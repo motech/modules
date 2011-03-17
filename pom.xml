@@ -155,6 +155,7 @@
                             <exclude>org/motechproject/model/Audit.class</exclude>
                             <exclude>org/motechproject/model/MotechBaseDataObject.class</exclude>
                             <exclude>org/motechproject/model/Rule.class</exclude>
+                            <exclude>org/motechproject/model/Patient.class</exclude>
                         </excludes>
                     </instrumentation>
                     <check>
