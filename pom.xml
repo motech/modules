@@ -104,6 +104,7 @@
                 <version>2.5</version>
                 <configuration>
                     <instrumentation>
+
                         <excludes>
                             <exclude>org/motechproject/server/service/ivr/CallInitiationException.class</exclude>
                             <exclude>org/motechproject/metrics/impl/LoggingAgentBackendImpl.class</exclude>
