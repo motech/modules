@@ -289,7 +289,7 @@
         <profile>
             <id>tw-ci</id>
             <properties>
-                <db.server>127.0.0.1</db.server>
+                    <db.server>127.0.0.1</db.server>
                 <db.port>5984</db.port>
             </properties>
             <distributionManagement>
@@ -363,8 +363,8 @@
                                         <argument>-s</argument>
                                         <argument>-S</argument>
                                         <argument>-X</argument>
-                                        <argument>"DELETE"</argument>
-                                        <argument>"http://${db.server}:${db.port}/rules"</argument>
+                                        <argument>DELETE</argument>
+                                        <argument>http://${db.server}:${db.port}/rules</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
@@ -380,8 +380,8 @@
                                         <argument>-s</argument>
                                         <argument>-S</argument>
                                         <argument>-X</argument>
-                                        <argument>"DELETE"</argument>
-                                        <argument>"http://${db.server}:${db.port}/trees"</argument>
+                                        <argument>DELETE</argument>
+                                        <argument>http://${db.server}:${db.port}/trees</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
@@ -397,8 +397,8 @@
                                         <argument>-s</argument>
                                         <argument>-S</argument>
                                         <argument>-X</argument>
-                                        <argument>"DELETE"</argument>
-                                        <argument>"http://${db.server}:${db.port}/test-tama"</argument>
+                                        <argument>DELETE</argument>
+                                        <argument>http://${db.server}:${db.port}/test-tama</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
@@ -414,8 +414,8 @@
                                         <argument>-s</argument>
                                         <argument>-S</argument>
                                         <argument>-X</argument>
-                                        <argument>"DELETE"</argument>
-                                        <argument>"http://${db.server}:${db.port}/test-appointments"</argument>
+                                        <argument>DELETE</argument>
+                                        <argument>http://${db.server}:${db.port}/test-appointments</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
@@ -431,8 +431,8 @@
                                         <argument>-s</argument>
                                         <argument>-S</argument>
                                         <argument>-X</argument>
-                                        <argument>"DELETE"</argument>
-                                        <argument>"http://${db.server}:${db.port}/test-outbox"</argument>
+                                        <argument>DELETE</argument>
+                                        <argument>http://${db.server}:${db.port}/test-outbox</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
@@ -448,8 +448,8 @@
                                         <argument>-s</argument>
                                         <argument>-S</argument>
                                         <argument>-X</argument>
-                                        <argument>"DELETE"</argument>
-                                        <argument>"http://${db.server}:${db.port}/motech-pillreminder"</argument>
+                                        <argument>DELETE</argument>
+                                        <argument>http://${db.server}:${db.port}/motech-pillreminder</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
@@ -465,8 +465,8 @@
                                         <argument>-s</argument>
                                         <argument>-S</argument>
                                         <argument>-X</argument>
-                                        <argument>"DELETE"</argument>
-                                        <argument>"http://${db.server}:${db.port}/motech-outbox"</argument>
+                                        <argument>DELETE</argument>
+                                        <argument>http://${db.server}:${db.port}/motech-outbox</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
@@ -482,8 +482,8 @@
                                         <argument>-s</argument>
                                         <argument>-S</argument>
                                         <argument>-X</argument>
-                                        <argument>"DELETE"</argument>
-                                        <argument>"http://${db.server}:${db.port}/motech-cmslite"</argument>
+                                        <argument>DELETE</argument>
+                                        <argument>http://${db.server}:${db.port}/motech-cmslite</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
