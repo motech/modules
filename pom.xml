@@ -315,7 +315,7 @@
                         <executions>
                             <execution>
                                 <id>drop DB => rules</id>
-                                <phase>post-integration-test</phase>
+                                <phase>pre-integration-test</phase>
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
@@ -332,7 +332,7 @@
                             </execution>
                             <execution>
                                 <id>drop DB => trees</id>
-                                <phase>post-integration-test</phase>
+                                <phase>pre-integration-test</phase>
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
@@ -349,7 +349,7 @@
                             </execution>
                             <execution>
                                 <id>drop DB => scheduletracking</id>
-                                <phase>post-integration-test</phase>
+                                <phase>pre-integration-test</phase>
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
@@ -366,7 +366,7 @@
                             </execution>
                             <execution>
                                 <id>drop DB => test-tama</id>
-                                <phase>post-integration-test</phase>
+                                <phase>pre-integration-test</phase>
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
@@ -383,7 +383,7 @@
                             </execution>
                             <execution>
                                 <id>drop DB => test-appointments</id>
-                                <phase>post-integration-test</phase>
+                                <phase>pre-integration-test</phase>
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
@@ -400,7 +400,7 @@
                             </execution>
                             <execution>
                                 <id>drop DB => test-outbox</id>
-                                <phase>post-integration-test</phase>
+                                <phase>pre-integration-test</phase>
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
@@ -417,7 +417,7 @@
                             </execution>
                             <execution>
                                 <id>drop DB => motech-pillreminder</id>
-                                <phase>post-integration-test</phase>
+                                <phase>pre-integration-test</phase>
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
@@ -434,7 +434,7 @@
                             </execution>
                             <execution>
                                 <id>drop DB => motech-outbox</id>
-                                <phase>post-integration-test</phase>
+                                <phase>pre-integration-test</phase>
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
@@ -451,7 +451,7 @@
                             </execution>
                             <execution>
                                 <id>drop DB => motech-cmslite</id>
-                                <phase>post-integration-test</phase>
+                                <phase>pre-integration-test</phase>
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
@@ -468,7 +468,7 @@
                             </execution>
                             <execution>
                                 <id>drop DB => motech-alert</id>
-                                <phase>post-integration-test</phase>
+                                <phase>pre-integration-test</phase>
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
