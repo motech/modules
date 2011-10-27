@@ -11,11 +11,21 @@
 			http://www.springframework.org/schema/integration/jms/spring-integration-jms.xsd
 			">
 
-    <gateway service-interface="org.motechproject.gateway.MotechSchedulerGateway"
+    <beans:bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <beans:property name="location" value="classpath:activemq.properties"/>
+        <beans:property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </beans:bean>
+    <beans:import resource="classpath:integrationCommon.xml"/>
+    <beans:import resource="classpath:applicationPlatformCommon.xml"/>
+
+	<gateway service-interface="org.motechproject.gateway.MotechSchedulerGateway"
 	 		id="outboundScheduleJobGateway"
 	 		default-request-channel="scheduleJobGatewayToEventJmsoutChannel"/>
 
 	<channel id="scheduleJobGatewayToEventJmsoutChannel"/>
+	
 
 	<jms:outbound-channel-adapter id="schedulejmsout" channel="scheduleJobGatewayToEventJmsoutChannel" destination="schedulerQueue"/>
+
+	
 </beans:beans>
