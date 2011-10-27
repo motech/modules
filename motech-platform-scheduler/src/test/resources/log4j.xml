@@ -10,7 +10,7 @@
 	</appender>
 
 	<logger name="org.motechproject">
-		<level value="INFO" />
+		<level value="WARN" />
 	</logger>
 	
 	<root>
