@@ -15,13 +15,6 @@ public class AggregationBySubject implements AggregationHandler {
 
     @Override
     public boolean canBeDispatched(List<MotechEvent> events) {
-/*
-        DateTime creationTime = (DateTime) event.getParameters().get("CREATION_TIME");
-        boolean can = new NextMondayDispatcher().deliveryDate(creationTime).toDate().before(DateUtil.now().toDate());
-*/
-        if (events.size() == 2) {
-            return true;
-        }
-        return false;
+        return events.size() == 2;
     }
 }

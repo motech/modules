@@ -10,18 +10,15 @@ public class TestApplication {
         ApplicationContext context = new ClassPathXmlApplicationContext("/applicationContext-test-aggregator.xml");
         EventAggregationGateway aggregationGateway = (EventAggregationGateway) context.getBean("messageGateway");
 
-        System.out.println("Send ABC");
-        aggregationGateway.dispatch(new MotechEvent("ABC"));
+        send(aggregationGateway, "ABC");
+        send(aggregationGateway, "ABCD");
+        send(aggregationGateway, "ABC");
+        send(aggregationGateway, "ABCD");
+    }
+
+    private static void send(EventAggregationGateway aggregationGateway, final String subject) throws InterruptedException {
+        System.out.println("Send " + subject);
+        aggregationGateway.dispatch(new MotechEvent(subject));
         Thread.sleep(3000);
-
-        System.out.println("Send ABCD");
-        aggregationGateway.dispatch(new MotechEvent("ABCD"));
-
-        System.out.println("Send ABC");
-        aggregationGateway.dispatch(new MotechEvent("ABC"));
-        Thread.sleep(3000);
-
-        System.out.println("Send ABCD");
-        aggregationGateway.dispatch(new MotechEvent("ABCD"));
     }
 }
