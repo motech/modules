@@ -6,12 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AggregateMotechEvent {
+public class AggregateMotechEvent<T> {
     public static final String SUBJECT = "AGGREGATED_EVENT";
     public static final String EVENTS_KEY = "EVENTS";
-    private final List<MotechEvent> events;
+    private final List<T> events;
 
-    public AggregateMotechEvent(List<MotechEvent> events) {
+    public AggregateMotechEvent(List<T> events) {
         this.events = events;
     }
 

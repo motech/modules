@@ -17,12 +17,12 @@ import java.util.List;
 import static ch.lambdaj.Lambda.*;
 
 @Component
-public class DeliveryTimeBasedExpiry {
+public class DeliveryTimeBasedExpiry<T> {
     private Logger logger = LoggerFactory.getLogger(DeliveryTimeBasedExpiry.class);
     private final AggregationHandler aggregationHandler;
 
     @Autowired
-    public DeliveryTimeBasedExpiry(AggregationHandler aggregationHandler) {
+    public DeliveryTimeBasedExpiry(AggregationHandler<T> aggregationHandler) {
         this.aggregationHandler = aggregationHandler;
     }
 
@@ -52,10 +52,10 @@ public class DeliveryTimeBasedExpiry {
             return false;
         }
 
-        List<MotechEvent> eventsInPayload = convert(collect(messages, on(Message.class).getPayload()), new Converter<Object, MotechEvent>() {
+        List<T> eventsInPayload = convert(collect(messages, on(Message.class).getPayload()), new Converter<Object, T>() {
             @Override
-            public MotechEvent convert(Object from) {
-                return (MotechEvent) from;
+            public T convert(Object from) {
+                return (T) from;
             }
         });
 

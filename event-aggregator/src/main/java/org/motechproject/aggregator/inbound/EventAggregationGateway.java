@@ -1,9 +1,8 @@
 package org.motechproject.aggregator.inbound;
 
-import org.motechproject.model.MotechEvent;
 import org.springframework.integration.annotation.Gateway;
 
-public interface EventAggregationGateway {
+public interface EventAggregationGateway<T> {
     @Gateway(requestChannel="inputMessages")
-    public void dispatch(MotechEvent message);
+    public void dispatch(T message);
 }

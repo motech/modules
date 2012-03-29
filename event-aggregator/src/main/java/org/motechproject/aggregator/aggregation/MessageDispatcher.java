@@ -11,28 +11,28 @@ import org.springframework.integration.annotation.ReleaseStrategy;
 import java.util.List;
 
 @MessageEndpoint
-public class MessageDispatcher {
+public class MessageDispatcher<T> {
     private AggregationHandler aggregationHandler;
     private static Logger logger = LoggerFactory.getLogger(MessageDispatcher.class.toString());
 
     @Autowired
-    public MessageDispatcher(AggregationHandler aggregationHandler) {
+    public MessageDispatcher(AggregationHandler<T> aggregationHandler) {
         this.aggregationHandler = aggregationHandler;
     }
 
-    public MotechEvent aggregateEvents(List<MotechEvent> events) {
-        return new AggregateMotechEvent(events).toMotechEvent();
+    public MotechEvent aggregateEvents(List<T> events) {
+        return new AggregateMotechEvent<T>(events).toMotechEvent();
     }
 
     @CorrelationStrategy
-    public String correlate(MotechEvent event) {
+    public String correlate(T event) {
         String groupId = aggregationHandler.groupId(event);
         logger.debug("Group ID of event: " + event + " is " + groupId);
         return groupId;
     }
 
     @ReleaseStrategy
-    public boolean canBeDispatched(List<MotechEvent> events){
+    public boolean canBeDispatched(List<T> events){
         return false;
     }
 

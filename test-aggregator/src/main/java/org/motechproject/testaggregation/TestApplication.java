@@ -8,7 +8,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class TestApplication {
     public static void main(String[] args) throws InterruptedException {
         ApplicationContext context = new ClassPathXmlApplicationContext("/applicationContext-test-aggregator.xml");
-        EventAggregationGateway aggregationGateway = (EventAggregationGateway) context.getBean("messageGateway");
+        EventAggregationGateway<MotechEvent> aggregationGateway = (EventAggregationGateway) context.getBean("messageGateway");
 
         send(aggregationGateway, "ABC");
         send(aggregationGateway, "ABCD");

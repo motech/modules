@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class AggregationBySubject implements AggregationHandler {
+public class AggregationBySubject implements AggregationHandler<MotechEvent> {
     @Override
     public String groupId(MotechEvent event) {
         return event.getSubject();
