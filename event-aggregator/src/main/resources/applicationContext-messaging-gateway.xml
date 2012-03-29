@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:integration="http://www.springframework.org/schema/integration"
+             xmlns:context="http://www.springframework.org/schema/context"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+			http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd">
+
+  <context:property-placeholder location="classpath:activemq.properties" ignore-unresolvable="true"/>
+  <context:property-placeholder location="classpath:aggregator.properties"/>
+
+  <integration:annotation-config/>
+  <context:component-scan base-package="org.motechproject.aggregator"/>
+
+  <bean id="reaper" class="org.springframework.integration.store.MessageGroupStoreReaper">
+    <property name="messageGroupStore" ref="messageStore"/>
+    <property name="timeout" value="60000"/>
+  </bean>
+
+  <bean name="reaperJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+    <property name="jobClass" value="org.motechproject.aggregator.repository.MessageGroupStoreReaperJob"/>
+    <property name="jobDataAsMap">
+      <map>
+        <entry key="timeout" value="5"/>
+      </map>
+    </property>
+  </bean>
+
+  <bean id="reaperTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <property name="jobDetail" ref="reaperJob"/>
+    <property name="cronExpression" value="${aggregator.cron.expression}"/>
+  </bean>
+
+  <integration:gateway id="messageGateway" service-interface="org.motechproject.aggregator.inbound.EventAggregationGateway"/>
+  <integration:channel id="inputMessages"/>
+  <integration:channel id="aggregatedOutputMessages"/>
+
+  <integration:outbound-channel-adapter channel="aggregatedOutputMessages" ref="aggregatedMessageDispatcher" method="dispatch"/>
+
+  <integration:aggregator
+      input-channel="inputMessages"
+      method="aggregateEvents"
+      message-store="messageStore"
+      output-channel="aggregatedOutputMessages"
+      send-partial-result-on-expiry="true">
+    <bean class="org.motechproject.aggregator.aggregation.MessageDispatcher"/>
+  </integration:aggregator>
+
+  <bean id="aggregatorDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+    <property name="url" value="${aggregator.db.connection.string}"/>
+    <property name="username" value="${aggregator.db.username}"/>
+    <property name="password" value="${aggregator.db.password}"/>
+  </bean>
+
+  <import resource="classpath:applicationPlatformScheduler.xml"/>
+</beans>
