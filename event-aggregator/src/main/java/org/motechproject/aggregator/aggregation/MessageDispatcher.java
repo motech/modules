@@ -1,6 +1,8 @@
 package org.motechproject.aggregator.aggregation;
 
 import org.motechproject.model.MotechEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.annotation.CorrelationStrategy;
 import org.springframework.integration.annotation.MessageEndpoint;
@@ -11,6 +13,7 @@ import java.util.List;
 @MessageEndpoint
 public class MessageDispatcher {
     private AggregationHandler aggregationHandler;
+    private static Logger logger = LoggerFactory.getLogger(MessageDispatcher.class.toString());
 
     @Autowired
     public MessageDispatcher(AggregationHandler aggregationHandler) {
@@ -23,7 +26,9 @@ public class MessageDispatcher {
 
     @CorrelationStrategy
     public String correlate(MotechEvent event) {
-        return aggregationHandler.groupId(event);
+        String groupId = aggregationHandler.groupId(event);
+        logger.debug("Group ID of event: " + event + " is " + groupId);
+        return groupId;
     }
 
     @ReleaseStrategy

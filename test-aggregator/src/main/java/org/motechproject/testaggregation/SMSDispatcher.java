@@ -20,8 +20,7 @@ public class SMSDispatcher {
 
     @MotechListener(subjects = AggregateMotechEvent.SUBJECT)
     public void dispatch(MotechEvent aggregatedEvent) {
-        System.out.println("Came here ...");
         List<MotechEvent> events = (List<MotechEvent>) aggregatedEvent.getParameters().get(AggregateMotechEvent.EVENTS_KEY);
-        System.out.println("Found events: " + events);
+        System.out.println("Aggregated events: " + events);
     }
 }

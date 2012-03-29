@@ -20,7 +20,6 @@ public class MessageStore extends JdbcMessageStore {
     private Collection<MessageGroupCallback> expiryCallbacksCopy = new LinkedHashSet<MessageGroupCallback>();
     private Logger logger = LoggerFactory.getLogger(MessageStore.class);
 
-
     @Autowired
     public MessageStore(DeliveryTimeBasedExpiry deliveryTimeBasedExpiry, @Qualifier("aggregatorDataSource") DataSource dataSource) {
         super(dataSource);
@@ -43,6 +42,7 @@ public class MessageStore extends JdbcMessageStore {
 
         for (MessageGroupCallback callback : expiryCallbacksCopy) {
             try {
+                logger.debug("Expiring from message store: " + group);
                 callback.execute(this, group);
             } catch (RuntimeException e) {
                 if (exception == null) {

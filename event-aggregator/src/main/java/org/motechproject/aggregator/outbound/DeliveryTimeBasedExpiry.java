@@ -59,6 +59,8 @@ public class DeliveryTimeBasedExpiry {
             }
         });
 
-        return aggregationHandler.canBeDispatched(eventsInPayload);
+        boolean canBeDispatched = aggregationHandler.canBeDispatched(eventsInPayload);
+        logger.debug("Events: " + eventsInPayload + ". Can be dispatched? " + canBeDispatched);
+        return canBeDispatched;
     }
 }
