@@ -3,7 +3,6 @@ package org.motechproject.aggregator.outbound;
 import ch.lambdaj.function.convert.Converter;
 import org.motechproject.aggregator.aggregation.AggregationHandler;
 import org.motechproject.aggregator.repository.MessageStore;
-import org.motechproject.model.MotechEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +10,14 @@ import org.springframework.integration.Message;
 import org.springframework.integration.store.MessageGroup;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
 import static ch.lambdaj.Lambda.*;
 
 @Component
-public class DeliveryTimeBasedExpiry<T> {
+public class DeliveryTimeBasedExpiry<T extends Serializable> {
     private Logger logger = LoggerFactory.getLogger(DeliveryTimeBasedExpiry.class);
     private final AggregationHandler aggregationHandler;
 

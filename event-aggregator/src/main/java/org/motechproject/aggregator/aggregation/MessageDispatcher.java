@@ -8,10 +8,11 @@ import org.springframework.integration.annotation.CorrelationStrategy;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ReleaseStrategy;
 
+import java.io.Serializable;
 import java.util.List;
 
 @MessageEndpoint
-public class MessageDispatcher<T> {
+public class MessageDispatcher<T extends Serializable> {
     private AggregationHandler aggregationHandler;
     private static Logger logger = LoggerFactory.getLogger(MessageDispatcher.class.toString());
 
