@@ -7,13 +7,13 @@
   <parent>
     <artifactId>motech-contrib</artifactId>
     <groupId>org.motechproject</groupId>
-    <version>1.0</version>
+    <version>0.1-SNAPSHOT</version>
   </parent>
 
   <name>event-aggregator</name>
   <artifactId>event-aggregator</artifactId>
   <groupId>org.motechproject</groupId>
-  <version>1.0</version>
+  <version>0.1-SNAPSHOT</version>
 
   <properties>
     <spring.version>3.0.5.RELEASE</spring.version>
