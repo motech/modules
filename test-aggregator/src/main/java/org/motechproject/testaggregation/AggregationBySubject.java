@@ -1,19 +1,20 @@
 package org.motechproject.testaggregation;
 
 import org.motechproject.aggregator.aggregation.AggregationHandler;
+import org.motechproject.model.MotechEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class AggregationBySubject implements AggregationHandler<String> {
+public class AggregationBySubject implements AggregationHandler<MotechEvent> {
     @Override
-    public String groupId(String value) {
-        return value;
+    public String groupId(MotechEvent event) {
+        return event.getSubject();
     }
 
     @Override
-    public boolean canBeDispatched(List<String> values) {
-        return values.size() == 2;
+    public boolean canBeDispatched(List<MotechEvent> events) {
+        return events.size() == 2;
     }
 }
