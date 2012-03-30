@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.aggregator.outbound.DeliveryTimeBasedExpiry;
+import org.motechproject.model.MotechEvent;
 import org.springframework.integration.store.MessageGroup;
 import org.springframework.integration.store.MessageGroupCallback;
 
@@ -15,7 +16,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class MessageStoreTest {
     @Mock
-    DeliveryTimeBasedExpiry timeBasedExpiry;
+    DeliveryTimeBasedExpiry<MotechEvent> timeBasedExpiry;
     @Mock
     DataSource dataSource;
     @Mock

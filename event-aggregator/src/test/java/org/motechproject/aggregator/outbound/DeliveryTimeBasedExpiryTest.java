@@ -19,7 +19,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class DeliveryTimeBasedExpiryTest {
     @Mock
-    AggregationHandler aggregationHandler;
+    AggregationHandler<MotechEvent> aggregationHandler;
     @Mock
     MessageStore messageStore;
     @Mock
@@ -27,13 +27,13 @@ public class DeliveryTimeBasedExpiryTest {
     @Mock
     Message<?> secondMessage;
 
-    private DeliveryTimeBasedExpiry timeBasedExpiry;
+    private DeliveryTimeBasedExpiry<MotechEvent> timeBasedExpiry;
     private List<MotechEvent> events;
 
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        timeBasedExpiry = new DeliveryTimeBasedExpiry(aggregationHandler);
+        timeBasedExpiry = new DeliveryTimeBasedExpiry<MotechEvent>(aggregationHandler);
         events = Arrays.asList(new MotechEvent("SUBJECT 1"), new MotechEvent("SUBJECT 2"));
     }
 

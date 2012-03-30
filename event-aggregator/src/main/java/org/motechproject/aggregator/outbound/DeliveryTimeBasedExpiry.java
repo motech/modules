@@ -19,14 +19,14 @@ import static ch.lambdaj.Lambda.*;
 @Component
 public class DeliveryTimeBasedExpiry<T extends Serializable> {
     private Logger logger = LoggerFactory.getLogger(DeliveryTimeBasedExpiry.class);
-    private final AggregationHandler aggregationHandler;
+    private final AggregationHandler<T> aggregationHandler;
 
     @Autowired
     public DeliveryTimeBasedExpiry(AggregationHandler<T> aggregationHandler) {
         this.aggregationHandler = aggregationHandler;
     }
 
-    public int expireMessageGroups(MessageStore messageStore, long timeout) {
+    public int expireMessageGroups(MessageStore<T> messageStore, long timeout) {
         int count = 0;
 
         for (MessageGroup group : messageStore) {

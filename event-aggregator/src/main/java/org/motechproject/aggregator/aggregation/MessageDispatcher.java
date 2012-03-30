@@ -13,7 +13,7 @@ import java.util.List;
 
 @MessageEndpoint
 public class MessageDispatcher<T extends Serializable> {
-    private AggregationHandler aggregationHandler;
+    private AggregationHandler<T> aggregationHandler;
     private static Logger logger = LoggerFactory.getLogger(MessageDispatcher.class.toString());
 
     @Autowired

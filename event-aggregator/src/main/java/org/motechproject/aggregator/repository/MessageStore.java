@@ -11,17 +11,18 @@ import org.springframework.integration.store.MessageGroupCallback;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
 @Component("messageStore")
-public class MessageStore extends JdbcMessageStore {
-    private DeliveryTimeBasedExpiry deliveryTimeBasedExpiry;
+public class MessageStore<T extends Serializable> extends JdbcMessageStore {
+    private DeliveryTimeBasedExpiry<T> deliveryTimeBasedExpiry;
     private Collection<MessageGroupCallback> expiryCallbacksCopy = new LinkedHashSet<MessageGroupCallback>();
     private Logger logger = LoggerFactory.getLogger(MessageStore.class);
 
     @Autowired
-    public MessageStore(DeliveryTimeBasedExpiry deliveryTimeBasedExpiry, @Qualifier("aggregatorDataSource") DataSource dataSource) {
+    public MessageStore(DeliveryTimeBasedExpiry<T> deliveryTimeBasedExpiry, @Qualifier("aggregatorDataSource") DataSource dataSource) {
         super(dataSource);
         this.deliveryTimeBasedExpiry = deliveryTimeBasedExpiry;
     }

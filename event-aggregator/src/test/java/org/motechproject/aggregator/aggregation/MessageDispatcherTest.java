@@ -17,9 +17,9 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class MessageDispatcherTest {
     @Mock
-    private AggregationHandler handler;
+    private AggregationHandler<MotechEvent> handler;
 
-    private MessageDispatcher dispatcher;
+    private MessageDispatcher<MotechEvent> dispatcher;
 
     @Before
     public void setUp() throws Exception {
