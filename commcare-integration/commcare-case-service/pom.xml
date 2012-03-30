@@ -19,13 +19,11 @@
         <db.name>commcare</db.name>
     </properties>
 
-<!--
     <parent>
         <artifactId>commcare-integration</artifactId>
         <groupId>org.motechproject.commcare</groupId>
         <version>0.1-SNAPSHOT</version>
     </parent>
--->
 
     <dependencies>
         <dependency>
@@ -82,10 +80,5 @@
             <artifactId>jersey-server</artifactId>
             <version>1.8</version>
         </dependency>
-
-
-
     </dependencies>
-
-    
 </project>
