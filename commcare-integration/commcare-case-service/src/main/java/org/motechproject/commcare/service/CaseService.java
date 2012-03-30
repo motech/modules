@@ -6,6 +6,8 @@ import org.motechproject.commcare.utils.DomainMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -32,9 +34,9 @@ public abstract class CaseService<T> {
        domainMapper = new DomainMapper<T>(clazz);
    }
 
-    @POST
-    @Path("/process")
-    @RequestMapping("/process/{xmlDocument}", method=RequestMethod.)
+    //@POST
+    //@Path("/process")
+    @RequestMapping(value="/process",method= RequestMethod.POST)
     public void ProcessCase(String xmlDocument){
         logger.info(xmlDocument);
         System.out.println("xmldoc "+xmlDocument);
@@ -50,8 +52,8 @@ public abstract class CaseService<T> {
             closeCase(object) ;
     }
 
-    @GET
-    @Path("/test")
+    //@GET
+    //@Path("/test")
     public String Test(){
         return "Hello World";
 
