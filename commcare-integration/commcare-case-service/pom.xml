@@ -6,7 +6,7 @@
 
     <groupId>commcare-case-service</groupId>
     <artifactId>commcare-case-service</artifactId>
-    <version>1.0</version>
+    <version>0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>commcare-case-service</name>
 
