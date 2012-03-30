@@ -34,6 +34,7 @@ public abstract class CaseService<T> {
 
     @POST
     @Path("/process")
+    @RequestMapping("/process/{xmlDocument}", method=RequestMethod.)
     public void ProcessCase(String xmlDocument){
         logger.info(xmlDocument);
         System.out.println("xmldoc "+xmlDocument);
