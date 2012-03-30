@@ -9,16 +9,16 @@ import java.util.Map;
 
 public class AggregateMotechEvent<T extends Serializable> {
     public static final String SUBJECT = "AGGREGATED_EVENT";
-    public static final String EVENTS_KEY = "EVENTS";
-    private final List<T> events;
+    public static final String VALUES_KEY = "VALUES";
+    private final List<T> values;
 
-    public AggregateMotechEvent(List<T> events) {
-        this.events = events;
+    public AggregateMotechEvent(List<T> values) {
+        this.values = values;
     }
 
     public MotechEvent toMotechEvent() {
         Map<String,Object> parameters = new HashMap<String, Object>();
-        parameters.put(EVENTS_KEY, events);
+        parameters.put(VALUES_KEY, values);
         return new MotechEvent(SUBJECT, parameters);
     }
 }

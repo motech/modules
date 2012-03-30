@@ -24,7 +24,7 @@ public class MessageDispatcherTest {
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        dispatcher = new MessageDispatcher(handler);
+        dispatcher = new MessageDispatcher<MotechEvent>(handler);
     }
 
     @Test
@@ -43,7 +43,7 @@ public class MessageDispatcherTest {
         MotechEvent aggregatedEvent = dispatcher.aggregateEvents(events);
 
         assertThat(aggregatedEvent.getSubject(), is(AggregateMotechEvent.SUBJECT));
-        assertThat((List<MotechEvent>) aggregatedEvent.getParameters().get(AggregateMotechEvent.EVENTS_KEY), is(events));
+        assertThat((List<MotechEvent>) aggregatedEvent.getParameters().get(AggregateMotechEvent.VALUES_KEY), is(events));
         verifyZeroInteractions(handler);
     }
 

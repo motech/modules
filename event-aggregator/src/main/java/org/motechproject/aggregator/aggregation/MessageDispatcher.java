@@ -21,19 +21,19 @@ public class MessageDispatcher<T extends Serializable> {
         this.aggregationHandler = aggregationHandler;
     }
 
-    public MotechEvent aggregateEvents(List<T> events) {
-        return new AggregateMotechEvent<T>(events).toMotechEvent();
+    public MotechEvent aggregateEvents(List<T> values) {
+        return new AggregateMotechEvent<T>(values).toMotechEvent();
     }
 
     @CorrelationStrategy
-    public String correlate(T event) {
-        String groupId = aggregationHandler.groupId(event);
-        logger.debug("Group ID of event: " + event + " is " + groupId);
+    public String correlate(T value) {
+        String groupId = aggregationHandler.groupId(value);
+        logger.debug("Group ID of event: " + value + " is " + groupId);
         return groupId;
     }
 
     @ReleaseStrategy
-    public boolean canBeDispatched(List<T> events){
+    public boolean canBeDispatched(List<T> value){
         return false;
     }
 
