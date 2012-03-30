@@ -27,7 +27,7 @@
       <version>3.0.5.RELEASE</version>
     </dependency>
     <dependency>
-      <artifactId>event-aggregator</artifactId>
+      <artifactId>message-aggregator</artifactId>
       <groupId>org.motechproject</groupId>
       <version>0.1-SNAPSHOT</version>
     </dependency>

@@ -10,8 +10,8 @@
     <version>0.1-SNAPSHOT</version>
   </parent>
 
-  <name>event-aggregator</name>
-  <artifactId>event-aggregator</artifactId>
+  <name>message-aggregator</name>
+  <artifactId>message-aggregator</artifactId>
   <groupId>org.motechproject</groupId>
   <version>0.1-SNAPSHOT</version>
 
