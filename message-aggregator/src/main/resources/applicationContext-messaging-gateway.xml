@@ -40,7 +40,6 @@
 
   <integration:aggregator
       input-channel="inputMessages"
-      method="aggregateEvents"
       message-store="messageStore"
       output-channel="aggregatedOutputMessages"
       send-partial-result-on-expiry="true">

@@ -4,14 +4,13 @@ import org.motechproject.model.MotechEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.integration.annotation.Aggregator;
 import org.springframework.integration.annotation.CorrelationStrategy;
-import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ReleaseStrategy;
 
 import java.io.Serializable;
 import java.util.List;
 
-@MessageEndpoint
 public class MessageDispatcher<T extends Serializable> {
     private AggregationHandler<T> aggregationHandler;
     private static Logger logger = LoggerFactory.getLogger(MessageDispatcher.class.toString());
@@ -21,6 +20,7 @@ public class MessageDispatcher<T extends Serializable> {
         this.aggregationHandler = aggregationHandler;
     }
 
+    @Aggregator
     public MotechEvent aggregateEvents(List<T> values) {
         return new AggregateMotechEvent<T>(values).toMotechEvent();
     }
