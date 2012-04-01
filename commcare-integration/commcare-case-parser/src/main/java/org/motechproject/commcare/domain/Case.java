@@ -11,24 +11,24 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public class Case {
-    private String caseId;
-    private String dateModified;
+    private String case_id;
+    private String date_modified;
     private String action;
     
     private Map<String,String> fieldValues;
-    private String caseTypeId;
-    private String caseName;
+    private String case_type_id;
+    private String case_name;
 
     public Case(){
         fieldValues = new HashMap<String, String>();
     }
 
-    public void setCaseId(String case_id) {
-        this.caseId = case_id;
+    public void setCase_id(String case_id) {
+        this.case_id = case_id;
     }
 
-    public void setDateModified(String date_modified) {
-        this.dateModified = date_modified;
+    public void setDate_modified(String date_modified) {
+        this.date_modified = date_modified;
     }
 
     public String getAction() {
@@ -40,32 +40,32 @@ public class Case {
         this.action = action;
     }
 
-    public void setCaseTypeId(String caseTypeId) {
-        this.caseTypeId = caseTypeId;
+    public void setCase_type_id(String case_type_id) {
+        this.case_type_id = case_type_id;
     }
 
-    public void setCaseName(String case_name) {
-        this.caseName = case_name;
+    public void setCase_name(String case_name) {
+        this.case_name = case_name;
     }
 
     public void AddFieldvalue(String nodeName, String nodeValue) {
         fieldValues.put(nodeName,nodeValue);
     }
 
-    public String getCaseId() {
-        return caseId;
+    public String getCase_id() {
+        return case_id;
     }
 
-    public String getDateModified() {
-        return dateModified;
+    public String getDate_modified() {
+        return date_modified;
     }
 
-    public String getCaseTypeId() {
-        return caseTypeId;
+    public String getCase_type_id() {
+        return case_type_id;
     }
 
-    public String getCaseName() {
-        return caseName;
+    public String getCase_name() {
+        return case_name;
     }
 
     public Map<String, String> getFieldValues() {

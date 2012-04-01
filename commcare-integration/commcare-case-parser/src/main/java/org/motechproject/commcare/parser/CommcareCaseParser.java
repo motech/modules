@@ -2,6 +2,7 @@ package org.motechproject.commcare.parser;
 
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import org.motechproject.commcare.domain.Case;
+import org.motechproject.commcare.utils.RequestMapper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -17,9 +18,18 @@ import java.io.StringReader;
  * Time: 12:34 PM
  * To change this template use File | Settings | File Templates.
  */
-public class CommcareCaseParser {
-    
-    public Case parseCase(String xmlDoc){
+public class CommcareCaseParser<T> {
+
+    RequestMapper<T> domainMapper;
+    private String xmlDoc;
+    private String caseAction;
+
+
+    public CommcareCaseParser(Class<T> clazz,String xmlDocument) {
+        domainMapper = new RequestMapper<T>(clazz);
+         this.xmlDoc = xmlDocument;
+    }
+    public T parseCase(){
         DOMParser parser = new DOMParser();
 
         InputSource inputSource = new InputSource();
@@ -30,9 +40,10 @@ public class CommcareCaseParser {
             ccCase = parseCase(parser.getDocument());
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
         
-        return ccCase;
+        return domainMapper.mapToDomainObject(ccCase);
     }
 
     public Case parseCase(Document document){
@@ -44,37 +55,49 @@ public class CommcareCaseParser {
 
     private Case createCase(Element item) {
         Case ccCase = new Case();
-        ccCase.setCaseId(getTextValue(item, "case_id"));
-        ccCase.setDateModified(getTextValue(item, "date_modified"));
+        ccCase.setCase_id(getTextValue(item, "case_id"));
+        ccCase.setDate_modified(getTextValue(item, "date_modified"));
         return ccCase;
     }
 
     private void updateAction(Case ccCase,Element item) {
-        if(getMatchingChildNode(item, "create") != null)   {
-          ccCase.setAction("CREATE");
+
+      if(getMatchingChildNode(item, "create") != null)   {
+          setCaseAction(ccCase,"CREATE");
           populateValuesForCreation(ccCase, item);
           populateValuesForUpdation(ccCase, item);
 
       } else if(getMatchingChildNode(item, "update") != null){
-          ccCase.setAction("UPDATE");
+          setCaseAction(ccCase, "UPDATE");
+          populateValuesForUpdation(ccCase,item);
+
+      }else if(getMatchingChildNode(item, "close") != null){
+          setCaseAction(ccCase, "CLOSE");
           populateValuesForUpdation(ccCase,item);
       }
+
     }
+
+    private void setCaseAction(Case ccCase,String action) {
+        this.caseAction = action;
+        ccCase.setAction(action);
+    }
+
     private void populateValuesForCreation(Case ccCase, Element item) {
-        ccCase.setCaseTypeId(getTextValue(item, "case_type_id"));
-        ccCase.setCaseName(getTextValue(item, "case_name"));
+        ccCase.setCase_type_id(getTextValue(item, "case_type_id"));
+        ccCase.setCase_name(getTextValue(item, "case_name"));
     }
 
     private void populateValuesForUpdation(Case ccCase, Element item) {
-
         Node updateitem = getMatchingNode(item, "update");
         NodeList childNodes = updateitem.getChildNodes();
 
         for(int i = 0;i<childNodes.getLength();i++){
             Node childNode = childNodes.item(i);
-            ccCase.AddFieldvalue(childNode.getNodeName(),childNode.getFirstChild().getNodeValue());
-        }
+            if(!childNode.getNodeName().contains("text"))
+                ccCase.AddFieldvalue(childNode.getNodeName(),childNode.getTextContent());
 
+        }
     }
 
     private String getTextValue(Element ele, String tagName) {
@@ -103,4 +126,7 @@ public class CommcareCaseParser {
     }
 
 
+    public String getCaseAction() {
+        return caseAction;
+    }
 }

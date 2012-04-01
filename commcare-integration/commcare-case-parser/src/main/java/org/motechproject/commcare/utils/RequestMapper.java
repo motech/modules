@@ -12,11 +12,11 @@ import org.motechproject.commcare.domain.Case;
  * Time: 10:48 PM
  * To change this template use File | Settings | File Templates.
  */
-public class DomainMapper<T> {
+public class RequestMapper<T> {
 
     private Class<T> clazz;
 
-    public DomainMapper(Class<T> clazz) {
+    public RequestMapper(Class<T> clazz) {
         this.clazz = clazz;
     }
 

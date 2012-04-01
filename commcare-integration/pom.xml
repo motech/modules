@@ -10,6 +10,7 @@
 
     <modules>
         <module>commcare-case-service</module>
+        <module>commcare-case-parser</module>
     </modules>
 
     <parent>

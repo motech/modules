@@ -1,11 +1,12 @@
-package org.motechproject.commcare.parser;
+package parser;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.motechproject.commcare.domain.Case;
+import org.motechproject.commcare.parser.CommcareCaseParser;
 
-import java.io.*;
+import java.io.FileNotFoundException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,24 +19,24 @@ public class CommcareCaseParserTest extends TestCase {
 
     @Test
     public void testShouldParseCaseAttributesCorrectly() throws FileNotFoundException {
-        CommcareCaseParser parser = new CommcareCaseParser();
-        Case aCase = parser.parseCase(caseXml());
-        Assert.assertEquals("3F2504E04F8911D39A0C0305E82C3301",aCase.getCaseId());
-        Assert.assertEquals("11/10/09 21:23:43",aCase.getDateModified());
+        CommcareCaseParser<Case> parser = new CommcareCaseParser<Case>(Case.class,caseXml());
+        Case aCase = parser.parseCase();
+        Assert.assertEquals("3F2504E04F8911D39A0C0305E82C3301",aCase.getCase_id());
+        Assert.assertEquals("11/10/09 21:23:43",aCase.getDate_modified());
     }
 
     @Test
     public void testShouldParseCreateAttributesCorrectly() throws FileNotFoundException {
-        CommcareCaseParser parser = new CommcareCaseParser();
-        Case aCase = parser.parseCase(caseXml());
-        Assert.assertEquals("houshold_rollout_ONICAF",aCase.getCaseTypeId());
-        Assert.assertEquals("Smith",aCase.getCaseName());
+        CommcareCaseParser<Case> parser = new CommcareCaseParser<Case>(Case.class,caseXml());
+        Case aCase = parser.parseCase();
+        Assert.assertEquals("houshold_rollout_ONICAF",aCase.getCase_type_id());
+        Assert.assertEquals("Smith",aCase.getCase_name());
     }
 
     @Test
     public void testShouldSetActionCorrectly() throws FileNotFoundException {
-        CommcareCaseParser parser = new CommcareCaseParser();
-        Case aCase = parser.parseCase(caseXml());
+        CommcareCaseParser<Case> parser = new CommcareCaseParser<Case>(Case.class,caseXml());
+        Case aCase = parser.parseCase();
         Assert.assertEquals("CREATE",aCase.getAction());
     }
 

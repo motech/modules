@@ -1,6 +1,6 @@
 package org.motechproject.commcare.gateway;
 
-import org.motechproject.commcare.utils.DomainMapper;
+import org.motechproject.commcare.utils.RequestMapper;
 
 /**
  * Created by IntelliJ IDEA.
@@ -11,10 +11,10 @@ import org.motechproject.commcare.utils.DomainMapper;
  */
 public class CommcareCaseGateway<T> {
 
-    DomainMapper<T> domainMapper;
+    RequestMapper<T> domainMapper;
 
     public CommcareCaseGateway(Class<T> clazz){
-        domainMapper = new DomainMapper<T>(clazz);
+        domainMapper = new RequestMapper<T>(clazz);
     }
 
     public void submitCase(T object){
