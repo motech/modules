@@ -22,7 +22,8 @@ public class CommcareCaseParserTest extends TestCase {
         CommcareCaseParser<Case> parser = new CommcareCaseParser<Case>(Case.class,caseXml());
         Case aCase = parser.parseCase();
         Assert.assertEquals("3F2504E04F8911D39A0C0305E82C3301",aCase.getCase_id());
-        Assert.assertEquals("11/10/09 21:23:43",aCase.getDate_modified());
+        Assert.assertEquals("2011-12-08T13:34:30",aCase.getDate_modified());
+        Assert.assertEquals("F0183EDA012765103CB106821BBA51A0",aCase.getUser_id());
     }
 
     @Test
@@ -41,9 +42,7 @@ public class CommcareCaseParserTest extends TestCase {
     }
 
     private String caseXml() {
-        String caseXml = "<case>"+
-        "<case_id>3F2504E04F8911D39A0C0305E82C3301</case_id>"+
-        "<date_modified>11/10/09 21:23:43</date_modified>"+
+        String caseXml = "<case xmlns=\"http://commcarehq.org/case/transaction/v2\" case_id=\"3F2504E04F8911D39A0C0305E82C3301\" user_id=\"F0183EDA012765103CB106821BBA51A0\" date_modified=\"2011-12-08T13:34:30\" >\n" +
         "<create>"+
         "<case_type_id>houshold_rollout_ONICAF</case_type_id>"+
         "<case_name>Smith</case_name>"+

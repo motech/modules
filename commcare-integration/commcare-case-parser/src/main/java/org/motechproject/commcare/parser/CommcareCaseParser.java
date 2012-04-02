@@ -2,7 +2,7 @@ package org.motechproject.commcare.parser;
 
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import org.motechproject.commcare.domain.Case;
-import org.motechproject.commcare.utils.RequestMapper;
+import org.motechproject.commcare.utils.CaseMapper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -20,13 +20,13 @@ import java.io.StringReader;
  */
 public class CommcareCaseParser<T> {
 
-    RequestMapper<T> domainMapper;
+    CaseMapper<T> domainMapper;
     private String xmlDoc;
     private String caseAction;
 
 
     public CommcareCaseParser(Class<T> clazz,String xmlDocument) {
-        domainMapper = new RequestMapper<T>(clazz);
+        domainMapper = new CaseMapper<T>(clazz);
          this.xmlDoc = xmlDocument;
     }
     public T parseCase(){
@@ -55,8 +55,10 @@ public class CommcareCaseParser<T> {
 
     private Case createCase(Element item) {
         Case ccCase = new Case();
-        ccCase.setCase_id(getTextValue(item, "case_id"));
-        ccCase.setDate_modified(getTextValue(item, "date_modified"));
+
+        ccCase.setCase_id(item.getAttribute("case_id"));
+        ccCase.setDate_modified(item.getAttribute("date_modified"));
+        ccCase.setUser_id(item.getAttribute("user_id"));
         return ccCase;
     }
 

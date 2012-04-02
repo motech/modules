@@ -19,6 +19,12 @@ public class Case {
     private String case_type_id;
     private String case_name;
 
+    public String getUser_id() {
+        return user_id;
+    }
+
+    private String user_id;
+
     public Case(){
         fieldValues = new HashMap<String, String>();
     }
@@ -72,7 +78,11 @@ public class Case {
         return fieldValues;
     }
 
-    public void setFieldValues(HashMap<String, String> fieldValues) {
+    public void setFieldValues(Map<String, String> fieldValues) {
         this.fieldValues = fieldValues;
+    }
+
+    public void setUser_id(String userId) {
+        this.user_id =   userId;
     }
 }

@@ -4,6 +4,9 @@ import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.beanutils.BeanUtils;
 import org.motechproject.commcare.domain.Case;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,11 +15,11 @@ import org.motechproject.commcare.domain.Case;
  * Time: 10:48 PM
  * To change this template use File | Settings | File Templates.
  */
-public class RequestMapper<T> {
+public class CaseMapper<T> {
 
     private Class<T> clazz;
 
-    public RequestMapper(Class<T> clazz) {
+    public CaseMapper(Class<T> clazz) {
         this.clazz = clazz;
     }
 
@@ -40,18 +43,26 @@ public class RequestMapper<T> {
         try {
              BeanUtils.copyProperties(ccCase, careCase);
 
-             BeanMap beanMap = new BeanMap(careCase);
-             beanMap.remove("caseId");
-             beanMap.remove("dateModified");
-             beanMap.remove("caseTypeId");
-             beanMap.remove("caseName");
+            BeanMap beanMap = new BeanMap(careCase);
+            removeStaticProperties(beanMap);
 
-             //ccCase.setFieldValues(beanMap.);
+            Map<String,String> valueMap = new HashMap<String,String>(); 
+            while(beanMap.keyIterator().hasNext()){
+                valueMap.put((String)beanMap.keyIterator().next(), (String) beanMap.get((String)beanMap.keyIterator().next()));
+            }
+             ccCase.setFieldValues(valueMap);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return null;
+        return ccCase;
+    }
+
+    private void removeStaticProperties(BeanMap beanMap) {
+        beanMap.remove("case_id");
+        beanMap.remove("date_modified");
+        beanMap.remove("case_type_id");
+        beanMap.remove("case_name");
     }
 }
