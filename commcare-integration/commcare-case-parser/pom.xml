@@ -10,7 +10,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>commcare-case-parser</groupId>
+    <groupId>org.motechproject.commcare</groupId>
     <artifactId>commcare-case-parser</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
