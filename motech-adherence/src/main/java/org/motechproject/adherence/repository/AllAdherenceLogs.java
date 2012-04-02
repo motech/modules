@@ -1,4 +1,4 @@
-package org.motechproject.adherence.dao;
+package org.motechproject.adherence.repository;
 
 import org.ektorp.ComplexKey;
 import org.ektorp.CouchDbConnector;

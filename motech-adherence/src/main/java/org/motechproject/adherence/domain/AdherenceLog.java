@@ -4,7 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.ektorp.support.TypeDiscriminator;
 import org.joda.time.LocalDate;
-import org.motechproject.adherence.service.AdherenceService;
+import org.motechproject.adherence.service.impl.AdherenceServiceImpl;
 import org.motechproject.model.MotechBaseDataObject;
 
 import java.util.HashMap;
@@ -20,7 +20,7 @@ public class AdherenceLog extends MotechBaseDataObject {
     protected LocalDate toDate;
     protected int deltaDosesTaken;
     protected int deltaTotalDoses;
-    protected Concept concept = AdherenceService.GENERIC_CONCEPT;
+    protected Concept concept = AdherenceServiceImpl.GENERIC_CONCEPT;
     private Map<String, Object> meta = new HashMap<String, Object>();
 
     public AdherenceLog() {
@@ -63,8 +63,7 @@ public class AdherenceLog extends MotechBaseDataObject {
     }
 
     public static AdherenceLog create(String externalId, Concept concept, Map<String, Object> meta, LocalDate today, int dosesTaken) {
-        AdherenceLog newLog = initialize(meta, AdherenceLog.create(externalId, concept, today), dosesTaken);
-        return newLog;
+        return initialize(meta, AdherenceLog.create(externalId, concept, today), dosesTaken);
     }
 
     public static AdherenceLog initialize(Map<String, Object> meta, AdherenceLog latestLog, int dosesTaken) {

@@ -1,16 +1,16 @@
-package org.motechproject.adherence.service;
+package org.motechproject.adherence.service.impl;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.motechproject.adherence.dao.AllAdherenceLogs;
 import org.motechproject.adherence.domain.AdherenceLog;
 import org.motechproject.adherence.domain.Concept;
 import org.motechproject.adherence.domain.ErrorFunction;
+import org.motechproject.adherence.repository.AllAdherenceLogs;
+import org.motechproject.testing.utils.BaseUnitTest;
 import org.motechproject.util.DateUtil;
 
 import java.util.Arrays;
@@ -22,18 +22,19 @@ import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class AdherenceServiceTest extends BaseTest {
+public class AdherenceServiceImplTest extends BaseUnitTest {
 
     @Mock
     private AllAdherenceLogs allAdherenceLogs;
-    private AdherenceService adherenceService;
+
+    private AdherenceServiceImpl adherenceService;
     private String externalId;
     private Concept concept;
 
     @Before
     public void setUp() {
         initMocks(this);
-        adherenceService = new AdherenceService(allAdherenceLogs);
+        adherenceService = new AdherenceServiceImpl(allAdherenceLogs);
         externalId = "externalId";
         concept = new Concept("conceptId", "tokenId");
     }
@@ -79,7 +80,7 @@ public class AdherenceServiceTest extends BaseTest {
     @Test
     public void shouldCorrectErrorWhenRecordingAdherence() {
         DateTime now = new DateTime(2011, 12, 2, 10, 0, 0, 0);
-        mockTime(now);
+        mockCurrentDate(now);
 
         AdherenceLog existingLog = AdherenceLog.create(externalId, concept, now.toLocalDate());
         existingLog.setDosesTaken(1);
@@ -138,7 +139,7 @@ public class AdherenceServiceTest extends BaseTest {
     @Test
     public void shouldCorrectErrorWhenRecordingAdherenceBetweenARange() {
         DateTime now = new DateTime(2011, 12, 2, 10, 0, 0, 0);
-        mockTime(now);
+        mockCurrentDate(now);
 
         AdherenceLog existingLog = AdherenceLog.create(externalId, concept, now.toLocalDate());
         existingLog.setDosesTaken(1);
@@ -161,7 +162,7 @@ public class AdherenceServiceTest extends BaseTest {
     @Test
     public void shouldSaveMetaWhenCorrectingError() {
         DateTime now = new DateTime(2011, 12, 2, 10, 0, 0, 0);
-        mockTime(now);
+        mockCurrentDate(now);
 
         AdherenceLog existingLog = AdherenceLog.create(externalId, concept, now.toLocalDate());
         existingLog.setDosesTaken(1);
@@ -175,7 +176,7 @@ public class AdherenceServiceTest extends BaseTest {
         ArgumentCaptor<AdherenceLog> logCaptor = ArgumentCaptor.forClass(AdherenceLog.class);
         verify(allAdherenceLogs, times(2)).insert(logCaptor.capture());
         List<AdherenceLog> allLogs = logCaptor.getAllValues();
-        assertEquals(true, allLogs.get(0).getMeta().get(AdherenceService.ERROR_CORRECTION));
+        assertEquals(true, allLogs.get(0).getMeta().get(AdherenceServiceImpl.ERROR_CORRECTION));
     }
 
     @Test
@@ -282,7 +283,7 @@ public class AdherenceServiceTest extends BaseTest {
     @Test
     public void shouldRollbackAdherence() {
         LocalDate logDate = DateUtil.newDate(2011, 1, 2);
-        mockTime(DateUtil.newDateTime(logDate, 10, 0, 0));
+        mockCurrentDate(DateUtil.newDateTime(logDate, 10, 0, 0));
 
         AdherenceLog adherenceLog = AdherenceLog.create(externalId, concept, logDate);
         adherenceLog.setId("logId");
@@ -296,7 +297,7 @@ public class AdherenceServiceTest extends BaseTest {
     public void shouldUpdateLogOnRollbackWhenTillDateCutsIt() {
         LocalDate logStartDate = DateUtil.newDate(2011, 1, 1);
         LocalDate logEndDate = DateUtil.newDate(2011, 1, 31);
-        mockTime(DateUtil.newDateTime(logEndDate, 10, 0, 0));
+        mockCurrentDate(DateUtil.newDateTime(logEndDate, 10, 0, 0));
 
         AdherenceLog adherenceLog = AdherenceLog.create(externalId, concept, logStartDate, logEndDate);
         adherenceLog.setId("logId");
@@ -306,8 +307,4 @@ public class AdherenceServiceTest extends BaseTest {
         verify(allAdherenceLogs, never()).remove(adherenceLogs.get(0));
     }
 
-    @After
-    public void tearDown() {
-        resetTime();
-    }
 }
