@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>commcare-integration</artifactId>
-        <groupId>org.motechproject.commcare</groupId>
+        <groupId>org.motechproject</groupId>
         <version>0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.motechproject.commcare</groupId>
+    <groupId>org.motechproject</groupId>
     <artifactId>commcare-case-gateway</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
