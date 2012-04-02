@@ -9,8 +9,8 @@
     <name>commcare-integration</name>
 
     <modules>
-        <module>commcare-case-service</module>
         <module>commcare-case-parser</module>
+        <module>commcare-case-service</module>
         <module>commcare-case-gateway</module>
     </modules>
 
