@@ -11,13 +11,6 @@ import org.xml.sax.InputSource;
 
 import java.io.StringReader;
 
-/**
- * Created by IntelliJ IDEA.
- * User: pchandra
- * Date: 3/22/12
- * Time: 12:34 PM
- * To change this template use File | Settings | File Templates.
- */
 public class CommcareCaseParser<T> {
 
     CaseMapper<T> domainMapper;
@@ -86,7 +79,7 @@ public class CommcareCaseParser<T> {
     }
 
     private void populateValuesForCreation(Case ccCase, Element item) {
-        ccCase.setCase_type_id(getTextValue(item, "case_type_id"));
+        ccCase.setCase_type(getTextValue(item, "case_type"));
         ccCase.setCase_name(getTextValue(item, "case_name"));
     }
 

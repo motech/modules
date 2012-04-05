@@ -3,20 +3,13 @@ package org.motechproject.commcare.domain;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by IntelliJ IDEA.
- * User: pchandra
- * Date: 3/22/12
- * Time: 9:15 PM
- * To change this template use File | Settings | File Templates.
- */
 public class Case {
     private String case_id;
     private String date_modified;
     private String action;
     
     private Map<String,String> fieldValues;
-    private String case_type_id;
+    private String case_type;
     private String case_name;
 
     public String getUser_id() {
@@ -46,8 +39,8 @@ public class Case {
         this.action = action;
     }
 
-    public void setCase_type_id(String case_type_id) {
-        this.case_type_id = case_type_id;
+    public void setCase_type(String case_type) {
+        this.case_type = case_type;
     }
 
     public void setCase_name(String case_name) {
@@ -66,8 +59,8 @@ public class Case {
         return date_modified;
     }
 
-    public String getCase_type_id() {
-        return case_type_id;
+    public String getCase_type() {
+        return case_type;
     }
 
     public String getCase_name() {

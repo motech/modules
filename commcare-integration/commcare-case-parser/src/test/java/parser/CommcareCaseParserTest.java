@@ -8,13 +8,6 @@ import org.motechproject.commcare.parser.CommcareCaseParser;
 
 import java.io.FileNotFoundException;
 
-/**
- * Created by IntelliJ IDEA.
- * User: pchandra
- * Date: 3/24/12
- * Time: 6:38 PM
- * To change this template use File | Settings | File Templates.
- */
 public class CommcareCaseParserTest extends TestCase {
 
     @Test
@@ -30,7 +23,7 @@ public class CommcareCaseParserTest extends TestCase {
     public void testShouldParseCreateAttributesCorrectly() throws FileNotFoundException {
         CommcareCaseParser<Case> parser = new CommcareCaseParser<Case>(Case.class,caseXml());
         Case aCase = parser.parseCase();
-        Assert.assertEquals("houshold_rollout_ONICAF",aCase.getCase_type_id());
+        Assert.assertEquals("houshold_rollout_ONICAF",aCase.getCase_type());
         Assert.assertEquals("Smith",aCase.getCase_name());
     }
 
@@ -44,7 +37,7 @@ public class CommcareCaseParserTest extends TestCase {
     private String caseXml() {
         String caseXml = "<case xmlns=\"http://commcarehq.org/case/transaction/v2\" case_id=\"3F2504E04F8911D39A0C0305E82C3301\" user_id=\"F0183EDA012765103CB106821BBA51A0\" date_modified=\"2011-12-08T13:34:30\" >\n" +
         "<create>"+
-        "<case_type_id>houshold_rollout_ONICAF</case_type_id>"+
+        "<case_type>houshold_rollout_ONICAF</case_type>"+
         "<case_name>Smith</case_name>"+
         "</create>"+
         "<update>"+

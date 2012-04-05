@@ -62,7 +62,7 @@ public class CaseMapper<T> {
     private void removeStaticProperties(BeanMap beanMap) {
         beanMap.remove("case_id");
         beanMap.remove("date_modified");
-        beanMap.remove("case_type_id");
+        beanMap.remove("case_type");
         beanMap.remove("case_name");
     }
 }
