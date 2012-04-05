@@ -81,6 +81,7 @@ public class CommcareCaseParser<T> {
     private void populateValuesForCreation(Case ccCase, Element item) {
         ccCase.setCase_type(getTextValue(item, "case_type"));
         ccCase.setCase_name(getTextValue(item, "case_name"));
+        ccCase.setOwner_id(getTextValue(item, "owner_id"));
     }
 
     private void populateValuesForUpdation(Case ccCase, Element item) {

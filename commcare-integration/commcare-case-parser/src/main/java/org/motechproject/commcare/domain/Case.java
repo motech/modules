@@ -5,18 +5,27 @@ import java.util.Map;
 
 public class Case {
     private String case_id;
+    private String user_id;
     private String date_modified;
+
     private String action;
-    
     private Map<String,String> fieldValues;
     private String case_type;
     private String case_name;
 
+    private String owner_id;
+
+    public String getOwner_id() {
+        return owner_id;
+    }
+
+    public void setOwner_id(String owner_id) {
+        this.owner_id = owner_id;
+    }
+
     public String getUser_id() {
         return user_id;
     }
-
-    private String user_id;
 
     public Case(){
         fieldValues = new HashMap<String, String>();

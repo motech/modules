@@ -64,5 +64,6 @@ public class CaseMapper<T> {
         beanMap.remove("date_modified");
         beanMap.remove("case_type");
         beanMap.remove("case_name");
+        beanMap.remove("owner_id");
     }
 }

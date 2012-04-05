@@ -2,17 +2,11 @@ package org.motechproject.commcare.request;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
-/**
- * Created by IntelliJ IDEA.
- * User: pchandra
- * Date: 4/1/12
- * Time: 3:29 PM
- * To change this template use File | Settings | File Templates.
- */
 @XStreamAlias("Create")
 public class CreateElement {
     private String case_type;
     private String case_name;
+    private String owner_id;
 
     public String getCase_type() {
         return case_type;
@@ -37,6 +31,4 @@ public class CreateElement {
     public void setOwner_id(String owner_id) {
         this.owner_id = owner_id;
     }
-
-    private String owner_id;
 }

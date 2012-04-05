@@ -1,12 +1,5 @@
 package org.motechproject.commcare.request;
 
-/**
- * Created by IntelliJ IDEA.
- * User: pchandra
- * Date: 4/1/12
- * Time: 3:29 PM
- * To change this template use File | Settings | File Templates.
- */
 public class Case {
     private CreateElement create;
 

@@ -17,6 +17,7 @@ public class CommcareCaseParserTest extends TestCase {
         Assert.assertEquals("3F2504E04F8911D39A0C0305E82C3301",aCase.getCase_id());
         Assert.assertEquals("2011-12-08T13:34:30",aCase.getDate_modified());
         Assert.assertEquals("F0183EDA012765103CB106821BBA51A0",aCase.getUser_id());
+        Assert.assertEquals("2Z2504E04F8911D39A0C0305E82C3000",aCase.getOwner_id());
     }
 
     @Test
@@ -39,6 +40,7 @@ public class CommcareCaseParserTest extends TestCase {
         "<create>"+
         "<case_type>houshold_rollout_ONICAF</case_type>"+
         "<case_name>Smith</case_name>"+
+        "<owner_id>2Z2504E04F8911D39A0C0305E82C3000</owner_id>"+
         "</create>"+
         "<update>"+
         "<household_id>24/F23/3</household_id>"+
