@@ -8,14 +8,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.io.Writer;
 
-/**
- * Created by IntelliJ IDEA.
- * User: pchandra
- * Date: 3/22/12
- * Time: 9:04 PM
- * To change this template use File | Settings | File Templates.
- */
-
 public abstract class CaseService<T> {
    private static Logger logger = Logger.getLogger(CaseService.class);
     private Class<T> clazz;

@@ -27,7 +27,7 @@ public class CommcareCaseParser<T> {
 
         InputSource inputSource = new InputSource();
         inputSource.setCharacterStream(new StringReader(xmlDoc));
-        Case ccCase = null;
+        Case ccCase;
         try {
             parser.parse(inputSource);
             ccCase = parseCase(parser.getDocument());
@@ -62,15 +62,17 @@ public class CommcareCaseParser<T> {
           populateValuesForCreation(ccCase, item);
           populateValuesForUpdation(ccCase, item);
 
-      } else if(getMatchingChildNode(item, "update") != null){
-          setCaseAction(ccCase, "UPDATE");
-          populateValuesForUpdation(ccCase,item);
+      } else {
+          if(getMatchingChildNode(item, "update") != null){
+              setCaseAction(ccCase, "UPDATE");
+              populateValuesForUpdation(ccCase,item);
 
-      }else if(getMatchingChildNode(item, "close") != null){
-          setCaseAction(ccCase, "CLOSE");
-          populateValuesForUpdation(ccCase,item);
+          }else {
+              if (getMatchingChildNode(item, "close") != null) {
+                  setCaseAction(ccCase, "CLOSE");
+              }
+          }
       }
-
     }
 
     private void setCaseAction(Case ccCase,String action) {
@@ -108,8 +110,7 @@ public class CommcareCaseParser<T> {
     }
 
     private Node getMatchingChildNode(Element ele, String tagName) {
-        Node element = getMatchingNode(ele,tagName);
-        return element.getFirstChild();
+        return getMatchingNode(ele,tagName);
     }
 
     private Node getMatchingNode(Element ele, String tagName) {

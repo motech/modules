@@ -29,6 +29,21 @@ public class CommcareCaseParserTest extends TestCase {
     }
 
     @Test
+    public void testShouldParseCloseAttributesCorrectly() throws FileNotFoundException {
+        CommcareCaseParser<Case> parser = new CommcareCaseParser<Case>(Case.class,caseXmlForClose());
+        Case aCase = parser.parseCase();
+        assertEquals("CLOSE",parser.getCaseAction());
+        assertEquals("3F2504E04F8911D39A0C0305E82C3301",aCase.getCase_id());
+    }
+
+    private String caseXmlForClose() {
+        return "<?xml version=\"1.0\"?>" +
+                "<case xmlns=\"http://commcarehq.org/case/transaction/v2\" case_id=\"3F2504E04F8911D39A0C0305E82C3301\" date_modified=\"2012-04-03\" user_id=\"F0183EDA012765103CB106821BBA51A0\">" +
+                "    <close />" +
+                "</case>";
+    }
+
+    @Test
     public void testShouldSetActionCorrectly() throws FileNotFoundException {
         CommcareCaseParser<Case> parser = new CommcareCaseParser<Case>(Case.class,caseXml());
         Case aCase = parser.parseCase();
