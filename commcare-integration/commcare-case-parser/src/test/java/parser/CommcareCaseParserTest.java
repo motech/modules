@@ -4,6 +4,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.motechproject.commcare.domain.Case;
+import org.motechproject.commcare.exception.ParserException;
 import org.motechproject.commcare.parser.CommcareCaseParser;
 
 import java.io.FileNotFoundException;
@@ -18,6 +19,81 @@ public class CommcareCaseParserTest extends TestCase {
         Assert.assertEquals("2011-12-08T13:34:30",aCase.getDate_modified());
         Assert.assertEquals("F0183EDA012765103CB106821BBA51A0",aCase.getUser_id());
         Assert.assertEquals("2Z2504E04F8911D39A0C0305E82C3000",aCase.getOwner_id());
+    }
+
+    @Test
+    public void testShouldThrowExceptionIfCaseIdIsMissing() {
+        String xmlDocument =  "<case xmlns=\"http://commcarehq.org/case/transaction/v2\" case_id1=\"3F2504E04F8911D39A0C0305E82C3301\" user_id=\"F0183EDA012765103CB106821BBA51A0\" date_modified=\"2011-12-08T13:34:30\" >\n" +
+                "<create>"+
+                "<case_type>houshold_rollout_ONICAF</case_type>"+
+                "<case_name>Smith</case_name>"+
+                "<owner_id>2Z2504E04F8911D39A0C0305E82C3000</owner_id>"+
+                "</create>"+
+                "</case>";
+        CommcareCaseParser<Case> parser = new CommcareCaseParser<Case>(Case.class, xmlDocument);
+        try{
+            Case aCase = parser.parseCase();
+            fail("Expecting parser exception");
+        }
+        catch (ParserException ex){
+            Assert.assertEquals("Mandatory field case_id is missing", ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testShouldThrowExceptionIfUserIdIsMissing() {
+        String xmlDocument =  "<case xmlns=\"http://commcarehq.org/case/transaction/v2\" case_id=\"3F2504E04F8911D39A0C0305E82C3301\" user_Id=\"F0183EDA012765103CB106821BBA51A0\" date_modified=\"2011-12-08T13:34:30\" >\n" +
+                "<create>"+
+                "<case_type>houshold_rollout_ONICAF</case_type>"+
+                "<case_name>Smith</case_name>"+
+                "<owner_id>2Z2504E04F8911D39A0C0305E82C3000</owner_id>"+
+                "</create>"+
+                "</case>";
+        CommcareCaseParser<Case> parser = new CommcareCaseParser<Case>(Case.class, xmlDocument);
+        try{
+            Case aCase = parser.parseCase();
+            fail("Expecting parser exception");
+        }
+        catch (ParserException ex){
+            Assert.assertEquals("Mandatory field user_id is missing", ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testShouldThrowExceptionIfCaseTypeIsMissing() {
+        String xmlDocument =  "<case xmlns=\"http://commcarehq.org/case/transaction/v2\" case_id=\"3F2504E04F8911D39A0C0305E82C3301\" user_id=\"F0183EDA012765103CB106821BBA51A0\" date_modified=\"2011-12-08T13:34:30\" >\n" +
+                "<create>"+
+                "<case_name>Smith</case_name>"+
+                "<owner_id>2Z2504E04F8911D39A0C0305E82C3000</owner_id>"+
+                "</create>"+
+                "</case>";
+        CommcareCaseParser<Case> parser = new CommcareCaseParser<Case>(Case.class, xmlDocument);
+        try{
+            Case aCase = parser.parseCase();
+            fail("Expecting parser exception");
+        }
+        catch (ParserException ex){
+            Assert.assertEquals("Mandatory field case_type is missing", ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testShouldThrowExceptionIfOwnerIdIsMissing() {
+        String xmlDocument =  "<case xmlns=\"http://commcarehq.org/case/transaction/v2\" case_id=\"3F2504E04F8911D39A0C0305E82C3301\" user_id=\"F0183EDA012765103CB106821BBA51A0\" date_modified=\"2011-12-08T13:34:30\" >\n" +
+                "<create>"+
+                "<case_type>houshold_rollout_ONICAF</case_type>"+
+                "<case_name>Smith</case_name>"+
+                "<owner_id></owner_id>"+
+                "</create>"+
+                "</case>";
+        CommcareCaseParser<Case> parser = new CommcareCaseParser<Case>(Case.class, xmlDocument);
+        try{
+            Case aCase = parser.parseCase();
+            fail("Expecting parser exception");
+        }
+        catch (ParserException ex){
+            Assert.assertEquals("Mandatory field owner_id is missing", ex.getMessage());
+        }
     }
 
     @Test

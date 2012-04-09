@@ -8,6 +8,9 @@
     <version>0.1-SNAPSHOT</version>
     <name>commcare-integration</name>
 
+    <properties>
+        <motech.version>0.9-SNAPSHOT</motech.version>
+    </properties>
     <modules>
         <module>commcare-case-parser</module>
         <module>commcare-case-service</module>
@@ -80,6 +83,11 @@
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-common</artifactId>
+            <version>${motech.version}</version>
         </dependency>
     </dependencies>
 </project>
