@@ -9,7 +9,7 @@
     <name>commcare-integration</name>
 
     <properties>
-        <motech.version>0.9-SNAPSHOT</motech.version>
+        <motech.version>0.10-SNAPSHOT</motech.version>
     </properties>
     <modules>
         <module>commcare-case-parser</module>

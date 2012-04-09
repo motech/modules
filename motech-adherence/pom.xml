@@ -13,7 +13,7 @@
 
     <properties>
         <spring.version>3.0.5.RELEASE</spring.version>
-        <motech-platform.version>0.9-SNAPSHOT</motech-platform.version>
+        <motech-platform.version>0.10-SNAPSHOT</motech-platform.version>
     </properties>
 
     <dependencies>
