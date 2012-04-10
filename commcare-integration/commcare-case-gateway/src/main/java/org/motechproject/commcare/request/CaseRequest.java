@@ -12,19 +12,11 @@ public class CaseRequest {
 
     private String case_id;
 
-    public CaseRequest(String caseId, String userId, String dateModified, CreateElement createElement, UpdateElement updateElement) {
-        case_id = caseId;
-        user_id = userId;
-        date_modified = dateModified;
-        this.createElement = createElement;
-        this.updateElement = updateElement;
-        this.xmlns="http://commcarehq.org/case/transaction/v2";
-    }
-
     public CaseRequest(String caseId, String userId, String dateModified) {
         this.case_id = caseId;
         this.user_id = userId;
         this.date_modified = dateModified;
+        this.xmlns="http://commcarehq.org/case/transaction/v2";
     }
 
     public String getXmlns() {

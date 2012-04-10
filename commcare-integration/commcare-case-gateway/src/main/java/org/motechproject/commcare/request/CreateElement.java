@@ -2,7 +2,7 @@ package org.motechproject.commcare.request;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
-@XStreamAlias("Create")
+@XStreamAlias("create")
 public class CreateElement {
     private String case_type;
     private String case_name;

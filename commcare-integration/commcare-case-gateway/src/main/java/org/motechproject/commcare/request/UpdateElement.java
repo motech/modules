@@ -2,14 +2,7 @@ package org.motechproject.commcare.request;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
-/**
- * Created by IntelliJ IDEA.
- * User: pchandra
- * Date: 4/1/12
- * Time: 3:29 PM
- * To change this template use File | Settings | File Templates.
- */
-@XStreamAlias("Update")
+@XStreamAlias("update")
 public class UpdateElement {
     private String task_id;
     private String date_eligible;

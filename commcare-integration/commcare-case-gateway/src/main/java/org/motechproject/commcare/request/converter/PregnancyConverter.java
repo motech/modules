@@ -7,13 +7,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.motechproject.commcare.request.Pregnancy;
 
-/**
- * Created by IntelliJ IDEA.
- * User: pchandra
- * Date: 4/1/12
- * Time: 8:21 PM
- * To change this template use File | Settings | File Templates.
- */
 public class PregnancyConverter implements Converter{
     @Override
     public void marshal(Object o, HierarchicalStreamWriter writer, MarshallingContext marshallingContext) {

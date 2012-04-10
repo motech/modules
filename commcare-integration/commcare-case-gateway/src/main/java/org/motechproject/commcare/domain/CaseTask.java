@@ -1,12 +1,7 @@
-package org.motechproject.commcare.request;
+package org.motechproject.commcare.domain;
 
-/**
- * Created by IntelliJ IDEA.
- * User: pchandra
- * Date: 4/2/12
- * Time: 4:13 AM
- * To change this template use File | Settings | File Templates.
- */
+import org.motechproject.commcare.request.Pregnancy;
+
 public class CaseTask {
 
     private String caseType = "task";
@@ -14,7 +9,7 @@ public class CaseTask {
     private String ownerId;
     private String caseId;
     private String userId;
-    private String dateModified;
+    private String currentTime;
     private String taskId;
     private String dateEligible;
     private String dateExpires;
@@ -65,12 +60,12 @@ public class CaseTask {
         this.userId = userId;
     }
 
-    public String getDateModified() {
-        return dateModified;
+    public String getCurrentTime() {
+        return currentTime;
     }
 
-    public void setDateModified(String dateModified) {
-        this.dateModified = dateModified;
+    public void setCurrentTime(String currentTime) {
+        this.currentTime = currentTime;
     }
 
     public String getTaskId() {
@@ -111,7 +106,7 @@ public class CaseTask {
             return false;
         if (dateExpires != null ? !dateExpires.equals(caseTask.dateExpires) : caseTask.dateExpires != null)
             return false;
-        if (dateModified != null ? !dateModified.equals(caseTask.dateModified) : caseTask.dateModified != null)
+        if (currentTime != null ? !currentTime.equals(caseTask.currentTime) : caseTask.currentTime != null)
             return false;
         if (ownerId != null ? !ownerId.equals(caseTask.ownerId) : caseTask.ownerId != null) return false;
         if (pregnancy != null ? !pregnancy.equals(caseTask.pregnancy) : caseTask.pregnancy != null) return false;
@@ -128,7 +123,7 @@ public class CaseTask {
         result = 31 * result + (ownerId != null ? ownerId.hashCode() : 0);
         result = 31 * result + (caseId != null ? caseId.hashCode() : 0);
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
-        result = 31 * result + (dateModified != null ? dateModified.hashCode() : 0);
+        result = 31 * result + (currentTime != null ? currentTime.hashCode() : 0);
         result = 31 * result + (taskId != null ? taskId.hashCode() : 0);
         result = 31 * result + (dateEligible != null ? dateEligible.hashCode() : 0);
         result = 31 * result + (dateExpires != null ? dateExpires.hashCode() : 0);

@@ -1,15 +1,10 @@
 package org.motechproject.commcare.request;
 
-/**
- * Created by IntelliJ IDEA.
- * User: pchandra
- * Date: 4/9/12
- * Time: 10:15 PM
- * To change this template use File | Settings | File Templates.
- */
+
 public class CommcareRequestData {
     String xmlns;
     MetaElement meta;
+
     CaseRequest ccCase;
 
     public CommcareRequestData(String xmlns, MetaElement meta, CaseRequest ccCase) {
