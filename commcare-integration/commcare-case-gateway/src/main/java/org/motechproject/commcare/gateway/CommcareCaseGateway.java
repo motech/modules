@@ -4,6 +4,7 @@ package org.motechproject.commcare.gateway;
 //import org.motechproject.commcare.utils.CaseMapper;
 
 import org.motechproject.commcare.request.CaseTask;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -15,6 +16,7 @@ import java.net.URI;
  * Time: 9:54 AM
  * To change this template use File | Settings | File Templates.
  */
+@Component
 public class CommcareCaseGateway{
 
     private final CaseTaskXmlConverter caseTaskXmlConverter = new CaseTaskXmlConverter();
