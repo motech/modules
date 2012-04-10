@@ -2,7 +2,7 @@ package org.motechproject.commcare.domain;
 
 public class CaseTask {
 
-    private String caseType = "task";
+    private String caseType;
     private String caseName;
     private String ownerId;
     private String caseId;
@@ -18,6 +18,7 @@ public class CaseTask {
         return clientCaseId;
     }
 
+
     public void setClientCaseId(String clientCaseId) {
         this.clientCaseId = clientCaseId;
     }
@@ -32,6 +33,10 @@ public class CaseTask {
 
     public String getCaseType() {
         return caseType;
+    }
+
+    public void setCaseType(String caseType) {
+        this.caseType = caseType;
     }
 
     public String getCaseName() {

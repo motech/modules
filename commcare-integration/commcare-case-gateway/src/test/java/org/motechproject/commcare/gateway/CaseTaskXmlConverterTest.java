@@ -73,6 +73,7 @@ public class CaseTaskXmlConverterTest {
     private CaseTask createCaseTask(String caseId, String motherCaseId, String taskId, String dateEligible, String dateExpires, String currentTime) {
         CaseTask caseTask = new CaseTask();
         caseTask.setCaseId(caseId);
+        caseTask.setCaseType("task");
         caseTask.setCaseName("TT 2");
         caseTask.setOwnerId(ownerId);
         caseTask.setCurrentTime(currentTime);
