@@ -6,9 +6,11 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 import org.motechproject.commcare.domain.CaseTask;
 import org.motechproject.commcare.request.*;
 import org.motechproject.commcare.request.converter.PregnancyConverter;
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
+@Component
 public class CaseTaskXmlConverter {
 
     public static String motechUserId = "ananya-care";
@@ -31,8 +33,7 @@ public class CaseTaskXmlConverter {
         UpdateElement update = new UpdateElement(task.getTaskId(), task.getDateEligible(), task.getDateExpires());
         ccCase.setUpdateElement(update);
 
-        Pregnancy pregnancy = pregnancy(task);
-        Index index = new Index(pregnancy);
+        Index index = new Index(new Pregnancy(task.getClientCaseId(), task.getClientCaseType()));
         ccCase.setIndex(index);
 
         return ccCase;
@@ -40,12 +41,6 @@ public class CaseTaskXmlConverter {
 
     private CaseRequest createCase(CaseTask task) {
         return new CaseRequest(task.getCaseId(),task.getUserId(),task.getCurrentTime());
-    }
-
-    private Pregnancy pregnancy(CaseTask task) {
-        if(task.getPregnancy() == null)
-            return  null;
-        return new Pregnancy(task.getPregnancy().getPregnancy_id(),task.getPregnancy().getCase_type());
     }
 
     private String convertToXml(CommcareRequestData request) {

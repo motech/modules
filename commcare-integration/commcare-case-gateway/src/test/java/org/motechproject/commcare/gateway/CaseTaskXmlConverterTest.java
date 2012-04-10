@@ -3,7 +3,6 @@ package org.motechproject.commcare.gateway;
 import org.joda.time.DateTimeZone;
 import org.junit.Test;
 import org.motechproject.commcare.domain.CaseTask;
-import org.motechproject.commcare.request.Pregnancy;
 import org.motechproject.util.DateUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -72,7 +71,6 @@ public class CaseTaskXmlConverterTest {
     }
 
     private CaseTask createCaseTask(String caseId, String motherCaseId, String taskId, String dateEligible, String dateExpires, String currentTime) {
-        Pregnancy pregnancy = new Pregnancy(motherCaseId, pregnancyCaseType);
         CaseTask caseTask = new CaseTask();
         caseTask.setCaseId(caseId);
         caseTask.setCaseName("TT 2");
@@ -80,7 +78,8 @@ public class CaseTaskXmlConverterTest {
         caseTask.setCurrentTime(currentTime);
         caseTask.setUserId(CaseTaskXmlConverter.motechUserId);
         caseTask.setTaskId(taskId);
-        caseTask.setPregnancy(pregnancy);
+        caseTask.setClientCaseId(motherCaseId);
+        caseTask.setClientCaseType(pregnancyCaseType);
         caseTask.setDateEligible(dateEligible);
         caseTask.setDateExpires(dateExpires);
         return caseTask;
