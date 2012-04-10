@@ -18,16 +18,13 @@ public class PregnancyConverter implements Converter{
     @Override
     public void marshal(Object o, HierarchicalStreamWriter writer, MarshallingContext marshallingContext) {
         Pregnancy pregnancy = (Pregnancy) o;
-        //writer.startNode("pregnancy_id");
         writer.addAttribute("case_type","pregnancy");
         writer.setValue(pregnancy.getPregnancy_id());
-
-        //writer.endNode();
     }
 
     @Override
     public Object unmarshal(HierarchicalStreamReader hierarchicalStreamReader, UnmarshallingContext unmarshallingContext) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override

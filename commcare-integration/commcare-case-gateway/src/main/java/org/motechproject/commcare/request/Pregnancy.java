@@ -11,6 +11,11 @@ public class Pregnancy {
     private String case_type;
     private String pregnancy_id;
 
+    public Pregnancy(String pregnancyId, String caseType) {
+        this.pregnancy_id = pregnancyId;
+        this.case_type = caseType;
+    }
+
     public String getCase_type() {
         return case_type;
     }

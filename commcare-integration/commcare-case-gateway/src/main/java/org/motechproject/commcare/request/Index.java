@@ -8,6 +8,10 @@ package org.motechproject.commcare.request;
  * To change this template use File | Settings | File Templates.
  */
 public class Index {
+    public Index(Pregnancy pregnancy) {
+        this.pregnancy_id = pregnancy;
+    }
+
     public Pregnancy getPregnancy_id() {
         return pregnancy_id;
     }

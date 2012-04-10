@@ -14,6 +14,12 @@ public class UpdateElement {
     private String task_id;
     private String date_eligible;
 
+    public UpdateElement(String taskId, String dateEligible, String dateExpires) {
+        this.task_id = taskId;
+        this.date_eligible = dateEligible;
+        this.date_expires = dateExpires;
+    }
+
     public String getTask_id() {
         return task_id;
     }

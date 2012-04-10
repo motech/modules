@@ -9,7 +9,7 @@ package org.motechproject.commcare.request;
  */
 public class CaseTask {
 
-    private String caseType = "Task";
+    private String caseType = "task";
     private String caseName;
     private String ownerId;
     private String caseId;
@@ -17,6 +17,9 @@ public class CaseTask {
     private String dateModified;
     private String taskId;
     private String dateEligible;
+    private String dateExpires;
+
+    private Pregnancy pregnancy;
 
     public Pregnancy getPregnancy() {
         return pregnancy;
@@ -25,8 +28,6 @@ public class CaseTask {
     public void setPregnancy(Pregnancy pregnancy) {
         this.pregnancy = pregnancy;
     }
-
-    private Pregnancy pregnancy;
 
     public String getCaseType() {
         return caseType;
@@ -96,5 +97,42 @@ public class CaseTask {
         this.dateExpires = dateExpires;
     }
 
-    private String dateExpires;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CaseTask caseTask = (CaseTask) o;
+
+        if (caseId != null ? !caseId.equals(caseTask.caseId) : caseTask.caseId != null) return false;
+        if (caseName != null ? !caseName.equals(caseTask.caseName) : caseTask.caseName != null) return false;
+        if (caseType != null ? !caseType.equals(caseTask.caseType) : caseTask.caseType != null) return false;
+        if (dateEligible != null ? !dateEligible.equals(caseTask.dateEligible) : caseTask.dateEligible != null)
+            return false;
+        if (dateExpires != null ? !dateExpires.equals(caseTask.dateExpires) : caseTask.dateExpires != null)
+            return false;
+        if (dateModified != null ? !dateModified.equals(caseTask.dateModified) : caseTask.dateModified != null)
+            return false;
+        if (ownerId != null ? !ownerId.equals(caseTask.ownerId) : caseTask.ownerId != null) return false;
+        if (pregnancy != null ? !pregnancy.equals(caseTask.pregnancy) : caseTask.pregnancy != null) return false;
+        if (taskId != null ? !taskId.equals(caseTask.taskId) : caseTask.taskId != null) return false;
+        if (userId != null ? !userId.equals(caseTask.userId) : caseTask.userId != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = caseType != null ? caseType.hashCode() : 0;
+        result = 31 * result + (caseName != null ? caseName.hashCode() : 0);
+        result = 31 * result + (ownerId != null ? ownerId.hashCode() : 0);
+        result = 31 * result + (caseId != null ? caseId.hashCode() : 0);
+        result = 31 * result + (userId != null ? userId.hashCode() : 0);
+        result = 31 * result + (dateModified != null ? dateModified.hashCode() : 0);
+        result = 31 * result + (taskId != null ? taskId.hashCode() : 0);
+        result = 31 * result + (dateEligible != null ? dateEligible.hashCode() : 0);
+        result = 31 * result + (dateExpires != null ? dateExpires.hashCode() : 0);
+        result = 31 * result + (pregnancy != null ? pregnancy.hashCode() : 0);
+        return result;
+    }
 }

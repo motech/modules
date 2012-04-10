@@ -8,6 +8,12 @@ public class CreateElement {
     private String case_name;
     private String owner_id;
 
+    public CreateElement(String caseType, String caseName, String ownerId) {
+        this.case_type = caseType;
+        this.case_name = caseName;
+        this.owner_id = ownerId;
+    }
+
     public String getCase_type() {
         return case_type;
     }
