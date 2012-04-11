@@ -14,7 +14,7 @@
     <context:annotation-config/>
 
 
-    <context:component-scan base-package="org.motechproject.commcare.gateway"/>
+    <context:component-scan base-package="org.motechproject.casexml.gateway"/>
 
 
 
