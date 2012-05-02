@@ -16,9 +16,7 @@ public class DosageLog extends MotechBaseDataObject {
     @NotNull
     private String treatmentCourseId;
     @NotNull
-    private LocalDate fromDate;
-    @NotNull
-    private LocalDate toDate;
+    private LocalDate dosageDate;
     @NotNull
     private int doseTakenCount;
     @NotNull
@@ -30,12 +28,11 @@ public class DosageLog extends MotechBaseDataObject {
         super();
     }
 
-    public DosageLog(String patientId, String treatmentCourseId, LocalDate fromDate, LocalDate toDate, int doseTakenCount, int idealDoseCount, Map<String, String> metaData) {
+    public DosageLog(String patientId, String treatmentCourseId, LocalDate dosageDate, int doseTakenCount, int idealDoseCount, Map<String, String> metaData) {
         super();
         setPatientId(patientId);
         setTreatmentCourseId(treatmentCourseId);
-        setFromDate(fromDate);
-        setToDate(toDate);
+        setDosageDate(dosageDate);
         setDoseTakenCount(doseTakenCount);
         setIdealDoseCount(idealDoseCount);
         setMetaData(metaData);
@@ -58,21 +55,12 @@ public class DosageLog extends MotechBaseDataObject {
         return this;
     }
 
-    public LocalDate getFromDate() {
-        return fromDate;
+    public LocalDate getDosageDate() {
+        return dosageDate;
     }
 
-    public DosageLog setFromDate(LocalDate fromDate) {
-        this.fromDate = fromDate;
-        return this;
-    }
-
-    public LocalDate getToDate() {
-        return toDate;
-    }
-
-    public DosageLog setToDate(LocalDate toDate) {
-        this.toDate = toDate;
+    public DosageLog setDosageDate(LocalDate dosageDate) {
+        this.dosageDate = dosageDate;
         return this;
     }
 

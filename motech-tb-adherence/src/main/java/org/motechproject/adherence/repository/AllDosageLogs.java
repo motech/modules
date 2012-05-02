@@ -24,7 +24,7 @@ public class AllDosageLogs extends MotechBaseRepository<DosageLog> {
 
     @Override
     public void add(DosageLog dosageLog) {
-        DosageLog existingLog = getBy(dosageLog.getPatientId(), dosageLog.getTreatmentCourseId(), dosageLog.getFromDate(), dosageLog.getToDate());
+        DosageLog existingLog = getBy(dosageLog.getPatientId(), dosageLog.getTreatmentCourseId(), dosageLog.getDosageDate());
         if (existingLog == null) {
             super.add(dosageLog);
         } else {
@@ -36,21 +36,21 @@ public class AllDosageLogs extends MotechBaseRepository<DosageLog> {
         }
     }
 
-    @View(name = "byPatientIdAndTreatmentCourseIdAndDateRange", map = "function(doc) {if (doc.type =='DosageLog') {emit([doc.patientId, doc.treatmentCourseId, doc.fromDate, doc.toDate], doc._id);}}")
-    private DosageLog getBy(String patientId, String treatmentCourseId, LocalDate fromDate, LocalDate toDate) {
-        final ComplexKey key = ComplexKey.of(patientId, treatmentCourseId, fromDate, toDate);
+    @View(name = "byPatientIdAndTreatmentCourseIdAndDateRange", map = "function(doc) {if (doc.type =='DosageLog') {emit([doc.patientId, doc.treatmentCourseId, doc.dosageDate], doc._id);}}")
+    private DosageLog getBy(String patientId, String treatmentCourseId, LocalDate dosageDate) {
+        final ComplexKey key = ComplexKey.of(patientId, treatmentCourseId, dosageDate);
         ViewQuery q = createQuery("byPatientIdAndTreatmentCourseIdAndDateRange").key(key).includeDocs(true);
         return singleResult(db.queryView(q, DosageLog.class));
     }
 
     public List<DosageLog> getAllBy(String patientId, String treatmentCourseId, LocalDate fromDate, LocalDate toDate) {
-        final ComplexKey startKey = ComplexKey.of(patientId, treatmentCourseId, fromDate, null);
-        final ComplexKey endKey = ComplexKey.of(patientId, treatmentCourseId, toDate, ComplexKey.emptyObject());
+        final ComplexKey startKey = ComplexKey.of(patientId, treatmentCourseId, fromDate);
+        final ComplexKey endKey = ComplexKey.of(patientId, treatmentCourseId, toDate);
         ViewQuery q = createQuery("byPatientIdAndTreatmentCourseIdAndDateRange").startKey(startKey).endKey(endKey).includeDocs(true);
         return db.queryView(q, DosageLog.class);
     }
 
-    @View(name = "byDateRange", map = "function(doc) {if (doc.type =='DosageLog') {emit([doc.fromDate, doc.toDate], doc._id);}}")
+    @View(name = "byDateRange", map = "function(doc) {if (doc.type =='DosageLog') {emit([doc.dosageDate], doc._id);}}")
     public List<DosageLog> getAllInDateRange(LocalDate fromDate, LocalDate toDate) {
         final ComplexKey startKey = ComplexKey.of(fromDate);
         final ComplexKey endKey = ComplexKey.of(toDate);
@@ -60,8 +60,8 @@ public class AllDosageLogs extends MotechBaseRepository<DosageLog> {
 
     @View(name = "patientSummaryByDateRange", file = "patientSummaryByDateRange.json")
     public DosageSummary getPatientDosageSummary(String patientId, String treatmentCourseId, LocalDate fromDate, LocalDate toDate) {
-        final ComplexKey startKey = ComplexKey.of(patientId, treatmentCourseId, fromDate, null);
-        final ComplexKey endKey = ComplexKey.of(patientId, treatmentCourseId, toDate, ComplexKey.emptyObject());
+        final ComplexKey startKey = ComplexKey.of(patientId, treatmentCourseId, fromDate);
+        final ComplexKey endKey = ComplexKey.of(patientId, treatmentCourseId, toDate);
         ViewQuery q = createQuery("patientSummaryByDateRange").startKey(startKey).endKey(endKey).reduce(true).groupLevel(2);
         List<DosageSummary> resultSet = db.queryView(q, DosageSummary.class);
         return (resultSet == null || resultSet.isEmpty()) ? null : resultSet.get(0);

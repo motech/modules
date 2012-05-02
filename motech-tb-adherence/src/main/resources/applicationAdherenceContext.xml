@@ -18,7 +18,7 @@
     </bean>
 
     <bean id="adherenceDbConnector" class="org.ektorp.impl.StdCouchDbConnector">
-        <constructor-arg value="motech-adherence"/>
+        <constructor-arg value="motech-tb-adherence"/>
         <constructor-arg ref="adherenceDbInstance"/>
     </bean>
 </beans>

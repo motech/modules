@@ -4,11 +4,10 @@ import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Test;
 import org.motechproject.adherence.common.SpringIntegrationTest;
-import org.motechproject.util.DateUtil;
 import org.motechproject.adherence.domain.DosageLog;
 import org.motechproject.adherence.domain.DosageSummary;
+import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -33,7 +32,7 @@ public class AllDosageLogsIT extends SpringIntegrationTest {
 
     @Test
     public void shouldAddDosageLogs_WhenLogDoesNotExistForGivenDateRangeAndPatientId() {
-        DosageLog dosageLog = new DosageLog("patientId", "treatmentCourseId", DateUtil.today(), DateUtil.today(), 3, 3, null);
+        DosageLog dosageLog = new DosageLog("patientId", "treatmentCourseId", DateUtil.today(), 3, 3, null);
         allDosageLogs.add(dosageLog);
         assertNotNull(allDosageLogs.get(dosageLog.getId()));
     }
@@ -44,14 +43,14 @@ public class AllDosageLogsIT extends SpringIntegrationTest {
             this.put("key1", "value1");
             this.put("key2", "value2");
         }};
-        DosageLog existingDosageLog = new DosageLog("patientId", "treatmentCourseId", DateUtil.today(), DateUtil.today(), 3, 3, metaData);
+        DosageLog existingDosageLog = new DosageLog("patientId", "treatmentCourseId", DateUtil.today(), 3, 3, metaData);
         allDosageLogs.add(existingDosageLog);
 
         //New log has same patientId, treatmentCourseId, startDate, endDate as existing log
         Map<String, String> updatedMetaData = new HashMap<String, String>() {{
             this.put("key2", "newValue2");
         }};
-        DosageLog dosageLog = new DosageLog("patientId", "treatmentCourseId", DateUtil.today(), DateUtil.today(), 5, 10, updatedMetaData);
+        DosageLog dosageLog = new DosageLog("patientId", "treatmentCourseId", DateUtil.today(), 5, 10, updatedMetaData);
         allDosageLogs.add(dosageLog);
 
         //A new log is not created in the db
@@ -140,8 +139,8 @@ public class AllDosageLogsIT extends SpringIntegrationTest {
         assertEquals(IDEAL_DOSE_COUNT * 26, dosageSummary.getTotalIdealDoseCount());
     }
 
-    private DosageLog addLog(String patientId, String treatmentCourseId, int doseTakenCount, LocalDate fromDate) {
-        DosageLog dosageLog = new DosageLog(patientId, treatmentCourseId, fromDate, fromDate, doseTakenCount, IDEAL_DOSE_COUNT, null);
+    private DosageLog addLog(String patientId, String treatmentCourseId, int doseTakenCount, LocalDate dosageDate) {
+        DosageLog dosageLog = new DosageLog(patientId, treatmentCourseId, dosageDate, doseTakenCount, IDEAL_DOSE_COUNT, null);
         allDosageLogs.add(dosageLog);
         return dosageLog;
     }

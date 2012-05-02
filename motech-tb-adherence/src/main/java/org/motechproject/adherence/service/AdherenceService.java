@@ -20,8 +20,8 @@ public class AdherenceService {
         this.allDosageLogs = allDosageLogs;
     }
 
-    public DosageLog recordAdherence(String patientId, String treatmentCourseId, LocalDate startDate, LocalDate endDate, int doseTakenCount, int idealDoseCount, Map<String, String> metaData) {
-        DosageLog dosageLog = new DosageLog(patientId, treatmentCourseId, startDate, endDate, doseTakenCount, idealDoseCount, metaData);
+    public DosageLog recordAdherence(String patientId, String treatmentCourseId, LocalDate dosageDate, int doseTakenCount, int idealDoseCount, Map<String, String> metaData) {
+        DosageLog dosageLog = new DosageLog(patientId, treatmentCourseId, dosageDate, doseTakenCount, idealDoseCount, metaData);
         allDosageLogs.add(dosageLog);
         return dosageLog;
     }
