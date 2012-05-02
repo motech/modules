@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>motech-tb-adherence</artifactId>
+    <name>motech-tb-adherence</name>
 
     <properties>
         <spring.version>3.0.5.RELEASE</spring.version>
