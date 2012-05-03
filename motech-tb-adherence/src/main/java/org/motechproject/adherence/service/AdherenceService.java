@@ -1,41 +1,40 @@
 package org.motechproject.adherence.service;
 
-import org.joda.time.LocalDate;
-import org.motechproject.adherence.domain.DosageLog;
-import org.motechproject.adherence.domain.DosageSummary;
-import org.motechproject.adherence.repository.AllDosageLogs;
+import org.joda.time.DateTime;
+import org.motechproject.adherence.contract.AdherenceRecords;
+import org.motechproject.adherence.contract.AdherenceSummary;
+import org.motechproject.adherence.contract.RecordAdherenceRequest;
+import org.motechproject.adherence.domain.AdherenceLog;
+import org.motechproject.adherence.repository.AllAdherenceLogs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class AdherenceService {
 
-    private AllDosageLogs allDosageLogs;
+    private AllAdherenceLogs allAdherenceLogs;
 
     @Autowired
-    public AdherenceService(AllDosageLogs allDosageLogs) {
-        this.allDosageLogs = allDosageLogs;
+    public AdherenceService(AllAdherenceLogs allAdherenceLogs) {
+        this.allAdherenceLogs = allAdherenceLogs;
     }
 
-    public DosageLog recordAdherence(String patientId, String treatmentCourseId, LocalDate dosageDate, int doseTakenCount, int idealDoseCount, Map<String, String> metaData) {
-        DosageLog dosageLog = new DosageLog(patientId, treatmentCourseId, dosageDate, doseTakenCount, idealDoseCount, metaData);
-        allDosageLogs.add(dosageLog);
-        return dosageLog;
+    public void recordAdherence(RecordAdherenceRequest request) {
+        AdherenceLog adherenceLog = new AdherenceLog(request.externalId(), request.treatmentId(), request.asOf());
+        adherenceLog.doseCounts(request.dosesTaken(), request.dosesMissed());
+        adherenceLog.meta(request.meta());
+        allAdherenceLogs.add(adherenceLog);
     }
 
-    public List<DosageLog> getDosageLogs(String patientId, String treatmentCourseId, LocalDate fromDate, LocalDate toDate) {
-        return allDosageLogs.getAllBy(patientId, treatmentCourseId, fromDate, toDate);
+    public AdherenceSummary adherenceAsOf(String externalId, String treatmentId, DateTime asOf) {
+        List<AdherenceLog> adherenceLogs = allAdherenceLogs.findLogsBy(externalId, treatmentId, asOf);
+        return new AdherenceSummary(externalId, treatmentId, asOf, adherenceLogs);
     }
 
-    public List<DosageLog> getDosageLogs(LocalDate fromDate, LocalDate toDate) {
-        return allDosageLogs.getAllInDateRange(fromDate, toDate);
+    public AdherenceRecords adherenceRecords(String externalId, String treatmentId, DateTime asOf) {
+        List<AdherenceLog> adherenceLogs = allAdherenceLogs.findLogsBy(externalId, treatmentId, asOf);
+        return new AdherenceRecords(externalId, treatmentId, adherenceLogs);
     }
-
-    public DosageSummary getPatientDosageSummary(String patientId, String treatmentCourseId, LocalDate fromDate, LocalDate toDate) {
-        return allDosageLogs.getPatientDosageSummary(patientId, treatmentCourseId, fromDate, toDate);
-    }
-
 }
