@@ -24,12 +24,11 @@ public class RecordAdherenceRequest {
 
     public RecordAdherenceRequest dosesTaken(int dosesTaken) {
         this.dosesTaken = dosesTaken;
-        this.dosesMissed = dosesTaken;
         return this;
     }
 
-    public RecordAdherenceRequest dosesMissed(int idealDoses) {
-        this.dosesMissed += idealDoses;
+    public RecordAdherenceRequest dosesMissed(int dosesMissed) {
+        this.dosesMissed = dosesMissed;
         return this;
     }
 
