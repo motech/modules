@@ -2,9 +2,8 @@ package org.motechproject.adherence.domain;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.motechproject.model.MotechBaseDataObject;
-import org.motechproject.util.DateUtil;
 
 import java.util.Map;
 
@@ -15,7 +14,8 @@ public class AdherenceLog extends MotechBaseDataObject {
     private String externalId;
     @JsonProperty
     private String treatmentId;
-    private DateTime asOf;
+    @JsonProperty
+    private LocalDate doseDate;
     @JsonProperty
     private int doseTaken;
     @JsonProperty
@@ -27,11 +27,11 @@ public class AdherenceLog extends MotechBaseDataObject {
         super();
     }
 
-    public AdherenceLog(String externalId, String treatmentId, DateTime asOf) {
+    public AdherenceLog(String externalId, String treatmentId, LocalDate doseDate) {
         super();
         this.externalId = externalId;
         this.treatmentId = treatmentId;
-        this.asOf = asOf;
+        this.doseDate = doseDate;
     }
 
     public AdherenceLog doseCounts(int dosesTaken, int dosesMissed) {
@@ -53,14 +53,8 @@ public class AdherenceLog extends MotechBaseDataObject {
         return treatmentId;
     }
 
-    @JsonProperty
-    public DateTime asOf() {
-        return asOf;
-    }
-
-    @JsonProperty
-    public void asOf(DateTime asOf) {
-        this.asOf = DateUtil.setTimeZone(asOf);
+    public LocalDate doseDate() {
+        return doseDate;
     }
 
     public int doseTaken() {
@@ -86,7 +80,7 @@ public class AdherenceLog extends MotechBaseDataObject {
 
         AdherenceLog that = (AdherenceLog) o;
 
-        if (asOf != null ? !asOf.equals(that.asOf) : that.asOf != null) return false;
+        if (doseDate != null ? !doseDate.equals(that.doseDate) : that.doseDate != null) return false;
         if (externalId != null ? !externalId.equals(that.externalId) : that.externalId != null) return false;
         if (treatmentId != null ? !treatmentId.equals(that.treatmentId) : that.treatmentId != null) return false;
 
@@ -97,7 +91,7 @@ public class AdherenceLog extends MotechBaseDataObject {
     public int hashCode() {
         int result = externalId != null ? externalId.hashCode() : 0;
         result = 31 * result + (treatmentId != null ? treatmentId.hashCode() : 0);
-        result = 31 * result + (asOf != null ? asOf.hashCode() : 0);
+        result = 31 * result + (doseDate != null ? doseDate.hashCode() : 0);
         return result;
     }
 }

@@ -1,6 +1,7 @@
 package org.motechproject.adherence.contract;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.adherence.domain.AdherenceLog;
@@ -18,7 +19,7 @@ public class AdherenceSummaryTest {
 
     String externalId = "externalId";
     String treatmentId = "treatmentId";
-    DateTime asOf = DateUtil.now();
+    LocalDate asOf = DateUtil.today();
 
     @Before
     public void setup() {

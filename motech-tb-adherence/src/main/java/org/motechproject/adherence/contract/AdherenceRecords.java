@@ -1,6 +1,7 @@
 package org.motechproject.adherence.contract;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.motechproject.adherence.domain.AdherenceLog;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class AdherenceRecords {
     private void adherenceRecords(List<AdherenceLog> logs) {
         this.adherenceRecords = new ArrayList<AdherenceRecord>();
         for (AdherenceLog log : logs) {
-            adherenceRecords.add(new AdherenceRecord(log.asOf(), log.doseTaken(), log.idealDoses(), log.meta()));
+            adherenceRecords.add(new AdherenceRecord(log.doseDate(), log.doseTaken(), log.idealDoses(), log.meta()));
         }
     }
 
@@ -36,19 +37,19 @@ public class AdherenceRecords {
 
     public static class AdherenceRecord {
 
-        DateTime recordDate;
+        LocalDate recordDate;
         int dosesTaken;
         int idealDoses;
         Map<String, Object> meta;
 
-        public AdherenceRecord(DateTime recordDate, int dosesTaken, int idealDoses, Map<String, Object> meta) {
+        public AdherenceRecord(LocalDate recordDate, int dosesTaken, int idealDoses, Map<String, Object> meta) {
             this.recordDate = recordDate;
             this.dosesTaken = dosesTaken;
             this.idealDoses = idealDoses;
             this.meta = meta;
         }
 
-        public DateTime recordDate() {
+        public LocalDate recordDate() {
             return recordDate;
         }
 

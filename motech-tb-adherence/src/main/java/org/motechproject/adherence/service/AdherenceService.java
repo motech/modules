@@ -1,6 +1,6 @@
 package org.motechproject.adherence.service;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.motechproject.adherence.contract.AdherenceRecords;
 import org.motechproject.adherence.contract.AdherenceSummary;
 import org.motechproject.adherence.contract.RecordAdherenceRequest;
@@ -21,20 +21,27 @@ public class AdherenceService {
         this.allAdherenceLogs = allAdherenceLogs;
     }
 
-    public void recordAdherence(RecordAdherenceRequest request) {
-        AdherenceLog adherenceLog = new AdherenceLog(request.externalId(), request.treatmentId(), request.asOf());
-        adherenceLog.doseCounts(request.dosesTaken(), request.dosesMissed());
-        adherenceLog.meta(request.meta());
-        allAdherenceLogs.add(adherenceLog);
+    public void recordAdherence(RecordAdherenceRequest... requests) {
+        for (RecordAdherenceRequest request : requests) {
+            AdherenceLog adherenceLog = new AdherenceLog(request.externalId(), request.treatmentId(), request.doseDate());
+            adherenceLog.doseCounts(request.dosesTaken(), request.dosesMissed());
+            adherenceLog.meta(request.meta());
+            allAdherenceLogs.add(adherenceLog);
+        }
     }
 
-    public AdherenceSummary adherenceAsOf(String externalId, String treatmentId, DateTime asOf) {
+    public AdherenceSummary adherenceAsOf(String externalId, String treatmentId, LocalDate asOf) {
         List<AdherenceLog> adherenceLogs = allAdherenceLogs.findLogsBy(externalId, treatmentId, asOf);
         return new AdherenceSummary(externalId, treatmentId, asOf, adherenceLogs);
     }
 
-    public AdherenceRecords adherenceRecords(String externalId, String treatmentId, DateTime asOf) {
+    public AdherenceRecords adherenceRecords(String externalId, String treatmentId, LocalDate asOf) {
         List<AdherenceLog> adherenceLogs = allAdherenceLogs.findLogsBy(externalId, treatmentId, asOf);
+        return new AdherenceRecords(externalId, treatmentId, adherenceLogs);
+    }
+
+    public AdherenceRecords adherenceRecords(String externalId, String treatmentId, LocalDate fromDate, LocalDate toDate) {
+        List<AdherenceLog> adherenceLogs = allAdherenceLogs.findLogsBy(externalId, treatmentId, fromDate, toDate);
         return new AdherenceRecords(externalId, treatmentId, adherenceLogs);
     }
 }

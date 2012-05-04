@@ -1,6 +1,6 @@
 package org.motechproject.adherence.contract;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.motechproject.adherence.domain.AdherenceLog;
 
 import java.util.List;
@@ -9,11 +9,11 @@ public class AdherenceSummary {
 
     private String externalId;
     private String treatmentId;
-    private DateTime asOf;
+    private LocalDate asOf;
     private int totalDosesTaken;
     private int totalIdealDoses;
 
-    public AdherenceSummary(String externalId, String treatmentId, DateTime asOf, List<AdherenceLog> logs) {
+    public AdherenceSummary(String externalId, String treatmentId, LocalDate asOf, List<AdherenceLog> logs) {
         this.externalId = externalId;
         this.treatmentId = treatmentId;
         this.asOf = asOf;
@@ -29,7 +29,7 @@ public class AdherenceSummary {
         return treatmentId;
     }
 
-    public DateTime asOf() {
+    public LocalDate asOf() {
         return asOf;
     }
 

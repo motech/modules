@@ -1,6 +1,7 @@
 package org.motechproject.adherence.contract;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,15 +10,15 @@ public class RecordAdherenceRequest {
 
     String externalId;
     String treatmentId;
-    DateTime asOf;
+    LocalDate doseDate;
     int dosesTaken;
     int dosesMissed;
     Map<String, Object> meta;
 
-    public RecordAdherenceRequest(String externalId, String treatmentId, DateTime asOf) {
+    public RecordAdherenceRequest(String externalId, String treatmentId, LocalDate doseDate) {
         this.externalId = externalId;
         this.treatmentId = treatmentId;
-        this.asOf = asOf;
+        this.doseDate = doseDate;
         dosesTaken = dosesMissed = 0;
         meta = new HashMap<String, Object>();
     }
@@ -54,8 +55,8 @@ public class RecordAdherenceRequest {
         return treatmentId;
     }
 
-    public DateTime asOf() {
-        return asOf;
+    public LocalDate doseDate() {
+        return doseDate;
     }
 
     public int dosesTaken() {

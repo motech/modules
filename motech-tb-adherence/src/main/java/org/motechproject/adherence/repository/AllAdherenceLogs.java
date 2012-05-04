@@ -4,7 +4,7 @@ import org.ektorp.ComplexKey;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.ViewQuery;
 import org.ektorp.support.View;
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.motechproject.adherence.domain.AdherenceLog;
 import org.motechproject.dao.MotechBaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class AllAdherenceLogs extends MotechBaseRepository<AdherenceLog> {
 
     @Override
     public void add(AdherenceLog adherenceLog) {
-        AdherenceLog existingLog = findLogBy(adherenceLog.externalId(), adherenceLog.treatmentId(), adherenceLog.asOf());
+        AdherenceLog existingLog = findLogBy(adherenceLog.externalId(), adherenceLog.treatmentId(), adherenceLog.doseDate());
         if (null == existingLog) {
             super.add(adherenceLog);
         } else {
@@ -32,17 +32,25 @@ public class AllAdherenceLogs extends MotechBaseRepository<AdherenceLog> {
         }
     }
 
-    @View(name = "by_externaId_treatmentId_asOf", map = "function(doc) {if (doc.type =='AdherenceLog') {emit([doc.externalId, doc.treatmentId, doc.asOf], doc._id);}}")
-    public List<AdherenceLog> findLogsBy(String externalId, String treatmentId, DateTime asOf) {
+    @View(name = "by_externaId_treatmentId_andDosageDate", map = "function(doc) {if (doc.type =='AdherenceLog') {emit([doc.externalId, doc.treatmentId, doc.doseDate], doc._id);}}")
+    public List<AdherenceLog> findLogsBy(String externalId, String treatmentId, LocalDate asOf) {
         final ComplexKey startKey = ComplexKey.of(externalId, treatmentId, null);
         final ComplexKey endKey = ComplexKey.of(externalId, treatmentId, asOf);
-        ViewQuery q = createQuery("by_externaId_treatmentId_asOf").startKey(startKey).endKey(endKey).inclusiveEnd(true).includeDocs(true);
+        ViewQuery q = createQuery("by_externaId_treatmentId_andDosageDate").startKey(startKey).endKey(endKey).inclusiveEnd(true).includeDocs(true);
         return db.queryView(q, AdherenceLog.class);
     }
 
-    protected AdherenceLog findLogBy(String externalId, String treatmentId, DateTime asOf) {
+
+    public List<AdherenceLog> findLogsBy(String externalId, String treatmentId, LocalDate fromDate, LocalDate toDate) {
+        final ComplexKey startKey = ComplexKey.of(externalId, treatmentId, fromDate);
+        final ComplexKey endKey = ComplexKey.of(externalId, treatmentId, toDate);
+        ViewQuery q = createQuery("by_externaId_treatmentId_andDosageDate").startKey(startKey).endKey(endKey).inclusiveEnd(true).includeDocs(true);
+        return db.queryView(q, AdherenceLog.class);
+    }
+
+    protected AdherenceLog findLogBy(String externalId, String treatmentId, LocalDate asOf) {
         final ComplexKey key = ComplexKey.of(externalId, treatmentId, asOf);
-        ViewQuery q = createQuery("by_externaId_treatmentId_asOf").key(key).includeDocs(true);
+        ViewQuery q = createQuery("by_externaId_treatmentId_andDosageDate").key(key).includeDocs(true);
         return singleResult(db.queryView(q, AdherenceLog.class));
     }
 
