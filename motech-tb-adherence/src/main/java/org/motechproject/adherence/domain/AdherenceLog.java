@@ -17,14 +17,11 @@ public class AdherenceLog extends MotechBaseDataObject {
     @JsonProperty
     private LocalDate doseDate;
     @JsonProperty
-    private int doseTaken;
-    @JsonProperty
-    private int idealDoses;
+    private int status;
     @JsonProperty
     private Map<String, Object> meta;
 
     public AdherenceLog() {
-        super();
     }
 
     public AdherenceLog(String externalId, String treatmentId, LocalDate doseDate) {
@@ -34,9 +31,8 @@ public class AdherenceLog extends MotechBaseDataObject {
         this.doseDate = doseDate;
     }
 
-    public AdherenceLog doseCounts(int dosesTaken, int dosesMissed) {
-        this.doseTaken = dosesTaken;
-        this.idealDoses = dosesTaken + dosesMissed;
+    public AdherenceLog status(int status) {
+        this.status = status;
         return this;
     }
 
@@ -57,16 +53,8 @@ public class AdherenceLog extends MotechBaseDataObject {
         return doseDate;
     }
 
-    public int doseTaken() {
-        return doseTaken;
-    }
-
-    public int doseMissed() {
-        return idealDoses - doseTaken;
-    }
-
-    public int idealDoses() {
-        return idealDoses;
+    public int status() {
+        return status;
     }
 
     public Map<String, Object> meta() {

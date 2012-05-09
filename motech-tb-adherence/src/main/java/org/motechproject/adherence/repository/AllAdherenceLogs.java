@@ -27,7 +27,7 @@ public class AllAdherenceLogs extends MotechBaseRepository<AdherenceLog> {
         if (null == existingLog) {
             super.add(adherenceLog);
         } else {
-            existingLog.doseCounts(adherenceLog.doseTaken(), adherenceLog.doseMissed());
+            existingLog.status(adherenceLog.status());
             update(existingLog);
         }
     }
