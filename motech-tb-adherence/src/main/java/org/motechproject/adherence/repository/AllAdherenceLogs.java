@@ -54,4 +54,9 @@ public class AllAdherenceLogs extends MotechBaseRepository<AdherenceLog> {
         return singleResult(db.queryView(q, AdherenceLog.class));
     }
 
+    @View(name = "by_dosageDate", map = "function(doc) {if (doc.type =='AdherenceLog') {emit(doc.doseDate, doc._id);}}")
+    public List<AdherenceLog> findLogsAsOf(LocalDate asOf) {
+        ViewQuery q = createQuery("by_dosageDate").endKey(asOf).inclusiveEnd(true).includeDocs(true);
+        return db.queryView(q, AdherenceLog.class);
+    }
 }

@@ -38,4 +38,8 @@ public class AdherenceService {
         List<AdherenceLog> adherenceLogs = allAdherenceLogs.findLogsBy(externalId, treatmentId, fromDate, toDate);
         return new AdherenceRecords(externalId, treatmentId, adherenceLogs);
     }
+
+    public List<AdherenceLog> adherenceLogs(LocalDate asOf) {
+        return allAdherenceLogs.findLogsAsOf(asOf);
+    }
 }

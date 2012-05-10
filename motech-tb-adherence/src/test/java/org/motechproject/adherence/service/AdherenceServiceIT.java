@@ -58,6 +58,22 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
     }
 
     @Test
+    public void shouldFetchAllAdherenceLogsWithinGivenDate() {
+        LocalDate today = DateUtil.today();
+        RecordAdherenceRequest patientOneWithinDateLimit = new RecordAdherenceRequest("externalId1", "treatmentId", today);
+        patientOneWithinDateLimit = patientOneWithinDateLimit.status(1);
+
+        RecordAdherenceRequest patientOneOutsideLimit = new RecordAdherenceRequest("externalId1", "treatmentId", today.plusDays(1));
+        patientOneOutsideLimit = patientOneOutsideLimit.status(1);
+
+        RecordAdherenceRequest patientTwoWithinDateLimit = new RecordAdherenceRequest("externalId2", "treatmentId", today.minusDays(1));
+        patientTwoWithinDateLimit = patientTwoWithinDateLimit.status(1);
+
+        adherenceService.recordAdherence(patientOneOutsideLimit, patientOneWithinDateLimit, patientTwoWithinDateLimit);
+        assertEquals(2, adherenceService.adherenceLogs(today).size());
+    }
+
+    @Test
     public void shouldFetchAdherenceRecordsBetweenTwoDates() {
         LocalDate today = DateUtil.today();
 
