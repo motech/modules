@@ -4,36 +4,55 @@ import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Test;
 import org.motechproject.adherence.common.SpringIntegrationTest;
+import org.motechproject.adherence.domain.AdherenceAuditLog;
 import org.motechproject.adherence.domain.AdherenceLog;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 
 public class AllAdherenceLogsIT extends SpringIntegrationTest {
 
     @Autowired
-    private AllAdherenceLogs allDosageLogs;
+    private AllAdherenceLogs allAdherenceLogs;
+    @Autowired
+    private AllAdherenceAuditLogs allAdherenceAuditLogs;
 
     @After
     public void tearDown() {
-        markForDeletion(allDosageLogs.getAll().toArray());
+        markForDeletion(allAdherenceLogs.getAll().toArray());
+        markForDeletion(allAdherenceAuditLogs.getAll().toArray());
     }
 
     @Test
     public void shouldSaveAdherenceLog() {
         AdherenceLog adherenceLog = new AdherenceLog("externalId", "treatmentId", DateUtil.today());
-        allDosageLogs.add(adherenceLog);
-        assertNotNull(allDosageLogs.get(adherenceLog.getId()));
+        allAdherenceLogs.add(adherenceLog, "user", "web");
+        assertNotNull(allAdherenceLogs.get(adherenceLog.getId()));
     }
 
     @Test
     public void shouldBeIdempotentOnSave() {
         AdherenceLog adherenceLog = new AdherenceLog("externalId", "treatmentId", DateUtil.today());
 
-        allDosageLogs.add(adherenceLog);
-        allDosageLogs.add(adherenceLog);
-        assertEquals(1, allDosageLogs.getAll().size());
+        allAdherenceLogs.add(adherenceLog, "user", "web");
+        allAdherenceLogs.add(adherenceLog, "user", "web");
+        assertEquals(1, allAdherenceLogs.getAll().size());
+    }
+
+    @Test
+    public void shouldCreateAuditLogOnAdd(){
+        AdherenceLog adherenceLog = new AdherenceLog("externalId", "treatmentId", DateUtil.today());
+        allAdherenceLogs.add(adherenceLog, "user", "SMS");
+
+        List<AdherenceAuditLog> auditLogList = allAdherenceAuditLogs.getAll();
+        assertFalse(auditLogList.isEmpty());
+        assertEquals("user", auditLogList.get(0).user());
+        assertEquals("SMS", auditLogList.get(0).source());
+        assertEquals(adherenceLog.getId(), auditLogList.get(0).adherenceLogDocId());
+        assertEquals(adherenceLog.status(), auditLogList.get(0).status());
     }
 
     @Test
@@ -49,7 +68,7 @@ public class AllAdherenceLogsIT extends SpringIntegrationTest {
 
         assertArrayEquals(
                 new AdherenceLog[]{toBeFound},
-                allDosageLogs.findLogsBy("externalId", "treatmentId", today).toArray()
+                allAdherenceLogs.findLogsBy("externalId", "treatmentId", today).toArray()
         );
     }
 
@@ -65,7 +84,7 @@ public class AllAdherenceLogsIT extends SpringIntegrationTest {
         addAll(toBeFound, anotherToBeFound, toBeIgnoredByExternalId, toBeIgnoredByTreatmentId);
 
         LocalDate asOf = today.plusDays(5);
-        assertEquals(2, allDosageLogs.findLogsBy("externalId", "treatmentId", asOf).size());
+        assertEquals(2, allAdherenceLogs.findLogsBy("externalId", "treatmentId", asOf).size());
     }
 
     @Test
@@ -79,13 +98,13 @@ public class AllAdherenceLogsIT extends SpringIntegrationTest {
 
         assertArrayEquals(
                 new AdherenceLog[]{hasDateWithinKeyDate},
-                allDosageLogs.findLogsBy("externalId", "treatmentId", today).toArray()
+                allAdherenceLogs.findLogsBy("externalId", "treatmentId", today).toArray()
         );
     }
 
     private void addAll(AdherenceLog... adherenceLogs) {
         for (AdherenceLog adherenceLog : adherenceLogs) {
-            allDosageLogs.add(adherenceLog);
+            allAdherenceLogs.add(adherenceLog, "user", "web");
         }
     }
 }

@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.adherence.common.SpringIntegrationTest;
 import org.motechproject.adherence.contract.AdherenceData;
+import org.motechproject.adherence.repository.AllAdherenceAuditLogs;
 import org.motechproject.adherence.repository.AllAdherenceLogs;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
 
     @Autowired
     AllAdherenceLogs allAdherenceLogs;
+    @Autowired
+    AllAdherenceAuditLogs allAdherenceAuditLogs;
 
     AdherenceService adherenceService;
 
@@ -27,6 +30,7 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
     @After
     public void tearDown() {
         markForDeletion(allAdherenceLogs.getAll().toArray());
+        markForDeletion(allAdherenceAuditLogs.getAll().toArray());
     }
 
     @Test
@@ -34,7 +38,7 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
         AdherenceData data = new AdherenceData("externalId", "treatmentId", DateUtil.today());
         data = data.status(1);
 
-        adherenceService.recordAdherence(data);
+        adherenceService.recordAdherence("someUser", "TEST", data);
         assertEquals(1, adherenceService.adherenceRecords("externalId", "treatmentId", DateUtil.today()).size());
     }
 
@@ -43,8 +47,8 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
         AdherenceData data = new AdherenceData("externalId", "treatmentId", DateUtil.today());
         data = data.status(2);
 
-        adherenceService.recordAdherence(data);
-        adherenceService.recordAdherence(data);
+        adherenceService.recordAdherence("someUser", "TEST", data);
+        adherenceService.recordAdherence("someUser", "TEST", data);
         assertEquals(1, adherenceService.adherenceRecords("externalId", "treatmentId", DateUtil.today()).size());
     }
 
@@ -53,7 +57,7 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
         AdherenceData data = new AdherenceData("externalId", "treatmentId", DateUtil.today());
         data = data.status(1);
 
-        adherenceService.recordAdherence(data);
+        adherenceService.recordAdherence("someUser", "TEST", data);
         assertEquals(1, adherenceService.adherenceRecords("externalId", "treatmentId", DateUtil.today()).size());
     }
 
@@ -69,7 +73,7 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
         AdherenceData patientTwoWithinDateLimit = new AdherenceData("externalId2", "treatmentId", today.minusDays(1));
         patientTwoWithinDateLimit = patientTwoWithinDateLimit.status(1);
 
-        adherenceService.recordAdherence(patientOneOutsideLimit, patientOneWithinDateLimit, patientTwoWithinDateLimit);
+        adherenceService.recordAdherence("someUser", "TEST", patientOneOutsideLimit, patientOneWithinDateLimit, patientTwoWithinDateLimit);
         assertEquals(2, adherenceService.adherenceLogs(today).size());
     }
 
@@ -82,7 +86,7 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
         AdherenceData forToday = new AdherenceData("externalId", "treatmentId", today);
         forToday = forToday.status(1);
 
-        adherenceService.recordAdherence(forYesterday, forToday);
+        adherenceService.recordAdherence("someUser", "TEST", forYesterday, forToday);
         assertEquals(2, adherenceService.adherenceRecords("externalId", "treatmentId", today.minusDays(1), today).size());
     }
 }

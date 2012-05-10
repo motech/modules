@@ -1,8 +1,8 @@
 package org.motechproject.adherence.service;
 
 import org.joda.time.LocalDate;
-import org.motechproject.adherence.contract.AdherenceRecords;
 import org.motechproject.adherence.contract.AdherenceData;
+import org.motechproject.adherence.contract.AdherenceRecords;
 import org.motechproject.adherence.domain.AdherenceLog;
 import org.motechproject.adherence.repository.AllAdherenceLogs;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +20,12 @@ public class AdherenceService {
         this.allAdherenceLogs = allAdherenceLogs;
     }
 
-    public void recordAdherence(AdherenceData... datas) {
+    public void recordAdherence(String user, String source, AdherenceData... datas) {
         for (AdherenceData data : datas) {
             AdherenceLog adherenceLog = new AdherenceLog(data.externalId(), data.treatmentId(), data.doseDate());
             adherenceLog.status(data.status());
             adherenceLog.meta(data.meta());
-            allAdherenceLogs.add(adherenceLog);
+            allAdherenceLogs.add(adherenceLog, user, source);
         }
     }
 
