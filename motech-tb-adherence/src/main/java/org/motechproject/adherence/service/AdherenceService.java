@@ -39,7 +39,7 @@ public class AdherenceService {
         return new AdherenceRecords(externalId, treatmentId, adherenceLogs);
     }
 
-    public List<AdherenceLog> adherenceLogs(LocalDate asOf) {
+    public List<AdherenceData> adherenceLogs(LocalDate asOf) {
         return allAdherenceLogs.findLogsAsOf(asOf);
     }
 }

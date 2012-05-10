@@ -1,17 +1,27 @@
 package org.motechproject.adherence.contract;
 
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.joda.time.LocalDate;
 
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class AdherenceData {
 
+    @JsonProperty
     String externalId;
+    @JsonProperty
     String treatmentId;
+    @JsonProperty
     LocalDate doseDate;
+    @JsonProperty
     int status;
+    @JsonProperty
     Map<String, Object> meta;
+
+    public AdherenceData() {
+    }
 
     public AdherenceData(String externalId, String treatmentId, LocalDate doseDate) {
         this.externalId = externalId;
