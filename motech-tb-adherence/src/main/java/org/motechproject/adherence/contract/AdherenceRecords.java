@@ -34,6 +34,14 @@ public class AdherenceRecords {
         return adherenceRecords.size();
     }
 
+    public String externalId() {
+        return externalId;
+    }
+
+    public String treatmentId() {
+        return treatmentId;
+    }
+
     public static class AdherenceRecord {
 
         LocalDate recordDate;
