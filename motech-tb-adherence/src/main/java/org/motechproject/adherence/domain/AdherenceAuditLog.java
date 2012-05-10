@@ -3,7 +3,9 @@ package org.motechproject.adherence.domain;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.motechproject.model.MotechBaseDataObject;
+import org.motechproject.util.DateUtil;
 
 @TypeDiscriminator("doc.type === 'AdherenceAuditLog'")
 public class AdherenceAuditLog extends MotechBaseDataObject {
@@ -13,7 +15,11 @@ public class AdherenceAuditLog extends MotechBaseDataObject {
     @JsonProperty
     private String source;
     @JsonProperty
-    private String adherenceLogDocId;
+    private String externalId;
+    @JsonProperty
+    private String treatmentId;
+    @JsonProperty
+    private LocalDate doseDate;
     @JsonProperty
     private int status;
     @JsonProperty
@@ -24,13 +30,15 @@ public class AdherenceAuditLog extends MotechBaseDataObject {
         super();
     }
 
-    public AdherenceAuditLog(String user, String source, String adherenceLogDocId, int status, DateTime dateModified) {
+    public AdherenceAuditLog(AdherenceLog adherenceLog, String user, String source) {
         super();
         this.user = user;
         this.source = source;
-        this.adherenceLogDocId = adherenceLogDocId;
-        this.status = status;
-        this.dateModified = dateModified;
+        this.externalId = adherenceLog.externalId();
+        this.treatmentId = adherenceLog.treatmentId();
+        this.status = adherenceLog.status();
+        this.doseDate = adherenceLog.doseDate();
+        this.dateModified = DateUtil.now();
     }
 
     public String user() {
@@ -41,15 +49,23 @@ public class AdherenceAuditLog extends MotechBaseDataObject {
         return source;
     }
 
-    public String adherenceLogDocId() {
-        return adherenceLogDocId;
-    }
-
     public int status() {
         return status;
     }
 
     public DateTime dateModified() {
-        return dateModified;
+        return DateUtil.setTimeZone(dateModified);
+    }
+
+    public String externalId() {
+        return externalId;
+    }
+
+    public String treatmentId() {
+        return treatmentId;
+    }
+
+    public LocalDate doseDate() {
+        return doseDate;
     }
 }

@@ -17,19 +17,16 @@ public class AllAdherenceLogsIT extends SpringIntegrationTest {
 
     @Autowired
     private AllAdherenceLogs allAdherenceLogs;
-    @Autowired
-    private AllAdherenceAuditLogs allAdherenceAuditLogs;
 
     @After
     public void tearDown() {
         markForDeletion(allAdherenceLogs.getAll().toArray());
-        markForDeletion(allAdherenceAuditLogs.getAll().toArray());
     }
 
     @Test
     public void shouldSaveAdherenceLog() {
         AdherenceLog adherenceLog = new AdherenceLog("externalId", "treatmentId", DateUtil.today());
-        allAdherenceLogs.add(adherenceLog, "user", "web");
+        allAdherenceLogs.add(adherenceLog);
         assertNotNull(allAdherenceLogs.get(adherenceLog.getId()));
     }
 
@@ -37,22 +34,9 @@ public class AllAdherenceLogsIT extends SpringIntegrationTest {
     public void shouldBeIdempotentOnSave() {
         AdherenceLog adherenceLog = new AdherenceLog("externalId", "treatmentId", DateUtil.today());
 
-        allAdherenceLogs.add(adherenceLog, "user", "web");
-        allAdherenceLogs.add(adherenceLog, "user", "web");
+        allAdherenceLogs.add(adherenceLog);
+        allAdherenceLogs.add(adherenceLog);
         assertEquals(1, allAdherenceLogs.getAll().size());
-    }
-
-    @Test
-    public void shouldCreateAuditLogOnAdd(){
-        AdherenceLog adherenceLog = new AdherenceLog("externalId", "treatmentId", DateUtil.today());
-        allAdherenceLogs.add(adherenceLog, "user", "SMS");
-
-        List<AdherenceAuditLog> auditLogList = allAdherenceAuditLogs.getAll();
-        assertFalse(auditLogList.isEmpty());
-        assertEquals("user", auditLogList.get(0).user());
-        assertEquals("SMS", auditLogList.get(0).source());
-        assertEquals(adherenceLog.getId(), auditLogList.get(0).adherenceLogDocId());
-        assertEquals(adherenceLog.status(), auditLogList.get(0).status());
     }
 
     @Test
@@ -104,7 +88,7 @@ public class AllAdherenceLogsIT extends SpringIntegrationTest {
 
     private void addAll(AdherenceLog... adherenceLogs) {
         for (AdherenceLog adherenceLog : adherenceLogs) {
-            allAdherenceLogs.add(adherenceLog, "user", "web");
+            allAdherenceLogs.add(adherenceLog);
         }
     }
 }

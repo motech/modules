@@ -19,39 +19,20 @@ import java.util.List;
 @Repository
 public class AllAdherenceLogs extends MotechBaseRepository<AdherenceLog> {
 
-    private AllAdherenceAuditLogs allAdherenceAuditLogs;
-
     @Autowired
-    protected AllAdherenceLogs(@Qualifier("adherenceDbConnector") CouchDbConnector db, AllAdherenceAuditLogs allAdherenceAuditLogs) {
+    protected AllAdherenceLogs(@Qualifier("adherenceDbConnector") CouchDbConnector db) {
         super(AdherenceLog.class, db);
-        this.allAdherenceAuditLogs = allAdherenceAuditLogs;
     }
 
     @Override
-    public void add(AdherenceLog adherenceLog){
-        throw new RuntimeException("this method should not be called.");
-    }
-
-    public void add(AdherenceLog adherenceLog, String user, String source) {
+    public void add(AdherenceLog adherenceLog) {
         AdherenceLog existingLog = findLogBy(adherenceLog.externalId(), adherenceLog.treatmentId(), adherenceLog.doseDate());
-        String adherenceLogId = null;
-        if (null == existingLog) {
+        if (existingLog == null) {
             super.add(adherenceLog);
-            adherenceLogId = adherenceLog.getId();
         } else {
             existingLog.status(adherenceLog.status());
             update(existingLog);
-            adherenceLogId = existingLog.getId();
         }
-
-        AdherenceAuditLog auditLog = new AdherenceAuditLog(user, source, adherenceLogId, adherenceLog.status(), DateUtil.now());
-        allAdherenceAuditLogs.add(auditLog);
-    }
-
-    public void update(AdherenceLog adherenceLog, String user, String source) {
-        update(adherenceLog);
-        AdherenceAuditLog auditLog = new AdherenceAuditLog(user, source, adherenceLog.getId(), adherenceLog.status(), DateUtil.now());
-        allAdherenceAuditLogs.add(auditLog);
     }
 
     @View(name = "by_externaId_treatmentId_andDosageDate", map = "function(doc) {if (doc.type =='AdherenceLog') {emit([doc.externalId, doc.treatmentId, doc.doseDate], doc._id);}}")
@@ -70,7 +51,7 @@ public class AllAdherenceLogs extends MotechBaseRepository<AdherenceLog> {
         return db.queryView(q, AdherenceLog.class);
     }
 
-    protected AdherenceLog findLogBy(String externalId, String treatmentId, LocalDate asOf) {
+    public AdherenceLog findLogBy(String externalId, String treatmentId, LocalDate asOf) {
         final ComplexKey key = ComplexKey.of(externalId, treatmentId, asOf);
         ViewQuery q = createQuery("by_externaId_treatmentId_andDosageDate").key(key).includeDocs(true);
         return singleResult(db.queryView(q, AdherenceLog.class));
