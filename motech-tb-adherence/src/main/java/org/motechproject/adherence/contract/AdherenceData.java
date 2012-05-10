@@ -5,7 +5,7 @@ import org.joda.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RecordAdherenceRequest {
+public class AdherenceData {
 
     String externalId;
     String treatmentId;
@@ -13,14 +13,14 @@ public class RecordAdherenceRequest {
     int status;
     Map<String, Object> meta;
 
-    public RecordAdherenceRequest(String externalId, String treatmentId, LocalDate doseDate) {
+    public AdherenceData(String externalId, String treatmentId, LocalDate doseDate) {
         this.externalId = externalId;
         this.treatmentId = treatmentId;
         this.doseDate = doseDate;
         meta = new HashMap<String, Object>();
     }
 
-    public RecordAdherenceRequest status(int status) {
+    public AdherenceData status(int status) {
         this.status = status;
         return this;
     }
@@ -29,12 +29,12 @@ public class RecordAdherenceRequest {
         return meta;
     }
 
-    public RecordAdherenceRequest meta(Map<String, Object> meta) {
+    public AdherenceData meta(Map<String, Object> meta) {
         this.meta = meta;
         return this;
     }
 
-    public RecordAdherenceRequest addMeta(String key, Object value) {
+    public AdherenceData addMeta(String key, Object value) {
         meta.put(key, value);
         return this;
     }
