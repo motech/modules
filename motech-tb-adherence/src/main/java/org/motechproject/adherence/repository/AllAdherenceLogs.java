@@ -6,10 +6,8 @@ import org.ektorp.ViewQuery;
 import org.ektorp.support.View;
 import org.joda.time.LocalDate;
 import org.motechproject.adherence.contract.AdherenceData;
-import org.motechproject.adherence.domain.AdherenceAuditLog;
 import org.motechproject.adherence.domain.AdherenceLog;
 import org.motechproject.dao.MotechBaseRepository;
-import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -58,8 +56,8 @@ public class AllAdherenceLogs extends MotechBaseRepository<AdherenceLog> {
     }
 
     @View(name = "by_dosageDate", map = "function(doc) {if (doc.type =='AdherenceLog') {emit(doc.doseDate, {externalId:doc.externalId, treatmentId:doc.treatmentId, doseDate:doc.doseDate, status:doc.status, meta:doc.meta});}}")
-    public List<AdherenceData> findLogsAsOf(LocalDate asOf) {
-        ViewQuery q = createQuery("by_dosageDate").endKey(asOf).inclusiveEnd(true);
+    public List<AdherenceData> findLogsAsOf(LocalDate asOf, int pageNumber, int pageSize) {
+        ViewQuery q = createQuery("by_dosageDate").endKey(asOf).skip(pageNumber * pageSize).limit(pageSize).inclusiveEnd(true);
         return db.queryView(q, AdherenceData.class);
     }
 }

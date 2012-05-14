@@ -120,7 +120,8 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
         patientTwoWithinDateLimit = patientTwoWithinDateLimit.status(1);
 
         adherenceService.recordAdherence("someUser", "TEST", patientOneOutsideLimit, patientOneWithinDateLimit, patientTwoWithinDateLimit);
-        assertEquals(2, adherenceService.adherenceLogs(today).size());
+        assertEquals(1, adherenceService.adherenceLogs(today, 0, 1).size());
+        assertEquals(1, adherenceService.adherenceLogs(today, 1, 1).size());
     }
 
     @Test

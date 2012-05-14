@@ -57,7 +57,7 @@ public class AdherenceService {
         return new AdherenceRecords(externalId, treatmentId, adherenceLogs);
     }
 
-    public List<AdherenceData> adherenceLogs(LocalDate asOf) {
-        return allAdherenceLogs.findLogsAsOf(asOf);
+    public List<AdherenceData> adherenceLogs(LocalDate asOf, int pageNumber, int pageSize) {
+        return allAdherenceLogs.findLogsAsOf(asOf, pageNumber, pageSize);
     }
 }

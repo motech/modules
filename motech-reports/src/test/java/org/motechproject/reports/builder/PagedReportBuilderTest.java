@@ -22,7 +22,7 @@ public class PagedReportBuilderTest {
         }
 
         @Override
-        protected List<String> data(long pageNumber) {
+        protected List<String> data(int pageNumber) {
             if (pageNumber == 1)
                 return asList("Row1", "Row2");
             else if (pageNumber == 2)

@@ -32,5 +32,5 @@ public abstract class PagedReportBuilder<T> {
 
     protected abstract List<String> createRowData(T modal);
 
-    protected abstract List<T> data(long pageNumber);
+    protected abstract List<T> data(int pageNumber);
 }
