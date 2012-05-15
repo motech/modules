@@ -1,4 +1,4 @@
-package org.motechproject.reports.model;
+package org.motechproject.reports.builder.excel.model;
 
 import org.apache.poi.ss.usermodel.CellStyle;
 

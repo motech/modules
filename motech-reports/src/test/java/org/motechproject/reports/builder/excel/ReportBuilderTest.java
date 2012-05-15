@@ -1,7 +1,8 @@
-package org.motechproject.reports.builder;
+package org.motechproject.reports.builder.excel;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.junit.Test;
+import org.motechproject.reports.builder.excel.ReportBuilder;
 
 import java.util.List;
 

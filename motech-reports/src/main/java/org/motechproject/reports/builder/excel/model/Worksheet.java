@@ -1,11 +1,12 @@
-package org.motechproject.reports.builder.excel;
+package org.motechproject.reports.builder.excel.model;
 
 
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.motechproject.reports.model.ExcelColumn;
+import org.motechproject.reports.builder.excel.model.ExcelColumn;
+import org.motechproject.reports.builder.excel.model.MotechCellStyle;
 
 import java.util.ArrayList;
 import java.util.List;
