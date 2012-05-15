@@ -23,7 +23,7 @@ public class PagedReportBuilder {
             List<Object> data = reportDataSource.data(pageNumber);
             if (data != null && !data.isEmpty()) {
                 for (Object datum : data) {
-                    workbook.addRow(createRowData(datum));
+                    workbook.addRow(reportDataSource.createRowData(datum));
                 }
                 pageNumber++;
             } else {
@@ -33,7 +33,4 @@ public class PagedReportBuilder {
         return workbook.book();
     }
 
-    private List<String> createRowData(Object model) {
-        return reportDataSource.createRowData(model);
-    }
 }

@@ -63,8 +63,8 @@ public class ReportDataSourceTest {
     }
 
     @Test
-    public void thatColumnHeadersAreValueMethodNames() {
-        assertEquals(asList("Id"), new ReportDataSource(new ValidReportDataSource()).columnHeaders());
+    public void shouldReturnColumnHeaders() {
+        assertEquals(asList("Id", "Custom column name"), new ReportDataSource(new ValidReportDataSource()).columnHeaders());
     }
 
 }

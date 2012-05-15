@@ -10,9 +10,14 @@ public class SampleData {
         this.id = id;
     }
 
-    @ReportValue
+    @ReportValue(index = 0)
     public String getId() {
         return id;
+    }
+
+    @ReportValue(column = "Custom column name", index = 1)
+    public String columnWithTitle() {
+        return "title";
     }
 
     @Override
