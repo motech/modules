@@ -4,7 +4,6 @@ import org.motechproject.reports.model.AllReportDataSources;
 import org.motechproject.reports.model.ReportDataSource;
 import org.motechproject.reports.writer.ExcelWriter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,9 +24,9 @@ public class ReportController {
         this.excelWriter = excelWriter;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{reportName}.xls")
-    public void createReport(@PathVariable("reportName") String reportName, HttpServletResponse response) {
-        ReportDataSource reportDataSource = allReportDataSources.get(reportName);
-        excelWriter.writeExcelToResponse(response, reportDataSource, reportName + ".xls");
+    @RequestMapping(method = RequestMethod.GET, value = "{groupName}/{reportName}.xls")
+    public void createReport(@PathVariable("reportName") String groupName, @PathVariable("reportName") String reportName, HttpServletResponse response) {
+        ReportDataSource reportDataSource = allReportDataSources.get(groupName);
+        excelWriter.writeExcelToResponse(response, reportDataSource, reportName,  reportName + ".xls");
     }
 }

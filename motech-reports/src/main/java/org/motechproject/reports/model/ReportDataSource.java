@@ -1,7 +1,7 @@
 package org.motechproject.reports.model;
 
 import org.motechproject.reports.annotation.Report;
-import org.motechproject.reports.annotation.ReportData;
+import org.motechproject.reports.annotation.ReportGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +23,7 @@ public class ReportDataSource {
     }
 
     public String name() {
-        return controller.getClass().getAnnotation(Report.class).name();
+        return controller.getClass().getAnnotation(ReportGroup.class).name();
     }
 
     public String title() {
@@ -31,12 +31,12 @@ public class ReportDataSource {
     }
 
     public static boolean isValidDataSource(Class<?> beanClass) {
-        return beanClass.isAnnotationPresent(Report.class);
+        return beanClass.isAnnotationPresent(ReportGroup.class);
     }
 
-    public List<Object> data(int pageNumber) {
+    public List<Object> data(String reportName, int pageNumber) {
         try {
-            Method method = getDataMethod();
+            Method method = getDataMethod(reportName);
             if (method != null) {
                 return (List<Object>) method.invoke(controller, pageNumber);
             }
@@ -56,17 +56,17 @@ public class ReportDataSource {
         return new ArrayList<Object>();
     }
 
-    public List<String> columnHeaders() {
-        return new ReportDataModel(getDataMethod().getGenericReturnType()).columnHeaders();
+    public List<String> columnHeaders(String reportName) {
+        return new ReportDataModel(getDataMethod(reportName).getGenericReturnType()).columnHeaders();
     }
 
-    public List<String> rowData(Object model) {
-        return new ReportDataModel(getDataMethod().getGenericReturnType()).rowData(model);
+    public List<String> rowData(String reportName, Object model) {
+        return new ReportDataModel(getDataMethod(reportName).getGenericReturnType()).rowData(model);
     }
 
-    private Method getDataMethod() {
+    private Method getDataMethod(String reportName) {
         for (Method method : controller.getClass().getDeclaredMethods()) {
-            if (method.isAnnotationPresent(ReportData.class)) {
+            if (method.isAnnotationPresent(Report.class) && method.getName().equalsIgnoreCase(reportName)) {
                 return method;
             }
         }

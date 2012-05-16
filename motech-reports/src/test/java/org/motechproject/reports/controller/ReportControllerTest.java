@@ -44,7 +44,7 @@ public class ReportControllerTest extends SpringIntegrationTest {
     @Test
     public void shouldIdentifyAppropriateExcelController() {
         assertFalse(sampleReportController.isCalled);
-        reportController.createReport("sampleReport", response);
+        reportController.createReport("sampleReports", "sampleReport", response);
         assertTrue(sampleReportController.isCalled);
     }
 

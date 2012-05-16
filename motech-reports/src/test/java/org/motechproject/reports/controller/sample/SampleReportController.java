@@ -1,7 +1,7 @@
 package org.motechproject.reports.controller.sample;
 
 import org.motechproject.reports.annotation.Report;
-import org.motechproject.reports.annotation.ReportData;
+import org.motechproject.reports.annotation.ReportGroup;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 
 @Component
-@Report(name = "sampleReport")
+@ReportGroup(name = "sampleReports")
 public class SampleReportController {
 
     private List<SampleData> sampleData1 = new ArrayList<SampleData>();
@@ -22,8 +22,8 @@ public class SampleReportController {
         this.sampleData2 = asList(new SampleData("id3"));
     }
 
-    @ReportData
-    public List<SampleData> data(int pageNumber) {
+    @Report
+    public List<SampleData> sampleReport(int pageNumber) {
         isCalled = true;
         if (pageNumber == 1) {
             return sampleData1;

@@ -9,21 +9,24 @@ import java.util.List;
 public class PagedReportBuilder {
 
     private Workbook workbook;
-    private ReportDataSource reportDataSource;
 
-    public PagedReportBuilder(ReportDataSource reportDataSource) {
+    private ReportDataSource reportDataSource;
+    private String reportName;
+
+    public PagedReportBuilder(ReportDataSource reportDataSource, String reportName) {
         this.reportDataSource = reportDataSource;
-        workbook = new Workbook(reportDataSource.title(), reportDataSource.columnHeaders());
+        this.reportName = reportName;
+        workbook = new Workbook(reportDataSource.title(), reportDataSource.columnHeaders(reportName));
     }
 
     public HSSFWorkbook build() {
         boolean doneBuilding = false;
         int pageNumber = 1;
         while (!doneBuilding) {
-            List<Object> data = reportDataSource.data(pageNumber);
+            List<Object> data = reportDataSource.data(reportName, pageNumber);
             if (data != null && !data.isEmpty()) {
                 for (Object datum : data) {
-                    workbook.addRow(reportDataSource.rowData(datum));
+                    workbook.addRow(reportDataSource.rowData(reportName, datum));
                 }
                 pageNumber++;
             } else {

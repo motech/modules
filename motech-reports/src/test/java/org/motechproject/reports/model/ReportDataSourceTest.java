@@ -2,7 +2,7 @@ package org.motechproject.reports.model;
 
 import org.junit.Test;
 import org.motechproject.reports.annotation.Report;
-import org.motechproject.reports.annotation.ReportData;
+import org.motechproject.reports.annotation.ReportGroup;
 import org.motechproject.reports.controller.sample.SampleData;
 import org.motechproject.reports.controller.sample.SampleReportController;
 
@@ -26,35 +26,35 @@ public class ReportDataSourceTest {
 
     @Test
     public void nameIsSpecifiedInReportAnnotation() {
-        assertEquals("sampleReport", new ReportDataSource(new SampleReportController()).name());
+        assertEquals("sampleReports", new ReportDataSource(new SampleReportController()).name());
     }
 
     @Test
     public void shouldRetrieveDataFromDataSource() {
         assertArrayEquals(
                 new SampleData[]{new SampleData("id1"), new SampleData("id2")},
-                new ReportDataSource(new SampleReportController()).data(1).toArray()
+                new ReportDataSource(new SampleReportController()).data("sampleReport", 1).toArray()
         );
     }
 
     @Test
     public void shouldRetrieveEmptyListWhenDataMethodIsNotSpecified() {
-        assertEquals(0, new ReportDataSource(new WithoutDataMethod()).data(1).size());
+        assertEquals(0, new ReportDataSource(new WithoutDataMethod()).data("sampleReport", 1).size());
     }
 
     @Test(expected = RuntimeException.class)
     public void shouldThrowExceptionWhenDataMethodSpecifiedIsNotPublic() {
-        assertEquals(0, new ReportDataSource(new WithPrivateDataMethod()).data(1).size());
+        assertEquals(0, new ReportDataSource(new WithPrivateDataMethod()).data("sampleReport", 1).size());
     }
 
     @Test(expected = RuntimeException.class)
     public void shouldThrowExceptionWhenDataMethodDoesNotHavePageNumber() {
-        assertEquals(0, new ReportDataSource(new WithInvalidDataMethod()).data(1).size());
+        assertEquals(0, new ReportDataSource(new WithInvalidDataMethod()).data("sampleReport", 1).size());
     }
 
     @Test(expected = RuntimeException.class)
     public void shouldThrowExceptionWhenDataMethodDoesNotReturnAList() {
-        assertEquals(0, new ReportDataSource(new WithInvalidReturnType()).data(1).size());
+        assertEquals(0, new ReportDataSource(new WithInvalidReturnType()).data("sampleReport", 1).size());
     }
 
     @Test
@@ -64,50 +64,50 @@ public class ReportDataSourceTest {
 
     @Test
     public void shouldReturnColumnHeaders() {
-        assertEquals(asList("Id", "Custom column name"), new ReportDataSource(new ValidReportDataSource()).columnHeaders());
+        assertEquals(asList("Id", "Custom column name"), new ReportDataSource(new ValidReportDataSource()).columnHeaders("sampleReport"));
     }
 
 }
 
-@Report(name = "validReportDataSource")
+@ReportGroup(name = "validReportDataSource")
 class ValidReportDataSource {
 
-    @ReportData
-    public List<SampleData> data() {
+    @Report
+    public List<SampleData> sampleReport() {
         return asList(new SampleData("id"));
     }
 }
 
 
-@Report(name = "withoutDataMethod")
+@ReportGroup(name = "withoutDataMethod")
 class WithoutDataMethod {
 }
 
-@Report(name = "withPrivateDataMethod")
+@ReportGroup(name = "withPrivateDataMethod")
 class WithPrivateDataMethod {
 
-    @ReportData
-    private List<SampleData> data(int pageNumber) {
+    @Report
+    private List<SampleData> sampleReport(int pageNumber) {
         return asList(new SampleData("id"));
     }
 
 }
 
-@Report(name = "withInvalidDataMethod")
+@ReportGroup(name = "withInvalidDataMethod")
 class WithInvalidDataMethod {
 
-    @ReportData
-    public List<SampleData> data() {
+    @Report
+    public List<SampleData> sampleReport() {
         return asList(new SampleData("id"));
     }
 
 }
 
-@Report(name = "withInvalidReturnType")
+@ReportGroup(name = "withInvalidReturnType")
 class WithInvalidReturnType {
 
-    @ReportData
-    public SampleData data() {
+    @Report
+    public SampleData sampleReport() {
         return new SampleData("id");
     }
 }

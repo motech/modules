@@ -11,19 +11,19 @@ public class PagedReportBuilderTest {
 
     @Test
     public void shouldAddTitle() {
-        HSSFWorkbook workbook = new PagedReportBuilder(new ReportDataSource(new SampleReportController())).build();
-        assertEquals("Sample Report", workbook.getSheetAt(0).getRow(0).getCell(0).getStringCellValue());
+        HSSFWorkbook workbook = new PagedReportBuilder(new ReportDataSource(new SampleReportController()), "sampleReport").build();
+        assertEquals("Sample Reports", workbook.getSheetAt(0).getRow(0).getCell(0).getStringCellValue());
     }
 
     @Test
     public void shouldAddColumnHeaders() {
-        HSSFWorkbook workbook = new PagedReportBuilder(new ReportDataSource(new SampleReportController())).build();
+        HSSFWorkbook workbook = new PagedReportBuilder(new ReportDataSource(new SampleReportController()), "sampleReport").build();
         assertEquals("Id", workbook.getSheetAt(0).getRow(1).getCell(0).getStringCellValue());
     }
 
     @Test
     public void shouldPageRowData() {
-        HSSFWorkbook workbook = new PagedReportBuilder(new ReportDataSource(new SampleReportController())).build();
+        HSSFWorkbook workbook = new PagedReportBuilder(new ReportDataSource(new SampleReportController()), "sampleReport").build();
         assertDataInFirstPageAdded(workbook);
         assertDataInSecondPageAdded(workbook);
     }

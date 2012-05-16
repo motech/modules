@@ -16,11 +16,11 @@ public class ExcelWriter {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public void writeExcelToResponse(HttpServletResponse response, ReportDataSource reportDataSource, String fileName) {
+    public void writeExcelToResponse(HttpServletResponse response, ReportDataSource reportDataSource, String reportName, String fileName) {
         try {
             initializeExcelResponse(response, fileName);
             ServletOutputStream outputStream = response.getOutputStream();
-            HSSFWorkbook excelWorkbook = createExcelWorkBook(reportDataSource);
+            HSSFWorkbook excelWorkbook = createExcelWorkBook(reportDataSource, reportName);
             if (null != excelWorkbook)
                 excelWorkbook.write(outputStream);
             outputStream.flush();
@@ -30,9 +30,9 @@ public class ExcelWriter {
     }
 
 
-    private HSSFWorkbook createExcelWorkBook(ReportDataSource reportDataSource) {
+    private HSSFWorkbook createExcelWorkBook(ReportDataSource reportDataSource, String reportName) {
         try {
-            return new PagedReportBuilder(reportDataSource).build();
+            return new PagedReportBuilder(reportDataSource, reportName).build();
         } catch (Exception e) {
             logger.error("Error while generating excel report: " + e.getMessage());
             return null;

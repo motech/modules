@@ -17,12 +17,12 @@ public class AllReportDataSourcesTest extends SpringIntegrationTest {
 
     @Test
     public void shouldReturnCorrectReportDataSource() {
-        assertEquals("sampleReport", allReportDataSources.get("sampleReport").name());
+        assertEquals("sampleReports", allReportDataSources.get("sampleReports").name());
     }
 
     @Test
     public void shouldReturnNullForIncorrectReportPath() {
-        assertNull(allReportDataSources.get("nonExistantReport"));
+        assertNull(allReportDataSources.get("incorrectReportPath"));
     }
 
     @Override

@@ -14,8 +14,8 @@ public class AllReportDataSources implements BeanPostProcessor {
 
     private Map<String, ReportDataSource> reportDataSources = new Hashtable<String, ReportDataSource>();
 
-    public ReportDataSource get(String path) {
-        return reportDataSources.get(path);
+    public ReportDataSource get(String groupName) {
+        return reportDataSources.get(groupName);
     }
 
     @Override
