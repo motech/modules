@@ -9,6 +9,7 @@ import org.motechproject.adherence.domain.AdherenceLog;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -28,6 +29,23 @@ public class AllAdherenceLogsIT extends SpringIntegrationTest {
         AdherenceLog adherenceLog = new AdherenceLog("externalId", "treatmentId", DateUtil.today());
         allAdherenceLogs.add(adherenceLog);
         assertNotNull(allAdherenceLogs.get(adherenceLog.getId()));
+    }
+
+    @Test
+    public void shouldSaveMetaDataOnUpdate() {
+        AdherenceLog adherenceLog = new AdherenceLog("externalId", "treatmentId", DateUtil.today());
+        HashMap<String, Object> metaData = new HashMap<String, Object>();
+        metaData.put("key", "val");
+        adherenceLog.meta(metaData);
+        allAdherenceLogs.add(adherenceLog);
+
+        AdherenceLog updatedAdherenceLog = new AdherenceLog("externalId", "treatmentId", DateUtil.today());
+        HashMap<String, Object> newMetaData = new HashMap<String, Object>();
+        newMetaData.put("key", "newVal");
+        updatedAdherenceLog.meta(newMetaData);
+        allAdherenceLogs.add(updatedAdherenceLog);
+
+        assertEquals("newVal", allAdherenceLogs.get(adherenceLog.getId()).meta().get("key"));
     }
 
     @Test
