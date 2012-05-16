@@ -29,6 +29,7 @@ public class AllAdherenceLogs extends MotechBaseRepository<AdherenceLog> {
             super.add(adherenceLog);
         } else {
             existingLog.status(adherenceLog.status());
+            existingLog.meta(adherenceLog.meta());
             update(existingLog);
         }
     }
