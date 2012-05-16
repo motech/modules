@@ -5,11 +5,11 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReportDataElement {
+public class ReportDataModel {
 
     private final Columns columns;
 
-    public ReportDataElement(Type returnType) {
+    public ReportDataModel(Type returnType) {
         Type[] typeParameters = ((ParameterizedType) returnType).getActualTypeArguments();
         assertHasSingleTypeParameter(typeParameters);
 
@@ -30,7 +30,7 @@ public class ReportDataElement {
         return columnHeaders;
     }
 
-    public List<String> createRowData(Object model) {
+    public List<String> rowData(Object model) {
         List<String> rowData = new ArrayList<String>();
         for (Column column : columns) {
             rowData.add(column.value(model));

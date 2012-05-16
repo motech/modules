@@ -23,7 +23,7 @@ public class PagedReportBuilder {
             List<Object> data = reportDataSource.data(pageNumber);
             if (data != null && !data.isEmpty()) {
                 for (Object datum : data) {
-                    workbook.addRow(reportDataSource.createRowData(datum));
+                    workbook.addRow(reportDataSource.rowData(datum));
                 }
                 pageNumber++;
             } else {

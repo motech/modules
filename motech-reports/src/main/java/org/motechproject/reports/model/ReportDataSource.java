@@ -57,11 +57,11 @@ public class ReportDataSource {
     }
 
     public List<String> columnHeaders() {
-        return new ReportDataElement(getDataMethod().getGenericReturnType()).columnHeaders();
+        return new ReportDataModel(getDataMethod().getGenericReturnType()).columnHeaders();
     }
 
-    public List<String> createRowData(Object model) {
-        return new ReportDataElement(getDataMethod().getGenericReturnType()).createRowData(model);
+    public List<String> rowData(Object model) {
+        return new ReportDataModel(getDataMethod().getGenericReturnType()).rowData(model);
     }
 
     private Method getDataMethod() {
