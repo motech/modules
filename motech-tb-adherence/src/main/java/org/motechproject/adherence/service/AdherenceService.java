@@ -24,27 +24,14 @@ public class AdherenceService {
         this.allAdherenceAuditLogs = allAdherenceAuditLogs;
     }
 
-    public void recordAdherence(String user, String source, AdherenceData... datas) {
-        for (AdherenceData data : datas) {
-            AdherenceLog adherenceLog = new AdherenceLog(data.externalId(), data.treatmentId(), data.doseDate());
-            adherenceLog.status(data.status());
-            adherenceLog.meta(data.meta());
-            addWithAuditLog(adherenceLog, user, source);
-        }
-    }
-
-    private void addWithAuditLog(AdherenceLog adherenceLog, String user, String source) {
-        AdherenceLog existingLog = allAdherenceLogs.findLogBy(adherenceLog.externalId(), adherenceLog.treatmentId(), adherenceLog.doseDate());
-
-        allAdherenceLogs.add(adherenceLog);
-
-        if (adherenceUpdated(adherenceLog, existingLog)) {
+    public void saveOrUpdateAdherence(String user, String source, AdherenceData... data) {
+        for (AdherenceData adherenceData : data) {
+            AdherenceLog adherenceLog = new AdherenceLog(adherenceData.externalId(), adherenceData.treatmentId(), adherenceData.doseDate());
+            adherenceLog.status(adherenceData.status());
+            adherenceLog.meta(adherenceData.meta());
+            allAdherenceLogs.add(adherenceLog);
             allAdherenceAuditLogs.add(new AdherenceAuditLog(adherenceLog, user, source));
         }
-    }
-
-    private boolean adherenceUpdated(AdherenceLog adherenceLog, AdherenceLog existingLog) {
-        return (existingLog == null) || (existingLog != null && existingLog.status() != adherenceLog.status());
     }
 
     public AdherenceRecords adherenceRecords(String externalId, String treatmentId, LocalDate asOf) {

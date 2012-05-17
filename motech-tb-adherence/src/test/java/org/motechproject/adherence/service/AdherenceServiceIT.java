@@ -52,7 +52,7 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
         AdherenceData data = new AdherenceData("externalId", "treatmentId", DateUtil.today());
         data = data.status(1);
 
-        adherenceService.recordAdherence("someUser", "TEST", data);
+        adherenceService.saveOrUpdateAdherence("someUser", "TEST", data);
         assertEquals(1, adherenceService.adherenceRecords("externalId", "treatmentId", DateUtil.today()).size());
     }
 
@@ -64,7 +64,7 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
         AdherenceData data = new AdherenceData("externalId", "treatmentId", DateUtil.today());
         data = data.status(1);
 
-        adherenceService.recordAdherence("someUser", "TEST", data);
+        adherenceService.saveOrUpdateAdherence("someUser", "TEST", data);
 
         AdherenceAuditLog adherenceAuditLog = allAdherenceAuditLogs.getAll().get(0);
         assertEquals("someUser", adherenceAuditLog.user());
@@ -77,24 +77,12 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
     }
 
     @Test
-    public void shouldNotCreateAuditLog_WhenThereIsNoChangeInAdherence() {
-        AdherenceData data = new AdherenceData("externalId", "treatmentId", DateUtil.today());
-        data = data.status(1);
-
-        adherenceService.recordAdherence("someUser", "TEST", data);
-        assertEquals(1, allAdherenceAuditLogs.getAll().size());
-
-        adherenceService.recordAdherence("someUser", "TEST", data);
-        assertEquals(1, allAdherenceAuditLogs.getAll().size());
-    }
-
-    @Test
     public void shouldBeIdempotentOnRecordAdherence() {
         AdherenceData data = new AdherenceData("externalId", "treatmentId", DateUtil.today());
         data = data.status(2);
 
-        adherenceService.recordAdherence("someUser", "TEST", data);
-        adherenceService.recordAdherence("someUser", "TEST", data);
+        adherenceService.saveOrUpdateAdherence("someUser", "TEST", data);
+        adherenceService.saveOrUpdateAdherence("someUser", "TEST", data);
         assertEquals(1, adherenceService.adherenceRecords("externalId", "treatmentId", DateUtil.today()).size());
     }
 
@@ -103,7 +91,7 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
         AdherenceData data = new AdherenceData("externalId", "treatmentId", DateUtil.today());
         data = data.status(1);
 
-        adherenceService.recordAdherence("someUser", "TEST", data);
+        adherenceService.saveOrUpdateAdherence("someUser", "TEST", data);
         assertEquals(1, adherenceService.adherenceRecords("externalId", "treatmentId", DateUtil.today()).size());
     }
 
@@ -119,7 +107,7 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
         AdherenceData patientTwoWithinDateLimit = new AdherenceData("externalId2", "treatmentId", today.minusDays(1));
         patientTwoWithinDateLimit = patientTwoWithinDateLimit.status(1);
 
-        adherenceService.recordAdherence("someUser", "TEST", patientOneOutsideLimit, patientOneWithinDateLimit, patientTwoWithinDateLimit);
+        adherenceService.saveOrUpdateAdherence("someUser", "TEST", patientOneOutsideLimit, patientOneWithinDateLimit, patientTwoWithinDateLimit);
         assertEquals(1, adherenceService.adherenceLogs(today, 0, 1).size());
         assertEquals(1, adherenceService.adherenceLogs(today, 1, 1).size());
     }
@@ -133,7 +121,7 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
         AdherenceData forToday = new AdherenceData("externalId", "treatmentId", today);
         forToday = forToday.status(1);
 
-        adherenceService.recordAdherence("someUser", "TEST", forYesterday, forToday);
+        adherenceService.saveOrUpdateAdherence("someUser", "TEST", forYesterday, forToday);
         assertEquals(2, adherenceService.adherenceRecords("externalId", "treatmentId", today.minusDays(1), today).size());
     }
 }
