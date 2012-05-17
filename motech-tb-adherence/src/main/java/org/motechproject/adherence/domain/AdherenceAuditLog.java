@@ -7,6 +7,8 @@ import org.joda.time.LocalDate;
 import org.motechproject.model.MotechBaseDataObject;
 import org.motechproject.util.DateUtil;
 
+import java.util.Map;
+
 @TypeDiscriminator("doc.type === 'AdherenceAuditLog'")
 public class AdherenceAuditLog extends MotechBaseDataObject {
 
@@ -24,9 +26,11 @@ public class AdherenceAuditLog extends MotechBaseDataObject {
     private int status;
     @JsonProperty
     private DateTime dateModified;
+    @JsonProperty
+    private Map<String, Object> meta;
 
     //Required for ektorp
-    public AdherenceAuditLog(){
+    public AdherenceAuditLog() {
         super();
     }
 
@@ -39,6 +43,7 @@ public class AdherenceAuditLog extends MotechBaseDataObject {
         this.status = adherenceLog.status();
         this.doseDate = adherenceLog.doseDate();
         this.dateModified = DateUtil.now();
+        this.meta = adherenceLog.meta();
     }
 
     public String user() {
@@ -67,5 +72,9 @@ public class AdherenceAuditLog extends MotechBaseDataObject {
 
     public LocalDate doseDate() {
         return doseDate;
+    }
+
+    public Map<String, Object> meta() {
+        return meta;
     }
 }
