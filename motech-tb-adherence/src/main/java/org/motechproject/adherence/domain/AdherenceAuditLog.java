@@ -42,8 +42,8 @@ public class AdherenceAuditLog extends MotechBaseDataObject {
         this.treatmentId = adherenceLog.treatmentId();
         this.status = adherenceLog.status();
         this.doseDate = adherenceLog.doseDate();
-        this.dateModified = DateUtil.now();
         this.meta = adherenceLog.meta();
+        this.dateModified = DateUtil.now();
     }
 
     public String user() {
