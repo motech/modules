@@ -17,7 +17,10 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.HashMap;
+
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.support.membermodification.MemberMatcher.method;
 
@@ -63,6 +66,9 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
 
         AdherenceData data = new AdherenceData("externalId", "treatmentId", DateUtil.today());
         data = data.status(1);
+        HashMap<String, Object> metaData = new HashMap<String, Object>();
+        metaData.put("key", "value");
+        data.meta(metaData);
 
         adherenceService.saveOrUpdateAdherence("someUser", "TEST", data);
 
@@ -74,6 +80,8 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
         assertEquals(data.doseDate(), adherenceAuditLog.doseDate());
         assertEquals(data.status(), adherenceAuditLog.status());
         assertEquals(now, adherenceAuditLog.dateModified());
+        assertNotNull(adherenceAuditLog.meta());
+        assertEquals("value", adherenceAuditLog.meta().get("key"));
     }
 
     @Test
