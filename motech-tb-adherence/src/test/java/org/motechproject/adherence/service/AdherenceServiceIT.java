@@ -13,6 +13,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -42,7 +43,7 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
         AdherenceData data = new AdherenceData("externalId", "treatmentId", DateUtil.today());
         data = data.status(1);
 
-        adherenceService.saveOrUpdateAdherence("someUser", "TEST", data);
+        adherenceService.saveOrUpdateAdherence(asList(data));
         assertEquals(1, adherenceService.adherenceRecords("externalId", "treatmentId", DateUtil.today()).size());
     }
 
@@ -51,8 +52,8 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
         AdherenceData data = new AdherenceData("externalId", "treatmentId", DateUtil.today());
         data = data.status(2);
 
-        adherenceService.saveOrUpdateAdherence("someUser", "TEST", data);
-        adherenceService.saveOrUpdateAdherence("someUser", "TEST", data);
+        adherenceService.saveOrUpdateAdherence(asList(data));
+        adherenceService.saveOrUpdateAdherence(asList(data));
         assertEquals(1, adherenceService.adherenceRecords("externalId", "treatmentId", DateUtil.today()).size());
     }
 
@@ -61,7 +62,7 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
         AdherenceData data = new AdherenceData("externalId", "treatmentId", DateUtil.today());
         data = data.status(1);
 
-        adherenceService.saveOrUpdateAdherence("someUser", "TEST", data);
+        adherenceService.saveOrUpdateAdherence(asList(data));
         assertEquals(1, adherenceService.adherenceRecords("externalId", "treatmentId", DateUtil.today()).size());
     }
 
@@ -77,7 +78,7 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
         AdherenceData patientTwoWithinDateLimit = new AdherenceData("externalId2", "treatmentId", today.minusDays(1));
         patientTwoWithinDateLimit = patientTwoWithinDateLimit.status(1);
 
-        adherenceService.saveOrUpdateAdherence("someUser", "TEST", patientOneOutsideLimit, patientOneWithinDateLimit, patientTwoWithinDateLimit);
+        adherenceService.saveOrUpdateAdherence(asList(patientOneOutsideLimit, patientOneWithinDateLimit, patientTwoWithinDateLimit));
         assertEquals(1, adherenceService.adherenceLogs(today, 0, 1).size());
         assertEquals(1, adherenceService.adherenceLogs(today, 1, 1).size());
     }
@@ -91,7 +92,7 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
         AdherenceData forToday = new AdherenceData("externalId", "treatmentId", today);
         forToday = forToday.status(1);
 
-        adherenceService.saveOrUpdateAdherence("someUser", "TEST", forYesterday, forToday);
+        adherenceService.saveOrUpdateAdherence(asList(forYesterday, forToday));
         assertEquals(2, adherenceService.adherenceRecords("externalId", "treatmentId", today.minusDays(1), today).size());
     }
 }
