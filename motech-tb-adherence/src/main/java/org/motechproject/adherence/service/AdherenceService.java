@@ -3,9 +3,7 @@ package org.motechproject.adherence.service;
 import org.joda.time.LocalDate;
 import org.motechproject.adherence.contract.AdherenceData;
 import org.motechproject.adherence.contract.AdherenceRecords;
-import org.motechproject.adherence.domain.AdherenceAuditLog;
 import org.motechproject.adherence.domain.AdherenceLog;
-import org.motechproject.adherence.repository.AllAdherenceAuditLogs;
 import org.motechproject.adherence.repository.AllAdherenceLogs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,12 +14,10 @@ import java.util.List;
 public class AdherenceService {
 
     private AllAdherenceLogs allAdherenceLogs;
-    private AllAdherenceAuditLogs allAdherenceAuditLogs;
 
     @Autowired
-    public AdherenceService(AllAdherenceLogs allAdherenceLogs, AllAdherenceAuditLogs allAdherenceAuditLogs) {
+    public AdherenceService(AllAdherenceLogs allAdherenceLogs) {
         this.allAdherenceLogs = allAdherenceLogs;
-        this.allAdherenceAuditLogs = allAdherenceAuditLogs;
     }
 
     public void saveOrUpdateAdherence(String user, String source, AdherenceData... data) {
@@ -30,7 +26,6 @@ public class AdherenceService {
             adherenceLog.status(adherenceData.status());
             adherenceLog.meta(adherenceData.meta());
             allAdherenceLogs.add(adherenceLog);
-            allAdherenceAuditLogs.add(new AdherenceAuditLog(adherenceLog, user, source));
         }
     }
 
