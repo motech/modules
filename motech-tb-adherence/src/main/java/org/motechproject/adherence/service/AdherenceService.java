@@ -20,7 +20,7 @@ public class AdherenceService {
         this.allAdherenceLogs = allAdherenceLogs;
     }
 
-    public void saveOrUpdateAdherence(String user, String source, AdherenceData... data) {
+    public void saveOrUpdateAdherence(List<AdherenceData> data) {
         for (AdherenceData adherenceData : data) {
             AdherenceLog adherenceLog = new AdherenceLog(adherenceData.externalId(), adherenceData.treatmentId(), adherenceData.doseDate());
             adherenceLog.status(adherenceData.status());
