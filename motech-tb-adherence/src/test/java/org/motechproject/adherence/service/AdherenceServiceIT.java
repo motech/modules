@@ -3,27 +3,21 @@ package org.motechproject.adherence.service;
 import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.motechproject.adherence.common.SpringIntegrationTest;
 import org.motechproject.adherence.contract.AdherenceData;
 import org.motechproject.adherence.repository.AllAdherenceLogs;
 import org.motechproject.util.DateUtil;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-@PrepareForTest(DateUtil.class)
 public class AdherenceServiceIT extends SpringIntegrationTest {
 
     @Autowired
     AllAdherenceLogs allAdherenceLogs;
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
 
     AdherenceService adherenceService;
 
