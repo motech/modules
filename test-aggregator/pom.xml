@@ -7,17 +7,16 @@
     <parent>
         <artifactId>motech-contrib</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.1-SNAPSHOT</version>
+        <version>0.10-SNAPSHOT</version>
     </parent>
 
     <name>test-aggregator</name>
     <artifactId>test-aggregator</artifactId>
     <groupId>org.motechproject</groupId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.10-SNAPSHOT</version>
 
     <properties>
         <spring.version>3.0.5.RELEASE</spring.version>
-        <motech-platform.version>0.11-SNAPSHOT</motech-platform.version>
     </properties>
 
     <dependencies>
@@ -29,18 +28,18 @@
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>message-aggregator</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>0.10-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-sms-api</artifactId>
-            <version>${motech-platform.version}</version>
+            <version>${motech.version}</version>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-sms-http</artifactId>
-            <version>${motech-platform.version}</version>
+            <version>${motech.version}</version>
         </dependency>
     </dependencies>
 

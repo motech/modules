@@ -5,7 +5,7 @@
     <parent>
         <artifactId>motech-contrib</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.1-SNAPSHOT</version>
+        <version>0.10-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -14,7 +14,6 @@
 
     <properties>
         <spring.version>3.0.5.RELEASE</spring.version>
-        <motech.version>0.11-SNAPSHOT</motech.version>
         <build.dir>../build</build.dir>
     </properties>
 
