@@ -6,4 +6,4 @@ where JOB_NAME LIKE '%repeat%dea/
 *.iml
 *.ipr
 *.iws
-*.log
+*.log*
