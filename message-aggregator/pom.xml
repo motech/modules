@@ -5,13 +5,13 @@
   <parent>
     <artifactId>motech-contrib</artifactId>
     <groupId>org.motechproject</groupId>
-    <version>0.10.1-SNAPSHOT</version>
+    <version>0.10.1</version>
   </parent>
 
   <name>message-aggregator</name>
   <artifactId>message-aggregator</artifactId>
   <groupId>org.motechproject</groupId>
-  <version>0.10.1-SNAPSHOT</version>
+  <version>0.10.1</version>
 
   <properties>
     <spring.version>3.0.5.RELEASE</spring.version>
