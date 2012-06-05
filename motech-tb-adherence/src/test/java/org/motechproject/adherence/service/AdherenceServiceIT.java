@@ -3,6 +3,7 @@ package org.motechproject.adherence.service;
 import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.motechproject.adherence.common.SpringIntegrationTest;
 import org.motechproject.adherence.contract.AdherenceData;
@@ -14,6 +15,7 @@ import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+@Ignore
 public class AdherenceServiceIT extends SpringIntegrationTest {
 
     @Autowired
