@@ -2,7 +2,6 @@ package org.motechproject.adherence.repository;
 
 import org.joda.time.LocalDate;
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.motechproject.adherence.common.SpringIntegrationTest;
 import org.motechproject.adherence.domain.AdherenceLog;
@@ -13,7 +12,6 @@ import java.util.HashMap;
 
 import static org.junit.Assert.*;
 
-@Ignore
 public class AllAdherenceLogsIT extends SpringIntegrationTest {
 
     @Autowired
