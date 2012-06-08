@@ -62,7 +62,7 @@ public class AllAdherenceLogs extends MotechBaseRepository<AdherenceLog> {
     }
 
     @View(name = "by_dateRange", map = "function(doc) {if (doc.type =='AdherenceLog') {emit([doc.externalId, doc.doseDate], {externalId:doc.externalId, treatmentId:doc.treatmentId, doseDate:doc.doseDate, status:doc.status, meta:doc.meta});}}")
-    public List<AdherenceData> findLogsBetween(String externalId, LocalDate startDate, LocalDate endDate) {
+    public List<AdherenceData> findLogsInRange(String externalId, LocalDate startDate, LocalDate endDate) {
         final ComplexKey startKey = ComplexKey.of(externalId, startDate);
         final ComplexKey endKey = ComplexKey.of(externalId, endDate);
         ViewQuery q = createQuery("by_dateRange").startKey(startKey).endKey(endKey).inclusiveEnd(true);

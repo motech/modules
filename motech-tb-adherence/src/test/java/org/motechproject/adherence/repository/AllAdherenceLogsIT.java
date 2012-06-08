@@ -117,7 +117,7 @@ public class AllAdherenceLogsIT extends SpringIntegrationTest {
                 hasDateWithinRange.treatmentId(),
                 hasDateWithinRange.doseDate());
 
-        List<AdherenceData> actualResult = allAdherenceLogs.findLogsBetween("externalId", new LocalDate(2012, 5, 4), new LocalDate(2012, 5, 6));
+        List<AdherenceData> actualResult = allAdherenceLogs.findLogsInRange("externalId", new LocalDate(2012, 5, 4), new LocalDate(2012, 5, 6));
         assertEquals(1, actualResult.size());
 
         AdherenceData actualAdherenceData = actualResult.get(0);
