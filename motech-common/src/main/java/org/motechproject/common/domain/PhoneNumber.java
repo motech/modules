@@ -8,7 +8,7 @@ public class PhoneNumber {
     private Long phoneNumber;
 
 
-    public PhoneNumber(String phoneNumber) throws PhoneNumberFormatException {
+    public PhoneNumber(String phoneNumber) {
         if (isNotValid(phoneNumber)) throw new PhoneNumberFormatException();
         this.phoneNumber = formatPhoneNumber(phoneNumber);
     }

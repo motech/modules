@@ -35,7 +35,7 @@ public class PhoneNumberTest {
     }
 
     @Test
-    public void shouldAppend91To12DigitPhoneNumbersAnd10DigitPhoneNumbers() throws PhoneNumberFormatException {
+    public void shouldAppend91To12DigitPhoneNumbersAnd10DigitPhoneNumbers() {
         PhoneNumber phoneNumber = new PhoneNumber("1234567890");
         assertEquals(new Long(911234567890L), phoneNumber.getPhoneNumber());
 
@@ -44,7 +44,7 @@ public class PhoneNumberTest {
     }
 
     @Test(expected = PhoneNumberFormatException.class)
-    public void shouldThrowExceptionIfNumberIsNotInTheRightFormat() throws PhoneNumberFormatException {
+    public void shouldThrowExceptionIfNumberIsNotInTheRightFormat() {
         new PhoneNumber("invalidPhoneNumber");
     }
 }
