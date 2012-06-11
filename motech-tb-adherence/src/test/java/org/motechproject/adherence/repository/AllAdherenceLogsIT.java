@@ -4,7 +4,7 @@ import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Test;
 import org.motechproject.adherence.common.SpringIntegrationTest;
-import org.motechproject.adherence.domain.AdherenceAuditLog;
+import org.motechproject.adherence.contract.AdherenceData;
 import org.motechproject.adherence.domain.AdherenceLog;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,6 +102,29 @@ public class AllAdherenceLogsIT extends SpringIntegrationTest {
                 new AdherenceLog[]{hasDateWithinKeyDate},
                 allAdherenceLogs.findLogsBy("externalId", "treatmentId", today).toArray()
         );
+    }
+
+    @Test
+    public void shouldFetchAllLogsBetweenGivenDates() {
+        AdherenceLog hasDateBeforeRange = new AdherenceLog("externalId", "treatmentId", new LocalDate(2012, 1, 1));
+        AdherenceLog hasDateWithinRange = new AdherenceLog("externalId", "treatmentId", new LocalDate(2012, 5, 5));
+        AdherenceLog alsoHasDateWithinRange = new AdherenceLog("otherExternalId", "treatmentId", new LocalDate(2012, 5, 5));
+        AdherenceLog hasDateBeyondRange = new AdherenceLog("externalId", "treatmentId", new LocalDate(2012, 12, 1));
+
+        addAll(hasDateBeforeRange, hasDateWithinRange, alsoHasDateWithinRange, hasDateBeyondRange);
+
+        AdherenceData expectedAdherenceData = new AdherenceData(hasDateWithinRange.externalId(),
+                hasDateWithinRange.treatmentId(),
+                hasDateWithinRange.doseDate());
+
+        List<AdherenceData> actualResult = allAdherenceLogs.findLogsInRange("externalId", new LocalDate(2012, 5, 4), new LocalDate(2012, 5, 6));
+        assertEquals(1, actualResult.size());
+
+        AdherenceData actualAdherenceData = actualResult.get(0);
+        assertEquals(expectedAdherenceData.doseDate(), actualAdherenceData.doseDate());
+        assertEquals(expectedAdherenceData.status(), actualAdherenceData.status());
+        assertEquals(expectedAdherenceData.externalId(), actualAdherenceData.externalId());
+        assertEquals(expectedAdherenceData.treatmentId(), actualAdherenceData.treatmentId());
     }
 
     private void addAll(AdherenceLog... adherenceLogs) {
