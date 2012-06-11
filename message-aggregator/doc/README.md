@@ -76,12 +76,12 @@ What do I need to do to make it work?
    The message-aggregator module expects an implementation of AggregationHandler in the spring context, which
    implements the groupId() and canBeDispatched() methods.
 
-   * The **groupId()** method is used to find the group of a given message. In this case, since message length is used
-     for grouping, all messages of the same length will have the same group ID and so, will be aggregated.
+   1. The **groupId()** method is used to find the group of a given message. In this case, since message length is used
+      for grouping, all messages of the same length will have the same group ID and so, will be aggregated.
 
-   * The **canBeDispatched()** method gives the client of this module an ability to decide whether this group of
-     messages can be dispatched at this time. This callback method is called for every group of messages every time the
-     CronTriggerBean is configured to run the reaper.
+   2. The **canBeDispatched()** method gives the client of this module an ability to decide whether this group of
+      messages can be dispatched at this time. This callback method is called for every group of messages every time the
+      CronTriggerBean is configured to run the reaper.
 
 4. Finally, using the usual motech-platform configurations, you need to implement the motech listener for the aggregated
    event, like so:
@@ -98,7 +98,7 @@ What do I need to do to make it work?
     In the case of the example shown below, you will receive 2 event callbacks here. One with the messages, "ABCD" and
     "cafe", and one more with just the message "123456".
 
-5. Coniguration files you'll need to setup in the classpath:
+5. Configuration files you'll need to setup in the classpath:
 
    * Usual motech-platform configuration files: activemq.properties, couchdb.properties, osgi.properties and
      quartz.properties.
