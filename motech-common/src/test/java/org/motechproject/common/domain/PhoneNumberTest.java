@@ -1,7 +1,6 @@
 package org.motechproject.common.domain;
 
 import org.junit.Test;
-import org.motechproject.common.exception.PhoneNumberFormatException;
 
 import static junit.framework.Assert.*;
 
@@ -43,8 +42,15 @@ public class PhoneNumberTest {
         assertEquals(new Long(911234567890L), phoneNumber.getPhoneNumber());
     }
 
-    @Test(expected = PhoneNumberFormatException.class)
-    public void shouldThrowExceptionIfNumberIsNotInTheRightFormat() {
-        new PhoneNumber("invalidPhoneNumber");
+    @Test
+    public void shouldReturnNullIfNumberIsNotInTheRightFormat() {
+        PhoneNumber invalidPhoneNumber = new PhoneNumber("invalidPhoneNumber");
+        assertNull(invalidPhoneNumber.getPhoneNumber());
+    }
+
+    @Test
+    public void shouldPassValidationForBlanks() {
+        assertTrue(PhoneNumber.isValidWithBlanksAllowed(null));
+        assertTrue(PhoneNumber.isValidWithBlanksAllowed(""));
     }
 }

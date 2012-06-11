@@ -2,14 +2,12 @@ package org.motechproject.common.domain;
 
 
 import org.apache.commons.lang.StringUtils;
-import org.motechproject.common.exception.PhoneNumberFormatException;
 
 public class PhoneNumber {
     private Long phoneNumber;
 
-
     public PhoneNumber(String phoneNumber) {
-        if (isNotValid(phoneNumber)) throw new PhoneNumberFormatException();
+        if (isNotValid(phoneNumber)) this.phoneNumber = null;
         this.phoneNumber = formatPhoneNumber(phoneNumber);
     }
 
@@ -17,16 +15,26 @@ public class PhoneNumber {
         return phoneNumber;
     }
 
+    public static boolean isValidWithBlanksAllowed(String phoneNumber) {
+        return validate(phoneNumber, true);
+    }
+
+    public static boolean isNotValidWithBlanksAllowed(String phoneNumber) {
+        return !validate(phoneNumber, true);
+    }
+
     public static boolean isValid(String phoneNumber) {
-        return !isNotValid(phoneNumber);
+        return validate(phoneNumber, false);
     }
 
     public static boolean isNotValid(String phoneNumber) {
-        return StringUtils.isBlank(phoneNumber) ||
-                phoneNumber.length() < 10 ||
-                !StringUtils.isNumeric(phoneNumber) ||
-                (phoneNumber.length() == 12 && !(phoneNumber.startsWith("91") || phoneNumber.startsWith("00"))) ||
-                (phoneNumber.length() > 10 && phoneNumber.length() != 12);
+        return !validate(phoneNumber, false);
+    }
+
+    private static boolean validate(String phoneNumber, boolean allowBlanks) {
+        if (allowBlanks && StringUtils.isBlank(phoneNumber)) return true;
+        return StringUtils.isNotBlank(phoneNumber) && StringUtils.isNumeric(phoneNumber) &&
+                (phoneNumber.length() == 10 || (phoneNumber.length() == 12 && (phoneNumber.startsWith("91") || phoneNumber.startsWith("00"))));
     }
 
     private Long formatPhoneNumber(String phoneNumber) {
