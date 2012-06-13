@@ -31,18 +31,18 @@ public class PhoneNumber {
         return !validate(phoneNumber, false);
     }
 
-    private static boolean validate(String phoneNumber, boolean allowBlanks) {
-        if (allowBlanks && StringUtils.isBlank(phoneNumber)) return true;
-        return StringUtils.isNotBlank(phoneNumber) && StringUtils.isNumeric(phoneNumber) &&
-                (phoneNumber.length() == 10 || (phoneNumber.length() == 12 && (phoneNumber.startsWith("91") || phoneNumber.startsWith("00"))));
-    }
-
-    private Long formatPhoneNumber(String phoneNumber) {
+    public static Long formatPhoneNumber(String phoneNumber) {
         Long returnValue = null;
         if (phoneNumber.length() == 10)
             returnValue = Long.parseLong("91" + phoneNumber);
         if (phoneNumber.length() == 12 && (phoneNumber.startsWith("91") || phoneNumber.startsWith("00")))
             returnValue = Long.parseLong("91" + phoneNumber.substring(2, 12));
         return returnValue;
+    }
+
+    private static boolean validate(String phoneNumber, boolean allowBlanks) {
+        if (allowBlanks && StringUtils.isBlank(phoneNumber)) return true;
+        return StringUtils.isNotBlank(phoneNumber) && StringUtils.isNumeric(phoneNumber) &&
+                (phoneNumber.length() == 10 || (phoneNumber.length() == 12 && (phoneNumber.startsWith("91") || phoneNumber.startsWith("00"))));
     }
 }
