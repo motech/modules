@@ -61,11 +61,11 @@ public class AllAdherenceLogs extends MotechBaseRepository<AdherenceLog> {
         return db.queryView(q, AdherenceData.class);
     }
 
-    @View(name = "by_dateRange", map = "function(doc) {if (doc.type =='AdherenceLog') {emit([doc.externalId, doc.doseDate], {externalId:doc.externalId, treatmentId:doc.treatmentId, doseDate:doc.doseDate, status:doc.status, meta:doc.meta});}}")
-    public List<AdherenceData> findLogsInRange(String externalId, LocalDate startDate, LocalDate endDate) {
-        final ComplexKey startKey = ComplexKey.of(externalId, startDate);
-        final ComplexKey endKey = ComplexKey.of(externalId, endDate);
-        ViewQuery q = createQuery("by_dateRange").startKey(startKey).endKey(endKey).inclusiveEnd(true);
+    @View(name = "by_dateRangeExternalIdAndTherapy", map = "function(doc) {if (doc.type =='AdherenceLog') {emit([doc.externalId, doc.treatmentId, doc.doseDate], {externalId:doc.externalId, treatmentId:doc.treatmentId, doseDate:doc.doseDate, status:doc.status, meta:doc.meta});}}")
+    public List<AdherenceData> findLogsInRange(String externalId, String treatmentId, LocalDate startDate, LocalDate endDate) {
+        final ComplexKey startKey = ComplexKey.of(externalId, treatmentId, startDate);
+        final ComplexKey endKey = ComplexKey.of(externalId, treatmentId, endDate);
+        ViewQuery q = createQuery("by_dateRangeExternalIdAndTherapy").startKey(startKey).endKey(endKey).inclusiveEnd(true);
         return db.queryView(q, AdherenceData.class);
     }
 }
