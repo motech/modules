@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.HashMap;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 
 public class AllAdherenceLogsIT extends SpringIntegrationTest {
@@ -125,6 +126,17 @@ public class AllAdherenceLogsIT extends SpringIntegrationTest {
         assertEquals(expectedAdherenceData.status(), actualAdherenceData.status());
         assertEquals(expectedAdherenceData.externalId(), actualAdherenceData.externalId());
         assertEquals(expectedAdherenceData.treatmentId(), actualAdherenceData.treatmentId());
+    }
+
+    @Test
+    public void shouldAddBulkObjects() {
+        AdherenceLog log1 = new AdherenceLog("externalId", "treatmentId", new LocalDate(2012, 1, 1));
+        AdherenceLog log2 = new AdherenceLog("externalId", "treatmentId", new LocalDate(2012, 5, 5));
+        AdherenceLog log3 = new AdherenceLog("otherExternalId", "treatmentId", new LocalDate(2012, 5, 5));
+
+        allAdherenceLogs.addAll(asList(log1,log2,log3));
+
+        assertEquals(3,allAdherenceLogs.getAll().size());
     }
 
     private void addAll(AdherenceLog... adherenceLogs) {

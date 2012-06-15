@@ -1,6 +1,7 @@
 package org.motechproject.adherence.service;
 
 import org.joda.time.LocalDate;
+import org.motechproject.adherence.AdherenceLogMapper;
 import org.motechproject.adherence.contract.AdherenceData;
 import org.motechproject.adherence.contract.AdherenceRecords;
 import org.motechproject.adherence.domain.AdherenceLog;
@@ -41,5 +42,10 @@ public class AdherenceService {
 
     public List<AdherenceData> adherenceLogs(LocalDate asOf, int pageNumber, int pageSize) {
         return allAdherenceLogs.findLogsAsOf(asOf, pageNumber, pageSize);
+    }
+
+    public void addLogs(List<AdherenceData> adherenceData) {
+        List<AdherenceLog> adherenceLogs = new AdherenceLogMapper().map(adherenceData);
+        allAdherenceLogs.addAll(adherenceLogs);
     }
 }

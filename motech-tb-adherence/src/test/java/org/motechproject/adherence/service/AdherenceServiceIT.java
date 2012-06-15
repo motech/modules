@@ -4,11 +4,15 @@ import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.motechproject.adherence.AdherenceLogMapper;
 import org.motechproject.adherence.common.SpringIntegrationTest;
 import org.motechproject.adherence.contract.AdherenceData;
+import org.motechproject.adherence.domain.AdherenceLog;
 import org.motechproject.adherence.repository.AllAdherenceLogs;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
@@ -88,5 +92,19 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
 
         adherenceService.saveOrUpdateAdherence(asList(forYesterday, forToday));
         assertEquals(2, adherenceService.adherenceRecords("externalId", "treatmentId", today.minusDays(1), today).size());
+    }
+    @Test
+    public void shouldSaveAdherenceLogs() {
+        AdherenceData datum1 = new AdherenceData("externalId1", "treatmentId1", LocalDate.now());
+        AdherenceData datum2 = new AdherenceData("externalId2", "treatmentId2", LocalDate.now());
+
+        AdherenceLogMapper mapper = new AdherenceLogMapper();
+        adherenceService.addLogs(asList(datum1,datum2));
+
+        List<AdherenceLog> logsInDb = allAdherenceLogs.getAll();
+        assertEquals(2, logsInDb.size());
+
+        assertEquals(mapper.map(datum1),logsInDb.get(0));
+        assertEquals(mapper.map(datum2),logsInDb.get(1));
     }
 }

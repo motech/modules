@@ -68,4 +68,9 @@ public class AllAdherenceLogs extends MotechBaseRepository<AdherenceLog> {
         ViewQuery q = createQuery("by_dateRangeExternalIdAndTherapy").startKey(startKey).endKey(endKey).inclusiveEnd(true);
         return db.queryView(q, AdherenceData.class);
     }
+
+
+    public void addAll(List<AdherenceLog> adherenceLogs){
+        db.executeAllOrNothing(adherenceLogs);
+    }
 }
