@@ -8,7 +8,7 @@ import org.motechproject.model.MotechBaseDataObject;
 import java.util.Map;
 
 @TypeDiscriminator("doc.type === 'AdherenceLog'")
-public class AdherenceLog extends MotechBaseDataObject {
+public class AdherenceLog extends MotechBaseDataObject{
 
     @JsonProperty
     private String externalId;
@@ -33,6 +33,11 @@ public class AdherenceLog extends MotechBaseDataObject {
 
     public AdherenceLog status(int status) {
         this.status = status;
+        return this;
+    }
+
+    public AdherenceLog treatmentId(String treatmentId){
+        this.treatmentId = treatmentId;
         return this;
     }
 

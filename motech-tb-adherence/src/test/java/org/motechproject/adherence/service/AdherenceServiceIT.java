@@ -96,10 +96,10 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
     @Test
     public void shouldSaveAdherenceLogs() {
         AdherenceData datum1 = new AdherenceData("externalId1", "treatmentId1", LocalDate.now());
-        AdherenceData datum2 = new AdherenceData("externalId2", "treatmentId2", LocalDate.now());
+        AdherenceData datum2 = new AdherenceData("externalId1", "treatmentId2", LocalDate.now());
 
         AdherenceLogMapper mapper = new AdherenceLogMapper();
-        adherenceService.addLogs(asList(datum1,datum2));
+        adherenceService.addOrUpdateLogsByDosedate(asList(datum1,datum2),"externalId1");
 
         List<AdherenceLog> logsInDb = allAdherenceLogs.getAll();
         assertEquals(2, logsInDb.size());

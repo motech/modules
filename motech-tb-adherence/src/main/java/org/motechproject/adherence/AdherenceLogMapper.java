@@ -11,6 +11,7 @@ public class AdherenceLogMapper {
     public AdherenceLog map(AdherenceData adherenceData) {
         AdherenceLog log = new AdherenceLog(adherenceData.externalId(),adherenceData.treatmentId(),adherenceData.doseDate());
         log.meta(adherenceData.meta());
+        log.status(adherenceData.status());
         return log;
     }
 

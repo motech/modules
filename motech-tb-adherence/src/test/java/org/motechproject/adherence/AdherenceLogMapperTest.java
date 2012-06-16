@@ -28,12 +28,16 @@ public class AdherenceLogMapperTest {
     @Test
     public void shouldMapListOfAdherenceDataToDomainObject() {
         AdherenceData datum1 = new AdherenceData("ext_id1","treatment_id1", LocalDate.now());
+        datum1.status(2);
         AdherenceData datum2 = new AdherenceData("ext_id2","treatment_id2", LocalDate.now());
+        datum2.status(1);
 
         List<AdherenceLog> adherenceLogs = new AdherenceLogMapper().map(asList(datum1, datum2));
 
         assertEquals(2,adherenceLogs.size());
         assertEquals(datum1.externalId(), adherenceLogs.get(0).externalId());
+        assertEquals(datum1.status(), adherenceLogs.get(0).status());
         assertEquals(datum2.externalId(), adherenceLogs.get(1).externalId());
+        assertEquals(datum2.status(), adherenceLogs.get(1).status());
     }
 }

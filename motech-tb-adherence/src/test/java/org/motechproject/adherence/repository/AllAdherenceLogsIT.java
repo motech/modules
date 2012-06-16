@@ -132,11 +132,54 @@ public class AllAdherenceLogsIT extends SpringIntegrationTest {
     public void shouldAddBulkObjects() {
         AdherenceLog log1 = new AdherenceLog("externalId", "treatmentId", new LocalDate(2012, 1, 1));
         AdherenceLog log2 = new AdherenceLog("externalId", "treatmentId", new LocalDate(2012, 5, 5));
-        AdherenceLog log3 = new AdherenceLog("otherExternalId", "treatmentId", new LocalDate(2012, 5, 5));
+        AdherenceLog log3 = new AdherenceLog("externalId", "treatmentId", new LocalDate(2012, 5, 5));
 
-        allAdherenceLogs.addAll(asList(log1,log2,log3));
+        allAdherenceLogs.addOrUpdateLogsForExternalIdByDoseDate(asList(log1, log2, log3),"externalId");
 
         assertEquals(3,allAdherenceLogs.getAll().size());
+    }
+
+    @Test
+    public void shouldUpdateBulkObjectsIfAlreadyExists() {
+        AdherenceLog log1 = new AdherenceLog("externalId", "treatmentId1", new LocalDate(2012, 1, 1));
+        log1.status(1);
+        AdherenceLog log2 = new AdherenceLog("externalId", "treatmentId2", new LocalDate(2012, 1, 1));
+        log2.status(2);
+        AdherenceLog log3 = new AdherenceLog("externalId", "treatmentId2", new LocalDate(2012, 5, 5));
+
+        allAdherenceLogs.add(log1);
+        allAdherenceLogs.addOrUpdateLogsForExternalIdByDoseDate(asList(log2,log3),"externalId");
+
+        assertEquals(2,allAdherenceLogs.getAll().size());
+        assertEquals(2,allAdherenceLogs.findLogBy("externalId","treatmentId2",new LocalDate(2012,1,1)).status());
+
+    }
+
+    @Test
+    public void shouldFetchLogsForExternalIdByDateRange() {
+        LocalDate startDate = new LocalDate(2012, 2, 1);
+        LocalDate dateInBetweenRange = new LocalDate(2012, 5, 5);
+        LocalDate endDate = new LocalDate(2012, 5, 10);
+
+        AdherenceLog logBeforeRange = new AdherenceLog("externalId1", "treatmentId1", startDate.minusDays(1));
+        AdherenceLog logInRange1 = new AdherenceLog("externalId1", "treatmentId3", startDate);
+        AdherenceLog logInRange2 = new AdherenceLog("externalId1", "treatmentId2", dateInBetweenRange);
+        AdherenceLog logInRange3 = new AdherenceLog("externalId1", "treatmentId3", endDate);
+        AdherenceLog logAfterRange = new AdherenceLog("externalId1", "treatmentId3", endDate.plusDays(1));
+        AdherenceLog logInRangeButDiffExternalId = new AdherenceLog("externalId2", "treatmentId3", dateInBetweenRange);
+        allAdherenceLogs.add(logBeforeRange);
+        allAdherenceLogs.add(logInRange1);
+        allAdherenceLogs.add(logInRange2);
+        allAdherenceLogs.add(logInRange3);
+        allAdherenceLogs.add(logInRangeButDiffExternalId);
+        allAdherenceLogs.add(logAfterRange);
+
+        List<AdherenceLog> result = allAdherenceLogs.findAllLogsForExternalIdInDoseDateRange("externalId1", startDate, endDate);
+        assertEquals(3,result.size());
+        assertEquals(startDate,result.get(0).doseDate());
+        assertEquals(dateInBetweenRange,result.get(1).doseDate());
+        assertEquals(endDate,result.get(2).doseDate());
+
     }
 
     private void addAll(AdherenceLog... adherenceLogs) {

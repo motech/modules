@@ -12,7 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static ch.lambdaj.Lambda.extract;
+import static ch.lambdaj.Lambda.on;
 
 @Repository
 public class AllAdherenceLogs extends MotechBaseRepository<AdherenceLog> {
@@ -69,8 +73,39 @@ public class AllAdherenceLogs extends MotechBaseRepository<AdherenceLog> {
         return db.queryView(q, AdherenceData.class);
     }
 
+    @View(name = "by_externalId_dosageDate", map = "function(doc) {if (doc.type =='AdherenceLog') {emit([doc.externalId,doc.doseDate], doc._id);}}")
+    public List<AdherenceLog> findAllLogsForExternalIdInDoseDateRange(String externalId, LocalDate startDate, LocalDate endDate) {
+        final ComplexKey startKey = ComplexKey.of(externalId, startDate);
+        final ComplexKey endKey = ComplexKey.of(externalId,endDate);
 
-    public void addAll(List<AdherenceLog> adherenceLogs){
-        db.executeAllOrNothing(adherenceLogs);
+        ViewQuery q = createQuery("by_externalId_dosageDate").startKey(startKey).endKey(endKey).includeDocs(true).inclusiveEnd(true);
+        return db.queryView(q, AdherenceLog.class);
+    }
+
+    public void addOrUpdateLogsForExternalIdByDoseDate(List<AdherenceLog> adherenceLogs,String externalId){
+        if (adherenceLogs.size() <= 0) {
+            return;
+        }
+        List<AdherenceLog> logsInDb = findAllLogsForExternalIdInDoseDateRange(externalId,adherenceLogs.get(0).doseDate(),adherenceLogs.get(adherenceLogs.size()-1).doseDate());
+        ArrayList<AdherenceLog> tobeStoredLogs = mapLogToDbLogsIfExixts(adherenceLogs,logsInDb);
+        db.executeAllOrNothing(tobeStoredLogs);
+    }
+
+    private ArrayList<AdherenceLog> mapLogToDbLogsIfExixts(List<AdherenceLog> logsToMap, List<AdherenceLog> dbLogs) {
+        ArrayList<AdherenceLog> tobeStoredLogs = new ArrayList<AdherenceLog>();
+        List<LocalDate> doseDatesToBeMappedWith= extract(dbLogs,on(AdherenceLog.class).doseDate());
+        for(AdherenceLog log : logsToMap) {
+            int logPos = doseDatesToBeMappedWith.indexOf(log.doseDate());
+            if (logPos < 0) {
+                tobeStoredLogs.add(log);
+            } else {
+                AdherenceLog dbLog = dbLogs.get(logPos);
+                dbLog.status(log.status());
+                dbLog.meta(log.meta());
+                dbLog.treatmentId(log.treatmentId());
+                tobeStoredLogs.add(dbLog);
+            }
+        }
+        return tobeStoredLogs;
     }
 }
