@@ -1,7 +1,7 @@
 package org.motechproject.testaggregation;
 
 import org.motechproject.aggregator.aggregation.AggregateMotechEvent;
-import org.motechproject.model.MotechEvent;
+import org.motechproject.scheduler.domain.MotechEvent;
 import org.motechproject.server.event.annotations.MotechListener;
 import org.motechproject.sms.api.service.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package org.motechproject.testaggregation;
 
 import org.motechproject.aggregator.aggregation.AggregationHandler;
-import org.motechproject.model.MotechEvent;
+import org.motechproject.scheduler.domain.MotechEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package org.motechproject.aggregator.aggregation;
 
-import org.motechproject.model.MotechEvent;
+import org.motechproject.scheduler.domain.MotechEvent;
 
 import java.io.Serializable;
 import java.util.HashMap;
