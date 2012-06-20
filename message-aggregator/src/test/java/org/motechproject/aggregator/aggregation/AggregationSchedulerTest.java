@@ -23,17 +23,19 @@ public class AggregationSchedulerTest {
     private JobDetail reaperJob;
     @Mock
     private Scheduler scheduler;
+    private JobKey jobKey;
 
     @Before
     public void setUp() throws Exception {
         initMocks(this);
+        jobKey = new JobKey(JOB_NAME, JOB_GROUP);
+
         when(schedulerFactoryBean.getScheduler()).thenReturn(scheduler);
-        when(reaperJob.getKey()).thenReturn(new JobKey(JOB_NAME, JOB_GROUP));
+        when(reaperJob.getKey()).thenReturn(jobKey);
     }
 
     @Test
     public void shouldRemoveOldScheduleJobWhenItExists() throws Exception {
-        JobKey jobKey = new JobKey(JOB_NAME, JOB_GROUP);
         when(scheduler.getJobDetail(jobKey)).thenReturn(reaperJob);
 
         new AggregationScheduler(schedulerFactoryBean, trigger, reaperJob);
@@ -43,7 +45,6 @@ public class AggregationSchedulerTest {
 
     @Test
     public void shouldNotTryAndRemoveOldScheduleJobWhenItDoesNotExist() throws Exception {
-        JobKey jobKey = new JobKey(JOB_NAME, JOB_GROUP);
         when(scheduler.getJobDetail(jobKey)).thenReturn(null);
 
         new AggregationScheduler(schedulerFactoryBean, trigger, reaperJob);
@@ -53,7 +54,6 @@ public class AggregationSchedulerTest {
 
     @Test
     public void shouldScheduleANewRepeatingJob() throws Exception {
-        JobKey jobKey = new JobKey(JOB_NAME, JOB_GROUP);
         when(scheduler.getJobDetail(jobKey)).thenReturn(reaperJob);
 
         new AggregationScheduler(schedulerFactoryBean, trigger, reaperJob);
