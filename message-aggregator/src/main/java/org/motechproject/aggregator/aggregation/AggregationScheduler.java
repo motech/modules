@@ -29,9 +29,9 @@ public class AggregationScheduler {
 
     public void initialize() {
         try {
-            final JobDetail existingReaperJob = schedulerFactoryBean.getScheduler().getJobDetail(reaperJob.getName(), reaperJob.getGroup());
+            final JobDetail existingReaperJob = schedulerFactoryBean.getScheduler().getJobDetail(reaperJob.getKey());
             if (existingReaperJob != null) {
-                schedulerFactoryBean.getScheduler().deleteJob(reaperJob.getName(), reaperJob.getGroup());
+                schedulerFactoryBean.getScheduler().deleteJob(reaperJob.getKey());
             }
             schedulerFactoryBean.getScheduler().scheduleJob(reaperJob, reaperTrigger);
         } catch (SchedulerException e) {

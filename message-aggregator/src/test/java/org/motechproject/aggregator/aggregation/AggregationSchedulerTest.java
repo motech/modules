@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.quartz.JobDetail;
+import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.Trigger;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
@@ -27,35 +28,37 @@ public class AggregationSchedulerTest {
     public void setUp() throws Exception {
         initMocks(this);
         when(schedulerFactoryBean.getScheduler()).thenReturn(scheduler);
-        when(reaperJob.getName()).thenReturn(JOB_NAME);
-        when(reaperJob.getGroup()).thenReturn(JOB_GROUP);
+        when(reaperJob.getKey()).thenReturn(new JobKey(JOB_NAME, JOB_GROUP));
     }
 
     @Test
     public void shouldRemoveOldScheduleJobWhenItExists() throws Exception {
-        when(scheduler.getJobDetail(JOB_NAME, JOB_GROUP)).thenReturn(reaperJob);
+        JobKey jobKey = new JobKey(JOB_NAME, JOB_GROUP);
+        when(scheduler.getJobDetail(jobKey)).thenReturn(reaperJob);
 
         new AggregationScheduler(schedulerFactoryBean, trigger, reaperJob);
 
-        verify(scheduler).deleteJob(JOB_NAME, JOB_GROUP);
+        verify(scheduler).deleteJob(jobKey);
     }
 
     @Test
     public void shouldNotTryAndRemoveOldScheduleJobWhenItDoesNotExist() throws Exception {
-        when(scheduler.getJobDetail(JOB_NAME, JOB_GROUP)).thenReturn(null);
+        JobKey jobKey = new JobKey(JOB_NAME, JOB_GROUP);
+        when(scheduler.getJobDetail(jobKey)).thenReturn(null);
 
         new AggregationScheduler(schedulerFactoryBean, trigger, reaperJob);
 
-        verify(scheduler, times(0)).deleteJob(JOB_NAME, JOB_GROUP);
+        verify(scheduler, times(0)).deleteJob(jobKey);
     }
 
     @Test
     public void shouldScheduleANewRepeatingJob() throws Exception {
-        when(scheduler.getJobDetail(JOB_NAME, JOB_GROUP)).thenReturn(reaperJob);
+        JobKey jobKey = new JobKey(JOB_NAME, JOB_GROUP);
+        when(scheduler.getJobDetail(jobKey)).thenReturn(reaperJob);
 
         new AggregationScheduler(schedulerFactoryBean, trigger, reaperJob);
 
-        verify(scheduler).deleteJob(JOB_NAME, JOB_GROUP);
+        verify(scheduler).deleteJob(jobKey);
         verify(scheduler).scheduleJob(reaperJob, trigger);
     }
 }
