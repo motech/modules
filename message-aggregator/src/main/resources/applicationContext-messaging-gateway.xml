@@ -18,7 +18,7 @@
         <property name="timeout" value="60000"/>
     </bean>
 
-    <bean name="reaperJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+    <bean name="reaperJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
         <property name="jobClass" value="org.motechproject.aggregator.repository.MessageGroupStoreReaperJob"/>
         <property name="jobDataAsMap">
             <map>
@@ -27,7 +27,7 @@
         </property>
     </bean>
 
-    <bean id="reaperTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <bean id="reaperTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="reaperJob"/>
         <property name="cronExpression" value="${aggregator.cron.expression}"/>
     </bean>
