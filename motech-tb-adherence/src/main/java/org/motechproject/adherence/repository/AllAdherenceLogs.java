@@ -5,7 +5,7 @@ import org.ektorp.CouchDbConnector;
 import org.ektorp.ViewQuery;
 import org.ektorp.support.View;
 import org.joda.time.LocalDate;
-import org.motechproject.adherence.contract.AdherenceData;
+import org.motechproject.adherence.contract.AdherenceRecord;
 import org.motechproject.adherence.domain.AdherenceLog;
 import org.motechproject.dao.MotechBaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,17 +60,17 @@ public class AllAdherenceLogs extends MotechBaseRepository<AdherenceLog> {
     }
 
     @View(name = "by_dosageDate", map = "function(doc) {if (doc.type =='AdherenceLog') {emit(doc.doseDate, {externalId:doc.externalId, treatmentId:doc.treatmentId, doseDate:doc.doseDate, status:doc.status, meta:doc.meta});}}")
-    public List<AdherenceData> findLogsAsOf(LocalDate asOf, int pageNumber, int pageSize) {
+    public List<AdherenceRecord> findLogsAsOf(LocalDate asOf, int pageNumber, int pageSize) {
         ViewQuery q = createQuery("by_dosageDate").endKey(asOf).skip(pageNumber * pageSize).limit(pageSize).inclusiveEnd(true);
-        return db.queryView(q, AdherenceData.class);
+        return db.queryView(q, AdherenceRecord.class);
     }
 
     @View(name = "by_dateRangeExternalIdAndTherapy", map = "function(doc) {if (doc.type =='AdherenceLog') {emit([doc.externalId, doc.treatmentId, doc.doseDate], {externalId:doc.externalId, treatmentId:doc.treatmentId, doseDate:doc.doseDate, status:doc.status, meta:doc.meta});}}")
-    public List<AdherenceData> findLogsInRange(String externalId, String treatmentId, LocalDate startDate, LocalDate endDate) {
+    public List<AdherenceRecord> findLogsInRange(String externalId, String treatmentId, LocalDate startDate, LocalDate endDate) {
         final ComplexKey startKey = ComplexKey.of(externalId, treatmentId, startDate);
         final ComplexKey endKey = ComplexKey.of(externalId, treatmentId, endDate);
         ViewQuery q = createQuery("by_dateRangeExternalIdAndTherapy").startKey(startKey).endKey(endKey).inclusiveEnd(true);
-        return db.queryView(q, AdherenceData.class);
+        return db.queryView(q, AdherenceRecord.class);
     }
 
     @View(name = "by_externalId_dosageDate", map = "function(doc) {if (doc.type =='AdherenceLog') {emit([doc.externalId,doc.doseDate], doc._id);}}")

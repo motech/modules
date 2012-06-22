@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.adherence.AdherenceLogMapper;
 import org.motechproject.adherence.common.SpringIntegrationTest;
-import org.motechproject.adherence.contract.AdherenceData;
+import org.motechproject.adherence.contract.AdherenceRecord;
 import org.motechproject.adherence.domain.AdherenceLog;
 import org.motechproject.adherence.repository.AllAdherenceLogs;
 import org.motechproject.util.DateUtil;
@@ -37,66 +37,38 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
     }
 
     @Test
-    public void shouldRecordAdherence() {
-        AdherenceData data = new AdherenceData("externalId", "treatmentId", DateUtil.today());
-        data = data.status(1);
-
-        adherenceService.saveOrUpdateAdherence(asList(data));
-        assertEquals(1, adherenceService.adherenceRecords("externalId", "treatmentId", DateUtil.today()).size());
-    }
-
-    @Test
-    public void shouldBeIdempotentOnRecordAdherence() {
-        AdherenceData data = new AdherenceData("externalId", "treatmentId", DateUtil.today());
-        data = data.status(2);
-
-        adherenceService.saveOrUpdateAdherence(asList(data));
-        adherenceService.saveOrUpdateAdherence(asList(data));
-        assertEquals(1, adherenceService.adherenceRecords("externalId", "treatmentId", DateUtil.today()).size());
-    }
-
-    @Test
-    public void shouldFetchAdherenceRecords() {
-        AdherenceData data = new AdherenceData("externalId", "treatmentId", DateUtil.today());
-        data = data.status(1);
-
-        adherenceService.saveOrUpdateAdherence(asList(data));
-        assertEquals(1, adherenceService.adherenceRecords("externalId", "treatmentId", DateUtil.today()).size());
-    }
-
-    @Test
     public void shouldFetchAllAdherenceLogsWithinGivenDate() {
         LocalDate today = DateUtil.today();
-        AdherenceData patientOneWithinDateLimit = new AdherenceData("externalId1", "treatmentId", today);
+        AdherenceRecord patientOneWithinDateLimit = new AdherenceRecord("externalId1", "treatmentId", today);
         patientOneWithinDateLimit = patientOneWithinDateLimit.status(1);
 
-        AdherenceData patientOneOutsideLimit = new AdherenceData("externalId1", "treatmentId", today.plusDays(1));
+        AdherenceRecord patientOneOutsideLimit = new AdherenceRecord("externalId1", "treatmentId", today.plusDays(1));
         patientOneOutsideLimit = patientOneOutsideLimit.status(1);
 
-        AdherenceData patientTwoWithinDateLimit = new AdherenceData("externalId2", "treatmentId", today.minusDays(1));
+        AdherenceRecord patientTwoWithinDateLimit = new AdherenceRecord("externalId2", "treatmentId", today.minusDays(1));
         patientTwoWithinDateLimit = patientTwoWithinDateLimit.status(1);
 
         adherenceService.saveOrUpdateAdherence(asList(patientOneOutsideLimit, patientOneWithinDateLimit, patientTwoWithinDateLimit));
-        assertEquals(1, adherenceService.adherenceLogs(today, 0, 1).size());
-        assertEquals(1, adherenceService.adherenceLogs(today, 1, 1).size());
+        assertEquals(1, adherenceService.adherence(today, 0, 1).size());
+        assertEquals(1, adherenceService.adherence(today, 1, 1).size());
     }
 
     @Test
     public void shouldFetchAdherenceRecordsBetweenTwoDates() {
         LocalDate today = DateUtil.today();
 
-        AdherenceData forYesterday = new AdherenceData("externalId", "treatmentId", today.minusDays(1));
+        AdherenceRecord forYesterday = new AdherenceRecord("externalId", "treatmentId", today.minusDays(1));
         forYesterday = forYesterday.status(1);
-        AdherenceData forToday = new AdherenceData("externalId", "treatmentId", today);
+        AdherenceRecord forToday = new AdherenceRecord("externalId", "treatmentId", today);
         forToday = forToday.status(1);
 
         adherenceService.saveOrUpdateAdherence(asList(forYesterday, forToday));
-        assertEquals(2, adherenceService.adherenceRecords("externalId", "treatmentId", today.minusDays(1), today).size());
+        assertEquals(2, adherenceService.adherence("externalId", "treatmentId", today.minusDays(1), today).size());
     }
     @Test
     public void shouldSaveAdherenceLogs() {
-        AdherenceData datum1 = new AdherenceData("externalId1", "treatmentId1", LocalDate.now());
-        AdherenceData datum2 = new AdherenceData("externalId1", "treatmentId2", LocalDate.now());
+        AdherenceRecord datum1 = new AdherenceRecord("externalId1", "treatmentId1", LocalDate.now());
+        AdherenceRecord datum2 = new AdherenceRecord("externalId1", "treatmentId2", LocalDate.now());
 
         AdherenceLogMapper mapper = new AdherenceLogMapper();
         adherenceService.addOrUpdateLogsByDoseDate(asList(datum1, datum2), "externalId1");

@@ -4,7 +4,7 @@ import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Test;
 import org.motechproject.adherence.common.SpringIntegrationTest;
-import org.motechproject.adherence.contract.AdherenceData;
+import org.motechproject.adherence.contract.AdherenceRecord;
 import org.motechproject.adherence.domain.AdherenceLog;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,18 +114,18 @@ public class AllAdherenceLogsIT extends SpringIntegrationTest {
 
         addAll(hasDateBeforeRange, hasDateWithinRange, alsoHasDateWithinRange, hasDateBeyondRange);
 
-        AdherenceData expectedAdherenceData = new AdherenceData(hasDateWithinRange.externalId(),
+        AdherenceRecord expectedAdherenceRecord = new AdherenceRecord(hasDateWithinRange.externalId(),
                 hasDateWithinRange.treatmentId(),
                 hasDateWithinRange.doseDate());
 
-        List<AdherenceData> actualResult = allAdherenceLogs.findLogsInRange("externalId", "treatmentId", new LocalDate(2012, 5, 4), new LocalDate(2012, 5, 6));
+        List<AdherenceRecord> actualResult = allAdherenceLogs.findLogsInRange("externalId", "treatmentId", new LocalDate(2012, 5, 4), new LocalDate(2012, 5, 6));
         assertEquals(1, actualResult.size());
 
-        AdherenceData actualAdherenceData = actualResult.get(0);
-        assertEquals(expectedAdherenceData.doseDate(), actualAdherenceData.doseDate());
-        assertEquals(expectedAdherenceData.status(), actualAdherenceData.status());
-        assertEquals(expectedAdherenceData.externalId(), actualAdherenceData.externalId());
-        assertEquals(expectedAdherenceData.treatmentId(), actualAdherenceData.treatmentId());
+        AdherenceRecord actualAdherenceRecord = actualResult.get(0);
+        assertEquals(expectedAdherenceRecord.doseDate(), actualAdherenceRecord.doseDate());
+        assertEquals(expectedAdherenceRecord.status(), actualAdherenceRecord.status());
+        assertEquals(expectedAdherenceRecord.externalId(), actualAdherenceRecord.externalId());
+        assertEquals(expectedAdherenceRecord.treatmentId(), actualAdherenceRecord.treatmentId());
     }
 
     @Test
