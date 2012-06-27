@@ -3,6 +3,7 @@ package org.motechproject.adherence.repository;
 import org.ektorp.ComplexKey;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.ViewQuery;
+import org.ektorp.ViewResult;
 import org.ektorp.support.View;
 import org.joda.time.LocalDate;
 import org.motechproject.adherence.contract.AdherenceRecord;
@@ -82,16 +83,30 @@ public class AllAdherenceLogs extends MotechBaseRepository<AdherenceLog> {
         return db.queryView(q, AdherenceLog.class);
     }
 
+    @View(name = "count_doses_taken_for_therapy_between", map = "function(doc) {if (doc.type == 'AdherenceLog') {emit([doc.externalId, doc.treatmentId, doc.status, doc.doseDate], doc._id);}}", reduce = "_count")
+    public int countOfDosesTakenBetween(String patientId, String treatmentId, LocalDate from, LocalDate to) {
+        int status = 1;
+        ComplexKey startKey = ComplexKey.of(patientId, treatmentId, status, from);
+        ComplexKey endKey = ComplexKey.of(patientId, treatmentId, status, to);
+
+        ViewQuery q = createQuery("count_doses_taken_for_therapy_between").startKey(startKey).endKey(endKey).inclusiveEnd(true);
+        ViewResult viewResult = db.queryView(q);
+        if (viewResult.getRows().size() == 0) {
+            return 0;
+        }
+        return viewResult.getRows().get(0).getValueAsInt();
+    }
+
     public void addOrUpdateLogsForExternalIdByDoseDate(List<AdherenceLog> adherenceLogs,String externalId){
         if (adherenceLogs.size() <= 0) {
             return;
         }
         List<AdherenceLog> logsInDb = findAllLogsForExternalIdInDoseDateRange(externalId,adherenceLogs.get(0).doseDate(),adherenceLogs.get(adherenceLogs.size()-1).doseDate());
-        ArrayList<AdherenceLog> tobeStoredLogs = mapLogToDbLogsIfExixts(adherenceLogs,logsInDb);
+        ArrayList<AdherenceLog> tobeStoredLogs = mapLogToDbLogsIfExists(adherenceLogs, logsInDb);
         db.executeAllOrNothing(tobeStoredLogs);
     }
 
-    private ArrayList<AdherenceLog> mapLogToDbLogsIfExixts(List<AdherenceLog> logsToMap, List<AdherenceLog> dbLogs) {
+    private ArrayList<AdherenceLog> mapLogToDbLogsIfExists(List<AdherenceLog> logsToMap, List<AdherenceLog> dbLogs) {
         ArrayList<AdherenceLog> tobeStoredLogs = new ArrayList<AdherenceLog>();
         List<LocalDate> doseDatesToBeMappedWith= extract(dbLogs,on(AdherenceLog.class).doseDate());
         for(AdherenceLog log : logsToMap) {

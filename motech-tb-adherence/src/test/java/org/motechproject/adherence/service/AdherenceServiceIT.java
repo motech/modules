@@ -65,6 +65,7 @@ public class AdherenceServiceIT extends SpringIntegrationTest {
         adherenceService.saveOrUpdateAdherence(asList(forYesterday, forToday));
         assertEquals(2, adherenceService.adherence("externalId", "treatmentId", today.minusDays(1), today).size());
     }
+
     @Test
     public void shouldSaveAdherenceLogs() {
         AdherenceRecord datum1 = new AdherenceRecord("externalId1", "treatmentId1", LocalDate.now());

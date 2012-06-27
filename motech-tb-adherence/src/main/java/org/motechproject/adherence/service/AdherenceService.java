@@ -42,4 +42,7 @@ public class AdherenceService {
         allAdherenceLogs.addOrUpdateLogsForExternalIdByDoseDate(adherenceLogs,externalId);
     }
 
+    public int countOfDosesTakenBetween(String patientId, String treatmentId, LocalDate from, LocalDate to) {
+        return allAdherenceLogs.countOfDosesTakenBetween(patientId, treatmentId, from, to);
+    }
 }
