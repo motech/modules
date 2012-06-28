@@ -3,7 +3,7 @@ package org.motechproject.adherence;
 
 import org.joda.time.LocalDate;
 import org.junit.Test;
-import org.motechproject.adherence.contract.AdherenceData;
+import org.motechproject.adherence.contract.AdherenceRecord;
 import org.motechproject.adherence.domain.AdherenceLog;
 
 import java.util.List;
@@ -14,7 +14,7 @@ import static junit.framework.Assert.assertEquals;
 public class AdherenceLogMapperTest {
     @Test
     public void shouldMapAdherenceDataToDomainObject() {
-        AdherenceData datum = new AdherenceData("ext_id","treatment_id", LocalDate.now());
+        AdherenceRecord datum = new AdherenceRecord("ext_id","treatment_id", LocalDate.now());
         datum.addMeta("key","value");
 
         AdherenceLog log = new AdherenceLogMapper().map(datum);
@@ -27,9 +27,9 @@ public class AdherenceLogMapperTest {
 
     @Test
     public void shouldMapListOfAdherenceDataToDomainObject() {
-        AdherenceData datum1 = new AdherenceData("ext_id1","treatment_id1", LocalDate.now());
+        AdherenceRecord datum1 = new AdherenceRecord("ext_id1","treatment_id1", LocalDate.now());
         datum1.status(2);
-        AdherenceData datum2 = new AdherenceData("ext_id2","treatment_id2", LocalDate.now());
+        AdherenceRecord datum2 = new AdherenceRecord("ext_id2","treatment_id2", LocalDate.now());
         datum2.status(1);
 
         List<AdherenceLog> adherenceLogs = new AdherenceLogMapper().map(asList(datum1, datum2));
