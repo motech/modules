@@ -34,15 +34,19 @@ public class AdherenceService {
     }
 
     public List<AdherenceRecord> adherence(String externalId, String treatmentId, LocalDate startDate, LocalDate endDate) {
-        return allAdherenceLogs.findLogsInRange(externalId,treatmentId,startDate,endDate);
+        return allAdherenceLogs.findLogsInRange(externalId, treatmentId, startDate, endDate);
     }
 
     public void addOrUpdateLogsByDoseDate(List<AdherenceRecord> adherenceRecord, String externalId) {
         List<AdherenceLog> adherenceLogs = new AdherenceLogMapper().map(adherenceRecord);
-        allAdherenceLogs.addOrUpdateLogsForExternalIdByDoseDate(adherenceLogs,externalId);
+        allAdherenceLogs.addOrUpdateLogsForExternalIdByDoseDate(adherenceLogs, externalId);
     }
 
     public int countOfDosesTakenBetween(String patientId, String treatmentId, LocalDate from, LocalDate to) {
         return allAdherenceLogs.countOfDosesTakenBetween(patientId, treatmentId, from, to);
+    }
+
+    public List<AdherenceRecord> allTakenLogsFrom(String patientId, String treatmentId, LocalDate startDate) {
+        return allAdherenceLogs.allTakenLogsFrom(patientId, treatmentId, startDate);
     }
 }

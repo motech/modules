@@ -174,6 +174,26 @@ public class AllAdherenceLogsIT extends SpringIntegrationTest {
     }
 
     @Test
+    public void shouldReturnAllTakenLogsSortedInAscendingOrderOfDoseDate() {
+        AdherenceLog log1 = new AdherenceLog("externalId", "treatmentId1", new LocalDate(2012, 1, 3));
+        log1.status(1);
+        AdherenceLog log2 = new AdherenceLog("externalId", "treatmentId1", new LocalDate(2012, 1, 1));
+        log2.status(1);
+        AdherenceLog log3 = new AdherenceLog("externalId", "treatmentId1", new LocalDate(2012, 1, 5));
+        log3.status(2);
+
+        allAdherenceLogs.add(log1);
+        allAdherenceLogs.add(log2);
+        allAdherenceLogs.add(log3);
+
+        List<AdherenceRecord> adherenceRecords = allAdherenceLogs.allTakenLogsFrom("externalId", "treatmentId1", new LocalDate(2012, 1, 1));
+
+        assertEquals(2, adherenceRecords.size());
+        assertEquals(new LocalDate(2012, 1, 1), adherenceRecords.get(0).doseDate());
+        assertEquals(new LocalDate(2012, 1, 3), adherenceRecords.get(1).doseDate());
+    }
+
+    @Test
     public void shouldFetchLogsForExternalIdByDateRange() {
         LocalDate startDate = new LocalDate(2012, 2, 1);
         LocalDate dateInBetweenRange = new LocalDate(2012, 5, 5);

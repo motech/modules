@@ -83,18 +83,27 @@ public class AllAdherenceLogs extends MotechBaseRepository<AdherenceLog> {
         return db.queryView(q, AdherenceLog.class);
     }
 
-    @View(name = "count_doses_taken_for_therapy_between", map = "function(doc) {if (doc.type == 'AdherenceLog') {emit([doc.externalId, doc.treatmentId, doc.status, doc.doseDate], doc._id);}}", reduce = "_count")
     public int countOfDosesTakenBetween(String patientId, String treatmentId, LocalDate from, LocalDate to) {
         int status = 1;
         ComplexKey startKey = ComplexKey.of(patientId, treatmentId, status, from);
         ComplexKey endKey = ComplexKey.of(patientId, treatmentId, status, to);
 
-        ViewQuery q = createQuery("count_doses_taken_for_therapy_between").startKey(startKey).endKey(endKey).inclusiveEnd(true);
+        ViewQuery q = createQuery("all_taken_logs").startKey(startKey).endKey(endKey).inclusiveEnd(true).reduce(true);
         ViewResult viewResult = db.queryView(q);
         if (viewResult.getRows().size() == 0) {
             return 0;
         }
         return viewResult.getRows().get(0).getValueAsInt();
+    }
+
+    @View(name = "all_taken_logs", map = "function(doc) {if (doc.type == 'AdherenceLog') {emit([doc.externalId, doc.treatmentId, doc.status, doc.doseDate], {externalId:doc.externalId, treatmentId:doc.treatmentId, doseDate:doc.doseDate, status:doc.status, meta:doc.meta});}}", reduce ="_count")
+    public List<AdherenceRecord> allTakenLogsFrom(String patientId, String treatmentId, LocalDate startDate) {
+        int status = 1;
+        ComplexKey startKey = ComplexKey.of(patientId, treatmentId, status, startDate);
+        ComplexKey endKey = ComplexKey.of(patientId, treatmentId, status, ComplexKey.emptyObject());
+
+        ViewQuery q = createQuery("all_taken_logs").startKey(startKey).endKey(endKey).inclusiveEnd(true).reduce(false);
+        return db.queryView(q, AdherenceRecord.class);
     }
 
     public void addOrUpdateLogsForExternalIdByDoseDate(List<AdherenceLog> adherenceLogs,String externalId){
