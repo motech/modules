@@ -40,6 +40,15 @@ public class PhoneNumber {
         return returnValue;
     }
 
+    public static Long formatPhoneNumberTo10Digits(String phoneNumber) {
+        Long returnValue = null;
+        if (phoneNumber.length() == 10)
+            returnValue = Long.parseLong(phoneNumber);
+        if (phoneNumber.length() == 12 && (phoneNumber.startsWith("91") || phoneNumber.startsWith("00")))
+            returnValue = Long.parseLong(phoneNumber.substring(2, 12));
+        return returnValue;
+    }
+
     private static boolean validate(String phoneNumber, boolean allowBlanks) {
         if (allowBlanks && StringUtils.isBlank(phoneNumber)) return true;
         return StringUtils.isNotBlank(phoneNumber) && StringUtils.isNumeric(phoneNumber) &&

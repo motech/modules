@@ -34,6 +34,28 @@ public class PhoneNumberTest {
     }
 
     @Test
+    public void shouldReturn10DigitPhoneNumberWhenGivenA10DigitNumber() {
+        String phoneNumber = "1234567890";
+        assertEquals(Long.valueOf(phoneNumber), PhoneNumber.formatPhoneNumberTo10Digits(phoneNumber));
+    }
+
+    @Test
+    public void shouldReturn10DigitPhoneNumberWhenGivenA12DigitNumberStartingWith91Or00() {
+        String phoneNumber1 = "911234567890";
+        Long expectedNumber = Long.parseLong("1234567890");
+        assertEquals(expectedNumber, PhoneNumber.formatPhoneNumberTo10Digits(phoneNumber1));
+
+        String phoneNumber2 = "001234567890";
+        assertEquals(expectedNumber, PhoneNumber.formatPhoneNumberTo10Digits(phoneNumber2));
+    }
+
+    @Test
+    public void shouldNotReturn10DigitPhoneNumberWhenGivenAnInvalidNumber() {
+        String phoneNumber1 = "01234567890";
+        assertNull(PhoneNumber.formatPhoneNumberTo10Digits(phoneNumber1));
+    }
+
+    @Test
     public void shouldAppend91To12DigitPhoneNumbersAnd10DigitPhoneNumbers() {
         PhoneNumber phoneNumber = new PhoneNumber("1234567890");
         assertEquals(new Long(911234567890L), phoneNumber.getPhoneNumber());
