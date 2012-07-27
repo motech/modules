@@ -132,6 +132,8 @@
     </dependencies>
 
     <modules>
+        <!-- Non-OSGI modules -->
+        <!-- OSGI modules -->
         <!-- Keep this module in last, the module checks if everything is alright after deploy motech on tomcat server -->
     </modules>
 
