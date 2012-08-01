@@ -5,18 +5,13 @@
     <parent>
         <artifactId>motech-contrib</artifactId>
         <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
-        <version>0.12-SNAPSHOT</version>
+        <version>0.1-SNAPSHOT</version>
     </parent>
 
     <name>message-aggregator</name>
     <artifactId>message-aggregator</artifactId>
     <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
-    <version>0.12-SNAPSHOT</version>
-
-    <properties>
-        <spring.version>3.1.0.RELEASE</spring.version>
-        <spring.integration.version>2.1.1.RELEASE</spring.integration.version>
-    </properties>
+    <version>0.1-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
