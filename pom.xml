@@ -124,16 +124,23 @@
             <artifactId>commons-fileupload</artifactId>
             <version>1.2.2</version>
         </dependency>
-        <dependency>
-            <groupId>findbugs</groupId>
-            <artifactId>annotations</artifactId>
-            <version>1.0.0</version>
-        </dependency>
+        <!-- Uncomment with findbugs-maven-plugin -->
+        <!--<dependency>-->
+            <!--<groupId>findbugs</groupId>-->
+            <!--<artifactId>annotations</artifactId>-->
+            <!--<version>1.0.0</version>-->
+        <!--</dependency>-->
     </dependencies>
 
     <modules>
         <!-- Non-OSGI modules -->
+        <module>modules/message-campaign/message-campaign</module>
+
         <!-- OSGI modules -->
+        <module>modules/message-campaign/message-campaign-bundle</module>
+
+        <!-- Packaging modules -->
+
         <!-- Keep this module in last, the module checks if everything is alright after deploy motech on tomcat server -->
     </modules>
 
