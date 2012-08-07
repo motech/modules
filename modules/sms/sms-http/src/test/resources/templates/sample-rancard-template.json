@@ -1,0 +1,17 @@
+{
+    "outgoing": {
+        "request": {
+            "urlPath": "http://app.rancardmobility.com/rmcs/sendMessage.jsp",
+            "queryParameters": {
+                "username": "drmg****",
+                "password": "dr3****",
+                "to": "$recipients" ,
+                "text": "$message",
+                "from": "*****"
+            }
+        }
+    },
+    "incoming": {
+
+    }
+}

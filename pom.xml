@@ -124,16 +124,47 @@
             <artifactId>commons-fileupload</artifactId>
             <version>1.2.2</version>
         </dependency>
-        <dependency>
-            <groupId>findbugs</groupId>
-            <artifactId>annotations</artifactId>
-            <version>1.0.0</version>
-        </dependency>
+        <!-- Uncomment with findbugs-maven-plugin -->
+        <!--<dependency>-->
+            <!--<groupId>findbugs</groupId>-->
+            <!--<artifactId>annotations</artifactId>-->
+            <!--<version>1.0.0</version>-->
+        <!--</dependency>-->
     </dependencies>
 
     <modules>
         <!-- Non-OSGI modules -->
+        <module>modules/alerts/alerts-api</module>
+        <module>modules/cmslite/cmslite-api</module>
+        <module>modules/commcare/commcare-api</module>
+        <module>modules/ivr/ivr-api</module>
+        <module>modules/ivr/ivr-asterisk</module>
+        <module>modules/ivr/ivr-kookoo</module>
+        <module>modules/ivr/ivr-verboice</module>
+        <module>modules/ivr/ivr-voxeo</module>
+        <module>modules/mobileforms/mobileforms-api</module>
+        <module>modules/outbox/outbox-api</module>
+        <module>modules/outbox/outbox</module>
+        <module>modules/sms/sms-api</module>
+        <module>modules/sms/sms-http</module>
+        <module>modules/sms/sms-smpp</module>
+
         <!-- OSGI modules -->
+        <module>modules/alerts/alerts-api-bundle</module>
+        <module>modules/cmslite/cmslite-api-bundle</module>
+        <module>modules/commcare/commcare-api-bundle</module>
+        <module>modules/ivr/ivr-asterisk-bundle</module>
+        <module>modules/ivr/ivr-kookoo-bundle</module>
+        <module>modules/ivr/ivr-verboice-bundle</module>
+        <module>modules/ivr/ivr-voxeo-bundle</module>
+        <module>modules/mobileforms/mobileforms-api-bundle</module>
+        <module>modules/outbox/outbox-bundle</module>
+        <module>modules/sms/sms-api-bundle</module>
+        <module>modules/sms/sms-http-bundle</module>
+        <module>modules/sms/sms-smpp-bundle</module>
+
+        <!-- Packaging modules -->
+
         <!-- Keep this module in last, the module checks if everything is alright after deploy motech on tomcat server -->
     </modules>
 
