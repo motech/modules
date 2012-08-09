@@ -10,8 +10,6 @@
 
     <name>message-aggregator</name>
     <artifactId>message-aggregator</artifactId>
-    <groupId>org.motechproject</groupId>
-    <version>0.12-SNAPSHOT</version>
 
     <properties>
         <spring.version>3.1.0.RELEASE</spring.version>
