@@ -10,8 +10,6 @@
 
     <name>message-aggregator</name>
     <artifactId>message-aggregator</artifactId>
-    <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
-    <version>0.1-SNAPSHOT</version>
 
     <dependencies>
         <dependency>

@@ -10,8 +10,6 @@
 
     <name>test-aggregator</name>
     <artifactId>test-aggregator</artifactId>
-    <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
-    <version>0.1-SNAPSHOT</version>
 
     <properties>
         <spring.version>3.1.0.RELEASE</spring.version>
@@ -24,9 +22,9 @@
             <version>3.1.0.RELEASE</version>
         </dependency>
         <dependency>
-            <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
+            <groupId>${motech.contrib.group}</groupId>
             <artifactId>message-aggregator</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.contrib.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

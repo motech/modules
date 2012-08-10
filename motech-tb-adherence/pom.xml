@@ -9,9 +9,7 @@
     </parent>
 
     <name>motech-tb-adherence</name>
-    <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
     <artifactId>motech-tb-adherence</artifactId>
-    <version>0.1-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
