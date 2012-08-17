@@ -120,9 +120,19 @@
             <version>3.1</version>
         </dependency>
         <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2</version>
+        </dependency>
+        <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
             <version>1.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openmrs.hibernate</groupId>
+            <artifactId>hibernate</artifactId>
+            <version>3.2.5.ga-mod</version>
         </dependency>
         <!-- Uncomment with findbugs-maven-plugin -->
         <!--<dependency>-->
