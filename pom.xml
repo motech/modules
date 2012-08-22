@@ -145,9 +145,13 @@
     <modules>
         <!-- Non-OSGI modules -->
         <module>modules/message-campaign/message-campaign</module>
+        <module>modules/pillreminder/api</module>
+        <module>modules/scheduletracking/api</module>
 
         <!-- OSGI modules -->
         <module>modules/message-campaign/message-campaign-bundle</module>
+        <module>modules/pillreminder/api-bundle</module>
+        <module>modules/scheduletracking/api-bundle</module>
 
         <!-- Packaging modules -->
 
