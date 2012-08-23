@@ -1,8 +1,8 @@
 package org.motechproject.aggregator.outbound;
 
 import org.junit.Test;
-import org.motechproject.scheduler.domain.MotechEvent;
-import org.motechproject.scheduler.gateway.OutboundEventGateway;
+import org.motechproject.event.MotechEvent;
+import org.motechproject.event.OutboundEventGateway;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageHeaders;
 

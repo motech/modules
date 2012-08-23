@@ -1,7 +1,7 @@
 package org.motechproject.testaggregation;
 
 import org.motechproject.aggregator.inbound.EventAggregationGateway;
-import org.motechproject.scheduler.domain.MotechEvent;
+import org.motechproject.event.MotechEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 

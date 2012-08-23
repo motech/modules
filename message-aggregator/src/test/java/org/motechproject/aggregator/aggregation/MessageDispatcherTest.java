@@ -3,7 +3,7 @@ package org.motechproject.aggregator.aggregation;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.scheduler.domain.MotechEvent;
+import org.motechproject.event.MotechEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;

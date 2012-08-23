@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.aggregator.aggregation.AggregationHandler;
 import org.motechproject.aggregator.repository.MessageStore;
-import org.motechproject.scheduler.domain.MotechEvent;
+import org.motechproject.event.MotechEvent;
 import org.springframework.integration.Message;
 import org.springframework.integration.store.MessageGroup;
 
