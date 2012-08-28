@@ -4,16 +4,24 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.ektorp.CouchDbConnector;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
-import org.motechproject.decisiontree.FlowSession;
-import org.motechproject.decisiontree.model.*;
-import org.motechproject.decisiontree.repository.AllTrees;
-import org.motechproject.decisiontree.service.impl.AllFlowSessionRecords;
-import org.motechproject.server.decisiontree.TreeNodeLocator;
+import org.motechproject.decisiontree.server.service.impl.AllFlowSessionRecords;
+import org.motechproject.decisiontree.core.FlowSession;
+import org.motechproject.decisiontree.core.model.AudioPrompt;
+import org.motechproject.decisiontree.core.model.ITransition;
+import org.motechproject.decisiontree.core.model.Node;
+import org.motechproject.decisiontree.core.model.TextToSpeechPrompt;
+import org.motechproject.decisiontree.core.model.Transition;
+import org.motechproject.decisiontree.core.model.Tree;
+import org.motechproject.decisiontree.core.repository.AllTrees;
 import org.motechproject.testing.utils.SpringIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,7 +38,7 @@ import static org.custommonkey.xmlunit.XMLUnit.setIgnoreWhitespace;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/testKookooContext.xml"})
-public class CallFlowIT extends SpringIntegrationTest {
+public class KookooIvrControllerCallFlowIT extends SpringIntegrationTest {
 
     static Server server;
     static String CONTEXT_PATH = "/motech";
@@ -97,20 +105,21 @@ public class CallFlowIT extends SpringIntegrationTest {
         tree.setName("someTree");
         tree.setRootTransition(new Transition().setDestinationNode(
             new Node()
-                .addPrompts(new TextToSpeechPrompt().setMessage("hello"))
-                .addTransition("1", new Transition().setDestinationNode(new Node()))
-                .setTransitionKeyEndMarker("*")
+                .addPrompts(
+                    new TextToSpeechPrompt().setMessage("hello"))
+                .addTransition(
+                    "*", new Transition().setDestinationNode(new Node()))
         ));
         allTrees.addOrReplace(tree);
 
-        String response = kookooIvrController.execute(new HttpGet(format("%s?tree=someTree&trP=Lw&ln=en&sid=shouldPlayPromptsAndRequestDtmfIfNodeHasTransitions", SERVER_URL)), new BasicResponseHandler());
+        String response = kookooIvrController.execute(new HttpGet(format("%s?tree=someTree&ln=en&sid=shouldPlayPromptsAndRequestDtmfIfNodeHasTransitions", SERVER_URL)), new BasicResponseHandler());
         String expectedResponse =
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<response>" +
-                "   <collectdtmf l=\"1\" t=\"*\" o=\"5000\">" +
+                "   <collectdtmf l=\"1\" t=\"#\" o=\"5000\">" +
                 "       <playtext>hello</playtext>" +
                 "   </collectdtmf>" +
-                "   <gotourl>http://localhost:7080/motech/kookoo/ivr?provider=kookoo&amp;ln=en&amp;tree=someTree&amp;trP=Lw</gotourl>" +
+                "   <gotourl>http://localhost:7080/motech/kookoo/ivr?provider=kookoo&amp;ln=en&amp;tree=someTree</gotourl>" +
                 "</response>";
         assertXMLEqual(expectedResponse, response);
     }
@@ -124,27 +133,24 @@ public class CallFlowIT extends SpringIntegrationTest {
                 .addTransition(
                     "1", new Transition().setDestinationNode(new Node()
                     .addPrompts(
-                            new TextToSpeechPrompt().setMessage("pressed one"))))
+                        new TextToSpeechPrompt().setMessage("pressed one"))))
                 .addTransition(
                     "2", new Transition().setDestinationNode(new Node()
-                        .addNoticePrompts(
-                            new TextToSpeechPrompt().setMessage("pressed two"))
                         .addPrompts(
-                                new TextToSpeechPrompt().setMessage("Press star key"))
+                            new TextToSpeechPrompt().setMessage("pressed two"))
                         .addTransition(
-                                "*", new Transition())))
+                            "*", new Transition())))
         ));
         allTrees.addOrReplace(tree);
 
-        String response = kookooIvrController.execute(new HttpGet(format("%s?tree=someTree&trP=Lw&ln=en&event=GotDTMF&data=2&sid="+UUID.randomUUID().getMostSignificantBits() , SERVER_URL)), new BasicResponseHandler());
+        String response = kookooIvrController.execute(new HttpGet(format("%s?tree=someTree&ln=en&event=GotDTMF&data=2&sid="+UUID.randomUUID().getMostSignificantBits() , SERVER_URL)), new BasicResponseHandler());
         String expectedResponse =
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<response>" +
-                "   <playtext>pressed two</playtext>" +
                 "   <collectdtmf l=\"1\" t=\"#\"  o=\"5000\">" +
-                "       <playtext>Press star key</playtext>" +
+                "       <playtext>pressed two</playtext>" +
                 "   </collectdtmf>" +
-                "   <gotourl>http://localhost:7080/motech/kookoo/ivr?provider=kookoo&amp;ln=en&amp;tree=someTree&amp;trP=LzI</gotourl>" +
+                "   <gotourl>http://localhost:7080/motech/kookoo/ivr?provider=kookoo&amp;ln=en&amp;tree=someTree</gotourl>" +
                 "</response>";
         assertXMLEqual(expectedResponse, response);
     }
@@ -155,11 +161,11 @@ public class CallFlowIT extends SpringIntegrationTest {
         tree.setName("someTree");
         tree.setRootTransition(new Transition().setDestinationNode(
             new Node().addPrompts(
-                    new AudioPrompt().setAudioFileUrl("music.wav"))
+                new AudioPrompt().setAudioFileUrl("music.wav"))
         ));
         allTrees.addOrReplace(tree);
 
-        String response = kookooIvrController.execute(new HttpGet(format("%s?tree=someTree&trP=Lw&ln=en&sid=noTransition", SERVER_URL)), new BasicResponseHandler());
+        String response = kookooIvrController.execute(new HttpGet(format("%s?tree=someTree&ln=en&sid=noTransition", SERVER_URL)), new BasicResponseHandler());
         String expectedResponse =
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<response>" +
@@ -179,7 +185,7 @@ public class CallFlowIT extends SpringIntegrationTest {
         ));
         allTrees.addOrReplace(tree);
 
-        String response = kookooIvrController.execute(new HttpGet(format("%s?tree=someTree&trP=aGFuZ3Vw&ln=en&sid=noTransition&event=Hangup", SERVER_URL)), new BasicResponseHandler());
+        String response = kookooIvrController.execute(new HttpGet(format("%s?tree=someTree&ln=en&sid=noTransition&event=Hangup", SERVER_URL)), new BasicResponseHandler());
         String expectedResponse =
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<response>" +
@@ -198,7 +204,7 @@ public class CallFlowIT extends SpringIntegrationTest {
         ));
         allTrees.addOrReplace(tree);
 
-        String response = kookooIvrController.execute(new HttpGet(format("%s?tree=someTree&trP=aGFuZ3Vw&ln=en&sid=noTransition&event=Disconnect", SERVER_URL)), new BasicResponseHandler());
+        String response = kookooIvrController.execute(new HttpGet(format("%s?tree=someTree&ln=en&sid=noTransition&event=Disconnect", SERVER_URL)), new BasicResponseHandler());
         String expectedResponse =
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<response>" +
@@ -218,12 +224,12 @@ public class CallFlowIT extends SpringIntegrationTest {
         ));
         allTrees.addOrReplace(tree);
 
-        String response = kookooIvrController.execute(new HttpGet(format("%s?tree=someTree&trP=Lw&ln=en&sid=shouldRequestMaxLengthDtmfForArbitraryInput", SERVER_URL)), new BasicResponseHandler());
+        String response = kookooIvrController.execute(new HttpGet(format("%s?tree=someTree&ln=en&sid=shouldRequestMaxLengthDtmfForArbitraryInput", SERVER_URL)), new BasicResponseHandler());
         String expectedResponse =
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<response>" +
                 "   <collectdtmf l=\"50\" t=\"#\" o=\"5000\"></collectdtmf>" +
-                "   <gotourl>http://localhost:7080/motech/kookoo/ivr?provider=kookoo&amp;ln=en&amp;tree=someTree&amp;trP=Lw</gotourl>" +
+                "   <gotourl>http://localhost:7080/motech/kookoo/ivr?provider=kookoo&amp;ln=en&amp;tree=someTree</gotourl>" +
                 "</response>";
         assertXMLEqual(expectedResponse, response);
     }
@@ -239,42 +245,14 @@ public class CallFlowIT extends SpringIntegrationTest {
         ));
         allTrees.addOrReplace(tree);
 
-        String response = kookooIvrController.execute(new HttpGet(format("%s?tree=someTree&trP=Lw&ln=en&event=GotDTMF&data=31415&sid="+ UUID.randomUUID().getMostSignificantBits() , SERVER_URL)), new BasicResponseHandler());
+        String response = kookooIvrController.execute(new HttpGet(format("%s?tree=someTree&ln=en&event=GotDTMF&data=31415&sid="+ UUID.randomUUID().getMostSignificantBits() , SERVER_URL)), new BasicResponseHandler());
         String expectedResponse = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
             "<response>" +
-            "   <playtext>you entered 31415</playtext>" +
             "   <collectdtmf l=\"1\" t=\"#\" o=\"5000\">" +
-            "       <playtext>Press star</playtext>" +
+            "       <playtext>you entered 31415</playtext>" +
             "   </collectdtmf>" +
-            "   <gotourl>http://localhost:7080/motech/kookoo/ivr?provider=kookoo&amp;ln=en&amp;tree=someTree&amp;trP=LzMxNDE1</gotourl>" +
+            "   <gotourl>http://localhost:7080/motech/kookoo/ivr?provider=kookoo&amp;ln=en&amp;tree=someTree</gotourl>" +
             "</response>";
-        assertXMLEqual(expectedResponse, response);
-    }
-
-    @Test
-    public void shouldTransitionToNoInputTransition_IfPresent_WhenTransitionTimesOut() throws Exception {
-        Tree tree = new Tree();
-        tree.setName("someTree");
-        tree.setRootTransition(new Transition().setDestinationNode(
-                new Node()
-                        .addTransition("?", new CustomTransition())
-                        .addTransition(TreeNodeLocator.NO_INPUT,
-                                new Transition().setDestinationNode(
-                                        new Node().addPrompts(
-                                                new TextToSpeechPrompt().setMessage("No input was given")
-                                        )
-                                )
-                        )
-        ));
-        allTrees.addOrReplace(tree);
-
-        String response = kookooIvrController.execute(new HttpGet(format("%s?tree=someTree&trP=Lw&ln=en&event=GotDTMF&data=&sid="+ UUID.randomUUID().getMostSignificantBits() , SERVER_URL)), new BasicResponseHandler());
-        String expectedResponse = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                "<response>" +
-                "   <playtext>No input was given</playtext>" +
-                "   <hangup></hangup>" +
-                "</response>";
-
         assertXMLEqual(expectedResponse, response);
     }
 
@@ -283,11 +261,9 @@ public class CallFlowIT extends SpringIntegrationTest {
         @Override
         public Node getDestinationNode(String input, FlowSession session) {
             return new Node()
-                .addNoticePrompts(new TextToSpeechPrompt().setMessage(format("you entered %s", input)))
-                .addPrompts(new TextToSpeechPrompt().setMessage("Press star"))
+                .addPrompts(new TextToSpeechPrompt().setMessage(format("you entered %s", input)))
                 .addTransition("*", new Transition().setDestinationNode(new Node().setPrompts(new AudioPrompt().setAudioFileUrl("You Pressed Star.wav"))));
         }
-
         //TODO need end-to-end tests with session.
     }
 }
