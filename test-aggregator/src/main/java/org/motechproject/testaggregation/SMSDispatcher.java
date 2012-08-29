@@ -2,7 +2,7 @@ package org.motechproject.testaggregation;
 
 import org.motechproject.aggregator.aggregation.AggregateMotechEvent;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.event.annotations.MotechListener;
+import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.sms.api.service.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
