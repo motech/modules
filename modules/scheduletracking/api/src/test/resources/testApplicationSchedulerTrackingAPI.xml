@@ -5,7 +5,6 @@
 
     <import resource="applicationSchedulerTrackingAPIContext.xml"/>
 
-    <!--Rahul: try to remove-->
     <import resource="classpath:applicationPlatformServerAPI.xml"/>
     <bean id="schedulerService" class="org.motechproject.scheduler.impl.MotechSchedulerServiceImpl"/>
 
