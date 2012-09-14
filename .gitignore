@@ -7,3 +7,5 @@ where JOB_NAME LIKE '%repeat%dea/
 *.ipr
 *.iws
 *.log*
+motech-bulk-export-import/SampleData-report.csv
+motech-bulk-export-import/report_file
