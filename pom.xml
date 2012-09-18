@@ -222,8 +222,6 @@
         <module>modules/pillreminder/api</module>
         <module>modules/scheduletracking/api</module>
 
-        <!-- Internal OSGI bundles -->
-
         <!-- OSGI modules -->
         <module>modules/message-campaign/message-campaign-bundle</module>
         <module>modules/pillreminder/api-bundle</module>
