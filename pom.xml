@@ -235,8 +235,6 @@
         <module>modules/sms/http</module>
         <module>modules/sms/smpp</module>
 
-        <!-- Internal OSGI bundles -->
-
         <!-- OSGI modules -->
         <module>modules/alerts/api-bundle</module>
         <module>modules/cmslite/api-bundle</module>
