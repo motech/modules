@@ -9,8 +9,16 @@
         </layout>
     </appender>
 
-    <logger name="org.motechproject">
-        <level value="WARN"/>
+    <logger name="org.motechproject.scheduler.impl.MotechScheduler">
+        <level value="INFO"/>
+    </logger>
+
+    <logger name="org.motechproject.scheduler.impl.MotechScheduledJob">
+        <level value="INFO"/>
+    </logger>
+
+    <logger name="org.motechproject.scheduler.impl.MotechSchedulerServiceImpl">
+        <level value="INFO"/>
     </logger>
 
     <root>
