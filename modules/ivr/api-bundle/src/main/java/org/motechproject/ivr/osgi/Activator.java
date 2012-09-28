@@ -1,4 +1,4 @@
-package org.motechproject.cmslite.api.osgi;
+package org.motechproject.ivr.osgi;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -12,8 +12,8 @@ import org.springframework.web.servlet.DispatcherServlet;
 
 public class Activator implements BundleActivator {
     private static Logger logger = LoggerFactory.getLogger(Activator.class);
-    private static final String CONTEXT_CONFIG_LOCATION = "applicationCmsLiteApiBundle.xml";
-    private static final String SERVLET_URL_MAPPING = "/cmsliteapi";
+    private static final String CONTEXT_CONFIG_LOCATION = "applicationIVRAPIBundle.xml";
+    private static final String SERVLET_URL_MAPPING = "/ivrapi";
     private ServiceTracker tracker;
     private ServiceReference httpService;
 
@@ -50,9 +50,9 @@ public class Activator implements BundleActivator {
         }
     }
 
-    public static class CmsLiteApiApplicationContext extends OsgiBundleXmlWebApplicationContext {
+    public static class IvrApiApplicationContext extends OsgiBundleXmlWebApplicationContext {
 
-        public CmsLiteApiApplicationContext() {
+        public IvrApiApplicationContext() {
             super();
             setBundleContext(Activator.bundleContext);
         }
@@ -63,7 +63,7 @@ public class Activator implements BundleActivator {
         try {
             DispatcherServlet dispatcherServlet = new DispatcherServlet();
             dispatcherServlet.setContextConfigLocation(CONTEXT_CONFIG_LOCATION);
-            dispatcherServlet.setContextClass(CmsLiteApiApplicationContext.class);
+            dispatcherServlet.setContextClass(IvrApiApplicationContext.class);
             ClassLoader old = Thread.currentThread().getContextClassLoader();
             try {
                 Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
@@ -75,7 +75,6 @@ public class Activator implements BundleActivator {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
 
     private void serviceRemoved(HttpService service) {
