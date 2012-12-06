@@ -1087,6 +1087,7 @@
         <module>modules/sms/http</module>
         <module>modules/sms/smpp</module>
 
+
         <!-- OSGI modules -->
         <module>modules/alerts/api-bundle</module>
         <module>modules/cmslite/api-bundle</module>
