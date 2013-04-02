@@ -1149,7 +1149,6 @@
 
 
         <!-- OSGI modules -->
-        <module>modules/cmslite/api-bundle</module>
         <module>modules/commcare/api-bundle</module>
         <module>modules/ivr/api-bundle</module>
         <module>modules/ivr/asterisk-bundle</module>
