@@ -1139,7 +1139,6 @@
 
     <modules>
         <!-- Non-OSGI modules -->
-        <module>modules/commcare/api</module>
         <module>modules/ivr/api</module>
         <module>modules/ivr/asterisk</module>
         <module>modules/ivr/kookoo</module>
@@ -1156,7 +1155,7 @@
         <module>modules/alerts/api</module>
         <module>modules/callflow/api</module>
         <module>modules/cmslite/api</module>
-        <module>modules/commcare/api-bundle</module>
+        <module>modules/commcare/api</module>
         <module>modules/decisiontree/core</module>
         <module>modules/ivr/api-bundle</module>
         <module>modules/ivr/asterisk-bundle</module>
