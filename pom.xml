@@ -17,14 +17,22 @@
         <db.server>localhost</db.server>
         <db.port>5984</db.port>
         <db.prefix>${user.name}_</db.prefix>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>3.1.0.RELEASE</spring.version>
-        <spring.security.version>3.1.0.RELEASE</spring.security.version>
-        <spring.integration.version>2.1.0.RELEASE</spring.integration.version>
+
         <external.dependency.release.tag>r010</external.dependency.release.tag>
-        <activemq.version>5.4.2-${external.dependency.release.tag}</activemq.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <modules.root.dir>${basedir}</modules.root.dir>
         <jdk.version>1.7</jdk.version>
+
+        <spring.version>3.1.0.RELEASE</spring.version>
+        <spring.security.version>${spring.version}</spring.security.version>
+        <spring.integration.version>2.1.0.RELEASE</spring.integration.version>
+
+        <activemq.version>5.4.2-${external.dependency.release.tag}</activemq.version>
+
+        <check.code.skip>${maven.test.skip}</check.code.skip>
+        <pmd.skip>${check.code.skip}</pmd.skip>
+        <checkstyle.skip>${check.code.skip}</checkstyle.skip>
+        <jslint.enable>true</jslint.enable>
 
         <scm.connection>scm:git:https://code.google.com/p/motech</scm.connection>
         <scm.developerConnection>scm:git:https://code.google.com/p/motech</scm.developerConnection>
@@ -1131,11 +1139,7 @@
 
     <modules>
         <!-- Non-OSGI modules -->
-        <module>modules/alerts/api</module>
-        <module>modules/cmslite/api</module>
         <module>modules/commcare/api</module>
-        <module>modules/decisiontree/core</module>
-        <module>modules/callflow/api</module>
         <module>modules/ivr/api</module>
         <module>modules/ivr/asterisk</module>
         <module>modules/ivr/kookoo</module>
@@ -1148,20 +1152,25 @@
         <module>modules/sms/http</module>
         <module>modules/sms/smpp</module>
 
-
         <!-- OSGI modules -->
+        <module>modules/alerts/api</module>
+        <module>modules/callflow/api</module>
+        <module>modules/cmslite/api</module>
         <module>modules/commcare/api-bundle</module>
+        <module>modules/decisiontree/core</module>
         <module>modules/ivr/api-bundle</module>
         <module>modules/ivr/asterisk-bundle</module>
         <module>modules/ivr/kookoo-bundle</module>
+        <module>modules/ivr/motech-calllog</module>
         <module>modules/ivr/verboice-bundle</module>
         <module>modules/ivr/voxeo-bundle</module>
-        <module>modules/ivr/motech-calllog</module>
         <module>modules/mobileforms/api-bundle</module>
         <module>modules/outbox/outbox-bundle</module>
         <module>modules/sms/api-bundle</module>
         <module>modules/sms/http-bundle</module>
         <module>modules/sms/smpp-bundle</module>
+
+        <!-- Archetypes modules -->
 
         <!-- Packaging modules -->
 
@@ -1269,7 +1278,7 @@
                     </rulesets>
                     <includeTests>false</includeTests>
                     <targetJdk>${jdk.version}</targetJdk>
-                    <skip>${maven.test.skip}</skip>
+                    <skip>${pmd.skip}</skip>
                 </configuration>
                 <executions>
                     <execution>
@@ -1314,7 +1323,7 @@
                     <enableFilesSummary>true</enableFilesSummary>
                     <failsOnError>true</failsOnError>
                     <consoleOutput>true</consoleOutput>
-                    <skip>${maven.test.skip}</skip>
+                    <skip>${checkstyle.skip}</skip>
                 </configuration>
                 <executions>
                     <execution>
