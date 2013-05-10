@@ -1146,7 +1146,6 @@
         <module>modules/ivr/verboice</module>
         <module>modules/ivr/voxeo</module>
         <module>modules/mobileforms/api</module>
-        <module>modules/outbox/api</module>
         <module>modules/outbox/outbox</module>
         <module>modules/sms/api</module>
         <module>modules/sms/http</module>
