@@ -36,7 +36,7 @@ public final class IvrBundleListener implements ServiceListener {
         ServiceReference serviceReference = event.getServiceReference();
         String[] objectClass = (String[]) serviceReference.getProperty("objectClass");
 
-        if (objectClass.length > 0 && objectClass[0].equals("org.motechproject.ivr.service.IVRService")) {
+        if (objectClass.length > 0 && objectClass[0].equals("org.motechproject.ivr.service.contract.IVRService")) {
             String provider = (String) serviceReference.getProperty("IvrProvider");
             if (event.getType() == ServiceEvent.REGISTERED) {
                 allProviderBundles.register(provider, (IVRService) bundleContext.getService(serviceReference));
