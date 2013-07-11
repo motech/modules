@@ -155,6 +155,7 @@
                             org.springframework.beans.factory.aspectj,
                             org.springframework.beans.factory.xml,
                             org.springframework.context.config,
+                            org.springframework.web,
                             *
                         </Import-Package>
                         <Embed-Dependency>motech-mobileforms-api;inline=true</Embed-Dependency>
