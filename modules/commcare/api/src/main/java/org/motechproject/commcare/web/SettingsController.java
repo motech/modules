@@ -1,7 +1,10 @@
 package org.motechproject.commcare.web;
 
+import org.motechproject.commcare.domain.CommcareDataForwardingEndpoint;
 import org.motechproject.commcare.domain.SettingsDto;
+import org.motechproject.commcare.service.CommcareDataForwardingEndpointService;
 import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.server.config.service.PlatformSettingsService;
 import org.osgi.framework.BundleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,6 +31,12 @@ public class SettingsController {
     private static final String FORWARD_CASES_KEY = "forwardCases";
     private static final String FORWARD_FORMS_KEY = "forwardForms";
     private static final String FORWARD_FORM_STUBS_KEY = "forwardFormStubs";
+
+    @Autowired
+    private PlatformSettingsService settingsService;
+
+    @Autowired
+    private CommcareDataForwardingEndpointService forwardingEndpointService;
 
     private SettingsFacade settingsFacade;
 
@@ -61,9 +70,24 @@ public class SettingsController {
         if (settings.getEventStrategy() != null) {
             settingsFacade.setProperty(CASE_EVENT_STRATEGY_KEY, settings.getEventStrategy());
         }
-        settingsFacade.setProperty(FORWARD_CASES_KEY, String.valueOf(settings.shouldForwardCases()));
-        settingsFacade.setProperty(FORWARD_FORMS_KEY, String.valueOf(settings.shouldForwardForms()));
-        settingsFacade.setProperty(FORWARD_FORM_STUBS_KEY, String.valueOf(settings.shouldForwardFormStubs()));
+
+        if (!getBooleanPropertyValue(FORWARD_CASES_KEY) && settings.shouldForwardCases()) {
+            settingsFacade.setProperty(FORWARD_CASES_KEY, String.valueOf(settings.shouldForwardCases()));
+
+            forward("CaseRepeater", getCasesUrl());
+        }
+
+        if (!getBooleanPropertyValue(FORWARD_FORMS_KEY) && settings.shouldForwardForms()) {
+            settingsFacade.setProperty(FORWARD_FORMS_KEY, String.valueOf(settings.shouldForwardForms()));
+
+            forward("FormRepeater", getFormsUrl());
+        }
+
+        if (!getBooleanPropertyValue(FORWARD_FORM_STUBS_KEY) && settings.shouldForwardFormStubs()) {
+            settingsFacade.setProperty(FORWARD_FORM_STUBS_KEY, String.valueOf(settings.shouldForwardFormStubs()));
+
+            forward("ShortFormRepeater", getFormStubsUrl());
+        }
     }
 
     private String getPropertyValue(final String propertyKey) {
@@ -73,5 +97,25 @@ public class SettingsController {
 
     private boolean getBooleanPropertyValue(final String propertyKey) {
         return Boolean.parseBoolean(settingsFacade.getProperty(propertyKey));
+    }
+
+    private void forward(String type, String url) {
+        CommcareDataForwardingEndpoint newForwardingEndpoint = new CommcareDataForwardingEndpoint(
+                getPropertyValue(COMMCARE_DOMAIN_KEY), type,
+                url, null);
+
+        forwardingEndpointService.createNewDataForwardingRule(newForwardingEndpoint);
+    }
+
+    private String getCasesUrl() {
+        return settingsService.getPlatformSettings().getServerUrl() + "/module/commcare/cases/";
+    }
+
+    private String getFormsUrl() {
+        return settingsService.getPlatformSettings().getServerUrl() + "/module/commcare/forms/";
+    }
+
+    private String getFormStubsUrl() {
+        return settingsService.getPlatformSettings().getServerUrl() + "/module/commcare/stub/";
     }
 }
