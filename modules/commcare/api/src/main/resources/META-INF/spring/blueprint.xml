@@ -50,6 +50,9 @@
     <osgi:service id="commcareFormServiceOsgi" ref="commcareFormServiceImpl"
                   interface="org.motechproject.commcare.service.CommcareFormService"/>
 
+    <osgi:service id="commcareDataForwardingEndpointServiceOsgi" ref="commcareDataForwardingEndpointServiceImpl"
+                  interface="org.motechproject.commcare.service.CommcareDataForwardingEndpointService"/>
+
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>
 
     <osgi:reference id="eventListenerRegistry"

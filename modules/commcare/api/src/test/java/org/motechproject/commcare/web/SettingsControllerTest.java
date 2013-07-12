@@ -3,20 +3,27 @@ package org.motechproject.commcare.web;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.motechproject.commcare.domain.CommcareDataForwardingEndpoint;
 import org.motechproject.commcare.domain.SettingsDto;
+import org.motechproject.commcare.service.CommcareDataForwardingEndpointService;
 import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.server.config.service.PlatformSettingsService;
+import org.motechproject.server.config.settings.ConfigFileSettings;
 import org.osgi.framework.BundleException;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-@RunWith(PowerMockRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class SettingsControllerTest {
     private static final String COMMCARE_BASE_URL_KEY = "commcareBaseUrl";
     private static final String CASE_EVENT_STRATEGY_KEY = "eventStrategy";
@@ -29,7 +36,7 @@ public class SettingsControllerTest {
     private static final String FORWARD_FORM_STUBS_KEY = "forwardFormStubs";
 
     private static final String EVENT_STRATEGY_VALUE = "minimal";
-    private static final String COMMCARE_BASE_URL_VALUE = "https://commcarehg.com/a/";
+    private static final String COMMCARE_BASE_URL_VALUE = "https://commcarehq.com/a/";
 
     private static final boolean FORWARD_CASES_VALUE = true;
     private static final boolean FORWARD_FORMS_VALUE = true;
@@ -38,13 +45,21 @@ public class SettingsControllerTest {
     @Mock
     private SettingsFacade settingsFacade;
 
-    private SettingsController controller;
+    @Mock
+    private ConfigFileSettings motechSettings;
+
+    @Mock
+    private PlatformSettingsService settingsService;
+
+    @Mock
+    private CommcareDataForwardingEndpointService forwardingEndpointService;
+
+    @InjectMocks
+    private SettingsController controller = new SettingsController(settingsFacade);
 
     @Before
     public void setUp() {
         initMocks(this);
-
-        controller = new SettingsController(settingsFacade);
     }
 
     @Test
@@ -74,6 +89,9 @@ public class SettingsControllerTest {
 
     @Test
     public void testSaveSettings() throws BundleException {
+        when(settingsService.getPlatformSettings()).thenReturn(motechSettings);
+        when(motechSettings.getServerUrl()).thenReturn("http://motechtest.org");
+
         SettingsDto dto = new SettingsDto();
         dto.setCommcareBaseUrl(COMMCARE_BASE_URL_VALUE);
         dto.setCommcareDomain(COMMCARE_DOMAIN_KEY);

@@ -12,4 +12,6 @@
 
     <osgi:reference id="commcareFormServiceRef" interface="org.motechproject.commcare.service.CommcareFormService"/>
 
+    <osgi:reference id="commcareDataForwardingEndpointServiceRef" interface="org.motechproject.commcare.service.CommcareDataForwardingEndpointService"/>
+
 </beans>

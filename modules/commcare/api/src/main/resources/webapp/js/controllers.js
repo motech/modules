@@ -24,7 +24,7 @@
                     $scope.verifySuccessMessage = 'Connection successful';
                     $scope.verifyErrorMessage = '';
                     $scope.connectionVerified = true;
-                    $('.commcare .switch-small').bootstrapSwitch('setActive', true);
+                    $scope.getVerifiedSettings();
                 },
                 function failure(response) {
                     $scope.verifyErrorMessage = response.data.message;
@@ -33,6 +33,7 @@
                     $('.commcare .switch-small').bootstrapSwitch('setActive', false);
                 });
         };
+
 
         $scope.isVerifyError = function() {
             return $scope.connectionVerified === false;
@@ -76,6 +77,64 @@
                     });
                 });
         };
+
+        /* In CommCare API v0.4 deleting forwarding rules is not supported */
+        $scope.blockSwitch = function(element) {
+            $(element).bootstrapSwitch('setActive', false);
+            $(element).click(function () {
+                var controlWrapper = $(element).next('.form-hints');
+                $(controlWrapper).children('.save-status').remove();
+                controlWrapper.append("<span class='save-status form-hint'><span class='icon-remove icon-white'/> Rule can be unset only on commcarehq.com</span>");
+                $(controlWrapper.children('.save-status')[0]).delay(10000).fadeOut(function() {
+                    $(this).remove();
+                });
+            });
+        };
+
+        $scope.getVerifiedSettings = function() {
+            $scope.settings = Settings.get(function success() {
+                if (!$scope.settings.eventStrategy) {
+                    $scope.settings.eventStrategy = $scope.eventStrategyOptions[0];
+                }
+                if($scope.settings.forwardForms) {
+                    $('#forwardFormsSwitch').bootstrapSwitch('setState', true);
+                    $scope.blockSwitch('#forwardFormsSwitch');
+                } else {
+                    $('#forwardFormsSwitch').bootstrapSwitch('setState', false);
+                    $('#forwardFormsSwitch').bootstrapSwitch('setActive', true);
+                }
+                if($scope.settings.forwardCases) {
+                    $('#forwardCasesSwitch').bootstrapSwitch('setState', true);
+                    $scope.blockSwitch('#forwardCasesSwitch');
+                } else {
+                    $('#forwardCasesSwitch').bootstrapSwitch('setState', false);
+                    $('#forwardCasesSwitch').bootstrapSwitch('setActive', true);
+                }
+                if($scope.settings.forwardStubForms) {
+                    $('#forwardFormStubsSwitch').bootstrapSwitch('setState', true);
+                    $scope.blockSwitch('#forwardFormStubsSwitch');
+                } else {
+                    $('#forwardFormStubsSwitch').bootstrapSwitch('setState', false);
+                    $('#forwardFormStubsSwitch').bootstrapSwitch('setActive', true);
+                }
+            });
+        };
+
+        $('#forwardFormsSwitch').change(function () {
+            if($scope.settings.forwardForms) {
+                $scope.blockSwitch(this);
+            }
+        });
+        $('#forwardCasesSwitch').change(function () {
+              if($scope.settings.forwardCases) {
+                 $scope.blockSwitch(this);
+              }
+        });
+        $('#forwardFormStubsSwitch').change(function () {
+              if($scope.settings.forwardFormStubs) {
+                 $scope.blockSwitch(this);
+              }
+        });
 
     });
 
