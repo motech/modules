@@ -7,7 +7,9 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.PutMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
 import org.motechproject.commcare.exception.CaseParserException;
 import org.motechproject.commcare.parser.OpenRosaResponseParser;
@@ -66,11 +68,92 @@ public class CommCareAPIHttpClient {
         return this.getRequest(commcareFixtureUrl(fixtureId), null);
     }
 
+    public int dataForwardingEndpointUploadRequest(String dataForwardingEndpointJson) {
+        return this.dataForwardingEndpointPostRequest(commcareDataForwardingEndpointUrl(), dataForwardingEndpointJson);
+    }
+
+    public int dataForwardingEndpointUpdateRequest(String resourceUri, String dataForwardingEndpointJson) {
+        String combinedUri = commcareDataForwardingEndpointUrl() + resourceUri + '/';
+        return this.dataForwardingEndpointPutRequest(combinedUri, dataForwardingEndpointJson);
+    }
+
+    public String dataForwardingEndpointsRequest() {
+        return this.getRequest(commcareDataForwardingEndpointUrl(), null);
+    }
+
+    public boolean verifyConnection() {
+        HttpMethod getMethod = new GetMethod(commcareDataForwardingEndpointUrl());
+
+        authenticate();
+
+        int status = executeMethod(getMethod);
+
+        return status == HttpStatus.SC_OK;
+    }
+
+    private int dataForwardingEndpointPostRequest(String requestUrl, String body) {
+
+        PostMethod postMethod = new PostMethod(requestUrl);
+
+        StringRequestEntity stringEntity = null;
+
+        try {
+            stringEntity = new StringRequestEntity(body, "application/json",
+                    "ISO-8859-1");
+        } catch (UnsupportedEncodingException e) {
+            logger.warn("UnsupportedEncodingException, this should not occur: " + e.getMessage()); //This exception cannot happen here
+        }
+
+        postMethod.setRequestEntity(stringEntity);
+
+        authenticate();
+
+        return executeMethod(postMethod);
+    }
+
+    private int executeMethod(HttpMethod httpMethod) {
+        int status = 0;
+
+        try {
+            status = commonsHttpClient.executeMethod(httpMethod);
+        } catch (HttpException e) {
+            logger.warn("HttpException while sending request to CommCareHQ: " + e.getMessage());
+        } catch (IOException e) {
+            logger.warn("IOException while sending request to CommcareHQ: " + e.getMessage());
+        } finally {
+            httpMethod.releaseConnection();
+        }
+
+        return status;
+    }
+
+    private int dataForwardingEndpointPutRequest(String requestUrl, String body) {
+
+        PutMethod putMethod = new PutMethod(requestUrl);
+
+        StringRequestEntity stringEntity = null;
+
+        try {
+            stringEntity = new StringRequestEntity(body, "application/json",
+                    "ISO-8859-1");
+        } catch (UnsupportedEncodingException e) {
+            logger.warn("UnsupportedEncodingException, this should not occur: " + e.getMessage()); //This exception cannot happen here
+        }
+
+        putMethod.setRequestEntity(stringEntity);
+
+        authenticate();
+
+        return executeMethod(putMethod);
+    }
+
     private HttpMethod buildRequest(String url, CaseRequest caseRequest) {
         HttpMethod requestMethod = new GetMethod(url);
 
         authenticate();
-        requestMethod.setQueryString(caseRequest.toQueryString());
+        if (caseRequest != null) {
+            requestMethod.setQueryString(caseRequest.toQueryString());
+        }
 
         return requestMethod;
     }
@@ -87,7 +170,10 @@ public class CommCareAPIHttpClient {
             logger.warn("HttpException while sending request to CommCare: " + e.getMessage());
         } catch (IOException e) {
             logger.warn("IOException while sending request to CommCare: " + e.getMessage());
+        } finally {
+            getMethod.releaseConnection();
         }
+
         return null;
     }
 
@@ -167,6 +253,10 @@ public class CommCareAPIHttpClient {
 
     String commcareCaseUrl(String caseId) {
         return String.format("%s/%s/api/v%s/case/%s/", getCommcareBaseUrl(), getCommcareDomain(), getCommcareApiVersion(), caseId);
+    }
+
+    private String commcareDataForwardingEndpointUrl() {
+        return String.format("%s/%s/api/v0.4/data-forwarding/", getCommcareBaseUrl(), getCommcareDomain());
     }
 
     String commcareCaseUploadUrl() {

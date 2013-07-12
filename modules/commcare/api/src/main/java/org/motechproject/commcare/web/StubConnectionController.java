@@ -1,11 +1,16 @@
 package org.motechproject.commcare.web;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.motechproject.commcare.domain.CommcareAccountSettings;
+import org.motechproject.commcare.domain.CommcareDataForwardingEndpoint;
 import org.motechproject.commcare.domain.CommcarePermission;
 import org.motechproject.commcare.exception.CommcareAuthenticationException;
 import org.motechproject.commcare.exception.CommcareConnectionFailureException;
 import org.motechproject.commcare.service.CommcareAccountService;
+import org.motechproject.commcare.service.CommcareDataForwardingEndpointService;
+import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.server.config.service.PlatformSettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -24,6 +29,18 @@ import static java.util.Arrays.asList;
 @Controller
 @RequestMapping("/connection")
 public class StubConnectionController {
+    @Autowired
+    private PlatformSettingsService settingsService;
+
+    @Autowired
+    private SettingsFacade settingsFacade;
+
+    @Autowired
+    private CommcareDataForwardingEndpointService forwardingEndpointService;
+
+    private static final String FORWARD_CASES_KEY = "forwardCases";
+    private static final String FORWARD_FORMS_KEY = "forwardForms";
+    private static final String FORWARD_FORM_STUBS_KEY = "forwardFormStubs";
 
     private CommcareAccountService commcareAccountService;
 
@@ -35,13 +52,19 @@ public class StubConnectionController {
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/verify", method = RequestMethod.POST)
     public void verifySettings(@RequestBody CommcareAccountSettings settings) throws CommcareAuthenticationException, CommcareConnectionFailureException {
-        commcareAccountService.verifySettings(settings);
+        settingsFacade.setProperty(FORWARD_CASES_KEY, String.valueOf(false));
+        settingsFacade.setProperty(FORWARD_FORMS_KEY, String.valueOf(false));
+        settingsFacade.setProperty(FORWARD_FORM_STUBS_KEY, String.valueOf(false));
+
+        if (commcareAccountService.verifySettings(settings)) {
+            checkForwardingSettings();
+        }
     }
 
     @RequestMapping(value = "/permissions", method = RequestMethod.GET)
     @ResponseBody
     public List<CommcarePermission> getPermissions() throws CommcareAuthenticationException, CommcareConnectionFailureException {
-        return asList(new CommcarePermission("modify CommCareHQ settings", true), new CommcarePermission("make API calls", false));
+        return asList(new CommcarePermission("modify CommCareHQ settings", true), new CommcarePermission("make API calls", true));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -63,6 +86,32 @@ public class StubConnectionController {
     @ResponseBody
     public String handleCommcareAuthenticationException(CommcareAuthenticationException exception) throws IOException {
         return new ObjectMapper().writeValueAsString(new ErrorText(exception.getMessage()));
+    }
+
+    private void checkForwardingSettings() {
+        for(CommcareDataForwardingEndpoint endpoint : forwardingEndpointService.getAllDataForwardingEndpoints()) {
+            String endpointUrl = endpoint.getUrl();
+
+            if (StringUtils.equals(endpointUrl, getCasesUrl())) {
+                settingsFacade.setProperty(FORWARD_CASES_KEY, String.valueOf(true));
+            } else if (StringUtils.equals(endpointUrl, getFormsUrl())) {
+                settingsFacade.setProperty(FORWARD_FORMS_KEY, String.valueOf(true));
+            } else if (StringUtils.equals(endpointUrl, getFormStubsUrl())) {
+                settingsFacade.setProperty(FORWARD_FORM_STUBS_KEY, String.valueOf(true));
+            }
+        }
+    }
+
+    private String getCasesUrl() {
+        return settingsService.getPlatformSettings().getServerUrl() + "/module/commcare/cases/";
+    }
+
+    private String getFormsUrl() {
+        return settingsService.getPlatformSettings().getServerUrl() + "/module/commcare/forms/";
+    }
+
+    private String getFormStubsUrl() {
+        return settingsService.getPlatformSettings().getServerUrl() + "/module/commcare/stub/";
     }
 }
 
