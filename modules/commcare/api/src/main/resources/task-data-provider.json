@@ -91,6 +91,10 @@
                     "fieldKey" : "md5"
                  },
                  {
+                    "displayName" : "commcare.form.field.receivedOn",
+                    "fieldKey" : "receivedOn"
+                 },
+                 {
                     "displayName" : "commcare.form.field.metadata",
                     "fieldKey" : "metadata",
                     "type" : "MAP"

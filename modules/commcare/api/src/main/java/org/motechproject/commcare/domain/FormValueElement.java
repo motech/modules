@@ -279,7 +279,7 @@ public class FormValueElement implements FormNode {
      * <br>
      * Search for <b>//</b> will return <b>this</b> element.
      * <br>
-     * Search for <b>//@thisAttribute</b> will return "thisAttribute</b> node on <b>this</b> element.
+     * Search for <b>//@thisAttribute</b> will return <b>"thisAttribute</b> node on <b>this</b> element.
      * <br>
      * Paths //foo/bar/#anyValue will return same result as //foo/bar or //foo/bar/#anyOtherValue.
      *
