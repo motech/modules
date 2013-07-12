@@ -10,6 +10,8 @@ public class CommcareForm {
     private String id;
     private String md5;
     private Map<String, String> metadata;
+    @SerializedName("received_on")
+    private String receivedOn;
     @SerializedName("resource_uri")
     private String resourceUri;
     private String type;
@@ -40,6 +42,12 @@ public class CommcareForm {
     }
     public void setMetadata(Map<String, String> metadata) {
         this.metadata = metadata;
+    }
+    public String getReceivedOn() {
+        return receivedOn;
+    }
+    public void setReceivedOn(String receivedOn) {
+        this.receivedOn = receivedOn;
     }
     public String getResourceUri() {
         return resourceUri;

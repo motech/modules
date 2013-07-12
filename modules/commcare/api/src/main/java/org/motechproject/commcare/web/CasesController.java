@@ -83,6 +83,8 @@ public class CasesController {
         }
 
         if (caseInstance != null) {
+
+            caseInstance.setServerModifiedOn(request.getHeader("server-modified-on"));
             CaseEvent caseEvent = new CaseEvent(caseInstance.getCaseId());
 
             MotechEvent motechCaseEvent;

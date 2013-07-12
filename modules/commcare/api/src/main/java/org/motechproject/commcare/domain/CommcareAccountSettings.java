@@ -18,7 +18,7 @@ public class CommcareAccountSettings {
     private String password;
 
     public String getCommcareBaseUrl() {
-        return commcareBaseUrl != null? commcareBaseUrl : StringUtils.EMPTY;
+        return commcareBaseUrl != null ? commcareBaseUrl : StringUtils.EMPTY;
     }
 
     public void setCommcareBaseUrl(String commcareBaseUrl) {
@@ -26,7 +26,7 @@ public class CommcareAccountSettings {
     }
 
     public String getCommcareDomain() {
-        return commcareDomain != null? commcareDomain : StringUtils.EMPTY;
+        return commcareDomain != null ? commcareDomain : StringUtils.EMPTY;
     }
 
     public void setCommcareDomain(final String commcareDomain) {
@@ -34,7 +34,7 @@ public class CommcareAccountSettings {
     }
 
     public String getUsername() {
-        return username != null? username : StringUtils.EMPTY;
+        return username != null ? username : StringUtils.EMPTY;
     }
 
     public void setUsername(final String username) {
@@ -42,7 +42,7 @@ public class CommcareAccountSettings {
     }
 
     public String getPassword() {
-        return password != null? password : StringUtils.EMPTY;
+        return password != null ? password : StringUtils.EMPTY;
     }
 
     public void setPassword(final String password) {

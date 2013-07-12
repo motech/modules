@@ -13,6 +13,7 @@ import java.util.Map;
  * received.
  */
 public class CaseEvent {
+    private String serverModifiedOn;
     private String caseId;
     private String userId;
     private String apiKey;
@@ -28,6 +29,7 @@ public class CaseEvent {
     }
 
     public CaseEvent(MotechEvent event) {
+        this.serverModifiedOn = ((String) event.getParameters().get(EventDataKeys.SERVER_MODIFIED_ON));
         this.caseId = ((String) event.getParameters().get(EventDataKeys.CASE_ID));
         this.userId = ((String) event.getParameters().get(EventDataKeys.USER_ID));
         this.apiKey = ((String) event.getParameters().get(EventDataKeys.API_KEY));
@@ -38,6 +40,14 @@ public class CaseEvent {
         this.caseType = ((String) event.getParameters().get(EventDataKeys.CASE_TYPE));
         this.caseName = ((String) event.getParameters().get(EventDataKeys.CASE_NAME));
         this.ownerId = ((String) event.getParameters().get(EventDataKeys.OWNER_ID));
+    }
+
+    public String getServerModifiedOn() {
+        return this.serverModifiedOn;
+    }
+
+    public void setServerModifiedOn(String serverModifiedOn) {
+        this.serverModifiedOn = serverModifiedOn;
     }
 
     public String getCaseId() {
@@ -120,6 +130,7 @@ public class CaseEvent {
 
     public MotechEvent toMotechEventWithData() {
         HashMap<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put(EventDataKeys.SERVER_MODIFIED_ON, this.serverModifiedOn);
         parameters.put(EventDataKeys.CASE_ID, this.caseId);
         parameters.put(EventDataKeys.USER_ID, this.userId);
         parameters.put(EventDataKeys.CASE_ACTION, this.action);
@@ -132,6 +143,7 @@ public class CaseEvent {
     }
 
     public CaseEvent eventFromCase(CaseXml caseInstance) {
+        setServerModifiedOn(caseInstance.getServerModifiedOn());
         setCaseId(caseInstance.getCaseId());
         setUserId(caseInstance.getUserId());
         setAction(caseInstance.getAction());

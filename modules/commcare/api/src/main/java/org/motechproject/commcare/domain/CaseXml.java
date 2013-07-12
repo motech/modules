@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CaseXml {
+    private String serverModifiedOn;
     private String caseId;
     private String userId;
     private String apiKey;
@@ -13,6 +14,14 @@ public class CaseXml {
     private String caseType;
     private String caseName;
     private String ownerId;
+
+    public String getServerModifiedOn() {
+        return this.serverModifiedOn;
+    }
+
+    public void setServerModifiedOn(String serverModifiedOn) {
+        this.serverModifiedOn = serverModifiedOn;
+    }
 
     public String getOwnerId() {
         return this.ownerId;

@@ -3,6 +3,7 @@ package org.motechproject.commcare.events.constants;
 public final class EventDataKeys {
 
     //CaseEvent
+    public static final String SERVER_MODIFIED_ON = "serverModifiedOn";
     public static final String CASE_ID = "caseId";
     public static final String USER_ID = "userId";
     public static final String API_KEY = "apiKey";
@@ -16,8 +17,10 @@ public final class EventDataKeys {
     //Malformed case xml exception event
     public static final String MESSAGE = "message";
 
-    //FormStubEvent
+    //FormStubEvent and FullFormsEvent
     public static final String RECEIVED_ON = "receivedOn";
+
+    //FormStubEvent
     public static final String FORM_ID = "formId";
     public static final String CASE_IDS = "caseIds";
 
