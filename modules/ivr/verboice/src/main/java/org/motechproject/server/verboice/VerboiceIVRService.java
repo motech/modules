@@ -8,6 +8,7 @@ import org.motechproject.callflow.service.FlowSessionService;
 import org.motechproject.decisiontree.core.FlowSession;
 import org.motechproject.ivr.domain.CallDetailRecord;
 import org.motechproject.ivr.domain.CallDirection;
+import org.motechproject.ivr.domain.CallDisposition;
 import org.motechproject.ivr.service.contract.CallRequest;
 import org.motechproject.ivr.service.contract.IVRService;
 import org.motechproject.server.config.SettingsFacade;
@@ -82,6 +83,7 @@ public class VerboiceIVRService implements IVRService {
         FlowSessionRecord flowSession = (FlowSessionRecord) flowSessionService.findOrCreate(callRequest.getCallId(), callRequest.getPhone());
         final CallDetailRecord callDetailRecord = flowSession.getCallDetailRecord();
         callDetailRecord.setCallDirection(CallDirection.Outbound);
+        callDetailRecord.setDisposition(CallDisposition.UNKNOWN);
         for (String key : callRequest.getPayload().keySet()) {
             if (!CALLBACK_URL.equals(key) && !CALLBACK_STATUS_URL.equals(key)) {
                 flowSession.set(key, callRequest.getPayload().get(key));

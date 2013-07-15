@@ -33,6 +33,11 @@ public class VerboiceIVRController {
 
     private static final String VERBOICE_CALL_SID = "CallSid";
     private static final String VERBOICE_FROM_PHONE_PARAM = "From";
+    private static final String VERBOICE_IN_PROGRESS_STATUS = "in-progress";
+    private static final String VERBOICE_BUSY_STATUS = "busy";
+    private static final String VERBOICE_COMPLETED_STATUS = "completed";
+    private static final String VERBOICE_FAILED_STATUS = "failed";
+    private static final String VERBOICE_NO_ANSWER_STATUS = "no-answer";
     private Logger logger = Logger.getLogger(VerboiceIVRController.class);
     private Map<String, IvrEvent> callEvents;
 
@@ -127,17 +132,15 @@ public class VerboiceIVRController {
             CallEventLog callEventLog = new CallEventLog(callStatus);
             callDetail.addCallEvent(callEventLog);
 
-            if ("ringing".equals(callStatus)) {
-                callDetail.setDisposition(CallDisposition.UNKNOWN);
-            } else if ("in-progress".equals(callStatus)) {
+            if (VERBOICE_IN_PROGRESS_STATUS.equals(callStatus)) {
                 callDetail.setDisposition(CallDisposition.ANSWERED);
-            } else if ("completed".equals(callStatus)) {
+            } else if (VERBOICE_COMPLETED_STATUS.equals(callStatus)) {
                 callDetail.setDisposition(CallDisposition.ANSWERED);
-            } else if ("failed".equals(callStatus)) {
+            } else if (VERBOICE_FAILED_STATUS.equals(callStatus)) {
                 callDetail.setDisposition(CallDisposition.FAILED);
-            } else if ("busy".equals(callStatus)) {
+            } else if (VERBOICE_BUSY_STATUS.equals(callStatus)) {
                 callDetail.setDisposition(CallDisposition.BUSY);
-            } else if ("no-answer".equals(callStatus)) {
+            } else if (VERBOICE_NO_ANSWER_STATUS.equals(callStatus)) {
                 callDetail.setDisposition(CallDisposition.NO_ANSWER);
             }
 
