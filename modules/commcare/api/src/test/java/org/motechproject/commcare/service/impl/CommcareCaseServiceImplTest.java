@@ -91,6 +91,17 @@ public class CommcareCaseServiceImplTest {
         assertNotNull(caseInstance);
     }
 
+    @Test
+    public void testAllCaseServerDateModified()
+    {
+        when(commcareHttpClient.casesRequest(Matchers.any(CaseRequest.class))).thenReturn(casesResponse());
+
+        List<CaseInfo> cases = caseService.getAllCases();
+
+        assertEquals(asList("2012-04-09T19:48:07Z", "2012-04-12T18:49:15Z", "2012-04-12T15:59:01Z",
+                "2012-04-10T14:31:44Z"), extract(cases, on(CaseInfo.class).getServerDateModified()));
+    }
+
     private String casesResponse() {
         try {
             URL url = this.getClass().getClassLoader().getResource("json/service/cases.json");

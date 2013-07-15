@@ -54,7 +54,6 @@ public class CaseParser<T> {
 
     private CaseXml createCase(Element item) {
         CaseXml ccCase = new CaseXml();
-
         ccCase.setCaseId(item.getAttribute("case_id"));
         ccCase.setApiKey(item.getAttribute("api_key"));
         ccCase.setDateModified(item.getAttribute("date_modified"));
