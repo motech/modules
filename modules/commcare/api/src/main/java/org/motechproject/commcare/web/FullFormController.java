@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.motechproject.commcare.events.constants.EventDataKeys.RECEIVED_ON;
 import static org.motechproject.commcare.events.constants.EventDataKeys.ATTRIBUTES;
 import static org.motechproject.commcare.events.constants.EventDataKeys.ELEMENT_NAME;
 import static org.motechproject.commcare.events.constants.EventDataKeys.SUB_ELEMENTS;
@@ -38,7 +40,7 @@ public class FullFormController {
 
     @RequestMapping(value = "/forms")
     @ResponseStatus(HttpStatus.OK)
-    public void receiveForm(@RequestBody String body) {
+    public void receiveForm(@RequestBody String body, HttpServletRequest request) {
         FullFormParser parser = new FullFormParser(body);
         FormValueElement formValueElement = null;
 
@@ -50,6 +52,8 @@ public class FullFormController {
 
         if (formValueElement != null) {
             Map<String, Object> parameters = new HashMap<>();
+
+            parameters.put(RECEIVED_ON, request.getHeader("received-on"));
             parameters.put(VALUE, formValueElement.getValue());
             parameters.put(ELEMENT_NAME, formValueElement.getElementName());
             parameters.put(ATTRIBUTES, formValueElement.getAttributes());

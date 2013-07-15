@@ -8,7 +8,9 @@ import org.mockito.Mock;
 import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
+import org.springframework.mock.web.MockHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,19 +29,23 @@ public class FullFormControllerTest {
     private EventRelay eventRelay;
 
     private FullFormController controller;
+    private MockHttpServletRequest request;
 
     @Before
     public void setUp() throws Exception {
         initMocks(this);
 
         controller = new FullFormController(eventRelay);
+
+        request = new MockHttpServletRequest();
+        request.addHeader("received-on", "2012-07-21T15:22:34");
     }
 
     @Test
     public void testIncomingFormsFailure() {
         ArgumentCaptor<MotechEvent> captor = ArgumentCaptor.forClass(MotechEvent.class);
 
-        controller.receiveForm("");
+        controller.receiveForm("", request);
         verify(eventRelay).sendEventMessage(captor.capture());
 
         MotechEvent event = captor.getValue();
@@ -51,17 +57,20 @@ public class FullFormControllerTest {
     public void testIncomingFormsSuccess() {
         ArgumentCaptor<MotechEvent> captor = ArgumentCaptor.forClass(MotechEvent.class);
 
-        controller.receiveForm(getBody());
+        controller.receiveForm(getBody(), request);
         verify(eventRelay).sendEventMessage(captor.capture());
 
         MotechEvent event = captor.getValue();
         assertEquals(event.getSubject(), FORMS_EVENT);
 
         Map<String, Object> parameters = event.getParameters();
+        assertTrue(parameters.containsKey(RECEIVED_ON));
         assertTrue(parameters.containsKey(ATTRIBUTES));
         assertTrue(parameters.containsKey(SUB_ELEMENTS));
         assertEquals("data", parameters.get(VALUE));
         assertEquals("form", parameters.get(ELEMENT_NAME));
+
+        assertEquals("2012-07-21T15:22:34", parameters.get(RECEIVED_ON));
 
         Map<String, String> attributes = (Map<String, String>) parameters.get(ATTRIBUTES);
         assertEquals(4, attributes.size());
