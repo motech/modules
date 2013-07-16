@@ -4,7 +4,21 @@
         {
             "displayName": "cmslite.streamContent.name",
             "type": "StreamContent",
-            "lookupFields": ["id"],
+            "lookupFields": [
+                {
+                    "displayName": "id",
+                    "fields": [
+                        "id"
+                    ]
+                },
+                {
+                    "displayName": "languageAndName",
+                    "fields": [
+                        "name",
+                        "language"
+                    ]
+                }
+            ],
             "fields": [
                 {
                     "displayName": "cmslite.streamContent.field.checksum",
@@ -35,7 +49,21 @@
         {
             "displayName": "cmslite.stringContent.name",
             "type": "StringContent",
-            "lookupFields": ["id"],
+            "lookupFields": [
+                {
+                    "displayName": "id",
+                    "fields": [
+                        "id"
+                    ]
+                },
+                {
+                    "displayName": "languageAndName",
+                    "fields": [
+                        "name",
+                        "language"
+                    ]
+                }
+            ],
             "fields": [
                 {
                     "displayName": "cmslite.stringContent.field.value",

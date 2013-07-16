@@ -1,5 +1,6 @@
 package org.motechproject.cmslite.api;
 
+import org.motechproject.cmslite.api.model.ContentNotFoundException;
 import org.motechproject.cmslite.api.model.StreamContent;
 import org.motechproject.cmslite.api.model.StringContent;
 import org.motechproject.cmslite.api.service.CMSLiteService;
@@ -13,7 +14,9 @@ import java.util.List;
 import java.util.Map;
 
 public class CMSDataProvider extends AbstractDataProvider {
-    private static final String SUPPORT_FIELD = "id";
+    private static final String ID_FIELD = "id";
+    private static final String NAME_FIELD = "name";
+    private static final String LANGUAGE_FIELD = "language";
 
     private CMSLiteService cmsLiteService;
 
@@ -38,24 +41,23 @@ public class CMSDataProvider extends AbstractDataProvider {
     @Override
     public Object lookup(String type, Map<String, String> lookupFields) {
         Object obj = null;
+        try {
+            if (supports(type)) {
+                if (lookupFields.containsKey(ID_FIELD)) {
+                    String id = lookupFields.get(ID_FIELD);
+                    Class<?> cls = getClassForType(type);
+                    obj = getContent(cls, id);
 
-        if (supports(type) && lookupFields.containsKey(SUPPORT_FIELD)) {
-            String id = lookupFields.get(SUPPORT_FIELD);
-
-            try {
-                Class<?> cls = getClassForType(type);
-
-                if (StringContent.class.isAssignableFrom(cls)) {
-                    obj = getStringContent(id);
-                } else if (StreamContent.class.isAssignableFrom(cls)) {
-                    obj = getStreamContent(id);
+                } else if (lookupFields.containsKey(NAME_FIELD) && lookupFields.containsKey(LANGUAGE_FIELD)){
+                    String name = lookupFields.get(NAME_FIELD);
+                    String language = lookupFields.get(LANGUAGE_FIELD);
+                    Class<?> cls = getClassForType(type);
+                    obj = getContent(cls, language, name);
                 }
-
-            } catch (ClassNotFoundException e) {
-                logError(e.getMessage(), e);
             }
+        } catch (ClassNotFoundException | ContentNotFoundException e) {
+            logError("Cannot lookup object: {type: %s, fields: %s}", type, lookupFields.keySet(), e);
         }
-
         return obj;
     }
 
@@ -78,6 +80,31 @@ public class CMSDataProvider extends AbstractDataProvider {
 
     private Object getStreamContent(String streamContentId) {
         return cmsLiteService.getStreamContent(streamContentId);
+    }
 
+    private Object getStringContent(String stringContentLanguage, String stringContentName) throws ContentNotFoundException {
+        return cmsLiteService.getStringContent(stringContentLanguage, stringContentName);
+    }
+
+    private Object getStreamContent(String streamContentLanguage, String streamContentName) throws ContentNotFoundException {
+        return cmsLiteService.getStreamContent(streamContentLanguage, streamContentName);
+    }
+
+    private Object getContent(Class<?> cls, String language, String name) throws ContentNotFoundException {
+        if (StringContent.class.isAssignableFrom(cls)) {
+            return getStringContent(language, name);
+        } else if (StreamContent.class.isAssignableFrom(cls)) {
+            return getStreamContent(language, name);
+        }
+        throw new ContentNotFoundException();
+    }
+
+    private Object getContent(Class<?> cls, String id) throws ContentNotFoundException {
+        if (StringContent.class.isAssignableFrom(cls)) {
+            return getStringContent(id);
+        } else if (StreamContent.class.isAssignableFrom(cls)) {
+            return getStreamContent(id);
+        }
+        throw new ContentNotFoundException();
     }
 }
