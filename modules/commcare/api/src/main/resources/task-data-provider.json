@@ -4,7 +4,14 @@
         {
             "displayName": "commcare.user.name",
             "type": "CommcareUser",
-            "lookupFields": ["id"],
+            "lookupFields": [
+                {
+                    "displayName": "id",
+                    "fields": [
+                        "id"
+                    ]
+                }
+            ],
             "fields": [
                 {
                     "displayName": "commcare.user.field.defaultPhoneNumber",
@@ -55,7 +62,14 @@
         {
              "displayName": "commcare.fixture.name",
              "type": "CommcareFixture",
-             "lookupFields": ["id"],
+             "lookupFields": [
+                 {
+                     "displayName": "id",
+                     "fields": [
+                         "id"
+                     ]
+                 }
+             ],
              "fields": [
                  {
                      "displayName": "commcare.fixture.field.id",
@@ -76,7 +90,14 @@
         {
             "displayName": "commcare.form.name",
             "type": "CommcareForm",
-            "lookupFields": ["id"],
+            "lookupFields": [
+                {
+                    "displayName": "id",
+                    "fields": [
+                        "id"
+                    ]
+                }
+            ],
             "fields": [
                  {
                     "displayName" : "commcare.form.field.form",
@@ -125,7 +146,14 @@
         {
             "displayName": "commcare.case.name",
             "type": "CaseInfo",
-            "lookupFields": ["id"],
+            "lookupFields": [
+                {
+                    "displayName": "id",
+                    "fields": [
+                        "id"
+                    ]
+                }
+            ],
             "fields": [
                 {
                     "displayName" : "commcare.case.field.caseId",

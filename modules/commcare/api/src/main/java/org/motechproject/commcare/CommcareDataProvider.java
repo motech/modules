@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Arrays;
 
 public class CommcareDataProvider extends AbstractDataProvider {
-    private static final String SUPPORT_FIELD = "id";
+    private static final String ID_FIELD = "id";
 
     private CommcareUserServiceImpl commcareUserService;
     private CommcareFixtureServiceImpl commcareFixtureService;
@@ -63,8 +63,8 @@ public class CommcareDataProvider extends AbstractDataProvider {
     public Object lookup(String type, Map<String, String> lookupFields) {
         Object obj = null;
 
-        if (supports(type) && lookupFields.containsKey(SUPPORT_FIELD)) {
-            String id = lookupFields.get(SUPPORT_FIELD);
+        if (supports(type) && lookupFields.containsKey(ID_FIELD)) {
+            String id = lookupFields.get(ID_FIELD);
 
             try {
                 Class<?> cls = getClassForType(type);
