@@ -6,6 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.ektorp.support.TypeDiscriminator;
 import org.joda.time.DateTime;
 import org.motechproject.commons.couchdb.model.MotechBaseDataObject;
+import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.sms.api.DeliveryStatus;
 import org.motechproject.sms.api.SMSType;
 import org.motechproject.sms.api.json.DeliveryStatusDeserializer;
@@ -19,9 +20,6 @@ public class SmsRecord extends MotechBaseDataObject {
     private String phoneNumber;
     @JsonProperty
     private String messageContent;
-    /**
-     * Should be in UTC
-     */
     @JsonProperty
     private DateTime messageTime;
     @JsonProperty
@@ -56,7 +54,11 @@ public class SmsRecord extends MotechBaseDataObject {
     }
 
     public DateTime getMessageTime() {
-        return messageTime;
+        return DateUtil.setTimeZoneUTC(messageTime);
+    }
+
+    public void setMessageTime(DateTime messageTime) {
+        this.messageTime = messageTime;
     }
 
     public DeliveryStatus getDeliveryStatus() {

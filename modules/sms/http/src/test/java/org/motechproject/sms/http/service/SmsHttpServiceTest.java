@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.verification.VerificationMode;
+import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.scheduler.MotechSchedulerService;
@@ -56,7 +57,7 @@ public class SmsHttpServiceTest extends BaseUnitTest {
     private static final String TEST_RECIPIENT = "0987654321";
     private static final String TEST_MESSAGE = "foo bar";
     private static final Integer TEST_FAILURE_COUNT = 2;
-    private static final DateTime SEND_TIME = new DateTime(2013, 5, 28, 15, 12);
+    private static final DateTime SEND_TIME = DateUtil.setTimeZoneUTC(new DateTime(2013, 5, 28, 15, 12));
 
     @Mock
     private HttpClient httpClient;
