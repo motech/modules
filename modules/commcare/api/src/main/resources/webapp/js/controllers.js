@@ -21,7 +21,7 @@
         $scope.verify = function() {
             Connection.verify($scope.settings.accountSettings,
                 function success()  {
-                    $scope.verifySuccessMessage = 'Connection successful';
+                    $scope.verifySuccessMessage = $scope.msg('verify.success');
                     $scope.verifyErrorMessage = '';
                     $scope.connectionVerified = true;
                     $scope.getVerifiedSettings();
@@ -62,16 +62,20 @@
             $scope.settings.$save(
                 function success() {
                     var controlWrapper = $(element).next('.form-hints');
+
                     $(controlWrapper).children('.save-status').remove();
-                    controlWrapper.append("<span class='save-status form-hint-success'><span class='icon-ok icon-white'/> Value has been saved</span>");
+                    controlWrapper.append("<span class='save-status form-hint-success'><i class='icon-ok icon-white'></i> {0}</span>".format($scope.msg('settings.success.value.saved')));
+
                     $(controlWrapper.children('.save-status')[0]).delay(5000).fadeOut(function() {
                         $(this).remove();
                     });
                 },
                 function error() {
                     var controlWrapper = $(element).next('.form-hints');
+
                     $(controlWrapper).children('.save-status').remove();
-                    controlWrapper.append("<span class='save-status form-hint'><span class='icon-remove icon-white'/> Unable to save value</span>");
+                    controlWrapper.append("<span class='save-status form-hint'><i class='icon-remove icon-white'></i> {0}</span>".format($scope.msg('settings.error.value.saved')));
+
                     $(controlWrapper.children('.save-status')[0]).delay(10000).fadeOut(function() {
                         $(this).remove();
                     });
@@ -83,8 +87,10 @@
             $(element).bootstrapSwitch('setActive', false);
             $(element).click(function () {
                 var controlWrapper = $(element).next('.form-hints');
+
                 $(controlWrapper).children('.save-status').remove();
-                controlWrapper.append("<span class='save-status form-hint'><span class='icon-remove icon-white'/> Rule can be unset only on commcarehq.com</span>");
+                controlWrapper.append("<span class='save-status form-hint'><i class='icon-remove icon-white'></i> {0}</span>".format($scope.msg('settings.error.rule')));
+
                 $(controlWrapper.children('.save-status')[0]).delay(10000).fadeOut(function() {
                     $(this).remove();
                 });
@@ -110,7 +116,7 @@
                     $('#forwardCasesSwitch').bootstrapSwitch('setState', false);
                     $('#forwardCasesSwitch').bootstrapSwitch('setActive', true);
                 }
-                if($scope.settings.forwardStubForms) {
+                if($scope.settings.forwardFormStubs) {
                     $('#forwardFormStubsSwitch').bootstrapSwitch('setState', true);
                     $scope.blockSwitch('#forwardFormStubsSwitch');
                 } else {

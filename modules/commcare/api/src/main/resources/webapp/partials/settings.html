@@ -8,7 +8,7 @@
         </div>
         <div ng-show="isVerifySuccess()" class="connection-status connection-success">
             <div>
-                <span class="icon-ok"/>
+                <span class="icon-ok"></span>
                 <span>{{verifySuccessMessage}}</span>
             </div>
             <div ng-repeat="permission in permissions" class="{{permission.granted && 'permission-present' || 'permission-absent'}}">
@@ -80,7 +80,7 @@
             <div class="switch switch-small" switch=".forwardFormsInput" autosave="switch-change" id="forwardFormsSwitch">
                 <input type="checkbox" ng-model="settings.forwardForms" class="forwardFormsInput" />
             </div>
-            <div class="form-hints"/>
+            <div class="form-hints"></div>
         </div>
     </div>
 
@@ -90,7 +90,7 @@
             <div class="switch-small" switch=".forwardCasesInput" autosave="switch-change" id="forwardCasesSwitch">
                 <input type="checkbox" ng-model="settings.forwardCases" class="forwardCasesInput" />
             </div>
-            <div class="form-hints"/>
+            <div class="form-hints"></div>
         </div>
     </div>
 
@@ -100,7 +100,7 @@
             <div class="switch-small" switch=".forwardFormStubsInput" autosave="switch-change" id="forwardFormStubsSwitch">
                 <input type="checkbox" ng-model="settings.forwardFormStubs" class="forwardFormStubsInput" />
             </div>
-            <div class="form-hints"/>
+            <div class="form-hints"></div>
         </div>
     </div>
 
