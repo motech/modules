@@ -18,6 +18,8 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.motechproject.commons.date.util.DateUtil.setTimeZoneUTC;
+
 @Repository
 public class AllAppointmentCalendars extends MotechBaseRepository<AppointmentCalendar> {
     @Autowired
@@ -45,7 +47,7 @@ public class AllAppointmentCalendars extends MotechBaseRepository<AppointmentCal
             "  }\n" +
             "}")
     public List<VisitResponse> findVisitsWithDueDateInRange(DateTime start, DateTime end) {
-        ViewQuery query = createQuery("by_dueDate").startKey(start).endKey(end);
+        ViewQuery query = createQuery("by_dueDate").startKey(setTimeZoneUTC(start)).endKey(setTimeZoneUTC(end));
         List<VisitQueryResult> visitQueryResults = db.queryView(query, VisitQueryResult.class);
         return extractVisitResponse(visitQueryResults);
     }

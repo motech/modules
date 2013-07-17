@@ -78,4 +78,28 @@ public class Appointment extends ExtensibleDataObject<Appointment> {
                 .append(reminders, appointment.reminders())
                 .isEquals();
     }
+
+    public DateTime getDueDate() {
+        return DateUtil.setTimeZoneUTC(dueDate);
+    }
+
+    public void setDueDate(DateTime dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public DateTime getOriginalDueDate() {
+        return DateUtil.setTimeZoneUTC(originalDueDate);
+    }
+
+    public void setOriginalDueDate(DateTime originalDueDate) {
+        this.originalDueDate = originalDueDate;
+    }
+
+    public DateTime getConfirmedDate() {
+        return DateUtil.setTimeZoneUTC(confirmedDate);
+    }
+
+    public void setConfirmedDate(DateTime confirmedDate) {
+        this.confirmedDate = confirmedDate;
+    }
 }

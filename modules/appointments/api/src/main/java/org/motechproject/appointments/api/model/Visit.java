@@ -46,6 +46,14 @@ public class Visit extends ExtensibleDataObject<Visit> {
         return DateUtil.setTimeZone(visitDate);
     }
 
+    public DateTime getVisitDate() {
+        return DateUtil.setTimeZoneUTC(visitDate);
+    }
+
+    public void setVisitDate(DateTime visitDate) {
+        this.visitDate = visitDate;
+    }
+
     public Visit visitDate(DateTime visitDate) {
         this.visitDate = visitDate;
         return this;
