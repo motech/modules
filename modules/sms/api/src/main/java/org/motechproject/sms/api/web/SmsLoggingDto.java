@@ -1,6 +1,7 @@
 package org.motechproject.sms.api.web;
 
 import org.joda.time.format.DateTimeFormat;
+import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.sms.api.domain.SmsRecord;
 
 public class SmsLoggingDto {
@@ -14,7 +15,7 @@ public class SmsLoggingDto {
     public SmsLoggingDto(SmsRecord record) {
         this.phoneNumber = record.getPhoneNumber();
         this.smsType = record.getSmsType().toString();
-        this.messageTime = DateTimeFormat.forPattern("Y-MM-dd hh:mm:ss").print(record.getMessageTime());
+        this.messageTime = DateTimeFormat.forPattern("Y-MM-dd hh:mm:ss").print(DateUtil.newDate(record.getMessageTime()));
         this.deliveryStatus = record.getDeliveryStatus().toString();
         this.messageContent = record.getMessageContent();
     }

@@ -60,7 +60,7 @@ public class Alert extends MotechBaseDataObject implements Comparable<Alert> {
     }
 
     public DateTime getDateTime() {
-        return DateUtil.setTimeZone(dateTime);
+        return DateUtil.setTimeZoneUTC(dateTime);
     }
 
     @JsonIgnore

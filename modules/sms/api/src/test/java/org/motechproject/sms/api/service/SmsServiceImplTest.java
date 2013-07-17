@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.scheduler.MotechSchedulerService;
@@ -111,7 +112,7 @@ public class SmsServiceImplTest {
 
     @Test
     public void shouldScheduleSendingOfSMSAtSpecificDeliveryTime() {
-        DateTime deliveryTime = new DateTime(2011, 12, 23, 13, 50, 0, 0);
+        DateTime deliveryTime = DateUtil.setTimeZoneUTC(new DateTime(2011, 12, 23, 13, 50, 0, 0));
         smsService.sendSMS(new SendSmsRequest(asList("123"), "This is a test message", deliveryTime));
 
         ArgumentCaptor<RunOnceSchedulableJob> scheduledJobCaptor = ArgumentCaptor.forClass(RunOnceSchedulableJob.class);
