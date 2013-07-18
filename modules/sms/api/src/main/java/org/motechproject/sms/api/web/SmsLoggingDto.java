@@ -15,7 +15,8 @@ public class SmsLoggingDto {
     public SmsLoggingDto(SmsRecord record) {
         this.phoneNumber = record.getPhoneNumber();
         this.smsType = record.getSmsType().toString();
-        this.messageTime = DateTimeFormat.forPattern("Y-MM-dd hh:mm:ss").print(DateUtil.newDate(record.getMessageTime()));
+        // DateUtil.setTimeZone converts the message time from UTC to local time for display
+        this.messageTime = DateTimeFormat.forPattern("Y-MM-dd hh:mm:ss").print(DateUtil.setTimeZone(record.getMessageTime()));
         this.deliveryStatus = record.getDeliveryStatus().toString();
         this.messageContent = record.getMessageContent();
     }
