@@ -3,10 +3,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.motechproject</groupId>
-    <artifactId>motech</artifactId>
+    <artifactId>platform-campaigns</artifactId>
     <version>0.21-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>MOTECH</name>
+    <name>MOTECH Platform Campaigns</name>
 
     <description>
         MOTECH is a software system from Grameen Foundation that harnesses the ubiquity
