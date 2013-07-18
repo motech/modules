@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>motech</artifactId>
+        <artifactId>platform-communications</artifactId>
         <groupId>org.motechproject</groupId>
         <version>0.21-SNAPSHOT</version>
         <relativePath>../../../</relativePath>
