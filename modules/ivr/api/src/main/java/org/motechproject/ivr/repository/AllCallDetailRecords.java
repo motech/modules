@@ -25,6 +25,7 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.motechproject.commons.date.util.DateUtil.setTimeZoneUTC;
 
 @Repository
 public class AllCallDetailRecords extends CouchDbRepositorySupportWithLucene<CallDetailRecord> {
@@ -86,7 +87,7 @@ public class AllCallDetailRecords extends CouchDbRepositorySupportWithLucene<Cal
     )})
     public List<CallDetailRecord> search(String phoneNumber, DateTime startTime, DateTime endTime, Integer minDurationInSeconds, Integer maxDurationInSeconds, List<String> dispositions, int page, int pageSize, String sortby, boolean reverse) {
 
-        StringBuilder queryString = generateQueryString(phoneNumber, startTime, endTime, minDurationInSeconds, maxDurationInSeconds, dispositions);
+        StringBuilder queryString = generateQueryString(phoneNumber, setTimeZoneUTC(startTime), setTimeZoneUTC(endTime), minDurationInSeconds, maxDurationInSeconds, dispositions);
 
         return runQuery(queryString, page, pageSize, sortby, reverse);
     }

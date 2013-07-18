@@ -6,6 +6,8 @@ import org.motechproject.ivr.event.CallEventCustomData;
 
 import java.io.Serializable;
 
+import static org.motechproject.commons.date.util.DateUtil.setTimeZoneUTC;
+
 /**
  * Represents IVR event like DTMF key press, Dial
  * @see IvrEvent
@@ -46,11 +48,11 @@ public class CallEventLog implements Serializable {
     }
 
     public DateTime getTimeStamp() {
-        return timeStamp;
+        return setTimeZoneUTC(timeStamp);
     }
 
     public void setTimeStamp(DateTime timeStamp) {
-        this.timeStamp = DateUtil.setTimeZone(timeStamp);
+        this.timeStamp = timeStamp;
     }
 
     /**

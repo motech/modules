@@ -14,6 +14,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static org.motechproject.commons.date.util.DateUtil.setTimeZoneUTC;
+
 @Repository
 public class AllAlerts extends MotechBaseRepository<Alert> {
     @Autowired
@@ -43,7 +45,7 @@ public class AllAlerts extends MotechBaseRepository<Alert> {
 
     @GenerateView
     public List<Alert> findByDateTime(DateTime fromDate, DateTime toDate) {
-        ViewQuery q = createQuery("by_dateTime").startKey(fromDate).endKey(toDate).includeDocs(true);
+        ViewQuery q = createQuery("by_dateTime").startKey(setTimeZoneUTC(fromDate)).endKey(setTimeZoneUTC(toDate)).includeDocs(true);
         return db.queryView(q, Alert.class);
     }
 }

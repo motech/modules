@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.sms.api.constants.EventDataKeys;
@@ -68,7 +69,7 @@ public class InboundSmsControllerTest {
         assertEquals("1234567890", event.getParameters().get(EventDataKeys.SENDER));
         assertEquals("2013-05-28T14:48", event.getParameters().get(TIMESTAMP));
 
-        assertSmsRecord("some text message", "1234567890", new DateTime(2013, 5, 28, 14, 48));
+        assertSmsRecord("some text message", "1234567890", DateUtil.setTimeZoneUTC(new DateTime(2013, 5, 28, 14, 48)));
     }
 
     @Test

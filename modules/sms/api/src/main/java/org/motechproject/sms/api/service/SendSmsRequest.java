@@ -2,6 +2,7 @@ package org.motechproject.sms.api.service;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.joda.time.DateTime;
+import org.motechproject.commons.date.util.DateUtil;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -60,7 +61,11 @@ public class SendSmsRequest {
     }
 
     public DateTime getDeliveryTime() {
-        return deliveryTime;
+        return DateUtil.setTimeZoneUTC(deliveryTime);
+    }
+
+    public void setDeliveryTime(DateTime deliveryTime) {
+       this.deliveryTime = deliveryTime;
     }
 
     @Override

@@ -13,7 +13,8 @@ import java.util.Map;
 
 import static org.motechproject.commons.date.util.DateUtil.newDateTime;
 import static org.motechproject.commons.date.util.DateUtil.now;
-import static org.motechproject.commons.date.util.DateUtil.setTimeZone;
+import static org.motechproject.commons.date.util.DateUtil.setTimeZoneUTC;
+
 
 /**
  * Call Detail Record represents call events and data captured in a call along with call metrics.
@@ -98,16 +99,18 @@ public class CallDetailRecord extends MotechBaseDataObject implements CallDetail
         return phoneNumber;
     }
 
+    @Override
     public DateTime getStartDate() {
-        return startDate != null ? setTimeZone(startDate) : startDate;
+        return setTimeZoneUTC(startDate);
     }
 
+    @Override
     public DateTime getEndDate() {
-        return endDate != null ? setTimeZone(endDate) : endDate;
+        return setTimeZoneUTC(endDate);
     }
 
     public Date getAnswerDate() {
-        return answerDate != null ? setTimeZone(newDateTime(answerDate)).toDate() : answerDate;
+        return answerDate != null ? setTimeZoneUTC(newDateTime(answerDate)).toDate() : answerDate;
     }
 
     public CallDisposition getDisposition() {
