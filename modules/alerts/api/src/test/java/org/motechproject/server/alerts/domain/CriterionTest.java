@@ -18,6 +18,7 @@ import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.motechproject.commons.date.util.DateUtil.setTimeZoneUTC;
 
 public class CriterionTest {
     @Mock
@@ -61,6 +62,6 @@ public class CriterionTest {
 
         List<Alert> filteredAlerts = Criterion.dateRange.filter(allAlerts, alertCriteria);
 
-        assertEquals(asList(dayTwo, dayThree), extract(filteredAlerts, on(Alert.class).getDateTime()));
+        assertEquals(asList(setTimeZoneUTC(dayTwo), setTimeZoneUTC(dayThree)), extract(filteredAlerts, on(Alert.class).getDateTime()));
     }
 }

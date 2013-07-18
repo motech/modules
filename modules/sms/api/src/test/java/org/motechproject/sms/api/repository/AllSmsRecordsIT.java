@@ -40,7 +40,7 @@ public class AllSmsRecordsIT {
         String refNo = "refNo";
         String recipient = "9123456780";
         String messageContent = "Dummy Message";
-        DateTime sentDate = DateUtil.now();
+        DateTime sentDate = DateUtil.nowUTC();
 
         SmsRecord smsRecord = new SmsRecord(SMSType.OUTBOUND, recipient, messageContent, sentDate, deliveryStatus, refNo);
         allSmsRecords.addOrReplace(smsRecord);
@@ -55,7 +55,7 @@ public class AllSmsRecordsIT {
         String refNo = "refNo";
         String recipient = "9123456780";
         String messageContent = "Dummy Message";
-        DateTime messageTime = DateUtil.now().toDateTime(DateTimeZone.UTC);
+        DateTime messageTime = DateUtil.nowUTC();
 
         allSmsRecords.addOrReplace(new SmsRecord(SMSType.OUTBOUND, recipient, messageContent, messageTime, DELIVERED, refNo));
         allSmsRecords.addOrReplace(new SmsRecord(SMSType.OUTBOUND, recipient, messageContent, messageTime.plusDays(1), ABORTED, refNo));
@@ -81,7 +81,7 @@ public class AllSmsRecordsIT {
         String refNo = "refNo";
         String recipient = "9123456780";
         String messageContent = "Dummy Message";
-        DateTime messageTime = DateUtil.now().toDateTime(DateTimeZone.UTC);
+        DateTime messageTime = DateUtil.nowUTC();
 
         SmsRecord smsRecord = new SmsRecord(smsType, recipient, messageContent, messageTime, deliveryStatus, refNo);
         allSmsRecords.addOrReplace(smsRecord);
@@ -97,7 +97,7 @@ public class AllSmsRecordsIT {
     public void shouldUpdateTheDeliveryStatusForLatestRecordForMatchingRefNoForASubscriber() {
         String refNo = "refNo";
         String recipient = "9123456780";
-        DateTime sentDate = DateUtil.now();
+        DateTime sentDate = DateUtil.nowUTC();
 
         final SmsRecord latestMessage = new SmsRecord(SMSType.OUTBOUND, recipient, "LatestMessage", sentDate, INPROGRESS, refNo);
         allSmsRecords.addOrReplace(latestMessage);

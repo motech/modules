@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.sms.api.SmsDeliveryFailureException;
@@ -32,7 +33,7 @@ import static org.motechproject.sms.api.DeliveryStatus.PENDING;
 import static org.motechproject.sms.api.SMSType.OUTBOUND;
 
 public class SmsSendHandlerTest extends BaseUnitTest {
-    private static final DateTime SEND_TIME = new DateTime(2013, 5, 29, 10, 25);
+    private static final DateTime SEND_TIME = DateUtil.setTimeZoneUTC(new DateTime(2013, 5, 29, 10, 25));
 
     private SmsSendHandler handler;
 

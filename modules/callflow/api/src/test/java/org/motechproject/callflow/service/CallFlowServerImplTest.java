@@ -6,6 +6,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.callflow.domain.FlowSessionRecord;
 import org.motechproject.callflow.domain.IvrEvent;
+import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.decisiontree.core.DecisionTreeService;
 import org.motechproject.decisiontree.core.FlowSession;
 import org.motechproject.event.listener.EventRelay;
@@ -65,7 +66,7 @@ public class CallFlowServerImplTest {
             verify(flowSessionService).updateSession(sessionCaptor.capture());
 
             FlowSessionRecord sessionRecord = (FlowSessionRecord) sessionCaptor.getValue();
-            assertEquals(newDateTime(2010, 10, 1), sessionRecord.getCallDetailRecord().getEndDate());
+            assertEquals(DateUtil.setTimeZoneUTC(newDateTime(2010, 10, 1)), sessionRecord.getCallDetailRecord().getEndDate());
         } finally {
             stopFakingTime();
         }
