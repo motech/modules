@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.motechproject</groupId>
-        <artifactId>motech</artifactId>
+        <artifactId>platform-campaigns</artifactId>
         <version>0.21-SNAPSHOT</version>
         <relativePath>../../../</relativePath>
     </parent>
