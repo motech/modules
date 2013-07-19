@@ -12,7 +12,6 @@ import java.util.Map;
 
 public class CommcareFormBuilder {
 
-
     private static final String DEFAULT_ROOT_ELEMENT = "form";
 
     private static final String UIVERSION_ATTRIBUTE_NAME = "uiVersion";
@@ -25,18 +24,18 @@ public class CommcareFormBuilder {
 
         CommcareForm form = new CommcareForm();
         form.setForm(rootElement);
-        populateFormFields(rootElement, form);
+        populateFormFields(rootElement, form, (String) motechEvent.getParameters().get(EventDataKeys.RECEIVED_ON));
         return form;
     }
 
-    private void populateFormFields(FormValueElement rootElement, CommcareForm form) {
+    private void populateFormFields(FormValueElement rootElement, CommcareForm form, String receivedOn) {
         Map<String, String> meta = getFormMeta(rootElement);
         form.setMetadata(meta);
         form.setUiversion(rootElement.getAttributes().get(UIVERSION_ATTRIBUTE_NAME));
         form.setVersion(rootElement.getAttributes().get(VERSION_ATTRIBUTE_NAME));
         form.setId(meta.get(INSTANCE_ID_ATTRIBUTE_NAME));
+        form.setReceivedOn(receivedOn);
     }
-
 
     private void fixRootElementName(FormValueElement rootElement) {
         if (rootElement.getElementName() ==  null) {

@@ -2,6 +2,7 @@ package org.motechproject.commcare.builder;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.commcare.domain.CommcareForm;
@@ -40,9 +41,9 @@ public class CommcareFormBuilderTest {
 
         motechEvent.getParameters().put(EventDataKeys.ELEMENT_NAME, elementName);
         motechEvent.getParameters().put(EventDataKeys.ATTRIBUTES, attributes);
-
+        String receivedOn = DateTime.now().toString();
+        motechEvent.getParameters().put(EventDataKeys.RECEIVED_ON, receivedOn);
         metaElement.put(EventDataKeys.ELEMENT_NAME, "meta");
-
 
         final String meta1 = "meta1";
         final String metaValue1 = "metaValue1";
@@ -83,6 +84,7 @@ public class CommcareFormBuilderTest {
         assertEquals("myUiVersion", actualForm.getUiversion());
         assertEquals("myVersion", actualForm.getVersion());
         assertEquals("myInstanceId", actualForm.getId());
+        assertEquals(receivedOn, actualForm.getReceivedOn());
     }
 
     @Test
@@ -96,7 +98,7 @@ public class CommcareFormBuilderTest {
 
         CommcareForm commcareForm = builder.buildFrom(motechEvent);
 
-        Multimap<String,FormValueElement> subElements = commcareForm.getForm().getSubElements();
+        Multimap<String, FormValueElement> subElements = commcareForm.getForm().getSubElements();
         assertEquals(0, subElements.size());
 
         Map<String, String> metadata = commcareForm.getMetadata();
@@ -115,7 +117,7 @@ public class CommcareFormBuilderTest {
 
         CommcareForm commcareForm = builder.buildFrom(motechEvent);
 
-        Multimap<String,FormValueElement> subElements = commcareForm.getForm().getSubElements();
+        Multimap<String, FormValueElement> subElements = commcareForm.getForm().getSubElements();
         assertEquals(0, subElements.size());
 
         Map<String, String> metadata = commcareForm.getMetadata();
@@ -191,7 +193,7 @@ public class CommcareFormBuilderTest {
 
         public FormValueElementMapBuilder addAttribute(String name, String value) {
             Map<String, String> attributes = (Map<String, String>) map.get(EventDataKeys.ATTRIBUTES);
-            if(attributes == null) {
+            if (attributes == null) {
                 attributes = new HashMap<>();
                 map.put(EventDataKeys.ATTRIBUTES, attributes);
             }
@@ -206,12 +208,12 @@ public class CommcareFormBuilderTest {
 
         public FormValueElementMapBuilder addSubElement(Map<String, Object> subElement, String elementName) {
             Multimap<String, Map<String, Object>> subElements = (Multimap<String, Map<String, Object>>) map.get(EventDataKeys.SUB_ELEMENTS);
-            if(subElements == null) {
+            if (subElements == null) {
                 subElements = new LinkedHashMultimap<>();
                 map.put(EventDataKeys.SUB_ELEMENTS, subElements);
             }
 
-            if(elementName == null) {
+            if (elementName == null) {
                 elementName = (String) subElement.get(EventDataKeys.ELEMENT_NAME);
             }
 
