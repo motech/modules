@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Random;
 
 import static org.motechproject.sms.api.DeliveryStatus.ABORTED;
-import static org.motechproject.sms.api.DeliveryStatus.DELIVERED;
+import static org.motechproject.sms.api.DeliveryStatus.DELIVERY_CONFIRMED;
 import static org.motechproject.sms.api.DeliveryStatus.KEEPTRYING;
 import static org.motechproject.sms.api.SMSType.OUTBOUND;
 import static org.motechproject.sms.api.constants.EventDataKeys.FAILURE_COUNT;
@@ -114,7 +114,7 @@ public class SmsHttpService {
             raiseFailureEvent(recipients, message, failureCount);
         } else {
             log.debug("SMS with message %s sent successfully to %s:", message, StringUtils.join(recipients.iterator(), ","));
-            addSmsRecord(recipients, message, sendTime, DELIVERED);
+            addSmsRecord(recipients, message, sendTime, DELIVERY_CONFIRMED);
         }
     }
 

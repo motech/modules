@@ -45,7 +45,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.motechproject.sms.api.DeliveryStatus.DELIVERED;
+import static org.motechproject.sms.api.DeliveryStatus.DELIVERY_CONFIRMED;
 import static org.motechproject.sms.api.DeliveryStatus.KEEPTRYING;
 import static org.motechproject.sms.api.SMSType.OUTBOUND;
 import static org.motechproject.sms.api.constants.EventDataKeys.FAILURE_COUNT;
@@ -104,7 +104,7 @@ public class SmsHttpServiceTest extends BaseUnitTest {
 
         verify(httpClient).executeMethod(httpMethod);
 
-        assertSmsRecord(times(1), TEST_MESSAGE, asList(TEST_RECIPIENT), DELIVERED);
+        assertSmsRecord(times(1), TEST_MESSAGE, asList(TEST_RECIPIENT), DELIVERY_CONFIRMED);
     }
 
     @Test
@@ -119,7 +119,7 @@ public class SmsHttpServiceTest extends BaseUnitTest {
 
         smsHttpService.sendSms(asList(TEST_RECIPIENT), TEST_MESSAGE, TEST_FAILURE_COUNT);
 
-        assertSmsRecord(times(1), TEST_MESSAGE, asList(TEST_RECIPIENT), DELIVERED);
+        assertSmsRecord(times(1), TEST_MESSAGE, asList(TEST_RECIPIENT), DELIVERY_CONFIRMED);
     }
 
     @Test
@@ -221,7 +221,7 @@ public class SmsHttpServiceTest extends BaseUnitTest {
         verify(httpClientParams).setAuthenticationPreemptive(true);
         verify(httpClientState).setCredentials(AuthScope.ANY, new UsernamePasswordCredentials("username", "password"));
 
-        assertSmsRecord(times(1), "message", Arrays.asList("123"), DELIVERED);
+        assertSmsRecord(times(1), "message", Arrays.asList("123"), DELIVERY_CONFIRMED);
     }
 
     private void assertSmsRecord(VerificationMode times, String message, List<String> recipients, DeliveryStatus deliveryStatus) {
