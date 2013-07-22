@@ -1,0 +1,38 @@
+[main]
+host = https://www.transifex.com
+
+[MOTECH.cmslite]
+file_filter = modules/cmslite/api/src/main/resources/webapp/messages/messages_<lang>.properties
+source_file = modules/cmslite/api/src/main/resources/webapp/messages/messages.properties
+source_lang = en_US
+type = PROPERTIES
+
+[MOTECH.commcare]
+file_filter = modules/commcare/api/src/main/resources/webapp/messages/messages_<lang>.properties
+source_file = modules/commcare/api/src/main/resources/webapp/messages/messages.properties
+source_lang = en_US
+type = PROPERTIES
+
+[MOTECH.ivr-api-bundle]
+file_filter = modules/ivr/api-bundle/src/main/resources/webapp/messages/messages_<lang>.properties
+source_file = modules/ivr/api-bundle/src/main/resources/webapp/messages/messages.properties
+source_lang = en_US
+type = PROPERTIES
+
+[MOTECH.mobileforms-api-bundle]
+file_filter = modules/mobileforms/api-bundle/src/main/resources/webapp/messages/messages_<lang>.properties
+source_file = modules/mobileforms/api-bundle/src/main/resources/webapp/messages/messages.properties
+source_lang = en_US
+type = PROPERTIES
+
+[MOTECH.outbox-bundle]
+file_filter = modules/outbox/outbox-bundle/src/main/resources/webapp/bundles/messages_<lang>.properties
+source_file = modules/outbox/outbox-bundle/src/main/resources/webapp/bundles/messages.properties
+source_lang = en_US
+type = PROPERTIES
+
+[MOTECH.sms-api-bundle]
+file_filter = modules/sms/api-bundle/src/main/resources/webapp/messages/messages_<lang>.properties
+source_file = modules/sms/api-bundle/src/main/resources/webapp/messages/messages.properties
+source_lang = en_US
+type = PROPERTIES
