@@ -9,15 +9,14 @@ import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.springframework.mock.web.MockHttpServletRequest;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.motechproject.commcare.events.constants.EventDataKeys.*;
 import static org.motechproject.commcare.events.constants.EventSubjects.FORMS_EVENT;
@@ -51,6 +50,15 @@ public class FullFormControllerTest {
         MotechEvent event = captor.getValue();
 
         assertEquals(event.getSubject(), FORMS_FAIL_EVENT);
+        assertNotNull(event.getParameters().get(FAILED_FORM_MESSAGE));
+    }
+
+    @Test
+    public void testIncomingDeviceReport() {
+
+        controller.receiveForm(getDeviceReportForm(), request);
+
+        verifyZeroInteractions(eventRelay);
     }
 
     @Test
@@ -92,8 +100,6 @@ public class FullFormControllerTest {
         assertEquals("9", ((Map<String, Object>) numberElementsList.get(1)).get(EventDataKeys.VALUE));
     }
 
-
-
     private void assertHasKeys(Multimap<String, Object> map, String... keys) {
         for(String key: keys) {
             assertTrue(map.containsKey(key));
@@ -134,5 +140,9 @@ public class FullFormControllerTest {
                 "  <n3:appVersion xmlns:n3=\"http://commcarehq.org/xforms\">2.0</n3:appVersion>\n" +
                 "  </n2:meta>\n" +
                 "</data>";
+    }
+
+    private String getDeviceReportForm() {
+        return "<?xml version=\'1.0\' encoding=\'UTF-8\' standalone=\'no\'?> <device_report xmlns=\"http://code.javarosa.org/devicereport\"> <device_id>DEVICEIDJ0j09s0u</device_id></device_report>";
     }
 }
