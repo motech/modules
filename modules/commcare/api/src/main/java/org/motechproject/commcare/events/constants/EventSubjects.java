@@ -16,6 +16,8 @@ public final class EventSubjects {
 
     public static final String FORMS_FAIL_EVENT = FORMS_EVENT + ".failed";
 
+    public static final String SCHEMA_CHANGE_EVENT = BASE_SUBJECT + "schemachange";
+
     private EventSubjects() {
     }
 }

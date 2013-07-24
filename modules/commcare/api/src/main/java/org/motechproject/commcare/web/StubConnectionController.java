@@ -119,7 +119,7 @@ public class StubConnectionController {
     }
 
     private String getAppStructureUrl() {
-        return settingsService.getPlatformSettings().getServerUrl() + "/module/commcare/appStructure/";
+        return settingsService.getPlatformSettings().getServerUrl() + "/module/commcare/appSchemaChange/";
     }
 }
 

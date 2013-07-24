@@ -128,6 +128,6 @@ public class SettingsController {
     }
 
     private String getShemaChangeUrl() {
-        return settingsService.getPlatformSettings().getServerUrl() + "/module/commcare/appStructure/";
+        return settingsService.getPlatformSettings().getServerUrl() + "/module/commcare/appSchemaChange/";
     }
 }
