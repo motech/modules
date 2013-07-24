@@ -13,11 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
-
 import static org.motechproject.commcare.events.constants.EventDataKeys.RECEIVED_ON;
 import static org.motechproject.commcare.events.constants.EventDataKeys.ATTRIBUTES;
 import static org.motechproject.commcare.events.constants.EventDataKeys.ELEMENT_NAME;
@@ -25,6 +23,7 @@ import static org.motechproject.commcare.events.constants.EventDataKeys.SUB_ELEM
 import static org.motechproject.commcare.events.constants.EventDataKeys.VALUE;
 import static org.motechproject.commcare.events.constants.EventSubjects.FORMS_EVENT;
 import static org.motechproject.commcare.events.constants.EventSubjects.FORMS_FAIL_EVENT;
+import static org.motechproject.commcare.events.constants.EventDataKeys.FAILED_FORM_MESSAGE;
 
 /**
  * Controller that handles the incoming full form feed from CommCareHQ.
@@ -47,7 +46,9 @@ public class FullFormController {
         try {
             formValueElement = parser.parse();
         } catch (FullFormParserException e) {
-            eventRelay.sendEventMessage(new MotechEvent(FORMS_FAIL_EVENT));
+            MotechEvent failedEvent = new MotechEvent(FORMS_FAIL_EVENT);
+            failedEvent.getParameters().put(FAILED_FORM_MESSAGE, e.getMessage());
+            eventRelay.sendEventMessage(failedEvent);
         }
 
         if (formValueElement != null) {

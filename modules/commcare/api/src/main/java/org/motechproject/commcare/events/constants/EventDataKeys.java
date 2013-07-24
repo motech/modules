@@ -30,6 +30,9 @@ public final class EventDataKeys {
     public static final String ATTRIBUTES = "attributes";
     public static final String VALUE = "value";
 
+    //FullFormsExceptionEvent
+    public static final String FAILED_FORM_MESSAGE = "failedMessage";
+
     private EventDataKeys() {
     }
 }
