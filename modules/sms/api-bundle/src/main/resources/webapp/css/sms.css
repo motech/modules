@@ -25,13 +25,13 @@
     z-index: 1;
 }
 
-.sms .s-ico {
-    float: right;
-    margin-right: 2px;
-    display: block;
-    width: 20px;
-    height: 20px;
-    padding: 8px 2px;
+.sms .ui-icon-asc{
+    margin-top: 5px;
+    margin-left: 1px;
+}
+
+.sms .ui-icon-desc {
+    margin-top: 11px;
 }
 
 .sms.tab-content {
