@@ -41,6 +41,7 @@ public class StubConnectionController {
     private static final String FORWARD_CASES_KEY = "forwardCases";
     private static final String FORWARD_FORMS_KEY = "forwardForms";
     private static final String FORWARD_FORM_STUBS_KEY = "forwardFormStubs";
+    private static final String FORWARD_APP_STRUCTURE_KEY = "forwardAppStructure";
 
     private CommcareAccountService commcareAccountService;
 
@@ -55,6 +56,7 @@ public class StubConnectionController {
         settingsFacade.setProperty(FORWARD_CASES_KEY, String.valueOf(false));
         settingsFacade.setProperty(FORWARD_FORMS_KEY, String.valueOf(false));
         settingsFacade.setProperty(FORWARD_FORM_STUBS_KEY, String.valueOf(false));
+        settingsFacade.setProperty(FORWARD_APP_STRUCTURE_KEY, String.valueOf(false));
 
         if (commcareAccountService.verifySettings(settings)) {
             checkForwardingSettings();
@@ -98,6 +100,8 @@ public class StubConnectionController {
                 settingsFacade.setProperty(FORWARD_FORMS_KEY, String.valueOf(true));
             } else if (StringUtils.equals(endpointUrl, getFormStubsUrl())) {
                 settingsFacade.setProperty(FORWARD_FORM_STUBS_KEY, String.valueOf(true));
+            } else if (StringUtils.equals(endpointUrl, getAppStructureUrl())) {
+                settingsFacade.setProperty(FORWARD_APP_STRUCTURE_KEY, String.valueOf(true));
             }
         }
     }
@@ -112,6 +116,10 @@ public class StubConnectionController {
 
     private String getFormStubsUrl() {
         return settingsService.getPlatformSettings().getServerUrl() + "/module/commcare/stub/";
+    }
+
+    private String getAppStructureUrl() {
+        return settingsService.getPlatformSettings().getServerUrl() + "/module/commcare/appStructure/";
     }
 }
 
