@@ -19,6 +19,8 @@ public class SettingsDto {
     private boolean forwardCases;
     @JsonProperty
     private boolean forwardFormStubs;
+    @JsonProperty
+    private boolean forwardAppStructure;
 
     public SettingsDto() {
         this.accountSettings = new CommcareAccountSettings();
@@ -89,5 +91,14 @@ public class SettingsDto {
 
     public void setForwardFormStubs(boolean forwardFormStubs) {
         this.forwardFormStubs = forwardFormStubs;
+    }
+
+    @JsonProperty("forwardAppStructure")
+    public boolean shouldForwardAppStructure() {
+        return  forwardAppStructure;
+    }
+
+    public void setForwardAppStructure(boolean forwardAppStructure) {
+        this.forwardAppStructure = forwardAppStructure;
     }
 }

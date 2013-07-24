@@ -104,4 +104,14 @@
         </div>
     </div>
 
+    <div class="control-group">
+        <label class="control-label">{{msg('settings.label.forwardAppStructure')}}</label>
+        <div class="controls">
+            <div class="switch-small" switch=".forwardAppStructureInput" autosave="switch-change" id="forwardAppStructureSwitch">
+                <input type="checkbox" ng-model="settings.forwardAppStructure" class="forwardAppStructureInput" />
+            </div>
+            <div class="form-hints"/>
+        </div>
+    </div>
+
 </form>

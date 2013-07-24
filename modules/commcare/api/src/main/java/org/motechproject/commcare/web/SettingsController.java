@@ -31,6 +31,7 @@ public class SettingsController {
     private static final String FORWARD_CASES_KEY = "forwardCases";
     private static final String FORWARD_FORMS_KEY = "forwardForms";
     private static final String FORWARD_FORM_STUBS_KEY = "forwardFormStubs";
+    private static final String FORWARD_SCHEMA_CHANGES_KEY = "forwardAppStructure";
 
     @Autowired
     private PlatformSettingsService settingsService;
@@ -57,6 +58,7 @@ public class SettingsController {
         dto.setForwardCases(getBooleanPropertyValue(FORWARD_CASES_KEY));
         dto.setForwardForms(getBooleanPropertyValue(FORWARD_FORMS_KEY));
         dto.setForwardFormStubs(getBooleanPropertyValue(FORWARD_FORM_STUBS_KEY));
+        dto.setForwardAppStructure(getBooleanPropertyValue(FORWARD_SCHEMA_CHANGES_KEY));
         return dto;
     }
 
@@ -88,6 +90,12 @@ public class SettingsController {
 
             forward("ShortFormRepeater", getFormStubsUrl());
         }
+
+        if (!getBooleanPropertyValue(FORWARD_SCHEMA_CHANGES_KEY) && settings.shouldForwardAppStructure()) {
+            settingsFacade.setProperty(FORWARD_SCHEMA_CHANGES_KEY, String.valueOf(settings.shouldForwardAppStructure()));
+
+            forward("AppStructureRepeater", getShemaChangeUrl());
+        }
     }
 
     private String getPropertyValue(final String propertyKey) {
@@ -117,5 +125,9 @@ public class SettingsController {
 
     private String getFormStubsUrl() {
         return settingsService.getPlatformSettings().getServerUrl() + "/module/commcare/stub/";
+    }
+
+    private String getShemaChangeUrl() {
+        return settingsService.getPlatformSettings().getServerUrl() + "/module/commcare/appStructure/";
     }
 }

@@ -34,6 +34,7 @@ public class SettingsControllerTest {
     private static final String FORWARD_CASES_KEY = "forwardCases";
     private static final String FORWARD_FORMS_KEY = "forwardForms";
     private static final String FORWARD_FORM_STUBS_KEY = "forwardFormStubs";
+    private static final String FORWARD_APP_STRUCTURE_KEY = "forwardAppStructure";
 
     private static final String EVENT_STRATEGY_VALUE = "minimal";
     private static final String COMMCARE_BASE_URL_VALUE = "https://commcarehq.com/a/";
@@ -41,6 +42,7 @@ public class SettingsControllerTest {
     private static final boolean FORWARD_CASES_VALUE = true;
     private static final boolean FORWARD_FORMS_VALUE = true;
     private static final boolean FORWARD_FORM_STUBS_VALUE = false;
+    private static final boolean FORWARD_APP_STRUCTURE_VALUE = true;
 
     @Mock
     private SettingsFacade settingsFacade;
@@ -72,10 +74,11 @@ public class SettingsControllerTest {
         when(settingsFacade.getProperty(FORWARD_FORMS_KEY)).thenReturn(String.valueOf(FORWARD_FORMS_VALUE));
         when(settingsFacade.getProperty(FORWARD_CASES_KEY)).thenReturn(String.valueOf(FORWARD_CASES_VALUE));
         when(settingsFacade.getProperty(FORWARD_FORM_STUBS_KEY)).thenReturn(String.valueOf(FORWARD_FORM_STUBS_VALUE));
+        when(settingsFacade.getProperty(FORWARD_APP_STRUCTURE_KEY)).thenReturn(String.valueOf(FORWARD_APP_STRUCTURE_VALUE));
 
         SettingsDto dto = controller.getSettings();
 
-        verify(settingsFacade, times(8)).getProperty(anyString());
+        verify(settingsFacade, times(9)).getProperty(anyString());
 
         assertEquals(COMMCARE_BASE_URL_VALUE, dto.getCommcareBaseUrl());
         assertEquals(COMMCARE_DOMAIN_KEY, dto.getCommcareDomain());
@@ -85,6 +88,7 @@ public class SettingsControllerTest {
         assertEquals(FORWARD_FORMS_VALUE, dto.shouldForwardForms());
         assertEquals(FORWARD_CASES_VALUE, dto.shouldForwardCases());
         assertEquals(FORWARD_FORM_STUBS_VALUE, dto.shouldForwardFormStubs());
+        assertEquals(FORWARD_APP_STRUCTURE_VALUE, dto.shouldForwardAppStructure());
     }
 
     @Test

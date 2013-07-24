@@ -123,6 +123,13 @@
                     $('#forwardFormStubsSwitch').bootstrapSwitch('setState', false);
                     $('#forwardFormStubsSwitch').bootstrapSwitch('setActive', true);
                 }
+                if($scope.settings.forwardAppStructure) {
+                    $('#forwardAppStructureSwitch').bootstrapSwitch('setState', true);
+                    $scope.blockSwitch('#forwardAppStructureSwitch');
+                } else {
+                    $('#forwardAppStructureSwitch').bootstrapSwitch('setState', false);
+                    $('#forwardAppStructureSwitch').bootstrapSwitch('setActive', true);
+                }
             });
         };
 
@@ -138,6 +145,11 @@
         });
         $('#forwardFormStubsSwitch').change(function () {
               if($scope.settings.forwardFormStubs) {
+                 $scope.blockSwitch(this);
+              }
+        });
+        $('#forwardAppStructureSwitch').change(function () {
+              if($scope.settings.forwardAppStructure) {
                  $scope.blockSwitch(this);
               }
         });
