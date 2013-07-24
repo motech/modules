@@ -155,7 +155,7 @@
                     },
                     shrinkToFit: true,
                     autowidth: true,
-                    rownumbers: true,
+                    rownumbers: false,
                     rowNum: 10,
                     rowList: [10, 20, 50],
                     colModel: [{
@@ -178,8 +178,8 @@
                     pager: '#' + attrs.loggingGrid,
                     width: '100%',
                     height: 'auto',
-                    sortname: 'phoneNumber',
-                    sortorder: 'asc',
+                    sortname: 'messageTime',
+                    sortorder: 'desc',
                     viewrecords: true,
                     gridComplete: function () {
                         angular.forEach(['phoneNumber', 'deliveryStatus', 'messageTime', 'smsType', 'messageContent'], function (value) {
