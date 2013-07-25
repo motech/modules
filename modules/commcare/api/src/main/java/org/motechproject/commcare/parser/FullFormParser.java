@@ -18,11 +18,24 @@ import java.io.StringReader;
 public class FullFormParser {
     private String xmlDoc;
 
+    public static final String FORM_DATA_ELEMENT = "data";
+    public static final String DEVICE_REPORT_ELEMENT = "device_report";
+    public static final String XMLNS_ELEMENT = "xmlns";
+    public static final String FORM = "form";
+
     public FullFormParser(String xmlDoc) {
         this.xmlDoc = xmlDoc;
     }
 
-
+    /**
+     * Method to parse incoming "full" XML forms from CommCareHQ.
+     * Parser assumes the form has an element with the tag "data".
+     * If the form does not, and instead has a device report, a null
+     * form is returned. Otherwise an exception is thrown indicating
+     * an unknown or faulty form XML.
+     * @return The parsed form, null if a device report
+     * @throws FullFormParserException Thrown if the form does not parse correctly and is not a device report form
+     */
     public FormValueElement parse() throws FullFormParserException {
         DOMParser parser = new DOMParser();
 
@@ -34,15 +47,19 @@ public class FullFormParser {
             parser.parse(inputSource);
 
             Document document = parser.getDocument();
-            Node item = document.getElementsByTagName("data").item(0);
+            Node item = document.getElementsByTagName(FORM_DATA_ELEMENT).item(0);
+
+            if (item == null && document.getElementsByTagName(DEVICE_REPORT_ELEMENT).item(0) != null) {
+                return null;
+            }
 
             root = new FormValueElement();
-            root.setElementName("form");
-            root.setValue("data");
+            root.setElementName(FORM);
+            root.setValue(FORM_DATA_ELEMENT);
             addAttributes(root, item.getAttributes());
             addSubElements(root, item.getChildNodes());
-        } catch (SAXException | IOException ex) {
-            throw new FullFormParserException(ex, "Exception while trying to parse formXml");
+        } catch (SAXException | IOException | NullPointerException ex) {
+            throw new FullFormParserException(ex, "Exception while trying to parse formXml: " + xmlDoc);
         }
 
         return root;
@@ -53,7 +70,7 @@ public class FullFormParser {
             Node attr = attributes.item(i);
             String key = attr.getNodeName();
 
-            if (key.startsWith("xmlns:")) {
+            if (key.startsWith(XMLNS_ELEMENT)) {
                 key = key.substring(0, 5);
             }
 
