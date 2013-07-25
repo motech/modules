@@ -33,14 +33,17 @@ public class AllCallDetailRecords extends CouchDbRepositorySupportWithLucene<Cal
     private static final int MAX_CALL_DURATION = 1000;
 
     @Autowired
-    protected AllCallDetailRecords(@Qualifier("callLogDbConnector") CouchDbConnector db) throws IOException {
+    protected AllCallDetailRecords(@Qualifier("callLogDbConnector") CouchDbConnector db)
+            throws IOException {
         super(CallDetailRecord.class, new LuceneAwareCouchDbConnector(db.getDatabaseName(), new StdCouchDbInstance(db.getConnection())));
         initStandardDesignDocument();
     }
 
 
     @View(name = "countLogs", map = "function(doc){ emit(null, 1);}", reduce = "_count")
-    public long countRecords(String phoneNumber, DateTime startTime, DateTime endTime, Integer minDurationInSeconds, Integer maxDurationInSeconds, List<String> dispositions) {
+    public long countRecords(String phoneNumber, DateTime startTime, DateTime endTime,
+                             Integer minDurationInSeconds, Integer maxDurationInSeconds,
+                             List<String> dispositions) {
         StringBuilder queryString = generateQueryString(phoneNumber, startTime, endTime, minDurationInSeconds, maxDurationInSeconds, dispositions);
         return runQuery(queryString, 0, 0, null, false).size();
     }
@@ -79,17 +82,20 @@ public class AllCallDetailRecords extends CouchDbRepositorySupportWithLucene<Cal
             index = "function(doc) { " +
                     "var ret=new Document(); " +
                     "ret.add(doc.phoneNumber,{'field':'phoneNumber'}); " +
+                    "ret.add(doc.callDirection,{'field':'callDirection'}); " +
                     "ret.add(doc.startDate, {'type':'date', 'field':'startDate'});" +
+                    "ret.add(doc.endDate, {'type':'date', 'field':'endDate'});" +
                     "ret.add(doc.duration, {'type':'int', 'field':'duration'}); " +
                     "ret.add(doc.disposition,{'field':'disposition'}); " +
                     "return ret " +
                     "}"
     )})
-    public List<CallDetailRecord> search(String phoneNumber, DateTime startTime, DateTime endTime, Integer minDurationInSeconds, Integer maxDurationInSeconds, List<String> dispositions, int page, int pageSize, String sortby, boolean reverse) {
+    public List<CallDetailRecord> search(String phoneNumber, DateTime startTime, DateTime endTime, Integer minDurationInSeconds,
+                                         Integer maxDurationInSeconds, List<String> dispositions, int page, int pageSize, String sortBy, boolean reverse) {
 
         StringBuilder queryString = generateQueryString(phoneNumber, setTimeZoneUTC(startTime), setTimeZoneUTC(endTime), minDurationInSeconds, maxDurationInSeconds, dispositions);
 
-        return runQuery(queryString, page, pageSize, sortby, reverse);
+        return runQuery(queryString, page, pageSize, sortBy, reverse);
     }
 
 
@@ -108,7 +114,9 @@ public class AllCallDetailRecords extends CouchDbRepositorySupportWithLucene<Cal
         return callDetailRecord;
     }
 
-    private StringBuilder generateQueryString(String phoneNumber, DateTime startTime, DateTime endTime, Integer minDurationInSeconds, Integer maxDurationInSeconds, List<String> dispositions) {
+    private StringBuilder generateQueryString(String phoneNumber, DateTime startTime,
+                                              DateTime endTime, Integer minDurationInSeconds,
+                                              Integer maxDurationInSeconds, List<String> dispositions) {
         StringBuilder queryString = new StringBuilder();
         if (maxDurationInSeconds != null && minDurationInSeconds != null) {
             queryString.append(String.format("duration<int>:[%d TO %d]", minDurationInSeconds, maxDurationInSeconds));
@@ -125,7 +133,8 @@ public class AllCallDetailRecords extends CouchDbRepositorySupportWithLucene<Cal
             if (queryString.length() > 0) {
                 queryString.append(" AND ");
             }
-            queryString.append(String.format("startDate<date>:[%s TO %s]", startTime.toString("yyyy-MM-dd'T'HH:mm:ss"), endTime.toString("yyyy-MM-dd'T'HH:mm:ss")));
+            queryString.append(String.format("startDate<date>:[%s TO %s]",
+                    startTime.toString("yyyy-MM-dd'T'HH:mm:ss"), endTime.toString("yyyy-MM-dd'T'HH:mm:ss")));
         }
         addDispositionFilter(dispositions, queryString);
         return queryString;
@@ -145,7 +154,8 @@ public class AllCallDetailRecords extends CouchDbRepositorySupportWithLucene<Cal
         }
     }
 
-    private List<CallDetailRecord> runQuery(StringBuilder queryString, int page, int pageSize, String sortBy, boolean reverse) {
+    private List<CallDetailRecord> runQuery(StringBuilder queryString, int page, int pageSize,
+                                            String sortBy, boolean reverse) {
         LuceneQuery query = new LuceneQuery("CallDetailRecord", "search");
         query.setQuery(queryString.toString());
         query.setStaleOk(false);

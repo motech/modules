@@ -118,12 +118,21 @@
             $('th img').each(function(){
                 $(this).removeClass().addClass('sorting-no');
             });
-
+            //when the column is sorting based on anything but a string
+            //(ex. int, date), the column to sort on ends with <type>,
+            //(ex. <int>). The column header will not have the <type>
+            //at the end, so that must be removed before trying to remove
+            //the sorting-no class.
+            var columnHeader = $scope.sortColumn,
+            index = columnHeader.indexOf("<");
+            if(index >= 0) {
+                columnHeader = columnHeader.substring(0, index);
+            }
             if ($scope.sortReverse) {
-                $('th.'+$scope.sortColumn+' img').removeClass('sorting-no').addClass('sorting-desc');
+                $('th.'+columnHeader+' img').removeClass('sorting-no').addClass('sorting-desc');
             }
             else {
-                $('th.'+$scope.sortColumn+' img').removeClass('sorting-no').addClass('sorting-asc');
+                $('th.'+columnHeader+' img').removeClass('sorting-no').addClass('sorting-asc');
             }
 
             $scope.getCalllogs();
