@@ -48,6 +48,10 @@ public class CommCareAPIHttpClient {
         return this.getRequest(commcareUserUrl(), null);
     }
 
+    public String appStructureRequest() {
+        return this.getRequest(commcareAppStructureUrl(), null);
+    }
+
     public String formRequest(String formId) {
         return this.getRequest(commcareFormUrl(formId), null);
     }
@@ -233,6 +237,10 @@ public class CommCareAPIHttpClient {
 
     String commcareUserUrl() {
         return String.format("%s/%s/api/v%s/user/?format=json", getCommcareBaseUrl(), getCommcareDomain(), getCommcareApiVersion());
+    }
+
+    String commcareAppStructureUrl() {
+        return String.format("%s/%s/api/v%s/application/", getCommcareBaseUrl(), getCommcareDomain(), getCommcareApiVersion());
     }
 
     String commcareFormUrl(String formId) {

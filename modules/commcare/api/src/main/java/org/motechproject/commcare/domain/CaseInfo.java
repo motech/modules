@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Domain class that represents the information and properties of a user on
+ * Domain class that represents the information and properties of a case on
  * CommCareHQ.
  */
 public class CaseInfo {

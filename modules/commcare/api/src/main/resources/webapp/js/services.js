@@ -7,8 +7,12 @@
         return $resource('../commcare/settings');
     });
 
-    angular.module('modulesServices', ['ngResource']).factory('Modules', function($resource) {
-        return $resource('../commcare/modules');
+    angular.module('modulesServices', ['ngResource']).factory('Schema', function($resource) {
+        return $resource('../commcare/schema');
+    });
+
+    angular.module('casesServices', ['ngResource']).factory('Cases', function($resource) {
+        return $resource('../commcare/caseList');
     });
 
     angular.module('connectionService', ['ngResource']).factory('Connection', function($resource) {
