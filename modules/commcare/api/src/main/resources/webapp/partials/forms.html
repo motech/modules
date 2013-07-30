@@ -1,34 +1,76 @@
 <div class="commcare">
 
-    <div ng-repeat="module in modules">
+    <div ng-show="formError" class="connection-status connection-error">
+        {{msg('commcare.error.schema')}}
+    </div>
 
-        <fieldset>
-            <legend>{{ module.name }}</legend>
+    <div ng-repeat="application in applications">
 
-            <div ng-repeat="form in module.formSchemas">
+        <h1>{{application.applicationName}}</h1>
 
-                <div class="form-schema-group">
-                    <span>{{ form.name }}</span>
-                    <button class="btn" data-toggle="modal" href="#form-schema-{{$parent.$index}}-{{$index}}">View</button>
+        <div ng-repeat="module in application.modules">
 
-                    <div id="form-schema-{{$parent.$index}}-{{$index}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <fieldset>
+                <legend>{{msg('commcare.module')}} {{$index+1}}</legend>
 
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <div ng-repeat="form in module.formSchemas">
 
-                            Module: <b>{{ module.name }}</b>&nbsp;&nbsp;Form: <b>{{ form.name }}</b>
-                        </div>
+                    <div class="form-schema-group">
+                        <span>{{ form.formNames["en"] }}</span>
+                        <button class="btn" data-toggle="modal" href="#form-schema-{{$parent.$index}}-{{$index}}">{{msg('main.view')}}</button>
 
-                        <div class="modal-body">
-                            <p>{{ form }}</p>
+                        <div id="form-schema-{{$parent.$index}}-{{$index}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+
+                                {{msg('commcare.module')}}: <b>{{msg('commcare.module')}} {{$index+1}}</b>&nbsp;&nbsp;Form: <b>{{ form.formNames["en"] }}</b>
+                            </div>
+
+                            <div class="modal-body">
+                                <p>{{msg('commcare.form.questions')}}:</p>
+                                <table class="table table-striped">
+                                    <tbody>
+                                    <tr ng-repeat="question in form.questions">
+                                        <td>{{question.questionLabel}}</td>
+                                        <td>
+                                            <table class="table table-bordered">
+                                                <tr>
+                                                    <td>{{msg('commcare.form.question.repeat')}}</td>
+                                                    <td>{{question.questionRepeat}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>{{msg('commcare.form.question.tag')}}</td>
+                                                    <td>{{question.questionTag}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>{{msg('commcare.form.question.value')}}</td>
+                                                    <td>{{question.questionValue}}</td>
+                                                </tr>
+                                                <table ui-if="question.options.length" class="table table-bordered">
+                                                    <tr>
+                                                        <th>{{msg('commcare.form.option.label')}}</th>
+                                                        <th>{{msg('commcare.form.option.value')}}</th>
+                                                    </tr>
+                                                    <tr ng-repeat="option in question.options">
+                                                        <td>{{option.label}}</td>
+                                                        <td>{{option.value}}</td>
+                                                    </tr>
+                                                </table>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
+
                 </div>
 
-            </div>
+            </fieldset>
 
-        </fieldset>
-
+        </div>
     </div>
 
 </div>
