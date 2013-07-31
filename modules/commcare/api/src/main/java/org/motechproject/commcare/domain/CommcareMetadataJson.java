@@ -2,7 +2,7 @@ package org.motechproject.commcare.domain;
 
 import com.google.gson.annotations.SerializedName;
 
-public class CaseMetadataJson {
+public class CommcareMetadataJson {
 
     @SerializedName("limit")
     private int limit;

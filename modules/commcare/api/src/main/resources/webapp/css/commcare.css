@@ -19,6 +19,14 @@
     float: right;
 }
 
+.commcare .case-schema-group {
+    margin-bottom: 20px;
+}
+
+.commcare .case-schema-group button {
+    float: right;
+}
+
 .commcare .permission-present {
     color: #21c145;
 }
