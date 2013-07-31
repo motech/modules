@@ -19,18 +19,21 @@
         });
 
         $scope.verify = function() {
+            blockUI();
             Connection.verify($scope.settings.accountSettings,
                 function success()  {
                     $scope.verifySuccessMessage = $scope.msg('verify.success');
                     $scope.verifyErrorMessage = '';
                     $scope.connectionVerified = true;
                     $scope.getVerifiedSettings();
+                    unblockUI();
                 },
                 function failure(response) {
                     $scope.verifyErrorMessage = response.data.message;
                     $scope.verifySuccessMessage = '';
                     $scope.connectionVerified = false;
                     $('.commcare .switch-small').bootstrapSwitch('setActive', false);
+                    unblockUI();
                 });
         };
 
@@ -156,13 +159,30 @@
 
     });
 
-    commcareModule.controller('ModulesCtrl', function ($scope, Modules) {
+    commcareModule.controller('ModulesCtrl', function ($scope, Schema) {
+        $scope.formError = false;
 
-        $scope.modules = Modules.query();
-
+        blockUI();
+        $scope.applications = Schema.query(function() {
+            $scope.formError = false;
+            unblockUI();
+        }, function() {
+            $scope.formError = true;
+            unblockUI();
+        });
     });
 
-    commcareModule.controller('CaseSchemasCtrl', function () {
+    commcareModule.controller('CaseSchemasCtrl', function ($scope, Cases) {
+        $scope.caseError = false;
+
+        blockUI();
+        $scope.cases = Cases.query(function() {
+            $scope.caseError = false;
+            unblockUI();
+        }, function() {
+            $scope.caseError = true;
+            unblockUI();
+        });
     });
 
 }());
