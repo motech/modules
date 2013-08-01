@@ -113,8 +113,13 @@ public class SmsHttpService {
             addSmsRecord(recipients, message, sendTime, KEEPTRYING);
             raiseFailureEvent(recipients, message, failureCount);
         } else {
-            log.debug("SMS with message %s sent successfully to %s:", message, StringUtils.join(recipients.iterator(), ","));
-            addSmsRecord(recipients, message, sendTime, DELIVERY_CONFIRMED);
+            try {
+                log.debug("SMS with message %s sent successfully to %s:", message,
+                        StringUtils.join(recipients.iterator(), ","));
+                addSmsRecord(recipients, message, sendTime, DELIVERY_CONFIRMED);
+            } catch (Exception e) {
+                log.error("SMS record failure due to : ", e);
+            }
         }
     }
 
