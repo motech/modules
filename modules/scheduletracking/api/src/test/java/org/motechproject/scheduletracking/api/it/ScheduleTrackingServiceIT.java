@@ -1,6 +1,7 @@
 package org.motechproject.scheduletracking.api.it;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -89,9 +90,9 @@ public class ScheduleTrackingServiceIT {
 
     @Test
     public void fulfillMilestoneShouldBeIdempotent() {
-        scheduleTrackingService.enroll(new EnrollmentRequest().setExternalId("entity_1").setScheduleName("IPTI Schedule").setPreferredAlertTime(null).setReferenceDate(newDate(2012, 2, 10)).setReferenceTime(null).setEnrollmentDate(newDate(2012, 2, 10)).setEnrollmentTime(null).setStartingMilestoneName(null).setMetadata(null));
-        scheduleTrackingService.fulfillCurrentMilestone("entity_1", "IPTI Schedule", newDate(2012, 2, 20), new Time(8, 20));
-        scheduleTrackingService.fulfillCurrentMilestone("entity_1", "IPTI Schedule", newDate(2012, 2, 20), new Time(8, 20));
+        scheduleTrackingService.enroll(new EnrollmentRequest().setExternalId("entity_1").setScheduleName("IPTI Schedule").setPreferredAlertTime(null).setReferenceDate(LocalDate.now()).setReferenceTime(null).setEnrollmentDate(LocalDate.now()).setEnrollmentTime(null).setStartingMilestoneName(null).setMetadata(null));
+        scheduleTrackingService.fulfillCurrentMilestone("entity_1", "IPTI Schedule", LocalDate.now(), new Time(8, 20));
+        scheduleTrackingService.fulfillCurrentMilestone("entity_1", "IPTI Schedule", LocalDate.now(), new Time(8, 20));
 
         List<EnrollmentRecord> enrollment = scheduleTrackingService.search(new EnrollmentsQuery().havingExternalId("entity_1").havingSchedule("IPTI Schedule"));
         assertEquals("IPTI 2", enrollment.get(0).getCurrentMilestoneName());
