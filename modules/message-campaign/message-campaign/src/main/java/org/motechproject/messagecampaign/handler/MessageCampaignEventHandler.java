@@ -1,35 +1,84 @@
 package org.motechproject.messagecampaign.handler;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.messagecampaign.EventKeys;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import static org.motechproject.messagecampaign.EventKeys.CAMPAIGN_NAME_KEY;
+import static org.motechproject.messagecampaign.EventKeys.ENROLL_USER_SUBJECT;
+import static org.motechproject.messagecampaign.EventKeys.EXTERNAL_ID_KEY;
+import static org.motechproject.messagecampaign.EventKeys.REFERENCE_DATE;
+import static org.motechproject.messagecampaign.EventKeys.REFERENCE_TIME;
+import static org.motechproject.messagecampaign.EventKeys.START_TIME;
+import static org.motechproject.messagecampaign.EventKeys.UNENROLL_USER_SUBJECT;
+
+/**
+ * Handler for {@link org.motechproject.messagecampaign.EventKeys#ENROLL_USER_SUBJECT} and
+ * {@link org.motechproject.messagecampaign.EventKeys#UNENROLL_USER_SUBJECT} events.
+ */
 @Component
 public class MessageCampaignEventHandler {
 
     @Autowired
     private MessageCampaignService messageCampaignService;
 
-    @MotechListener(subjects = {EventKeys.ENROLL_USER_SUBJECT, EventKeys.UNENROLL_USER_SUBJECT})
+    @MotechListener(subjects = {ENROLL_USER_SUBJECT, UNENROLL_USER_SUBJECT})
     public void enrollOrUnenroll(MotechEvent event) {
-        String externalId = event.getParameters().get(EventKeys.EXTERNAL_ID_KEY).toString();
-        String campaignName = event.getParameters().get(EventKeys.CAMPAIGN_NAME_KEY).toString();
-        LocalDate referenceDate = (LocalDate) event.getParameters().get(EventKeys.REFERENCE_DATE);
-        Time referenceTime = new Time(event.getParameters().get(EventKeys.REFERENCE_TIME).toString());
-        Time startTime = new Time(event.getParameters().get(EventKeys.START_TIME).toString());
-        CampaignRequest request = new CampaignRequest(externalId, campaignName, referenceDate, referenceTime, startTime);
+        CampaignRequest request = new CampaignRequest(
+                getString(event, EXTERNAL_ID_KEY),
+                getString(event, CAMPAIGN_NAME_KEY),
+                getLocalDate(event, REFERENCE_DATE),
+                getTime(event, REFERENCE_TIME),
+                getTime(event, START_TIME)
+        );
 
-        if (event.getSubject().equals(EventKeys.ENROLL_USER_SUBJECT)) {
-            messageCampaignService.startFor(request);
-        } else if (event.getSubject().equals(EventKeys.UNENROLL_USER_SUBJECT)) {
-            messageCampaignService.stopAll(request);
+        switch (event.getSubject()) {
+            case ENROLL_USER_SUBJECT:
+                messageCampaignService.startFor(request);
+                break;
+            case UNENROLL_USER_SUBJECT:
+                messageCampaignService.stopAll(request);
+                break;
+            default:
+        }
+    }
+
+    private String getString(MotechEvent event, String key) {
+        return event.getParameters().get(key).toString();
+    }
+
+    private LocalDate getLocalDate(MotechEvent event, String key) {
+        Object param = event.getParameters().get(key);
+        LocalDate referenceDate;
+
+        if (param instanceof LocalDate) {
+            referenceDate = (LocalDate) param;
+        } else if (param instanceof DateTime) {
+            referenceDate = ((DateTime) param).toLocalDate();
+        } else {
+            referenceDate = LocalDate.parse(param.toString());
         }
 
+        return referenceDate;
+    }
+
+    private Time getTime(MotechEvent event, String key) {
+        Object param = event.getParameters().get(key);
+        Time time;
+
+        if (param instanceof DateTime) {
+            DateTime dateTime = (DateTime) param;
+            time = new Time(dateTime.getHourOfDay(), dateTime.getMinuteOfHour());
+        } else {
+            time = new Time(param.toString());
+        }
+
+        return time;
     }
 }

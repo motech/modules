@@ -71,6 +71,35 @@
           "displayName" : "messagecampaign.campaign.name"
         }
       ]
+    },
+    {
+      "displayName" : "messagecampaign.enroll.user",
+      "subject" : "org.motechproject.messagecampaign.enroll-user",
+      "actionParameters" : [
+        {
+          "key" : "ExternalID",
+          "displayName" : "messagecampaign.externalID"
+        },
+        {
+          "key" : "CampaignName",
+          "displayName" : "messagecampaign.campaign.name"
+        },
+        {
+          "key" : "ReferanceDate",
+          "displayName" : "messagecampaign.reference.date",
+          "type": "DATE"
+        },
+        {
+          "key" : "ReferanceTime",
+          "displayName" : "messagecampaign.reference.time",
+          "type": "TIME"
+        },
+        {
+          "key" : "StartTime",
+          "displayName" : "messagecampaign.start.time",
+          "type": "TIME"
+        }
+      ]
     }
   ]
 }
