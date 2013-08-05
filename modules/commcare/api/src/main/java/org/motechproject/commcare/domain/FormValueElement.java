@@ -12,7 +12,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
-
+/**
+ * Object representation of the forwarded form from CommCareHQ.
+ */
 public class FormValueElement implements FormNode {
 
     private String elementName;
@@ -64,6 +66,17 @@ public class FormValueElement implements FormNode {
 
     public void setAttributes(Map<String, String> attributes) {
         this.attributes = attributes;
+    }
+
+    public Map<String, FormValueElement> getElements() {
+        Map<String, FormValueElement> map = new HashMap<>(subElements.size() + 1);
+        map.put(elementName, this);
+
+        for (Entry<String, FormValueElement> entry : subElements.entries()) {
+            map.put(entry.getValue().getElementName(), entry.getValue());
+        }
+
+        return map;
     }
 
     /**
