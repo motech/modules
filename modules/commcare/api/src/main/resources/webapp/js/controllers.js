@@ -22,7 +22,7 @@
             blockUI();
             Connection.verify($scope.settings.accountSettings,
                 function success()  {
-                    $scope.verifySuccessMessage = $scope.msg('verify.success');
+                    $scope.verifySuccessMessage = $scope.msg('commcare.verify.success');
                     $scope.verifyErrorMessage = '';
                     $scope.connectionVerified = true;
                     $scope.getVerifiedSettings();
@@ -67,7 +67,7 @@
                     var controlWrapper = $(element).next('.form-hints');
 
                     $(controlWrapper).children('.save-status').remove();
-                    controlWrapper.append("<span class='save-status form-hint-success'><i class='icon-ok icon-white'></i> {0}</span>".format($scope.msg('settings.success.value.saved')));
+                    controlWrapper.append("<span class='save-status form-hint-success'><i class='icon-ok icon-white'></i> {0}</span>".format($scope.msg('commcare.settings.success.value.saved')));
 
                     $(controlWrapper.children('.save-status')[0]).delay(5000).fadeOut(function() {
                         $(this).remove();
@@ -77,7 +77,7 @@
                     var controlWrapper = $(element).next('.form-hints');
 
                     $(controlWrapper).children('.save-status').remove();
-                    controlWrapper.append("<span class='save-status form-hint'><i class='icon-remove icon-white'></i> {0}</span>".format($scope.msg('settings.error.value.saved')));
+                    controlWrapper.append("<span class='save-status form-hint'><i class='icon-remove icon-white'></i> {0}</span>".format($scope.msg('commcare.settings.error.value.saved')));
 
                     $(controlWrapper.children('.save-status')[0]).delay(10000).fadeOut(function() {
                         $(this).remove();
@@ -92,7 +92,7 @@
                 var controlWrapper = $(element).next('.form-hints');
 
                 $(controlWrapper).children('.save-status').remove();
-                controlWrapper.append("<span class='save-status form-hint'><i class='icon-remove icon-white'></i> {0}</span>".format($scope.msg('settings.error.rule')));
+                controlWrapper.append("<span class='save-status form-hint'><i class='icon-remove icon-white'></i> {0}</span>".format($scope.msg('commcare.settings.error.rule')));
 
                 $(controlWrapper.children('.save-status')[0]).delay(10000).fadeOut(function() {
                     $(this).remove();
