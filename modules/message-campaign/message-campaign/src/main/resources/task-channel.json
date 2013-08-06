@@ -92,12 +92,28 @@
         {
           "key" : "ReferanceTime",
           "displayName" : "msgCampaign.reference.time",
-          "type": "TIME"
+          "type": "TIME",
+          "required": false
         },
         {
           "key" : "StartTime",
           "displayName" : "msgCampaign.start.time",
-          "type": "TIME"
+          "type": "TIME",
+          "required": false
+        }
+      ]
+    },
+    {
+      "displayName" : "msgCampaign.unenroll.user",
+      "subject" : "org.motechproject.messagecampaign.unenroll-user",
+      "actionParameters" : [
+        {
+          "key" : "ExternalID",
+          "displayName" : "msgCampaign.externalID"
+        },
+        {
+          "key" : "CampaignName",
+          "displayName" : "msgCampaign.campaign.name"
         }
       ]
     }
