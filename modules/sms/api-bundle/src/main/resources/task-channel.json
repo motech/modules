@@ -73,7 +73,8 @@
         {
           "key" : "delivery_time",
           "type" : "DATE",
-          "displayName" : "sms.deliveryTime"
+          "displayName" : "sms.deliveryTime",
+          "required": false
         }
       ]
     }
