@@ -135,7 +135,7 @@ public class VerboiceIVRControllerTest {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setParameter("CallStatus", callStatus);
-        request.setParameter("CallSid", "123a");
+        request.setParameter("motech_call_id", "123a");
         request.setParameter("From", "1234567890");
 
         verboiceIvrController.handleStatus(request);

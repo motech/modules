@@ -54,9 +54,9 @@ public class VerboiceIVRControllerEndOfCallIT extends SpringIntegrationTest {
             TestListener listener = new TestListener("end_of_call_test_missed_call_listener");
             eventListenerRegistry.registerListener(listener, IvrEvent.Missed.getEventSubject());
             String callSid = "123A";
-            String motechCallId = "motechId";
+            String motechCallId = "MOTECHID";
             String phoneNumber = "12345";
-            flowSessionService.findOrCreate(callSid, phoneNumber);
+            flowSessionService.findOrCreate(motechCallId, phoneNumber);
             String url = String.format("/web-api/ivr/callstatus?CallStatus=no-answer&CallSid=%s&motech_call_id=%s&From=%s", callSid, motechCallId, phoneNumber);
             mockVerboiceIvrController.perform(get(url));
 
@@ -69,7 +69,7 @@ public class VerboiceIVRControllerEndOfCallIT extends SpringIntegrationTest {
                 }
             }
         } finally {
-            eventListenerRegistry.clearListenersForBean("end_of_call_test_hangup_listener");
+            eventListenerRegistry.clearListenersForBean("end_of_call_test_missed_call_listener");
         }
     }
 
