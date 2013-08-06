@@ -12,18 +12,12 @@ import org.motechproject.ivr.domain.CallDisposition;
 import org.motechproject.ivr.service.contract.CallRequest;
 import org.motechproject.ivr.service.contract.IVRService;
 import org.motechproject.server.config.SettingsFacade;
-import org.motechproject.server.verboice.domain.VerboiceServerResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
-
 import java.io.IOException;
-
 import static java.lang.String.format;
 import static org.apache.commons.lang.StringUtils.isBlank;
 
@@ -40,35 +34,22 @@ public class VerboiceIVRService implements IVRService {
     private SettingsFacade settings;
     private HttpClient commonsHttpClient;
     private FlowSessionService flowSessionService;
-    private Gson gsonParser;
 
     @Autowired
     public VerboiceIVRService(@Qualifier("verboiceAPISettings") SettingsFacade settings, HttpClient commonsHttpClient, FlowSessionService flowSessionService) {
         this.settings = settings;
         this.commonsHttpClient = commonsHttpClient;
         this.flowSessionService = flowSessionService;
-        gsonParser = new Gson();
     }
 
     @Override
     public void initiateCall(CallRequest callRequest) {
-        FlowSession session = initSession(callRequest);
+        initSession(callRequest);
         try {
             GetMethod getMethod = new GetMethod(outgoingCallUri(callRequest));
             getMethod.addRequestHeader("Authorization", "Basic " + basicAuthValue());
             int status = commonsHttpClient.executeMethod(getMethod);
-            String responseBody = getMethod.getResponseBodyAsString();
-            if (responseBody != null && responseBody.trim().length() > 0) {
-                VerboiceServerResponse response = null;
-                try {
-                    response = gsonParser.fromJson(responseBody, VerboiceServerResponse.class);
-                } catch (JsonParseException e) {
-                    log.error("Unable to parse response from Verboice: " + responseBody);
-                }
-                if (response != null && response.getCallId() != null) {
-                    flowSessionService.updateSessionId(session.getSessionId(), response.getCallId());
-                }
-            }
+
             log.info(String.format("[%d]\n%s", status, getMethod.getResponseBodyAsString()));
         } catch (IOException e) {
             log.error("Exception when initiating call: ", e);
@@ -108,13 +89,16 @@ public class VerboiceIVRService implements IVRService {
             callFlowId = "&" + CALL_FLOW_ID + "=" + callRequest.getPayload().get(CALL_FLOW_ID);
         }
 
-        return format(
-                "http://%s:%s/api/call?motech_call_id=%s&channel=%s&address=%s%s%s%s",
+        StringBuilder url = new StringBuilder(format(
+                "http://%s:%s/api/call?channel=%s&address=%s%s%s%s",
                 settings.getProperty("host"),
                 settings.getProperty("port"),
-                callRequest.getCallId(),
                 isBlank(callRequest.getCallBackUrl())?settings.getProperty("channel"):callRequest.getCallBackUrl(),
                         callRequest.getPhone(), callbackUrlParameter, callbackStatusUrlParameter, callFlowId
-                );
+                ));
+
+        url.append("&callback_params%5Bmotech_call_id%5D=" + callRequest.getCallId());
+
+        return url.toString();
     }
 }

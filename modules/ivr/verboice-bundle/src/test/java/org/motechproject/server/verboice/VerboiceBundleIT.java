@@ -25,7 +25,7 @@ public class VerboiceBundleIT extends BaseOsgiIT {
 
     public void testVerboiceCallBackAuthenticationSuccess() throws IOException, InterruptedException {
 
-        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/verboice/web-api/ivr?CallSid=123", TestContext.getJettyPort()));
+        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/verboice/web-api/ivr?CallSid=123&motech_call_id=ABC", TestContext.getJettyPort()));
         addAuthHeader(httpGet, "motech", "motech");
 
         HttpResponse response = httpClient.execute(httpGet);
@@ -36,7 +36,7 @@ public class VerboiceBundleIT extends BaseOsgiIT {
 
     public void testVerboiceCallBackAuthenticationFailed() throws IOException, InterruptedException {
 
-        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/verboice/web-api/ivr?CallSid=123", TestContext.getJettyPort()));
+        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/verboice/web-api/ivr?CallSid=123&motech_call_id=ABC", TestContext.getJettyPort()));
         addAuthHeader(httpGet, "bad", "user");
 
         HttpResponse response = httpClient.execute(httpGet);
@@ -47,7 +47,7 @@ public class VerboiceBundleIT extends BaseOsgiIT {
 
     public void testVerboiceStatusCallBackAuthenticationSuccess() throws IOException, InterruptedException {
 
-        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/verboice/web-api/ivr/callstatus?CallSid=123", TestContext.getJettyPort()));
+        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/verboice/web-api/ivr/callstatus?CallSid=123&motech_call_id=ABC", TestContext.getJettyPort()));
         addAuthHeader(httpGet, "motech", "motech");
 
         HttpResponse response = httpClient.execute(httpGet);
@@ -58,7 +58,7 @@ public class VerboiceBundleIT extends BaseOsgiIT {
 
     public void testVerboiceStatusCallBackAuthenticationFailed() throws IOException, InterruptedException {
 
-        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/verboice/web-api/ivr/callstatus?CallSid=123", TestContext.getJettyPort()));
+        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/verboice/web-api/ivr/callstatus?CallSid=123&motech_call_id=ABC", TestContext.getJettyPort()));
         addAuthHeader(httpGet, "bad", "user");
 
         HttpResponse response = httpClient.execute(httpGet);
