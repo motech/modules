@@ -163,7 +163,7 @@
                         width: '25',
                         align: 'center',
                         formatter: function (value) {
-                            return scope.msg('resource.type.' + value);
+                            return scope.msg('cmslite.resource.type.' + value);
                         }
                     }],
                     pager: '#' + attrs.resourcesGrid,
@@ -178,7 +178,7 @@
                         });
 
                         angular.forEach(['name', 'languages', 'type'], function (value) {
-                            elem.jqGrid('setLabel', value, scope.msg('resource.' + value));
+                            elem.jqGrid('setLabel', value, scope.msg('cmslite.resource.' + value));
                         });
 
                         $('#outsideResourceTable').children('div').width('100%');

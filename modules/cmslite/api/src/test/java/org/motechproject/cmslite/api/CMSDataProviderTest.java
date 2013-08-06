@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class CMSDataProviderTest {
-    private static final String FIELD_KEY = "id";
+    private static final String FIELD_KEY = "cmslite.id";
     private static final String FIELD_VALUE = "12345";
 
     private static Map<String, String> lookupFields;

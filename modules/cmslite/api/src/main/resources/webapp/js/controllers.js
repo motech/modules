@@ -61,7 +61,7 @@
                         });
                     },
                     error: function (response) {
-                        handleWithStackTrace('header.error', 'error.resource.save', response);
+                        handleWithStackTrace('cmslite.header.error', 'cmslite.error.resource.save', response);
                         unblockUI();
                     }
                 });
@@ -80,7 +80,7 @@
                         });
                     },
                     error: function (response) {
-                        handleWithStackTrace('header.error', 'error.resource.save', response);
+                        handleWithStackTrace('cmslite.header.error', 'cmslite.error.resource.save', response);
                         unblockUI();
                     }
                 });
@@ -88,13 +88,13 @@
         };
 
         $scope.removeResource = function(type, resource) {
-            jConfirm(jQuery.i18n.prop('header.confirm.remove'), jQuery.i18n.prop("header.confirm"), function (val) {
+            jConfirm(jQuery.i18n.prop('cmslite.header.confirm.remove'), jQuery.i18n.prop("cmslite.header.confirm"), function (val) {
                 if (val) {
                     $scope.select.$remove({ type: type, language: resource.language, name: resource.name}, function () {
                         $scope.select = {};
                         $('#resourceTable').trigger('reloadGrid');
                         $('#' + type + 'ResourceModal').modal('hide');
-                    }, alertHandler('error.removed', 'header.error'));
+                    }, alertHandler('cmslite.error.removed', 'cmslite.header.error'));
                 }
             });
         };
@@ -111,7 +111,7 @@
                         unblockUI();
                     },
                     error: function (response) {
-                        handleWithStackTrace('header.error', 'error.resource.save', response);
+                        handleWithStackTrace('cmslite.header.error', 'cmslite.error.resource.save', response);
                         unblockUI();
                     }
                 });
