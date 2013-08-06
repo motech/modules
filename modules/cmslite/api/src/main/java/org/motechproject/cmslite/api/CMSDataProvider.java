@@ -14,9 +14,9 @@ import java.util.List;
 import java.util.Map;
 
 public class CMSDataProvider extends AbstractDataProvider {
-    private static final String ID_FIELD = "id";
-    private static final String NAME_FIELD = "name";
-    private static final String LANGUAGE_FIELD = "language";
+    private static final String ID_FIELD = "cmslite.id";
+    private static final String NAME_FIELD = "cmslite.dataname";
+    private static final String LANGUAGE_FIELD = "cmslite.language";
 
     private CMSLiteService cmsLiteService;
 
