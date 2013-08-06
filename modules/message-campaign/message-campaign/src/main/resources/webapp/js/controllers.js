@@ -179,10 +179,10 @@
         $scope.uploadSettings = function () {
             $("#messageCampaignSettingsForm").ajaxSubmit({
                 success: function() {
-                    motechAlert('settings.success.saved', 'main.saved');
+                    motechAlert('msgCampaign.settings.success.saved', 'msgCampaign.saved');
                 },
                 error: function() {
-                    motechAlert('settings.error.save', 'main.error');
+                    motechAlert('msgCampaign.settings.error.save', 'msgCampaign.error');
                 }
             });
         };
