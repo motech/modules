@@ -1,18 +1,18 @@
 <div ng-controller='TestCallController'>
 
     <div class="alert alert-error" ng-show='providers.length == 0'>
-        <strong>{{msg('no.providers.message')}}</strong>
+        <strong>{{msg('ivr.no.providers.message')}}</strong>
     </div>
 
     <form class="form-horizontal" ng-submit='makeCall(call)'>
         <div class="control-group">
-            <label class="control-label">{{msg('number.label')}}</label>
+            <label class="control-label">{{msg('ivr.number.label')}}</label>
             <div class="controls">
                 <input type='text' ng-model='call.phoneNumber' required />
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">{{msg('provider.label')}}</label>
+            <label class="control-label">{{msg('ivr.provider.label')}}</label>
             <div class="controls">
                 <select ng-model='call.provider' ng-options='provider.name as provider.name for provider in providers' required>
                 </select>
@@ -23,10 +23,10 @@
                 <input type='submit' class='btn' value='Dial'/>
 
                 <span ng-show='dialed == true' class='text-info'>
-                    &nbsp;&nbsp;{{msg('dial.success.message')}}
+                    &nbsp;&nbsp;{{msg('ivr.dial.success.message')}}
                 </span>
                 <span ng-show='dialed == false' class='text-error'>
-                    &nbsp;&nbsp;{{msg('dial.failed.message')}}
+                    &nbsp;&nbsp;{{msg('ivr.dial.failed.message')}}
                 </span>
             </div>
         </div>

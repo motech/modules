@@ -1,14 +1,14 @@
 <div ng-controller="CalllogController" class="call-log">
-    <div class="box-header">{{ msg('calllog.welcome.heading') }}</div>
+    <div class="box-header">{{ msg('ivr.calllog.welcome.heading') }}</div>
 
     <div class="box-content clearfix margin-after">
 
     <form name="form" ng-submit="search()" nonvalidate>
         <div id="filter" class="control-group">
             <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#filter-panel">
-                <i class="icon-eject icon-white"></i>&nbsp;{{msg('header.filters')}}
+                <i class="icon-eject icon-white"></i>&nbsp;{{msg('ivr.header.filters')}}
             </button>
-            <input class="btn btn-primary" type="submit" value="{{msg('calllog.search')}}" ng-disabled="form.$invalid"/>
+            <input class="btn btn-primary" type="submit" value="{{msg('ivr.calllog.search')}}" ng-disabled="form.$invalid"/>
             <span class="help-inline" id="filter-title"></span>
         </div>
         <div id="filter-panel" class="collapse">
@@ -16,18 +16,18 @@
 
                 <div class="row-fluid">
                     <div class="span4">
-                        <fieldset class="inside"><legend>{{msg('calllog.phoneNumber')}}</legend>
+                        <fieldset class="inside"><legend>{{msg('ivr.calllog.phoneNumber')}}</legend>
                             <div class="control-group form-inline">
-                                <input type="text" class="span10 search-query" id="phoneNumber" ng-model="phoneNumber" typeahead placeholder="{{msg('search')}}"
+                                <input type="text" class="span10 search-query" id="phoneNumber" ng-model="phoneNumber" typeahead placeholder="{{msg('ivr.calllog.search')}}"
                                        data-event-type="keyup" data-search-field="name" jqgrid-search="resourceTable">
                             </div>
                         </fieldset>
                     </div>
                     <div class="span8">
-                        <fieldset class="inside"><legend>{{msg('header.dates')}}</legend>
+                        <fieldset class="inside"><legend>{{msg('ivr.header.dates')}}</legend>
                             <div class="control-group form-inline">
-                                <input for="from" ng-date-time-picker type="datetime" id="from" name="from" class="offset1 span4 search-query" placeholder="{{msg('header.from')}}">
-                                <input for="to" ng-date-time-picker type="datetime" id="to" name="to" class="span4 margin-offset1 search-query" placeholder="{{msg('header.to')}}">
+                                <input for="from" ng-date-time-picker type="datetime" id="from" name="from" class="offset1 span4 search-query" placeholder="{{msg('ivr.header.from')}}">
+                                <input for="to" ng-date-time-picker type="datetime" id="to" name="to" class="span4 margin-offset1 search-query" placeholder="{{msg('ivr.header.to')}}">
                             </div>
                         </fieldset>
                     </div>
@@ -36,32 +36,32 @@
 
                 <div class="row-fluid">
                     <div class="span3">
-                        <fieldset class="inside"><legend>{{msg('calllog.callDuraction')}}</legend>
+                        <fieldset class="inside"><legend>{{msg('ivr.calllog.callDuraction')}}</legend>
                             <div class="control-group">
                                 <input type="text" class="slider-control" slider="#slider" slider-point="min"/>
                                 -
                                 <input type="text" class="slider-control" slider="#slider" slider-point="max"/>
-                                <span class="help-inline">{{msg('calllog.seconds')}}</span>
+                                <span class="help-inline">{{msg('ivr.calllog.seconds')}}</span>
                                 <div ng-slider id="slider"></div>
                             </div>
                         </fieldset>
                     </div>
                     <div class="span6">
-                        <fieldset class="inside"><legend>{{msg('calllog.disposition')}}</legend>
+                        <fieldset class="inside"><legend>{{msg('ivr.calllog.disposition')}}</legend>
                             <div data-toggle="buttons-checkbox" class="btn-group control-group">
-                                <button id="answered" class="btn btn-info active" type="button" ng-click="setActive('answered')" ><i class="icon-white icon-ok"></i> {{msg('calllog.answered')}}</button>
-                                <button id="busy" class="btn btn-info active" type="button" ng-click="setActive('busy')" ><i class="icon-white icon-ok"></i> {{msg('calllog.busy')}}</button>
-                                <button id="failed" class="btn btn-info active" type="button" ng-click="setActive('failed')" ><i class="icon-white icon-ok"></i> {{msg('calllog.failed')}}</button>
-                                <button id="noAnswer" class="btn btn-info active" type="button" ng-click="setActive('noAnswer')" ><i class="icon-white icon-ok"></i> {{msg('calllog.noAnswer')}}</button>
-                                <button id="unknown" class="btn btn-info active" type="button" ng-click="setActive('unknown')" ><i class="icon-white icon-ok"></i> {{msg('calllog.unknown')}}</button>
+                                <button id="answered" class="btn btn-info active" type="button" ng-click="setActive('answered')" ><i class="icon-white icon-ok"></i> {{msg('ivr.calllog.answered')}}</button>
+                                <button id="busy" class="btn btn-info active" type="button" ng-click="setActive('busy')" ><i class="icon-white icon-ok"></i> {{msg('ivr.calllog.busy')}}</button>
+                                <button id="failed" class="btn btn-info active" type="button" ng-click="setActive('failed')" ><i class="icon-white icon-ok"></i> {{msg('ivr.calllog.failed')}}</button>
+                                <button id="noAnswer" class="btn btn-info active" type="button" ng-click="setActive('noAnswer')" ><i class="icon-white icon-ok"></i> {{msg('ivr.calllog.noAnswer')}}</button>
+                                <button id="unknown" class="btn btn-info active" type="button" ng-click="setActive('unknown')" ><i class="icon-white icon-ok"></i> {{msg('ivr.calllog.unknown')}}</button>
                             </div>
                         </fieldset>
                     </div>
                     <div class="span3">
-                        <fieldset class="inside"><legend>{{msg('calllog.direction')}}</legend>
+                        <fieldset class="inside"><legend>{{msg('ivr.calllog.direction')}}</legend>
                             <div data-toggle="buttons-checkbox" class="btn-group control-group">
-                                <button id="incoming" class="btn btn-info active" type="button" ><i class="icon-white icon-ok"></i> {{msg('calllog.incoming')}}</button>
-                                <button id="outgoing" class="btn btn-info active" type="button" ><i class="icon-white icon-ok"></i> {{msg('calllog.outgoing')}}</button>
+                                <button id="incoming" class="btn btn-info active" type="button" ><i class="icon-white icon-ok"></i> {{msg('ivr.calllog.incoming')}}</button>
+                                <button id="outgoing" class="btn btn-info active" type="button" ><i class="icon-white icon-ok"></i> {{msg('ivr.calllog.outgoing')}}</button>
                             </div>
                         </fieldset>
                     </div>
@@ -73,12 +73,12 @@
 
     <div class="pagination pagination-right pagination-condensed lightblue" ng-show="pageCount.count > 1">
         <ul>
-            <li ng-class="{disabled: currentPage == 0}"><a href ng-click="prevPage()">{{msg('calllog.pagination.prev')}}</a></li>
+            <li ng-class="{disabled: currentPage == 0}"><a href ng-click="prevPage()">{{msg('ivr.calllog.pagination.prev')}}</a></li>
 
             <li ng-repeat="selectedPage in range(pageCount.count)" ng-class="{active: selectedPage == currentPage}" ng-click="setPage()">
                 <a href ng-bind="selectedPage + 1"></a>
             </li>
-            <li ng-class="{disabled: currentPage == pageCount.count - 1}"><a href ng-click="nextPage()">{{msg('calllog.pagination.next')}}</a></li>
+            <li ng-class="{disabled: currentPage == pageCount.count - 1}"><a href ng-click="nextPage()">{{msg('ivr.calllog.pagination.next')}}</a></li>
         </ul>
     </div>
 
@@ -86,23 +86,23 @@
         <thead>
             <tr>
                 <th class="phoneNumber" ng-click="sort('phoneNumber')">
-                    <img src=../ivr/img/trans.gif alt="{{msg('calllog.sortingPhoneNumber')}}" title="{{msg('calllog.sortingPhoneNumber')}}"
-                        class="sorting-no" />{{msg('calllog.phoneNumber')}}</th>
+                    <img src=../ivr/img/trans.gif alt="{{msg('ivr.calllog.sortingPhoneNumber')}}" title="{{msg('ivr.calllog.sortingPhoneNumber')}}"
+                        class="sorting-no" />{{msg('ivr.calllog.phoneNumber')}}</th>
                 <th class="callDirection" ng-click="sort('callDirection')">
-                    <img src=../ivr/img/trans.gif alt="{{msg('calllog.sortingDirection')}}" title="{{msg('calllog.sortingDirection')}}"
-                         class="sorting-no" />{{msg('calllog.direction')}}</th>
+                    <img src=../ivr/img/trans.gif alt="{{msg('ivr.calllog.sortingDirection')}}" title="{{msg('ivr.calllog.sortingDirection')}}"
+                         class="sorting-no" />{{msg('ivr.calllog.direction')}}</th>
                 <th class="startDate" ng-click="sort('startDate<date>')">
-                    <img src=../ivr/img/trans.gif alt="{{msg('calllog.sortingStartDate')}}" title="{{msg('calllog.sortingStartDate')}}"
-                         class="sorting-no" />{{msg('calllog.startDate')}}</th>
+                    <img src=../ivr/img/trans.gif alt="{{msg('ivr.calllog.sortingStartDate')}}" title="{{msg('ivr.calllog.sortingStartDate')}}"
+                         class="sorting-no" />{{msg('ivr.calllog.startDate')}}</th>
                 <th class="endDate" ng-click="sort('endDate<date>')">
-                    <img src=../ivr/img/trans.gif alt="{{msg('calllog.sortingEndDate')}}" title="{{msg('calllog.sortingEndDate')}}"
-                         class="sorting-no" />{{msg('calllog.endDate')}}</th>
+                    <img src=../ivr/img/trans.gif alt="{{msg('ivr.calllog.sortingEndDate')}}" title="{{msg('ivr.calllog.sortingEndDate')}}"
+                         class="sorting-no" />{{msg('ivr.calllog.endDate')}}</th>
                 <th class="disposition" ng-click="sort('disposition')">
-                    <img src=../ivr/img/trans.gif alt="{{msg('calllog.sortingDisposition')}}" title="{{msg('calllog.sortingDisposition')}}"
-                         class="sorting-no" />{{msg('calllog.disposition')}}</th>
+                    <img src=../ivr/img/trans.gif alt="{{msg('ivr.calllog.sortingDisposition')}}" title="{{msg('ivr.calllog.sortingDisposition')}}"
+                         class="sorting-no" />{{msg('ivr.calllog.disposition')}}</th>
                 <th class="duration" ng-click="sort('duration<int>')">
-                    <img src=../ivr/img/trans.gif alt="{{msg('calllog.sortingDuration')}}" title="{{msg('calllog.sortingDuration')}}"
-                         class="sorting-no" />{{msg('calllog.duration')}}</th>
+                    <img src=../ivr/img/trans.gif alt="{{msg('ivr.calllog.sortingDuration')}}" title="{{msg('ivr.calllog.sortingDuration')}}"
+                         class="sorting-no" />{{msg('ivr.calllog.duration')}}</th>
             </tr>
         </thead>
     </table>
@@ -128,7 +128,7 @@
                 </div>
                 <div id="item{{$index}}" class="accordion-body collapse clearfix">
                     <div class="accordion-inner">
-                        <div class="padded" ng-hide="isEmpty(calllog.callEvents)">{{msg('calllog.noEvents')}}</div>
+                        <div class="padded" ng-hide="isEmpty(calllog.callEvents)">{{msg('ivr.calllog.noEvents')}}</div>
                         <div ng-repeat="callEvent in calllog.callEvents" ng-model="calllogs">
                             <div ng-include="'../ivr/partials/event.html'"/>
                         </div>
