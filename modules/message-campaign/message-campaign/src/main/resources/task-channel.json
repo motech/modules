@@ -1,102 +1,102 @@
 {
-  "displayName" : "messagecampaign.name",
+  "displayName" : "msgCampaign.name",
   "moduleName" : "${project.artifactId}",
   "moduleVersion" : "${parsedVersion.osgiVersion}",
-  "description" : "messagecampaign.description",
+  "description" : "msgCampaign.description",
   "triggerTaskEvents" : [
     {
-      "displayName" : "messagecampaign.send.message",
+      "displayName" : "msgCampaign.send.message",
       "subject" : "org.motechproject.messagecampaign.fired-campaign-message",
       "eventParameters" : [
         {
           "eventKey" : "CampaignName",
-          "displayName" : "messagecampaign.campaign.name"
+          "displayName" : "msgCampaign.campaign.name"
         },
         {
           "eventKey" :  "ExternalID",
-          "displayName" : "messagecampaign.externalID"
+          "displayName" : "msgCampaign.externalID"
         },
         {
           "eventKey" :  "MessageKey",
-          "displayName" : "messagecampaign.message.key"
+          "displayName" : "msgCampaign.message.key"
         }
       ]
     },
     {
-      "displayName" : "messagecampaign.campaign.completed",
+      "displayName" : "msgCampaign.campaign.completed",
       "subject" : "org.motechproject.messagecampaign.campaign-completed",
       "eventParameters" : [
         {
           "eventKey" : "ExternalID",
-          "displayName" : "messagecampaign.externalID"
+          "displayName" : "msgCampaign.externalID"
         },
         {
           "eventKey" : "CampaignName",
-          "displayName" : "messagecampaign.campaign.name"
+          "displayName" : "msgCampaign.campaign.name"
         }
       ]
     }
   ],
   "actionTaskEvents" : [
     {
-      "displayName" : "messagecampaign.send.message",
+      "displayName" : "msgCampaign.send.message",
       "subject" : "org.motechproject.messagecampaign.fired-campaign-message",
       "actionParameters" : [
         {
           "key" : "CampaignName",
-          "displayName" : "messagecampaign.campaign.name"
+          "displayName" : "msgCampaign.campaign.name"
         },
         {
           "key" :  "ExternalID",
-          "displayName" : "messagecampaign.externalID"
+          "displayName" : "msgCampaign.externalID"
         },
         {
           "key" :  "MessageKey",
-          "displayName" : "messagecampaign.message.key"
+          "displayName" : "msgCampaign.message.key"
         }
       ]
     },
     {
-      "displayName" : "messagecampaign.campaign.completed",
+      "displayName" : "msgCampaign.campaign.completed",
       "serviceInterface": "org.motechproject.messagecampaign.service.MessageCampaignService",
       "serviceMethod": "campaignCompleted",
       "subject" : "org.motechproject.messagecampaign.campaign-completed",
       "actionParameters" : [
         {
           "key" : "ExternalID",
-          "displayName" : "messagecampaign.externalID"
+          "displayName" : "msgCampaign.externalID"
         },
         {
           "key" : "CampaignName",
-          "displayName" : "messagecampaign.campaign.name"
+          "displayName" : "msgCampaign.campaign.name"
         }
       ]
     },
     {
-      "displayName" : "messagecampaign.enroll.user",
+      "displayName" : "msgCampaign.enroll.user",
       "subject" : "org.motechproject.messagecampaign.enroll-user",
       "actionParameters" : [
         {
           "key" : "ExternalID",
-          "displayName" : "messagecampaign.externalID"
+          "displayName" : "msgCampaign.externalID"
         },
         {
           "key" : "CampaignName",
-          "displayName" : "messagecampaign.campaign.name"
+          "displayName" : "msgCampaign.campaign.name"
         },
         {
           "key" : "ReferanceDate",
-          "displayName" : "messagecampaign.reference.date",
+          "displayName" : "msgCampaign.reference.date",
           "type": "DATE"
         },
         {
           "key" : "ReferanceTime",
-          "displayName" : "messagecampaign.reference.time",
+          "displayName" : "msgCampaign.reference.time",
           "type": "TIME"
         },
         {
           "key" : "StartTime",
-          "displayName" : "messagecampaign.start.time",
+          "displayName" : "msgCampaign.start.time",
           "type": "TIME"
         }
       ]
