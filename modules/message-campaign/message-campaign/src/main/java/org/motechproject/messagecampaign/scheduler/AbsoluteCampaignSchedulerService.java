@@ -1,5 +1,6 @@
 package org.motechproject.messagecampaign.scheduler;
 
+import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.messagecampaign.EventKeys;
@@ -20,6 +21,8 @@ import static org.motechproject.commons.date.util.DateUtil.newDateTime;
 @Component
 public class AbsoluteCampaignSchedulerService extends CampaignSchedulerService<AbsoluteCampaignMessage, AbsoluteCampaign> {
 
+    private Logger logger = Logger.getLogger(this.getClass());
+
     @Autowired
     public AbsoluteCampaignSchedulerService(MotechSchedulerService schedulerService, AllMessageCampaigns allMessageCampaigns) {
         super(schedulerService, allMessageCampaigns);
@@ -31,7 +34,12 @@ public class AbsoluteCampaignSchedulerService extends CampaignSchedulerService<A
         MotechEvent motechEvent = new MotechEvent(EventKeys.SEND_MESSAGE, params);
         LocalDate startDate = ((AbsoluteCampaignMessage) campaignMessage).date();
         RunOnceSchedulableJob runOnceSchedulableJob = new RunOnceSchedulableJob(motechEvent, newDateTime(startDate, deliverTimeFor(enrollment, campaignMessage)).toDate());
-        getSchedulerService().scheduleRunOnceJob(runOnceSchedulableJob);
+
+        try {
+            getSchedulerService().scheduleRunOnceJob(runOnceSchedulableJob);
+        } catch (IllegalArgumentException e) {
+            logger.info("Unable to schedule absolute campaign message " + campaignMessage.messageKey() + " for ID: " + enrollment.getExternalId() + " enrolled in campaign: " + enrollment.getCampaignName() + " - Message date is in the past");
+        }
     }
 
     @Override
