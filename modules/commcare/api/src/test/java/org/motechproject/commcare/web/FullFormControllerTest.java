@@ -13,14 +13,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.motechproject.commcare.events.constants.EventDataKeys.*;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
+import static org.motechproject.commcare.events.constants.EventDataKeys.RECEIVED_ON;
+import static org.motechproject.commcare.events.constants.EventDataKeys.ATTRIBUTES;
+import static org.motechproject.commcare.events.constants.EventDataKeys.SUB_ELEMENTS;
+import static org.motechproject.commcare.events.constants.EventDataKeys.ELEMENT_NAME;
+import static org.motechproject.commcare.events.constants.EventDataKeys.VALUE;
+import static org.motechproject.commcare.events.constants.EventSubjects.DEVICE_LOG_EVENT;
 import static org.motechproject.commcare.events.constants.EventSubjects.FORMS_EVENT;
-import static org.motechproject.commcare.events.constants.EventSubjects.FORMS_FAIL_EVENT;
 
 public class FullFormControllerTest {
 
@@ -45,20 +48,37 @@ public class FullFormControllerTest {
         ArgumentCaptor<MotechEvent> captor = ArgumentCaptor.forClass(MotechEvent.class);
 
         controller.receiveForm("", request);
-        verify(eventRelay).sendEventMessage(captor.capture());
-
-        MotechEvent event = captor.getValue();
-
-        assertEquals(event.getSubject(), FORMS_FAIL_EVENT);
-        assertNotNull(event.getParameters().get(FAILED_FORM_MESSAGE));
+        verify(eventRelay, times(2)).sendEventMessage(captor.capture());
     }
 
     @Test
     public void testIncomingDeviceReport() {
+        ArgumentCaptor<MotechEvent> captor = ArgumentCaptor.forClass(MotechEvent.class);
 
         controller.receiveForm(getDeviceReportForm(), request);
 
-        verifyZeroInteractions(eventRelay);
+        verify(eventRelay).sendEventMessage(captor.capture());
+        MotechEvent event = captor.getValue();
+
+        assertEquals(event.getSubject(), DEVICE_LOG_EVENT);
+
+        Map<String, Object> parameters = event.getParameters();
+        assertTrue(parameters.containsKey(RECEIVED_ON));
+        assertTrue(parameters.containsKey(ATTRIBUTES));
+        assertTrue(parameters.containsKey(SUB_ELEMENTS));
+        assertEquals("device_report", parameters.get(VALUE));
+        assertEquals("deviceLog", parameters.get(ELEMENT_NAME));
+
+        assertEquals("2012-07-21T15:22:34", parameters.get(RECEIVED_ON));
+
+        Map<String, String> attributes = (Map<String, String>) parameters.get(ATTRIBUTES);
+        assertEquals(1, attributes.size());
+        assertEquals("http://code.javarosa.org/devicereport", attributes.get("xmlns"));
+
+        Multimap<String, Object> subElements = (Multimap<String, Object>) parameters.get(SUB_ELEMENTS);
+        assertEquals(1, subElements.size());
+
+        assertHasKeys(subElements, "device_id");
     }
 
     @Test

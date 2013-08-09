@@ -18,6 +18,8 @@ public final class EventSubjects {
 
     public static final String SCHEMA_CHANGE_EVENT = BASE_SUBJECT + "schemachange";
 
+    public static final String DEVICE_LOG_EVENT = BASE_SUBJECT + "devicelog";
+
     private EventSubjects() {
     }
 }
