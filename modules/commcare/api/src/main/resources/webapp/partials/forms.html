@@ -64,6 +64,18 @@
                                 </table>
                             </div>
                         </div>
+                        <button class="btn" data-toggle="modal" href="#form-schema-{{$parent.$index}}-{{$index}}-json">{{msg('commcare.json')}}</button>
+                        <div id="form-schema-{{$parent.$index}}-{{$index}}-json" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+
+                                {{msg('commcare.module')}}: <b>{{msg('commcare.module')}} {{$index+1}}</b>&nbsp;&nbsp;Form: <b>{{ form.formNames["en"] }}</b>
+                            </div>
+                            <div class="modal-body">
+                               <pre>{{formatJson(form)}}</pre>
+                            </div>
+                        </div>
                     </div>
 
                 </div>

@@ -161,7 +161,7 @@
 
     commcareModule.controller('ModulesCtrl', function ($scope, Schema) {
         $scope.formError = false;
-
+        $scope.formatJson=function(jsonResponse){return JSON.stringify(jsonResponse, null,4);};
         blockUI();
         $scope.applications = Schema.query(function() {
             $scope.formError = false;
@@ -174,7 +174,7 @@
 
     commcareModule.controller('CaseSchemasCtrl', function ($scope, Cases) {
         $scope.caseError = false;
-
+        $scope.formatJson=function(jsonResponse){return JSON.stringify(jsonResponse, null,4);};
         blockUI();
         $scope.cases = Cases.query(function() {
             $scope.caseError = false;
