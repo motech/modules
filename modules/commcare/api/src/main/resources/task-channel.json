@@ -88,6 +88,40 @@
           "displayName" : "commcare.value"
         }
       ]
+    },
+    {
+      "displayName" : "commcare.forms.failed",
+      "subject" : "org.motechproject.commcare.api.forms.failed",
+      "eventParameters" : [
+        {
+          "eventKey" : "failedMessage",
+          "displayName" : "commcare.message"
+        }
+      ]
+    },
+    {
+      "displayName" : commcare.devicelog,
+      "subject" : "org.motechproject.commcare.api.devicelog",
+      "eventParameters" : [
+      {
+        "eventKey" : "elementName",
+        "displayName" : "commcare.elementName"
+      },
+      {
+        "eventKey" : "subElements",
+        "type" : "MAP",
+        "displayName" : "commcare.subElements"
+      },
+      {
+        "eventKey" : "attributes",
+        "type" : "MAP",
+        "displayName" : "commcare.attributes"
+      },
+      {
+        "eventKey" : "value",
+        "displayName" : "commcare.value"
+      }
+    ]
     }
   ],
   "actionTaskEvents" : [

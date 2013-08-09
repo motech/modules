@@ -22,6 +22,7 @@ public class FullFormParser {
     public static final String DEVICE_REPORT_ELEMENT = "device_report";
     public static final String XMLNS_ELEMENT = "xmlns";
     public static final String FORM = "form";
+    public static final String DEVICE_LOG = "deviceLog";
 
     public FullFormParser(String xmlDoc) {
         this.xmlDoc = xmlDoc;
@@ -48,12 +49,17 @@ public class FullFormParser {
 
             Document document = parser.getDocument();
             Node item = document.getElementsByTagName(FORM_DATA_ELEMENT).item(0);
+            root = new FormValueElement();
 
             if (item == null && document.getElementsByTagName(DEVICE_REPORT_ELEMENT).item(0) != null) {
-                return null;
+                item = document.getElementsByTagName(DEVICE_REPORT_ELEMENT).item(0);
+                root.setElementName(DEVICE_LOG);
+                root.setValue(DEVICE_REPORT_ELEMENT);
+                addAttributes(root, item.getAttributes());
+                addSubElements(root, item.getChildNodes());
+                return root;
             }
 
-            root = new FormValueElement();
             root.setElementName(FORM);
             root.setValue(FORM_DATA_ELEMENT);
             addAttributes(root, item.getAttributes());
