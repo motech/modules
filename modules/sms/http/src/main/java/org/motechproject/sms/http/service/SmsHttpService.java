@@ -114,7 +114,7 @@ public class SmsHttpService {
             raiseFailureEvent(recipients, message, failureCount);
         } else {
             try {
-                log.debug("SMS with message %s sent successfully to %s:", message,
+                log.debug("SMS with message : {}, sent successfully to {}", message,
                         StringUtils.join(recipients.iterator(), ","));
                 addSmsRecord(recipients, message, sendTime, DELIVERY_CONFIRMED);
             } catch (Exception e) {
