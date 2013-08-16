@@ -32,6 +32,7 @@ import static java.util.Arrays.asList;
 public class VerboiceIVRController {
 
     private static final String VERBOICE_CALL_SID = "CallSid";
+    private static final String MOTECH_CALL_ID = "motech_call_id";
     private static final String VERBOICE_FROM_PHONE_PARAM = "From";
     private static final String VERBOICE_IN_PROGRESS_STATUS = "in-progress";
     private static final String VERBOICE_BUSY_STATUS = "busy";
@@ -92,13 +93,14 @@ public class VerboiceIVRController {
     public void handleStatus(HttpServletRequest request) {
         String callStatus = request.getParameter("CallStatus");
         String callSid = request.getParameter(VERBOICE_CALL_SID);
+        String motechId = request.getParameter(MOTECH_CALL_ID);
         String phoneNum = request.getParameter(VERBOICE_FROM_PHONE_PARAM);
 
-        logger.info("Verboice status callback : " + callStatus);
+        logger.info("Verboice status callback : " + callStatus + " for CallSid: " + callSid + " with Motech ID: " + motechId);
 
-        updateRecord(callStatus, callSid, phoneNum);
+        updateRecord(callStatus, motechId, callSid, phoneNum);
 
-        raiseCallEvent(callStatus, callSid);
+        raiseCallEvent(callStatus, motechId);
     }
 
     private void raiseCallEvent(String callStatus, String callSid) {
@@ -124,8 +126,8 @@ public class VerboiceIVRController {
         callEvents.put("dial&completed", IvrEvent.DialAnswered);
     }
 
-    private void updateRecord(String callStatus, String callSid, String phoneNumber) {
-        FlowSessionRecord record = (FlowSessionRecord) flowSessionService.getSession(callSid);
+    private void updateRecord(String callStatus, String motechId, String callSid, String phoneNumber) {
+        FlowSessionRecord record = (FlowSessionRecord) flowSessionService.getSession(motechId);
         if (record != null) {
 
             CallDetailRecord callDetail = record.getCallDetailRecord();
@@ -144,9 +146,13 @@ public class VerboiceIVRController {
                 callDetail.setDisposition(CallDisposition.NO_ANSWER);
             }
 
+            if (record.get(VERBOICE_CALL_SID) == null) {
+                record.set(VERBOICE_CALL_SID, callSid);
+            }
+
             flowSessionService.updateSession(record);
         } else {
-            record = (FlowSessionRecord) flowSessionService.findOrCreate(callSid, phoneNumber);
+            record = (FlowSessionRecord) flowSessionService.findOrCreate(motechId, phoneNumber);
             final CallDetailRecord callDetailRecord = record.getCallDetailRecord();
             callDetailRecord.setCallDirection(CallDirection.Inbound);
             flowSessionService.updateSession(record);

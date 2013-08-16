@@ -68,7 +68,7 @@ public class VerboiceIVRServiceTest {
         }});
         ivrService.initiateCall(callRequest);
 
-        verify(httpClient).executeMethod(argThat(new GetMethodMatcher(format("http://verboice:3000/api/call?motech_call_id=%s&channel=foobar&address=1234567890&callback_url=key&status_callback_url=key2", callRequest.getCallId()))));
+        verify(httpClient).executeMethod(argThat(new GetMethodMatcher("http://verboice:3000/api/call?channel=foobar&address=1234567890&callback_url=key&status_callback_url=key2" + "&callback_params[motech_call_id]=" + callRequest.getCallId())));
     }
 
     @Test
@@ -101,7 +101,7 @@ public class VerboiceIVRServiceTest {
         verify(flowSession).set("foo", "bar");
         verify(flowSessionService).updateSession(flowSession);
 
-        verify(httpClient).executeMethod(argThat(new GetMethodMatcher(format("http://verboice:3000/api/call?motech_call_id=%s&channel=foobar&address=1234567890&callback_url=key", callRequest.getCallId()))));
+        verify(httpClient).executeMethod(argThat(new GetMethodMatcher("http://verboice:3000/api/call?channel=foobar&address=1234567890&callback_url=key"+ "&callback_params[motech_call_id]=" + callRequest.getCallId())));
     }
 
     public class GetMethodMatcher extends ArgumentMatcher<GetMethod> {
