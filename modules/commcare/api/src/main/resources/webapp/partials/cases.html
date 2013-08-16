@@ -65,6 +65,21 @@
                         </table>
                     </div>
                 </div>
+
+                <button class="btn" data-toggle="modal" href="#case-schema-{{$parent.$index}}-{{$index}}-json">{{msg('commcare.json')}}</button>
+
+                <div id="case-schema-{{$parent.$index}}-{{$index}}-json" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+
+                        {{msg('commcare.case.name')}}: <b>{{case.caseName}}</b>
+                    </div>
+
+                    <div class="modal-body">
+                        {{formatJson(case)}}
+                    </div>
+                </div>
             </div>
         </div>
 
