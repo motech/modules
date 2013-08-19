@@ -1,7 +1,7 @@
 <div> <!-- Only required for left/right tabs -->
     <ul id="content-tabs" class="nav nav-tabs sms">
-        <li class="active"><a data-target="main-content" href="#/smstest" data-toggle="tab">{{msg('sms.tab.test')}}</a></li>
-        <li><a data-target="main-content" href="#/smslogging" data-toggle="tab">{{msg('sms.tab.logging')}}</a></li>
+        <li ng-class="active('#/smstest')"><a data-target="main-content" href="#/smstest" data-toggle="tab">{{msg('sms.tab.test')}}</a></li>
+        <li ng-class="active('#/smslogging')"><a data-target="main-content" href="#/smslogging" data-toggle="tab">{{msg('sms.tab.logging')}}</a></li>
     </ul>
     <div class="tab-content sms"  id="tab-content">
         <div id="main-content" class="tab-pane active">
