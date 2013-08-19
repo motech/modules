@@ -9,6 +9,8 @@ import org.motechproject.commcare.exception.CommcareAuthenticationException;
 import org.motechproject.commcare.exception.CommcareConnectionFailureException;
 import org.motechproject.commcare.service.CommcareAccountService;
 import org.motechproject.commcare.service.CommcareDataForwardingEndpointService;
+import org.motechproject.event.MotechEvent;
+import org.motechproject.event.listener.EventRelay;
 import org.motechproject.server.config.SettingsFacade;
 import org.motechproject.server.config.service.PlatformSettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.motechproject.commcare.events.constants.EventSubjects.SCHEMA_CHANGE_EVENT;
 
 @Controller
 @RequestMapping("/connection")
@@ -37,6 +40,9 @@ public class StubConnectionController {
 
     @Autowired
     private CommcareDataForwardingEndpointService forwardingEndpointService;
+
+    @Autowired
+    private EventRelay eventRelay;
 
     private static final String FORWARD_CASES_KEY = "forwardCases";
     private static final String FORWARD_FORMS_KEY = "forwardForms";
@@ -60,6 +66,7 @@ public class StubConnectionController {
 
         if (commcareAccountService.verifySettings(settings)) {
             checkForwardingSettings();
+            eventRelay.sendEventMessage(new MotechEvent(SCHEMA_CHANGE_EVENT));
         }
     }
 

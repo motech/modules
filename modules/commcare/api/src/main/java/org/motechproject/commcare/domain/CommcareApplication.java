@@ -1,19 +1,27 @@
 package org.motechproject.commcare.domain;
 
-import com.google.gson.annotations.SerializedName;
+import org.ektorp.support.TypeDiscriminator;
+import org.motechproject.commons.couchdb.model.MotechBaseDataObject;
 
 import java.util.List;
 
-public class CommcareApplicationJson {
+/**
+ * Controller that handles the incoming full form feed from CommCareHQ.
+ */
+@TypeDiscriminator("doc.type === 'CommcareApplication'")
+public class CommcareApplication extends MotechBaseDataObject{
 
-    @SerializedName("name")
+    private static final long serialVersionUID = 1L;
+
     private String applicationName;
-    @SerializedName("resource_uri")
     private String resourceUri;
-    @SerializedName("modules")
     private List<CommcareModuleJson> modules;
 
-    public CommcareApplicationJson(String applicationName, String resourceUri, List<CommcareModuleJson> modules) {
+    public CommcareApplication() {
+    }
+
+    public CommcareApplication(String applicationName, String resourceUri, List<CommcareModuleJson> modules) {
+        this();
         this.applicationName = applicationName;
         this.resourceUri = resourceUri;
         this.modules = modules;
