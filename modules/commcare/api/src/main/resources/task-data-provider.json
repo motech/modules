@@ -6,7 +6,7 @@
             "type": "CommcareUser",
             "lookupFields": [
                 {
-                    "displayName": "id",
+                    "displayName": "commcare.id",
                     "fields": [
                         "id"
                     ]
@@ -64,7 +64,7 @@
              "type": "CommcareFixture",
              "lookupFields": [
                  {
-                     "displayName": "id",
+                     "displayName": "commcare.id",
                      "fields": [
                          "id"
                      ]
@@ -92,7 +92,7 @@
             "type": "CommcareForm",
             "lookupFields": [
                 {
-                    "displayName": "id",
+                    "displayName": "commcare.id",
                     "fields": [
                         "id"
                     ]
@@ -148,7 +148,7 @@
             "type": "CaseInfo",
             "lookupFields": [
                 {
-                    "displayName": "id",
+                    "displayName": "commcare.id",
                     "fields": [
                         "id"
                     ]

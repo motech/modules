@@ -14,8 +14,8 @@
                 {
                     "displayName": "cmslite.languageAndName",
                     "fields": [
-                        "name",
-                        "language"
+                        "cmslite.dataname",
+                        "cmslite.language"
                     ]
                 }
             ],
@@ -59,8 +59,8 @@
                 {
                     "displayName": "cmslite.languageAndName",
                     "fields": [
-                        "name",
-                        "language"
+                        "cmslite.dataname",
+                        "cmslite.language"
                     ]
                 }
             ],
