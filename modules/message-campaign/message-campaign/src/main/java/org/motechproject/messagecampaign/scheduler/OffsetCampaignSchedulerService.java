@@ -1,5 +1,6 @@
 package org.motechproject.messagecampaign.scheduler;
 
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.event.MotechEvent;
@@ -21,6 +22,7 @@ import static org.motechproject.commons.date.util.DateUtil.now;
 public class OffsetCampaignSchedulerService extends CampaignSchedulerService<OffsetCampaignMessage, OffsetCampaign> {
 
     private static final int SECONDS_IN_A_DAY = 24 * 60 * 60;
+    private Logger logger = Logger.getLogger(this.getClass());
 
     @Autowired
     public OffsetCampaignSchedulerService(MotechSchedulerService schedulerService, AllMessageCampaigns allMessageCampaigns) {
@@ -37,7 +39,12 @@ public class OffsetCampaignSchedulerService extends CampaignSchedulerService<Off
         if (jobTime.isAfter(now())) {
             MotechEvent motechEvent = new MotechEvent(EventKeys.SEND_MESSAGE, jobParams(message.messageKey(), enrollment));
             RunOnceSchedulableJob runOnceSchedulableJob = new RunOnceSchedulableJob(motechEvent, jobTime.toDate());
-            getSchedulerService().scheduleRunOnceJob(runOnceSchedulableJob);
+
+            try {
+                getSchedulerService().scheduleRunOnceJob(runOnceSchedulableJob);
+            } catch (IllegalArgumentException e) {
+                logger.info("Unable to schedule offset campaign message " + message.messageKey() + " for ID: " + enrollment.getExternalId() + " enrolled in campaign: " + enrollment.getCampaignName() + " - Message date is in the past");
+            }
         }
     }
 

@@ -61,8 +61,10 @@ public class MessageCampaignEventHandler {
             referenceDate = (LocalDate) param;
         } else if (param instanceof DateTime) {
             referenceDate = ((DateTime) param).toLocalDate();
-        } else {
+        } else if (param != null) {
             referenceDate = LocalDate.parse(param.toString());
+        } else {
+            referenceDate = null;
         }
 
         return referenceDate;
@@ -75,8 +77,10 @@ public class MessageCampaignEventHandler {
         if (param instanceof DateTime) {
             DateTime dateTime = (DateTime) param;
             time = new Time(dateTime.getHourOfDay(), dateTime.getMinuteOfHour());
-        } else {
+        } else if (param != null) {
             time = new Time(param.toString());
+        } else {
+            time = null;
         }
 
         return time;

@@ -1,12 +1,12 @@
 <div>
     <ul id="content-tabs" class="nav nav-tabs message-campaign">
-        <li class="active">
+        <li ng-class="active('#/campaigns')">
             <a data-target="main-content" href="#/campaigns" data-toggle="tab">{{msg('msgCampaign.campaigns')}}</a>
         </li>
-        <li>
+        <li ng-class="active('#/admin')">
             <a data-target="main-content" href="#/admin" data-toggle="tab">{{msg('msgCampaign.admin')}}</a>
         </li>
-        <li>
+        <li ng-class="active('#/settings')">
             <a data-target="main-content" href="#/settings" data-toggle="tab">{{msg('msgCampaign.settings')}}</a>
         </li>
     </ul>
