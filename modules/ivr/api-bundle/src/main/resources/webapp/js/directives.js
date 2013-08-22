@@ -1,7 +1,47 @@
+//provides angular directives for call logs, including loading the grid of
+//logs and searching the grid.
+
 (function () {
     'use strict';
 
-    angular.module('motech-ivr').directive('tooltip', function () {
+    var widgetModule = angular.module('motech-ivr'),
+
+        //takes the given query (a list of pairs) and returns a string
+        //that can be used to query the database.
+        makeParams = function(query) {
+                 var prop,
+                     params = '?';
+                 for (prop in query) {
+                     params += prop + '=' + query[prop] + '&';
+                 }
+
+                 params = params.slice(0, params.length - 1);
+                 return params;
+            },
+
+        searchGrid = function(grid, time, url, params, timeoutHnd) {
+             if (timeoutHnd) {
+                 clearTimeout(timeoutHnd);
+             }
+             return setTimeout(function () {
+                 jQuery('#' + grid).jqGrid('setGridParam', {
+                     url: '../ivr/api/calllog/search' + params
+                 }).trigger('reloadGrid');
+             }, time || 0);
+        },
+
+        setUpQuery = function(url, field) {
+            var prop,
+                query = {};
+            for (prop in url.queryKey) {
+                if (prop !== field) {
+                    query[prop] = url.queryKey[prop];
+                }
+            }
+            return query;
+        };
+
+    widgetModule.directive('tooltip', function () {
 
         return {
             restrict:'A',
@@ -20,14 +60,32 @@
         };
     });
 
-    angular.module('motech-ivr').directive('typeahead', function () {
+    widgetModule.directive('typeahead', function () {
 
         return {
             restrict:'A',
             link:function (scope, element, attr) {
                 $.get("../ivr/api/calllog/phone-numbers", function (data) {
                     element.typeahead({
-                        source:data
+                        source:data,
+                        updater: function(item) {
+                            //when the user selects a phone number, search
+                            //the database with that phone number
+                            var timeoutHnd,
+                                table = angular.element('#' + attr.jqgridSearch),
+                                url = parseUri(table.jqGrid('getGridParam', 'url')),
+                                query = setUpQuery(url, "phoneNumber"),
+                                params,
+                                array = [];
+
+                            query.phoneNumber = item;
+
+                            params = makeParams(query);
+
+                            timeoutHnd = searchGrid(attr.jqgridSearch, 0, url, params, timeoutHnd);
+                            return item;
+                        }
+
                     });
                 });
             }
@@ -36,11 +94,13 @@
 
 
 
-    angular.module('motech-ivr').directive('ngSlider', function (CalllogMaxDuration) {
+    widgetModule.directive('ngSlider', function (CalllogMaxDuration) {
         return function (scope, element, attributes) {
             CalllogMaxDuration.get(function (data) {
 
                 var sliderElement = $(element),
+                    elem = angular.element(element),
+                    table = angular.element('#resourceTable'),
 
                 getSliderMin = function () {
                     return sliderElement.slider("values", 0);
@@ -70,7 +130,28 @@
                         setSliderInputs(ui.values[0], ui.values[1]);
                     },
                     change:function (event, ui) {
+                        //when the slider is changed, must re-query the database
+                        var timeoutHnd,
+                            url = parseUri(table.jqGrid('getGridParam', 'url')),
+                            query = {},
+                            params,
+                            array = [],
+                            prop;
+
                         setSliderInputs(ui.values[0], ui.values[1]);
+                        for (prop in url.queryKey) {
+                            if (prop !== "minDuration" && prop !== "maxDuration") {
+                                query[prop] = url.queryKey[prop];
+                            }
+                        }
+
+                        query.minDuration = ui.values[0];
+                        query.maxDuration = ui.values[1];
+
+                        params = makeParams(query);
+
+
+                        timeoutHnd = searchGrid("resourceTable", 0, url, params, timeoutHnd);
                     }
                 });
                 setSliderInputs(getSliderMin(), getSliderMax());
@@ -105,8 +186,220 @@
                     }
                 });
 
+
+
             });
 
         };
     });
+
+    widgetModule.directive('gridDatePickerFrom', function() {
+        return {
+            restrict: 'A',
+            link: function(scope, element, attrs) {
+                var elem = angular.element(element),
+                    endDateTextBox = angular.element('#dateTimeTo');
+
+                elem.datetimepicker({
+                    dateFormat: "yy-mm-dd",
+                    changeMonth: true,
+                    changeYear: true,
+                    maxDate: +0,
+                    timeFormat: "HH:mm:ss",
+                    onSelect: function (selectedDateTime){
+                        endDateTextBox.datetimepicker('option', 'minDate', elem.datetimepicker('getDate') );
+                    }
+                });
+            }
+        };
+    });
+
+    widgetModule.directive('gridDatePickerTo', function() {
+        return {
+            restrict: 'A',
+            link: function(scope, element, attrs) {
+                var elem = angular.element(element),
+                    startDateTextBox = angular.element('#dateTimeFrom');
+
+                elem.datetimepicker({
+                    dateFormat: "yy-mm-dd",
+                    changeMonth: true,
+                    changeYear: true,
+                    maxDate: +0,
+                    timeFormat: "HH:mm:ss",
+                    onSelect: function (selectedDateTime){
+                        startDateTextBox.datetimepicker('option', 'maxDate', elem.datetimepicker('getDate') );
+                    }
+                });
+            }
+        };
+    });
+
+    widgetModule.directive('jqgridSearch', function () {
+        return {
+            restrict: 'A',
+            link: function (scope, element, attrs) {
+                var elem = angular.element(element),
+                    table = angular.element('#' + attrs.jqgridSearch),
+                    eventType = elem.data('event-type'),
+                    timeoutHnd,
+
+                    filter = function (time) {
+                        var field = elem.data('search-field'),
+                            value = elem.data('search-value'),
+                            type = elem.data('field-type') || 'string',
+                            url = parseUri(table.jqGrid('getGridParam', 'url')),
+                            params,
+                            array = [],
+                            query = setUpQuery(url, field);
+
+                        switch (type) {
+                        case 'boolean':
+                            query[field] = url.queryKey[field].toLowerCase() !== 'true';
+
+                            if (query[field]) {
+                                elem.find('i').removeClass('icon-ban-circle').addClass('icon-ok');
+                            } else {
+                                elem.find('i').removeClass('icon-ok').addClass('icon-ban-circle');
+                            }
+                            break;
+                        case 'array':
+                            if (elem.children().hasClass("icon-ok")) {
+                                elem.children().removeClass("icon-ok").addClass("icon-ban-circle");
+                            } else if (elem.children().hasClass("icon-ban-circle")) {
+                                elem.children().removeClass("icon-ban-circle").addClass("icon-ok");
+                                array.push(value);
+                            }
+                            angular.forEach(url.queryKey[field].split(','), function (val) {
+                                if (angular.element('#' + val).children().hasClass("icon-ok")) {
+                                    array.push(val);
+                                }
+                            });
+
+                            query[field] = array.join(',');
+                            break;
+                        default:
+                            query[field] = elem.val();
+                        }
+
+                        params = makeParams(query);
+
+                        timeoutHnd = searchGrid(attrs.jqgridSearch, time, url, params, timeoutHnd);
+                    };
+
+
+                switch (eventType) {
+                case 'keyup':
+                    elem.keyup(function () {
+                        filter(500);
+                    });
+                    break;
+                case 'change':
+                    elem.change(filter);
+                    break;
+                default:
+                    elem.click(filter);
+                }
+            }
+        };
+    });
+
+
+
+    widgetModule.directive('callGrid', function($compile) {
+         return {
+            restrict: 'A',
+            link: function (scope, element, attrs) {
+                var elem = angular.element(element), filters;
+
+                elem.jqGrid({
+                    url: '../ivr/api/calllog/search?phoneNumber=&startDate=&endDate=&answered=true&busy=true&failed=true&noAnswer=true&unknown=true&inbound=true&outbound=true&minDuration=&maxDuration=',
+                    datatype: 'json',
+                    jsonReader:{
+                        repeatitems:false
+                    },
+                    prmNames: {
+                        sort: 'sortColumn',
+                        order: 'sortDirection'
+                    },
+                    shrinkToFit: true,
+                    autowidth: true,
+                    rownumbers: true,
+                    rowNum: 10,
+                    rowList: [10, 20, 50],
+                    colModel: [{
+                        name: 'phoneNumber',
+                        index: 'phoneNumber'
+                    }, {
+                        name: 'callDirection',
+                        index: 'callDirection'
+                    }, {
+                        name: 'startDate',
+                        index: 'startDate',
+                        formatter: function(cellValue, options) {
+                                       if(cellValue) {
+                                           return $.fmatter.util.DateFormat(
+                                           '',
+                                           new Date(+cellValue),
+                                           'UniversalSortableDateTime',
+                                           $.extend({}, $.jgrid.formatter.date, options)
+                                           );
+                                       } else {
+                                           return '';
+                                       }
+                                   }
+                    },
+                    {
+                        name: 'endDate',
+                        index: 'endDate',
+                        formatter: function(cellValue, options) {
+                            if(cellValue) {
+                                return $.fmatter.util.DateFormat(
+                                '',
+                                new Date(+cellValue),
+                                'UniversalSortableDateTime',
+                                $.extend({}, $.jgrid.formatter.date, options)
+                                );
+                            } else {
+                                return '';
+                            }
+                        }
+
+                    },
+                    {
+                        name: 'disposition',
+                        index: 'disposition'
+                    },
+                    {
+                        name: 'duration',
+                        index: 'duration'
+                    }],
+                    pager: '#' + attrs.callGrid,
+                    width: '100%',
+                    height: 'auto',
+                    sortname: 'startDate',
+                    sortorder: 'desc',
+                    viewrecords: true,
+                    gridComplete: function () {
+
+                        angular.forEach(['phoneNumber', 'callDirection', 'startDate', 'endDate', 'disposition', 'duration'], function (value) {
+                            elem.jqGrid('setLabel', value, scope.msg('ivr.calllog.' + value));
+                        });
+
+                        $('#outsideCalllogTable').children('div').width('100%');
+                        $('.ui-jqgrid-htable').addClass("table-lightblue");
+                        $('.ui-jqgrid-btable').addClass("table-lightblue");
+                        $('.ui-jqgrid-htable').addClass('table-lightblue');
+                        $('#outsideCalllogTable').children('div').each(function() {
+                            $('table', this).width('100%');
+                            $(this).find('#resourceTable').width('100%');
+                            $(this).find('table').width('100%');
+                       });
+                    }
+                });
+
+            }
+        };
+    });
+
 }());

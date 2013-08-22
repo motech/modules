@@ -14,10 +14,9 @@ public class CalllogBundleIT extends BaseOsgiIT {
 
     public void testCalllogSearch() throws IOException, InterruptedException {
         PollingHttpClient httpClient = new PollingHttpClient();
-        String response = httpClient.get(String.format("http://localhost:%d/ivr/api/calllog/search", TestContext.getJettyPort()),
-                new BasicResponseHandler());
-
-        assertTrue(new JsonParser().parse(response).isJsonArray());
+        String response = httpClient.get(String.format("http://localhost:%d/ivr/api/calllog/search",
+                TestContext.getJettyPort()), new BasicResponseHandler());
+        assertTrue(new JsonParser().parse(response).isJsonObject());
     }
 
     public void testThatCallRecordsServiceIsAvailable() {

@@ -190,3 +190,38 @@
 .call-log .row-fluid .span4.margin-offset1 {
     margin-left: 9%;
 }
+
+#t_resourceTable {
+    min-height: 25px;
+    height: auto;
+    width: auto;
+    padding: 5px;
+}
+
+#t_resourceTable .control-group {
+    margin-bottom: 2px;
+}
+
+.ui-jqgrid-bdiv {
+    width: 100%;
+}
+
+
+.ui-jqgrid-hdiv {
+    width: 100%;
+}
+
+.ui-jqgrid-hbox {
+    width: 100%;
+}
+
+.ui-jqgrid-view {
+    width: 100%;
+}
+
+.ui-jqgrid-pager {
+    width: 100%;
+}
+
+
+

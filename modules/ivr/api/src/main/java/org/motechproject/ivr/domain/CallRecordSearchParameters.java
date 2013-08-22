@@ -2,11 +2,12 @@ package org.motechproject.ivr.domain;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
+import org.motechproject.commons.couchdb.query.QueryParam;
 
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 public class CallRecordSearchParameters {
-    private static final String DEFAULT_DATE_FORMAT = "MM/dd/YYYY HH:mm";
+    private static final String DEFAULT_DATE_FORMAT = "YYYY-MM-dd HH:mm:ss";
     private String phoneNumber;
 
     private DateTime fromDate;
@@ -22,33 +23,35 @@ public class CallRecordSearchParameters {
     private boolean noAnswer;
     private boolean unknown;
 
-    private int page;
-    private String sortColumn;
+    private boolean inbound;
+    private boolean outbound;
 
-    private boolean sortReverse;
+    //Query Param holds page number to return, records per page,
+    //what column to sort by, and whether or not to sort in reverse order
+    private QueryParam queryParam = new QueryParam();
 
-    public void setSortReverse(boolean sortReverse) {
-        this.sortReverse = sortReverse;
+    public void setQueryParam(QueryParam queryParam) {
+        this.queryParam = queryParam;
     }
 
-    public boolean isSortReverse() {
-        return sortReverse;
+    public QueryParam getQueryParam() {
+        return queryParam;
     }
 
-    public int getPage() {
-        return page;
+    public void setInbound(boolean inbound) {
+        this.inbound = inbound;
     }
 
-    public void setPage(int page) {
-        this.page = page;
+    public boolean isInbound() {
+        return inbound;
     }
 
-    public String getSortColumn() {
-        return sortColumn;
+    public void setOutbound(boolean outbound) {
+        this.outbound = outbound;
     }
 
-    public void setSortColumn(String sortColumn) {
-        this.sortColumn = sortColumn;
+    public boolean isOutbound() {
+        return outbound;
     }
 
     public String getToDate() {
