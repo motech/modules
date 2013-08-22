@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>platform-communications</artifactId>
@@ -90,7 +91,9 @@
                             <excludeDefaultDirectories>true</excludeDefaultDirectories>
                             <filesets>
                                 <fileset>
-                                    <directory>${user.home}/.motech/config/org.motechproject.motech-ivr-verboice-bundle</directory>
+                                    <directory>
+                                        ${user.home}/.motech/config/org.motechproject.motech-ivr-verboice-bundle
+                                    </directory>
                                     <includes>
                                         <include>**/*</include>
                                     </includes>
@@ -101,6 +104,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
@@ -194,6 +198,7 @@
     <profiles>
         <profile>
             <id>IT</id>
+
             <build>
                 <plugins>
                     <plugin>
@@ -207,11 +212,11 @@
                                 <configuration>
                                     <target>
                                         <exec executable="curl">
-                                            <arg value="-s"/>
-                                            <arg value="-S"/>
-                                            <arg value="-X"/>
-                                            <arg value="DELETE"/>
-                                            <arg value="http://${db.server}:${db.port}/${db.prefix}motech-web-security"/>
+                                            <arg value="-s" />
+                                            <arg value="-S" />
+                                            <arg value="-X" />
+                                            <arg value="DELETE" />
+                                            <arg value="http://${db.server}:${db.port}/${db.prefix}motech-web-security" />
                                         </exec>
                                     </target>
                                 </configuration>
@@ -225,9 +230,9 @@
                                 <configuration>
                                     <target>
                                         <exec executable="curl">
-                                            <arg value="-X"/>
-                                            <arg value="PUT"/>
-                                            <arg value="http://${db.server}:${db.port}/${db.prefix}motech-web-security"/>
+                                            <arg value="-X" />
+                                            <arg value="PUT" />
+                                            <arg value="http://${db.server}:${db.port}/${db.prefix}motech-web-security" />
                                         </exec>
                                     </target>
                                 </configuration>
@@ -242,13 +247,13 @@
                                     <target>
                                         <!-- Login/Password: motech/motech -->
                                         <exec executable="curl">
-                                            <arg value="-X"/>
-                                            <arg value="POST"/>
-                                            <arg value="http://${db.server}:${db.port}/${db.prefix}motech-web-security"/>
-                                            <arg value="-d"/>
-                                            <arg value="@${modules.root.dir}/testdata/adminuser.json"/>
-                                            <arg value="-H"/>
-                                            <arg value="Content-Type: application/json"/>
+                                            <arg value="-X" />
+                                            <arg value="POST" />
+                                            <arg value="http://${db.server}:${db.port}/${db.prefix}motech-web-security" />
+                                            <arg value="-d" />
+                                            <arg value="@${modules.root.dir}/testdata/adminuser.json" />
+                                            <arg value="-H" />
+                                            <arg value="Content-Type: application/json" />
                                         </exec>
                                     </target>
                                 </configuration>
@@ -263,11 +268,11 @@
                                 <configuration>
                                     <target>
                                         <exec executable="curl">
-                                            <arg value="-s"/>
-                                            <arg value="-S"/>
-                                            <arg value="-X"/>
-                                            <arg value="DELETE"/>
-                                            <arg value="http://${db.server}:${db.port}/${db.prefix}motech-web-security"/>
+                                            <arg value="-s" />
+                                            <arg value="-S" />
+                                            <arg value="-X" />
+                                            <arg value="DELETE" />
+                                            <arg value="http://${db.server}:${db.port}/${db.prefix}motech-web-security" />
                                         </exec>
                                     </target>
                                 </configuration>
