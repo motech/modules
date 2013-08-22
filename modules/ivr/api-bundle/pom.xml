@@ -92,7 +92,8 @@
                             <disallowIncrAndDecr>true</disallowIncrAndDecr>
                             <requireUseStrict>true</requireUseStrict>
                             <predefinedVars>
-                                $, angular
+                                $, angular, blockUI, unblockUI, handleWithStackTrace, alertHandler,
+                                jConfirm, jQuery, parseUri
                             </predefinedVars>
                             <excludes>
                                 <exclude>lib/*</exclude>

@@ -27,10 +27,14 @@ import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.motechproject.commons.date.util.DateUtil.setTimeZoneUTC;
 
+/**
+ * AllCallDetailRecords provides functionality for searching call records.
+ * Can return search results, number of call records, all phone numbers in the records,
+ * maximum call duration in records, and can find a record based on the call id.
+ */
+
 @Repository
 public class AllCallDetailRecords extends CouchDbRepositorySupportWithLucene<CallDetailRecord> {
-
-    private static final int MAX_CALL_DURATION = 1000;
 
     @Autowired
     protected AllCallDetailRecords(@Qualifier("callLogDbConnector") CouchDbConnector db)
@@ -39,13 +43,22 @@ public class AllCallDetailRecords extends CouchDbRepositorySupportWithLucene<Cal
         initStandardDesignDocument();
     }
 
-
+    /**
+     * @param phoneNumber
+     * @param startTime
+     * @param endTime
+     * @param minDurationInSeconds
+     * @param maxDurationInSeconds
+     * @param dispositions
+     * @param directions
+     * @return total number of records with the given parameters
+     */
     @View(name = "countLogs", map = "function(doc){ emit(null, 1);}", reduce = "_count")
     public long countRecords(String phoneNumber, DateTime startTime, DateTime endTime,
                              Integer minDurationInSeconds, Integer maxDurationInSeconds,
-                             List<String> dispositions) {
-        StringBuilder queryString = generateQueryString(phoneNumber, startTime, endTime, minDurationInSeconds, maxDurationInSeconds, dispositions);
-        return runQuery(queryString, 0, 0, null, false).size();
+                             List<String> dispositions, List<String> directions) {
+        StringBuilder queryString = generateQueryString(phoneNumber, startTime, endTime, minDurationInSeconds, maxDurationInSeconds, dispositions, directions);
+        return runQuery(queryString, null, false).size();
     }
 
     @View(name = "maxCallDuration", map = "function(doc){ emit(null, doc.duration);}",
@@ -76,7 +89,18 @@ public class AllCallDetailRecords extends CouchDbRepositorySupportWithLucene<Cal
         return allPhoneNumbers;
     }
 
-
+    /**
+     * @param phoneNumber
+     * @param startTime
+     * @param endTime
+     * @param minDurationInSeconds
+     * @param maxDurationInSeconds
+     * @param dispositions
+     * @param directions
+     * @param sortBy
+     * @param reverse
+     * @return a list of all call records with the given parameters
+     */
     @FullText({@Index(
             name = "search",
             index = "function(doc) { " +
@@ -90,12 +114,24 @@ public class AllCallDetailRecords extends CouchDbRepositorySupportWithLucene<Cal
                     "return ret " +
                     "}"
     )})
-    public List<CallDetailRecord> search(String phoneNumber, DateTime startTime, DateTime endTime, Integer minDurationInSeconds,
-                                         Integer maxDurationInSeconds, List<String> dispositions, int page, int pageSize, String sortBy, boolean reverse) {
+    public List<CallDetailRecord> search(String phoneNumber, DateTime startTime, DateTime endTime,
+                                         Integer minDurationInSeconds, Integer maxDurationInSeconds,
+                                         List<String> dispositions, List<String> directions,
+                                         String sortBy, boolean reverse) {
 
-        StringBuilder queryString = generateQueryString(phoneNumber, setTimeZoneUTC(startTime), setTimeZoneUTC(endTime), minDurationInSeconds, maxDurationInSeconds, dispositions);
+        StringBuilder queryString = generateQueryString(phoneNumber, setTimeZoneUTC(startTime),
+                setTimeZoneUTC(endTime), minDurationInSeconds, maxDurationInSeconds, dispositions,
+                directions);
+        String sortColumn = sortBy;
+        if(sortBy != null) {
+            if(sortBy.equalsIgnoreCase("duration")) {
+                sortColumn = sortBy + "<int>";
+            } else if(sortBy.contains("Date")) {
+                sortColumn = sortBy + "<date>";
+            }
+        }
 
-        return runQuery(queryString, page, pageSize, sortBy, reverse);
+        return runQuery(queryString, sortColumn, reverse);
     }
 
 
@@ -116,13 +152,18 @@ public class AllCallDetailRecords extends CouchDbRepositorySupportWithLucene<Cal
 
     private StringBuilder generateQueryString(String phoneNumber, DateTime startTime,
                                               DateTime endTime, Integer minDurationInSeconds,
-                                              Integer maxDurationInSeconds, List<String> dispositions) {
+                                              Integer maxDurationInSeconds, List<String> dispositions,
+                                              List<String> directions) {
         StringBuilder queryString = new StringBuilder();
-        if (maxDurationInSeconds != null && minDurationInSeconds != null) {
-            queryString.append(String.format("duration<int>:[%d TO %d]", minDurationInSeconds, maxDurationInSeconds));
-        } else {
-            queryString.append(String.format("duration<int>:[%d TO %d]", 0, MAX_CALL_DURATION));
+        Integer minDuration = minDurationInSeconds;
+        Integer maxDuration = maxDurationInSeconds;
+        if(minDurationInSeconds == null) {
+            minDuration = 0;
         }
+        if(maxDurationInSeconds == null) {
+            maxDuration = (int) findMaxCallDuration();
+        }
+        queryString.append(String.format("duration<int>:[%d TO %d]", minDuration, maxDuration));
         if (StringUtils.isNotBlank(phoneNumber)) {
             if (queryString.length() > 0) {
                 queryString.append(" AND ");
@@ -136,34 +177,37 @@ public class AllCallDetailRecords extends CouchDbRepositorySupportWithLucene<Cal
             queryString.append(String.format("startDate<date>:[%s TO %s]",
                     startTime.toString("yyyy-MM-dd'T'HH:mm:ss"), endTime.toString("yyyy-MM-dd'T'HH:mm:ss")));
         }
-        addDispositionFilter(dispositions, queryString);
+        addFilter(dispositions, queryString, "disposition");
+        addFilter(directions, queryString, "callDirection");
         return queryString;
     }
 
-
-    private void addDispositionFilter(List<String> dispositions, StringBuilder queryString) {
-        if (isNotEmpty(dispositions)) {
+    /**
+     * Appends to the given queryString a filter for the given type with
+     * the given options
+     * @param options
+     * @param queryString
+     * @param type type of filter
+     */
+    private void addFilter(List<String> options, StringBuilder queryString, String type) {
+        if (isNotEmpty(options)) {
             queryString.append(" AND (");
-            for (int i = 0; i < dispositions.size(); i++) {
+            for (int i = 0; i < options.size(); i++) {
                 if (i > 0) {
                     queryString.append(" OR ");
                 }
-                queryString.append("disposition:").append(dispositions.get(i));
+                queryString.append(type + ":").append(options.get(i));
             }
             queryString.append(")");
         }
     }
 
-    private List<CallDetailRecord> runQuery(StringBuilder queryString, int page, int pageSize,
+    private List<CallDetailRecord> runQuery(StringBuilder queryString,
                                             String sortBy, boolean reverse) {
         LuceneQuery query = new LuceneQuery("CallDetailRecord", "search");
         query.setQuery(queryString.toString());
         query.setStaleOk(false);
         query.setIncludeDocs(true);
-        if (pageSize > 0) {
-            query.setLimit(pageSize);
-            query.setSkip(page * pageSize);
-        }
         if (!isBlank(sortBy)) {
             String sortString = reverse ? "\\" + sortBy : sortBy;
             query.setSort(sortString);

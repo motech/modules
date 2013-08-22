@@ -1,3 +1,4 @@
+//Functions to add behavior to the ivr pages.
 (function () {
     'use strict';
 
@@ -210,10 +211,8 @@
         $scope.setActive = function(active){
             if($('#'+active.toString()).is('button.active') === true) {
                 $scope.active = false;
-                $('#'+active.toString()).find('i').removeClass("icon-ok").addClass('icon-ban-circle');
             } else {
                 $scope.active = true;
-                $('#'+active.toString()).find('i').removeClass("icon-ban-circle").addClass('icon-ok');
             }
         };
     });
