@@ -22,9 +22,27 @@
                     </div>
                     <div class="span8">
                         <fieldset class="inside"><legend>{{msg('ivr.header.dates')}}</legend>
+
                             <div class="control-group form-inline">
-                                <input id="dateTimeFrom" grid-date-picker-from="" type="datetime" name="from" class="offset1 span4 search-query" placeholder="{{msg('ivr.header.from')}}" data-event-type="change" data-search-field="fromDate" jqgrid-search="resourceTable">
-                                <input id="dateTimeTo" grid-date-picker-to="" type="datetime" name="to" class="span4 margin-offset1 search-query" placeholder="{{msg('ivr.header.to')}}" data-event-type="change" data-search-field="toDate" jqgrid-search="resourceTable">
+                                <label class="control-label label-right" for="startDate">Start Date:</label>
+                                <span id="startDate">
+                                    <input id="startDateTimeFrom" grid-date-picker-from="startDateTime" type="datetime" name="from" class="offset1 span4 search-query" placeholder="{{msg('ivr.header.from')}}" data-event-type="change" data-search-field="startFromDate" jqgrid-search="resourceTable">
+                                    <input id="startDateTimeTo" grid-date-picker-to="startDateTime" type="datetime" name="to" class="span4 margin-offset1 search-query" placeholder="{{msg('ivr.header.to')}}" data-event-type="change" data-search-field="startToDate" jqgrid-search="resourceTable">
+                                </span>
+                            </div>
+                            <div class="control-group form-inline">
+                                <label class="control-label label-right" for="answerDate">Answer Date:</label>
+                                <span id="answerDate">
+                                    <input id="answerDateTimeFrom" grid-date-picker-from="answerDateTime" type="datetime" name="from" class="offset1 span4 search-query" placeholder="{{msg('ivr.header.from')}}" data-event-type="change" data-search-field="answerFromDate" jqgrid-search="resourceTable">
+                                    <input id="answerDateTimeTo" grid-date-picker-to="answerDateTime" type="datetime" name="to" class="span4 margin-offset1 search-query" placeholder="{{msg('ivr.header.to')}}" data-event-type="change" data-search-field="answerToDate" jqgrid-search="resourceTable">
+                                </span>
+                            </div>
+                            <div class="control-group form-inline">
+                                <label class="control-label label-right" for="endDate">End Date:</label>
+                                <span id="endDate">
+                                    <input id="endDateTimeFrom" grid-date-picker-from="endDateTime" type="datetime" name="from" class="offset1 span4 search-query" placeholder="{{msg('ivr.header.from')}}" data-event-type="change" data-search-field="endFromDate" jqgrid-search="resourceTable">
+                                    <input id="endDateTimeTo" grid-date-picker-to="endDateTime" type="datetime" name="to" class="span4 margin-offset1 search-query" placeholder="{{msg('ivr.header.to')}}" data-event-type="change" data-search-field="endToDate" jqgrid-search="resourceTable">
+                                </span>
                             </div>
                         </fieldset>
                     </div>

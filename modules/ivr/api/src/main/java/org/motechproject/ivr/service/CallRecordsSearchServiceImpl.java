@@ -30,8 +30,12 @@ public class CallRecordsSearchServiceImpl implements CallRecordsSearchService {
     public List<CallDetailRecord> search(CallRecordSearchParameters callLogSearchParameters) {
         QueryParam queryParam = callLogSearchParameters.getQueryParam();
         return allCallDetailRecords.search(callLogSearchParameters.getPhoneNumber(),
-                callLogSearchParameters.getFromDateAsDateTime(),
-                callLogSearchParameters.getToDateAsDateTime(),
+                callLogSearchParameters.getStartFromDateAsDateTime(),
+                callLogSearchParameters.getStartToDateAsDateTime(),
+                callLogSearchParameters.getAnswerFromDateAsDateTime(),
+                callLogSearchParameters.getAnswerToDateAsDateTime(),
+                callLogSearchParameters.getEndFromDateAsDateTime(),
+                callLogSearchParameters.getEndToDateAsDateTime(),
                 callLogSearchParameters.getMinDuration(),
                 callLogSearchParameters.getMaxDuration(),
                 mapToDispositions(callLogSearchParameters), mapToDirections(callLogSearchParameters),
@@ -46,8 +50,12 @@ public class CallRecordsSearchServiceImpl implements CallRecordsSearchService {
     @Override
     public long count(CallRecordSearchParameters callLogSearchParameters) {
         double numOfPages = allCallDetailRecords.countRecords(callLogSearchParameters.getPhoneNumber(),
-                callLogSearchParameters.getFromDateAsDateTime(),
-                callLogSearchParameters.getToDateAsDateTime(),
+                callLogSearchParameters.getStartFromDateAsDateTime(),
+                callLogSearchParameters.getStartToDateAsDateTime(),
+                callLogSearchParameters.getAnswerFromDateAsDateTime(),
+                callLogSearchParameters.getAnswerToDateAsDateTime(),
+                callLogSearchParameters.getEndFromDateAsDateTime(),
+                callLogSearchParameters.getEndToDateAsDateTime(),
                 callLogSearchParameters.getMinDuration(),
                 callLogSearchParameters.getMaxDuration(), mapToDispositions(callLogSearchParameters),
                 mapToDirections(callLogSearchParameters)) /

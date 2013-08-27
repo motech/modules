@@ -10,8 +10,14 @@ public class CallRecordSearchParameters {
     private static final String DEFAULT_DATE_FORMAT = "YYYY-MM-dd HH:mm:ss";
     private String phoneNumber;
 
-    private DateTime fromDate;
-    private DateTime toDate;
+    private DateTime startFromDate;
+    private DateTime startToDate;
+
+    private DateTime answerFromDate;
+    private DateTime answerToDate;
+
+    private DateTime endFromDate;
+    private DateTime endToDate;
 
     private Integer minDuration;
     private Integer maxDuration;
@@ -54,34 +60,84 @@ public class CallRecordSearchParameters {
         return outbound;
     }
 
-    public String getToDate() {
-        return toDate.toString(DEFAULT_DATE_FORMAT);
+    public String getStartToDate() {
+        return startToDate.toString(DEFAULT_DATE_FORMAT);
     }
 
-    public DateTime getToDateAsDateTime() {
-        return toDate;
+    public DateTime getStartToDateAsDateTime() {
+        return startToDate;
     }
 
-    public void setToDate(String toDate) {
-        this.toDate = toDate(toDate);
+    public void setStartToDate(String toDate) {
+        this.startToDate = toDate(toDate);
     }
 
     private DateTime toDate(String date) {
         return isNotBlank(date) ? DateTime.parse(date, DateTimeFormat.forPattern(DEFAULT_DATE_FORMAT)) : null;
     }
 
-    public String getFromDate() {
-        return fromDate.toString(DEFAULT_DATE_FORMAT);
+    public String getStartFromDate() {
+        return startFromDate.toString(DEFAULT_DATE_FORMAT);
+    }
+
+    public DateTime getStartFromDateAsDateTime() {
+        return startFromDate;
+    }
+
+    public void setStartFromDate(String fromDate) {
+        this.startFromDate = toDate(fromDate);
     }
 
 
-    public DateTime getFromDateAsDateTime() {
-        return fromDate;
+    public String getAnswerToDate() {
+        return answerToDate.toString(DEFAULT_DATE_FORMAT);
     }
 
-    public void setFromDate(String fromDate) {
-        this.fromDate = toDate(fromDate);
+    public DateTime getAnswerToDateAsDateTime() {
+        return answerToDate;
     }
+
+    public void setAnswerToDate(String toDate) {
+        this.answerToDate = toDate(toDate);
+    }
+
+    public String getAnswerFromDate() {
+        return answerFromDate.toString(DEFAULT_DATE_FORMAT);
+    }
+
+    public DateTime getAnswerFromDateAsDateTime() {
+        return answerFromDate;
+    }
+
+    public void setAnswerFromDate(String fromDate) {
+        this.answerFromDate = toDate(fromDate);
+    }
+
+
+    public String getEndToDate() {
+        return endToDate.toString(DEFAULT_DATE_FORMAT);
+    }
+
+    public DateTime getEndToDateAsDateTime() {
+        return endToDate;
+    }
+
+    public void setEndToDate(String toDate) {
+        this.endToDate = toDate(toDate);
+    }
+
+    public String getEndFromDate() {
+        return endFromDate.toString(DEFAULT_DATE_FORMAT);
+    }
+
+    public DateTime getEndFromDateAsDateTime() {
+        return endFromDate;
+    }
+
+    public void setEndFromDate(String fromDate) {
+        this.endFromDate = toDate(fromDate);
+    }
+
 
     public String getPhoneNumber() {
         return phoneNumber;

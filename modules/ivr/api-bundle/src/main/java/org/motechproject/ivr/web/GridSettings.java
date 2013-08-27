@@ -1,6 +1,5 @@
 package org.motechproject.ivr.web;
 
-
 import org.motechproject.commons.couchdb.query.QueryParam;
 import org.motechproject.ivr.domain.CallRecordSearchParameters;
 
@@ -15,9 +14,14 @@ public class GridSettings {
     private String sortColumn;
     private String sortDirection;
     private String phoneNumber;
+    private String startFromDate;
+    private String startToDate;
 
-    private String fromDate;
-    private String toDate;
+    private String answerFromDate;
+    private String answerToDate;
+
+    private String endFromDate;
+    private String endToDate;
 
     private Integer minDuration;
     private Integer maxDuration;
@@ -73,20 +77,52 @@ public class GridSettings {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getToDate() {
-        return toDate;
+    public String getStartToDate() {
+        return startToDate;
     }
 
-    public void setToDate(String toDate) {
-        this.toDate = toDate;
+    public void setStartToDate(String toDate) {
+        this.startToDate = toDate;
     }
 
-    public String getFromDate() {
-        return fromDate;
+    public String getStartFromDate() {
+        return startFromDate;
     }
 
-    public void setFromDate(String fromDate) {
-        this.fromDate = fromDate;
+    public void setStartFromDate(String fromDate) {
+        this.startFromDate = fromDate;
+    }
+
+    public String getAnswerToDate() {
+        return answerToDate;
+    }
+
+    public void setAnswerToDate(String toDate) {
+        this.answerToDate = toDate;
+    }
+
+    public String getAnswerFromDate() {
+        return answerFromDate;
+    }
+
+    public void setAnswerFromDate(String fromDate) {
+        this.answerFromDate = fromDate;
+    }
+
+    public String getEndToDate() {
+        return endToDate;
+    }
+
+    public void setEndToDate(String toDate) {
+        this.endToDate = toDate;
+    }
+
+    public String getEndFromDate() {
+        return endFromDate;
+    }
+
+    public void setEndFromDate(String fromDate) {
+        this.endFromDate = fromDate;
     }
 
     public Integer getMinDuration() {
@@ -169,8 +205,12 @@ public class GridSettings {
         params.setFailed(failed);
         params.setNoAnswer(noAnswer);
         params.setUnknown(unknown);
-        params.setToDate(toDate);
-        params.setFromDate(fromDate);
+        params.setStartToDate(startToDate);
+        params.setStartFromDate(startFromDate);
+        params.setAnswerToDate(answerToDate);
+        params.setAnswerFromDate(answerFromDate);
+        params.setEndToDate(endToDate);
+        params.setEndFromDate(endFromDate);
         params.setMaxDuration(maxDuration);
         params.setMinDuration(minDuration);
         params.setPhoneNumber(phoneNumber);
