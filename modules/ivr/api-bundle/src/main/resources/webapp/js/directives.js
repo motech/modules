@@ -198,13 +198,13 @@
             restrict: 'A',
             link: function(scope, element, attrs) {
                 var elem = angular.element(element),
-                    endDateTextBox = angular.element('#dateTimeTo');
-
+                    endDateTextBox = angular.element('#' + attrs.gridDatePickerFrom + 'To');
                 elem.datetimepicker({
                     dateFormat: "yy-mm-dd",
                     changeMonth: true,
                     changeYear: true,
                     maxDate: +0,
+                    showSecond: true,
                     timeFormat: "HH:mm:ss",
                     onSelect: function (selectedDateTime){
                         endDateTextBox.datetimepicker('option', 'minDate', elem.datetimepicker('getDate') );
@@ -219,13 +219,14 @@
             restrict: 'A',
             link: function(scope, element, attrs) {
                 var elem = angular.element(element),
-                    startDateTextBox = angular.element('#dateTimeFrom');
+                    startDateTextBox = angular.element('#' + attrs.gridDatePickerTo + 'From');
 
                 elem.datetimepicker({
                     dateFormat: "yy-mm-dd",
                     changeMonth: true,
                     changeYear: true,
                     maxDate: +0,
+                    showSecond: true,
                     timeFormat: "HH:mm:ss",
                     onSelect: function (selectedDateTime){
                         startDateTextBox.datetimepicker('option', 'maxDate', elem.datetimepicker('getDate') );
@@ -313,7 +314,7 @@
                 var elem = angular.element(element), filters;
 
                 elem.jqGrid({
-                    url: '../ivr/api/calllog/search?phoneNumber=&startDate=&endDate=&answered=true&busy=true&failed=true&noAnswer=true&unknown=true&inbound=true&outbound=true&minDuration=&maxDuration=',
+                    url: '../ivr/api/calllog/search?phoneNumber=&startFromDate=&startToDate=&answerFromDate=&answerToDate=&endFromDate=&endToDate=&answered=true&busy=true&failed=true&noAnswer=true&unknown=true&inbound=true&outbound=true&minDuration=&maxDuration=',
                     datatype: 'json',
                     jsonReader:{
                         repeatitems:false
@@ -336,6 +337,23 @@
                     }, {
                         name: 'startDate',
                         index: 'startDate',
+                        formatter: function(cellValue, options) {
+                           if(cellValue) {
+                               return $.fmatter.util.DateFormat(
+                               '',
+                               new Date(+cellValue),
+                               'UniversalSortableDateTime',
+                               $.extend({}, $.jgrid.formatter.date, options)
+                               );
+                           } else {
+                               return '';
+                           }
+                       }
+
+                    },
+                    {
+                        name: 'answerDate',
+                        index: 'answerDate',
                         formatter: function(cellValue, options) {
                                        if(cellValue) {
                                            return $.fmatter.util.DateFormat(
@@ -381,8 +399,8 @@
                     sortorder: 'desc',
                     viewrecords: true,
                     gridComplete: function () {
+                        angular.forEach(['phoneNumber', 'callDirection', 'startDate', 'answerDate', 'endDate', 'disposition', 'duration'], function (value) {
 
-                        angular.forEach(['phoneNumber', 'callDirection', 'startDate', 'endDate', 'disposition', 'duration'], function (value) {
                             elem.jqGrid('setLabel', value, scope.msg('ivr.calllog.' + value));
                         });
 

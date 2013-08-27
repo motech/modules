@@ -64,7 +64,7 @@ public class AllCallDetailRecordsIT {
         DateTime endTime = DateTime.now().plusDays(1);
         DateTime startTime = DateTime.now().minusDays(1);
         int maxDuration = MAX_CALL_DURATION;
-        final List<CallDetailRecord> rowList = allCallDetailRecords.search(PHONE_NUMBER_1, startTime, endTime, 0, maxDuration,
+        final List<CallDetailRecord> rowList = allCallDetailRecords.search(PHONE_NUMBER_1, startTime, endTime, null, null, null, null, 0, maxDuration,
                 Arrays.asList(CallDisposition.UNKNOWN.name()), Arrays.asList(CallDirection.Inbound.name()), null, false);
         assertTrue(rowList.size() > 0);
     }
@@ -72,14 +72,14 @@ public class AllCallDetailRecordsIT {
     @Test
     public void shouldSearchCallsWithSpecificDuration() throws Exception {
         final List<CallDetailRecord> rowList = allCallDetailRecords.search(null, DateTime.now().minusDays(1),
-                DateTime.now().plusDays(1), null, null, null, null, null, false);
+                DateTime.now().plusDays(1), null, null, null, null, null, null, null, null, null, false);
         assertTrue(rowList.size() > 0);
     }
 
     @Test
     public void shouldReturnBasedOnGivenSortByParamInDescendingOrder() throws Exception {
         List<CallDetailRecord> rowList = allCallDetailRecords.search("99991234*", DateTime.now().minusDays(1),
-                DateTime.now().plusDays(1), null, null, null,null, "phoneNumber", true);
+                DateTime.now().plusDays(1), null, null, null, null, null, null, null,null, "phoneNumber", true);
         assertEquals(rowList.get(0).getPhoneNumber(), PHONE_NUMBER_2);
 
     }
@@ -87,14 +87,14 @@ public class AllCallDetailRecordsIT {
     @Test
     public void shouldReturnBasedOnGivenSortByParamInAscendingOrder() throws Exception {
         List<CallDetailRecord> rowList = allCallDetailRecords.search("99991234*", DateTime.now().minusDays(1),
-                DateTime.now().plusDays(1), null, null, null, null, "phoneNumber", false);
+                DateTime.now().plusDays(1), null, null, null, null, null, null, null, null, "phoneNumber", false);
         assertEquals(PHONE_NUMBER_1, rowList.get(0).getPhoneNumber());
     }
 
     @Test
     public void shouldReturnTheTotalNumberOfCallRecords() {
         long count = allCallDetailRecords.countRecords("99991234*", DateTime.now().minusDays(1),
-                DateTime.now().plusDays(1), null, null, null, null);
+                DateTime.now().plusDays(1), null, null, null, null, null, null, null, null);
         assertEquals(2, count);
     }
 
@@ -106,9 +106,9 @@ public class AllCallDetailRecordsIT {
     @After
     public void tearDown() {
         final List<CallDetailRecord> logs = allCallDetailRecords.search(PHONE_NUMBER_1, DateTime.now().minusDays(1), DateTime.now().plusDays(1),
-                null, null, null,null, null, false);
+                null, null, null, null, null, null, null,null, null, false);
         logs.addAll(allCallDetailRecords.search(PHONE_NUMBER_2, DateTime.now().minusDays(1), DateTime.now().plusDays(1),
-                null, null, null, null, null, false));
+                null, null, null, null, null, null, null, null, null, false));
         for (CallDetail log : logs) {
             allCallDetailRecords.remove((CallDetailRecord) log);
         }

@@ -44,9 +44,14 @@ public class AllCallDetailRecords extends CouchDbRepositorySupportWithLucene<Cal
     }
 
     /**
+     *
      * @param phoneNumber
-     * @param startTime
-     * @param endTime
+     * @param startFromTime
+     * @param startToTime
+     * @param answerFromTime
+     * @param answerToTime
+     * @param endFromTime
+     * @param endToTime
      * @param minDurationInSeconds
      * @param maxDurationInSeconds
      * @param dispositions
@@ -54,10 +59,14 @@ public class AllCallDetailRecords extends CouchDbRepositorySupportWithLucene<Cal
      * @return total number of records with the given parameters
      */
     @View(name = "countLogs", map = "function(doc){ emit(null, 1);}", reduce = "_count")
-    public long countRecords(String phoneNumber, DateTime startTime, DateTime endTime,
-                             Integer minDurationInSeconds, Integer maxDurationInSeconds,
-                             List<String> dispositions, List<String> directions) {
-        StringBuilder queryString = generateQueryString(phoneNumber, startTime, endTime, minDurationInSeconds, maxDurationInSeconds, dispositions, directions);
+    public long countRecords(String phoneNumber, DateTime startFromTime,
+                             DateTime startToTime, DateTime answerFromTime,
+                             DateTime answerToTime, DateTime endFromTime,
+                             DateTime endToTime, Integer minDurationInSeconds,
+                             Integer maxDurationInSeconds, List<String> dispositions,
+                             List<String> directions) {
+        StringBuilder queryString = generateQueryString(phoneNumber, startFromTime, startToTime, answerFromTime,
+                answerToTime, endFromTime, endToTime, minDurationInSeconds, maxDurationInSeconds, dispositions, directions);
         return runQuery(queryString, null, false).size();
     }
 
@@ -90,9 +99,14 @@ public class AllCallDetailRecords extends CouchDbRepositorySupportWithLucene<Cal
     }
 
     /**
+     *
      * @param phoneNumber
-     * @param startTime
-     * @param endTime
+     * @param startFromTime
+     * @param startToTime
+     * @param answerFromTime
+     * @param answerToTime
+     * @param endFromTime
+     * @param endToTime
      * @param minDurationInSeconds
      * @param maxDurationInSeconds
      * @param dispositions
@@ -108,19 +122,25 @@ public class AllCallDetailRecords extends CouchDbRepositorySupportWithLucene<Cal
                     "ret.add(doc.phoneNumber,{'field':'phoneNumber'}); " +
                     "ret.add(doc.callDirection,{'field':'callDirection'}); " +
                     "ret.add(doc.startDate, {'type':'date', 'field':'startDate'});" +
+                    "ret.add(doc.answerDate, {'type': 'date', 'field': 'answerDate'});" +
                     "ret.add(doc.endDate, {'type':'date', 'field':'endDate'});" +
                     "ret.add(doc.duration, {'type':'int', 'field':'duration'}); " +
                     "ret.add(doc.disposition,{'field':'disposition'}); " +
                     "return ret " +
                     "}"
     )})
-    public List<CallDetailRecord> search(String phoneNumber, DateTime startTime, DateTime endTime,
-                                         Integer minDurationInSeconds, Integer maxDurationInSeconds,
+    public List<CallDetailRecord> search(String phoneNumber, DateTime startFromTime,
+                                         DateTime startToTime, DateTime answerFromTime,
+                                         DateTime answerToTime, DateTime endFromTime,
+                                         DateTime endToTime, Integer minDurationInSeconds,
+                                         Integer maxDurationInSeconds,
                                          List<String> dispositions, List<String> directions,
                                          String sortBy, boolean reverse) {
 
-        StringBuilder queryString = generateQueryString(phoneNumber, setTimeZoneUTC(startTime),
-                setTimeZoneUTC(endTime), minDurationInSeconds, maxDurationInSeconds, dispositions,
+        StringBuilder queryString = generateQueryString(phoneNumber, setTimeZoneUTC(startFromTime),
+                setTimeZoneUTC(startToTime), setTimeZoneUTC(answerFromTime),
+                setTimeZoneUTC(answerToTime),setTimeZoneUTC(endFromTime),
+                setTimeZoneUTC(endToTime),minDurationInSeconds, maxDurationInSeconds, dispositions,
                 directions);
         String sortColumn = sortBy;
         if(sortBy != null) {
@@ -150,8 +170,10 @@ public class AllCallDetailRecords extends CouchDbRepositorySupportWithLucene<Cal
         return callDetailRecord;
     }
 
-    private StringBuilder generateQueryString(String phoneNumber, DateTime startTime,
-                                              DateTime endTime, Integer minDurationInSeconds,
+    private StringBuilder generateQueryString(String phoneNumber, DateTime startFromTime,
+                                              DateTime startToTime, DateTime answerFromTime,
+                                              DateTime answerToTime, DateTime endFromTime,
+                                              DateTime endToTime, Integer minDurationInSeconds,
                                               Integer maxDurationInSeconds, List<String> dispositions,
                                               List<String> directions) {
         StringBuilder queryString = new StringBuilder();
@@ -170,16 +192,22 @@ public class AllCallDetailRecords extends CouchDbRepositorySupportWithLucene<Cal
             }
             queryString.append(String.format(" phoneNumber:%s", phoneNumber));
         }
+        addTime(startFromTime, startToTime, "startDate", queryString);
+        addTime(answerFromTime, answerToTime, "answerDate", queryString);
+        addTime(endFromTime, endToTime, "endDate", queryString);
+        addFilter(dispositions, queryString, "disposition");
+        addFilter(directions, queryString, "callDirection");
+        return queryString;
+    }
+
+    private void addTime(DateTime startTime, DateTime endTime, String timeType, StringBuilder queryString) {
         if (startTime != null && endTime != null) {
             if (queryString.length() > 0) {
                 queryString.append(" AND ");
             }
-            queryString.append(String.format("startDate<date>:[%s TO %s]",
+            queryString.append(String.format(timeType + "<date>:[%s TO %s]",
                     startTime.toString("yyyy-MM-dd'T'HH:mm:ss"), endTime.toString("yyyy-MM-dd'T'HH:mm:ss")));
         }
-        addFilter(dispositions, queryString, "disposition");
-        addFilter(directions, queryString, "callDirection");
-        return queryString;
     }
 
     /**
