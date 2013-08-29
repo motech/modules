@@ -53,10 +53,10 @@
                     <div class="span3">
                         <fieldset class="inside"><legend>{{msg('ivr.calllog.callDuration')}}</legend>
                             <div class="control-group">
-                                <input type="text" class="slider-control" slider="#slider" slider-point="min" data-event-type="keyup" data-search-field="minDuration" jqgrid-search="resourceTable"/>
+                                <input type="text" id="minDuration" class="slider-control" slider="#slider" slider-point="min" data-event-type="keyup" data-search-field="minDuration" jqgrid-search="resourceTable"/>
                                 -
 
-                                <input type="text" class="slider-control" slider="#slider" slider-point="max" data-event-type="keyup" data-search-field="maxDuration" jqgrid-search="resourceTable"/>
+                                <input type="text" id="maxDuration" class="slider-control" slider="#slider" slider-point="max" data-event-type="keyup" data-search-field="maxDuration" jqgrid-search="resourceTable"/>
                                 <span class="help-inline">{{msg('ivr.calllog.seconds')}}</span>
                                 <div ng-slider id="slider"></div>
                             </div>
