@@ -3,8 +3,10 @@
 
 (function () {
     'use strict';
+    var currentPhoneNumber,    //phone number currently displayed and searched on
+        overallMaxDuration,    //maximum duration of all call records
 
-    var widgetModule = angular.module('motech-ivr'),
+        widgetModule = angular.module('motech-ivr'),
 
         //takes the given query (a list of pairs) and returns a string
         //that can be used to query the database.
@@ -13,11 +15,92 @@
                      params = '?';
                  for (prop in query) {
                      params += prop + '=' + query[prop] + '&';
+                     if (prop === "phoneNumber") {
+                        currentPhoneNumber = query[prop];
+                     }
                  }
 
                  params = params.slice(0, params.length - 1);
                  return params;
             },
+
+        //takes a list, a separator, and a separator for the last two elements
+        //of the list, and returns a proper english representation of the list.
+        //Example: if list = [1, 2, 3], separator = "," and terminalSeparator = "and",
+        //will return "1, 2 and 3"
+        listToProperString = function(list, separator, terminalSeparator) {
+            var s = "";
+            $.each(list, function(i, item) {
+                s += item;
+                if (i < list.length - 2) {
+                    s += separator;
+                } else if (list.length > 1 && i === list.length - 2) {
+                    s += terminalSeparator;
+                }
+            });
+            return s;
+        },
+
+        //returns a list of buttons that are currently active,
+        //given a list of their id's and a corresponding list of
+        //what the buttons should be displayed as. The two lists
+        //must be the same size and have the same ordering.
+        findActiveButtons = function(options, texts) {
+            var i,
+                result = [];
+            for(i = 0; i < options.length; i+=1) {
+                if ($("#" + options[i]).children().hasClass("icon-ok")) {
+                    result.push(texts[i]);
+                }
+            }
+            return result;
+        },
+
+        setFilterTitle = function(scope) {
+            var title = "",
+                filters = [],
+                startDateTo = $("#startDateTimeTo").val(),
+                startDateFrom =  $("#startDateTimeFrom").val(),
+                answerDateTo = $("#answerDateTimeTo").val(),
+                answerDateFrom = $("#answerDateTimeFrom").val(),
+                endDateTo = $("#endDateTimeTo").val(),
+                endDateFrom = $("#endDateTimeFrom").val(),
+                minDuration = $("#minDuration").val(),
+                maxDuration = $("#maxDuration").val(),
+                dispositionOptions = ["answered", "busy", "failed", "noAnswer", "unknown"],
+                dispositionTexts = [scope.msg('ivr.calllog.answered'), scope.msg('ivr.calllog.busy'),
+                 scope.msg('ivr.calllog.failed'), scope.msg('ivr.calllog.noAnswer'), scope.msg('ivr.calllog.unknown')],
+                directionOptions = [ scope.msg('ivr.calllog.inbound'),  scope.msg('ivr.calllog.outbound')],
+                dispositions,
+                directions;
+            if(currentPhoneNumber !== "") {
+                filters.push(scope.msg('ivr.calllog.phoneNumber') + ": " + currentPhoneNumber);
+            }
+            if(startDateFrom !== "" && startDateTo !== "") {
+                filters.push(scope.msg('ivr.calllog.startDate') + ": " +  startDateFrom + " to " + startDateTo);
+            }
+            if(answerDateFrom !== "" && answerDateTo !== "") {
+                filters.push(scope.msg('ivr.calllog.answerDate') + ": " +  answerDateFrom + " to " + answerDateTo);
+            }
+            if(endDateFrom !== "" && endDateTo !== "") {
+                filters.push(scope.msg('ivr.calllog.endDate') + ": " +  endDateFrom + " to " + endDateTo);
+            }
+            if(minDuration > 0 || maxDuration < overallMaxDuration) {
+                filters.push(scope.msg('ivr.calllog.duration') + ": " + minDuration + " to " + maxDuration + " seconds");
+            }
+            dispositions = findActiveButtons(dispositionOptions, dispositionTexts);
+            if(dispositions.length > 0 && dispositions.length < 5) {
+                filters.push(scope.msg('ivr.calllog.disposition') + ": " + listToProperString(dispositions, " or ", " or "));
+            }
+            directions = findActiveButtons(directionOptions, directionOptions);
+            if(directions.length === 1) {
+                filters.push(scope.msg('ivr.calllog.callDirection') + ": " + directions[0]);
+            }
+            if (filters.length > 0) {
+                title = "<b>" + scope.msg('ivr.calllog.filteredBy') + "</b> " + listToProperString(filters, ", ", " " + scope.msg('ivr.calllog.and') + " ");
+            }
+            $('#filter-title').html(title);
+        },
 
         searchGrid = function(grid, time, url, params, timeoutHnd) {
              if (timeoutHnd) {
@@ -79,9 +162,9 @@
                                 array = [];
 
                             query.phoneNumber = item;
-
+                            currentPhoneNumber = item;
                             params = makeParams(query);
-
+                            setFilterTitle(scope);
                             timeoutHnd = searchGrid(attr.jqgridSearch, 0, url, params, timeoutHnd);
                             return item;
                         }
@@ -120,7 +203,7 @@
                 };
 
                 scope.maxDuration = data.maxDuration;
-
+                overallMaxDuration = scope.maxDuration;
                 sliderElement.slider({
                     range:true,
                     min:0,
@@ -152,6 +235,7 @@
 
 
                         timeoutHnd = searchGrid("resourceTable", 0, url, params, timeoutHnd);
+                        setFilterTitle(scope);
                     }
                 });
                 setSliderInputs(getSliderMin(), getSliderMax());
@@ -286,6 +370,7 @@
                         params = makeParams(query);
 
                         timeoutHnd = searchGrid(attrs.jqgridSearch, time, url, params, timeoutHnd);
+                        setFilterTitle(scope);
                     };
 
 

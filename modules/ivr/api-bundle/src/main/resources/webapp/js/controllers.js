@@ -39,36 +39,6 @@
                 }
             });
             return s;
-        },
-        setFilterTitle = function() {
-            var filters = [], s,
-                statuses = [];
-            if ($scope.phoneNumber !== '') {
-                filters.push("Phone number " + $scope.phoneNumber);
-            }
-            if ($scope.from !== '') {
-                filters.push("Start date " + $scope.from);
-            }
-            if ($scope.to !== '') {
-                filters.push("End date " + $scope.to);
-            }
-            $.each(["answered", "busy", "failed", "noAnswer", "unknown"], function(i, s) {
-                if ($scope[s] === true) {
-                    statuses.push(s);
-                }
-            });
-            if ($scope.min > 0 || $scope.max < $scope.maxDuration) {
-                filters.push("Call Duration " + $scope.min + " - " + $scope.max + " seconds");
-            }
-            if (statuses.length > 0) {
-                filters.push("Disposition " + toCsv(statuses, " | ", " | "));
-            }
-            if (filters.length > 0) {
-                s = "<b>Filtered by</b> " + toCsv(filters, ", ", " and ");
-            } else {
-                s = "Filter by";
-            }
-            $('#filter-title').html(s);
         };
 
         $scope.countPages = function () {
@@ -158,7 +128,6 @@
             $scope.getCalllogs();
             $scope.countPages();
 
-            setFilterTitle();
         };
 
         $scope.prevPage = function () {
