@@ -18,6 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Map;
+
 import static java.lang.String.format;
 import static org.apache.commons.lang.StringUtils.isBlank;
 
@@ -30,6 +34,7 @@ public class VerboiceIVRService implements IVRService {
     private static final String CALLBACK_URL = "callback_url";
     private static final String CALLBACK_STATUS_URL = "status_callback_url";
     private static final String CALL_FLOW_ID = "call_flow_id";
+    private static final String LANGUAGE = "language";
 
     private SettingsFacade settings;
     private HttpClient commonsHttpClient;
@@ -75,30 +80,34 @@ public class VerboiceIVRService implements IVRService {
         return flowSession;
     }
 
-    private String outgoingCallUri(CallRequest callRequest) {
-        String callbackUrlParameter = "";
-        String callbackStatusUrlParameter = "";
-        String callFlowId = "";
-        if (callRequest.getPayload() != null && callRequest.getPayload().containsKey(CALLBACK_URL)) {
-            callbackUrlParameter = "&" + CALLBACK_URL + "=" + callRequest.getPayload().get(CALLBACK_URL);
-        }
-        if (callRequest.getPayload() != null && callRequest.getPayload().containsKey(CALLBACK_STATUS_URL)) {
-            callbackStatusUrlParameter = "&" + CALLBACK_STATUS_URL + "=" + callRequest.getPayload().get(CALLBACK_STATUS_URL);
-        }
-        if (callRequest.getPayload() != null && callRequest.getPayload().containsKey(CALL_FLOW_ID)) {
-            callFlowId = "&" + CALL_FLOW_ID + "=" + callRequest.getPayload().get(CALL_FLOW_ID);
+    private String outgoingCallUri(CallRequest callRequest) throws UnsupportedEncodingException {
+        StringBuilder queryParameters = new StringBuilder("");
+
+        Map<String, String> requestPayload = callRequest.getPayload();
+
+        if (requestPayload != null) {
+            appendParam(requestPayload.get(CALLBACK_URL), CALLBACK_URL, queryParameters);
+            appendParam(requestPayload.get(CALLBACK_STATUS_URL), CALLBACK_STATUS_URL, queryParameters);
+            appendParam(requestPayload.get(CALL_FLOW_ID), CALL_FLOW_ID, queryParameters);
+            appendParam(requestPayload.get(LANGUAGE), "vars[" + LANGUAGE + "]", queryParameters);
         }
 
-        StringBuilder url = new StringBuilder(format(
-                "http://%s:%s/api/call?channel=%s&address=%s%s%s%s",
+        String url = format(
+                "http://%s:%s/api/call?channel=%s&address=%s%s&callback_params[motech_call_id]=%s",
                 settings.getProperty("host"),
                 settings.getProperty("port"),
                 isBlank(callRequest.getCallBackUrl())?settings.getProperty("channel"):callRequest.getCallBackUrl(),
-                        callRequest.getPhone(), callbackUrlParameter, callbackStatusUrlParameter, callFlowId
-                ));
+                        callRequest.getPhone(), queryParameters.toString(), callRequest.getCallId()
+                );
 
-        url.append("&callback_params%5Bmotech_call_id%5D=" + callRequest.getCallId());
+        return URLEncoder.encode(url, "UTF-8");
+    }
 
-        return url.toString();
+    private void appendParam(String value, String key, StringBuilder queryParameters) {
+        if (value == null) {
+            return;
+        }
+
+        queryParameters.append("&" + key + "=" + value);
     }
 }
