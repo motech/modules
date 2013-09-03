@@ -90,6 +90,7 @@ public class VerboiceIVRServiceTest {
         callRequest.setPayload(new HashMap<String, String>() {{
             put("callback_url", "key");
             put("foo", "bar");
+            put("language", "en");
         }});
 
         FlowSessionRecord flowSession = mock(FlowSessionRecord.class);
@@ -101,7 +102,7 @@ public class VerboiceIVRServiceTest {
         verify(flowSession).set("foo", "bar");
         verify(flowSessionService).updateSession(flowSession);
 
-        verify(httpClient).executeMethod(argThat(new GetMethodMatcher("http://verboice:3000/api/call?channel=foobar&address=1234567890&callback_url=key"+ "&callback_params[motech_call_id]=" + callRequest.getCallId())));
+        verify(httpClient).executeMethod(argThat(new GetMethodMatcher("http://verboice:3000/api/call?channel=foobar&address=1234567890&callback_url=key"+ "&vars[language]=en" + "&callback_params[motech_call_id]=" + callRequest.getCallId())));
     }
 
     public class GetMethodMatcher extends ArgumentMatcher<GetMethod> {
