@@ -138,7 +138,6 @@ public class IvrController extends MultiActionController {
         String status = request.getParameter("status");
         String reason = request.getParameter("reason");
         String callerId = "1234567890";
-        //String callerId = request.getParameter("application.callerId").substring(4);
         String timestamp = request.getParameter("timestamp");
 
         logger.info("Recording event for outgoing call to " + callerId + " [externalId: " + externalId + "sessionId: " + sessionId + ", status: " + status + ", timestamp: " + timestamp + "]");

@@ -71,7 +71,6 @@ public class VxmlOutboxController extends MultiActionController {
         setResponseHeaders(response);
 
         //Interim implementation. Party ID will be obtained from the Authentication context
-        //String externalId = "1";
         String externalId = request.getParameter("pId");
 
         retrievedMessagesService.unscheduleJob(externalId);
@@ -332,7 +331,6 @@ public class VxmlOutboxController extends MultiActionController {
         setResponseHeaders(response);
 
         //Interim implementation. Party ID will be obtained from the Authentication context
-        //String externalId = "1";
         String externalId = request.getParameter("pId");
 
 
