@@ -1322,6 +1322,13 @@
                     <targetJdk>${jdk.version}</targetJdk>
                     <skip>${pmd.skip}</skip>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.motechproject</groupId>
+                        <artifactId>pmd-rules</artifactId>
+                        <version>1.0-SNAPSHOT</version>
+                    </dependency>
+                </dependencies>
                 <executions>
                     <execution>
                         <phase>compile</phase>
