@@ -1,5 +1,6 @@
 package org.motechproject.sms.http.web;
 
+import org.apache.commons.httpclient.HttpStatus;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,8 +16,11 @@ import org.motechproject.sms.api.service.SmsAuditService;
 import org.motechproject.sms.http.TemplateReader;
 import org.motechproject.sms.http.template.Incoming;
 import org.motechproject.sms.http.template.SmsHttpTemplate;
+import org.springframework.test.web.server.MockMvc;
+import org.springframework.test.web.server.setup.MockMvcBuilders;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -27,8 +31,18 @@ import static org.motechproject.sms.api.DeliveryStatus.RECEIVED;
 import static org.motechproject.sms.api.SMSType.INBOUND;
 import static org.motechproject.sms.api.constants.EventDataKeys.INBOUND_MESSAGE;
 import static org.motechproject.sms.api.constants.EventDataKeys.TIMESTAMP;
+import static org.springframework.test.web.server.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
 
 public class InboundSmsControllerTest {
+
+    private InboundSmsController smsController;
+
+    private MockMvc controller;
+
+    @Mock
+    HttpServletResponse response;
+
     @Mock
     private EventRelay eventRelay;
 
@@ -41,6 +55,17 @@ public class InboundSmsControllerTest {
     @Before
     public void setup() {
         initMocks(this);
+        //Setting template which will be used in smsControler constructor
+        SmsHttpTemplate template = new SmsHttpTemplate();
+        Incoming incoming = new Incoming();
+        incoming.setMessageKey("message");
+        incoming.setSenderKey("sender");
+        incoming.setTimestampKey("sent_at");
+        template.setIncoming(incoming);
+        when(templateReader.getTemplate()).thenReturn(template);
+
+        smsController = new InboundSmsController(templateReader, eventRelay, smsAuditService);
+        controller = MockMvcBuilders.standaloneSetup(smsController).build();
     }
 
     @Test
@@ -94,6 +119,14 @@ public class InboundSmsControllerTest {
         assertEquals(null, event.getParameters().get(TIMESTAMP));
 
         assertSmsRecord("some text message", "1234567890", null);
+    }
+
+    @Test
+    public void testResponseStatusIsOk() throws Exception {
+
+        controller.perform(get("/sms/inbound?message=Test&sender=665403530&sent_at=2013"))
+                .andExpect(status().is(HttpStatus.SC_OK));
+
     }
 
     private void assertSmsRecord(String message, String recipient, DateTime sendTime) {

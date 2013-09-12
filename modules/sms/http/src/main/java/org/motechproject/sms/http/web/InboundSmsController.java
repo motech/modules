@@ -9,8 +9,10 @@ import org.motechproject.sms.api.service.SmsAuditService;
 import org.motechproject.sms.http.TemplateReader;
 import org.motechproject.sms.http.template.SmsHttpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -22,6 +24,7 @@ import static org.motechproject.sms.api.constants.EventDataKeys.INBOUND_MESSAGE;
 import static org.motechproject.sms.api.constants.EventDataKeys.SENDER;
 import static org.motechproject.sms.api.constants.EventDataKeys.TIMESTAMP;
 
+/*Class  responsible for handling inbound sms */
 @Controller
 @RequestMapping("/sms")
 public class InboundSmsController {
@@ -38,6 +41,7 @@ public class InboundSmsController {
     }
 
     @RequestMapping(value = "inbound")
+    @ResponseStatus(HttpStatus.OK)
     public void handle(HttpServletRequest request) {
         String sender = request.getParameter(template.getIncoming().getSenderKey());
         String message = request.getParameter(template.getIncoming().getMessageKey());
