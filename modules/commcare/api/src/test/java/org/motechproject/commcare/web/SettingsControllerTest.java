@@ -12,7 +12,7 @@ import org.motechproject.commcare.domain.SettingsDto;
 import org.motechproject.commcare.service.CommcareDataForwardingEndpointService;
 import org.motechproject.server.config.SettingsFacade;
 import org.motechproject.server.config.service.PlatformSettingsService;
-import org.motechproject.server.config.settings.ConfigFileSettings;
+import org.motechproject.server.config.domain.ConfigFileSettings;
 import org.osgi.framework.BundleException;
 
 import static org.junit.Assert.assertEquals;
