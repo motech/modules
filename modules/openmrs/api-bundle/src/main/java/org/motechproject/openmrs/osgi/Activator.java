@@ -1,7 +1,7 @@
 package org.motechproject.openmrs.osgi;
 
 import org.motechproject.osgi.web.MotechOsgiWebApplicationContext;
-import org.motechproject.osgi.web.ServletRegistrationException;
+import org.motechproject.osgi.web.exception.ServletRegistrationException;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
