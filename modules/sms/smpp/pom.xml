@@ -22,17 +22,17 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>${motech.groupId}</groupId>
             <artifactId>motech-platform-event</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>${motech.groupId}</groupId>
             <artifactId>motech-platform-commons-couchdb</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>${motech.groupId}</groupId>
             <artifactId>motech-platform-server-config</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -55,9 +55,9 @@
         </dependency>
         <!-- test -->
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>${motech.groupId}</groupId>
             <artifactId>motech-testing-utils</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

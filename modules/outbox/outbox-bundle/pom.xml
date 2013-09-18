@@ -22,14 +22,14 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>${motech.groupId}</groupId>
             <artifactId>motech-platform-osgi-web-util</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>${motech.groupId}</groupId>
             <artifactId>motech-tasks-test-utils</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
             <scope>test</scope>
         </dependency>
         <!-- OSGI dependencies -->
@@ -47,15 +47,15 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>${motech.groupId}</groupId>
             <artifactId>motech-testing-utils</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>${motech.groupId}</groupId>
             <artifactId>motech-platform-osgi-extender-fragment</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

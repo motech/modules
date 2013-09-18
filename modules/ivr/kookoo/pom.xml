@@ -51,9 +51,9 @@
 
         <!-- Test -->
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>${motech.groupId}</groupId>
             <artifactId>motech-testing-utils</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

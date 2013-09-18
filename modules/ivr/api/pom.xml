@@ -20,23 +20,23 @@
 
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>${motech.groupId}</groupId>
             <artifactId>motech-platform-server-config</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>${motech.groupId}</groupId>
             <artifactId>motech-platform-commons-couchdb</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.ldriscoll</groupId>
             <artifactId>org.motechproject.ektorplucene</artifactId>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>${motech.groupId}</groupId>
             <artifactId>motech-platform-event</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
