@@ -29,9 +29,9 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>${motech.groupId}</groupId>
             <artifactId>motech-platform-osgi-web-util</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
         </dependency>
 
         <!-- OSGI dependencies -->
