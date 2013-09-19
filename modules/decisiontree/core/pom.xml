@@ -30,9 +30,9 @@
             <version>${motech.version}</version>
         </dependency>
         <dependency>
-            <groupId>${motech.groupId}</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>motech-ivr-api-bundle</artifactId>
-            <version>${motech.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <!-- Test -->
         <dependency>
