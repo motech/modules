@@ -165,7 +165,7 @@
                             currentPhoneNumber = item;
                             params = makeParams(query);
                             setFilterTitle(scope);
-                            timeoutHnd = searchGrid(attr.jqgridSearch, 0, url, params, timeoutHnd);
+                            timeoutHnd = searchGrid(attr.jqgridSearch, 500, url, params, timeoutHnd);
                             return item;
                         }
 
@@ -377,7 +377,7 @@
                 switch (eventType) {
                 case 'keyup':
                     elem.keyup(function () {
-                        filter(500);
+                        filter(0);
                     });
                     break;
                 case 'change':
