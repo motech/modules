@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventListener;
-import org.motechproject.event.listener.EventListenerRegistry;
+import org.motechproject.event.listener.EventListenerRegistryService;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.scheduler.factory.MotechSchedulerFactoryBean;
 import org.motechproject.scheduler.MotechSchedulerService;
@@ -62,7 +62,7 @@ public class SchedulingFloatingAlertsWithoutPreferredTimeIT {
     private AllEnrollments allEnrollments;
 
     @Autowired
-    EventListenerRegistry eventListenerRegistry;
+    EventListenerRegistryService eventListenerRegistry;
 
     Scheduler scheduler;
 
