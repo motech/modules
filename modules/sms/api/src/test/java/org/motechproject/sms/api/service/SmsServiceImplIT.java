@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventListener;
-import org.motechproject.event.listener.EventListenerRegistry;
+import org.motechproject.event.listener.EventListenerRegistryService;
 import org.motechproject.sms.api.constants.EventDataKeys;
 import org.motechproject.sms.api.constants.EventSubjects;
 import org.motechproject.sms.api.exceptions.SendSmsException;
@@ -27,7 +27,7 @@ public class SmsServiceImplIT {
     SmsService smsService;
 
     @Autowired
-    EventListenerRegistry eventListenerRegistry;
+    EventListenerRegistryService eventListenerRegistry;
 
     @Test
     public void shouldRaiseSendSmsEvent() throws InterruptedException {

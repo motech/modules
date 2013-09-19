@@ -8,7 +8,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventListener;
-import org.motechproject.event.listener.EventListenerRegistry;
 import org.motechproject.event.listener.EventListenerRegistryService;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.scheduler.MotechSchedulerService;
@@ -47,7 +46,7 @@ public class SMSServiceBundleIT extends BaseOsgiIT {
         assertNotNull(eventListenerRegistryRef);
 
 
-        EventListenerRegistry eventListenerRegistry = (EventListenerRegistry) bundleContext.getService(eventListenerRegistryRef);
+        EventListenerRegistryService eventListenerRegistry = (EventListenerRegistryService) bundleContext.getService(eventListenerRegistryRef);
 
 
         eventListenerRegistry.registerListener(new EventListener() {
