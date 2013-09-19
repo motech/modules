@@ -5,7 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.event.listener.EventListenerRegistry;
+import org.motechproject.event.listener.EventListenerRegistryService;
 import org.motechproject.messagecampaign.EventKeys;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
 import org.motechproject.messagecampaign.dao.AllCampaignEnrollments;
@@ -34,7 +34,7 @@ public class MessageCampaignServiceFT {
     Scheduler scheduler;
 
     @Autowired
-    EventListenerRegistry eventListenerRegistry;
+    EventListenerRegistryService eventListenerRegistry;
 
     @Autowired
     MotechSchedulerService schedulerService;
