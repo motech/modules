@@ -287,7 +287,6 @@
                     dateFormat: "yy-mm-dd",
                     changeMonth: true,
                     changeYear: true,
-                    maxDate: +0,
                     showSecond: true,
                     timeFormat: "HH:mm:ss",
                     onSelect: function (selectedDateTime){
@@ -309,7 +308,6 @@
                     dateFormat: "yy-mm-dd",
                     changeMonth: true,
                     changeYear: true,
-                    maxDate: +0,
                     showSecond: true,
                     timeFormat: "HH:mm:ss",
                     onSelect: function (selectedDateTime){
