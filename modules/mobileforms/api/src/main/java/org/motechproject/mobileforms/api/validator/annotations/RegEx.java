@@ -1,6 +1,6 @@
 package org.motechproject.mobileforms.api.validator.annotations;
 
-import org.motechproject.mobileforms.api.validator.RegExValidator;
+import org.motechproject.mobileforms.api.validator.impl.RegExValidator;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

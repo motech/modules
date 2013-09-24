@@ -1,6 +1,6 @@
 package org.motechproject.mobileforms.api.validator.annotations;
 
-import org.motechproject.mobileforms.api.validator.RequiredValidator;
+import org.motechproject.mobileforms.api.validator.impl.RequiredValidator;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

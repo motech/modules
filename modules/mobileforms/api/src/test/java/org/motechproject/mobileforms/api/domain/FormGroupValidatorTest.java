@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.motechproject.mobileforms.api.validator.FormGroupValidator;
 import org.motechproject.mobileforms.api.validator.FormValidator;
 import org.motechproject.mobileforms.api.validator.TestFormBean;
 

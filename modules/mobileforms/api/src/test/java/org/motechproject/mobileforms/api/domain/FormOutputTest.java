@@ -4,7 +4,6 @@ import org.fcitmuk.epihandy.ResponseHeader;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.mobileforms.api.validator.TestFormBean;
-import org.motechproject.mobileforms.api.vo.Study;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;

@@ -10,7 +10,7 @@ import org.motechproject.mobileforms.api.domain.FormBean;
 import org.motechproject.mobileforms.api.parser.FormDataParser;
 import org.motechproject.mobileforms.api.repository.AllMobileForms;
 import org.motechproject.mobileforms.api.utils.MapToBeanConvertor;
-import org.motechproject.mobileforms.api.vo.Study;
+import org.motechproject.mobileforms.api.domain.Study;
 
 import java.util.ArrayList;
 import java.util.HashMap;
