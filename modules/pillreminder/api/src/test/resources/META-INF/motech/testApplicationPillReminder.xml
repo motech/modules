@@ -11,6 +11,7 @@
     <import resource="classpath:META-INF/motech/eventQueuePublisher.xml"/>
     <import resource="classpath:META-INF/motech/eventQueueConsumer.xml"/>
     <import resource="classpath:META-INF/motech/applicationScheduler.xml"/>
+    <import resource="classpath:META-INF/motech/applicationMetrics.xml"/>
 
 
     <context:component-scan base-package="org.motechproject.server.pillreminder.api"/>
