@@ -1,4 +1,4 @@
-package org.motechproject.ivr.event;
+package org.motechproject.ivr.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
