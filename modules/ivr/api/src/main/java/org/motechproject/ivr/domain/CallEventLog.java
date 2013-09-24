@@ -2,7 +2,6 @@ package org.motechproject.ivr.domain;
 
 import org.joda.time.DateTime;
 import org.motechproject.commons.date.util.DateUtil;
-import org.motechproject.ivr.event.CallEventCustomData;
 
 import java.io.Serializable;
 
