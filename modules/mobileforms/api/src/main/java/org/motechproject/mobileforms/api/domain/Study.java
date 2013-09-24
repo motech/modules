@@ -1,9 +1,7 @@
-package org.motechproject.mobileforms.api.vo;
+package org.motechproject.mobileforms.api.domain;
 
 import ch.lambdaj.function.convert.Converter;
 import ch.lambdaj.group.Group;
-import org.motechproject.mobileforms.api.domain.FormBean;
-import org.motechproject.mobileforms.api.domain.FormBeanGroup;
 
 import java.util.ArrayList;
 import java.util.Arrays;

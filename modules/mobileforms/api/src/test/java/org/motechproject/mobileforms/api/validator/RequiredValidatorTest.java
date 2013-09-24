@@ -2,6 +2,7 @@ package org.motechproject.mobileforms.api.validator;
 
 import org.junit.Test;
 import org.motechproject.mobileforms.api.domain.FormError;
+import org.motechproject.mobileforms.api.validator.impl.RequiredValidator;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
