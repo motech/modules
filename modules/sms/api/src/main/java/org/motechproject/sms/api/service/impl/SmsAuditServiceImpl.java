@@ -1,8 +1,10 @@
-package org.motechproject.sms.api.service;
+package org.motechproject.sms.api.service.impl;
 
 import org.motechproject.sms.api.domain.SmsRecord;
 import org.motechproject.sms.api.repository.AllSmsRecords;
 import org.motechproject.sms.api.domain.SmsRecords;
+import org.motechproject.sms.api.service.SmsAuditService;
+import org.motechproject.sms.api.service.SmsRecordSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
