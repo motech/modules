@@ -1,4 +1,4 @@
-package org.motechproject.commcare.util;
+package org.motechproject.commcare.client;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;

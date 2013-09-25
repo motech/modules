@@ -3,7 +3,7 @@ package org.motechproject.commcare.service.impl;
 import org.junit.Test;
 import org.junit.Before;
 import org.mockito.Mock;
-import org.motechproject.commcare.util.CommCareAPIHttpClient;
+import org.motechproject.commcare.client.CommCareAPIHttpClient;
 import org.motechproject.commcare.domain.CommcareDataForwardingEndpoint;
 
 import java.util.List;
