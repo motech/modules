@@ -3,6 +3,7 @@ package org.motechproject.mobileforms.api.vo;
 import org.junit.Test;
 import org.motechproject.mobileforms.api.domain.FormBean;
 import org.motechproject.mobileforms.api.domain.FormBeanGroup;
+import org.motechproject.mobileforms.api.domain.Study;
 import org.motechproject.mobileforms.api.validator.TestFormBean;
 
 import java.util.Arrays;

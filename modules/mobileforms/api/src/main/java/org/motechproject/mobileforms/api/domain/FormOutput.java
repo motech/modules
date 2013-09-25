@@ -2,7 +2,6 @@ package org.motechproject.mobileforms.api.domain;
 
 import ch.lambdaj.function.convert.Converter;
 import org.fcitmuk.epihandy.ResponseHeader;
-import org.motechproject.mobileforms.api.vo.Study;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.mobileforms.api.domain.FormError;
 import org.motechproject.mobileforms.api.validator.annotations.RegEx;
+import org.motechproject.mobileforms.api.validator.impl.RegExValidator;
 
 import static junit.framework.Assert.assertNull;
 import static org.hamcrest.Matchers.equalTo;

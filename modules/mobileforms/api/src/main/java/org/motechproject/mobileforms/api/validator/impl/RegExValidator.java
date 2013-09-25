@@ -1,6 +1,7 @@
-package org.motechproject.mobileforms.api.validator;
+package org.motechproject.mobileforms.api.validator.impl;
 
 import org.motechproject.mobileforms.api.domain.FormError;
+import org.motechproject.mobileforms.api.validator.FieldValidator;
 import org.motechproject.mobileforms.api.validator.annotations.RegEx;
 
 import java.util.regex.Pattern;

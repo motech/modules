@@ -3,9 +3,9 @@ package org.motechproject.mobileforms.api.domain;
 /**
  * Form validation error for specified field.
  *
- * @see org.motechproject.mobileforms.api.validator.RegExValidator
- * @see org.motechproject.mobileforms.api.validator.RequiredValidator
- * @see org.motechproject.mobileforms.api.validator.MaxLengthValidator
+ * @see org.motechproject.mobileforms.api.validator.impl.RegExValidator
+ * @see org.motechproject.mobileforms.api.validator.impl.RequiredValidator
+ * @see org.motechproject.mobileforms.api.validator.impl.MaxLengthValidator
  */
 public class FormError {
     private String parameter;

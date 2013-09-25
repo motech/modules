@@ -1,6 +1,8 @@
-package org.motechproject.mobileforms.api.domain;
+package org.motechproject.mobileforms.api.validator;
 
-import org.motechproject.mobileforms.api.validator.FormValidator;
+import org.motechproject.mobileforms.api.domain.FormBean;
+import org.motechproject.mobileforms.api.domain.FormBeanGroup;
+import org.motechproject.mobileforms.api.domain.FormError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;

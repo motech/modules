@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.mobileforms.api.domain.FormError;
 import org.motechproject.mobileforms.api.validator.annotations.MaxLength;
+import org.motechproject.mobileforms.api.validator.impl.MaxLengthValidator;
 
 import java.util.ArrayList;
 import java.util.List;
