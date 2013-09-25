@@ -16,6 +16,7 @@ import org.motechproject.scheduler.domain.RunOnceSchedulableJob;
 import org.motechproject.server.config.SettingsFacade;
 import org.motechproject.sms.api.MessageSplitter;
 import org.motechproject.sms.api.event.SendSmsEvent;
+import org.motechproject.sms.api.service.impl.SmsServiceImpl;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;

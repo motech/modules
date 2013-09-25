@@ -1,4 +1,4 @@
-package org.motechproject.sms.api.service;
+package org.motechproject.sms.api.service.impl;
 
 import org.apache.log4j.Logger;
 import org.hibernate.validator.ValidatorFactoryBean;
@@ -10,6 +10,8 @@ import org.motechproject.server.config.SettingsFacade;
 import org.motechproject.sms.api.MessageSplitter;
 import org.motechproject.sms.api.event.SendSmsEvent;
 import org.motechproject.sms.api.exceptions.SendSmsException;
+import org.motechproject.sms.api.service.SendSmsRequest;
+import org.motechproject.sms.api.service.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
