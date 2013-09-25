@@ -4,7 +4,7 @@ import com.google.gson.JsonParseException;
 import org.motechproject.commcare.domain.CommcareForm;
 import org.motechproject.commcare.parser.FormAdapter;
 import org.motechproject.commcare.service.CommcareFormService;
-import org.motechproject.commcare.util.CommCareAPIHttpClient;
+import org.motechproject.commcare.client.CommCareAPIHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

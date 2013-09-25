@@ -1,10 +1,11 @@
-package org.motechproject.commcare.util;
+package org.motechproject.commcare.client;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.hamcrest.core.IsEqual;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.motechproject.commcare.client.CommCareAPIHttpClient;
 import org.motechproject.server.config.SettingsFacade;
 
 import static org.junit.Assert.assertThat;

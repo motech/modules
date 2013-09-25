@@ -7,7 +7,7 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.motechproject.commcare.domain.CommcareDataForwardingEndpoint;
 import org.motechproject.commcare.domain.CommcareDataForwardingEndpointsJson;
 import org.motechproject.commcare.service.CommcareDataForwardingEndpointService;
-import org.motechproject.commcare.util.CommCareAPIHttpClient;
+import org.motechproject.commcare.client.CommCareAPIHttpClient;
 import org.motechproject.commons.api.json.MotechJsonReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
