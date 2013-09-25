@@ -11,9 +11,9 @@
     <context:annotation-config/>
     <context:component-scan base-package="org.motechproject.sms.api"/>
 
-    <bean id="smsService" class="org.motechproject.sms.api.service.SmsServiceImpl"/>
+    <bean id="smsService" class="org.motechproject.sms.api.service.impl.SmsServiceImpl"/>
 
-    <bean id="smsAuditService" class="org.motechproject.sms.api.service.SmsAuditServiceImpl"/>
+    <bean id="smsAuditService" class="org.motechproject.sms.api.service.impl.SmsAuditServiceImpl"/>
 
     <bean id="smsApiSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
         <property name="configFiles">
