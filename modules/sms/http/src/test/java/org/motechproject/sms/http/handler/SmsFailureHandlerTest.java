@@ -1,9 +1,8 @@
-package org.motechproject.sms.http;
+package org.motechproject.sms.http.handler;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
@@ -12,6 +11,7 @@ import org.motechproject.server.config.SettingsFacade;
 import org.motechproject.sms.api.SmsDeliveryFailureException;
 import org.motechproject.sms.api.constants.EventDataKeys;
 import org.motechproject.sms.api.constants.EventSubjects;
+import org.motechproject.sms.http.handler.SmsFailureHandler;
 import org.motechproject.testing.utils.BaseUnitTest;
 
 import java.lang.reflect.Method;
