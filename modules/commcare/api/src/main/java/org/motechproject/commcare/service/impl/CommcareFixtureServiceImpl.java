@@ -5,7 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import org.motechproject.commcare.domain.CommcareFixture;
 import org.motechproject.commcare.domain.CommcareFixturesJson;
 import org.motechproject.commcare.service.CommcareFixtureService;
-import org.motechproject.commcare.util.CommCareAPIHttpClient;
+import org.motechproject.commcare.client.CommCareAPIHttpClient;
 import org.motechproject.commons.api.json.MotechJsonReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

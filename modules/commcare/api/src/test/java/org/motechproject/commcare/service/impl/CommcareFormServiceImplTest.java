@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.motechproject.commcare.domain.CommcareForm;
 import org.motechproject.commcare.domain.FormNode;
 import org.motechproject.commcare.domain.FormValueElement;
-import org.motechproject.commcare.util.CommCareAPIHttpClient;
+import org.motechproject.commcare.client.CommCareAPIHttpClient;
 
 import java.util.ArrayList;
 import java.util.Collection;
