@@ -1,7 +1,8 @@
-package org.motechproject.mobileforms.api.validator;
+package org.motechproject.mobileforms.api.validator.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.mobileforms.api.domain.FormError;
+import org.motechproject.mobileforms.api.validator.FieldValidator;
 import org.motechproject.mobileforms.api.validator.annotations.Required;
 
 public class RequiredValidator implements FieldValidator<Required> {

@@ -1,6 +1,6 @@
 package org.motechproject.mobileforms.api.validator.annotations;
 
-import org.motechproject.mobileforms.api.validator.MaxLengthValidator;
+import org.motechproject.mobileforms.api.validator.impl.MaxLengthValidator;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
