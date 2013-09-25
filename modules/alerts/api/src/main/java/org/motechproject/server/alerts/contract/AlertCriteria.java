@@ -3,7 +3,6 @@ package org.motechproject.server.alerts.contract;
 import org.joda.time.DateTime;
 import org.motechproject.server.alerts.domain.AlertStatus;
 import org.motechproject.server.alerts.domain.AlertType;
-import org.motechproject.server.alerts.domain.Criterion;
 
 import java.util.ArrayList;
 import java.util.List;
