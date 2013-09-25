@@ -1,14 +1,13 @@
 package org.motechproject.commcare.service.impl;
 
 import org.apache.commons.io.FileUtils;
-import org.hamcrest.core.Is;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.motechproject.commcare.domain.CaseInfo;
 import org.motechproject.commcare.request.json.CaseRequest;
-import org.motechproject.commcare.util.CommCareAPIHttpClient;
+import org.motechproject.commcare.client.CommCareAPIHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
