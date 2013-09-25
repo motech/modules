@@ -1,4 +1,4 @@
-package org.motechproject.sms.http;
+package org.motechproject.sms.http.handler;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -13,6 +13,7 @@ import org.motechproject.sms.api.constants.EventDataKeys;
 import org.motechproject.sms.api.constants.EventSubjects;
 import org.motechproject.sms.api.domain.SmsRecord;
 import org.motechproject.sms.api.service.SmsAuditService;
+import org.motechproject.sms.http.handler.SmsSendHandler;
 import org.motechproject.sms.http.service.SmsHttpService;
 import org.motechproject.testing.utils.BaseUnitTest;
 

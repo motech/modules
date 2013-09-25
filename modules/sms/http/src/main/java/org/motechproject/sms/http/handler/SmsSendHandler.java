@@ -1,4 +1,4 @@
-package org.motechproject.sms.http;
+package org.motechproject.sms.http.handler;
 
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
