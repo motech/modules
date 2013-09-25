@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.server.alerts.contract.AlertCriteria;
+import org.motechproject.server.alerts.contract.Criterion;
 import org.motechproject.server.alerts.repository.AllAlerts;
 
 import java.util.ArrayList;
