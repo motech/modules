@@ -14,6 +14,9 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A record representing a call flow session, persisted in Couchdb.
+ */
 @TypeDiscriminator("doc.type === 'FlowSessionRecord'")
 public class FlowSessionRecord extends MotechBaseDataObject implements FlowSession {
 
@@ -76,6 +79,7 @@ public class FlowSessionRecord extends MotechBaseDataObject implements FlowSessi
         this.currentNode = currentNode;
     }
 
+    @Override
     public CallDetailRecord getCallDetailRecord() {
         return callDetailRecord;
     }

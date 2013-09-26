@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -101,6 +102,25 @@ public class AllCallDetailRecordsIT {
     @Test
     public void shouldFindMaxCallDuration() {
         assertEquals(MAX_CALL_DURATION, allCallDetailRecords.findMaxCallDuration());
+    }
+
+    @Test
+    public void shouldUpdateExistingCallRecords() {
+        CallDetailRecord cdr = new CallDetailRecord("callId", PHONE_NUMBER_1);
+        allCallDetailRecords.addOrUpdate(cdr);
+
+        CallDetailRecord fromDb = allCallDetailRecords.findByCallId("callId");
+        assertNotNull(fromDb);
+        assertEquals("callId", fromDb.getCallId());
+        assertEquals(PHONE_NUMBER_1, fromDb.getPhoneNumber());
+
+        cdr = new CallDetailRecord("callId", PHONE_NUMBER_2);
+        allCallDetailRecords.addOrUpdate(cdr);
+
+        fromDb = allCallDetailRecords.findByCallId("callId");
+        assertNotNull(fromDb);
+        assertEquals("callId", fromDb.getCallId());
+        assertEquals(PHONE_NUMBER_2, fromDb.getPhoneNumber());
     }
 
     @After

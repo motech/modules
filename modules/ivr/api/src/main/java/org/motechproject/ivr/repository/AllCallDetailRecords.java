@@ -43,6 +43,26 @@ public class AllCallDetailRecords extends CouchDbRepositorySupportWithLucene<Cal
         initStandardDesignDocument();
     }
 
+    public void addOrUpdate(CallDetailRecord callDetailRecord) {
+        CallDetailRecord existing = findByCallId(callDetailRecord.getCallId());
+        if (existing == null) {
+            add(callDetailRecord);
+        } else {
+            existing.setCallDirection(callDetailRecord.getCallDirection());
+            existing.setDisposition(callDetailRecord.getDisposition());
+            existing.setAnswerDate(callDetailRecord.getAnswerDate());
+            existing.setDuration(callDetailRecord.getDuration());
+            existing.setCustomProperties(callDetailRecord.getCustomProperties());
+            existing.setCallEvents(callDetailRecord.getCallEvents());
+            existing.setStartDate(callDetailRecord.getStartDate());
+            existing.setEndDate(callDetailRecord.getEndDate());
+            existing.setErrorMessage(callDetailRecord.getErrorMessage());
+            existing.setPhoneNumber(callDetailRecord.getPhoneNumber());
+
+            update(existing);
+        }
+    }
+
     /**
      *
      * @param phoneNumber
