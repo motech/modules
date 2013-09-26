@@ -12,14 +12,16 @@ import java.util.List;
 
 public class OutboxTaskBundleIT extends AbstractTaskBundleIT {
 
+    private static final String CHANNEL_NAME = "org.motechproject.motech-outbox-bundle";
+
     public void testTaskChannelCreated() throws IOException {
-        Channel channel = findChannel("outbox");
+        Channel channel = findChannel(CHANNEL_NAME);
 
         assertNotNull(channel);
     }
 
     public void testTaskTriggers() throws IOException {
-        Channel channel = findChannel("outbox");
+        Channel channel = findChannel(CHANNEL_NAME);
 
         assertExecuteOutboxTrigger(channel.getTriggerTaskEvents());
         assertIncompleteOutboxCallTrigger(channel.getTriggerTaskEvents());
@@ -61,7 +63,7 @@ public class OutboxTaskBundleIT extends AbstractTaskBundleIT {
     }
 
     public void testTaskActions() throws IOException {
-        Channel channel = findChannel("outbox");
+        Channel channel = findChannel(CHANNEL_NAME);
 
         assertExecuteOutboxAction(channel.getActionTaskEvents());
         assertScheduleExecutionAction(channel.getActionTaskEvents());

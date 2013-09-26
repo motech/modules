@@ -15,19 +15,21 @@ import static org.motechproject.sms.api.constants.EventSubjects.SMS_DELIVERY_REP
 
 public class SmsSmppTaskBundleIT extends AbstractTaskBundleIT {
 
+    private static final String CHANNEL_NAME = "org.motechproject.motech-sms-smpp-bundle";
+
     @Override
     protected List<String> getImports() {
         return Arrays.asList("org.motechproject.sms.api.service");
     }
 
     public void testTaskChannelCreated() throws IOException {
-        Channel channel = findChannel("sms.smpp");
+        Channel channel = findChannel(CHANNEL_NAME);
 
         assertNotNull(channel);
     }
 
     public void testTaskTriggers() throws IOException {
-        Channel channel = findChannel("sms.smpp");
+        Channel channel = findChannel(CHANNEL_NAME);
 
         assertSmsDeliveryReport(channel.getTriggerTaskEvents());
     }

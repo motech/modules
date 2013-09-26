@@ -23,19 +23,21 @@ import static org.motechproject.sms.api.constants.EventSubjects.SMS_FAILURE_NOTI
 
 public class SmsApiTaskBundleIT extends AbstractTaskBundleIT {
 
+    private final String CHANNEL_NAME = "org.motechproject.motech-sms-api-bundle";
+
     @Override
     protected List<String> getImports() {
         return Arrays.asList("org.motechproject.sms.api.service");
     }
 
     public void testTaskChannelCreated() throws IOException {
-        Channel channel = findChannel("sms.api");
+        Channel channel = findChannel(CHANNEL_NAME);
 
         assertNotNull(channel);
     }
 
     public void testTaskTriggers() throws IOException {
-        Channel channel = findChannel("sms.api");
+        Channel channel = findChannel(CHANNEL_NAME);
 
         assertSendSmsTrigger(channel.getTriggerTaskEvents());
         assertInboundSmsTrigger(channel.getTriggerTaskEvents());
@@ -43,7 +45,7 @@ public class SmsApiTaskBundleIT extends AbstractTaskBundleIT {
     }
 
     public void testTaskActions() throws IOException {
-        Channel channel = findChannel("sms.api");
+        Channel channel = findChannel(CHANNEL_NAME);
 
         assertSendSmsAction(channel.getActionTaskEvents());
     }
