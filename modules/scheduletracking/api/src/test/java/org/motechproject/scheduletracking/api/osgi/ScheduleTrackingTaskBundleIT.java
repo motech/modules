@@ -13,14 +13,16 @@ import java.util.List;
 
 public class ScheduleTrackingTaskBundleIT extends AbstractTaskBundleIT {
 
+    private static final String CHANNEL_NAME = "org.motechproject.motech-scheduletracking-api";
+
     public void testTaskChannelCreated() throws IOException {
-        Channel channel = findChannel("scheduleTracking");
+        Channel channel = findChannel(CHANNEL_NAME);
 
         assertNotNull(channel);
     }
 
     public void testTaskTriggers() throws IOException {
-        Channel channel = findChannel("scheduleTracking");
+        Channel channel = findChannel(CHANNEL_NAME);
 
         assertMileStoneAlertTrigger(channel.getTriggerTaskEvents());
         assertDefaultmentCaptureTrigger(channel.getTriggerTaskEvents());
@@ -54,7 +56,7 @@ public class ScheduleTrackingTaskBundleIT extends AbstractTaskBundleIT {
     }
 
     public void testTaskActions() throws IOException {
-        Channel channel = findChannel("scheduleTracking");
+        Channel channel = findChannel(CHANNEL_NAME);
 
         assertDefaultCaptureAction(channel.getActionTaskEvents());
     }
