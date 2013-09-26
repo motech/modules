@@ -10,14 +10,16 @@ import java.util.List;
 
 public class AppointmentsTaskBundleIT extends AbstractTaskBundleIT {
 
+    private static final String CHANNEL_NAME = "org.motechproject.motech-appointments-api";
+
     public void testTaskChannelCreated() throws IOException {
-        Channel channel = findChannel("appointments");
+        Channel channel = findChannel(CHANNEL_NAME);
 
         assertNotNull(channel);
     }
 
     public void testTaskTriggers() throws IOException {
-        Channel channel = findChannel("appointments");
+        Channel channel = findChannel(CHANNEL_NAME);
 
         assertVisitTrigger(channel.getTriggerTaskEvents());
         assertAppointmentTrigger(channel.getTriggerTaskEvents());
