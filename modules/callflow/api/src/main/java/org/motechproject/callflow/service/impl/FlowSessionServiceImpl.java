@@ -5,6 +5,7 @@ import org.motechproject.callflow.domain.FlowSessionRecord;
 import org.motechproject.callflow.repository.AllFlowSessionRecords;
 import org.motechproject.callflow.service.FlowSessionService;
 import org.motechproject.decisiontree.core.FlowSession;
+import org.motechproject.ivr.service.contract.CallRecordsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -13,14 +14,19 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Implementation of the <code>FlowSessionService</code> interface. Allows manipulation and retrieval of flow sessions.
+ */
 @Service("flowSessionService")
 public class FlowSessionServiceImpl implements FlowSessionService {
 
     private AllFlowSessionRecords allFlowSessionRecords;
+    private CallRecordsService callRecordsService;
 
     @Autowired
-    public FlowSessionServiceImpl(AllFlowSessionRecords allFlowSessionRecords) {
+    public FlowSessionServiceImpl(AllFlowSessionRecords allFlowSessionRecords, CallRecordsService callRecordsService) {
         this.allFlowSessionRecords = allFlowSessionRecords;
+        this.callRecordsService = callRecordsService;
     }
 
     @Override
@@ -37,6 +43,7 @@ public class FlowSessionServiceImpl implements FlowSessionService {
 
     @Override
     public void updateSession(FlowSession flowSession) {
+        callRecordsService.add(flowSession.getCallDetailRecord());
         allFlowSessionRecords.update((FlowSessionRecord) flowSession);
     }
 

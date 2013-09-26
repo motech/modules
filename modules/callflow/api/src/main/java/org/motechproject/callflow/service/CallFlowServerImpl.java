@@ -84,7 +84,7 @@ public class CallFlowServerImpl implements CallFlowServer {
     @Override
     public void raiseCallEvent(IvrEvent callEvent, String flowSessionId) {
         FlowSession session = flowSessionService.getSession(flowSessionId);
-        CallDetailRecord callDetail = ((FlowSessionRecord) session).getCallDetailRecord();
+        CallDetailRecord callDetail = session.getCallDetailRecord();
         if (callEvent.isEndOfCall()) {
             callDetail.setEndDate(now()).addCallEvent(new CallEventLog(callEvent.getEventSubject()));
             flowSessionService.updateSession(session);

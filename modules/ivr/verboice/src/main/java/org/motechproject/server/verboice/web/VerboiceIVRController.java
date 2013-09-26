@@ -2,7 +2,6 @@ package org.motechproject.server.verboice.web;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.motechproject.ivr.domain.CallEventLog;
 import org.motechproject.callflow.domain.FlowSessionRecord;
 import org.motechproject.callflow.domain.IvrEvent;
 import org.motechproject.callflow.service.CallFlowServer;
@@ -11,6 +10,7 @@ import org.motechproject.decisiontree.core.FlowSession;
 import org.motechproject.ivr.domain.CallDetailRecord;
 import org.motechproject.ivr.domain.CallDirection;
 import org.motechproject.ivr.domain.CallDisposition;
+import org.motechproject.ivr.domain.CallEventLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -27,6 +27,12 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 
+/**
+ * The controller that responds to the Verboice system requests, which represent a call.
+ * It receives incoming calls and handles status updates to the active calls. It uses the
+ * <code>CallFlowServer</code> to generate a response. Verboice sessions are persisted in flow
+ * session database through the <code>FlowSessionService</code>.
+ */
 @Controller
 @RequestMapping("/web-api")
 public class VerboiceIVRController {
@@ -55,11 +61,12 @@ public class VerboiceIVRController {
     public ModelAndView handle(HttpServletRequest request, HttpServletResponse response) {
         String verboiceCallId = request.getParameter(VERBOICE_CALL_SID);
         String phoneNumber = request.getParameter(VERBOICE_FROM_PHONE_PARAM);
-        FlowSession session = null;
-        session = flowSessionService.getSession(verboiceCallId);
+
+        FlowSession session = flowSessionService.getSession(verboiceCallId);
+
         if (session == null) {
             session = flowSessionService.findOrCreate(verboiceCallId, phoneNumber);
-            final CallDetailRecord callDetailRecord = ((FlowSessionRecord) session).getCallDetailRecord();
+            final CallDetailRecord callDetailRecord = session.getCallDetailRecord();
             callDetailRecord.setCallDirection(CallDirection.Inbound);
         }
 
@@ -134,16 +141,26 @@ public class VerboiceIVRController {
             CallEventLog callEventLog = new CallEventLog(callStatus);
             callDetail.addCallEvent(callEventLog);
 
-            if (VERBOICE_IN_PROGRESS_STATUS.equals(callStatus)) {
-                callDetail.setDisposition(CallDisposition.ANSWERED);
-            } else if (VERBOICE_COMPLETED_STATUS.equals(callStatus)) {
-                callDetail.setDisposition(CallDisposition.ANSWERED);
-            } else if (VERBOICE_FAILED_STATUS.equals(callStatus)) {
-                callDetail.setDisposition(CallDisposition.FAILED);
-            } else if (VERBOICE_BUSY_STATUS.equals(callStatus)) {
-                callDetail.setDisposition(CallDisposition.BUSY);
-            } else if (VERBOICE_NO_ANSWER_STATUS.equals(callStatus)) {
-                callDetail.setDisposition(CallDisposition.NO_ANSWER);
+            if (callStatus != null) {
+                switch (callStatus) {
+                    case VERBOICE_IN_PROGRESS_STATUS:
+                        callDetail.setDisposition(CallDisposition.ANSWERED);
+                        break;
+                    case VERBOICE_COMPLETED_STATUS:
+                        callDetail.setDisposition(CallDisposition.ANSWERED);
+                        break;
+                    case VERBOICE_FAILED_STATUS:
+                        callDetail.setDisposition(CallDisposition.FAILED);
+                        break;
+                    case VERBOICE_BUSY_STATUS:
+                        callDetail.setDisposition(CallDisposition.BUSY);
+                        break;
+                    case VERBOICE_NO_ANSWER_STATUS:
+                        callDetail.setDisposition(CallDisposition.NO_ANSWER);
+                        break;
+                    default:
+                        break;
+                }
             }
 
             if (record.get(VERBOICE_CALL_SID) == null) {

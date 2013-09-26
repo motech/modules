@@ -6,6 +6,9 @@ import org.motechproject.ivr.service.contract.CallRecordsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service used for persisting call detail records.
+ */
 @Service("callRecordsService")
 public class CallRecordsServiceImpl implements CallRecordsService {
 
@@ -17,7 +20,7 @@ public class CallRecordsServiceImpl implements CallRecordsService {
     }
 
     public void add(CallDetailRecord callDetailRecord) {
-        allCallDetailRecords.add(callDetailRecord);
+        allCallDetailRecords.addOrUpdate(callDetailRecord);
     }
 
 }

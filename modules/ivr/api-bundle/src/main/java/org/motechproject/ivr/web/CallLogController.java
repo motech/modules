@@ -26,13 +26,13 @@ import java.util.List;
 public class CallLogController {
 
     @Autowired
-    private CallRecordsSearchService calllogSearchServiceI;
+    private CallRecordsSearchService calllogSearchService;
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     @ResponseBody
     public CallLogRecords search(@ModelAttribute GridSettings settings) throws IOException {
         CallRecordSearchParameters params = settings.toCallRecordSearchParameters();
-        List<CallDetailRecord> records = calllogSearchServiceI.search(params);
+        List<CallDetailRecord> records = calllogSearchService.search(params);
         return new CallLogRecords(settings.getPage(), settings.getRows(), records);
     }
 
@@ -41,7 +41,7 @@ public class CallLogController {
     public String count(@ModelAttribute GridSettings settings) throws IOException {
         HashMap<String, Long> map = new HashMap<>();
         CallRecordSearchParameters params = settings.toCallRecordSearchParameters();
-        map.put("count", calllogSearchServiceI.count(params));
+        map.put("count", calllogSearchService.count(params));
         return new ObjectMapper().writeValueAsString(map);
     }
 
@@ -49,13 +49,13 @@ public class CallLogController {
     @ResponseBody
     public String findMaxCallDuration() throws IOException {
         HashMap<String, Long> map = new HashMap<>();
-        map.put("maxDuration", calllogSearchServiceI.findMaxCallDuration());
+        map.put("maxDuration", calllogSearchService.findMaxCallDuration());
         return new ObjectMapper().writeValueAsString(map);
     }
 
     @RequestMapping(value = "/phone-numbers",  method = RequestMethod.GET)
     @ResponseBody
     public List<String> allPhoneNumbers() throws IOException {
-        return calllogSearchServiceI.getAllPhoneNumbers();
+        return calllogSearchService.getAllPhoneNumbers();
     }
 }
