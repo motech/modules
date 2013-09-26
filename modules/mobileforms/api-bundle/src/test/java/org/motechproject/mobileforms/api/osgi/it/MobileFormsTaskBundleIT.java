@@ -13,6 +13,8 @@ import static org.motechproject.mobileforms.api.callbacks.FormGroupPublisher.FOR
 
 public class MobileFormsTaskBundleIT extends AbstractTaskBundleIT {
 
+    private static final String CHANNEL_NAME = "org.motechproject.motech-mobileforms-api-bundle";
+
     public void testValidFormTriggerExists() throws IOException {
         assertTrigger(FORM_VALID_FROMS);
     }
@@ -22,7 +24,7 @@ public class MobileFormsTaskBundleIT extends AbstractTaskBundleIT {
     }
 
     private void assertTrigger(String subject) throws IOException {
-        Channel channel = findChannel("mobileforms");
+        Channel channel = findChannel(CHANNEL_NAME);
         assertNotNull(channel);
         List<TriggerEvent> triggerTaskEvents = channel.getTriggerTaskEvents();
         TriggerEvent trigger = findTriggerEventBySubject(triggerTaskEvents, subject);
