@@ -6,7 +6,7 @@ import org.mockito.Mock;
 import org.motechproject.scheduletracking.api.domain.Enrollment;
 import org.motechproject.scheduletracking.api.domain.Schedule;
 import org.motechproject.scheduletracking.api.repository.AllEnrollments;
-import org.motechproject.scheduletracking.api.service.impl.EnrollmentService;
+import org.motechproject.scheduletracking.api.service.impl.EnrollmentServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +23,6 @@ public class ExternalIdCriterionTest {
 
     @Mock
     private AllEnrollments allEnrollments;
-    @Mock
-    private EnrollmentService enrollmentService;
 
     @Before
     public void setup() {
@@ -35,7 +33,7 @@ public class ExternalIdCriterionTest {
     public void shouldFetchByExternalId() {
         List<Enrollment> result = mock(List.class);
         when(allEnrollments.findByExternalId("entity1")).thenReturn(result);
-        assertEquals(result, new ExternalIdCriterion("entity1").fetch(allEnrollments, enrollmentService));
+        assertEquals(result, new ExternalIdCriterion("entity1").fetch(allEnrollments));
     }
 
     @Test
@@ -47,7 +45,7 @@ public class ExternalIdCriterionTest {
         allEnrollments.add(new Enrollment().setExternalId("oneMoreExternalId").setSchedule(schedule).setCurrentMilestoneName(null).setStartOfSchedule(null).setEnrolledOn(null).setPreferredAlertTime(null).setStatus(null).setMetadata(null));
         allEnrollments.add(new Enrollment().setExternalId("someExternalId").setSchedule(schedule).setCurrentMilestoneName(null).setStartOfSchedule(null).setEnrolledOn(null).setPreferredAlertTime(null).setStatus(null).setMetadata(null));
 
-        List<Enrollment> filteredEnrollments = new ExternalIdCriterion("someExternalId").filter(allEnrollments, null);
+        List<Enrollment> filteredEnrollments = new ExternalIdCriterion("someExternalId").filter(allEnrollments);
         assertEquals(asList(new String[]{"someExternalId", "someExternalId"}), extract(filteredEnrollments, on(Enrollment.class).getExternalId()));
     }
 }

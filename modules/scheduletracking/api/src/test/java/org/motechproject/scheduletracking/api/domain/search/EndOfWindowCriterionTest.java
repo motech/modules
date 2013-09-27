@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.motechproject.scheduletracking.api.domain.Enrollment;
 import org.motechproject.scheduletracking.api.domain.WindowName;
 import org.motechproject.scheduletracking.api.repository.AllEnrollments;
-import org.motechproject.scheduletracking.api.service.impl.EnrollmentService;
+import org.motechproject.scheduletracking.api.service.impl.EnrollmentServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class EndOfWindowCriterionTest {
 
     @Mock
-    EnrollmentService enrollmentService;
+    EnrollmentServiceImpl enrollmentService;
     @Mock
     AllEnrollments allEnrollments;
 
@@ -42,15 +42,15 @@ public class EndOfWindowCriterionTest {
 
         when(allEnrollments.getAll()).thenReturn(enrollments);
 
-        when(enrollmentService.getEndOfWindowForCurrentMilestone(enrollment1, WindowName.due)).thenReturn(newDateTime(2012, 2, 3, 5, 10, 0));
-        when(enrollmentService.getEndOfWindowForCurrentMilestone(enrollment2, WindowName.due)).thenReturn(newDateTime(2012, 2, 3, 0, 0, 0));
-        when(enrollmentService.getEndOfWindowForCurrentMilestone(enrollment3, WindowName.due)).thenReturn(newDateTime(2012, 2, 5, 0, 0, 0));
-        when(enrollmentService.getEndOfWindowForCurrentMilestone(enrollment4, WindowName.due)).thenReturn(newDateTime(2012, 2, 6, 0, 0, 0));
+        when(enrollment1.getEndOfWindowForCurrentMilestone(WindowName.due)).thenReturn(newDateTime(2012, 2, 3, 5, 10, 0));
+        when(enrollment2.getEndOfWindowForCurrentMilestone(WindowName.due)).thenReturn(newDateTime(2012, 2, 3, 0, 0, 0));
+        when(enrollment3.getEndOfWindowForCurrentMilestone(WindowName.due)).thenReturn(newDateTime(2012, 2, 5, 0, 0, 0));
+        when(enrollment4.getEndOfWindowForCurrentMilestone(WindowName.due)).thenReturn(newDateTime(2012, 2, 6, 0, 0, 0));
 
         DateTime start = newDateTime(2012, 2, 3, 0, 0, 0);
         DateTime end = newDateTime(2012, 2, 5, 23, 59, 59);
-        List<Enrollment> fetchedEnrollments = new EndOfWindowCriterion(WindowName.due, start, end).fetch(allEnrollments, enrollmentService);
-        List<Enrollment> filteredEnrollments = new EndOfWindowCriterion(WindowName.due, start, end).filter(enrollments, enrollmentService);
+        List<Enrollment> fetchedEnrollments = new EndOfWindowCriterion(WindowName.due, start, end).fetch(allEnrollments);
+        List<Enrollment> filteredEnrollments = new EndOfWindowCriterion(WindowName.due, start, end).filter(enrollments);
 
         assertEquals(asList(enrollment1, enrollment2, enrollment3), fetchedEnrollments);
         assertEquals(asList(enrollment1, enrollment2, enrollment3), filteredEnrollments);

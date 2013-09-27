@@ -34,7 +34,7 @@ public class CompletedDuringCriterionTest {
         List<Enrollment> enrollments = mock(List.class);
         when(allEnrollments.completedDuring(start,  end)).thenReturn(enrollments);
 
-        assertEquals(enrollments, new CompletedDuringCriterion(start, end).fetch(allEnrollments, null));
+        assertEquals(enrollments, new CompletedDuringCriterion(start, end).fetch(allEnrollments));
     }
 
     @Test
@@ -46,7 +46,7 @@ public class CompletedDuringCriterionTest {
         Enrollment enrollment4 = mockEnrollment(false, null);
         allEnrollments.addAll(asList(enrollment1, enrollment2, enrollment3, enrollment4));
 
-        List<Enrollment> filteredEnrollments = new CompletedDuringCriterion(newDateTime(2011, 12, 15, 0, 0, 0), newDateTime(2011, 12, 16, 0, 0, 0)).filter(allEnrollments, null);
+        List<Enrollment> filteredEnrollments = new CompletedDuringCriterion(newDateTime(2011, 12, 15, 0, 0, 0), newDateTime(2011, 12, 16, 0, 0, 0)).filter(allEnrollments);
         assertEquals(asList(enrollment1), filteredEnrollments);
     }
 

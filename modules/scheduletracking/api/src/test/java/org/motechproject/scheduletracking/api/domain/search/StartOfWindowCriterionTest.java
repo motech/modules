@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.motechproject.scheduletracking.api.domain.Enrollment;
 import org.motechproject.scheduletracking.api.domain.WindowName;
 import org.motechproject.scheduletracking.api.repository.AllEnrollments;
-import org.motechproject.scheduletracking.api.service.impl.EnrollmentService;
+import org.motechproject.scheduletracking.api.service.impl.EnrollmentServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +20,6 @@ import static org.motechproject.commons.date.util.DateUtil.newDateTime;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 public class StartOfWindowCriterionTest {
-    @Mock
-    EnrollmentService enrollmentService;
     @Mock
     private AllEnrollments allEnrollments;
 
@@ -48,8 +46,8 @@ public class StartOfWindowCriterionTest {
 
         DateTime start = newDateTime(2012, 2, 3, 0, 0, 0);
         DateTime end = newDateTime(2012, 2, 5, 23, 59, 59);
-        List<Enrollment> fetchedEnrollments = new StartOfWindowCriterion(WindowName.due, start, end).fetch(allEnrollments, enrollmentService);
-        List<Enrollment> filteredEnrollments = new StartOfWindowCriterion(WindowName.due, start, end).filter(enrollments, enrollmentService);
+        List<Enrollment> fetchedEnrollments = new StartOfWindowCriterion(WindowName.due, start, end).fetch(allEnrollments);
+        List<Enrollment> filteredEnrollments = new StartOfWindowCriterion(WindowName.due, start, end).filter(enrollments);
 
         assertEquals(asList(enrollment1, enrollment2, enrollment3), fetchedEnrollments);
         assertEquals(asList(enrollment1, enrollment2, enrollment3), filteredEnrollments);

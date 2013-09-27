@@ -28,7 +28,7 @@ public class EnrollmentRecordMapperTest {
     private EnrollmentRecordMapper enrollmentRecordMapper;
 
     @Mock
-    private EnrollmentService enrollmentService;
+    private EnrollmentServiceImpl enrollmentService;
 
     @Before
     public void setup() {

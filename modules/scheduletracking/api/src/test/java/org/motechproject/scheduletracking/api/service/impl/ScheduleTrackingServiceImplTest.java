@@ -64,7 +64,7 @@ public class ScheduleTrackingServiceImplTest {
     @Mock
     private AllEnrollments allEnrollments;
     @Mock
-    private EnrollmentService enrollmentService;
+    private EnrollmentServiceImpl enrollmentService;
     @Mock
     private EnrollmentsQueryService enrollmentsQueryService;
     @Mock

@@ -4,6 +4,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 import org.joda.time.DateTime;
+import org.joda.time.Period;
 import org.motechproject.commons.couchdb.model.MotechBaseDataObject;
 import org.motechproject.commons.date.model.Time;
 
@@ -12,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static org.motechproject.commons.date.util.DateUtil.inRange;
 import static org.motechproject.commons.date.util.DateUtil.setTimeZone;
 import static org.motechproject.scheduletracking.api.domain.EnrollmentStatus.ACTIVE;
 import static org.motechproject.scheduletracking.api.domain.EnrollmentStatus.COMPLETED;
@@ -190,5 +192,26 @@ public class Enrollment extends MotechBaseDataObject {
         status = enrollment.getStatus();
         metadata = new HashMap<>(enrollment.getMetadata());
         return this;
+    }
+
+    public WindowName getCurrentWindowAsOf(DateTime asOf) {
+        DateTime milestoneStart = this.getCurrentMilestoneStartDate();
+        Milestone milestone = schedule.getMilestone(this.getCurrentMilestoneName());
+        for (MilestoneWindow window : milestone.getMilestoneWindows()) {
+            Period windowStart = milestone.getWindowStart(window.getName());
+            Period windowEnd = milestone.getWindowEnd(window.getName());
+            DateTime windowStartDateTime = milestoneStart.plus(windowStart);
+            DateTime windowEndDateTime = milestoneStart.plus(windowEnd);
+            if (inRange(asOf, windowStartDateTime, windowEndDateTime)) {
+                return window.getName();
+            }
+        }
+        return null;
+    }
+
+    public DateTime getEndOfWindowForCurrentMilestone(WindowName windowName) {
+        DateTime currentMilestoneStartDate = this.getCurrentMilestoneStartDate();
+        Milestone currentMilestone = schedule.getMilestone(this.getCurrentMilestoneName());
+        return currentMilestoneStartDate.plus(currentMilestone.getWindowEnd(windowName));
     }
 }

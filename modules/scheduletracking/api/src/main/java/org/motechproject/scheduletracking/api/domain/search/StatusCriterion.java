@@ -4,7 +4,6 @@ import ch.lambdaj.Lambda;
 import org.motechproject.scheduletracking.api.domain.Enrollment;
 import org.motechproject.scheduletracking.api.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.api.repository.AllEnrollments;
-import org.motechproject.scheduletracking.api.service.impl.EnrollmentService;
 
 import java.util.List;
 
@@ -20,12 +19,12 @@ public class StatusCriterion implements Criterion {
     }
 
     @Override
-    public List<Enrollment> fetch(AllEnrollments allEnrollments, EnrollmentService enrollmentService) {
+    public List<Enrollment> fetch(AllEnrollments allEnrollments) {
         return allEnrollments.findByStatus(status);
     }
 
     @Override
-    public List<Enrollment> filter(List<Enrollment> enrollments, EnrollmentService enrollmentService) {
+    public List<Enrollment> filter(List<Enrollment> enrollments) {
         return Lambda.filter(having(on(Enrollment.class).getStatus(), equalTo(status)), enrollments);
     }
 }

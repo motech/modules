@@ -2,7 +2,6 @@ package org.motechproject.scheduletracking.api.domain.search;
 
 import org.motechproject.scheduletracking.api.domain.Enrollment;
 import org.motechproject.scheduletracking.api.repository.AllEnrollments;
-import org.motechproject.scheduletracking.api.service.impl.EnrollmentService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +16,12 @@ public class MetadataCriterion implements Criterion {
     }
 
     @Override
-    public List<Enrollment> fetch(AllEnrollments allEnrollments, EnrollmentService enrollmentService) {
+    public List<Enrollment> fetch(AllEnrollments allEnrollments) {
         return allEnrollments.findByMetadataProperty(key, value);
     }
 
     @Override
-    public List<Enrollment> filter(List<Enrollment> enrollments, EnrollmentService enrollmentService) {
+    public List<Enrollment> filter(List<Enrollment> enrollments) {
         List<Enrollment> filteredEnrollments = new ArrayList<Enrollment>();
         for (Enrollment enrollment : enrollments) {
             if (enrollment.getMetadata() != null && value.equals(enrollment.getMetadata().get(key))) {
