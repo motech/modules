@@ -14,6 +14,7 @@ import org.motechproject.scheduletracking.api.repository.TrackedSchedulesJsonRea
 import org.motechproject.scheduletracking.api.repository.TrackedSchedulesJsonReaderImpl;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
 import org.motechproject.scheduletracking.api.service.EnrollmentRequest;
+import org.motechproject.scheduletracking.api.service.EnrollmentService;
 import org.motechproject.scheduletracking.api.service.EnrollmentUpdater;
 import org.motechproject.scheduletracking.api.service.EnrollmentsQuery;
 import org.motechproject.scheduletracking.api.service.MilestoneAlerts;

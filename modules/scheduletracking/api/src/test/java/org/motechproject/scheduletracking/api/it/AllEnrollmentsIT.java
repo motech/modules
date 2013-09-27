@@ -20,7 +20,7 @@ import org.motechproject.scheduletracking.api.repository.TrackedSchedulesJsonRea
 import org.motechproject.scheduletracking.api.repository.TrackedSchedulesJsonReaderImpl;
 import org.motechproject.scheduletracking.api.service.EnrollmentRequest;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
-import org.motechproject.scheduletracking.api.service.impl.EnrollmentService;
+import org.motechproject.scheduletracking.api.service.impl.EnrollmentServiceImpl;
 import org.motechproject.server.config.service.PlatformSettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -44,7 +44,7 @@ public class AllEnrollmentsIT {
     @Autowired
     private AllEnrollments allEnrollments;
     @Autowired
-    private EnrollmentService enrollmentService;
+    private EnrollmentServiceImpl enrollmentService;
 
     @Autowired
     private AllSchedules allSchedules;

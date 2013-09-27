@@ -41,8 +41,8 @@ import static org.motechproject.scheduletracking.api.utility.DateTimeUtil.weeksA
 import static org.motechproject.scheduletracking.api.utility.PeriodUtil.days;
 import static org.motechproject.scheduletracking.api.utility.PeriodUtil.weeks;
 
-public class EnrollmentServiceTest extends BaseUnitTest {
-    private EnrollmentService enrollmentService;
+public class EnrollmentServiceImplTest extends BaseUnitTest {
+    private EnrollmentServiceImpl enrollmentService;
 
     @Mock
     private AllSchedules allSchedules;
@@ -58,7 +58,7 @@ public class EnrollmentServiceTest extends BaseUnitTest {
     @Before
     public void setup() {
         initMocks(this);
-        enrollmentService = new EnrollmentService(allSchedules, allEnrollments, enrollmentAlertService, enrollmentDefaultmentService, eventRelay);
+        enrollmentService = new EnrollmentServiceImpl(allSchedules, allEnrollments, enrollmentAlertService, enrollmentDefaultmentService, eventRelay);
     }
 
     @Test
@@ -343,25 +343,6 @@ public class EnrollmentServiceTest extends BaseUnitTest {
     }
 
     @Test
-    public void shouldReturnTheWindowAnEnrollmentIsInForTheCurrentMilestone() {
-        Milestone firstMilestone = new Milestone("first_milestone", weeks(1), weeks(1), weeks(1), weeks(1));
-        Schedule schedule = new Schedule("my_schedule");
-        schedule.addMilestones(firstMilestone);
-        when(allSchedules.getByName("my_schedule")).thenReturn(schedule);
-
-        DateTime referenceDate = newDateTime(2012, 12, 4, 8, 30, 0);
-        Enrollment enrollment = new Enrollment().setExternalId("ID-074285").setSchedule(schedule).setCurrentMilestoneName("first_milestone").setStartOfSchedule(referenceDate).setEnrolledOn(referenceDate).setPreferredAlertTime(null).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
-
-        assertEquals(WindowName.earliest, enrollmentService.getCurrentWindowAsOf(enrollment, newDateTime(2012, 12, 4, 8, 30, 0)));
-        assertEquals(WindowName.earliest, enrollmentService.getCurrentWindowAsOf(enrollment, newDateTime(2012, 12, 4, 8, 30, 1)));
-        assertEquals(WindowName.due, enrollmentService.getCurrentWindowAsOf(enrollment, newDateTime(2012, 12, 11, 9, 30, 0)));
-        assertEquals(WindowName.due, enrollmentService.getCurrentWindowAsOf(enrollment, newDateTime(2012, 12, 11, 8, 30, 0)));
-        assertEquals(WindowName.late, enrollmentService.getCurrentWindowAsOf(enrollment, newDateTime(2012, 12, 18, 9, 30, 0)));
-        assertEquals(WindowName.max, enrollmentService.getCurrentWindowAsOf(enrollment, newDateTime(2012, 12, 28, 9, 30, 0)));
-        assertEquals(null, enrollmentService.getCurrentWindowAsOf(enrollment, newDateTime(2013, 1, 28, 9, 30, 0)));
-    }
-
-    @Test
     public void shouldReturnTheEndOfAGivenWindowForTheCurrentMilestone() {
         Milestone firstMilestone = new Milestone("first_milestone", weeks(1), weeks(1), weeks(1), weeks(1));
         Schedule schedule = new Schedule("my_schedule");
@@ -371,10 +352,10 @@ public class EnrollmentServiceTest extends BaseUnitTest {
         DateTime referenceDate = newDateTime(2012, 12, 4, 8, 30, 0);
         Enrollment enrollment = new Enrollment().setExternalId("ID-074285").setSchedule(schedule).setCurrentMilestoneName("first_milestone").setStartOfSchedule(referenceDate).setEnrolledOn(referenceDate).setPreferredAlertTime(null).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
 
-        assertEquals(referenceDate.plusWeeks(1), enrollmentService.getEndOfWindowForCurrentMilestone(enrollment, WindowName.earliest));
-        assertEquals(referenceDate.plusWeeks(2), enrollmentService.getEndOfWindowForCurrentMilestone(enrollment, WindowName.due));
-        assertEquals(referenceDate.plusWeeks(3), enrollmentService.getEndOfWindowForCurrentMilestone(enrollment, WindowName.late));
-        assertEquals(referenceDate.plusWeeks(4), enrollmentService.getEndOfWindowForCurrentMilestone(enrollment, WindowName.max));
+        assertEquals(referenceDate.plusWeeks(1), enrollment.getEndOfWindowForCurrentMilestone(WindowName.earliest));
+        assertEquals(referenceDate.plusWeeks(2), enrollment.getEndOfWindowForCurrentMilestone(WindowName.due));
+        assertEquals(referenceDate.plusWeeks(3), enrollment.getEndOfWindowForCurrentMilestone(WindowName.late));
+        assertEquals(referenceDate.plusWeeks(4), enrollment.getEndOfWindowForCurrentMilestone(WindowName.max));
     }
 
     @Test

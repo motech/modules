@@ -27,7 +27,7 @@ public class StatusCriterionTest {
         allEnrollments.add(new Enrollment().setExternalId(null).setSchedule(schedule).setCurrentMilestoneName(null).setStartOfSchedule(null).setEnrolledOn(null).setPreferredAlertTime(null).setStatus(EnrollmentStatus.DEFAULTED).setMetadata(null));
         allEnrollments.add(new Enrollment().setExternalId(null).setSchedule(schedule).setCurrentMilestoneName(null).setStartOfSchedule(null).setEnrolledOn(null).setPreferredAlertTime(null).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null));
 
-        List<Enrollment> filteredEnrollments = new StatusCriterion(EnrollmentStatus.ACTIVE).filter(allEnrollments, null);
+        List<Enrollment> filteredEnrollments = new StatusCriterion(EnrollmentStatus.ACTIVE).filter(allEnrollments);
         assertEquals(asList(new EnrollmentStatus[]{ EnrollmentStatus.ACTIVE, EnrollmentStatus.ACTIVE}), extract(filteredEnrollments, on(Enrollment.class).getStatus()));
     }
 
@@ -38,7 +38,7 @@ public class StatusCriterionTest {
 
         when(allEnrollments.findByStatus(EnrollmentStatus.ACTIVE)).thenReturn(enrollments);
 
-        assertEquals(enrollments, new StatusCriterion(EnrollmentStatus.ACTIVE).fetch(allEnrollments,null));
+        assertEquals(enrollments, new StatusCriterion(EnrollmentStatus.ACTIVE).fetch(allEnrollments));
     }
 
 }

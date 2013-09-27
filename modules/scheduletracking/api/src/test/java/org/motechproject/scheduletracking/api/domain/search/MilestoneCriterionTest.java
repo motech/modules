@@ -36,7 +36,7 @@ public class MilestoneCriterionTest {
         List<Enrollment> enrollments = mock(List.class);
         when(allEnrollments.findByCurrentMilestone("milestone")).thenReturn(enrollments);
 
-        assertEquals(enrollments, new MilestoneCriterion("milestone").fetch(allEnrollments, null));
+        assertEquals(enrollments, new MilestoneCriterion("milestone").fetch(allEnrollments));
     }
 
     @Test
@@ -57,13 +57,13 @@ public class MilestoneCriterionTest {
         allEnrollments.add(new Enrollment().setExternalId(null).setSchedule(schedule2).setCurrentMilestoneName("s2_milestone-2").setStartOfSchedule(null).setEnrolledOn(null).setPreferredAlertTime(null).setStatus(null).setMetadata(null));
         allEnrollments.add(new Enrollment().setExternalId(null).setSchedule(schedule2).setCurrentMilestoneName("s2_milestone-3").setStartOfSchedule(null).setEnrolledOn(null).setPreferredAlertTime(null).setStatus(null).setMetadata(null));
 
-        List<Enrollment> filteredEnrollments = new MilestoneCriterion("s2_milestone-1").filter(allEnrollments, null);
+        List<Enrollment> filteredEnrollments = new MilestoneCriterion("s2_milestone-1").filter(allEnrollments);
         assertEquals(Collections.emptyList(), extract(filteredEnrollments, on(Enrollment.class).getScheduleName()));
 
-        filteredEnrollments = new MilestoneCriterion("s2_milestone-2").filter(allEnrollments, null);
+        filteredEnrollments = new MilestoneCriterion("s2_milestone-2").filter(allEnrollments);
         assertEquals(asList(new String[]{"schedule_2"}), extract(filteredEnrollments, on(Enrollment.class).getScheduleName()));
 
-        filteredEnrollments = new MilestoneCriterion("s1_milestone-1").filter(allEnrollments, null);
+        filteredEnrollments = new MilestoneCriterion("s1_milestone-1").filter(allEnrollments);
         assertEquals(asList(new String[]{"schedule_1", "schedule_1"}), extract(filteredEnrollments, on(Enrollment.class).getScheduleName()));
     }
 }

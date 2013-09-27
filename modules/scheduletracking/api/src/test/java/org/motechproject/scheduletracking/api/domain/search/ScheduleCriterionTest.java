@@ -33,7 +33,7 @@ public class ScheduleCriterionTest {
         List<Enrollment> enrollments = mock(List.class);
         when(allEnrollments.findBySchedule(asList(new String[]{ "schedule1", "schedule2" }))).thenReturn(enrollments);
 
-        assertEquals(enrollments, new ScheduleCriterion("schedule1", "schedule2").fetch(allEnrollments, null));
+        assertEquals(enrollments, new ScheduleCriterion("schedule1", "schedule2").fetch(allEnrollments));
     }
 
     @Test
@@ -48,7 +48,7 @@ public class ScheduleCriterionTest {
         allEnrollments.add(new Enrollment().setExternalId(null).setSchedule(schedule2).setCurrentMilestoneName(null).setStartOfSchedule(null).setEnrolledOn(null).setPreferredAlertTime(null).setStatus(null).setMetadata(null));
         allEnrollments.add(new Enrollment().setExternalId(null).setSchedule(schedule3).setCurrentMilestoneName(null).setStartOfSchedule(null).setEnrolledOn(null).setPreferredAlertTime(null).setStatus(null).setMetadata(null));
 
-        List<Enrollment> filteredEnrollments = new ScheduleCriterion("schedule_1", "schedule_3").filter(allEnrollments, null);
+        List<Enrollment> filteredEnrollments = new ScheduleCriterion("schedule_1", "schedule_3").filter(allEnrollments);
         assertEquals(asList(new String[]{"schedule_1", "schedule_1", "schedule_3"}), extract(filteredEnrollments, on(Enrollment.class).getScheduleName()));
     }
 }

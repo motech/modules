@@ -4,8 +4,6 @@ import org.joda.time.DateTime;
 import org.motechproject.scheduletracking.api.domain.Enrollment;
 import org.motechproject.scheduletracking.api.domain.WindowName;
 import org.motechproject.scheduletracking.api.repository.AllEnrollments;
-import org.motechproject.scheduletracking.api.service.impl.EnrollmentService;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,16 +15,16 @@ public class InWindowCriterion implements Criterion {
     }
 
     @Override
-    public List<Enrollment> fetch(AllEnrollments allEnrollments, EnrollmentService enrollmentService) {
-        return filter(allEnrollments.getAll(), enrollmentService);
+    public List<Enrollment> fetch(AllEnrollments allEnrollments) {
+        return filter(allEnrollments.getAll());
     }
 
     @Override
-    public List<Enrollment> filter(List<Enrollment> enrollments, EnrollmentService enrollmentService) {
+    public List<Enrollment> filter(List<Enrollment> enrollments) {
         List<Enrollment> filteredEnrollments = new ArrayList<Enrollment>();
         DateTime now = DateTime.now();
         for (Enrollment enrollment : enrollments) {
-            if (windowNames.contains(enrollmentService.getCurrentWindowAsOf(enrollment, now))) {
+            if (windowNames.contains(enrollment.getCurrentWindowAsOf(now))) {
                 filteredEnrollments.add(enrollment);
             }
         }

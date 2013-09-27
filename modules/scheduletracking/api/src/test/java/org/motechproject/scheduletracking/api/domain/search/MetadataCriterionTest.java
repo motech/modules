@@ -23,7 +23,7 @@ public class MetadataCriterionTest {
         AllEnrollments allEnrollments = mock(AllEnrollments.class);
         List<Enrollment> result = mock(List.class);
         when(allEnrollments.findByMetadataProperty("foo", "bar")).thenReturn(result);
-        assertEquals(result, new MetadataCriterion("foo", "bar").fetch(allEnrollments, null));
+        assertEquals(result, new MetadataCriterion("foo", "bar").fetch(allEnrollments));
     }
 
     @Test
@@ -49,7 +49,7 @@ public class MetadataCriterionTest {
 
         enrollments.add(new Enrollment().setExternalId("entity5").setSchedule(schedule).setCurrentMilestoneName(null).setStartOfSchedule(null).setEnrolledOn(null).setPreferredAlertTime(null).setStatus(null).setMetadata(null));
 
-        List<Enrollment> filtered = new MetadataCriterion("foo", "bar").filter(enrollments, null);
+        List<Enrollment> filtered = new MetadataCriterion("foo", "bar").filter(enrollments);
         assertEquals(asList(new String[]{ "entity1", "entity3" }), extract(filtered, on(Enrollment.class).getExternalId()));
     }
 

@@ -13,12 +13,10 @@ import java.util.List;
 @Component
 public class EnrollmentsQueryService {
 
-    private EnrollmentService enrollmentService;
     private AllEnrollments allEnrollments;
 
     @Autowired
-    public EnrollmentsQueryService(AllEnrollments allEnrollments, EnrollmentService enrollmentService) {
-        this.enrollmentService = enrollmentService;
+    public EnrollmentsQueryService(AllEnrollments allEnrollments) {
         this.allEnrollments = allEnrollments;
     }
 
@@ -26,10 +24,10 @@ public class EnrollmentsQueryService {
         List<Enrollment> enrollments = new ArrayList<Enrollment>();
         Criterion primaryCriterion = query.getPrimaryCriterion();
         if (primaryCriterion != null) {
-            enrollments = primaryCriterion.fetch(allEnrollments, enrollmentService);
+            enrollments = primaryCriterion.fetch(allEnrollments);
         }
         for (Criterion criterion : query.getSecondaryCriteria()) {
-            enrollments = criterion.filter(enrollments, enrollmentService);
+            enrollments = criterion.filter(enrollments);
         }
         return enrollments;
     }

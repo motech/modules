@@ -5,7 +5,6 @@ import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.scheduletracking.api.domain.Enrollment;
 import org.motechproject.scheduletracking.api.domain.WindowName;
 import org.motechproject.scheduletracking.api.repository.AllEnrollments;
-import org.motechproject.scheduletracking.api.service.impl.EnrollmentService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +21,12 @@ public class StartOfWindowCriterion implements Criterion {
     }
 
     @Override
-    public List<Enrollment> fetch(AllEnrollments allEnrollments, EnrollmentService enrollmentService) {
-        return filter(allEnrollments.getAll(), enrollmentService);
+    public List<Enrollment> fetch(AllEnrollments allEnrollments) {
+        return filter(allEnrollments.getAll());
     }
 
     @Override
-    public List<Enrollment> filter(List<Enrollment> enrollments, EnrollmentService enrollmentService) {
+    public List<Enrollment> filter(List<Enrollment> enrollments) {
         List<Enrollment> filteredEnrollments = new ArrayList<Enrollment>();
         for (Enrollment enrollment : enrollments) {
             DateTime startOfWindowForCurrentMilestone = enrollment.getStartOfWindowForCurrentMilestone(windowName);
