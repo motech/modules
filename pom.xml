@@ -37,6 +37,7 @@
         <check.code.skip>${maven.test.skip}</check.code.skip>
         <pmd.skip>${check.code.skip}</pmd.skip>
         <checkstyle.skip>${check.code.skip}</checkstyle.skip>
+        <enforcer.skip>${check.code.skip}</enforcer.skip>
         <jslint.enable>true</jslint.enable>
         <unitTests.skip>${skipTests}</unitTests.skip>
 
@@ -1329,7 +1330,7 @@
                     <dependency>
                         <groupId>org.motechproject</groupId>
                         <artifactId>pmd-rules</artifactId>
-                        <version>1.0-SNAPSHOT</version>
+                        <version>0.1</version>
                     </dependency>
                 </dependencies>
                 <executions>
@@ -1399,6 +1400,34 @@
                         </goals>
                         <configuration>
                             <outputFile>target/dependencies.list</outputFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.3.1</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.motechproject</groupId>
+                        <artifactId>enforcer-rules</artifactId>
+                        <version>0.1</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>enforce-no-package-cycles</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <phase>verify</phase>
+                        <configuration>
+                            <rules>
+                                <NoPackageCyclesRule
+                                        implementation="PackageCycles" />
+                            </rules>
+                            <skip>${enforcer.skip}</skip>
                         </configuration>
                     </execution>
                 </executions>
