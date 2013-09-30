@@ -1,4 +1,4 @@
-package org.motechproject.appointments.api.service.contract;
+package org.motechproject.appointments.api.service;
 
 import org.joda.time.DateTime;
 import org.motechproject.appointments.api.model.search.Criterion;

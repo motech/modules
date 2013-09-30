@@ -6,7 +6,6 @@ import org.motechproject.appointments.api.service.contract.ConfirmAppointmentReq
 import org.motechproject.appointments.api.service.contract.CreateVisitRequest;
 import org.motechproject.appointments.api.service.contract.RescheduleAppointmentRequest;
 import org.motechproject.appointments.api.service.contract.VisitResponse;
-import org.motechproject.appointments.api.service.contract.VisitsQuery;
 
 import java.util.List;
 import java.util.Map;

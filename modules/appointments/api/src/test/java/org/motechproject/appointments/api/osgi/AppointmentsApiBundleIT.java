@@ -32,7 +32,8 @@ public class AppointmentsApiBundleIT extends BaseOsgiIT {
     @Override
     protected List<String> getImports() {
         return asList(
-                "org.motechproject.appointments.api.service.contract"
+                "org.motechproject.appointments.api.service.contract",
+                "org.motechproject.appointments.api.service"
         );
     }
 }

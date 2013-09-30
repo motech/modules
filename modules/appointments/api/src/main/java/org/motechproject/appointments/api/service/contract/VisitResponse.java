@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * \ingroup Appointments
  *
- * Visit details, returned by querying visits. see {@link org.motechproject.appointments.api.service.AppointmentService#search(VisitsQuery)}
+ * Visit details, returned by querying visits. see {@link org.motechproject.appointments.api.service.AppointmentService#search(org.motechproject.appointments.api.service.VisitsQuery)}
  */
 public class VisitResponse {
     private String name;

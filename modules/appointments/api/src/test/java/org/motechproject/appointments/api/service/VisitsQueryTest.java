@@ -1,4 +1,4 @@
-package org.motechproject.appointments.api.service.contract;
+package org.motechproject.appointments.api.service;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -6,6 +6,7 @@ import org.motechproject.appointments.api.model.search.Criterion;
 import org.motechproject.appointments.api.model.search.DueDateInCriterion;
 import org.motechproject.appointments.api.model.search.MetadataCriterion;
 import org.motechproject.appointments.api.model.search.UnvisitedCriterion;
+import org.motechproject.appointments.api.service.VisitsQuery;
 
 import java.util.List;
 

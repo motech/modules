@@ -8,7 +8,7 @@ import org.motechproject.appointments.api.model.AppointmentCalendar;
 import org.motechproject.appointments.api.model.Visit;
 import org.motechproject.appointments.api.repository.AllAppointmentCalendars;
 import org.motechproject.appointments.api.service.contract.VisitResponse;
-import org.motechproject.appointments.api.service.contract.VisitsQuery;
+import org.motechproject.appointments.api.service.VisitsQuery;
 import org.motechproject.appointments.api.service.impl.VisitsQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;

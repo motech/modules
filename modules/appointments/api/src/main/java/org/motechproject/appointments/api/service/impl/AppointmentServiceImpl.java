@@ -17,7 +17,7 @@ import org.motechproject.appointments.api.service.contract.ConfirmAppointmentReq
 import org.motechproject.appointments.api.service.contract.CreateVisitRequest;
 import org.motechproject.appointments.api.service.contract.RescheduleAppointmentRequest;
 import org.motechproject.appointments.api.service.contract.VisitResponse;
-import org.motechproject.appointments.api.service.contract.VisitsQuery;
+import org.motechproject.appointments.api.service.VisitsQuery;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.springframework.beans.factory.annotation.Autowired;
