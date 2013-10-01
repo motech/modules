@@ -6,7 +6,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 import org.motechproject.commons.couchdb.model.MotechBaseDataObject;
-import org.motechproject.decisiontree.core.FlowSession;
+import org.motechproject.decisiontree.core.model.FlowSession;
 import org.motechproject.decisiontree.core.model.Node;
 import org.motechproject.ivr.domain.CallDetailRecord;
 

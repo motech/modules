@@ -4,7 +4,7 @@ import org.ektorp.CouchDbConnector;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.motechproject.decisiontree.core.FlowSession;
+import org.motechproject.decisiontree.core.model.FlowSession;
 import org.motechproject.decisiontree.core.model.AudioPrompt;
 import org.motechproject.decisiontree.core.model.ITransition;
 import org.motechproject.decisiontree.core.model.ITreeCommand;

@@ -1,8 +1,6 @@
 package org.motechproject.decisiontree.core.model;
 
 
-import org.motechproject.decisiontree.core.FlowSession;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

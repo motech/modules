@@ -1,7 +1,6 @@
 package org.motechproject.decisiontree.core.model;
 
 import org.codehaus.jackson.annotate.JsonTypeInfo;
-import org.motechproject.decisiontree.core.FlowSession;
 
 /**
  * Represents transition from one node to the other.

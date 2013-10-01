@@ -4,7 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.motechproject.callflow.domain.FlowSessionRecord;
 import org.motechproject.callflow.repository.AllFlowSessionRecords;
 import org.motechproject.callflow.service.FlowSessionService;
-import org.motechproject.decisiontree.core.FlowSession;
+import org.motechproject.decisiontree.core.model.FlowSession;
 import org.motechproject.ivr.service.contract.CallRecordsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

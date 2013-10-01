@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.callflow.domain.FlowSessionRecord;
 import org.motechproject.decisiontree.core.DecisionTreeService;
-import org.motechproject.decisiontree.core.FlowSession;
+import org.motechproject.decisiontree.core.model.FlowSession;
 import org.motechproject.decisiontree.core.model.Action;
 import org.motechproject.decisiontree.core.model.INodeOperation;
 import org.motechproject.decisiontree.core.model.Node;
