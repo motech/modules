@@ -2,7 +2,6 @@ package org.motechproject.decisiontree.core.model;
 
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.motechproject.decisiontree.core.FlowSession;
 
 import static ch.lambdaj.Lambda.extract;
 import static ch.lambdaj.Lambda.on;

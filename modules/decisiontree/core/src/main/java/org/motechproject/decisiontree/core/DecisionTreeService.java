@@ -1,5 +1,6 @@
 package org.motechproject.decisiontree.core;
 
+import org.motechproject.decisiontree.core.model.FlowSession;
 import org.motechproject.decisiontree.core.model.Node;
 import org.motechproject.decisiontree.core.model.Tree;
 

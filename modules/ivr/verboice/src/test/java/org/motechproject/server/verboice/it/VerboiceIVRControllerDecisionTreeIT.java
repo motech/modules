@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.callflow.repository.AllFlowSessionRecords;
-import org.motechproject.decisiontree.core.FlowSession;
+import org.motechproject.decisiontree.core.model.FlowSession;
 import org.motechproject.decisiontree.core.TreeNodeLocator;
 import org.motechproject.decisiontree.core.model.AudioPrompt;
 import org.motechproject.decisiontree.core.model.DialPrompt;

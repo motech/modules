@@ -1,4 +1,4 @@
-package org.motechproject.decisiontree.core;
+package org.motechproject.decisiontree.core.model;
 
 import org.motechproject.decisiontree.core.model.Node;
 import org.motechproject.ivr.domain.CallDetailRecord;
