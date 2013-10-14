@@ -47,11 +47,6 @@
         </dependency>
         <dependency>
             <groupId>${motech.groupId}</groupId>
-            <artifactId>motech-platform-web-security-bundle</artifactId>
-            <version>${motech.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${motech.groupId}</groupId>
             <artifactId>motech-tasks-test-utils</artifactId>
             <version>${motech.version}</version>
             <scope>test</scope>
