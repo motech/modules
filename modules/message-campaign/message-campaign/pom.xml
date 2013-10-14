@@ -24,7 +24,7 @@
         </dependency>
         <dependency>
             <groupId>${motech.groupId}</groupId>
-            <artifactId>motech-platform-web-security-bundle</artifactId>
+            <artifactId>motech-platform-web-security</artifactId>
             <version>${motech.version}</version>
         </dependency>
         <dependency>
