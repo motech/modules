@@ -202,6 +202,10 @@
     margin-bottom: 2px;
 }
 
+.overflowed {
+    overflow: auto;
+}
+
 .ui-jqgrid-bdiv {
     width: 100%;
 }
