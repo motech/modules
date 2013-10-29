@@ -230,6 +230,7 @@
                             org.motechproject.messagecampaign;version=${project.version},
                             org.motechproject.messagecampaign.contract;version=${project.version},
                             org.motechproject.messagecampaign.service;version=${project.version},
+                            org.motechproject.messagecampaign.domain;version=${project.version},
                             org.motechproject.messagecampaign.domain.campaign;version=${project.version},
                             org.motechproject.messagecampaign.userspecified;version=${project.version}
                         </Export-Package>
