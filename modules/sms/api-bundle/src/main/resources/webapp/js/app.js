@@ -3,7 +3,7 @@
 
     /* App Module */
 
-    angular.module('motech-sms', ['motech-dashboard', 'ngCookies', 'bootstrap', 'smsRecordsService']).config(['$routeProvider',
+    angular.module('motech-sms', ['motech-dashboard', 'ngCookies', 'ngRoute', 'bootstrap', 'smsRecordsService']).config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider.
                 when('/smstest', {templateUrl: '../sms/resource/partials/smstest.html', controller: 'SmsController'}).

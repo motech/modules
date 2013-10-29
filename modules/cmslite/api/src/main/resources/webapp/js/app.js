@@ -4,7 +4,7 @@
     /* App Module */
 
     angular.module('motech-cmslite', ['motech-dashboard', 'resourceServices',
-                                    'ngCookies', 'bootstrap', 'motech-widgets']).config(['$routeProvider',
+                                    'ngCookies', 'bootstrap', 'ngRoute', 'motech-widgets']).config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider.
                 when('/resources', {templateUrl: '../cmsliteapi/resources/partials/resources.html', controller: 'ResourceCtrl'}).
