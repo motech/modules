@@ -21,6 +21,9 @@
     <osgi:reference id="platformSettingsServiceOsgi"
                     interface="org.motechproject.server.config.service.PlatformSettingsService" />
 
+    <osgi:reference id="configurationServiceOsgi"
+                    interface="org.motechproject.config.service.ConfigurationService" />
+
     <bean id="alertDbConnector" factory-bean="couchDbManager" factory-method="getConnector">
         <constructor-arg value="motech-openmrs-atomfeed"/>
     </bean>

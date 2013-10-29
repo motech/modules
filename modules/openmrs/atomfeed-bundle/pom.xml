@@ -64,6 +64,7 @@
                             org.motechproject.commons.couchdb.service,
                             org.motechproject.server.config,
                             org.motechproject.server.config.service,
+                            org.motechproject.config.service,
                             org.springframework.beans.factory.config,
                             org.springframework.beans.factory.xml,
                             org.springframework.context.config,

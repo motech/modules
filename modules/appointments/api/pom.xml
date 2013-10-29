@@ -122,6 +122,7 @@
                             org.motechproject.event.listener,
                             org.motechproject.server.config,
                             org.motechproject.server.config.service,
+                            org.motechproject.config.service,
                             *
                         </Import-Package>
                     </instructions>
