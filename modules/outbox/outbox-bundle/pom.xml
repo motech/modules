@@ -106,6 +106,7 @@
                             org.motechproject.commons.couchdb.service,
                             org.motechproject.event.listener.annotations,
                             org.motechproject.server.config,
+                            org.motechproject.server.config.service,
                             org.springframework.context.support,
                             org.springframework.web.context.support,
                             org.springframework.web.servlet.config,

@@ -6,7 +6,7 @@ import org.motechproject.outbox.api.domain.OutboundVoiceMessageStatus;
 import org.motechproject.outbox.api.domain.VoiceMessageType;
 import org.motechproject.outbox.api.service.VoiceOutboxService;
 import org.motechproject.outbox.server.service.RetrievedMessagesService;
-import org.motechproject.server.config.service.PlatformSettingsService;
+import org.motechproject.config.service.ConfigurationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +50,7 @@ public class VxmlOutboxController extends MultiActionController {
     private VoiceOutboxService voiceOutboxService;
 
     @Autowired
-    private PlatformSettingsService platformSettingsService;
+    private ConfigurationService configurationService;
 
     @Autowired
     private RetrievedMessagesService retrievedMessagesService;
@@ -79,7 +79,7 @@ public class VxmlOutboxController extends MultiActionController {
         String language = request.getParameter(LANGUAGE_PARAM);
 
         if (language == null) {
-            language = platformSettingsService.getPlatformLanguage("en");
+            language = configurationService.getPlatformSettings().getLanguage();
         }
 
         String contextPath = request.getContextPath();

@@ -37,5 +37,7 @@
 
     <osgi:reference id="platformSettingsServiceOsgi" interface="org.motechproject.server.config.service.PlatformSettingsService"/>
 
+    <osgi:reference id="configurationServiceOsgi" interface="org.motechproject.config.service.ConfigurationService"/>
+
 
 </beans>

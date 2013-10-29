@@ -16,7 +16,8 @@ import org.motechproject.outbox.api.domain.VoiceMessageType;
 import org.motechproject.outbox.api.service.VoiceOutboxService;
 import org.motechproject.outbox.server.service.RetrievedMessagesService;
 import org.motechproject.outbox.server.web.VxmlOutboxController;
-import org.motechproject.server.config.service.PlatformSettingsService;
+import org.motechproject.config.service.ConfigurationService;
+import org.motechproject.server.config.domain.MotechSettings;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,7 +49,10 @@ public class VxmlOutboxControllerTest {
     HttpServletResponse response;
 
     @Mock
-    private PlatformSettingsService platformSettingsService;
+    private ConfigurationService configurationService;
+
+    @Mock
+    private MotechSettings settings;
 
     @Mock
     private RetrievedMessagesService retrievedMessagesService;
@@ -74,6 +78,8 @@ public class VxmlOutboxControllerTest {
         when(request.getParameter("pId")).thenReturn(externalId);
 
         when(voiceOutboxService.getNextMessage(externalId, OutboundVoiceMessageStatus.PENDING)).thenReturn(voiceMessage);
+        when(configurationService.getPlatformSettings()).thenReturn(settings);
+        when(settings.getLanguage()).thenReturn("en");
 
         ModelAndView modelAndView = vxmlOutboxController.outboxMessage(request, response);
         verify(retrievedMessagesService).unscheduleJob(externalId);
@@ -88,6 +94,8 @@ public class VxmlOutboxControllerTest {
         String externalId = "ext1";
         when(request.getParameter("pId")).thenReturn(externalId);
         when(voiceOutboxService.getNextMessage(externalId, OutboundVoiceMessageStatus.PENDING)).thenThrow(new RuntimeException());
+        when(configurationService.getPlatformSettings()).thenReturn(settings);
+        when(settings.getLanguage()).thenReturn("en");
 
         ModelAndView modelAndView = vxmlOutboxController.outboxMessage(request, response);
 
@@ -98,7 +106,8 @@ public class VxmlOutboxControllerTest {
 
     @Test
     public void testNextOutboxMessageNoMessage() {
-
+        when(configurationService.getPlatformSettings()).thenReturn(settings);
+        when(settings.getLanguage()).thenReturn("en");
 
         ModelAndView modelAndView = vxmlOutboxController.outboxMessage(request, response);
 
@@ -116,6 +125,8 @@ public class VxmlOutboxControllerTest {
         String externalId = "ext1";
         when(request.getParameter("pId")).thenReturn(externalId);
         when(voiceOutboxService.getNextMessage(externalId, OutboundVoiceMessageStatus.PENDING)).thenReturn(voiceMessage);
+        when(configurationService.getPlatformSettings()).thenReturn(settings);
+        when(settings.getLanguage()).thenReturn("en");
 
         ModelAndView modelAndView = vxmlOutboxController.outboxMessage(request, response);
 
@@ -129,6 +140,9 @@ public class VxmlOutboxControllerTest {
 
         String messageId = "mID";
         String voiceMessageTypeName = "voicemessagetypename";
+
+        when(configurationService.getPlatformSettings()).thenReturn(settings);
+        when(settings.getLanguage()).thenReturn("en");
 
         OutboundVoiceMessage voiceMessage = new OutboundVoiceMessage();
         VoiceMessageType voiceMessageType = new VoiceMessageType();
@@ -153,6 +167,8 @@ public class VxmlOutboxControllerTest {
 
         Mockito.when(request.getParameter("mId")).thenReturn(messageId);
         when(voiceOutboxService.getMessageById(messageId)).thenThrow(new RuntimeException());
+        when(configurationService.getPlatformSettings()).thenReturn(settings);
+        when(settings.getLanguage()).thenReturn("en");
 
         ModelAndView modelAndView = vxmlOutboxController.outboxMessage(request, response);
 

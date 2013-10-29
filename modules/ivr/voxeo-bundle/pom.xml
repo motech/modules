@@ -140,6 +140,7 @@
                             org.motechproject.ivr.service.contract,
                             org.motechproject.server.config,
                             org.motechproject.server.config.service,
+                            org.motechproject.config.service,
                             org.springframework.beans.factory.xml,
                             org.springframework.context.config,
                             org.springframework.context.support,

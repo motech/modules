@@ -151,6 +151,7 @@
                             org.motechproject.event,
                             org.motechproject.event.listener.annotations,
                             org.motechproject.server.config.service,
+                            org.motechproject.config.service,
                             org.motechproject.sms.api,
                             org.osgi.framework;version="0.0.0",
                             org.osgi.util.tracker;version="0.0.0",

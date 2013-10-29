@@ -22,6 +22,7 @@ public class CMSLiteBundleIT extends BaseOsgiIT {
         assertNotNull(bundleContext.getServiceReference("org.motechproject.event.listener.EventListenerRegistryService"));
         assertNotNull(bundleContext.getServiceReference("org.motechproject.server.config.SettingsFacade"));
         assertNotNull(bundleContext.getServiceReference("org.motechproject.server.config.service.PlatformSettingsService"));
+        assertNotNull(bundleContext.getServiceReference("org.motechproject.config.service.ConfigurationService"));
         assertNotNull(bundleContext.getServiceReference("org.motechproject.cmslite.api.service.CMSLiteService"));
         final CMSLiteService cmsLiteService = (CMSLiteService) getApplicationContext().getBean("cmsLiteServiceRef");
         assertNotNull(cmsLiteService);

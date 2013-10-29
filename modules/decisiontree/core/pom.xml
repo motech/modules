@@ -75,6 +75,7 @@
                             org.motechproject.server.config,
                             org.motechproject.ivr.domain,
                             org.motechproject.server.config.service,
+                            org.motechproject.config.service,
                             org.springframework.ui.velocity,
                             org.springframework.web.servlet.config,
                             org.springframework.web.servlet.mvc,
