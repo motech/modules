@@ -8,6 +8,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.commons.date.util.DateUtil;
+import org.motechproject.config.service.ConfigurationService;
 import org.motechproject.scheduler.MotechSchedulerService;
 import org.motechproject.scheduletracking.api.domain.Alert;
 import org.motechproject.scheduletracking.api.domain.Enrollment;
@@ -26,7 +27,7 @@ import org.motechproject.scheduletracking.api.service.EnrollmentRequest;
 import org.motechproject.scheduletracking.api.service.EnrollmentsQuery;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.scheduletracking.api.service.contract.UpdateCriteria;
-import org.motechproject.server.config.service.PlatformSettingsService;
+import org.motechproject.server.config.domain.SettingsRecord;
 
 import java.io.File;
 import java.io.IOException;
@@ -70,7 +71,9 @@ public class ScheduleTrackingServiceImplTest {
     @Mock
     private EnrollmentRecordMapper enrollmentRecordMapper;
     @Mock
-    private PlatformSettingsService platformSettingsService;
+    private ConfigurationService configurationService;
+    @Mock
+    private SettingsRecord settings;
 
     private ScheduleFactory scheduleFactory;
 
@@ -80,7 +83,7 @@ public class ScheduleTrackingServiceImplTest {
     public void setUp() {
         initMocks(this);
         scheduleFactory = new ScheduleFactory();
-        scheduleTrackingService = new ScheduleTrackingServiceImpl(allSchedules, allEnrollments, enrollmentService, enrollmentsQueryService, enrollmentRecordMapper, platformSettingsService, scheduleFactory);
+        scheduleTrackingService = new ScheduleTrackingServiceImpl(allSchedules, allEnrollments, enrollmentService, enrollmentsQueryService, enrollmentRecordMapper, configurationService, scheduleFactory);
     }
 
     @Test
@@ -469,6 +472,8 @@ public class ScheduleTrackingServiceImplTest {
     @Test
     public void shouldSaveGivenSchedulesInDb() throws IOException, URISyntaxException {
         String scheduleJson = readFileToString(new File(getClass().getResource("/schedules/simple-schedule.json").toURI()));
+        when(configurationService.getPlatformSettings()).thenReturn(settings);
+        when(settings.getLanguage()).thenReturn("en");
 
         scheduleTrackingService.add(scheduleJson);
 

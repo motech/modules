@@ -2,6 +2,7 @@ package org.motechproject.scheduletracking.api.service.impl;
 
 import org.joda.time.LocalDate;
 import org.motechproject.commons.date.model.Time;
+import org.motechproject.config.service.ConfigurationService;
 import org.motechproject.scheduletracking.api.domain.Enrollment;
 import org.motechproject.scheduletracking.api.domain.Schedule;
 import org.motechproject.scheduletracking.api.domain.ScheduleFactory;
@@ -21,16 +22,19 @@ import org.motechproject.scheduletracking.api.service.MilestoneAlerts;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.scheduletracking.api.service.contract.UpdateCriteria;
 import org.motechproject.scheduletracking.api.service.contract.UpdateCriterion;
-import org.motechproject.server.config.service.PlatformSettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import static java.text.MessageFormat.format;
 import static org.motechproject.commons.date.util.DateUtil.newDateTime;
 
+/**
+ * Implementation of {@link ScheduleTrackingService}
+ */
 public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
     private AllSchedules allSchedules;
     private AllEnrollments allEnrollments;
@@ -38,17 +42,17 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
     private EnrollmentsQueryService enrollmentsQueryService;
     private EnrollmentRecordMapper enrollmentRecordMapper;
     private TrackedSchedulesJsonReader schedulesJsonReader;
-    private PlatformSettingsService platformSettingsService;
+    private ConfigurationService configurationService;
     private ScheduleFactory scheduleFactory;
 
     @Autowired
-    public ScheduleTrackingServiceImpl(AllSchedules allSchedules, AllEnrollments allEnrollments, EnrollmentService enrollmentService, EnrollmentsQueryService enrollmentsQueryService, EnrollmentRecordMapper enrollmentRecordMapper, PlatformSettingsService platformSettingsService, ScheduleFactory scheduleFactory) {
+    public ScheduleTrackingServiceImpl(AllSchedules allSchedules, AllEnrollments allEnrollments, EnrollmentService enrollmentService, EnrollmentsQueryService enrollmentsQueryService, EnrollmentRecordMapper enrollmentRecordMapper, ConfigurationService configurationService, ScheduleFactory scheduleFactory) {
         this.allSchedules = allSchedules;
         this.allEnrollments = allEnrollments;
         this.enrollmentService = enrollmentService;
         this.enrollmentsQueryService = enrollmentsQueryService;
         this.enrollmentRecordMapper = enrollmentRecordMapper;
-        this.platformSettingsService = platformSettingsService;
+        this.configurationService = configurationService;
         this.scheduleFactory = scheduleFactory;
         this.schedulesJsonReader = new TrackedSchedulesJsonReaderImpl();
     }
@@ -113,7 +117,7 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
     @Override
     public void add(String scheduleJson) {
         ScheduleRecord scheduleRecord = schedulesJsonReader.getSchedule(scheduleJson);
-        Schedule schedule = scheduleFactory.build(scheduleRecord, platformSettingsService.getPlatformLocale());
+        Schedule schedule = scheduleFactory.build(scheduleRecord, new Locale(configurationService.getPlatformSettings().getLanguage()));
         allSchedules.addOrUpdate(schedule);
     }
 

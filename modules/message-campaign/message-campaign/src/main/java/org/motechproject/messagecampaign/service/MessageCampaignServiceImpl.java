@@ -2,6 +2,7 @@ package org.motechproject.messagecampaign.service;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.motechproject.config.service.ConfigurationService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.event.listener.annotations.MotechListener;
@@ -18,7 +19,6 @@ import org.motechproject.messagecampaign.userspecified.CampaignRecord;
 import org.motechproject.messagecampaign.web.ex.EnrollmentNotFoundException;
 import org.motechproject.server.config.SettingsFacade;
 import org.motechproject.server.config.monitor.ConfigFileMonitor;
-import org.motechproject.server.config.service.PlatformSettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -31,6 +31,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Implementation of {@link MessageCampaignService}
+ */
 @Service("messageCampaignService")
 public class MessageCampaignServiceImpl implements MessageCampaignService {
 
@@ -48,7 +51,7 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
     private CommonsMultipartResolver commonsMultipartResolver;
 
     @Autowired
-    private PlatformSettingsService platformSettingsService;
+    private ConfigurationService configurationService;
 
     @Autowired
     public MessageCampaignServiceImpl(CampaignEnrollmentService campaignEnrollmentService, CampaignEnrollmentRecordMapper campaignEnrollmentRecordMapper, AllCampaignEnrollments allCampaignEnrollments, CampaignSchedulerFactory campaignSchedulerFactory,
@@ -188,7 +191,7 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
 
     @MotechListener(subjects = ConfigFileMonitor.FILE_CHANGED_EVENT_SUBJECT)
     public void changeMaxUploadSize(MotechEvent event) {
-        String uploadSize = platformSettingsService.getPlatformSettings().getUploadSize();
+        String uploadSize =  configurationService.getPlatformSettings().getUploadSize();
 
         if (StringUtils.isNotBlank(uploadSize)) {
             commonsMultipartResolver.setMaxUploadSize(Long.valueOf(uploadSize));
