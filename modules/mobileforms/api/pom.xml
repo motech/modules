@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>${motech.groupId}</groupId>
-            <artifactId>motech-platform-server-config</artifactId>
+            <artifactId>motech-platform-event</artifactId>
             <version>${motech.version}</version>
         </dependency>
         <dependency>

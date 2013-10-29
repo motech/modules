@@ -9,6 +9,8 @@ import org.motechproject.testing.utils.TestContext;
 import org.osgi.framework.ServiceReference;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class CalllogBundleIT extends BaseOsgiIT {
 

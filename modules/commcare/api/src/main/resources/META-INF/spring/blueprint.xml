@@ -61,6 +61,9 @@
     <osgi:reference id="platformSettingsService"
                     interface="org.motechproject.server.config.service.PlatformSettingsService"/>
 
+    <osgi:reference id="configurationService"
+                    interface="org.motechproject.config.service.ConfigurationService"/>
+
     <osgi:reference id="couchDbManager" interface="org.motechproject.commons.couchdb.service.CouchDbManager"/>
 
     <mvc:annotation-driven/>

@@ -25,7 +25,7 @@
     <dependencies>
         <dependency>
             <groupId>${motech.groupId}</groupId>
-            <artifactId>motech-platform-server-config</artifactId>
+            <artifactId>motech-platform-event</artifactId>
             <version>${motech.version}</version>
         </dependency>
         <dependency>
@@ -172,6 +172,7 @@
                             org.motechproject.event.listener.annotations,
                             org.motechproject.server.config,
                             org.motechproject.server.config.service,
+                            org.motechproject.config.service,
                             org.motechproject.commons.couchdb.service,
                             org.springframework.context.config,
                             org.springframework.web.servlet.config,

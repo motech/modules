@@ -4,7 +4,7 @@ import org.motechproject.commcare.domain.CommcareDataForwardingEndpoint;
 import org.motechproject.commcare.domain.SettingsDto;
 import org.motechproject.commcare.service.CommcareDataForwardingEndpointService;
 import org.motechproject.server.config.SettingsFacade;
-import org.motechproject.server.config.service.PlatformSettingsService;
+import org.motechproject.config.service.ConfigurationService;
 import org.osgi.framework.BundleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -34,7 +34,7 @@ public class SettingsController {
     private static final String FORWARD_SCHEMA_CHANGES_KEY = "forwardAppStructure";
 
     @Autowired
-    private PlatformSettingsService settingsService;
+    private ConfigurationService settingsService;
 
     @Autowired
     private CommcareDataForwardingEndpointService forwardingEndpointService;

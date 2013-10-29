@@ -11,12 +11,11 @@ import org.motechproject.commcare.domain.CommcareDataForwardingEndpoint;
 import org.motechproject.commcare.domain.SettingsDto;
 import org.motechproject.commcare.service.CommcareDataForwardingEndpointService;
 import org.motechproject.server.config.SettingsFacade;
-import org.motechproject.server.config.service.PlatformSettingsService;
-import org.motechproject.server.config.domain.ConfigFileSettings;
+import org.motechproject.config.service.ConfigurationService;
+import org.motechproject.server.config.domain.SettingsRecord;
 import org.osgi.framework.BundleException;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -48,10 +47,10 @@ public class SettingsControllerTest {
     private SettingsFacade settingsFacade;
 
     @Mock
-    private ConfigFileSettings motechSettings;
+    private SettingsRecord motechSettings;
 
     @Mock
-    private PlatformSettingsService settingsService;
+    private ConfigurationService settingsService;
 
     @Mock
     private CommcareDataForwardingEndpointService forwardingEndpointService;

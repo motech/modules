@@ -12,7 +12,7 @@ import org.motechproject.commcare.service.CommcareDataForwardingEndpointService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.server.config.SettingsFacade;
-import org.motechproject.server.config.service.PlatformSettingsService;
+import org.motechproject.config.service.ConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -33,7 +33,7 @@ import static org.motechproject.commcare.events.constants.EventSubjects.SCHEMA_C
 @RequestMapping("/connection")
 public class StubConnectionController {
     @Autowired
-    private PlatformSettingsService settingsService;
+    private ConfigurationService settingsService;
 
     @Autowired
     private SettingsFacade settingsFacade;

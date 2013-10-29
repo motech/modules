@@ -2,7 +2,7 @@ package org.motechproject.sms.smpp.osgi;
 
 import org.motechproject.event.listener.EventListenerRegistryService;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.server.config.service.PlatformSettingsService;
+import org.motechproject.config.service.ConfigurationService;
 import org.motechproject.sms.api.service.SmsService;
 import org.motechproject.testing.osgi.BaseOsgiIT;
 
@@ -22,7 +22,7 @@ public class SmsSmppServiceBundleIT extends BaseOsgiIT {
 
         assertNotNull(bundleContext.getServiceReference(EventListenerRegistryService.class.getName()));
 
-        assertNotNull(bundleContext.getServiceReference(PlatformSettingsService.class.getName()));
+        assertNotNull(bundleContext.getServiceReference(ConfigurationService.class.getName()));
 
     }
 
