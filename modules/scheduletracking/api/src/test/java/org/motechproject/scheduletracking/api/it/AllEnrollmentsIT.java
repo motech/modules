@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.commons.date.util.DateUtil;
+import org.motechproject.config.service.ConfigurationService;
 import org.motechproject.scheduletracking.api.domain.Enrollment;
 import org.motechproject.scheduletracking.api.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.api.domain.Schedule;
@@ -27,6 +28,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
+import java.util.Locale;
 
 import static ch.lambdaj.Lambda.on;
 import static java.util.Arrays.asList;
@@ -53,13 +55,13 @@ public class AllEnrollmentsIT {
     @Autowired
     private ScheduleFactory scheduleFactory;
     @Autowired
-    private PlatformSettingsService platformSettingsService;
+    private ConfigurationService configurationSettingsService;
 
     @Before
     public void setUp() {
         TrackedSchedulesJsonReader schedulesJsonReader = new TrackedSchedulesJsonReaderImpl();
         for (ScheduleRecord scheduleRecord : schedulesJsonReader.getAllSchedules("/schedules")) {
-            Schedule schedule = scheduleFactory.build(scheduleRecord, platformSettingsService.getPlatformLocale());
+            Schedule schedule = scheduleFactory.build(scheduleRecord, new Locale(configurationSettingsService.getPlatformSettings().getLanguage()));
             allSchedules.add(schedule);
         }
 

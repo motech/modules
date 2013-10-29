@@ -150,6 +150,8 @@
                             org.motechproject.commons.couchdb.service,
                             org.motechproject.event.listener.annotations,
                             org.motechproject.server.config,
+                            org.motechproject.server.config.service,
+                            org.motechproject.config.service,
                             *
                         </Import-Package>
                     </instructions>
