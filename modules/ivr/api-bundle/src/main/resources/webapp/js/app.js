@@ -4,7 +4,7 @@
     /* App Module */
 
     angular.module('motech-ivr', ['motech-dashboard', 'motech-widgets', 'TestCallServices', 'CalllogSearchService', 'CalllogCountService',
-        'CalllogPhoneNumberService', 'CalllogMaxDurationService', 'ngCookies', 'bootstrap']).config(['$routeProvider',
+        'CalllogPhoneNumberService', 'CalllogMaxDurationService', 'ngCookies', 'ngRoute', 'bootstrap']).config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider.
                 when('/test-call', {templateUrl:'../ivr/partials/test-call.html'}).
