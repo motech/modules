@@ -4,10 +4,11 @@ import com.google.gson.JsonParseException;
 import org.apache.commons.io.IOUtils;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
 import org.motechproject.server.config.SettingsFacade;
-import org.motechproject.server.config.service.PlatformSettingsService;
 import org.osgi.framework.BundleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -27,9 +28,6 @@ public class SettingsController {
     private MessageCampaignService messageCampaignService;
 
     @Autowired
-    private PlatformSettingsService platformSettingsService;
-
-    @Autowired
     @Qualifier("messageCampaignSettings")
     private SettingsFacade settingsFacade;
 
@@ -42,19 +40,18 @@ public class SettingsController {
         }
         String oldConfig = null;
         try {
-            oldConfig = IOUtils.toString(platformSettingsService.getRawConfig(settingsFacade.getSymbolicName(),
-                    MessageCampaignService.MESSAGE_CAMPAIGNS_JSON_FILENAME));
+            oldConfig = IOUtils.toString(settingsFacade.getRawConfig(MessageCampaignService.MESSAGE_CAMPAIGNS_JSON_FILENAME));
 
-            platformSettingsService.saveRawConfig(settingsFacade.getSymbolicName(),
-                    MessageCampaignService.MESSAGE_CAMPAIGNS_JSON_FILENAME,
-                    messageCampaigns.getInputStream());
+            Resource resource = new InputStreamResource(messageCampaigns.getInputStream());
+
+            settingsFacade.saveRawConfig(MessageCampaignService.MESSAGE_CAMPAIGNS_JSON_FILENAME,
+                    resource);
 
             messageCampaignService.loadCampaigns();
         } catch (JsonParseException e) {
             //revert to previous config
-            platformSettingsService.saveRawConfig(settingsFacade.getSymbolicName(),
-                    MessageCampaignService.MESSAGE_CAMPAIGNS_JSON_FILENAME,
-                    new ByteArrayInputStream(oldConfig.getBytes()));
+            settingsFacade.saveRawConfig(MessageCampaignService.MESSAGE_CAMPAIGNS_JSON_FILENAME,
+                    new InputStreamResource(new ByteArrayInputStream(oldConfig.getBytes())));
             throw new IllegalArgumentException("Invalid JSON file", e);
         }
     }
