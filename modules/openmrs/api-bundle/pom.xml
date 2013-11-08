@@ -98,7 +98,7 @@
                             org.motechproject.event.listener.annotations,
                             org.motechproject.server.config,
                             org.motechproject.server.config.service,
-                            org.mogitechproject.config.service,
+                            org.motechproject.config.service,
                             org.springframework.aop.config,
                             org.springframework.aop.framework.autoproxy,
                             org.springframework.beans.factory.aspectj,
