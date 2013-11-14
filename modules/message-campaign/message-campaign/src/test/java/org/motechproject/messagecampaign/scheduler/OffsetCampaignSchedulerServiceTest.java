@@ -1,9 +1,12 @@
 package org.motechproject.messagecampaign.scheduler;
 
 import org.joda.time.LocalDate;
+import org.joda.time.Period;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.commons.date.model.Time;
@@ -16,6 +19,7 @@ import org.motechproject.messagecampaign.domain.campaign.Campaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
 import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
+import org.motechproject.messagecampaign.scheduler.exception.CampaignEnrollmentException;
 import org.motechproject.scheduler.MotechSchedulerService;
 import org.motechproject.scheduler.domain.RunOnceSchedulableJob;
 
@@ -27,6 +31,7 @@ import static org.joda.time.Period.days;
 import static org.joda.time.Period.minutes;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.motechproject.commons.date.util.DateUtil.newDateTime;
@@ -42,6 +47,9 @@ public class OffsetCampaignSchedulerServiceTest {
     private MotechSchedulerService schedulerService;
     @Mock
     private AllMessageCampaigns allMessageCampaigns;
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @Before
     public void setup() {
@@ -143,6 +151,43 @@ public class OffsetCampaignSchedulerServiceTest {
         Assert.assertEquals(startDate2.toString(), allJobs.get(1).getStartDate().toString());
         Assert.assertEquals("org.motechproject.messagecampaign.fired-campaign-message", allJobs.get(1).getMotechEvent().getSubject());
         assertMotechEvent(allJobs.get(1), "MessageJob.testCampaign.12345.child-info-week-1a", "child-info-week-1a");
+    }
+
+    @Test
+    public void shouldCheckIfReferenceTimeIsProvidedWhenTimeOffsetIsLessThanADayForSchedulingACampaign() {
+        int timeOffset = 60;
+        String externalId = "externalId";
+        String campaignName = "campaignName";
+        CampaignEnrollment enrollment = new CampaignEnrollment(externalId, campaignName).setReferenceTime(null);
+        OffsetCampaignMessage campaignMessage = new OffsetCampaignMessage();
+        campaignMessage.name(campaignName);
+        campaignMessage.timeOffset(new Period(timeOffset * 1000));
+
+        expectedException.expect(CampaignEnrollmentException.class);
+        expectedException.expectMessage(String.format("Cannot enroll %s for message campaign %s - Reference time is not provided.", externalId, campaignName));
+
+        offsetCampaignSchedulerService.scheduleMessageJob(enrollment, campaignMessage);
+
+        verifyZeroInteractions(schedulerService);
+    }
+
+    @Test
+    public void shouldCheckIfStartTimeIsProvidedWithCampaignMessageOrEnrollmentForSchedulingACampaign() {
+        int timeOffsetGreaterThanADay = (24 * 60 * 60) + 1;
+        String externalId = "externalId";
+        String campaignName = "campaignName";
+        CampaignEnrollment enrollment = new CampaignEnrollment(externalId, campaignName).setReferenceTime(null).setDeliverTime(null);
+        OffsetCampaignMessage campaignMessage = new OffsetCampaignMessage();
+        campaignMessage.name(campaignName);
+        campaignMessage.setStartTime(null);
+        campaignMessage.timeOffset(new Period(timeOffsetGreaterThanADay * 1000));
+
+        expectedException.expect(CampaignEnrollmentException.class);
+        expectedException.expectMessage(String.format("Cannot enroll %s for message campaign %s - Start time not defined for campaign. Define it in campaign-message.json or at enrollment time", externalId, campaignName));
+
+        offsetCampaignSchedulerService.scheduleMessageJob(enrollment, campaignMessage);
+
+        verifyZeroInteractions(schedulerService);
     }
 
     private void assertMotechEvent(RunOnceSchedulableJob runOnceSchedulableJob, String expectedJobId, String messageKey) {

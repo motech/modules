@@ -8,6 +8,7 @@ import org.motechproject.messagecampaign.dao.AllMessageCampaigns;
 import org.motechproject.messagecampaign.domain.campaign.Campaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
+import org.motechproject.messagecampaign.scheduler.exception.CampaignEnrollmentException;
 import org.motechproject.scheduler.MotechSchedulerService;
 
 import java.util.ArrayList;
@@ -51,8 +52,13 @@ public abstract class CampaignSchedulerService<M extends CampaignMessage, C exte
 
     protected abstract void scheduleMessageJob(CampaignEnrollment enrollment, CampaignMessage message);
 
-    protected Time deliverTimeFor(CampaignEnrollment enrollment, CampaignMessage message) {
-        return enrollment.getDeliverTime() != null ? enrollment.getDeliverTime() : message.getStartTime();
+    protected Time deliverTimeFor(CampaignEnrollment enrollment, CampaignMessage message) throws CampaignEnrollmentException {
+        Time deliveryTime = enrollment.getDeliverTime() != null ? enrollment.getDeliverTime() : message.getStartTime();
+
+        if (deliveryTime == null) {
+            throw new CampaignEnrollmentException(String.format("Cannot enroll %s for message campaign %s - Start time not defined for campaign. Define it in campaign-message.json or at enrollment time", enrollment.getExternalId(), message.name()));
+        }
+        return deliveryTime;
     }
 
     protected Map<String, Object> jobParams(String messageKey, CampaignEnrollment enrollment) {
