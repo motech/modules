@@ -90,12 +90,6 @@
           "type": "DATE"
         },
         {
-          "key" : "ReferanceTime",
-          "displayName" : "msgCampaign.reference.time",
-          "type": "TIME",
-          "required": false
-        },
-        {
           "key" : "StartTime",
           "displayName" : "msgCampaign.start.time",
           "type": "TIME",

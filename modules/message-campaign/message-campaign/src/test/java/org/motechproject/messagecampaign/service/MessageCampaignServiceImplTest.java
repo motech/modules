@@ -160,7 +160,7 @@ public class MessageCampaignServiceImplTest {
 
     @Test
     public void shouldCallCampaignSchedulerToStart() {
-        CampaignRequest campaignRequest = new CampaignRequest("entity_1", "campaign-name", null, null, null);
+        CampaignRequest campaignRequest = new CampaignRequest("entity_1", "campaign-name", null, null);
 
         AbsoluteCampaign absoluteCampaign = mock(AbsoluteCampaign.class);
         when(allMessageCampaigns.getCampaign("campaign-name")).thenReturn(absoluteCampaign);
@@ -293,14 +293,13 @@ public class MessageCampaignServiceImplTest {
         enrollment.setStatus(CampaignEnrollmentStatus.ACTIVE);
         enrollment.setDeliverTime(10, 50);
         enrollment.setReferenceDate(now.plusWeeks(1));
-        enrollment.setReferenceTime(10, 51);
 
         CampaignSchedulerService campaignScheduler = mock(CampaignSchedulerService.class);
 
         when(allCampaignEnrollments.get("enrollmentId")).thenReturn(enrollment);
         when(campaignSchedulerFactory.getCampaignScheduler("campaign")).thenReturn(campaignScheduler);
 
-        CampaignRequest campaignRequest = new CampaignRequest("extId", "campaign", now, new Time(11, 0), new Time(10, 0));
+        CampaignRequest campaignRequest = new CampaignRequest("extId", "campaign", now, new Time(10, 0));
 
         messageCampaignService.updateEnrollment(campaignRequest, "enrollmentId");
 
@@ -311,7 +310,7 @@ public class MessageCampaignServiceImplTest {
             public boolean matches(Object argument) {
                 CampaignEnrollment enrollment = (CampaignEnrollment) argument;
                 return Objects.equals("campaign", enrollment.getCampaignName()) && Objects.equals("extId", enrollment.getExternalId())
-                        && Objects.equals(new Time(11, 0), enrollment.getReferenceTime()) && Objects.equals(new Time(10, 0), enrollment.getDeliverTime())
+                        && Objects.equals(new Time(10, 0), enrollment.getDeliverTime())
                         && Objects.equals(now, enrollment.getReferenceDate());
             }
         };
@@ -336,7 +335,7 @@ public class MessageCampaignServiceImplTest {
         when(allCampaignEnrollments.get("couchId")).thenReturn(enrollment);
         when(allCampaignEnrollments.findByExternalIdAndCampaignName("extId2", "PREGNANCY")).thenReturn(otherEnrollment);
 
-        CampaignRequest campaignRequest = new CampaignRequest("extId2", "PREGNANCY", null, null, null);
+        CampaignRequest campaignRequest = new CampaignRequest("extId2", "PREGNANCY", null, null);
 
         messageCampaignService.updateEnrollment(campaignRequest, "couchId");
     }

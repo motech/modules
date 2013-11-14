@@ -1,5 +1,9 @@
 package org.motechproject.messagecampaign;
 
+/**
+ * A class grouping constants representing the keys used by the message campaign module.
+ */
+
 public final class EventKeys {
 
     public static final String SCHEDULE_JOB_ID_KEY = "JobID";
@@ -11,7 +15,6 @@ public final class EventKeys {
     public static final String MESSAGE_KEY = "MessageKey";
     public static final String GENERATED_MESSAGE_KEY = "GenMsgKey";
     public static final String REFERENCE_DATE = "ReferanceDate";
-    public static final String REFERENCE_TIME = "ReferanceTime";
     public static final String START_TIME = "StartTime";
 
     public static final String BASE_SUBJECT = "org.motechproject.messagecampaign.";

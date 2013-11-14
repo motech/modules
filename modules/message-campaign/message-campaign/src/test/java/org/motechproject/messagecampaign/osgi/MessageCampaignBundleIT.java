@@ -47,7 +47,7 @@ public class MessageCampaignBundleIT extends BaseOsgiIT {
         messageCampaignService.saveCampaign(campaign);
 
         String externalId = "MessageCampaignBundleIT-" + UUID.randomUUID();
-        CampaignRequest campaignRequest = new CampaignRequest(externalId, "PREGNANCY", new LocalDate(2020, 7, 10), null, null);
+        CampaignRequest campaignRequest = new CampaignRequest(externalId, "PREGNANCY", new LocalDate(2020, 7, 10), null);
 
         try {
             messageCampaignService.startFor(campaignRequest);
