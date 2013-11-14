@@ -10,6 +10,7 @@ import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
+import org.motechproject.messagecampaign.scheduler.exception.CampaignEnrollmentException;
 import org.motechproject.scheduler.MotechSchedulerService;
 import org.motechproject.scheduler.domain.RunOnceSchedulableJob;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,12 +50,16 @@ public class OffsetCampaignSchedulerService extends CampaignSchedulerService<Off
     }
 
     @Override
-    protected Time deliverTimeFor(CampaignEnrollment enrollment, CampaignMessage message) {
+    protected Time deliverTimeFor(CampaignEnrollment enrollment, CampaignMessage message) throws CampaignEnrollmentException {
         OffsetCampaignMessage offsetCampaignMessage = (OffsetCampaignMessage) message;
         if (offsetCampaignMessage.timeOffset().toStandardSeconds().getSeconds() < SECONDS_IN_A_DAY) {
-            return enrollment.getReferenceTime();
+            Time referenceTime = enrollment.getReferenceTime();
+            if (referenceTime == null) {
+                throw new CampaignEnrollmentException(String.format("Cannot enroll %s for message campaign %s - Reference time is not provided.", enrollment.getExternalId(), message.name()));
+            }
+            return referenceTime;
         }
-        return enrollment.getDeliverTime() != null ? enrollment.getDeliverTime() : message.getStartTime();
+        return super.deliverTimeFor(enrollment, message);
     }
 
     @Override

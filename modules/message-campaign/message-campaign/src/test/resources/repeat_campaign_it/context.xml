@@ -11,6 +11,7 @@
         <property name="moduleName" value="message-campaign"/>
         <property name="rawConfigFiles">
             <list>
+                <value>classpath:message-campaigns.json</value>
                 <value>classpath:repeat_campaign_it/campaigns.json</value>
             </list>
         </property>

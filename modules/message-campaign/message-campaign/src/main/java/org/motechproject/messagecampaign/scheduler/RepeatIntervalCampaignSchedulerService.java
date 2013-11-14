@@ -9,6 +9,7 @@ import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.RepeatIntervalCampaign;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.domain.message.RepeatIntervalCampaignMessage;
+import org.motechproject.messagecampaign.scheduler.exception.CampaignEnrollmentException;
 import org.motechproject.scheduler.MotechSchedulerService;
 import org.motechproject.scheduler.domain.RepeatingSchedulableJob;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,12 +45,16 @@ public class RepeatIntervalCampaignSchedulerService extends CampaignSchedulerSer
     }
 
     @Override
-    protected Time deliverTimeFor(CampaignEnrollment enrollment, CampaignMessage message) {
+    protected Time deliverTimeFor(CampaignEnrollment enrollment, CampaignMessage message) throws CampaignEnrollmentException {
         RepeatIntervalCampaignMessage repeatIntervalCampaignMessage = (RepeatIntervalCampaignMessage) message;
         if (repeatIntervalCampaignMessage.getRepeatIntervalInMillis() < MILLIS_IN_A_DAY) {
-            return enrollment.getReferenceTime();
+            Time referenceTime = enrollment.getReferenceTime();
+            if (referenceTime == null) {
+                throw new CampaignEnrollmentException(String.format("Cannot enroll %s for message campaign %s - Reference time is not provided.", enrollment.getExternalId(), message.name()));
+            }
+            return referenceTime;
         }
-        return enrollment.getDeliverTime() != null ? enrollment.getDeliverTime() : message.getStartTime();
+        return super.deliverTimeFor(enrollment, message);
     }
 
     @Override
