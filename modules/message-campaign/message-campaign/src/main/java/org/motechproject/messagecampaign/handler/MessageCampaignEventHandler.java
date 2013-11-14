@@ -14,7 +14,6 @@ import static org.motechproject.messagecampaign.EventKeys.CAMPAIGN_NAME_KEY;
 import static org.motechproject.messagecampaign.EventKeys.ENROLL_USER_SUBJECT;
 import static org.motechproject.messagecampaign.EventKeys.EXTERNAL_ID_KEY;
 import static org.motechproject.messagecampaign.EventKeys.REFERENCE_DATE;
-import static org.motechproject.messagecampaign.EventKeys.REFERENCE_TIME;
 import static org.motechproject.messagecampaign.EventKeys.START_TIME;
 import static org.motechproject.messagecampaign.EventKeys.UNENROLL_USER_SUBJECT;
 
@@ -34,7 +33,6 @@ public class MessageCampaignEventHandler {
                 getString(event, EXTERNAL_ID_KEY),
                 getString(event, CAMPAIGN_NAME_KEY),
                 getLocalDate(event, REFERENCE_DATE),
-                getTime(event, REFERENCE_TIME),
                 getTime(event, START_TIME)
         );
 

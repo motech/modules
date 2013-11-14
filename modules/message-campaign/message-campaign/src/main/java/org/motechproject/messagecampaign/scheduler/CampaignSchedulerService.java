@@ -17,6 +17,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Abstract class for handling campaign (un)scheduling
+ * @param <M> Type of {@link CampaignMessage}
+ * @param <C> Type of {@link Campaign}
+ */
 public abstract class CampaignSchedulerService<M extends CampaignMessage, C extends Campaign<M>> {
 
     private MotechSchedulerService schedulerService;

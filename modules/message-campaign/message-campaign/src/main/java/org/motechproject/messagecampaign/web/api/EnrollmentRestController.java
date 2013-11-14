@@ -28,6 +28,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ *  Controller for handling message campaign enrollment requests.
+ */
+
 @Controller
 @RequestMapping(value = "web-api/enrollments")
 public class EnrollmentRestController {
@@ -47,7 +51,7 @@ public class EnrollmentRestController {
                                    @RequestBody EnrollmentRequest enrollmentRequest) {
 
         CampaignRequest campaignRequest = new CampaignRequest(userId, campaignName,
-                enrollmentRequest.getReferenceDate(), null, enrollmentRequest.getStartTime());
+                enrollmentRequest.getReferenceDate(), enrollmentRequest.getStartTime());
 
         String enrollmentId = enrollmentRequest.getEnrollmentId();
 
@@ -80,7 +84,7 @@ public class EnrollmentRestController {
     public void updateEnrollment(@PathVariable String campaignName, @PathVariable String userId,
                                  @RequestBody EnrollmentRequest enrollmentRequest) {
         CampaignRequest campaignRequest = new CampaignRequest(userId, campaignName,
-                enrollmentRequest.getReferenceDate(), null, enrollmentRequest.getStartTime());
+                enrollmentRequest.getReferenceDate(), enrollmentRequest.getStartTime());
 
         messageCampaignService.stopAll(campaignRequest);
         messageCampaignService.startFor(campaignRequest);

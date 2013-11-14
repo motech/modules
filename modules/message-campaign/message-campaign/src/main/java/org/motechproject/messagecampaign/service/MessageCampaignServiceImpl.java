@@ -65,7 +65,7 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
     }
 
     public void startFor(CampaignRequest request) {
-        CampaignEnrollment enrollment = new CampaignEnrollment(request.externalId(), request.campaignName()).setReferenceDate(request.referenceDate()).setReferenceTime(request.referenceTime()).setDeliverTime(request.deliverTime());
+        CampaignEnrollment enrollment = new CampaignEnrollment(request.externalId(), request.campaignName()).setReferenceDate(request.referenceDate()).setDeliverTime(request.deliverTime());
         campaignEnrollmentService.register(enrollment);
         CampaignSchedulerService campaignScheduler = campaignSchedulerFactory.getCampaignScheduler(request.campaignName());
         campaignScheduler.start(enrollment);
@@ -128,7 +128,7 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
         campaignSchedulerFactory.getCampaignScheduler(existingEnrollment.getCampaignName()).stop(existingEnrollment);
 
         existingEnrollment.setExternalId(enrollRequest.externalId()).setDeliverTime(enrollRequest.deliverTime())
-                .setReferenceDate(enrollRequest.referenceDate()).setReferenceTime(enrollRequest.referenceTime());
+                .setReferenceDate(enrollRequest.referenceDate());
         allCampaignEnrollments.saveOrUpdate(existingEnrollment);
 
         campaignSchedulerFactory.getCampaignScheduler(existingEnrollment.getCampaignName()).start(existingEnrollment);
@@ -174,7 +174,7 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
 
     @Override
     public void campaignCompleted(String externalId, String campaignName) {
-        stopAll(new CampaignRequest(externalId, campaignName, null, null, null));
+        stopAll(new CampaignRequest(externalId, campaignName, null, null));
     }
 
     @PostConstruct

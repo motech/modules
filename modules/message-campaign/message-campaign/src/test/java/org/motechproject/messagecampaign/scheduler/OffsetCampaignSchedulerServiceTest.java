@@ -67,7 +67,7 @@ public class OffsetCampaignSchedulerServiceTest {
             when(allMessageCampaigns.getCampaign("camp")).thenReturn(campaign);
 
             offsetCampaignSchedulerService.scheduleMessageJob(
-                    new CampaignEnrollment("entity1", "camp").setReferenceDate(new LocalDate(2010, 10, 3)).setReferenceTime(3, 10),
+                    new CampaignEnrollment("entity1", "camp").setReferenceDate(new LocalDate(2010, 10, 3)),
                     new OffsetCampaignMessage(days(5)).messageKey("foo").setStartTime(5, 30));
 
             ArgumentCaptor<RunOnceSchedulableJob> jobCaptor = ArgumentCaptor.forClass(RunOnceSchedulableJob.class);
@@ -81,7 +81,7 @@ public class OffsetCampaignSchedulerServiceTest {
     }
 
     @Test
-    public void referenceTimeShouldBeUsedWhenOffsetIsLessThanADay() {
+    public void shouldHandleTheCaseWhenOffsetIsLessThanADayAndEnrollWithAppropriateTime() {
         try {
             fakeNow(newDateTime(2010, 10, 1));
 
@@ -90,14 +90,14 @@ public class OffsetCampaignSchedulerServiceTest {
             when(allMessageCampaigns.getCampaign("camp")).thenReturn(campaign);
 
             offsetCampaignSchedulerService.scheduleMessageJob(
-                    new CampaignEnrollment("entity1", "camp").setReferenceDate(new LocalDate(2010, 10, 3)).setReferenceTime(2, 0).setDeliverTime(8, 20),
+                    new CampaignEnrollment("entity1", "camp").setReferenceDate(new LocalDate(2010, 10, 3)).setDeliverTime(8, 20),
                     new OffsetCampaignMessage(minutes(5)).messageKey("foo").setStartTime(5, 30));
 
             ArgumentCaptor<RunOnceSchedulableJob> jobCaptor = ArgumentCaptor.forClass(RunOnceSchedulableJob.class);
             verify(schedulerService).scheduleRunOnceJob(jobCaptor.capture());
             RunOnceSchedulableJob job = jobCaptor.getValue();
 
-            assertEquals(newDateTime(2010, 10, 3, 2, 5, 0).toDate(), job.getStartDate());
+            assertEquals(newDateTime(2010, 10, 3, 8, 25, 0).toDate(), job.getStartDate());
         } finally {
             stopFakingTime();
         }
@@ -154,29 +154,11 @@ public class OffsetCampaignSchedulerServiceTest {
     }
 
     @Test
-    public void shouldCheckIfReferenceTimeIsProvidedWhenTimeOffsetIsLessThanADayForSchedulingACampaign() {
-        int timeOffset = 60;
-        String externalId = "externalId";
-        String campaignName = "campaignName";
-        CampaignEnrollment enrollment = new CampaignEnrollment(externalId, campaignName).setReferenceTime(null);
-        OffsetCampaignMessage campaignMessage = new OffsetCampaignMessage();
-        campaignMessage.name(campaignName);
-        campaignMessage.timeOffset(new Period(timeOffset * 1000));
-
-        expectedException.expect(CampaignEnrollmentException.class);
-        expectedException.expectMessage(String.format("Cannot enroll %s for message campaign %s - Reference time is not provided.", externalId, campaignName));
-
-        offsetCampaignSchedulerService.scheduleMessageJob(enrollment, campaignMessage);
-
-        verifyZeroInteractions(schedulerService);
-    }
-
-    @Test
     public void shouldCheckIfStartTimeIsProvidedWithCampaignMessageOrEnrollmentForSchedulingACampaign() {
         int timeOffsetGreaterThanADay = (24 * 60 * 60) + 1;
         String externalId = "externalId";
         String campaignName = "campaignName";
-        CampaignEnrollment enrollment = new CampaignEnrollment(externalId, campaignName).setReferenceTime(null).setDeliverTime(null);
+        CampaignEnrollment enrollment = new CampaignEnrollment(externalId, campaignName).setDeliverTime(null);
         OffsetCampaignMessage campaignMessage = new OffsetCampaignMessage();
         campaignMessage.name(campaignName);
         campaignMessage.setStartTime(null);

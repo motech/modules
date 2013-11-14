@@ -10,7 +10,6 @@ import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
-import org.motechproject.messagecampaign.scheduler.exception.CampaignEnrollmentException;
 import org.motechproject.scheduler.MotechSchedulerService;
 import org.motechproject.scheduler.domain.RunOnceSchedulableJob;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +18,13 @@ import org.springframework.stereotype.Component;
 import static org.motechproject.commons.date.util.DateUtil.newDateTime;
 import static org.motechproject.commons.date.util.DateUtil.now;
 
+/**
+ *  SchedulerService responsible for (un)scheduling offset campaign enrollment
+ */
+
 @Component
 public class OffsetCampaignSchedulerService extends CampaignSchedulerService<OffsetCampaignMessage, OffsetCampaign> {
 
-    private static final int SECONDS_IN_A_DAY = 24 * 60 * 60;
     private Logger logger = Logger.getLogger(this.getClass());
 
     @Autowired
@@ -47,19 +49,6 @@ public class OffsetCampaignSchedulerService extends CampaignSchedulerService<Off
                 logger.info("Unable to schedule offset campaign message " + message.messageKey() + " for ID: " + enrollment.getExternalId() + " enrolled in campaign: " + enrollment.getCampaignName() + " - Message date is in the past");
             }
         }
-    }
-
-    @Override
-    protected Time deliverTimeFor(CampaignEnrollment enrollment, CampaignMessage message) throws CampaignEnrollmentException {
-        OffsetCampaignMessage offsetCampaignMessage = (OffsetCampaignMessage) message;
-        if (offsetCampaignMessage.timeOffset().toStandardSeconds().getSeconds() < SECONDS_IN_A_DAY) {
-            Time referenceTime = enrollment.getReferenceTime();
-            if (referenceTime == null) {
-                throw new CampaignEnrollmentException(String.format("Cannot enroll %s for message campaign %s - Reference time is not provided.", enrollment.getExternalId(), message.name()));
-            }
-            return referenceTime;
-        }
-        return super.deliverTimeFor(enrollment, message);
     }
 
     @Override
