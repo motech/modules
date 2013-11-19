@@ -57,7 +57,9 @@ public class ManagedSmslibServiceTest {
             setProperty(SmppProperties.BINDTYPE, "TRANSMITTER");
             setProperty(SmppProperties.QUEUE_DIRECTORY, "/foo/bar");
         }};
-        Properties smsProperties = new Properties();
+        Properties smsProperties = new Properties() {{
+            setProperty(SmsProperties.MAX_RETRIES, "2");
+        }};
 
         smsSettings = new SettingsFacade();
         smsSettings.saveConfigProperties("sms.properties", smsProperties);
@@ -114,7 +116,7 @@ public class ManagedSmslibServiceTest {
     @Test
     public void shouldConfigureRetryCountOnSmsLib() {
         Service actualSmslibService = Service.getInstance();
-        smsSettings.setProperty("sms.properties", SmsProperties.MAX_RETRIES, "5");
+        smsSettings.setProperty(SmsProperties.MAX_RETRIES, "5");
 
         new ManagedSmslibService(actualSmslibService, null, null, smsSettings, smppSettings);
         assertEquals(5, actualSmslibService.getSettings().QUEUE_RETRIES);

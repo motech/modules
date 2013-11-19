@@ -1,8 +1,11 @@
 package org.motechproject.sms.http.osgi;
 
+import org.motechproject.config.core.domain.BootstrapConfig;
+import org.motechproject.config.core.domain.ConfigSource;
+import org.motechproject.config.core.domain.DBConfig;
+import org.motechproject.config.service.ConfigurationService;
 import org.motechproject.event.listener.EventListenerRegistryService;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.server.config.service.PlatformSettingsService;
 import org.motechproject.sms.api.service.SendSmsRequest;
 import org.motechproject.sms.api.service.SmsService;
 import org.motechproject.testing.osgi.BaseOsgiIT;
@@ -11,8 +14,9 @@ import org.motechproject.testing.utils.WaitCondition;
 import org.motechproject.testing.utils.server.RequestInfo;
 import org.motechproject.testing.utils.server.StubServer;
 import org.osgi.framework.ServiceReference;
-import org.springframework.core.io.ClassPathResource;
-import java.io.InputStream;
+
+import java.net.URL;
+
 import static java.util.Arrays.asList;
 
 
@@ -33,18 +37,22 @@ public class SmsHttpServiceBundleIT extends BaseOsgiIT {
         assertNotNull(bundleContext.getServiceReference(EventRelay.class.getName()));
         assertNotNull(bundleContext.getServiceReference(EventListenerRegistryService.class.getName()));
 
-        ServiceReference platformSettingsRef = bundleContext.getServiceReference(PlatformSettingsService.class.getName());
-        assertNotNull(platformSettingsRef);
+        ServiceReference configurationServiceRef = bundleContext.getServiceReference(ConfigurationService.class.getName());
+        assertNotNull(configurationServiceRef);
 
-        PlatformSettingsService platformSettingsService = (PlatformSettingsService) bundleContext.getService(platformSettingsRef);
+        ConfigurationService configurationService = (ConfigurationService) bundleContext.getService(configurationServiceRef);
 
-        InputStream inputStream = new ClassPathResource("sms-http-template.json").getInputStream();
-        platformSettingsService.saveRawConfig("org.motechproject.motech-sms-http-bundle", "sms-http-template.json", inputStream);
+        URL url = Thread.currentThread().getContextClassLoader().getResource("sms-http-template.json");
 
+        BootstrapConfig bootstrap = new BootstrapConfig(new DBConfig("http://localhost:5984/_utils", "" , ""), "", ConfigSource.UI);
+        configurationService.save(bootstrap);
+        configurationService.loadBootstrapConfig();
+
+        configurationService.saveRawConfig("org.motechproject.motech-sms-http-bundle", "sms-http-template.json",
+                url.openStream());
 
         ServiceReference smsServiceRef = bundleContext.getServiceReference(SmsService.class.getName());
         assertNotNull(smsServiceRef);
-
 
         SmsService smsService = (SmsService) getApplicationContext().getBean("smsServiceRef");
 
