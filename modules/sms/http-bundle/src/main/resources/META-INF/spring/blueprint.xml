@@ -9,8 +9,8 @@
 
     <import resource="classpath*:META-INF/motech/applicationSmsHttp.xml"/>
 
-    <osgi:reference id="platformSettingsServiceOsgi"
-                    interface="org.motechproject.server.config.service.PlatformSettingsService"/>
+    <osgi:reference id="configurationServiceOsgi"
+                    interface="org.motechproject.config.service.ConfigurationService"/>
 
     <osgi:reference id="eventListenerRegistryServiceOsgi"
                     interface="org.motechproject.event.listener.EventListenerRegistryService"/>
