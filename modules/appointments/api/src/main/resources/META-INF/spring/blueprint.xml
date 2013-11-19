@@ -27,9 +27,6 @@
 
     <osgi:reference id="schedulerServiceOsgi" interface="org.motechproject.scheduler.MotechSchedulerService"/>
 
-    <osgi:reference id="platformSettingsServiceOsgi"
-                    interface="org.motechproject.server.config.service.PlatformSettingsService"/>
-
     <osgi:reference id="configurationServiceOsgi"
                     interface="org.motechproject.config.service.ConfigurationService"/>
 
