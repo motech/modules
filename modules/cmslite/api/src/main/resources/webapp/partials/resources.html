@@ -12,26 +12,26 @@
 
     <div class="collapse" id="collapse-resource">
         <div class="inside">
-            <div class="row-fluid span12 margin-before">
-                <div class="span4">
+            <div class="row margin-before">
+                <div class="col-lg-4 col-md-12 col-sm-12">
                     <fieldset class="inside"><legend>{{msg('cmslite.resource.name')}}</legend>
-                        <div class="control-group form-inline">
-                            <input type="text" class="input-xlarge search-query" placeholder="{{msg('cmslite.resource.searchByName')}}" data-event-type="keyup" data-search-field="name" jqgrid-search="resourceTable">
+                        <div class="form-group form-inline">
+                            <input type="text" class="input-xlarge form-control search-query" placeholder="{{msg('cmslite.resource.searchByName')}}" data-event-type="keyup" data-search-field="name" jqgrid-search="resourceTable">
                         </div>
                     </fieldset>
                 </div>
-                <div class="span3">
+                <div class="col-lg-3 col-md-5 col-sm-5">
                     <fieldset class="inside"><legend>{{msg('cmslite.resource.type')}}</legend>
-                        <div data-toggle="buttons-checkbox" class="btn-group control-group">
+                        <div data-toggle="buttons-checkbox" class="btn-group form-group">
                             <button class="btn btn-info active" type="button" data-field-type="boolean" data-search-field="string" jqgrid-search="resourceTable"><i class="icon-white icon-ok"></i> {{msg('cmslite.resource.type.string')}}</button>
                             <button class="btn btn-info active" type="button" data-field-type="boolean" data-search-field="stream" jqgrid-search="resourceTable"><i class="icon-white icon-ok"></i> {{msg('cmslite.resource.type.stream')}}</button>
                         </div>
                     </fieldset>
                 </div>
-                <div class="span5">
+                <div class="col-lg-5 col-md-75 col-sm-7">
                     <fieldset class="inside">
                         <legend>{{msg('cmslite.resource.languages')}}</legend>
-                        <label class="checkbox inline" ng-repeat="lang in usedLanguages">
+                        <label class="checkbox form-inline" ng-repeat="lang in usedLanguages">
                             <input type="checkbox" id="languages" value="{{lang}}" data-field-type="array" data-event-type="click" data-search-field="languages" jqgrid-search="resourceTable"> {{lang}}
                         </label>
                     </fieldset>

@@ -1,25 +1,27 @@
-<div class="row-fluid tab-frame">
-    <div class="inside">
-        <div class="clearfix margin-before">
+<div class="row tab-frame">
+    <div class="col-lg-9 col-md-12 col-sm-12">
+        <div class="inside clearfix margin-before">
             <div class="smsAlert">{{smsDeliveryStatus()}}</div>
             <form name="form" class="form-horizontal inside" ng-submit="sendSMS()" nonvalidate>
 
-                <div class="control-group">
-                    <label class="control-label" for="recipient">{{msg('sms.phone.number')}}</label>
-                    <div class="controls">
-                        <input class="input-xlarge-fluid" type="text" ng-model="sms.recipient" id="recipient" required>
+                <div class="form-group">
+                    <label class="col-md-2 col-sm-3 control-label" for="recipient">{{msg('sms.phone.number')}}</label>
+                    <div class="col-md-10 col-sm-9">
+                        <input class="form-control input-xlarge-fluid" type="text" ng-model="sms.recipient" id="recipient" required>
                     </div>
                 </div>
 
-                <div class="control-group">
-                    <label class="control-label" for="message">{{msg('sms.message')}}</label>
-                    <div class="controls">
-                        <textarea class="input-xlarge-fluid" rows="3" ng-model="sms.message" id="message" placeholder="{{msg('sms.message.placeholder')}}" required></textarea>
+                <div class="form-group">
+                    <label class="col-md-2 col-sm-3 control-label" for="message">{{msg('sms.message')}}</label>
+                    <div class="col-md-10 col-sm-9">
+                        <textarea class="form-control input-xlarge-fluid" rows="3" ng-model="sms.message" id="message" placeholder="{{msg('sms.message.placeholder')}}" required></textarea>
                     </div>
                 </div>
 
-                <div class="controls">
-                    <input class="btn btn-primary" type="submit" value="{{msg('sms.send')}}" ng-disabled="form.$invalid"/>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-sm-offset-3 col-md-10 col-sm-9">
+                        <input class="btn btn-primary" type="submit" value="{{msg('sms.send')}}" ng-disabled="form.$invalid"/>
+                    </div>
                 </div>
             </form>
         </div>

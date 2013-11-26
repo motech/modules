@@ -8,7 +8,7 @@
 
         function resetDeliveryStatus() {
             $scope.smsDeliveryResult = "";
-            $('.smsAlert').removeClass("alert alert-success alert-error");
+            $('.smsAlert').removeClass("alert alert-success alert-danger");
         }
 
         function setDeliveryStatus(status){
@@ -22,11 +22,11 @@
             $http.post('../smsapi/outbound', $scope.sms).success(
                 function (data, status, headers, config) {
                     setDeliveryStatus($scope.msg('sms.sent'));
-                    $('.smsAlert').removeClass("alert-error").addClass('alert alert-success');
+                    $('.smsAlert').removeClass("alert-danger").addClass('alert alert-success');
                 }
             ).error(function (data, status, headers, config) {
                     setDeliveryStatus($scope.msg('sms.failed') + " - " +status);
-                    $('.smsAlert').removeClass("alert-success").addClass('alert alert-error');
+                    $('.smsAlert').removeClass("alert-success").addClass('alert alert-danger');
                 });
         };
 

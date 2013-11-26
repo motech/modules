@@ -1,3 +1,10 @@
+.commcare.nav.nav-tabs {
+    border-bottom: medium none;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 10px;
+}
+
 .commcare .form-actions {
     background: none;
     border-top: none;
