@@ -1,6 +1,6 @@
-<div class="row-fluid tab-frame">
+<div class="row tab-frame">
 
-    <div id="operations-sms-logging" class="control-group">
+    <div id="operations-sms-logging" class="form-group">
         <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#collapse-sms-logging">
             <i class="icon-eject icon-white"></i>&nbsp;{{msg('sms.logging.filters')}}
         </button>
@@ -9,43 +9,43 @@
     <div class="collapse margin-before" id="collapse-sms-logging">
         <div class="inside">
 
-            <div class="row-fluid">
-                <div class="span3">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-12">
                     <fieldset class="inside"><legend>{{msg('sms.logging.phoneNumber')}}</legend>
-                        <div class="control-group form-inline">
-                            <input type="text" class="input-medium search-query" placeholder="{{msg('sms.logging.search')}}" data-event-type="keyup" data-search-field="phoneNumber" jqgrid-search="resourceTable">
+                        <div class="form-group">
+                            <input type="text" class="input-large-fluid form-control search-query" placeholder="{{msg('sms.logging.search')}}" data-event-type="keyup" data-search-field="phoneNumber" jqgrid-search="resourceTable">
                         </div>
                     </fieldset>
                 </div>
-                <div class="span3">
+                <div class="col-lg-3 col-md-6 col-sm-12">
                     <fieldset class="inside"><legend>{{msg('sms.logging.message')}}</legend>
-                        <div class="control-group form-inline">
-                            <input type="text" class="span12 search-query" placeholder="{{msg('sms.logging.search')}}" data-event-type="keyup" data-search-field="messageContent" jqgrid-search="resourceTable">
+                        <div class="form-group">
+                            <input type="text" class="input-large-fluid form-control search-query" placeholder="{{msg('sms.logging.search')}}" data-event-type="keyup" data-search-field="messageContent" jqgrid-search="resourceTable">
                         </div>
                     </fieldset>
                 </div>
-                <div class="span6">
+                <div class="col-lg-6 col-md-11 col-sm-12">
                     <fieldset class="inside"><legend>{{msg('sms.logging.messageTime')}}</legend>
-                        <div class="control-group form-inline">
-                            <input id="dateTimeFrom" grid-date-picker-from="" type="datetime" class="span6 search-query" placeholder="{{msg('sms.logging.from')}}" data-event-type="change" data-search-field="timeFrom" jqgrid-search="resourceTable">
-                            <input id="dateTimeTo" grid-date-picker-to="" type="datetime" class="span6 search-query" placeholder="{{msg('sms.logging.to')}}" data-event-type="change" data-search-field="timeTo" jqgrid-search="resourceTable">
+                        <div class="col-sm-12 form-inline">
+                            <input id="dateTimeFrom" grid-date-picker-from="" type="datetime" class="input-medium-fluid form-control search-query" placeholder="{{msg('sms.logging.from')}}" data-event-type="change" data-search-field="timeFrom" jqgrid-search="resourceTable">
+                            <input id="dateTimeTo" grid-date-picker-to="" type="datetime" class="input-medium-fluid form-control search-query" placeholder="{{msg('sms.logging.to')}}" data-event-type="change" data-search-field="timeTo" jqgrid-search="resourceTable">
                         </div>
                     </fieldset>
                 </div>
             </div>
 
-            <div class="row-fluid">
-                <div class="span4">
+            <div class="row">
+                <div class="col-lg-3 col-md-12">
                     <fieldset class="inside"><legend>{{msg('sms.logging.direction')}}</legend>
-                        <div data-toggle="buttons-checkbox" class="btn-group control-group">
+                        <div data-toggle="buttons-checkbox" class="btn-group form-group">
                             <button id="INBOUND" class="btn btn-info active" type="button" data-field-type="array" data-search-field="smsType" data-search-value="INBOUND" jqgrid-search="resourceTable"><i class="icon-white icon-ok"></i> {{msg('sms.logging.direction.inbound')}}</button>
                             <button id="OUTBOUND" class="btn btn-info active" type="button" data-field-type="array" data-search-field="smsType" data-search-value="OUTBOUND" jqgrid-search="resourceTable"><i class="icon-white icon-ok"></i> {{msg('sms.logging.direction.outbound')}}</button>
                         </div>
                     </fieldset>
                 </div>
-                <div class="span8">
+                <div class="col-lg-9 col-md-12">
                     <fieldset class="inside"><legend>{{msg('sms.logging.deliveryStatus')}}</legend>
-                        <div data-toggle="buttons-checkbox" class="btn-group control-group">
+                        <div data-toggle="buttons-checkbox" class="btn-group form-group">
                             <button id="DISPATCHED" class="btn btn-info active" type="button" data-field-type="array" data-search-field="deliveryStatus" data-search-value="DISPATCHED" jqgrid-search="resourceTable"><i class="icon-white icon-ok"></i> {{msg('sms.logging.deliver.status.dispatched')}}</button>
                             <button id="DELIVERY_CONFIRMED" class="btn btn-info active" type="button" data-field-type="array" data-search-field="deliveryStatus" data-search-value="DELIVERY_CONFIRMED" jqgrid-search="resourceTable"><i class="icon-white icon-ok"></i> {{msg('sms.logging.deliver.status.deliveryConfirmed')}}</button>
                             <button id="KEEPTRYING" class="btn btn-info active" type="button" data-field-type="array" data-search-field="deliveryStatus" data-search-value="KEEPTRYING" jqgrid-search="resourceTable"><i class="icon-white icon-ok"></i> {{msg('sms.logging.deliver.status.keepTrying')}}</button>

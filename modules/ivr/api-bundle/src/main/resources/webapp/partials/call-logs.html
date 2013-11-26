@@ -1,47 +1,47 @@
 <div ng-controller="CalllogController" class="call-log">
-    <div class="box-header">{{ msg('ivr.calllog.welcome.heading') }}</div>
+    <div class="row tab-frame">
+        <div class="col-lg-12 col-md-12 col-sm-12">
 
-    <div class="box-content clearfix margin-after">
-        <div id="operations-call-logs" class="control-group">
-            <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#filter-panel">
-                <i class="icon-eject icon-white"></i>&nbsp;{{msg('ivr.header.filters')}}
-            </button>
-            <span class="help-inline" id="filter-title"></span>
-        </div>
-        <div id="filter-panel" class="collapse">
-            <div class="inside">
+            <div id="operations-call-logs" class="row margin-before inside">
+                <div class="form-group">
+                    <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#filter-panel">
+                        <i class="icon-eject icon-white"></i>&nbsp;{{msg('ivr.header.filters')}}
+                    </button>
+                    <span class="help-inline" id="filter-title"></span>
+                </div>
+            </div>
 
-                <div class="row-fluid">
-                    <div class="span4">
+            <div id="filter-panel" class="collapse">
+                <div class="row">
+                    <div class="col-sm-4">
                         <fieldset class="inside"><legend>{{msg('ivr.calllog.phoneNumber')}}</legend>
-                            <div class="control-group form-inline">
-                                <input type="text" class="span10 search-query" id="phoneNumber" ng-model="phoneNumber" typeahead placeholder="{{msg('ivr.calllog.search')}}"
+                            <div class="form-group form-inline">
+                                <input type="text" class="form-control search-query" id="phoneNumber" ng-model="phoneNumber" typeahead placeholder="{{msg('ivr.calllog.search')}}"
                                        data-event-type="keyup" data-search-field="phoneNumber" jqgrid-search="resourceTable">
                             </div>
                         </fieldset>
                     </div>
-                    <div class="span8">
+                    <div class="col-sm-8">
                         <fieldset class="inside"><legend>{{msg('ivr.header.dates')}}</legend>
-
-                            <div class="control-group form-inline">
+                            <div class="form-group form-inline">
                                 <label class="control-label label-right" for="startDate">Start Date:</label>
                                 <span id="startDate">
-                                    <input id="startDateTimeFrom" grid-date-picker-from="startDateTime" type="datetime" name="from" class="offset1 span4 search-query" placeholder="{{msg('ivr.header.from')}}" data-event-type="change" data-search-field="startFromDate" jqgrid-search="resourceTable">
-                                    <input id="startDateTimeTo" grid-date-picker-to="startDateTime" type="datetime" name="to" class="span4 margin-offset1 search-query" placeholder="{{msg('ivr.header.to')}}" data-event-type="change" data-search-field="startToDate" jqgrid-search="resourceTable">
+                                    <input id="startDateTimeFrom" grid-date-picker-from="startDateTime" type="datetime" name="from" class="form-control offset1 input-auto search-query" placeholder="{{msg('ivr.header.from')}}" data-event-type="change" data-search-field="startFromDate" jqgrid-search="resourceTable">
+                                    <input id="startDateTimeTo" grid-date-picker-to="startDateTime" type="datetime" name="to" class="form-control input-auto margin-offset1 search-query" placeholder="{{msg('ivr.header.to')}}" data-event-type="change" data-search-field="startToDate" jqgrid-search="resourceTable">
                                 </span>
                             </div>
-                            <div class="control-group form-inline">
+                            <div class="form-group form-inline">
                                 <label class="control-label label-right" for="answerDate">Answer Date:</label>
                                 <span id="answerDate">
-                                    <input id="answerDateTimeFrom" grid-date-picker-from="answerDateTime" type="datetime" name="from" class="offset1 span4 search-query" placeholder="{{msg('ivr.header.from')}}" data-event-type="change" data-search-field="answerFromDate" jqgrid-search="resourceTable">
-                                    <input id="answerDateTimeTo" grid-date-picker-to="answerDateTime" type="datetime" name="to" class="span4 margin-offset1 search-query" placeholder="{{msg('ivr.header.to')}}" data-event-type="change" data-search-field="answerToDate" jqgrid-search="resourceTable">
+                                    <input id="answerDateTimeFrom" grid-date-picker-from="answerDateTime" type="datetime" name="from" class="form-control offset1 input-auto search-query" placeholder="{{msg('ivr.header.from')}}" data-event-type="change" data-search-field="answerFromDate" jqgrid-search="resourceTable">
+                                    <input id="answerDateTimeTo" grid-date-picker-to="answerDateTime" type="datetime" name="to" class="form-control input-auto margin-offset1 search-query" placeholder="{{msg('ivr.header.to')}}" data-event-type="change" data-search-field="answerToDate" jqgrid-search="resourceTable">
                                 </span>
                             </div>
-                            <div class="control-group form-inline">
+                            <div class="form-group form-inline">
                                 <label class="control-label label-right" for="endDate">End Date:</label>
                                 <span id="endDate">
-                                    <input id="endDateTimeFrom" grid-date-picker-from="endDateTime" type="datetime" name="from" class="offset1 span4 search-query" placeholder="{{msg('ivr.header.from')}}" data-event-type="change" data-search-field="endFromDate" jqgrid-search="resourceTable">
-                                    <input id="endDateTimeTo" grid-date-picker-to="endDateTime" type="datetime" name="to" class="span4 margin-offset1 search-query" placeholder="{{msg('ivr.header.to')}}" data-event-type="change" data-search-field="endToDate" jqgrid-search="resourceTable">
+                                    <input id="endDateTimeFrom" grid-date-picker-from="endDateTime" type="datetime" name="from" class="form-control offset1 input-auto search-query" placeholder="{{msg('ivr.header.from')}}" data-event-type="change" data-search-field="endFromDate" jqgrid-search="resourceTable">
+                                    <input id="endDateTimeTo" grid-date-picker-to="endDateTime" type="datetime" name="to" class="form-control input-auto margin-offset1 search-query" placeholder="{{msg('ivr.header.to')}}" data-event-type="change" data-search-field="endToDate" jqgrid-search="resourceTable">
                                 </span>
                             </div>
                         </fieldset>
@@ -49,22 +49,22 @@
                 </div>
                 <div class="clearfix"></div>
 
-                <div class="row-fluid">
-                    <div class="span3">
+                <div class="row">
+                    <div class="col-lg-3 col-md-12">
                         <fieldset class="inside"><legend>{{msg('ivr.calllog.callDuration')}}</legend>
-                            <div class="control-group">
+                            <div class="form-group">
                                 <input type="text" id="minDuration" class="slider-control" slider="#slider" slider-point="min" data-event-type="keyup" data-search-field="minDuration" jqgrid-search="resourceTable"/>
                                 -
 
                                 <input type="text" id="maxDuration" class="slider-control" slider="#slider" slider-point="max" data-event-type="keyup" data-search-field="maxDuration" jqgrid-search="resourceTable"/>
                                 <span class="help-inline">{{msg('ivr.calllog.seconds')}}</span>
-                                <div ng-slider id="slider"></div>
+                                <div class="margin-before" ng-slider id="slider"></div>
                             </div>
                         </fieldset>
                     </div>
-                    <div class="span6">
+                    <div class="col-lg-6 col-md-8">
                         <fieldset class="inside"><legend>{{msg('ivr.calllog.disposition')}}</legend>
-                            <div data-toggle="buttons-checkbox" class="btn-group control-group">
+                            <div data-toggle="buttons-checkbox" class="btn-group form-group">
                                 <button id="answered" class="btn btn-info active" type="button" ng-click="setActive('busy')" data-field-type="boolean" data-search-field="answered" jqgrid-search="resourceTable"><i class="icon-white icon-ok"></i> {{msg('ivr.calllog.answered')}}</button>
                                 <button id="busy" class="btn btn-info active" type="button" ng-click="setActive('busy')" data-field-type="boolean" data-search-field="busy" jqgrid-search="resourceTable"><i class="icon-white icon-ok"></i> {{msg('ivr.calllog.busy')}}</button>
                                 <button id="failed" class="btn btn-info active" type="button" ng-click="setActive('failed')" data-field-type="boolean" data-search-field="failed" jqgrid-search="resourceTable"><i class="icon-white icon-ok"></i> {{msg('ivr.calllog.failed')}}</button>
@@ -73,9 +73,9 @@
                             </div>
                         </fieldset>
                     </div>
-                    <div class="span3">
+                    <div class="col-lg-3 col-md-4">
                         <fieldset class="inside"><legend>{{msg('ivr.calllog.callDirection')}}</legend>
-                            <div data-toggle="buttons-checkbox" class="btn-group control-group">
+                            <div data-toggle="buttons-checkbox" class="btn-group form-group">
                                 <button id="Inbound" class="btn btn-info active" type="button" data-field-type="boolean" data-search-field="inbound" jqgrid-search="resourceTable"><i class="icon-white icon-ok"></i> {{msg('ivr.calllog.inbound')}}</button>
                                 <button id="Outbound" class="btn btn-info active" type="button" data-field-type="boolean" data-search-field="outbound"  jqgrid-search="resourceTable"><i class="icon-white icon-ok"></i> {{msg('ivr.calllog.outbound')}}</button>
 
@@ -85,12 +85,11 @@
                 </div>
 
             </div>
+
+            <div id="outsideCalllogTable" class="row overrideJqgridTable overflowed">
+                <table id="resourceTable" call-grid="pageResourceTable"></table>
+                <div id="pageResourceTable" class="overflowed"></div>
+            </div>
         </div>
-
-    <div id="outsideCalllogTable" class="overrideJqgridTable overflowed">
-        <table id="resourceTable" call-grid="pageResourceTable"></table>
-        <div id="pageResourceTable" class="overflowed"></div>
-    </div>
-
     </div>
 </div>
