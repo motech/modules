@@ -3,6 +3,9 @@ package org.motechproject.server.kookoo;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
+import org.motechproject.security.domain.MotechSecurityConfiguration;
+import org.motechproject.security.repository.AllMotechSecurityRulesCouchdbImpl;
+import org.motechproject.security.service.SecurityRuleLoader;
 import org.motechproject.testing.osgi.BaseOsgiIT;
 import org.motechproject.testing.utils.PollingHttpClient;
 import org.motechproject.testing.utils.TestContext;
@@ -17,11 +20,15 @@ public class KookooIvrServiceBundleIT extends BaseOsgiIT {
 
     private PollingHttpClient httpClient = new PollingHttpClient();
 
+    private AllMotechSecurityRulesCouchdbImpl securityRules;
+    private SecurityRuleLoader securityRuleLoad;
+
     public void testThatIVRServiceIsAvailableForImport() throws InvalidSyntaxException {
         assertNotNull(applicationContext.getBean("testKookooIVRService"));
     }
 
     public void testKooKooCallbackUrlIsNotAuthenticated() throws IOException, InterruptedException {
+        checkSecurity();
         HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/kookoo/web-api/ivr", TestContext.getJettyPort()));
 
         HttpResponse response = httpClient.execute(httpGet);
@@ -30,6 +37,7 @@ public class KookooIvrServiceBundleIT extends BaseOsgiIT {
     }
 
     public void testKooKooStatusCallbackUrlIsNotAuthenticated() throws IOException, InterruptedException {
+        checkSecurity();
         HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/kookoo/web-api/ivr/callstatus", TestContext.getJettyPort()));
 
         HttpResponse response = httpClient.execute(httpGet);
@@ -39,11 +47,23 @@ public class KookooIvrServiceBundleIT extends BaseOsgiIT {
 
     @Override
     protected List<String> getImports() {
-        return asList("org.motechproject.ivr.service.contract");
+        return asList("org.motechproject.ivr.service.contract",
+                "org.motechproject.commons.couchdb.service");
     }
 
     @Override
     protected String[] getConfigLocations() {
         return new String[]{"/META-INF/osgi/testIVRKookooContext.xml"};
+    }
+
+    private void checkSecurity() {
+        securityRules= (AllMotechSecurityRulesCouchdbImpl) applicationContext.getBean("securityRules");
+        securityRuleLoad=(SecurityRuleLoader) applicationContext.getBean("securityRuleLoad");
+
+        MotechSecurityConfiguration securityConfig = securityRules.getMotechSecurityConfiguration();
+
+        if (securityRules == null || securityConfig == null) {
+            securityRuleLoad.loadRules(applicationContext);
+        }
     }
 }
