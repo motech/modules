@@ -7,6 +7,7 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
     <import resource="classpath:META-INF/motech/applicationCommonsCouchdbContext.xml"/>
+    <import resource="classpath:META-INF/motech/coreConfigContext.xml"/>
     <import resource="classpath:META-INF/motech/activemqConnection.xml"/>
     <import resource="classpath:META-INF/motech/eventQueuePublisher.xml"/>
     <import resource="classpath:META-INF/motech/eventQueueConsumer.xml"/>
