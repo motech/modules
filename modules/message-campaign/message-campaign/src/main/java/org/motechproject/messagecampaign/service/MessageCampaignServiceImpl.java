@@ -2,6 +2,7 @@ package org.motechproject.messagecampaign.service;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.motechproject.config.core.constants.ConfigurationConstants;
 import org.motechproject.config.service.ConfigurationService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
@@ -18,7 +19,6 @@ import org.motechproject.messagecampaign.scheduler.CampaignSchedulerService;
 import org.motechproject.messagecampaign.userspecified.CampaignRecord;
 import org.motechproject.messagecampaign.web.ex.EnrollmentNotFoundException;
 import org.motechproject.server.config.SettingsFacade;
-import org.motechproject.server.config.monitor.ConfigFileMonitor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -189,7 +189,7 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
         }
     }
 
-    @MotechListener(subjects = ConfigFileMonitor.FILE_CHANGED_EVENT_SUBJECT)
+    @MotechListener(subjects = ConfigurationConstants.FILE_CHANGED_EVENT_SUBJECT)
     public void changeMaxUploadSize(MotechEvent event) {
         String uploadSize =  configurationService.getPlatformSettings().getUploadSize();
 

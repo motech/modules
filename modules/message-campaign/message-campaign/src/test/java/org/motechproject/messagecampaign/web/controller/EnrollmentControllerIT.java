@@ -54,6 +54,10 @@ public class EnrollmentControllerIT {
     String userName = "testuser";
     String credentials = "testpass";
 
+    private CampaignRequest enrollRequest = new CampaignRequest(
+            USER_ID, FRIDAY_CAMPAIGN, new LocalDate(2020, 7, 10), null
+    );
+
     @Before
     public void setUp() throws Exception {
         setUpSecurityContext();
@@ -67,6 +71,8 @@ public class EnrollmentControllerIT {
         final EnrollmentDto enrollmentDto = allEnrollments.getEnrollments().get(0);
         assertEquals(USER_ID, enrollmentDto.getExternalId());
         assertEquals(FRIDAY_CAMPAIGN, enrollmentDto.getCampaignName());
+
+        messageCampaignService.stopAll(enrollRequest);
     }
 
     private void createCampaignAndEnroll() {
@@ -74,7 +80,6 @@ public class EnrollmentControllerIT {
         absoluteCampaignMessageRecord.setName(FRIDAY_CAMPAIGN);
         final CampaignRecord campaignRecord = CampaignRecordBuilder.absoluteCampaignRecord(FRIDAY_CAMPAIGN, absoluteCampaignMessageRecord);
         messageCampaignService.saveCampaign(campaignRecord);
-        final CampaignRequest enrollRequest = new CampaignRequest(USER_ID, FRIDAY_CAMPAIGN, new LocalDate(2020, 7, 10), null); // Friday;
         messageCampaignService.startFor(enrollRequest);
     }
 
