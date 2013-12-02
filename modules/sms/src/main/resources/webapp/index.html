@@ -1,0 +1,13 @@
+<div>
+    <ul class="nav nav-tabs sms">
+        <li ng-class="active('#/send')"><a href="#/send">{{msg('sms.web.send.title')}}</a></li>
+        <li ng-class="active('#/log')"><a href="#/log">{{msg('sms.web.log.title')}}</a></li>
+        <li ng-class="active('#/settings')"><a href="#/settings">{{msg('sms.web.settings.title')}}</a></li>
+    </ul>
+    <div class="tab-content sms">
+        <div id="main-content" class="active">
+            <div ng-view></div>
+        </div>
+    </div>
+</div>
+

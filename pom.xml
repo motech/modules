@@ -832,11 +832,6 @@
                 <version>2.0beta1-${external.dependency.release.tag}</version>
             </dependency>
             <dependency>
-                <groupId>org.smslib</groupId>
-                <artifactId>org.motechproject.org.smslib</artifactId>
-                <version>3.5.1-${external.dependency.release.tag}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.googlecode.jsmpp</groupId>
                 <artifactId>org.motechproject.com.googlecode.jsmpp</artifactId>
                 <version>2.1.0-${external.dependency.release.tag}</version>
@@ -1205,9 +1200,6 @@
         <module>modules/ivr/voxeo</module>
         <module>modules/mobileforms/api</module>
         <module>modules/outbox/outbox</module>
-        <module>modules/sms/api</module>
-        <module>modules/sms/http</module>
-        <module>modules/sms/smpp</module>
 
         <!-- OSGI modules -->
         <module>modules/alerts/api</module>
@@ -1222,9 +1214,7 @@
         <module>modules/ivr/voxeo-bundle</module>
         <module>modules/mobileforms/api-bundle</module>
         <module>modules/outbox/outbox-bundle</module>
-        <module>modules/sms/api-bundle</module>
-        <module>modules/sms/http-bundle</module>
-        <module>modules/sms/smpp-bundle</module>
+        <module>modules/sms</module>
 
         <!-- Archetypes modules -->
 
