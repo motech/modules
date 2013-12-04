@@ -19,9 +19,9 @@ source_file = modules/ivr/api-bundle/src/main/resources/webapp/messages/messages
 source_lang = en_US
 type = PROPERTIES
 
-[MOTECH.mobileforms-api-bundle]
-file_filter = modules/mobileforms/api-bundle/src/main/resources/webapp/messages/messages_<lang>.properties
-source_file = modules/mobileforms/api-bundle/src/main/resources/webapp/messages/messages.properties
+[MOTECH.mobileforms-api]
+file_filter = modules/mobileforms/api/src/main/resources/webapp/messages/messages_<lang>.properties
+source_file = modules/mobileforms/api/src/main/resources/webapp/messages/messages.properties
 source_lang = en_US
 type = PROPERTIES
 
