@@ -13,7 +13,7 @@ import static org.motechproject.mobileforms.api.callbacks.FormGroupPublisher.FOR
 
 public class MobileFormsTaskBundleIT extends AbstractTaskBundleIT {
 
-    private static final String CHANNEL_NAME = "org.motechproject.motech-mobileforms-api-bundle";
+    private static final String CHANNEL_NAME = "org.motechproject.motech-mobileforms-api";
 
     public void testValidFormTriggerExists() throws IOException {
         assertTrigger(FORM_VALID_FROMS);
