@@ -12,7 +12,7 @@ import java.util.List;
 
 public class OutboxTaskBundleIT extends AbstractTaskBundleIT {
 
-    private static final String CHANNEL_NAME = "org.motechproject.motech-outbox-bundle";
+    private static final String CHANNEL_NAME = "org.motechproject.motech-outbox";
 
     public void testTaskChannelCreated() throws IOException {
         Channel channel = findChannel(CHANNEL_NAME);

@@ -1199,7 +1199,6 @@
         <module>modules/ivr/verboice</module>
         <module>modules/ivr/voxeo</module>
         <module>modules/mobileforms/api</module>
-        <module>modules/outbox/outbox</module>
 
         <!-- OSGI modules -->
         <module>modules/alerts/api</module>
@@ -1212,7 +1211,7 @@
         <module>modules/ivr/kookoo-bundle</module>
         <module>modules/ivr/verboice-bundle</module>
         <module>modules/ivr/voxeo-bundle</module>
-        <module>modules/outbox/outbox-bundle</module>
+        <module>modules/outbox/outbox</module>
         <module>modules/sms</module>
 
         <!-- Archetypes modules -->
