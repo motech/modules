@@ -31,8 +31,8 @@ source_file = modules/outbox/outbox/src/main/resources/webapp/bundles/messages.p
 source_lang = en_US
 type = PROPERTIES
 
-[MOTECH.sms-api-bundle]
-file_filter = modules/sms/api-bundle/src/main/resources/webapp/messages/messages_<lang>.properties
-source_file = modules/sms/api-bundle/src/main/resources/webapp/messages/messages.properties
+[MOTECH.sms-bundle]
+file_filter = modules/sms/src/main/resources/webapp/messages/messages_<lang>.properties
+source_file = modules/sms/src/main/resources/webapp/messages/messages.properties
 source_lang = en_US
 type = PROPERTIES
