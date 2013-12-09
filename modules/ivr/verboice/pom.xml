@@ -17,7 +17,7 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>motech-ivr-api-bundle</artifactId>
+            <artifactId>motech-ivr-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
