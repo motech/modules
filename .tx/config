@@ -13,9 +13,9 @@ source_file = modules/commcare/api/src/main/resources/webapp/messages/messages.p
 source_lang = en_US
 type = PROPERTIES
 
-[MOTECH.ivr-api-bundle]
-file_filter = modules/ivr/api-bundle/src/main/resources/webapp/messages/messages_<lang>.properties
-source_file = modules/ivr/api-bundle/src/main/resources/webapp/messages/messages.properties
+[MOTECH.ivr-api]
+file_filter = modules/ivr/api/src/main/resources/webapp/messages/messages_<lang>.properties
+source_file = modules/ivr/api/src/main/resources/webapp/messages/messages.properties
 source_lang = en_US
 type = PROPERTIES
 

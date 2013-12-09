@@ -29,7 +29,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>motech-ivr-api-bundle</artifactId>
+            <artifactId>motech-ivr-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -42,5 +42,4 @@
             <artifactId>junit-addons</artifactId>
         </dependency>
     </dependencies>
-
 </project>

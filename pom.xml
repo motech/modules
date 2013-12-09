@@ -1206,7 +1206,6 @@
         <module>modules/cmslite/api</module>
         <module>modules/commcare/api</module>
         <module>modules/decisiontree/core</module>
-        <module>modules/ivr/api-bundle</module>
         <module>modules/ivr/asterisk-bundle</module>
         <module>modules/ivr/kookoo-bundle</module>
         <module>modules/ivr/verboice-bundle</module>
@@ -1454,7 +1453,7 @@
                                     <resources>
                                         <resource>
                                             <directory>${modules.root.dir}/testdata</directory>
-                                            <include>motech-settings.conf</include>
+                                            <include>motech-settings.properties</include>
                                             <include>bootstrap.properties</include>
                                             <include>config-locations.properties</include>
                                         </resource>
