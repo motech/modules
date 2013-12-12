@@ -10,13 +10,13 @@
                 <div class="form-group">
                     <label class="col-md-2 col-sm-3 control-label">{{msg('ivr.number.label')}}</label>
                     <div class="col-md-10 col-sm-9">
-                        <input class="form-control input-auto" type='text' ng-model='call.phoneNumber' required />
+                        <input class="form-control input-large-fluid" type='text' ng-model='call.phoneNumber' required />
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-md-2 col-sm-3 control-label">{{msg('ivr.provider.label')}}</label>
                     <div class="col-md-10 col-sm-9">
-                        <select class="form-control input-auto" ng-model='call.provider' ng-options='provider.name as provider.name for provider in providers' required>
+                        <select class="form-control input-large-fluid" ng-model='call.provider' ng-options='provider.name as provider.name for provider in providers' required>
                         </select>
                     </div>
                 </div>

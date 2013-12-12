@@ -1,13 +1,34 @@
-<div> <!-- Only required for left/right tabs -->
-    <ul id="content-tabs" class="nav nav-tabs commcare">
-        <li ng-class="active('#/settings')"><a href="#/settings" >{{msg('commcare.tab.settings')}}</a></li>
-        <li ng-class="active('#/forms')"><a href="#/forms" >{{msg('commcare.tab.forms')}}</a></li>
-        <li ng-class="active('#/cases')"><a href="#/cases" >{{msg('commcare.tab.cases')}}</a></li>
-    </ul>
-
-    <div class="tab-content commcare"  id="tab-content">
-        <div id="main-content" class="tab-pane active">
-            <div ng-view></div>
+<div id="inner-center" class="commcare inner-center ui-layout-center ui-layout-pane ui-layout-pane-center">
+    <div class="header-footer-breadcrumb">
+        <ul class="breadcrumb" role="navigation">
+            <li><a role="menu" href=".">{{msg('server.home')}}</a></li>
+            <li><a role="menu" href="#/settings">{{msg('commcare')}}</a></li>
+            <li ng-show="active('#/settings')" ng-class="active('#/settings')">{{msg('commcare.tab.settings')}}</li>
+            <li ng-show="active('#/forms')" ng-class="active('#/forms')">{{msg('commcare.tab.forms')}}</li>
+            <li ng-show="active('#/cases')" ng-class="active('#/cases')">{{msg('commcare.tab.cases')}}</li>
+        </ul>
+    </div>
+    <div class="header-footer">
+        <ul id="content-tabs" class="nav nav-tabs">
+            <li ng-class="active('#/settings')"><a href="#/settings">{{msg('commcare.tab.settings')}}</a></li>
+            <li ng-class="active('#/forms')"><a href="#/forms">{{msg('commcare.tab.forms')}}</a></li>
+            <li ng-class="active('#/cases')"><a href="#/cases">{{msg('commcare.tab.cases')}}</a></li>
+        </ul>
+    </div>
+    <div class="ui-layout-content">
+        <div class="tab-content" id="tab-content">
+            <div id="main-content" class="active">
+                <div ng-view></div>
+            </div>
         </div>
+    </div>
+</div>
+
+<div id="inner-east" class="commcare inner-east ui-layout-pane ui-layout-pane-east">
+    <div class="header-toolbar header-footer"><i id="tbarCloseEast" class="button icon-caret-right pull-right"></i></div>
+    <!------------------------  Filters  ------------------------>
+    <div class="inbox-header">{{msg('commcare')}}</div>
+    <div class="ui-layout-content">
+        <div class="inside"></div>
     </div>
 </div>
