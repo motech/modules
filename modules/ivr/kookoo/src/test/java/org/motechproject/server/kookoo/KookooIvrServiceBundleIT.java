@@ -3,6 +3,7 @@ package org.motechproject.server.kookoo;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
+import org.junit.Assert;
 import org.motechproject.security.domain.MotechSecurityConfiguration;
 import org.motechproject.security.repository.AllMotechSecurityRulesCouchdbImpl;
 import org.motechproject.security.service.SecurityRuleLoader;
@@ -24,7 +25,7 @@ public class KookooIvrServiceBundleIT extends BaseOsgiIT {
     private SecurityRuleLoader securityRuleLoad;
 
     public void testThatIVRServiceIsAvailableForImport() throws InvalidSyntaxException {
-        assertNotNull(applicationContext.getBean("testKookooIVRService"));
+        Assert.assertNotNull(applicationContext.getBean("testKookooIVRService"));
     }
 
     public void testKooKooCallbackUrlIsNotAuthenticated() throws IOException, InterruptedException {
