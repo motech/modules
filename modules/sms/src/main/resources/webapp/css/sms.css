@@ -126,6 +126,23 @@ input.ng-invalid:focus {
     z-index: 1;
 }
 
+.ui-datepicker, #ui-timepicker-div {
+    z-index: 9999 !important;
+}
+
+
+.ui-datepicker.ui-widget {
+    font-size: 0.9em;
+}
+
+.ui-timepicker-div select {
+    width: auto;
+    height: 24px;
+    line-height: 18px;
+    padding: 1px 3px;
+    margin: 0 0 0 5px;
+}
+
 .char-counter {
     color: silver;
     font-size: 8pt;
