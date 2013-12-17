@@ -1,8 +1,57 @@
-<div> <!-- Only required for left/right tabs -->
-    <div class="tab-content cms-lite" id="tab-content">
-        <div id="main-content" class="tab-pane active">
-            <div ng-view></div>
+<div ng-controller="ResourceCtrl">
+<div id="inner-center" class="cms-lite inner-center ui-layout-center ui-layout-pane ui-layout-pane-center">
+    <div class="header-footer-breadcrumb">
+        <ul class="breadcrumb" role="navigation">
+            <li><a role="menu" href=".">{{msg('server.home')}}</a></li>
+            <li><a role="menu" href="#/resources">{{msg('cmslite')}}</a></li>
+            <li ng-show="active('#/resources')" ng-class="active('#/resources')">{{msg('cmslite.header.resourceCMS')}}</li>
+        </ul>
+    </div>
+    <div class="header-footer">
+        <ul id="content-tabs" class="nav nav-tabs">
+            <li ng-class="active('#/resources')"><a href="#/resources">{{msg('cmslite.header.resourceCMS')}}</a></li>
+        </ul>
+    </div>
+    <div class="header-footer inside">
+        <button type="button" class="btn btn-info" id="cmslite-resource-filters">
+            <i class="icon-filter icon-white"></i>&nbsp;{{msg('cmslite.resource.filters')}}
+        </button>
+    </div>
+    <div class="ui-layout-content">
+        <div class="tab-content" id="tab-content">
+            <div id="main-content" class="active">
+                <div ng-view></div>
+            </div>
         </div>
     </div>
 </div>
 
+<div id="inner-east" class="cms-lite inner-east ui-layout-pane ui-layout-pane-east">
+    <div class="header-toolbar header-footer"><i id="tbarCloseEast" class="button icon-caret-right pull-right"></i></div>
+    <!------------------------  Filters  ------------------------>
+    <div class="inbox-header">{{msg('cmslite.resource.filters')}}</div>
+    <div class="ui-layout-content">
+        <div class="inside">
+            <fieldset class="inside">
+                <legend>{{msg('cmslite.resource.name')}}</legend>
+                <div class="form-group">
+                    <input type="text" class="form-control input-sm search-query" placeholder="{{msg('cmslite.resource.searchByName')}}" data-event-type="keyup" data-search-field="name" jqgrid-search="resourceTable">
+                </div>
+            </fieldset>
+            <fieldset class="inside">
+                <legend>{{msg('cmslite.resource.type')}}</legend>
+                <div data-toggle="buttons-checkbox" class="form-group btn-group-vertical">
+                    <button class="btn btn-info btn-sm active" type="button" data-field-type="boolean" data-search-field="string" jqgrid-search="resourceTable"><i class="icon-white icon-ok"></i> {{msg('cmslite.resource.type.string')}}</button>
+                    <button class="btn btn-info btn-sm active" type="button" data-field-type="boolean" data-search-field="stream" jqgrid-search="resourceTable"><i class="icon-white icon-ok"></i> {{msg('cmslite.resource.type.stream')}}</button>
+                </div>
+            </fieldset>
+            <fieldset class="inside">
+                <legend>{{msg('cmslite.resource.languages')}}</legend>
+                <label class="checkbox" ng-repeat="lang in usedLanguages">
+                    <input type="checkbox" id="languages" value="{{lang}}" data-field-type="array" data-event-type="click" data-search-field="languages" jqgrid-search="resourceTable"> {{lang}}
+                </label>
+            </fieldset>
+        </div>
+    </div>
+</div>
+</div>

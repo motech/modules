@@ -7,6 +7,7 @@
     ivrModule.controller('TestCallController', function ($scope, Provider, Call) {
 
         $scope.providers = Provider.all();
+        $scope.innerLayout.hide('east');
 
         $scope.makeCall = function() {
             $scope.dialed = undefined;
@@ -40,6 +41,8 @@
             });
             return s;
         };
+        $scope.innerLayout.show('east');
+        $scope.innerLayout.addToggleBtn("#ivr-call-logs-filters", "east");
 
         $scope.countPages = function () {
             $scope.pageCount = CalllogCount.query(

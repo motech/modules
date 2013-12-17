@@ -13,6 +13,7 @@
         $scope.dt = "now";
         $scope.messages = [];
         $scope.error = "";
+        $scope.innerLayout.hide('east');
 
         $http.get('../sms/configs')
         .success(function(response) {
@@ -68,6 +69,8 @@
 
     smsModule.controller('LogController', function ($scope, $http) {
         $scope.log = [];
+        $scope.innerLayout.show('east');
+        $scope.innerLayout.addToggleBtn("#sms-logging-filters", "east");
     });
 
     /*
@@ -79,6 +82,7 @@
         $scope.errors = [];
         $scope.messages = [];
         $scope.dupeNames = [];
+        $scope.innerLayout.hide('east');
 
         $http.get('../sms/templates')
             .success(function(response){
