@@ -33,8 +33,6 @@
                 */
                 scope.innerLayoutOptions = {
                     name: 'innerLayout',
-                    // resizeWithWindowDelay: 250, // delay calling resizeAll when window is *still* resizing
-                    // resizeWithWindowMaxDelay: 2000, // force resize every XX ms while window is being resized
                     resizable: true,
                     slidable: true,
                     closable: true,
@@ -42,9 +40,9 @@
                     center__paneSelector: "#inner-center",
                     east__spacing_open: 6,
                     spacing_closed: 30,
-                    //south__showOverflowOnHover: true,
-                   // center__showOverflowOnHover: true,
                     east__size: 300,
+                    east__minSize: 200,
+                    east__maxSize: 350,
                     showErrorMessages: true, // some panes do not have an inner layout
                     resizeWhileDragging: true,
                     center__minHeight: 100,
@@ -61,7 +59,6 @@
                     togglerTip_closed: "Open This Pane",
                     east__initClosed: true,
                     initHidden: false
-                    //isHidden: true
                 };
 
                 // create the page-layout, which will ALSO create the tabs-wrapper child-layout
