@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-        angular.module('messageCampaign', ['motech-dashboard', 'CampaignService', 'EnrollmentService', 'ngCookies', 'ngRoute', 'bootstrap'])
+        angular.module('messageCampaign', ['motech-dashboard', 'CampaignService', 'EnrollmentService', 'ngCookies', 'ngRoute'])
         .config(['$routeProvider', function ($routeProvider) {
 
             $routeProvider
