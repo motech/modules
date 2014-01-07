@@ -73,7 +73,7 @@
             <div class="form-group">
                 <label class="col-md-3 col-sm-4 control-label">
                     {{msg('commcare.settings.label.eventStrategy')}}
-                    <i class="icon-info-sign" ui-jq="tooltip" ui-options="{placement:'bottom'}" data-original-title="{{msg('commcare.settings.tooltip.eventStrategy')}}"></i>
+                    <i class="icon-info-sign" data-trigger="hover" data-placement="right" bs-popover="{{msg('commcare.settings.tooltip.eventStrategy')}}" data-original-title=""></i>
                 </label>
                 <div class="col-md-9 col-sm-8 form-inline">
                     <select class="form-control input-auto" ng-model="settings.eventStrategy" autosave="change" ng-options="option for option in eventStrategyOptions" required ng-disabled="!isVerifySuccess()">
