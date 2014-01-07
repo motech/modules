@@ -102,3 +102,7 @@
   min-width: 700px;
   width: auto;
 }
+
+.popover {
+    min-width: 340px;
+}
