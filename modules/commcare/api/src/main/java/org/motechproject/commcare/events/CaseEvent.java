@@ -23,6 +23,7 @@ public class CaseEvent {
     private String caseType;
     private String caseName;
     private String ownerId;
+    private String caseDataXmlns;
 
     public CaseEvent(String caseId) {
         this.caseId = caseId;
@@ -40,6 +41,7 @@ public class CaseEvent {
         this.caseType = ((String) event.getParameters().get(EventDataKeys.CASE_TYPE));
         this.caseName = ((String) event.getParameters().get(EventDataKeys.CASE_NAME));
         this.ownerId = ((String) event.getParameters().get(EventDataKeys.OWNER_ID));
+        this.caseDataXmlns = ((String) event.getParameters().get(EventDataKeys.CASE_DATA_XMLNS));
     }
 
     public String getServerModifiedOn() {
@@ -122,6 +124,14 @@ public class CaseEvent {
         this.ownerId = ownerId;
     }
 
+    public String getCaseDataXmlns() {
+        return caseDataXmlns;
+    }
+
+    public void setCaseDataXmlns(String caseDataXmlns) {
+        this.caseDataXmlns = caseDataXmlns;
+    }
+
     public MotechEvent toMotechEventWithoutData() {
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(EventDataKeys.CASE_ID, this.caseId);
@@ -139,6 +149,7 @@ public class CaseEvent {
         parameters.put(EventDataKeys.CASE_TYPE, this.caseType);
         parameters.put(EventDataKeys.DATE_MODIFIED, this.dateModified);
         parameters.put(EventDataKeys.OWNER_ID, this.ownerId);
+        parameters.put(EventDataKeys.CASE_DATA_XMLNS, this.caseDataXmlns);
         return new MotechEvent(EventSubjects.CASE_EVENT, parameters);
     }
 
@@ -153,6 +164,7 @@ public class CaseEvent {
         setDateModified(caseInstance.getDateModified());
         setFieldValues(caseInstance.getFieldValues());
         setOwnerId(caseInstance.getOwnerId());
+        setCaseDataXmlns(caseInstance.getCaseDataXmlns());
 
         return this;
     }

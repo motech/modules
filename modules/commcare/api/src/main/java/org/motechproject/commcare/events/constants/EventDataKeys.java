@@ -13,6 +13,7 @@ public final class EventDataKeys {
     public static final String CASE_TYPE = "caseType";
     public static final String CASE_NAME = "caseName";
     public static final String OWNER_ID = "ownerId";
+    public static final String CASE_DATA_XMLNS = "caseDataXmlns";
 
     //Malformed case xml exception event
     public static final String MESSAGE = "message";
