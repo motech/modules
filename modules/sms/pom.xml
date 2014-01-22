@@ -4,12 +4,12 @@
     <parent>
         <artifactId>platform-communications</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.22-SNAPSHOT</version>
+        <version>0.23-SNAPSHOT</version>
         <relativePath>../../</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <version>0.22-SNAPSHOT</version>
+    <version>0.23-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <description>MOTECH SMS Module</description>
     <groupId>org.motechproject</groupId>

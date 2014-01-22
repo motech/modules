@@ -5,12 +5,12 @@
     <parent>
         <artifactId>platform-communications</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.22-SNAPSHOT</version>
+        <version>0.23-SNAPSHOT</version>
         <relativePath>../../../</relativePath>
     </parent>
 
     <artifactId>motech-ivr-kookoo</artifactId>
-    <version>0.22-SNAPSHOT</version>
+    <version>0.23-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
     <name>MOTECH IVR Kookoo</name>
