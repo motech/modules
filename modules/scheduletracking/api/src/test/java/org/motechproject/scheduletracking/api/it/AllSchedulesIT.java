@@ -5,14 +5,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.config.service.ConfigurationService;
 import org.motechproject.scheduletracking.api.domain.Schedule;
 import org.motechproject.scheduletracking.api.domain.ScheduleFactory;
 import org.motechproject.scheduletracking.api.domain.json.ScheduleRecord;
 import org.motechproject.scheduletracking.api.repository.AllSchedules;
 import org.motechproject.scheduletracking.api.repository.TrackedSchedulesJsonReader;
 import org.motechproject.scheduletracking.api.repository.TrackedSchedulesJsonReaderImpl;
-import org.motechproject.server.config.service.PlatformSettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
@@ -37,8 +35,6 @@ public class AllSchedulesIT {
     @Autowired
     @Qualifier("scheduleTrackingDbConnector")
     CouchDbConnector db;
-    @Autowired
-    ConfigurationService configurationSettingsService;
 
     private TrackedSchedulesJsonReader schedulesJsonReader;
 
@@ -56,7 +52,7 @@ public class AllSchedulesIT {
         allSchedules = new AllSchedules(db);
         List<ScheduleRecord> scheduleRecords = new TrackedSchedulesJsonReaderImpl().getAllSchedules("/schedules");
         for (ScheduleRecord scheduleRecord : scheduleRecords) {
-            Schedule schedule = scheduleFactory.build(scheduleRecord,new Locale(configurationSettingsService.getPlatformSettings().getLanguage()));
+            Schedule schedule = scheduleFactory.build(scheduleRecord, Locale.ENGLISH);
             allSchedules.add(schedule);
         }
     }
@@ -76,7 +72,7 @@ public class AllSchedulesIT {
     public void shouldAddSchedule() throws URISyntaxException, IOException {
         String scheduleJson = readFileToString(new File(getClass().getResource("/foo_schedules/foo-schedule.json").toURI()));
         ScheduleRecord scheduleRecord = schedulesJsonReader.getSchedule(scheduleJson);
-        Schedule schedule = scheduleFactory.build(scheduleRecord,new Locale(configurationSettingsService.getPlatformSettings().getLanguage()));
+        Schedule schedule = scheduleFactory.build(scheduleRecord, Locale.ENGLISH);
 
         allSchedules.addOrUpdate(schedule);
 
@@ -89,13 +85,13 @@ public class AllSchedulesIT {
     public void shouldUpdateExistingSchedule() throws URISyntaxException, IOException {
         String scheduleJson = readFileToString(new File(getClass().getResource("/foo_schedules/foo-schedule.json").toURI()));
         ScheduleRecord scheduleRecord = schedulesJsonReader.getSchedule(scheduleJson);
-        Schedule schedule = scheduleFactory.build(scheduleRecord, new Locale(configurationSettingsService.getPlatformSettings().getLanguage()));
+        Schedule schedule = scheduleFactory.build(scheduleRecord, Locale.ENGLISH);
 
         allSchedules.addOrUpdate(schedule);
 
         String newScheduleJson = readFileToString(new File(getClass().getResource("/foo_schedules/new-foo-schedule.json").toURI()));
         ScheduleRecord newScheduleRecord = schedulesJsonReader.getSchedule(newScheduleJson);
-        Schedule newSchedule = scheduleFactory.build(newScheduleRecord, new Locale(configurationSettingsService.getPlatformSettings().getLanguage()));
+        Schedule newSchedule = scheduleFactory.build(newScheduleRecord, Locale.ENGLISH);
 
         allSchedules.addOrUpdate(newSchedule);
 
@@ -108,7 +104,7 @@ public class AllSchedulesIT {
     public void shouldRemoveScheduleByName() throws URISyntaxException, IOException {
         String scheduleJson = readFileToString(new File(getClass().getResource("/foo_schedules/foo-schedule.json").toURI()));
         ScheduleRecord scheduleRecord = schedulesJsonReader.getSchedule(scheduleJson);
-        Schedule schedule = scheduleFactory.build(scheduleRecord, new Locale(configurationSettingsService.getPlatformSettings().getLanguage()));
+        Schedule schedule = scheduleFactory.build(scheduleRecord, Locale.ENGLISH);
         allSchedules.addOrUpdate(schedule);
 
         allSchedules.remove("foo");
