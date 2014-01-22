@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.commons.date.model.Time;
-import org.motechproject.config.service.ConfigurationService;
 import org.motechproject.scheduletracking.api.domain.Enrollment;
 import org.motechproject.scheduletracking.api.domain.Schedule;
 import org.motechproject.scheduletracking.api.domain.ScheduleFactory;
@@ -44,14 +43,12 @@ public class ScheduleTrackingServiceIT {
     private AllEnrollments allEnrollments;
     @Autowired
     private ScheduleFactory scheduleFactory;
-    @Autowired
-    private ConfigurationService configurationSettingsService;
 
     @Before
     public void setUp(){
         List<ScheduleRecord> scheduleRecords = new TrackedSchedulesJsonReaderImpl().getAllSchedules("/schedules");
         for (ScheduleRecord scheduleRecord : scheduleRecords) {
-            Schedule schedule = scheduleFactory.build(scheduleRecord,new Locale(configurationSettingsService.getPlatformSettings().getLanguage()));
+            Schedule schedule = scheduleFactory.build(scheduleRecord, Locale.ENGLISH);
             allSchedules.add(schedule);
         }
     }
