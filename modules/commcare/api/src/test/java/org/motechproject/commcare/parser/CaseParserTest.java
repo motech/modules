@@ -86,6 +86,20 @@ public class CaseParserTest extends TestCase {
                 aCase.getFieldValues().get("mother_id"));
     }
 
+    @Test
+    public void shouldParseDataXmlns() throws CaseParserException {
+        CaseParser<CaseXml> parser = new CaseParser<CaseXml>(CaseXml.class,
+                caseXmlWithDataTag());
+        CaseXml aCase = parser.parseCase();
+
+        Assert.assertEquals("3F2504E04F8911D39A0C0305E82C3301", aCase.getCaseId());
+        Assert.assertEquals("2011-12-08T13:34:30", aCase.getDateModified());
+        Assert.assertEquals("F0183EDA012765103CB106821BBA51A0", aCase.getUserId());
+        Assert.assertEquals("2Z2504E04F8911D39A0C0305E82C3000", aCase.getOwnerId());
+
+        Assert.assertEquals("http://myDomain.com/test/ns", aCase.getCaseDataXmlns());
+    }
+
     private String caseXml() {
         String caseXml = "<case xmlns=\"http://commcarehq.org/case/transaction/v2\" case_id=\"3F2504E04F8911D39A0C0305E82C3301\" user_id=\"F0183EDA012765103CB106821BBA51A0\" date_modified=\"2011-12-08T13:34:30\" api_key=\"API_KEY\" >\n"
                 + "<create>"
@@ -99,6 +113,11 @@ public class CaseParserTest extends TestCase {
                 + "<visit_number>1</visit_number>" + "</update>" + "</case>";
 
         return caseXml;
+    }
+
+    private String caseXmlWithDataTag() {
+        return "<data xmlns=\"http://myDomain.com/test/ns\"><meta><userID>fb6e0b19cbe3ef683a10c4c4766a1ef3</userID></meta>"
+                + caseXml() + "</data>";
     }
 
     private String childXml() {

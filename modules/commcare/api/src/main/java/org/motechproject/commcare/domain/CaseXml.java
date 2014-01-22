@@ -13,6 +13,7 @@ public class CaseXml {
     private Map<String, String> fieldValues;
     private String caseType;
     private String caseName;
+    private String caseDataXmlns;
     private String ownerId;
 
     public String getServerModifiedOn() {
@@ -101,5 +102,13 @@ public class CaseXml {
 
     public void setApiKey(String apiKey) {
         this.apiKey = apiKey;
+    }
+
+    public String getCaseDataXmlns() {
+        return caseDataXmlns;
+    }
+
+    public void setCaseDataXmlns(String caseDataXmlns) {
+        this.caseDataXmlns = caseDataXmlns;
     }
 }
