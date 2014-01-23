@@ -15,14 +15,15 @@
 
     <properties>
         <motech.groupId>org.motechproject</motech.groupId>
-        <motech.version>0.22-SNAPSHOT</motech.version>
+        <motech.version>0.23-SNAPSHOT</motech.version>
+
         <db.server>localhost</db.server>
         <db.port>5984</db.port>
         <db.prefix>${user.name}_</db.prefix>
 
         <jasmine.server.port>8234</jasmine.server.port>
 
-        <external.dependency.release.tag>r022</external.dependency.release.tag>
+        <external.dependency.release.tag>r026</external.dependency.release.tag>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <modules.root.dir>${basedir}</modules.root.dir>
         <jdk.version>1.7</jdk.version>
