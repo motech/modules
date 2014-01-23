@@ -34,10 +34,7 @@ public class CaseParser<T> {
         try {
             parser.parse(inputSource);
             ccCase = parseCase(parser.getDocument());
-        } catch (IOException ex) {
-            throw new CaseParserException(ex,
-                    "Exception while trying to parse caseXml");
-        } catch (SAXException ex) {
+        } catch (IOException | SAXException ex) {
             throw new CaseParserException(ex,
                     "Exception while trying to parse caseXml");
         }
@@ -49,6 +46,10 @@ public class CaseParser<T> {
         Element item = (Element) document.getElementsByTagName("case").item(0);
         CaseXml ccCase = createCase(item);
         updateAction(ccCase, item);
+
+        Element dataItem = (Element) document.getElementsByTagName("data").item(0);
+        updateDataFields(ccCase, dataItem);
+
         return ccCase;
     }
 
@@ -80,6 +81,13 @@ public class CaseParser<T> {
         }
         if (getMatchingChildNode(item, "index") != null) {
             populateValuesFor(ccCase, item, "index");
+        }
+    }
+
+    private void updateDataFields(CaseXml ccCase, Element dataItem) {
+        if (dataItem != null) {
+            String xmlns = dataItem.getAttribute("xmlns");
+            ccCase.setCaseDataXmlns(xmlns);
         }
     }
 
