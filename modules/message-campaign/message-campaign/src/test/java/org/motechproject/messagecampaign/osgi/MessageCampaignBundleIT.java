@@ -62,14 +62,14 @@ public class MessageCampaignBundleIT extends BaseOsgiIT {
         PollingHttpClient httpClient = new PollingHttpClient();
 
         HttpGet request = new HttpGet(String.format("http://localhost:%d/messagecampaign/web-api/campaigns", PORT));
-        HttpResponse response = httpClient.execute(request);
+        HttpResponse response = httpClient.execute(request, HttpStatus.SC_UNAUTHORIZED);
 
         assertEquals(HttpStatus.SC_UNAUTHORIZED, response.getStatusLine().getStatusCode());
 
         EntityUtils.consume(response.getEntity());
 
         request = new HttpGet(String.format("http://localhost:%d/messagecampaign/web-api/enrollments/users", PORT));
-        response = httpClient.execute(request);
+        response = httpClient.execute(request, HttpStatus.SC_UNAUTHORIZED);
 
         assertEquals(HttpStatus.SC_UNAUTHORIZED, response.getStatusLine().getStatusCode());
     }
@@ -80,14 +80,14 @@ public class MessageCampaignBundleIT extends BaseOsgiIT {
                 .setCredentials(AuthScope.ANY, new UsernamePasswordCredentials("mal", "icious"));
 
         HttpGet request = new HttpGet(String.format("http://localhost:%d/messagecampaign/web-api/campaigns", PORT));
-        HttpResponse response = httpClient.execute(request);
+        HttpResponse response = httpClient.execute(request, HttpStatus.SC_UNAUTHORIZED);
 
         assertEquals(HttpStatus.SC_UNAUTHORIZED, response.getStatusLine().getStatusCode());
 
         EntityUtils.consume(response.getEntity());
 
         request = new HttpGet(String.format("http://localhost:%d/messagecampaign/web-api/enrollments/users", PORT));
-        response = httpClient.execute(request);
+        response = httpClient.execute(request, HttpStatus.SC_UNAUTHORIZED);
         assertEquals(HttpStatus.SC_UNAUTHORIZED, response.getStatusLine().getStatusCode());
     }
 
@@ -100,14 +100,14 @@ public class MessageCampaignBundleIT extends BaseOsgiIT {
 
         HttpGet request = new HttpGet(String.format("http://localhost:%d/messagecampaign/web-api/enrollments/users", PORT));
         request.setHeader("Authorization", "Basic " + encodeBase64String("user-mc-noauth:pass".getBytes("UTF-8")).trim());
-        HttpResponse response = httpClient.execute(request);
+        HttpResponse response = httpClient.execute(request, HttpStatus.SC_FORBIDDEN);
         assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
 
         EntityUtils.consume(response.getEntity());
 
         request = new HttpGet(String.format("http://localhost:%d/messagecampaign/web-api/campaigns", PORT));
         request.setHeader("Authorization", "Basic " + encodeBase64String("user-mc-noauth:pass".getBytes("UTF-8")).trim());
-        response = httpClient.execute(request);
+        response = httpClient.execute(request, HttpStatus.SC_FORBIDDEN);
         assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
     }
 
