@@ -4,14 +4,14 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.junit.Assert;
-import org.junit.Ignore;
-import org.motechproject.security.domain.MotechSecurityConfiguration;
-import org.motechproject.security.repository.AllMotechSecurityRulesCouchdbImpl;
-import org.motechproject.security.service.SecurityRuleLoader;
+import org.motechproject.security.domain.MotechURLSecurityRule;
+import org.motechproject.security.repository.AllMotechSecurityRules;
 import org.motechproject.testing.osgi.BaseOsgiIT;
 import org.motechproject.testing.utils.PollingHttpClient;
 import org.motechproject.testing.utils.TestContext;
 import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
 import java.util.List;
@@ -22,16 +22,11 @@ public class KookooIvrServiceBundleIT extends BaseOsgiIT {
 
     private PollingHttpClient httpClient = new PollingHttpClient();
 
-    private AllMotechSecurityRulesCouchdbImpl securityRules;
-    private SecurityRuleLoader securityRuleLoad;
-
     public void testThatIVRServiceIsAvailableForImport() throws InvalidSyntaxException {
         Assert.assertNotNull(applicationContext.getBean("testKookooIVRService"));
     }
 
-    // TODO: the two tests below consistently (well, not 100% consistently unfortunately) fail on ci.motechproject.org
-    @Ignore
-    public void testKooKooCallbackUrlIsNotAuthenticated() throws IOException, InterruptedException {
+    public void testKooKooCallbackUrlIsNotAuthenticated() throws IOException, InterruptedException, InvalidSyntaxException {
         checkSecurity();
         HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/kookoo/web-api/ivr", TestContext.getJettyPort()));
 
@@ -40,8 +35,7 @@ public class KookooIvrServiceBundleIT extends BaseOsgiIT {
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
     }
 
-    @Ignore
-    public void testKooKooStatusCallbackUrlIsNotAuthenticated() throws IOException, InterruptedException {
+    public void testKooKooStatusCallbackUrlIsNotAuthenticated() throws IOException, InterruptedException, InvalidSyntaxException {
         checkSecurity();
         HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/kookoo/web-api/ivr/callstatus", TestContext.getJettyPort()));
 
@@ -61,14 +55,24 @@ public class KookooIvrServiceBundleIT extends BaseOsgiIT {
         return new String[]{"/META-INF/osgi/testIVRKookooContext.xml"};
     }
 
-    private void checkSecurity() {
-        securityRules= (AllMotechSecurityRulesCouchdbImpl) applicationContext.getBean("securityRules");
-        securityRuleLoad=(SecurityRuleLoader) applicationContext.getBean("securityRuleLoad");
+    private void checkSecurity() throws InvalidSyntaxException, InterruptedException {
+        int retries = 0;
 
-        MotechSecurityConfiguration securityConfig = securityRules.getMotechSecurityConfiguration();
+        do {
+            for (ServiceReference ref : bundleContext.getAllServiceReferences(WebApplicationContext.class.getName() , null)) {
+                if (ref.getBundle().getSymbolicName().equals("org.motechproject.motech-platform-web-security")) {
+                    WebApplicationContext wsContext = (WebApplicationContext) bundleContext.getService(ref);
 
-        if (securityRules == null || securityConfig == null) {
-            securityRuleLoad.loadRules(applicationContext);
-        }
+                    AllMotechSecurityRules allSecurityRules = wsContext.getBean(AllMotechSecurityRules.class);
+                    List<MotechURLSecurityRule> rules = allSecurityRules.getRules();
+
+                    if (rules != null && !rules.isEmpty()) {
+                        return;
+                    }
+                }
+            }
+
+            Thread.sleep(2000);
+        } while (retries++ < 5);
     }
 }
