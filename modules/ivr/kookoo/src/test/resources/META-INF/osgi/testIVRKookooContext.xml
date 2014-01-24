@@ -8,15 +8,4 @@
 
     <osgi:reference id="testKookooIVRService" interface="org.motechproject.ivr.service.contract.IVRService" availability="mandatory"/>
 
-    <osgi:reference id="couchDbManager" interface="org.motechproject.commons.couchdb.service.CouchDbManager"/>
-
-    <bean id="securityRules" class="org.motechproject.security.repository.AllMotechSecurityRulesCouchdbImpl">
-        <constructor-arg ref="webSecurityDbConnector" />
-    </bean>
-
-    <bean id="securityRuleLoad" class="org.motechproject.security.service.SecurityRuleLoader"/>
-
-    <bean id="webSecurityDbConnector" factory-bean="couchDbManager" factory-method="getConnector">
-        <constructor-arg value="motech-web-security"/>
-    </bean>
 </beans>
