@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
@@ -9,15 +10,16 @@
         </layout>
     </appender>
 
-    <logger name="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
-        <level value="INFO"/>
-    </logger>
     <logger name="org.motechproject">
-        <level value="WARN" />
+        <level value="ERROR" />
+    </logger>
+
+    <logger name="org.motechproject.security">
+        <level value="DEBUG" />
     </logger>
 
     <root>
-        <priority value="WARN" />
+        <priority value="ERROR" />
         <appender-ref ref="CONSOLE" />
     </root>
 
