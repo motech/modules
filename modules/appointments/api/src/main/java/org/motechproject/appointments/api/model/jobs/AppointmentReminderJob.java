@@ -12,9 +12,11 @@ import java.util.Map;
 public class AppointmentReminderJob extends RepeatingSchedulableJob {
 
     public static final String SUBJECT = EventKeys.APPOINTMENT_REMINDER_EVENT_SUBJECT;
+    public static final int MILLIS_PER_SEC = 1000;
 
     public AppointmentReminderJob(String externalId, String jobId, Reminder reminder, String visitName) {
-        super(createMotechEvent(externalId, visitName, jobId), reminder.startDate(), reminder.endDate(), reminder.repeatCount(), reminder.intervalSeconds() * 1000, true);
+        super(createMotechEvent(externalId, visitName, jobId), reminder.startDate(), reminder.endDate(),
+                reminder.repeatCount(), reminder.intervalSeconds() * MILLIS_PER_SEC, true);
     }
 
     private static MotechEvent createMotechEvent(String externalId, String visitName, String jobId) {

@@ -41,11 +41,12 @@ public class AppointmentEventHandler {
     public void createVisit(MotechEvent event) {
         String externalId = event.getParameters().get(EventKeys.EXTERNAL_ID_KEY).toString();
         String visitName = event.getParameters().get(EventKeys.VISIT_NAME).toString();
-        DateTime visitDate = (DateTime)event.getParameters().get(EventKeys.VISIT_DATE);
-        int remindFrom = (int)event.getParameters().get(EventKeys.REMIND_FROM);
-        int intervalCount = (int)event.getParameters().get(EventKeys.INTERVAL_COUNT);
-        ReminderConfiguration.IntervalUnit intervalUnit = ReminderConfiguration.IntervalUnit.valueOf(event.getParameters().get(EventKeys.INTERVAL_UNIT).toString());
-        int repeatCount = (int)event.getParameters().get(EventKeys.REPEAT_COUNT);
+        DateTime visitDate = (DateTime) event.getParameters().get(EventKeys.VISIT_DATE);
+        int remindFrom = (int) event.getParameters().get(EventKeys.REMIND_FROM);
+        int intervalCount = (int) event.getParameters().get(EventKeys.INTERVAL_COUNT);
+        ReminderConfiguration.IntervalUnit intervalUnit = ReminderConfiguration.IntervalUnit.valueOf(
+                event.getParameters().get(EventKeys.INTERVAL_UNIT).toString());
+        int repeatCount = (int) event.getParameters().get(EventKeys.REPEAT_COUNT);
 
         ReminderConfiguration reminderConfiguration = new ReminderConfiguration().setRemindFrom(remindFrom)
                 .setIntervalCount(intervalCount)
