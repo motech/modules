@@ -165,7 +165,7 @@ public class EnrollmentRestController {
         return new EnrollmentList(enrollments);
     }
 
-    @ExceptionHandler({EnrollmentNotFoundException.class, CampaignNotFoundException.class})
+    @ExceptionHandler({EnrollmentNotFoundException.class, CampaignNotFoundException.class })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public String handleException(Exception e) {
