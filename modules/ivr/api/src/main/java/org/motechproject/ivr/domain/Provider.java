@@ -4,7 +4,7 @@ public final class Provider {
 
     private String name;
 
-    public Provider(){}
+    public Provider() { }
 
     public Provider(String name) {
         this.name = name;

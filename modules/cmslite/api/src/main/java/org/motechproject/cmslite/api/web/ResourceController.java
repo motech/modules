@@ -263,7 +263,7 @@ public class ResourceController {
         }
     }
 
-    @ExceptionHandler({ContentNotFoundException.class, CMSLiteException.class, IOException.class})
+    @ExceptionHandler({ContentNotFoundException.class, CMSLiteException.class, IOException.class })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public String handleException(Exception e) {

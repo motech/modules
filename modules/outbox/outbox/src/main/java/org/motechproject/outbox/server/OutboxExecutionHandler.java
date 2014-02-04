@@ -38,7 +38,7 @@ public class OutboxExecutionHandler {
     @Autowired
     private RetrievedMessagesService retrievedMessagesService;
 
-    @MotechListener(subjects = {EventKeys.EXECUTE_OUTBOX_SUBJECT})
+    @MotechListener(subjects = {EventKeys.EXECUTE_OUTBOX_SUBJECT })
     public void execute(MotechEvent event) {
 
         String externalID = EventKeys.getExternalID(event);
@@ -86,7 +86,7 @@ public class OutboxExecutionHandler {
         }
     }
 
-    @MotechListener(subjects = {EventKeys.SCHEDULE_EXECUTION_SUBJECT})
+    @MotechListener(subjects = {EventKeys.SCHEDULE_EXECUTION_SUBJECT })
     public void schedule(MotechEvent event) {
 
         Integer callHour = EventKeys.getCallHourKey(event);
@@ -119,7 +119,7 @@ public class OutboxExecutionHandler {
         motechSchedulerService.scheduleJob(cronSchedulableJob);
     }
 
-    @MotechListener(subjects = {EventKeys.UNSCHEDULE_EXECUTION_SUBJECT})
+    @MotechListener(subjects = {EventKeys.UNSCHEDULE_EXECUTION_SUBJECT })
     public void unschedule(MotechEvent event) {
         if (EventKeys.getScheduleJobIdKey(event) == null) {
             logError(event, EventKeys.SCHEDULE_JOB_ID_KEY);

@@ -18,6 +18,9 @@ import java.util.Set;
  */
 @TypeDiscriminator("doc.type === 'PhoneCall'")
 public class PhoneCall extends MotechBaseDataObject {
+
+    public static final int MILLIS_PER_SEC = 1000;
+
     /**
      * Call direction, Incoming and Outgoing
      */
@@ -87,7 +90,7 @@ public class PhoneCall extends MotechBaseDataObject {
             return null;
         }
 
-        return (int) ((endDate.getTime() - startDate.getTime()) / 1000);
+        return (int) ((endDate.getTime() - startDate.getTime()) / MILLIS_PER_SEC);
     }
 
     public CallRequest getCallRequest() {

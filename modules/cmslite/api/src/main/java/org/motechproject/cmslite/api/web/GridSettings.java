@@ -7,6 +7,7 @@ import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.apache.commons.lang.StringUtils.startsWithIgnoreCase;
 
 public class GridSettings {
+    public static final int DEFAULT_ROWS = 5;
     private String languages = "";
     private String name = "";
     private String sortColumn = "";
@@ -14,7 +15,7 @@ public class GridSettings {
     private Boolean stream = true;
     private Boolean string = true;
     private Integer page = 1;
-    private Integer rows = 5;
+    private Integer rows = DEFAULT_ROWS;
 
     public boolean isCorrect(String contentName, String contentLanguage, String contentType) {
         boolean equalLanguage = isBlank(languages) || containsLanguage(contentLanguage);

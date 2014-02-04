@@ -16,7 +16,7 @@ public class StubCommcareAccountServiceImpl implements CommcareAccountService {
 
     @Override
     public boolean verifySettings(CommcareAccountSettings commcareAccountSettings) throws CommcareConnectionFailureException, CommcareAuthenticationException {
-        if(commcareHttpClient.verifyConnection()) {
+        if (commcareHttpClient.verifyConnection()) {
             return true;
         } else {
             throw new CommcareAuthenticationException("Motech was unable to authenticate to CommCareHQ. Please verify your account settings.");

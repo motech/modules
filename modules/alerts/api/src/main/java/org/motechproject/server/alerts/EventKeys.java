@@ -14,6 +14,6 @@ public final class EventKeys {
     public static final String ALERT_DATA = "AlertData";
     public static final String BASE_SUBJECT = "org.motechproject.alerts.api.";
     public static final String CREATE_ALERT_SUBJECT = BASE_SUBJECT + "Create.Alert";
-    public static final String CLOSE_ALERT_SUBJECT= BASE_SUBJECT + "Close.Alert";
-    public static final String MARK_ALERT_READ_SUBJECT= BASE_SUBJECT + "Mark.Alert.Read";
+    public static final String CLOSE_ALERT_SUBJECT = BASE_SUBJECT + "Close.Alert";
+    public static final String MARK_ALERT_READ_SUBJECT = BASE_SUBJECT + "Mark.Alert.Read";
 }

@@ -77,7 +77,7 @@ public class FullFormParser {
             String key = attr.getNodeName();
 
             if (key.startsWith(XMLNS_ELEMENT)) {
-                key = key.substring(0, 5);
+                key = XMLNS_ELEMENT;
             }
 
             if (!element.containsAttribute(key)) {

@@ -122,7 +122,7 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
     }
 
     private CaseResponseJson parseCasesFromResponse(String response) {
-        Type caseResponseType = new TypeToken<CaseResponseJson>() {}.getType();
+        Type caseResponseType = new TypeToken<CaseResponseJson>() { } .getType();
         return (CaseResponseJson) motechJsonReader.readFromString(response, caseResponseType);
     }
 

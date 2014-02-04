@@ -37,7 +37,7 @@ public class CommcareAppStructureServiceImpl implements CommcareAppStructureServ
     }
 
     private AppStructureResponseJson parseApplicationsFromResponse(String response) {
-        Type appStructureResponseType = new TypeToken<AppStructureResponseJson>() {}.getType();
+        Type appStructureResponseType = new TypeToken<AppStructureResponseJson>() { } .getType();
         return (AppStructureResponseJson) motechJsonReader.readFromString(response, appStructureResponseType);
     }
 }

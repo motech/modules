@@ -29,11 +29,11 @@ public class CallLogRecords implements Serializable {
         this.page = page;
         records = callDetailRecords.size();
         int subtotal = 1;
-        if(records > rows) {
+        if (records > rows) {
             subtotal = records / rows;
             //if the number of records is not an exact multiple
             //of the number of rows, need to add 1 to number of rows
-            if(records % rows != 0) {
+            if (records % rows != 0) {
                 subtotal++;
             }
         }
