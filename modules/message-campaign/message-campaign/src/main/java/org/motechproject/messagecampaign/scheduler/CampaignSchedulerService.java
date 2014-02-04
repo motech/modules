@@ -57,7 +57,7 @@ public abstract class CampaignSchedulerService<M extends CampaignMessage, C exte
 
     protected abstract void scheduleMessageJob(CampaignEnrollment enrollment, CampaignMessage message);
 
-    protected Time deliverTimeFor(CampaignEnrollment enrollment, CampaignMessage message) throws CampaignEnrollmentException {
+    protected Time deliverTimeFor(CampaignEnrollment enrollment, CampaignMessage message) {
         Time deliveryTime = enrollment.getDeliverTime() != null ? enrollment.getDeliverTime() : message.getStartTime();
 
         if (deliveryTime == null) {

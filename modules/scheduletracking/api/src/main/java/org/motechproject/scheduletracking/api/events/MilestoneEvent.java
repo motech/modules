@@ -46,7 +46,11 @@ public class MilestoneEvent {
      */
     public MilestoneEvent(MotechEvent motechEvent) {
         this.scheduleName = (String) motechEvent.getParameters().get(EventDataKeys.SCHEDULE_NAME);
-        this.milestoneAlert = new MilestoneAlert((String)motechEvent.getParameters().get(EventDataKeys.MILESTONE_NAME), (DateTime) motechEvent.getParameters().get(EventDataKeys.EARLIEST_DATE_TIME), (DateTime) motechEvent.getParameters().get(EventDataKeys.DUE_DATE_TIME), (DateTime) motechEvent.getParameters().get(EventDataKeys.LATE_DATE_TIME), (DateTime) motechEvent.getParameters().get(EventDataKeys.DEFAULTMENT_DATE_TIME));
+        this.milestoneAlert = new MilestoneAlert((String) motechEvent.getParameters().get(EventDataKeys.MILESTONE_NAME),
+                (DateTime) motechEvent.getParameters().get(EventDataKeys.EARLIEST_DATE_TIME),
+                (DateTime) motechEvent.getParameters().get(EventDataKeys.DUE_DATE_TIME), 
+                (DateTime) motechEvent.getParameters().get(EventDataKeys.LATE_DATE_TIME),
+                (DateTime) motechEvent.getParameters().get(EventDataKeys.DEFAULTMENT_DATE_TIME));
         this.windowName = (String) motechEvent.getParameters().get(EventDataKeys.WINDOW_NAME);
         this.externalId = (String) motechEvent.getParameters().get(EventDataKeys.EXTERNAL_ID);
         this.referenceDateTime = (DateTime) motechEvent.getParameters().get(EventDataKeys.REFERENCE_DATE);

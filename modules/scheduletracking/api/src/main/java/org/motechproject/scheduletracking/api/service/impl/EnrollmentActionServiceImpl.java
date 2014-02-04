@@ -15,7 +15,8 @@ public class EnrollmentActionServiceImpl implements EnrollmentActionService {
     @Autowired
     private ScheduleTrackingService scheduleTrackingService;
 
-    public void enroll(String externalId, String scheduleName, String preferredAlertTime, DateTime referenceDate, String referenceTime,
+    public void enroll(String externalId, String scheduleName, // NO CHECKSTYLE ParameterNumber
+                       String preferredAlertTime, DateTime referenceDate, String referenceTime,
                        DateTime enrolmentDate, String enrollmentTime, String startingMilestoneName) {
         EnrollmentRequest enrollmentRequest = new EnrollmentRequest()
                 .setExternalId(externalId)

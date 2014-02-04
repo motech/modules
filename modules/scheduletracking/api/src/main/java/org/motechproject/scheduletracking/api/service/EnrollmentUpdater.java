@@ -13,7 +13,7 @@ public enum EnrollmentUpdater {
             Map<String, String> metadata = new HashMap<String, String>(enrollment.getMetadata());
             Map<String, String> tobeUpdatedMetadata = (Map<String, String>) newValue;
             
-            for (Map.Entry<String,String> entry : tobeUpdatedMetadata.entrySet()) {
+            for (Map.Entry<String, String> entry : tobeUpdatedMetadata.entrySet()) {
                 metadata.put(entry.getKey(), entry.getValue());
             }
 

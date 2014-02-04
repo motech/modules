@@ -27,7 +27,7 @@ public class MessageCampaignEventHandler {
     @Autowired
     private MessageCampaignService messageCampaignService;
 
-    @MotechListener(subjects = {ENROLL_USER_SUBJECT, UNENROLL_USER_SUBJECT})
+    @MotechListener(subjects = {ENROLL_USER_SUBJECT, UNENROLL_USER_SUBJECT })
     public void enrollOrUnenroll(MotechEvent event) {
         CampaignRequest request = new CampaignRequest(
                 getString(event, EXTERNAL_ID_KEY),
