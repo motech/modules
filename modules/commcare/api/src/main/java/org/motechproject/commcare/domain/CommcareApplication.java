@@ -9,7 +9,7 @@ import java.util.List;
  * Controller that handles the incoming full form feed from CommCareHQ.
  */
 @TypeDiscriminator("doc.type === 'CommcareApplication'")
-public class CommcareApplication extends MotechBaseDataObject{
+public class CommcareApplication extends MotechBaseDataObject {
 
     private static final long serialVersionUID = 1L;
 

@@ -194,7 +194,7 @@
             <property name="tokens" value="LITERAL_CATCH,LITERAL_DO,LITERAL_ELSE,LITERAL_FINALLY,LITERAL_IF,LITERAL_FOR,LITERAL_TRY,LITERAL_WHILE,INSTANCE_INIT,STATIC_INIT"/>
         </module>
         <module name="EqualsAvoidNull">
-            <property name="severity" value="warning"/>
+            <property name="severity" value="error"/>
         </module>
         <module name="MethodLength">
             <property name="severity" value="warning"/>

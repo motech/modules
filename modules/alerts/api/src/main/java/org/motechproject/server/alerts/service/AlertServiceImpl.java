@@ -95,7 +95,7 @@ public class AlertServiceImpl implements AlertService {
     public void update(String alertId, UpdateCriteria updateCriteria) {
         Alert alert = get(alertId);
         Map<UpdateCriterion, Object> all = updateCriteria.getAll();
-        for (Map.Entry<UpdateCriterion,Object> entry: all.entrySet()) {
+        for (Map.Entry<UpdateCriterion, Object> entry: all.entrySet()) {
             AlertUpdater.get(entry.getKey()).update(alert, entry.getValue());
         }
         allAlerts.update(alert);

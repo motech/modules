@@ -79,7 +79,7 @@ public class AllCallDetailRecords extends CouchDbRepositorySupportWithLucene<Cal
      * @return total number of records with the given parameters
      */
     @View(name = "countLogs", map = "function(doc){ emit(null, 1);}", reduce = "_count")
-    public long countRecords(String phoneNumber, DateTime startFromTime,
+    public long countRecords(String phoneNumber, DateTime startFromTime, // NO CHECKSTYLE ParameterNumber
                              DateTime startToTime, DateTime answerFromTime,
                              DateTime answerToTime, DateTime endFromTime,
                              DateTime endToTime, Integer minDurationInSeconds,
@@ -148,8 +148,8 @@ public class AllCallDetailRecords extends CouchDbRepositorySupportWithLucene<Cal
                     "ret.add(doc.disposition,{'field':'disposition'}); " +
                     "return ret " +
                     "}"
-    )})
-    public List<CallDetailRecord> search(String phoneNumber, DateTime startFromTime,
+    ) })
+    public List<CallDetailRecord> search(String phoneNumber, DateTime startFromTime, //NO CHECKSTYLE ParameterNumber
                                          DateTime startToTime, DateTime answerFromTime,
                                          DateTime answerToTime, DateTime endFromTime,
                                          DateTime endToTime, Integer minDurationInSeconds,
@@ -159,14 +159,13 @@ public class AllCallDetailRecords extends CouchDbRepositorySupportWithLucene<Cal
 
         StringBuilder queryString = generateQueryString(phoneNumber, setTimeZoneUTC(startFromTime),
                 setTimeZoneUTC(startToTime), setTimeZoneUTC(answerFromTime),
-                setTimeZoneUTC(answerToTime),setTimeZoneUTC(endFromTime),
-                setTimeZoneUTC(endToTime),minDurationInSeconds, maxDurationInSeconds, dispositions,
-                directions);
+                setTimeZoneUTC(answerToTime), setTimeZoneUTC(endFromTime),
+                setTimeZoneUTC(endToTime), minDurationInSeconds, maxDurationInSeconds, dispositions, directions);
         String sortColumn = sortBy;
-        if(sortBy != null) {
-            if(sortBy.equalsIgnoreCase("duration")) {
+        if (sortBy != null) {
+            if ("duration".equalsIgnoreCase(sortBy)) {
                 sortColumn = sortBy + "<int>";
-            } else if(sortBy.contains("Date")) {
+            } else if (sortBy.contains("Date")) {
                 sortColumn = sortBy + "<date>";
             }
         }
@@ -190,7 +189,7 @@ public class AllCallDetailRecords extends CouchDbRepositorySupportWithLucene<Cal
         return callDetailRecord;
     }
 
-    private StringBuilder generateQueryString(String phoneNumber, DateTime startFromTime,
+    private StringBuilder generateQueryString(String phoneNumber, DateTime startFromTime, //NO CHECKSTYLE ParameterNumber
                                               DateTime startToTime, DateTime answerFromTime,
                                               DateTime answerToTime, DateTime endFromTime,
                                               DateTime endToTime, Integer minDurationInSeconds,
@@ -199,10 +198,10 @@ public class AllCallDetailRecords extends CouchDbRepositorySupportWithLucene<Cal
         StringBuilder queryString = new StringBuilder();
         Integer minDuration = minDurationInSeconds;
         Integer maxDuration = maxDurationInSeconds;
-        if(minDurationInSeconds == null) {
+        if (minDurationInSeconds == null) {
             minDuration = 0;
         }
-        if(maxDurationInSeconds == null) {
+        if (maxDurationInSeconds == null) {
             maxDuration = (int) findMaxCallDuration();
         }
         queryString.append(String.format("duration<int>:[%d TO %d]", minDuration, maxDuration));

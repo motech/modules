@@ -100,10 +100,10 @@ public class CallRecordsSearchServiceImpl implements CallRecordsSearchService {
     //in the parameters
     private List<String> mapToDirections(CallRecordSearchParameters callLogSearchParameters) {
         List<String> directions = new ArrayList<>();
-        if(callLogSearchParameters.isInbound()) {
+        if (callLogSearchParameters.isInbound()) {
             directions.add(CallDirection.Inbound.name());
         }
-        if(callLogSearchParameters.isOutbound()) {
+        if (callLogSearchParameters.isOutbound()) {
             directions.add(CallDirection.Outbound.name());
         }
         return directions;

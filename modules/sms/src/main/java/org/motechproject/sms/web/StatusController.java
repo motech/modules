@@ -93,7 +93,7 @@ public class StatusController {
         do {
             //seems that lucene takes a while to index, so try a couple of times and delay in between
             if (retry > 0) {
-                logger.debug("Trying again to find log record with motechId {}, try {}", providerMessageId, retry+1);
+                logger.debug("Trying again to find log record with motechId {}, try {}", providerMessageId, retry + 1);
                 try {
                     Thread.sleep(RECORD_FIND_TIMEOUT);
                 } catch (InterruptedException e) {

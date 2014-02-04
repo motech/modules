@@ -137,7 +137,6 @@
                         <Export-Package>
                             org.motechproject.ivr.domain;version=${project.version},
                             org.motechproject.ivr.event;version=${project.version},
-                            org.motechproject.ivr.message;version=${project.version},
                             org.motechproject.ivr.exception;version=${project.version},
                             org.motechproject.ivr.service.contract;version=${project.version}
                         </Export-Package>

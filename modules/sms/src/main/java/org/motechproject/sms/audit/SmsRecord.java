@@ -39,9 +39,9 @@ public class SmsRecord extends MotechBaseDataObject {
     public SmsRecord() {
     }
 
-    public SmsRecord(String config, SmsDirection smsDirection, String number, String message, DateTime timestamp,
-                     DeliveryStatus deliveryStatus, String providerStatus, String motechId, String providerId,
-                     String errorMessage) {
+    public SmsRecord(String config, SmsDirection smsDirection,String number,  //NO CHECKSTYLE ParameterNumber
+                     String message, DateTime timestamp, DeliveryStatus deliveryStatus, String providerStatus,
+                     String motechId, String providerId, String errorMessage) {
         super("SmsRecord");
         this.config = config;
         this.smsDirection = smsDirection;

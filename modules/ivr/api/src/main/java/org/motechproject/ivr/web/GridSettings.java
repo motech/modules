@@ -216,10 +216,10 @@ public class GridSettings {
         params.setPhoneNumber(phoneNumber);
         params.setInbound(inbound);
         params.setOutbound(outbound);
-        if(page == null) {
+        if (page == null) {
             page = 1;
         }
-        if(rows == null) {
+        if (rows == null) {
             rows = DEFAULT_PAGE_SIZE;
         }
         params.setQueryParam(new QueryParam(page, rows, sortColumn, reverse));

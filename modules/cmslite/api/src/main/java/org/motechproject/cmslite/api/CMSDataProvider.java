@@ -48,7 +48,7 @@ public class CMSDataProvider extends AbstractDataProvider {
                     Class<?> cls = getClassForType(type);
                     obj = getContent(cls, id);
 
-                } else if (lookupFields.containsKey(NAME_FIELD) && lookupFields.containsKey(LANGUAGE_FIELD)){
+                } else if (lookupFields.containsKey(NAME_FIELD) && lookupFields.containsKey(LANGUAGE_FIELD)) {
                     String name = lookupFields.get(NAME_FIELD);
                     String language = lookupFields.get(LANGUAGE_FIELD);
                     Class<?> cls = getClassForType(type);

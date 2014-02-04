@@ -177,7 +177,6 @@
                             org.motechproject.mobileforms.api.service;version=${project.version},
                             org.motechproject.mobileforms.api.utils;version=${project.version},
                             org.motechproject.mobileforms.api.validator;version=${project.version},
-                            org.motechproject.mobileforms.api.vo;version=${project.version},
                             org.motechproject.mobileforms.api.web;version=${project.version}
                         </Export-Package>
                         <Import-Package>

@@ -96,7 +96,7 @@ public class VerboiceIVRService implements IVRService {
                 "http://%s:%s/api/call?channel=%s&address=%s%s&callback_params[motech_call_id]=%s",
                 settings.getProperty("host"),
                 settings.getProperty("port"),
-                isBlank(callRequest.getCallBackUrl())?settings.getProperty("channel"):callRequest.getCallBackUrl(),
+                isBlank(callRequest.getCallBackUrl()) ? settings.getProperty("channel") : callRequest.getCallBackUrl(),
                         callRequest.getPhone(), queryParameters.toString(), callRequest.getCallId()
                 );
 

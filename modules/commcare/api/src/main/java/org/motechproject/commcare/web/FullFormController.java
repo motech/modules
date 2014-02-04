@@ -81,7 +81,7 @@ public class FullFormController {
         Multimap<String, Map<String, Object>> elements = new LinkedHashMultimap<>();
 
         for (Map.Entry<String, FormValueElement> entry : subElements.entries()) {
-            Map<String, Object> elementAsMap = new HashMap<>(4);
+            Map<String, Object> elementAsMap = new HashMap<>(4); //NO CHECKSTYLE MagicNumber
             FormValueElement formValueElement = entry.getValue();
 
             elementAsMap.put(ELEMENT_NAME, formValueElement.getElementName());

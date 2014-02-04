@@ -98,7 +98,7 @@ public class StubConnectionController {
     }
 
     private void checkForwardingSettings() {
-        for(CommcareDataForwardingEndpoint endpoint : forwardingEndpointService.getAllDataForwardingEndpoints()) {
+        for (CommcareDataForwardingEndpoint endpoint : forwardingEndpointService.getAllDataForwardingEndpoints()) {
             String endpointUrl = endpoint.getUrl();
 
             if (StringUtils.equals(endpointUrl, getCasesUrl())) {

@@ -87,7 +87,7 @@ public class SmsHttpService {
                 return "POST Parameters: " + sb.toString();
             } else if (requestEntity.getClass() == StringRequestEntity.class) {
                 // Assume MediaType.APPLICATION_JSON_VALUE
-                return "POST JSON: " + ((StringRequestEntity)requestEntity).getContent().toString();
+                return "POST JSON: " + ((StringRequestEntity) requestEntity).getContent().toString();
             }
         } else if (method.getClass().equals(GetMethod.class)) {
             GetMethod g = (GetMethod) method;
@@ -153,9 +153,9 @@ public class SmsHttpService {
         return props;
     }
 
-    private void handleFailure(Integer httpStatus, String priorErrorMessage, Integer failureCount,
-                               Response templateResponse, String httpResponse, Config config, OutgoingSms sms,
-                               List<SmsRecord> auditRecords, List<MotechEvent> events) {
+    private void handleFailure(Integer httpStatus, String priorErrorMessage, //NO CHECKSTYLE ParameterNumber
+                               Integer failureCount, Response templateResponse, String httpResponse, Config config,
+                               OutgoingSms sms, List<SmsRecord> auditRecords, List<MotechEvent> events) {
         String errorMessage = priorErrorMessage;
 
         if (httpStatus == null) {

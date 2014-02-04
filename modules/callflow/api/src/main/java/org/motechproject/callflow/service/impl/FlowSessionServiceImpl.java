@@ -77,7 +77,7 @@ public class FlowSessionServiceImpl implements FlowSessionService {
     // TODO: session should not have provider specific params
     private FlowSession copyParameters(HttpServletRequest request, FlowSession session) {
         Map <String, Object> parameters = request.getParameterMap();
-        for (Map.Entry<String,Object> entry : parameters.entrySet()) {
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
             session.set(entry.getKey().toString(), ((String[]) entry.getValue())[0]);
         }
         return session;

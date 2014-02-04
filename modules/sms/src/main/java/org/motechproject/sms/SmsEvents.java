@@ -36,9 +36,10 @@ public final class SmsEvents {
         return new MotechEvent(SmsEventSubjects.INBOUND_SMS, params);
     }
 
-    public static MotechEvent outboundEvent(String subject, String config, List<String> recipients, String message,
-                                            String motechId, String providerMessageId, Integer failureCount,
-                                            String providerStatus, DateTime timestamp) {
+    public static MotechEvent outboundEvent(String subject, String config, //NO CHECKSTYLE ParameterNumber
+                                            List<String> recipients, String message, String motechId,
+                                            String providerMessageId, Integer failureCount, String providerStatus,
+                                            DateTime timestamp) {
         Map<String, Object> params = new HashMap<>();
         params.put(SmsEventParams.CONFIG, config);
         params.put(SmsEventParams.RECIPIENTS, recipients);

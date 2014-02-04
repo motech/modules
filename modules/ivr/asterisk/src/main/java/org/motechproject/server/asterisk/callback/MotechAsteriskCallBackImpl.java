@@ -27,7 +27,7 @@ public class MotechAsteriskCallBackImpl implements OriginateCallback {
 
     private CallRequest callRequest;
 
-    public MotechAsteriskCallBackImpl(){}
+    public MotechAsteriskCallBackImpl() { }
 
     public MotechAsteriskCallBackImpl(CallRequest callRequest) {
         this.callRequest = callRequest;
