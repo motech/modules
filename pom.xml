@@ -1196,7 +1196,6 @@
         <!-- Non-OSGI modules -->
         <module>modules/ivr/api</module>
         <module>modules/ivr/asterisk</module>
-        <module>modules/ivr/voxeo</module>
         <module>modules/mobileforms/api</module>
 
         <!-- OSGI modules -->
@@ -1208,7 +1207,7 @@
         <module>modules/ivr/kookoo</module>
         <module>modules/ivr/verboice</module>
         <module>modules/ivr/asterisk-bundle</module>
-        <module>modules/ivr/voxeo-bundle</module>
+        <module>modules/ivr/voxeo</module>
         <module>modules/outbox/outbox</module>
         <module>modules/sms</module>
 
