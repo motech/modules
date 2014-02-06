@@ -14,6 +14,7 @@
     <groupId>org.motechproject</groupId>
     <artifactId>motech-ivr-asterisk</artifactId>
     <version>0.23-SNAPSHOT</version>
+    <packaging>bundle</packaging>
 
     <name>MOTECH IVR Asterisk</name>
 
@@ -23,9 +24,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>${motech.groupId}</groupId>
-            <artifactId>motech-platform-commons-couchdb</artifactId>
-            <version>${motech.version}</version>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>motech-ivr-asterisk</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -33,8 +34,32 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>${motech.groupId}</groupId>
+            <artifactId>motech-platform-commons-couchdb</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${motech.groupId}</groupId>
+            <artifactId>motech-platform-osgi-web-util</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.asteriskjava</groupId>
             <artifactId>asterisk-java</artifactId>
+        </dependency>
+        <!-- OSGI dependencies -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>com.springsource.javax.servlet</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>org.springframework.web.servlet</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>com.springsource.org.apache.commons.codec</artifactId>
         </dependency>
         <!-- Test -->
         <dependency>
@@ -42,4 +67,94 @@
             <artifactId>junit-addons</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>2.3.4</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Blueprint-Enabled>true</Blueprint-Enabled>
+                        <Context-Path>asterisk</Context-Path>
+                        <Context-File>META-INF/osgi/applicationAsteriskBundle.xml</Context-File>
+                        <Export-Package>
+                            org.motechproject.server.asterisk.*;version=${project.version}
+                        </Export-Package>
+                        <Import-Package>
+                            org.apache.log4j,
+                            org.asteriskjava,
+                            org.asteriskjava.live,
+                            org.ektorp.impl,
+                            org.ektorp.spring,
+                            org.motechproject.commons.couchdb.service,
+                            org.motechproject.event.listener.annotations,
+                            org.motechproject.server.config,
+                            org.motechproject.server.config.service,
+                            org.motechproject.config.service,
+                            org.springframework.beans.factory.xml,
+                            org.springframework.context.config,
+                            org.springframework.context.support,
+                            org.springframework.web.servlet.mvc,
+                            org.springframework.security.config,
+                            org.eclipse.gemini.blueprint.config,
+                            org.springframework.web.servlet.config,
+                            *
+                        </Import-Package>
+                        <Embed-Dependency>motech-ivr-asterisk</Embed-Dependency>
+                        <Embed-Transitive>true</Embed-Transitive>
+                    </instructions>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-osgi-dependencies</id>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeScope>runtime</includeScope>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                            <outputDirectory>
+                                ${user.home}/.motech/bundles
+                            </outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.5</version>
+                <executions>
+                    <execution>
+                        <id>copy-bundles</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${user.home}/.motech/bundles</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>target</directory>
+                                    <includes>
+                                        <include>*.jar</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
 </project>
