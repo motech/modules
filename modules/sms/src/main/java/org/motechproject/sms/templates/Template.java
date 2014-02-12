@@ -48,11 +48,7 @@ public class Template {
                     throw new IllegalStateException(String.format("Template error: {}: invalid json: {}", name,
                             e.toString()));
                 }
-                if (requestEntity != null) {
-                    ((PostMethod) httpMethod).setRequestEntity(requestEntity);
-                } else {
-                    throw new IllegalStateException(String.format("Template error: {}: null request entity", name));
-                }
+                ((PostMethod) httpMethod).setRequestEntity(requestEntity);
             } else {
                 httpMethod.setRequestHeader("Content-Type", PostMethod.FORM_URL_ENCODED_CONTENT_TYPE);
                 addBodyParameters((PostMethod) httpMethod, props);
