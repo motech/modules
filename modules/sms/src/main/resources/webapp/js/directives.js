@@ -220,45 +220,45 @@
                     colModel: [{
                         name: 'config',
                         index: 'config',
-                        width: 80
+                        width: 90
                     }, {
                         name: 'phoneNumber',
                         index: 'phoneNumber',
-                        width: 80
+                        width: 90
                     }, {
                         name: 'messageContent',
                         index: 'messageContent',
                         sortable: false,
-                        width: 200
+                        width: 220
                     }, {
                         name: 'deliveryStatus',
                         index: 'deliveryStatus',
-                        width: 90
+                        width: 100
                     }, {
                         name: 'providerStatus',
                         index: 'providerStatus',
-                        width: 90
+                        width: 100
                     }, {
                         name: 'timestamp',
                         index: 'timestamp',
-                        width: 120
+                        width: 130
                     }, {
                         name: 'smsDirection',
                         index: 'smsDirection',
-                        width: 80
+                        width: 90
                     }, {
                         name: 'motechId',
                         index: 'motechId',
-                        width: 200
+                        width: 240
                     }, {
                         name: 'providerId',
                         index: 'providerId',
-                        width: 200
+                        width: 100
                     }, {
                          name: 'errorMessage',
                          index: 'errorMessage',
                          sortable: false,
-                        width: 200
+                        width: 250
                     }],
                     pager: '#' + attrs.loggingGrid,
                     width: '100%',
@@ -272,16 +272,19 @@
                             elem.jqGrid('setLabel', value, scope.msg('sms.log.' + value));
                         });
                         $('#outsideSmsLoggingTable').children('div').width('100%');
-                        $('.ui-jqgrid-htable').addClass('table-lightblue');
+                        $('.ui-jqgrid-htable').addClass("table-lightblue");
                         $('.ui-jqgrid-btable').addClass("table-lightblue");
-                        $('.ui-jqgrid-htable').addClass('table-lightblue');
-
+                        $('.ui-jqgrid-htable').width('100%');
                         $('.ui-jqgrid-bdiv').width('100%');
                         $('.ui-jqgrid-hdiv').width('100%');
-                        $('.ui-jqgrid-hbox').width('100%');
                         $('.ui-jqgrid-view').width('100%');
                         $('#t_resourceTable').width('auto');
                         $('.ui-jqgrid-pager').width('100%');
+                        $('.ui-jqgrid-hbox').css({'padding-right':'0'});
+                        $('.ui-jqgrid-hbox').width('100%');
+                        $('#outsideSmsLoggingTable').children('div').each(function() {
+                            $(this).find('table').width('100%');
+                        });
                         var startDateTextBox = angular.element('#dateTimeFrom'),
                             endDateTextBox = angular.element('#dateTimeTo');
                     }
