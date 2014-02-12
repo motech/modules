@@ -50,8 +50,10 @@ public class SettingsController {
             messageCampaignService.loadCampaigns();
         } catch (JsonParseException e) {
             //revert to previous config
-            settingsFacade.saveRawConfig(MessageCampaignService.MESSAGE_CAMPAIGNS_JSON_FILENAME,
-                    new InputStreamResource(new ByteArrayInputStream(oldConfig.getBytes())));
+            if (oldConfig != null) {
+                settingsFacade.saveRawConfig(MessageCampaignService.MESSAGE_CAMPAIGNS_JSON_FILENAME,
+                        new InputStreamResource(new ByteArrayInputStream(oldConfig.getBytes())));
+            }
             throw new IllegalArgumentException("Invalid JSON file", e);
         }
     }
