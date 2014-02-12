@@ -157,10 +157,6 @@ fieldset {
     border-radius: 0;
 }
 
-.ui-jqgrid {
-    font-size:11px;
-}
-
 .overrideJqgridTable .ui-jqgrid tr.jqgrow td {
     padding-top: 0;
     padding-bottom: 0;
