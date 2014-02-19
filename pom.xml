@@ -1209,6 +1209,7 @@
         <module>modules/ivr/voxeo</module>
         <module>modules/outbox/outbox</module>
         <module>modules/sms</module>
+        <module>modules/mtraining</module>
 
         <!-- Archetypes modules -->
 
