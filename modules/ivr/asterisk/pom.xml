@@ -104,7 +104,6 @@
                             org.springframework.web.servlet.config,
                             *
                         </Import-Package>
-                        <Embed-Dependency>motech-ivr-asterisk</Embed-Dependency>
                         <Embed-Transitive>true</Embed-Transitive>
                     </instructions>
                 </configuration>
