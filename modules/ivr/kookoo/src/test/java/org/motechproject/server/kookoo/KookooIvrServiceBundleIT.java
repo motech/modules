@@ -26,7 +26,7 @@ public class KookooIvrServiceBundleIT extends BaseOsgiIT {
         Assert.assertNotNull(applicationContext.getBean("testKookooIVRService"));
     }
 
-    public void testKooKooCallbackUrlIsNotAuthenticated() throws IOException, InterruptedException, InvalidSyntaxException {
+    public void ignoredTestKooKooCallbackUrlIsNotAuthenticated() throws IOException, InterruptedException, InvalidSyntaxException {
         checkSecurity();
         HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/kookoo/web-api/ivr", TestContext.getJettyPort()));
 
@@ -35,7 +35,7 @@ public class KookooIvrServiceBundleIT extends BaseOsgiIT {
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
     }
 
-    public void testKooKooStatusCallbackUrlIsNotAuthenticated() throws IOException, InterruptedException, InvalidSyntaxException {
+    public void ignoredTestKooKooStatusCallbackUrlIsNotAuthenticated() throws IOException, InterruptedException, InvalidSyntaxException {
         checkSecurity();
         HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/kookoo/web-api/ivr/callstatus", TestContext.getJettyPort()));
 
