@@ -22,11 +22,6 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>motech-ivr-voxeo</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>motech-callflow</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -44,16 +39,6 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>motech-ivr-api</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${motech.groupId}</groupId>
-            <artifactId>motech-testing-utils</artifactId>
-            <version>${motech.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>com.springsource.org.apache.commons.httpclient</artifactId>
         </dependency>
         <!-- OSGI dependencies -->
         <dependency>
