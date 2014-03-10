@@ -59,7 +59,7 @@ public class CMSDataProviderTest {
         String clazz = MotechObject.class.getSimpleName();
 
         // when
-        Object object = provider.lookup(clazz, lookupFields);
+        Object object = provider.lookup(clazz, "id", lookupFields);
 
         // then
         assertNull(object);
@@ -72,7 +72,7 @@ public class CMSDataProviderTest {
         HashMap<String, String> fields = new HashMap<>();
 
         // when
-        Object object = provider.lookup(clazz, fields);
+        Object object = provider.lookup(clazz, "id", fields);
 
         // then
         assertNull(object);
@@ -85,8 +85,8 @@ public class CMSDataProviderTest {
         String streamContentClass = StreamContent.class.getSimpleName();
 
         // when
-        Object stringContent = provider.lookup(stringContentClass, lookupFields);
-        Object streamContent = provider.lookup(streamContentClass, lookupFields);
+        Object stringContent = provider.lookup(stringContentClass, "id", lookupFields);
+        Object streamContent = provider.lookup(streamContentClass, "id", lookupFields);
 
         // then
         assertNull(stringContent);
@@ -100,8 +100,8 @@ public class CMSDataProviderTest {
         String streamContentClass = StreamContent.class.getSimpleName();
 
         // when
-        Object stringContent = provider.lookup(stringContentClass, lookupFields);
-        Object streamContent = provider.lookup(streamContentClass, lookupFields);
+        Object stringContent = provider.lookup(stringContentClass, "id", lookupFields);
+        Object streamContent = provider.lookup(streamContentClass, "id", lookupFields);
 
         // then
         assertNull(stringContent);
@@ -118,8 +118,8 @@ public class CMSDataProviderTest {
         when(cmsLiteService.getStreamContent(FIELD_VALUE)).thenReturn(streamContent);
 
         // when
-        StringContent stringContent = (StringContent) provider.lookup(stringContentClass, lookupFields);
-        StreamContent streamContent = (StreamContent) provider.lookup(streamContentClass, lookupFields);
+        StringContent stringContent = (StringContent) provider.lookup(stringContentClass, "id", lookupFields);
+        StreamContent streamContent = (StreamContent) provider.lookup(streamContentClass, "id", lookupFields);
 
         // then
         assertEquals(this.stringContent, stringContent);

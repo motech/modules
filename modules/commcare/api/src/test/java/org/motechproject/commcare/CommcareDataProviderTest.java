@@ -87,7 +87,7 @@ public class CommcareDataProviderTest {
         String clazz = MotechObject.class.getSimpleName();
 
         // when
-        Object object = provider.lookup(clazz, lookupFields);
+        Object object = provider.lookup(clazz, "id", lookupFields);
 
         // then
         assertNull(object);
@@ -100,7 +100,7 @@ public class CommcareDataProviderTest {
         HashMap<String, String> fields = new HashMap<>();
 
         // when
-        Object object = provider.lookup(clazz, fields);
+        Object object = provider.lookup(clazz, "id", fields);
 
         // then
         assertNull(object);
@@ -116,10 +116,10 @@ public class CommcareDataProviderTest {
 
 
         // when
-        Object userContent = provider.lookup(commcareUserClass, lookupFields);
-        Object formContent = provider.lookup(commcareFormClass, lookupFields);
-        Object fixtureContent = provider.lookup(commcareFixtureClass, lookupFields);
-        Object caseContent = provider.lookup(caseInfoClass, lookupFields);
+        Object userContent = provider.lookup(commcareUserClass, "id", lookupFields);
+        Object formContent = provider.lookup(commcareFormClass, "id", lookupFields);
+        Object fixtureContent = provider.lookup(commcareFixtureClass, "id", lookupFields);
+        Object caseContent = provider.lookup(caseInfoClass, "id", lookupFields);
 
         // then
         assertNull(userContent);
@@ -138,10 +138,10 @@ public class CommcareDataProviderTest {
 
 
         // when
-        Object userContent = provider.lookup(commcareUserClass, lookupFields);
-        Object formContent = provider.lookup(commcareFormClass, lookupFields);
-        Object fixtureContent = provider.lookup(commcareFixtureClass, lookupFields);
-        Object caseContent = provider.lookup(caseInfoClass, lookupFields);
+        Object userContent = provider.lookup(commcareUserClass, "id", lookupFields);
+        Object formContent = provider.lookup(commcareFormClass, "id", lookupFields);
+        Object fixtureContent = provider.lookup(commcareFixtureClass, "id", lookupFields);
+        Object caseContent = provider.lookup(caseInfoClass, "id", lookupFields);
 
         // then
         assertNull(userContent);
@@ -164,10 +164,10 @@ public class CommcareDataProviderTest {
         when(commcareCaseService.getCaseByCaseId(FIELD_VALUE)).thenReturn(caseInfo);
 
         // when
-        CommcareUser commcareUser1 = (CommcareUser) provider.lookup(commcareUserClass, lookupFields);
-        CommcareForm commcareForm1 = (CommcareForm) provider.lookup(commcareFormClass, lookupFields);
-        CommcareFixture commcareFixture1 = (CommcareFixture) provider.lookup(commcareFixtureClass, lookupFields);
-        CaseInfo caseInfo1 = (CaseInfo) provider.lookup(caseInfoClass, lookupFields);
+        CommcareUser commcareUser1 = (CommcareUser) provider.lookup(commcareUserClass, "id", lookupFields);
+        CommcareForm commcareForm1 = (CommcareForm) provider.lookup(commcareFormClass, "id", lookupFields);
+        CommcareFixture commcareFixture1 = (CommcareFixture) provider.lookup(commcareFixtureClass, "id", lookupFields);
+        CaseInfo caseInfo1 = (CaseInfo) provider.lookup(caseInfoClass, "id", lookupFields);
 
         // then
         assertEquals(this.commcareUser, commcareUser1);
