@@ -39,7 +39,7 @@ public class CMSDataProvider extends AbstractDataProvider {
     }
 
     @Override
-    public Object lookup(String type, Map<String, String> lookupFields) {
+    public Object lookup(String type, String lookupName, Map<String, String> lookupFields) {
         Object obj = null;
         try {
             if (supports(type)) {

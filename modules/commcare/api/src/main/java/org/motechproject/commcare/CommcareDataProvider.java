@@ -60,7 +60,7 @@ public class CommcareDataProvider extends AbstractDataProvider {
     }
 
     @Override
-    public Object lookup(String type, Map<String, String> lookupFields) {
+    public Object lookup(String type, String lookupName, Map<String, String> lookupFields) {
         Object obj = null;
 
         if (supports(type) && lookupFields.containsKey(ID_FIELD)) {
