@@ -181,8 +181,12 @@
                 success: function() {
                     motechAlert('msgCampaign.settings.success.saved', 'msgCampaign.saved');
                 },
-                error: function() {
-                    motechAlert('msgCampaign.settings.error.save', 'msgCampaign.error');
+                error: function(error) {
+                    if (error.status === 403) {
+                        motechAlert('msgCampaign.settings.error.permission', 'msgCampaign.error');
+                    } else {
+                        motechAlert('msgCampaign.settings.error.save', 'msgCampaign.error');
+                    }
                 }
             });
         };
