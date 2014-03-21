@@ -1,16 +1,21 @@
+<script type="text/javascript">
+    defaultView('/ivr/test-call');
+    innerLayout();
+</script>
+
 <div id="inner-center" class="ivr inner-center ui-layout-center ui-layout-pane ui-layout-pane-center">
     <div class="header-footer-breadcrumb">
         <ul class="breadcrumb" role="navigation">
             <li><a role="menu" href=".">{{msg('server.home')}}</a></li>
-            <li><a role="menu" href="#/test-call">{{msg('IVR')}}</a></li>
-            <li ng-show="active('#/test-call')" ng-class="active('#/test-call')">{{msg('ivr.test.call')}}</li>
-            <li ng-show="active('#/call-logs')" ng-class="active('#/call-logs')">{{msg('ivr.call.log')}}</li>
+            <li><a role="menu" href="#/ivr/test-call">{{msg('IVR')}}</a></li>
+            <li ng-show="active('#/ivr/test-call')" ng-class="active('#/ivr/test-call')">{{msg('ivr.test.call')}}</li>
+            <li ng-show="active('#/ivr/call-logs')" ng-class="active('#/ivr/call-logs')">{{msg('ivr.call.log')}}</li>
         </ul>
     </div>
     <div class="header-footer">
         <ul id="content-tabs" class="nav nav-tabs">
-            <li ng-class="active('#/test-call')"><a href="#/test-call">{{msg('ivr.test.call')}}</a></li>
-            <li ng-class="active('#/call-logs')"><a href="#/call-logs">{{msg('ivr.call.log')}}</a></li>
+            <li ng-class="active('#/ivr/test-call')"><a href="#/ivr/test-call">{{msg('ivr.test.call')}}</a></li>
+            <li ng-class="active('#/ivr/call-logs')"><a href="#/ivr/call-logs">{{msg('ivr.call.log')}}</a></li>
         </ul>
     </div>
     <div class="ui-layout-content">

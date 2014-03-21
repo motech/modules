@@ -1,18 +1,23 @@
+<script type="text/javascript">
+    defaultView('/commcare/settings');
+    innerLayout();
+</script>
+
 <div id="inner-center" class="commcare inner-center ui-layout-center ui-layout-pane ui-layout-pane-center">
     <div class="header-footer-breadcrumb">
         <ul class="breadcrumb" role="navigation">
             <li><a role="menu" href=".">{{msg('server.home')}}</a></li>
             <li><a role="menu" href="#/settings">{{msg('commcare')}}</a></li>
-            <li ng-show="active('#/settings')" ng-class="active('#/settings')">{{msg('commcare.tab.settings')}}</li>
-            <li ng-show="active('#/forms')" ng-class="active('#/forms')">{{msg('commcare.tab.forms')}}</li>
-            <li ng-show="active('#/cases')" ng-class="active('#/cases')">{{msg('commcare.tab.cases')}}</li>
+            <li ng-show="active('#/commcare/settings')" ng-class="active('#/commcare/settings')">{{msg('commcare.tab.settings')}}</li>
+            <li ng-show="active('#/commcare/forms')" ng-class="active('#/commcare/forms')">{{msg('commcare.tab.forms')}}</li>
+            <li ng-show="active('#/commcare/cases')" ng-class="active('#/commcare/cases')">{{msg('commcare.tab.cases')}}</li>
         </ul>
     </div>
     <div class="header-footer">
         <ul id="content-tabs" class="nav nav-tabs">
-            <li ng-class="active('#/settings')"><a href="#/settings">{{msg('commcare.tab.settings')}}</a></li>
-            <li ng-class="active('#/forms')"><a href="#/forms">{{msg('commcare.tab.forms')}}</a></li>
-            <li ng-class="active('#/cases')"><a href="#/cases">{{msg('commcare.tab.cases')}}</a></li>
+            <li ng-class="active('#/commcare/settings')"><a href="#/commcare/settings">{{msg('commcare.tab.settings')}}</a></li>
+            <li ng-class="active('#/commcare/forms')"><a href="#/commcare/forms">{{msg('commcare.tab.forms')}}</a></li>
+            <li ng-class="active('#/commcare/cases')"><a href="#/commcare/cases">{{msg('commcare.tab.cases')}}</a></li>
         </ul>
     </div>
     <div class="ui-layout-content">

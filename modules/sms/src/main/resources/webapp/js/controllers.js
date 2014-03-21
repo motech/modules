@@ -1,19 +1,24 @@
 (function () {
     'use strict';
 
-    var smsModule = angular.module('motech-sms');
+    var controllers = angular.module('sms.controllers', []);
 
     /*
      *
      * Send
      *
      */
-    smsModule.controller('SendController', function ($log, $scope, $timeout, $http) {
+    controllers.controller('SendController', function ($log, $scope, $timeout, $http) {
         $scope.sms = {};
         $scope.dt = "now";
         $scope.messages = [];
         $scope.error = "";
-        $scope.innerLayout.hide('east');
+
+        innerLayout({
+            spacing_closed: 30,
+            east__minSize: 200,
+            east__maxSize: 350
+        });
 
         $http.get('../sms/configs')
         .success(function(response) {
@@ -67,10 +72,17 @@
      *
      */
 
-    smsModule.controller('LogController', function ($scope, $http) {
+    controllers.controller('LogController', function ($scope, $http) {
         $scope.log = [];
-        $scope.innerLayout.show('east');
-        $scope.innerLayout.addToggleBtn("#sms-logging-filters", "east");
+
+        innerLayout({
+            spacing_closed: 30,
+            east__minSize: 200,
+            east__maxSize: 350
+        }, {
+            show: true,
+            button: '#sms-logging-filters'
+        });
     });
 
     /*
@@ -78,11 +90,16 @@
      * Settings
      *
      */
-    smsModule.controller('SettingsController', function ($scope, $http, $timeout) {
+    controllers.controller('SettingsController', function ($scope, $http, $timeout) {
         $scope.errors = [];
         $scope.messages = [];
         $scope.dupeNames = [];
-        $scope.innerLayout.hide('east');
+
+        innerLayout({
+            spacing_closed: 30,
+            east__minSize: 200,
+            east__maxSize: 350
+        });
 
         $http.get('../sms/templates')
             .success(function(response){

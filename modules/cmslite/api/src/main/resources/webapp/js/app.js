@@ -3,11 +3,10 @@
 
     /* App Module */
 
-    angular.module('motech-cmslite', ['motech-dashboard', 'resourceServices',
+    angular.module('cmslite', ['motech-dashboard', 'cmslite.services', 'cmslite.directives', 'cmslite.controllers',
                                     'ngCookies', 'ngRoute', 'motech-widgets']).config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider.
-                when('/resources', {templateUrl: '../cmsliteapi/resources/partials/resources.html'}).
-                otherwise({redirectTo: '/resources'});
+                when('/cmslite/resources', {templateUrl: '../cmsliteapi/resources/partials/resources.html', controller: 'ResourceCtrl'});
         }]);
 }());

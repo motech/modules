@@ -3,12 +3,11 @@
 
     /* App Module */
 
-    angular.module('motech-ivr', ['motech-dashboard', 'motech-widgets', 'TestCallServices', 'CalllogSearchService', 'CalllogCountService',
-        'CalllogPhoneNumberService', 'CalllogMaxDurationService', 'ngCookies', 'ngRoute']).config(['$routeProvider',
+    angular.module('ivr', ['motech-dashboard', 'motech-widgets', 'ivr.services', 'ivr.directives', 'ivr.controllers',
+        'ngCookies', 'ngRoute']).config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider.
-                when('/test-call', {templateUrl:'../ivr/partials/test-call.html'}).
-                when('/call-logs', { templateUrl:'../ivr/partials/call-logs.html' }).
-                otherwise({redirectTo:'/test-call'});
+                when('/ivr/test-call', {templateUrl:'../ivr/partials/test-call.html'}).
+                when('/ivr/call-logs', { templateUrl:'../ivr/partials/call-logs.html' });
         }]);
 }());

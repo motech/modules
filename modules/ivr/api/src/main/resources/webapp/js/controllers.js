@@ -2,12 +2,11 @@
 (function () {
     'use strict';
 
-    var ivrModule = angular.module('motech-ivr');
+    var controllers = angular.module('ivr.controllers', []);
 
-    ivrModule.controller('TestCallController', function ($scope, Provider, Call) {
+    controllers.controller('TestCallController', function ($scope, Provider, Call) {
 
         $scope.providers = Provider.all();
-        $scope.innerLayout.hide('east');
 
         $scope.makeCall = function() {
             $scope.dialed = undefined;
@@ -20,9 +19,15 @@
                 }
             );
         };
+
+        innerLayout({
+            spacing_closed: 30,
+            east__minSize: 200,
+            east__maxSize: 350
+        });
     });
 
-    ivrModule.controller('CalllogController', function ($scope, CalllogSearch, CalllogCount, CalllogPhoneNumber, CalllogMaxDuration, $http) {
+    controllers.controller('CalllogController', function ($scope, CalllogSearch, CalllogCount, CalllogPhoneNumber, CalllogMaxDuration, $http) {
         $scope.phoneNumber = "";
         $scope.sortColumn = "";
         $scope.currentPage = 0;
@@ -41,8 +46,15 @@
             });
             return s;
         };
-        $scope.innerLayout.show('east');
-        $scope.innerLayout.addToggleBtn("#ivr-call-logs-filters", "east");
+
+        innerLayout({
+            spacing_closed: 30,
+            east__minSize: 200,
+            east__maxSize: 350
+        }, {
+            show: true,
+            button: '#ivr-call-logs-filters'
+        });
 
         $scope.countPages = function () {
             $scope.pageCount = CalllogCount.query(

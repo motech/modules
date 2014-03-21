@@ -3,9 +3,9 @@
 
     /* Controllers */
 
-    var commcareModule = angular.module('commcare');
+    var controllers = angular.module('commcare.controllers', []);
 
-    commcareModule.controller('SettingsCtrl', function ($scope, Settings, Connection, Permissions) {
+    controllers.controller('SettingsCtrl', function ($scope, Settings, Connection, Permissions) {
 
         $scope.permissions = Permissions.query();
 
@@ -159,7 +159,7 @@
 
     });
 
-    commcareModule.controller('ModulesCtrl', function ($scope, Schema) {
+    controllers.controller('ModulesCtrl', function ($scope, Schema) {
         $scope.formError = false;
         $scope.formatJson=function(jsonResponse){return JSON.stringify(jsonResponse, null,4);};
         blockUI();
@@ -172,7 +172,7 @@
         });
     });
 
-    commcareModule.controller('CaseSchemasCtrl', function ($scope, Cases) {
+    controllers.controller('CaseSchemasCtrl', function ($scope, Cases) {
         $scope.caseError = false;
         $scope.formatJson=function(jsonResponse){return JSON.stringify(jsonResponse, null,4);};
         blockUI();

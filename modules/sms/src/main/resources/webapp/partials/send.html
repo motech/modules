@@ -4,7 +4,7 @@
 
         <div class="alert alert-danger alert-block" ng-show="config.configs.length == 0">
             {{msg('sms.web.send.noConfigErrorBody')}}<br/>
-            {{msg('sms.web.send.noConfigErrorAction')}} <a href="#/settings">{{msg('sms.web.send.noConfigErrorTab')}}</a>.
+            {{msg('sms.web.send.noConfigErrorAction')}} <a href="#/sms/settings">{{msg('sms.web.send.noConfigErrorTab')}}</a>.
         </div>
         <div ng-repeat="message in messages" class="alert alert-success alert-block animate-repeat">
             <button type="button" class="close" data-dismiss="alert">&times;</button>

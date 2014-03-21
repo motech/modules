@@ -4,9 +4,18 @@
 
     /* Controllers */
 
-    var widgetModule = angular.module('motech-cmslite');
+    var controllers = angular.module('cmslite.controllers', []);
 
-    widgetModule.controller('ResourceCtrl', function ($scope, $http, Resources) {
+    controllers.controller('ResourceCtrl', function ($scope, $http, Resources) {
+        innerLayout({
+            spacing_closed: 30,
+            east__minSize: 200,
+            east__maxSize: 350
+        }, {
+            show: true,
+            button: '#cmslite-resource-filters'
+        });
+
         $scope.select = {};
         $scope.mode = 'read';
         $scope.resourceType = 'string';

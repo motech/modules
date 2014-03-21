@@ -3,7 +3,7 @@
 
     /* Services */
 
-    angular.module('resourceServices', ['ngResource']).factory('Resources', function ($resource) {
+    angular.module('cmslite.services', ['ngResource']).factory('Resources', function ($resource) {
         return $resource('../cmsliteapi/resource/:type/:language/:name');
     });
 
