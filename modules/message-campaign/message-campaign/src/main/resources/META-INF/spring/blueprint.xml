@@ -27,11 +27,8 @@
                 <entry key="messages" value="../messagecampaign/resources/messages/"/>
             </map>
         </constructor-arg>
-        <constructor-arg name="header">
-            <bean class="org.motechproject.osgi.web.Header"/>
-        </constructor-arg>
         <property name="roleForAccess" value="manageCampaigns"/>
-        <property name="settingsURL" value="/settings" />
+        <property name="settingsURL" value="/messageCampaign/settings" />
     </bean>
 
     <osgi:service id="messageCampaignServiceOsgi" ref="messageCampaignService"

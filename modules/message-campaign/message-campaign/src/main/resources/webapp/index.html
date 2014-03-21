@@ -1,18 +1,23 @@
+<script type="text/javascript">
+    defaultView('/messageCampaign/campaigns');
+    innerLayout();
+</script>
+
 <div id="inner-center" class="message-campaign inner-center ui-layout-center ui-layout-pane ui-layout-pane-center">
     <div class="header-footer-breadcrumb">
         <ul class="breadcrumb" role="navigation">
             <li><a role="menu" href=".">{{msg('server.home')}}</a></li>
-            <li><a role="menu" href="#/campaigns">{{msg('messageCampaign')}}</a></li>
-            <li ng-show="active('#/campaigns')" ng-class="active('#/campaigns')">{{msg('msgCampaign.campaigns')}} list</li>
-            <li ng-show="active('#/admin')" ng-class="active('#/admin')">{{msg('msgCampaign.admin')}}</li>
-            <li ng-show="active('#/settings')" ng-class="active('#/settings')">{{msg('msgCampaign.settings')}}</li>
+            <li><a role="menu" href="#/messageCampaign/campaigns">{{msg('messageCampaign')}}</a></li>
+            <li ng-show="active('#/messageCampaign/campaigns')" ng-class="active('#/messageCampaign/campaigns')">{{msg('msgCampaign.campaigns')}} list</li>
+            <li ng-show="active('#/messageCampaign/admin')" ng-class="active('#/messageCampaign/admin')">{{msg('msgCampaign.admin')}}</li>
+            <li ng-show="active('#/messageCampaign/settings')" ng-class="active('#/messageCampaign/settings')">{{msg('msgCampaign.settings')}}</li>
         </ul>
     </div>
     <div class="header-footer">
         <ul id="content-tabs" class="nav nav-tabs">
-            <li ng-class="active('#/campaigns')"><a href="#/campaigns">{{msg('msgCampaign.campaigns')}}</a></li>
-            <li ng-class="active('#/admin')"><a href="#/admin">{{msg('msgCampaign.admin')}}</a></li>
-            <li ng-class="active('#/settings')"><a href="#/settings">{{msg('msgCampaign.settings')}}</a></li>
+            <li ng-class="active('#/messageCampaign/campaigns')"><a href="#/messageCampaign/campaigns">{{msg('msgCampaign.campaigns')}}</a></li>
+            <li ng-class="active('#/messageCampaign/admin')"><a href="#/messageCampaign/admin">{{msg('msgCampaign.admin')}}</a></li>
+            <li ng-class="active('#/messageCampaign/settings')"><a href="#/messageCampaign/settings">{{msg('msgCampaign.settings')}}</a></li>
         </ul>
     </div>
     <div class="ui-layout-content">
