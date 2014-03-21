@@ -21,16 +21,13 @@
         <constructor-arg value="../cmsliteapi/resources/index.html"/>
         <constructor-arg>
             <list>
-                <value>motech-cmslite</value>
+                <value>cmslite</value>
             </list>
         </constructor-arg>
         <constructor-arg>
             <map>
                 <entry key="messages" value="../cmsliteapi/resources/messages/"/>
             </map>
-        </constructor-arg>
-        <constructor-arg>
-            <bean class="org.motechproject.osgi.web.Header"/>
         </constructor-arg>
     </bean>
 

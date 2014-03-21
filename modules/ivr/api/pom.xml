@@ -113,7 +113,7 @@
                             <requireUseStrict>true</requireUseStrict>
                             <predefinedVars>
                                 $, angular, blockUI, unblockUI, handleWithStackTrace, alertHandler,
-                                jConfirm, jQuery, parseUri
+                                jConfirm, jQuery, parseUri, innerLayout
                             </predefinedVars>
                             <excludes>
                                 <exclude>lib/*</exclude>

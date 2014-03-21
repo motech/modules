@@ -1,15 +1,18 @@
-<div ng-controller="ResourceCtrl">
+<script type="text/javascript">
+    defaultView('/cmslite/resources');
+</script>
+
 <div id="inner-center" class="cms-lite inner-center ui-layout-center ui-layout-pane ui-layout-pane-center">
     <div class="header-footer-breadcrumb">
         <ul class="breadcrumb" role="navigation">
             <li><a role="menu" href=".">{{msg('server.home')}}</a></li>
-            <li><a role="menu" href="#/resources">{{msg('cmslite')}}</a></li>
-            <li ng-show="active('#/resources')" ng-class="active('#/resources')">{{msg('cmslite.header.resourceCMS')}}</li>
+            <li><a role="menu" href="#/cmslite/resources">{{msg('cmslite')}}</a></li>
+            <li ng-show="active('#/cmslite/resources')" ng-class="active('#/cmslite/resources')">{{msg('cmslite.header.resourceCMS')}}</li>
         </ul>
     </div>
     <div class="header-footer">
         <ul id="content-tabs" class="nav nav-tabs">
-            <li ng-class="active('#/resources')"><a href="#/resources">{{msg('cmslite.header.resourceCMS')}}</a></li>
+            <li ng-class="active('#/resources')"><a href="#/cmslite/resources">{{msg('cmslite.header.resourceCMS')}}</a></li>
         </ul>
     </div>
     <div class="header-footer inside">
@@ -53,5 +56,4 @@
             </fieldset>
         </div>
     </div>
-</div>
 </div>

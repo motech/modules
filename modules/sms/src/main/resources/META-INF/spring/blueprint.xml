@@ -34,7 +34,7 @@
         <constructor-arg name="moduleName" value="motech-sms"/>
         <constructor-arg name="angularModules">
             <list>
-                <value>motech-sms</value>
+                <value>sms</value>
             </list>
         </constructor-arg>
         <constructor-arg name="i18n">
@@ -42,10 +42,7 @@
                 <entry key="messages" value="../sms/resources/messages/"/>
             </map>
         </constructor-arg>
-        <constructor-arg name="header">
-            <bean class="org.motechproject.osgi.web.Header"/>
-        </constructor-arg>
-        <property name="settingsURL" value="/settings" />
+        <property name="settingsURL" value="/sms/settings" />
     </bean>
 
     <bean id="multiThreadedHttpConnectionManager"

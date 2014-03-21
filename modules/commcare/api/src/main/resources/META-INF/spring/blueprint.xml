@@ -16,8 +16,6 @@
 
     <bean id="commcareDataProvider" class="org.motechproject.commcare.CommcareDataProvider"/>
 
-    <bean id="header" class="org.motechproject.osgi.web.Header"/>
-
     <bean id="moduleRegistrationData" class="org.motechproject.osgi.web.ModuleRegistrationData">
         <constructor-arg name="moduleName" value="commcare" />
         <constructor-arg name="url" value="../commcare/resources/index.html" />
@@ -31,7 +29,6 @@
                 <entry key="messages" value="../commcare/resources/messages/"/>
             </map>
         </constructor-arg>
-        <constructor-arg name="header" ref="header"/>
         <property name="settingsURL" value="/settings" />
     </bean>
 
