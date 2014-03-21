@@ -1,16 +1,16 @@
 (function () {
     'use strict';
 
-    var messageCampaignModule = angular.module('messageCampaign');
+    var controllers = angular.module('messageCampaign.controllers', []);
 
-    messageCampaignModule.controller('CampaignsCtrl', function ($scope, Campaigns) {
+    controllers.controller('CampaignsCtrl', function ($scope, Campaigns) {
 
         $scope.$on('$viewContentLoaded', function () {
             $scope.campaigns = Campaigns.query();
         });
     });
 
-     messageCampaignModule.controller('EnrollmentsCtrl', function ($scope, $routeParams, Enrollments) {
+     controllers.controller('EnrollmentsCtrl', function ($scope, $routeParams, Enrollments) {
 
         $scope.campaignName = $routeParams.campaignName;
 
@@ -175,7 +175,7 @@
         });
     });
 
-    messageCampaignModule.controller('SettingsCtrl', function ($scope) {
+    controllers.controller('SettingsCtrl', function ($scope) {
         $scope.uploadSettings = function () {
             $("#messageCampaignSettingsForm").ajaxSubmit({
                 success: function() {
