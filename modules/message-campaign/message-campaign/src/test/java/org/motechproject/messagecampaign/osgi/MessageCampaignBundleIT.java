@@ -17,7 +17,6 @@ import org.motechproject.security.service.MotechUserService;
 import org.motechproject.testing.osgi.BaseOsgiIT;
 import org.motechproject.testing.utils.PollingHttpClient;
 import org.motechproject.testing.utils.TestContext;
-import org.osgi.framework.ServiceReference;
 
 import java.util.List;
 import java.util.Locale;
@@ -31,13 +30,9 @@ public class MessageCampaignBundleIT extends BaseOsgiIT {
     private static final int PORT = TestContext.getJettyPort();
 
     public void testMessageCampaignService() {
-        ServiceReference serviceReference = bundleContext.getServiceReference(MessageCampaignService.class.getName());
-        assertNotNull(serviceReference);
+        getService(MessageCampaignService.class.getName());
 
         MessageCampaignService messageCampaignService = (MessageCampaignService) getApplicationContext().getBean("messageCampaignServiceRef");
-        assertNotNull(messageCampaignService);
-
-        messageCampaignService = (MessageCampaignService) bundleContext.getService(serviceReference);
         assertNotNull(messageCampaignService);
 
         CampaignRecord campaign = new CampaignRecord();
@@ -92,8 +87,7 @@ public class MessageCampaignBundleIT extends BaseOsgiIT {
     }
 
     public void testControllersAsUnathorizedUser() throws Exception {
-        ServiceReference motechUserServiceRef = bundleContext.getServiceReference(MotechUserService.class.getName());
-        MotechUserService motechUserService = (MotechUserService) bundleContext.getService(motechUserServiceRef);
+        MotechUserService motechUserService = getService(MotechUserService.class);
         motechUserService.register("user-mc-noauth", "pass", "testmcnoauth@test.com", null, asList("Admin User"), Locale.ENGLISH);
 
         PollingHttpClient httpClient = new PollingHttpClient();
@@ -112,8 +106,7 @@ public class MessageCampaignBundleIT extends BaseOsgiIT {
     }
 
     public void testControllersAsAuthorizedUser() throws Exception {
-        ServiceReference motechUserServiceRef = bundleContext.getServiceReference(MotechUserService.class.getName());
-        MotechUserService motechUserService = (MotechUserService) bundleContext.getService(motechUserServiceRef);
+        MotechUserService motechUserService = getService(MotechUserService.class);
         motechUserService.register("user-mc-auth", "pass", "testmcauth@test.com", "test", asList("Campaign Manager"), Locale.ENGLISH);
 
         PollingHttpClient httpClient = new PollingHttpClient();

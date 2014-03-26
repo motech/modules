@@ -3,7 +3,6 @@ package org.motechproject.scheduletracking.api.osgi;
 import org.motechproject.scheduletracking.api.domain.Schedule;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.testing.osgi.BaseOsgiIT;
-import org.osgi.framework.ServiceReference;
 
 import java.util.List;
 import java.util.UUID;
@@ -13,10 +12,7 @@ import static java.util.Arrays.asList;
 public class ScheduleTrackingApiBundleIT extends BaseOsgiIT {
 
     public void testScheduleTrackingService() {
-        ServiceReference serviceReference = bundleContext.getServiceReference(ScheduleTrackingService.class.getName());
-        assertNotNull(serviceReference);
-        ScheduleTrackingService scheduleTrackingService = (ScheduleTrackingService) bundleContext.getService(serviceReference);
-        assertNotNull(scheduleTrackingService);
+        ScheduleTrackingService scheduleTrackingService = getService(ScheduleTrackingService.class);
 
         final String scheduleName = "ScheduleTrackingApiBundleIT-" + UUID.randomUUID();
         try {
