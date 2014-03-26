@@ -4,7 +4,6 @@ import org.motechproject.appointments.api.service.AppointmentService;
 import org.motechproject.appointments.api.service.contract.CreateVisitRequest;
 import org.motechproject.appointments.api.service.contract.VisitResponse;
 import org.motechproject.testing.osgi.BaseOsgiIT;
-import org.osgi.framework.ServiceReference;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,10 +13,7 @@ import static java.util.Arrays.asList;
 public class AppointmentsApiBundleIT extends BaseOsgiIT {
 
     public void testAppointmentService() {
-        ServiceReference serviceReference = bundleContext.getServiceReference(AppointmentService.class.getName());
-        assertNotNull(serviceReference);
-        AppointmentService appointmentService = (AppointmentService) bundleContext.getService(serviceReference);
-        assertNotNull(appointmentService);
+        AppointmentService appointmentService = getService(AppointmentService.class);
 
         final String externalId = "AppointmentsApiBundleIT-" + UUID.randomUUID();
         String visitName = "Visit-" + externalId;
