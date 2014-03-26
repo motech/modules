@@ -3,7 +3,6 @@ package org.motechproject.decisiontree.core.osgi;
 import org.motechproject.decisiontree.core.DecisionTreeService;
 import org.motechproject.decisiontree.core.model.Tree;
 import org.motechproject.testing.osgi.BaseOsgiIT;
-import org.osgi.framework.ServiceReference;
 
 import java.util.Arrays;
 import java.util.List;
@@ -11,10 +10,8 @@ import java.util.List;
 public class DecisionTreeCoreBundleIT extends BaseOsgiIT {
 
     public void testDecisionTreeService() {
-        ServiceReference serviceReference = bundleContext.getServiceReference(DecisionTreeService.class.getName());
-        assertNotNull(serviceReference);
-        DecisionTreeService decisionTreeService = (DecisionTreeService) bundleContext.getService(serviceReference);
-        assertNotNull(decisionTreeService);
+        DecisionTreeService decisionTreeService = getService(DecisionTreeService.class);
+
         String treeName = "DecisionTreeCoreBundleIT";
         Tree tree = new Tree().setName(treeName);
         try {

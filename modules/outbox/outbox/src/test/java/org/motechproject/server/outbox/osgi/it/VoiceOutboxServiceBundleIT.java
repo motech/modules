@@ -6,7 +6,6 @@ import org.motechproject.outbox.api.service.VoiceOutboxService;
 import org.motechproject.testing.osgi.BaseOsgiIT;
 import org.motechproject.testing.utils.PollingHttpClient;
 import org.motechproject.testing.utils.TestContext;
-import org.osgi.framework.ServiceReference;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -15,10 +14,7 @@ public class VoiceOutboxServiceBundleIT extends BaseOsgiIT {
 
 
     public void testVoiceOutboxService() {
-        ServiceReference serviceReference = bundleContext.getServiceReference(VoiceOutboxService.class.getName());
-        assertNotNull(serviceReference);
-        VoiceOutboxService voiceOutboxService = (VoiceOutboxService) bundleContext.getService(serviceReference);
-        assertNotNull(voiceOutboxService);
+        VoiceOutboxService voiceOutboxService = getService(VoiceOutboxService.class);
 
         final String externalId = "VoiceOutboxServiceBundleIT-" + UUID.randomUUID();
         String messageId = null;

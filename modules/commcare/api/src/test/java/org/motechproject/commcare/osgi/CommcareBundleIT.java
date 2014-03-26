@@ -14,19 +14,10 @@ import java.io.IOException;
 
 public class CommcareBundleIT extends BaseOsgiIT {
 
-    public void testCommcareUserService() {
-        CommcareUserService service = (CommcareUserService) verifyServiceAvailable(CommcareUserService.class.getName());
-        assertNotNull(service);
-    }
-
-    public void testCommcareCaseService() {
-        CommcareCaseService service = (CommcareCaseService) verifyServiceAvailable(CommcareCaseService.class.getName());
-        assertNotNull(service);
-    }
-
-    public void testCommcareFormService() {
-        CommcareFormService service = (CommcareFormService) verifyServiceAvailable(CommcareFormService.class.getName());
-        assertNotNull(service);
+    public void testServices() {
+        getService(CommcareUserService.class);
+        getService(CommcareCaseService.class);
+        getService(CommcareFormService.class);
     }
 
     public void testSettingsController() throws IOException, InterruptedException {

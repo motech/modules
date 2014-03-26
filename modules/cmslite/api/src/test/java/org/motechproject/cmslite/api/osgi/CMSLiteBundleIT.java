@@ -6,6 +6,10 @@ import org.motechproject.cmslite.api.model.CMSLiteException;
 import org.motechproject.cmslite.api.model.ContentNotFoundException;
 import org.motechproject.cmslite.api.model.StringContent;
 import org.motechproject.cmslite.api.service.CMSLiteService;
+import org.motechproject.config.service.ConfigurationService;
+import org.motechproject.event.listener.EventListenerRegistryService;
+import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.server.config.service.PlatformSettingsService;
 import org.motechproject.testing.osgi.BaseOsgiIT;
 import org.motechproject.testing.utils.PollingHttpClient;
 import org.motechproject.testing.utils.TestContext;
@@ -19,11 +23,12 @@ public class CMSLiteBundleIT extends BaseOsgiIT {
 
 
     public void testCMSLiteApiBundle() throws CMSLiteException, ContentNotFoundException, IOException, InterruptedException {
-        assertNotNull(bundleContext.getServiceReference("org.motechproject.event.listener.EventListenerRegistryService"));
-        assertNotNull(bundleContext.getServiceReference("org.motechproject.server.config.SettingsFacade"));
-        assertNotNull(bundleContext.getServiceReference("org.motechproject.server.config.service.PlatformSettingsService"));
-        assertNotNull(bundleContext.getServiceReference("org.motechproject.config.service.ConfigurationService"));
-        assertNotNull(bundleContext.getServiceReference("org.motechproject.cmslite.api.service.CMSLiteService"));
+        getService(EventListenerRegistryService.class);
+        getService(SettingsFacade.class);
+        getService(PlatformSettingsService.class);
+        getService(ConfigurationService.class);
+        getService(CMSLiteService.class);
+
         final CMSLiteService cmsLiteService = (CMSLiteService) getApplicationContext().getBean("cmsLiteServiceRef");
         assertNotNull(cmsLiteService);
 
