@@ -10,7 +10,6 @@ import org.motechproject.testing.osgi.BaseOsgiIT;
 import org.motechproject.testing.utils.PollingHttpClient;
 import org.motechproject.testing.utils.TestContext;
 import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.framework.ServiceReference;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
@@ -56,32 +55,20 @@ public class KookooIvrServiceBundleIT extends BaseOsgiIT {
     }
 
     private void checkSecurity() throws InvalidSyntaxException, InterruptedException {
-        int retries = 0;
+        WebApplicationContext wsContext = getWebAppContext("org.motechproject.motech-platform-web-security");
 
-        do {
-            for (ServiceReference ref : bundleContext.getAllServiceReferences(WebApplicationContext.class.getName() , null)) {
-                if (ref.getBundle().getSymbolicName().equals("org.motechproject.motech-platform-web-security")) {
-                    WebApplicationContext wsContext = (WebApplicationContext) bundleContext.getService(ref);
+        AllMotechSecurityRules allSecurityRules = wsContext.getBean(AllMotechSecurityRules.class);
+        List<MotechURLSecurityRule> rules = allSecurityRules.getRules();
 
-                    AllMotechSecurityRules allSecurityRules = wsContext.getBean(AllMotechSecurityRules.class);
-                    List<MotechURLSecurityRule> rules = allSecurityRules.getRules();
-
-                    if (rules != null && !rules.isEmpty()) {
-                        for (MotechURLSecurityRule rule : rules) {
-                            if ("/**/kookoo/web-api/**".equals(rule.getPattern())) {
-                                System.out.println("Security rule for Kookoo found");
-                                Thread.sleep(2000);
-                                return;
-                            }
-                        }
-                        System.out.print("Kookoo security rule unavailable");
-                    }
+        if (rules != null && !rules.isEmpty()) {
+            for (MotechURLSecurityRule rule : rules) {
+                if ("/**/kookoo/web-api/**".equals(rule.getPattern())) {
+                    System.out.println("Security rule for Kookoo found");
+                    Thread.sleep(2000);
+                    return;
                 }
             }
-
-            Thread.sleep(2000);
-        } while (retries++ < 5);
-
-        System.out.println("No security rules set up");
+            System.out.print("Kookoo security rule unavailable");
+        }
     }
 }

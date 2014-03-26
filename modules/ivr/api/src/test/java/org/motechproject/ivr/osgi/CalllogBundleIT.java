@@ -6,7 +6,6 @@ import org.motechproject.ivr.service.contract.CallRecordsService;
 import org.motechproject.testing.osgi.BaseOsgiIT;
 import org.motechproject.testing.utils.PollingHttpClient;
 import org.motechproject.testing.utils.TestContext;
-import org.osgi.framework.ServiceReference;
 
 import java.io.IOException;
 
@@ -20,14 +19,6 @@ public class CalllogBundleIT extends BaseOsgiIT {
     }
 
     public void testThatCallRecordsServiceIsAvailable() {
-        ServiceReference reference = bundleContext.getServiceReference(CallRecordsService.class.getName());
-        assertNotNull(reference);
-        CallRecordsService service = (CallRecordsService) bundleContext.getService(reference);
-        assertNotNull(service);
+        getService(CallRecordsService.class);
     }
-
-//    @Override
-//    protected List<String> getImports() {
-//        return Arrays.asList("org.motechproject.ivr.service", "org.motechproject.ivr.repository");
-//    }
 }
