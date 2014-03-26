@@ -5,7 +5,6 @@ import org.motechproject.server.pillreminder.api.contract.DosageRequest;
 import org.motechproject.server.pillreminder.api.contract.PillRegimenResponse;
 import org.motechproject.server.pillreminder.api.service.PillReminderService;
 import org.motechproject.testing.osgi.BaseOsgiIT;
-import org.osgi.framework.ServiceReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,13 +15,9 @@ import static java.util.Arrays.asList;
 public class PillReminderApiBundleIT extends BaseOsgiIT {
 
     public void testPillreminderService() {
-        ServiceReference serviceReference = bundleContext.getServiceReference(PillReminderService.class.getName());
-        assertNotNull(serviceReference);
+        getService(PillReminderService.class);
 
         PillReminderService pillReminderService = (PillReminderService) getApplicationContext().getBean("pillreminderServiceRef");
-        assertNotNull(pillReminderService);
-
-        pillReminderService = (PillReminderService) bundleContext.getService(serviceReference);
         assertNotNull(pillReminderService);
 
         final String externalId = "PillReminderApiBundleIT-" + UUID.randomUUID();
