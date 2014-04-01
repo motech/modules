@@ -1,6 +1,5 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.motechproject</groupId>
@@ -131,10 +130,6 @@
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.http.jetty</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.motechproject</groupId>
-            <artifactId>motech-platform-osgi-extender-fragment</artifactId>
-        </dependency>
     </dependencies>
 
     <dependencyManagement>
@@ -248,7 +243,6 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>org.springframework.web.servlet</artifactId>
@@ -542,7 +536,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>com.springsource.org.apache.commons.codec</artifactId>
-                <version>1.4.0</version>
+                <version>1.6.0</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -584,6 +578,11 @@
                         <artifactId>com.springsource.org.apache.commons.codec</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>org.motechproject.org.apache.commons.configuration</artifactId>
+                <version>1.8-${external.dependency.release.tag}</version>
             </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
@@ -664,6 +663,26 @@
             </dependency>
             <!-- Others -->
             <dependency>
+                <groupId>org.reflections</groupId>
+                <artifactId>org.motechproject.reflections</artifactId>
+                <version>0.9.5-${external.dependency.release.tag}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>org.motechproject.guava</artifactId>
+                <version>0.8.0-${external.dependency.release.tag}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.servicemix.bundles</groupId>
+                <artifactId>org.apache.servicemix.bundles.paranamer</artifactId>
+                <version>2.6_1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.javassist</groupId>
+                <artifactId>javassist</artifactId>
+                <version>3.18.1-GA</version>
+            </dependency>
+            <dependency>
                 <groupId>org.sonatype.aether</groupId>
                 <artifactId>aether-api</artifactId>
                 <version>1.13.1</version>
@@ -672,6 +691,11 @@
                 <groupId>org.aspectj</groupId>
                 <artifactId>com.springsource.org.aspectj.runtime</artifactId>
                 <version>1.6.8.RELEASE</version>
+            </dependency>
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>com.springsource.org.aspectj.weaver</artifactId>
+                <version>1.6.12.RELEASE</version>
             </dependency>
             <dependency>
                 <groupId>org.antlr</groupId>
@@ -832,11 +856,6 @@
                 <version>2.0beta1-${external.dependency.release.tag}</version>
             </dependency>
             <dependency>
-                <groupId>com.googlecode.jsmpp</groupId>
-                <artifactId>org.motechproject.com.googlecode.jsmpp</artifactId>
-                <version>2.1.0-${external.dependency.release.tag}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.geronimo.specs</groupId>
                 <artifactId>com.springsource.javax.management.j2ee</artifactId>
                 <version>1.0.1</version>
@@ -872,11 +891,6 @@
                 <version>0.5.0-${external.dependency.release.tag}</version>
             </dependency>
             <dependency>
-                <groupId>org.openmrs.liquibase</groupId>
-                <artifactId>org.motechproject.org.openmrs.liquibase</artifactId>
-                <version>1.9.4-${external.dependency.release.tag}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.azeckoski</groupId>
                 <artifactId>org.motechproject.org.azeckoski.reflectutils</artifactId>
                 <version>0.9.14-${external.dependency.release.tag}</version>
@@ -885,6 +899,12 @@
                 <groupId>org.subethamail</groupId>
                 <artifactId>org.motechproject.org.subethamail</artifactId>
                 <version>3.1.7-${external.dependency.release.tag}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>activation</artifactId>
+                        <groupId>javax.activation</groupId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>net.sourceforge.cglib</groupId>
@@ -903,157 +923,6 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>org.openmrs.module</groupId>
-                <artifactId>idgen-core</artifactId>
-                <version>1.5.1</version>
-                <scope>provided</scope>
-            </dependency>
-            <!-- OpenMRS -->
-            <dependency>
-                <groupId>org.openmrs.api</groupId>
-                <artifactId>openmrs-api</artifactId>
-                <version>1.8.4</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>commons-io</groupId>
-                        <artifactId>commons-io</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.azeckoski</groupId>
-                        <artifactId>reflectutils</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>spring-core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>spring-beans</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>spring-context</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>spring-aop</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>spring-orm</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>spring-tx</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>spring-jdbc</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.antlr</groupId>
-                        <artifactId>antlr-runtime</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>ca.uhn.hapi</groupId>
-                        <artifactId>hapi-structures-v25</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.openmrs.simpleframework</groupId>
-                        <artifactId>simple-xml</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>stax</groupId>
-                        <artifactId>stax</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.openmrs.hibernate</groupId>
-                        <artifactId>hibernate</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.thoughtworks.xstream</groupId>
-                        <artifactId>xstream</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.openmrs.liquibase</groupId>
-                        <artifactId>liquibase-core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>cglib-nodep</artifactId>
-                        <groupId>cglib</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>slf4j-api</artifactId>
-                        <groupId>org.slf4j</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>slf4j-log4j12</artifactId>
-                        <groupId>org.slf4j</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>spring-oxm</artifactId>
-                        <groupId>org.springframework</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>jcl-over-slf4j</artifactId>
-                        <groupId>org.slf4j</groupId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.openmrs.web</groupId>
-                <artifactId>openmrs-web</artifactId>
-                <version>1.8.2</version>
-                <scope>provided</scope>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>spring-web</artifactId>
-                        <groupId>org.springframework</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>spring-webmvc</artifactId>
-                        <groupId>org.springframework</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>spring-core</artifactId>
-                        <groupId>org.springframework</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>spring-context</artifactId>
-                        <groupId>org.springframework</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>spring-oxm</artifactId>
-                        <groupId>org.springframework</groupId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.openmrs.test</groupId>
-                <artifactId>openmrs-test</artifactId>
-                <version>1.8.2</version>
-                <type>pom</type>
-                <scope>test</scope>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>slf4j-api</artifactId>
-                        <groupId>org.slf4j</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>commons-logging</artifactId>
-                        <groupId>commons-logging</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>spring-oxm</artifactId>
-                        <groupId>org.springframework</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>spring-test</artifactId>
-                        <groupId>org.springframework</groupId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.http.proxy</artifactId>
                 <version>2.2.0</version>
@@ -1061,7 +930,7 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.framework</artifactId>
-                <version>3.2.0</version>
+                <version>4.2.1</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -1092,6 +961,12 @@
                 <artifactId>powermock-module-junit4</artifactId>
                 <version>1.4.9</version>
                 <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>junit</groupId>
+                        <artifactId>junit</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.powermock</groupId>
@@ -1130,6 +1005,10 @@
                         <groupId>org.springframework</groupId>
                         <artifactId>spring-test</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>org.hamcrest</groupId>
+                        <artifactId>hamcrest-library</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
@@ -1152,9 +1031,21 @@
             </dependency>
             <!-- OSGi IT -->
             <dependency>
+                <groupId>org.eclipse.gemini.blueprint</groupId>
+                <artifactId>org.motechproject.gemini-blueprint-test</artifactId>
+                <version>1.0.2.RELEASE</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>com.springsource.org.junit</artifactId>
+                        <groupId>org.junit</groupId>
+                    </exclusion>
+                </exclusions>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.http.jetty</artifactId>
-                <version>2.0.4</version>
+                <version>2.2.0</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -1169,10 +1060,15 @@
                 <version>${spring.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.motechproject</groupId>
-                <artifactId>motech-platform-osgi-extender-fragment</artifactId>
-                <version>${motech.version}</version>
-                <scope>test</scope>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.main</artifactId>
+                <version>3.2.0</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.felix</groupId>
+                        <artifactId>org.apache.felix.framework</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -1202,6 +1098,40 @@
     </modules>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>2.8</version>
+                    <executions>
+                        <execution>
+                            <id>copy-osgi-dependencies</id>
+                            <goals>
+                                <goal>copy-dependencies</goal>
+                            </goals>
+                            <configuration>
+                                <includeScope>runtime</includeScope>
+                                <overWriteIfNewer>true</overWriteIfNewer>
+                                <outputDirectory>${user.home}/.motech/bundles
+                                </outputDirectory>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>list-dependencies</id>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>resolve</goal>
+                            </goals>
+                            <configuration>
+                                <outputFile>target/dependencies.list</outputFile>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -1369,23 +1299,6 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.5.1</version>
-                <executions>
-                    <execution>
-                        <id>list-dependencies</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>resolve</goal>
-                        </goals>
-                        <configuration>
-                            <outputFile>target/dependencies.list</outputFile>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <version>1.3.1</version>
                 <dependencies>
@@ -1397,6 +1310,17 @@
                 </dependencies>
                 <executions>
                     <execution>
+                        <id>enforce-dependency-convergence</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <DependencyConvergence />
+                            </rules>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>enforce-no-package-cycles</id>
                         <goals>
                             <goal>enforce</goal>
@@ -1404,7 +1328,7 @@
                         <phase>verify</phase>
                         <configuration>
                             <rules>
-                                <NoPackageCyclesRule implementation="PackageCycles"/>
+                                <NoPackageCyclesRule implementation="PackageCycles" />
                             </rules>
                             <skip>${enforcer.skip}</skip>
                         </configuration>
@@ -1420,11 +1344,11 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-resources-plugin</artifactId>
-                        <version>2.6</version>
                         <executions>
                             <execution>
-                                <id>copy-config-files</id>
+                                <id>copy-test-config-files</id>
                                 <phase>pre-integration-test</phase>
                                 <goals>
                                     <goal>copy-resources</goal>
@@ -1434,11 +1358,37 @@
                                     <resources>
                                         <resource>
                                             <directory>${modules.root.dir}/testdata</directory>
-                                            <include>motech-settings.properties</include>
                                             <include>bootstrap.properties</include>
-                                            <include>config-locations.properties</include>
+                                            <include>motech-settings.properties</include>
                                         </resource>
                                     </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <version>2.5</version>
+                        <inherited>false</inherited>
+                        <executions>
+                            <execution>
+                                <id>clean-test-config-files</id>
+                                <goals>
+                                    <goal>clean</goal>
+                                </goals>
+                                <phase>post-integration-test</phase>
+                                <configuration>
+                                    <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                                    <filesets>
+                                        <fileset>
+                                            <followSymlinks>false</followSymlinks>
+                                            <directory>${user.home}/.motech/config</directory>
+                                            <includes>
+                                                <include>bootstrap.properties</include>
+                                                <include>motech-settings.properties</include>
+                                            </includes>
+                                        </fileset>
+                                    </filesets>
                                 </configuration>
                             </execution>
                         </executions>
