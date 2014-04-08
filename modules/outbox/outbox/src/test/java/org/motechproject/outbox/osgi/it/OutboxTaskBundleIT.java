@@ -1,32 +1,57 @@
-package org.motechproject.server.outbox.osgi.it;
+package org.motechproject.outbox.osgi.it;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.motechproject.outbox.api.EventKeys;
 import org.motechproject.tasks.domain.ActionEvent;
 import org.motechproject.tasks.domain.Channel;
 import org.motechproject.tasks.domain.TriggerEvent;
 import org.motechproject.tasks.osgi.test.AbstractTaskBundleIT;
+import org.ops4j.pax.exam.junit.PaxExam;
+import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
+import org.ops4j.pax.exam.spi.reactors.PerClass;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+@RunWith(PaxExam.class)
+@ExamReactorStrategy(PerClass.class)
 public class OutboxTaskBundleIT extends AbstractTaskBundleIT {
 
     private static final String CHANNEL_NAME = "org.motechproject.motech-outbox";
 
-    public void testTaskChannelCreated() throws IOException {
+    @Test
+    public void testTaskChannelCreated() throws IOException, InterruptedException {
+        waitForChannel(CHANNEL_NAME);
         Channel channel = findChannel(CHANNEL_NAME);
 
         assertNotNull(channel);
     }
 
-    public void testTaskTriggers() throws IOException {
+    @Test
+    public void testTaskTriggers() throws IOException, InterruptedException {
+        waitForChannel(CHANNEL_NAME);
         Channel channel = findChannel(CHANNEL_NAME);
 
+        assertNotNull(channel);
         assertExecuteOutboxTrigger(channel.getTriggerTaskEvents());
         assertIncompleteOutboxCallTrigger(channel.getTriggerTaskEvents());
         assertCompletedOutboxCallTrigger(channel.getTriggerTaskEvents());
         assertMaxPendingMessagesTrigger(channel.getTriggerTaskEvents());
+    }
+
+    @Test
+    public void testTaskActions() throws IOException, InterruptedException {
+        waitForChannel(CHANNEL_NAME);
+        Channel channel = findChannel(CHANNEL_NAME);
+
+        assertNotNull(channel);
+        assertExecuteOutboxAction(channel.getActionTaskEvents());
+        assertScheduleExecutionAction(channel.getActionTaskEvents());
+        assertUnscheduleExecutionAction(channel.getActionTaskEvents());
     }
 
     private void assertExecuteOutboxTrigger(List<TriggerEvent> triggerTaskEvents) {
@@ -62,14 +87,6 @@ public class OutboxTaskBundleIT extends AbstractTaskBundleIT {
         assertTrue(hasEventParameterKey(EventKeys.EXTERNAL_ID_KEY, maxPendingMessagesTrigger.getEventParameters()));
     }
 
-    public void testTaskActions() throws IOException {
-        Channel channel = findChannel(CHANNEL_NAME);
-
-        assertExecuteOutboxAction(channel.getActionTaskEvents());
-        assertScheduleExecutionAction(channel.getActionTaskEvents());
-        assertUnscheduleExecutionAction(channel.getActionTaskEvents());
-    }
-
     private void assertExecuteOutboxAction(List<ActionEvent> actionTaskEvents) {
         ActionEvent executeOutboxAction = findActionEventBySubject(actionTaskEvents, EventKeys.EXECUTE_OUTBOX_SUBJECT);
 
@@ -97,15 +114,5 @@ public class OutboxTaskBundleIT extends AbstractTaskBundleIT {
 
         assertNotNull(unscheduleExecutionAction);
         assertTrue(hasActionParameterKey(EventKeys.SCHEDULE_JOB_ID_KEY, unscheduleExecutionAction.getActionParameters()));
-    }
-
-    @Override
-    protected String[] getConfigLocations() {
-        return new String[]{"/META-INF/spring/testOutboxBundleContext.xml"};
-    }
-
-    @Override
-    protected List<String> getImports() {
-        return Arrays.asList("org.motechproject.outbox.api.service");
     }
 }

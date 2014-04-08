@@ -3,59 +3,74 @@ package org.motechproject.server.kookoo;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
-import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.motechproject.ivr.service.contract.IVRService;
 import org.motechproject.security.domain.MotechURLSecurityRule;
 import org.motechproject.security.repository.AllMotechSecurityRules;
-import org.motechproject.testing.osgi.BaseOsgiIT;
-import org.motechproject.testing.utils.PollingHttpClient;
-import org.motechproject.testing.utils.TestContext;
+import org.motechproject.testing.osgi.BasePaxIT;
+import org.motechproject.testing.osgi.TestContext;
+import org.motechproject.testing.osgi.helper.ServiceRetriever;
+import org.ops4j.pax.exam.junit.PaxExam;
+import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
+import org.ops4j.pax.exam.spi.reactors.PerClass;
+import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-public class KookooIvrServiceBundleIT extends BaseOsgiIT {
+@RunWith(PaxExam.class)
+@ExamReactorStrategy(PerClass.class)
+public class KookooIvrServiceBundleIT extends BasePaxIT {
 
-    private PollingHttpClient httpClient = new PollingHttpClient();
+    @Inject
+    private IVRService kookooIvrService;
+    @Inject
+    private BundleContext bundleContext;
 
+    @Override
+    protected boolean startHttpServer() {
+        return true;
+    }
+
+    @Test
     public void testThatIVRServiceIsAvailableForImport() throws InvalidSyntaxException {
-        Assert.assertNotNull(applicationContext.getBean("testKookooIVRService"));
+        assertTrue(kookooIvrService instanceof KookooCallServiceImpl);
     }
 
-    public void ignoredTestKooKooCallbackUrlIsNotAuthenticated() throws IOException, InterruptedException, InvalidSyntaxException {
+    @Test
+    public void testKooKooCallbackUrlIsNotAuthenticated() throws IOException, InterruptedException, InvalidSyntaxException {
         checkSecurity();
-        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/kookoo/web-api/ivr", TestContext.getJettyPort()));
 
-        HttpResponse response = httpClient.execute(httpGet);
+        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/kookoo/web-api/ivr",
+                TestContext.getJettyPort()));
+
+        HttpResponse response = getHttpClient().execute(httpGet);
 
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
     }
 
-    public void ignoredTestKooKooStatusCallbackUrlIsNotAuthenticated() throws IOException, InterruptedException, InvalidSyntaxException {
+    @Test
+    public void testKooKooStatusCallbackUrlIsNotAuthenticated() throws IOException, InterruptedException, InvalidSyntaxException {
         checkSecurity();
-        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/kookoo/web-api/ivr/callstatus", TestContext.getJettyPort()));
 
-        HttpResponse response = httpClient.execute(httpGet);
+        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/kookoo/web-api/ivr/callstatus",
+                TestContext.getJettyPort()));
+
+        HttpResponse response = getHttpClient().execute(httpGet);
 
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
-    }
-
-    @Override
-    protected List<String> getImports() {
-        return asList("org.motechproject.ivr.service.contract",
-                "org.motechproject.commons.couchdb.service");
-    }
-
-    @Override
-    protected String[] getConfigLocations() {
-        return new String[]{"/META-INF/osgi/testIVRKookooContext.xml"};
     }
 
     private void checkSecurity() throws InvalidSyntaxException, InterruptedException {
-        WebApplicationContext wsContext = getWebAppContext("org.motechproject.motech-platform-web-security");
+        WebApplicationContext wsContext = ServiceRetriever.getWebAppContext(bundleContext,
+                "org.motechproject.motech-platform-web-security");
 
         AllMotechSecurityRules allSecurityRules = wsContext.getBean(AllMotechSecurityRules.class);
         List<MotechURLSecurityRule> rules = allSecurityRules.getRules();
@@ -63,12 +78,12 @@ public class KookooIvrServiceBundleIT extends BaseOsgiIT {
         if (rules != null && !rules.isEmpty()) {
             for (MotechURLSecurityRule rule : rules) {
                 if ("/**/kookoo/web-api/**".equals(rule.getPattern())) {
-                    System.out.println("Security rule for Kookoo found");
+                    getLogger().info("Security rule for Kookoo found");
                     Thread.sleep(2000);
                     return;
                 }
             }
-            System.out.print("Kookoo security rule unavailable");
+            getLogger().error("Kookoo security rule unavailable");
         }
     }
 }

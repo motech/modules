@@ -4,64 +4,83 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.motechproject.testing.osgi.BaseOsgiIT;
-import org.motechproject.testing.utils.PollingHttpClient;
-import org.motechproject.testing.utils.TestContext;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.motechproject.ivr.service.contract.IVRService;
+import org.motechproject.testing.osgi.BasePaxIT;
+import org.motechproject.testing.osgi.TestContext;
+import org.ops4j.pax.exam.junit.PaxExam;
+import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
+import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.osgi.framework.InvalidSyntaxException;
 
+import javax.inject.Inject;
 import java.io.IOException;
-import java.util.List;
 
-import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-public class VerboiceBundleIT extends BaseOsgiIT {
+@RunWith(PaxExam.class)
+@ExamReactorStrategy(PerClass.class)
+public class VerboiceBundleIT extends BasePaxIT {
 
-    private PollingHttpClient httpClient = new PollingHttpClient(new DefaultHttpClient(), 60);
+    @Inject
+    private IVRService verboiceIvrService;
 
-    public void testThatVerboiceIvrServicesIsAvailableOnImport() throws InvalidSyntaxException {
-        assertNotNull("testIvrServiceOsgi");
+    @Override
+    protected boolean startHttpServer() {
+        return true;
     }
 
-    public void testVerboiceCallBackAuthenticationSuccess() throws IOException, InterruptedException {
+    @Test
+    public void testThatVerboiceIvrServicesIsAvailableOnImport() throws InvalidSyntaxException {
+        assertTrue(verboiceIvrService instanceof VerboiceIVRService);
+    }
 
-        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/verboice/web-api/ivr?CallSid=123&motech_call_id=ABC", TestContext.getJettyPort()));
+    @Test
+    public void testVerboiceCallBackAuthenticationSuccess() throws IOException, InterruptedException {
+        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/verboice/web-api/ivr?CallSid=123&motech_call_id=ABC",
+                TestContext.getJettyPort()));
         addAuthHeader(httpGet, "motech", "motech");
 
-        HttpResponse response = httpClient.execute(httpGet);
+        HttpResponse response = getHttpClient().execute(httpGet);
 
         assertNotNull(response);
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
     }
 
+    @Test
     public void testVerboiceCallBackAuthenticationFailed() throws IOException, InterruptedException {
-
-        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/verboice/web-api/ivr?CallSid=123&motech_call_id=ABC", TestContext.getJettyPort()));
+        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/verboice/web-api/ivr?CallSid=123&motech_call_id=ABC",
+                TestContext.getJettyPort()));
         addAuthHeader(httpGet, "bad", "user");
 
-        HttpResponse response = httpClient.execute(httpGet);
+        HttpResponse response = getHttpClient().execute(httpGet, HttpStatus.SC_UNAUTHORIZED);
 
         assertNotNull(response);
         assertEquals(HttpStatus.SC_UNAUTHORIZED, response.getStatusLine().getStatusCode());
     }
 
+    @Test
     public void testVerboiceStatusCallBackAuthenticationSuccess() throws IOException, InterruptedException {
-
-        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/verboice/web-api/ivr/callstatus?CallSid=123&motech_call_id=ABC", TestContext.getJettyPort()));
+        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/verboice/web-api/ivr/callstatus?CallSid=123&motech_call_id=ABC",
+                TestContext.getJettyPort()));
         addAuthHeader(httpGet, "motech", "motech");
 
-        HttpResponse response = httpClient.execute(httpGet);
+        HttpResponse response = getHttpClient().execute(httpGet);
 
         assertNotNull(response);
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
     }
 
+    @Test
     public void testVerboiceStatusCallBackAuthenticationFailed() throws IOException, InterruptedException {
-
-        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/verboice/web-api/ivr/callstatus?CallSid=123&motech_call_id=ABC", TestContext.getJettyPort()));
+        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/verboice/web-api/ivr/callstatus?CallSid=123&motech_call_id=ABC",
+                TestContext.getJettyPort()));
         addAuthHeader(httpGet, "bad", "user");
 
-        HttpResponse response = httpClient.execute(httpGet);
+        HttpResponse response = getHttpClient().execute(httpGet, HttpStatus.SC_UNAUTHORIZED);
 
         assertNotNull(response);
         assertEquals(HttpStatus.SC_UNAUTHORIZED, response.getStatusLine().getStatusCode());
@@ -69,15 +88,5 @@ public class VerboiceBundleIT extends BaseOsgiIT {
 
     private void addAuthHeader(HttpGet httpGet, String userName, String password) {
         httpGet.addHeader("Authorization", "Basic " + new String(Base64.encodeBase64((userName + ":" + password).getBytes())));
-    }
-
-    @Override
-    protected List<String> getImports() {
-        return asList("org.motechproject.ivr.service.contract");
-    }
-
-    @Override
-    protected String[] getConfigLocations() {
-        return new String[]{"/META-INF/osgi/testIvrVerboiceOsgiContext.xml"};
     }
 }

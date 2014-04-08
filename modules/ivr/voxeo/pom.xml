@@ -54,17 +54,15 @@
             <groupId>${motech.groupId}</groupId>
             <artifactId>motech-platform-event</artifactId>
             <version>${motech.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>${motech.groupId}</groupId>
-            <artifactId>motech-testing-utils</artifactId>
-            <version>${motech.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>${motech.groupId}</groupId>
             <artifactId>motech-platform-osgi-extender-fragment</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${motech.groupId}</groupId>
+            <artifactId>motech-testing-utils</artifactId>
             <version>${motech.version}</version>
             <scope>test</scope>
         </dependency>
@@ -89,7 +87,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>org.springframework.transaction</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
