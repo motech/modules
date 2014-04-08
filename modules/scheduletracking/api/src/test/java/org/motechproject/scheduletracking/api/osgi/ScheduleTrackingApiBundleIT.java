@@ -1,19 +1,29 @@
 package org.motechproject.scheduletracking.api.osgi;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.motechproject.scheduletracking.api.domain.Schedule;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
-import org.motechproject.testing.osgi.BaseOsgiIT;
+import org.motechproject.testing.osgi.BasePaxIT;
+import org.ops4j.pax.exam.junit.PaxExam;
+import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
+import org.ops4j.pax.exam.spi.reactors.PerClass;
 
-import java.util.List;
+import javax.inject.Inject;
 import java.util.UUID;
 
-import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-public class ScheduleTrackingApiBundleIT extends BaseOsgiIT {
+@RunWith(PaxExam.class)
+@ExamReactorStrategy(PerClass.class)
+public class ScheduleTrackingApiBundleIT extends BasePaxIT {
 
+    @Inject
+    private ScheduleTrackingService scheduleTrackingService;
+
+    @Test
     public void testScheduleTrackingService() {
-        ScheduleTrackingService scheduleTrackingService = getService(ScheduleTrackingService.class);
-
         final String scheduleName = "ScheduleTrackingApiBundleIT-" + UUID.randomUUID();
         try {
             scheduleTrackingService.add("{name: " + scheduleName + "}");
@@ -24,12 +34,5 @@ public class ScheduleTrackingApiBundleIT extends BaseOsgiIT {
             scheduleTrackingService.remove(scheduleName);
         }
 
-    }
-
-    @Override
-    protected List<String> getImports() {
-        return asList(
-                "org.motechproject.scheduletracking.api.domain"
-        );
     }
 }

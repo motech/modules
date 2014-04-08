@@ -35,7 +35,6 @@
             <groupId>${motech.groupId}</groupId>
             <artifactId>motech-platform-osgi-extender-fragment</artifactId>
             <version>${motech.version}</version>
-            <scope>test</scope>
         </dependency>
         <!-- OSGI dependencies -->
         <dependency>

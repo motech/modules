@@ -62,8 +62,8 @@
         </dependency>
         <!-- OSGi -->
         <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.core</artifactId>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.framework</artifactId>
         </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
@@ -124,11 +124,7 @@
         <!-- OSGi IT -->
         <dependency>
             <groupId>org.motechproject</groupId>
-            <artifactId>motech-osgi-it</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.http.jetty</artifactId>
+            <artifactId>motech-pax-it</artifactId>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
@@ -443,12 +439,12 @@
             <dependency>
                 <groupId>org.osgi</groupId>
                 <artifactId>org.osgi.core</artifactId>
-                <version>4.2.0</version>
+                <version>5.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.osgi</groupId>
                 <artifactId>org.osgi.compendium</artifactId>
-                <version>4.2.0</version>
+                <version>5.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.gemini</groupId>
@@ -904,7 +900,7 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.framework</artifactId>
-                <version>3.2.0</version>
+                <version>4.2.1</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -1002,7 +998,7 @@
             </dependency>
             <dependency>
                 <groupId>org.motechproject</groupId>
-                <artifactId>motech-osgi-it</artifactId>
+                <artifactId>motech-pax-it</artifactId>
                 <version>${motech.version}</version>
                 <scope>test</scope>
             </dependency>
@@ -1015,23 +1011,14 @@
                 <groupId>org.motechproject</groupId>
                 <artifactId>motech-platform-osgi-extender-fragment</artifactId>
                 <version>${motech.version}</version>
-                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
     <modules>
-        <!-- Non-OSGI modules -->
-
-        <!-- OSGI modules -->
         <module>modules/message-campaign/message-campaign</module>
         <module>modules/pillreminder/api</module>
         <module>modules/scheduletracking/api</module>
-
-        <!-- Archetypes modules -->
-
-        <!-- Packaging modules -->
-
     </modules>
 
     <build>
@@ -1050,8 +1037,8 @@
                             <configuration>
                                 <includeScope>runtime</includeScope>
                                 <overWriteIfNewer>true</overWriteIfNewer>
-                                <outputDirectory>${user.home}/.motech/bundles
-                                </outputDirectory>
+                                <outputDirectory>${user.home}/.motech/bundles</outputDirectory>
+                                <excludeArtifactIds>org.apache.felix.framework</excludeArtifactIds>
                             </configuration>
                         </execution>
                         <execution>

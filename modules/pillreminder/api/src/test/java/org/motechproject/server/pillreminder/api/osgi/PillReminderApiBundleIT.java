@@ -1,25 +1,32 @@
 package org.motechproject.server.pillreminder.api.osgi;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.motechproject.server.pillreminder.api.contract.DailyPillRegimenRequest;
 import org.motechproject.server.pillreminder.api.contract.DosageRequest;
 import org.motechproject.server.pillreminder.api.contract.PillRegimenResponse;
 import org.motechproject.server.pillreminder.api.service.PillReminderService;
-import org.motechproject.testing.osgi.BaseOsgiIT;
+import org.motechproject.testing.osgi.BasePaxIT;
+import org.ops4j.pax.exam.junit.PaxExam;
+import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
+import org.ops4j.pax.exam.spi.reactors.PerClass;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-public class PillReminderApiBundleIT extends BaseOsgiIT {
+@RunWith(PaxExam.class)
+@ExamReactorStrategy(PerClass.class)
+public class PillReminderApiBundleIT extends BasePaxIT {
 
+    @Inject
+    private PillReminderService pillReminderService;
+
+    @Test
     public void testPillreminderService() {
-        getService(PillReminderService.class);
-
-        PillReminderService pillReminderService = (PillReminderService) getApplicationContext().getBean("pillreminderServiceRef");
-        assertNotNull(pillReminderService);
-
         final String externalId = "PillReminderApiBundleIT-" + UUID.randomUUID();
         try {
             pillReminderService.createNew(new DailyPillRegimenRequest(externalId, 2, 15, 5, new ArrayList<DosageRequest>()));
@@ -29,17 +36,5 @@ public class PillReminderApiBundleIT extends BaseOsgiIT {
         } finally {
             pillReminderService.remove(externalId);
         }
-    }
-
-    @Override
-    protected String[] getConfigLocations() {
-        return new String[]{"/META-INF/spring/testPillreminderApiBundleContext.xml"};
-    }
-
-    @Override
-    protected List<String> getImports() {
-        return asList(
-                "org.motechproject.server.pillreminder.api.service","org.motechproject.osgi.web"
-        );
     }
 }
