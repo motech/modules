@@ -1,24 +1,37 @@
 package org.motechproject.appointments.api.osgi;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.motechproject.appointments.api.EventKeys;
 import org.motechproject.tasks.domain.Channel;
 import org.motechproject.tasks.domain.TriggerEvent;
 import org.motechproject.tasks.osgi.test.AbstractTaskBundleIT;
+import org.ops4j.pax.exam.junit.PaxExam;
+import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
+import org.ops4j.pax.exam.spi.reactors.PerClass;
 
 import java.io.IOException;
 import java.util.List;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+@RunWith(PaxExam.class)
+@ExamReactorStrategy(PerClass.class)
 public class AppointmentsTaskBundleIT extends AbstractTaskBundleIT {
 
     private static final String CHANNEL_NAME = "org.motechproject.motech-appointments-api";
 
-    public void testTaskChannelCreated() throws IOException {
+    @Test
+    public void testTaskChannelCreated() throws IOException, InterruptedException {
+        waitForChannel(CHANNEL_NAME);
         Channel channel = findChannel(CHANNEL_NAME);
-
         assertNotNull(channel);
     }
 
-    public void testTaskTriggers() throws IOException {
+    @Test
+    public void testTaskTriggers() throws IOException, InterruptedException {
+        waitForChannel(CHANNEL_NAME);
         Channel channel = findChannel(CHANNEL_NAME);
 
         assertVisitTrigger(channel.getTriggerTaskEvents());

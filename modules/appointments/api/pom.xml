@@ -6,14 +6,16 @@
         <version>0.24-SNAPSHOT</version>
         <relativePath>../../../</relativePath>
     </parent>
-    <groupId>org.motechproject</groupId>
+
     <artifactId>motech-appointments-api</artifactId>
     <version>0.24-SNAPSHOT</version>
     <name>MOTECH Appointments API</name>
     <packaging>bundle</packaging>
+
     <properties>
         <modules.root.dir>${basedir}/../../..</modules.root.dir>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>${motech.groupId}</groupId>

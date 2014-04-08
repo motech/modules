@@ -1,20 +1,30 @@
 package org.motechproject.appointments.api.osgi;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.motechproject.appointments.api.service.AppointmentService;
 import org.motechproject.appointments.api.service.contract.CreateVisitRequest;
 import org.motechproject.appointments.api.service.contract.VisitResponse;
-import org.motechproject.testing.osgi.BaseOsgiIT;
+import org.motechproject.testing.osgi.BasePaxIT;
+import org.ops4j.pax.exam.junit.PaxExam;
+import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
+import org.ops4j.pax.exam.spi.reactors.PerClass;
 
-import java.util.List;
+import javax.inject.Inject;
 import java.util.UUID;
 
-import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-public class AppointmentsApiBundleIT extends BaseOsgiIT {
+@RunWith(PaxExam.class)
+@ExamReactorStrategy(PerClass.class)
+public class AppointmentsApiBundleIT extends BasePaxIT {
 
+    @Inject
+    private AppointmentService appointmentService;
+
+    @Test
     public void testAppointmentService() {
-        AppointmentService appointmentService = getService(AppointmentService.class);
-
         final String externalId = "AppointmentsApiBundleIT-" + UUID.randomUUID();
         String visitName = "Visit-" + externalId;
         CreateVisitRequest request = new CreateVisitRequest().setVisitName(visitName);
@@ -23,13 +33,5 @@ public class AppointmentsApiBundleIT extends BaseOsgiIT {
         assertNotNull(response);
         assertEquals(visitName, response.getName());
         // Delete the doc in the post-integration phase
-    }
-
-    @Override
-    protected List<String> getImports() {
-        return asList(
-                "org.motechproject.appointments.api.service.contract",
-                "org.motechproject.appointments.api.service"
-        );
     }
 }
