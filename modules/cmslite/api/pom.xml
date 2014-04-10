@@ -43,12 +43,11 @@
             <artifactId>motech-platform-osgi-web-util</artifactId>
             <version>${motech.version}</version>
         </dependency>
-        <!-- Test -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>org.springframework.web.servlet</artifactId>
-            <scope>test</scope>
         </dependency>
+        <!-- Test -->
         <dependency>
             <groupId>${motech.groupId}</groupId>
             <artifactId>motech-testing-utils</artifactId>
