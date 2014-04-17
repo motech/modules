@@ -29,7 +29,8 @@
                 <entry key="messages" value="../commcare/resources/messages/"/>
             </map>
         </constructor-arg>
-        <property name="settingsURL" value="/settings" />
+        <property name="settingsURL" value="/commcare/settings"/>
+        <property name="defaultURL" value="/commcare/settings"/>
     </bean>
 
     <osgi:service id="commcareDataProviderOsgi" auto-export="interfaces" ref="commcareDataProvider"
