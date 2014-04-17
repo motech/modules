@@ -29,6 +29,7 @@
         </constructor-arg>
         <property name="roleForAccess" value="manageCampaigns"/>
         <property name="settingsURL" value="/messageCampaign/settings" />
+        <property name="defaultURL" value="/messageCampaign/campaigns"/>
     </bean>
 
     <osgi:service id="messageCampaignServiceOsgi" ref="messageCampaignService"
