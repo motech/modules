@@ -43,6 +43,7 @@
             </map>
         </constructor-arg>
         <property name="settingsURL" value="/sms/settings" />
+        <property name="defaultURL" value="/sms/send"/>
     </bean>
 
     <bean id="multiThreadedHttpConnectionManager"

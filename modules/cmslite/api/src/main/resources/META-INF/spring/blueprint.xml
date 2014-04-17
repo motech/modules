@@ -29,6 +29,7 @@
                 <entry key="messages" value="../cmsliteapi/resources/messages/"/>
             </map>
         </constructor-arg>
+        <property name="defaultURL" value="/cmslite/resources"/>
     </bean>
 
     <osgi:service id="cmsLiteServiceOsgi" ref="cmsLiteService"
