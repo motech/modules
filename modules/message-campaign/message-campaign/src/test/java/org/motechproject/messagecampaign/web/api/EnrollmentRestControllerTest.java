@@ -85,7 +85,7 @@ public class EnrollmentRestControllerTest {
         );
 
         ArgumentCaptor<CampaignRequest> captor = ArgumentCaptor.forClass(CampaignRequest.class);
-        verify(messageCampaignService).startFor(captor.capture());
+        verify(messageCampaignService).enroll(captor.capture());
 
         assertEquals(new Time(20, 1), captor.getValue().deliverTime());
         assertEquals(new LocalDate(2013, 8, 14), captor.getValue().referenceDate());
@@ -367,16 +367,17 @@ public class EnrollmentRestControllerTest {
         final Time expectedTime = new Time(17, 1);
         final LocalDate expectedDate = new LocalDate(2013, 8, 20);
 
+        ArgumentCaptor<String> externalIdCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<String> campaignNameCaptor = ArgumentCaptor.forClass(String.class);
+
+        verify(messageCampaignService).unenroll(externalIdCaptor.capture(), campaignNameCaptor.capture());
+
+        assertEquals(USER_ID, externalIdCaptor.getValue());
+        assertEquals(CAMPAIGN_NAME, campaignNameCaptor.getValue());
+
         ArgumentCaptor<CampaignRequest> captor = ArgumentCaptor.forClass(CampaignRequest.class);
 
-        verify(messageCampaignService).stopAll(captor.capture());
-
-        assertEquals(CAMPAIGN_NAME, captor.getValue().campaignName());
-        assertEquals(USER_ID, captor.getValue().externalId());
-        assertEquals(expectedTime, captor.getValue().deliverTime());
-        assertEquals(expectedDate, captor.getValue().referenceDate());
-
-        verify(messageCampaignService).startFor(captor.capture());
+        verify(messageCampaignService).enroll(captor.capture());
 
         assertEquals(CAMPAIGN_NAME, captor.getValue().campaignName());
         assertEquals(USER_ID, captor.getValue().externalId());
@@ -402,11 +403,13 @@ public class EnrollmentRestControllerTest {
         assertEquals(1, queryCaptor.getValue().getSecondaryCriteria().size());
         verifyExternalIdCriterion(queryCaptor.getValue().getSecondaryCriteria().get(0), USER_ID);
 
-        ArgumentCaptor<CampaignRequest> campaignRequestCaptor = ArgumentCaptor.forClass(CampaignRequest.class);
-        verify(messageCampaignService).stopAll(campaignRequestCaptor.capture());
+        ArgumentCaptor<String> externalIdCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<String> campaignNameCaptor = ArgumentCaptor.forClass(String.class);
 
-        assertEquals(CAMPAIGN_NAME, campaignRequestCaptor.getValue().campaignName());
-        assertEquals(USER_ID, campaignRequestCaptor.getValue().externalId());
+        verify(messageCampaignService).unenroll(externalIdCaptor.capture(), campaignNameCaptor.capture());
+
+        assertEquals(USER_ID, externalIdCaptor.getValue());
+        assertEquals(CAMPAIGN_NAME, campaignNameCaptor.getValue());
     }
 
     @Test

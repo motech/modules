@@ -86,7 +86,7 @@ public class MessageCampaignServiceImplTest {
                 .withReferenceDate(new LocalDate(2011, 11, 22))
                 .withDeliverTime(new Time(8, 30))
                 .build();
-        messageCampaignService.startFor(request);
+        messageCampaignService.enroll(request);
 
         ArgumentCaptor<CampaignEnrollment> campaignEnrollmentCaptor = ArgumentCaptor.forClass(CampaignEnrollment.class);
         verify(campaignEnrollmentService).register(campaignEnrollmentCaptor.capture());
@@ -114,7 +114,7 @@ public class MessageCampaignServiceImplTest {
                 .withReferenceDate(new LocalDate(2011, 11, 22))
                 .withDeliverTime(new Time(8, 30))
                 .build();
-        messageCampaignService.stopAll(request);
+        messageCampaignService.unenroll(request.externalId(), request.campaignName());
 
         verify(campaignEnrollmentService).unregister(request.externalId(), request.campaignName());
 
@@ -168,7 +168,7 @@ public class MessageCampaignServiceImplTest {
         CampaignSchedulerService campaignScheduler = mock(CampaignSchedulerService.class);
         when(campaignSchedulerFactory.getCampaignScheduler("campaign-name")).thenReturn(campaignScheduler);
 
-        messageCampaignService.startFor(campaignRequest);
+        messageCampaignService.enroll(campaignRequest);
 
         ArgumentCaptor<CampaignEnrollment> enrollment = ArgumentCaptor.forClass(CampaignEnrollment.class);
         verify(campaignScheduler).start(enrollment.capture());

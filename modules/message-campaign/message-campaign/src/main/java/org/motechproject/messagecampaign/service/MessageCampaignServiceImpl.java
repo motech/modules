@@ -64,7 +64,7 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
         this.relay = relay;
     }
 
-    public void startFor(CampaignRequest request) {
+    public void enroll(CampaignRequest request) {
         CampaignEnrollment enrollment = new CampaignEnrollment(request.externalId(), request.campaignName()).setReferenceDate(request.referenceDate()).setDeliverTime(request.deliverTime());
         campaignEnrollmentService.register(enrollment);
         CampaignSchedulerService campaignScheduler = campaignSchedulerFactory.getCampaignScheduler(request.campaignName());
@@ -79,14 +79,14 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
     }
 
     @Override
-    public void stopAll(CampaignRequest request) {
-        campaignEnrollmentService.unregister(request.externalId(), request.campaignName());
-        CampaignEnrollment enrollment = allCampaignEnrollments.findByExternalIdAndCampaignName(request.externalId(), request.campaignName());
-        campaignSchedulerFactory.getCampaignScheduler(request.campaignName()).stop(enrollment);
+    public void unenroll(String externalId, String campaignName) {
+        campaignEnrollmentService.unregister(externalId, campaignName);
+        CampaignEnrollment enrollment = allCampaignEnrollments.findByExternalIdAndCampaignName(externalId, campaignName);
+        campaignSchedulerFactory.getCampaignScheduler(campaignName).stop(enrollment);
 
         Map<String, Object> param = new HashMap<>();
-        param.put(EventKeys.EXTERNAL_ID_KEY, request.externalId());
-        param.put(EventKeys.CAMPAIGN_NAME_KEY, request.campaignName());
+        param.put(EventKeys.EXTERNAL_ID_KEY, externalId);
+        param.put(EventKeys.CAMPAIGN_NAME_KEY, campaignName);
         MotechEvent event = new MotechEvent(EventKeys.UNENROLLED_USER_SUBJECT, param);
 
         relay.sendEventMessage(event);
@@ -174,7 +174,7 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
 
     @Override
     public void campaignCompleted(String externalId, String campaignName) {
-        stopAll(new CampaignRequest(externalId, campaignName, null, null));
+        unenroll(externalId, campaignName);
     }
 
     @PostConstruct

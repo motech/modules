@@ -72,7 +72,7 @@ public class EnrollmentControllerIT {
         assertEquals(USER_ID, enrollmentDto.getExternalId());
         assertEquals(FRIDAY_CAMPAIGN, enrollmentDto.getCampaignName());
 
-        messageCampaignService.stopAll(enrollRequest);
+        messageCampaignService.unenroll(enrollRequest.externalId(), enrollRequest.campaignName());
     }
 
     private void createCampaignAndEnroll() {
@@ -80,7 +80,7 @@ public class EnrollmentControllerIT {
         absoluteCampaignMessageRecord.setName(FRIDAY_CAMPAIGN);
         final CampaignRecord campaignRecord = CampaignRecordBuilder.absoluteCampaignRecord(FRIDAY_CAMPAIGN, absoluteCampaignMessageRecord);
         messageCampaignService.saveCampaign(campaignRecord);
-        messageCampaignService.startFor(enrollRequest);
+        messageCampaignService.enroll(enrollRequest);
     }
 
     @After

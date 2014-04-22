@@ -41,10 +41,10 @@ public class MessageCampaignServiceIT {
 
         TriggerKey triggerKey = triggerKey("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.PREGNANCY.entity_1.PREGNANCY", "default");
 
-        messageCampaignService.startFor(campaignRequest);
+        messageCampaignService.enroll(campaignRequest);
         assertTrue(scheduler.checkExists(triggerKey));
 
-        messageCampaignService.stopAll(campaignRequest);
+        messageCampaignService.unenroll(campaignRequest.externalId(), campaignRequest.campaignName());
         assertFalse(scheduler.checkExists(triggerKey));
     }
 }

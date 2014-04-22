@@ -19,14 +19,15 @@ public interface MessageCampaignService {
      *
      * @param enrollRequest
      */
-    void startFor(CampaignRequest enrollRequest);
+    void enroll(CampaignRequest enrollRequest);
 
     /**
      * Unenrolls an external from the campaign as specified in the request. The entity will no longer receive events from the campaign.
      *
-     * @param enrollRequest
+     * @param externalId    - a client defined id to identify the enrollment
+     * @param campaignName  - the campaign into which the entity should be enrolled
      */
-    void stopAll(CampaignRequest enrollRequest);
+    void unenroll(String externalId, String campaignName);
 
     /**
      * Searches and returns the Campaign Enrollment Records as per the criteria in the given CampaignEnrollmentsQuery
