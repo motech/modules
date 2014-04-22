@@ -70,11 +70,11 @@ public class MessageCampaignBundleIT extends BasePaxIT {
         CampaignRequest campaignRequest = new CampaignRequest(externalId, "PREGNANCY", new LocalDate(2020, 7, 10), null);
 
         try {
-            messageCampaignService.startFor(campaignRequest);
+            messageCampaignService.enroll(campaignRequest);
             List<CampaignEnrollmentRecord> campaignEnrollmentRecords = messageCampaignService.search(new CampaignEnrollmentsQuery().withExternalId(externalId));
             assertTrue(campaignEnrollmentRecords.size() == 1);
         } finally {
-            messageCampaignService.stopAll(campaignRequest); // Doesn't delete the doc
+            messageCampaignService.unenroll(campaignRequest.externalId(), campaignRequest.campaignName()); // Doesn't delete the doc
         }
     }
 

@@ -58,7 +58,7 @@ public class EnrollmentRestController {
         if (StringUtils.isNotBlank(enrollmentId)) {
             messageCampaignService.updateEnrollment(campaignRequest, enrollmentId);
         } else {
-            messageCampaignService.startFor(campaignRequest);
+            messageCampaignService.enroll(campaignRequest);
         }
     }
 
@@ -86,8 +86,8 @@ public class EnrollmentRestController {
         CampaignRequest campaignRequest = new CampaignRequest(userId, campaignName,
                 enrollmentRequest.getReferenceDate(), enrollmentRequest.getStartTime());
 
-        messageCampaignService.stopAll(campaignRequest);
-        messageCampaignService.startFor(campaignRequest);
+        messageCampaignService.unenroll(userId, campaignName);
+        messageCampaignService.enroll(campaignRequest);
     }
 
     @RequestMapping(value = "/{campaignName}/users/{externalId}", method = RequestMethod.DELETE)
@@ -106,7 +106,7 @@ public class EnrollmentRestController {
             campaignRequest.setCampaignName(campaignName);
             campaignRequest.setExternalId(externalId);
 
-            messageCampaignService.stopAll(campaignRequest);
+            messageCampaignService.unenroll(externalId, campaignName);
         }
     }
 

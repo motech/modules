@@ -38,10 +38,10 @@ public class MessageCampaignEventHandler {
 
         switch (event.getSubject()) {
             case ENROLL_USER_SUBJECT:
-                messageCampaignService.startFor(request);
+                messageCampaignService.enroll(request);
                 break;
             case UNENROLL_USER_SUBJECT:
-                messageCampaignService.stopAll(request);
+                messageCampaignService.unenroll(request.externalId(), request.campaignName());
                 break;
             default:
         }

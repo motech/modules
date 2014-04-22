@@ -43,7 +43,7 @@ public class MessageCampaignEventHandlerTest {
         messageCampaignEventHandler.enrollOrUnenroll(event);
 
         ArgumentCaptor<CampaignRequest> requestArgumentCaptor = ArgumentCaptor.forClass(CampaignRequest.class);
-        verify(messageCampaignService).startFor(requestArgumentCaptor.capture());
+        verify(messageCampaignService).enroll(requestArgumentCaptor.capture());
         CampaignRequest request = requestArgumentCaptor.getValue();
         assertEquals(EXTERNAL_ID, request.externalId());
         assertEquals(CAMPAIGN_NAME, request.campaignName());
@@ -56,12 +56,13 @@ public class MessageCampaignEventHandlerTest {
 
         messageCampaignEventHandler.enrollOrUnenroll(event);
 
-        ArgumentCaptor<CampaignRequest> requestArgumentCaptor = ArgumentCaptor.forClass(CampaignRequest.class);
-        verify(messageCampaignService).stopAll(requestArgumentCaptor.capture());
-        CampaignRequest request = requestArgumentCaptor.getValue();
-        assertEquals(EXTERNAL_ID, request.externalId());
-        assertEquals(CAMPAIGN_NAME, request.campaignName());
-        assertEquals(REFERENCE_DATE, request.referenceDate());
+        ArgumentCaptor<String> externalIdCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<String> campaignNameCaptor = ArgumentCaptor.forClass(String.class);
+
+        verify(messageCampaignService).unenroll(externalIdCaptor.capture(), campaignNameCaptor.capture());
+
+        assertEquals(EXTERNAL_ID, externalIdCaptor.getValue());
+        assertEquals(CAMPAIGN_NAME, campaignNameCaptor.getValue());
     }
 
     private Map<String, Object> createParam() {

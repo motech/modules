@@ -61,7 +61,7 @@ public class MessageCampaignServiceFT {
         eventListenerRegistry.registerListener(listener, EventKeys.SEND_MESSAGE);
 
         CampaignRequest campaignRequest = new CampaignRequest("entity_1", "weekly_campaign", new LocalDate(2012, 10, 1), null);
-        messageCampaignService.startFor(campaignRequest);
+        messageCampaignService.enroll(campaignRequest);
 
         listener.assertEventRaisedAt(asList(
                 newDateTime(2012, 10, 1, 10, 30, 0),

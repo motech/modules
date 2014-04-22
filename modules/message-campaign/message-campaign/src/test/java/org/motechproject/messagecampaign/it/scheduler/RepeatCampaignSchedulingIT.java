@@ -57,7 +57,7 @@ public class RepeatCampaignSchedulingIT {
     @Test
     public void shouldScheduleAllMessagesOfCampaignAtMessageStartTime() throws SchedulerException {
         CampaignRequest campaignRequest = new CampaignRequest("entity_1", "WeeklyCampaign", new LocalDate(2020, 7, 10), null);
-        messageCampaignService.startFor(campaignRequest);
+        messageCampaignService.enroll(campaignRequest);
         List<DateTime> fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.WeeklyCampaign.entity_1.message_key_1-repeat");
         assertEquals(asList(
                 newDateTime(2020, 7, 10, 10, 30, 0),
@@ -76,7 +76,7 @@ public class RepeatCampaignSchedulingIT {
     @Test
     public void shouldScheduleWeeklyMessagesAtUserSpecifiedTime() throws SchedulerException {
         CampaignRequest campaignRequest = new CampaignRequest("entity_1", "WeeklyCampaign", new LocalDate(2020, 7, 10), new Time(15, 20));
-        messageCampaignService.startFor(campaignRequest);
+        messageCampaignService.enroll(campaignRequest);
         List<DateTime> fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.WeeklyCampaign.entity_1.message_key_1-repeat");
         assertEquals(asList(
                 newDateTime(2020, 7, 10, 15, 20, 0),
@@ -90,7 +90,7 @@ public class RepeatCampaignSchedulingIT {
         try {
             fakeToday(new LocalDate(2020, 7, 15));
             CampaignRequest campaignRequest = new CampaignRequest("entity_1", "WeeklyCampaign", new LocalDate(2020, 7, 10), null);
-            messageCampaignService.startFor(campaignRequest);
+            messageCampaignService.enroll(campaignRequest);
             List<DateTime> fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.WeeklyCampaign.entity_1.message_key_1-repeat");
             assertEquals(asList(
                     newDateTime(2020, 7, 17, 10, 30, 0),
@@ -104,7 +104,7 @@ public class RepeatCampaignSchedulingIT {
     @Test
     public void shouldScheduleMessagesEvery12Hours() throws SchedulerException {
         CampaignRequest campaignRequest = new CampaignRequest("entity_1", "HourlyCampaign", new LocalDate(2020, 7, 10), new Time(4, 30));
-        messageCampaignService.startFor(campaignRequest);
+        messageCampaignService.enroll(campaignRequest);
         List<DateTime> fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.HourlyCampaign.entity_1.message_key_1-repeat");
         assertEquals(asList(
                 newDateTime(2020, 7, 10, 4, 30, 0),
