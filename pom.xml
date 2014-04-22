@@ -1016,7 +1016,7 @@
     </dependencyManagement>
 
     <modules>
-        <module>modules/message-campaign/message-campaign</module>
+        <module>modules/message-campaign</module>
         <module>modules/pillreminder/api</module>
         <module>modules/scheduletracking/api</module>
     </modules>

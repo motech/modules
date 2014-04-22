@@ -5,7 +5,7 @@
         <artifactId>platform-campaigns</artifactId>
         <groupId>org.motechproject</groupId>
         <version>0.24-SNAPSHOT</version>
-        <relativePath>../../../</relativePath>
+        <relativePath>../../</relativePath>
     </parent>
     <artifactId>motech-message-campaign</artifactId>
     <name>MOTECH Message Campaign</name>
@@ -13,7 +13,7 @@
     <version>0.24-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <properties>
-        <modules.root.dir>${basedir}/../../..</modules.root.dir>
+        <modules.root.dir>${basedir}/../..</modules.root.dir>
     </properties>
     <dependencies>
         <dependency>
