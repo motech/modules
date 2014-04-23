@@ -7,6 +7,8 @@ import org.motechproject.outbox.api.domain.OutboundVoiceMessage;
 import org.motechproject.outbox.api.service.VoiceOutboxService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.TestContext;
+import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
+import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
@@ -21,13 +23,14 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
+@ExamFactory(MotechNativeTestContainerFactory.class)
 public class VoiceOutboxServiceBundleIT extends BasePaxIT {
 
     @Inject
     private VoiceOutboxService voiceOutboxService;
 
     @Override
-    protected boolean startHttpServer() {
+    protected boolean shouldFakeModuleStartupEvent() {
         return true;
     }
 
