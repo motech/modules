@@ -10,8 +10,10 @@ import org.junit.runner.RunWith;
 import org.motechproject.ivr.service.contract.IVRService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.TestContext;
+import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.testing.utils.server.RequestInfo;
 import org.motechproject.testing.utils.server.StubServer;
+import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
@@ -27,6 +29,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
+@ExamFactory(MotechNativeTestContainerFactory.class)
 public class VoxeoBundleIT extends BasePaxIT {
 
     private static final String CONTEXT_PATH = "/SessionControl";
@@ -36,7 +39,7 @@ public class VoxeoBundleIT extends BasePaxIT {
     private IVRService voxeoIvrService;
 
     @Override
-    protected boolean startHttpServer() {
+    protected boolean shouldFakeModuleStartupEvent() {
         return true;
     }
 
