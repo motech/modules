@@ -196,7 +196,7 @@
                         <version>1.6</version>
                         <executions>
                             <execution>
-                                <id>drop DB =&gt; motech-scheduletracking</id>
+                                <id>drop DB =&gt; motech-scheduletracking-api</id>
                                 <phase>pre-integration-test</phase>
                                 <configuration>
                                     <target>
@@ -205,7 +205,7 @@
                                             <arg value="-S" />
                                             <arg value="-X" />
                                             <arg value="DELETE" />
-                                            <arg value="http://${db.server}:${db.port}/${db.prefix}motech-scheduletracking" />
+                                            <arg value="http://${db.server}:${db.port}/${db.prefix}motech-scheduletracking-api" />
                                         </exec>
                                     </target>
                                 </configuration>
