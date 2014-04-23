@@ -7,6 +7,8 @@ import org.motechproject.server.pillreminder.api.contract.DosageRequest;
 import org.motechproject.server.pillreminder.api.contract.PillRegimenResponse;
 import org.motechproject.server.pillreminder.api.service.PillReminderService;
 import org.motechproject.testing.osgi.BasePaxIT;
+import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
+import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
@@ -20,10 +22,16 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
+@ExamFactory(MotechNativeTestContainerFactory.class)
 public class PillReminderApiBundleIT extends BasePaxIT {
 
     @Inject
     private PillReminderService pillReminderService;
+
+    @Override
+    protected boolean shouldFakeModuleStartupEvent() {
+        return true;
+    }
 
     @Test
     public void testPillreminderService() {
