@@ -131,10 +131,6 @@
             <groupId>org.motechproject</groupId>
             <artifactId>motech-pax-it</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.http.jetty</artifactId>
-        </dependency>
     </dependencies>
 
     <dependencyManagement>
@@ -1088,7 +1084,7 @@
         <module>modules/mobileforms/api</module>
 
         <!-- OSGI modules -->
-        <module>modules/alerts/api</module>
+        <module>modules/alerts</module>
         <module>modules/callflow</module>
         <module>modules/cmslite/api</module>
         <module>modules/commcare</module>
@@ -1191,12 +1187,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.12</version>
+                <version>2.17</version>
                 <dependencies>
                     <dependency>
                         <groupId>org.apache.maven.surefire</groupId>
                         <artifactId>surefire-junit47</artifactId>
-                        <version>2.12.4</version>
+                        <version>2.17</version>
                     </dependency>
                 </dependencies>
                 <configuration>
@@ -1405,7 +1401,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>2.9</version>
+                        <version>2.17</version>
                         <executions>
                             <execution>
                                 <id>integration-test</id>
@@ -1450,6 +1446,57 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>sql-maven-plugin</artifactId>
+                        <version>1.5</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>mysql</groupId>
+                                <artifactId>mysql-connector-java</artifactId>
+                                <version>5.1.9</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <driver>com.mysql.jdbc.Driver</driver>
+                            <username>${mysql.user}</username>
+                            <password>${mysql.password}</password>
+                            <url>jdbc:mysql://localhost:3306</url>
+                        </configuration>
+                        <!--
+                            For each Bundle IT tests in modules migrated to MDS the
+                            'motech_data_services' database has to be dropped and created again.
+                        -->
+                        <executions>
+                            <execution>
+                                <id>drop-db</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+                                    <autocommit>true</autocommit>
+                                    <sqlCommand>
+                                        DROP DATABASE motech_data_services;
+                                    </sqlCommand>
+                                    <onError>continue</onError>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>create-db</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+                                    <autocommit>true</autocommit>
+                                    <sqlCommand>
+                                        CREATE DATABASE IF NOT EXISTS motech_data_services;
+                                    </sqlCommand>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
@@ -1480,7 +1527,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
-                        <version>2.12</version>
+                        <version>2.17</version>
                         <configuration>
                             <excludes>
                                 <exclude>NONE</exclude>
@@ -1498,7 +1545,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>2.9</version>
+                        <version>2.17</version>
                     </plugin>
                 </plugins>
             </build>
