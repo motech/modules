@@ -3,46 +3,36 @@ package org.motechproject.sms.audit;
 //todo: motechTimestanp & providerTimestamp instead of just timestamp?
 //todo: 'senderNumber' & 'recipientNumber' instead of 'phoneNumber'?
 
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.ektorp.support.TypeDiscriminator;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.joda.time.DateTime;
-import org.motechproject.commons.couchdb.model.MotechBaseDataObject;
 import org.motechproject.commons.date.util.DateUtil;
+import org.motechproject.mds.annotations.Entity;
 
 /**
  * SMS audit record for the database
  */
-@TypeDiscriminator("doc.type === 'SmsRecord'")
-public class SmsRecord extends MotechBaseDataObject {
-
-    @JsonProperty
+@Entity
+public class SmsRecord {
     private String config;
-    @JsonProperty
     private SmsDirection smsDirection;
-    @JsonProperty
     private String phoneNumber;
-    @JsonProperty
     private String messageContent;
-    @JsonProperty
     private DateTime timestamp;
-    @JsonProperty
     private DeliveryStatus deliveryStatus;
-    @JsonProperty
     private String providerStatus;
-    @JsonProperty
     private String motechId;
-    @JsonProperty
     private String providerId;
-    @JsonProperty
     private String errorMessage;
 
     public SmsRecord() {
+        this(null, null, null, null, null, null, null, null, null, null);
     }
 
-    public SmsRecord(String config, SmsDirection smsDirection,String number,  //NO CHECKSTYLE ParameterNumber
+    public SmsRecord(String config, SmsDirection smsDirection, String number,  //NO CHECKSTYLE ParameterNumber
                      String message, DateTime timestamp, DeliveryStatus deliveryStatus, String providerStatus,
                      String motechId, String providerId, String errorMessage) {
-        super("SmsRecord");
         this.config = config;
         this.smsDirection = smsDirection;
         this.phoneNumber = number;
@@ -59,40 +49,44 @@ public class SmsRecord extends MotechBaseDataObject {
         return config;
     }
 
+    public void setConfig(String config) {
+        this.config = config;
+    }
+
     public SmsDirection getSmsDirection() {
         return smsDirection;
+    }
+
+    public void setSmsDirection(SmsDirection smsDirection) {
+        this.smsDirection = smsDirection;
     }
 
     public String getPhoneNumber() {
         return phoneNumber;
     }
 
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     public String getMessageContent() {
         return messageContent;
+    }
+
+    public void setMessageContent(String messageContent) {
+        this.messageContent = messageContent;
     }
 
     public DateTime getTimestamp() {
         return DateUtil.setTimeZoneUTC(timestamp);
     }
 
-    public DeliveryStatus getDeliveryStatus() {
-        return deliveryStatus;
-    }
-
-    public String getMotechId() {
-        return motechId;
-    }
-
-    public String getProviderId() {
-        return providerId;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
     public void setTimestamp(DateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public DeliveryStatus getDeliveryStatus() {
+        return deliveryStatus;
     }
 
     public void setDeliveryStatus(DeliveryStatus deliveryStatus) {
@@ -107,19 +101,42 @@ public class SmsRecord extends MotechBaseDataObject {
         this.providerStatus = providerStatus;
     }
 
+    public String getMotechId() {
+        return motechId;
+    }
+
+    public void setMotechId(String motechId) {
+        this.motechId = motechId;
+    }
+
+    public String getProviderId() {
+        return providerId;
+    }
+
+    public void setProviderId(String providerId) {
+        this.providerId = providerId;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
+
     @Override
     public String toString() {
-        return "SmsRecord{" +
-                "config='" + config + '\'' +
-                ", smsDirection=" + smsDirection +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", messageContent='" + messageContent + '\'' +
-                ", timestamp=" + timestamp +
-                ", deliveryStatus=" + deliveryStatus +
-                ", providerStatus='" + providerStatus + '\'' +
-                ", motechId='" + motechId + '\'' +
-                ", providerId='" + providerId + '\'' +
-                ", errorMessage='" + errorMessage + '\'' +
-                '}';
+        return ToStringBuilder.reflectionToString(this);
     }
 }

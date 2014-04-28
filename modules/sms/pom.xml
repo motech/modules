@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
         <artifactId>platform-communications</artifactId>
@@ -16,8 +18,6 @@
 
     <properties>
         <modules.root.dir>${basedir}/../..</modules.root.dir>
-        <jslint.enable>true</jslint.enable>
-        <jdk.version>1.7</jdk.version>
     </properties>
 
     <artifactId>motech-sms-bundle</artifactId>
@@ -86,13 +86,18 @@
             <version>${motech.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-dataservices</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.ldriscoll</groupId>
             <artifactId>org.motechproject.ektorplucene</artifactId>
         </dependency>
     </dependencies>
     <build>
         <resources>
-           <resource>
+            <resource>
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>task-channel.json</include>
@@ -128,7 +133,9 @@
                             <excludeDefaultDirectories>true</excludeDefaultDirectories>
                             <filesets>
                                 <fileset>
-                                    <directory>${user.home}/.motech/config/org.motechproject.motech-sms-bundle</directory>
+                                    <directory>
+                                        ${user.home}/.motech/config/org.motechproject.motech-sms-bundle
+                                    </directory>
                                     <includes>
                                         <include>**/*</include>
                                     </includes>
@@ -165,13 +172,13 @@
                         <Blueprint-Enabled>true</Blueprint-Enabled>
                         <Export-Package>
                             org.motechproject.sms.service;version=${project.version},
+                            org.motechproject.sms.audit;version=${project.version}
                         </Export-Package>
                         <Import-Package>
                             org.apache.velocity.exception,
                             org.motechproject.server.config.service,
-                            org.motechproject.commons.couchdb.service,
                             *
-                        </Import-Package>                                                          `
+                        </Import-Package>
                     </instructions>
                 </configuration>
             </plugin>
@@ -189,7 +196,8 @@
                             <disallowIncrAndDecr>true</disallowIncrAndDecr>
                             <requireUseStrict>true</requireUseStrict>
                             <predefinedVars>
-                                $, angular, motechAlert, handleWithStackTrace, jQuery, parseUri, innerLayout
+                                $, angular, motechAlert, handleWithStackTrace, jQuery, parseUri,
+                                innerLayout
                             </predefinedVars>
                             <failOnIssues>${jslint.enable}</failOnIssues>
                         </configuration>
@@ -224,22 +232,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
-                <configuration>
-                    <source>${jdk.version}</source>
-                    <target>${jdk.version}</target>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
-    <repositories>
-        <repository>
-            <id>motech-repo</id>
-            <name>MOTECH Maven Repository</name>
-            <url>http://nexus.motechproject.org/content/repositories/public</url>
-        </repository>
-    </repositories>
 </project>
