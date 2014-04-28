@@ -1088,7 +1088,7 @@
         <module>modules/alerts/api</module>
         <module>modules/callflow/api</module>
         <module>modules/cmslite/api</module>
-        <module>modules/commcare/api</module>
+        <module>modules/commcare</module>
         <module>modules/decisiontree/core</module>
         <module>modules/ivr/asterisk</module>
         <module>modules/ivr/kookoo</module>
