@@ -15,7 +15,7 @@ Contents:
    pill_reminder
    schedule_tracking
    sample_schedule
-
+   packages
 
 Indices and tables
 ==================
