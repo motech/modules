@@ -8,18 +8,17 @@
         <artifactId>platform-communications</artifactId>
         <groupId>org.motechproject</groupId>
         <version>0.24-SNAPSHOT</version>
-        <relativePath>../../../</relativePath>
+        <relativePath>../../</relativePath>
     </parent>
 
-    <groupId>org.motechproject</groupId>
-    <artifactId>motech-commcare-api</artifactId>
+    <artifactId>motech-commcare</artifactId>
     <version>0.24-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
-    <name>MOTECH CommCare API</name>
+    <name>MOTECH CommCare</name>
 
     <properties>
-        <modules.root.dir>${basedir}/../../..</modules.root.dir>
+        <modules.root.dir>${basedir}/../..</modules.root.dir>
     </properties>
 
     <dependencies>
@@ -135,7 +134,7 @@
                             <excludeDefaultDirectories>true</excludeDefaultDirectories>
                             <filesets>
                                 <fileset>
-                                    <directory>${user.home}/.motech/config/org.motechproject.motech-commcare-api-bundle</directory>
+                                    <directory>${user.home}/.motech/config/org.motechproject.motech-commcare-bundle</directory>
                                     <includes>
                                         <include>**/*</include>
                                     </includes>
