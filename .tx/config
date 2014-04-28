@@ -8,8 +8,8 @@ source_lang = en_US
 type = PROPERTIES
 
 [MOTECH.commcare]
-file_filter = modules/commcare/api/src/main/resources/webapp/messages/messages_<lang>.properties
-source_file = modules/commcare/api/src/main/resources/webapp/messages/messages.properties
+file_filter = modules/commcare/src/main/resources/webapp/messages/messages_<lang>.properties
+source_file = modules/commcare/src/main/resources/webapp/messages/messages.properties
 source_lang = en_US
 type = PROPERTIES
 
