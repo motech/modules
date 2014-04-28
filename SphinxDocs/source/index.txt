@@ -19,6 +19,7 @@ Contents:
    mobile_forms
    outbox
    sms
+   packages
 
 Indices and tables
 ==================
