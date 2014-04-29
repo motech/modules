@@ -23,11 +23,6 @@ public class DecisionTreeCoreBundleIT extends BasePaxIT {
     @Inject
     private DecisionTreeService decisionTreeService;
 
-    @Override
-    protected boolean shouldFakeModuleStartupEvent() {
-        return true;
-    }
-
     @Test
     public void testDecisionTreeService() {
         String treeName = "DecisionTreeCoreBundleIT";

@@ -31,11 +31,6 @@ public class VerboiceBundleIT extends BasePaxIT {
     @Inject
     private IVRService verboiceIvrService;
 
-    @Override
-    protected boolean shouldFakeModuleStartupEvent() {
-        return true;
-    }
-
     @Test
     public void testThatVerboiceIvrServicesIsAvailableOnImport() throws InvalidSyntaxException {
         assertTrue(verboiceIvrService instanceof VerboiceIVRService);

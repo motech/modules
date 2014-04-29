@@ -29,11 +29,6 @@ public class AlertsApiBundleIT extends BasePaxIT {
     @Inject
     private AlertService alertService;
 
-    @Override
-    protected boolean shouldFakeModuleStartupEvent() {
-        return true;
-    }
-
     @Test
     public void testAppointmentService() {
         final String externalId = "AlertsApiBundleIT-" + UUID.randomUUID();

@@ -29,11 +29,6 @@ public class VoiceOutboxServiceBundleIT extends BasePaxIT {
     @Inject
     private VoiceOutboxService voiceOutboxService;
 
-    @Override
-    protected boolean shouldFakeModuleStartupEvent() {
-        return true;
-    }
-
     @Test
     public void testVoiceOutboxService() {
         final String externalId = "VoiceOutboxServiceBundleIT-" + UUID.randomUUID();

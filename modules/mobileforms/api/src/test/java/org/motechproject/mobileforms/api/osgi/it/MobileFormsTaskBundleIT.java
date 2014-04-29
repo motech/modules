@@ -32,11 +32,6 @@ public class MobileFormsTaskBundleIT extends AbstractTaskBundleIT {
     @Inject
     private BundleContext bundleContext;
 
-    @Override
-    protected boolean shouldFakeModuleStartupEvent() {
-        return true;
-    }
-
     @Test
     public void testValidFormTriggerExists() throws IOException, InterruptedException {
         assertTrigger(FORM_VALID_FROMS);

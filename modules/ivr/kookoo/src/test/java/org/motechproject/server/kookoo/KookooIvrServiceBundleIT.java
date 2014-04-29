@@ -37,11 +37,6 @@ public class KookooIvrServiceBundleIT extends BasePaxIT {
     @Inject
     private BundleContext bundleContext;
 
-    @Override
-    protected boolean shouldFakeModuleStartupEvent() {
-        return true;
-    }
-
     @Test
     public void testThatIVRServiceIsAvailableForImport() throws InvalidSyntaxException {
         assertTrue(kookooIvrService instanceof KookooCallServiceImpl);
