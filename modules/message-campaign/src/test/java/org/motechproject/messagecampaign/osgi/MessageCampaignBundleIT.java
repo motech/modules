@@ -48,11 +48,6 @@ public class MessageCampaignBundleIT extends BasePaxIT {
     @Inject
     private MotechUserService motechUserService;
 
-    @Override
-    protected boolean shouldFakeModuleStartupEvent() {
-        return true;
-    }
-
     @Before
     public void setUp() {
         getHttpClient().getCredentialsProvider().clear();

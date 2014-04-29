@@ -25,11 +25,6 @@ public class ScheduleTrackingApiBundleIT extends BasePaxIT {
     @Inject
     private ScheduleTrackingService scheduleTrackingService;
 
-    @Override
-    protected boolean shouldFakeModuleStartupEvent() {
-        return true;
-    }
-
     @Test
     public void testScheduleTrackingService() {
         final String scheduleName = "ScheduleTrackingApiBundleIT-" + UUID.randomUUID();

@@ -28,11 +28,6 @@ public class ScheduleTrackingTaskBundleIT extends AbstractTaskBundleIT {
 
     private static final String CHANNEL_NAME = "org.motechproject.motech-scheduletracking-api";
 
-    @Override
-    protected boolean shouldFakeModuleStartupEvent() {
-        return true;
-    }
-
     @Test
     public void testTaskChannelCreated() throws IOException, InterruptedException {
         waitForChannel(CHANNEL_NAME);
