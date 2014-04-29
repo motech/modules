@@ -15,7 +15,7 @@ import java.util.Set;
 public interface SmsRecordsDataService extends MotechDataService<SmsRecord> {
 
     @Lookup
-    List<SmsRecord> findByCriteria(@LookupField(name = "config") String config,
+    List<SmsRecord> findByCriteria(@LookupField(name = "config") String config, //NO CHECKSTYLE ParameterNumber
                                    @LookupField(name = "smsDirection") Set<SmsDirection> directions,
                                    @LookupField(name = "phoneNumber") String phoneNumber,
                                    @LookupField(name = "messageContent") String messageContent,
