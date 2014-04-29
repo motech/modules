@@ -28,11 +28,6 @@ public class PillReminderApiBundleIT extends BasePaxIT {
     @Inject
     private PillReminderService pillReminderService;
 
-    @Override
-    protected boolean shouldFakeModuleStartupEvent() {
-        return true;
-    }
-
     @Test
     public void testPillreminderService() {
         final String externalId = "PillReminderApiBundleIT-" + UUID.randomUUID();
