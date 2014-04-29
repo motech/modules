@@ -26,11 +26,6 @@ public class AppointmentsApiBundleIT extends BasePaxIT {
     @Inject
     private AppointmentService appointmentService;
 
-    @Override
-    protected boolean shouldFakeModuleStartupEvent() {
-        return true;
-    }
-
     @Test
     public void testAppointmentService() {
         final String externalId = "AppointmentsApiBundleIT-" + UUID.randomUUID();
