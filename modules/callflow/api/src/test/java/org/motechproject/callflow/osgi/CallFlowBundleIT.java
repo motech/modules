@@ -28,11 +28,6 @@ public class CallFlowBundleIT extends BasePaxIT {
     @Inject
     private FlowSessionService flowSessionService;
 
-    @Override
-    protected boolean shouldFakeModuleStartupEvent() {
-        return true;
-    }
-
     @Test
     public void testCallFlowServer() {
         String sessionId = "123a";

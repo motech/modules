@@ -27,11 +27,6 @@ public class CallLogBundleIT extends BasePaxIT {
     @Inject
     private CallRecordsService callRecordsService;
 
-    @Override
-    protected boolean shouldFakeModuleStartupEvent() {
-        return true;
-    }
-
     @Test
     public void testCalllogSearch() throws IOException, InterruptedException {
         String response = getHttpClient().get(String.format("http://localhost:%d/ivr/api/calllog/search",

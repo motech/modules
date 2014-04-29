@@ -38,11 +38,6 @@ public class CMSLiteBundleIT extends BasePaxIT {
     @Inject
     private CMSLiteService cmsLiteService;
 
-    @Override
-    protected boolean shouldFakeModuleStartupEvent() {
-        return true;
-    }
-
     @Test
     public void testCMSLiteApiBundle() throws CMSLiteException, ContentNotFoundException, IOException, InterruptedException {
         assertNotNull(eventListenerRegistryService);

@@ -39,11 +39,6 @@ public class VoxeoBundleIT extends BasePaxIT {
     private IVRService voxeoIvrService;
 
     @Override
-    protected boolean shouldFakeModuleStartupEvent() {
-        return true;
-    }
-
-    @Override
     protected Collection<String> getAdditionalTestDependencies() {
         return Arrays.asList("org.motechproject:motech-testing-utils",
                 "org.springframework:org.springframework.test",
