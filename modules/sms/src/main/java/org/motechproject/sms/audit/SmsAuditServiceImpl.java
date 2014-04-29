@@ -1,6 +1,5 @@
 package org.motechproject.sms.audit;
 
-import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.motechproject.commons.api.Range;
 import org.slf4j.Logger;
@@ -8,9 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static org.motechproject.commons.api.MotechEnumUtils.toEnumSet;
 
 /**
  * Reading and writing to the SMS audit log
@@ -38,10 +38,10 @@ public class SmsAuditServiceImpl implements SmsAuditService {
     @Override
     public SmsRecords findAllSmsRecords(SmsRecordSearchCriteria criteria) {
         Set<String> directions = criteria.getSmsDirections();
-        Set<SmsDirection> directionsEnum = asEnumList(SmsDirection.class, directions);
+        Set<SmsDirection> directionsEnum = toEnumSet(SmsDirection.class, directions);
 
         Set<String> statuses = criteria.getDeliveryStatuses();
-        Set<DeliveryStatus> statusesEnum = asEnumList(DeliveryStatus.class, statuses);
+        Set<DeliveryStatus> statusesEnum = toEnumSet(DeliveryStatus.class, statuses);
 
         Range<DateTime> timestampRange = criteria.getTimestampRange();
 
@@ -59,30 +59,5 @@ public class SmsAuditServiceImpl implements SmsAuditService {
         );
 
         return new SmsRecords(records.size(), records);
-    }
-
-    private <T extends Enum> Set<T> asEnumList(Class<T> enumClass, Set<String> strings) {
-        Set<T> set = new HashSet<>();
-
-        for (String string : strings) {
-            set.add(asEnum(enumClass, string));
-        }
-
-        return set;
-    }
-
-    private <T extends Enum> T asEnum(Class<T> enumClass, String string) {
-        T result = null;
-
-        if (StringUtils.isNotBlank(string)) {
-            for (T status : enumClass.getEnumConstants()) {
-                if (status.name().equalsIgnoreCase(string)) {
-                    result = status;
-                    break;
-                }
-            }
-        }
-
-        return result;
     }
 }

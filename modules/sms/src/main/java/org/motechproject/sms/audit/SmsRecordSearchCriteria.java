@@ -7,6 +7,8 @@ import org.motechproject.commons.couchdb.query.QueryParam;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.motechproject.commons.api.MotechEnumUtils.toStringSet;
+
 
 /**
  * Helper used to generate lucene query from log filter UI
@@ -130,14 +132,6 @@ public class SmsRecordSearchCriteria {
 
     public QueryParam getQueryParam() {
         return queryParam;
-    }
-
-    private Set<String> toStringSet(Set<? extends Enum> items) {
-        Set<String> itemStringSet = new HashSet<>();
-        for (Enum item : items) {
-            itemStringSet.add(item.name());
-        }
-        return itemStringSet;
     }
 
     @Override

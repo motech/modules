@@ -145,7 +145,7 @@ public class SmsHttpService {
         // This displays usernames & passwords in the server log! But then again, so does the settings UI...
         // ***** WARNING *****
         if (logger.isDebugEnabled()) {
-            for (Map.Entry<String,String> entry : props.entrySet()) {
+            for (Map.Entry<String, String> entry : props.entrySet()) {
                 logger.debug("PROP {}: {}", entry.getKey(), entry.getValue());
             }
         }
