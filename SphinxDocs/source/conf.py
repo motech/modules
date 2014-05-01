@@ -38,6 +38,13 @@ extensions = [
     'motechjavasphinx',
 ]
 
+#intersphinx mapping
+intersphinx_mapping = {
+    'MOTECH-Platform' : ('http://motech-project.readthedocs.org/en/latest/, None),
+    'MOTECH-Platform-Medical-Records' : ('http://motech-project.readthedocs.org/projects/motech-platform-medical-records/en/latest/'),
+    'MOTECH-Platform-Communications' : ('http://motech-project.readthedocs.org/projects/motech-platform-communications/en/latest/'),
+}
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
