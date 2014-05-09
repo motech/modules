@@ -13,9 +13,9 @@ import org.motechproject.ivr.service.contract.CallRequest;
 import org.motechproject.ivr.service.contract.IVRService;
 import org.motechproject.outbox.api.EventKeys;
 import org.motechproject.outbox.server.service.RetrievedMessagesService;
-import org.motechproject.scheduler.MotechSchedulerService;
-import org.motechproject.scheduler.domain.CronSchedulableJob;
-import org.motechproject.scheduler.domain.JobId;
+import org.motechproject.scheduler.service.MotechSchedulerService;
+import org.motechproject.scheduler.contract.CronSchedulableJob;
+import org.motechproject.scheduler.contract.JobId;
 
 import java.util.Properties;
 

@@ -4,9 +4,9 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.outbox.api.EventKeys;
 import org.motechproject.outbox.api.domain.MessageRecord;
 import org.motechproject.outbox.api.repository.AllMessageRecords;
-import org.motechproject.scheduler.MotechSchedulerService;
-import org.motechproject.scheduler.domain.CronJobId;
-import org.motechproject.scheduler.domain.CronSchedulableJob;
+import org.motechproject.scheduler.service.MotechSchedulerService;
+import org.motechproject.scheduler.contract.CronJobId;
+import org.motechproject.scheduler.contract.CronSchedulableJob;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
