@@ -277,7 +277,7 @@ DEFAULTMENT_CAPTURE
 This module exposes an EndOfMilestoneListener, which handles and consumes events with the subject EventSubjects.DEFAULTMENT_CAPTURE.
 ::
 
-  EventSubjects.DEFAULTMENT_CAPTURE (org.motechproject.scheduletracking.api.defaultment.capture)
+  EventSubjects.DEFAULTMENT_CAPTURE (org.motechproject.scheduletracking.defaultment.capture)
 
       Parameters/Payload:
 
@@ -296,7 +296,7 @@ MILESTONE_ALERT
 The EnrollmentAlertService emits events with the subject EventSubjects.MILESTONE_ALERT.
 ::
 
-  EventSubjects.MILESTONE_ALERT (org.motechproject.scheduletracking.api.milestone.alert)
+  EventSubjects.MILESTONE_ALERT (org.motechproject.scheduletracking.milestone.alert)
 
       Parameters/Payload:
 
@@ -318,7 +318,7 @@ DEFAULTMENT_CAPTURE
 The EnrollmentDefaultmentService emits events with the subject EventSubjects.DEFAULTMENT_CAPTURE.
 ::
 
-  EventSubjects.DEFAULTMENT_CAPTURE (org.motechproject.scheduletracking.api.defaultment.capture)
+  EventSubjects.DEFAULTMENT_CAPTURE (org.motechproject.scheduletracking.defaultment.capture)
 
       Parameters/Payload:
 
@@ -336,7 +336,7 @@ USER_ENROLLED
 The EnrollmentService implementation emits events with the subject EventSubjects.USER_ENROLLED.
 ::
 
-  EventSubjects.USER_ENROLLED (org.motechproject.scheduletracking.api.user.enrolled)
+  EventSubjects.USER_ENROLLED (org.motechproject.scheduletracking.user.enrolled)
 
       Parameters/Payload:
 
@@ -361,7 +361,7 @@ USER_UNENROLLED
 The EnrollmentService implementation emits events with the subject EventSubjects.USER_UNENROLLED.
 ::
 
-  EventSubjects.USER_UNENROLLED (org.motechproject.scheduletracking.api.user.unenrolled)
+  EventSubjects.USER_UNENROLLED (org.motechproject.scheduletracking.user.unenrolled)
 
       Parameters/Payload:
 
