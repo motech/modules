@@ -10,9 +10,9 @@ import org.motechproject.outbox.api.EventKeys;
 import org.motechproject.outbox.api.domain.MessageRecord;
 import org.motechproject.outbox.api.repository.AllMessageRecords;
 import org.motechproject.outbox.server.service.RetrievedMessagesService;
-import org.motechproject.scheduler.MotechSchedulerService;
-import org.motechproject.scheduler.domain.CronJobId;
-import org.motechproject.scheduler.domain.CronSchedulableJob;
+import org.motechproject.scheduler.service.MotechSchedulerService;
+import org.motechproject.scheduler.contract.CronJobId;
+import org.motechproject.scheduler.contract.CronSchedulableJob;
 
 import java.util.Properties;
 

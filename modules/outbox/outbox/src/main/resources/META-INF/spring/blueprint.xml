@@ -22,7 +22,7 @@
     <osgi:service id="voiceOutboxServiceOsgi" ref="voiceOutboxService"
                   interface="org.motechproject.outbox.api.service.VoiceOutboxService"/>
 
-    <osgi:reference id="MotechSchedulerService" interface="org.motechproject.scheduler.MotechSchedulerService" />
+    <osgi:reference id="MotechSchedulerService" interface="org.motechproject.scheduler.service.MotechSchedulerService" />
 
     <osgi:reference id="couchDbManager" interface="org.motechproject.commons.couchdb.service.CouchDbManager" />
 
