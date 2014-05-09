@@ -1,6 +1,6 @@
 package org.motechproject.server.pillreminder.api.builder;
 
-import org.motechproject.scheduler.MotechSchedulerService;
+import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.server.pillreminder.api.EventKeys;
 
 import java.util.HashMap;

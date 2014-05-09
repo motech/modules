@@ -10,7 +10,7 @@ import org.motechproject.messagecampaign.EventKeys;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
 import org.motechproject.messagecampaign.dao.AllCampaignEnrollments;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
-import org.motechproject.scheduler.MotechSchedulerService;
+import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.testing.utils.faketime.JvmFakeTime;
 import org.quartz.Scheduler;
 import org.springframework.beans.factory.annotation.Autowired;

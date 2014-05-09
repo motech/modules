@@ -29,7 +29,7 @@
     <osgi:reference id="couchDbManager" interface="org.motechproject.commons.couchdb.service.CouchDbManager"/>
 
     <osgi:reference id="schedulerServiceOsgi"
-                    interface="org.motechproject.scheduler.MotechSchedulerService"/>
+                    interface="org.motechproject.scheduler.service.MotechSchedulerService"/>
 
     <osgi:reference id="eventRelayOsgi"
                     interface="org.motechproject.event.listener.EventRelay"/>
