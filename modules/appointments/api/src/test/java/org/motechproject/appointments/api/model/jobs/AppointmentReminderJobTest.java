@@ -5,7 +5,7 @@ import org.motechproject.appointments.api.EventKeys;
 import org.motechproject.appointments.api.model.Appointment;
 import org.motechproject.appointments.api.model.Reminder;
 import org.motechproject.appointments.api.model.Visit;
-import org.motechproject.scheduler.MotechSchedulerService;
+import org.motechproject.scheduler.service.MotechSchedulerService;
 
 import java.util.Arrays;
 

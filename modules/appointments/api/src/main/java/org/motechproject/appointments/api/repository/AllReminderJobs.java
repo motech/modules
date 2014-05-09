@@ -4,7 +4,7 @@ import org.motechproject.appointments.api.model.Reminder;
 import org.motechproject.appointments.api.model.Visit;
 import org.motechproject.appointments.api.model.jobs.AppointmentReminderJob;
 import org.motechproject.appointments.api.model.jobs.VisitReminderJob;
-import org.motechproject.scheduler.MotechSchedulerService;
+import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

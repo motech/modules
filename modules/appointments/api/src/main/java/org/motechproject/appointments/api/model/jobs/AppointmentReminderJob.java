@@ -3,8 +3,8 @@ package org.motechproject.appointments.api.model.jobs;
 import org.motechproject.appointments.api.EventKeys;
 import org.motechproject.appointments.api.model.Reminder;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.scheduler.MotechSchedulerService;
-import org.motechproject.scheduler.domain.RepeatingSchedulableJob;
+import org.motechproject.scheduler.service.MotechSchedulerService;
+import org.motechproject.scheduler.contract.RepeatingSchedulableJob;
 
 import java.util.HashMap;
 import java.util.Map;

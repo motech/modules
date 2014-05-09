@@ -10,7 +10,7 @@ import org.motechproject.appointments.api.model.Visit;
 import org.motechproject.appointments.api.model.jobs.AppointmentReminderJob;
 import org.motechproject.appointments.api.model.jobs.VisitReminderJob;
 import org.motechproject.commons.date.util.DateUtil;
-import org.motechproject.scheduler.MotechSchedulerService;
+import org.motechproject.scheduler.service.MotechSchedulerService;
 
 import java.util.Arrays;
 
