@@ -1018,7 +1018,7 @@
     <modules>
         <module>modules/message-campaign</module>
         <module>modules/pillreminder/api</module>
-        <module>modules/scheduletracking/api</module>
+        <module>modules/scheduletracking</module>
     </modules>
 
     <build>
