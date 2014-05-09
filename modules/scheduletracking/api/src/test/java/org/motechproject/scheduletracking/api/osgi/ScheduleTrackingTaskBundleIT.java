@@ -2,7 +2,7 @@ package org.motechproject.scheduletracking.api.osgi;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.scheduler.MotechSchedulerService;
+import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.scheduletracking.api.events.constants.EventDataKeys;
 import org.motechproject.scheduletracking.api.events.constants.EventSubjects;
 import org.motechproject.tasks.domain.ActionEvent;

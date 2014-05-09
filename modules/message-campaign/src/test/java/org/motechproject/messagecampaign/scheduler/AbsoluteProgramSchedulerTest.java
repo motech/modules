@@ -12,8 +12,8 @@ import org.motechproject.messagecampaign.dao.AllMessageCampaigns;
 import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.service.CampaignEnrollmentService;
-import org.motechproject.scheduler.MotechSchedulerService;
-import org.motechproject.scheduler.domain.RunOnceSchedulableJob;
+import org.motechproject.scheduler.service.MotechSchedulerService;
+import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
 
 import java.util.Date;
 import java.util.List;

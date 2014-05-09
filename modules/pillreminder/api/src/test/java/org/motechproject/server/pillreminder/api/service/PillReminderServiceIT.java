@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.scheduler.factory.MotechSchedulerFactoryBean;
-import org.motechproject.scheduler.impl.MotechSchedulerServiceImpl;
+import org.motechproject.scheduler.service.impl.MotechSchedulerServiceImpl;
 import org.motechproject.server.pillreminder.api.contract.DailyPillRegimenRequest;
 import org.motechproject.server.pillreminder.api.contract.DosageRequest;
 import org.motechproject.server.pillreminder.api.contract.MedicineRequest;
