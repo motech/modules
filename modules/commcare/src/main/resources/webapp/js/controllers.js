@@ -5,9 +5,9 @@
 
     var controllers = angular.module('commcare.controllers', []);
 
-    controllers.controller('SettingsCtrl', function ($scope, Settings, Connection, Permissions) {
+    controllers.controller('SettingsCtrl', function ($scope, Settings, Connection, CommcarePermissions) {
 
-        $scope.permissions = Permissions.query();
+        $scope.permissions = CommcarePermissions.query();
 
         $scope.eventStrategyOptions = [ 'minimal', 'partial', 'full' ];
 
