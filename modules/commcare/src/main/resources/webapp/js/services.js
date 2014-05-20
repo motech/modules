@@ -23,7 +23,7 @@
         });
     });
 
-    services.factory('Permissions', function($resource) {
+    services.factory('CommcarePermissions', function($resource) {
         return $resource('../commcare/connection/permissions');
     });
 
