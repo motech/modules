@@ -1,34 +1,36 @@
-<?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <artifactId>platform-communications</artifactId>
         <groupId>org.motechproject</groupId>
         <version>0.24-SNAPSHOT</version>
-        <relativePath>../../../</relativePath>
+        <relativePath>../../</relativePath>
     </parent>
 
     <groupId>org.motechproject</groupId>
-    <artifactId>motech-callflow</artifactId>
-    <version>0.24-SNAPSHOT</version>
+    <artifactId>motech-decisiontree-core</artifactId>
     <packaging>bundle</packaging>
-    <name>MOTECH Call Flow</name>
-    <description>MOTECH Call Flow Module</description>
+    <name>MOTECH Decision Tree Core</name>
+    <version>0.24-SNAPSHOT</version>
 
     <properties>
-        <modules.root.dir>${basedir}/../../..</modules.root.dir>
+        <modules.root.dir>${basedir}/../..</modules.root.dir>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>motech-decisiontree-core</artifactId>
-            <version>${project.version}</version>
+            <groupId>${motech.groupId}</groupId>
+            <artifactId>motech-platform-event</artifactId>
+            <version>${motech.version}</version>
         </dependency>
         <dependency>
             <groupId>${motech.groupId}</groupId>
-            <artifactId>motech-platform-commons-couchdb</artifactId>
+            <artifactId>motech-platform-server-config</artifactId>
             <version>${motech.version}</version>
         </dependency>
         <dependency>
@@ -37,30 +39,31 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>org.springframework.web.servlet</artifactId>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>org.motechproject.org.codehaus.jackson</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>com.springsource.org.hamcrest</artifactId>
+            <groupId>org.ektorp</groupId>
+            <artifactId>org.motechproject.org.ektorp</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>com.springsource.org.hamcrest.core</artifactId>
+            <groupId>${motech.groupId}</groupId>
+            <artifactId>motech-platform-osgi-web-util</artifactId>
+            <version>${motech.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.github.ldriscoll</groupId>
-            <artifactId>org.motechproject.ektorplucene</artifactId>
-        </dependency>
-
+        <!-- Test -->
         <dependency>
             <groupId>${motech.groupId}</groupId>
             <artifactId>motech-testing-utils</artifactId>
             <version>${motech.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>${motech.groupId}</groupId>
+            <artifactId>motech-platform-osgi-extender-fragment</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -71,18 +74,23 @@
                 <configuration>
                     <instructions>
                         <Export-Package>
-                            org.motechproject.callflow.domain,
-                            org.motechproject.callflow.repository,
-                            org.motechproject.callflow.service
+                            org.motechproject.decisiontree.core;version=${project.version},
+                            org.motechproject.decisiontree.core.model;version=${project.version},
+                            org.motechproject.decisiontree.core.repository;version=${project.version}
                         </Export-Package>
                         <Import-Package>
-                            org.motechproject.event,
+                            org.motechproject.commons.couchdb.service,
                             org.motechproject.event.listener,
                             org.motechproject.event.listener.annotations,
                             org.motechproject.server.config,
+                            org.motechproject.ivr.domain,
                             org.motechproject.server.config.service,
                             org.motechproject.config.service,
-                            org.motechproject.commons.couchdb.service,
+                            org.springframework.ui.velocity,
+                            org.springframework.web.servlet.config,
+                            org.springframework.web.servlet.mvc,
+                            org.springframework.web.servlet.support,
+                            org.springframework.web.servlet.view.velocity,
                             *
                         </Import-Package>
                     </instructions>
@@ -139,13 +147,6 @@
                                             <arg value="-X" />
                                             <arg value="DELETE" />
                                             <arg value="http://${db.server}:${db.port}/${db.prefix}trees" />
-                                        </exec>
-                                        <exec executable="curl">
-                                            <arg value="-s" />
-                                            <arg value="-S" />
-                                            <arg value="-X" />
-                                            <arg value="DELETE" />
-                                            <arg value="http://${db.server}:${db.port}/${db.prefix}calldetailrecords" />
                                         </exec>
                                     </target>
                                 </configuration>
