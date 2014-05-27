@@ -1,9 +1,9 @@
-package org.motechproject.decisiontree.core;
+package org.motechproject.decisiontree;
 
-import org.motechproject.decisiontree.core.model.FlowSession;
-import org.motechproject.decisiontree.core.model.Node;
-import org.motechproject.decisiontree.core.model.Tree;
-import org.motechproject.decisiontree.core.repository.AllTrees;
+import org.motechproject.decisiontree.model.FlowSession;
+import org.motechproject.decisiontree.model.Node;
+import org.motechproject.decisiontree.model.Tree;
+import org.motechproject.decisiontree.repository.AllTrees;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -21,6 +21,6 @@
         <constructor-arg value="motech-calllog"/>
     </bean>
 
-    <bean class="org.motechproject.decisiontree.core.TreeNodeLocator"/>
+    <bean class="org.motechproject.decisiontree.TreeNodeLocator"/>
 
 </beans>

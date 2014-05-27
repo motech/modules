@@ -25,7 +25,7 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>motech-decisiontree-core</artifactId>
+            <artifactId>motech-decisiontree</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -54,12 +54,17 @@
             <groupId>com.github.ldriscoll</groupId>
             <artifactId>org.motechproject.ektorplucene</artifactId>
         </dependency>
-
+        <!-- Test -->
         <dependency>
             <groupId>${motech.groupId}</groupId>
             <artifactId>motech-testing-utils</artifactId>
             <version>${motech.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${motech.groupId}</groupId>
+            <artifactId>motech-platform-osgi-extender-fragment</artifactId>
+            <version>${motech.version}</version>
         </dependency>
     </dependencies>
 

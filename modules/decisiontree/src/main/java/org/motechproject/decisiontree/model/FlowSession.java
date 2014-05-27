@@ -1,6 +1,6 @@
-package org.motechproject.decisiontree.core.model;
+package org.motechproject.decisiontree.model;
 
-import org.motechproject.decisiontree.core.model.Node;
+import org.motechproject.decisiontree.model.Node;
 import org.motechproject.ivr.domain.CallDetailRecord;
 
 import java.io.Serializable;

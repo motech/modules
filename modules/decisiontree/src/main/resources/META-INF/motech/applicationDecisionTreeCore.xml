@@ -7,17 +7,17 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
     <context:annotation-config/>
-    <context:component-scan base-package="org.motechproject.decisiontree.core"/>
+    <context:component-scan base-package="org.motechproject.decisiontree"/>
 
     <bean id="decissionTreeCoreSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
-        <property name="moduleName" value="decisiontree-core"/>
+        <property name="moduleName" value="decisiontree"/>
     </bean>
 
     <bean id="treesDatabase" factory-bean="couchDbManager" factory-method="getConnector">
         <constructor-arg value="trees"/>
     </bean>
 
-    <bean id="treeDao" class="org.motechproject.decisiontree.core.repository.AllTrees">
+    <bean id="treeDao" class="org.motechproject.decisiontree.repository.AllTrees">
         <constructor-arg ref="treesDatabase"/>
     </bean>
 

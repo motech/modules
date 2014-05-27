@@ -1,4 +1,4 @@
-package org.motechproject.decisiontree.core.model;
+package org.motechproject.decisiontree.model;
 
 
 import java.util.Arrays;

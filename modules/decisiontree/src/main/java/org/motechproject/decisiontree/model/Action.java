@@ -1,7 +1,7 @@
 /**
  * \ingroup decisionTree
  */
-package org.motechproject.decisiontree.core.model;
+package org.motechproject.decisiontree.model;
 
 /**
  * Represents an action that can be associated with a node to raise events.

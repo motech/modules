@@ -1,8 +1,8 @@
-package org.motechproject.decisiontree.core;
+package org.motechproject.decisiontree;
 
-import org.motechproject.decisiontree.core.model.FlowSession;
-import org.motechproject.decisiontree.core.model.Node;
-import org.motechproject.decisiontree.core.model.Tree;
+import org.motechproject.decisiontree.model.FlowSession;
+import org.motechproject.decisiontree.model.Node;
+import org.motechproject.decisiontree.model.Tree;
 
 import java.util.List;
 

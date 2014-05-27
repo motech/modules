@@ -1,9 +1,9 @@
-package org.motechproject.decisiontree.core.osgi;
+package org.motechproject.decisiontree.osgi;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.decisiontree.core.DecisionTreeService;
-import org.motechproject.decisiontree.core.model.Tree;
+import org.motechproject.decisiontree.DecisionTreeService;
+import org.motechproject.decisiontree.model.Tree;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;

@@ -22,7 +22,7 @@
 
     <osgi:reference id="callRecordsService" interface="org.motechproject.ivr.service.contract.CallRecordsService" />
 
-    <osgi:reference id="decisionTreeService" interface="org.motechproject.decisiontree.core.DecisionTreeService"/>
+    <osgi:reference id="decisionTreeService" interface="org.motechproject.decisiontree.DecisionTreeService"/>
 
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>
 

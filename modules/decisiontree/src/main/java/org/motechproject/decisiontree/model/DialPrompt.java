@@ -1,4 +1,4 @@
-package org.motechproject.decisiontree.core.model;
+package org.motechproject.decisiontree.model;
 
 /**
  * Represents the IVR Dial out verb. one can make out-going call in the middle of ivr tree.

@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.callflow.service.CallFlowServer;
 import org.motechproject.callflow.service.FlowSessionService;
-import org.motechproject.decisiontree.core.model.CallStatus;
+import org.motechproject.decisiontree.model.CallStatus;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;

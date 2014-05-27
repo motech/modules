@@ -1,7 +1,7 @@
 package org.motechproject.callflow.service;
 
 
-import org.motechproject.decisiontree.core.model.FlowSession;
+import org.motechproject.decisiontree.model.FlowSession;
 
 import javax.servlet.http.HttpServletRequest;
 

@@ -8,7 +8,7 @@ import org.motechproject.callflow.domain.FlowSessionRecord;
 import org.motechproject.callflow.domain.IvrEvent;
 import org.motechproject.callflow.service.CallFlowServer;
 import org.motechproject.callflow.service.FlowSessionService;
-import org.motechproject.decisiontree.core.model.FlowSession;
+import org.motechproject.decisiontree.model.FlowSession;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;

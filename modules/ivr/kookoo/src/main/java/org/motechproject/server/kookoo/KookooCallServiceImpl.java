@@ -5,7 +5,7 @@ import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.motechproject.callflow.service.FlowSessionService;
 import org.motechproject.commons.api.MotechException;
-import org.motechproject.decisiontree.core.model.FlowSession;
+import org.motechproject.decisiontree.model.FlowSession;
 import org.motechproject.ivr.service.contract.CallRequest;
 import org.motechproject.ivr.service.contract.IVRService;
 import org.motechproject.server.config.SettingsFacade;

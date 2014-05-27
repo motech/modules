@@ -6,8 +6,8 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 import org.motechproject.commons.couchdb.model.MotechBaseDataObject;
-import org.motechproject.decisiontree.core.model.FlowSession;
-import org.motechproject.decisiontree.core.model.Node;
+import org.motechproject.decisiontree.model.FlowSession;
+import org.motechproject.decisiontree.model.Node;
 import org.motechproject.ivr.domain.CallDetailRecord;
 
 import java.io.Serializable;

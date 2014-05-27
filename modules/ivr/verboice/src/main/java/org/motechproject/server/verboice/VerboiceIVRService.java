@@ -5,7 +5,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.motechproject.callflow.domain.FlowSessionRecord;
 import org.motechproject.callflow.service.FlowSessionService;
-import org.motechproject.decisiontree.core.model.FlowSession;
+import org.motechproject.decisiontree.model.FlowSession;
 import org.motechproject.ivr.domain.CallDetailRecord;
 import org.motechproject.ivr.domain.CallDirection;
 import org.motechproject.ivr.domain.CallDisposition;

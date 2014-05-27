@@ -1,6 +1,6 @@
-package org.motechproject.decisiontree.core.repository;
+package org.motechproject.decisiontree.repository;
 
-import org.motechproject.decisiontree.core.model.ITreeCommand;
+import org.motechproject.decisiontree.model.ITreeCommand;
 
 class TestCommand implements ITreeCommand {
     @Override
