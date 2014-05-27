@@ -13,9 +13,9 @@
     </parent>
 
     <groupId>org.motechproject</groupId>
-    <artifactId>motech-decisiontree-core</artifactId>
+    <artifactId>motech-decisiontree</artifactId>
     <packaging>bundle</packaging>
-    <name>MOTECH Decision Tree Core</name>
+    <name>MOTECH Decision Tree</name>
     <version>0.24-SNAPSHOT</version>
 
     <properties>
@@ -74,9 +74,9 @@
                 <configuration>
                     <instructions>
                         <Export-Package>
-                            org.motechproject.decisiontree.core;version=${project.version},
-                            org.motechproject.decisiontree.core.model;version=${project.version},
-                            org.motechproject.decisiontree.core.repository;version=${project.version}
+                            org.motechproject.decisiontree;version=${project.version},
+                            org.motechproject.decisiontree.model;version=${project.version},
+                            org.motechproject.decisiontree.repository;version=${project.version}
                         </Export-Package>
                         <Import-Package>
                             org.motechproject.commons.couchdb.service,

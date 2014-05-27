@@ -6,7 +6,7 @@ import org.motechproject.callflow.domain.FlowSessionRecord;
 import org.motechproject.callflow.domain.IvrEvent;
 import org.motechproject.callflow.service.CallFlowServer;
 import org.motechproject.callflow.service.FlowSessionService;
-import org.motechproject.decisiontree.core.model.FlowSession;
+import org.motechproject.decisiontree.model.FlowSession;
 import org.motechproject.ivr.domain.CallDetailRecord;
 import org.motechproject.ivr.domain.CallDirection;
 import org.motechproject.ivr.domain.CallDisposition;

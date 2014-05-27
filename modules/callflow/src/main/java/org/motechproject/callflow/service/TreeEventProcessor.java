@@ -1,8 +1,8 @@
 package org.motechproject.callflow.service;
 
-import org.motechproject.decisiontree.core.model.Action;
-import org.motechproject.decisiontree.core.model.Node;
-import org.motechproject.decisiontree.core.model.Transition;
+import org.motechproject.decisiontree.model.Action;
+import org.motechproject.decisiontree.model.Node;
+import org.motechproject.decisiontree.model.Transition;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.springframework.beans.factory.annotation.Autowired;

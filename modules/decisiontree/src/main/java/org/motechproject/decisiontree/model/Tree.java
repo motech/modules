@@ -1,4 +1,4 @@
-package org.motechproject.decisiontree.core.model;
+package org.motechproject.decisiontree.model;
 
 import org.ektorp.support.TypeDiscriminator;
 import org.motechproject.commons.couchdb.model.MotechBaseDataObject;

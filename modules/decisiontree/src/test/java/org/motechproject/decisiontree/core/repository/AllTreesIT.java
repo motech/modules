@@ -1,17 +1,17 @@
-package org.motechproject.decisiontree.core.repository;
+package org.motechproject.decisiontree.repository;
 
 import org.ektorp.CouchDbConnector;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.motechproject.decisiontree.core.model.FlowSession;
-import org.motechproject.decisiontree.core.model.AudioPrompt;
-import org.motechproject.decisiontree.core.model.ITransition;
-import org.motechproject.decisiontree.core.model.ITreeCommand;
-import org.motechproject.decisiontree.core.model.Node;
-import org.motechproject.decisiontree.core.model.TextToSpeechPrompt;
-import org.motechproject.decisiontree.core.model.Transition;
-import org.motechproject.decisiontree.core.model.Tree;
+import org.motechproject.decisiontree.model.FlowSession;
+import org.motechproject.decisiontree.model.AudioPrompt;
+import org.motechproject.decisiontree.model.ITransition;
+import org.motechproject.decisiontree.model.ITreeCommand;
+import org.motechproject.decisiontree.model.Node;
+import org.motechproject.decisiontree.model.TextToSpeechPrompt;
+import org.motechproject.decisiontree.model.Transition;
+import org.motechproject.decisiontree.model.Tree;
 import org.motechproject.testing.utils.SpringIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

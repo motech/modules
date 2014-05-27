@@ -1,4 +1,4 @@
-package org.motechproject.decisiontree.core.model;
+package org.motechproject.decisiontree.model;
 
 /**
  * Associates a node with its path on the decision tree.

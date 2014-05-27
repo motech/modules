@@ -1,10 +1,10 @@
-package org.motechproject.decisiontree.core.model;
+package org.motechproject.decisiontree.model;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
-import org.motechproject.decisiontree.core.TreeNodeLocator;
+import org.motechproject.decisiontree.TreeNodeLocator;
 
 import java.io.Serializable;
 import java.util.ArrayList;

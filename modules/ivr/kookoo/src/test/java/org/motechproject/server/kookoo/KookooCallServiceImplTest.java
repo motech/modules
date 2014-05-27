@@ -10,7 +10,7 @@ import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.motechproject.callflow.domain.FlowSessionRecord;
 import org.motechproject.callflow.service.FlowSessionService;
-import org.motechproject.decisiontree.core.model.FlowSession;
+import org.motechproject.decisiontree.model.FlowSession;
 import org.motechproject.ivr.service.contract.CallRequest;
 import org.motechproject.server.config.SettingsFacade;
 

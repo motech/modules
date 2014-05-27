@@ -1,9 +1,9 @@
-package org.motechproject.decisiontree.core.repository;
+package org.motechproject.decisiontree.repository;
 
 import org.ektorp.CouchDbConnector;
 import org.ektorp.support.GenerateView;
 import org.motechproject.commons.couchdb.dao.MotechBaseRepository;
-import org.motechproject.decisiontree.core.model.Tree;
+import org.motechproject.decisiontree.model.Tree;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
