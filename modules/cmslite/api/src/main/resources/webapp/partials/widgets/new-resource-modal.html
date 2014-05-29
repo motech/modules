@@ -1,4 +1,5 @@
-<div id="newResourceModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="newResourceLabel" aria-hidden="true" clear-form="newResourceForm">
+<div id="newResourceModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="newResourceLabel"
+     aria-hidden="true" clear-form="newResourceForm">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -6,60 +7,80 @@
                 <h4 class="modal-title" id="newResourceLabel">{{msg('cmslite.header.addNewResource')}}</h4>
             </div>
             <div class="modal-body">
-                <form id="newResourceForm" name="newResourceForm" class="form-horizontal" action="../cmsliteapi/resource" enctype="multipart/form-data" method="POST">
+                <form id="newResourceForm" name="newResourceForm" class="form-horizontal"
+                      action="../cmsliteapi/resource" enctype="multipart/form-data" method="POST">
                     <div class="form-group">
                         <label class="col-sm-3 control-label" for="name">{{msg('cmslite.resource.name')}}</label>
+
                         <div class="col-sm-9 form-inline">
-                            <input type="text" id="name" name="name" auto-complete="name" class="form-control input-xlarge-fluid"/>
+                            <input type="text" id="name" name="name" auto-complete="name"
+                                   class="form-control input-xlarge-fluid"/>
                             <span class="form-hint" style="display: none;">{{msg('cmslite.error.required.name')}}</span>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label" for="language">{{msg('cmslite.resource.language')}}</label>
+                        <label class="col-sm-3 control-label"
+                               for="language">{{msg('cmslite.resource.language')}}</label>
+
                         <div class="col-sm-9 form-inline">
-                            <input type="text" id="language" name="language" auto-complete="language" class="form-control input-xlarge-fluid"/>
-                            <span class="form-hint" style="display: none;">{{msg('cmslite.error.required.language')}}</span>
+                            <input type="text" id="language" name="language" auto-complete="language"
+                                   class="form-control input-xlarge-fluid"/>
+                            <span class="form-hint"
+                                  style="display: none;">{{msg('cmslite.error.required.language')}}</span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">{{msg('cmslite.resource.type')}}</label>
+
                         <div class="col-sm-9">
                             <div class="btn-group">
                                 <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                     {{msg('cmslite.resource.type.' + resourceType)}} <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a class="pointer" ng-click="changeResourceType('string')">{{msg('cmslite.resource.type.string')}}</a></li>
-                                    <li><a class="pointer" ng-click="changeResourceType('stream')">{{msg('cmslite.resource.type.stream')}}</a></li>
+                                    <li><a class="pointer" ng-click="changeResourceType('string')">{{msg('cmslite.resource.type.string')}}</a>
+                                    </li>
+                                    <li><a class="pointer" ng-click="changeResourceType('stream')">{{msg('cmslite.resource.type.stream')}}</a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                     <div class="form-group" ui-if="resourceType == 'string'">
                         <div class="col-sm-offset-3 col-sm-9 form-inline">
-                            <textarea rows="4" id="value" name="value" class="form-control input-xlarge-fluid"></textarea>
-                            <span class="form-hint" style="display: none;">{{msg('cmslite.error.required.string')}}</span>
+                            <textarea rows="4" id="value" name="value"
+                                      class="form-control input-xlarge-fluid"></textarea>
+                            <span class="form-hint"
+                                  style="display: none;">{{msg('cmslite.error.required.string')}}</span>
                         </div>
                     </div>
-                    <div class="form-group form-inline fileupload fileupload-new" ui-if="resourceType == 'stream'" data-provides="fileupload">
+                    <div class="form-group form-inline fileupload fileupload-new" ui-if="resourceType == 'stream'"
+                         data-provides="fileupload">
                         <label class="col-sm-3 control-label">{{msg('cmslite.info.fileChosen')}}</label>
+
                         <div class="col-sm-9">
-                            <div class="form-control input-auto uneditable-input input-xlarge fileupload-exists"><i class="icon-file"></i>&nbsp;<span class="fileupload-preview"></span></div>
+                            <div class="form-control input-auto uneditable-input input-xlarge fileupload-exists"><i
+                                    class="icon-file"></i>&nbsp;<span class="fileupload-preview"></span></div>
                             <span class="btn btn-default btn-file">
                                 <span class="fileupload-new">{{msg('cmslite.button.selectFile')}}</span>
                                 <span class="fileupload-exists">{{msg('cmslite.button.changeFile')}}</span>
                                 <input type="file" id="contentFile" name="contentFile" class="input-file"/>
                             </span>
                             <span class="form-hint stream" style="display: none;">{{msg('cmslite.error.required.stream')}}</span>
-                            <a href="#" target="_self" class="btn btn-danger fileupload-exists" data-dismiss="fileupload"><i class="icon-trash icon-white"></i>&nbsp;{{msg('cmslite.button.remove')}}</a>
+                            <a href="#" target="_self" class="btn btn-danger fileupload-exists"
+                               data-dismiss="fileupload"><i class="icon-trash icon-white"></i>&nbsp;{{msg('cmslite.button.remove')}}</a>
                         </div>
                     </div>
                     <input type="hidden" id="type" name="type" value="{{resourceType}}">
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" ng-click="saveNewResource()"><i class="icon-ok icon-white"></i> {{msg('cmslite.button.save')}}</button>
-                <button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><i class="icon-remove"></i> {{msg('cmslite.button.close')}}</button>
+                <button class="btn btn-primary" ng-click="saveNewResource()"><i class="icon-ok icon-white"></i>
+                    {{msg('cmslite.button.save')}}
+                </button>
+                <button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><i class="icon-remove"></i>
+                    {{msg('cmslite.button.close')}}
+                </button>
             </div>
         </div>
     </div>

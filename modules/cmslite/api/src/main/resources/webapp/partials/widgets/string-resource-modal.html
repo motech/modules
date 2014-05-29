@@ -1,12 +1,15 @@
-<div id="stringResourceModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="stringResourceLabel" aria-hidden="true" clear-form="stringResourceForm">
+<div id="stringResourceModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="stringResourceLabel"
+     aria-hidden="true" clear-form="stringResourceForm">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="stringResourceLabel">{{msg('cmslite.header.resource')}}: {{select.name}}, {{select.language}}</h4>
+                <h4 class="modal-title" id="stringResourceLabel">{{msg('cmslite.header.resource')}}: {{select.name}},
+                    {{select.language}}</h4>
             </div>
             <div class="modal-body">
-                <form id="stringResourceForm" name="stringResourceForm" class="form-horizontal" action="../cmsliteapi/resource/string/{{select.language}}/{{select.name}}" method="POST">
+                <form id="stringResourceForm" name="stringResourceForm" class="form-horizontal"
+                      action="../cmsliteapi/resource/string/{{select.language}}/{{select.name}}" method="POST">
                     <div class="form-group">
                         <!-- read mode -->
                         <div class="col-sm-12" ui-if="mode == 'read'">
@@ -16,21 +19,33 @@
 
                         <!-- write mode -->
                         <div class="col-sm-12 form-inline" ui-if="mode == 'write'">
-                            <textarea rows="4" id="value" name="value" ng-model="select.value" class="form-control input-xlarge-fluid"></textarea>
-                            <span class="form-hint" style="display: none;">{{msg('cmslite.error.required.string')}}</span>
+                            <textarea rows="4" id="value" name="value" ng-model="select.value"
+                                      class="form-control input-xlarge-fluid"></textarea>
+                            <span class="form-hint"
+                                  style="display: none;">{{msg('cmslite.error.required.string')}}</span>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <!-- read mode -->
-                <button ui-if="mode == 'read'" class="btn btn-primary" ng-click="changeMode('write')"><i class="icon-ok icon-white"></i> {{msg('cmslite.button.edit')}}</button>
-                <button ui-if="mode == 'read'" class="btn btn-danger" ng-click="removeResource('string', select)"><i class="icon-remove icon-white"></i> {{msg('cmslite.button.delete')}}</button>
-                <button ui-if="mode == 'read'" class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{msg('cmslite.button.close')}}</button>
+                <button ui-if="mode == 'read'" class="btn btn-primary" ng-click="changeMode('write')"><i
+                        class="icon-ok icon-white"></i> {{msg('cmslite.button.edit')}}
+                </button>
+                <button ui-if="mode == 'read'" class="btn btn-danger" ng-click="removeResource('string', select)"><i
+                        class="icon-remove icon-white"></i> {{msg('cmslite.button.delete')}}
+                </button>
+                <button ui-if="mode == 'read'" class="btn btn-default" data-dismiss="modal" aria-hidden="true">
+                    {{msg('cmslite.button.close')}}
+                </button>
 
                 <!-- write mode -->
-                <button ui-if="mode == 'write'" class="btn btn-primary" ng-click="editStringResource()"><i class="icon-ok icon-white"></i> {{msg('cmslite.button.save')}}</button>
-                <button ui-if="mode == 'write'" class="btn btn-default" ng-click="changeMode('read')">{{msg('cmslite.button.cancel')}}</button>
+                <button ui-if="mode == 'write'" class="btn btn-primary" ng-click="editStringResource()"><i
+                        class="icon-ok icon-white"></i> {{msg('cmslite.button.save')}}
+                </button>
+                <button ui-if="mode == 'write'" class="btn btn-default" ng-click="changeMode('read')">
+                    {{msg('cmslite.button.cancel')}}
+                </button>
             </div>
         </div>
     </div>

@@ -1,9 +1,9 @@
 package org.motechproject.cmslite.api.web;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.internal.matchers.IsCollectionContaining;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -11,19 +11,20 @@ import org.motechproject.cmslite.api.model.CMSLiteException;
 import org.motechproject.cmslite.api.model.StreamContent;
 import org.motechproject.cmslite.api.model.StringContent;
 import org.motechproject.cmslite.api.service.CMSLiteService;
+import org.motechproject.cmslite.api.service.StreamContentService;
+import org.motechproject.cmslite.api.service.StringContentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.server.MockMvc;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import static java.util.Arrays.asList;
 import static org.apache.commons.codec.digest.DigestUtils.md5Hex;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -73,9 +74,9 @@ public class ResourceControllerTest {
     public void shouldReturnNamesStartedWithGivenTerm() throws Exception {
         StringContent stringContent = new StringContent(STRING_LANGUAGE, STRING_NAME, STRING_VALUE);
         StreamContent streamContent = new StreamContent(STREAM_LANGUAGE, STREAM_NAME, null, STREAM_CHECKSUM, STREAM_CONTENT_TYPE);
-        String expectedResponse = createResponse(Arrays.asList(STRING_NAME));
+        String expectedResponse = createResponse(asList(STRING_NAME));
 
-        when(cmsLiteService.getAllContents()).thenReturn(Arrays.asList(stringContent, streamContent));
+        when(cmsLiteService.getAllContents()).thenReturn(asList(streamContent, stringContent));
 
         controller.perform(
                 get("/resource/available/{field}?term={term}", "name", "valid-stri")
@@ -92,10 +93,10 @@ public class ResourceControllerTest {
 
     @Test
     public void shouldReturnLanguagesStartedWithGivenTerm() throws Exception {
-        String expectedResponse = createResponse(Arrays.asList(STREAM_LANGUAGE));
+        String expectedResponse = createResponse(asList(STREAM_LANGUAGE));
 
         controller.perform(
-                get("/resource/available/{field}?term={term}", "language", STREAM_LANGUAGE.toLowerCase().substring(0,2))
+                get("/resource/available/{field}?term={term}", "language", STREAM_LANGUAGE.toLowerCase().substring(0, 2))
         ).andExpect(
                 status().is(HttpStatus.OK.value())
         ).andExpect(
@@ -110,11 +111,11 @@ public class ResourceControllerTest {
         StringContent stringContent = new StringContent(STRING_LANGUAGE, STRING_NAME, STRING_VALUE);
         StreamContent streamContent = new StreamContent(STREAM_LANGUAGE, STREAM_NAME, null, STREAM_CHECKSUM, STREAM_CONTENT_TYPE);
         GridSettings settings = createGridSettings("", true, true, "", 5, 1, "", "asc");
-        List<ResourceDto> resourceDtos = Arrays.asList(new ResourceDto(stringContent), new ResourceDto(streamContent));
+        List<ResourceDto> resourceDtos = asList(new ResourceDto(streamContent), new ResourceDto(stringContent));
 
         String expectedResponse = createResponse(new Resources(settings, resourceDtos));
 
-        when(cmsLiteService.getAllContents()).thenReturn(Arrays.asList(stringContent, streamContent));
+        when(cmsLiteService.getAllContents()).thenReturn(asList(streamContent, stringContent));
 
         controller.perform(
                 get("/resource?name={name}&string={string}&stream={stream}&languages={languages}&rows={rows}&page={page}&sidx={sidx}&sord={sord}",
@@ -135,7 +136,7 @@ public class ResourceControllerTest {
         StringContent stringContent = new StringContent(STRING_LANGUAGE, STRING_NAME, STRING_VALUE);
         StreamContent streamContent = new StreamContent(STREAM_LANGUAGE, STREAM_NAME, null, STREAM_CHECKSUM, STREAM_CONTENT_TYPE);
 
-        when(cmsLiteService.getAllContents()).thenReturn(Arrays.asList(stringContent, streamContent));
+        when(cmsLiteService.getAllContents()).thenReturn(asList(streamContent, stringContent));
 
         Set<String> actual = resourceController.getAllLanguages();
         assertThat(actual, hasItems(STREAM_LANGUAGE, STRING_LANGUAGE));
@@ -185,10 +186,9 @@ public class ResourceControllerTest {
     public void shouldEditStreamContent() throws Exception {
         StreamContent streamContent = new StreamContent(STREAM_LANGUAGE, STREAM_NAME, null, STREAM_CHECKSUM, STREAM_CONTENT_TYPE);
         MultipartFile file = mock(MultipartFile.class);
-        InputStream stream = mock(InputStream.class);
 
         when(cmsLiteService.getStreamContent(STREAM_LANGUAGE, STREAM_NAME)).thenReturn(streamContent);
-        when(file.getInputStream()).thenReturn(stream);
+        when(file.getBytes()).thenReturn(ArrayUtils.EMPTY_BYTE_ARRAY);
         when(file.getBytes()).thenReturn("new file".getBytes());
         when(file.getContentType()).thenReturn("text/plain");
 
@@ -198,7 +198,7 @@ public class ResourceControllerTest {
 
         verify(cmsLiteService).addContent(captor.capture());
 
-        streamContent.setInputStream(stream);
+        streamContent.setContent(ArrayUtils.EMPTY_BYTE_OBJECT_ARRAY);
         streamContent.setContentType("text/plain");
         streamContent.setChecksum(md5Hex("new file".getBytes()));
 
@@ -246,13 +246,6 @@ public class ResourceControllerTest {
         resourceController.addContent(STRING_TYPE, STRING_NAME, STRING_LANGUAGE, "", null);
     }
 
-    @Test(expected = CMSLiteException.class)
-    public void shouldNotAddStringContentWhenItAlreadyExist() throws IOException, CMSLiteException {
-        when(cmsLiteService.isStringContentAvailable(STRING_LANGUAGE, STRING_NAME)).thenReturn(true);
-
-        resourceController.addContent(STRING_TYPE, STRING_NAME, STRING_LANGUAGE, STRING_VALUE, null);
-    }
-
     @Test
     public void shouldAddStringContent() throws CMSLiteException, IOException {
         StringContent stringContent = new StringContent(STRING_LANGUAGE, STRING_NAME, STRING_VALUE);
@@ -270,23 +263,14 @@ public class ResourceControllerTest {
         resourceController.addContent(STREAM_TYPE, STREAM_NAME, STREAM_LANGUAGE, null, null);
     }
 
-    @Test(expected = CMSLiteException.class)
-    public void shouldNotAddStremContentWhenItAlreadyExist() throws IOException, CMSLiteException {
-        when(cmsLiteService.isStreamContentAvailable(STREAM_LANGUAGE, STREAM_NAME)).thenReturn(true);
-
-        resourceController.addContent(STREAM_TYPE, STREAM_NAME, STREAM_LANGUAGE, null, null);
-    }
-
     @Test
     public void shouldAddStreamContent() throws CMSLiteException, IOException {
         byte[] bytes = "new file".getBytes();
         String checksum = md5Hex(bytes);
 
         MultipartFile file = mock(MultipartFile.class);
-        InputStream stream = mock(InputStream.class);
-        StreamContent streamContent = new StreamContent(STREAM_LANGUAGE, STREAM_NAME, stream, checksum, STREAM_CONTENT_TYPE);
+        StreamContent streamContent = new StreamContent(STREAM_LANGUAGE, STREAM_NAME, ArrayUtils.toObject(bytes), checksum, STREAM_CONTENT_TYPE);
 
-        when(file.getInputStream()).thenReturn(stream);
         when(file.getBytes()).thenReturn(bytes);
         when(file.getContentType()).thenReturn(STREAM_CONTENT_TYPE);
 
@@ -300,6 +284,9 @@ public class ResourceControllerTest {
 
     @Test
     public void shouldRemoveStreamContent() throws Exception {
+        StreamContent streamContent = new StreamContent(STREAM_LANGUAGE, STREAM_NAME, null, STREAM_CHECKSUM, STREAM_CONTENT_TYPE);
+        when(cmsLiteService.getStreamContent(STREAM_LANGUAGE, STREAM_NAME)).thenReturn(streamContent);
+
         controller.perform(
                 delete("/resource/{type}/{language}/{name}", STREAM_TYPE, STREAM_LANGUAGE, STREAM_NAME)
         ).andExpect(
@@ -311,6 +298,9 @@ public class ResourceControllerTest {
 
     @Test
     public void shouldRemoveStringContent() throws Exception {
+        StringContent stringContent = new StringContent(STRING_LANGUAGE, STRING_NAME, STRING_VALUE);
+        when(cmsLiteService.getStringContent(STRING_LANGUAGE, STRING_NAME)).thenReturn(stringContent);
+
         controller.perform(
                 delete("/resource/{type}/{language}/{name}", STRING_TYPE, STRING_LANGUAGE, STRING_NAME)
         ).andExpect(

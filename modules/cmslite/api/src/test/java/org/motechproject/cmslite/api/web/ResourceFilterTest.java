@@ -10,6 +10,7 @@ import org.motechproject.cmslite.api.model.StringContent;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
@@ -21,8 +22,26 @@ import static org.motechproject.cmslite.api.web.ResourceFilter.equalsContent;
 import static org.motechproject.cmslite.api.web.ResourceFilter.getContentType;
 
 public class ResourceFilterTest {
-    private class TestContent extends Content {
+    private class TestContent implements Content {
         private static final long serialVersionUID = -7200151247736237000L;
+        private Map<String, String> metadata;
+        private String language;
+        private  String name;
+
+        @Override
+        public Map<String, String> getMetadata() {
+            return metadata;
+        }
+
+        @Override
+        public String getLanguage() {
+            return language;
+        }
+
+        @Override
+        public String getName() {
+            return name;
+        }
     }
 
     @Test

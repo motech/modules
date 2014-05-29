@@ -3,12 +3,13 @@ package org.motechproject.cmslite.api.web;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.motechproject.cmslite.api.model.Content;
+import org.motechproject.cmslite.api.model.StreamContent;
+import org.motechproject.cmslite.api.model.StringContent;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.commons.lang.StringUtils.equalsIgnoreCase;
-import static org.apache.commons.lang.StringUtils.startsWithIgnoreCase;
 
 public final class ResourceFilter {
 
@@ -42,9 +43,9 @@ public final class ResourceFilter {
     public static String getContentType(Content content) {
         String contentType;
 
-        if (startsWithIgnoreCase(content.getType(), "string")) {
+        if (content instanceof StringContent) {
             contentType = "string";
-        } else if (startsWithIgnoreCase(content.getType(), "stream")) {
+        } else if (content instanceof StreamContent) {
             contentType = "stream";
         } else {
             contentType = "";
