@@ -10,6 +10,4 @@ public class Module {
     private String name;
 
     private List<Chapter> chapters;
-
-    private Quiz quiz;
 }

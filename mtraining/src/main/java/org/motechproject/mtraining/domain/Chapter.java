@@ -10,6 +10,4 @@ public class Chapter {
     private String name;
 
     private List<Lesson> lessons;
-
-    private Quiz quiz;
 }

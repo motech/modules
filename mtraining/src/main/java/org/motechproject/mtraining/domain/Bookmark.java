@@ -1,13 +1,13 @@
 package org.motechproject.mtraining.domain;
 
-import java.util.List;
+import java.util.Map;
 
 /**
- * Created by kosh on 5/29/14.
+ * Bookmark object to store the progress for
  */
 public class Bookmark {
 
     private String externalId;
 
-    private List<CoursePlan> coursePlans;
+    private Map<String, Object> progress;
 }

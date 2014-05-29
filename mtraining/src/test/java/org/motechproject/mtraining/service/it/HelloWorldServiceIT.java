@@ -1,6 +1,6 @@
 package org.motechproject.mtraining.service.it;
 
-import org.motechproject.mtraining.service.HelloWorldService;
+import org.motechproject.mtraining.service.MTrainingService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -23,7 +23,7 @@ import static org.junit.Assert.assertNotNull;
 public class HelloWorldServiceIT extends BasePaxIT {
 
     @Inject
-    private HelloWorldService helloService;
+    private MTrainingService helloService;
 
     @Test
     public void testHelloWorldServicePresent() throws Exception {

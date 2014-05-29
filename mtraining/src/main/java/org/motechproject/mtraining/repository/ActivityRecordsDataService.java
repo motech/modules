@@ -12,7 +12,7 @@ import org.motechproject.mds.service.MotechDataService;
  * as methods for adding, deleting, saving and finding all instances.  In this class we
  * define and custom lookups we may need.
  */
-public interface HelloWorldRecordsDataService extends MotechDataService<EnrollmentRecord> {
+public interface ActivityRecordsDataService extends MotechDataService<EnrollmentRecord> {
     @Lookup
     EnrollmentRecord findRecordByName(@LookupField(name = "name") String recordName);
 }

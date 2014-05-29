@@ -16,7 +16,5 @@ public class Course {
 
     private boolean active;
 
-    private Quiz quiz;
-
     private List<Module> modules;
 }

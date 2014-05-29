@@ -1,13 +1,13 @@
 package org.motechproject.mtraining.service;
 
-import java.util.List;
-
 import org.motechproject.mtraining.domain.EnrollmentRecord;
+
+import java.util.List;
 
 /**
  * Service interface for CRUD on simple repository records.
  */
-public interface HelloWorldRecordService {
+public interface ActivityRecordService {
 
     void create(String name, String message);
 

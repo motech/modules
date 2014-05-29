@@ -3,7 +3,7 @@ package org.motechproject.mtraining.service.it;
 import java.util.List;
 
 import org.motechproject.mtraining.domain.EnrollmentRecord;
-import org.motechproject.mtraining.service.HelloWorldRecordService;
+import org.motechproject.mtraining.service.ActivityRecordService;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +29,7 @@ import static org.junit.Assert.assertTrue;
 public class HelloWorldRecordServiceIT extends BasePaxIT {
 
     @Inject
-    private HelloWorldRecordService helloRecordService;
+    private ActivityRecordService helloRecordService;
 
     @Test
     public void testHelloWorldRecordService() throws Exception {
