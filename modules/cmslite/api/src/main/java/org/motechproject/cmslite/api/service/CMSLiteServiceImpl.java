@@ -6,9 +6,6 @@ import org.motechproject.cmslite.api.model.Content;
 import org.motechproject.cmslite.api.model.ContentNotFoundException;
 import org.motechproject.cmslite.api.model.StreamContent;
 import org.motechproject.cmslite.api.model.StringContent;
-import org.motechproject.cmslite.api.repository.AllStreamContents;
-import org.motechproject.cmslite.api.repository.AllStringContents;
-import org.motechproject.cmslite.api.repository.BaseContentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,72 +14,53 @@ import java.util.List;
 
 @Service("cmsLiteService")
 public class CMSLiteServiceImpl implements CMSLiteService {
-    private AllStreamContents allStreamContents;
-    private AllStringContents allStringContents;
-
-    @Autowired
-    public CMSLiteServiceImpl(AllStreamContents allStreamContents, AllStringContents allStringContents) {
-        this.allStreamContents = allStreamContents;
-        this.allStringContents = allStringContents;
-    }
+    private StringContentService stringContentService;
+    private StreamContentService streamContentService;
 
     @Override
     public StringContent getStringContent(String language, String name) throws ContentNotFoundException {
-        return (StringContent) getContent(language, name, allStringContents);
+        List<StringContent> stringContents = stringContentService.findByLanguageAndName(language, name);
+        if (stringContents == null || stringContents.size() == 0) {
+            throw new ContentNotFoundException();
+        }
+        return stringContents.get(0);
     }
 
     @Override
     public StreamContent getStreamContent(String language, String name) throws ContentNotFoundException {
-        return (StreamContent) getContent(language, name, allStreamContents);
+        List<StreamContent> streamContents = streamContentService.findByLanguageAndName(language, name);
+        if (streamContents == null || streamContents.size() == 0) {
+            throw new ContentNotFoundException();
+        }
+        StreamContent streamContent = streamContents.get(0);
+        streamContent.setContent(retrieveStreamContentData(streamContent));
+        return streamContent;
     }
 
     @Override
     public void removeStreamContent(String language, String name) throws ContentNotFoundException {
-        allStreamContents.remove(getStreamContent(language, name));
+        streamContentService.delete(getStreamContent(language, name));
     }
 
     @Override
     public void removeStringContent(String language, String name) throws ContentNotFoundException {
-        allStringContents.remove(getStringContent(language, name));
-    }
-
-    @Override
-    public boolean isStreamContentAvailable(String language, String name) {
-        return allStreamContents.isContentAvailable(language, name);
-    }
-
-    @Override
-    public boolean isStringContentAvailable(String language, String name) {
-        return allStringContents.isContentAvailable(language, name);
+        stringContentService.delete(getStringContent(language, name));
     }
 
     @Override
     public List<Content> getAllContents() {
         List<Content> contents = new ArrayList<>();
-        contents.addAll(allStreamContents.getAll());
-        contents.addAll(allStringContents.getAll());
+        contents.addAll(streamContentService.retrieveAll());
+        contents.addAll(stringContentService.retrieveAll());
 
         return contents;
     }
 
     public StreamContent getStreamContent(String streamContentId) {
-        return allStreamContents.get(streamContentId);
+        return streamContentService.retrieve("id", streamContentId);
     }
     public StringContent getStringContent(String stringContentId) {
-        return allStringContents.get(stringContentId);
-    }
-
-    private Content getContent(String language, String name, BaseContentRepository contentRepository) throws ContentNotFoundException {
-        if (language == null || name == null) {
-            throw new IllegalArgumentException("Language and Name should not be null");
-        }
-
-        Content content = contentRepository.getContent(language, name);
-        if (content != null) {
-            return content;
-        }
-
-        throw new ContentNotFoundException();
+        return stringContentService.retrieve("id", stringContentId);
     }
 
     @Override
@@ -92,9 +70,36 @@ public class CMSLiteServiceImpl implements CMSLiteService {
         }
 
         if (content instanceof StreamContent) {
-            allStreamContents.addContent((StreamContent) content);
+            streamContentService.create((StreamContent) content);
         } else if (content instanceof StringContent) {
-            allStringContents.addContent((StringContent) content);
+            stringContentService.create((StringContent) content);
         }
+    }
+
+    @Override
+    public boolean isStreamContentAvailable(String language, String name) {
+        List<StreamContent> streamContents = streamContentService.findByLanguageAndName(language, name);
+        return !(streamContents == null || streamContents.size() == 0);
+    }
+
+    @Override
+    public boolean isStringContentAvailable(String language, String name) {
+        List<StringContent> stringContents = stringContentService.findByLanguageAndName(language, name);
+        return !(stringContents == null || stringContents.size() == 0);
+    }
+
+    @Override
+    public Byte[] retrieveStreamContentData(StreamContent instance) {
+        return (Byte[]) streamContentService.getDetachedField(instance, "content");
+    }
+
+    @Autowired
+    public void setStringContentService(StringContentService stringContentService) {
+        this.stringContentService = stringContentService;
+    }
+
+    @Autowired
+    public void setStreamContentService(StreamContentService streamContentService) {
+        this.streamContentService = streamContentService;
     }
 }

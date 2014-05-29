@@ -1,48 +1,69 @@
 package org.motechproject.cmslite.api.model;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.ektorp.support.TypeDiscriminator;
+import org.apache.commons.lang.ArrayUtils;
+import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 
-import java.io.InputStream;
+import java.util.Map;
 import java.util.Objects;
 
 /**
  * \ingroup cmslite
  * Represents stream content along with checksum.
  */
-@TypeDiscriminator("doc.type === 'StreamContent'")
-public class StreamContent extends Content {
-    private static final long serialVersionUID = 8169367710567919494L;
+@Entity
+public class StreamContent implements Content {
 
-    private InputStream inputStream;
-    @JsonProperty
+    @Field(required =  true)
+    private Byte[] content;
+
+    @Field
+    @UIDisplayable
     private String checksum;
-    @JsonProperty
+
+    @Field
+    @UIDisplayable
     private String contentType;
+
+    @Field(required = true)
+    @UIDisplayable
+    private String language;
+
+    @Field(required = true)
+    @UIDisplayable
+    private String name;
+
+    @Field
+    private Map<String, String> metadata;
 
     public StreamContent() {
         this(null, null, null, null, null);
     }
 
-    public StreamContent(String language, String name, InputStream inputStream, String checksum, String contentType) {
-        super(language, name);
-        this.inputStream = inputStream;
+    public StreamContent(String language, String name, Byte[] content, String checksum, String contentType) {
+        this.name = name;
+        this.language = language;
+
+        if (content != null) {
+            this.content = content.clone();
+        } else {
+            this.content = ArrayUtils.EMPTY_BYTE_OBJECT_ARRAY;
+        }
         this.checksum = checksum;
         this.contentType = contentType;
     }
 
-    @JsonIgnore
-    public InputStream getInputStream() {
-        return inputStream;
+    public void setContent(Byte[] content) {
+        this.content = content.clone();
+    }
+
+    public Byte[] getContent() {
+        return content.clone();
     }
 
     public String getChecksum() {
         return checksum;
-    }
-
-    public void setInputStream(InputStream inputStream) {
-        this.inputStream = inputStream;
     }
 
     public String getContentType() {
@@ -57,9 +78,33 @@ public class StreamContent extends Content {
         this.contentType = contentType;
     }
 
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Map<String, String> getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(Map<String, String> metadata) {
+        this.metadata = metadata;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(inputStream, checksum, contentType);
+        return Objects.hash(checksum, contentType);
     }
 
     @Override
@@ -72,20 +117,18 @@ public class StreamContent extends Content {
             return false;
         }
 
-        if (!super.equals(obj)) {
-            return false;
-        }
-
         final StreamContent other = (StreamContent) obj;
 
-        return Objects.equals(this.inputStream, other.inputStream) &&
+        return Objects.equals(this.language, other.language) &&
+                Objects.equals(this.name, other.name) &&
+                Objects.equals(this.metadata, other.metadata) &&
                 Objects.equals(this.checksum, other.checksum) &&
                 Objects.equals(this.contentType, other.contentType);
     }
 
     @Override
     public String toString() {
-        return String.format("StreamContent{inputStream=%s, checksum='%s', contentType='%s'} %s",
-                inputStream, checksum, contentType, super.toString());
+        return String.format("StreamContent{checksum='%s', contentType='%s'} Content{language='%s', name='%s', metadata=%s}",
+                checksum, contentType, language, name, metadata);
     }
 }

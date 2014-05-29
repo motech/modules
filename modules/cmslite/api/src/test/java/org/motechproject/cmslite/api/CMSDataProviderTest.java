@@ -10,7 +10,6 @@ import org.motechproject.cmslite.api.service.CMSLiteService;
 import org.motechproject.commons.api.MotechObject;
 import org.springframework.core.io.ResourceLoader;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,13 +39,13 @@ public class CMSDataProviderTest {
     private CMSDataProvider provider;
 
     @BeforeClass
-    public static void setLookupFields(){
+    public static void setLookupFields() {
         lookupFields = new HashMap<>();
         lookupFields.put(FIELD_KEY, FIELD_VALUE);
     }
 
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         initMocks(this);
 
         provider = new CMSDataProvider(resourceLoader);

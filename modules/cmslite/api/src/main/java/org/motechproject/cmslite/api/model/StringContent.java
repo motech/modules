@@ -1,7 +1,7 @@
 package org.motechproject.cmslite.api.model;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.ektorp.support.TypeDiscriminator;
+import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.Field;
 
 import java.util.Map;
 import java.util.Objects;
@@ -10,12 +10,20 @@ import java.util.Objects;
  * \ingroup cmslite
  * Represents Text Content.
  */
-@TypeDiscriminator("doc.type === 'StringContent'")
-public class StringContent extends Content {
-    private static final long serialVersionUID = -8406650651634017618L;
+@Entity
+public class StringContent implements Content {
 
-    @JsonProperty
+    @Field(required = true)
     private String value;
+
+    @Field(required = true)
+    private String language;
+
+    @Field(required = true)
+    private String name;
+
+    @Field
+    private Map<String, String> metadata;
 
     public StringContent() {
         this(null, null, null);
@@ -26,7 +34,9 @@ public class StringContent extends Content {
     }
 
     public StringContent(String language, String name, String value, Map<String, String> metadata) {
-        super(language, name, metadata);
+        this.name = name;
+        this.language = language;
+        this.metadata = metadata;
         this.value = value;
     }
 
@@ -36,6 +46,30 @@ public class StringContent extends Content {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public Map<String, String> getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(Map<String, String> metadata) {
+        this.metadata = metadata;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -53,17 +87,16 @@ public class StringContent extends Content {
             return false;
         }
 
-        if (!super.equals(obj)) {
-            return false;
-        }
-
         final StringContent other = (StringContent) obj;
 
-        return Objects.equals(this.value, other.value);
+        return  Objects.equals(this.language, other.language) &&
+                Objects.equals(this.name, other.name) &&
+                Objects.equals(this.metadata, other.metadata) &&
+                Objects.equals(this.value, other.value);
     }
 
     @Override
     public String toString() {
-        return String.format("StringContent{value='%s'} %s", value, super.toString());
+        return String.format("StringContent{value='%s'} Content{language='%s', name='%s', metadata=%s}", value, language, name, metadata);
     }
 }

@@ -16,8 +16,7 @@ import java.util.List;
 /**
  * \ingroup cmslite
  * CMS Lite is lightweight content management based on couchdb storage. It supports storing and retrieving of stream / text along with
- * custom meta data for each language. Implementer can also use {@link org.motechproject.cmslite.api.web.ResourceServlet} to export rest based
- * content retrieval.
+ * custom meta data for each language
  */
 @Component
 public interface CMSLiteService {
@@ -91,4 +90,5 @@ public interface CMSLiteService {
     StringContent getStringContent(String stringContentId);
     StreamContent getStreamContent(String stringContentId);
 
+    Byte[] retrieveStreamContentData(StreamContent instance);
 }

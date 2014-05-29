@@ -32,13 +32,11 @@
         <property name="defaultURL" value="/cmslite/resources"/>
     </bean>
 
-    <osgi:service id="cmsLiteServiceOsgi" ref="cmsLiteService"
-                  interface="org.motechproject.cmslite.api.service.CMSLiteService"/>
+    <osgi:reference id="stringContentServiceOsgi"
+                    interface="org.motechproject.cmslite.api.service.StringContentService"/>
 
-    <osgi:service id="cmsDataProviderOsgi" auto-export="interfaces" ref="cmsDataProvider"
-                  interface="org.motechproject.commons.api.DataProvider"/>
-
-    <osgi:reference id="couchDbManager" interface="org.motechproject.commons.couchdb.service.CouchDbManager"/>
+    <osgi:reference id="streamContentServiceOsgi"
+                    interface="org.motechproject.cmslite.api.service.StreamContentService"/>
 
     <osgi:reference id="platformSettingsServiceOsgi"
                     interface="org.motechproject.server.config.service.PlatformSettingsService"/>
@@ -47,5 +45,11 @@
                     interface="org.motechproject.config.service.ConfigurationService"/>
 
     <osgi:reference id="settingsFacade" interface="org.motechproject.server.config.SettingsFacade"/>
+
+    <osgi:service id="cmsLiteServiceOsgi" ref="cmsLiteService"
+                  interface="org.motechproject.cmslite.api.service.CMSLiteService"/>
+
+    <osgi:service id="cmsDataProviderOsgi" auto-export="interfaces" ref="cmsDataProvider"
+                  interface="org.motechproject.commons.api.DataProvider"/>
 
 </beans>

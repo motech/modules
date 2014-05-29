@@ -1,6 +1,8 @@
 package org.motechproject.cmslite.api.web;
 
 import org.motechproject.cmslite.api.model.Content;
+import org.motechproject.cmslite.api.model.StreamContent;
+import org.motechproject.cmslite.api.model.StringContent;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -8,7 +10,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static java.util.Collections.addAll;
-import static org.apache.commons.lang.StringUtils.startsWithIgnoreCase;
 
 public class ResourceDto implements Serializable {
     private static final long serialVersionUID = 6728665456455509425L;
@@ -21,9 +22,9 @@ public class ResourceDto implements Serializable {
         this.name = content.getName();
         this.languages.add(content.getLanguage());
 
-        if (startsWithIgnoreCase(content.getType(), "string")) {
+        if (content instanceof StringContent) {
             type = "string";
-        } else if (startsWithIgnoreCase(content.getType(), "stream")) {
+        } else if (content instanceof StreamContent) {
             type = "stream";
         } else {
             type = null;

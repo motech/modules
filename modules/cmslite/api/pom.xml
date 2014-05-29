@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>platform-communications</artifactId>
         <groupId>org.motechproject</groupId>
@@ -18,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>${motech.groupId}</groupId>
-            <artifactId>motech-platform-commons-couchdb</artifactId>
+            <artifactId>motech-platform-dataservices</artifactId>
             <version>${motech.version}</version>
         </dependency>
         <dependency>
@@ -106,16 +107,12 @@
                         <Blueprint-Enabled>true</Blueprint-Enabled>
                         <Export-Package>
                             org.motechproject.cmslite.api.model;version=${project.version},
-                            org.motechproject.cmslite.api.repository;version=${project.version},
                             org.motechproject.cmslite.api.service;version=${project.version},
                             org.motechproject.cmslite.api.web;version=${project.version}
                         </Export-Package>
                         <Import-Package>
                             javax.servlet.*;resolution:=optional,
                             org.apache.commons.fileupload,
-                            org.ektorp.impl,
-                            org.ektorp.spring,
-                            org.motechproject.commons.couchdb.service,
                             org.motechproject.server.config,
                             org.motechproject.server.config.service,
                             org.motechproject.config.service,
@@ -166,37 +163,4 @@
             </plugin>
         </plugins>
     </build>
-    <profiles>
-        <profile>
-            <id>IT</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <version>1.6</version>
-                        <executions>
-                            <execution>
-                                <id>drop DB =&gt; motech-cmslite</id>
-                                <phase>pre-integration-test</phase>
-                                <configuration>
-                                    <target>
-                                        <exec executable="curl">
-                                            <arg value="-s" />
-                                            <arg value="-S" />
-                                            <arg value="-X" />
-                                            <arg value="DELETE" />
-                                            <arg value="http://${db.server}:${db.port}/${db.prefix}motech-cmslite" />
-                                        </exec>
-                                    </target>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

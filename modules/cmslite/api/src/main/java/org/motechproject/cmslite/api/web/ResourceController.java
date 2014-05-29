@@ -1,7 +1,7 @@
 package org.motechproject.cmslite.api.web;
 
 import org.apache.commons.io.IOUtils;
-import org.ektorp.AttachmentInputStream;
+import org.apache.commons.lang.ArrayUtils;
 import org.motechproject.cmslite.api.model.CMSLiteException;
 import org.motechproject.cmslite.api.model.Content;
 import org.motechproject.cmslite.api.model.ContentNotFoundException;
@@ -24,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Arrays;
@@ -57,7 +56,8 @@ public class ResourceController {
 
         switch (field) {
             case "name":
-                for (Content content : cmsLiteService.getAllContents()) {
+                List<Content> contents = cmsLiteService.getAllContents();
+                for (Content content : contents) {
                     if (startsWith(content.getName(), term)) {
                         strings.add(content.getName());
                     }
@@ -134,13 +134,11 @@ public class ResourceController {
                                   @RequestParam MultipartFile contentFile) throws ContentNotFoundException, CMSLiteException, IOException {
         StreamContent streamContent = cmsLiteService.getStreamContent(language, name);
 
-        try (InputStream inputStream = contentFile.getInputStream()) {
-            streamContent.setChecksum(md5Hex(contentFile.getBytes()));
-            streamContent.setContentType(contentFile.getContentType());
-            streamContent.setInputStream(inputStream);
+        streamContent.setChecksum(md5Hex(contentFile.getBytes()));
+        streamContent.setContentType(contentFile.getContentType());
+        streamContent.setContent(ArrayUtils.toObject(contentFile.getBytes()));
 
-            cmsLiteService.addContent(streamContent);
-        }
+        cmsLiteService.addContent(streamContent);
     }
 
     @RequestMapping(value = "/resource", method = RequestMethod.POST)
@@ -183,12 +181,10 @@ public class ResourceController {
                     throw new CMSLiteException(String.format("Resource %s in %s language already exists.", name, language));
                 }
 
-                try (InputStream inputStream = contentFile.getInputStream()) {
-                    String checksum = md5Hex(contentFile.getBytes());
-                    String contentType = contentFile.getContentType();
+                String checksum = md5Hex(contentFile.getBytes());
+                String contentType = contentFile.getContentType();
 
-                    cmsLiteService.addContent(new StreamContent(language, name, inputStream, checksum, contentType));
-                }
+                cmsLiteService.addContent(new StreamContent(language, name, ArrayUtils.toObject(contentFile.getBytes()), checksum, contentType));
                 break;
             default:
         }
@@ -213,27 +209,20 @@ public class ResourceController {
             throws IOException {
         LOG.info(String.format("Getting resource for : stream:%s:%s", language, name));
 
-        OutputStream out = null;
-        AttachmentInputStream contentStream = null;
+        try (OutputStream out = response.getOutputStream()) {
 
-        try {
-            out = response.getOutputStream();
+            StreamContent streamContent = cmsLiteService.getStreamContent(language, name);
 
-            contentStream = (AttachmentInputStream) cmsLiteService.getStreamContent(language, name).getInputStream();
-
-            response.setContentLength((int) contentStream.getContentLength());
-            response.setContentType(contentStream.getContentType());
+            response.setContentLength(streamContent.getContent().length);
+            response.setContentType(streamContent.getContentType());
             response.setHeader("Accept-Ranges", "bytes");
             response.setStatus(HttpServletResponse.SC_OK);
 
-            IOUtils.copy(contentStream, out);
-        } catch (ContentNotFoundException e) {
+            out.write(ArrayUtils.toPrimitive(streamContent.getContent()));
+        } catch (Exception e) {
             LOG.error(String.format("Content not found for : stream:%s:%s%n:%s", language, name,
                     Arrays.toString(e.getStackTrace())));
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, NOT_FOUND_RESPONSE);
-        } finally {
-            IOUtils.closeQuietly(contentStream);
-            IOUtils.closeQuietly(out);
         }
     }
 
@@ -254,7 +243,7 @@ public class ResourceController {
             response.setStatus(HttpServletResponse.SC_OK);
 
             writer.print(stringContent.getValue());
-        } catch (ContentNotFoundException e) {
+        } catch (Exception e) {
             LOG.error(String.format("Content not found for : string:%s:%s%n:%s", language, name,
                     Arrays.toString(e.getStackTrace())));
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, NOT_FOUND_RESPONSE);
