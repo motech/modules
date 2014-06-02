@@ -1,0 +1,8 @@
+[main]
+host = https://www.transifex.com
+
+[MOTECH.mtraining]
+file_filter = modules/mtraining/src/main/resources/webapp/messages/messages_<lang>.properties
+source_file = modules/mtraining/src/main/resources/webapp/messages/messages.properties
+source_lang = en_US
+type = PROPERTIES
