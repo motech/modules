@@ -9,10 +9,7 @@ import java.util.List;
  * Course plan contains a schedule(collection) or courses grouped by location
  */
 @Entity
-public class CoursePlan {
-
-    @Field
-    private String name;
+public class CoursePlan extends BaseMeta {
 
     @Field
     private List<Course> courses;

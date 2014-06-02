@@ -8,13 +8,35 @@ import java.util.List;
  * Created by kosh on 5/29/14.
  */
 @Entity
-public class Course {
+public class Course extends BaseMeta {
 
-    private String name;
+    private int version;
 
     private String location;
 
-    private boolean active;
-
     private List<Module> modules;
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public List<Module> getModules() {
+        return modules;
+    }
+
+    public void setModules(List<Module> modules) {
+        this.modules = modules;
+    }
 }

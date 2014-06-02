@@ -5,9 +5,13 @@ package org.motechproject.mtraining.domain;
  */
 public class Lesson {
 
-    private String name;
-
     private String content;
 
-    private Quiz quiz;
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 }
