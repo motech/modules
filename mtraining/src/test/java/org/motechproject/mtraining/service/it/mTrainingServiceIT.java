@@ -1,5 +1,6 @@
 package org.motechproject.mtraining.service.it;
 
+import org.motechproject.mtraining.domain.Course;
 import org.motechproject.mtraining.service.MTrainingService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,14 +21,14 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
-public class HelloWorldServiceIT extends BasePaxIT {
+public class mTrainingServiceIT extends BasePaxIT {
 
     @Inject
-    private MTrainingService helloService;
+    private MTrainingService mtrainingService;
 
     @Test
     public void testHelloWorldServicePresent() throws Exception {
-        assertNotNull(helloService);
-        assertNotNull(helloService.sayHello());
+        assertNotNull(mtrainingService);
+        assertNotNull(mtrainingService.createCourse(new Course()));
     }
 }
