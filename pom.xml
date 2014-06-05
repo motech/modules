@@ -1017,7 +1017,7 @@
 
     <modules>
         <module>modules/message-campaign</module>
-        <module>modules/pillreminder/api</module>
+        <module>modules/pill-reminder</module>
         <module>modules/scheduletracking</module>
     </modules>
 

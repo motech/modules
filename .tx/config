@@ -7,9 +7,9 @@ source_file = modules/message-campaign/src/main/resources/webapp/messages/messag
 source_lang = en_US
 type = PROPERTIES
 
-[MOTECH.pillreminder]
-file_filter = modules/pillreminder/api/src/main/resources/webapp/messages/messages_<lang>.properties
-source_file = modules/pillreminder/api/src/main/resources/webapp/messages/messages.properties
+[MOTECH.pill-reminder]
+file_filter = modules/pill-reminder/src/main/resources/webapp/messages/messages_<lang>.properties
+source_file = modules/pill-reminder/src/main/resources/webapp/messages/messages.properties
 source_lang = en_US
 type = PROPERTIES
 
