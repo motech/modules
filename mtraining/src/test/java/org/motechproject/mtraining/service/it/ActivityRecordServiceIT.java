@@ -1,5 +1,6 @@
 package org.motechproject.mtraining.service.it;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.mtraining.domain.EnrollmentRecord;
@@ -28,7 +29,8 @@ public class ActivityRecordServiceIT extends BasePaxIT {
     private ActivityRecordService activityRecordService;
 
     @Test
-    public void testHelloWorldRecordService() throws Exception {
+    @Ignore
+    public void testEnrollmentRecord() throws Exception {
         EnrollmentRecord testRecord = new EnrollmentRecord("testName", "test message");
         activityRecordService.add(testRecord);
 

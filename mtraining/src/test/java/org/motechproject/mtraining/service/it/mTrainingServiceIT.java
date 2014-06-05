@@ -1,5 +1,6 @@
 package org.motechproject.mtraining.service.it;
 
+import org.junit.Ignore;
 import org.motechproject.mtraining.domain.Course;
 import org.motechproject.mtraining.service.MTrainingService;
 import org.junit.Test;
@@ -27,7 +28,8 @@ public class mTrainingServiceIT extends BasePaxIT {
     private MTrainingService mtrainingService;
 
     @Test
-    public void testHelloWorldServicePresent() throws Exception {
+    @Ignore
+    public void testmTrainingServiceInstance() throws Exception {
         assertNotNull(mtrainingService);
         assertNotNull(mtrainingService.createCourse(new Course()));
     }
