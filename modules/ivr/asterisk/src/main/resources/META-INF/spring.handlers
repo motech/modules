@@ -1,0 +1,2 @@
+http\://www.eclipse.org/gemini/blueprint/schema/blueprint=org.eclipse.gemini.blueprint.config.OsgiNamespaceHandler
+http\://www.springframework.org/schema/security=org.springframework.security.config.SecurityNamespaceHandler
