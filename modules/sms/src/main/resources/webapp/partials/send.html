@@ -1,0 +1,77 @@
+<div class="row">
+    <h4 class="frame-title">{{msg('sms.web.send.title')}}</h4>
+    <div class="inside">
+
+        <div class="alert alert-danger alert-block" ng-show="config.configs.length == 0">
+            {{msg('sms.web.send.noConfigErrorBody')}}<br/>
+            {{msg('sms.web.send.noConfigErrorAction')}} <a href="#/sms/settings">{{msg('sms.web.send.noConfigErrorTab')}}</a>.
+        </div>
+        <div ng-repeat="message in messages" class="alert alert-success alert-block animate-repeat">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{message}}
+        </div>
+        <div ng-show="error.length > 0" class="alert alert-error alert-block" ng-bind="error"></div>
+
+        <form name="form" class="form-horizontal inside" ng-submit="sendSms()" ng-hide="!config || config.configs.length == 0" novalidate>
+
+            <div class="form-group">
+                <label class="col-md-2 col-sm-3 control-label">{{msg('sms.web.send.config')}}</label>
+                <div class="form-inline col-md-10 col-sm-9">
+                    <label class="radio-inline" ng-repeat="conf in config.configs">
+                        <input type="radio" value="{{conf.name}}" ng-model="sms.config">
+                        {{conf.name}}
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group" ng-class="{'has-error': !sms.recipients}">
+                <label class="col-md-2 control-label" for="recipients">
+                    {{msg('sms.web.send.recipients')}}
+                </label>
+                <div class="col-md-4" tooltip="{{msg('sms.web.send.recipients.tooltip')}}">
+                    <input name="recipients" id="recipients" class="form-control" type="text" ng-model="sms.recipients" ng-pattern="/^[+]?[0-9]+(,[+]?[0-9]+)*$/" ng-list required ng-focus="true">
+                    <span ng-show="form.recipients.$error.required" class="help-block">{{msg('sms.web.required_field', msg('sms.web.send.recipients_field'))}}</span>
+                    <span ng-show="form.recipients.$error.pattern" class="help-block">{{msg('sms.web.send.bad-number_format', msg('sms.web.send.recipients_field'))}}</span>
+                </div>
+            </div>
+
+            <div class="form-group" ng-class="{'has-error': !sms.message}">
+                <label class="col-md-2 control-label" for="message">{{msg('sms.web.send.message')}}<br/><span class="char-counter">{{sms.message.length}}</span></label>
+                <div class="col-md-4">
+                    <textarea name="message" id="message" class="form-control textarea" rows="5" required ng-model="sms.message"></textarea>
+                    <span ng-show="form.message.$error.required" class="help-block">{{msg('sms.web.required_field', msg('sms.web.send.message_field'))}}</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 col-sm-3 control-label">
+                    {{msg('sms.web.send.delivery_time')}}
+                </label>
+                <div class="form-inline col-md-10 col-sm-9">
+                    <label class="radio-inline">
+                        <input type="radio" value="now" ng-model="dt">
+                        {{msg('sms.web.send.immediately')}}
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" value="10sec" ng-model="dt">
+                        {{msg('sms.web.send.in10sec')}}
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" value="1min" ng-model="dt">
+                        {{msg('sms.web.send.in1min')}}
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" value="1hour" ng-model="dt">
+                        {{msg('sms.web.send.in1hour')}}
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-sm-offset-3 col-md-10 col-sm-9">
+                    <input class="btn btn-primary" type="submit" value="{{msg('sms.web.send.send')}}" ng-disabled="form.$invalid || messages.length"/>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

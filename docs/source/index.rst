@@ -12,6 +12,14 @@ Contents:
    :maxdepth: 2
 
    mtraining
+   alerts
+   call_flow
+   cms_lite
+   commcare
+   ivr/index
+   mobile_forms
+   outbox
+   sms
    packages
 
 Indices and tables
