@@ -1079,27 +1079,20 @@
     </dependencyManagement>
 
     <modules>
-        <!-- Non-OSGI modules -->
-        <module>modules/ivr/api</module>
-        <module>modules/mobileforms/api</module>
-
-        <!-- OSGI modules -->
+        <module>alerts</module>
+        <module>callflow</module>
+        <module>cmslite</module>
+        <module>commcare</module>
+        <module>decisiontree</module>
+        <module>ivr/api</module>
+        <module>ivr/asterisk</module>
+        <module>ivr/kookoo</module>
+        <module>ivr/verboice</module>
+        <module>ivr/voxeo</module>
         <module>mtraining</module>
-        <module>modules/alerts</module>
-        <module>modules/callflow</module>
-        <module>modules/cmslite/api</module>
-        <module>modules/commcare</module>
-        <module>modules/decisiontree</module>
-        <module>modules/ivr/asterisk</module>
-        <module>modules/ivr/kookoo</module>
-        <module>modules/ivr/verboice</module>
-        <module>modules/ivr/voxeo</module>
-        <module>modules/outbox/outbox</module>
-        <module>modules/sms</module>
-
-        <!-- Archetypes modules -->
-
-        <!-- Packaging modules -->
+        <module>mobileforms</module>
+        <module>outbox</module>
+        <module>sms</module>
 
     </modules>
 
