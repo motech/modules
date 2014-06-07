@@ -1,0 +1,115 @@
+{
+  "displayName" : "msgCampaign.name",
+  "moduleName" : "${project.artifactId}",
+  "moduleVersion" : "${parsedVersion.osgiVersion}",
+  "description" : "msgCampaign.description",
+  "triggerTaskEvents" : [
+    {
+      "displayName" : "msgCampaign.send.message",
+      "subject" : "org.motechproject.messagecampaign.fired-campaign-message",
+      "eventParameters" : [
+        {
+          "eventKey" : "CampaignName",
+          "displayName" : "msgCampaign.campaign.name"
+        },
+        {
+          "eventKey" :  "ExternalID",
+          "displayName" : "msgCampaign.externalID"
+        },
+        {
+          "eventKey" :  "MessageKey",
+          "displayName" : "msgCampaign.message.key"
+        }
+      ]
+    },
+    {
+      "displayName" : "msgCampaign.campaign.completed",
+      "subject" : "org.motechproject.messagecampaign.campaign-completed",
+      "eventParameters" : [
+        {
+          "eventKey" : "ExternalID",
+          "displayName" : "msgCampaign.externalID"
+        },
+        {
+          "eventKey" : "CampaignName",
+          "displayName" : "msgCampaign.campaign.name"
+        }
+      ]
+    }
+  ],
+  "actionTaskEvents" : [
+    {
+      "displayName" : "msgCampaign.send.message",
+      "subject" : "org.motechproject.messagecampaign.fired-campaign-message",
+      "actionParameters" : [
+        {
+          "key" : "CampaignName",
+          "displayName" : "msgCampaign.campaign.name"
+        },
+        {
+          "key" :  "ExternalID",
+          "displayName" : "msgCampaign.externalID"
+        },
+        {
+          "key" :  "MessageKey",
+          "displayName" : "msgCampaign.message.key"
+        }
+      ]
+    },
+    {
+      "displayName" : "msgCampaign.campaign.completed",
+      "serviceInterface": "org.motechproject.messagecampaign.service.MessageCampaignService",
+      "serviceMethod": "campaignCompleted",
+      "subject" : "org.motechproject.messagecampaign.campaign-completed",
+      "actionParameters" : [
+        {
+          "key" : "ExternalID",
+          "displayName" : "msgCampaign.externalID"
+        },
+        {
+          "key" : "CampaignName",
+          "displayName" : "msgCampaign.campaign.name"
+        }
+      ]
+    },
+    {
+      "displayName" : "msgCampaign.enroll.user",
+      "subject" : "org.motechproject.messagecampaign.enroll-user",
+      "actionParameters" : [
+        {
+          "key" : "ExternalID",
+          "displayName" : "msgCampaign.externalID"
+        },
+        {
+          "key" : "CampaignName",
+          "displayName" : "msgCampaign.campaign.name"
+        },
+        {
+          "key" : "ReferanceDate",
+          "displayName" : "msgCampaign.reference.date",
+          "type": "DATE"
+        },
+        {
+          "key" : "StartTime",
+          "displayName" : "msgCampaign.start.time",
+          "type": "TIME",
+          "required": false
+        }
+      ]
+    },
+    {
+      "displayName" : "msgCampaign.unenroll.user",
+      "subject" : "org.motechproject.messagecampaign.unenroll-user",
+      "actionParameters" : [
+        {
+          "key" : "ExternalID",
+          "displayName" : "msgCampaign.externalID"
+        },
+        {
+          "key" : "CampaignName",
+          "displayName" : "msgCampaign.campaign.name"
+        }
+      ]
+    }
+  ]
+}

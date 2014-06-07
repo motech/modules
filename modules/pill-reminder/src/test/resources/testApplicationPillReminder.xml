@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+    <import resource="classpath*:META-INF/motech/*.xml"/>
+
+    <bean id="pillReminderSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
+        <property name="moduleName" value="pillremainder"/>
+    </bean>
+
+    <bean id="pillReminderDbConnector" factory-bean="couchDbManager" factory-method="getConnector">
+        <constructor-arg value="motech-pillreminder"/>
+    </bean>
+
+
+</beans>
