@@ -42,3 +42,21 @@ file_filter = modules/sms/src/main/resources/webapp/messages/messages_<lang>.pro
 source_file = modules/sms/src/main/resources/webapp/messages/messages.properties
 source_lang = en_US
 type = PROPERTIES
+
+[MOTECH.message-campaign]
+file_filter = modules/message-campaign/src/main/resources/webapp/messages/messages_<lang>.properties
+source_file = modules/message-campaign/src/main/resources/webapp/messages/messages.properties
+source_lang = en_US
+type = PROPERTIES
+
+[MOTECH.pill-reminder]
+file_filter = modules/pill-reminder/src/main/resources/webapp/messages/messages_<lang>.properties
+source_file = modules/pill-reminder/src/main/resources/webapp/messages/messages.properties
+source_lang = en_US
+type = PROPERTIES
+
+[MOTECH.scheduletracking]
+file_filter = modules/scheduletracking/src/main/resources/webapp/messages/messages_<lang>.properties
+source_file = modules/scheduletracking/src/main/resources/webapp/messages/messages.properties
+source_lang = en_US
+type = PROPERTIES

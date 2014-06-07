@@ -20,6 +20,10 @@ Contents:
    mobile_forms
    outbox
    sms
+   message_campaign
+   pill_reminder
+   schedule_tracking
+   sample_schedule
    packages
 
 Indices and tables

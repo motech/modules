@@ -87,15 +87,15 @@ qthelp:
 	      ".qhcp project file in $(BUILDDIR)/qthelp, like this:"
 	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/MOTECHPlatformCommunications.qhcp"
 	@echo "To view the help file:"
-	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/MOTECHPlatformCommunications.qhc"
+	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/MOTECHModules.qhc"
 
 devhelp:
 	$(SPHINXBUILD) -b devhelp $(ALLSPHINXOPTS) $(BUILDDIR)/devhelp
 	@echo
 	@echo "Build finished."
 	@echo "To view the help file:"
-	@echo "# mkdir -p $$HOME/.local/share/devhelp/MOTECHPlatformCommunications"
-	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/MOTECHPlatformCommunications"
+	@echo "# mkdir -p $$HOME/.local/share/devhelp/MOTECHModules"
+	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/MOTECHModules"
 	@echo "# devhelp"
 
 epub:

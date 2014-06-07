@@ -78,6 +78,7 @@
             <groupId>org.eclipse.gemini</groupId>
             <artifactId>org.eclipse.gemini.blueprint.core</artifactId>
         </dependency>
+        <!-- SLF4J -->
         <dependency>
             <groupId>org.eclipse.gemini</groupId>
             <artifactId>org.eclipse.gemini.blueprint.extender</artifactId>
@@ -130,6 +131,10 @@
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-pax-it</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-osgi-extender-fragment</artifactId>
         </dependency>
     </dependencies>
 
@@ -943,6 +948,11 @@
                 <artifactId>org.springframework.security.openid</artifactId>
                 <version>${spring.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.motechproject</groupId>
+                <artifactId>motech-platform-osgi-extender-fragment</artifactId>
+                <version>${motech.version}</version>
+            </dependency>
             <!-- Test -->
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -1093,7 +1103,9 @@
         <module>mobileforms</module>
         <module>outbox</module>
         <module>sms</module>
-
+        <module>modules/message-campaign</module>
+        <module>modules/pill-reminder</module>
+        <module>modules/scheduletracking</module>
     </modules>
 
     <build>
@@ -1310,7 +1322,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-resources-plugin</artifactId>
-			            <version>2.6</version>
+                        <version>2.6</version>
                         <executions>
                             <execution>
                                 <id>copy-test-config-files</id>
@@ -1456,112 +1468,6 @@
                                 </configuration>
                             </execution>
                         </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>FT</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <version>2.5.1</version>
-                        <executions>
-                            <execution>
-                                <id>default-testCompile</id>
-                                <phase>test-compile</phase>
-                                <configuration>
-                                    <fork>true</fork>
-                                    <compilerArgument>
-                                        -Xbootclasspath/p:${modules.root.dir}/tools/jvmfaketime/jvmfaketime.jar
-                                    </compilerArgument>
-                                    <testExcludes>
-                                        <exclude>NONE</exclude>
-                                    </testExcludes>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>2.17</version>
-                        <configuration>
-                            <excludes>
-                                <exclude>NONE</exclude>
-                            </excludes>
-                            <includes>
-                                <include>**/ft/*.java</include>
-                            </includes>
-                            <argLine>-XX:-UseSplitVerifier</argLine>
-                            <!-- bug in powermock on java7 -->
-                            <forkMode>always</forkMode>
-                            <!-- bug in surefire; won't pass argline for never -->
-                            <argLine>-Xbootclasspath/p:${modules.root.dir}/tools/jvmfaketime/jvmfaketime.jar</argLine>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>2.17</version>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <profile>
-            <id>RPM</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>rpm-maven-plugin</artifactId>
-                        <version>2.0</version>
-                        <inherited>false</inherited>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>attached-rpm</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-
-                        <configuration>
-                            <copyright>2012, Grameen Foundation</copyright>
-                            <distribution>Motech distribution</distribution>
-                            <group>Applications/Internet</group>
-                            <prefix>/usr/share</prefix>
-
-                            <defineStatements>
-                                <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
-                            </defineStatements>
-
-                            <requires>
-                                <require>motech-base &gt;= ${project.version}</require>
-                                <require>mysql-server</require>
-                                <require>couchdb</require>
-                                <require>curl</require>
-                            </requires>
-
-                            <mappings>
-                                <mapping>
-                                    <directory>/usr/share/doc/motech</directory>
-                                    <documentation>true</documentation>
-                                    <username>root</username>
-                                    <groupname>root</groupname>
-                                    <sources>
-                                        <source>
-                                            <location>LICENSE.txt</location>
-                                        </source>
-                                        <source>
-                                            <location>README</location>
-                                        </source>
-                                    </sources>
-                                </mapping>
-                            </mappings>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>
