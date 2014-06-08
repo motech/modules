@@ -1103,9 +1103,9 @@
         <module>mobileforms</module>
         <module>outbox</module>
         <module>sms</module>
-        <module>modules/message-campaign</module>
-        <module>modules/pill-reminder</module>
-        <module>modules/scheduletracking</module>
+        <module>message-campaign</module>
+        <module>pill-reminder</module>
+        <module>schedule-tracking</module>
     </modules>
 
     <build>

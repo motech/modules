@@ -6,7 +6,6 @@ import org.mockito.Mock;
 import org.motechproject.scheduletracking.domain.Enrollment;
 import org.motechproject.scheduletracking.domain.Schedule;
 import org.motechproject.scheduletracking.repository.AllEnrollments;
-import org.motechproject.scheduletracking.service.impl.EnrollmentServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;

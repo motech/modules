@@ -26,7 +26,7 @@ import static org.junit.Assert.assertTrue;
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class ScheduleTrackingTaskBundleIT extends AbstractTaskBundleIT {
 
-    private static final String CHANNEL_NAME = "org.motechproject.motech-scheduletracking";
+    private static final String CHANNEL_NAME = "org.motechproject.schedule-tracking";
 
     @Test
     public void testTaskChannelCreated() throws IOException, InterruptedException {

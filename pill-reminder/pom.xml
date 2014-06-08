@@ -1,20 +1,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.motechproject</groupId>
         <artifactId>modules</artifactId>
+        <groupId>org.motechproject</groupId>
         <version>0.24-SNAPSHOT</version>
-        <relativePath>../../</relativePath>
+        <relativePath>../</relativePath>
     </parent>
-    <groupId>org.motechproject</groupId>
-    <artifactId>motech-scheduletracking</artifactId>
-    <name>MOTECH Schedule Tracking</name>
-    <description>MOTECH Schedule Tracking</description>
+
+    <artifactId>pill-reminder</artifactId>
+    <name>Pill Reminder Module</name>
     <version>0.24-SNAPSHOT</version>
     <packaging>bundle</packaging>
+
     <properties>
-        <modules.root.dir>${basedir}/../..</modules.root.dir>
+        <modules.root.dir>${basedir}/..</modules.root.dir>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>${motech.groupId}</groupId>
@@ -28,7 +29,7 @@
         </dependency>
         <dependency>
             <groupId>${motech.groupId}</groupId>
-            <artifactId>motech-platform-event</artifactId>
+            <artifactId>motech-platform-osgi-web-util</artifactId>
             <version>${motech.version}</version>
         </dependency>
         <dependency>
@@ -36,57 +37,10 @@
             <artifactId>motech-platform-osgi-extender-fragment</artifactId>
             <version>${motech.version}</version>
         </dependency>
-        <!-- OSGI dependencies -->
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>com.springsource.org.hamcrest</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>com.springsource.org.hamcrest.core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>com.springsource.javax.servlet</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>org.springframework.web.servlet</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>com.springsource.org.json</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>org.springframework.jms</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>com.springsource.org.apache.commons.io</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>org.motechproject.com.google.code.gson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>org.motechproject.org.codehaus.jackson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>org.motechproject.org.quartz-scheduler</artifactId>
-        </dependency>
         <!-- Test -->
         <dependency>
             <groupId>${motech.groupId}</groupId>
             <artifactId>motech-testing-utils</artifactId>
-            <version>${motech.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>${motech.groupId}</groupId>
-            <artifactId>motech-tasks-test-utils</artifactId>
             <version>${motech.version}</version>
             <scope>test</scope>
         </dependency>
@@ -129,41 +83,15 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <version>2.3.4</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <instructions>
-                        <Context-Path>scheduletracking</Context-Path>
-                        <Resource-Path>scheduletracking/resources</Resource-Path>
-                        <Blueprint-Enabled>true</Blueprint-Enabled>
-                        <Export-Package>
-                            org.motechproject.scheduletracking.service;version=${project.version},
-                            org.motechproject.scheduletracking.service.impl;version=${project.version},
-                            org.motechproject.scheduletracking.events;version=${project.version},
-                            org.motechproject.scheduletracking.events.constants;version=${project.version},
-                            org.motechproject.scheduletracking.domain;version=${project.version}
-                        </Export-Package>
-                        <Import-Package>
-                            org.motechproject.commons.couchdb.service,
-                            org.motechproject.event.listener.annotations,
-                            org.motechproject.server.config,
-                            org.motechproject.server.config.service,
-                            org.motechproject.config.service,
-                            *
-                        </Import-Package>
-                    </instructions>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-            </plugin>
-            <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>2.5</version>
                 <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>resources</goal>
+                        </goals>
+                    </execution>
                     <execution>
                         <id>copy-bundles</id>
                         <phase>package</phase>
@@ -184,6 +112,37 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>2.3.4</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Context-Path>pill-reminder</Context-Path>
+                        <Resource-Path>pill-reminder/resource</Resource-Path>
+                        <Blueprint-Enabled>true</Blueprint-Enabled>
+                        <Export-Package>
+                            org.motechproject.pillreminder;version=${project.version},
+                            org.motechproject.pillreminder.contract;version=${project.version},
+                            org.motechproject.pillreminder.service;version=${project.version}
+                        </Export-Package>
+                        <Import-Package>
+                            org.motechproject.commons.couchdb.service,
+                            org.motechproject.event.listener,
+                            org.motechproject.server.config,
+                            org.motechproject.server.config.service,
+                            org.motechproject.config.service,
+                            org.motechproject.osgi.web,
+                            *
+                        </Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
     <profiles>
@@ -196,7 +155,7 @@
                         <version>1.6</version>
                         <executions>
                             <execution>
-                                <id>drop DB =&gt; motech-scheduletracking</id>
+                                <id>drop DB =&gt; motech-pillreminder</id>
                                 <phase>pre-integration-test</phase>
                                 <configuration>
                                     <target>
@@ -205,7 +164,7 @@
                                             <arg value="-S" />
                                             <arg value="-X" />
                                             <arg value="DELETE" />
-                                            <arg value="http://${db.server}:${db.port}/${db.prefix}motech-scheduletracking" />
+                                            <arg value="http://${db.server}:${db.port}/${db.prefix}motech-pillreminder" />
                                         </exec>
                                     </target>
                                 </configuration>
