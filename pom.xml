@@ -1091,7 +1091,7 @@
     <modules>
         <module>alerts</module>
         <module>callflow</module>
-        <module>cmslite</module>
+        <module>cms-lite</module>
         <module>commcare</module>
         <module>decisiontree</module>
         <module>ivr/api</module>

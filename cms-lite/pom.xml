@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.motechproject</groupId>
-    <artifactId>cmslite</artifactId>
-    <name>CMS lite Module</name>
+    <artifactId>cms-lite</artifactId>
+    <name>CMS Lite</name>
     <version>0.24-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <properties>
