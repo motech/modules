@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.motechproject</groupId>
     <artifactId>cms-lite</artifactId>
-    <name>CMS Lite</name>
+    <name>CMS Lite Module</name>
     <version>0.24-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <properties>
