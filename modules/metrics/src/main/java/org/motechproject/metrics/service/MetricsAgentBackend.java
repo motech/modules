@@ -1,4 +1,4 @@
-package org.motechproject.metrics;
+package org.motechproject.metrics.service;
 
 import org.motechproject.metrics.domain.ConfigProperty;
 

@@ -10,6 +10,7 @@ import org.motechproject.commons.date.util.DateTimeSourceUtil;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.commons.date.util.datetime.DateTimeSource;
 import org.motechproject.metrics.impl.MultipleMetricsAgentImpl;
+import org.motechproject.metrics.service.MetricsAgentBackend;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 

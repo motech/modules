@@ -1,7 +1,7 @@
 package org.motechproject.metrics.util;
 
 import org.eclipse.gemini.blueprint.service.importer.OsgiServiceLifecycleListener;
-import org.motechproject.metrics.MetricsAgentBackend;
+import org.motechproject.metrics.service.MetricsAgentBackend;
 import org.motechproject.metrics.domain.ConfigProperty;
 import org.motechproject.metrics.impl.MultipleMetricsAgentImpl;
 import org.springframework.beans.factory.annotation.Autowired;
