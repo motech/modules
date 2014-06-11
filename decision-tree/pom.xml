@@ -13,9 +13,9 @@
     </parent>
 
     <groupId>org.motechproject</groupId>
-    <artifactId>callflow</artifactId>
+    <artifactId>decision-tree</artifactId>
     <packaging>bundle</packaging>
-    <name>Call Flow Module</name>
+    <name>Decision Tree Module</name>
     <version>0.24-SNAPSHOT</version>
 
     <properties>
@@ -24,13 +24,13 @@
 
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>decisiontree</artifactId>
-            <version>${project.version}</version>
+            <groupId>${motech.groupId}</groupId>
+            <artifactId>motech-platform-event</artifactId>
+            <version>${motech.version}</version>
         </dependency>
         <dependency>
             <groupId>${motech.groupId}</groupId>
-            <artifactId>motech-platform-commons-couchdb</artifactId>
+            <artifactId>motech-platform-server-config</artifactId>
             <version>${motech.version}</version>
         </dependency>
         <dependency>
@@ -39,20 +39,17 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>org.springframework.web.servlet</artifactId>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>org.motechproject.org.codehaus.jackson</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>com.springsource.org.hamcrest</artifactId>
+            <groupId>org.ektorp</groupId>
+            <artifactId>org.motechproject.org.ektorp</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>com.springsource.org.hamcrest.core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.ldriscoll</groupId>
-            <artifactId>org.motechproject.ektorplucene</artifactId>
+            <groupId>${motech.groupId}</groupId>
+            <artifactId>motech-platform-osgi-web-util</artifactId>
+            <version>${motech.version}</version>
         </dependency>
         <!-- Test -->
         <dependency>
@@ -67,7 +64,6 @@
             <version>${motech.version}</version>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -78,18 +74,23 @@
                 <configuration>
                     <instructions>
                         <Export-Package>
-                            org.motechproject.callflow.domain,
-                            org.motechproject.callflow.repository,
-                            org.motechproject.callflow.service
+                            org.motechproject.decisiontree;version=${project.version},
+                            org.motechproject.decisiontree.model;version=${project.version},
+                            org.motechproject.decisiontree.repository;version=${project.version}
                         </Export-Package>
                         <Import-Package>
-                            org.motechproject.event,
+                            org.motechproject.commons.couchdb.service,
                             org.motechproject.event.listener,
                             org.motechproject.event.listener.annotations,
                             org.motechproject.server.config,
+                            org.motechproject.ivr.domain,
                             org.motechproject.server.config.service,
                             org.motechproject.config.service,
-                            org.motechproject.commons.couchdb.service,
+                            org.springframework.ui.velocity,
+                            org.springframework.web.servlet.config,
+                            org.springframework.web.servlet.mvc,
+                            org.springframework.web.servlet.support,
+                            org.springframework.web.servlet.view.velocity,
                             *
                         </Import-Package>
                     </instructions>
@@ -146,13 +147,6 @@
                                             <arg value="-X" />
                                             <arg value="DELETE" />
                                             <arg value="http://${db.server}:${db.port}/${db.prefix}trees" />
-                                        </exec>
-                                        <exec executable="curl">
-                                            <arg value="-s" />
-                                            <arg value="-S" />
-                                            <arg value="-X" />
-                                            <arg value="DELETE" />
-                                            <arg value="http://${db.server}:${db.port}/${db.prefix}calldetailrecords" />
                                         </exec>
                                     </target>
                                 </configuration>
