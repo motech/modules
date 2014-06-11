@@ -1,8 +1,8 @@
 package org.motechproject.metrics.impl;
 
 import org.apache.commons.io.FileUtils;
-import org.motechproject.metrics.MetricsAgentBackend;
-import org.motechproject.metrics.StatsdAgentBackend;
+import org.motechproject.metrics.service.MetricsAgentBackend;
+import org.motechproject.metrics.service.StatsdAgentBackend;
 import org.motechproject.metrics.domain.ConfigProperty;
 import org.motechproject.metrics.domain.PropertyType;
 import org.motechproject.metrics.exception.ValidationException;

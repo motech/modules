@@ -1,4 +1,4 @@
-package org.motechproject.metrics;
+package org.motechproject.metrics.service;
 
 /*
 Interface used by StatsdAgentBackendImpl. Required to let user change values of this class from UI.

@@ -7,19 +7,19 @@
         <artifactId>motech</artifactId>
         <groupId>org.motechproject</groupId>
         <version>0.24-SNAPSHOT</version>
-        <relativePath>../../../</relativePath>
+        <relativePath>../../</relativePath>
     </parent>
 
 
-    <artifactId>motech-platform-metrics</artifactId>
+    <artifactId>metrics</artifactId>
     <groupId>org.motechproject</groupId>
     <version>0.24-SNAPSHOT</version>
-    <name>MOTECH Metrics</name>
+    <name>Metrics Module</name>
     <description>MOTECH Metrics</description>
     <packaging>bundle</packaging>
 
     <properties>
-        <modules.root.dir>${basedir}/../../..</modules.root.dir>
+        <modules.root.dir>${basedir}/../..</modules.root.dir>
     </properties>
 
     <dependencies>
@@ -55,6 +55,12 @@
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-platform-osgi-extender-fragment</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>motech-pax-it</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
@@ -130,8 +136,7 @@
                         <Context-Path>metrics</Context-Path>
                         <Resource-Path>metrics/resources</Resource-Path>
                         <Export-Package>
-                            org.motechproject.metrics;version=${project.version},
-                            org.motechproject.metrics.impl;version=${project.version}
+                            org.motechproject.metrics.service;version=${project.version}
                         </Export-Package>
                         <Import-Package>
                             org.springframework.http,

@@ -1,6 +1,6 @@
 package org.motechproject.metrics.impl;
 
-import org.motechproject.metrics.MetricsAgentBackend;
+import org.motechproject.metrics.service.MetricsAgentBackend;
 import org.motechproject.metrics.domain.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
