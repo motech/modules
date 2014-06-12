@@ -1100,8 +1100,6 @@
         <module>ivr/verboice</module>
         <module>ivr/voxeo</module>
         <module>mtraining</module>
-        <module>mobileforms</module>
-        <module>outbox</module>
         <module>sms</module>
         <module>message-campaign</module>
         <module>pill-reminder</module>

@@ -17,8 +17,6 @@ Contents:
    cms_lite
    commcare
    ivr/index
-   mobile_forms
-   outbox
    sms
    message_campaign
    pill_reminder
