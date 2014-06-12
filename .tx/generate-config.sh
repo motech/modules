@@ -41,6 +41,9 @@ elif [ ${NAME} == 'http-bundle-archetype' ]; then
     NAME="minimal-bundle-archetype"
 elif [ ${NAME} == 'web-security' ] && [ ${EXT} == 'webapp' ]; then
     NAME="web-security-bundle"
+# for some modules we have to change name
+elif [ ${NAME} == 'mobileforms' ]; then
+    NAME="mobileforms-api"
 fi
 
 # get path to directory where messages.properties exists
