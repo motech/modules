@@ -2,7 +2,7 @@ package org.motechproject.sms.audit;
 
 import org.joda.time.DateTime;
 import org.motechproject.commons.api.Range;
-import org.motechproject.commons.couchdb.query.QueryParam;
+import org.motechproject.mds.query.QueryParams;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +25,7 @@ public class SmsRecordSearchCriteria {
     private String motechId;
     private String providerId;
     private String errorMessage;
-    private QueryParam queryParam = new QueryParam();
+    private QueryParams queryParams;
 
     public SmsRecordSearchCriteria withSmsDirections(Set<SmsDirection> smsDirections) {
         this.smsDirections.addAll(smsDirections);
@@ -48,8 +48,7 @@ public class SmsRecordSearchCriteria {
     }
 
     public SmsRecordSearchCriteria withProviderId(String providerId) {
-        //todo: temporary couchdb-lucene kludge : lucene interprets - as an OR, so enclose in quotes
-        this.providerId = "\"" + providerId + "\"";
+        this.providerId = providerId;
         return this;
     }
 
@@ -83,8 +82,8 @@ public class SmsRecordSearchCriteria {
         return this;
     }
 
-    public SmsRecordSearchCriteria withQueryParam(QueryParam queryParam) {
-        this.queryParam = queryParam;
+    public SmsRecordSearchCriteria withQueryParams(QueryParams queryParam) {
+        this.queryParams = queryParam;
         return this;
     }
 
@@ -130,8 +129,8 @@ public class SmsRecordSearchCriteria {
         return errorMessage;
     }
 
-    public QueryParam getQueryParam() {
-        return queryParam;
+    public QueryParams getQueryParams() {
+        return queryParams;
     }
 
     @Override
@@ -147,7 +146,7 @@ public class SmsRecordSearchCriteria {
                 ", motechId='" + motechId + '\'' +
                 ", providerId='" + providerId + '\'' +
                 ", errorMessage='" + errorMessage + '\'' +
-                ", queryParam=" + queryParam +
+                ", queryParams=" + queryParams +
                 '}';
     }
 }

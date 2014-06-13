@@ -5,10 +5,11 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.motechproject.commons.api.Range;
-import org.motechproject.commons.couchdb.query.QueryParam;
+import org.motechproject.mds.query.QueryParams;
+import org.motechproject.mds.util.Order;
 import org.motechproject.sms.audit.DeliveryStatus;
-import org.motechproject.sms.audit.SmsRecordSearchCriteria;
 import org.motechproject.sms.audit.SmsDirection;
+import org.motechproject.sms.audit.SmsRecordSearchCriteria;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -147,7 +148,10 @@ public class GridSettings {
 
     public SmsRecordSearchCriteria toSmsRecordSearchCriteria() {
         boolean reverse = "desc".equalsIgnoreCase(sortDirection);
-        QueryParam queryParam = new QueryParam(page - 1, rows, sortColumn, reverse);
+
+        Order order = new Order(sortColumn, (reverse) ? Order.Direction.ASC : Order.Direction.DESC);
+        QueryParams queryParam = new QueryParams(page, rows, order);
+
         Set<SmsDirection> types = getSmsDirectionFromSettings();
         Set<DeliveryStatus> deliveryStatusList = getDeliveryStatusFromSettings();
         Range<DateTime> range = createRangeFromSettings();
@@ -159,25 +163,25 @@ public class GridSettings {
             criteria.withDeliverystatuses(deliveryStatusList);
         }
         if (StringUtils.isNotBlank(config)) {
-            criteria.withConfig(config + "*");
+            criteria.withConfig(config);
         }
         if (StringUtils.isNotBlank(phoneNumber)) {
-            criteria.withPhoneNumber(phoneNumber + "*");
+            criteria.withPhoneNumber(phoneNumber);
         }
         if (StringUtils.isNotBlank(messageContent)) {
-            criteria.withMessageContent(messageContent + "*");
+            criteria.withMessageContent(messageContent);
         }
         if (StringUtils.isNotBlank(motechId)) {
-            criteria.withMotechId(motechId + "*");
+            criteria.withMotechId(motechId);
         }
         if (StringUtils.isNotBlank(providerId)) {
-            criteria.withProviderId(providerId + "*");
+            criteria.withProviderId(providerId);
         }
         if (StringUtils.isNotBlank(providerStatus)) {
-            criteria.withProviderStatus(providerStatus + "*");
+            criteria.withProviderStatus(providerStatus);
         }
         criteria.withTimestampRange(range);
-        criteria.withQueryParam(queryParam);
+        criteria.withQueryParams(queryParam);
         return criteria;
     }
 
@@ -217,7 +221,7 @@ public class GridSettings {
         } else {
             to = DateTime.now();
         }
-        return new Range<DateTime>(from, to);
+        return new Range<>(from, to);
     }
 
     @Override
