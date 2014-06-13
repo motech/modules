@@ -13,4 +13,5 @@ public interface SmsAuditService {
 
     SmsRecords findAllSmsRecords(SmsRecordSearchCriteria criteria);
 
+    long countAllSmsRecords(SmsRecordSearchCriteria criteria);
 }
