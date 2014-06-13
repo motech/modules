@@ -1,7 +1,8 @@
 package org.motechproject.sms.web;
 
-import org.motechproject.commons.couchdb.query.QueryParam;
 import org.motechproject.event.listener.EventRelay;
+import org.motechproject.mds.query.QueryParams;
+import org.motechproject.mds.util.Order;
 import org.motechproject.server.config.SettingsFacade;
 import org.motechproject.sms.SmsEventSubjects;
 import org.motechproject.sms.alert.MotechStatusMessage;
@@ -83,10 +84,7 @@ public class StatusController {
         SmsRecord smsRecord;
         SmsRecords smsRecords;
         SmsRecord existingSmsRecord = null;
-        QueryParam queryParam = new QueryParam();
-
-        queryParam.setSortBy("timestamp");
-        queryParam.setReverse(true);
+        QueryParams queryParams = new QueryParams(new Order("timestamp", Order.Direction.DESC));
 
         // Try to find an existing SMS record using the provider message ID
         // NOTE: Only works if the provider guarantees the message id is unique. So far, all do.
@@ -103,15 +101,16 @@ public class StatusController {
             smsRecords = smsAuditService.findAllSmsRecords(new SmsRecordSearchCriteria()
                     .withConfig(configName)
                     .withProviderId(providerMessageId)
-                    .withQueryParam(queryParam));
+                    .withQueryParams(queryParams));
             retry++;
         } while (retry < RECORD_FIND_RETRY_COUNT && CollectionUtils.isEmpty(smsRecords.getRecords()));
+
         if (CollectionUtils.isEmpty(smsRecords.getRecords())) {
             // If we couldn't find a record by provider message ID try using the MOTECH ID
             smsRecords = smsAuditService.findAllSmsRecords(new SmsRecordSearchCriteria()
                     .withConfig(configName)
                     .withMotechId(providerMessageId)
-                    .withQueryParam(queryParam));
+                    .withQueryParams(queryParams));
             if (!CollectionUtils.isEmpty(smsRecords.getRecords())) {
                 logger.debug("Found log record with matching motechId {}", providerMessageId);
                 existingSmsRecord = smsRecords.getRecords().get(0);
@@ -149,7 +148,7 @@ public class StatusController {
         String statusString = params.get(status.getStatusKey());
         String providerMessageId = params.get(status.getMessageIdKey());
         SmsRecord smsRecord = findOrCreateSmsRecord(configName, providerMessageId, statusString);
-        List<String> recipients = Arrays.asList(new String[]{smsRecord.getPhoneNumber()});
+        List<String> recipients = Arrays.asList(smsRecord.getPhoneNumber());
 
         if (statusString != null) {
             String eventSubject;

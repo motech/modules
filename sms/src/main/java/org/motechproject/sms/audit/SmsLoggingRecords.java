@@ -11,15 +11,15 @@ public class SmsLoggingRecords implements Serializable {
 
     private static final long serialVersionUID = -6205245415683301270L;
 
-    private final Integer page;
-    private final Integer total;
-    private final Integer records;
-    private final List<SmsLoggingRecord> rows;
+    private final Integer page; // page number
+    private final Integer total; // number of rows per page
+    private final Long records; // total number of records
+    private final List<SmsLoggingRecord> rows; // data to display
 
-    public SmsLoggingRecords(Integer page, Integer rows, SmsRecords smsRecords) {
+    public SmsLoggingRecords(Integer page, Integer rows, Long totalRecords, SmsRecords smsRecords) {
         this.page = page;
-        records = smsRecords.getCount();
-        total = records <= rows ? 1 : (records / rows) + 1;
+        records = totalRecords;
+        total = rows;
 
         List<SmsLoggingRecord> smsLoggingRecords = new ArrayList<>();
         for (SmsRecord smsRecord : smsRecords.getRecords()) {
@@ -37,7 +37,7 @@ public class SmsLoggingRecords implements Serializable {
         return total;
     }
 
-    public Integer getRecords() {
+    public Long getRecords() {
         return records;
     }
 
