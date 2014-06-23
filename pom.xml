@@ -1093,6 +1093,8 @@
         <module>cms-lite</module>
         <module>commcare</module>
         <module>decision-tree</module>
+        <module>event-logging</module>
+        <module>http-agent</module>
         <module>ivr/api</module>
         <module>ivr/asterisk</module>
         <module>ivr/kookoo</module>
