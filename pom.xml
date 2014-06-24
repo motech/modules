@@ -1089,17 +1089,10 @@
     <modules>
         <module>alerts</module>
         <module>appointments</module>
-        <module>call-flow</module>
         <module>cms-lite</module>
         <module>commcare</module>
-        <module>decision-tree</module>
         <module>event-logging</module>
         <module>http-agent</module>
-        <module>ivr/api</module>
-        <module>ivr/asterisk</module>
-        <module>ivr/kookoo</module>
-        <module>ivr/verboice</module>
-        <module>ivr/voxeo</module>
         <module>mtraining</module>
         <module>sms</module>
         <module>message-campaign</module>
