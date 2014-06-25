@@ -5,6 +5,7 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
 
+import javax.jdo.annotations.Unique;
 import java.util.Map;
 import java.util.Objects;
 
@@ -13,6 +14,7 @@ import java.util.Objects;
  * Represents stream content along with checksum.
  */
 @Entity
+@Unique(name = "languageAndName", members = {"language", "name" })
 public class StreamContent implements Content {
 
     @Field(required =  true)
