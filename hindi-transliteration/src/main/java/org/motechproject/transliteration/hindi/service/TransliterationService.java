@@ -1,4 +1,4 @@
-package org.motechproject.transliteration.service;
+package org.motechproject.transliteration.hindi.service;
 
 /**
  * Simple example of a service interface.

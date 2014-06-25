@@ -1,4 +1,4 @@
-package org.motechproject.transliteration.service;
+package org.motechproject.transliteration.hindi.service;
 
 import org.motechproject.transliteration.mapping.CharacterMapping;
 import org.motechproject.transliteration.mapping.HindiMapping;

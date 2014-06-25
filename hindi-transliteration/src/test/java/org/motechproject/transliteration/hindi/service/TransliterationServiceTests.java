@@ -1,4 +1,4 @@
-package org.motechproject.transliteration.service;
+package org.motechproject.transliteration.hindi.service;
 
 import junit.framework.Assert;
 import org.junit.Test;

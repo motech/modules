@@ -1,4 +1,4 @@
-package org.motechproject.transliteration.mapping;
+package org.motechproject.transliteration.hindi.mapping;
 
 import org.junit.Test;
 
