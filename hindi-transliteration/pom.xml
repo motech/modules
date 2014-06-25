@@ -4,20 +4,19 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-    <artifactId>motech-contrib</artifactId>
+      <artifactId>modules</artifactId>
+      <groupId>org.motechproject</groupId>
+      <version>0.24-SNAPSHOT</version>
+    </parent>
+
     <groupId>org.motechproject</groupId>
-    <version>0.12-SNAPSHOT</version>
-  </parent>
-    <groupId>org.motechproject</groupId>
-    <artifactId>motech-transliteration</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <artifactId>hindi-transliteration</artifactId>
+    <version>0.24-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>Transliteration</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <motech.version>0.22-SNAPSHOT</motech.version>
-        <spring.version>3.1.0.RELEASE</spring.version>
     </properties>
 
     <dependencies>
@@ -69,10 +68,10 @@
                     <instructions>
                         <Blueprint-Enabled>true</Blueprint-Enabled>
                         <Context-Path>transliteration</Context-Path>
-                        <Resource-Path>motech-transliteration/resources</Resource-Path>
+                        <Resource-Path>hindi-transliteration/resources</Resource-Path>
                         <Context-File>META-INF/motech/applicationContext.xml</Context-File>
                         <Export-Package>
-                            org.motechproject.transliteration.service;version=${project.version},
+                            org.motechproject.transliteration.hindi.service;version=${project.version},
                         </Export-Package>
                         <Import-Package>*</Import-Package>
                     </instructions>
