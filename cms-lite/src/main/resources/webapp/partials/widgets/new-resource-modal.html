@@ -13,7 +13,7 @@
                         <label class="col-sm-3 control-label" for="name">{{msg('cmslite.resource.name')}}</label>
 
                         <div class="col-sm-9 form-inline">
-                            <input type="text" id="name" name="name" auto-complete="name"
+                            <input type="text" id="name" name="name" cms-lite-auto-complete="name"
                                    class="form-control input-xlarge-fluid"/>
                             <span class="form-hint" style="display: none;">{{msg('cmslite.error.required.name')}}</span>
                         </div>
@@ -23,7 +23,7 @@
                                for="language">{{msg('cmslite.resource.language')}}</label>
 
                         <div class="col-sm-9 form-inline">
-                            <input type="text" id="language" name="language" auto-complete="language"
+                            <input type="text" id="language" name="language" cms-lite-auto-complete="language"
                                    class="form-control input-xlarge-fluid"/>
                             <span class="form-hint"
                                   style="display: none;">{{msg('cmslite.error.required.language')}}</span>
@@ -75,10 +75,10 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" ng-click="saveNewResource()"><i class="icon-ok icon-white"></i>
+                <button class="btn btn-primary" ng-click="saveNewResource()">
                     {{msg('cmslite.button.save')}}
                 </button>
-                <button class="btn btn-default" data-dismiss="modal" aria-hidden="true"><i class="icon-remove"></i>
+                <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">
                     {{msg('cmslite.button.close')}}
                 </button>
             </div>

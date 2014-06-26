@@ -6,7 +6,7 @@
 
     var controllers = angular.module('cmslite.controllers', []);
 
-    controllers.controller('ResourceCtrl', function ($scope, $http, Resources) {
+    controllers.controller('ResourceCtrl', function ($scope, $rootScope, $http, Resources) {
         innerLayout({
             spacing_closed: 30,
             east__minSize: 200,
@@ -24,6 +24,7 @@
         $scope.getLanguages = function () {
             $http.get('../cmsliteapi/resource/all/languages').success(function (data) {
                 $scope.usedLanguages = data;
+                $rootScope.usedLanguages = $scope.usedLanguages;
             });
         };
 
@@ -39,7 +40,7 @@
             $scope.resourceType = 'string';
             $scope.mode = 'read';
             $scope.select = {};
-
+            $('#newResourceForm').resetForm();
             $('#newResourceModal').modal('show');
         };
 
@@ -101,8 +102,9 @@
                 if (val) {
                     $scope.select.$remove({ type: type, language: resource.language, name: resource.name}, function () {
                         $scope.select = {};
-                        $('#resourceTable').trigger('reloadGrid');
+                        $('#cms-lite-table').trigger('reloadGrid');
                         $('#' + type + 'ResourceModal').modal('hide');
+                        $scope.getLanguages();
                     }, alertHandler('cmslite.error.removed', 'cmslite.header.error'));
                 }
             });
@@ -113,7 +115,7 @@
                 blockUI();
                 $('#newResourceForm').ajaxSubmit({
                     success: function () {
-                        $('#resourceTable').trigger('reloadGrid');
+                        $('#cms-lite-table').trigger('reloadGrid');
                         $('#newResourceModal').modal('hide');
 
                         $scope.getLanguages();

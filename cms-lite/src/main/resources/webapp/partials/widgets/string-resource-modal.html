@@ -29,19 +29,19 @@
             </div>
             <div class="modal-footer">
                 <!-- read mode -->
-                <button ui-if="mode == 'read'" class="btn btn-primary" ng-click="changeMode('write')"><i
-                        class="icon-ok icon-white"></i> {{msg('cmslite.button.edit')}}
+                <button ui-if="mode == 'read'" class="btn btn-primary" ng-click="changeMode('write')">
+                    {{msg('cmslite.button.edit')}}
                 </button>
-                <button ui-if="mode == 'read'" class="btn btn-danger" ng-click="removeResource('string', select)"><i
-                        class="icon-remove icon-white"></i> {{msg('cmslite.button.delete')}}
+                <button ui-if="mode == 'read'" class="btn btn-danger" ng-click="removeResource('string', select)">
+                    {{msg('cmslite.button.delete')}}
                 </button>
                 <button ui-if="mode == 'read'" class="btn btn-default" data-dismiss="modal" aria-hidden="true">
                     {{msg('cmslite.button.close')}}
                 </button>
 
                 <!-- write mode -->
-                <button ui-if="mode == 'write'" class="btn btn-primary" ng-click="editStringResource()"><i
-                        class="icon-ok icon-white"></i> {{msg('cmslite.button.save')}}
+                <button ui-if="mode == 'write'" class="btn btn-primary" ng-click="editStringResource()">
+                    {{msg('cmslite.button.save')}}
                 </button>
                 <button ui-if="mode == 'write'" class="btn btn-default" ng-click="changeMode('read')">
                     {{msg('cmslite.button.cancel')}}
