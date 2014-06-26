@@ -13,7 +13,7 @@
     <artifactId>hindi-transliteration</artifactId>
     <version>0.24-SNAPSHOT</version>
     <packaging>bundle</packaging>
-    <name>Transliteration</name>
+    <name>Hindi Transliteration</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
