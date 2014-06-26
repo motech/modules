@@ -3,7 +3,7 @@ package org.motechproject.mtraining.service;
 import org.motechproject.mtraining.domain.Bookmark;
 
 /**
- * Created by kosh on 5/29/14.
+ * Service interface for management of course bookmarks for a user
  */
 public interface BookmarkService {
 
@@ -13,5 +13,5 @@ public interface BookmarkService {
 
     Bookmark updateBookmark(Bookmark bookmark);
 
-    void deleteBookmark(Bookmark bookmark);
+    void deleteBookmark(String bookmarkId);
 }

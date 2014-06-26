@@ -7,13 +7,22 @@ import java.util.List;
 /**
  * Created by kosh on 5/29/14.
  */
-public class Chapter extends BaseMeta {
+public class Chapter extends CourseUnitMetadata {
 
     @Field
     private List<Lesson> lessons;
 
     @Field
     private Quiz quiz;
+
+    public Chapter() {
+        this(null, null);
+    }
+
+    public Chapter(List<Lesson> lessons, Quiz quiz) {
+        this.lessons = lessons;
+        this.quiz = quiz;
+    }
 
     public List<Lesson> getLessons() {
         return lessons;

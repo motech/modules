@@ -5,7 +5,7 @@ import org.motechproject.mds.annotations.Field;
 /**
  * Created by kosh on 6/2/14.
  */
-public class BaseMeta {
+public class CourseUnitMetadata {
 
     @Field
     private String name;

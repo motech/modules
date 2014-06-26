@@ -31,6 +31,5 @@ public class mTrainingServiceIT extends BasePaxIT {
     @Ignore
     public void testmTrainingServiceInstance() throws Exception {
         assertNotNull(mtrainingService);
-        assertNotNull(mtrainingService.createCourse(new Course()));
     }
 }
