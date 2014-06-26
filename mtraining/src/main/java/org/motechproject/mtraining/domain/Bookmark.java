@@ -1,5 +1,6 @@
 package org.motechproject.mtraining.domain;
 
+import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Map;
 /**
  * Bookmark object to store the progress for the patient
  */
+@Entity
 public class Bookmark {
 
     @Field

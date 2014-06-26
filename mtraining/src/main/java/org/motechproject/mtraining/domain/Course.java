@@ -1,6 +1,7 @@
 package org.motechproject.mtraining.domain;
 
 import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.Field;
 
 import java.util.List;
 
@@ -8,35 +9,23 @@ import java.util.List;
  * Created by kosh on 5/29/14.
  */
 @Entity
-public class Course extends BaseMeta {
+public class Course extends CourseUnitMetadata {
 
-    private int version;
+    @Field
+    private List<Chapter> chapters;
 
-    private String location;
-
-    private List<Module> modules;
-
-    public int getVersion() {
-        return version;
+    public Course() {
+        this(null);
     }
 
-    public void setVersion(int version) {
-        this.version = version;
+    public Course(List<Chapter> chapters) {
+        this.chapters = chapters;
+    }
+    public List<Chapter> getChapters() {
+        return chapters;
     }
 
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public List<Module> getModules() {
-        return modules;
-    }
-
-    public void setModules(List<Module> modules) {
-        this.modules = modules;
+    public void setModules(List<Chapter> chapters) {
+        this.chapters = chapters;
     }
 }
