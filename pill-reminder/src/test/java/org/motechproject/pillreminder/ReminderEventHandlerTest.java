@@ -14,7 +14,7 @@ import org.motechproject.event.listener.EventRelay;
 import org.motechproject.pillreminder.builder.SchedulerPayloadBuilder;
 import org.motechproject.pillreminder.builder.testbuilder.DosageBuilder;
 import org.motechproject.pillreminder.builder.testbuilder.PillRegimenBuilder;
-import org.motechproject.pillreminder.dao.AllPillRegimens;
+import org.motechproject.pillreminder.dao.PillRegimenDataService;
 import org.motechproject.pillreminder.domain.DailyScheduleDetails;
 import org.motechproject.pillreminder.domain.Dosage;
 import org.motechproject.pillreminder.domain.PillRegimen;
@@ -35,10 +35,11 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ReminderEventHandlerTest extends BaseUnitTest {
+
     @Mock
     EventRelay eventRelay;
     @Mock
-    AllPillRegimens allPillRegimens;
+    PillRegimenDataService pillRegimenDataService;
     @Mock
     MotechSchedulerService schedulerService;
 
@@ -52,7 +53,7 @@ public class ReminderEventHandlerTest extends BaseUnitTest {
     @Before
     public void setUp() {
         initMocks(this);
-        pillReminderEventHandler = new ReminderEventHandler(eventRelay, allPillRegimens, schedulerService);
+        pillReminderEventHandler = new ReminderEventHandler(eventRelay, pillRegimenDataService, schedulerService);
     }
 
     @Test
@@ -60,18 +61,18 @@ public class ReminderEventHandlerTest extends BaseUnitTest {
         mockCurrentDate(dateTime(DateUtil.today(), reminderStartTime.plusMinutes(25)));
         int pillWindow = 1;
         String externalId = "externalId";
-        String dosageId = "dosageId";
+        long dosageId = 26;
         int retryInterval = 10;
 
         Dosage dosage = buildDosageNotYetTaken(dosageId);
         PillRegimen pillRegimen = buildPillRegimen(externalId, pillWindow, bufferOverDosageTimeInMinutes, dosage, retryInterval);
 
-        when(allPillRegimens.findByExternalId(externalId)).thenReturn(pillRegimen);
+        when(pillRegimenDataService.findByExternalId(externalId)).thenReturn(pillRegimen);
 
         MotechEvent motechEvent = buildMotechEvent(externalId, dosageId);
         pillReminderEventHandler.handleEvent(motechEvent);
 
-        verify(allPillRegimens, atLeastOnce()).findByExternalId(externalId);
+        verify(pillRegimenDataService, atLeastOnce()).findByExternalId(externalId);
         verify(eventRelay, only()).sendEventMessage(Matchers.<MotechEvent>any());
     }
 
@@ -79,17 +80,17 @@ public class ReminderEventHandlerTest extends BaseUnitTest {
     public void shouldRaiseEventWithInformationAboutTheNumberOfTimesItHasBeenRaisedIncludingCurrentEvent() {
         mockCurrentDate(dateTime(DateUtil.today(), reminderStartTime.plusMinutes(25)));
         String externalId = "externalId";
-        String dosageId = "dosageId";
+        long dosageId = 11L;
         ArgumentCaptor<MotechEvent> event = ArgumentCaptor.forClass(MotechEvent.class);
 
         Dosage dosage = buildDosageNotYetTaken(dosageId);
         PillRegimen pillRegimen = buildPillRegimen(externalId, pillWindow, bufferOverDosageTimeInMinutes, dosage, retryInterval);
-        when(allPillRegimens.findByExternalId(externalId)).thenReturn(pillRegimen);
+        when(pillRegimenDataService.findByExternalId(externalId)).thenReturn(pillRegimen);
 
         MotechEvent motechEvent = buildMotechEvent(externalId, dosageId);
         pillReminderEventHandler.handleEvent(motechEvent);
 
-        verify(allPillRegimens, atLeastOnce()).findByExternalId(externalId);
+        verify(pillRegimenDataService, atLeastOnce()).findByExternalId(externalId);
         verify(eventRelay, times(1)).sendEventMessage(event.capture());
 
         assertNotNull(event.getValue().getParameters());
@@ -100,18 +101,18 @@ public class ReminderEventHandlerTest extends BaseUnitTest {
     public void shouldRaiseEventWithInformationAboutTheNumberOfTimesItWillBeRaisedForEveryPillWindow() {
         mockCurrentDate(dateTime(DateUtil.today(), reminderStartTime));
         String externalId = "externalId";
-        String dosageId = "dosageId";
+        long dosageId = 87;
         ArgumentCaptor<MotechEvent> event = ArgumentCaptor.forClass(MotechEvent.class);
 
         Dosage dosage = buildDosageNotYetTaken(dosageId);
         PillRegimen pillRegimen = buildPillRegimen(externalId, pillWindow, bufferOverDosageTimeInMinutes, dosage, retryInterval);
 
-        when(allPillRegimens.findByExternalId(externalId)).thenReturn(pillRegimen);
+        when(pillRegimenDataService.findByExternalId(externalId)).thenReturn(pillRegimen);
 
         MotechEvent motechEvent = buildMotechEvent(externalId, dosageId);
         pillReminderEventHandler.handleEvent(motechEvent);
 
-        verify(allPillRegimens, atLeastOnce()).findByExternalId(externalId);
+        verify(pillRegimenDataService, atLeastOnce()).findByExternalId(externalId);
         verify(eventRelay, times(1)).sendEventMessage(event.capture());
 
         assertNotNull(event.getValue().getParameters());
@@ -123,18 +124,18 @@ public class ReminderEventHandlerTest extends BaseUnitTest {
         mockCurrentDate(dateTime(DateUtil.today(), reminderStartTime.plusMinutes(25)));
         int pillWindow = 0;
         String externalId = "externalId";
-        String dosageId = "dosageId";
+        long dosageId = 10L;
         ArgumentCaptor<MotechEvent> event = ArgumentCaptor.forClass(MotechEvent.class);
 
         Dosage dosage = buildDosageNotYetTaken(dosageId);
         PillRegimen pillRegimen = buildPillRegimen(externalId, pillWindow, bufferOverDosageTimeInMinutes, dosage, retryInterval);
 
-        when(allPillRegimens.findByExternalId(externalId)).thenReturn(pillRegimen);
+        when(pillRegimenDataService.findByExternalId(externalId)).thenReturn(pillRegimen);
 
         MotechEvent motechEvent = buildMotechEvent(externalId, dosageId);
         pillReminderEventHandler.handleEvent(motechEvent);
 
-        verify(allPillRegimens, atLeastOnce()).findByExternalId(externalId);
+        verify(pillRegimenDataService, atLeastOnce()).findByExternalId(externalId);
         verify(eventRelay, times(1)).sendEventMessage(event.capture());
 
         assertNotNull(event.getValue().getParameters());
@@ -145,19 +146,19 @@ public class ReminderEventHandlerTest extends BaseUnitTest {
     public void shoulNotRaiseEventWhenDosageIsAlreadyTakenForCurrentPillWindow() {
         int pillWindow = 0;
         String externalId = "externalId";
-        String dosageId = "dosageId";
+        long dosageId = 10;
         int retryInterval = 4;
 
         Dosage dosage = buildDosageTaken(dosageId);
 
         PillRegimen pillRegimen = buildPillRegimen(externalId, pillWindow, bufferOverDosageTimeInMinutes, dosage, retryInterval);
 
-        when(allPillRegimens.findByExternalId(externalId)).thenReturn(pillRegimen);
+        when(pillRegimenDataService.findByExternalId(externalId)).thenReturn(pillRegimen);
 
         MotechEvent motechEvent = buildMotechEvent(externalId, dosageId);
         pillReminderEventHandler.handleEvent(motechEvent);
 
-        verify(allPillRegimens, atLeastOnce()).findByExternalId(externalId);
+        verify(pillRegimenDataService, atLeastOnce()).findByExternalId(externalId);
         verify(eventRelay, never()).sendEventMessage(Matchers.<MotechEvent>any());
     }
 
@@ -165,13 +166,13 @@ public class ReminderEventHandlerTest extends BaseUnitTest {
     public void shouldScheduleRepeatRemindersForFirstCall() {
         mockCurrentDate(dateTime(DateUtil.today(), reminderStartTime));
         String externalId = "externalId";
-        String dosageId = "dosageId";
+        long dosageId = 17;
 
         Dosage dosage = buildDosageNotYetTaken(dosageId);
 
         PillRegimen pillRegimen = buildPillRegimen(externalId, pillWindow, bufferOverDosageTimeInMinutes, dosage, retryInterval);
 
-        when(allPillRegimens.findByExternalId(externalId)).thenReturn(pillRegimen);
+        when(pillRegimenDataService.findByExternalId(externalId)).thenReturn(pillRegimen);
 
         MotechEvent motechEvent = buildMotechEvent(externalId, dosageId);
         pillReminderEventHandler.handleEvent(motechEvent);
@@ -188,14 +189,14 @@ public class ReminderEventHandlerTest extends BaseUnitTest {
     public void shouldNotScheduleRepeatRemindersForReminderCalls() {
         int pillWindow = 1;
         String externalId = "externalId";
-        String dosageId = "dosageId";
+        long dosageId = 14;
         int retryInterval = 4;
 
         Dosage dosage = buildDosageNotYetTaken(dosageId);
 
         PillRegimen pillRegimen = buildPillRegimen(externalId, pillWindow, bufferOverDosageTimeInMinutes, dosage, retryInterval);
 
-        when(allPillRegimens.findByExternalId(externalId)).thenReturn(pillRegimen);
+        when(pillRegimenDataService.findByExternalId(externalId)).thenReturn(pillRegimen);
 
         MotechEvent motechEvent = buildMotechEvent(externalId, dosageId);
 
@@ -204,12 +205,12 @@ public class ReminderEventHandlerTest extends BaseUnitTest {
         verify(schedulerService, never()).scheduleRepeatingJob(Matchers.<RepeatingSchedulableJob>any());
     }
 
-    private MotechEvent buildMotechEvent(String externalId, String dosageId) {
+    private MotechEvent buildMotechEvent(String externalId, Long dosageId) {
         Map<String, Object> eventParams = new SchedulerPayloadBuilder().withDosageId(dosageId).withExternalId(externalId).payload();
         return new MotechEvent(EventKeys.PILLREMINDER_REMINDER_EVENT_SUBJECT, eventParams);
     }
 
-    private Dosage buildDosageNotYetTaken(String dosageId) {
+    private Dosage buildDosageNotYetTaken(Long dosageId) {
         return DosageBuilder.newDosage()
                 .withDosageTime(new Time(reminderStartTime))
                 .withResponseLastCapturedDate(DateUtil.today().minusDays(1))
@@ -217,7 +218,7 @@ public class ReminderEventHandlerTest extends BaseUnitTest {
                 .build();
     }
 
-    private Dosage buildDosageTaken(String dosageId) {
+    private Dosage buildDosageTaken(Long dosageId) {
         return DosageBuilder.newDosage()
                 .withDosageTime(new Time(10, 25))
                 .withResponseLastCapturedDate(DateUtil.today())

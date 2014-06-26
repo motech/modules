@@ -14,11 +14,15 @@ public class PillRegimenResponseBuilder {
     private DosageResponseBuilder dosageResponseBuilder = new DosageResponseBuilder();
 
     public PillRegimenResponse createFrom(PillRegimen pillRegimen) {
-        List<DosageResponse> dosages = new ArrayList<DosageResponse>();
+        List<DosageResponse> dosages = new ArrayList<>();
         for (Dosage dosage : pillRegimen.getDosages()) {
             dosages.add(dosageResponseBuilder.createFrom(dosage));
         }
+
         DailyScheduleDetails scheduleDetails = pillRegimen.getScheduleDetails();
-        return new PillRegimenResponse(pillRegimen.getId(), pillRegimen.getExternalId(), scheduleDetails.getPillWindowInHours(), scheduleDetails.getRepeatIntervalInMinutes(), scheduleDetails.getBufferOverDosageTimeInMinutes(), dosages);
+
+        return new PillRegimenResponse(pillRegimen.getId(), pillRegimen.getExternalId(),
+                scheduleDetails.getPillWindowInHours(), scheduleDetails.getRepeatIntervalInMinutes(),
+                scheduleDetails.getBufferOverDosageTimeInMinutes(), dosages);
     }
 }

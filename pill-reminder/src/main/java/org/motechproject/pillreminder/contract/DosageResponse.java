@@ -11,7 +11,7 @@ import java.util.List;
  * Also contains information about last dosage confirmation.
  */
 public class DosageResponse {
-    private String dosageId;
+    private Long dosageId;
     private int dosageHour;
     private int dosageMinute;
     private LocalDate startDate;
@@ -19,7 +19,7 @@ public class DosageResponse {
     private LocalDate responseLastCapturedDate;
     private List<MedicineResponse> medicines;
 
-    public DosageResponse(String dosageId, Time dosageTime, LocalDate startDate, LocalDate endDate, LocalDate responseLastCapturedDate, List<MedicineResponse> medicines) {
+    public DosageResponse(Long dosageId, Time dosageTime, LocalDate startDate, LocalDate endDate, LocalDate responseLastCapturedDate, List<MedicineResponse> medicines) {
         this.dosageId = dosageId;
         this.dosageHour = dosageTime.getHour();
         this.dosageMinute = dosageTime.getMinute();
@@ -30,7 +30,7 @@ public class DosageResponse {
     }
 
     /** Unique dosage identifier */
-    public String getDosageId() {
+    public Long getDosageId() {
         return dosageId;
     }
 

@@ -7,14 +7,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SchedulerPayloadBuilder {
-    private Map<String, Object> params = new HashMap<String, Object>();
+    private Map<String, Object> params = new HashMap<>();
 
     public SchedulerPayloadBuilder withJobId(String id) {
         params.put(MotechSchedulerService.JOB_ID_KEY, id);
         return this;
     }
 
-    public SchedulerPayloadBuilder withDosageId(String id) {
+    public SchedulerPayloadBuilder withDosageId(Long id) {
         params.put(EventKeys.DOSAGE_ID_KEY, id);
         return this;
     }

@@ -1,6 +1,5 @@
 package org.motechproject.pillreminder.builder;
 
-import junit.framework.Assert;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.motechproject.commons.date.model.Time;
@@ -16,6 +15,7 @@ import java.util.List;
 import static ch.lambdaj.Lambda.extract;
 import static ch.lambdaj.Lambda.on;
 import static java.util.Arrays.asList;
+import static junit.framework.Assert.assertEquals;
 
 public class DosageResponseBuilderTest {
 
@@ -26,15 +26,15 @@ public class DosageResponseBuilderTest {
         medicines.add(new Medicine("medicine1", date, date));
         medicines.add(new Medicine("medicine2", date, date));
         Dosage dosage = new Dosage(new Time(10, 5), medicines);
-        dosage.setId("dosageId");
+        dosage.setId(14L);
 
         DosageResponse dosageResponse = new DosageResponseBuilder().createFrom(dosage);
 
-        Assert.assertEquals("dosageId", dosageResponse.getDosageId());
-        Assert.assertEquals(10, dosageResponse.getDosageHour());
-        Assert.assertEquals(5, dosageResponse.getDosageMinute());
+        assertEquals(Long.valueOf(14), dosageResponse.getDosageId());
+        assertEquals(10, dosageResponse.getDosageHour());
+        assertEquals(5, dosageResponse.getDosageMinute());
 
         List<MedicineResponse> dosageResponseMedicines = dosageResponse.getMedicines();
-        Assert.assertEquals(asList("medicine1", "medicine2"), extract(dosageResponseMedicines, on(MedicineResponse.class).getName()));
+        assertEquals(asList("medicine1", "medicine2"), extract(dosageResponseMedicines, on(MedicineResponse.class).getName()));
     }
 }

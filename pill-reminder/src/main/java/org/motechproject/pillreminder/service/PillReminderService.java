@@ -33,11 +33,11 @@ public interface PillReminderService {
      * @param dosageId  Dosage id
      * @param lastCapturedDate Dosage confirmation captured date.
      */
-    void dosageStatusKnown(String pillRegimenId, String dosageId, LocalDate lastCapturedDate);
+    void dosageStatusKnown(Long pillRegimenId, Long dosageId, LocalDate lastCapturedDate);
 
     /**
      * Get pill regimen for given subscriber (externalId)
-     * @param externalId
+     * @param externalId the external ID set from regimen
      * @return Dosage details along with reminder config
      * @see org.motechproject.pillreminder.contract.PillRegimenResponse
      */

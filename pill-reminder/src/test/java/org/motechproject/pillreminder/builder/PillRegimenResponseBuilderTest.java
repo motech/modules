@@ -21,11 +21,11 @@ public class PillRegimenResponseBuilderTest {
 
         final Dosage dosage = new Dosage(new Time(10, 5), new HashSet<Medicine>());
         PillRegimen pillRegimen = new PillRegimen("123", new HashSet<Dosage>(){{this.add(dosage);}}, new DailyScheduleDetails(20, 5, 5));
-        pillRegimen.setId("pillRegimenId");
+        pillRegimen.setId(12L);
 
         PillRegimenResponse pillRegimenResponse = builder.createFrom(pillRegimen);
 
-        assertEquals("pillRegimenId", pillRegimenResponse.getPillRegimenId());
+        assertEquals(Long.valueOf(12), pillRegimenResponse.getPillRegimenId());
         assertEquals("123", pillRegimenResponse.getExternalId());
         assertEquals(5, pillRegimenResponse.getReminderRepeatWindowInHours());
         assertEquals(20, pillRegimenResponse.getReminderRepeatIntervalInMinutes());

@@ -13,8 +13,4 @@
     <bean id="pillReminderSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
         <property name="moduleName" value="pill-reminder"/>
     </bean>
-
-    <bean id="pillReminderDbConnector" factory-bean="couchDbManager" factory-method="getConnector">
-        <constructor-arg value="motech-pill-reminder"/>
-    </bean>
 </beans>

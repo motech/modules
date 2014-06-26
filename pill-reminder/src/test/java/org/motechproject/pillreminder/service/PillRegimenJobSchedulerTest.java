@@ -36,7 +36,7 @@ public class PillRegimenJobSchedulerTest {
     private MotechSchedulerService schedulerService;
 
     private PillRegimenJobScheduler jobScheduler;
-    private String pillRegimenId;
+    private Long pillRegimenId;
     private String externalId;
     private HashSet<Dosage> dosages;
 
@@ -44,7 +44,7 @@ public class PillRegimenJobSchedulerTest {
     public void setUp() {
         initMocks(this);
 
-        pillRegimenId = "pillRegimenId";
+        pillRegimenId = 361988L;
         externalId = "externalId";
 
         final HashSet<Medicine> medicines = new HashSet<Medicine>() {{
@@ -53,9 +53,9 @@ public class PillRegimenJobSchedulerTest {
 
         dosages = new HashSet<Dosage>() {{
             final Dosage dosage1 = new Dosage(new Time(10, 5), medicines);
-            dosage1.setId("dosage1");
+            dosage1.setId(1L);
             final Dosage dosage2 = new Dosage(new Time(20, 5), medicines);
-            dosage2.setId("dosage2");
+            dosage2.setId(2L);
             add(dosage1);
             add(dosage2);
         }};
@@ -77,10 +77,10 @@ public class PillRegimenJobSchedulerTest {
         pillRegimen = new PillRegimen(externalId, dosages, new DailyScheduleDetails(15, 2, 5));
         pillRegimen.setId(pillRegimenId);
         jobScheduler.unscheduleJobs(pillRegimen);
-        verify(schedulerService, times(1)).safeUnscheduleJob(EventKeys.PILLREMINDER_REMINDER_EVENT_SUBJECT_SCHEDULER, "dosage1");
-        verify(schedulerService, times(1)).safeUnscheduleRepeatingJob(EventKeys.PILLREMINDER_REMINDER_EVENT_SUBJECT_SCHEDULER, "dosage1");
-        verify(schedulerService, times(1)).safeUnscheduleJob(EventKeys.PILLREMINDER_REMINDER_EVENT_SUBJECT_SCHEDULER, "dosage2");
-        verify(schedulerService, times(1)).safeUnscheduleRepeatingJob(EventKeys.PILLREMINDER_REMINDER_EVENT_SUBJECT_SCHEDULER, "dosage2");
+        verify(schedulerService, times(1)).safeUnscheduleJob(EventKeys.PILLREMINDER_REMINDER_EVENT_SUBJECT_SCHEDULER, "1");
+        verify(schedulerService, times(1)).safeUnscheduleRepeatingJob(EventKeys.PILLREMINDER_REMINDER_EVENT_SUBJECT_SCHEDULER, "1");
+        verify(schedulerService, times(1)).safeUnscheduleJob(EventKeys.PILLREMINDER_REMINDER_EVENT_SUBJECT_SCHEDULER, "2");
+        verify(schedulerService, times(1)).safeUnscheduleRepeatingJob(EventKeys.PILLREMINDER_REMINDER_EVENT_SUBJECT_SCHEDULER, "2");
     }
 
     @Test
@@ -92,13 +92,7 @@ public class PillRegimenJobSchedulerTest {
             add(new Medicine("med1", today.minusDays(1), null));
         }};
         final Dosage dosage1 = new Dosage(new Time(10, 15), medicines);
-
-        jobScheduler = new PillRegimenJobScheduler(schedulerService) {
-            @Override
-            public CronSchedulableJob getSchedulableDailyJob(PillRegimen pillRegimen, Dosage dosage) {
-                return super.getSchedulableDailyJob(pillRegimen, dosage);
-            }
-        };
+        dosage1.setId(88L);
 
         final CronSchedulableJob schedulableJob = jobScheduler.getSchedulableDailyJob(pillRegimen, dosage1);
         assertEquals(String.format("0 %d %d * * ?", 20, 10), schedulableJob.getCronExpression());
@@ -115,13 +109,7 @@ public class PillRegimenJobSchedulerTest {
             add(new Medicine("med1", today.minusDays(1), null));
         }};
         final Dosage dosage1 = new Dosage(new Time(23, 58), medicines);
-
-        jobScheduler = new PillRegimenJobScheduler(schedulerService) {
-            @Override
-            public CronSchedulableJob getSchedulableDailyJob(PillRegimen pillRegimen, Dosage dosage) {
-                return super.getSchedulableDailyJob(pillRegimen, dosage);
-            }
-        };
+        dosage1.setId(17L);
 
         final CronSchedulableJob schedulableJob = jobScheduler.getSchedulableDailyJob(pillRegimen, dosage1);
         assertEquals(String.format("0 %d %d * * ?", 3, 0), schedulableJob.getCronExpression());

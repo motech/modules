@@ -5,12 +5,12 @@ import org.motechproject.commons.api.MotechObject;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.scheduler.service.MotechSchedulerService;
-import org.motechproject.scheduler.contract.RepeatingSchedulableJob;
-import org.motechproject.pillreminder.dao.AllPillRegimens;
+import org.motechproject.pillreminder.dao.PillRegimenDataService;
 import org.motechproject.pillreminder.domain.DailyScheduleDetails;
 import org.motechproject.pillreminder.domain.Dosage;
 import org.motechproject.pillreminder.domain.PillRegimen;
+import org.motechproject.scheduler.contract.RepeatingSchedulableJob;
+import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,13 +20,14 @@ import java.util.Map;
 @Component
 public class ReminderEventHandler extends MotechObject {
     private EventRelay eventRelay;
-    private AllPillRegimens allPillRegimens;
+    private PillRegimenDataService pillRegimenDataService;
     private MotechSchedulerService schedulerService;
 
     @Autowired
-    public ReminderEventHandler(EventRelay eventRelay, AllPillRegimens allPillRegimens, MotechSchedulerService schedulerService) {
+    public ReminderEventHandler(EventRelay eventRelay, PillRegimenDataService pillRegimenDataService,
+                                MotechSchedulerService schedulerService) {
         this.eventRelay = eventRelay;
-        this.allPillRegimens = allPillRegimens;
+        this.pillRegimenDataService = pillRegimenDataService;
         this.schedulerService = schedulerService;
     }
 
@@ -72,15 +73,25 @@ public class ReminderEventHandler extends MotechObject {
 
     private PillRegimen getPillRegimen(MotechEvent motechEvent) {
         final String pillRegimenExternalId = (String) motechEvent.getParameters().get(EventKeys.EXTERNAL_ID_KEY);
-        return allPillRegimens.findByExternalId(pillRegimenExternalId);
+        return pillRegimenDataService.findByExternalId(pillRegimenExternalId);
     }
 
     private Dosage getDosage(PillRegimen pillRegimen, MotechEvent motechEvent) {
-        final String dosageId = (String) motechEvent.getParameters().get(EventKeys.DOSAGE_ID_KEY);
+        Long dosageId;
+        Object dosageIdObj = motechEvent.getParameters().get(EventKeys.DOSAGE_ID_KEY);
+
+        if (dosageIdObj instanceof Long) {
+            dosageId = (Long) dosageIdObj;
+        } else if (dosageIdObj instanceof String) {
+            dosageId = Long.valueOf((String) dosageIdObj);
+        } else {
+            throw new IllegalArgumentException("Cannot parse to a dosage ID " + dosageIdObj);
+        }
+
         return findDosage(dosageId, pillRegimen);
     }
 
-    private Dosage findDosage(final String dosageId, PillRegimen pillRegimen) {
+    private Dosage findDosage(final Long dosageId, PillRegimen pillRegimen) {
         for (Dosage dosage : pillRegimen.getDosages()) {
             if (dosage.getId().equals(dosageId)) {
                 return dosage;

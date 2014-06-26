@@ -1,13 +1,23 @@
 package org.motechproject.pillreminder.domain;
 
 import org.joda.time.LocalDate;
+import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.Field;
 
+@Entity
 public class Medicine {
-    private String name;
-    private LocalDate startDate;
-    private LocalDate endDate;
 
-    public static final String MEDICINE_END_DATE_CANNOT_BE_BEFORE_START_DATE = "Medicine end-date cannot be before start-date";
+    public static final String MEDICINE_END_DATE_CANNOT_BE_BEFORE_START_DATE =
+            "Medicine end-date cannot be before start-date";
+
+    @Field(displayName = "Name")
+    private String name;
+
+    @Field(displayName = "Start Date")
+    private LocalDate startDate;
+
+    @Field(displayName = "End Date")
+    private LocalDate endDate;
 
     public Medicine() {
     }
@@ -23,14 +33,13 @@ public class Medicine {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Medicine)) {
             return false;
         }
+
         Medicine medicine = (Medicine) o;
-        if (!name.equals(medicine.name)) {
-            return false;
-        }
-        return true;
+
+        return name.equals(medicine.name);
     }
 
     @Override

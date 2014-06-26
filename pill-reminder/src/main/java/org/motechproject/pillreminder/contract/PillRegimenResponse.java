@@ -7,14 +7,14 @@ import java.util.List;
  * @see org.motechproject.pillreminder.service.PillReminderService#getPillRegimen(String)
  */
 public class PillRegimenResponse {
-    private String pillRegimenId;
+    private Long pillRegimenId;
     private String externalId;
     private int reminderRepeatWindowInHours;
     private int reminderRepeatIntervalInMinutes;
     private int bufferOverDosageTimeInMinutes;
     private List<DosageResponse> dosages;
 
-    public PillRegimenResponse(String pillRegimenId, String externalId, int reminderRepeatWindowInHours, int reminderRepeatIntervalInMinutes, int bufferOverDosageTimeInMinutes, List<DosageResponse> dosages) {
+    public PillRegimenResponse(Long pillRegimenId, String externalId, int reminderRepeatWindowInHours, int reminderRepeatIntervalInMinutes, int bufferOverDosageTimeInMinutes, List<DosageResponse> dosages) {
         this.pillRegimenId = pillRegimenId;
         this.externalId = externalId;
         this.reminderRepeatWindowInHours = reminderRepeatWindowInHours;
@@ -23,7 +23,7 @@ public class PillRegimenResponse {
         this.dosages = dosages;
     }
 
-    public String getPillRegimenId() {
+    public Long getPillRegimenId() {
         return pillRegimenId;
     }
 
