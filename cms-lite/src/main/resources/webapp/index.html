@@ -25,8 +25,7 @@
 </div>
 
 <div id="inner-east" class="cms-lite inner-east ui-layout-pane ui-layout-pane-east">
-    <div class="header-toolbar header-footer"><i id="tbarCloseEast" class="button icon-caret-right pull-right"></i>
-    </div>
+    <div class="header-toolbar header-footer"></div>
     <!------------------------  Filters  ------------------------>
     <div class="filter-header">{{msg('cmslite.resource.filters')}}</div>
     <div class="ui-layout-content">
@@ -36,28 +35,27 @@
                 <div class="form-group">
                     <input type="text" class="form-control input-sm search-query"
                            placeholder="{{msg('cmslite.resource.searchByName')}}" data-event-type="keyup"
-                           data-search-field="name" jqgrid-search="resourceTable">
+                           data-search-field="name" cms-lite-jqgrid-search="cms-lite-table">
                 </div>
             </fieldset>
             <fieldset class="inside">
                 <legend>{{msg('cmslite.resource.type')}}</legend>
                 <div data-toggle="buttons-checkbox" class="form-group btn-group-vertical">
                     <button class="btn btn-info btn-sm active" type="button" data-field-type="boolean"
-                            data-search-field="string" jqgrid-search="resourceTable"><i class="icon-white icon-ok"></i>
+                            data-search-field="string" cms-lite-jqgrid-search="cms-lite-table"><i class="icon-white icon-ok"></i>
                         {{msg('cmslite.resource.type.string')}}
                     </button>
                     <button class="btn btn-info btn-sm active" type="button" data-field-type="boolean"
-                            data-search-field="stream" jqgrid-search="resourceTable"><i class="icon-white icon-ok"></i>
+                            data-search-field="stream" cms-lite-jqgrid-search="cms-lite-table"><i class="icon-white icon-ok"></i>
                         {{msg('cmslite.resource.type.stream')}}
                     </button>
                 </div>
             </fieldset>
             <fieldset class="inside">
                 <legend>{{msg('cmslite.resource.languages')}}</legend>
-                <label class="checkbox" ng-repeat="lang in usedLanguages">
-                    <input type="checkbox" id="languages" value="{{lang}}" data-field-type="array"
-                           data-event-type="click" data-search-field="languages" jqgrid-search="resourceTable"> {{lang}}
-                </label>
+                <div data-toggle="buttons-checkbox" class="form-group btn-group-vertical">
+                    <button id="{{lang}}" ng-repeat="lang in usedLanguages" class="btn btn-info btn-sm" type="button" data-field-type="array" data-search-field="languages" data-search-value="{{lang}}" cms-lite-jqgrid-search="cms-lite-table"><i class="icon-white icon-ban-circle"></i>&nbsp;{{lang}}</button>
+                </div>
             </fieldset>
         </div>
     </div>

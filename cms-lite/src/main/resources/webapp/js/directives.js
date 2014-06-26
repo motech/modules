@@ -5,25 +5,14 @@
 
     var directives = angular.module('cmslite.directives', []);
 
-    directives.directive('clearForm', function () {
-        return {
-            restrict: 'A',
-            link: function (scope, element, attrs) {
-                $(element).on('hidden', function () {
-                    $('#' + attrs.clearForm).clearForm();
-                });
-            }
-        };
-    });
-
-    directives.directive('autoComplete', function () {
+    directives.directive('cmsLiteAutoComplete', function () {
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
                 angular.element(element).autocomplete({
                     minLength: 2,
                     source: function (request, response) {
-                        $.getJSON('../cmsliteapi/resource/available/' + attrs.autoComplete, request, function (data) {
+                        $.getJSON('../cmsliteapi/resource/available/' + attrs.cmsLiteAutoComplete, request, function (data) {
                             response(data);
                         });
                     }
@@ -32,18 +21,17 @@
         };
     });
 
-    directives.directive('jqgridSearch', function () {
+    directives.directive('cmsLiteJqgridSearch', function () {
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
                 var elem = angular.element(element),
-                    table = angular.element('#' + attrs.jqgridSearch),
                     eventType = elem.data('event-type'),
                     timeoutHnd,
                     filter = function (time) {
                         var field = elem.data('search-field'),
                             type = elem.data('field-type') || 'string',
-                            url = parseUri(jQuery('#' + attrs.jqgridSearch).jqGrid('getGridParam', 'url')),
+                            url = parseUri(jQuery('#' + attrs.cmsLiteJqgridSearch).jqGrid('getGridParam', 'url')),
                             query = {},
                             params = '?',
                             array = [],
@@ -68,15 +56,17 @@
                             }
                             break;
                         case 'array':
-                            angular.forEach(url.queryKey[field].split(','), function (value) {
-                                if (elem.not(':checked') && elem.val() !== value && value !== '') {
+                            if (elem.children().hasClass("icon-ok")) {
+                                elem.children().removeClass("icon-ok").addClass("icon-ban-circle");
+                            } else if (elem.children().hasClass("icon-ban-circle")) {
+                                elem.children().removeClass("icon-ban-circle").addClass("icon-ok");
+                            }
+
+                            angular.forEach(scope.usedLanguages, function (value) {
+                                if (angular.element('#' + value).children().hasClass("icon-ok") && value !== '') {
                                     array.push(value);
                                 }
                             });
-
-                            if (elem.is(':checked')) {
-                                array.push(elem.val());
-                            }
 
                             query[field] = array.join(',');
                             break;
@@ -97,7 +87,7 @@
                         }
 
                         timeoutHnd = setTimeout(function () {
-                            jQuery('#' + attrs.jqgridSearch).jqGrid('setGridParam', {
+                            jQuery('#' + attrs.cmsLiteJqgridSearch).jqGrid('setGridParam', {
                                 url: '../cmsliteapi/resource' + params
                             }).trigger('reloadGrid');
                         }, time || 0);
@@ -116,7 +106,7 @@
         };
     });
 
-    directives.directive('resourcesGrid', function ($compile) {
+    directives.directive('cmsLiteGrid', function ($compile) {
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
@@ -168,7 +158,7 @@
                             return scope.msg('cmslite.resource.type.' + value);
                         }
                     }],
-                    pager: '#' + attrs.resourcesGrid,
+                    pager: '#' + attrs.cmsLiteGrid,
                     width: '100%',
                     height: 'auto',
                     sortname: 'name',
@@ -189,18 +179,18 @@
                             elem.jqGrid('setLabel', value, scope.msg('cmslite.resource.' + value));
                         });
 
-                        $('#outsideResourceTable').children('div').width('100%');
+                        $('#outside-cms-lite-table').children('div').width('100%');
                         $('.ui-jqgrid-htable').addClass("table-lightblue");
                         $('.ui-jqgrid-btable').addClass("table-lightblue");
                         $('.ui-jqgrid-htable').width('100%');
                         $('.ui-jqgrid-bdiv').width('100%');
                         $('.ui-jqgrid-hdiv').width('100%');
                         $('.ui-jqgrid-view').width('100%');
-                        $('#t_resourceTable').width('auto');
+                        $('#t_cms-lite-table').width('auto');
                         $('.ui-jqgrid-pager').width('100%');
                         $('.ui-jqgrid-hbox').css({'padding-right':'0'});
                         $('.ui-jqgrid-hbox').width('100%');
-                        $('#outsideResourceTable').children('div').each(function() {
+                        $('#outside-cms-lite-table').children('div').each(function() {
                             $(this).find('table').width('100%');
                         });
                     }
