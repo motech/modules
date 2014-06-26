@@ -3,6 +3,7 @@ package org.motechproject.cmslite.model;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.jdo.annotations.Unique;
 import java.util.Map;
 import java.util.Objects;
 
@@ -11,6 +12,7 @@ import java.util.Objects;
  * Represents Text Content.
  */
 @Entity
+@Unique(name = "languageAndName", members = {"language", "name" })
 public class StringContent implements Content {
 
     @Field(required = true)
