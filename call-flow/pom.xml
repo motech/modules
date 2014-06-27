@@ -8,7 +8,7 @@
     <parent>
         <artifactId>modules</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.24-SNAPSHOT</version>
+        <version>0.21.1</version>
         <relativePath>../</relativePath>
     </parent>
 
@@ -16,7 +16,7 @@
     <artifactId>call-flow</artifactId>
     <packaging>bundle</packaging>
     <name>Call Flow Module</name>
-    <version>0.24-SNAPSHOT</version>
+    <version>0.21.1</version>
 
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>

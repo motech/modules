@@ -261,24 +261,7 @@ public class FormValueElement implements FormNode {
      *
      * <p><b>Example:</b>
      * <br>For FormValueElement similar to following XML:
-     * <pre><code>
-     *      &lt;this thisAttribute="thisAttribute"&gt;
-     *          &lt;foo&gt;
-     *              &lt;bar barAttribute="barAttribute1"&gt;
-     *                  &lt;child&gt;child1&lt;/child&gt;
-     *                  &lt;child&gt;child2&lt;/child&gt;
-     *              &lt;/bar&gt;
-     *              &lt;child&gt;child3&lt;/child&gt;
-     *          &lt;/foo&gt;
-     *          &lt;foo&gt;
-     *              &lt;bar barAttribute="barAttribute2" otherBarAttribute="otherBarAttribute"&gt;
-     *                  &lt;child&gt;child4&lt;/child&gt;
-     *                  &lt;child&gt;child5&lt;/child&gt;
-     *                  &lt;otherChild&gt;otherChild&lt;/otherChild&gt;
-     *              &lt;/bar&gt;
-     *          &lt;/foo&gt;
-     *      &lt;/this&gt;
-     *     </code></pre>
+     *
      * </p>
      * Search for <b>//foo</b> will return both foo elements
      * <br>

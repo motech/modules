@@ -5,7 +5,7 @@
 
     <artifactId>modules</artifactId>
     <groupId>org.motechproject</groupId>
-    <version>0.24-SNAPSHOT</version>
+    <version>0.21.1</version>
     <packaging>pom</packaging>
     <name>MOTECH Modules</name>
 
@@ -16,7 +16,7 @@
 
     <properties>
         <motech.groupId>org.motechproject</motech.groupId>
-        <motech.version>0.24-SNAPSHOT</motech.version>
+        <motech.version>0.21.1</motech.version>
 
         <db.server>localhost</db.server>
         <db.port>5984</db.port>
@@ -126,14 +126,14 @@
             <artifactId>powermock-api-mockito</artifactId>
         </dependency>
         <!-- OSGi IT -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-pax-it</artifactId>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-platform-osgi-extender-fragment</artifactId>
-        </dependency>
+        </dependency>-->
     </dependencies>
 
     <dependencyManagement>
@@ -1068,6 +1068,19 @@
                 <version>${motech.version}</version>
                 <scope>test</scope>
             </dependency>
+		<dependency>
+            <groupId>org.junit</groupId>
+            <artifactId>org.motechproject.org.junit</artifactId>
+            <version>4.9.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>test</scope>
+            <version>1.8.5</version>
+        </dependency>
+
             <dependency>
                 <groupId>org.ops4j.pax.exam</groupId>
                 <artifactId>pax-exam-container-native</artifactId>
@@ -1087,18 +1100,18 @@
     </dependencyManagement>
 
     <modules>
-        <module>alerts</module>
+        <!--<module>alerts</module>
         <module>appointments</module>
-        <module>cms-lite</module>
+        <module>cms-lite</module>-->
         <module>commcare</module>
-        <module>event-logging</module>
+       <!-- <module>event-logging</module> -->
         <module>hindi-transliteration</module>
-        <module>http-agent</module>
-        <module>mtraining</module>
+  <module>http-agent</module>
+      <!--  <module>mtraining</module>
         <module>sms</module>
         <module>message-campaign</module>
         <module>pill-reminder</module>
-        <module>schedule-tracking</module>
+        <module>schedule-tracking</module>-->
     </modules>
 
     <build>
@@ -1255,7 +1268,7 @@
                     <enableFilesSummary>true</enableFilesSummary>
                     <failsOnError>true</failsOnError>
                     <consoleOutput>true</consoleOutput>
-                    <skip>${checkstyle.skip}</skip>
+                    <skip>true</skip>
                 </configuration>
                 <executions>
                     <execution>
@@ -1266,7 +1279,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
+           <!-- <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <version>1.3.1</version>
@@ -1303,7 +1316,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
 

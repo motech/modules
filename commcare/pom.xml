@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>platform-communications</artifactId>
+        <artifactId>modules</artifactId>
         <groupId>org.motechproject</groupId>
         <version>0.21.1</version>
-        <relativePath>../../../</relativePath>
+       
     </parent>
 
     <groupId>org.motechproject</groupId>
@@ -19,7 +19,7 @@
     <name>MOTECH CommCare API</name>
 
     <properties>
-        <modules.root.dir>${basedir}/../../..</modules.root.dir>
+        <modules.root.dir>${basedir}/..</modules.root.dir>
     </properties>
 
     <dependencies>
@@ -165,7 +165,8 @@
                             org.motechproject.commcare.events.constants;version=${project.version},
                             org.motechproject.commcare.events;version=${project.version},
                             org.motechproject.commcare.builder;version=${project.version},
-                            org.motechproject.commcare.parser;version=${project.version}
+                            org.motechproject.commcare.parser;version=${project.version},
+			
                         </Export-Package>
                         <Import-Package>
                             org.motechproject.event.listener,

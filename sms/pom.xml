@@ -6,12 +6,12 @@
     <parent>
         <artifactId>modules</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.24-SNAPSHOT</version>
+        <version>0.21.1</version>
         <relativePath>../</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <version>0.24-SNAPSHOT</version>
+    <version>0.21.1</version>
     <description>SMS Module</description>
     <groupId>org.motechproject</groupId>
     <artifactId>sms</artifactId>

@@ -7,14 +7,14 @@
     <parent>
         <artifactId>modules</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.24-SNAPSHOT</version>
+        <version>0.21.1</version>
         <relativePath>../</relativePath>
     </parent>
 
     <name>Http Agent Module</name>
     <groupId>org.motechproject</groupId>
     <artifactId>http-agent</artifactId>
-    <version>0.24-SNAPSHOT</version>
+    <version>0.21.1</version>
     <packaging>bundle</packaging>
 
     <properties>
@@ -22,6 +22,11 @@
     </properties>
 
     <dependencies>
+	<dependency>
+            <groupId>${motech.groupId}</groupId>
+            <artifactId>motech-platform-server-config</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>motech-platform-event</artifactId>
@@ -43,12 +48,12 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>com.springsource.org.apache.commons.lang</artifactId>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>motech-pax-it</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
-        </dependency>
+        </dependency>-->
     </dependencies>
 
     <build>
@@ -68,6 +73,8 @@
                             org.springframework.beans.factory.xml,
                             org.springframework.context.config,
                             org.springframework.http.client,
+			    org.motechproject.server.config,
+			    org.motechproject.server.config.service,
                             org.apache.http,
                             org.apache.http.*,
                             *
