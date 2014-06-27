@@ -1,0 +1,38 @@
+{"meta":{
+    "limit":20,
+    "next":"?limit=2&offset=2",
+    "offset":0,
+    "previous":"?limit=2&offset=0",
+    "total_count":4
+}, "objects":[
+    {
+        "modules": [
+        {
+            "case_properties": ["name", "user_bednet"],
+            "case_type": "myCase1",
+            "forms": [
+            {
+                "name": {"en": "myForm1"},
+                "questions": [
+                {
+                    "label": "questionName",
+                    "repeat": "",
+                    "tag": "input",
+                    "value": "/data/name",
+                    "options": [
+                     {
+                        "label": "1. Yes",
+                        "value": "yes"
+                     },
+                     {
+                        "label": "2. No",
+                        "value": "no"
+                     }]
+                }],
+                "xmlns": "http://openrosa.org/formdesigner/61650CE0-06E3-46D2-A53F-E105725DDB3B"
+            }]
+        }],
+        "name": "myApplication",
+        "resource_uri": ""
+    }
+]}

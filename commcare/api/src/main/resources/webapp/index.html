@@ -1,0 +1,13 @@
+<div> <!-- Only required for left/right tabs -->
+    <ul id="content-tabs" class="nav nav-tabs">
+        <li ng-class="active('#/settings')"><a data-target="main-content" href="#/settings" data-toggle="tab">{{msg('commcare.tab.settings')}}</a></li>
+        <li ng-class="active('#/forms')"><a data-target="main-content" href="#/forms" data-toggle="tab">{{msg('commcare.tab.forms')}}</a></li>
+        <li ng-class="active('#/cases')"><a data-target="main-content" href="#/cases" data-toggle="tab">{{msg('commcare.tab.cases')}}</a></li>
+    </ul>
+
+    <div class="tab-content"  id="tab-content">
+        <div id="main-content" class="tab-pane active">
+            <div ng-view></div>
+        </div>
+    </div>
+</div>
