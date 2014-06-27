@@ -1,28 +1,22 @@
 package org.motechproject.mtraining.domain;
 
+import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 /**
  * Created by kosh on 6/2/14.
  */
+@Entity
 public class CourseUnitMetadata {
 
     @Field
     private String name;
 
     @Field
-    private boolean isActive;
+    private boolean status;
 
     @Field
     private int sequenceNumber;
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean isActive) {
-        this.isActive = isActive;
-    }
 
     public String getName() {
         return name;
@@ -30,6 +24,14 @@ public class CourseUnitMetadata {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     public int getSequenceNumber() {
