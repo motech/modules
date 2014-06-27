@@ -2,16 +2,57 @@ package org.motechproject.mtraining.service;
 
 import org.motechproject.mtraining.domain.Bookmark;
 
+import java.util.List;
+
 /**
  * Service interface for management of course bookmarks for a user
  */
 public interface BookmarkService {
 
+    /**
+     * Create a bookmark for a user
+     * @param bookmark bookmark object to save
+     * @return bookmark object created in the store
+     */
     Bookmark createBookmark(Bookmark bookmark);
 
-    Bookmark getBookmark(String bookmarkId);
+    /**
+     * get bookmark by bookmark id
+     * @param bookmarkId id of the bookmark
+     * @return bookmark object with the id
+     */
+    Bookmark getBookmarkById(String bookmarkId);
 
+    /**
+     * Get the latest bookmark for the user identified by externalId
+     * @param externalId external tracking id for the user
+     * @return bookmark object for the user
+     */
+    Bookmark getLatestBookmarkByUserId(String externalId);
+
+    /**
+     * Get all the bookmarks for a user
+     * @param externalId external tracking id for the user
+     * @return
+     */
+    List<Bookmark> getAllBookmarksForUser(String externalId);
+
+    /**
+     * Update the given bookmark for the user
+     * @param bookmark bookmark to update
+     * @return updated bookmark object
+     */
     Bookmark updateBookmark(Bookmark bookmark);
 
+    /**
+     * Delete a bookmark with the given id
+     * @param bookmarkId id of the bookmark
+     */
     void deleteBookmark(String bookmarkId);
+
+    /**
+     * delete all bookmarks for a given user
+     * @param externalId external tracking id for the user
+     */
+    void deleteAllBookmarksForUser(String externalId);
 }

@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
-public class mTrainingServiceIT extends BasePaxIT {
+public class MTrainingServiceIT extends BasePaxIT {
 
     @Inject
     private MTrainingService mtrainingService;

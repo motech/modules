@@ -6,7 +6,7 @@ import org.motechproject.mds.annotations.Field;
 import java.util.Map;
 
 /**
- * Bookmark object to store the progress for the patient
+ * Bookmark object to store the progress for the user
  */
 @Entity
 public class Bookmark {
@@ -16,6 +16,15 @@ public class Bookmark {
 
     @Field
     private Map<String, Object> progress;
+
+    public Bookmark() {
+        this(null, null);
+    }
+
+    public Bookmark(String externalId, Map<String, Object> progress) {
+        this.externalId = externalId;
+        this.progress = progress;
+    }
 
     public String getExternalId() {
         return externalId;

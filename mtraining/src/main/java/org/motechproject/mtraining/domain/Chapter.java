@@ -1,5 +1,6 @@
 package org.motechproject.mtraining.domain;
 
+import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.List;
 /**
  * Created by kosh on 5/29/14.
  */
+@Entity
 public class Chapter extends CourseUnitMetadata {
 
     @Field

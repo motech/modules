@@ -21,6 +21,7 @@ public class Course extends CourseUnitMetadata {
     public Course(List<Chapter> chapters) {
         this.chapters = chapters;
     }
+
     public List<Chapter> getChapters() {
         return chapters;
     }
