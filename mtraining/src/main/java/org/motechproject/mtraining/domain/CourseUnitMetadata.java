@@ -1,21 +1,14 @@
 package org.motechproject.mtraining.domain;
 
-import org.motechproject.mds.annotations.Entity;
-import org.motechproject.mds.annotations.Field;
-
 /**
  * Common metadata shared by all course sub classes
  */
-@Entity
 public class CourseUnitMetadata {
 
-    @Field
     private String name;
 
-    @Field
     private boolean status;
 
-    @Field
     private int sequenceNumber;
 
     public String getName() {
