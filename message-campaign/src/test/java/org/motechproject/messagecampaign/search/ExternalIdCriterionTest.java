@@ -1,7 +1,7 @@
 package org.motechproject.messagecampaign.search;
 
 import org.junit.Test;
-import org.motechproject.messagecampaign.dao.AllCampaignEnrollments;
+import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 
 import java.util.ArrayList;
@@ -30,11 +30,11 @@ public class ExternalIdCriterionTest {
     @Test
     public void shouldFetchByExternalIdFromDb() {
         List<CampaignEnrollment> campaignEnrollments = mock(List.class);
-        AllCampaignEnrollments allCampaignEnrollments = mock(AllCampaignEnrollments.class);
+        CampaignEnrollmentDataService campaignEnrollmentDataService = mock(CampaignEnrollmentDataService.class);
 
-        when(allCampaignEnrollments.findByExternalId("externalId")).thenReturn(campaignEnrollments);
+        when(campaignEnrollmentDataService.findByExternalId("externalId")).thenReturn(campaignEnrollments);
 
-        assertEquals(campaignEnrollments, new ExternalIdCriterion("externalId").fetch(allCampaignEnrollments));
+        assertEquals(campaignEnrollments, new ExternalIdCriterion("externalId").fetch(campaignEnrollmentDataService));
     }
 
 }

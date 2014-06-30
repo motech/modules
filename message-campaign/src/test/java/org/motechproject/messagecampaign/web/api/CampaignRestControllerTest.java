@@ -8,9 +8,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.motechproject.messagecampaign.dao.AllCampaignEnrollments;
 import org.motechproject.messagecampaign.domain.CampaignNotFoundException;
 import org.motechproject.messagecampaign.loader.CampaignJsonLoader;
+import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
 import org.motechproject.messagecampaign.userspecified.CampaignRecord;
 import org.springframework.http.HttpStatus;
@@ -49,7 +49,7 @@ public class CampaignRestControllerTest {
     private MessageCampaignService messageCampaignService;
 
     @Mock
-    private AllCampaignEnrollments allCampaignEnrollments;
+    private CampaignRecordService campaignRecordService;
 
     @Before
     public void setUp() {

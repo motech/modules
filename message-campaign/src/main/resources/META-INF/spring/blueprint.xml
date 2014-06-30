@@ -28,7 +28,7 @@
             </map>
         </constructor-arg>
         <property name="roleForAccess" value="manageCampaigns"/>
-        <property name="settingsURL" value="/messageCampaign/settings" />
+        <property name="settingsURL" value="/messageCampaign/settings"/>
         <property name="defaultURL" value="/messageCampaign/campaigns"/>
     </bean>
 
@@ -38,17 +38,25 @@
     <osgi:reference id="schedulerServiceOsgi"
                     interface="org.motechproject.scheduler.service.MotechSchedulerService"/>
 
-    <osgi:reference id="couchDbManager" interface="org.motechproject.commons.couchdb.service.CouchDbManager"/>
 
     <osgi:reference id="platformSettingsServiceOsgi"
                     interface="org.motechproject.server.config.service.PlatformSettingsService"/>
 
     <osgi:reference id="configurationServiceOsgi"
-                    interface="org.motechproject.config.service.ConfigurationService" />
+                    interface="org.motechproject.config.service.ConfigurationService"/>
 
     <osgi:reference id="eventRelayOsgi"
                     interface="org.motechproject.event.listener.EventRelay"/>
 
     <osgi:reference id="eventListenerRegistryServiceOsgi"
                     interface="org.motechproject.event.listener.EventListenerRegistryService"/>
+
+    <osgi:reference id="campaignRecordServiceOsgi"
+                    interface="org.motechproject.messagecampaign.dao.CampaignRecordService"/>
+
+    <osgi:reference id="campaignEnrollmentServiceOsgi"
+                    interface="org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService"/>
+
+    <osgi:reference id="campaignMessageRecordServiceOsgi"
+                    interface="org.motechproject.messagecampaign.dao.CampaignMessageRecordService"/>
 </beans>

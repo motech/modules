@@ -28,7 +28,7 @@ public class EnrollmentController {
     @ResponseStatus(HttpStatus.OK)
     public void enrollOrUpdateUser(@PathVariable String campaignName,
                                    @RequestParam String externalId,
-                                   @RequestParam String enrollmentId) {
+                                   @RequestParam Long enrollmentId) {
         EnrollmentRequest enrollmentRequest = new EnrollmentRequest();
         enrollmentRequest.setEnrollmentId(enrollmentId);
         enrollmentRequest.setReferenceDate(DateUtil.today());

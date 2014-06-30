@@ -35,11 +35,11 @@ public class CampaignRecordTest {
         assertEquals(1, messages.size());
 
         AbsoluteCampaignMessage message = messages.get(0);
-        assertEquals(messageRecord.getName(), message.name());
-        assertEquals(messageRecord.getFormats(), message.formats());
-        assertEquals(messageRecord.getLanguages(), message.languages());
-        assertEquals(messageRecord.getMessageKey(), message.messageKey());
-        assertEquals(messageRecord.getDate(), message.date());
+        assertEquals(messageRecord.getName(), message.getName());
+        assertEquals(messageRecord.getFormats(), message.getFormats());
+        assertEquals(messageRecord.getLanguages(), message.getLanguages());
+        assertEquals(messageRecord.getMessageKey(), message.getMessageKey());
+        assertEquals(messageRecord.getDate(), message.getDate());
     }
 
     @Test
@@ -56,11 +56,11 @@ public class CampaignRecordTest {
         assertEquals(1, messages.size());
 
         OffsetCampaignMessage message = messages.get(0);
-        assertEquals(messageRecord.getName(), message.name());
-        assertEquals(messageRecord.getFormats(), message.formats());
-        assertEquals(messageRecord.getLanguages(), message.languages());
-        assertEquals(messageRecord.getMessageKey(), message.messageKey());
-        assertEquals(new JodaFormatter().parsePeriod(messageRecord.getTimeOffset()), message.timeOffset());
+        assertEquals(messageRecord.getName(), message.getName());
+        assertEquals(messageRecord.getFormats(), message.getFormats());
+        assertEquals(messageRecord.getLanguages(), message.getLanguages());
+        assertEquals(messageRecord.getMessageKey(), message.getMessageKey());
+        assertEquals(new JodaFormatter().parsePeriod(messageRecord.getTimeOffset()), message.getTimeOffset());
 
     }
 
@@ -77,10 +77,10 @@ public class CampaignRecordTest {
         assertEquals(1, messages.size());
 
         CronBasedCampaignMessage message = messages.get(0);
-        assertEquals(messageRecord.getName(), message.name());
-        assertEquals(messageRecord.getFormats(), message.formats());
-        assertEquals(messageRecord.getLanguages(), message.languages());
-        assertEquals(messageRecord.getMessageKey(), message.messageKey());
-        assertEquals(messageRecord.getCron(), message.cron());
+        assertEquals(messageRecord.getName(), message.getName());
+        assertEquals(messageRecord.getFormats(), message.getFormats());
+        assertEquals(messageRecord.getLanguages(), message.getLanguages());
+        assertEquals(messageRecord.getMessageKey(), message.getMessageKey());
+        assertEquals(messageRecord.getCron(), message.getCron());
     }
 }

@@ -8,51 +8,56 @@ import org.junit.runner.RunWith;
 import org.motechproject.event.listener.EventListenerRegistryService;
 import org.motechproject.messagecampaign.EventKeys;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
-import org.motechproject.messagecampaign.dao.AllCampaignEnrollments;
+import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
 import org.motechproject.scheduler.service.MotechSchedulerService;
+import org.motechproject.testing.osgi.BasePaxIT;
+import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.testing.utils.faketime.JvmFakeTime;
+import org.ops4j.pax.exam.ExamFactory;
+import org.ops4j.pax.exam.junit.PaxExam;
+import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
+import org.ops4j.pax.exam.spi.reactors.PerSuite;
+import org.osgi.framework.BundleContext;
 import org.quartz.Scheduler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.quartz.SchedulerFactoryBean;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
 import static org.motechproject.commons.date.util.DateUtil.newDateTime;
 
-@ContextConfiguration(locations = "classpath:message_campaign_service_ft/context.xml")
-@RunWith(SpringJUnit4ClassRunner.class)
-public class MessageCampaignServiceFT {
-
-    @Autowired
+@RunWith(PaxExam.class)
+@ExamReactorStrategy(PerSuite.class)
+@ExamFactory(MotechNativeTestContainerFactory.class)
+public class MessageCampaignServiceFT extends BasePaxIT {
+    @Inject
     MessageCampaignService messageCampaignService;
 
-    @Autowired
-    SchedulerFactoryBean schedulerFactoryBean;
+    @Inject
+    BundleContext bundleContext;
 
     Scheduler scheduler;
 
-    @Autowired
+    @Inject
     EventListenerRegistryService eventListenerRegistry;
 
-    @Autowired
+    @Inject
     MotechSchedulerService schedulerService;
 
-    @Autowired
-    AllCampaignEnrollments allCampaignEnrollments;
+    @Inject
+    CampaignEnrollmentDataService campaignEnrollmentDataService;
 
     @Before
     public void setup() {
         JvmFakeTime.load();
         //System.startFakingTime();
-        scheduler = schedulerFactoryBean.getScheduler();
+        scheduler = (Scheduler) getQuartzScheduler(bundleContext);
     }
 
     @After
     public void teardown() {
         schedulerService.unscheduleAllJobs("org.motechproject.messagecampaign");
-        allCampaignEnrollments.removeAll();
+        campaignEnrollmentDataService.deleteAll();
     }
 
     @Test

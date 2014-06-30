@@ -13,8 +13,8 @@ import org.motechproject.event.listener.EventRelay;
 import org.motechproject.messagecampaign.EventKeys;
 import org.motechproject.messagecampaign.builder.EnrollRequestBuilder;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
-import org.motechproject.messagecampaign.dao.AllCampaignEnrollments;
-import org.motechproject.messagecampaign.dao.AllMessageCampaigns;
+import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
+import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.CampaignNotFoundException;
 import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaign;
 import org.motechproject.messagecampaign.domain.campaign.Campaign;
@@ -49,9 +49,9 @@ import static org.motechproject.commons.date.util.DateUtil.now;
 public class MessageCampaignServiceImplTest {
     private MessageCampaignServiceImpl messageCampaignService;
     @Mock
-    private AllMessageCampaigns allMessageCampaigns;
+    private CampaignRecordService campaignRecordService;
     @Mock
-    private CampaignEnrollmentService campaignEnrollmentService;
+    private EnrollmentService enrollmentService;
     @Mock
     private MotechSchedulerService schedulerService;
     @Mock
@@ -59,7 +59,7 @@ public class MessageCampaignServiceImplTest {
     @Mock
     private MotechSchedulerService mockSchedulerService;
     @Mock
-    private AllCampaignEnrollments allCampaignEnrollments;
+    private CampaignEnrollmentDataService campaignEnrollmentDataService;
     @Mock
     private CampaignSchedulerFactory campaignSchedulerFactory;
     @Mock
@@ -70,14 +70,16 @@ public class MessageCampaignServiceImplTest {
     @Before
     public void setUp() {
         initMocks(this);
-        messageCampaignService = new MessageCampaignServiceImpl(campaignEnrollmentService, campaignEnrollmentRecordMapper,
-                allCampaignEnrollments, campaignSchedulerFactory, allMessageCampaigns, eventRelay);
+        messageCampaignService = new MessageCampaignServiceImpl(enrollmentService, campaignEnrollmentDataService, campaignEnrollmentRecordMapper,
+                campaignSchedulerFactory, campaignRecordService, eventRelay);
     }
 
     @Test
     public void shouldCreateEnrollmentWhenScheduleIsStarted() {
         Campaign campaign = mock(Campaign.class);
-        when(allMessageCampaigns.getCampaign("testCampaign")).thenReturn(campaign);
+
+        when(campaignRecordService.findByName("testCampaign")).thenReturn(campaignRecord);
+        when(campaignRecord.build()).thenReturn(campaign);
 
         CampaignSchedulerService campaignScheduler = mock(CampaignSchedulerService.class);
         when(campaignSchedulerFactory.getCampaignScheduler("testCampaign")).thenReturn(campaignScheduler);
@@ -89,7 +91,7 @@ public class MessageCampaignServiceImplTest {
         messageCampaignService.enroll(request);
 
         ArgumentCaptor<CampaignEnrollment> campaignEnrollmentCaptor = ArgumentCaptor.forClass(CampaignEnrollment.class);
-        verify(campaignEnrollmentService).register(campaignEnrollmentCaptor.capture());
+        verify(enrollmentService).register(campaignEnrollmentCaptor.capture());
 
         CampaignEnrollment campaignEnrollment = campaignEnrollmentCaptor.getValue();
         assertThat(campaignEnrollment.getReferenceDate(), is(new LocalDate(2011, 11, 22)));
@@ -105,8 +107,8 @@ public class MessageCampaignServiceImplTest {
     @Test
     public void shouldUnRegisterEnrollmentWhenScheduleIsStopped() {
         Campaign campaign = mock(Campaign.class);
-        when(allMessageCampaigns.getCampaign("testCampaign")).thenReturn(campaign);
-
+        when(campaignRecordService.findByName("testCampaign")).thenReturn(campaignRecord);
+        when(campaignRecord.build()).thenReturn(campaign);
         CampaignSchedulerService campaignScheduler = mock(CampaignSchedulerService.class);
         when(campaignSchedulerFactory.getCampaignScheduler("testCampaign")).thenReturn(campaignScheduler);
 
@@ -114,9 +116,12 @@ public class MessageCampaignServiceImplTest {
                 .withReferenceDate(new LocalDate(2011, 11, 22))
                 .withDeliverTime(new Time(8, 30))
                 .build();
+
+        when(campaignEnrollmentDataService.findByExternalIdAndCampaignName(request.externalId(), request.campaignName())).thenReturn(new CampaignEnrollment(request.externalId(), request.campaignName()));
+
         messageCampaignService.unenroll(request.externalId(), request.campaignName());
 
-        verify(campaignEnrollmentService).unregister(request.externalId(), request.campaignName());
+        verify(enrollmentService).unregister(request.externalId(), request.campaignName());
 
         ArgumentCaptor<MotechEvent> motechEventArgumentCaptor = ArgumentCaptor.forClass(MotechEvent.class);
         verify(eventRelay).sendEventMessage(motechEventArgumentCaptor.capture());
@@ -129,11 +134,12 @@ public class MessageCampaignServiceImplTest {
     @Test
     public void shouldUnregisterAllCampaignsMatchingQuery() {
         Campaign campaign = mock(Campaign.class);
-        when(allMessageCampaigns.getCampaign("testCampaign")).thenReturn(campaign);
+        when(campaignRecordService.findByName("testCampaign")).thenReturn(campaignRecord);
+        when(campaignRecord.build()).thenReturn(campaign);
 
         CampaignEnrollment enrollment1 = new CampaignEnrollment("external_id_1", "testCampaign");
         CampaignEnrollment enrollment2 = new CampaignEnrollment("external_id_2", "testCampaign");
-        when(campaignEnrollmentService.search(any(CampaignEnrollmentsQuery.class)))
+        when(enrollmentService.search(any(CampaignEnrollmentsQuery.class)))
                 .thenReturn(asList(enrollment1, enrollment2));
 
         CampaignSchedulerService campaignScheduler = mock(CampaignSchedulerService.class);
@@ -144,15 +150,15 @@ public class MessageCampaignServiceImplTest {
         messageCampaignService.stopAll(query);
 
         ArgumentCaptor<CampaignEnrollmentsQuery> captor = ArgumentCaptor.forClass(CampaignEnrollmentsQuery.class);
-        verify(campaignEnrollmentService).search(captor.capture());
+        verify(enrollmentService).search(captor.capture());
 
         assertEquals(0, captor.getValue().getSecondaryCriteria().size());
         Criterion primaryCriterion = captor.getValue().getPrimaryCriterion();
-        primaryCriterion.fetch(allCampaignEnrollments);
-        verify(allCampaignEnrollments).findByCampaignName("testCampaign");
+        primaryCriterion.fetch(campaignEnrollmentDataService);
+        verify(campaignEnrollmentDataService).findByCampaignName("testCampaign");
 
-        verify(campaignEnrollmentService).unregister(enrollment1.getExternalId(), enrollment2.getCampaignName());
-        verify(campaignEnrollmentService).unregister(enrollment2.getExternalId(), enrollment2.getCampaignName());
+        verify(enrollmentService).unregister(enrollment1.getExternalId(), enrollment2.getCampaignName());
+        verify(enrollmentService).unregister(enrollment2.getExternalId(), enrollment2.getCampaignName());
         verify(campaignSchedulerFactory, times(2)).getCampaignScheduler("testCampaign");
         verify(campaignScheduler).stop(enrollment1);
         verify(campaignScheduler).stop(enrollment2);
@@ -163,7 +169,8 @@ public class MessageCampaignServiceImplTest {
         CampaignRequest campaignRequest = new CampaignRequest("entity_1", "campaign-name", null, null);
 
         AbsoluteCampaign absoluteCampaign = mock(AbsoluteCampaign.class);
-        when(allMessageCampaigns.getCampaign("campaign-name")).thenReturn(absoluteCampaign);
+        when(campaignRecordService.findByName("campaign-name")).thenReturn(campaignRecord);
+        when(campaignRecord.build()).thenReturn(absoluteCampaign);
 
         CampaignSchedulerService campaignScheduler = mock(CampaignSchedulerService.class);
         when(campaignSchedulerFactory.getCampaignScheduler("campaign-name")).thenReturn(campaignScheduler);
@@ -190,7 +197,7 @@ public class MessageCampaignServiceImplTest {
         CampaignEnrollment enrollment2 = new CampaignEnrollment("external_id_2", null);
         List<CampaignEnrollment> enrollments = asList(enrollment1, enrollment2);
 
-        when(campaignEnrollmentService.search(enrollmentQuery)).thenReturn(enrollments);
+        when(enrollmentService.search(enrollmentQuery)).thenReturn(enrollments);
         CampaignEnrollmentRecord record1 = new CampaignEnrollmentRecord(null, null, null, null);
         CampaignEnrollmentRecord record2 = new CampaignEnrollmentRecord(null, null, null, null);
         when(campaignEnrollmentRecordMapper.map(enrollment1)).thenReturn(record1);
@@ -203,13 +210,14 @@ public class MessageCampaignServiceImplTest {
     public void shouldGetCampaignTimings() {
         AbsoluteCampaign campaign = mock(AbsoluteCampaign.class);
 
-        when(allMessageCampaigns.getCampaign("campaign")).thenReturn(campaign);
+        when(campaignRecordService.findByName("campaign")).thenReturn(campaignRecord);
+        when(campaignRecord.build()).thenReturn(campaign);
 
         CampaignSchedulerService campaignScheduler = mock(CampaignSchedulerService.class);
         when(campaignSchedulerFactory.getCampaignScheduler("campaign")).thenReturn(campaignScheduler);
 
         CampaignEnrollment enrollment = new CampaignEnrollment("entity_1", "campaign");
-        when(allCampaignEnrollments.findByExternalIdAndCampaignName("entity_1", "campaign")).thenReturn(enrollment);
+        when(campaignEnrollmentDataService.findByExternalIdAndCampaignName("entity_1", "campaign")).thenReturn(enrollment);
 
         DateTime now = now();
         DateTime startDate = now.plusDays(1);
@@ -223,14 +231,15 @@ public class MessageCampaignServiceImplTest {
     public void shouldGetEmptyCampaignTimingsMapIfEnrollmentIsNotActive() {
         AbsoluteCampaign campaign = mock(AbsoluteCampaign.class);
 
-        when(allMessageCampaigns.getCampaign("campaign")).thenReturn(campaign);
+        when(campaignRecordService.findByName("campaign")).thenReturn(campaignRecord);
+        when(campaignRecord.build()).thenReturn(campaign);
 
         CampaignSchedulerService campaignScheduler = mock(CampaignSchedulerService.class);
         when(campaignSchedulerFactory.getCampaignScheduler("campaign")).thenReturn(campaignScheduler);
 
         CampaignEnrollment enrollment = new CampaignEnrollment("entity_1", "campaign");
         enrollment.setStatus(CampaignEnrollmentStatus.INACTIVE);
-        when(allCampaignEnrollments.findByExternalIdAndCampaignName("entity_1", "campaign")).thenReturn(enrollment);
+        when(campaignEnrollmentDataService.findByExternalIdAndCampaignName("entity_1", "campaign")).thenReturn(enrollment);
 
         DateTime now = now();
         DateTime startDate = now.plusDays(1);
@@ -242,46 +251,46 @@ public class MessageCampaignServiceImplTest {
     @Test
     public void shouldSaveCampaigns() {
         messageCampaignService.saveCampaign(campaignRecord);
-        verify(allMessageCampaigns).saveOrUpdate(campaignRecord);
+        verify(campaignRecordService).create(campaignRecord);
     }
 
     @Test
     public void shouldRemoveCampaigns() {
-        when(allMessageCampaigns.findFirstByName("PREGNANCY")).thenReturn(campaignRecord);
-        when(campaignEnrollmentService.search(any(CampaignEnrollmentsQuery.class)))
+        when(campaignRecordService.findByName("PREGNANCY")).thenReturn(campaignRecord);
+        when(enrollmentService.search(any(CampaignEnrollmentsQuery.class)))
                 .thenReturn(Collections.<CampaignEnrollment>emptyList());
 
         messageCampaignService.deleteCampaign("PREGNANCY");
 
-        verify(allMessageCampaigns).findFirstByName("PREGNANCY");
-        verify(allMessageCampaigns).remove(campaignRecord);
+        verify(campaignRecordService).findByName("PREGNANCY");
+        verify(campaignRecordService).delete(campaignRecord);
 
         ArgumentCaptor<CampaignEnrollmentsQuery> captor = ArgumentCaptor.forClass(CampaignEnrollmentsQuery.class);
-        verify(campaignEnrollmentService).search(captor.capture());
+        verify(enrollmentService).search(captor.capture());
 
         Criterion primaryCriterion = captor.getValue().getPrimaryCriterion();
-        primaryCriterion.fetch(allCampaignEnrollments);
-        verify(allCampaignEnrollments).findByCampaignName("PREGNANCY");
+        primaryCriterion.fetch(campaignEnrollmentDataService);
+        verify(campaignEnrollmentDataService).findByCampaignName("PREGNANCY");
         assertTrue(captor.getValue().getSecondaryCriteria().isEmpty());
     }
 
     @Test
     public void shouldRetrieveCampaignByName() {
-        when(allMessageCampaigns.findFirstByName("PREGNANCY")).thenReturn(campaignRecord);
+        when(campaignRecordService.findByName("PREGNANCY")).thenReturn(campaignRecord);
         assertEquals(campaignRecord, messageCampaignService.getCampaignRecord("PREGNANCY"));
-        verify(allMessageCampaigns).findFirstByName("PREGNANCY");
+        verify(campaignRecordService).findByName("PREGNANCY");
     }
 
     @Test
     public void shouldRetrieveAllCampaigns() {
-        when(allMessageCampaigns.getAll()).thenReturn(asList(campaignRecord));
+        when(campaignRecordService.retrieveAll()).thenReturn(asList(campaignRecord));
         assertEquals(asList(campaignRecord), messageCampaignService.getAllCampaignRecords());
-        verify(allMessageCampaigns).getAll();
+        verify(campaignRecordService).retrieveAll();
     }
 
     @Test(expected = CampaignNotFoundException.class)
     public void shouldThrowExceptionWhenDeletingNonExistantCampaign() {
-        when(allMessageCampaigns.findFirstByName("PREGNANCY")).thenReturn(null);
+        when(campaignRecordService.findByName("PREGNANCY")).thenReturn(null);
         messageCampaignService.deleteCampaign("PREGNANCY");
     }
 
@@ -291,17 +300,17 @@ public class MessageCampaignServiceImplTest {
 
         CampaignEnrollment enrollment = new CampaignEnrollment("oldExtId", "campaign");
         enrollment.setStatus(CampaignEnrollmentStatus.ACTIVE);
-        enrollment.setDeliverTime(10, 50);
+        enrollment.setDeliverTime(new Time(10, 50));
+        enrollment.setId(9001L);
         enrollment.setReferenceDate(now.plusWeeks(1));
 
         CampaignSchedulerService campaignScheduler = mock(CampaignSchedulerService.class);
 
-        when(allCampaignEnrollments.get("enrollmentId")).thenReturn(enrollment);
+        when(campaignEnrollmentDataService.findById(9001L)).thenReturn(enrollment);
         when(campaignSchedulerFactory.getCampaignScheduler("campaign")).thenReturn(campaignScheduler);
+        CampaignRequest campaignRequest = new CampaignRequest("enrollmentId", "campaign", now, new Time(10, 0));
 
-        CampaignRequest campaignRequest = new CampaignRequest("extId", "campaign", now, new Time(10, 0));
-
-        messageCampaignService.updateEnrollment(campaignRequest, "enrollmentId");
+        messageCampaignService.updateEnrollment(campaignRequest, 9001L);
 
         verify(campaignScheduler).stop(enrollment);
 
@@ -309,34 +318,34 @@ public class MessageCampaignServiceImplTest {
             @Override
             public boolean matches(Object argument) {
                 CampaignEnrollment enrollment = (CampaignEnrollment) argument;
-                return Objects.equals("campaign", enrollment.getCampaignName()) && Objects.equals("extId", enrollment.getExternalId())
+                return Objects.equals("campaign", enrollment.getCampaignName()) && Objects.equals("enrollmentId", enrollment.getExternalId())
                         && Objects.equals(new Time(10, 0), enrollment.getDeliverTime())
                         && Objects.equals(now, enrollment.getReferenceDate());
             }
         };
 
-        verify(allCampaignEnrollments).saveOrUpdate(argThat(matcher));
+        verify(campaignEnrollmentDataService).update(argThat(matcher));
         verify(campaignScheduler).start(argThat(matcher));
     }
 
     @Test(expected = EnrollmentNotFoundException.class)
     public void shouldThrowExceptionWhenUpdatingNonExistentEnrollment() {
-        when(allCampaignEnrollments.get("id")).thenReturn(null);
-        messageCampaignService.updateEnrollment(new CampaignRequest(), "id");
+        when(campaignEnrollmentDataService.findByExternalId("id")).thenReturn(null);
+        messageCampaignService.updateEnrollment(new CampaignRequest(), 9001L);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionForDuplicateExtIdAndCampaignName() {
         CampaignEnrollment enrollment = new CampaignEnrollment("extId", "PREGNANCY");
-        enrollment.setId("couchId");
+        enrollment.setId(9001L);
         CampaignEnrollment otherEnrollment = new CampaignEnrollment("extId2", "PREGNANCY");
-        otherEnrollment.setId("otherEnrollmentId");
+        enrollment.setId(9002L);
 
-        when(allCampaignEnrollments.get("couchId")).thenReturn(enrollment);
-        when(allCampaignEnrollments.findByExternalIdAndCampaignName("extId2", "PREGNANCY")).thenReturn(otherEnrollment);
+        when(campaignEnrollmentDataService.findById(9001L)).thenReturn(enrollment);
+        when(campaignEnrollmentDataService.findByExternalIdAndCampaignName("extId2", "PREGNANCY")).thenReturn(otherEnrollment);
 
         CampaignRequest campaignRequest = new CampaignRequest("extId2", "PREGNANCY", null, null);
 
-        messageCampaignService.updateEnrollment(campaignRequest, "couchId");
+        messageCampaignService.updateEnrollment(campaignRequest, 9001L);
     }
 }

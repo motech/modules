@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.motechproject.messagecampaign.dao.AllCampaignEnrollments;
+import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollmentStatus;
 import org.motechproject.messagecampaign.search.Criterion;
@@ -22,24 +22,24 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
-public class CampaignEnrollmentServiceTest {
+public class CampaignEnrollmentDataServiceTest {
 
     @Mock
-    AllCampaignEnrollments mockAllCampaignEnrollments;
-    CampaignEnrollmentService service;
+    CampaignEnrollmentDataService campaignEnrollmentDataService;
+    EnrollmentService service;
 
     @Before
     public void setUp() {
         initMocks(this);
-        service = new CampaignEnrollmentService();
-        setField(service, "allCampaignEnrollments", mockAllCampaignEnrollments);
+        service = new EnrollmentService();
+        setField(service, "campaignEnrollmentDataService", campaignEnrollmentDataService);
     }
 
     @Test
     public void shouldSaveOrUpdateEnrollmentOnRegister() {
         CampaignEnrollment enrollment = mock(CampaignEnrollment.class);
         service.register(enrollment);
-        verify(mockAllCampaignEnrollments).saveOrUpdate(enrollment);
+        verify(campaignEnrollmentDataService).create(enrollment);
     }
 
     @Test
@@ -48,7 +48,7 @@ public class CampaignEnrollmentServiceTest {
         service.unregister(enrollment);
         assertEquals(CampaignEnrollmentStatus.INACTIVE, enrollment.getStatus());
         ArgumentCaptor<CampaignEnrollment> campaignEnrollmentCaptor = ArgumentCaptor.forClass(CampaignEnrollment.class);
-        verify(mockAllCampaignEnrollments).saveOrUpdate(campaignEnrollmentCaptor.capture());
+        verify(campaignEnrollmentDataService).update(campaignEnrollmentCaptor.capture());
         assertThat(campaignEnrollmentCaptor.getValue().getCampaignName(), is(enrollment.getCampaignName()));
         assertThat(campaignEnrollmentCaptor.getValue().getExternalId(), is(enrollment.getExternalId()));
         assertThat(campaignEnrollmentCaptor.getValue().getStatus(), is(CampaignEnrollmentStatus.INACTIVE));
@@ -60,12 +60,12 @@ public class CampaignEnrollmentServiceTest {
         String externalId = "newExternalId";
         String campaignName = "NewCampaignName";
         CampaignEnrollment enrollment = new CampaignEnrollment(externalId, campaignName);
-        when(mockAllCampaignEnrollments.findByExternalIdAndCampaignName(externalId, campaignName)).thenReturn(enrollment);
+        when(campaignEnrollmentDataService.findByExternalIdAndCampaignName(externalId, campaignName)).thenReturn(enrollment);
 
         service.unregister(enrollment.getExternalId(), enrollment.getCampaignName());
 
         ArgumentCaptor<CampaignEnrollment> campaignEnrollmentCaptor = ArgumentCaptor.forClass(CampaignEnrollment.class);
-        verify(mockAllCampaignEnrollments).saveOrUpdate(campaignEnrollmentCaptor.capture());
+        verify(campaignEnrollmentDataService).update(campaignEnrollmentCaptor.capture());
         assertThat(campaignEnrollmentCaptor.getValue().getCampaignName(), is(enrollment.getCampaignName()));
         assertThat(campaignEnrollmentCaptor.getValue().getExternalId(), is(enrollment.getExternalId()));
         assertThat(campaignEnrollmentCaptor.getValue().getStatus(), is(CampaignEnrollmentStatus.INACTIVE));
@@ -75,7 +75,7 @@ public class CampaignEnrollmentServiceTest {
     public void shouldSearchTheCampaignEnrollmentsBasedOnTheGivenQuery() {
         Criterion primaryCriterion = mock(Criterion.class);
         List<CampaignEnrollment> primaryCriterionFilteredEnrollments = mock(List.class);
-        when(primaryCriterion.fetch(mockAllCampaignEnrollments)).thenReturn(primaryCriterionFilteredEnrollments);
+        when(primaryCriterion.fetch(campaignEnrollmentDataService)).thenReturn(primaryCriterionFilteredEnrollments);
 
         Criterion secondaryCriterion1 = mock(Criterion.class);
         List<CampaignEnrollment> secondaryCriterion1FilteredEnrollments = mock(List.class);

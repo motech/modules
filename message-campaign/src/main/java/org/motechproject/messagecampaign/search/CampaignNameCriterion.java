@@ -1,6 +1,6 @@
 package org.motechproject.messagecampaign.search;
 
-import org.motechproject.messagecampaign.dao.AllCampaignEnrollments;
+import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 
 import java.util.ArrayList;
@@ -14,8 +14,8 @@ public class CampaignNameCriterion implements Criterion {
     }
 
     @Override
-    public List<CampaignEnrollment> fetch(AllCampaignEnrollments allCampaignEnrollments) {
-        return allCampaignEnrollments.findByCampaignName(campaignName);
+    public List<CampaignEnrollment> fetch(CampaignEnrollmentDataService campaignEnrollmentDataService) {
+        return campaignEnrollmentDataService.findByCampaignName(campaignName);
     }
 
     @Override

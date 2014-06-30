@@ -1,6 +1,6 @@
 package org.motechproject.messagecampaign.search;
 
-import org.motechproject.messagecampaign.dao.AllCampaignEnrollments;
+import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollmentStatus;
 
@@ -15,8 +15,8 @@ public class StatusCriterion implements Criterion {
     }
 
     @Override
-    public List<CampaignEnrollment> fetch(AllCampaignEnrollments allCampaignEnrollments) {
-        return allCampaignEnrollments.findByStatus(campaignEnrollmentStatus);
+    public List<CampaignEnrollment> fetch(CampaignEnrollmentDataService campaignEnrollmentDataService) {
+        return campaignEnrollmentDataService.findByStatus(campaignEnrollmentStatus);
     }
 
     @Override

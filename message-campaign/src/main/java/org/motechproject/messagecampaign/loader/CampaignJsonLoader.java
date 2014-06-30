@@ -3,7 +3,7 @@ package org.motechproject.messagecampaign.loader;
 import com.google.gson.reflect.TypeToken;
 import org.motechproject.commons.api.MotechException;
 import org.motechproject.commons.api.json.MotechJsonReader;
-import org.motechproject.messagecampaign.dao.AllMessageCampaigns;
+import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.userspecified.CampaignRecord;
 import org.motechproject.messagecampaign.web.model.CampaignDto;
 import org.motechproject.server.config.SettingsFacade;
@@ -20,7 +20,7 @@ public class CampaignJsonLoader {
 
     private SettingsFacade settings;
 
-    private AllMessageCampaigns allMessageCampaigns;
+    private CampaignRecordService campaignRecordService;
 
     private MotechJsonReader motechJsonReader;
 
@@ -42,7 +42,8 @@ public class CampaignJsonLoader {
 
     public List<CampaignRecord> loadCampaigns(InputStream in) {
         List<CampaignDto> dtoList = (List<CampaignDto>) motechJsonReader.readFromStream(
-                in, new TypeToken<List<CampaignDto>>() { } .getType()
+                in, new TypeToken<List<CampaignDto>>() {
+        }.getType()
         );
 
         List<CampaignRecord> records = new ArrayList<>(dtoList.size());
@@ -55,7 +56,8 @@ public class CampaignJsonLoader {
 
     public CampaignRecord loadSingleCampaign(InputStream in) {
         CampaignDto campaignDto = (CampaignDto) motechJsonReader.readFromStream(
-                in, new TypeToken<CampaignDto>() { } .getType()
+                in, new TypeToken<CampaignDto>() {
+        }.getType()
         );
         return campaignDto.toCampaignRecord();
     }
@@ -71,7 +73,9 @@ public class CampaignJsonLoader {
     public void loadAferInit() {
         List<CampaignRecord> records = loadCampaigns(settings.getRawConfig(messageCampaignsJsonFile));
         for (CampaignRecord record : records) {
-            allMessageCampaigns.saveOrUpdate(record);
+            if (campaignRecordService.findByName(record.getName()) == null) {
+                campaignRecordService.create(record);
+            }
         }
     }
 
@@ -87,7 +91,7 @@ public class CampaignJsonLoader {
         this.settings = settings;
     }
 
-    public void setAllMessageCampaigns(AllMessageCampaigns allMessageCampaigns) {
-        this.allMessageCampaigns = allMessageCampaigns;
+    public void setAllMessageCampaigns(CampaignRecordService campaignRecordService) {
+        this.campaignRecordService = campaignRecordService;
     }
 }

@@ -9,13 +9,13 @@ import org.motechproject.event.listener.EventRelay;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.messagecampaign.EventKeys;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
-import org.motechproject.messagecampaign.dao.AllCampaignEnrollments;
-import org.motechproject.messagecampaign.dao.AllMessageCampaigns;
 import org.motechproject.messagecampaign.domain.CampaignNotFoundException;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.loader.CampaignJsonLoader;
 import org.motechproject.messagecampaign.scheduler.CampaignSchedulerFactory;
 import org.motechproject.messagecampaign.scheduler.CampaignSchedulerService;
+import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
+import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.userspecified.CampaignRecord;
 import org.motechproject.messagecampaign.web.ex.EnrollmentNotFoundException;
 import org.motechproject.server.config.SettingsFacade;
@@ -37,11 +37,11 @@ import java.util.Map;
 @Service("messageCampaignService")
 public class MessageCampaignServiceImpl implements MessageCampaignService {
 
-    private CampaignEnrollmentService campaignEnrollmentService;
+    private EnrollmentService enrollmentService;
     private CampaignEnrollmentRecordMapper campaignEnrollmentRecordMapper;
-    private AllCampaignEnrollments allCampaignEnrollments;
+    private CampaignEnrollmentDataService campaignEnrollmentDataService;
     private CampaignSchedulerFactory campaignSchedulerFactory;
-    private AllMessageCampaigns allMessageCampaigns;
+    private CampaignRecordService campaignRecordService;
     private EventRelay relay;
     @Autowired
     @Qualifier("messageCampaignSettings")
@@ -54,19 +54,22 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
     private ConfigurationService configurationService;
 
     @Autowired
-    public MessageCampaignServiceImpl(CampaignEnrollmentService campaignEnrollmentService, CampaignEnrollmentRecordMapper campaignEnrollmentRecordMapper, AllCampaignEnrollments allCampaignEnrollments, CampaignSchedulerFactory campaignSchedulerFactory,
-                                      AllMessageCampaigns allMessageCampaigns, EventRelay relay) {
-        this.campaignEnrollmentService = campaignEnrollmentService;
+    public MessageCampaignServiceImpl(EnrollmentService enrollmentService, CampaignEnrollmentDataService campaignEnrollmentDataService, CampaignEnrollmentRecordMapper campaignEnrollmentRecordMapper,
+                                      CampaignSchedulerFactory campaignSchedulerFactory, CampaignRecordService campaignRecordService, EventRelay relay) {
+        this.enrollmentService = enrollmentService;
+        this.campaignEnrollmentDataService = campaignEnrollmentDataService;
         this.campaignEnrollmentRecordMapper = campaignEnrollmentRecordMapper;
-        this.allCampaignEnrollments = allCampaignEnrollments;
+        this.campaignEnrollmentDataService = campaignEnrollmentDataService;
         this.campaignSchedulerFactory = campaignSchedulerFactory;
-        this.allMessageCampaigns = allMessageCampaigns;
+        this.campaignRecordService = campaignRecordService;
         this.relay = relay;
     }
 
     public void enroll(CampaignRequest request) {
-        CampaignEnrollment enrollment = new CampaignEnrollment(request.externalId(), request.campaignName()).setReferenceDate(request.referenceDate()).setDeliverTime(request.deliverTime());
-        campaignEnrollmentService.register(enrollment);
+        CampaignEnrollment enrollment = new CampaignEnrollment(request.externalId(), request.campaignName());
+        enrollment.setReferenceDate(request.referenceDate());
+        enrollment.setDeliverTime(request.deliverTime());
+        enrollmentService.register(enrollment);
         CampaignSchedulerService campaignScheduler = campaignSchedulerFactory.getCampaignScheduler(request.campaignName());
         campaignScheduler.start(enrollment);
 
@@ -80,8 +83,8 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
 
     @Override
     public void unenroll(String externalId, String campaignName) {
-        campaignEnrollmentService.unregister(externalId, campaignName);
-        CampaignEnrollment enrollment = allCampaignEnrollments.findByExternalIdAndCampaignName(externalId, campaignName);
+        enrollmentService.unregister(externalId, campaignName);
+        CampaignEnrollment enrollment = campaignEnrollmentDataService.findByExternalIdAndCampaignName(externalId, campaignName);
         campaignSchedulerFactory.getCampaignScheduler(campaignName).stop(enrollment);
 
         Map<String, Object> param = new HashMap<>();
@@ -95,7 +98,7 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
     @Override
     public List<CampaignEnrollmentRecord> search(CampaignEnrollmentsQuery query) {
         List<CampaignEnrollmentRecord> campaignEnrollmentRecords = new ArrayList<>();
-        for (CampaignEnrollment campaignEnrollment : campaignEnrollmentService.search(query)) {
+        for (CampaignEnrollment campaignEnrollment : enrollmentService.search(query)) {
             campaignEnrollmentRecords.add(campaignEnrollmentRecordMapper.map(campaignEnrollment));
         }
         return campaignEnrollmentRecords;
@@ -103,7 +106,7 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
 
     @Override
     public Map<String, List<DateTime>> getCampaignTimings(String externalId, String campaignName, DateTime startDate, DateTime endDate) {
-        CampaignEnrollment enrollment = allCampaignEnrollments.findByExternalIdAndCampaignName(externalId, campaignName);
+        CampaignEnrollment enrollment = campaignEnrollmentDataService.findByExternalIdAndCampaignName(externalId, campaignName);
         if (!enrollment.isActive()) {
             return new HashMap<>();
         }
@@ -111,46 +114,50 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
     }
 
     @Override
-    public void updateEnrollment(CampaignRequest enrollRequest, String enrollmentId) {
-        CampaignEnrollment existingEnrollment = allCampaignEnrollments.get(enrollmentId);
+    public void updateEnrollment(CampaignRequest enrollRequest, Long enrollmentId) {
+        CampaignEnrollment existingEnrollment = campaignEnrollmentDataService.findById(enrollmentId);
 
         if (existingEnrollment == null) {
             throw new EnrollmentNotFoundException("Enrollment with id " + enrollmentId + " not found");
         } else {
-            CampaignEnrollment byIdAndName = allCampaignEnrollments.findByExternalIdAndCampaignName(
+            CampaignEnrollment campaignEnrollment = campaignEnrollmentDataService.findByExternalIdAndCampaignName(
                     enrollRequest.externalId(), enrollRequest.campaignName());
-            if (byIdAndName != null && !byIdAndName.getId().equals(enrollmentId)) {
-                throw new IllegalArgumentException(String.format("%s is already enrolled in %s campaign, enrollmentId: %s",
-                        enrollRequest.externalId(), enrollRequest.campaignName(), byIdAndName.getId()));
+            if (campaignEnrollment != null && !existingEnrollment.getExternalId().equals(campaignEnrollment.getExternalId())) {
+                throw new IllegalArgumentException(String.format("%s is already enrolled in %s campaign",
+                        enrollRequest.externalId(), enrollRequest.campaignName()));
             }
         }
 
         campaignSchedulerFactory.getCampaignScheduler(existingEnrollment.getCampaignName()).stop(existingEnrollment);
 
-        existingEnrollment.setExternalId(enrollRequest.externalId()).setDeliverTime(enrollRequest.deliverTime())
-                .setReferenceDate(enrollRequest.referenceDate());
-        allCampaignEnrollments.saveOrUpdate(existingEnrollment);
+        existingEnrollment.setExternalId(enrollRequest.externalId());
+        existingEnrollment.setDeliverTime(enrollRequest.deliverTime());
+        existingEnrollment.setReferenceDate(enrollRequest.referenceDate());
+        campaignEnrollmentDataService.update(existingEnrollment);
 
         campaignSchedulerFactory.getCampaignScheduler(existingEnrollment.getCampaignName()).start(existingEnrollment);
     }
 
     @Override
     public void stopAll(CampaignEnrollmentsQuery query) {
-        List<CampaignEnrollment> enrollments = campaignEnrollmentService.search(query);
+        List<CampaignEnrollment> enrollments = enrollmentService.search(query);
         for (CampaignEnrollment enrollment : enrollments) {
-            campaignEnrollmentService.unregister(enrollment.getExternalId(), enrollment.getCampaignName());
+            enrollmentService.unregister(enrollment.getExternalId(), enrollment.getCampaignName());
             campaignSchedulerFactory.getCampaignScheduler(enrollment.getCampaignName()).stop(enrollment);
         }
     }
 
     @Override
     public void saveCampaign(CampaignRecord campaign) {
-        allMessageCampaigns.saveOrUpdate(campaign);
+        CampaignRecord record = campaignRecordService.findByName(campaign.getName());
+        if (record == null) {
+            campaignRecordService.create(campaign);
+        }
     }
 
     @Override
     public void deleteCampaign(String campaignName) {
-        CampaignRecord campaignRecord = allMessageCampaigns.findFirstByName(campaignName);
+        CampaignRecord campaignRecord = campaignRecordService.findByName(campaignName);
 
         if (campaignRecord == null) {
             throw new CampaignNotFoundException("Campaign not found: " + campaignName);
@@ -158,18 +165,18 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
             CampaignEnrollmentsQuery enrollmentsQuery = new CampaignEnrollmentsQuery().withCampaignName(campaignName);
             stopAll(enrollmentsQuery);
 
-            allMessageCampaigns.remove(campaignRecord);
+            campaignRecordService.delete(campaignRecord);
         }
     }
 
     @Override
     public CampaignRecord getCampaignRecord(String campaignName) {
-        return allMessageCampaigns.findFirstByName(campaignName);
+        return campaignRecordService.findByName(campaignName);
     }
 
     @Override
     public List<CampaignRecord> getAllCampaignRecords() {
-        return allMessageCampaigns.getAll();
+        return campaignRecordService.retrieveAll();
     }
 
     @Override
@@ -184,14 +191,16 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
         if (inputStream != null) {
             List<CampaignRecord> records = new CampaignJsonLoader().loadCampaigns(inputStream);
             for (CampaignRecord record : records) {
-                allMessageCampaigns.saveOrUpdate(record);
+                if(campaignRecordService.findByName(record.getName()) == null) {
+                    campaignRecordService.create(record);
+                }
             }
         }
     }
 
     @MotechListener(subjects = ConfigurationConstants.FILE_CHANGED_EVENT_SUBJECT)
     public void changeMaxUploadSize(MotechEvent event) {
-        String uploadSize =  configurationService.getPlatformSettings().getUploadSize();
+        String uploadSize = configurationService.getPlatformSettings().getUploadSize();
 
         if (StringUtils.isNotBlank(uploadSize)) {
             commonsMultipartResolver.setMaxUploadSize(Long.valueOf(uploadSize));
