@@ -30,7 +30,7 @@ public interface SmsRecordsDataService extends MotechDataService<SmsRecord> {
                                    @LookupField(name = "errorMessage", customOperator = MATCHES) String errorMessage,
                                    QueryParams queryParams);
 
-    long countFindByCriteria(@LookupField(name = "config", customOperator = MATCHES) String config,
+    long countFindByCriteria(@LookupField(name = "config", customOperator = MATCHES) String config, //NO CHECKSTYLE ParameterNumber
                              @LookupField(name = "smsDirection") Set<SmsDirection> directions,
                              @LookupField(name = "phoneNumber", customOperator = MATCHES) String phoneNumber,
                              @LookupField(name = "messageContent", customOperator = MATCHES) String messageContent,
