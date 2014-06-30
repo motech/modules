@@ -4,9 +4,9 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.messagecampaign.EventKeys;
-import org.motechproject.messagecampaign.dao.AllCampaignEnrollments;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollmentStatus;
+import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,12 +17,12 @@ import java.util.Map;
 @Component
 public class EndOfCampaignNotifier {
 
-    private AllCampaignEnrollments allCampaignEnrollments;
+    private CampaignEnrollmentDataService campaignEnrollmentDataService;
     private EventRelay eventRelay;
 
     @Autowired
-    public EndOfCampaignNotifier(AllCampaignEnrollments allCampaignEnrollments, EventRelay eventRelay) {
-        this.allCampaignEnrollments = allCampaignEnrollments;
+    public EndOfCampaignNotifier(CampaignEnrollmentDataService campaignEnrollmentDataService, EventRelay eventRelay) {
+        this.campaignEnrollmentDataService = campaignEnrollmentDataService;
         this.eventRelay = eventRelay;
     }
 
@@ -43,8 +43,8 @@ public class EndOfCampaignNotifier {
     }
 
     private void markEnrollmentAsComplete(String externalId, String campaignName) {
-        CampaignEnrollment enrollment = allCampaignEnrollments.findByExternalIdAndCampaignName(externalId, campaignName);
+        CampaignEnrollment enrollment = campaignEnrollmentDataService.findByExternalIdAndCampaignName(externalId, campaignName);
         enrollment.setStatus(CampaignEnrollmentStatus.COMPLETED);
-        allCampaignEnrollments.update(enrollment);
+        campaignEnrollmentDataService.update(enrollment);
     }
 }

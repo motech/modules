@@ -13,28 +13,28 @@ public class CampaignMessageBuilder {
 
     public AbsoluteCampaignMessage absoluteCampaignMessage(String name, LocalDate date, String messageKey, Time startTime) {
         AbsoluteCampaignMessage absoluteCampaignMessage = new AbsoluteCampaignMessage();
-        absoluteCampaignMessage.name(name);
-        absoluteCampaignMessage.date(date);
-        absoluteCampaignMessage.messageKey(messageKey);
+        absoluteCampaignMessage.setName(name);
+        absoluteCampaignMessage.setDate(date);
+        absoluteCampaignMessage.setMessageKey(messageKey);
         absoluteCampaignMessage.setStartTime(startTime);
-        absoluteCampaignMessage.formats(Arrays.asList("IVR"));
-        absoluteCampaignMessage.languages(Arrays.asList("en"));
+        absoluteCampaignMessage.setFormats(Arrays.asList("IVR"));
+        absoluteCampaignMessage.setLanguages(Arrays.asList("en"));
         return absoluteCampaignMessage;
     }
 
     public CronBasedCampaignMessage cronBasedCampaignMessage(String name, String cron, String messageKey) {
         CronBasedCampaignMessage cronBasedCampaignMessage = new CronBasedCampaignMessage();
-        cronBasedCampaignMessage.name(name);
-        cronBasedCampaignMessage.cron(cron);
-        cronBasedCampaignMessage.messageKey(messageKey);
+        cronBasedCampaignMessage.setName(name);
+        cronBasedCampaignMessage.setCron(cron);
+        cronBasedCampaignMessage.setMessageKey(messageKey);
         return cronBasedCampaignMessage;
     }
 
     public OffsetCampaignMessage offsetCampaignMessage(String name, String timeOffset, String messageKey, Time startTime) {
         OffsetCampaignMessage offsetCampaignMessage = new OffsetCampaignMessage();
-        offsetCampaignMessage.name(name);
-        offsetCampaignMessage.timeOffset(new JodaFormatter().parsePeriod(timeOffset));
-        offsetCampaignMessage.messageKey(messageKey);
+        offsetCampaignMessage.setName(name);
+        offsetCampaignMessage.setTimeOffset(new JodaFormatter().parsePeriod(timeOffset));
+        offsetCampaignMessage.setMessageKey(messageKey);
         offsetCampaignMessage.setStartTime(startTime);
         return offsetCampaignMessage;
     }

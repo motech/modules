@@ -1,9 +1,9 @@
 package org.motechproject.messagecampaign.search;
 
 import org.junit.Test;
-import org.motechproject.messagecampaign.dao.AllCampaignEnrollments;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollmentStatus;
+import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,11 +38,11 @@ public class StatusCriterionTest {
     @Test
     public void shouldFetchByCampaignEnrollmentStatusFromDb() {
         List<CampaignEnrollment> campaignEnrollments = mock(List.class);
-        AllCampaignEnrollments allCampaignEnrollments = mock(AllCampaignEnrollments.class);
+        CampaignEnrollmentDataService campaignEnrollmentDataService = mock(CampaignEnrollmentDataService.class);
 
-        when(allCampaignEnrollments.findByStatus(CampaignEnrollmentStatus.ACTIVE)).thenReturn(campaignEnrollments);
+        when(campaignEnrollmentDataService.findByStatus(CampaignEnrollmentStatus.ACTIVE)).thenReturn(campaignEnrollments);
 
-        assertEquals(campaignEnrollments, new StatusCriterion(CampaignEnrollmentStatus.ACTIVE).fetch(allCampaignEnrollments));
+        assertEquals(campaignEnrollments, new StatusCriterion(CampaignEnrollmentStatus.ACTIVE).fetch(campaignEnrollmentDataService));
     }
 
 }

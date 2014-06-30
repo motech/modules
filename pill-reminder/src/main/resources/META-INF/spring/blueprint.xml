@@ -23,10 +23,10 @@
         </constructor-arg>
     </bean>
 
+
     <osgi:service id="pillReminderServiceImplOsgi" auto-export="interfaces" ref="pillReminderServiceImpl"
                   interface="org.motechproject.pillreminder.service.PillReminderService"/>
 
-    <osgi:reference id="couchDbManager" interface="org.motechproject.commons.couchdb.service.CouchDbManager"/>
 
     <osgi:reference id="schedulerServiceOsgi"
                     interface="org.motechproject.scheduler.service.MotechSchedulerService"/>
@@ -37,9 +37,10 @@
     <osgi:reference id="configurationServiceOsgi"
                     interface="org.motechproject.config.service.ConfigurationService" />
 
-    <osgi:reference id="platformSettingsServiceOsgi" interface="org.motechproject.server.config.service.PlatformSettingsService"/>
+    <osgi:reference id="eventListenerRegistryServiceOsgi"
+                    interface="org.motechproject.event.listener.EventListenerRegistryService"/>
 
-    <osgi:reference id="eventListenerRegistryServiceOsgi" interface="org.motechproject.event.listener.EventListenerRegistryService"/>
-
+    <osgi:reference id="pillRegimenDataServiceOsgi"
+                    interface="org.motechproject.pillreminder.dao.PillRegimenDataService"/>
 
 </beans>

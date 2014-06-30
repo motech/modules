@@ -1,11 +1,14 @@
 package org.motechproject.pillreminder.domain;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.commons.date.util.DateUtil;
+import org.motechproject.mds.annotations.Cascade;
+import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.Ignore;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,20 +16,27 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
-
+@Entity
 public class Dosage {
-    private String id;
+
+    @Field
+    private Long id;
+
+    @Field(displayName = "Dosage Time")
     private Time dosageTime;
+
+    @Field(displayName = "Last Response Captured Date")
     private LocalDate responseLastCapturedDate;
+
+    @Field(displayName = "Medicines")
+    @Cascade(delete = true)
     private Set<Medicine> medicines;
 
     public Dosage() {
     }
 
     public Dosage(Time dosageTime, Set<Medicine> medicines) {
-        this.id = UUID.randomUUID().toString();
         this.dosageTime = dosageTime;
         this.medicines = medicines;
     }
@@ -47,11 +57,11 @@ public class Dosage {
         this.dosageTime = dosageTime;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -69,23 +79,24 @@ public class Dosage {
         }
     }
 
-    @JsonIgnore
+    @Ignore
     public boolean isTodaysDosageResponseCaptured() {
         LocalDate today = DateUtil.today();
         LocalDate yesterday = today.minusDays(1);
         LocalTime localNow = DateUtil.now().toLocalTime();
+
         if (responseLastCapturedDate == null) {
             return false;
-        }
-        if (responseLastCapturedDate.equals(today)) {
+        } else if (responseLastCapturedDate.equals(today)) {
             return true;
         }
+
         return responseLastCapturedDate.equals(yesterday) && new Time(localNow.getHourOfDay(), localNow.getMinuteOfHour()).isBefore(dosageTime);
     }
 
-    @JsonIgnore
+    @Ignore
     public LocalDate getStartDate() {
-        List<Medicine> sortedList = new ArrayList<Medicine>(medicines);
+        List<Medicine> sortedList = new ArrayList<>(medicines);
         Collections.sort(sortedList, new Comparator<Medicine>() {
             @Override
             public int compare(Medicine o1, Medicine o2) {
@@ -95,14 +106,14 @@ public class Dosage {
         return sortedList.isEmpty() ? null : sortedList.get(0).getStartDate();
     }
 
-    @JsonIgnore
+    @Ignore
     public LocalDate getEndDate() {
         Set<Medicine> medicinesWithNonNullEndDate = getMedicinesWithNonNullEndDate();
         if (medicinesWithNonNullEndDate.isEmpty()) {
             return null;
         }
 
-        List<Medicine> sortedList = new ArrayList<Medicine>(medicinesWithNonNullEndDate);
+        List<Medicine> sortedList = new ArrayList<>(medicinesWithNonNullEndDate);
         Collections.sort(sortedList, new Comparator<Medicine>() {
             @Override
             public int compare(Medicine o1, Medicine o2) {
@@ -112,8 +123,9 @@ public class Dosage {
         return sortedList.isEmpty() ? null : sortedList.get(0).getEndDate();
     }
 
+    @Ignore
     private Set<Medicine> getMedicinesWithNonNullEndDate() {
-        Set<Medicine> medicinesWithNonNullEndDate = new HashSet<Medicine>();
+        Set<Medicine> medicinesWithNonNullEndDate = new HashSet<>();
         for (Medicine medicine : medicines) {
             if (medicine.getEndDate() != null) {
                 medicinesWithNonNullEndDate.add(medicine);

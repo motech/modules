@@ -4,7 +4,7 @@
   "moduleVersion" : "${parsedVersion.osgiVersion}",
   "triggerTaskEvents" : [
     {
-      "displayName" : "pillreminder.event.subject",
+      "displayName" : "pillreminder.remind.patient",
       "subject" : "org.motechproject.pillreminder.pill-reminder",
       "eventParameters" : [
         {

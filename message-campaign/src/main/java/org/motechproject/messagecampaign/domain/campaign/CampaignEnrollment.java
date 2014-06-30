@@ -1,28 +1,31 @@
 package org.motechproject.messagecampaign.domain.campaign;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.ektorp.support.TypeDiscriminator;
 import org.joda.time.LocalDate;
-import org.motechproject.commons.couchdb.model.MotechBaseDataObject;
 import org.motechproject.commons.date.model.Time;
+import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.Field;
+
+import javax.jdo.annotations.Unique;
 
 /**
- *  Represents an enrollment for a campaign
+ * Represents an enrollment for a campaign
  */
 
-@TypeDiscriminator("doc.type === 'CampaignEnrollment'")
-public class CampaignEnrollment extends MotechBaseDataObject {
+@Entity
+@Unique(name = "externalIdAndCampaignName", members = {"externalId", "campaignName" })
+public class CampaignEnrollment {
 
-    @JsonProperty
+    private Long id;
+
+    @Field(required = true)
     private String externalId;
-    @JsonProperty
+
+    @Field(required = true)
     private String campaignName;
-    @JsonProperty
+
     private CampaignEnrollmentStatus status;
-    @JsonProperty
     private LocalDate referenceDate;
-    @JsonProperty
     private Time deliverTime;
 
     private CampaignEnrollment() {
@@ -46,11 +49,6 @@ public class CampaignEnrollment extends MotechBaseDataObject {
         return referenceDate;
     }
 
-    public CampaignEnrollment setReferenceDate(LocalDate referenceDate) {
-        this.referenceDate = referenceDate;
-        return this;
-    }
-
     public CampaignEnrollment copyFrom(CampaignEnrollment enrollment) {
         this.referenceDate = enrollment.getReferenceDate();
         this.status = enrollment.getStatus();
@@ -71,19 +69,28 @@ public class CampaignEnrollment extends MotechBaseDataObject {
         return deliverTime;
     }
 
-    public CampaignEnrollment setDeliverTime(Time deliverTime) {
-        this.deliverTime = deliverTime;
-        return this;
-    }
-
-    public CampaignEnrollment setDeliverTime(int hour, int minute) {
-        this.deliverTime = new Time(hour, minute);
-        return this;
-    }
-
-    public CampaignEnrollment setExternalId(String externalId) {
+    public void setExternalId(String externalId) {
         this.externalId = externalId;
-        return this;
+    }
+
+    public void setCampaignName(String campaignName) {
+        this.campaignName = campaignName;
+    }
+
+    public void setReferenceDate(LocalDate referenceDate) {
+        this.referenceDate = referenceDate;
+    }
+
+    public void setDeliverTime(Time deliverTime) {
+        this.deliverTime = deliverTime;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @JsonIgnore

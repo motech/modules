@@ -13,7 +13,7 @@ import java.util.Objects;
 public class EnrollmentDto {
 
     @JsonProperty
-    private String enrollmentId;
+    private Long enrollmentId;
 
     @JsonProperty
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -30,14 +30,6 @@ public class EnrollmentDto {
     @JsonProperty
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate referenceDate;
-
-    public String getEnrollmentId() {
-        return enrollmentId;
-    }
-
-    public void setEnrollmentId(String enrollmentId) {
-        this.enrollmentId = enrollmentId;
-    }
 
     public String getExternalId() {
         return externalId;

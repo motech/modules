@@ -12,7 +12,7 @@ public class DosageBuilder {
         return this;
     }
 
-    public DosageBuilder withId(String id) {
+    public DosageBuilder withId(Long id) {
         dosage.setId(id);
         return this;
     }

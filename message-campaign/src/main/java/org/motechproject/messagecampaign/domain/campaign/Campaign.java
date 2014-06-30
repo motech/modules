@@ -4,23 +4,12 @@ import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 
 import java.util.List;
 
-public abstract class Campaign<T extends CampaignMessage> {
-    private String name;
-    private List<T> messages;
+public interface Campaign<T extends CampaignMessage> {
+    String getName();
 
-    public String getName() {
-        return name;
-    }
+    void setName(String name);
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    void setMessages(List<T> messages);
 
-    public void setMessages(List<T> messages) {
-        this.messages = messages;
-    }
-
-    public List<T> getMessages() {
-        return messages;
-    }
+    List<T> getMessages();
 }

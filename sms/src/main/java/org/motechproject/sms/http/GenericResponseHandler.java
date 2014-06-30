@@ -71,7 +71,7 @@ public class GenericResponseHandler extends ResponseHandler {
             }
             getEvents().add(outboundEvent(getConfig().retryOrAbortSubject(failureCount), getConfig().getName(),
                     sms.getRecipients(), sms.getMessage(), sms.getMotechId(), null, failureCount, null, null));
-            getLogger().debug("Failed to sent SMS: {}", failureMessage);
+            getLogger().debug("Failed to send SMS: {}", failureMessage);
             for (String recipient : sms.getRecipients()) {
                 getAuditRecords().add(new SmsRecord(getConfig().getName(), OUTBOUND, recipient, sms.getMessage(), now(),
                         getConfig().retryOrAbortStatus(failureCount), null, sms.getMotechId(), null, failureMessage));

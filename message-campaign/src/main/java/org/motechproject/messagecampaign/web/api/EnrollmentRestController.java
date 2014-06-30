@@ -1,12 +1,11 @@
 package org.motechproject.messagecampaign.web.api;
 
-import org.apache.commons.lang.StringUtils;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
 import org.motechproject.messagecampaign.domain.CampaignNotFoundException;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollmentStatus;
-import org.motechproject.messagecampaign.service.CampaignEnrollmentService;
 import org.motechproject.messagecampaign.service.CampaignEnrollmentsQuery;
+import org.motechproject.messagecampaign.service.EnrollmentService;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
 import org.motechproject.messagecampaign.web.ex.EnrollmentNotFoundException;
 import org.motechproject.messagecampaign.web.model.EnrollmentDto;
@@ -29,7 +28,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- *  Controller for handling message campaign enrollment requests.
+ * Controller for handling message campaign enrollment requests.
  */
 
 @Controller
@@ -42,7 +41,7 @@ public class EnrollmentRestController {
     private MessageCampaignService messageCampaignService;
 
     @Autowired
-    private CampaignEnrollmentService enrollmentService;
+    private EnrollmentService enrollmentService;
 
     @RequestMapping(value = "/{campaignName}/users/{userId}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
@@ -53,9 +52,9 @@ public class EnrollmentRestController {
         CampaignRequest campaignRequest = new CampaignRequest(userId, campaignName,
                 enrollmentRequest.getReferenceDate(), enrollmentRequest.getStartTime());
 
-        String enrollmentId = enrollmentRequest.getEnrollmentId();
+        Long enrollmentId = enrollmentRequest.getEnrollmentId();
 
-        if (StringUtils.isNotBlank(enrollmentId)) {
+        if (enrollmentId != null && enrollmentId > 0) {
             messageCampaignService.updateEnrollment(campaignRequest, enrollmentId);
         } else {
             messageCampaignService.enroll(campaignRequest);

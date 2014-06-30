@@ -1,13 +1,13 @@
 package org.motechproject.messagecampaign.scheduler;
 
-import org.motechproject.messagecampaign.dao.AllMessageCampaigns;
 import org.motechproject.messagecampaign.domain.CampaignNotFoundException;
 import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaign;
-import org.motechproject.messagecampaign.domain.campaign.Campaign;
 import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaign;
 import org.motechproject.messagecampaign.domain.campaign.DayOfWeekCampaign;
 import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
 import org.motechproject.messagecampaign.domain.campaign.RepeatIntervalCampaign;
+import org.motechproject.messagecampaign.dao.CampaignRecordService;
+import org.motechproject.messagecampaign.userspecified.CampaignRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,7 +38,7 @@ public class CampaignSchedulerFactory {
     private DayOfWeekCampaignSchedulerService dayOfWeekCampaignSchedulerService;
 
     @Autowired
-    private AllMessageCampaigns allMessageCampaigns;
+    private CampaignRecordService campaignRecordService;
 
     @PostConstruct
     public void init() {
@@ -51,13 +51,13 @@ public class CampaignSchedulerFactory {
 
 
     public CampaignSchedulerService getCampaignScheduler(final String campaignName) {
-        final Campaign campaign = allMessageCampaigns.getCampaign(campaignName);
+        CampaignRecord campaign = campaignRecordService.findByName(campaignName);
 
         if (campaign == null) {
             throw new CampaignNotFoundException(format("Campaign (%s) not found.", campaignName));
         }
 
-        CampaignSchedulerService schedulerService = campaignSchedulerServices.get(campaign.getClass());
+        CampaignSchedulerService schedulerService = campaignSchedulerServices.get(campaign.build().getClass());
 
         if (schedulerService == null) {
             throw new CampaignNotFoundException(format("Campaign (%s) not found.", campaignName));

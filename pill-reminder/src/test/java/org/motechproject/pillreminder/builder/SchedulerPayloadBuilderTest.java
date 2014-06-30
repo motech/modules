@@ -12,8 +12,8 @@ public class SchedulerPayloadBuilderTest {
     @Test
     public void shouldBuildASchedulerPayload() {
         Map payload = new SchedulerPayloadBuilder()
-                .withDosageId("dosageId")
+                .withDosageId(10L)
                 .payload();
-        assertEquals(payload.get(EventKeys.DOSAGE_ID_KEY), "dosageId");
+        assertEquals(payload.get(EventKeys.DOSAGE_ID_KEY), 10L);
     }
 }

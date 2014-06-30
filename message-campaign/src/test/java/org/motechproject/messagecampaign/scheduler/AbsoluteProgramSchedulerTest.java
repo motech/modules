@@ -8,16 +8,18 @@ import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.messagecampaign.builder.CampaignBuilder;
 import org.motechproject.messagecampaign.builder.EnrollRequestBuilder;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
-import org.motechproject.messagecampaign.dao.AllMessageCampaigns;
 import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
-import org.motechproject.messagecampaign.service.CampaignEnrollmentService;
-import org.motechproject.scheduler.service.MotechSchedulerService;
+import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
+import org.motechproject.messagecampaign.dao.CampaignRecordService;
+import org.motechproject.messagecampaign.userspecified.CampaignRecord;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
+import org.motechproject.scheduler.service.MotechSchedulerService;
 
 import java.util.Date;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -30,10 +32,11 @@ public class AbsoluteProgramSchedulerTest {
     private MotechSchedulerService schedulerService;
 
     @Mock
-    private CampaignEnrollmentService mockCampaignEnrollmentService;
+    private CampaignEnrollmentDataService mockCampaignEnrollmentDataService;
     @Mock
-    private AllMessageCampaigns allMessageCampaigns;
-
+    private CampaignRecordService campaignRecordService;
+    @Mock
+    private CampaignRecord campaignRecord;
 
     @Before
     public void setUp() {
@@ -46,9 +49,10 @@ public class AbsoluteProgramSchedulerTest {
         CampaignRequest request = new EnrollRequestBuilder().withDefaults().build();
         AbsoluteCampaign campaign = new CampaignBuilder().defaultAbsoluteCampaign();
 
-        AbsoluteCampaignSchedulerService absoluteCampaignScheduler = new AbsoluteCampaignSchedulerService(schedulerService, allMessageCampaigns);
+        AbsoluteCampaignSchedulerService absoluteCampaignScheduler = new AbsoluteCampaignSchedulerService(schedulerService, campaignRecordService);
 
-        when(allMessageCampaigns.getCampaign("testCampaign")).thenReturn(campaign);
+        when(campaignRecordService.findByName("testCampaign")).thenReturn(campaignRecord);
+        when(campaignRecord.build()).thenReturn(campaign);
 
         CampaignEnrollment enrollment = new CampaignEnrollment("12345", "testCampaign");
         absoluteCampaignScheduler.start(enrollment);
@@ -58,12 +62,12 @@ public class AbsoluteProgramSchedulerTest {
 
         List<RunOnceSchedulableJob> allJobs = capture.getAllValues();
 
-        Date startDate1 = DateUtil.newDateTime(campaign.getMessages().get(0).date(), request.deliverTime().getHour(), request.deliverTime().getMinute(), 0).toDate();
+        Date startDate1 = DateUtil.newDateTime(campaign.getMessages().get(0).getDate(), request.deliverTime().getHour(), request.deliverTime().getMinute(), 0).toDate();
         assertEquals(startDate1.toString(), allJobs.get(0).getStartDate().toString());
         assertEquals("org.motechproject.messagecampaign.fired-campaign-message", allJobs.get(0).getMotechEvent().getSubject());
         assertMotechEvent(allJobs.get(0), "MessageJob.testCampaign.12345.random-1", "random-1");
 
-        Date startDate2 = DateUtil.newDateTime(campaign.getMessages().get(1).date(), request.deliverTime().getHour(), request.deliverTime().getMinute(), 0).toDate();
+        Date startDate2 = DateUtil.newDateTime(campaign.getMessages().get(1).getDate(), request.deliverTime().getHour(), request.deliverTime().getMinute(), 0).toDate();
         assertEquals(startDate2.toString(), allJobs.get(1).getStartDate().toString());
         assertEquals("org.motechproject.messagecampaign.fired-campaign-message", allJobs.get(1).getMotechEvent().getSubject());
         assertMotechEvent(allJobs.get(1), "MessageJob.testCampaign.12345.random-2", "random-2");

@@ -23,19 +23,19 @@
 
     var directives = angular.module('sms.directives', []);
 
-    directives.directive('jqgridSearch', function () {
+    directives.directive('smsJqgridSearch', function () {
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
                 var elem = angular.element(element),
-                    table = angular.element('#' + attrs.jqgridSearch),
+                    table = angular.element('#' + attrs.smsJqgridSearch),
                     eventType = elem.data('event-type'),
                     timeoutHnd,
                     filter = function (time) {
                         var field = elem.data('search-field'),
                             value = elem.data('search-value'),
                             type = elem.data('field-type') || 'string',
-                            url = parseUri(jQuery('#' + attrs.jqgridSearch).jqGrid('getGridParam', 'url')),
+                            url = parseUri(jQuery('#' + attrs.smsJqgridSearch).jqGrid('getGridParam', 'url')),
                             query = {},
                             params = '?',
                             array = [],
@@ -87,7 +87,7 @@
                         }
 
                         timeoutHnd = setTimeout(function () {
-                            jQuery('#' + attrs.jqgridSearch).jqGrid('setGridParam', {
+                            jQuery('#' + attrs.smsJqgridSearch).jqGrid('setGridParam', {
                                 url: '../sms/log' + params
                             }).trigger('reloadGrid');
                         }, time || 0);
@@ -109,7 +109,7 @@
         };
     });
 
-    directives.directive('gridDatePickerFrom', function() {
+    directives.directive('smsGridDatePickerFrom', function() {
         return {
             restrict: 'A',
             link: function(scope, element, attrs) {
@@ -130,7 +130,7 @@
         };
     });
 
-    directives.directive('gridDatePickerTo', function() {
+    directives.directive('smsGridDatePickerTo', function() {
         return {
             restrict: 'A',
             link: function(scope, element, attrs) {
@@ -151,7 +151,7 @@
         };
     });
 
-    directives.directive('loggingGrid', function($compile, $http, $templateCache) {
+    directives.directive('smsLoggingGrid', function($compile, $http, $templateCache) {
         return {
             restrict: 'A',
             link: function(scope, element, attrs) {
@@ -213,7 +213,7 @@
                          sortable: false,
                         width: 250
                     }],
-                    pager: '#' + attrs.loggingGrid,
+                    pager: '#' + attrs.smsLoggingGrid,
                     width: '100%',
                     height: 'auto',
                     sortname: 'timestamp',
@@ -231,7 +231,7 @@
                         $('.ui-jqgrid-bdiv').width('100%');
                         $('.ui-jqgrid-hdiv').width('100%');
                         $('.ui-jqgrid-view').width('100%');
-                        $('#t_resourceTable').width('auto');
+                        $('#t_smsLoggingTable').width('auto');
                         $('.ui-jqgrid-pager').width('100%');
                         $('.ui-jqgrid-hbox').css({'padding-right':'0'});
                         $('.ui-jqgrid-hbox').width('100%');

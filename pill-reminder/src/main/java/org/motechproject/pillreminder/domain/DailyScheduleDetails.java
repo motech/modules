@@ -1,11 +1,20 @@
 package org.motechproject.pillreminder.domain;
 
+import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.Field;
+
+@Entity
 public class DailyScheduleDetails {
+
+    @Field(displayName = "Pill Window in Hours")
     private int pillWindowInHours;
+
+    @Field(displayName = "Repeat Interval in Minutes")
     private int repeatIntervalInMinutes;
+
+    @Field(displayName = "Buffer Over-Dosage Time in Minutes")
     private int bufferOverDosageTimeInMinutes;
 
-    //Needed for Jackson.
     public DailyScheduleDetails() {
     }
 
