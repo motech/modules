@@ -1,5 +1,6 @@
 package org.motechproject.mtraining.domain;
 
+import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
@@ -22,7 +23,14 @@ public class ActivityRecord {
     @Field
     private String lessonName;
 
-    public ActivityRecord() {
+    @Field
+    private DateTime startTime;
+
+    @Field
+    private DateTime completionTime;
+
+    public ActivityRecord(String externalId) {
+        this.externalId = externalId;
     }
 
     public String getExternalId() {
@@ -55,5 +63,21 @@ public class ActivityRecord {
 
     public void setLessonName(String lessonName) {
         this.lessonName = lessonName;
+    }
+
+    public DateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(DateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public DateTime getCompletionTime() {
+        return completionTime;
+    }
+
+    public void setCompletionTime(DateTime completionTime) {
+        this.completionTime = completionTime;
     }
 }

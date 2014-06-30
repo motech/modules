@@ -17,11 +17,26 @@ public interface ActivityService {
     ActivityRecord addActivity(ActivityRecord activityRecord);
 
     /**
+     * Update the activity for a user (set completion time, etc)
+     * @param activityRecord activity record to update
+     * @return updated activity record
+     */
+    ActivityRecord updateActivity(ActivityRecord activityRecord);
+
+    /**
      * Get a list of all activity for a user
      * @param externalId Id of the user
      * @return list of activity records
      */
     List<ActivityRecord> findActivityForUser(String externalId);
+
+    /**
+     * Get all completed activity for user identified by external id (decided by
+     * whether completion time has been set on the record)
+     * @param externalId external id of the user
+     * @return list of activity records
+     */
+    List<ActivityRecord> getCompletedActivityForUser(String externalId);
 
     /**
      * Get a unique user count for activity on a course
