@@ -48,7 +48,7 @@ public class MultilineResponseHandler extends ResponseHandler {
                             sms.getRecipients(), sms.getMessage(), sms.getMotechId(), null, failureCount, null, null));
 
                     String errorMessage = String.format(
-                            "Failed to sent SMS. Template error. Can't parse response: %s", responseLine);
+                            "Failed to send SMS. Template error. Can't parse response: %s", responseLine);
                     getLogger().error(errorMessage);
                     getMotechStatusMessage().alert(errorMessage);
 
@@ -61,7 +61,7 @@ public class MultilineResponseHandler extends ResponseHandler {
                     List<String> recipients = Arrays.asList(new String[]{recipient});
                     getEvents().add(outboundEvent(getConfig().retryOrAbortSubject(failureCount), getConfig().getName(),
                             recipients, sms.getMessage(), sms.getMotechId(), null, failureCount, null, null));
-                    getLogger().info("Failed to sent SMS: {}", failureMessage);
+                    getLogger().info("Failed to send SMS: {}", failureMessage);
                     getAuditRecords().add(new SmsRecord(getConfig().getName(), OUTBOUND, recipient, sms.getMessage(),
                             now(), getConfig().retryOrAbortStatus(failureCount), null, sms.getMotechId(), null,
                             failureMessage));

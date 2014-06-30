@@ -33,6 +33,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -197,6 +198,18 @@ public class SmsHttpService {
         return handler;
     }
 
+    private HttpMethod prepHttpMethod(Template template, Map<String, String> props, Config config) {
+        HttpMethod method = template.generateRequestFor(props);
+        if (logger.isDebugEnabled()) {
+            logger.debug(printableMethodParams(method));
+        }
+
+        if (template.getOutgoing().hasAuthentication()) {
+            authenticate(props, config);
+        }
+        return method;
+    }
+
     public synchronized void send(OutgoingSms sms) {
 
         //todo: right now we reload the configs for every call, but when we switch to the new config system we should
@@ -218,17 +231,12 @@ public class SmsHttpService {
         // Generate the HTTP request
         //
         try {
-            httpMethod = template.generateRequestFor(props);
-            if (logger.isDebugEnabled()) {
-                logger.debug(printableMethodParams(httpMethod));
-            }
-
-            if (template.getOutgoing().hasAuthentication()) {
-                authenticate(props, config);
-            }
-
+            httpMethod = prepHttpMethod(template, props, config);
             httpStatus = commonsHttpClient.executeMethod(httpMethod);
             httpResponse = httpMethod.getResponseBodyAsString();
+        } catch (UnknownHostException e) {
+            errorMessage = String.format("Network connectivity issues or problem with '%s' template? %s",
+                    template.getName(), e.toString());
         } catch (IllegalArgumentException|IOException|IllegalStateException e) {
             errorMessage = String.format("Problem with '%s' template? %s", template.getName(), e.toString());
         } finally {
