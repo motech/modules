@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.messagecampaign.EventKeys;
-import org.motechproject.messagecampaign.dao.AllCampaignEnrollments;
+import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollmentStatus;
 import org.quartz.SchedulerException;
@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -32,12 +33,12 @@ public class EndOfCampaignNotifierTest {
     @Mock
     private EventRelay eventRelay;
     @Mock
-    private AllCampaignEnrollments allCampaignEnrollments;
+    private CampaignEnrollmentDataService campaignEnrollmentDataService;
 
     @Before
     public void setup() {
         initMocks(this);
-        endOfCampaignNotifier = new EndOfCampaignNotifier(allCampaignEnrollments, eventRelay);
+        endOfCampaignNotifier = new EndOfCampaignNotifier(campaignEnrollmentDataService, eventRelay);
     }
 
     @Test
@@ -45,7 +46,7 @@ public class EndOfCampaignNotifierTest {
         Trigger trigger = mock(Trigger.class);
         when(trigger.getNextFireTime()).thenReturn(null);
 
-        when(allCampaignEnrollments.findByExternalIdAndCampaignName("123abc", "campaign")).thenReturn(new CampaignEnrollment("123abc", "campaign"));
+        when(campaignEnrollmentDataService.findByExternalIdAndCampaignName("123abc", "campaign")).thenReturn(new CampaignEnrollment("123abc", "campaign"));
 
         Map<String, Object> params = new HashMap<>();
         params.put(EventKeys.EXTERNAL_ID_KEY, "123abc");
@@ -68,7 +69,7 @@ public class EndOfCampaignNotifierTest {
         Trigger trigger = mock(Trigger.class);
         when(trigger.getNextFireTime()).thenReturn(null);
 
-        when(allCampaignEnrollments.findByExternalIdAndCampaignName("123abc", "campaign")).thenReturn(new CampaignEnrollment("123abc", "campaign"));
+        when(campaignEnrollmentDataService.findByExternalIdAndCampaignName("123abc", "campaign")).thenReturn(new CampaignEnrollment("123abc", "campaign"));
 
         Map<String, Object> params = new HashMap<>();
         params.put(EventKeys.EXTERNAL_ID_KEY, "123abc");
@@ -78,7 +79,7 @@ public class EndOfCampaignNotifierTest {
         endOfCampaignNotifier.handle(event);
 
         ArgumentCaptor<CampaignEnrollment> enrollmentCaptor = ArgumentCaptor.forClass(CampaignEnrollment.class);
-        verify(allCampaignEnrollments).update(enrollmentCaptor.capture());
+        verify(campaignEnrollmentDataService).update(enrollmentCaptor.capture());
         CampaignEnrollment enrollment = enrollmentCaptor.getValue();
         assertEquals("123abc", enrollment.getExternalId());
         assertEquals("campaign", enrollment.getCampaignName());

@@ -1,72 +1,29 @@
 package org.motechproject.messagecampaign.domain.message;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.motechproject.commons.date.model.Time;
-import org.motechproject.messagecampaign.web.util.TimeSerializer;
 
 import java.util.List;
 
-public class CampaignMessage {
-    @JsonProperty
-    private String name;
-    @JsonProperty
-    private List<String> formats;
-    @JsonProperty
-    private List<String> languages;
-    @JsonProperty
-    private String messageKey;
-    @JsonProperty
-    @JsonSerialize(using = TimeSerializer.class)
-    private Time startTime;
+public interface CampaignMessage {
+    String getName();
 
-    public String name() {
-        return name;
-    }
+    List<String> getFormats();
 
-    public List<String> formats() {
-        return formats;
-    }
+    List<String> getLanguages();
 
-    public List<String> languages() {
-        return languages;
-    }
+    String getMessageKey();
 
-    public String messageKey() {
-        return messageKey;
-    }
+    void setName(String name);
 
-    public CampaignMessage name(String name) {
-        this.name = name;
-        return this;
-    }
+    void setFormats(List<String> formats);
 
-    public CampaignMessage formats(List<String> formats) {
-        this.formats = formats;
-        return this;
-    }
+    void setLanguages(List<String> languages);
 
-    public CampaignMessage languages(List<String> languages) {
-        this.languages = languages;
-        return this;
-    }
+    void setMessageKey(String messageKey);
 
-    public CampaignMessage messageKey(String messageKey) {
-        this.messageKey = messageKey;
-        return this;
-    }
+    Time getStartTime();
 
-    public Time getStartTime() {
-        return startTime;
-    }
+    void setStartTime(Time startTime);
 
-    public CampaignMessage setStartTime(Time startTime) {
-        this.startTime = startTime;
-        return this;
-    }
-
-    public CampaignMessage setStartTime(int hour, int minute) {
-        this.startTime = new Time(hour, minute);
-        return this;
-    }
+    void setStartTime(int hour, int minute);
 }

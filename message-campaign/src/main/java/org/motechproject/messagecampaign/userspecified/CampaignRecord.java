@@ -1,8 +1,7 @@
 package org.motechproject.messagecampaign.userspecified;
 
-import org.ektorp.support.TypeDiscriminator;
-import org.motechproject.commons.couchdb.model.MotechBaseDataObject;
 import org.motechproject.commons.date.util.JodaFormatter;
+import org.motechproject.mds.annotations.Entity;
 import org.motechproject.messagecampaign.domain.campaign.Campaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignType;
 import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaign;
@@ -11,16 +10,17 @@ import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
 import org.motechproject.messagecampaign.domain.campaign.RepeatIntervalCampaign;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 
+import javax.jdo.annotations.Unique;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@TypeDiscriminator("doc.type == 'CampaignRecord'")
-public class CampaignRecord extends MotechBaseDataObject {
+@Entity
+public class CampaignRecord {
 
-    private static final long serialVersionUID = 7088652519806025250L;
-
+    @Unique
     private String name;
+
     private List<CampaignMessageRecord> messages = new ArrayList<>();
     private CampaignType campaignType;
     private String maxDuration;
@@ -29,6 +29,7 @@ public class CampaignRecord extends MotechBaseDataObject {
         Campaign campaign = campaignType.instance();
         campaign.setMessages(buildCampaignMessages());
         campaign.setName(this.name);
+
         if (campaign instanceof OffsetCampaign) {
             ((OffsetCampaign) campaign).maxDuration(maxDuration);
         } else if (campaign instanceof RepeatIntervalCampaign) {
@@ -38,11 +39,12 @@ public class CampaignRecord extends MotechBaseDataObject {
         } else if (campaign instanceof CronBasedCampaign) {
             ((CronBasedCampaign) campaign).maxDuration(maxDuration);
         }
+
         return campaign;
     }
 
     private List<CampaignMessage> buildCampaignMessages() {
-        List<CampaignMessage> campaignMessages = new ArrayList<CampaignMessage>();
+        List<CampaignMessage> campaignMessages = new ArrayList<>();
         for (CampaignMessageRecord messageRecord : this.messages) {
             campaignMessages.add(messageRecord.build(campaignType));
         }

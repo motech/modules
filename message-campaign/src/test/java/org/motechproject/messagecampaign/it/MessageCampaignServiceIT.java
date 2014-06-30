@@ -6,33 +6,39 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
-import org.motechproject.scheduler.factory.MotechSchedulerFactoryBean;
+import org.motechproject.testing.osgi.BasePaxIT;
+import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
+import org.ops4j.pax.exam.ExamFactory;
+import org.ops4j.pax.exam.junit.PaxExam;
+import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
+import org.ops4j.pax.exam.spi.reactors.PerSuite;
+import org.osgi.framework.BundleContext;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.TriggerKey;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import javax.inject.Inject;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.quartz.TriggerKey.triggerKey;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:testMessageCampaignApplicationContext.xml")
-public class MessageCampaignServiceIT {
+@RunWith(PaxExam.class)
+@ExamReactorStrategy(PerSuite.class)
+@ExamFactory(MotechNativeTestContainerFactory.class)
+public class MessageCampaignServiceIT extends BasePaxIT {
 
-    @Autowired
+    @Inject
     MessageCampaignService messageCampaignService;
 
-    @Autowired
-    MotechSchedulerFactoryBean motechSchedulerFactoryBean;
+    @Inject
+    private BundleContext bundleContext;
 
     Scheduler scheduler;
 
     @Before
     public void setup() {
-        scheduler = motechSchedulerFactoryBean.getQuartzScheduler();
+        scheduler = (Scheduler) getQuartzScheduler(bundleContext);
     }
 
     @Test

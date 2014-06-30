@@ -10,12 +10,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
-import org.motechproject.messagecampaign.dao.AllCampaignEnrollments;
+import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollmentStatus;
 import org.motechproject.messagecampaign.search.Criterion;
-import org.motechproject.messagecampaign.service.CampaignEnrollmentService;
 import org.motechproject.messagecampaign.service.CampaignEnrollmentsQuery;
+import org.motechproject.messagecampaign.service.EnrollmentService;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
 import org.motechproject.messagecampaign.web.ex.EnrollmentNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -32,7 +32,6 @@ import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -60,13 +59,13 @@ public class EnrollmentRestControllerTest {
     private MessageCampaignService messageCampaignService;
 
     @Mock
-    private CampaignEnrollmentService enrollmentService;
+    private EnrollmentService enrollmentService;
 
     @Mock
     private CampaignEnrollment secondEnrollment;
 
     @Mock
-    private AllCampaignEnrollments allCampaignEnrollments;
+    private CampaignEnrollmentDataService campaignEnrollmentDataService;
 
     @Before
     public void setUp() {
@@ -104,7 +103,7 @@ public class EnrollmentRestControllerTest {
         );
 
         ArgumentCaptor<CampaignRequest> captor = ArgumentCaptor.forClass(CampaignRequest.class);
-        verify(messageCampaignService).updateEnrollment(captor.capture(), eq("couchId"));
+        verify(messageCampaignService).updateEnrollment(captor.capture(), any(Long.class));
 
         assertEquals(new Time(20, 1), captor.getValue().deliverTime());
         assertEquals(new LocalDate(2013, 8, 14), captor.getValue().referenceDate());
@@ -114,10 +113,10 @@ public class EnrollmentRestControllerTest {
 
     @Test
     public void shouldReturn404WhenUpdatingNonexistentEnrollment() throws Exception {
-        final String expectedResponse = "Enrollment with id couchId not found";
+        final String expectedResponse = "Enrollment with id Id not found";
 
         doThrow(new EnrollmentNotFoundException(expectedResponse))
-                .when(messageCampaignService).updateEnrollment(any(CampaignRequest.class), eq("couchId"));
+                .when(messageCampaignService).updateEnrollment(any(CampaignRequest.class), any(Long.class));
 
         controller.perform(
                 post("/web-api/enrollments/{campaignName}/users/{userId}", CAMPAIGN_NAME, USER_ID)
@@ -133,10 +132,10 @@ public class EnrollmentRestControllerTest {
     @Test
     public void shouldReturn400WhenCreatingADuplicate() throws Exception {
         final String expectedResponse = String.format("%s is already enrolled in %s campaign, enrollmentId: %s",
-                USER_ID, CAMPAIGN_NAME, "couchId2");
+                USER_ID, CAMPAIGN_NAME, "Id2");
 
         doThrow(new IllegalArgumentException(expectedResponse))
-                .when(messageCampaignService).updateEnrollment(any(CampaignRequest.class), eq("couchId"));
+                .when(messageCampaignService).updateEnrollment(any(CampaignRequest.class), any(Long.class));
 
         controller.perform(
                 post("/web-api/enrollments/{campaignName}/users/{userId}", CAMPAIGN_NAME, USER_ID)
@@ -154,7 +153,7 @@ public class EnrollmentRestControllerTest {
         CampaignEnrollment enrollment = new CampaignEnrollment(USER_ID, CAMPAIGN_NAME);
         enrollment.setReferenceDate(new LocalDate(2013, 3, 10));
         enrollment.setDeliverTime(new Time(20, 30));
-        enrollment.setId("couchId");
+        enrollment.setId(9001L);
 
         when(enrollmentService.search(any(CampaignEnrollmentsQuery.class))).thenReturn(asList(enrollment));
 
@@ -199,15 +198,17 @@ public class EnrollmentRestControllerTest {
         CampaignEnrollment enrollment1 = new CampaignEnrollment("47sf6a", CAMPAIGN_NAME);
         enrollment1.setDeliverTime(new Time(20, 1));
         enrollment1.setReferenceDate(new LocalDate(2013, 4, 1));
-        enrollment1.setId("enrollmentId1");
+        enrollment1.setId(9001L);
+
         CampaignEnrollment enrollment2 = new CampaignEnrollment("d6gt40", CAMPAIGN_NAME);
         enrollment2.setDeliverTime(new Time(10, 0));
         enrollment2.setReferenceDate(new LocalDate(2013, 8, 18));
-        enrollment2.setId("enrollmentId2");
+        enrollment2.setId(9002L);
+
         CampaignEnrollment enrollment3 = new CampaignEnrollment("o34j6f", CAMPAIGN_NAME);
         enrollment3.setDeliverTime(new Time(10, 0));
         enrollment3.setReferenceDate(new LocalDate(2013, 1, 25));
-        enrollment3.setId("enrollmentId3");
+        enrollment3.setId(9003L);
 
         when(enrollmentService.search(any(CampaignEnrollmentsQuery.class)))
                 .thenReturn(asList(enrollment1, enrollment2, enrollment3));
@@ -254,11 +255,14 @@ public class EnrollmentRestControllerTest {
         CampaignEnrollment enrollment1 = new CampaignEnrollment(USER_ID, CAMPAIGN_NAME);
         enrollment1.setDeliverTime(new Time(20, 1));
         enrollment1.setReferenceDate(new LocalDate(2013, 4, 1));
-        enrollment1.setId("enrollmentId1");
+        enrollment1.setExternalId("enrollmentId1");
+        enrollment1.setId(9001L);
+
         CampaignEnrollment enrollment2 = new CampaignEnrollment(USER_ID, "CHILD_DEVELOPMENT");
         enrollment2.setDeliverTime(new Time(10, 0));
         enrollment2.setReferenceDate(new LocalDate(2013, 8, 18));
-        enrollment2.setId("enrollmentId2");
+        enrollment2.setExternalId("enrollmentId2");
+        enrollment2.setId(9002L);
 
         when(enrollmentService.search(any(CampaignEnrollmentsQuery.class)))
                 .thenReturn(asList(enrollment1, enrollment2));
@@ -303,15 +307,17 @@ public class EnrollmentRestControllerTest {
         CampaignEnrollment enrollment1 = new CampaignEnrollment(USER_ID, CAMPAIGN_NAME);
         enrollment1.setDeliverTime(new Time(20, 1));
         enrollment1.setReferenceDate(new LocalDate(2012, 1, 2));
-        enrollment1.setId("enrollmentId1");
+        enrollment1.setId(9001L);
+
         CampaignEnrollment enrollment2 = new CampaignEnrollment("d6gt40", CAMPAIGN_NAME);
         enrollment2.setDeliverTime(new Time(10, 0));
         enrollment2.setReferenceDate(new LocalDate(2012, 2, 15));
-        enrollment2.setId("enrollmentId2");
+        enrollment2.setId(9002L);
+
         CampaignEnrollment enrollment3 = new CampaignEnrollment("o34j6f", "CHILD_DEVELOPMENT");
         enrollment3.setDeliverTime(new Time(10, 0));
         enrollment3.setReferenceDate(new LocalDate(2012, 3, 13));
-        enrollment3.setId("enrollmentId3");
+        enrollment3.setId(9003L);
 
         when(enrollmentService.search(any(CampaignEnrollmentsQuery.class)))
                 .thenReturn(asList(enrollment1, enrollment2, enrollment3));
@@ -429,18 +435,18 @@ public class EnrollmentRestControllerTest {
     }
 
     private void verifyExternalIdCriterion(Criterion criterion, String externalId) {
-        criterion.fetch(allCampaignEnrollments);
-        verify(allCampaignEnrollments).findByExternalId(externalId);
+        criterion.fetch(campaignEnrollmentDataService);
+        verify(campaignEnrollmentDataService).findByExternalId(externalId);
     }
 
     private void verifyCampaignNameCriterion(Criterion criterion, String campaignName) {
-        criterion.fetch(allCampaignEnrollments);
-        verify(allCampaignEnrollments).findByCampaignName(campaignName);
+        criterion.fetch(campaignEnrollmentDataService);
+        verify(campaignEnrollmentDataService).findByCampaignName(campaignName);
     }
 
     private void verifyStatusCriterion(Criterion criterion, CampaignEnrollmentStatus status) {
-        criterion.fetch(allCampaignEnrollments);
-        verify(allCampaignEnrollments).findByStatus(status);
+        criterion.fetch(campaignEnrollmentDataService);
+        verify(campaignEnrollmentDataService).findByStatus(status);
     }
 
     private String loadJson(String filename) throws IOException {

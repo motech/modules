@@ -1,23 +1,31 @@
 package org.motechproject.messagecampaign.it.scheduler;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.commons.date.model.Time;
+import org.motechproject.commons.date.util.DateTimeSourceUtil;
+import org.motechproject.commons.date.util.datetime.DateTimeSource;
+import org.motechproject.commons.date.util.datetime.DefaultDateTimeSource;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
-import org.motechproject.scheduler.factory.MotechSchedulerFactoryBean;
 import org.motechproject.scheduler.service.MotechSchedulerService;
+import org.motechproject.testing.osgi.BasePaxIT;
+import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
+import org.ops4j.pax.exam.ExamFactory;
+import org.ops4j.pax.exam.junit.PaxExam;
+import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
+import org.ops4j.pax.exam.spi.reactors.PerClass;
+import org.osgi.framework.BundleContext;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,28 +33,28 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static org.motechproject.commons.date.util.DateUtil.newDateTime;
-import static org.motechproject.testing.utils.TimeFaker.fakeToday;
-import static org.motechproject.testing.utils.TimeFaker.stopFakingTime;
 import static org.quartz.TriggerKey.triggerKey;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:repeat_campaign_it/context.xml")
-public class RepeatCampaignSchedulingIT {
+@RunWith(PaxExam.class)
+@ExamReactorStrategy(PerClass.class)
+@ExamFactory(MotechNativeTestContainerFactory.class)
+public class RepeatCampaignSchedulingIT extends BasePaxIT {
+    private static final DateTimeSource DATE_TIME_SOURCE = new DefaultDateTimeSource();
 
-    @Autowired
+    @Inject
     MessageCampaignService messageCampaignService;
 
-    @Autowired
-    MotechSchedulerFactoryBean motechSchedulerFactoryBean;
+    @Inject
+    BundleContext bundleContext;
 
     Scheduler scheduler;
 
-    @Autowired
+    @Inject
     private MotechSchedulerService schedulerService;
 
     @Before
     public void setup() {
-        scheduler = motechSchedulerFactoryBean.getQuartzScheduler();
+        scheduler = (Scheduler) getQuartzScheduler(bundleContext);
     }
 
     @After
@@ -88,7 +96,25 @@ public class RepeatCampaignSchedulingIT {
     @Test
     public void shouldNotScheduleMessagesInPastForDelayedEnrollment() throws SchedulerException {
         try {
-            fakeToday(new LocalDate(2020, 7, 15));
+            DateTimeSourceUtil.setSourceInstance(new DateTimeSource() {
+                private DateTime dateTime = new DateTime(2020, 7, 15, 0, 0);
+
+                @Override
+                public DateTimeZone timeZone() {
+                    return dateTime.getZone();
+                }
+
+                @Override
+                public DateTime now() {
+                    return dateTime;
+                }
+
+                @Override
+                public LocalDate today() {
+                    return dateTime.toLocalDate();
+                }
+            });
+
             CampaignRequest campaignRequest = new CampaignRequest("entity_1", "WeeklyCampaign", new LocalDate(2020, 7, 10), null);
             messageCampaignService.enroll(campaignRequest);
             List<DateTime> fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.WeeklyCampaign.entity_1.message_key_1-repeat");
@@ -97,7 +123,7 @@ public class RepeatCampaignSchedulingIT {
                     newDateTime(2020, 7, 24, 10, 30, 0)),
                     fireTimes);
         } finally {
-            stopFakingTime();
+            DateTimeSourceUtil.setSourceInstance(DATE_TIME_SOURCE);
         }
     }
 
@@ -124,4 +150,6 @@ public class RepeatCampaignSchedulingIT {
         }
         return fireTimes;
     }
+
+
 }

@@ -1,6 +1,6 @@
 package org.motechproject.messagecampaign.search;
 
-import org.motechproject.messagecampaign.dao.AllCampaignEnrollments;
+import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 
 import java.util.ArrayList;
@@ -14,8 +14,8 @@ public class ExternalIdCriterion implements Criterion {
     }
 
     @Override
-    public List<CampaignEnrollment> fetch(AllCampaignEnrollments allCampaignEnrollments) {
-        return allCampaignEnrollments.findByExternalId(externalId);
+    public List<CampaignEnrollment> fetch(CampaignEnrollmentDataService campaignEnrollmentDataService) {
+        return campaignEnrollmentDataService.findByExternalId(externalId);
     }
 
     @Override

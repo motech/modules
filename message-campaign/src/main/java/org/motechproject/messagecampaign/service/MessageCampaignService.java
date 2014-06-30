@@ -24,8 +24,8 @@ public interface MessageCampaignService {
     /**
      * Unenrolls an external from the campaign as specified in the request. The entity will no longer receive events from the campaign.
      *
-     * @param externalId    - a client defined id to identify the enrollment
-     * @param campaignName  - the campaign into which the entity should be enrolled
+     * @param externalId   - a client defined id to identify the enrollment
+     * @param campaignName - the campaign into which the entity should be enrolled
      */
     void unenroll(String externalId, String campaignName);
 
@@ -40,7 +40,7 @@ public interface MessageCampaignService {
 
     Map<String, List<DateTime>> getCampaignTimings(String externalId, String campaignName, DateTime startDate, DateTime endDate);
 
-    void updateEnrollment(CampaignRequest enrollRequest, String enrollmentId);
+    void updateEnrollment(CampaignRequest enrollRequest, Long enrollmentId);
 
     void stopAll(CampaignEnrollmentsQuery query);
 

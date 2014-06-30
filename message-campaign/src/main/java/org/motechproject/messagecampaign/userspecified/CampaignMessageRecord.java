@@ -1,10 +1,12 @@
 package org.motechproject.messagecampaign.userspecified;
 
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.joda.time.LocalDate;
-import org.motechproject.commons.date.model.DayOfWeek;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.commons.date.util.JodaFormatter;
+import org.motechproject.mds.annotations.Entity;
+import org.motechproject.messagecampaign.domain.message.DayOfWeek;
 import org.motechproject.messagecampaign.domain.campaign.CampaignType;
 import org.motechproject.messagecampaign.domain.message.AbsoluteCampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
@@ -20,17 +22,22 @@ import java.util.Objects;
 
 import static org.motechproject.commons.date.model.Time.parseTime;
 
+@Entity
 public class CampaignMessageRecord {
-
     private static final long serialVersionUID = -1781293196314540037L;
-
+    @JsonProperty
     private String name;
+    @JsonProperty
     private List<String> formats;
+    @JsonProperty
     private List<String> languages;
+    @JsonProperty
     private String messageKey;
+    @JsonProperty
     private String startTime;
 
     @JsonSerialize(using = LocalDateSerializer.class, include = JsonSerialize.Inclusion.NON_NULL)
+    @JsonProperty
     private LocalDate date;
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -62,16 +69,16 @@ public class CampaignMessageRecord {
     }
 
     private CampaignMessage buildDayOfWeekCampaignMessage() {
-        DayOfWeekCampaignMessage message = new DayOfWeekCampaignMessage(getDaysOfWeek(repeatOn));
-        message.name(getName())
-                .formats(getFormats())
-                .languages(getLanguages())
-                .messageKey(getMessageKey())
-                .setStartTime(parseTime(startTime, ":"));
+        DayOfWeekCampaignMessage message = new DayOfWeekCampaignMessage(retrieveDaysOfWeek(repeatOn));
+        message.setName(getName());
+        message.setFormats(getFormats());
+        message.setLanguages(getLanguages());
+        message.setMessageKey(getMessageKey());
+        message.setStartTime(parseTime(startTime, ":"));
         return message;
     }
 
-    private List<DayOfWeek> getDaysOfWeek(List<String> days) {
+    private List<DayOfWeek> retrieveDaysOfWeek(List<String> days) {
         List<DayOfWeek> daysOfWeek = new ArrayList<>();
         for (String day : days) {
             daysOfWeek.add(DayOfWeek.parse(day));
@@ -82,43 +89,43 @@ public class CampaignMessageRecord {
     private CampaignMessage buildRepeatIntervalCampaignMessage() {
         RepeatIntervalCampaignMessage message = new RepeatIntervalCampaignMessage(new JodaFormatter().
                 parsePeriod(getRepeatEvery()));
-        message.name(getName())
-                .formats(getFormats())
-                .languages(getLanguages())
-                .messageKey(getMessageKey())
-                .setStartTime(parseTime(startTime, ":"));
+        message.setName(getName());
+        message.setFormats(getFormats());
+        message.setLanguages(getLanguages());
+        message.setMessageKey(getMessageKey());
+        message.setStartTime(parseTime(startTime, ":"));
         return message;
     }
 
     private CampaignMessage buildCron() {
         CronBasedCampaignMessage message = new CronBasedCampaignMessage();
-        message.name(name);
-        message.formats(formats);
-        message.languages(languages);
-        message.messageKey(messageKey);
-        message.cron(cron);
+        message.setName(name);
+        message.setFormats(formats);
+        message.setLanguages(languages);
+        message.setMessageKey(messageKey);
+        message.setCron(cron);
         message.setStartTime(parseTime(startTime, ":"));
         return message;
     }
 
     private CampaignMessage buildAbsolute() {
         AbsoluteCampaignMessage message = new AbsoluteCampaignMessage();
-        message.name(name);
-        message.formats(formats);
-        message.languages(languages);
-        message.messageKey(messageKey);
-        message.date(date);
+        message.setName(name);
+        message.setFormats(formats);
+        message.setLanguages(languages);
+        message.setMessageKey(messageKey);
+        message.setDate(date);
         message.setStartTime(parseTime(startTime, ":"));
         return message;
     }
 
     private CampaignMessage buildOffset() {
         OffsetCampaignMessage message = new OffsetCampaignMessage();
-        message.name(name);
-        message.formats(formats);
-        message.languages(languages);
-        message.messageKey(messageKey);
-        message.timeOffset(new JodaFormatter().parsePeriod(timeOffset));
+        message.setName(name);
+        message.setFormats(formats);
+        message.setLanguages(languages);
+        message.setMessageKey(messageKey);
+        message.setTimeOffset(new JodaFormatter().parsePeriod(timeOffset));
         message.setStartTime(Time.parseTime(startTime, ":"));
         return message;
     }
@@ -234,7 +241,7 @@ public class CampaignMessageRecord {
         result = 31 * result + (repeatOn != null ? repeatOn.hashCode() : 0);
         result = 31 * result + (messageKey != null ? messageKey.hashCode() : 0);
         result = 31 * result + (date != null ? date.hashCode() : 0);
-        result = timeHash();
+        result = 31 * result + timeHash();
         return result;
     }
 

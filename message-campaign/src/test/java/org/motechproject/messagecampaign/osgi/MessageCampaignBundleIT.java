@@ -7,11 +7,15 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
 import org.joda.time.LocalDate;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
+import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignType;
+import org.motechproject.messagecampaign.dao.CampaignMessageRecordService;
+import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.service.CampaignEnrollmentRecord;
 import org.motechproject.messagecampaign.service.CampaignEnrollmentsQuery;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
@@ -26,12 +30,13 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 
 import javax.inject.Inject;
+import javax.xml.bind.DatatypeConverter;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
 import static java.util.Arrays.asList;
-import static org.apache.commons.codec.binary.Base64.encodeBase64String;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -46,11 +51,27 @@ public class MessageCampaignBundleIT extends BasePaxIT {
     private MessageCampaignService messageCampaignService;
 
     @Inject
+    private CampaignMessageRecordService campaignMessageRecordService;
+
+    @Inject
+    private CampaignEnrollmentDataService campaignEnrollmentDataService;
+
+    @Inject
+    private CampaignRecordService campaignRecordService;
+
+    @Inject
     private MotechUserService motechUserService;
 
     @Before
     public void setUp() {
         getHttpClient().getCredentialsProvider().clear();
+    }
+
+    @After
+    public void tearDown() {
+        campaignEnrollmentDataService.deleteAll();
+        campaignMessageRecordService.deleteAll();
+        campaignRecordService.deleteAll();
     }
 
     @Test
@@ -72,7 +93,6 @@ public class MessageCampaignBundleIT extends BasePaxIT {
             messageCampaignService.unenroll(campaignRequest.externalId(), campaignRequest.campaignName()); // Doesn't delete the doc
         }
     }
-
     @Test
     public void testControllersAnonymous() throws Exception {
         HttpGet request = new HttpGet(String.format("http://localhost:%d/messagecampaign/web-api/campaigns", PORT));
@@ -110,14 +130,14 @@ public class MessageCampaignBundleIT extends BasePaxIT {
         motechUserService.register("user-mc-noauth", "pass", "testmcnoauth@test.com", null, asList("Admin User"), Locale.ENGLISH);
 
         HttpGet request = new HttpGet(String.format("http://localhost:%d/messagecampaign/web-api/enrollments/users", PORT));
-        request.setHeader("Authorization", "Basic " + encodeBase64String("user-mc-noauth:pass".getBytes("UTF-8")).trim());
+        request.setHeader("Authorization", "Basic " + DatatypeConverter.printBase64Binary("user-mc-noauth:pass".getBytes("UTF-8")).trim());
         HttpResponse response = getHttpClient().execute(request, HttpStatus.SC_FORBIDDEN);
         assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
 
         EntityUtils.consume(response.getEntity());
 
         request = new HttpGet(String.format("http://localhost:%d/messagecampaign/web-api/campaigns", PORT));
-        request.setHeader("Authorization", "Basic " + encodeBase64String("user-mc-noauth:pass".getBytes("UTF-8")).trim());
+        request.setHeader("Authorization", "Basic " + DatatypeConverter.printBase64Binary("user-mc-noauth:pass".getBytes("UTF-8")).trim());
         response = getHttpClient().execute(request, HttpStatus.SC_FORBIDDEN);
         assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
     }
@@ -127,14 +147,13 @@ public class MessageCampaignBundleIT extends BasePaxIT {
         motechUserService.register("user-mc-auth", "pass", "testmcauth@test.com", "test", asList("Campaign Manager"), Locale.ENGLISH);
 
         HttpGet request = new HttpGet(String.format("http://localhost:%d/messagecampaign/web-api/campaigns", PORT));
-        request.addHeader("Authorization", "Basic " + encodeBase64String("user-mc-auth:pass".getBytes("UTF-8")).trim());
+        request.addHeader("Authorization", "Basic " + DatatypeConverter.printBase64Binary("user-mc-auth:pass".getBytes("UTF-8")).trim());
         HttpResponse response = getHttpClient().execute(request);
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
 
         EntityUtils.consume(response.getEntity());
-
         request = new HttpGet(String.format("http://localhost:%d/messagecampaign/web-api/enrollments/users", PORT));
-        request.addHeader("Authorization", "Basic " + encodeBase64String("user-mc-auth:pass".getBytes("UTF-8")).trim());
+        request.addHeader("Authorization", "Basic " + DatatypeConverter.printBase64Binary("user-mc-auth:pass".getBytes("UTF-8")).trim());
         response = getHttpClient().execute(request);
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
     }

@@ -1,8 +1,8 @@
 package org.motechproject.messagecampaign.search;
 
 import org.junit.Test;
-import org.motechproject.messagecampaign.dao.AllCampaignEnrollments;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
+import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class CampaignNameCriterionTest {
     @Test
     public void shouldFetchByCampaignNameFromDb() {
         List<CampaignEnrollment> campaignEnrollments = mock(List.class);
-        AllCampaignEnrollments allCampaignEnrollments = mock(AllCampaignEnrollments.class);
+        CampaignEnrollmentDataService allCampaignEnrollments = mock(CampaignEnrollmentDataService.class);
 
         when(allCampaignEnrollments.findByCampaignName("campaign1")).thenReturn(campaignEnrollments);
 
