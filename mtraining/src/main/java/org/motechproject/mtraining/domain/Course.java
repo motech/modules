@@ -6,7 +6,7 @@ import org.motechproject.mds.annotations.Field;
 import java.util.List;
 
 /**
- * Created by kosh on 5/29/14.
+ * Course metadata containing chapter information
  */
 @Entity
 public class Course extends CourseUnitMetadata {

@@ -4,7 +4,7 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 /**
- * Created by kosh on 5/29/14.
+ * Question object with resource identifiers for question and answer
  */
 @Entity
 public class Question {

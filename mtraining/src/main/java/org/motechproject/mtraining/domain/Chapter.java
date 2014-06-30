@@ -6,7 +6,7 @@ import org.motechproject.mds.annotations.Field;
 import java.util.List;
 
 /**
- * Created by kosh on 5/29/14.
+ * Chapter object to store quiz and lesson metadata
  */
 @Entity
 public class Chapter extends CourseUnitMetadata {

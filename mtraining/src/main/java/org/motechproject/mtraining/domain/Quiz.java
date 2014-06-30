@@ -6,7 +6,7 @@ import org.motechproject.mds.annotations.Field;
 import java.util.List;
 
 /**
- * Created by kosh on 5/29/14.
+ * Quiz object to store questions and answer for a chapter
  */
 @Entity
 public class Quiz {

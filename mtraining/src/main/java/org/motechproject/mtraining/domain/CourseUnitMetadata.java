@@ -4,7 +4,7 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 /**
- * Created by kosh on 6/2/14.
+ * Common metadata shared by all course sub classes
  */
 @Entity
 public class CourseUnitMetadata {

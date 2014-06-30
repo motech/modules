@@ -4,7 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 /**
- * Created by kosh on 6/10/14.
+ * Parent IT class to run all the individual service ITs
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({MTrainingServiceIT.class})

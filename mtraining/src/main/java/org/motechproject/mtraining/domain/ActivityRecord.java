@@ -5,7 +5,7 @@ import org.motechproject.mds.annotations.Field;
 
 
 /**
- * Log for an instane of course access
+ * Log for an instance of course activity for a user identified by externalId
  */
 @Entity
 public class ActivityRecord {

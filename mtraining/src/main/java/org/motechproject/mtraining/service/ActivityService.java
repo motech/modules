@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Service interface for managing activity records for a Course
  */
-public interface ActivityRecordService {
+public interface ActivityService {
 
     /**
      * Add activity for a user (identified by externalId field in the record)
