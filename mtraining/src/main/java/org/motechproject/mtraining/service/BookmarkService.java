@@ -33,7 +33,7 @@ public interface BookmarkService {
     /**
      * Get all the bookmarks for a user
      * @param externalId external tracking id for the user
-     * @return
+     * @return list of bookmarks for user
      */
     List<Bookmark> getAllBookmarksForUser(String externalId);
 
