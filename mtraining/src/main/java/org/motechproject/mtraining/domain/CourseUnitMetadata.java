@@ -5,10 +5,19 @@ package org.motechproject.mtraining.domain;
  */
 public class CourseUnitMetadata {
 
+    /**
+     * Name of the course unit
+     */
     private String name;
 
+    /**
+     * Status of the course unit
+     */
     private boolean status;
 
+    /**
+     * sequence number to help with ordering of the courses
+     */
     private int sequenceNumber;
 
     public String getName() {
