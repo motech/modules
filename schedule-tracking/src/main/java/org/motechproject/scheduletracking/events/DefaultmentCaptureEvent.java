@@ -9,16 +9,16 @@ import java.util.HashMap;
 
 public class DefaultmentCaptureEvent {
     private String jobId;
-    private String enrollmentId;
+    private Long enrollmentId;
     private String externalId;
 
     public DefaultmentCaptureEvent(MotechEvent event) {
         this.jobId = (String) event.getParameters().get(MotechSchedulerService.JOB_ID_KEY);
-        this.enrollmentId = (String) event.getParameters().get(EventDataKeys.ENROLLMENT_ID);
+        this.enrollmentId = (Long) event.getParameters().get(EventDataKeys.ENROLLMENT_ID);
         this.externalId = (String) event.getParameters().get(EventDataKeys.EXTERNAL_ID);
     }
 
-    public DefaultmentCaptureEvent(String enrollmentId, String jobId, String externalId) {
+    public DefaultmentCaptureEvent(Long enrollmentId, String jobId, String externalId) {
         this.jobId = jobId;
         this.enrollmentId = enrollmentId;
         this.externalId = externalId;
@@ -32,7 +32,7 @@ public class DefaultmentCaptureEvent {
         return new MotechEvent(EventSubjects.DEFAULTMENT_CAPTURE, data);
     }
 
-    public String getEnrollmentId() {
+    public Long getEnrollmentId() {
         return enrollmentId;
     }
 

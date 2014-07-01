@@ -7,7 +7,6 @@ import org.mockito.Mock;
 import org.motechproject.scheduletracking.domain.Enrollment;
 import org.motechproject.scheduletracking.domain.WindowName;
 import org.motechproject.scheduletracking.repository.AllEnrollments;
-import org.motechproject.scheduletracking.service.impl.EnrollmentServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +20,6 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 public class EndOfWindowCriterionTest {
 
-    @Mock
-    EnrollmentServiceImpl enrollmentService;
     @Mock
     AllEnrollments allEnrollments;
 
@@ -40,7 +37,7 @@ public class EndOfWindowCriterionTest {
         Enrollment enrollment4 = mock(Enrollment.class);
         enrollments.addAll(asList(enrollment1, enrollment2, enrollment3, enrollment4));
 
-        when(allEnrollments.getAll()).thenReturn(enrollments);
+        when(allEnrollments.retrieveAll()).thenReturn(enrollments);
 
         when(enrollment1.getEndOfWindowForCurrentMilestone(WindowName.due)).thenReturn(newDateTime(2012, 2, 3, 5, 10, 0));
         when(enrollment2.getEndOfWindowForCurrentMilestone(WindowName.due)).thenReturn(newDateTime(2012, 2, 3, 0, 0, 0));

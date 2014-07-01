@@ -9,14 +9,12 @@ import org.motechproject.scheduletracking.domain.json.AlertRecord;
 import org.motechproject.scheduletracking.domain.json.MilestoneRecord;
 import org.motechproject.scheduletracking.domain.json.ScheduleRecord;
 import org.motechproject.scheduletracking.domain.json.ScheduleWindowsRecord;
-import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-@Component
 public class ScheduleFactory {
     public static final Period EMPTY_PERIOD = Period.ZERO;
 
@@ -29,7 +27,7 @@ public class ScheduleFactory {
 
     public Schedule build(ScheduleRecord scheduleRecord, Locale locale) {
         Schedule schedule = new Schedule(scheduleRecord.name());
-        schedule.isBasedOnAbsoluteWindows(scheduleRecord.isAbsoluteSchedule());
+        schedule.setBasedOnAbsoluteWindows(scheduleRecord.isAbsoluteSchedule());
         int alertIndex = 0;
         Period previousWindowEnd = new Period();
 

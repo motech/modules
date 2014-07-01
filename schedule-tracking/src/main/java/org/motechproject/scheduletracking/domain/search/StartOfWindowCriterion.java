@@ -22,7 +22,7 @@ public class StartOfWindowCriterion implements Criterion {
 
     @Override
     public List<Enrollment> fetch(AllEnrollments allEnrollments) {
-        return filter(allEnrollments.getAll());
+        return filter(allEnrollments.retrieveAll());
     }
 
     @Override

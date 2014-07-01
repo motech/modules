@@ -22,7 +22,7 @@ public interface ScheduleTrackingService {
      * @param enrollmentRequest
      * @return enrollmentId string
      */
-    String enroll(EnrollmentRequest enrollmentRequest);
+    Long enroll(EnrollmentRequest enrollmentRequest);
 
     /**
      * Fulfills the current milestone of the enrollment(with fulfillmentDate and time as the the given date and time) which belongs to the given externalId and schedule name     *

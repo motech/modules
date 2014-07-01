@@ -16,7 +16,7 @@ public class InWindowCriterion implements Criterion {
 
     @Override
     public List<Enrollment> fetch(AllEnrollments allEnrollments) {
-        return filter(allEnrollments.getAll());
+        return filter(allEnrollments.retrieveAll());
     }
 
     @Override

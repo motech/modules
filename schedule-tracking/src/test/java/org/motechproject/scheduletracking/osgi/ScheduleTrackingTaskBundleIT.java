@@ -13,7 +13,7 @@ import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
-import org.ops4j.pax.exam.spi.reactors.PerClass;
+import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import java.io.IOException;
 import java.util.List;
@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(PaxExam.class)
-@ExamReactorStrategy(PerClass.class)
+@ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class ScheduleTrackingTaskBundleIT extends AbstractTaskBundleIT {
 
@@ -86,6 +86,6 @@ public class ScheduleTrackingTaskBundleIT extends AbstractTaskBundleIT {
         assertTrue(hasActionParameterKey(EventDataKeys.EXTERNAL_ID, defaultmentCaptureAction.getActionParameters()));
         assertTrue(hasActionParameterKey(MotechSchedulerService.JOB_ID_KEY,
                 defaultmentCaptureAction.getActionParameters()));
-
     }
+
 }

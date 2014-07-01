@@ -37,7 +37,7 @@ public class EnrollmentDefaultmentService {
             return;
         }
 
-        MotechEvent event = new DefaultmentCaptureEvent(enrollment.getId(), enrollment.getId(), enrollment.getExternalId()).toMotechEvent();
+        MotechEvent event = new DefaultmentCaptureEvent(enrollment.getId(), enrollment.getId().toString(), enrollment.getExternalId()).toMotechEvent();
         schedulerService.safeScheduleRunOnceJob(new RunOnceSchedulableJob(event, milestoneEndDateTime.toDate()));
     }
 

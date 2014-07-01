@@ -7,32 +7,37 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.scheduletracking.domain.Enrollment;
+import org.motechproject.scheduletracking.domain.EnrollmentBuilder;
 import org.motechproject.scheduletracking.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.domain.Schedule;
-import org.motechproject.scheduletracking.domain.ScheduleFactory;
 import org.motechproject.scheduletracking.domain.WindowName;
-import org.motechproject.scheduletracking.domain.json.ScheduleRecord;
 import org.motechproject.scheduletracking.repository.AllEnrollments;
-import org.motechproject.scheduletracking.repository.AllSchedules;
-import org.motechproject.scheduletracking.repository.TrackedSchedulesJsonReaderImpl;
+import org.motechproject.scheduletracking.repository.dataservices.EnrollmentDataService;
 import org.motechproject.scheduletracking.service.EnrollmentRecord;
 import org.motechproject.scheduletracking.service.EnrollmentsQuery;
+import org.motechproject.scheduletracking.repository.dataservices.ScheduleDataService;
 import org.motechproject.scheduletracking.service.ScheduleTrackingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.motechproject.scheduletracking.utility.TestScheduleUtil;
+import org.motechproject.testing.osgi.BasePaxIT;
+import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
+import org.motechproject.testing.osgi.helper.ServiceRetriever;
+import org.ops4j.pax.exam.ExamFactory;
+import org.ops4j.pax.exam.junit.PaxExam;
+import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
+import org.ops4j.pax.exam.spi.reactors.PerSuite;
+import org.osgi.framework.BundleContext;
+import org.springframework.web.context.WebApplicationContext;
 
+import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import static ch.lambdaj.Lambda.extract;
 import static ch.lambdaj.Lambda.on;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
-import static org.hamcrest.Matchers.hasItems;
-import static org.junit.Assert.assertThat;
 import static org.motechproject.commons.date.util.DateUtil.newDate;
 import static org.motechproject.commons.date.util.DateUtil.newDateTime;
 import static org.motechproject.commons.date.util.DateUtil.now;
@@ -40,32 +45,36 @@ import static org.motechproject.scheduletracking.utility.DateTimeUtil.daysAgo;
 import static org.motechproject.scheduletracking.utility.DateTimeUtil.weeksAgo;
 import static org.motechproject.scheduletracking.utility.DateTimeUtil.yearsAgo;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:META-INF/motech/*.xml")
-public class EnrollmentsSearchIT {
+@RunWith(PaxExam.class)
+@ExamReactorStrategy(PerSuite.class)
+@ExamFactory(MotechNativeTestContainerFactory.class)
+public class EnrollmentsSearchIT extends BasePaxIT {
 
-    @Autowired
-    private ScheduleTrackingService scheduleTrackingService;
-    @Autowired
     private AllEnrollments allEnrollments;
-    @Autowired
-    private AllSchedules allSchedules;
-    @Autowired
-    private ScheduleFactory scheduleFactory;
+    @Inject
+    private ScheduleTrackingService scheduleTrackingService;
+    @Inject
+    private ScheduleDataService scheduleDataService;
+    @Inject
+    private EnrollmentDataService enrollmentDataService;
+    @Inject
+    private BundleContext bundleContext;
 
     @Before
     public void setUp(){
-        List<ScheduleRecord> scheduleRecords = new TrackedSchedulesJsonReaderImpl().getAllSchedules("/schedules");
-        for (ScheduleRecord scheduleRecord : scheduleRecords) {
-            Schedule schedule = scheduleFactory.build(scheduleRecord, Locale.ENGLISH);
-            allSchedules.add(schedule);
+        for (Schedule schedule : TestScheduleUtil.getTestSchedules(bundleContext, "schedules")) {
+            scheduleDataService.create(schedule);
         }
+
+        //Set up beans
+        WebApplicationContext webAppContext = ServiceRetriever.getWebAppContext(bundleContext, "org.motechproject.schedule-tracking");
+        allEnrollments = (AllEnrollments) webAppContext.getBean("allEnrollments");
     }
 
     @After
     public void tearDown() {
-        allEnrollments.removeAll();
-        allSchedules.removeAll();
+        enrollmentDataService.deleteAll();
+        scheduleDataService.deleteAll();
     }
 
     @Test
@@ -115,7 +124,7 @@ public class EnrollmentsSearchIT {
         EnrollmentsQuery query = new EnrollmentsQuery().havingSchedule("IPTI Schedule").completedDuring(newDateTime(2012, 10, 9, 0, 0, 0), newDateTime(2012, 10, 15, 23, 59, 59));
         List<EnrollmentRecord> result = scheduleTrackingService.search(query);
 
-        assertThat(extract(result, on(EnrollmentRecord.class).getExternalId()), hasItems("entity_1", "entity_3"));
+        assertEquals(extract(result, on(EnrollmentRecord.class).getExternalId()), Arrays.asList("entity_1", "entity_3"));
     }
 
     @Test
@@ -166,8 +175,8 @@ public class EnrollmentsSearchIT {
     }
 
     private Enrollment createEnrollment(String externalId, String scheduleName, String currentMilestoneName, DateTime referenceDateTime, DateTime enrollmentDateTime, Time preferredAlertTime, EnrollmentStatus enrollmentStatus, Map<String,String> metadata) {
-        Enrollment enrollment = new Enrollment().setExternalId(externalId).setSchedule(allSchedules.getByName(scheduleName)).setCurrentMilestoneName(currentMilestoneName).setStartOfSchedule(referenceDateTime).setEnrolledOn(enrollmentDateTime).setPreferredAlertTime(preferredAlertTime).setStatus(enrollmentStatus).setMetadata(metadata);
-        allEnrollments.add(enrollment);
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId(externalId).withSchedule(scheduleDataService.findByName(scheduleName)).withCurrentMilestoneName(currentMilestoneName).withStartOfSchedule(referenceDateTime).withEnrolledOn(enrollmentDateTime).withPreferredAlertTime(preferredAlertTime).withStatus(enrollmentStatus).withMetadata(metadata).toEnrollment();
+        enrollmentDataService.create(enrollment);
         return enrollment;
     }
 }
