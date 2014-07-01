@@ -7,6 +7,7 @@ import org.motechproject.mds.annotations.Field;
 
 /**
  * Log for an instance of course activity for a user identified by externalId
+ * This could be used either as a bookmarking system or enrollment system to track progress
  */
 @Entity
 public class ActivityRecord {
