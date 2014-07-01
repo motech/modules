@@ -6,6 +6,8 @@ import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
 
+import java.util.List;
+
 /**
  * Interface for repository that persists simple records and allows CRUD.
  * MotechDataService base class will provide the implementation of this class as well
@@ -14,5 +16,5 @@ import org.motechproject.mds.service.MotechDataService;
  */
 public interface ActivityDataService extends MotechDataService<ActivityRecord> {
     @Lookup
-    ActivityRecord findRecordByName(@LookupField(name = "name") String recordName);
+    List<ActivityRecord> findRecordsForUser(@LookupField(name = "externalId") String externalId);
 }
