@@ -1106,7 +1106,7 @@
         <module>commcare</module>
        <!-- <module>event-logging</module> -->
         <module>hindi-transliteration</module>
-  <module>http-agent</module>
+  <!--<module>http-agent</module>-->
       <!--  <module>mtraining</module>
         <module>sms</module>
         <module>message-campaign</module>
