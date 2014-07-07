@@ -28,4 +28,11 @@ public interface JobTriggerService {
 
     void handleEvent(MotechEvent event) throws BatchException;
 
+    /**
+     * Restarts the Execution
+     * @param jobName 
+     * @param executionId
+     */
+    void restart(String jobName, Integer executionId) throws BatchException;
+
 }

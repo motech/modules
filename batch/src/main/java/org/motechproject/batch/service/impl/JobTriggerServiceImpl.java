@@ -61,16 +61,7 @@ public class JobTriggerServiceImpl implements JobTriggerService {
         triggerJob(jobName);
     }
 
-    @Override
-    public void triggerJob(String jobName) throws BatchException {
-        LOGGER.info("Starting executing JOB: " + jobName);
-        ClassLoader classLoader = Thread.currentThread()
-                .getContextClassLoader();
-        ClassLoader contextClassLoader = getClass().getClassLoader();
-        BatchJobClassLoader testLoader = new BatchJobClassLoader(
-                contextClassLoader);
-
-        Thread.currentThread().setContextClassLoader(testLoader);
+    private Properties getJobParameters(String jobName) throws BatchException {
         List<BatchJob> batchJobList = jobRepo.findByJobName(jobName);
         boolean jobExists = true;
         if (batchJobList == null || batchJobList.size() == 0) {
@@ -91,6 +82,20 @@ public class JobTriggerServiceImpl implements JobTriggerService {
             jobParameters.put(batchJobParameter.getParameterName(),
                     batchJobParameter.getParameterValue());
         }
+        return jobParameters;
+    }
+
+    @Override
+    public void triggerJob(String jobName) throws BatchException {
+        LOGGER.info("Starting executing JOB: " + jobName);
+        ClassLoader classLoader = Thread.currentThread()
+                .getContextClassLoader();
+        ClassLoader contextClassLoader = getClass().getClassLoader();
+        BatchJobClassLoader testLoader = new BatchJobClassLoader(
+                contextClassLoader);
+
+        Thread.currentThread().setContextClassLoader(testLoader);
+        Properties jobParameters = getJobParameters(jobName);
 
         try {
             jsrJobOperator.start(jobName, jobParameters);
@@ -147,6 +152,15 @@ public class JobTriggerServiceImpl implements JobTriggerService {
                 .setJobExecutionHistoryList(executionHistoryList);
 
         return jobExecutionHistoryListDto;
+    }
+
+    @Override
+    public void restart(String jobName, Integer executionId)
+            throws BatchException {
+        Properties restartParameters = getJobParameters(jobName);
+
+        jsrJobOperator.restart(executionId, restartParameters);
+
     }
 
 }

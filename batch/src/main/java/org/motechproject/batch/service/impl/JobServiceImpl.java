@@ -28,6 +28,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.scheduler.contract.CronSchedulableJob;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
+import org.quartz.ObjectAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -124,7 +125,20 @@ public class JobServiceImpl implements JobService {
                 parameters);
         CronSchedulableJob providerSyncCronJob = new CronSchedulableJob(
                 motechEvent, batchJob.getCronExpression());
-        schedulerService.scheduleJob(providerSyncCronJob);
+        try {
+            schedulerService.scheduleJob(providerSyncCronJob);
+        } catch (RuntimeException e) {
+            if (e.getCause() instanceof ObjectAlreadyExistsException) {
+                throw new BatchException(ApplicationErrors.BAD_REQUEST, e,
+                        "Job name already exists");
+            } else {
+                if (e.getCause() instanceof ObjectAlreadyExistsException) {
+                    throw new BatchException(ApplicationErrors.BAD_REQUEST, e,
+                            "Motech Scheduler threw a run time Exception with Message : "
+                                    + e.getMessage());
+                }
+            }
+        }
     }
 
     @Override
@@ -178,7 +192,22 @@ public class JobServiceImpl implements JobService {
                             "Date[%s] not in correct format. Correct format is [%s]",
                             params.getDate(), BatchConstants.DATE_FORMAT));
         }
-        schedulerService.scheduleRunOnceJob(schedulableJob);
+        try {
+            schedulerService.scheduleRunOnceJob(schedulableJob);
+        } catch (RuntimeException e) {
+            if (e.getCause() instanceof ObjectAlreadyExistsException) {
+                throw new BatchException(ApplicationErrors.BAD_REQUEST, e,
+                        "Job name already exists");
+            } else {
+                if (e.getCause() instanceof ObjectAlreadyExistsException) {
+                    throw new BatchException(ApplicationErrors.BAD_REQUEST, e,
+                            "Motech Scheduler threw a run time Exception with Message : "
+                                    + e.getMessage());
+                }
+            }
+
+        }
+
     }
 
     @SuppressWarnings("deprecation")
@@ -252,6 +281,20 @@ public class JobServiceImpl implements JobService {
 
         return String.format("{\"message\":\"%s\"}",
                 "Hello World " + hubTopics.size());
+
+    }
+
+    @Override
+    public void rescheduleJob(String jobName, String cronExpression) {
+
+        schedulerService.rescheduleJob(BatchConstants.EVENT_SUBJECT, jobName,
+                cronExpression);
+
+    }
+
+    @Override
+    public void unscheduleJob(String jobName) throws BatchException {
+        schedulerService.unscheduleJob(BatchConstants.EVENT_SUBJECT, jobName);
 
     }
 

@@ -26,6 +26,7 @@ public final class BatchConstants {
     public static final int DOUBLE_VAL_PRECISION = 17;
     public static final int DOUBLE_VAL_SCALE = 17;
     public static final int CODE_LENGTH = 1000;
+    public static final String JOB_NAME_REQUEST_PARAM = "jobName";
     
     
     private BatchConstants() {

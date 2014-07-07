@@ -17,6 +17,7 @@ import org.motechproject.batch.model.OneTimeJobScheduleParams;
 import org.motechproject.batch.service.FileUploadService;
 import org.motechproject.batch.service.JobService;
 import org.motechproject.batch.service.JobTriggerService;
+import org.motechproject.batch.util.BatchConstants;
 import org.motechproject.batch.validation.BatchValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -121,10 +122,11 @@ public class BatchController {
     }
 
     @ResponseStatus(value = HttpStatus.OK)
-    @RequestMapping(value = "/jobHistory/{jobName}", method = RequestMethod.GET)
+    @RequestMapping(value = "/jobHistory/{jobName}", method = RequestMethod.GET,params = {
+            BatchConstants.JOB_NAME_REQUEST_PARAM})
     @ResponseBody
     public JobExecutionHistoryList getjobHistoryList(
-            @PathVariable("jobName") String jobName) {
+            @PathVariable(value = BatchConstants.JOB_NAME_REQUEST_PARAM) String jobName) {
         LOGGER.info(String.format(
                 "Request to get execution history of job %s started", jobName));
         StopWatch sw = new StopWatch();
@@ -155,9 +157,10 @@ public class BatchController {
     }
 
     @ResponseStatus(value = HttpStatus.OK)
-    @RequestMapping(value = "/trigger/{jobName}", method = RequestMethod.GET)
+    @RequestMapping(value = "/trigger/{jobName}", method = RequestMethod.GET,params = {
+            BatchConstants.JOB_NAME_REQUEST_PARAM})
     @ResponseBody
-    public void triggerJob(@PathVariable("jobName") String jobName) {
+    public void triggerJob(@PathVariable(BatchConstants.JOB_NAME_REQUEST_PARAM) String jobName) {
 
         LOGGER.info(String.format("Request to trigger the job %s started",
                 jobName));
@@ -226,6 +229,91 @@ public class BatchController {
             LOGGER.info(String
                     .format("Request to schedule a cron job for job %s ended. Time taken (ms) = %d",
                             params.getJobName(), sw.getTime()));
+            sw.stop();
+        }
+
+    }
+
+    /**
+     * Reschedule a cron job given job name, cron expression
+     * 
+     * @param jobName
+     *            jobName for the job to be rescheduled
+     * @param cronExpression
+     *            cron expression for the job
+     * @param paramsMap
+     * @throws BatchException
+     */
+    @ResponseStatus(value = HttpStatus.OK)
+    @RequestMapping(value = "/reschedulecronjob", method = RequestMethod.POST,params = {
+            BatchConstants.JOB_NAME_REQUEST_PARAM})
+    @ResponseBody
+    public void rescheduleJob(@RequestParam(value=BatchConstants.JOB_NAME_REQUEST_PARAM) String jobName,
+            @RequestParam("cronExpression") String cronExpression) {
+
+        LOGGER.info(String
+                .format("Request to reschedule a cron job for job %s with cron expression %s started",
+                        jobName, cronExpression));
+        StopWatch sw = new StopWatch();
+        sw.start();
+        try {
+            List<String> errors = batchValidator.validateShedulerInputs(
+                    jobName, cronExpression);
+
+            if (!errors.isEmpty()) {
+                throw new BatchException(ApplicationErrors.BAD_REQUEST,
+                        errors.toString());
+            }
+            jobService.rescheduleJob(jobName, cronExpression);
+        } catch (BatchException e) {
+            LOGGER.error(String
+                    .format("Error occured while processing request to schedule a cron job for job %s with cron expression %s",
+                            jobName, cronExpression));
+            throw new RestException(e, e.getMessage());
+        } finally {
+            LOGGER.info(String
+                    .format("Request to reschedule a cron job for job %s ended. Time taken (ms) = %d",
+                            jobName, sw.getTime()));
+            sw.stop();
+        }
+
+    }
+
+    /**
+     * Unschedule a cron job given job name
+     * 
+     * @param jobName
+     *            jobName for the job to be rescheduled
+     * @throws BatchException
+     */
+    @ResponseStatus(value = HttpStatus.OK)
+    @RequestMapping(value = "/unschedulecronjob", method = RequestMethod.POST,params = {
+            BatchConstants.JOB_NAME_REQUEST_PARAM})
+    @ResponseBody
+    public void unscheduleJob(@RequestParam(value=BatchConstants.JOB_NAME_REQUEST_PARAM) String jobName) {
+
+        LOGGER.info(String
+                .format("Request to reschedule a cron job for job %s with cron expression %s started",
+                        jobName));
+        StopWatch sw = new StopWatch();
+        sw.start();
+        try {
+            List<String> errors = batchValidator.validateUpdateInputs(jobName);
+
+            if (!errors.isEmpty()) {
+                throw new BatchException(ApplicationErrors.BAD_REQUEST,
+                        errors.toString());
+            }
+            jobService.unscheduleJob(jobName);
+        } catch (BatchException e) {
+            LOGGER.error(String
+                    .format("Error occured while processing request to unschedule a  job for job %s with cron expression %s",
+                            jobName));
+            throw new RestException(e, e.getMessage());
+        } finally {
+            LOGGER.info(String
+                    .format("Request to reschedule a cron job for job %s ended. Time taken (ms) = %d",
+                            jobName, sw.getTime()));
             sw.stop();
         }
 
@@ -343,14 +431,39 @@ public class BatchController {
         return error;
     }
 
+    @ResponseStatus(value = HttpStatus.OK)
+    @RequestMapping(value = "/restart/{jobName}/{executionId}", method = RequestMethod.GET,params = {
+            BatchConstants.JOB_NAME_REQUEST_PARAM})
+    @ResponseBody
+    public void restartExecution(@PathVariable(value=BatchConstants.JOB_NAME_REQUEST_PARAM) String jobName,
+            @PathVariable("executionId") Integer executionId) {
+
+        LOGGER.info(String.format(
+                "Request to restart the execution %d for job %s started", executionId,jobName));
+        StopWatch sw = new StopWatch();
+        sw.start();
+        try {
+
+            jobTriggerService.restart(jobName,executionId);
+        } catch (BatchException e) {
+            LOGGER.error(e.getMessage());
+            throw new RestException(e, e.getMessage());
+        } finally {
+            LOGGER.info(String
+                    .format("Request to restart the execution %d  for job %s ended . Time taken (ms) = %d ",
+                            executionId , jobName, sw.getTime()));
+            sw.stop();
+        }
+    }
+
     /**
      * Ping method to test if application is up. To be removed
      * 
      * @return
      */
-    @RequestMapping("/sayHello")
+    @RequestMapping("/ping")
     @ResponseBody
-    public String sayHello() {
+    public String ping() {
         return jobService.sayHello();
 
     }
