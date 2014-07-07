@@ -2,16 +2,22 @@ package org.motechproject.batch.util;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 
+import org.apache.log4j.Logger;
+
 public final class BatchUtils {
-    
+
     private BatchUtils() {
-        
+
     }
+
+    private static final Logger LOGGER = Logger.getLogger(BatchUtils.class);
 
     public static String getNetworkHostName() {
         String hostName = null;
@@ -20,8 +26,9 @@ public final class BatchUtils {
             hostName = InetAddress.getLocalHost().getHostName();
 
             if ("localhost".equalsIgnoreCase(hostName)) {
-                NetworkInterface networkInterface = NetworkInterface
-                        .getByName("eth0");
+                NetworkInterface networkInterface;
+
+                networkInterface = NetworkInterface.getByName("eth0");
 
                 Enumeration<InetAddress> a = networkInterface
                         .getInetAddresses();
@@ -35,9 +42,10 @@ public final class BatchUtils {
                     }
                 }
             }
-
-        } catch (Exception e) {
-            
+        } catch (SocketException e) {
+            LOGGER.debug(e.getMessage());
+        } catch (UnknownHostException e) {
+            LOGGER.debug(e.getMessage());
         }
 
         return hostName;

@@ -19,9 +19,10 @@ public class BatchExecutionDao {
         JobExecutionHistoryListDTO jobExecutionHistoryList = new JobExecutionHistoryListDTO();
         String sql = "select je.* from BATCH_JOB_INSTANCE ji "
                 + "inner join BATCH_JOB_EXECUTION je on ji.JOB_INSTANCE_ID=je.JOB_INSTANCE_ID where ji.JOB_NAME='"
-                + jobName +"'";
+                + jobName + "'";
         List<JobExecutionHistoryDTO> jobExecutionHistory = jdbcTempalte.query(
-                sql, new BeanPropertyRowMapper<JobExecutionHistoryDTO>(JobExecutionHistoryDTO.class));
+                sql, new BeanPropertyRowMapper<JobExecutionHistoryDTO>(
+                        JobExecutionHistoryDTO.class));
         jobExecutionHistoryList.setJobExecutionHistoryList(jobExecutionHistory);
         return jobExecutionHistoryList;
 

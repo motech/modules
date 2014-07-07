@@ -21,7 +21,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.batch.exception.BatchException;
 import org.motechproject.batch.mds.BatchJob;
-import org.motechproject.batch.mds.BatchJobExecutionParams;
 import org.motechproject.batch.mds.BatchJobParameters;
 import org.motechproject.batch.mds.BatchJobStatus;
 import org.motechproject.batch.mds.service.BatchJobMDSService;
@@ -69,12 +68,7 @@ public class JobServiceImplTest {
 	 List<BatchJob> batchJobs = new ArrayList<BatchJob>();
 	 batchJobs.add(batchJob);
 	 
-	 List<BatchJobExecutionParams> executionHistoryList = new ArrayList<>();
-	 BatchJobExecutionParams batchJobExecutionParams = new BatchJobExecutionParams();
-	 
-	 batchJobExecutionParams.setKeyName("testKey");
-	 batchJobExecutionParams.setStringVal("testVal");
-	 executionHistoryList.add(batchJobExecutionParams);
+
 	 
 	 batchJobStatus = new BatchJobStatus();
 	 batchJobStatus.setJobStatusCode("active");

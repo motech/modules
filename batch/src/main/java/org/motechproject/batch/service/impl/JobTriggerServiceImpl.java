@@ -41,7 +41,7 @@ public class JobTriggerServiceImpl implements JobTriggerService {
 
     @Value("${xml.path}")
     private String xmlPath;
-    
+
     @Autowired
     private BatchExecutionDao executionDao;
 
@@ -144,7 +144,7 @@ public class JobTriggerServiceImpl implements JobTriggerService {
             classLoader = Thread.currentThread().getContextClassLoader();
             ClassLoader contextClassLoader = getClass().getClassLoader();
             BatchJobClassLoader testLoader = new BatchJobClassLoader(
-                    contextClassLoader,xmlPath);
+                    contextClassLoader, xmlPath);
 
             Thread.currentThread().setContextClassLoader(testLoader);
             return jsrJobOperator.restart(executionId, restartParameters);

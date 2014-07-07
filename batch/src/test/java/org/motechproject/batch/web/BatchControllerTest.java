@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,14 +18,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.batch.exception.BatchErrors;
 import org.motechproject.batch.exception.BatchException;
 import org.motechproject.batch.exception.RestException;
+import org.motechproject.batch.mds.BatchJobStatus;
 import org.motechproject.batch.model.BatchJobDTO;
 import org.motechproject.batch.model.BatchJobListDTO;
 import org.motechproject.batch.model.JobExecutionHistoryDTO;
-import org.motechproject.batch.model.JobExecutionHistoryList;
 import org.motechproject.batch.model.JobExecutionHistoryListDTO;
-import org.motechproject.batch.mds.BatchJobExecution;
-import org.motechproject.batch.mds.BatchJobExecutionParams;
-import org.motechproject.batch.mds.BatchJobStatus;
 import org.motechproject.batch.service.JobService;
 import org.motechproject.batch.service.JobTriggerService;
 import org.motechproject.batch.validation.BatchValidator;
