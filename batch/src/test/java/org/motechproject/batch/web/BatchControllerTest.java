@@ -29,7 +29,7 @@ import org.motechproject.batch.validation.BatchValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockMultipartFile;
 
-@Ignore
+
 @RunWith(MockitoJUnitRunner.class)
 public class BatchControllerTest {
 	

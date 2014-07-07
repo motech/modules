@@ -141,7 +141,6 @@ public class JobTriggerServiceImplTest {
      * @throws BatchException
      */
     @Test
-    @Ignore
     public void getJObExecutionHistory_catch_batch_exception()
             throws BatchException {
         // TODO test cases failing
