@@ -103,7 +103,7 @@ public class JobTriggerServiceImpl implements JobTriggerService {
         } catch (JobStartException | JobSecurityException e) {
 
             throw new BatchException(ApplicationErrors.JOB_TRIGGER_FAILED, e,
-                    ApplicationErrors.JOB_TRIGGER_FAILED.getMessage());
+                    e.getMessage());
         } finally {
 
             Thread.currentThread().setContextClassLoader(classLoader);
