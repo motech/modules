@@ -212,11 +212,6 @@
 			<artifactId>com.springsource.org.apache.commons.dbcp</artifactId>
 		</dependency>
 
-		<!--  <dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>org.motechproject.org.postgresql</artifactId>
-		</dependency> -->
-
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -258,10 +253,7 @@
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>org.motechproject.org.postgresql</artifactId>
-		</dependency>
+
 
 		<dependency>
 			<groupId>org.eclipse.persistence</groupId>
