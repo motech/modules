@@ -2,12 +2,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	 <parent>
-        <artifactId>modules</artifactId>
-        <groupId>org.motechproject</groupId>
-        <version>0.24-SNAPSHOT</version>
-        <relativePath>../</relativePath>
-    </parent>
+	<parent>
+		<artifactId>modules</artifactId>
+		<groupId>org.motechproject</groupId>
+		<version>0.24-SNAPSHOT</version>
+		<relativePath>../</relativePath>
+	</parent>
 
 	<artifactId>motech-platform-batch</artifactId>
 	<groupId>org.motechproject</groupId>
@@ -21,6 +21,27 @@
 		<spring.batch.version>3.0.0.M3-r027</spring.batch.version>
 		<quartz.version>2.0.0</quartz.version>
 		<spring.version>3.1.2.RELEASE</spring.version>
+		<hsqldb.version>1.8.0.9</hsqldb.version>
+		<javax.persistence.version>2.1.0</javax.persistence.version>
+		<apache.servicemix.bundles.xpp3.version>1.1.4c_7</apache.servicemix.bundles.xpp3.version>
+		<apache.servicemix.bundles.ant.version>1.8.1_1</apache.servicemix.bundles.ant.version>
+		<apache.servicemix.bundles.javax.inject.version>1_2</apache.servicemix.bundles.javax.inject.version>
+		<apache.servicemix.bundles.jopt.simple.version>4.6_1</apache.servicemix.bundles.jopt.simple.version>
+		<ibm.jbatch.version>1.0</ibm.jbatch.version>
+		<javax.batch.version>1.0</javax.batch.version>
+		<apache.ibatis.version>2.3.4.726</apache.ibatis.version>
+		<mongodb.version>2.12.2</mongodb.version>
+		<springsource.hibernate.version>3.6.0.Final-r027</springsource.hibernate.version>
+		<springframework.amqp.version>1.3.3.RELEASE-r027</springframework.amqp.version>
+		<springframework.retry.version>1.1.0.RELEASE-r027</springframework.retry.version>
+		<fasterxml.jackson.version>2.0.2</fasterxml.jackson.version>
+		<spring.data.commons.version>1.6.4.RELEASE</spring.data.commons.version>
+		<thoughtworks.xstream.version>1.4.7</thoughtworks.xstream.version>
+		<codehaus.jettison.version>1.2</codehaus.jettison.version>
+		<gemston.gemfire.version>7.0.1</gemston.gemfire.version>
+		<codehaus.groovy.version>1.8.9</codehaus.groovy.version>
+		<javax.el.version>2.2.5</javax.el.version>
+		<spring.osgi.core.version>1.2.1</spring.osgi.core.version>
 	</properties>
 
 	<build>
@@ -52,7 +73,7 @@
 
 						</Export-Package>
 						<Import-Package>
-						org.springframework.beans,
+							org.springframework.beans,
 							org.springframework.web.servlet.config,
 							org.apache.commons.dbcp,
 							org.apache.commons.lang,
@@ -81,11 +102,8 @@
 							org.joda.time,
 							<!-- org.hibernate.validator, -->
 							org.springframework.beans.factory.xml,
-							<!--javax.validation.bootstrap,
-							javax.validation.constraints,
-							javax.validation.groups,
-							javax.validation.metadata,
-							javax.validation.spi,-->
+							<!--javax.validation.bootstrap, javax.validation.constraints, javax.validation.groups, 
+								javax.validation.metadata, javax.validation.spi, -->
 							!com.googlecode.jtype,
 							<!-- org.hibernate.validator.engine, -->
 							<!--org.motechproject.commons.date.util, org.motechproject.event.metrics, -->
@@ -97,34 +115,34 @@
 							org.springframework.batch.core.jsr.configuration.support,
 							org.springframework.batch.item.database.support,
 							org.springframework.batch.core.repository.support,
-							 org.springframework.batch.support.transaction,
+							org.springframework.batch.support.transaction,
 							com.mysql.jdbc,
 							com.thoughtworks.xstream.io,
 							org.codehaus.jettison.mapped,
 							org.springframework.jdbc.support.lob,
-org.springframework.jdbc.config,
-org.springframework.batch.core.repository,
-org.springframework.aop,
-org.springframework.aop.framework,
-org.springframework.batch.core,
-org.springframework.batch.*,
-org.aopalliance.aop,
- org.springframework.batch.item.file.transform,
-org.springframework.batch.core.scope,org.springframework.batch.core.configuration.xml,
-org.springframework.batch.core.jsr.launch,
-org.springframework.jdbc.datasource,
-org.springframework.context.support,
-org.springframework.batch.core.jsr,
-org.springframework.beans.factory,
-org.springframework.batch.core.jsr.configuration.xml,
-org.springframework.aop.scope,
-org.springframework.batch.core.job.flow.support,
-org.springframework.batch.core.job.flow.support.state,
-org.springframework.batch.core.*,
-org.codehaus.jackson.annotate,
-org.motechproject.scheduler.service,
-org.motechproject.commons.sql.service,
-org.motechproject.server.config,
+							org.springframework.jdbc.config,
+							org.springframework.batch.core.repository,
+							org.springframework.aop,
+							org.springframework.aop.framework,
+							org.springframework.batch.core,
+							org.springframework.batch.*,
+							org.aopalliance.aop,
+							org.springframework.batch.item.file.transform,
+							org.springframework.batch.core.scope,org.springframework.batch.core.configuration.xml,
+							org.springframework.batch.core.jsr.launch,
+							org.springframework.jdbc.datasource,
+							org.springframework.context.support,
+							org.springframework.batch.core.jsr,
+							org.springframework.beans.factory,
+							org.springframework.batch.core.jsr.configuration.xml,
+							org.springframework.aop.scope,
+							org.springframework.batch.core.job.flow.support,
+							org.springframework.batch.core.job.flow.support.state,
+							org.springframework.batch.core.*,
+							org.codehaus.jackson.annotate,
+							org.motechproject.scheduler.service,
+							org.motechproject.commons.sql.service,
+							org.motechproject.server.config,
 							*
 						</Import-Package>
 					</instructions>
@@ -214,10 +232,10 @@ org.motechproject.server.config,
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-    <groupId>org.hsqldb</groupId>
-    <artifactId>com.springsource.org.hsqldb</artifactId>
-    <version>1.8.0.9</version>
-</dependency>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>com.springsource.org.hsqldb</artifactId>
+			<version>${hsqldb.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
@@ -246,9 +264,9 @@ org.motechproject.server.config,
 		<dependency>
 			<groupId>org.eclipse.persistence</groupId>
 			<artifactId>javax.persistence</artifactId>
- 			<version>2.1.0</version>
+			<version>${javax.persistence.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>motech-platform-dataservices</artifactId>
@@ -282,7 +300,7 @@ org.motechproject.server.config,
 				</exclusion>
 				<exclusion>
 					<groupId>org.springframework.batch</groupId>
-			<artifactId>spring-batch-core</artifactId>
+					<artifactId>spring-batch-core</artifactId>
 				</exclusion>
 
 			</exclusions>
@@ -297,7 +315,7 @@ org.motechproject.server.config,
 					<groupId>org.springframework</groupId>
 					<artifactId>spring-context</artifactId>
 				</exclusion>
-<exclusion>
+				<exclusion>
 					<groupId>org.springframework</groupId>
 					<artifactId>spring-batch-infrastructure</artifactId>
 				</exclusion>
@@ -309,7 +327,7 @@ org.motechproject.server.config,
 
 			<groupId>org.apache.servicemix.bundles</groupId>
 			<artifactId>org.apache.servicemix.bundles.xpp3</artifactId>
-			<version>1.1.4c_7</version>
+			<version>${apache.servicemix.bundles.xpp3.version}</version>
 		</dependency>
 
 		<!-- Added for spring-batch ..since it requires version higher than in 
@@ -317,22 +335,22 @@ org.motechproject.server.config,
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>org.springframework.aop</artifactId>
-			<version>3.1.2.RELEASE</version>
+			<!-- <version>3.1.2.RELEASE</version> -->
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>org.springframework.core</artifactId>
-			<version>3.1.2.RELEASE</version>
+			<!-- <version>3.1.2.RELEASE</version> -->
 		</dependency>
-<dependency>
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>org.springframework.beans</artifactId>
-			<version>3.1.2.RELEASE</version>
+			<!-- <version>3.1.2.RELEASE</version> -->
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>org.springframework.context</artifactId>
-			<version>3.1.2.RELEASE</version>
+			<!-- <version>3.1.2.RELEASE</version> -->
 			<exclusions>
 				<exclusion>
 					<groupId>org.apache.commons</groupId>
@@ -361,79 +379,79 @@ org.motechproject.server.config,
 		<dependency>
 			<groupId>com.ibm.jbatch</groupId>
 			<artifactId>com.ibm.jbatch-tck-spi</artifactId>
-			<version>1.0</version>
+			<version>${ibm.jbatch.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.batch</groupId>
 			<artifactId>javax.batch-api</artifactId>
-			<version>1.0</version>
+			<version>${javax.batch.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.ibatis</groupId>
 			<artifactId>com.springsource.com.ibatis</artifactId>
-			<version>2.3.4.726</version>
+			<version>${apache.ibatis.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
-			<version>2.12.2</version>
+			<version>${mongodb.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.servicemix.bundles</groupId>
 			<artifactId>org.apache.servicemix.bundles.ant</artifactId>
-			<version>1.8.1_1</version>
+			<version>${apache.servicemix.bundles.ant.version}</version>
 		</dependency>
-		 <dependency>
+		<dependency>
 			<groupId>org.motechproject.org.hibernate</groupId>
 			<artifactId>com.springsource.org.hibernate</artifactId>
-			<version>3.6.0.Final-r027</version>
+			<version>${springsource.hibernate.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.amqp</groupId>
 			<artifactId>org.motechproject.org.springframework.amqp</artifactId>
-			<version>1.3.3.RELEASE-r027</version>
+			<version>${springframework.amqp.version}</version>
 			<exclusions>
-                    <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                    </exclusion>
-                </exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
-<!--  TODO change to r027 -->
-	   <dependency>
+		<!-- TODO change to r027 -->
+		<dependency>
 			<groupId>org.springframework.retry</groupId>
 			<artifactId>org.motechproject.org.springframework.retry</artifactId>
-			<version>1.1.0.RELEASE-r027</version>
+			<version>${springframework.retry.version}</version>
 			<exclusions>
-                    <exclusion>
-	                    <groupId>org.springframework</groupId>
-						<artifactId>spring-core</artifactId>
-                    </exclusion>
-                </exclusions>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-core</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>com.springsource.com.fasterxml.jackson.core.jackson-databind</artifactId>
-			<version>2.0.2</version>
+			<version>${fasterxml.jackson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>com.springsource.com.fasterxml.jackson.core.jackson-core</artifactId>
-			<version>2.0.2</version>
+			<version>${fasterxml.jackson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>org.springframework.oxm</artifactId>
-			<version>3.1.2.RELEASE</version>
+			<!-- <version>3.1.2.RELEASE</version> -->
 		</dependency>
-		
+
 		<dependency>
-	<groupId>org.springframework.data</groupId>
-	<artifactId>spring-data-commons</artifactId>
-	<version>1.6.4.RELEASE</version>
-	<exclusions>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-commons</artifactId>
+			<version>${spring.data.commons.version}</version>
+			<exclusions>
 				<exclusion>
 					<groupId>org.springframework</groupId>
 					<artifactId>spring-beans</artifactId>
@@ -455,60 +473,60 @@ org.motechproject.server.config,
 					<artifactId>jcl-over-slf4j</artifactId>
 				</exclusion>
 			</exclusions>
-	
-</dependency>
-<dependency>
-	<groupId>com.thoughtworks.xstream</groupId>
-	<artifactId>xstream</artifactId>
-	<version>1.4.7</version>
-</dependency>
-<dependency>
-	<groupId>org.codehaus.jettison</groupId>
-	<artifactId>jettison</artifactId>
-	<version>1.2</version>
-</dependency>
-<dependency>
-  <groupId>com.gemstone.gemfire</groupId>
-  <artifactId>gemfire</artifactId>
-  <version>7.0.1</version>
-</dependency>
 
-<!--  dependancies required for spring-beans 4...methof not found -->
-<dependency>
-	<groupId>org.codehaus.groovy</groupId>
-	<artifactId>groovy-all</artifactId>
-	<version>1.8.9</version>
-</dependency>
-<dependency>
-	<groupId>javax.el</groupId>
-	<artifactId>javax.el-api</artifactId>
-	<version>2.2.5</version>
-</dependency>
-<dependency>
-	<groupId>org.apache.servicemix.bundles</groupId>
-	<artifactId>org.apache.servicemix.bundles.javax-inject</artifactId>
-	<version>1_2</version>
-</dependency>
-<dependency>
-                <groupId>net.sourceforge.cglib</groupId>
-                <artifactId>com.springsource.net.sf.cglib</artifactId>
-             </dependency>
-             
-             <!--  depen for core 4.0.5 -->
-             <dependency>
-	<groupId>org.apache.servicemix.bundles</groupId>
-	<artifactId>org.apache.servicemix.bundles.jopt-simple</artifactId>
-	<version>4.6_1</version>
-</dependency>
-             
-             
-             <!--  depen for coe M# -->
-             <dependency>
-	<groupId>org.springframework.osgi</groupId>
-	<artifactId>spring-osgi-core</artifactId>
-	<version>1.2.1</version>
-</dependency>
-             
+		</dependency>
+		<dependency>
+			<groupId>com.thoughtworks.xstream</groupId>
+			<artifactId>xstream</artifactId>
+			<version>${thoughtworks.xstream.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jettison</groupId>
+			<artifactId>jettison</artifactId>
+			<version>${codehaus.jettison.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gemstone.gemfire</groupId>
+			<artifactId>gemfire</artifactId>
+			<version>${gemston.gemfire.version}</version>
+		</dependency>
+
+		<!-- dependancies required for spring-beans 4...methof not found -->
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<version>${codehaus.groovy.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.el</groupId>
+			<artifactId>javax.el-api</artifactId>
+			<version>${javax.el.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.servicemix.bundles</groupId>
+			<artifactId>org.apache.servicemix.bundles.javax-inject</artifactId>
+			<version>${apache.servicemix.bundles.javax.inject.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.cglib</groupId>
+			<artifactId>com.springsource.net.sf.cglib</artifactId>
+		</dependency>
+
+		<!-- depen for core 4.0.5 -->
+		<dependency>
+			<groupId>org.apache.servicemix.bundles</groupId>
+			<artifactId>org.apache.servicemix.bundles.jopt-simple</artifactId>
+			<version>${apache.servicemix.bundles.jopt.simple.version}</version>
+		</dependency>
+
+
+		<!-- depen for coe M# -->
+		<dependency>
+			<groupId>org.springframework.osgi</groupId>
+			<artifactId>spring-osgi-core</artifactId>
+			<version>${spring.osgi.core.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<repositories>
