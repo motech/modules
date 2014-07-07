@@ -17,6 +17,12 @@
 
 	<!-- Scans the classpath of this application for @Components to deploy as 
 		beans -->
+			<!-- ========================= GENERAL DEFINITIONS ========================= -->
+	<context:property-placeholder
+		location="
+	classpath:*application.properties,classpath:*batch-springdb.properties,
+	classpath:*batch-springdb.properties" />
+		
 	<import resource="classpath*:baseRefContext.xml" />
 
 	<context:annotation-config />
@@ -25,19 +31,31 @@
 	<context:component-scan base-package="org.motechproject.batch.repository" />
 	<context:component-scan base-package="org.motechproject.batch.service.impl" />
 	<context:component-scan base-package="org.motechproject.batch.validation" />
+	<context:component-scan base-package="org.motechproject.batch.dao" />
 
 	<mvc:annotation-driven />
 	<context:annotation-config />
 
 	<bean id="jsrJobOperator"
 		class="org.springframework.batch.core.jsr.launch.JsrJobOperator">
+		
+	</bean>
+	
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+	<constructor-arg ref="dataSource" />
+	</bean>
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${batch.jdbc.driver}" />
+		<property name="url" value="${batch.jdbc.url}" />
+		<property name="username" value="${batch.jdbc.user}" />
+		<property name="password" value="${batch.jdbc.password}" />
+		<property name="testWhileIdle" value="${batch.jdbc.testWhileIdle}" />
+		<property name="validationQuery" value="${batch.jdbc.validationQuery}" />
+
 	</bean>
 
-	<!-- ========================= GENERAL DEFINITIONS ========================= -->
-	<context:property-placeholder
-		location="
-	classpath:*application.properties,
-	classpath:*batch-springdb.properties" />
+
 
 </beans>
 

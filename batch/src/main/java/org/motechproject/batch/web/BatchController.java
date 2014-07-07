@@ -12,7 +12,7 @@ import org.motechproject.batch.exception.BatchException;
 import org.motechproject.batch.exception.RestException;
 import org.motechproject.batch.model.BatchJobListDTO;
 import org.motechproject.batch.model.CronJobScheduleParam;
-import org.motechproject.batch.model.JobExecutionHistoryList;
+import org.motechproject.batch.model.JobExecutionHistoryListDTO;
 import org.motechproject.batch.model.OneTimeJobScheduleParams;
 import org.motechproject.batch.service.FileUploadService;
 import org.motechproject.batch.service.JobService;
@@ -123,13 +123,13 @@ public class BatchController {
     @ResponseStatus(value = HttpStatus.OK)
     @RequestMapping(value = "/jobHistory", method = RequestMethod.GET, params = { BatchConstants.JOB_NAME_REQUEST_PARAM })
     @ResponseBody
-    public JobExecutionHistoryList getjobHistoryList(
+    public JobExecutionHistoryListDTO getjobHistoryList(
             @RequestParam(value = BatchConstants.JOB_NAME_REQUEST_PARAM) String jobName) {
         LOGGER.info(String.format(
                 "Request to get execution history of job %s started", jobName));
         StopWatch sw = new StopWatch();
         sw.start();
-        JobExecutionHistoryList jobExecutionHistoryList = null;
+        JobExecutionHistoryListDTO jobExecutionHistoryList = null;
         try {
             List<String> errors = batchValidator.validateUpdateInputs(jobName);
             if (!errors.isEmpty()) {
@@ -430,7 +430,7 @@ public class BatchController {
     }
 
     @ResponseStatus(value = HttpStatus.OK)
-    @RequestMapping(value = "/restart", method = RequestMethod.POST,params = { BatchConstants.JOB_NAME_REQUEST_PARAM })
+    @RequestMapping(value = "/restart", method = RequestMethod.POST, params = { BatchConstants.JOB_NAME_REQUEST_PARAM })
     @ResponseBody
     public long restartExecution(
             @RequestParam(value = BatchConstants.JOB_NAME_REQUEST_PARAM) String jobName,

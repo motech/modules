@@ -6,8 +6,10 @@ import java.net.URL;
 
 public class BatchJobClassLoader extends ClassLoader {
 
-    public BatchJobClassLoader(ClassLoader l) {
+    private String xmlPath;
+    public BatchJobClassLoader(ClassLoader l, String xmlPath) {
         super(l);
+        this.xmlPath = xmlPath;
     }
 
     @Override
@@ -15,7 +17,7 @@ public class BatchJobClassLoader extends ClassLoader {
 
         URL url = super.findResource(name);
         if (url == null) {
-            String absNmae = "/home/beehyv/jobs/" + name;
+            String absNmae = xmlPath + name;
             try {
                 File file = new File(absNmae);
                 if (file.exists()) {

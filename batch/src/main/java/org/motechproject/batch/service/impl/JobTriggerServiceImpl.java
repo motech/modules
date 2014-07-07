@@ -1,6 +1,5 @@
 package org.motechproject.batch.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -10,20 +9,20 @@ import javax.batch.operations.JobStartException;
 import javax.batch.operations.NoSuchJobExecutionException;
 
 import org.apache.log4j.Logger;
+import org.motechproject.batch.dao.BatchExecutionDao;
 import org.motechproject.batch.exception.ApplicationErrors;
 import org.motechproject.batch.exception.BatchException;
 import org.motechproject.batch.mds.BatchJob;
-import org.motechproject.batch.mds.BatchJobExecution;
 import org.motechproject.batch.mds.BatchJobParameters;
 import org.motechproject.batch.mds.service.BatchJobMDSService;
 import org.motechproject.batch.mds.service.BatchJobParameterMDSService;
-import org.motechproject.batch.model.JobExecutionHistoryDTO;
-import org.motechproject.batch.model.JobExecutionHistoryList;
+import org.motechproject.batch.model.JobExecutionHistoryListDTO;
 import org.motechproject.batch.service.JobTriggerService;
 import org.motechproject.batch.util.BatchConstants;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
@@ -39,6 +38,12 @@ public class JobTriggerServiceImpl implements JobTriggerService {
             .getLogger(JobTriggerServiceImpl.class);
 
     private JobOperator jsrJobOperator;
+
+    @Value("${xml.path}")
+    private String xmlPath;
+    
+    @Autowired
+    private BatchExecutionDao executionDao;
 
     @Autowired
     public JobTriggerServiceImpl(BatchJobMDSService jobRepo,
@@ -93,7 +98,7 @@ public class JobTriggerServiceImpl implements JobTriggerService {
                 .getContextClassLoader();
         ClassLoader contextClassLoader = getClass().getClassLoader();
         BatchJobClassLoader testLoader = new BatchJobClassLoader(
-                contextClassLoader);
+                contextClassLoader, xmlPath);
 
         Thread.currentThread().setContextClassLoader(testLoader);
         Properties jobParameters = getJobParameters(jobName);
@@ -114,7 +119,7 @@ public class JobTriggerServiceImpl implements JobTriggerService {
     }
 
     @Override
-    public JobExecutionHistoryList getJObExecutionHistory(String jobName)
+    public JobExecutionHistoryListDTO getJObExecutionHistory(String jobName)
             throws BatchException {
 
         List<BatchJob> batchJobList = jobRepo.findByJobName(jobName);
@@ -125,36 +130,9 @@ public class JobTriggerServiceImpl implements JobTriggerService {
         if (!jobExists) {
             throw new BatchException(ApplicationErrors.JOB_NOT_FOUND);
         }
-        List<BatchJobExecution> executionHistoryList = null;
-        JobExecutionHistoryList jobExecutionHistoryListDto = new JobExecutionHistoryList();
 
-        List<JobExecutionHistoryDTO> jobExecutionHistoryList = new ArrayList<JobExecutionHistoryDTO>();
+        return executionDao.getExecutionHist(jobName);
 
-        for (BatchJobExecution executionJob : executionHistoryList) {
-            JobExecutionHistoryDTO executionHistoryDTO = new JobExecutionHistoryDTO();
-
-            executionHistoryDTO.setJobExecutionId(executionJob
-                    .getJobExecutionId());
-            executionHistoryDTO.setVersion(executionJob.getVersion());
-
-            executionHistoryDTO.setStartTime(executionJob.getStartTime());
-            executionHistoryDTO.setEndTime(executionJob.getEndTime());
-            executionHistoryDTO.setStatus(executionJob.getStatus());
-            executionHistoryDTO.setExitCode(executionJob.getExitCode());
-            executionHistoryDTO.setExitMessage(executionJob.getExitMessage());
-            executionHistoryDTO.setLastUpdated(executionJob.getLastUpdated());
-
-            executionHistoryDTO.setCreatedBy(executionJob.getCreatedBy());
-            executionHistoryDTO.setLastUpdatedBy(executionJob
-                    .getLastUpdatedBy());
-
-            jobExecutionHistoryList.add(executionHistoryDTO);
-
-        }
-        jobExecutionHistoryListDto
-                .setJobExecutionHistoryList(executionHistoryList);
-
-        return jobExecutionHistoryListDto;
     }
 
     @Override
@@ -163,11 +141,10 @@ public class JobTriggerServiceImpl implements JobTriggerService {
         ClassLoader classLoader = null;
         Properties restartParameters = getJobParameters(jobName);
         try {
-            classLoader = Thread.currentThread()
-                    .getContextClassLoader();
+            classLoader = Thread.currentThread().getContextClassLoader();
             ClassLoader contextClassLoader = getClass().getClassLoader();
             BatchJobClassLoader testLoader = new BatchJobClassLoader(
-                    contextClassLoader);
+                    contextClassLoader,xmlPath);
 
             Thread.currentThread().setContextClassLoader(testLoader);
             return jsrJobOperator.restart(executionId, restartParameters);

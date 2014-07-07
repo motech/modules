@@ -21,7 +21,9 @@ import org.motechproject.batch.exception.BatchException;
 import org.motechproject.batch.exception.RestException;
 import org.motechproject.batch.model.BatchJobDTO;
 import org.motechproject.batch.model.BatchJobListDTO;
+import org.motechproject.batch.model.JobExecutionHistoryDTO;
 import org.motechproject.batch.model.JobExecutionHistoryList;
+import org.motechproject.batch.model.JobExecutionHistoryListDTO;
 import org.motechproject.batch.mds.BatchJobExecution;
 import org.motechproject.batch.mds.BatchJobExecutionParams;
 import org.motechproject.batch.mds.BatchJobStatus;
@@ -43,9 +45,9 @@ public class BatchControllerTest {
 	private BatchJobDTO batchJobDTO;
 	private List<BatchJobDTO> listBatchJobDTO;
 	private String jobName;
-	private BatchJobExecution batchJobExecutionParams;
-	private JobExecutionHistoryList jobExecutionHistoryList;
-	private List<BatchJobExecution> paramsList;
+	private JobExecutionHistoryDTO batchJobExecutionParams;
+	private JobExecutionHistoryListDTO jobExecutionHistoryList;
+	private List<JobExecutionHistoryDTO> paramsList;
 	private List<String> errors;
 	private String cronExpression;
 	private HashMap<String, String> paramsMap;
@@ -69,8 +71,8 @@ public class BatchControllerTest {
 	listBatchJobDTO.add(batchJobDTO);
 	batchJobListDTO.setBatchJobDtoList(listBatchJobDTO);
 	
-	jobExecutionHistoryList = new JobExecutionHistoryList();
-	paramsList = new ArrayList<BatchJobExecution>();
+	jobExecutionHistoryList = new JobExecutionHistoryListDTO();
+	paramsList = new ArrayList<JobExecutionHistoryDTO>();
 	paramsList.add(batchJobExecutionParams);
 	jobExecutionHistoryList.setJobExecutionHistoryList(paramsList);
 	when(jobService.getListOfJobs()).thenReturn(batchJobListDTO);
@@ -96,7 +98,7 @@ public class BatchControllerTest {
 	public void getjobHistoryListReturnsValidResponse() throws Exception
 	{
 		
-		JobExecutionHistoryList jobExecutionHistoryList = controller.getjobHistoryList(jobName);
+	    JobExecutionHistoryListDTO jobExecutionHistoryList = controller.getjobHistoryList(jobName);
 		assertNotNull(jobExecutionHistoryList);
 		assertEquals(1, jobExecutionHistoryList.getJobExecutionHistoryList().size());
 		
@@ -114,7 +116,7 @@ public class BatchControllerTest {
 		when(batchValidator.validateUpdateInputs(jobName)).thenReturn(errors);
 		try
 		{
-			JobExecutionHistoryList jobExecutionHistoryList = controller.getjobHistoryList(jobName);
+		    JobExecutionHistoryListDTO jobExecutionHistoryList = controller.getjobHistoryList(jobName);
 		}
 		catch(RestException e){
 			BatchErrors be = e.getBatchException().getError();
@@ -140,7 +142,7 @@ public class BatchControllerTest {
 	
 	try
 		{
-			JobExecutionHistoryList jobExecutionHistoryList = controller.getjobHistoryList(jobName);
+	    JobExecutionHistoryListDTO jobExecutionHistoryList = controller.getjobHistoryList(jobName);
 		}
 	catch(RestException e)
 		{

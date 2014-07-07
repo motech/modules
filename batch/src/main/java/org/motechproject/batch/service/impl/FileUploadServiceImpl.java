@@ -32,7 +32,7 @@ public class FileUploadServiceImpl implements FileUploadService {
         try {
             bytes = file.getBytes();
             stream = new BufferedOutputStream(new FileOutputStream(new File(
-                    xmlPath, jobName + ".xml")));
+                    xmlPath + "/META-INF/batch-jobs/", jobName + ".xml")));
             stream.write(bytes);
             stream.close();
 
