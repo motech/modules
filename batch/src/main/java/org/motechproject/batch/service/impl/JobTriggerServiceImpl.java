@@ -160,12 +160,24 @@ public class JobTriggerServiceImpl implements JobTriggerService {
     @Override
     public long restart(String jobName, Integer executionId)
             throws BatchException {
+        ClassLoader classLoader = null;
         Properties restartParameters = getJobParameters(jobName);
         try {
+            classLoader = Thread.currentThread()
+                    .getContextClassLoader();
+            ClassLoader contextClassLoader = getClass().getClassLoader();
+            BatchJobClassLoader testLoader = new BatchJobClassLoader(
+                    contextClassLoader);
+
+            Thread.currentThread().setContextClassLoader(testLoader);
             return jsrJobOperator.restart(executionId, restartParameters);
         } catch (NoSuchJobExecutionException e) {
+
             throw new BatchException(ApplicationErrors.BAD_REQUEST, e,
                     e.getMessage());
+        } finally {
+
+            Thread.currentThread().setContextClassLoader(classLoader);
         }
 
     }
