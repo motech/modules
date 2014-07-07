@@ -39,7 +39,7 @@ import org.springframework.web.multipart.MultipartFile;
  * 
  */
 @Controller
-@RequestMapping("/batch")
+@RequestMapping("/")
 public class BatchController {
 
     private static final Logger LOGGER = Logger
