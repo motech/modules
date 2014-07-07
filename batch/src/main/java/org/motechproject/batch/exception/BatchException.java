@@ -2,7 +2,11 @@ package org.motechproject.batch.exception;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
+/**
+ * Custom exception for batch module
+ * @author naveen
+ *
+ */
 @SuppressWarnings("serial")
 public class BatchException extends Exception {
 

@@ -2,7 +2,11 @@ package org.motechproject.batch.exception;
 
 import org.motechproject.batch.util.BatchConstants;
 import org.springframework.http.HttpStatus;
-
+/**
+ * Custom Exception messages for Rest services
+ * @author naveen
+ *
+ */
 public enum ApplicationErrors implements BatchErrors {
 
     BAD_REQUEST(1001, "One or more input parameter(s) may be wrong",

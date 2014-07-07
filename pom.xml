@@ -1099,6 +1099,7 @@
         <module>message-campaign</module>
         <module>pill-reminder</module>
         <module>schedule-tracking</module>
+	<module>batch</module>
     </modules>
 
     <build>
