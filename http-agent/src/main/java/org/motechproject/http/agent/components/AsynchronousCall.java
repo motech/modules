@@ -20,9 +20,9 @@ public class AsynchronousCall implements CommunicationType {
         eventRelay.sendEventMessage(motechEvent);
     }
 
-	@Override
-	public ResponseEntity<?> sendWithReturnType(MotechEvent motechEvent) {
-		eventRelay.sendEventMessage(motechEvent);
-		return null;
-	}
+    @Override
+    public ResponseEntity<?> sendWithReturnType(MotechEvent motechEvent) {
+        eventRelay.sendEventMessage(motechEvent);
+        return null;
+    }
 }

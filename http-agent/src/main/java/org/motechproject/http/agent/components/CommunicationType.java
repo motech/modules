@@ -6,6 +6,6 @@ import org.springframework.http.ResponseEntity;
 public interface CommunicationType {
 
     void send(MotechEvent motechEvent);
-    
+
     ResponseEntity<?> sendWithReturnType(MotechEvent motechEvent);
 }

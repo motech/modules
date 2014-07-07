@@ -21,46 +21,52 @@ public class HttpAgentImpl implements HttpAgent {
     private SynchronousCall synchronousCall;
 
     @Autowired
-    public HttpAgentImpl(AsynchronousCall asynchronousCall, SynchronousCall synchronousCall) {
+    public HttpAgentImpl(AsynchronousCall asynchronousCall,
+            SynchronousCall synchronousCall) {
         this.asynchronousCall = asynchronousCall;
         this.synchronousCall = synchronousCall;
     }
 
     @Override
     public void execute(String url, Object data, Method method) {
-        Map<String, Object> parameters = constructParametersFrom(url, data, method);
+        Map<String, Object> parameters = constructParametersFrom(url, data,
+                method);
         sendMessage(parameters);
     }
 
     @Override
     public void executeSync(String url, Object data, Method method) {
-        Map<String, Object> parameters = constructParametersFrom(url, data, method);
+        Map<String, Object> parameters = constructParametersFrom(url, data,
+                method);
         sendMessageSync(parameters);
     }
 
-	@Override
-	public ResponseEntity<?> executeWithReturnTypeSync(String url, Object data,
-			Method method) {
-		Map<String, Object> parameters = constructParametersFrom(url, data, method, null, null);
+    @Override
+    public ResponseEntity<?> executeWithReturnTypeSync(String url, Object data,
+            Method method) {
+        Map<String, Object> parameters = constructParametersFrom(url, data,
+                method, null, null);
         return sendMessageWithReturnTypeSync(parameters);
-	}
+    }
 
-	@Override
-	public ResponseEntity<?> executeWithReturnTypeSync(String url, Object data,
-			Method method, Integer retry_count) {
-		Map<String, Object> parameters = constructParametersFrom(url, data, method, retry_count, null);
+    @Override
+    public ResponseEntity<?> executeWithReturnTypeSync(String url, Object data,
+            Method method, Integer retryCount) {
+        Map<String, Object> parameters = constructParametersFrom(url, data,
+                method, retryCount, null);
         return sendMessageWithReturnTypeSync(parameters);
-	}
+    }
 
-	@Override
-	public ResponseEntity<?> executeWithReturnTypeSync(String url, Object data,
-			Method method, Integer retry_count, Long retry_interval) {
-		Map<String, Object> parameters = constructParametersFrom(url, data, method, retry_count, retry_interval);
+    @Override
+    public ResponseEntity<?> executeWithReturnTypeSync(String url, Object data,
+            Method method, Integer retryCount, Long retryInterval) {
+        Map<String, Object> parameters = constructParametersFrom(url, data,
+                method, retryCount, retryInterval);
         return sendMessageWithReturnTypeSync(parameters);
-	}
+    }
 
-
-    private Map<String, Object> constructParametersFrom(String url, Object data, Method method) {
+    private Map<String, Object> constructParametersFrom(String url,
+            Object data, Method method) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(EventDataKeys.URL, url);
         parameters.put(EventDataKeys.METHOD, method);
@@ -68,29 +74,33 @@ public class HttpAgentImpl implements HttpAgent {
         return parameters;
     }
 
-
-    private Map<String, Object> constructParametersFrom(String url, Object data, Method method, Integer retry_count, Long retry_interval) {
+    private Map<String, Object> constructParametersFrom(String url,
+            Object data, Method method, Integer retryCount, Long retryInterval) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(EventDataKeys.URL, url);
         parameters.put(EventDataKeys.METHOD, method);
         parameters.put(EventDataKeys.DATA, data);
-        parameters.put(EventDataKeys.RETRY_COUNT, retry_count);
-        parameters.put(EventDataKeys.RETRY_INTERVAL, retry_interval);
+        parameters.put(EventDataKeys.RETRY_COUNT, retryCount);
+        parameters.put(EventDataKeys.RETRY_INTERVAL, retryInterval);
         return parameters;
     }
 
     private void sendMessage(Map<String, Object> parameters) {
-        MotechEvent motechEvent = new MotechEvent(EventSubjects.HTTP_REQUEST, parameters);
+        MotechEvent motechEvent = new MotechEvent(EventSubjects.HTTP_REQUEST,
+                parameters);
         asynchronousCall.send(motechEvent);
     }
 
     private void sendMessageSync(Map<String, Object> parameters) {
-        MotechEvent motechEvent = new MotechEvent(EventSubjects.HTTP_REQUEST, parameters);
+        MotechEvent motechEvent = new MotechEvent(EventSubjects.HTTP_REQUEST,
+                parameters);
         synchronousCall.send(motechEvent);
     }
 
-    private ResponseEntity<?> sendMessageWithReturnTypeSync(Map<String, Object> parameters) {
-        MotechEvent motechEvent = new MotechEvent(EventSubjects.SYNC_HTTP_REQUEST_RET_TYPE, parameters);
+    private ResponseEntity<?> sendMessageWithReturnTypeSync(
+            Map<String, Object> parameters) {
+        MotechEvent motechEvent = new MotechEvent(
+                EventSubjects.SYNC_HTTP_REQUEST_RET_TYPE, parameters);
         return synchronousCall.sendWithReturnType(motechEvent);
     }
 }
