@@ -157,7 +157,7 @@ public class BatchController {
     @ResponseStatus(value = HttpStatus.OK)
     @RequestMapping(value = "/trigger", method = RequestMethod.POST, params = { BatchConstants.JOB_NAME_REQUEST_PARAM })
     @ResponseBody
-    public void triggerJob(
+    public long triggerJob(
             @RequestParam(BatchConstants.JOB_NAME_REQUEST_PARAM) String jobName) {
 
         LOGGER.info(String.format("Request to trigger the job %s started",
@@ -170,7 +170,7 @@ public class BatchController {
                 throw new BatchException(ApplicationErrors.BAD_REQUEST,
                         errors.toString());
             }
-            jobTriggerService.triggerJob(jobName);
+            return jobTriggerService.triggerJob(jobName);
         } catch (BatchException e) {
             LOGGER.error(String.format(
                     "Error occured while processing request to trigger job %s",
@@ -430,7 +430,7 @@ public class BatchController {
     }
 
     @ResponseStatus(value = HttpStatus.OK)
-    @RequestMapping(value = "/restart", method = RequestMethod.POST)
+    @RequestMapping(value = "/restart", method = RequestMethod.POST,params = { BatchConstants.JOB_NAME_REQUEST_PARAM })
     @ResponseBody
     public long restartExecution(
             @RequestParam(value = BatchConstants.JOB_NAME_REQUEST_PARAM) String jobName,

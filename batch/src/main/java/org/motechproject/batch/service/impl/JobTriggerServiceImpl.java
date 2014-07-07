@@ -7,6 +7,7 @@ import java.util.Properties;
 import javax.batch.operations.JobOperator;
 import javax.batch.operations.JobSecurityException;
 import javax.batch.operations.JobStartException;
+import javax.batch.operations.NoSuchJobExecutionException;
 
 import org.apache.log4j.Logger;
 import org.motechproject.batch.exception.ApplicationErrors;
@@ -86,7 +87,7 @@ public class JobTriggerServiceImpl implements JobTriggerService {
     }
 
     @Override
-    public void triggerJob(String jobName) throws BatchException {
+    public long triggerJob(String jobName) throws BatchException {
         LOGGER.info("Starting executing JOB: " + jobName);
         ClassLoader classLoader = Thread.currentThread()
                 .getContextClassLoader();
@@ -98,14 +99,16 @@ public class JobTriggerServiceImpl implements JobTriggerService {
         Properties jobParameters = getJobParameters(jobName);
 
         try {
-            jsrJobOperator.start(jobName, jobParameters);
+            return jsrJobOperator.start(jobName, jobParameters);
         } catch (JobStartException | JobSecurityException e) {
 
             throw new BatchException(ApplicationErrors.JOB_TRIGGER_FAILED, e,
                     ApplicationErrors.JOB_TRIGGER_FAILED.getMessage());
+        } finally {
+
+            Thread.currentThread().setContextClassLoader(classLoader);
         }
 
-        Thread.currentThread().setContextClassLoader(classLoader);
         // TODO Implement the datetime
 
     }
@@ -158,8 +161,12 @@ public class JobTriggerServiceImpl implements JobTriggerService {
     public long restart(String jobName, Integer executionId)
             throws BatchException {
         Properties restartParameters = getJobParameters(jobName);
-
-        return jsrJobOperator.restart(executionId, restartParameters);
+        try {
+            return jsrJobOperator.restart(executionId, restartParameters);
+        } catch (NoSuchJobExecutionException e) {
+            throw new BatchException(ApplicationErrors.BAD_REQUEST, e,
+                    e.getMessage());
+        }
 
     }
 
