@@ -19,7 +19,7 @@
 		beans -->
 	<!-- ========================= GENERAL DEFINITIONS ========================= -->
 	<context:property-placeholder
-		location="file:/home/beehyv/.motech/config/batch-springdb.properties"
+		location="file:${user.home}/.motech/config/batch-springdb.properties"
 		order="0" ignore-unresolvable="true" />
 	<context:property-placeholder location="batch-hsql.properties"
 		order="1" />

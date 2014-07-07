@@ -69,7 +69,7 @@
 
 	<!-- <bean id="jobRegistry" class="org.springframework.batch.core.configuration.support.MapJobRegistry"/> -->
 
-	<context:property-placeholder location="file:/home/beehyv/.motech/config/batch-springdb.properties"
+	<context:property-placeholder location="file:${user.home}/.motech/config/batch-springdb.properties"
 		order="0" ignore-unresolvable="true" />
 	<context:property-placeholder location="batch-hsql.properties"
 		order="1" />
