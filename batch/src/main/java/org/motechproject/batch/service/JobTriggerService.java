@@ -33,6 +33,6 @@ public interface JobTriggerService {
      * @param jobName 
      * @param executionId
      */
-    void restart(String jobName, Integer executionId) throws BatchException;
+    long restart(String jobName, Integer executionId) throws BatchException;
 
 }

@@ -155,11 +155,11 @@ public class JobTriggerServiceImpl implements JobTriggerService {
     }
 
     @Override
-    public void restart(String jobName, Integer executionId)
+    public long restart(String jobName, Integer executionId)
             throws BatchException {
         Properties restartParameters = getJobParameters(jobName);
 
-        jsrJobOperator.restart(executionId, restartParameters);
+        return jsrJobOperator.restart(executionId, restartParameters);
 
     }
 

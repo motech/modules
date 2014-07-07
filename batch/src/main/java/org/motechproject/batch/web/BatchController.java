@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -122,11 +121,10 @@ public class BatchController {
     }
 
     @ResponseStatus(value = HttpStatus.OK)
-    @RequestMapping(value = "/jobHistory/{jobName}", method = RequestMethod.GET,params = {
-            BatchConstants.JOB_NAME_REQUEST_PARAM})
+    @RequestMapping(value = "/jobHistory", method = RequestMethod.GET, params = { BatchConstants.JOB_NAME_REQUEST_PARAM })
     @ResponseBody
     public JobExecutionHistoryList getjobHistoryList(
-            @PathVariable(value = BatchConstants.JOB_NAME_REQUEST_PARAM) String jobName) {
+            @RequestParam(value = BatchConstants.JOB_NAME_REQUEST_PARAM) String jobName) {
         LOGGER.info(String.format(
                 "Request to get execution history of job %s started", jobName));
         StopWatch sw = new StopWatch();
@@ -157,10 +155,10 @@ public class BatchController {
     }
 
     @ResponseStatus(value = HttpStatus.OK)
-    @RequestMapping(value = "/trigger/{jobName}", method = RequestMethod.GET,params = {
-            BatchConstants.JOB_NAME_REQUEST_PARAM})
+    @RequestMapping(value = "/trigger", method = RequestMethod.POST, params = { BatchConstants.JOB_NAME_REQUEST_PARAM })
     @ResponseBody
-    public void triggerJob(@PathVariable(BatchConstants.JOB_NAME_REQUEST_PARAM) String jobName) {
+    public void triggerJob(
+            @RequestParam(BatchConstants.JOB_NAME_REQUEST_PARAM) String jobName) {
 
         LOGGER.info(String.format("Request to trigger the job %s started",
                 jobName));
@@ -181,7 +179,7 @@ public class BatchController {
         } finally {
             LOGGER.info(String
                     .format("Request to trigger the job %s ended. Time taken (ms) = %d ",
-                            jobName + sw.getTime()));
+                            jobName, sw.getTime()));
             sw.stop();
         }
     }
@@ -245,10 +243,10 @@ public class BatchController {
      * @throws BatchException
      */
     @ResponseStatus(value = HttpStatus.OK)
-    @RequestMapping(value = "/reschedulecronjob", method = RequestMethod.POST,params = {
-            BatchConstants.JOB_NAME_REQUEST_PARAM})
+    @RequestMapping(value = "/reschedulecronjob", method = RequestMethod.POST, params = { BatchConstants.JOB_NAME_REQUEST_PARAM })
     @ResponseBody
-    public void rescheduleJob(@RequestParam(value=BatchConstants.JOB_NAME_REQUEST_PARAM) String jobName,
+    public void rescheduleJob(
+            @RequestParam(value = BatchConstants.JOB_NAME_REQUEST_PARAM) String jobName,
             @RequestParam("cronExpression") String cronExpression) {
 
         LOGGER.info(String
@@ -287,10 +285,10 @@ public class BatchController {
      * @throws BatchException
      */
     @ResponseStatus(value = HttpStatus.OK)
-    @RequestMapping(value = "/unschedulecronjob", method = RequestMethod.POST,params = {
-            BatchConstants.JOB_NAME_REQUEST_PARAM})
+    @RequestMapping(value = "/unschedulecronjob", method = RequestMethod.POST, params = { BatchConstants.JOB_NAME_REQUEST_PARAM })
     @ResponseBody
-    public void unscheduleJob(@RequestParam(value=BatchConstants.JOB_NAME_REQUEST_PARAM) String jobName) {
+    public void unscheduleJob(
+            @RequestParam(value = BatchConstants.JOB_NAME_REQUEST_PARAM) String jobName) {
 
         LOGGER.info(String
                 .format("Request to reschedule a cron job for job %s with cron expression %s started",
@@ -432,26 +430,27 @@ public class BatchController {
     }
 
     @ResponseStatus(value = HttpStatus.OK)
-    @RequestMapping(value = "/restart/{jobName}/{executionId}", method = RequestMethod.GET,params = {
-            BatchConstants.JOB_NAME_REQUEST_PARAM})
+    @RequestMapping(value = "/restart", method = RequestMethod.POST)
     @ResponseBody
-    public void restartExecution(@PathVariable(value=BatchConstants.JOB_NAME_REQUEST_PARAM) String jobName,
-            @PathVariable("executionId") Integer executionId) {
+    public long restartExecution(
+            @RequestParam(value = BatchConstants.JOB_NAME_REQUEST_PARAM) String jobName,
+            @RequestParam("executionId") Integer executionId) {
 
         LOGGER.info(String.format(
-                "Request to restart the execution %d for job %s started", executionId,jobName));
+                "Request to restart the execution %d for job %s started",
+                executionId, jobName));
         StopWatch sw = new StopWatch();
         sw.start();
         try {
 
-            jobTriggerService.restart(jobName,executionId);
+            return jobTriggerService.restart(jobName, executionId);
         } catch (BatchException e) {
             LOGGER.error(e.getMessage());
             throw new RestException(e, e.getMessage());
         } finally {
             LOGGER.info(String
                     .format("Request to restart the execution %d  for job %s ended . Time taken (ms) = %d ",
-                            executionId , jobName, sw.getTime()));
+                            executionId, jobName, sw.getTime()));
             sw.stop();
         }
     }
