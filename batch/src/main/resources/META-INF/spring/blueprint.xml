@@ -22,7 +22,7 @@
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"></bean>
 	<!-- <bean id="header" class="org.motechproject.osgi.web.Header"/> -->
 
-	<bean id="moduleRegistrationData" class="org.motechproject.osgi.web.ModuleRegistrationData">
+	<!--  <bean id="moduleRegistrationData" class="org.motechproject.osgi.web.ModuleRegistrationData">
 		<constructor-arg name="url" value="../batch/resources/index.html" />
 		<constructor-arg name="moduleName" value="batch" />
 		<constructor-arg name="angularModules">
@@ -35,7 +35,7 @@
 				<entry key="messages" value="../batch/messages/" />
 			</map>
 		</constructor-arg>
-	</bean>
+	</bean> -->
 	
 	<osgi:reference id="jobRepo"
 		interface="org.motechproject.batch.mds.service.BatchJobMDSService" />
