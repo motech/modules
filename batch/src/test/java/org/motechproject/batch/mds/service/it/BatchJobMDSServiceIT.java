@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.batch.mds.BatchJob;
 import org.motechproject.batch.mds.service.BatchJobMDSService;
+import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -19,7 +20,7 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
-public class BatchJobMDSServiceIT {
+public class BatchJobMDSServiceIT extends BasePaxIT {
 
 	@Inject
 	private BatchJobMDSService batchJobMDSService;

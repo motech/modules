@@ -15,14 +15,16 @@
 					http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
 
+
 	<!-- Scans the classpath of this application for @Components to deploy as 
 		beans -->
 	<!-- ========================= GENERAL DEFINITIONS ========================= -->
-	<context:property-placeholder
+	 <!-- <context:property-placeholder
 		location="file:${user.home}/.motech/config/batch-springdb.properties"
-		order="0" ignore-unresolvable="true" />
-	<context:property-placeholder location="batch-hsql.properties"
-		order="1" />
+		order="0" ignore-resource-not-found="true" /> -->
+		
+	<context:property-placeholder location="classpath:*batch-hsql.properties"
+		order="1" /> 
 
 
 	<import resource="classpath*:baseRefContext.xml" />
