@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:osgi="http://www.eclipse.org/gemini/blueprint/schema/blueprint"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.eclipse.org/gemini/blueprint/schema/blueprint http://www.eclipse.org/gemini/blueprint/schema/blueprint/gemini-blueprint.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+    <import resource="classpath*:META-INF/motech/*.xml" />
+    <import resource="classpath*:META-INF/motech/applicationHub.xml" />
+
+    <context:annotation-config />
+
+    <osgi:service ref="subscriptionService"
+        interface="org.motechproject.hub.service.SubscriptionService"
+        auto-export="interfaces" />
+    <osgi:service ref="contentDistributionService"
+        interface="org.motechproject.hub.service.ContentDistributionService"
+        auto-export="interfaces" />
+
+    <osgi:reference id="hubTopicMDSService"
+        interface="org.motechproject.hub.mds.service.HubTopicMDSService" />
+    <osgi:reference id="hubDistributionStatusMDSService"
+        interface="org.motechproject.hub.mds.service.HubDistributionStatusMDSService" />
+    <osgi:reference id="hubPublisherTransactionMDSService"
+        interface="org.motechproject.hub.mds.service.HubPublisherTransactionMDSService" />
+    <osgi:reference id="hubSubscriberTransactionMDSService"
+        interface="org.motechproject.hub.mds.service.HubSubscriberTransactionMDSService" />
+    <osgi:reference id="hubSubscriptionMDSService"
+        interface="org.motechproject.hub.mds.service.HubSubscriptionMDSService" />
+    <osgi:reference id="hubSubscriptionStatusMDSService"
+        interface="org.motechproject.hub.mds.service.HubSubscriptionStatusMDSService" />
+    <osgi:reference id="hubDistributionContentMDSService"
+        interface="org.motechproject.hub.mds.service.HubDistributionContentMDSService" />
+
+    <osgi:reference id="httpAgentImpl"
+        interface="org.motechproject.http.agent.service.HttpAgent" />
+
+</beans>
