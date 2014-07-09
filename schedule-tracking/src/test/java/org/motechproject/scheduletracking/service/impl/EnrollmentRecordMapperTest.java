@@ -6,6 +6,7 @@ import org.mockito.Mock;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.scheduletracking.domain.Enrollment;
+import org.motechproject.scheduletracking.domain.EnrollmentBuilder;
 import org.motechproject.scheduletracking.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.domain.Schedule;
 import org.motechproject.scheduletracking.domain.WindowName;
@@ -43,15 +44,15 @@ public class EnrollmentRecordMapperTest {
         Map<String, String> metadata = new HashMap<>();
         metadata.put("foo", "bar");
 
-        final Enrollment enrollment = new Enrollment()
-            .setExternalId("externalId")
-            .setSchedule(schedule)
-            .setCurrentMilestoneName("milestoneX")
-            .setStartOfSchedule(DateUtil.newDateTime(2000, 2, 1, 0, 0, 0))
-            .setEnrolledOn(DateUtil.newDateTime(2000, 2, 10, 0, 0, 0))
-            .setPreferredAlertTime(new Time(10, 10))
-            .setStatus(EnrollmentStatus.ACTIVE)
-            .setMetadata(metadata);
+        final Enrollment enrollment = new EnrollmentBuilder()
+            .withExternalId("externalId")
+            .withSchedule(schedule)
+            .withCurrentMilestoneName("milestoneX")
+            .withStartOfSchedule(DateUtil.newDateTime(2000, 2, 1, 0, 0, 0))
+            .withEnrolledOn(DateUtil.newDateTime(2000, 2, 10, 0, 0, 0))
+            .withPreferredAlertTime(new Time(10, 10))
+            .withStatus(EnrollmentStatus.ACTIVE)
+            .withMetadata(metadata).toEnrollment();
         final EnrollmentRecord record = enrollmentRecordMapper.map(enrollment);
 
         assertRecordMatchesEnrollment(record, enrollment);

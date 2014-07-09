@@ -1,17 +1,18 @@
 package org.motechproject.scheduletracking.domain;
 
 import org.joda.time.DateTime;
-
-import java.io.Serializable;
+import org.motechproject.mds.annotations.Entity;
 
 import static org.motechproject.commons.date.util.DateUtil.setTimeZone;
 
-public class MilestoneFulfillment implements Serializable {
-    private static final long serialVersionUID = 7990212996988800913L;
+@Entity
+public class MilestoneFulfillment {
+
     private String milestoneName;
     private DateTime fulfillmentDateTime;
 
-    private MilestoneFulfillment() {
+    public MilestoneFulfillment() {
+        this(null, null);
     }
 
     public MilestoneFulfillment(String milestoneName, DateTime fulfillmentDateTime) {

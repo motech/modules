@@ -2,6 +2,7 @@ package org.motechproject.scheduletracking.domain.search;
 
 import org.junit.Test;
 import org.motechproject.scheduletracking.domain.Enrollment;
+import org.motechproject.scheduletracking.domain.EnrollmentBuilder;
 import org.motechproject.scheduletracking.domain.Schedule;
 import org.motechproject.scheduletracking.repository.AllEnrollments;
 
@@ -34,20 +35,20 @@ public class MetadataCriterionTest {
 
         metadata1.put("foo","bar");
         metadata1.put("fuu", "bar");
-        enrollments.add(new Enrollment().setExternalId("entity1").setSchedule(schedule).setCurrentMilestoneName(null).setStartOfSchedule(null).setEnrolledOn(null).setPreferredAlertTime(null).setStatus(null).setMetadata(metadata1));
+        enrollments.add(new EnrollmentBuilder().withExternalId("entity1").withSchedule(schedule).withCurrentMilestoneName(null).withStartOfSchedule(null).withEnrolledOn(null).withPreferredAlertTime(null).withStatus(null).withMetadata(metadata1).toEnrollment());
 
         metadata2.put("foo", "baz");
         metadata2.put("fuu", "biz");
-        enrollments.add(new Enrollment().setExternalId("entity2").setSchedule(schedule).setCurrentMilestoneName(null).setStartOfSchedule(null).setEnrolledOn(null).setPreferredAlertTime(null).setStatus(null).setMetadata(metadata2));
+        enrollments.add(new EnrollmentBuilder().withExternalId("entity2").withSchedule(schedule).withCurrentMilestoneName(null).withStartOfSchedule(null).withEnrolledOn(null).withPreferredAlertTime(null).withStatus(null).withMetadata(metadata2).toEnrollment());
 
         metadata3.put("foo","bar");
-        enrollments.add(new Enrollment().setExternalId("entity3").setSchedule(schedule).setCurrentMilestoneName(null).setStartOfSchedule(null).setEnrolledOn(null).setPreferredAlertTime(null).setStatus(null).setMetadata(metadata3));
+        enrollments.add(new EnrollmentBuilder().withExternalId("entity3").withSchedule(schedule).withCurrentMilestoneName(null).withStartOfSchedule(null).withEnrolledOn(null).withPreferredAlertTime(null).withStatus(null).withMetadata(metadata3).toEnrollment());
 
         metadata4.put("foo", "boz");
         metadata4.put("fuu", "ber");
-        enrollments.add(new Enrollment().setExternalId("entity4").setSchedule(schedule).setCurrentMilestoneName(null).setStartOfSchedule(null).setEnrolledOn(null).setPreferredAlertTime(null).setStatus(null).setMetadata(metadata4));
+        enrollments.add(new EnrollmentBuilder().withExternalId("entity4").withSchedule(schedule).withCurrentMilestoneName(null).withStartOfSchedule(null).withEnrolledOn(null).withPreferredAlertTime(null).withStatus(null).withMetadata(metadata4).toEnrollment());
 
-        enrollments.add(new Enrollment().setExternalId("entity5").setSchedule(schedule).setCurrentMilestoneName(null).setStartOfSchedule(null).setEnrolledOn(null).setPreferredAlertTime(null).setStatus(null).setMetadata(null));
+        enrollments.add(new EnrollmentBuilder().withExternalId("entity5").withSchedule(schedule).withCurrentMilestoneName(null).withStartOfSchedule(null).withEnrolledOn(null).withPreferredAlertTime(null).withStatus(null).withMetadata(null).toEnrollment());
 
         List<Enrollment> filtered = new MetadataCriterion("foo", "bar").filter(enrollments);
         assertEquals(asList(new String[]{ "entity1", "entity3" }), extract(filtered, on(Enrollment.class).getExternalId()));

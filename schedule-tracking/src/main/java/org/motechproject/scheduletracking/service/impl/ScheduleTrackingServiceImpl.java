@@ -3,21 +3,22 @@ package org.motechproject.scheduletracking.service.impl;
 import org.joda.time.LocalDate;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.scheduletracking.domain.Enrollment;
+import org.motechproject.scheduletracking.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.domain.Schedule;
 import org.motechproject.scheduletracking.domain.ScheduleFactory;
 import org.motechproject.scheduletracking.domain.exception.InvalidEnrollmentException;
 import org.motechproject.scheduletracking.domain.exception.ScheduleTrackingException;
 import org.motechproject.scheduletracking.domain.json.ScheduleRecord;
-import org.motechproject.scheduletracking.repository.AllEnrollments;
-import org.motechproject.scheduletracking.repository.AllSchedules;
 import org.motechproject.scheduletracking.repository.TrackedSchedulesJsonReader;
 import org.motechproject.scheduletracking.repository.TrackedSchedulesJsonReaderImpl;
+import org.motechproject.scheduletracking.repository.dataservices.EnrollmentDataService;
 import org.motechproject.scheduletracking.service.EnrollmentRecord;
 import org.motechproject.scheduletracking.service.EnrollmentRequest;
 import org.motechproject.scheduletracking.service.EnrollmentService;
 import org.motechproject.scheduletracking.service.EnrollmentUpdater;
 import org.motechproject.scheduletracking.service.EnrollmentsQuery;
 import org.motechproject.scheduletracking.service.MilestoneAlerts;
+import org.motechproject.scheduletracking.repository.dataservices.ScheduleDataService;
 import org.motechproject.scheduletracking.service.ScheduleTrackingService;
 import org.motechproject.scheduletracking.service.contract.UpdateCriteria;
 import org.motechproject.scheduletracking.service.contract.UpdateCriterion;
@@ -38,40 +39,37 @@ import static org.motechproject.commons.date.util.DateUtil.newDateTime;
  * Implementation of {@link ScheduleTrackingService}
  */
 public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
-    private AllSchedules allSchedules;
-    private AllEnrollments allEnrollments;
+    private EnrollmentDataService enrollmentDataService;
+    private ScheduleDataService scheduleDataService;
     private EnrollmentService enrollmentService;
     private EnrollmentsQueryService enrollmentsQueryService;
     private EnrollmentRecordMapper enrollmentRecordMapper;
     private TrackedSchedulesJsonReader schedulesJsonReader;
     private SettingsFacade scheduleTrackingSettings;
-    private ScheduleFactory scheduleFactory;
 
     @Autowired
-    public ScheduleTrackingServiceImpl(AllSchedules allSchedules, AllEnrollments allEnrollments,
-                                       EnrollmentService enrollmentService, EnrollmentsQueryService enrollmentsQueryService,
-                                       EnrollmentRecordMapper enrollmentRecordMapper,
-                                       @Qualifier("scheduleTrackingSettings") SettingsFacade scheduleTrackingSettings,
-                                       ScheduleFactory scheduleFactory) {
-        this.allSchedules = allSchedules;
-        this.allEnrollments = allEnrollments;
+    public ScheduleTrackingServiceImpl(EnrollmentsQueryService enrollmentsQueryService,
+                                       ScheduleDataService scheduleDataService, EnrollmentService enrollmentService,
+                                       EnrollmentRecordMapper enrollmentRecordMapper, EnrollmentDataService enrollmentDataService,
+                                       @Qualifier("scheduleTrackingSettings") SettingsFacade scheduleTrackingSettings) {
+        this.enrollmentDataService = enrollmentDataService;
+        this.scheduleDataService = scheduleDataService;
         this.enrollmentService = enrollmentService;
         this.enrollmentsQueryService = enrollmentsQueryService;
         this.enrollmentRecordMapper = enrollmentRecordMapper;
         this.scheduleTrackingSettings = scheduleTrackingSettings;
-        this.scheduleFactory = scheduleFactory;
         this.schedulesJsonReader = new TrackedSchedulesJsonReaderImpl();
     }
 
     @Override
     public EnrollmentRecord getEnrollment(String externalId, String scheduleName) {
-        Enrollment activeEnrollment = allEnrollments.getActiveEnrollment(externalId, scheduleName);
+        Enrollment activeEnrollment = enrollmentDataService.findByExternalIdScheduleNameAndStatus(externalId, scheduleName, EnrollmentStatus.ACTIVE);
         return enrollmentRecordMapper.map(activeEnrollment);
     }
 
     @Override
     public void updateEnrollment(String externalId, String scheduleName, UpdateCriteria updateCriteria) {
-        Enrollment enrollment = allEnrollments.getActiveEnrollment(externalId, scheduleName);
+        Enrollment enrollment = enrollmentDataService.findByExternalIdScheduleNameAndStatus(externalId, scheduleName, EnrollmentStatus.ACTIVE);
         if (enrollment == null) {
             throw new InvalidEnrollmentException(
                     format("Cannot find an active enrollment with " +
@@ -81,7 +79,7 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
             for (Map.Entry<UpdateCriterion, Object> entry:criteria.entrySet()) {
                 EnrollmentUpdater.get(entry.getKey()).update(enrollment, entry.getValue());
             }
-            allEnrollments.update(enrollment);
+            enrollmentDataService.update(enrollment);
         }
     }
 
@@ -105,7 +103,7 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
 
     @Override
     public MilestoneAlerts getAlertTimings(EnrollmentRequest enrollmentRequest) {
-        Schedule schedule = allSchedules.getByName(enrollmentRequest.getScheduleName());
+        Schedule schedule = scheduleDataService.findByName(enrollmentRequest.getScheduleName());
         if (schedule == null) {
             throw new ScheduleTrackingException("No schedule with name: %s", enrollmentRequest.getScheduleName());
         }
@@ -123,18 +121,26 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
     @Override
     public void add(String scheduleJson) {
         ScheduleRecord scheduleRecord = schedulesJsonReader.getSchedule(scheduleJson);
-        Schedule schedule = scheduleFactory.build(scheduleRecord, getLanguage());
-        allSchedules.addOrUpdate(schedule);
+        Schedule schedule = new ScheduleFactory().build(scheduleRecord, getLanguage());
+
+        Schedule existing = scheduleDataService.findByName(schedule.getName());
+
+        if (existing == null) {
+            scheduleDataService.create(schedule);
+        } else {
+            existing.merge(schedule);
+            scheduleDataService.update(existing);
+        }
     }
 
     @Override
     public void remove(String scheduleName) {
-        allSchedules.remove(scheduleName);
+        scheduleDataService.delete(scheduleDataService.findByName(scheduleName));
     }
 
     @Override
-    public String enroll(EnrollmentRequest enrollmentRequest) {
-        Schedule schedule = allSchedules.getByName(enrollmentRequest.getScheduleName());
+    public Long enroll(EnrollmentRequest enrollmentRequest) {
+        Schedule schedule = scheduleDataService.findByName(enrollmentRequest.getScheduleName());
         if (schedule == null) {
             throw new ScheduleTrackingException("No schedule with name: %s", enrollmentRequest.getScheduleName());
         }
@@ -151,7 +157,7 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
 
     @Override
     public void fulfillCurrentMilestone(String externalId, String scheduleName, LocalDate fulfillmentDate, Time fulfillmentTime) {
-        Enrollment activeEnrollment = allEnrollments.getActiveEnrollment(externalId, scheduleName);
+        Enrollment activeEnrollment = enrollmentDataService.findByExternalIdScheduleNameAndStatus(externalId, scheduleName, EnrollmentStatus.ACTIVE);
         if (activeEnrollment == null) {
             throw new InvalidEnrollmentException(format("Can fulfill only active enrollments. This enrollment has: External ID: {0}, Schedule name: {1}", externalId, scheduleName));
         }
@@ -173,7 +179,7 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
     @Override
     public void unenroll(String externalId, List<String> scheduleNames) {
         for (String scheduleName : scheduleNames) {
-            Enrollment activeEnrollment = allEnrollments.getActiveEnrollment(externalId, scheduleName);
+            Enrollment activeEnrollment = enrollmentDataService.findByExternalIdScheduleNameAndStatus(externalId, scheduleName, EnrollmentStatus.ACTIVE);
             if (activeEnrollment != null) {
                 enrollmentService.unenroll(activeEnrollment);
             }
@@ -182,12 +188,12 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
 
     @Override
     public Schedule getScheduleByName(String scheduleName) {
-        return allSchedules.getByName(scheduleName);
+        return scheduleDataService.findByName(scheduleName);
     }
 
     @Override
     public List<Schedule> getAllSchedules() {
-        return allSchedules.getAll();
+        return scheduleDataService.retrieveAll();
     }
 
     private Locale getLanguage() {

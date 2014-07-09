@@ -108,14 +108,16 @@ public class JobServiceImpl implements JobService {
         jobRepo.create(batchJob);
         int batchId = Integer.parseInt(String.valueOf(jobRepo.getDetachedField(
                 batchJob, "id")));
-        for (String key : params.getParamsMap().keySet()) {
+        if (params.getParamsMap() != null) {
+            for (String key : params.getParamsMap().keySet()) {
 
-            BatchJobParameters batchJobParms = new BatchJobParameters();
-            batchJobParms.setBatchJobId(batchId);
-            batchJobParms.setParameterName(key);
-            batchJobParms.setParameterValue(params.getParamsMap().get(key));
+                BatchJobParameters batchJobParms = new BatchJobParameters();
+                batchJobParms.setBatchJobId(batchId);
+                batchJobParms.setParameterName(key);
+                batchJobParms.setParameterValue(params.getParamsMap().get(key));
 
-            jobParameterRepo.create(batchJobParms);
+                jobParameterRepo.create(batchJobParms);
+            }
         }
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(MotechSchedulerService.JOB_ID_KEY,

@@ -19,12 +19,11 @@
 	<!-- Scans the classpath of this application for @Components to deploy as 
 		beans -->
 	<!-- ========================= GENERAL DEFINITIONS ========================= -->
-	 <!-- <context:property-placeholder
-		location="file:${user.home}/.motech/config/batch-springdb.properties"
+	<!-- <context:property-placeholder location="file:${user.home}/.motech/config/batch-springdb.properties" 
 		order="0" ignore-resource-not-found="true" /> -->
-		
+
 	<context:property-placeholder location="classpath:*batch-hsql.properties"
-		order="1" /> 
+		order="1" />
 
 
 	<import resource="classpath*:baseRefContext.xml" />
@@ -45,19 +44,7 @@
 
 	</bean>
 
-	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-		<constructor-arg ref="dataSource" />
-	</bean>
-	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
-		destroy-method="close">
-		<property name="driverClassName" value="${batch.jdbc.driver}" />
-		<property name="url" value="${batch.jdbc.url}" />
-		<property name="username" value="${batch.jdbc.user}" />
-		<property name="password" value="${batch.jdbc.password}" />
-		<property name="testWhileIdle" value="${batch.jdbc.testWhileIdle}" />
-		<property name="validationQuery" value="${batch.jdbc.validationQuery}" />
 
-	</bean>
 
 
 

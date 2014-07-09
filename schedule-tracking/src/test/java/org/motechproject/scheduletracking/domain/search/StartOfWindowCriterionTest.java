@@ -19,6 +19,7 @@ import static org.motechproject.commons.date.util.DateUtil.newDateTime;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 public class StartOfWindowCriterionTest {
+
     @Mock
     private AllEnrollments allEnrollments;
 
@@ -41,7 +42,7 @@ public class StartOfWindowCriterionTest {
         when(enrollment3.getStartOfWindowForCurrentMilestone(WindowName.due)).thenReturn(newDateTime(2012, 2, 5, 0, 0, 0));
         when(enrollment4.getStartOfWindowForCurrentMilestone(WindowName.due)).thenReturn(newDateTime(2012, 2, 6, 0, 0, 0));
 
-        when(allEnrollments.getAll()).thenReturn(enrollments);
+        when(allEnrollments.retrieveAll()).thenReturn(enrollments);
 
         DateTime start = newDateTime(2012, 2, 3, 0, 0, 0);
         DateTime end = newDateTime(2012, 2, 5, 23, 59, 59);

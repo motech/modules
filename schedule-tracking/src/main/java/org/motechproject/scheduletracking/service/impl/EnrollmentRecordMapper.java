@@ -6,8 +6,6 @@ import org.motechproject.scheduletracking.domain.WindowName;
 import org.motechproject.scheduletracking.service.EnrollmentRecord;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-
 @Component
 public class EnrollmentRecordMapper {
     public EnrollmentRecord map(Enrollment enrollment) {
@@ -22,7 +20,7 @@ public class EnrollmentRecordMapper {
             .setReferenceDateTime(enrollment.getStartOfSchedule())
             .setEnrollmentDateTime(enrollment.getEnrolledOn())
             .setStatus(enrollment.getStatus().toString())
-            .setMetadata(new HashMap<>(enrollment.getMetadata()))
+            .setMetadata(enrollment.getMetadata())
             .setEarliestStart(null)
             .setDueStart(null)
             .setLateStart(null)
@@ -45,7 +43,7 @@ public class EnrollmentRecordMapper {
             .setReferenceDateTime(enrollment.getStartOfSchedule())
             .setEnrollmentDateTime(enrollment.getEnrolledOn())
             .setStatus(enrollment.getStatus().toString())
-            .setMetadata(new HashMap<>(enrollment.getMetadata()))
+            .setMetadata(enrollment.getMetadata())
             .setEarliestStart(earliestStart)
             .setDueStart(dueStart)
             .setLateStart(lateStart)
