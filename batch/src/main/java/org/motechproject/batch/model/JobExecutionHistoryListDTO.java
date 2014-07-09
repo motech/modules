@@ -2,18 +2,21 @@ package org.motechproject.batch.model;
 
 import java.util.List;
 
+import javax.batch.runtime.JobExecution;
+
 public class JobExecutionHistoryListDTO {
+    
+     private List<JobExecution> jobExecutionHistoryList;
 
-   private List<JobExecutionHistoryDTO> jobExecutionHistoryList;
-
-    // Setters and Getters for the fields
-    public List<JobExecutionHistoryDTO> getJobExecutionHistoryList() {
+    public List<JobExecution> getJobExecutionHistoryList() {
         return jobExecutionHistoryList;
     }
 
     public void setJobExecutionHistoryList(
-            List<JobExecutionHistoryDTO> jobExecutionHistoryList) {
+            List<JobExecution> jobExecutionHistoryList) {
         this.jobExecutionHistoryList = jobExecutionHistoryList;
     }
+
+
 
 }

@@ -5,6 +5,11 @@ package org.motechproject.batch.mds;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+/**
+ * Class containing all the fields related to job
+ * @author naveen
+ * 
+ */
 @Entity
 public class BatchJob implements java.io.Serializable {
 

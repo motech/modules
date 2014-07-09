@@ -50,8 +50,8 @@ public class BatchValidator {
     }
 
     private void checkCronExpression(String cronExpression, List<String> errors) {
-        if (!CronExpression.isValidExpression(cronExpression)
-                || cronExpression == null) {
+        if (cronExpression == null
+                || !CronExpression.isValidExpression(cronExpression)) {
             errors.add("Job cron expression supplied is not valid");
         }
     }

@@ -1,5 +1,6 @@
 package org.motechproject.batch.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -7,9 +8,10 @@ import javax.batch.operations.JobOperator;
 import javax.batch.operations.JobSecurityException;
 import javax.batch.operations.JobStartException;
 import javax.batch.operations.NoSuchJobExecutionException;
+import javax.batch.runtime.JobExecution;
+import javax.batch.runtime.JobInstance;
 
 import org.apache.log4j.Logger;
-import org.motechproject.batch.dao.BatchExecutionDao;
 import org.motechproject.batch.exception.ApplicationErrors;
 import org.motechproject.batch.exception.BatchException;
 import org.motechproject.batch.mds.BatchJob;
@@ -41,9 +43,6 @@ public class JobTriggerServiceImpl implements JobTriggerService {
 
     @Value("${xml.path}")
     private String xmlPath;
-
-    @Autowired
-    private BatchExecutionDao executionDao;
 
     @Autowired
     public JobTriggerServiceImpl(BatchJobMDSService jobRepo,
@@ -94,9 +93,9 @@ public class JobTriggerServiceImpl implements JobTriggerService {
     @Override
     public long triggerJob(String jobName) throws BatchException {
         LOGGER.info("Starting executing JOB: " + jobName);
-        ClassLoader classLoader = Thread.currentThread()
+        ClassLoader contextClassLoader = Thread.currentThread()
                 .getContextClassLoader();
-        ClassLoader contextClassLoader = getClass().getClassLoader();
+
         BatchJobClassLoader testLoader = new BatchJobClassLoader(
                 contextClassLoader, xmlPath);
 
@@ -111,7 +110,7 @@ public class JobTriggerServiceImpl implements JobTriggerService {
                     e.getMessage());
         } finally {
 
-            Thread.currentThread().setContextClassLoader(classLoader);
+            Thread.currentThread().setContextClassLoader(contextClassLoader);
         }
 
         // TODO Implement the datetime
@@ -121,7 +120,7 @@ public class JobTriggerServiceImpl implements JobTriggerService {
     @Override
     public JobExecutionHistoryListDTO getJObExecutionHistory(String jobName)
             throws BatchException {
-
+        List<JobExecution> jobExecutions = new ArrayList<JobExecution>();
         List<BatchJob> batchJobList = jobRepo.findByJobName(jobName);
         boolean jobExists = true;
         if (batchJobList == null || batchJobList.size() == 0) {
@@ -131,18 +130,26 @@ public class JobTriggerServiceImpl implements JobTriggerService {
             throw new BatchException(ApplicationErrors.JOB_NOT_FOUND);
         }
 
-        return executionDao.getExecutionHist(jobName);
+        int count = jsrJobOperator.getJobInstanceCount(jobName);
+        List<JobInstance> jobInstances = jsrJobOperator.getJobInstances(
+                jobName, 1, count);
+        for (int icount = 0; icount < jobInstances.size(); icount++) {
+            jobExecutions = jsrJobOperator.getJobExecutions(jobInstances
+                    .get(icount));
+        }
+        JobExecutionHistoryListDTO historyListDTO = new JobExecutionHistoryListDTO();
+        historyListDTO.setJobExecutionHistoryList(jobExecutions);
+        return historyListDTO;
 
     }
 
     @Override
     public long restart(String jobName, Integer executionId)
             throws BatchException {
-        ClassLoader classLoader = null;
+        ClassLoader contextClassLoader = null;
         Properties restartParameters = getJobParameters(jobName);
         try {
-            classLoader = Thread.currentThread().getContextClassLoader();
-            ClassLoader contextClassLoader = getClass().getClassLoader();
+            contextClassLoader = Thread.currentThread().getContextClassLoader();
             BatchJobClassLoader testLoader = new BatchJobClassLoader(
                     contextClassLoader, xmlPath);
 
@@ -154,7 +161,7 @@ public class JobTriggerServiceImpl implements JobTriggerService {
                     e.getMessage());
         } finally {
 
-            Thread.currentThread().setContextClassLoader(classLoader);
+            Thread.currentThread().setContextClassLoader(contextClassLoader);
         }
 
     }

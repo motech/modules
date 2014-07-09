@@ -20,7 +20,7 @@
 		<modules.root.dir>${basedir}/..</modules.root.dir>
 		<spring.batch.version>3.0.0.M3-r027</spring.batch.version>
 		<quartz.version>2.0.0</quartz.version>
-		<spring.version>3.1.2.RELEASE</spring.version>
+		<!-- <spring.version.requied.for.batch>3.1.2.RELEASE</spring.version.batch> -->
 		<hsqldb.version>1.8.0.9</hsqldb.version>
 		<javax.persistence.version>2.1.0</javax.persistence.version>
 		<apache.servicemix.bundles.xpp3.version>1.1.4c_7</apache.servicemix.bundles.xpp3.version>
@@ -67,8 +67,8 @@
 							org.motechproject.batch.service;version=${project.version},
 							org.motechproject.batch.mds;version=${project.version},
 							org.motechproject.batch.mds.service;version=${project.version},
-
-
+							org.motechproject.batch.exception;version=${project.version},
+							org.motechproject.batch.model;version=${project.version}
 							org.motechproject.batch.service.impl;version=${project.version}
 
 						</Export-Package>
@@ -250,7 +250,6 @@
 		<dependency>
 			<groupId>org.motechproject</groupId>
 			<artifactId>motech-platform-osgi-extender-fragment</artifactId>
-			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -265,19 +264,18 @@
 			<groupId>org.motechproject</groupId>
 			<artifactId>motech-platform-dataservices</artifactId>
 			<version>${motech.version}</version>
-			 <exclusions> <exclusion> <groupId>org.motechproject</groupId> <artifactId>motech-platform-web-security</artifactId> 
-				</exclusion> </exclusions> 
 		</dependency>
 		<dependency>
-			<groupId>org.motechproject</groupId>
-			<artifactId>motech-platform-web-security</artifactId>
-			<version>${motech.version}</version>
-			 <exclusions> <exclusion> <groupId>org.springframework.security</groupId> <artifactId>org.springframework.security.openid</artifactId> 
-				</exclusion> </exclusions> 
+			<groupId>javax.mail</groupId>
+			<artifactId>com.springsource.javax.mail</artifactId>
 		</dependency>
-		<dependency>
-		<groupId>org.springframework.security</groupId> <artifactId>org.springframework.security.openid</artifactId> 
-		</dependency>
+		<!-- <dependency> <groupId>org.openid4java</groupId> <artifactId>openid4java</artifactId> 
+			<version>0.9.7</version> <exclusions> <exclusion> <artifactId>commons-logging</artifactId> 
+			<groupId>commons-logging</groupId> </exclusion> <exclusion> <artifactId>spring-core</artifactId> 
+			<groupId>org.springframework</groupId> </exclusion> <exclusion> <artifactId>spring-context</artifactId> 
+			<groupId>org.springframework</groupId> </exclusion> <exclusion> <groupId>commons-httpclient</groupId> 
+			<artifactId>commons-httpclient</artifactId> </exclusion> <exclusion> <artifactId>spring-beans</artifactId> 
+			<groupId>org.springframework</groupId> </exclusion> </exclusions> </dependency> -->
 
 
 
