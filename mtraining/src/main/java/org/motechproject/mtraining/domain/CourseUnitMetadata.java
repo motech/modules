@@ -16,9 +16,17 @@ public class CourseUnitMetadata {
     private boolean status;
 
     /**
-     * sequence number to help with ordering of the courses
+     * The content for the course unit
      */
-    private int sequenceNumber;
+    private String content;
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 
     public String getName() {
         return name;
@@ -34,13 +42,5 @@ public class CourseUnitMetadata {
 
     public void setStatus(boolean status) {
         this.status = status;
-    }
-
-    public int getSequenceNumber() {
-        return sequenceNumber;
-    }
-
-    public void setSequenceNumber(int sequenceNumber) {
-        this.sequenceNumber = sequenceNumber;
     }
 }

@@ -9,22 +9,12 @@ import org.motechproject.mds.annotations.Field;
 @Entity
 public class Lesson extends CourseUnitMetadata {
 
-    @Field
-    private String content;
-
     public Lesson() {
         this(null);
     }
 
     public Lesson(String content) {
-        this.content = content;
+        setContent(content);
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 }

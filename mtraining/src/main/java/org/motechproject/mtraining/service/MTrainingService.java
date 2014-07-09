@@ -1,6 +1,8 @@
 package org.motechproject.mtraining.service;
 
+import org.motechproject.mtraining.domain.Chapter;
 import org.motechproject.mtraining.domain.Course;
+import org.motechproject.mtraining.domain.Lesson;
 import org.motechproject.mtraining.domain.Quiz;
 
 import java.util.List;
@@ -9,6 +11,10 @@ import java.util.List;
  * Service interface for mTraining. Contains APIs to perform CRUD operations on Course and related object
  */
 public interface MTrainingService {
+
+    /**
+     *  Course CRUD
+     */
 
     /**
      * Create a course with the given structure
@@ -50,6 +56,33 @@ public interface MTrainingService {
      * @param status status to set for the course
      */
     void toggleCourseStatus(long courseId, boolean status);
+
+    /**
+     * Chapter CRUD
+     */
+    Chapter createChapter(Chapter chapter);
+
+    Chapter getChapterByName(String chapterName);
+
+    Chapter getChapterById(long chapterId);
+
+    Chapter updateChapter(Chapter chapter);
+
+    void deleteChapter(long chapterId);
+
+    /**
+     * Lesson CRUD
+     */
+
+    Lesson createLesson(Lesson lesson);
+
+    Lesson getLessonByName(String lessonName);
+
+    Lesson getLessonById(long id);
+
+    Lesson updateLesson(Lesson lesson);
+
+    void deleteLesson(long lessonId);
 
     /**
      * get the quiz for a given chapter
