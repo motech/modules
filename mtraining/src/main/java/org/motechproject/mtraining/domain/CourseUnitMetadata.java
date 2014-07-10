@@ -20,6 +20,27 @@ public class CourseUnitMetadata {
      */
     private String content;
 
+    /**
+     * Constructor with 0 arguments
+     */
+    public CourseUnitMetadata() {
+        this.name = "";
+        this.status = false;
+        this.content = "";
+    }
+
+    /**
+     * Constructor with all arguments
+     * @param name Name of the unit
+     * @param status Status of the unit
+     * @param content Content reference for the unit
+     */
+    public CourseUnitMetadata(String name, boolean status, String content) {
+        this.name = name;
+        this.status = status;
+        this.content = content;
+    }
+
     public String getContent() {
         return content;
     }

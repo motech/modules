@@ -20,10 +20,6 @@ public class Quiz {
     @Field
     private double passPercentage;
 
-    public Quiz() {
-        this(null, null, 0.0);
-    }
-
     public Quiz(String quizName, List<Question> questions, double passPercentage) {
         this.quizName = quizName;
         this.questions = questions;

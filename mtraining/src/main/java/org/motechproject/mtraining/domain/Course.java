@@ -14,19 +14,22 @@ public class Course extends CourseUnitMetadata {
     @Field
     private List<Chapter> chapters;
 
-    public Course() {
-        this(null);
+    public Course(String name, boolean status, String content) {
+        this(name, status, content, null);
     }
 
-    public Course(List<Chapter> chapters) {
+    public Course(String name, boolean status, String content, List<Chapter> chapters) {
+        super(name, status, content);
         this.chapters = chapters;
     }
 
     public List<Chapter> getChapters() {
+
         return chapters;
     }
 
-    public void setModules(List<Chapter> chapters) {
+    public void setChapters(List<Chapter> chapters) {
+
         this.chapters = chapters;
     }
 }

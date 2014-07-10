@@ -51,20 +51,14 @@ public interface MTrainingService {
     void deleteCourse(long courseId);
 
     /**
-     * Change the status of a course to active/inactive. status = true = active
-     * @param courseId id of the course
-     * @param status status to set for the course
-     */
-    void toggleCourseStatus(long courseId, boolean status);
-
-    /**
      * Chapter CRUD
      */
+
     Chapter createChapter(Chapter chapter);
 
-    Chapter getChapterByName(String chapterName);
-
     Chapter getChapterById(long chapterId);
+
+    List<Chapter> getChapterByName(String chapterName);
 
     Chapter updateChapter(Chapter chapter);
 
@@ -76,7 +70,7 @@ public interface MTrainingService {
 
     Lesson createLesson(Lesson lesson);
 
-    Lesson getLessonByName(String lessonName);
+    List<Lesson> getLessonByName(String lessonName);
 
     Lesson getLessonById(long id);
 

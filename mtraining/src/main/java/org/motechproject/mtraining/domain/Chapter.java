@@ -17,11 +17,16 @@ public class Chapter extends CourseUnitMetadata {
     @Field
     private Quiz quiz;
 
-    public Chapter() {
-        this(null, null);
+    public Chapter(String name, boolean status, String content) {
+        this(name, status, content, null, null);
     }
 
-    public Chapter(List<Lesson> lessons, Quiz quiz) {
+    public Chapter(String name, boolean status, String content, List<Lesson> lessons) {
+        this(name, status, content, lessons, null);
+    }
+
+    public Chapter(String name, boolean status, String content, List<Lesson> lessons, Quiz quiz) {
+        super(name, status, content);
         this.lessons = lessons;
         this.quiz = quiz;
     }
