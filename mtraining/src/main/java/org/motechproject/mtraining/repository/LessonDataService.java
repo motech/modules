@@ -3,7 +3,7 @@ package org.motechproject.mtraining.repository;
 import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
-import org.motechproject.mtraining.domain.Course;
+import org.motechproject.mtraining.domain.Lesson;
 
 import java.util.List;
 
@@ -13,11 +13,11 @@ import java.util.List;
  * as methods for adding, deleting, saving and finding all instances.  In this class we
  * define and custom lookups we may need.
  */
-public interface CourseDataService extends MotechDataService<Course> {
+public interface LessonDataService extends MotechDataService<Lesson> {
 
     @Lookup
-    List<Course> findCourseByName(@LookupField(name = "name") String courseName);
+    List<Lesson> findLessonByName(@LookupField(name = "name") String lessonName);
 
     @Lookup
-    Course findCourseById(@LookupField(name = "id") long id);
+    Lesson findLessonById(@LookupField(name = "id") long id);
 }
