@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -32,9 +33,32 @@
         <spring.version>3.1.0.RELEASE</spring.version>
         <spring.security.version>${spring.version}</spring.security.version>
         <spring.integration.version>2.1.0.RELEASE</spring.integration.version>
-
+        <spring.batch.version>3.0.0.M3-r027</spring.batch.version>
         <activemq.version>5.4.2-${external.dependency.release.tag}</activemq.version>
 
+        <hsqldb.version>1.8.0.9</hsqldb.version>
+        <javax.persistence.version>2.1.0</javax.persistence.version>
+        <javax.persistence.version>2.1.0</javax.persistence.version>
+        <apache.servicemix.bundles.xpp3.version>1.1.4c_7</apache.servicemix.bundles.xpp3.version>
+        <apache.servicemix.bundles.ant.version>1.8.1_1</apache.servicemix.bundles.ant.version>
+        <apache.servicemix.bundles.javax.inject.version>1_2</apache.servicemix.bundles.javax.inject.version>
+        <apache.servicemix.bundles.jopt.simple.version>4.6_1</apache.servicemix.bundles.jopt.simple.version>
+        <ibm.jbatch.version>1.0</ibm.jbatch.version>
+        <javax.batch.version>1.0</javax.batch.version>
+        <apache.ibatis.version>2.3.4.726</apache.ibatis.version>
+        <mongodb.version>2.12.2</mongodb.version>
+        <springsource.hibernate.version>3.6.0.Final-r027</springsource.hibernate.version>
+        <springframework.amqp.version>1.3.3.RELEASE-r027</springframework.amqp.version>
+        <springframework.retry.version>1.1.0.RELEASE-r027</springframework.retry.version>
+        <fasterxml.jackson.version>2.0.2</fasterxml.jackson.version>
+        <spring.data.commons.version>1.6.4.RELEASE</spring.data.commons.version>
+        <thoughtworks.xstream.version>1.4.7</thoughtworks.xstream.version>
+        <codehaus.jettison.version>1.2</codehaus.jettison.version>
+        <gemston.gemfire.version>7.0.1</gemston.gemfire.version>
+        <codehaus.groovy.version>1.8.9</codehaus.groovy.version>
+        <javax.el.version>2.2.5</javax.el.version>
+        <spring.osgi.core.version>1.2.1</spring.osgi.core.version>
+        <quartz.version>2.0.0</quartz.version>
         <exam.version>3.4.0</exam.version>
 
         <check.code.skip>${maven.test.skip}</check.code.skip>
@@ -1099,7 +1123,7 @@
         <module>message-campaign</module>
         <module>pill-reminder</module>
         <module>schedule-tracking</module>
-	<module>batch</module>
+        <module>batch</module>
     </modules>
 
     <build>
@@ -1286,7 +1310,7 @@
                         </goals>
                         <configuration>
                             <rules>
-                                <DependencyConvergence/>
+                                <DependencyConvergence />
                             </rules>
                         </configuration>
                     </execution>
@@ -1298,7 +1322,7 @@
                         <phase>verify</phase>
                         <configuration>
                             <rules>
-                                <NoPackageCyclesRule implementation="PackageCycles"/>
+                                <NoPackageCyclesRule implementation="PackageCycles" />
                             </rules>
                             <skip>${enforcer.skip}</skip>
                         </configuration>
@@ -1429,10 +1453,8 @@
                             <password>${mysql.password}</password>
                             <url>jdbc:mysql://localhost:3306</url>
                         </configuration>
-                        <!--
-                            For each Bundle IT tests in modules migrated to MDS the
-                            'motech_data_services' database has to be dropped and created again.
-                        -->
+                        <!-- For each Bundle IT tests in modules migrated to MDS the 'motech_data_services' 
+                            database has to be dropped and created again. -->
                         <executions>
                             <execution>
                                 <id>drop-db</id>
