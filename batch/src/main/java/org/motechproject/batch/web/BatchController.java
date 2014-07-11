@@ -196,27 +196,66 @@ public class BatchController {
      * @throws BatchException
      */
     @ResponseStatus(value = HttpStatus.OK)
-    @RequestMapping(value = "/schedulecronjob", method = RequestMethod.POST)
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
-    public void scheduleCronJob(CronJobScheduleParam params,
+    public void uploadJobConfiguration(String jobName,
             @RequestParam("file") MultipartFile file) {
 
-        LOGGER.info(String
-                .format("Request to schedule a cron job for job %s with cron expression %s started",
-                        params.getJobName(), params.getCronExpression()));
+        LOGGER.info(String.format(
+                "Request to upload job config file with jobName %s started",
+                jobName));
         StopWatch sw = new StopWatch();
         sw.start();
         try {
-            List<String> errors = batchValidator.validateShedulerInputs(
-                    params.getJobName(), params.getCronExpression());
-            errors.addAll(batchValidator.validateUploadInputs(
-                    params.getJobName(), file.getContentType()));
+            List<String> errors = batchValidator.validateUploadInputs(jobName,
+                    file.getContentType());
 
             if (!errors.isEmpty()) {
                 throw new BatchException(ApplicationErrors.BAD_REQUEST,
                         errors.toString());
             }
-            fileUploadService.uploadFile(params.getJobName(), file, xmlPath);
+            fileUploadService.uploadFile(jobName, file, xmlPath);
+        } catch (BatchException e) {
+            LOGGER.error(String
+                    .format("Error occured while processing request to upload job config file with jobName %s",
+                            jobName));
+            throw new RestException(e, e.getMessage());
+        } finally {
+            LOGGER.info(String
+                    .format("Request to upload job config file with jobName %s ended. Time taken (ms) = %d",
+                            jobName, sw.getTime()));
+            sw.stop();
+        }
+
+    }
+
+    /**
+     * Schedule a cron job given job name, cron expression and parameters for
+     * the job
+     * 
+     * @param jobName
+     *            jobName for the job to be scheduled
+     * @param cronExpression
+     *            cron expression for the job
+     * @param paramsMap
+     * @throws BatchException
+     */
+    @ResponseStatus(value = HttpStatus.OK)
+    @RequestMapping(value = "/schedulecronjob", method = RequestMethod.POST)
+    @ResponseBody
+    public void scheduleCronJob(@RequestBody CronJobScheduleParam params) {
+
+        LOGGER.info("Request to schedule a cron job started");
+        StopWatch sw = new StopWatch();
+        sw.start();
+        try {
+            List<String> errors = batchValidator.validateShedulerInputs(
+                    params.getJobName(), params.getCronExpression());
+
+            if (!errors.isEmpty()) {
+                throw new BatchException(ApplicationErrors.BAD_REQUEST,
+                        errors.toString());
+            }
             jobService.scheduleJob(params);
         } catch (BatchException e) {
             LOGGER.error(String
@@ -291,7 +330,7 @@ public class BatchController {
             @RequestParam(value = BatchConstants.JOB_NAME_REQUEST_PARAM) String jobName) {
 
         LOGGER.info(String
-                .format("Request to reschedule a cron job for job %s with cron expression %s started",
+                .format("Request to unschedule a cron job for job %s with cron expression %s started",
                         jobName));
         StopWatch sw = new StopWatch();
         sw.start();
@@ -421,7 +460,7 @@ public class BatchController {
             error.setErrorCode(String.valueOf(ex.getBatchException()
                     .getErrorCode()));
             error.setErrorMessage(ex.getBatchException().getErrorMessage());
-            error.setApplication("motech-platform-batch");
+            error.setApplication("batch");
 
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);

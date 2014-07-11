@@ -25,6 +25,7 @@ public interface JobTriggerService {
 
     /**
      * Returns the execution history for a job
+     * 
      * @param jobName
      * @return
      * @throws BatchException
@@ -36,7 +37,8 @@ public interface JobTriggerService {
 
     /**
      * Restarts the Execution
-     * @param jobName 
+     * 
+     * @param jobName
      * @param executionId
      */
     long restart(String jobName, Integer executionId) throws BatchException;

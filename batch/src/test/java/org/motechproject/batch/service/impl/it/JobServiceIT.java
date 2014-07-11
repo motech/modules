@@ -49,6 +49,8 @@ public class JobServiceIT extends BasePaxIT {
 		Assert.assertEquals("random-test-job",batchJobsMds.get(0).getJobName());
 		Assert.assertEquals("0 15 10 * * ? 2017",batchJobsMds.get(0).getCronExpression());
 		Assert.assertEquals((Integer)1,batchJobsMds.get(0).getBatchJobStatusId());
+		
+		
 	}
 	
 	@Test
@@ -68,6 +70,10 @@ public class JobServiceIT extends BasePaxIT {
 		Assert.assertEquals(1,batchJobsMds.size());
 		Assert.assertEquals("random-test-job",batchJobsMds.get(0).getJobName());
 		Assert.assertEquals("0 15 10 * * ? 2017",batchJobsMds.get(0).getCronExpression());
+		batchJobMDSService.delete(batchJobsMds.get(0));
+		batchJobsMds =  batchJobMDSService.findByJobName("random-test-job");
+		Assert.assertEquals(0,batchJobsMds.size());
+        
 	}
 	
 	@Test

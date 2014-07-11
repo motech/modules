@@ -66,8 +66,7 @@ public interface JobService {
     String sayHello();
 
     /**
-     * ReShedule an existing batch  job with given job name and cron
-     * expression
+     * ReShedule an existing batch job with given job name and cron expression
      * 
      * @param jobName
      *            job name for the job to be scheduled
@@ -79,7 +78,7 @@ public interface JobService {
     void rescheduleJob(String jobName, String cronExpression);
 
     /**
-     * UnShedule an existing batch  job with given job name 
+     * UnShedule an existing batch job with given job name
      * 
      * @param jobName
      *            job name for the job to be scheduled

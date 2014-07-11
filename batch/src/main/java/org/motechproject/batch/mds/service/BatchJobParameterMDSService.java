@@ -7,6 +7,12 @@ import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
 
+/**
+ * Class to query BatchJobParameters entity
+ * 
+ * @author naveen
+ * 
+ */
 public interface BatchJobParameterMDSService extends
         MotechDataService<BatchJobParameters> {
     @Lookup(name = "By JobId")

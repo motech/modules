@@ -24,7 +24,6 @@ import org.mockito.Mockito;
 import org.motechproject.batch.exception.BatchException;
 import org.motechproject.batch.mds.BatchJob;
 import org.motechproject.batch.mds.BatchJobParameters;
-import org.motechproject.batch.mds.BatchJobStatus;
 import org.motechproject.batch.mds.service.BatchJobMDSService;
 import org.motechproject.batch.mds.service.BatchJobParameterMDSService;
 import org.motechproject.batch.model.BatchJobDTO;
@@ -59,21 +58,16 @@ public class JobTriggerServiceImplTest {
     List<BatchJob> batchJobs = new ArrayList<BatchJob>();
     BatchJobListDTO batchJobListDTO;
     String cronExpression;
-    Date date = new Date(2014, 4, 22);
     BatchJobListDTO listDto = new BatchJobListDTO();
-    BatchJobStatus batchJobStatus;
     String jobName = "Test Case";
     Object id = 4L;
     String batchJobId = "4";
-    private boolean jobExists;
 
     @Before
     public void setUp() throws BatchException {
-        jobExists = true;
 
         cronExpression = "0 15 10 * * ? 2014";
         batchJob = new BatchJob();
-        batchJob.setBatchJobStatusId(new BatchJobStatus().getJobStatusId());
         batchJob.setCronExpression(cronExpression);
         batchJob.setJobName("testJob");
 

@@ -20,7 +20,6 @@ import org.motechproject.batch.mds.service.BatchJobParameterMDSService;
 import org.motechproject.batch.model.BatchJobDTO;
 import org.motechproject.batch.model.BatchJobListDTO;
 import org.motechproject.batch.model.CronJobScheduleParam;
-import org.motechproject.batch.model.JobStatusLookup;
 import org.motechproject.batch.model.OneTimeJobScheduleParams;
 import org.motechproject.batch.service.JobService;
 import org.motechproject.batch.util.BatchConstants;
@@ -103,8 +102,7 @@ public class JobServiceImpl implements JobService {
         BatchJob batchJob = new BatchJob();
         batchJob.setCronExpression(params.getCronExpression());
         batchJob.setJobName(params.getJobName());
-        batchJob.setBatchJobStatusId(JobStatusLookup.ACTIVE.getId());
-
+        
         jobRepo.create(batchJob);
         int batchId = Integer.parseInt(String.valueOf(jobRepo.getDetachedField(
                 batchJob, "id")));
@@ -161,8 +159,7 @@ public class JobServiceImpl implements JobService {
         BatchJob batchJob = new BatchJob();
         batchJob.setCronExpression(cronString);
         batchJob.setJobName(params.getJobName());
-        batchJob.setBatchJobStatusId(JobStatusLookup.ACTIVE.getId());
-
+        
         jobRepo.create(batchJob);
         long batchId = (long) jobRepo.getDetachedField(batchJob, "id");
 

@@ -1,12 +1,11 @@
 package org.motechproject.batch.mds;
 
-// Generated Apr 7, 2014 9:39:14 PM by Hibernate Tools 3.4.0.CR1
-
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 /**
  * Class containing all the fields related to job
+ * 
  * @author naveen
  * 
  */

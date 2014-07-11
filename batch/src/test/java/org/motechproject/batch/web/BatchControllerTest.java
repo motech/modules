@@ -19,7 +19,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.batch.exception.BatchErrors;
 import org.motechproject.batch.exception.BatchException;
 import org.motechproject.batch.exception.RestException;
-import org.motechproject.batch.mds.BatchJobStatus;
+
 import org.motechproject.batch.model.BatchJobDTO;
 import org.motechproject.batch.model.BatchJobListDTO;
 import org.motechproject.batch.model.JobExecutionHistoryListDTO;
@@ -64,7 +64,6 @@ public class BatchControllerTest {
         listBatchJobDTO = new ArrayList<BatchJobDTO>();
         mockMultipartFile = new MockMultipartFile("fileName",
                 "myContent1".getBytes());
-        batchJobDTO.setBatchJobStatus(new BatchJobStatus());
         batchJobDTO.setCronExpression("0 15 10 * * ? 2014");
         batchJobDTO.setJobId(2);
         batchJobDTO.setJobName("testJob");

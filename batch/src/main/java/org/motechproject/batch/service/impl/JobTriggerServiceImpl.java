@@ -112,9 +112,6 @@ public class JobTriggerServiceImpl implements JobTriggerService {
 
             Thread.currentThread().setContextClassLoader(contextClassLoader);
         }
-
-        // TODO Implement the datetime
-
     }
 
     @Override

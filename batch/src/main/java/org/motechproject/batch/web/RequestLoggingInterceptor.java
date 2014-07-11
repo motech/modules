@@ -9,11 +9,11 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 public class RequestLoggingInterceptor extends HandlerInterceptorAdapter {
 
-    private final static Logger LOGGER = LoggerFactory
+    private static final Logger LOGGER = LoggerFactory
             .getLogger(RequestLoggingInterceptor.class);
 
-    private ClassLoader classLoader = null;
-    private boolean bundleClassLoaderSet = false;
+    private ClassLoader classLoader;
+    private boolean bundleClassLoaderSet;
 
     @Override
     public boolean preHandle(HttpServletRequest request,

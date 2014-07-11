@@ -12,9 +12,7 @@
    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
   http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
   http://www.springframework.org/schema/jdbc
-					http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
-
-
+                    http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
 	<!-- Scans the classpath of this application for @Components to deploy as 
 		beans -->
@@ -24,7 +22,6 @@
 
 	<context:property-placeholder location="classpath:*batch-hsql.properties"
 		order="1" />
-
 
 	<import resource="classpath*:baseRefContext.xml" />
 
@@ -39,14 +36,71 @@
 	<mvc:annotation-driven />
 	<context:annotation-config />
 
-	<bean id="jsrJobOperator"
-		class="org.springframework.batch.core.jsr.launch.JsrJobOperator">
+
+
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${batch.jdbc.driver}" />
+		<property name="url" value="${batch.jdbc.url}" />
+		<property name="username" value="${batch.jdbc.user}" />
+		<property name="password" value="${batch.jdbc.password}" />
+		<property name="testWhileIdle" value="${batch.jdbc.testWhileIdle}" />
+		<property name="validationQuery" value="${batch.jdbc.validationQuery}" />
 
 	</bean>
+	<bean id="jobLauncher"
+		class="org.springframework.batch.core.launch.support.SimpleJobLauncher"
+		p:jobRepository-ref="jobRepository" />
+
+	<bean id="batchJobOperator"
+
+		class="org.springframework.batch.core.launch.support.SimpleJobOperator"
+		p:jobLauncher-ref="jobLauncher" p:jobExplorer-ref="jobExplorer"
+		p:jobRepository-ref="jobRepository" p:jobRegistry-ref="jobRegistry" />
 
 
+	<jdbc:initialize-database data-source="dataSource"
+		enabled="${batch.data.source.init}" ignore-failures="DROPS">
+		<jdbc:script location="${batch.drop.script}" />
+		<jdbc:script location="${batch.schema.script}" />
+	</jdbc:initialize-database>
+
+	<bean id="jobExplorer"
+		class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean"
+		p:dataSource-ref="dataSource" />
+
+	<bean id="jobRegistry"
+		class="org.springframework.batch.core.configuration.support.MapJobRegistry" />
+
+	<bean
+		class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor"
+		p:jobRegistry-ref="jobRegistry" />
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<batch:job-repository data-source="dataSource" id="jobRepository"
+		transaction-manager="transactionManager" />
 
 
+	<bean id="baseContext"
+		class="org.springframework.context.support.GenericXmlApplicationContext">
+		<constructor-arg>
+			<list>
+				<value>baseContext.xml</value>
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean id="jsrJobOperator"
+		class="org.springframework.batch.core.jsr.launch.JsrJobOperator"
+		p:jobExplorer-ref="jobExplorer" p:jobRepository-ref="jobRepository" />
+
+	<bean id="jobParametersIncrementer"
+		class="org.springframework.batch.core.launch.support.RunIdIncrementer" />
 
 </beans>
 

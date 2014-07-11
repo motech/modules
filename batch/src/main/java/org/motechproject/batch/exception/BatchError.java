@@ -8,21 +8,19 @@ import org.motechproject.batch.util.BatchUtils;
 
 /**
  * JSON element for Error when there is an exception in rest call
+ * 
  * @author naveen
- *
+ * 
  */
 @XmlRootElement(name = "Error")
 // @JsonSerialize(include = Inclusion.NON_NULL)
 public class BatchError {
 
-    // transactionId
     private String errorCode;
     private String errorMessage;
     private String application;
     private Date timeStamp;
     private String hostName;
-
-    // BatchErrorDetail
 
     public BatchError() {
         timeStamp = BatchUtils.getCurrentDateTime();

@@ -7,6 +7,7 @@ import java.net.URL;
 public class BatchJobClassLoader extends ClassLoader {
 
     private String xmlPath;
+
     public BatchJobClassLoader(ClassLoader l, String xmlPath) {
         super(l);
         this.xmlPath = xmlPath;

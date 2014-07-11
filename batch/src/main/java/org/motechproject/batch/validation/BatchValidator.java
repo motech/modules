@@ -6,7 +6,11 @@ import java.util.List;
 import org.quartz.CronExpression;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-
+/**
+ * Validates the input parameters of batch service API calls for HTTP requests
+ * @author naveen
+ *
+ */
 @Service
 public class BatchValidator {
 

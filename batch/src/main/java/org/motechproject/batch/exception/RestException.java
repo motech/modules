@@ -3,10 +3,12 @@ package org.motechproject.batch.exception;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+
 /**
  * Exception thrown for Http Requests incase of any exception
+ * 
  * @author naveen
- *
+ * 
  */
 public class RestException extends RuntimeException {
 
