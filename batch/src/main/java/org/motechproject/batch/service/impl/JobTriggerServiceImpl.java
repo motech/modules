@@ -131,15 +131,15 @@ public class JobTriggerServiceImpl implements JobTriggerService {
         int count = 0;
 
         try {
-            jsrJobOperator.getJobInstanceCount(jobName);
+            count = jsrJobOperator.getJobInstanceCount(jobName);
         } catch (NoSuchJobException nsje) {
             throw new BatchException(ApplicationErrors.NO_SUCH_JOB_FOUND, nsje);
         }
         List<JobInstance> jobInstances = jsrJobOperator.getJobInstances(
                 jobName, 0, count);
         for (int icount = 0; icount < jobInstances.size(); icount++) {
-            jobExecutions = jsrJobOperator.getJobExecutions(jobInstances
-                    .get(icount));
+            jobExecutions.addAll(jsrJobOperator.getJobExecutions(jobInstances
+                    .get(icount)));
         }
         JobExecutionHistoryListDTO historyListDTO = new JobExecutionHistoryListDTO();
         historyListDTO.setJobExecutionHistoryList(jobExecutions);

@@ -19,7 +19,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.batch.exception.BatchErrors;
 import org.motechproject.batch.exception.BatchException;
 import org.motechproject.batch.exception.RestException;
-
 import org.motechproject.batch.model.BatchJobDTO;
 import org.motechproject.batch.model.BatchJobListDTO;
 import org.motechproject.batch.model.JobExecutionHistoryListDTO;
@@ -49,7 +48,6 @@ public class BatchControllerTest {
     private List<JobExecution> paramsList;
     private List<String> errors;
     private String cronExpression;
-    private HashMap<String, String> paramsMap;
     MockMultipartFile mockMultipartFile;
 
     @Before
@@ -57,7 +55,6 @@ public class BatchControllerTest {
 
         jobName = "testJob";
         cronExpression = "0 15 10 * * ? 2014";
-        paramsMap = new HashMap<String, String>();
         errors = new ArrayList<String>();
         batchJobDTO = new BatchJobDTO();
         batchJobListDTO = new BatchJobListDTO();
@@ -124,7 +121,6 @@ public class BatchControllerTest {
             assertEquals("One or more input parameter(s) may be wrong",
                     be.getMessage());
         }
-        // assertEquals(, actual);
 
     }
 

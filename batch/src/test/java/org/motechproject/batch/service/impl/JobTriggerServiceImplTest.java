@@ -9,7 +9,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -41,11 +40,6 @@ public class JobTriggerServiceImplTest {
     BatchJobParameterMDSService jobParameterRepo = mock(BatchJobParameterMDSService.class);
     BatchJobMDSService jobRepo = mock(BatchJobMDSService.class);
     JsrJobOperator jobOperator = mock(JsrJobOperator.class);
-    // Properties jobParameters = mock(Properties.class);
-    // @Mock BatchJobParameterMDSService jobParameterRepo;
-    // @Mock JobOperator jobOperator;
-    // @Mock Properties jobParameters;
-    // @Mock BatchJobMDSService jobRepo;
     @InjectMocks
     JobTriggerServiceImpl jobTriggerServiceImpl = new JobTriggerServiceImpl(
             jobRepo, jobParameterRepo, jobOperator);
@@ -97,11 +91,8 @@ public class JobTriggerServiceImplTest {
                 .thenReturn(id);
         Mockito.when(jobParameterRepo.findByJobId((Integer) anyObject()))
                 .thenReturn(parameters);
-        // Mockito.when(jobOperator.start("logAnalysis",
-        // jobParameters)).thenReturn(4l);
 
         jobTriggerServiceImpl.triggerJob(jobName);
-        // verify(jobParameters).put((String)anyObject(),(String)anyObject());
         verify(jobOperator, times(1)).start((String) any(), (Properties) any());
 
     }
@@ -111,8 +102,6 @@ public class JobTriggerServiceImplTest {
      * 
      * @throws BatchException
      */
-    // TODO Remove Ignore after completing the method
-    // serviceImpl.getJObExecutionHistory(jobName)
     @Ignore
     @Test
     public void getJObExecutionHistory_success() throws BatchException {
@@ -137,8 +126,6 @@ public class JobTriggerServiceImplTest {
     @Test
     public void getJObExecutionHistory_catch_batch_exception()
             throws BatchException {
-        // TODO test cases failing
-        // //when(jobRepo.checkBatchJob(jobName)).thenReturn(false);
         try {
             JobExecutionHistoryListDTO listJobExecutionHistory = jobTriggerServiceImpl
                     .getJObExecutionHistory(jobName);

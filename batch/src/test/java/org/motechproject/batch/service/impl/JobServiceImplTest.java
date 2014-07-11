@@ -19,7 +19,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.batch.exception.ApplicationErrors;
-import org.motechproject.batch.exception.BatchError;
 import org.motechproject.batch.exception.BatchException;
 import org.motechproject.batch.mds.BatchJob;
 import org.motechproject.batch.mds.BatchJobParameters;

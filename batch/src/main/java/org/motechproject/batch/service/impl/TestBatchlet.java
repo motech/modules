@@ -1,4 +1,4 @@
-package org.motechproject.batch.service;
+package org.motechproject.batch.service.impl;
 
 import javax.batch.api.Batchlet;
 
