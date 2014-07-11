@@ -7,6 +7,7 @@ import java.util.Properties;
 import javax.batch.operations.JobOperator;
 import javax.batch.operations.JobSecurityException;
 import javax.batch.operations.JobStartException;
+import javax.batch.operations.NoSuchJobException;
 import javax.batch.operations.NoSuchJobExecutionException;
 import javax.batch.runtime.JobExecution;
 import javax.batch.runtime.JobInstance;
@@ -127,7 +128,13 @@ public class JobTriggerServiceImpl implements JobTriggerService {
             throw new BatchException(ApplicationErrors.JOB_NOT_FOUND);
         }
 
-        int count = jsrJobOperator.getJobInstanceCount(jobName);
+        int count = 0;
+
+        try {
+            jsrJobOperator.getJobInstanceCount(jobName);
+        } catch (NoSuchJobException nsje) {
+            throw new BatchException(ApplicationErrors.NO_SUCH_JOB_FOUND, nsje);
+        }
         List<JobInstance> jobInstances = jsrJobOperator.getJobInstances(
                 jobName, 0, count);
         for (int icount = 0; icount < jobInstances.size(); icount++) {

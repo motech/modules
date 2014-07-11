@@ -13,6 +13,7 @@ import org.motechproject.batch.exception.BatchException;
 import org.motechproject.batch.mds.BatchJob;
 import org.motechproject.batch.mds.service.BatchJobMDSService;
 import org.motechproject.batch.service.FileUploadService;
+import org.motechproject.batch.util.BatchConstants;
 import org.motechproject.batch.web.BatchController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,29 +26,40 @@ public class FileUploadServiceImpl implements FileUploadService {
 
     private static final Logger LOGGER = Logger
             .getLogger(BatchController.class);
-    
+
     @Autowired
     private BatchJobMDSService jobRepo;
-    
+
     @Override
     public void uploadFile(String jobName, MultipartFile file, String xmlPath)
             throws BatchException {
 
         if (!jobNameExists(jobName)) {
-            throw new BatchException(
-                    ApplicationErrors.JOB_NOT_FOUND,
+            throw new BatchException(ApplicationErrors.JOB_NOT_FOUND,
                     ApplicationErrors.JOB_NOT_FOUND.getMessage());
         }
-        
+
         LOGGER.debug("xml path" + xmlPath);
         byte[] bytes;
         BufferedOutputStream stream = null;
 
         try {
-            //TODO create these folders if not present
+
+            // Creating folders if not present
+            String location = xmlPath + BatchConstants.META_INF_PATH;
+            File f = new File(location);
+            if (!f.exists()) {
+                f.mkdir();
+            }
+            location = location + BatchConstants.BATCH_JOBS_PATH;
+            f = new File(location);
+            if (!f.exists()) {
+                f.mkdir();
+            }
             bytes = file.getBytes();
+
             stream = new BufferedOutputStream(new FileOutputStream(new File(
-                    xmlPath + "/META-INF/batch-jobs/", jobName + ".xml")));
+                    location, jobName + BatchConstants.XML_EXTENSION)));
             stream.write(bytes);
 
         } catch (IOException e) {
