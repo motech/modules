@@ -20,6 +20,7 @@ import org.motechproject.batch.mds.service.BatchJobParameterMDSService;
 import org.motechproject.batch.model.BatchJobDTO;
 import org.motechproject.batch.model.BatchJobListDTO;
 import org.motechproject.batch.model.CronJobScheduleParam;
+import org.motechproject.batch.model.JobStatusLookup;
 import org.motechproject.batch.model.OneTimeJobScheduleParams;
 import org.motechproject.batch.service.JobService;
 import org.motechproject.batch.util.BatchConstants;
@@ -98,11 +99,19 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public void scheduleJob(CronJobScheduleParam params) throws BatchException {
-
+        List<BatchJob> jobs = jobRepo.findByJobName(params.getJobName());
+        Boolean jobExists = false;
+        if (jobs != null && jobs.size() > 0) {
+            jobExists = true;
+        }
+        if (jobExists) {
+            throw new BatchException(ApplicationErrors.DUPLICATE_JOB);
+        }
         BatchJob batchJob = new BatchJob();
         batchJob.setCronExpression(params.getCronExpression());
         batchJob.setJobName(params.getJobName());
-        
+        batchJob.setBatchJobStatusId(JobStatusLookup.ACTIVE.getId());
+
         jobRepo.create(batchJob);
         int batchId = Integer.parseInt(String.valueOf(jobRepo.getDetachedField(
                 batchJob, "id")));
@@ -144,6 +153,14 @@ public class JobServiceImpl implements JobService {
     @Override
     public void scheduleOneTimeJob(OneTimeJobScheduleParams params)
             throws BatchException {
+        List<BatchJob> jobs = jobRepo.findByJobName(params.getJobName());
+        Boolean jobExists = false;
+        if (jobs != null && jobs.size() > 0) {
+            jobExists = true;
+        }
+        if (jobExists) {
+            throw new BatchException(ApplicationErrors.DUPLICATE_JOB);
+        }
 
         DateTimeFormatter formatter = DateTimeFormat
                 .forPattern(BatchConstants.DATE_FORMAT);
@@ -159,7 +176,8 @@ public class JobServiceImpl implements JobService {
         BatchJob batchJob = new BatchJob();
         batchJob.setCronExpression(cronString);
         batchJob.setJobName(params.getJobName());
-        
+        batchJob.setBatchJobStatusId(JobStatusLookup.ACTIVE.getId());
+
         jobRepo.create(batchJob);
         long batchId = (long) jobRepo.getDetachedField(batchJob, "id");
 
@@ -293,8 +311,24 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public void unscheduleJob(String jobName) throws BatchException {
-        schedulerService.unscheduleJob(BatchConstants.EVENT_SUBJECT, jobName);
+        boolean jobExists = true;
+        List<BatchJob> jobs = jobRepo.findByJobName(jobName);
+        if (jobs == null || jobs.size() == 0) {
+            jobExists = false;
+        }
+        if (!jobExists) {
+            throw new BatchException(ApplicationErrors.JOB_NOT_FOUND);
+        }
+        try {
+            schedulerService.unscheduleJob(BatchConstants.EVENT_SUBJECT,
+                    jobName);
 
+        } catch (Exception e) {
+            throw new BatchException(ApplicationErrors.UNSCHEDULE_JOB_FAILED,
+                    e, e.getMessage());
+        }
+
+        jobs.get(0).setBatchJobStatusId(JobStatusLookup.INACTIVE.getId());
+        jobRepo.update(jobs.get(0));
     }
-
 }

@@ -19,7 +19,8 @@ public enum ApplicationErrors implements BatchErrors {
     DATABASE_OPERATION_FAILED(3003,
             "Error in querying database", HttpStatus.INTERNAL_SERVER_ERROR),
     FILE_READING_WRTING_FAILED(3002, "Error while reading from or writing to file", HttpStatus.INTERNAL_SERVER_ERROR),
-    JOB_TRIGGER_FAILED(3001, "Error in starting job", HttpStatus.INTERNAL_SERVER_ERROR);
+    JOB_TRIGGER_FAILED(3001, "Error in starting job", HttpStatus.INTERNAL_SERVER_ERROR), 
+    UNSCHEDULE_JOB_FAILED(3004, "Error in unscheduling job", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private final int code;
     private String message;

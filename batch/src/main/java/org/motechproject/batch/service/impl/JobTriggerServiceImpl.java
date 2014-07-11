@@ -129,7 +129,7 @@ public class JobTriggerServiceImpl implements JobTriggerService {
 
         int count = jsrJobOperator.getJobInstanceCount(jobName);
         List<JobInstance> jobInstances = jsrJobOperator.getJobInstances(
-                jobName, 1, count);
+                jobName, 0, count);
         for (int icount = 0; icount < jobInstances.size(); icount++) {
             jobExecutions = jsrJobOperator.getJobExecutions(jobInstances
                     .get(icount));

@@ -9,7 +9,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,6 +18,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.motechproject.batch.exception.ApplicationErrors;
+import org.motechproject.batch.exception.BatchError;
 import org.motechproject.batch.exception.BatchException;
 import org.motechproject.batch.mds.BatchJob;
 import org.motechproject.batch.mds.BatchJobParameters;
@@ -29,6 +30,7 @@ import org.motechproject.batch.model.BatchJobListDTO;
 import org.motechproject.batch.model.CronJobScheduleParam;
 import org.motechproject.batch.model.OneTimeJobScheduleParams;
 import org.motechproject.scheduler.service.MotechSchedulerService;
+import org.springframework.http.HttpStatus;
 
 @RunWith(MockitoJUnitRunner.class)
 public class JobServiceImplTest {
@@ -101,6 +103,8 @@ public class JobServiceImplTest {
 
     @Test
     public void scheduleJob_success() throws BatchException {
+        when(jobRepo.findByJobName(jobName)).thenReturn(
+                new ArrayList<BatchJob>());
         HashMap<String, String> hm = new HashMap<String, String>();
         hm.put("key_job", "value_job");
         CronJobScheduleParam params = new CronJobScheduleParam();
@@ -109,14 +113,37 @@ public class JobServiceImplTest {
         params.setParamsMap(hm);
 
         serviceImpl.scheduleJob(params);
+
         verify(jobRepo).create((BatchJob) any());
-        verify(jobRepo, times(1)).create((BatchJob) any());
         verify(jobParameterRepo).create((BatchJobParameters) any());
-        verify(jobParameterRepo, times(1)).create((BatchJobParameters) any());
+        verify(jobRepo).findByJobName(jobName);
+    }
+
+    @Test
+    public void scheduleJob_duplicate_job() throws BatchException {
+        HashMap<String, String> hm = new HashMap<String, String>();
+        hm.put("key_job", "value_job");
+        CronJobScheduleParam params = new CronJobScheduleParam();
+        params.setCronExpression(cronExpression);
+        params.setJobName(jobName);
+        params.setParamsMap(hm);
+        try {
+            serviceImpl.scheduleJob(params);
+        } catch (BatchException be) {
+            ApplicationErrors error = (ApplicationErrors) be.getError();
+            assertEquals("Duplicate Job", error.getMessage());
+            assertEquals(1003, error.getCode());
+            assertEquals(HttpStatus.BAD_REQUEST, error.getHttpStatus());
+        }
+        verify(jobRepo, times(0)).create((BatchJob) any());
+        verify(jobParameterRepo, times(0)).create((BatchJobParameters) any());
+        verify(jobRepo).findByJobName(jobName);
     }
 
     @Test
     public void scheduleOneTimeJob_success() throws BatchException {
+        when(jobRepo.findByJobName(jobName)).thenReturn(
+                new ArrayList<BatchJob>());
         HashMap<String, String> hm = new HashMap<String, String>();
         hm.put("job_key", "job_value");
         OneTimeJobScheduleParams params = new OneTimeJobScheduleParams();
@@ -125,10 +152,31 @@ public class JobServiceImplTest {
         params.setDate(date);
 
         serviceImpl.scheduleOneTimeJob(params);
+        verify(jobRepo).findByJobName(jobName);
         verify(jobRepo).create((BatchJob) any());
-        verify(jobRepo, times(1)).create((BatchJob) any());
         verify(jobParameterRepo).create((BatchJobParameters) any());
-        verify(jobParameterRepo, times(1)).create((BatchJobParameters) any());
+    }
+
+    @Test
+    public void scheduleOneTimeJob_duplicate_job() {
+        HashMap<String, String> hm = new HashMap<String, String>();
+        hm.put("job_key", "job_value");
+        OneTimeJobScheduleParams params = new OneTimeJobScheduleParams();
+        params.setJobName(jobName);
+        params.setParamsMap(hm);
+        params.setDate(date);
+
+        try {
+            serviceImpl.scheduleOneTimeJob(params);
+        } catch (BatchException be) {
+            ApplicationErrors error = (ApplicationErrors) be.getError();
+            assertEquals("Duplicate Job", error.getMessage());
+            assertEquals(1003, error.getCode());
+            assertEquals(HttpStatus.BAD_REQUEST, error.getHttpStatus());
+        }
+        verify(jobRepo, times(0)).create((BatchJob) any());
+        verify(jobParameterRepo, times(0)).create((BatchJobParameters) any());
+        verify(jobRepo).findByJobName(jobName);
     }
 
     /**

@@ -38,7 +38,10 @@
 
 
 
-
+	<mvc:interceptors>
+		<bean
+			class="org.motechproject.batch.web.RequestLoggingInterceptor" />
+	</mvc:interceptors>
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="${batch.jdbc.driver}" />
