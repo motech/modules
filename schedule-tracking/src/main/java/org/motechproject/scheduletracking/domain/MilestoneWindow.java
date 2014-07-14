@@ -1,24 +1,21 @@
 package org.motechproject.scheduletracking.domain;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.joda.time.Period;
+import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.Ignore;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MilestoneWindow implements Serializable {
-    private static final long serialVersionUID = 7828029668079018381L;
-    @JsonProperty
+@Entity
+public class MilestoneWindow {
+
     private WindowName name;
-    @JsonProperty
     private Period period;
-    @JsonProperty
     private List<Alert> alerts = new ArrayList<Alert>();
 
-    private MilestoneWindow() {
+    public MilestoneWindow() {
     }
 
     public MilestoneWindow(WindowName name, Period period) {
@@ -26,22 +23,32 @@ public class MilestoneWindow implements Serializable {
         this.period = period;
     }
 
-    @JsonIgnore
     public WindowName getName() {
         return name;
     }
 
-    @JsonIgnore
     public Period getPeriod() {
         return period;
     }
 
+    @Ignore
     public void addAlerts(Alert... alertsList) {
         alerts.addAll(Arrays.asList(alertsList));
     }
 
-    @JsonIgnore
     public List<Alert> getAlerts() {
         return alerts;
+    }
+
+    public void setAlerts(List<Alert> alerts) {
+        this.alerts = alerts;
+    }
+
+    public void setPeriod(Period period) {
+        this.period = period;
+    }
+
+    public void setName(WindowName name) {
+        this.name = name;
     }
 }

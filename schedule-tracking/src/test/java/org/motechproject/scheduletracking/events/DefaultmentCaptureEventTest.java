@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 public class DefaultmentCaptureEventTest {
     @Test
     public void shouldCreateMotechEvent() {
-        String enrollmentId = "enrollmentId";
+        Long enrollmentId = 567L;
         String jobId = "jobId";
         final String externalId = "externalId";
 

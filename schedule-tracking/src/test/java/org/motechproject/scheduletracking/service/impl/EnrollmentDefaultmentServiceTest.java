@@ -10,6 +10,7 @@ import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
 import org.motechproject.scheduletracking.domain.Alert;
 import org.motechproject.scheduletracking.domain.Enrollment;
+import org.motechproject.scheduletracking.domain.EnrollmentBuilder;
 import org.motechproject.scheduletracking.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.domain.Milestone;
 import org.motechproject.scheduletracking.domain.Schedule;
@@ -49,8 +50,8 @@ public class EnrollmentDefaultmentServiceTest {
         schedule.addMilestones(milestone);
         String externalId = "entity_1";
         DateTime now = now();
-        Enrollment enrollment = new Enrollment().setExternalId(externalId).setSchedule(schedule).setCurrentMilestoneName(milestone.getName()).setStartOfSchedule(now).setEnrolledOn(now).setPreferredAlertTime(new Time(8, 10)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
-        enrollment.setId("enrollment_1");
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId(externalId).withSchedule(schedule).withCurrentMilestoneName(milestone.getName()).withStartOfSchedule(now).withEnrolledOn(now).withPreferredAlertTime(new Time(8, 10)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
+        enrollment.setId(1L);
 
         enrollmentDefaultmentService.scheduleJobToCaptureDefaultment(enrollment);
 
@@ -59,7 +60,7 @@ public class EnrollmentDefaultmentServiceTest {
 
         RunOnceSchedulableJob job = runOnceJobArgumentCaptor.getValue();
         DefaultmentCaptureEvent event = new DefaultmentCaptureEvent(job.getMotechEvent());
-        assertEquals("enrollment_1", event.getJobId());
+        assertEquals("1", event.getJobId());
         assertEquals(now.plusWeeks(4).toDate(), job.getStartDate());
         assertEquals(externalId, event.getExternalId());
     }
@@ -75,8 +76,8 @@ public class EnrollmentDefaultmentServiceTest {
         String externalId = "entity_1";
         DateTime referenceDateTime = newDateTime(2012, 1, 1, 0, 0, 0).minusMonths(10);
         DateTime enrollmentDateTime = now();
-        Enrollment enrollment = new Enrollment().setExternalId(externalId).setSchedule(schedule).setCurrentMilestoneName(milestone.getName()).setStartOfSchedule(referenceDateTime).setEnrolledOn(enrollmentDateTime).setPreferredAlertTime(new Time(8, 10)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
-        enrollment.setId("enrollment_1");
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId(externalId).withSchedule(schedule).withCurrentMilestoneName(milestone.getName()).withStartOfSchedule(referenceDateTime).withEnrolledOn(enrollmentDateTime).withPreferredAlertTime(new Time(8, 10)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
+        enrollment.setId(1L);
 
         enrollmentDefaultmentService.scheduleJobToCaptureDefaultment(enrollment);
 
@@ -86,11 +87,11 @@ public class EnrollmentDefaultmentServiceTest {
     @Test
     public void shouldUnscheduleDefaultmentCaptureJob() {
         Schedule schedule = new Schedule("some_schedule");
-        Enrollment enrollment = new Enrollment().setExternalId("entity_1").setSchedule(schedule).setCurrentMilestoneName("milestone").setStartOfSchedule(weeksAgo(0)).setEnrolledOn(weeksAgo(0)).setPreferredAlertTime(new Time(8, 10)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
-        enrollment.setId("enrollment_1");
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId("entity_1").withSchedule(schedule).withCurrentMilestoneName("milestone").withStartOfSchedule(weeksAgo(0)).withEnrolledOn(weeksAgo(0)).withPreferredAlertTime(new Time(8, 10)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
+        enrollment.setId(1L);
 
         enrollmentDefaultmentService.unscheduleDefaultmentCaptureJob(enrollment);
 
-        verify(schedulerService).safeUnscheduleAllJobs(String.format("%s-enrollment_1", EventSubjects.DEFAULTMENT_CAPTURE));
+        verify(schedulerService).safeUnscheduleAllJobs(String.format("%s-1", EventSubjects.DEFAULTMENT_CAPTURE));
     }
 }

@@ -1,26 +1,29 @@
 package org.motechproject.scheduletracking.it;
 
-import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.commons.date.model.Time;
-import org.motechproject.scheduler.factory.MotechSchedulerFactoryBean;
 import org.motechproject.scheduler.service.MotechSchedulerService;
-import org.motechproject.scheduletracking.repository.AllEnrollments;
-import org.motechproject.scheduletracking.repository.AllSchedules;
+import org.motechproject.scheduletracking.repository.dataservices.EnrollmentDataService;
 import org.motechproject.scheduletracking.service.EnrollmentRequest;
+import org.motechproject.scheduletracking.repository.dataservices.ScheduleDataService;
 import org.motechproject.scheduletracking.service.ScheduleTrackingService;
+import org.motechproject.scheduletracking.utility.TestScheduleUtil;
+import org.motechproject.testing.osgi.BasePaxIT;
+import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
+import org.ops4j.pax.exam.ExamFactory;
+import org.ops4j.pax.exam.junit.PaxExam;
+import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
+import org.ops4j.pax.exam.spi.reactors.PerSuite;
+import org.osgi.framework.BundleContext;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.io.File;
+import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -32,48 +35,47 @@ import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static org.motechproject.commons.date.util.DateUtil.newDate;
 import static org.motechproject.commons.date.util.DateUtil.newDateTime;
-import static org.motechproject.testing.utils.TimeFaker.fakeNow;
-import static org.motechproject.testing.utils.TimeFaker.stopFakingTime;
 import static org.quartz.TriggerKey.triggerKey;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath*:META-INF/motech/*.xml")
-public class SchedulingWithoutPreferredTimeIT {
+@RunWith(PaxExam.class)
+@ExamReactorStrategy(PerSuite.class)
+@ExamFactory(MotechNativeTestContainerFactory.class)
+public class SchedulingWithoutPreferredTimeIT extends BasePaxIT {
 
-    @Autowired
+    @Inject
     private ScheduleTrackingService scheduleTrackingService;
 
-    @Autowired
-    MotechSchedulerService schedulerService;
+    @Inject
+    private MotechSchedulerService schedulerService;
 
-    @Autowired
-    private MotechSchedulerFactoryBean motechSchedulerFactoryBean;
+    @Inject
+    private ScheduleDataService scheduleDataService;
 
-    @Autowired
-    private AllSchedules allSchedules;
+    @Inject
+    private EnrollmentDataService enrollmentDataService;
 
-    @Autowired
-    private AllEnrollments allEnrollments;
+    @Inject
+    private BundleContext bundleContext;
 
-    Scheduler scheduler;
+    private Scheduler scheduler;
 
     @Before
     public void setup() {
-        scheduler = motechSchedulerFactoryBean.getQuartzScheduler();
+        scheduler = (Scheduler) getQuartzScheduler(bundleContext);
     }
 
     @After
     public void teardown() {
         schedulerService.unscheduleAllJobs("org.motechproject.scheduletracking");
-        allEnrollments.removeAll();
-        allSchedules.removeAll();
+        enrollmentDataService.deleteAll();
+        scheduleDataService.deleteAll();
     }
 
     @Test
     public void shouldScheduleAlertsAtReferenceTime() throws SchedulerException, URISyntaxException, IOException {
-        addSchedule("/schedulingIT/schedule.json");
+        addSchedule("schedulingIT", "schedule.json");
 
-        String enrollmentId = scheduleTrackingService.enroll(new EnrollmentRequest().setExternalId("abcde").setScheduleName("schedule").setPreferredAlertTime(null).setReferenceDate(newDate(2050, 5, 10)).setReferenceTime(new Time(8, 20)).setEnrollmentDate(newDate(2050, 5, 10)).setEnrollmentTime(new Time(0, 0)).setStartingMilestoneName("milestone1").setMetadata(null));
+        Long enrollmentId = scheduleTrackingService.enroll(new EnrollmentRequest().setExternalId("abcde").setScheduleName("schedule").setPreferredAlertTime(null).setReferenceDate(newDate(2050, 5, 10)).setReferenceTime(new Time(8, 20)).setEnrollmentDate(newDate(2050, 5, 10)).setEnrollmentTime(new Time(0, 0)).setStartingMilestoneName("milestone1").setMetadata(null));
 
         List<DateTime> fireTimes = getFireTimes(format("org.motechproject.scheduletracking.milestone.alert-%s.0-repeat", enrollmentId)) ;
         assertEquals(asList(
@@ -87,12 +89,12 @@ public class SchedulingWithoutPreferredTimeIT {
 
     @Test
     public void shouldNotScheduleAlertsInThePastForDelayedEnrollment() throws SchedulerException, URISyntaxException, IOException {
-        addSchedule("/schedulingIT/schedule.json");
+        addSchedule("schedulingIT", "schedule.json");
 
         try {
-            fakeNow(newDateTime(2050, 5, 17, 9, 0, 0));
+            TestScheduleUtil.fakeNow(newDateTime(2050, 5, 17, 9, 0, 0));
 
-            String enrollmentId = scheduleTrackingService.enroll(new EnrollmentRequest().setExternalId("abcde").setScheduleName("schedule").setPreferredAlertTime(null).setReferenceDate(newDate(2050, 5, 10)).setReferenceTime(new Time(10, 0)).setEnrollmentDate(newDate(2050, 5, 17)).setEnrollmentTime(new Time(0, 0)).setStartingMilestoneName("milestone1").setMetadata(null));
+            Long enrollmentId = scheduleTrackingService.enroll(new EnrollmentRequest().setExternalId("abcde").setScheduleName("schedule").setPreferredAlertTime(null).setReferenceDate(newDate(2050, 5, 10)).setReferenceTime(new Time(10, 0)).setEnrollmentDate(newDate(2050, 5, 17)).setEnrollmentTime(new Time(0, 0)).setStartingMilestoneName("milestone1").setMetadata(null));
 
             List<DateTime> fireTimes = getFireTimes(format("org.motechproject.scheduletracking.milestone.alert-%s.0-repeat", enrollmentId)) ;
             assertEquals(asList(
@@ -101,17 +103,17 @@ public class SchedulingWithoutPreferredTimeIT {
                     newDateTime(2050, 5, 19, 10, 0, 0)),
                     fireTimes);
         } finally {
-            stopFakingTime();
+            TestScheduleUtil.stopFakingTime();
         }
     }
 
     @Test
     public void shouldNotScheduleAlertForTheDayIfPreferredTimeIsPassed() throws SchedulerException, URISyntaxException, IOException {
-        addSchedule("/schedulingIT/schedule.json");
+        addSchedule("schedulingIT", "schedule.json");
 
         try {
-            fakeNow(newDateTime(2050, 5, 17, 11, 0, 0));
-            String enrollmentId = scheduleTrackingService.enroll(new EnrollmentRequest().setExternalId("abcde").setScheduleName("schedule").setPreferredAlertTime(null).setReferenceDate(newDate(2050, 5, 10)).setReferenceTime(new Time(8, 0)).setEnrollmentDate(newDate(2050, 5, 17)).setEnrollmentTime(new Time(0, 0)).setStartingMilestoneName("milestone1").setMetadata(null));
+            TestScheduleUtil.fakeNow(newDateTime(2050, 5, 17, 11, 0, 0));
+            Long enrollmentId = scheduleTrackingService.enroll(new EnrollmentRequest().setExternalId("abcde").setScheduleName("schedule").setPreferredAlertTime(null).setReferenceDate(newDate(2050, 5, 10)).setReferenceTime(new Time(8, 0)).setEnrollmentDate(newDate(2050, 5, 17)).setEnrollmentTime(new Time(0, 0)).setStartingMilestoneName("milestone1").setMetadata(null));
 
             List<DateTime> fireTimes = getFireTimes(format("org.motechproject.scheduletracking.milestone.alert-%s.0-repeat", enrollmentId)) ;
             assertEquals(asList(
@@ -119,51 +121,50 @@ public class SchedulingWithoutPreferredTimeIT {
                     newDateTime(2050, 5, 19, 8, 0, 0)),
                     fireTimes);
         } finally {
-            stopFakingTime();
+            TestScheduleUtil.stopFakingTime();
         }
     }
 
     @Test
     public void shouldScheduleSecondMilestoneAlertsUsingLastFulfilTimeAsReferenceWhichIsBeforeNow() throws IOException, URISyntaxException, SchedulerException {
-        addSchedule("/schedulingIT/schedule.json");
+        addSchedule("schedulingIT", "schedule.json");
 
         try {
-            fakeNow(newDateTime(2050, 5, 18, 10, 0, 0));
+            TestScheduleUtil.fakeNow(newDateTime(2050, 5, 18, 10, 0, 0));
 
-            String enrollmentId = scheduleTrackingService.enroll(new EnrollmentRequest().setExternalId("abcde").setScheduleName("schedule").setPreferredAlertTime(null).setReferenceDate(newDate(2050, 5, 10)).setReferenceTime(new Time(11, 0)).setEnrollmentDate(newDate(2050, 5, 10)).setEnrollmentTime(new Time(11, 0)).setStartingMilestoneName("milestone1").setMetadata(null));
+            Long enrollmentId = scheduleTrackingService.enroll(new EnrollmentRequest().setExternalId("abcde").setScheduleName("schedule").setPreferredAlertTime(null).setReferenceDate(newDate(2050, 5, 10)).setReferenceTime(new Time(11, 0)).setEnrollmentDate(newDate(2050, 5, 10)).setEnrollmentTime(new Time(11, 0)).setStartingMilestoneName("milestone1").setMetadata(null));
             scheduleTrackingService.fulfillCurrentMilestone("abcde", "schedule", newDate(2050, 5, 17), new Time(9, 0));
 
             List<DateTime> fireTimes = getFireTimes(format("org.motechproject.scheduletracking.milestone.alert-%s.1-runonce", enrollmentId)) ;
             assertEquals(asList(
                     newDateTime(2050, 5, 19, 9, 0, 0)),
                     fireTimes);
-        }finally {
-            stopFakingTime();
+        } finally {
+            TestScheduleUtil.stopFakingTime();
         }
     }
 
     @Test
     public void shouldScheduleSecondMilestoneAlertsUsingLastFulfilTimeAsReferenceWhichIsAfterNow() throws IOException, URISyntaxException, SchedulerException {
-        addSchedule("/schedulingIT/schedule.json");
+        addSchedule("schedulingIT", "schedule.json");
 
         try {
-            fakeNow(newDateTime(2050, 5, 18, 10, 0, 0));
-        String enrollmentId = scheduleTrackingService.enroll(new EnrollmentRequest().setExternalId("abcde").setScheduleName("schedule").setPreferredAlertTime(null).setReferenceDate(newDate(2050, 5, 10)).setReferenceTime(new Time(9, 0)).setEnrollmentDate(newDate(2050, 5, 10)).setEnrollmentTime(new Time(9, 0)).setStartingMilestoneName("milestone1").setMetadata(null));
-        scheduleTrackingService.fulfillCurrentMilestone("abcde", "schedule", newDate(2050, 5, 17), new Time(11, 0));
+            TestScheduleUtil.fakeNow(newDateTime(2050, 5, 18, 10, 0, 0));
+            Long enrollmentId = scheduleTrackingService.enroll(new EnrollmentRequest().setExternalId("abcde").setScheduleName("schedule").setPreferredAlertTime(null).setReferenceDate(newDate(2050, 5, 10)).setReferenceTime(new Time(9, 0)).setEnrollmentDate(newDate(2050, 5, 10)).setEnrollmentTime(new Time(9, 0)).setStartingMilestoneName("milestone1").setMetadata(null));
+            scheduleTrackingService.fulfillCurrentMilestone("abcde", "schedule", newDate(2050, 5, 17), new Time(11, 0));
 
-        List<DateTime> fireTimes = getFireTimes(format("org.motechproject.scheduletracking.milestone.alert-%s.1-repeat", enrollmentId)) ;
-        assertEquals(asList(
+            List<DateTime> fireTimes = getFireTimes(format("org.motechproject.scheduletracking.milestone.alert-%s.1-repeat", enrollmentId)) ;
+            assertEquals(asList(
                 newDateTime(2050, 5, 18, 11, 0, 0),
                 newDateTime(2050, 5, 19, 11, 0, 0)),
                 fireTimes);
-        }finally {
-            stopFakingTime();
+        } finally {
+            TestScheduleUtil.stopFakingTime();
         }
     }
 
-    private void addSchedule(String filename) throws URISyntaxException, IOException {
-        File file = new File(getClass().getResource(filename).toURI());
-        String scheduleJson = FileUtils.readFileToString(file);
+    private void addSchedule(String path, String filename) throws URISyntaxException, IOException {
+        String scheduleJson = TestScheduleUtil.getScheduleJsonFromFile(bundleContext, path, filename);
         scheduleTrackingService.add(scheduleJson);
     }
 

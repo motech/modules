@@ -90,10 +90,6 @@
             <artifactId>motech-platform-dataservices</artifactId>
             <version>${motech.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.github.ldriscoll</groupId>
-            <artifactId>org.motechproject.ektorplucene</artifactId>
-        </dependency>
     </dependencies>
     <build>
         <resources>

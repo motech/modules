@@ -12,11 +12,12 @@ import org.mockito.Mock;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.scheduler.contract.RepeatingSchedulableJob;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
+import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.scheduletracking.domain.Alert;
 import org.motechproject.scheduletracking.domain.Enrollment;
+import org.motechproject.scheduletracking.domain.EnrollmentBuilder;
 import org.motechproject.scheduletracking.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.domain.Milestone;
 import org.motechproject.scheduletracking.domain.MilestoneAlert;
@@ -89,7 +90,7 @@ public class EnrollmentAlertServiceTest {
         Schedule schedule = new Schedule(scheduleName);
         schedule.addMilestones(milestone);
 
-        Enrollment enrollment = new Enrollment().setExternalId(externalId).setSchedule(schedule).setCurrentMilestoneName(milestone.getName()).setStartOfSchedule(weeksAgo(0)).setEnrolledOn(weeksAgo(0)).setPreferredAlertTime(new Time(8, 20)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId(externalId).withSchedule(schedule).withCurrentMilestoneName(milestone.getName()).withStartOfSchedule(weeksAgo(0)).withEnrolledOn(weeksAgo(0)).withPreferredAlertTime(new Time(8, 20)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
         enrollmentAlertService.scheduleAlertsForCurrentMilestone(enrollment);
 
         ArgumentCaptor<RepeatingSchedulableJob> repeatJobCaptor = ArgumentCaptor.forClass(RepeatingSchedulableJob.class);
@@ -115,7 +116,7 @@ public class EnrollmentAlertServiceTest {
         schedule.addMilestones(milestone);
         DateTime now = DateUtil.now();
 
-        Enrollment enrollment = new Enrollment().setExternalId(externalId).setSchedule(schedule).setCurrentMilestoneName(milestone.getName()).setStartOfSchedule(now).setEnrolledOn(now).setPreferredAlertTime(null).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId(externalId).withSchedule(schedule).withCurrentMilestoneName(milestone.getName()).withStartOfSchedule(now).withEnrolledOn(now).withPreferredAlertTime(null).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
         enrollmentAlertService.scheduleAlertsForCurrentMilestone(enrollment);
 
         ArgumentCaptor<RepeatingSchedulableJob> repeatJobCaptor = ArgumentCaptor.forClass(RepeatingSchedulableJob.class);
@@ -144,7 +145,7 @@ public class EnrollmentAlertServiceTest {
         Schedule schedule = new Schedule(scheduleName);
         schedule.addMilestones(milestone);
 
-        Enrollment enrollment = new Enrollment().setExternalId(externalId).setSchedule(schedule).setCurrentMilestoneName(milestone.getName()).setStartOfSchedule(weeksAgo(0)).setEnrolledOn(weeksAgo(0)).setPreferredAlertTime(new Time(8, 20)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId(externalId).withSchedule(schedule).withCurrentMilestoneName(milestone.getName()).withStartOfSchedule(weeksAgo(0)).withEnrolledOn(weeksAgo(0)).withPreferredAlertTime(new Time(8, 20)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
         enrollmentAlertService.scheduleAlertsForCurrentMilestone(enrollment);
 
         ArgumentCaptor<RepeatingSchedulableJob> repeatJobCaptor = ArgumentCaptor.forClass(RepeatingSchedulableJob.class);
@@ -166,7 +167,7 @@ public class EnrollmentAlertServiceTest {
         Schedule schedule = new Schedule("my_schedule");
         schedule.addMilestones(milestone);
 
-        Enrollment enrollment = new Enrollment().setExternalId("entity_1").setSchedule(schedule).setCurrentMilestoneName("milestone").setStartOfSchedule(weeksAgo(0)).setEnrolledOn(weeksAgo(0)).setPreferredAlertTime(new Time(8, 20)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId("entity_1").withSchedule(schedule).withCurrentMilestoneName("milestone").withStartOfSchedule(weeksAgo(0)).withEnrolledOn(weeksAgo(0)).withPreferredAlertTime(new Time(8, 20)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
         enrollmentAlertService.scheduleAlertsForCurrentMilestone(enrollment);
 
         ArgumentCaptor<RepeatingSchedulableJob> repeatJobCaptor = ArgumentCaptor.forClass(RepeatingSchedulableJob.class);
@@ -186,7 +187,7 @@ public class EnrollmentAlertServiceTest {
         Schedule schedule = new Schedule("my_schedule");
         schedule.addMilestones(milestone);
 
-        Enrollment enrollment = new Enrollment().setExternalId("entity_1").setSchedule(schedule).setCurrentMilestoneName("milestone").setStartOfSchedule(daysAgo(4)).setEnrolledOn(daysAgo(0)).setPreferredAlertTime(new Time(8, 20)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId("entity_1").withSchedule(schedule).withCurrentMilestoneName("milestone").withStartOfSchedule(daysAgo(4)).withEnrolledOn(daysAgo(0)).withPreferredAlertTime(new Time(8, 20)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
         enrollmentAlertService.scheduleAlertsForCurrentMilestone(enrollment);
 
         RunOnceSchedulableJob job = expectAndCaptureRunOneJob();
@@ -200,7 +201,7 @@ public class EnrollmentAlertServiceTest {
         Schedule schedule = new Schedule("my_schedule");
         schedule.addMilestones(milestone);
 
-        Enrollment enrollment = new Enrollment().setExternalId("entity_1").setSchedule(schedule).setCurrentMilestoneName("milestone").setStartOfSchedule(daysAgo(0)).setEnrolledOn(daysAgo(0)).setPreferredAlertTime(new Time(8, 10)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId("entity_1").withSchedule(schedule).withCurrentMilestoneName("milestone").withStartOfSchedule(daysAgo(0)).withEnrolledOn(daysAgo(0)).withPreferredAlertTime(new Time(8, 10)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
         enrollmentAlertService.scheduleAlertsForCurrentMilestone(enrollment);
 
         RepeatingSchedulableJob job = expectAndCaptureRepeatingJob();
@@ -216,7 +217,7 @@ public class EnrollmentAlertServiceTest {
         Schedule schedule = new Schedule("my_schedule");
         schedule.addMilestones(milestone);
 
-        Enrollment enrollment = new Enrollment().setExternalId("entity_1").setSchedule(schedule).setCurrentMilestoneName("milestone").setStartOfSchedule(daysAgo(0)).setEnrolledOn(daysAgo(0)).setPreferredAlertTime(new Time(8, 20)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId("entity_1").withSchedule(schedule).withCurrentMilestoneName("milestone").withStartOfSchedule(daysAgo(0)).withEnrolledOn(daysAgo(0)).withPreferredAlertTime(new Time(8, 20)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
         enrollmentAlertService.scheduleAlertsForCurrentMilestone(enrollment);
 
         RepeatingSchedulableJob job = expectAndCaptureRepeatingJob();
@@ -231,7 +232,7 @@ public class EnrollmentAlertServiceTest {
         Schedule schedule = new Schedule("my_schedule");
         schedule.addMilestones(milestone);
 
-        Enrollment enrollment = new Enrollment().setExternalId("entity_1").setSchedule(schedule).setCurrentMilestoneName("milestone").setStartOfSchedule(daysAgo(4)).setEnrolledOn(daysAgo(0)).setPreferredAlertTime(new Time(8, 20)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId("entity_1").withSchedule(schedule).withCurrentMilestoneName("milestone").withStartOfSchedule(daysAgo(4)).withEnrolledOn(daysAgo(0)).withPreferredAlertTime(new Time(8, 20)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
         enrollmentAlertService.scheduleAlertsForCurrentMilestone(enrollment);
 
         verify(schedulerService, never()).safeScheduleRepeatingJob(Matchers.<RepeatingSchedulableJob>any());
@@ -244,7 +245,7 @@ public class EnrollmentAlertServiceTest {
         Schedule schedule = new Schedule("my_schedule");
         schedule.addMilestones(milestone);
 
-        Enrollment enrollment = new Enrollment().setExternalId("entity_1").setSchedule(schedule).setCurrentMilestoneName("milestone").setStartOfSchedule(weeksAgo(0)).setEnrolledOn(weeksAgo(0)).setPreferredAlertTime(new Time(8, 20)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId("entity_1").withSchedule(schedule).withCurrentMilestoneName("milestone").withStartOfSchedule(weeksAgo(0)).withEnrolledOn(weeksAgo(0)).withPreferredAlertTime(new Time(8, 20)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
         enrollmentAlertService.scheduleAlertsForCurrentMilestone(enrollment);
 
         RepeatingSchedulableJob job = expectAndCaptureRepeatingJob();
@@ -258,10 +259,10 @@ public class EnrollmentAlertServiceTest {
         secondMilestone.addAlert(WindowName.due, new Alert(days(0), days(1), 1, 0, false));
 
         Schedule schedule = new Schedule("my_schedule");
-        schedule.isBasedOnAbsoluteWindows(true);
+        schedule.setBasedOnAbsoluteWindows(true);
         schedule.addMilestones(firstMilestone, secondMilestone);
 
-        Enrollment enrollmentIntoSecondMilestone = new Enrollment().setExternalId("some_id").setSchedule(schedule).setCurrentMilestoneName("milestone_2").setStartOfSchedule(weeksAgo(0)).setEnrolledOn(weeksAgo(0)).setPreferredAlertTime(new Time(0, 0)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
+        Enrollment enrollmentIntoSecondMilestone = new EnrollmentBuilder().withExternalId("some_id").withSchedule(schedule).withCurrentMilestoneName("milestone_2").withStartOfSchedule(weeksAgo(0)).withEnrolledOn(weeksAgo(0)).withPreferredAlertTime(new Time(0, 0)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
         enrollmentAlertService.scheduleAlertsForCurrentMilestone(enrollmentIntoSecondMilestone);
 
         RunOnceSchedulableJob job = expectAndCaptureRunOneJob();
@@ -277,7 +278,7 @@ public class EnrollmentAlertServiceTest {
         Schedule schedule = new Schedule("my_schedule");
         schedule.addMilestones(firstMilestone);
 
-        Enrollment enrollment = new Enrollment().setExternalId("some_id").setSchedule(schedule).setCurrentMilestoneName("milestone_1").setStartOfSchedule(daysAgo(12)).setEnrolledOn(DateUtil.now()).setPreferredAlertTime(new Time(8, 15)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId("some_id").withSchedule(schedule).withCurrentMilestoneName("milestone_1").withStartOfSchedule(daysAgo(12)).withEnrolledOn(DateUtil.now()).withPreferredAlertTime(new Time(8, 15)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
         enrollmentAlertService.scheduleAlertsForCurrentMilestone(enrollment);
 
         ArgumentCaptor<RepeatingSchedulableJob> repeatJobCaptor = ArgumentCaptor.forClass(RepeatingSchedulableJob.class);
@@ -296,7 +297,7 @@ public class EnrollmentAlertServiceTest {
         Schedule schedule = new Schedule("my_schedule");
         schedule.addMilestones(firstMilestone);
 
-        Enrollment enrollment = new Enrollment().setExternalId("some_id").setSchedule(schedule).setCurrentMilestoneName("milestone_1").setStartOfSchedule(daysAgo(12)).setEnrolledOn(DateUtil.now()).setPreferredAlertTime(new Time(6, 15)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId("some_id").withSchedule(schedule).withCurrentMilestoneName("milestone_1").withStartOfSchedule(daysAgo(12)).withEnrolledOn(DateUtil.now()).withPreferredAlertTime(new Time(6, 15)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
         enrollmentAlertService.scheduleAlertsForCurrentMilestone(enrollment);
 
         ArgumentCaptor<RunOnceSchedulableJob> runOneJobCaptor = ArgumentCaptor.forClass(RunOnceSchedulableJob.class);
@@ -314,7 +315,7 @@ public class EnrollmentAlertServiceTest {
         Schedule schedule = new Schedule("my_schedule");
         schedule.addMilestones(firstMilestone);
 
-        Enrollment enrollment = new Enrollment().setExternalId("some_id").setSchedule(schedule).setCurrentMilestoneName("milestone_1").setStartOfSchedule(daysAgo(30)).setEnrolledOn(DateUtil.now()).setPreferredAlertTime(new Time(8, 15)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId("some_id").withSchedule(schedule).withCurrentMilestoneName("milestone_1").withStartOfSchedule(daysAgo(30)).withEnrolledOn(DateUtil.now()).withPreferredAlertTime(new Time(8, 15)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
         enrollmentAlertService.scheduleAlertsForCurrentMilestone(enrollment);
 
         ArgumentCaptor<RepeatingSchedulableJob> repeatJobCaptor = ArgumentCaptor.forClass(RepeatingSchedulableJob.class);
@@ -333,7 +334,7 @@ public class EnrollmentAlertServiceTest {
         Schedule schedule = new Schedule("my_schedule");
         schedule.addMilestones(firstMilestone);
 
-        Enrollment enrollment = new Enrollment().setExternalId("some_id").setSchedule(schedule).setCurrentMilestoneName("milestone_1").setStartOfSchedule(weeksAgo(4)).setEnrolledOn(weeksAgo(1)).setPreferredAlertTime(new Time(8, 15)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId("some_id").withSchedule(schedule).withCurrentMilestoneName("milestone_1").withStartOfSchedule(weeksAgo(4)).withEnrolledOn(weeksAgo(1)).withPreferredAlertTime(new Time(8, 15)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
         enrollmentAlertService.scheduleAlertsForCurrentMilestone(enrollment);
 
         ArgumentCaptor<RunOnceSchedulableJob> runOneJobCaptor = ArgumentCaptor.forClass(RunOnceSchedulableJob.class);
@@ -353,7 +354,7 @@ public class EnrollmentAlertServiceTest {
         Schedule schedule = new Schedule("my_schedule");
         schedule.addMilestones(firstMilestone);
 
-        Enrollment enrollment = new Enrollment().setExternalId("some_id").setSchedule(schedule).setCurrentMilestoneName("milestone_1").setStartOfSchedule(now()).setEnrolledOn(now()).setPreferredAlertTime(new Time(8, 15)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId("some_id").withSchedule(schedule).withCurrentMilestoneName("milestone_1").withStartOfSchedule(now()).withEnrolledOn(now()).withPreferredAlertTime(new Time(8, 15)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
         MilestoneAlerts milestoneAlerts = enrollmentAlertService.getAlertTimings(enrollment);
 
         List<DateTime> earliestWindowAlertTimings = milestoneAlerts.getEarliestWindowAlertTimings();
@@ -381,7 +382,7 @@ public class EnrollmentAlertServiceTest {
         Schedule schedule = new Schedule("my_schedule");
         schedule.addMilestones(firstMilestone);
 
-        Enrollment enrollment = new Enrollment().setExternalId("some_id").setSchedule(schedule).setCurrentMilestoneName("milestone_non_existent").setStartOfSchedule(now()).setEnrolledOn(now()).setPreferredAlertTime(new Time(8, 15)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId("some_id").withSchedule(schedule).withCurrentMilestoneName("milestone_non_existent").withStartOfSchedule(now()).withEnrolledOn(now()).withPreferredAlertTime(new Time(8, 15)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
         MilestoneAlerts milestoneAlerts = enrollmentAlertService.getAlertTimings(enrollment);
 
         List<DateTime> earliestWindowAlertTimings = milestoneAlerts.getEarliestWindowAlertTimings();
@@ -396,7 +397,7 @@ public class EnrollmentAlertServiceTest {
         Schedule schedule = new Schedule("my_schedule");
         schedule.addMilestones(firstMilestone);
 
-        Enrollment enrollment = new Enrollment().setExternalId("some_id").setSchedule(schedule).setCurrentMilestoneName("milestone_1").setStartOfSchedule(daysAgo(3)).setEnrolledOn(daysAgo(3)).setPreferredAlertTime(new Time(8, 15)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId("some_id").withSchedule(schedule).withCurrentMilestoneName("milestone_1").withStartOfSchedule(daysAgo(3)).withEnrolledOn(daysAgo(3)).withPreferredAlertTime(new Time(8, 15)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
         MilestoneAlerts milestoneAlerts = enrollmentAlertService.getAlertTimings(enrollment);
 
         List<DateTime> earliestWindowAlertTimings = milestoneAlerts.getEarliestWindowAlertTimings();
@@ -413,7 +414,7 @@ public class EnrollmentAlertServiceTest {
         Schedule schedule = new Schedule("my_schedule");
         schedule.addMilestones(firstMilestone);
 
-        Enrollment enrollment = new Enrollment().setExternalId("some_id").setSchedule(schedule).setCurrentMilestoneName("milestone_1").setStartOfSchedule(weeksAgo(1)).setEnrolledOn(weeksAgo(1)).setPreferredAlertTime(new Time(8, 15)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId("some_id").withSchedule(schedule).withCurrentMilestoneName("milestone_1").withStartOfSchedule(weeksAgo(1)).withEnrolledOn(weeksAgo(1)).withPreferredAlertTime(new Time(8, 15)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
         MilestoneAlerts milestoneAlerts = enrollmentAlertService.getAlertTimings(enrollment);
 
         List<DateTime> earliestWindowAlertTimings = milestoneAlerts.getEarliestWindowAlertTimings();
@@ -429,10 +430,10 @@ public class EnrollmentAlertServiceTest {
         secondMilestone.addAlert(WindowName.due, new Alert(days(0), days(1), 3, 0, false));
 
         Schedule schedule = new Schedule("my_schedule");
-        schedule.isBasedOnAbsoluteWindows(true);
+        schedule.setBasedOnAbsoluteWindows(true);
         schedule.addMilestones(firstMilestone, secondMilestone);
 
-        Enrollment enrollmentIntoSecondMilestone = new Enrollment().setExternalId("some_id").setSchedule(schedule).setCurrentMilestoneName("milestone_2").setStartOfSchedule(weeksAgo(0)).setEnrolledOn(weeksAgo(0)).setPreferredAlertTime(new Time(0, 0)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
+        Enrollment enrollmentIntoSecondMilestone = new EnrollmentBuilder().withExternalId("some_id").withSchedule(schedule).withCurrentMilestoneName("milestone_2").withStartOfSchedule(weeksAgo(0)).withEnrolledOn(weeksAgo(0)).withPreferredAlertTime(new Time(0, 0)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
         MilestoneAlerts milestoneAlerts = enrollmentAlertService.getAlertTimings(enrollmentIntoSecondMilestone);
 
         List<DateTime> dueWindowAlertTimings = milestoneAlerts.getDueWindowAlertTimings();
@@ -448,7 +449,7 @@ public class EnrollmentAlertServiceTest {
         Schedule schedule = new Schedule("my_schedule");
         schedule.addMilestones(firstMilestone);
 
-        Enrollment enrollment = new Enrollment().setExternalId("some_id").setSchedule(schedule).setCurrentMilestoneName("milestone_1").setStartOfSchedule(daysAgo(12)).setEnrolledOn(DateUtil.now()).setPreferredAlertTime(new Time(8, 15)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId("some_id").withSchedule(schedule).withCurrentMilestoneName("milestone_1").withStartOfSchedule(daysAgo(12)).withEnrolledOn(DateUtil.now()).withPreferredAlertTime(new Time(8, 15)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
         MilestoneAlerts milestoneAlerts = enrollmentAlertService.getAlertTimings(enrollment);
 
         List<DateTime> dueWindowAlertTimings = milestoneAlerts.getDueWindowAlertTimings();
@@ -464,7 +465,7 @@ public class EnrollmentAlertServiceTest {
         Schedule schedule = new Schedule("my_schedule");
         schedule.addMilestones(firstMilestone, secondMilestone);
 
-        Enrollment enrollment = new Enrollment().setExternalId("entity_1").setSchedule(schedule).setCurrentMilestoneName("milestone").setStartOfSchedule(weeksAgo(0)).setEnrolledOn(weeksAgo(0)).setPreferredAlertTime(new Time(8, 20)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId("entity_1").withSchedule(schedule).withCurrentMilestoneName("milestone").withStartOfSchedule(weeksAgo(0)).withEnrolledOn(weeksAgo(0)).withPreferredAlertTime(new Time(8, 20)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
         enrollmentAlertService.scheduleAlertsForCurrentMilestone(enrollment);
 
         verify(schedulerService, times(0)).safeScheduleRepeatingJob(Matchers.<RepeatingSchedulableJob>any());
@@ -477,7 +478,7 @@ public class EnrollmentAlertServiceTest {
         Schedule schedule = new Schedule("my_schedule");
         schedule.addMilestones(milestone);
 
-        Enrollment enrollment = new Enrollment().setExternalId("entity_1").setSchedule(schedule).setCurrentMilestoneName("milestone_1").setStartOfSchedule(weeksAgo(1)).setEnrolledOn(weeksAgo(0)).setPreferredAlertTime(new Time(8, 20)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId("entity_1").withSchedule(schedule).withCurrentMilestoneName("milestone_1").withStartOfSchedule(weeksAgo(1)).withEnrolledOn(weeksAgo(0)).withPreferredAlertTime(new Time(8, 20)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
         enrollmentAlertService.scheduleAlertsForCurrentMilestone(enrollment);
 
         verify(schedulerService, times(0)).scheduleRepeatingJob(Matchers.<RepeatingSchedulableJob>any());
@@ -492,7 +493,7 @@ public class EnrollmentAlertServiceTest {
         Schedule schedule = new Schedule("my_schedule");
         schedule.addMilestones(firstMilestone, secondMilestone);
 
-        Enrollment enrollment = new Enrollment().setExternalId("entity_1").setSchedule(schedule).setCurrentMilestoneName("milestone_2").setStartOfSchedule(weeksAgo(4)).setEnrolledOn(weeksAgo(0)).setPreferredAlertTime(new Time(8, 20)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId("entity_1").withSchedule(schedule).withCurrentMilestoneName("milestone_2").withStartOfSchedule(weeksAgo(4)).withEnrolledOn(weeksAgo(0)).withPreferredAlertTime(new Time(8, 20)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
         enrollmentAlertService.scheduleAlertsForCurrentMilestone(enrollment);
 
         RepeatingSchedulableJob job = expectAndCaptureRepeatingJob();
@@ -503,11 +504,11 @@ public class EnrollmentAlertServiceTest {
     }
 
     public void shouldUnenrollEntityFromTheSchedule() {
-        Enrollment enrollment = new Enrollment().setExternalId("entity_1").setSchedule(null).setCurrentMilestoneName("milestone").setStartOfSchedule(weeksAgo(4)).setEnrolledOn(weeksAgo(4)).setPreferredAlertTime(new Time(8, 20)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
-        enrollment.setId("enrollment_1");
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId("entity_1").withSchedule(null).withCurrentMilestoneName("milestone").withStartOfSchedule(weeksAgo(4)).withEnrolledOn(weeksAgo(4)).withPreferredAlertTime(new Time(8, 20)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
+        enrollment.setId(1L);
         enrollmentAlertService.unscheduleAllAlerts(enrollment);
 
-        verify(schedulerService).safeUnscheduleAllJobs(String.format("%s-%s", EventSubjects.MILESTONE_ALERT, "enrollment_1"));
+        verify(schedulerService).safeUnscheduleAllJobs(String.format("%s-%s", EventSubjects.MILESTONE_ALERT, 1L));
     }
 
     private void assertRepeatIntervalValue(long expected, long actual) {

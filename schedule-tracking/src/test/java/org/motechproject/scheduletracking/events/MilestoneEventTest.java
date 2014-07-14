@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.scheduletracking.domain.Enrollment;
+import org.motechproject.scheduletracking.domain.EnrollmentBuilder;
 import org.motechproject.scheduletracking.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.domain.Milestone;
 import org.motechproject.scheduletracking.domain.MilestoneAlert;
@@ -58,7 +58,7 @@ public class MilestoneEventTest {
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, referenceDateTime);
 
         MilestoneWindow milestoneWindow = new MilestoneWindow(WindowName.due, weeks(1));
-        MilestoneEvent milestoneEvent = new MilestoneEvent(new Enrollment().setExternalId(externalId).setSchedule(schedule).setCurrentMilestoneName(milestone.getName()).setStartOfSchedule(referenceDateTime).setEnrolledOn(enrollmentDateTime).setPreferredAlertTime(new Time(8, 10)).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null), milestoneAlert, milestoneWindow);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(new EnrollmentBuilder().withExternalId(externalId).withSchedule(schedule).withCurrentMilestoneName(milestone.getName()).withStartOfSchedule(referenceDateTime).withEnrolledOn(enrollmentDateTime).withPreferredAlertTime(new Time(8, 10)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment(), milestoneAlert, milestoneWindow);
         MotechEvent motechEvent = milestoneEvent.toMotechEvent();
 
         assertEventDetails(motechEvent, externalId, scheduleName, milestoneAlert, milestoneWindow.getName().toString(), milestone.getData());

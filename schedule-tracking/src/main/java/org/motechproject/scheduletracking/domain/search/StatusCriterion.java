@@ -9,7 +9,7 @@ import java.util.List;
 
 import static ch.lambdaj.Lambda.having;
 import static ch.lambdaj.Lambda.on;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.CoreMatchers.equalTo;
 
 public class StatusCriterion implements Criterion {
     private EnrollmentStatus status;

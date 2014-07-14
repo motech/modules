@@ -4,19 +4,26 @@ package org.motechproject.http.agent.listener;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.event.MotechEvent;
+import org.motechproject.http.agent.domain.Credentials;
 import org.motechproject.http.agent.domain.EventDataKeys;
 import org.motechproject.http.agent.domain.EventSubjects;
 import org.motechproject.http.agent.service.Method;
 import org.motechproject.server.config.SettingsFacade;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -33,56 +40,76 @@ public class HttpClientEventListenerTest {
 
     private HttpClientEventListener httpClientEventListener;
 
+    private String url;
+    private String data;
+    private Map headers;
+    private Credentials credentials;
+
     @Before
     public void setup() {
         when(settings.getProperty(HttpClientEventListener.HTTP_CONNECT_TIMEOUT)).thenReturn("0");
         when(settings.getProperty(HttpClientEventListener.HTTP_READ_TIMEOUT)).thenReturn("0");
         when(restTempate.getRequestFactory()).thenReturn(httpComponentsClientHttpRequestFactory);
         httpClientEventListener = new HttpClientEventListener(restTempate, settings);
+
+        url = "http://commcare";
+        data = "aragorn";
+        headers = new HashMap<String, String>();
+        headers.put("key1", "value1");
+        headers.put("key2", "value2");
+        credentials = new Credentials("Admin", "password");
     }
 
     @Test
     public void shouldReadFromQueueAndMakeAHttpCallForPost() throws IOException {
-        final String postUrl = "http://commcare";
-        final String postData = "aragorn";
         MotechEvent motechEvent = new MotechEvent(EventSubjects.HTTP_REQUEST, new HashMap<String, Object>() {{
-            put(EventDataKeys.URL, postUrl);
-            put(EventDataKeys.DATA, postData);
+            put(EventDataKeys.URL, url);
+            put(EventDataKeys.DATA, data);
             put(EventDataKeys.METHOD, Method.POST);
+            put(EventDataKeys.HEADERS, headers);
         }});
 
         httpClientEventListener.handle(motechEvent);
 
-        verify(restTempate).postForLocation(postUrl, postData);
+        ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
+        verify(restTempate).postForLocation(eq(url), captor.capture());
+        assertRequestObject(data, headers, captor.getValue());
     }
 
     @Test
     public void shouldReadFromQueueAndMakeAHttpCall() throws IOException {
-        final String putUrl = "http://commcare";
-        final String postData = "aragorn";
         MotechEvent motechEvent = new MotechEvent(EventSubjects.HTTP_REQUEST, new HashMap<String, Object>() {{
-            put(EventDataKeys.URL, putUrl);
-            put(EventDataKeys.DATA, postData);
+            put(EventDataKeys.URL, url);
+            put(EventDataKeys.DATA, data);
             put(EventDataKeys.METHOD, Method.PUT);
+            put(EventDataKeys.HEADERS, headers);
         }});
 
         httpClientEventListener.handle(motechEvent);
 
-        verify(restTempate).put(putUrl, postData);
+        ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
+        verify(restTempate).put(eq(url), captor.capture());
+        assertRequestObject(data, headers, captor.getValue());
     }
 
     @Test
     public void shouldReadFromQueueAndMakeAHttpDeleteCall() throws IOException {
-        final String deleteUrl = "http://commcare";
-        final String deleteRequest = "aragorn";
         MotechEvent motechEvent = new MotechEvent(EventSubjects.HTTP_REQUEST, new HashMap<String, Object>() {{
-            put(EventDataKeys.URL, deleteUrl);
-            put(EventDataKeys.DATA, deleteRequest);
+            put(EventDataKeys.URL, url);
+            put(EventDataKeys.DATA, data);
             put(EventDataKeys.METHOD, Method.DELETE);
+            put(EventDataKeys.HEADERS, headers);
         }});
 
         httpClientEventListener.handle(motechEvent);
+        ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
+        verify(restTempate).delete(eq(url), captor.capture());
+        assertRequestObject(data, headers, captor.getValue());
+    }
 
-        verify(restTempate).delete(deleteUrl, deleteRequest);
+    private void assertRequestObject(String expectedData, Map expectedHeaders, Object requestObject) {
+        assertTrue(requestObject instanceof HttpEntity);
+        assertEquals(expectedData, ((HttpEntity) requestObject).getBody());
+        assertEquals(expectedHeaders, ((HttpEntity) requestObject).getHeaders().toSingleValueMap());
     }
 }

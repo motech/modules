@@ -7,20 +7,19 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.motechproject.scheduletracking.domain.Enrollment;
+import org.motechproject.scheduletracking.domain.EnrollmentBuilder;
 import org.motechproject.scheduletracking.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.domain.Milestone;
 import org.motechproject.scheduletracking.domain.Schedule;
 import org.motechproject.scheduletracking.domain.WindowName;
 import org.motechproject.scheduletracking.repository.AllEnrollments;
-import org.motechproject.scheduletracking.repository.AllSchedules;
-import org.motechproject.scheduletracking.service.impl.EnrollmentServiceImpl;
+import org.motechproject.scheduletracking.repository.dataservices.ScheduleDataService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.motechproject.commons.date.util.DateUtil.newDateTime;
@@ -30,11 +29,9 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class InWindowCriterionTest {
 
     @Mock
-    EnrollmentServiceImpl enrollmentService;
-    @Mock
     private AllEnrollments allEnrollments;
     @Mock
-    private AllSchedules allSchedules;
+    private ScheduleDataService scheduleDataService;
 
     @Before
     public void setup() {
@@ -49,7 +46,7 @@ public class InWindowCriterionTest {
         Enrollment enrollment3 = mock(Enrollment.class);
         enrollments.addAll(asList(enrollment1, enrollment2, enrollment3));
 
-        when(allEnrollments.getAll()).thenReturn(enrollments);
+        when(allEnrollments.retrieveAll()).thenReturn(enrollments);
 
         when(enrollment1.getCurrentWindowAsOf(Matchers.<DateTime>any())).thenReturn(WindowName.earliest);
         when(enrollment2.getCurrentWindowAsOf(Matchers.<DateTime>any())).thenReturn(WindowName.due);
@@ -70,7 +67,7 @@ public class InWindowCriterionTest {
         Enrollment enrollment3 = mock(Enrollment.class);
         enrollments.addAll(asList(enrollment1, enrollment2, enrollment3));
 
-        when(allEnrollments.getAll()).thenReturn(enrollments);
+        when(allEnrollments.retrieveAll()).thenReturn(enrollments);
 
         when(enrollment1.getCurrentWindowAsOf(Matchers.<DateTime>any())).thenReturn(WindowName.earliest);
         when(enrollment2.getCurrentWindowAsOf(Matchers.<DateTime>any())).thenReturn(WindowName.due);
@@ -85,10 +82,10 @@ public class InWindowCriterionTest {
         Milestone firstMilestone = new Milestone("first_milestone", weeks(1), weeks(1), weeks(1), weeks(1));
         Schedule schedule = new Schedule("my_schedule");
         schedule.addMilestones(firstMilestone);
-        Mockito.when(allSchedules.getByName("my_schedule")).thenReturn(schedule);
+        Mockito.when(scheduleDataService.findByName("my_schedule")).thenReturn(schedule);
 
         DateTime referenceDate = newDateTime(2012, 12, 4, 8, 30, 0);
-        Enrollment enrollment = new Enrollment().setExternalId("ID-074285").setSchedule(schedule).setCurrentMilestoneName("first_milestone").setStartOfSchedule(referenceDate).setEnrolledOn(referenceDate).setPreferredAlertTime(null).setStatus(EnrollmentStatus.ACTIVE).setMetadata(null);
+        Enrollment enrollment = new EnrollmentBuilder().withExternalId("ID-074285").withSchedule(schedule).withCurrentMilestoneName("first_milestone").withStartOfSchedule(referenceDate).withEnrolledOn(referenceDate).withPreferredAlertTime(null).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
 
         assertEquals(WindowName.earliest, enrollment.getCurrentWindowAsOf(newDateTime(2012, 12, 4, 8, 30, 0)));
         assertEquals(WindowName.earliest, enrollment.getCurrentWindowAsOf(newDateTime(2012, 12, 4, 8, 30, 1)));
