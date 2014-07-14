@@ -8,7 +8,7 @@
         class="org.springframework.context.support.GenericXmlApplicationContext">
         <constructor-arg>
             <list>
-            	<value>classpath:baseContext.xml</value>
+                <value>classpath:baseContext.xml</value>
             </list>
         </constructor-arg>
     </bean>

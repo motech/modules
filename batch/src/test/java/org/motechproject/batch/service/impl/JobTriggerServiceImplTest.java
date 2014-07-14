@@ -8,6 +8,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -82,6 +84,7 @@ public class JobTriggerServiceImplTest {
 
     @Test
     public void triggerJob_success() throws BatchException {
+        jobName = "logAnalysis";
         PowerMockito.mockStatic(BatchRuntime.class);
         PowerMockito.when(BatchRuntime.getJobOperator())
                 .thenReturn(jobOperator);
@@ -91,7 +94,6 @@ public class JobTriggerServiceImplTest {
                 .thenReturn(id);
         Mockito.when(jobParameterRepo.findByJobId((Integer) anyObject()))
                 .thenReturn(parameters);
-
         jobTriggerServiceImpl.triggerJob(jobName);
         verify(jobOperator, times(1)).start((String) any(), (Properties) any());
 

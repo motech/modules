@@ -18,7 +18,6 @@ public class PropertyWriter {
     private static final Logger LOGGER = Logger.getLogger(PropertyWriter.class);
 
     public PropertyWriter(String fileName, Properties props) {
-        LOGGER.error("In propertywriter constructor....");
         FileWriter w;
         try {
             w = new FileWriter(fileName);

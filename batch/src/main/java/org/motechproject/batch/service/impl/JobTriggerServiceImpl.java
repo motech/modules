@@ -1,5 +1,7 @@
 package org.motechproject.batch.service.impl;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -12,6 +14,7 @@ import javax.batch.operations.NoSuchJobExecutionException;
 import javax.batch.runtime.JobExecution;
 import javax.batch.runtime.JobInstance;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.motechproject.batch.exception.ApplicationErrors;
 import org.motechproject.batch.exception.BatchException;
@@ -21,6 +24,7 @@ import org.motechproject.batch.mds.service.BatchJobMDSService;
 import org.motechproject.batch.mds.service.BatchJobParameterMDSService;
 import org.motechproject.batch.model.JobExecutionHistoryListDTO;
 import org.motechproject.batch.service.JobTriggerService;
+import org.motechproject.batch.util.BatchConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -82,13 +86,34 @@ public class JobTriggerServiceImpl implements JobTriggerService {
 
         Properties jobParameters = getJobParameters(jobName);
 
+        storeJobContent(jobName);
         try {
             return jsrJobOperator.start(jobName, jobParameters);
         } catch (JobStartException | JobSecurityException e) {
-
             throw new BatchException(ApplicationErrors.JOB_TRIGGER_FAILED, e,
                     e.getMessage());
         }
+    }
+
+    private void storeJobContent(String jobName) throws BatchException {
+        InputStream is = getClass().getClassLoader().getResourceAsStream(
+                BatchConstants.BATCH_XML_CONFIG_PATH + jobName
+                        + BatchConstants.XML_EXTENSION);
+        try {
+            if (is != null) {
+                BatchJob batchJob = jobRepo.findByJobName(jobName).get(0);
+                batchJob.setJobContent(IOUtils.toByteArray(is));
+                jobRepo.update(batchJob);
+            } else {
+                throw new BatchException(
+                        ApplicationErrors.FILE_READING_WRTING_FAILED);
+            }
+        } catch (IOException e) {
+            throw new BatchException(
+                    ApplicationErrors.FILE_READING_WRTING_FAILED, e,
+                    e.getMessage());
+        }
+
     }
 
     @Override
@@ -126,7 +151,6 @@ public class JobTriggerServiceImpl implements JobTriggerService {
     @Override
     public long restart(String jobName, Integer executionId)
             throws BatchException {
-        ClassLoader contextClassLoader = null;
         Properties restartParameters = getJobParameters(jobName);
         try {
             return jsrJobOperator.restart(executionId, restartParameters);

@@ -27,8 +27,7 @@ public final class BatchConstants {
     public static final int DOUBLE_VAL_SCALE = 17;
     public static final int CODE_LENGTH = 1000;
     public static final String JOB_NAME_REQUEST_PARAM = "jobName";
-    public static final String META_INF_PATH = "META-INF/";
-    public static final String BATCH_JOBS_PATH = "batch-jobs/";
+    public static final String BATCH_XML_CONFIG_PATH = "META-INF/batch-jobs/";
     public static final String XML_EXTENSION = ".xml";
 
     private BatchConstants() {

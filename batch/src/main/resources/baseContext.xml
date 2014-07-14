@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:batch="http://www.springframework.org/schema/batch" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    xmlns:batch="http://www.springframework.org/schema/batch" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
                     http://www.springframework.org/schema/beans/spring-beans.xsd
                     http://www.springframework.org/schema/batch
                     http://www.springframework.org/schema/batch/spring-batch.xsd
@@ -14,73 +14,74 @@
 
 
 
-	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
-		destroy-method="close">
-		<property name="driverClassName" value="${jdbc.driver}" />
-		<property name="url" value="${jdbc.url}" />
-		<property name="username" value="${jdbc.username}" />
-		<property name="password" value="${jdbc.password}" />
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+        destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}" />
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
 
-	</bean>
+    </bean>
 
-	<bean id="jobLauncher"
-		class="org.springframework.batch.core.launch.support.SimpleJobLauncher"
-		p:jobRepository-ref="jobRepository" />
+    <bean id="jobLauncher"
+        class="org.springframework.batch.core.launch.support.SimpleJobLauncher"
+        p:jobRepository-ref="jobRepository" />
 
-	<bean id="batchJobOperator"
+    <bean id="batchJobOperator"
 
-		class="org.springframework.batch.core.launch.support.SimpleJobOperator"
-		p:jobLauncher-ref="jobLauncher" p:jobExplorer-ref="jobExplorer"
-		p:jobRepository-ref="jobRepository" p:jobRegistry-ref="jobRegistry" />
-
-
-
-	<bean id="jobExplorer"
-		class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean"
-		p:dataSource-ref="dataSource" />
-
-	<bean id="jobRegistry"
-		class="org.springframework.batch.core.configuration.support.MapJobRegistry" />
-
-	<bean
-		class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor"
-		p:jobRegistry-ref="jobRegistry" />
-
-	<bean id="transactionManager"
-		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource" />
-	</bean>
-
-	<batch:job-repository data-source="dataSource" id="jobRepository"
-		transaction-manager="transactionManager" />
+        class="org.springframework.batch.core.launch.support.SimpleJobOperator"
+        p:jobLauncher-ref="jobLauncher" p:jobExplorer-ref="jobExplorer"
+        p:jobRepository-ref="jobRepository" p:jobRegistry-ref="jobRegistry" />
 
 
-	<!-- Initialise the database if enabled: -->
-	<jdbc:initialize-database data-source="dataSource">
-		<jdbc:script location="classpath:schema-mysql.sql" />
-	</jdbc:initialize-database>
 
-	<bean id="jobParametersConverter"
-		class="org.springframework.batch.core.jsr.JsrJobParametersConverter">
-		<constructor-arg ref="dataSource" />
-	</bean>
+    <bean id="jobExplorer"
+        class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean"
+        p:dataSource-ref="dataSource" />
 
-	<!-- <bean id="jobRegistry" class="org.springframework.batch.core.configuration.support.MapJobRegistry"/> -->
+    <bean id="jobRegistry"
+        class="org.springframework.batch.core.configuration.support.MapJobRegistry" />
 
-	<!-- <context:property-placeholder location="file:${user.home}/.motech/config/batch-springdb.properties" 
-		order="0" ignore-resource-not-found="true" /> <context:property-placeholder 
-		location="classpath:*batch-hsql.properties"/> -->
+    <bean
+        class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor"
+        p:jobRegistry-ref="jobRegistry" />
 
-	<bean id="placeholderProperties"
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="locations">
-			<list>
-				<value>file:${user.home}/.motech/config/application-batch.properties</value>
-			</list>
-		</property>
-		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
-		<property name="ignoreResourceNotFound" value="true" />
-		<property name="ignoreUnresolvablePlaceholders" value="false" />
-		<property name="order" value="1" />
-	</bean>
+    <bean id="transactionManager"
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <batch:job-repository data-source="dataSource" id="jobRepository"
+        transaction-manager="transactionManager" />
+
+
+    <!-- Initialise the database if enabled: -->
+    <jdbc:initialize-database data-source="dataSource">
+        <jdbc:script location="classpath:schema-mysql.sql" />
+    </jdbc:initialize-database>
+
+    <bean id="jobParametersConverter"
+        class="org.springframework.batch.core.jsr.JsrJobParametersConverter">
+        <constructor-arg ref="dataSource" />
+    </bean>
+
+    <!-- <bean id="jobRegistry" class="org.springframework.batch.core.configuration.support.MapJobRegistry"/> -->
+
+    <!-- <context:property-placeholder location="file:${user.home}/.motech/config/batch-springdb.properties" 
+        order="0" ignore-resource-not-found="true" /> <context:property-placeholder 
+        location="classpath:*batch-hsql.properties"/> -->
+
+    <bean id="placeholderProperties"
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>file:${user.home}/.motech/config/application-batch.properties
+                </value>
+            </list>
+        </property>
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+        <property name="ignoreResourceNotFound" value="true" />
+        <property name="ignoreUnresolvablePlaceholders" value="false" />
+        <property name="order" value="1" />
+    </bean>
 </beans>
