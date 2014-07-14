@@ -5,6 +5,7 @@ import org.motechproject.mtraining.domain.ActivityRecord;
 import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
+import org.motechproject.mtraining.domain.ActivityState;
 
 import java.util.List;
 
@@ -17,4 +18,8 @@ import java.util.List;
 public interface ActivityDataService extends MotechDataService<ActivityRecord> {
     @Lookup
     List<ActivityRecord> findRecordsForUser(@LookupField(name = "externalId") String externalId);
+
+    @Lookup
+    List<ActivityRecord> findCompletedRecordsForUser(@LookupField(name = "externalId") String externalId,
+                                                     @LookupField(name = "state") ActivityState state);
 }

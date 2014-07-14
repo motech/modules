@@ -41,7 +41,7 @@ public class MTrainingServiceIT extends BasePaxIT {
 
     @Test
     public void testCourseCreation() throws Exception {
-        Course course = mTrainingService.createCourse(new Course("MyCourse", true, "FooBar.com/voice1"));
+        Course course = mTrainingService.createCourse(new Course("MyCourse", true, "FooBar.com/ivr1"));
         assertNotNull(course);
 
         List<Course> saved = mTrainingService.getCourseByName("MyCourse");

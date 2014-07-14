@@ -14,7 +14,9 @@ public class Course extends CourseUnitMetadata {
     @Field
     private List<Chapter> chapters;
 
+
     public Course(String name, boolean status, String content) {
+
         this(name, status, content, null);
     }
 

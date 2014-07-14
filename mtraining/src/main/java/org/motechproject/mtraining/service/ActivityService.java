@@ -39,17 +39,10 @@ public interface ActivityService {
     List<ActivityRecord> getCompletedActivityForUser(String externalId);
 
     /**
-     * Get a unique user count for activity on a course
-     * @param courseName name of the course
-     * @return Count of unique users that have accessed the course
-     */
-    Long getUniqueActivityCountByCourse(String courseName);
-
-    /**
      * Delete the activity by record id
      * @param activityRecordId activity record id to delete
      */
-    void deleteActivity(String activityRecordId);
+    void deleteActivity(long activityRecordId);
 
     /**
      * Delete all activity for a user (intended for data cleanups)

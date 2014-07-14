@@ -21,7 +21,7 @@ public interface BookmarkService {
      * @param bookmarkId id of the bookmark
      * @return bookmark object with the id
      */
-    Bookmark getBookmarkById(String bookmarkId);
+    Bookmark getBookmarkById(long bookmarkId);
 
     /**
      * Get the latest bookmark for the user identified by externalId
@@ -48,7 +48,7 @@ public interface BookmarkService {
      * Delete a bookmark with the given id
      * @param bookmarkId id of the bookmark
      */
-    void deleteBookmark(String bookmarkId);
+    void deleteBookmark(long bookmarkId);
 
     /**
      * delete all bookmarks for a given user

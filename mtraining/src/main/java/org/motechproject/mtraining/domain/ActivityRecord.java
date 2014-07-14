@@ -30,6 +30,9 @@ public class ActivityRecord {
     @Field
     private DateTime completionTime;
 
+    @Field
+    private ActivityState state;
+
     public ActivityRecord(String externalId) {
         this.externalId = externalId;
     }
@@ -80,5 +83,13 @@ public class ActivityRecord {
 
     public void setCompletionTime(DateTime completionTime) {
         this.completionTime = completionTime;
+    }
+
+    public ActivityState getState() {
+        return state;
+    }
+
+    public void setState(ActivityState state) {
+        this.state = state;
     }
 }

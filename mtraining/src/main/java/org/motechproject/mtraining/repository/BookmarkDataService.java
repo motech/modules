@@ -16,7 +16,7 @@ import java.util.List;
 public interface BookmarkDataService extends MotechDataService<Bookmark> {
 
     @Lookup
-    Bookmark findBookmarkById(@LookupField(name = "id") Long id);
+    Bookmark findBookmarkById(@LookupField(name = "id") long id);
 
     @Lookup
     List<Bookmark> findBookmarksForUser(@LookupField(name = "externalId") String externalId);

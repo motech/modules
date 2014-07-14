@@ -8,6 +8,10 @@
     <osgi:service ref="mTrainingService"
                   interface="org.motechproject.mtraining.service.MTrainingService" />
 
+    <osgi:service ref="bookmarkService"
+                  interface="org.motechproject.mtraining.service.BookmarkService" />
+
+
     <osgi:reference id="courseDataService"
                     interface="org.motechproject.mtraining.repository.CourseDataService" />
 

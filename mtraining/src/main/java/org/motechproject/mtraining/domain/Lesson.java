@@ -9,6 +9,7 @@ import org.motechproject.mds.annotations.Entity;
 public class Lesson extends CourseUnitMetadata {
 
     public Lesson(String name, boolean status, String content) {
+
         super(name, status, content);
     }
 
