@@ -2,7 +2,7 @@ package org.motechproject.batch.util;
 
 public final class BatchConstants {
     public static final String DATE_FORMAT = "dd/MM/yyyy HH:mm:ss";
-    public static final String EVENT_SUBJECT = "org.motechproject.batch.service.impl.JobTriggerServiceImpl";
+    public static final String EVENT_SUBJECT = "BATCH_JOB_TRIGGERED";
     public static final String PARAMS_KEY = "Params";
     public static final String JOB_NAME_KEY = "Job_Name";
     public static final int SHORT_CONTEXT_LENGTH = 2500;

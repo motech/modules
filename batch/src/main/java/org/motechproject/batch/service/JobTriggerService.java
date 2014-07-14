@@ -2,7 +2,6 @@ package org.motechproject.batch.service;
 
 import org.motechproject.batch.exception.BatchException;
 import org.motechproject.batch.model.JobExecutionHistoryListDTO;
-import org.motechproject.event.MotechEvent;
 import org.springframework.stereotype.Service;
 
 /**
@@ -33,8 +32,7 @@ public interface JobTriggerService {
     JobExecutionHistoryListDTO getJObExecutionHistory(String jobName)
             throws BatchException;
 
-    void handleEvent(MotechEvent event) throws BatchException;
-
+  
     /**
      * Restarts the Execution
      * 
