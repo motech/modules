@@ -11,8 +11,6 @@
 
     <osgi:service ref="jobService"
         interface="org.motechproject.batch.service.JobService" />
-    <osgi:service ref="fileUploadService"
-        interface="org.motechproject.batch.service.FileUploadService" />
     <osgi:service ref="jobTriggerService"
         interface="org.motechproject.batch.service.JobTriggerService" />
 

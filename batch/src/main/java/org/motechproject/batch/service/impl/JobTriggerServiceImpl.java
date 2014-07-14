@@ -22,7 +22,6 @@ import org.motechproject.batch.mds.service.BatchJobParameterMDSService;
 import org.motechproject.batch.model.JobExecutionHistoryListDTO;
 import org.motechproject.batch.service.JobTriggerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
@@ -38,9 +37,6 @@ public class JobTriggerServiceImpl implements JobTriggerService {
             .getLogger(JobTriggerServiceImpl.class);
 
     private JobOperator jsrJobOperator;
-
-    @Value("${xml.path}")
-    private String xmlPath;
 
     @Autowired
     public JobTriggerServiceImpl(BatchJobMDSService jobRepo,
@@ -83,13 +79,7 @@ public class JobTriggerServiceImpl implements JobTriggerService {
     @Override
     public long triggerJob(String jobName) throws BatchException {
         LOGGER.info("Starting executing JOB: " + jobName);
-        ClassLoader contextClassLoader = Thread.currentThread()
-                .getContextClassLoader();
 
-        BatchJobClassLoader testLoader = new BatchJobClassLoader(
-                contextClassLoader, xmlPath);
-
-        Thread.currentThread().setContextClassLoader(testLoader);
         Properties jobParameters = getJobParameters(jobName);
 
         try {
@@ -98,9 +88,6 @@ public class JobTriggerServiceImpl implements JobTriggerService {
 
             throw new BatchException(ApplicationErrors.JOB_TRIGGER_FAILED, e,
                     e.getMessage());
-        } finally {
-
-            Thread.currentThread().setContextClassLoader(contextClassLoader);
         }
     }
 
@@ -142,19 +129,11 @@ public class JobTriggerServiceImpl implements JobTriggerService {
         ClassLoader contextClassLoader = null;
         Properties restartParameters = getJobParameters(jobName);
         try {
-            contextClassLoader = Thread.currentThread().getContextClassLoader();
-            BatchJobClassLoader testLoader = new BatchJobClassLoader(
-                    contextClassLoader, xmlPath);
-
-            Thread.currentThread().setContextClassLoader(testLoader);
             return jsrJobOperator.restart(executionId, restartParameters);
         } catch (NoSuchJobExecutionException e) {
 
             throw new BatchException(ApplicationErrors.BAD_REQUEST, e,
                     e.getMessage());
-        } finally {
-
-            Thread.currentThread().setContextClassLoader(contextClassLoader);
         }
 
     }

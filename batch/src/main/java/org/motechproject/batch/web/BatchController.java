@@ -14,13 +14,11 @@ import org.motechproject.batch.model.BatchJobListDTO;
 import org.motechproject.batch.model.CronJobScheduleParam;
 import org.motechproject.batch.model.JobExecutionHistoryListDTO;
 import org.motechproject.batch.model.OneTimeJobScheduleParams;
-import org.motechproject.batch.service.FileUploadService;
 import org.motechproject.batch.service.JobService;
 import org.motechproject.batch.service.JobTriggerService;
 import org.motechproject.batch.util.BatchConstants;
 import org.motechproject.batch.validation.BatchValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -30,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Controller class to perform all the batch job operations
@@ -47,20 +44,6 @@ public class BatchController {
 
     @Autowired
     private JobService jobService;
-
-    @Autowired
-    private FileUploadService fileUploadService;
-
-    @Value("${xml.path}")
-    private String xmlPath;
-
-    public String getXmlPath() {
-        return xmlPath;
-    }
-
-    public void setXmlPath(String xmlPath) {
-        this.xmlPath = xmlPath;
-    }
 
     public JobService getJobService() {
         return jobService;
@@ -182,51 +165,6 @@ public class BatchController {
                             jobName, sw.getTime()));
             sw.stop();
         }
-    }
-
-    /**
-     * Schedule a cron job given job name, cron expression and parameters for
-     * the job
-     * 
-     * @param jobName
-     *            jobName for the job to be scheduled
-     * @param cronExpression
-     *            cron expression for the job
-     * @param paramsMap
-     * @throws BatchException
-     */
-    @ResponseStatus(value = HttpStatus.OK)
-    @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    @ResponseBody
-    public void uploadJobConfiguration(String jobName,
-            @RequestParam("file") MultipartFile file) {
-
-        LOGGER.info(String.format(
-                "Request to upload job config file with jobName %s started",
-                jobName));
-        StopWatch sw = new StopWatch();
-        sw.start();
-        try {
-            List<String> errors = batchValidator.validateUploadInputs(jobName,
-                    file.getContentType());
-
-            if (!errors.isEmpty()) {
-                throw new BatchException(ApplicationErrors.BAD_REQUEST,
-                        errors.toString());
-            }
-            fileUploadService.uploadFile(jobName, file, xmlPath);
-        } catch (BatchException e) {
-            LOGGER.error(String
-                    .format("Error occured while processing request to upload job config file with jobName %s",
-                            jobName));
-            throw new RestException(e, e.getMessage());
-        } finally {
-            LOGGER.info(String
-                    .format("Request to upload job config file with jobName %s ended. Time taken (ms) = %d",
-                            jobName, sw.getTime()));
-            sw.stop();
-        }
-
     }
 
     /**
