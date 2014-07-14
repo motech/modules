@@ -44,6 +44,14 @@
             <artifactId>com.springsource.org.apache.commons.lang</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>com.springsource.org.apache.httpcomponents.httpclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.ehcache</groupId>
+            <artifactId>com.springsource.net.sf.ehcache</artifactId>
+        </dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>motech-pax-it</artifactId>
             <version>${project.version}</version>
@@ -62,7 +70,8 @@
                     <instructions>
                         <Blueprint-Enabled>true</Blueprint-Enabled>
                         <Export-Package>
-                            org.motechproject.http.agent.service;version=${project.version}
+                            org.motechproject.http.agent.service;version=${project.version},
+                            org.motechproject.http.agent.domain;version=${project.version}
                         </Export-Package>
                         <Import-Package>
                             org.springframework.beans.factory.xml,

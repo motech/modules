@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.scheduletracking.domain.Enrollment;
+import org.motechproject.scheduletracking.domain.EnrollmentBuilder;
 import org.motechproject.scheduletracking.domain.Schedule;
 import org.motechproject.scheduletracking.repository.AllEnrollments;
 
@@ -42,11 +43,11 @@ public class ScheduleCriterionTest {
         Schedule schedule2 = new Schedule("schedule_2");
         Schedule schedule3 = new Schedule("schedule_3");
         List<Enrollment> allEnrollments = new ArrayList<Enrollment>();
-        allEnrollments.add(new Enrollment().setExternalId(null).setSchedule(schedule).setCurrentMilestoneName(null).setStartOfSchedule(null).setEnrolledOn(null).setPreferredAlertTime(null).setStatus(null).setMetadata(null));
-        allEnrollments.add(new Enrollment().setExternalId(null).setSchedule(schedule).setCurrentMilestoneName(null).setStartOfSchedule(null).setEnrolledOn(null).setPreferredAlertTime(null).setStatus(null).setMetadata(null));
-        allEnrollments.add(new Enrollment().setExternalId(null).setSchedule(schedule2).setCurrentMilestoneName(null).setStartOfSchedule(null).setEnrolledOn(null).setPreferredAlertTime(null).setStatus(null).setMetadata(null));
-        allEnrollments.add(new Enrollment().setExternalId(null).setSchedule(schedule2).setCurrentMilestoneName(null).setStartOfSchedule(null).setEnrolledOn(null).setPreferredAlertTime(null).setStatus(null).setMetadata(null));
-        allEnrollments.add(new Enrollment().setExternalId(null).setSchedule(schedule3).setCurrentMilestoneName(null).setStartOfSchedule(null).setEnrolledOn(null).setPreferredAlertTime(null).setStatus(null).setMetadata(null));
+        allEnrollments.add(new EnrollmentBuilder().withExternalId(null).withSchedule(schedule).withCurrentMilestoneName(null).withStartOfSchedule(null).withEnrolledOn(null).withPreferredAlertTime(null).withStatus(null).withMetadata(null).toEnrollment());
+        allEnrollments.add(new EnrollmentBuilder().withExternalId(null).withSchedule(schedule).withCurrentMilestoneName(null).withStartOfSchedule(null).withEnrolledOn(null).withPreferredAlertTime(null).withStatus(null).withMetadata(null).toEnrollment());
+        allEnrollments.add(new EnrollmentBuilder().withExternalId(null).withSchedule(schedule2).withCurrentMilestoneName(null).withStartOfSchedule(null).withEnrolledOn(null).withPreferredAlertTime(null).withStatus(null).withMetadata(null).toEnrollment());
+        allEnrollments.add(new EnrollmentBuilder().withExternalId(null).withSchedule(schedule2).withCurrentMilestoneName(null).withStartOfSchedule(null).withEnrolledOn(null).withPreferredAlertTime(null).withStatus(null).withMetadata(null).toEnrollment());
+        allEnrollments.add(new EnrollmentBuilder().withExternalId(null).withSchedule(schedule3).withCurrentMilestoneName(null).withStartOfSchedule(null).withEnrolledOn(null).withPreferredAlertTime(null).withStatus(null).withMetadata(null).toEnrollment());
 
         List<Enrollment> filteredEnrollments = new ScheduleCriterion("schedule_1", "schedule_3").filter(allEnrollments);
         assertEquals(asList(new String[]{"schedule_1", "schedule_1", "schedule_3"}), extract(filteredEnrollments, on(Enrollment.class).getScheduleName()));

@@ -1,7 +1,6 @@
 package org.motechproject.alerts.service;
 
 import org.apache.commons.lang.StringUtils;
-import org.ektorp.DocumentNotFoundException;
 import org.motechproject.alerts.contract.AlertCriteria;
 import org.motechproject.alerts.contract.AlertService;
 import org.motechproject.alerts.contract.AlertsDataService;
@@ -42,7 +41,6 @@ public class AlertServiceImpl implements AlertService {
      * @param status      Status of the alert like new, read and closed
      * @param priority    priority of the alert specified by integer values
      * @param data        Extra information of the alert stored as property => value pairs
-     * @throws org.ektorp.UpdateConflictException Thrown if the alert already exists.
      */
     @Override
     public void create(String entityId, String name, String description, AlertType type,
@@ -76,16 +74,16 @@ public class AlertServiceImpl implements AlertService {
      *
      * @param id Id of the alert
      * @return Alert object with the given id if found
-     * @throws DocumentNotFoundException Thrown when alert with the given id does not exists
      */
     @Override
     public Alert get(Long id) {
-        try {
-            return alertsDataService.retrieve("id", id);
-        } catch (DocumentNotFoundException e) {
-            logger.error(String.format("No Alert found for the given id: %s.", id), e);
-            return null;
+        Alert alert = alertsDataService.retrieve("id", id);
+
+        if (alert == null) {
+            logger.error("No Alert found for the given id: {}.", id);
         }
+
+        return alert;
     }
 
     @Override

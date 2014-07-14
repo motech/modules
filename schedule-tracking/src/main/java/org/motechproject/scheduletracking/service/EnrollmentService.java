@@ -7,7 +7,7 @@ import org.motechproject.scheduletracking.domain.Enrollment;
 import java.util.Map;
 
 public interface EnrollmentService {
-    String enroll(String externalId, String scheduleName, String startingMilestoneName, DateTime referenceDateTime, DateTime enrollmentDateTime, Time preferredAlertTime, Map<String, String> metadata);
+    Long enroll(String externalId, String scheduleName, String startingMilestoneName, DateTime referenceDateTime, DateTime enrollmentDateTime, Time preferredAlertTime, Map<String, String> metadata);
 
     void fulfillCurrentMilestone(Enrollment enrollment, DateTime fulfillmentDateTime);
 

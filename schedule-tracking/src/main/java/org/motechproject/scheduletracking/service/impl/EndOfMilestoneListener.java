@@ -4,7 +4,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.scheduletracking.domain.Enrollment;
 import org.motechproject.scheduletracking.events.DefaultmentCaptureEvent;
-import org.motechproject.scheduletracking.repository.AllEnrollments;
+import org.motechproject.scheduletracking.repository.dataservices.EnrollmentDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,18 +13,18 @@ import static org.motechproject.scheduletracking.events.constants.EventSubjects.
 
 @Component
 public class EndOfMilestoneListener {
-    private AllEnrollments allEnrollments;
+    private EnrollmentDataService enrollmentDataService;
 
     @Autowired
-    public EndOfMilestoneListener(AllEnrollments allEnrollments) {
-        this.allEnrollments = allEnrollments;
+    public EndOfMilestoneListener(EnrollmentDataService enrollmentDataService) {
+        this.enrollmentDataService = enrollmentDataService;
     }
 
     @MotechListener(subjects = DEFAULTMENT_CAPTURE)
     public void handle(MotechEvent motechEvent) {
         DefaultmentCaptureEvent event = new DefaultmentCaptureEvent(motechEvent);
-        Enrollment enrollment = allEnrollments.get(event.getEnrollmentId());
+        Enrollment enrollment = enrollmentDataService.findById(event.getEnrollmentId());
         enrollment.setStatus(DEFAULTED);
-        allEnrollments.update(enrollment);
+        enrollmentDataService.update(enrollment);
     }
 }

@@ -1,23 +1,18 @@
 package org.motechproject.scheduletracking.domain;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.joda.time.Period;
+import org.motechproject.mds.annotations.Entity;
 
+@Entity
 public class Alert {
 
-    @JsonProperty
     private Period offset;
-    @JsonProperty
     private Period interval;
-    @JsonProperty
     private int count;
-    @JsonProperty
     private int index;
-    @JsonProperty
     private boolean floating;
 
-    private Alert() {
+    public Alert() {
     }
 
     public Alert(Period offset, Period interval, int count, int index, boolean floating) {
@@ -28,28 +23,43 @@ public class Alert {
         this.floating = floating;
     }
 
-    @JsonIgnore
     public int getCount() {
         return count;
     }
 
-    @JsonIgnore
     public Period getOffset() {
         return offset;
     }
 
-    @JsonIgnore
     public Period getInterval() {
         return interval;
     }
 
-    @JsonIgnore
     public int getIndex() {
         return index;
     }
 
-    @JsonIgnore
     public boolean isFloating() {
         return floating;
+    }
+
+    public void setOffset(Period offset) {
+        this.offset = offset;
+    }
+
+    public void setFloating(boolean floating) {
+        this.floating = floating;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public void setInterval(Period interval) {
+        this.interval = interval;
     }
 }

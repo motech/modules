@@ -1,38 +1,34 @@
 package org.motechproject.scheduletracking.domain;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.ektorp.support.TypeDiscriminator;
 import org.joda.time.DateTime;
 import org.joda.time.MutablePeriod;
 import org.joda.time.Period;
-import org.motechproject.commons.couchdb.model.MotechBaseDataObject;
+import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.Ignore;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.motechproject.commons.date.util.DateUtil.now;
 
-@TypeDiscriminator("doc.type === 'Schedule'")
-public class Schedule extends MotechBaseDataObject implements Serializable {
-    private static final long serialVersionUID = 5289540619417160322L;
-    @JsonProperty
-    private String name;
-    @JsonProperty
-    private List<Milestone> milestones = new ArrayList<>();
-    @JsonProperty
-    private boolean isBasedOnAbsoluteWindows;
+@Entity
+public class Schedule {
 
-    private Schedule() {
+    private String name;
+    private List<Milestone> milestones = new ArrayList<>();
+    @Field
+    private boolean basedOnAbsoluteWindows;
+
+    public Schedule() {
+        this(null);
     }
 
     public Schedule(String name) {
         this.name = name;
     }
 
-    @JsonIgnore
     public String getName() {
         return name;
     }
@@ -41,17 +37,15 @@ public class Schedule extends MotechBaseDataObject implements Serializable {
         milestones.addAll(Arrays.asList(milestonesList));
     }
 
-    @JsonIgnore
+    @Ignore
     public Milestone getFirstMilestone() {
         return milestones.get(0);
     }
 
-    @JsonIgnore
     public List<Milestone> getMilestones() {
         return milestones;
     }
 
-    @JsonIgnore
     public Milestone getMilestone(String milestoneName) {
         for (Milestone milestone : milestones) {
             if (milestone.getName().equals(milestoneName)) {
@@ -61,7 +55,6 @@ public class Schedule extends MotechBaseDataObject implements Serializable {
         return null;
     }
 
-    @JsonIgnore
     public String getNextMilestoneName(String currentMilestoneName) {
         int currentIndex = milestones.indexOf(getMilestone(currentMilestoneName));
         if (currentIndex < milestones.size() - 1) {
@@ -70,7 +63,7 @@ public class Schedule extends MotechBaseDataObject implements Serializable {
         return null;
     }
 
-    @JsonIgnore
+    @Ignore
     public Period getDuration() {
         MutablePeriod duration = new MutablePeriod();
         for (Milestone milestone : milestones) {
@@ -107,20 +100,19 @@ public class Schedule extends MotechBaseDataObject implements Serializable {
         return name != null ? name.hashCode() : 0;
     }
 
-    @JsonIgnore
-    public Schedule isBasedOnAbsoluteWindows(boolean value) {
-        this.isBasedOnAbsoluteWindows = value;
-        return this;
+    @Ignore
+    public void setBasedOnAbsoluteWindows(boolean value) {
+        this.basedOnAbsoluteWindows = value;
     }
 
-    @JsonIgnore
     public boolean isBasedOnAbsoluteWindows() {
-        return this.isBasedOnAbsoluteWindows;
+        return basedOnAbsoluteWindows;
     }
 
+    @Ignore
     public Schedule merge(Schedule schedule) {
         this.milestones = schedule.milestones;
-        this.isBasedOnAbsoluteWindows = schedule.isBasedOnAbsoluteWindows;
+        this.basedOnAbsoluteWindows = schedule.basedOnAbsoluteWindows;
         return this;
     }
 }

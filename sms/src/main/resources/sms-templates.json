@@ -215,7 +215,8 @@
         "name":"Twilio",
         "configurables": [
             "username",
-            "password"
+            "password",
+            "from"
         ],
         "outgoing":{
             "msxSmsSize":"160",

@@ -1,12 +1,10 @@
 package org.motechproject.scheduletracking.domain;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.ektorp.support.TypeDiscriminator;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
-import org.motechproject.commons.couchdb.model.MotechBaseDataObject;
 import org.motechproject.commons.date.model.Time;
+import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.Ignore;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -18,27 +16,20 @@ import static org.motechproject.commons.date.util.DateUtil.setTimeZone;
 import static org.motechproject.scheduletracking.domain.EnrollmentStatus.ACTIVE;
 import static org.motechproject.scheduletracking.domain.EnrollmentStatus.COMPLETED;
 
-@TypeDiscriminator("doc.type === 'Enrollment'")
-public class Enrollment extends MotechBaseDataObject {
-    @JsonProperty
-    private String externalId;
-    @JsonProperty
-    private String scheduleName;
-    @JsonProperty
-    private String currentMilestoneName;
-    @JsonProperty
-    private DateTime startOfSchedule;
-    @JsonProperty
-    private DateTime enrolledOn;
-    @JsonProperty
-    private Time preferredAlertTime;
-    @JsonProperty
-    private EnrollmentStatus status;
-    @JsonProperty
-    private Map<String, String> metadata;
+@Entity
+public class Enrollment {
 
+    private Long id;
+    private String externalId;
+    private String scheduleName;
+    private String currentMilestoneName;
+    private DateTime startOfSchedule;
+    private DateTime enrolledOn;
+    private Time preferredAlertTime;
+    private EnrollmentStatus status;
+    private Map<String, String> metadata;
     private Schedule schedule;
-    private List<MilestoneFulfillment> fulfillments = new LinkedList<MilestoneFulfillment>();
+    private List<MilestoneFulfillment> fulfillments = new LinkedList<>();
 
     public Enrollment() {
         metadata = new HashMap<>();
@@ -48,66 +39,59 @@ public class Enrollment extends MotechBaseDataObject {
         return metadata;
     }
 
-    public Enrollment setMetadata(Map<String, String> metadata) {
+    public void setMetadata(Map<String, String> metadata) {
         this.metadata = metadata;
-        return this;
     }
 
     public String getScheduleName() {
         return scheduleName;
     }
 
-    public Enrollment setScheduleName(String scheduleName) {
+    public void setScheduleName(String scheduleName) {
         this.scheduleName = scheduleName;
-        return this;
     }
 
     public String getExternalId() {
         return externalId;
     }
 
-    public Enrollment setExternalId(String externalId) {
+    public void setExternalId(String externalId) {
         this.externalId = externalId;
-        return this;
     }
 
     public DateTime getStartOfSchedule() {
         return setTimeZone(startOfSchedule);
     }
 
-    public Enrollment setStartOfSchedule(DateTime startOfSchedule) {
+    public void setStartOfSchedule(DateTime startOfSchedule) {
         this.startOfSchedule = startOfSchedule;
-        return this;
     }
 
     public DateTime getEnrolledOn() {
         return setTimeZone(enrolledOn);
     }
 
-    public Enrollment setEnrolledOn(DateTime enrolledOn) {
+    public void setEnrolledOn(DateTime enrolledOn) {
         this.enrolledOn = enrolledOn;
-        return this;
     }
 
     public Time getPreferredAlertTime() {
         return preferredAlertTime;
     }
 
-    public Enrollment setPreferredAlertTime(Time preferredAlertTime) {
+    public void setPreferredAlertTime(Time preferredAlertTime) {
         this.preferredAlertTime = preferredAlertTime;
-        return this;
     }
 
     public List<MilestoneFulfillment> getFulfillments() {
         return fulfillments;
     }
 
-    public Enrollment setFulfillments(List<MilestoneFulfillment> fulfillments) {
+    public void setFulfillments(List<MilestoneFulfillment> fulfillments) {
         this.fulfillments = fulfillments;
-        return this;
     }
 
-    @JsonIgnore
+    @Ignore
     public DateTime getLastFulfilledDate() {
         if (fulfillments.isEmpty()) {
             return null;
@@ -115,57 +99,52 @@ public class Enrollment extends MotechBaseDataObject {
         return fulfillments.get(fulfillments.size() - 1).getFulfillmentDateTime();
     }
 
-    @JsonIgnore
+    @Ignore
     public boolean isActive() {
         return status.equals(ACTIVE);
     }
 
-    @JsonIgnore
+    @Ignore
     public boolean isCompleted() {
         return status.equals(COMPLETED);
     }
 
-    @JsonIgnore
     public Schedule getSchedule() {
         return schedule;
     }
 
-    public Enrollment setSchedule(Schedule schedule) {
+    public void setSchedule(Schedule schedule) {
         this.schedule = schedule;
         this.scheduleName = schedule.getName();
-        return this;
     }
 
     public String getCurrentMilestoneName() {
         return currentMilestoneName;
     }
 
-    public Enrollment setCurrentMilestoneName(String currentMilestoneName) {
+    public void setCurrentMilestoneName(String currentMilestoneName) {
         this.currentMilestoneName = currentMilestoneName;
-        return this;
     }
 
     public EnrollmentStatus getStatus() {
         return status;
     }
 
-    public Enrollment setStatus(EnrollmentStatus status) {
+    public void setStatus(EnrollmentStatus status) {
         this.status = status;
-        return this;
     }
 
     public void fulfillCurrentMilestone(DateTime fulfillmentDateTime) {
         fulfillments.add(new MilestoneFulfillment(currentMilestoneName, fulfillmentDateTime));
     }
 
-    @JsonIgnore
     public DateTime getStartOfWindowForCurrentMilestone(WindowName windowName) {
         DateTime currentMilestoneStartDate = getCurrentMilestoneStartDate();
         Milestone currentMilestone = schedule.getMilestone(currentMilestoneName);
         return currentMilestoneStartDate.plus(currentMilestone.getWindowStart(windowName));
     }
 
-    @JsonIgnore
+    @Ignore
     public DateTime getCurrentMilestoneStartDate() {
         if (schedule.isBasedOnAbsoluteWindows()) {
             DateTime startOfMilestone = getStartOfSchedule();
@@ -213,5 +192,13 @@ public class Enrollment extends MotechBaseDataObject {
         DateTime currentMilestoneStartDate = this.getCurrentMilestoneStartDate();
         Milestone currentMilestone = schedule.getMilestone(this.getCurrentMilestoneName());
         return currentMilestoneStartDate.plus(currentMilestone.getWindowEnd(windowName));
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
