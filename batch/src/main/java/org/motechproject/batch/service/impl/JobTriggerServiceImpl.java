@@ -21,9 +21,6 @@ import org.motechproject.batch.mds.service.BatchJobMDSService;
 import org.motechproject.batch.mds.service.BatchJobParameterMDSService;
 import org.motechproject.batch.model.JobExecutionHistoryListDTO;
 import org.motechproject.batch.service.JobTriggerService;
-import org.motechproject.batch.util.BatchConstants;
-import org.motechproject.event.MotechEvent;
-import org.motechproject.event.listener.annotations.MotechListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -58,14 +55,6 @@ public class JobTriggerServiceImpl implements JobTriggerService {
     private BatchJobParameterMDSService jobParameterRepo;
 
     private BatchJobMDSService jobRepo;
-
-    @Override
-    @MotechListener(subjects = BatchConstants.EVENT_SUBJECT)
-    public void handleEvent(MotechEvent event) throws BatchException {
-        String jobName = event.getParameters().get(BatchConstants.JOB_NAME_KEY)
-                .toString();
-        triggerJob(jobName);
-    }
 
     private Properties getJobParameters(String jobName) throws BatchException {
         List<BatchJob> batchJobList = jobRepo.findByJobName(jobName);
