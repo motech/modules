@@ -60,7 +60,7 @@ public class CourseUnitMetadata {
         this.name = name;
     }
 
-    public boolean isStatus() {
+    public boolean getStatus() {
         return status;
     }
 
