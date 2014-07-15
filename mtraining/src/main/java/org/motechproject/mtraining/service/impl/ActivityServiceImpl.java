@@ -5,12 +5,14 @@ import org.motechproject.mtraining.domain.ActivityState;
 import org.motechproject.mtraining.repository.ActivityDataService;
 import org.motechproject.mtraining.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * Created by kosh on 7/14/14.
  */
+@Service("activityService")
 public class ActivityServiceImpl implements ActivityService {
 
     @Autowired

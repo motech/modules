@@ -5,12 +5,14 @@
 
     <import resource="classpath*:META-INF/motech/*.xml" />
 
-    <osgi:service ref="mTrainingService"
+    <osgi:service id="mTrainingServiceOsgi" ref="mTrainingService"
                   interface="org.motechproject.mtraining.service.MTrainingService" />
 
-    <osgi:service ref="bookmarkService"
+    <osgi:service id="bookmarkServiceOsgi" ref="bookmarkService"
                   interface="org.motechproject.mtraining.service.BookmarkService" />
 
+    <osgi:service id="activityServiceOsgi" ref="activityService"
+                  interface="org.motechproject.mtraining.service.ActivityService" />
 
     <osgi:reference id="courseDataService"
                     interface="org.motechproject.mtraining.repository.CourseDataService" />

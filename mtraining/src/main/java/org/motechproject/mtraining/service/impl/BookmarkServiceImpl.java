@@ -4,6 +4,7 @@ import org.motechproject.mtraining.domain.Bookmark;
 import org.motechproject.mtraining.repository.BookmarkDataService;
 import org.motechproject.mtraining.service.BookmarkService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 /**
  * Service implementation for bookmarks
  */
+@Service("bookmarkService")
 public class BookmarkServiceImpl implements BookmarkService {
 
     @Autowired
