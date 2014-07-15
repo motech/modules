@@ -1,8 +1,11 @@
 package org.motechproject.mtraining.domain;
 
+import org.motechproject.mds.annotations.Entity;
+
 /**
  * Common metadata shared by all course sub classes
  */
+@Entity
 public class CourseUnitMetadata {
 
     /**
