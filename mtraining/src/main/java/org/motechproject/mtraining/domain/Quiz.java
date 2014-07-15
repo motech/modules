@@ -12,7 +12,7 @@ import java.util.List;
 public class Quiz {
 
     @Field
-    private String quizName;
+    private String name;
 
     @Field
     private List<Question> questions;
@@ -20,33 +20,39 @@ public class Quiz {
     @Field
     private double passPercentage;
 
-    public Quiz(String quizName, List<Question> questions, double passPercentage) {
-        this.quizName = quizName;
+    public Quiz(String name, List<Question> questions, double passPercentage) {
+        this.name = name;
         this.questions = questions;
         this.passPercentage = passPercentage;
     }
 
-    public String getQuizNameName() {
-        return quizName;
+    public String getName() {
+
+        return this.name;
     }
 
-    public void setQuizName(String quizName) {
-        this.quizName = quizName;
+    public void setName(String name) {
+
+        this.name = name;
     }
 
     public List<Question> getQuestions() {
+
         return questions;
     }
 
     public void setQuestions(List<Question> questions) {
+
         this.questions = questions;
     }
 
     public double getPassPercentage() {
+
         return passPercentage;
     }
 
     public void setPassPercentage(double passPercentage) {
+
         this.passPercentage = passPercentage;
     }
 }

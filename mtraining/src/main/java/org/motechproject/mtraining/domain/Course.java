@@ -14,14 +14,16 @@ public class Course extends CourseUnitMetadata {
     @Field
     private List<Chapter> chapters;
 
-
-    public Course(String name, boolean status, String content) {
-
-        this(name, status, content, null);
+    public Course() {
     }
 
-    public Course(String name, boolean status, String content, List<Chapter> chapters) {
-        super(name, status, content);
+    public Course(String name, CourseUnitState state, String content) {
+
+        this(name, state, content, null);
+    }
+
+    public Course(String name, CourseUnitState state, String content, List<Chapter> chapters) {
+        super(name, state, content);
         this.chapters = chapters;
     }
 

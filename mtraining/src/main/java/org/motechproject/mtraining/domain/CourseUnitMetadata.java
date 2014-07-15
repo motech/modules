@@ -6,7 +6,7 @@ import org.motechproject.mds.annotations.Entity;
  * Common metadata shared by all course sub classes
  */
 @Entity
-public class CourseUnitMetadata {
+public class CourseUnitMetadata extends MdsEntity {
 
     /**
      * Name of the course unit
@@ -16,7 +16,7 @@ public class CourseUnitMetadata {
     /**
      * Status of the course unit
      */
-    private boolean status;
+    private CourseUnitState state;
 
     /**
      * The content for the course unit
@@ -28,43 +28,49 @@ public class CourseUnitMetadata {
      */
     public CourseUnitMetadata() {
         this.name = "";
-        this.status = false;
+        this.state = CourseUnitState.Inactive;
         this.content = "";
     }
 
     /**
      * Constructor with all arguments
      * @param name Name of the unit
-     * @param status Status of the unit
+     * @param state Status of the unit
      * @param content Content reference for the unit
      */
-    public CourseUnitMetadata(String name, boolean status, String content) {
+    public CourseUnitMetadata(String name, CourseUnitState state, String content) {
         this.name = name;
-        this.status = status;
+        this.state = state;
         this.content = content;
     }
 
     public String getContent() {
+
         return content;
     }
 
     public void setContent(String content) {
+
         this.content = content;
     }
 
     public String getName() {
+
         return name;
     }
 
     public void setName(String name) {
+
         this.name = name;
     }
 
-    public boolean getStatus() {
-        return status;
+    public CourseUnitState getState() {
+
+        return state;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setState(CourseUnitState state) {
+
+        this.state = state;
     }
 }
