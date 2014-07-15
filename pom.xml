@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" ?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>modules</artifactId>
     <groupId>org.motechproject</groupId>
-    <version>0.24-SNAPSHOT</version>
+    <version>0.25-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>MOTECH Modules</name>
 
@@ -16,7 +15,7 @@
 
     <properties>
         <motech.groupId>org.motechproject</motech.groupId>
-        <motech.version>0.24-SNAPSHOT</motech.version>
+        <motech.version>0.25-SNAPSHOT</motech.version>
 
         <db.server>localhost</db.server>
         <db.port>5984</db.port>
