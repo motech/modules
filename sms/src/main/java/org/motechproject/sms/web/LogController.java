@@ -26,11 +26,15 @@ public class LogController {
         SmsRecords smsRecords = new SmsRecords();
         SmsRecordSearchCriteria criteria = settings.toSmsRecordSearchCriteria();
         long totalRecords = 0;
+        int totalPages = 0;
 
         if (!criteria.getSmsDirections().isEmpty() && !criteria.getDeliveryStatuses().isEmpty()) {
             smsRecords = smsAuditService.findAllSmsRecords(criteria);
             totalRecords = smsAuditService.countAllSmsRecords(criteria);
         }
-        return new SmsLoggingRecords(settings.getPage(), settings.getRows(), totalRecords, smsRecords);
+
+        totalPages = (int) Math.ceil((double) totalRecords / settings.getRows());
+
+        return new SmsLoggingRecords(settings.getPage(), totalPages, totalRecords, smsRecords);
     }
 }
