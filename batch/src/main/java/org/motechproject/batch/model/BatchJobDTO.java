@@ -2,14 +2,14 @@ package org.motechproject.batch.model;
 
 import org.joda.time.DateTime;
 
-
 /**
  * Class containing fields of Batch Job which is to be sent as response
- * 
+ *
  * @author Naveen
- * 
+ *
  */
 public class BatchJobDTO {
+
     private long jobId;
     private String jobName;
     private String cronExpression;
@@ -17,7 +17,6 @@ public class BatchJobDTO {
     private DateTime lastUpdated;
     private String createdBy;
     private String lastUpdatedBy;
-
 
     public long getJobId() {
         return jobId;

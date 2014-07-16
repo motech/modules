@@ -9,7 +9,7 @@ import org.motechproject.mds.annotations.Field;
 @Entity
 public class BatchJobParameters implements java.io.Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -5755680223644726209L;
 
     @Field(required = true)
     private Integer batchJobId;

@@ -1,6 +1,7 @@
 package org.motechproject.batch.util;
 
 public final class BatchConstants {
+
     public static final String DATE_FORMAT = "dd/MM/yyyy HH:mm:ss";
     public static final String EVENT_SUBJECT = "BATCH_JOB_TRIGGERED";
     public static final String PARAMS_KEY = "Params";

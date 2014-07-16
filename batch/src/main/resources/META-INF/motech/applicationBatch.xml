@@ -14,28 +14,17 @@
   http://www.springframework.org/schema/jdbc
                     http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
-    <!-- Scans the classpath of this application for @Components to deploy as 
-        beans -->
+    <!-- Scans the classpath of this application for @Components to deploy as
+         beans -->
     <!-- ========================= GENERAL DEFINITIONS ========================= -->
-    <!-- <context:property-placeholder location="file:${user.home}/.motech/config/batch-springdb.properties" 
-        order="0" ignore-resource-not-found="true" /> -->
-
-    <context:property-placeholder location="classpath:*batch-hsql.properties"
-        order="1" />
-    <!-- <import resource="classpath*:beanRefContext.xml" /> -->
 
     <context:annotation-config />
-
     <context:component-scan base-package="org.motechproject.batch.web" />
     <context:component-scan base-package="org.motechproject.batch.repository" />
     <context:component-scan base-package="org.motechproject.batch.service.impl" />
     <context:component-scan base-package="org.motechproject.batch.validation" />
     <context:component-scan base-package="org.motechproject.batch.dao" />
-
     <mvc:annotation-driven />
-    <context:annotation-config />
-
-
 
     <bean id="configSettings" class="org.motechproject.server.config.SettingsFacade"
         autowire="byType">
@@ -58,7 +47,7 @@
 
     <bean id="propertyWriter" class="org.motechproject.batch.util.PropertyWriter">
         <constructor-arg
-            value="${user.home}/.motech/config/application-batch.properties"
+            value="/tmp/application-batch.properties"
             type="java.lang.String" />
         <constructor-arg ref="sqlProperties" />
     </bean>
@@ -72,4 +61,3 @@
         depends-on="propertyWriter" />
 
 </beans>
-

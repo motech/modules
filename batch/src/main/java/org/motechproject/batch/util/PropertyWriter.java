@@ -4,18 +4,20 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * This class is called from applicationbatch, so that basecontext can can acces
- * the file
- * 
+ * This class is called from applicationBatch, so that baseContext can acces the
+ * file
+ *
  * @author haritha
- * 
+ *
  */
 public class PropertyWriter {
 
-    private static final Logger LOGGER = Logger.getLogger(PropertyWriter.class);
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(PropertyWriter.class);
 
     public PropertyWriter(String fileName, Properties props) {
         FileWriter w;
@@ -23,7 +25,7 @@ public class PropertyWriter {
             w = new FileWriter(fileName);
             props.store(w, "FromSqlDbManager");
         } catch (IOException e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage());
         }
 
     }

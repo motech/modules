@@ -1,4 +1,5 @@
 package org.motechproject.batch.service.impl.it;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,64 +22,59 @@ import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
-
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class JobServiceIT extends BasePaxIT {
-	@Inject
-	private BatchJobMDSService batchJobMDSService;
-	@Inject
-	private JobService jobService;
-	
-	@Test
-	public void getListOfJobTest() throws BatchException {
-		
-		BatchJob batchJob = new BatchJob();
-		batchJob.setJobName("random-test-job");
-		batchJob.setCronExpression("0 15 10 * * ? 2017");
-		batchJob.setBatchJobStatusId(1);
-		
-		batchJobMDSService.create(batchJob);
-		BatchJobListDTO batchJobs = jobService.getListOfJobs();
-		List<BatchJob> batchJobsMds =  batchJobMDSService.findByJobName("random-test-job");
-		
-		Assert.assertNotNull(batchJobs);
-		Assert.assertEquals(1,batchJobsMds.size());
-		Assert.assertEquals("random-test-job",batchJobsMds.get(0).getJobName());
-		Assert.assertEquals("0 15 10 * * ? 2017",batchJobsMds.get(0).getCronExpression());
-		Assert.assertEquals((Integer)1,batchJobsMds.get(0).getBatchJobStatusId());
-		
-		
-	}
-	
-	@Test
-	public void scheduleJobTest() throws BatchException {
-		CronJobScheduleParam params = new CronJobScheduleParam();
-		Map<String,String> paramsMap = new HashMap<>();
-		paramsMap.put("param_key1","param_value1");
-		paramsMap.put("param_key2","param_value2");
-		
-		params.setCronExpression("0 15 10 * * ? 2017");
-		params.setJobName("random-test-job");
-		params.setParamsMap(paramsMap);
-		
-		jobService.scheduleJob(params);
-		
-		List<BatchJob> batchJobsMds =  batchJobMDSService.findByJobName("random-test-job");
-		Assert.assertEquals(1,batchJobsMds.size());
-		Assert.assertEquals("random-test-job",batchJobsMds.get(0).getJobName());
-		Assert.assertEquals("0 15 10 * * ? 2017",batchJobsMds.get(0).getCronExpression());
-		batchJobMDSService.delete(batchJobsMds.get(0));
-		batchJobsMds =  batchJobMDSService.findByJobName("random-test-job");
-		Assert.assertEquals(0,batchJobsMds.size());
-        
-	}
-	
-	@Test
-	public void updateJobPropertyTest() {
-		
-	}
 
-	
+    @Inject
+    private BatchJobMDSService batchJobMDSService;
+    @Inject
+    private JobService jobService;
+
+    @Test
+    public void getListOfJobTest() throws BatchException {
+
+        BatchJob batchJob = new BatchJob();
+        batchJob.setJobName("random-test-job");
+        batchJob.setCronExpression("0 15 10 * * ? 2017");
+        batchJob.setBatchJobStatusId(1);
+
+        batchJobMDSService.create(batchJob);
+        BatchJobListDTO batchJobs = jobService.getListOfJobs();
+        List<BatchJob> batchJobsMds = batchJobMDSService
+                .findByJobName("random-test-job");
+
+        Assert.assertNotNull(batchJobs);
+        Assert.assertEquals(1, batchJobsMds.size());
+        Assert.assertEquals("random-test-job", batchJobsMds.get(0).getJobName());
+        Assert.assertEquals("0 15 10 * * ? 2017", batchJobsMds.get(0)
+                .getCronExpression());
+        Assert.assertEquals((Integer) 1, batchJobsMds.get(0)
+                .getBatchJobStatusId());
+    }
+
+    @Test
+    public void scheduleJobTest() throws BatchException {
+        CronJobScheduleParam params = new CronJobScheduleParam();
+        Map<String, String> paramsMap = new HashMap<>();
+        paramsMap.put("param_key1", "param_value1");
+        paramsMap.put("param_key2", "param_value2");
+
+        params.setCronExpression("0 15 10 * * ? 2017");
+        params.setJobName("random-test-job");
+        params.setParamsMap(paramsMap);
+
+        jobService.scheduleJob(params);
+
+        List<BatchJob> batchJobsMds = batchJobMDSService
+                .findByJobName("random-test-job");
+        Assert.assertEquals(1, batchJobsMds.size());
+        Assert.assertEquals("random-test-job", batchJobsMds.get(0).getJobName());
+        Assert.assertEquals("0 15 10 * * ? 2017", batchJobsMds.get(0)
+                .getCronExpression());
+        batchJobMDSService.delete(batchJobsMds.get(0));
+        batchJobsMds = batchJobMDSService.findByJobName("random-test-job");
+        Assert.assertEquals(0, batchJobsMds.size());
+    }
 }

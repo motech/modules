@@ -8,8 +8,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -35,7 +33,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.batch.core.jsr.launch.JsrJobOperator;
 
-//@RunWith(MockitoJUnitRunner.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(BatchRuntime.class)
 public class JobTriggerServiceImplTest {
@@ -66,7 +63,6 @@ public class JobTriggerServiceImplTest {
         batchJob = new BatchJob();
         batchJob.setCronExpression(cronExpression);
         batchJob.setJobName("testJob");
-
         batchJobs.add(batchJob);
 
         batchJobParameters.setBatchJobId(4);
@@ -77,7 +73,6 @@ public class JobTriggerServiceImplTest {
         batchJobDTO = new BatchJobDTO();
         batchJobListDTO = new BatchJobListDTO();
         listBatchJobDTO = new ArrayList<>();
-
         listBatchJobDTO.add(batchJob);
 
     }
@@ -101,7 +96,7 @@ public class JobTriggerServiceImplTest {
 
     /**
      * valid scenario
-     * 
+     *
      * @throws BatchException
      */
     @Ignore
@@ -122,7 +117,7 @@ public class JobTriggerServiceImplTest {
 
     /**
      * Invalid scenario
-     * 
+     *
      * @throws BatchException
      */
     @Test

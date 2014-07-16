@@ -9,9 +9,9 @@ import org.motechproject.mds.service.MotechDataService;
 
 /**
  * Class to query BatchJobParameters entity
- * 
+ *
  * @author naveen
- * 
+ *
  */
 public interface BatchJobParameterMDSService extends
         MotechDataService<BatchJobParameters> {

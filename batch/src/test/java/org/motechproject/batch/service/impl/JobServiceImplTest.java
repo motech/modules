@@ -40,6 +40,11 @@ public class JobServiceImplTest {
     BatchJobParameterMDSService jobParameterRepo;
     @Mock
     MotechSchedulerService motechSchedulerService;
+
+    @InjectMocks
+    JobServiceImpl serviceImpl = new JobServiceImpl(jobRepo, jobParameterRepo,
+            motechSchedulerService);
+
     List<BatchJob> listBatchJobDTO;
     BatchJobDTO batchJobDTO;
     BatchJob batchJob;
@@ -48,10 +53,6 @@ public class JobServiceImplTest {
     String cronExpression;
     String date;
     long id = 4L;
-
-    @InjectMocks
-    JobServiceImpl serviceImpl = new JobServiceImpl(jobRepo, jobParameterRepo,
-            motechSchedulerService);
     BatchJobListDTO listDto = new BatchJobListDTO();
     String jobName = "Test Case";
 
@@ -83,7 +84,7 @@ public class JobServiceImplTest {
 
     /**
      * valid scenario
-     * 
+     *
      * @throws BatchException
      */
     @Test
@@ -181,7 +182,7 @@ public class JobServiceImplTest {
     /**
      * valid scenario(when parameterList from db matches the list sent for
      * update)
-     * 
+     *
      * @throws BatchException
      */
     @Test
@@ -208,7 +209,7 @@ public class JobServiceImplTest {
     /**
      * valid scenario(when parameterList from db does not match the list sent
      * for update)
-     * 
+     *
      * @throws BatchException
      */
     @Test
@@ -231,5 +232,4 @@ public class JobServiceImplTest {
         verify(jobParameterRepo, times(1)).findByJobId((Integer) any());
         verify(jobParameterRepo).create((BatchJobParameters) any());
     }
-
 }

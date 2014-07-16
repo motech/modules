@@ -9,15 +9,15 @@ import org.motechproject.batch.model.OneTimeJobScheduleParams;
 
 /**
  * Interface to schedule reschedule jobs or update job parameters
- * 
+ *
  * @author Naveen
- * 
+ *
  */
 public interface JobService {
 
     /**
      * get list of scheduled jobs
-     * 
+     *
      * @return batchJobListDTO which contains list of BatchJobDTO(contains
      *         fields from BatchJob <code>class</code>)
      */
@@ -25,7 +25,7 @@ public interface JobService {
 
     /**
      * Shedule a new cron job with given job name and cron expression
-     * 
+     *
      * @param jobName
      *            job name for the job to be scheduled
      * @param cronExpression
@@ -39,7 +39,7 @@ public interface JobService {
 
     /**
      * Schedule a one time job, to be run once in the future
-     * 
+     *
      * @param jobName
      *            job name for the job to be scheduled
      * @param date
@@ -53,7 +53,7 @@ public interface JobService {
 
     /**
      * Update the job parameters of the scheduled job
-     * 
+     *
      * @param jobName
      *            job name for the job for which parameters to be updated
      * @param paramsMap
@@ -67,7 +67,7 @@ public interface JobService {
 
     /**
      * ReShedule an existing batch job with given job name and cron expression
-     * 
+     *
      * @param jobName
      *            job name for the job to be scheduled
      * @param cronExpression
@@ -79,7 +79,7 @@ public interface JobService {
 
     /**
      * UnShedule an existing batch job with given job name
-     * 
+     *
      * @param jobName
      *            job name for the job to be scheduled
      * @param cronExpression

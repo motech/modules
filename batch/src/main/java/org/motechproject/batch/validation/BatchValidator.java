@@ -3,11 +3,14 @@ package org.motechproject.batch.validation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.quartz.CronExpression;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+
 /**
  * Validates the input parameters of batch service API calls for HTTP requests
+ *
  * @author naveen
  *
  */
@@ -50,7 +53,6 @@ public class BatchValidator {
         if (!MediaType.TEXT_XML.equals(MediaType.valueOf(contentType))) {
             errors.add("You must upload xml file for the job");
         }
-
     }
 
     private void checkCronExpression(String cronExpression, List<String> errors) {
@@ -61,9 +63,8 @@ public class BatchValidator {
     }
 
     private void checkJobName(String jobName, List<String> errors) {
-        if (jobName == null || ("").equals(jobName)) {
+        if (StringUtils.isBlank(jobName)) {
             errors.add("Job name must be provided");
         }
     }
-
 }

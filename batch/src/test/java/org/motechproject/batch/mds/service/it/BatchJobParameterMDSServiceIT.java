@@ -24,33 +24,32 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class BatchJobParameterMDSServiceIT extends BasePaxIT {
 
-	@Inject
-	private BatchJobParameterMDSService batchJobParameterMDSService;
-	private int batchJobId = 10000;
+    @Inject
+    private BatchJobParameterMDSService batchJobParameterMDSService;
 
-	@Test
-	public void testBatchJobParameters() {
+    private int batchJobId = 10000;
 
-		List<BatchJobParameters> batchJobsParameters = batchJobParameterMDSService
-				.findByJobId(batchJobId);
-		Assert.assertNotNull(batchJobsParameters);
-		Assert.assertEquals(0, batchJobsParameters.size());
+    @Test
+    public void testBatchJobParameters() {
 
-		BatchJobParameters batchJobParameters = new BatchJobParameters();
-		batchJobParameters.setBatchJobId(batchJobId);
-		batchJobParameters.setParameterName("param_key");
-		batchJobParameters.setParameterValue("param_value");
+        List<BatchJobParameters> batchJobsParameters = batchJobParameterMDSService
+                .findByJobId(batchJobId);
+        Assert.assertNotNull(batchJobsParameters);
+        Assert.assertEquals(0, batchJobsParameters.size());
 
-		batchJobsParameters = batchJobParameterMDSService
-				.findByJobId(batchJobId);
-		Assert.assertNotNull(batchJobsParameters);
-		Assert.assertEquals(1, batchJobsParameters.size());
+        BatchJobParameters batchJobParameters = new BatchJobParameters();
+        batchJobParameters.setBatchJobId(batchJobId);
+        batchJobParameters.setParameterName("param_key");
+        batchJobParameters.setParameterValue("param_value");
 
-	}
+        batchJobsParameters = batchJobParameterMDSService
+                .findByJobId(batchJobId);
+        Assert.assertNotNull(batchJobsParameters);
+        Assert.assertEquals(1, batchJobsParameters.size());
+    }
 
-	@After
-	public void tearDown() {
-		batchJobParameterMDSService.deleteAll();
-	}
-
+    @After
+    public void tearDown() {
+        batchJobParameterMDSService.deleteAll();
+    }
 }

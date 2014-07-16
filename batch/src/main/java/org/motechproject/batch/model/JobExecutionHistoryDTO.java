@@ -18,8 +18,6 @@ public class JobExecutionHistoryDTO {
     private String createdBy;
     private String lastUpdatedBy;
 
-    // Setters and Getters for above fields
-
     public long getJobExecutionId() {
         return jobExecutionId;
     }

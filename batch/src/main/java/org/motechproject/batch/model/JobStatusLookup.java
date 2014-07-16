@@ -2,7 +2,7 @@ package org.motechproject.batch.model;
 
 public enum JobStatusLookup {
 
-    ACTIVE(1), 
+    ACTIVE(1),
     INACTIVE(2);
 
     private final int id;

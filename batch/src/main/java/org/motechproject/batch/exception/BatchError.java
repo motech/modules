@@ -8,12 +8,10 @@ import org.motechproject.batch.util.BatchUtils;
 
 /**
  * JSON element for Error when there is an exception in rest call
- * 
+ *
  * @author naveen
- * 
  */
 @XmlRootElement(name = "Error")
-// @JsonSerialize(include = Inclusion.NON_NULL)
 public class BatchError {
 
     private String errorCode;

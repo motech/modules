@@ -36,8 +36,10 @@ public class BatchControllerTest {
     JobTriggerService jobTriggerService;
     @Mock
     BatchValidator batchValidator;
+
     @InjectMocks
     BatchController controller = new BatchController();
+
     private BatchJobListDTO batchJobListDTO;
     private BatchJobDTO batchJobDTO;
     private List<BatchJobDTO> listBatchJobDTO;
@@ -46,14 +48,12 @@ public class BatchControllerTest {
     private JobExecutionHistoryListDTO jobExecutionHistoryList;
     private List<JobExecution> paramsList;
     private List<String> errors;
-    private String cronExpression;
     MockMultipartFile mockMultipartFile;
 
     @Before
     public void setUp() throws BatchException {
 
         jobName = "testJob";
-        cronExpression = "0 15 10 * * ? 2014";
         errors = new ArrayList<String>();
         batchJobDTO = new BatchJobDTO();
         batchJobListDTO = new BatchJobListDTO();
@@ -74,7 +74,6 @@ public class BatchControllerTest {
         when(jobTriggerService.getJObExecutionHistory(jobName)).thenReturn(
                 jobExecutionHistoryList);
         when(batchValidator.validateUpdateInputs(jobName)).thenReturn(errors);
-        // when(batchValidator.validateUpdateInputs(jobName)).thenReturn(errors);
     }
 
     /**
@@ -102,7 +101,7 @@ public class BatchControllerTest {
 
     /**
      * Invalid scenario: mandatory field <code>jobName</code> empty
-     * 
+     *
      * @throws Exception
      */
     @Test
@@ -120,13 +119,11 @@ public class BatchControllerTest {
             assertEquals("One or more input parameter(s) may be wrong",
                     be.getMessage());
         }
-
     }
 
     /**
      * Invalid scenario: mandatory field <code>jobName</code> null
      */
-
     @Test
     public void getJobHistoryListNullJobName() {
         jobName = null;
@@ -143,7 +140,6 @@ public class BatchControllerTest {
             assertEquals("One or more input parameter(s) may be wrong",
                     be.getMessage());
         }
-
     }
 
     /**
@@ -153,16 +149,11 @@ public class BatchControllerTest {
     public void triggerJobReturnsValidResponse() {
         errors.clear();
         when(batchValidator.validateUpdateInputs(jobName)).thenReturn(errors);
-
         controller.triggerJob(jobName);
-
     }
 
     /**
      * Invalid scenario: mandatory field <code>jobName</code> empty
-     * 
-     * @throws BatchException
-     * @throws Exception
      */
     @Test
     public void triggerJobWithEmptyJOBName() {
@@ -200,75 +191,4 @@ public class BatchControllerTest {
                     be.getMessage());
         }
     }
-
-    @Test
-    public void scheduleCronjobWithValidInputs() {
-        errors.clear();
-        errors.add("Job name must be provided");
-        when(batchValidator.validateUpdateInputs(jobName)).thenReturn(errors);
-        // controller.scheduleCronJob(jobName, cronExpression, paramsMap);
-        // TODO what values to assert;
-    }
-
-    /**
-     * Invalid scenario: mandotary field <code>cronExpression</code> invalid
-     */
-    @Test
-    public void scheduleCronjobWithInvalidCronExpression() {
-        cronExpression = "2434 ? 998?*";
-        errors.clear();
-        errors.add("Job cron expression supplied is not valid");
-        when(batchValidator.validateShedulerInputs(jobName, cronExpression))
-                .thenReturn(errors);
-        try {
-            // controller.scheduleCronJob(jobName, cronExpression, paramsMap);
-        } catch (RestException e) {
-            BatchErrors be = e.getBatchException().getError();
-            assertEquals(1001, be.getCode());
-            assertEquals(HttpStatus.BAD_REQUEST, be.getHttpStatus());
-            assertEquals("One or more input parameter(s) may be wrong",
-                    be.getMessage());
-        }
-    }
-
-    @Test
-    public void scheduleOneTimejobWithValidInputs() {
-        errors.clear();
-        when(
-                batchValidator.validateOneTimeInputs(jobName,
-                        "05/10/2014 10:08:47")).thenReturn(errors);
-        // controller.scheduleOneTimeJob(jobName, "05/10/2014 10:08:47",
-        // paramsMap);
-        // TODO what values to assert;
-    }
-
-    @Test
-    public void scheduleOneTimejobWithEmptyJobName() {
-        jobName = "";
-        errors.clear();
-        errors.add("Job name must be provided");
-        when(
-                batchValidator.validateOneTimeInputs(jobName,
-                        "05/10/2014 10:08:47")).thenReturn(errors);
-        try {
-            // controller.scheduleOneTimeJob(jobName, "05/10/2014 10:08:47",
-            // paramsMap);
-        } catch (RestException e) {
-            BatchErrors be = e.getBatchException().getError();
-            assertEquals(1001, be.getCode());
-            assertEquals(HttpStatus.BAD_REQUEST, be.getHttpStatus());
-            assertEquals("One or more input parameter(s) may be wrong",
-                    be.getMessage());
-        }
-    }
-
-    @Test
-    public void updateJobPropertyWithValidInputs() {
-        errors.clear();
-        when(batchValidator.validateUpdateInputs(jobName)).thenReturn(errors);
-
-        // controller.updateJobProperty(jobName, paramsMap);
-
-    }
-
 }

@@ -7,7 +7,6 @@
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
     <import resource="classpath*:META-INF/motech/applicationBatch.xml" />
-    <import resource="classpath*:META-INF/motech/hibernateContext.xml" />
 
     <osgi:service ref="jobService"
         interface="org.motechproject.batch.service.JobService" />

@@ -9,15 +9,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public final class BatchUtils {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BatchUtils.class);
 
     private BatchUtils() {
 
     }
-
-    private static final Logger LOGGER = Logger.getLogger(BatchUtils.class);
 
     public static String getNetworkHostName() {
         String hostName = null;

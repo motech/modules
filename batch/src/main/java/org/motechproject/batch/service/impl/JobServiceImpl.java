@@ -35,9 +35,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Class to schedule reschedule jobs or update job parameters
- * 
+ *
  * @author Naveen
- * 
+ *
  */
 
 @Service(value = "jobService")
@@ -61,7 +61,6 @@ public class JobServiceImpl implements JobService {
     }
 
     public JobServiceImpl() {
-        // TODO Auto-generated constructor stub
     }
 
     @Override
@@ -84,7 +83,6 @@ public class JobServiceImpl implements JobService {
                 batchJobDto.setJobId(l);
                 batchJobDto.setJobName(batchJob.getJobName());
                 batchJobDto.setCronExpression(batchJob.getCronExpression());
-                // TODO check whether the fields are coming in the right format
                 batchJobDto
                         .setCreateTime(new DateTime(creationDate.toString()));
                 batchJobDto.setLastUpdated(new DateTime(modDate.toString()));
@@ -279,7 +277,7 @@ public class JobServiceImpl implements JobService {
     /**
      * returns a cron string generated from datetime parameter in the form
      * <code>dd/MM/yyyy HH:mm:ss</code>
-     * 
+     *
      * @param date
      *            date parameter from which cron string mwill be generated
      * @return <code>String</code> representing cron expression

@@ -5,9 +5,9 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 
 /**
  * Custom exception for batch module
- * 
+ *
  * @author naveen
- * 
+ *
  */
 @SuppressWarnings("serial")
 public class BatchException extends Exception {

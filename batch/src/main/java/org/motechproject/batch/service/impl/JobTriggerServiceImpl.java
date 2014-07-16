@@ -15,7 +15,6 @@ import javax.batch.runtime.JobExecution;
 import javax.batch.runtime.JobInstance;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
 import org.motechproject.batch.exception.ApplicationErrors;
 import org.motechproject.batch.exception.BatchException;
 import org.motechproject.batch.mds.BatchJob;
@@ -25,22 +24,28 @@ import org.motechproject.batch.mds.service.BatchJobParameterMDSService;
 import org.motechproject.batch.model.JobExecutionHistoryListDTO;
 import org.motechproject.batch.service.JobTriggerService;
 import org.motechproject.batch.util.BatchConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
  * Class to perform the trigger operation for all types of jobs
- * 
+ *
  * @author Naveen
- * 
+ *
  */
 @Service(value = "jobTriggerService")
 public class JobTriggerServiceImpl implements JobTriggerService {
 
-    private static final Logger LOGGER = Logger
+    private static final Logger LOGGER = LoggerFactory
             .getLogger(JobTriggerServiceImpl.class);
 
     private JobOperator jsrJobOperator;
+
+    private BatchJobParameterMDSService jobParameterRepo;
+
+    private BatchJobMDSService jobRepo;
 
     @Autowired
     public JobTriggerServiceImpl(BatchJobMDSService jobRepo,
@@ -51,10 +56,6 @@ public class JobTriggerServiceImpl implements JobTriggerService {
         this.jsrJobOperator = jsrJobOperator;
 
     }
-
-    private BatchJobParameterMDSService jobParameterRepo;
-
-    private BatchJobMDSService jobRepo;
 
     private Properties getJobParameters(String jobName) throws BatchException {
         List<BatchJob> batchJobList = jobRepo.findByJobName(jobName);
@@ -82,7 +83,7 @@ public class JobTriggerServiceImpl implements JobTriggerService {
 
     @Override
     public long triggerJob(String jobName) throws BatchException {
-        LOGGER.info("Starting executing JOB: " + jobName);
+        LOGGER.info("Starting executing JOB {}", jobName);
 
         Properties jobParameters = getJobParameters(jobName);
 

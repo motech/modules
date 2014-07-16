@@ -9,10 +9,8 @@
                     http://www.springframework.org/schema/batch/spring-batch.xsd
                     http://www.springframework.org/schema/jdbc
                     http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
-                     http://www.springframework.org/schema/context 
+                     http://www.springframework.org/schema/context
                      http://www.springframework.org/schema/context/spring-context.xsd">
-
-
 
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
         destroy-method="close">
@@ -20,7 +18,6 @@
         <property name="url" value="${jdbc.url}" />
         <property name="username" value="${jdbc.username}" />
         <property name="password" value="${jdbc.password}" />
-
     </bean>
 
     <bean id="jobLauncher"
@@ -28,12 +25,9 @@
         p:jobRepository-ref="jobRepository" />
 
     <bean id="batchJobOperator"
-
         class="org.springframework.batch.core.launch.support.SimpleJobOperator"
         p:jobLauncher-ref="jobLauncher" p:jobExplorer-ref="jobExplorer"
         p:jobRepository-ref="jobRepository" p:jobRegistry-ref="jobRegistry" />
-
-
 
     <bean id="jobExplorer"
         class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean"
@@ -54,7 +48,6 @@
     <batch:job-repository data-source="dataSource" id="jobRepository"
         transaction-manager="transactionManager" />
 
-
     <!-- Initialise the database if enabled: -->
     <jdbc:initialize-database data-source="dataSource">
         <jdbc:script location="classpath:schema-mysql.sql" />
@@ -65,17 +58,11 @@
         <constructor-arg ref="dataSource" />
     </bean>
 
-    <!-- <bean id="jobRegistry" class="org.springframework.batch.core.configuration.support.MapJobRegistry"/> -->
-
-    <!-- <context:property-placeholder location="file:${user.home}/.motech/config/batch-springdb.properties" 
-        order="0" ignore-resource-not-found="true" /> <context:property-placeholder 
-        location="classpath:*batch-hsql.properties"/> -->
-
     <bean id="placeholderProperties"
         class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                <value>file:${user.home}/.motech/config/application-batch.properties
+                <value>file:/tmp/application-batch.properties
                 </value>
             </list>
         </property>

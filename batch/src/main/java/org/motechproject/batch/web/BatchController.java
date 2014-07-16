@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.time.StopWatch;
-import org.apache.log4j.Logger;
 import org.motechproject.batch.exception.ApplicationErrors;
 import org.motechproject.batch.exception.BatchError;
 import org.motechproject.batch.exception.BatchException;
@@ -18,6 +17,8 @@ import org.motechproject.batch.service.JobService;
 import org.motechproject.batch.service.JobTriggerService;
 import org.motechproject.batch.util.BatchConstants;
 import org.motechproject.batch.validation.BatchValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -31,19 +32,25 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * Controller class to perform all the batch job operations
- * 
+ *
  * @author Naveen
- * 
+ *
  */
 @Controller
 @RequestMapping("/")
 public class BatchController {
 
-    private static final Logger LOGGER = Logger
+    private static final Logger LOGGER = LoggerFactory
             .getLogger(BatchController.class);
 
     @Autowired
     private JobService jobService;
+
+    @Autowired
+    private JobTriggerService jobTriggerService;
+
+    @Autowired
+    private BatchValidator batchValidator;
 
     public JobService getJobService() {
         return jobService;
@@ -53,9 +60,6 @@ public class BatchController {
         this.jobService = jobService;
     }
 
-    @Autowired
-    private JobTriggerService jobTriggerService;
-
     public JobTriggerService getJobTriggerService() {
         return jobTriggerService;
     }
@@ -63,9 +67,6 @@ public class BatchController {
     public void setJobTriggerService(JobTriggerService jobTriggerService) {
         this.jobTriggerService = jobTriggerService;
     }
-
-    @Autowired
-    private BatchValidator batchValidator;
 
     public BatchValidator getBatchValidator() {
         return batchValidator;
@@ -77,7 +78,7 @@ public class BatchController {
 
     /**
      * To get list of all the scheduled jobs
-     * 
+     *
      * @return List of BatchJob.
      */
     @ResponseStatus(value = HttpStatus.OK)
@@ -95,9 +96,9 @@ public class BatchController {
             LOGGER.error("Error occured while processing request to get list of jobs");
             throw new RestException(e, e.getMessage());
         } finally {
-            LOGGER.info(String
-                    .format("Request to get list of batch jobs ended. Time taken (ms) = %d",
-                            sw.getTime()));
+            LOGGER.info(
+                    "Request to get list of batch jobs ended. Time taken (ms) = {}",
+                    sw.getTime());
             sw.stop();
         }
 
@@ -108,8 +109,8 @@ public class BatchController {
     @ResponseBody
     public JobExecutionHistoryListDTO getjobHistoryList(
             @RequestParam(value = BatchConstants.JOB_NAME_REQUEST_PARAM) String jobName) {
-        LOGGER.info(String.format(
-                "Request to get execution history of job %s started", jobName));
+        LOGGER.info("Request to get execution history of job {} started",
+                jobName);
         StopWatch sw = new StopWatch();
         sw.start();
         JobExecutionHistoryListDTO jobExecutionHistoryList = null;
@@ -124,14 +125,14 @@ public class BatchController {
                     .getJObExecutionHistory(jobName);
             return jobExecutionHistoryList;
         } catch (BatchException e) {
-            LOGGER.error(String
-                    .format("Error occured while processing request to get execution history for job %s",
-                            jobName));
+            LOGGER.error(
+                    "Error occured while processing request to get execution history for job {}",
+                    jobName);
             throw new RestException(e, e.getMessage());
         } finally {
-            LOGGER.info(String
-                    .format("Request to get execution history for job %s ended. Time taken (ms) = %d",
-                            jobName, sw.getTime()));
+            LOGGER.info(
+                    "Request to get execution history for job {} ended. Time taken (ms) = {}",
+                    jobName, sw.getTime());
             sw.stop();
         }
 
@@ -143,8 +144,7 @@ public class BatchController {
     public long triggerJob(
             @RequestParam(BatchConstants.JOB_NAME_REQUEST_PARAM) String jobName) {
 
-        LOGGER.info(String.format("Request to trigger the job %s started",
-                jobName));
+        LOGGER.info("Request to trigger the job {} started", jobName);
         StopWatch sw = new StopWatch();
         sw.start();
         try {
@@ -155,14 +155,14 @@ public class BatchController {
             }
             return jobTriggerService.triggerJob(jobName);
         } catch (BatchException e) {
-            LOGGER.error(String.format(
-                    "Error occured while processing request to trigger job %s",
-                    jobName));
+            LOGGER.error(
+                    "Error occured while processing request to trigger job {}",
+                    jobName);
             throw new RestException(e, e.getMessage());
         } finally {
-            LOGGER.info(String
-                    .format("Request to trigger the job %s ended. Time taken (ms) = %d ",
-                            jobName, sw.getTime()));
+            LOGGER.info(
+                    "Request to trigger the job {} ended. Time taken (ms) = {} ",
+                    jobName, sw.getTime());
             sw.stop();
         }
     }
@@ -170,12 +170,13 @@ public class BatchController {
     /**
      * Schedule a cron job given job name, cron expression and parameters for
      * the job
-     * 
+     *
      * @param jobName
      *            jobName for the job to be scheduled
      * @param cronExpression
      *            cron expression for the job
      * @param paramsMap
+     *
      * @throws BatchException
      */
     @ResponseStatus(value = HttpStatus.OK)
@@ -196,14 +197,14 @@ public class BatchController {
             }
             jobService.scheduleJob(params);
         } catch (BatchException e) {
-            LOGGER.error(String
-                    .format("Error occured while processing request to schedule a cron job for job %s with cron expression %s",
-                            params.getJobName(), params.getCronExpression()));
+            LOGGER.error(
+                    "Error occured while processing request to schedule a cron job for job {} with cron expression {}",
+                    params.getJobName(), params.getCronExpression());
             throw new RestException(e, e.getMessage());
         } finally {
-            LOGGER.info(String
-                    .format("Request to schedule a cron job for job %s ended. Time taken (ms) = %d",
-                            params.getJobName(), sw.getTime()));
+            LOGGER.info(
+                    "Request to schedule a cron job for job {} ended. Time taken (ms) = {}",
+                    params.getJobName(), sw.getTime());
             sw.stop();
         }
 
@@ -211,12 +212,13 @@ public class BatchController {
 
     /**
      * Reschedule a cron job given job name, cron expression
-     * 
+     *
      * @param jobName
      *            jobName for the job to be rescheduled
      * @param cronExpression
      *            cron expression for the job
      * @param paramsMap
+     *
      * @throws BatchException
      */
     @ResponseStatus(value = HttpStatus.OK)
@@ -226,9 +228,9 @@ public class BatchController {
             @RequestParam(value = BatchConstants.JOB_NAME_REQUEST_PARAM) String jobName,
             @RequestParam("cronExpression") String cronExpression) {
 
-        LOGGER.info(String
-                .format("Request to reschedule a cron job for job %s with cron expression %s started",
-                        jobName, cronExpression));
+        LOGGER.info(
+                "Request to reschedule a cron job for job {} with cron expression {} started",
+                jobName, cronExpression);
         StopWatch sw = new StopWatch();
         sw.start();
         try {
@@ -241,14 +243,14 @@ public class BatchController {
             }
             jobService.rescheduleJob(jobName, cronExpression);
         } catch (BatchException e) {
-            LOGGER.error(String
-                    .format("Error occured while processing request to schedule a cron job for job %s with cron expression %s",
-                            jobName, cronExpression));
+            LOGGER.error(
+                    "Error occured while processing request to schedule a cron job for job {} with cron expression {}",
+                    jobName, cronExpression);
             throw new RestException(e, e.getMessage());
         } finally {
-            LOGGER.info(String
-                    .format("Request to reschedule a cron job for job %s ended. Time taken (ms) = %d",
-                            jobName, sw.getTime()));
+            LOGGER.info(
+                    "Request to reschedule a cron job for job {} ended. Time taken (ms) = {}",
+                    jobName, sw.getTime());
             sw.stop();
         }
 
@@ -256,9 +258,10 @@ public class BatchController {
 
     /**
      * Unschedule a cron job given job name
-     * 
+     *
      * @param jobName
      *            jobName for the job to be rescheduled
+     *
      * @throws BatchException
      */
     @ResponseStatus(value = HttpStatus.OK)
@@ -267,9 +270,8 @@ public class BatchController {
     public void unscheduleJob(
             @RequestParam(value = BatchConstants.JOB_NAME_REQUEST_PARAM) String jobName) {
 
-        LOGGER.info(String
-                .format("Request to unschedule a cron job for job %s with cron expression %s started",
-                        jobName));
+        LOGGER.info("Request to unschedule a cron job for job {} started",
+                jobName);
         StopWatch sw = new StopWatch();
         sw.start();
         try {
@@ -281,14 +283,14 @@ public class BatchController {
             }
             jobService.unscheduleJob(jobName);
         } catch (BatchException e) {
-            LOGGER.error(String
-                    .format("Error occured while processing request to unschedule a  job for job %s with cron expression %s",
-                            jobName));
+            LOGGER.error(
+                    "Error occured while processing request to unschedule the job {}",
+                    jobName);
             throw new RestException(e, e.getMessage());
         } finally {
-            LOGGER.info(String
-                    .format("Request to reschedule a cron job for job %s ended. Time taken (ms) = %d",
-                            jobName, sw.getTime()));
+            LOGGER.info(
+                    "Request to reschedule a cron job for job {} ended. Time taken (ms) = {}",
+                    jobName, sw.getTime());
             sw.stop();
         }
 
@@ -296,7 +298,7 @@ public class BatchController {
 
     /**
      * schedules a job to be run at one particular time in future
-     * 
+     *
      * @param jobName
      *            jobName for the job to be scheduled
      * @param date
@@ -304,15 +306,16 @@ public class BatchController {
      * @param paramsMap
      *            List of parameters which needs to be passed when we run the
      *            job
+     *
      * @throws BatchException
      */
     @ResponseStatus(value = HttpStatus.OK)
     @RequestMapping(value = "/scheduleonetimejob", method = RequestMethod.POST)
     @ResponseBody
     public void scheduleOneTimeJob(@RequestBody OneTimeJobScheduleParams params) {
-        LOGGER.info(String
-                .format("Request to schedule one time job for job %s with date %s started",
-                        params.getJobName(), params.getDate()));
+        LOGGER.info(
+                "Request to schedule one time job for job {} with date {} started",
+                params.getJobName(), params.getDate());
         StopWatch sw = new StopWatch();
         sw.start();
 
@@ -326,14 +329,14 @@ public class BatchController {
             }
             jobService.scheduleOneTimeJob(params);
         } catch (BatchException e) {
-            LOGGER.error(String
-                    .format("Error occured while processing request to schedule one time job for job %s with date %s started",
-                            params.getJobName(), params.getDate()));
+            LOGGER.error(
+                    "Error occured while processing request to schedule one time job for job {} with date {}",
+                    params.getJobName(), params.getDate());
             throw new RestException(e, e.getMessage());
         } finally {
-            LOGGER.info(String
-                    .format("Request to schedule one time job for job %s ended. Time taken (ms) = %d",
-                            params.getJobName(), sw.getTime()));
+            LOGGER.info(
+                    "Request to schedule one time job for job {} ended. Time taken (ms) = {}",
+                    params.getJobName(), sw.getTime());
             sw.stop();
         }
 
@@ -341,7 +344,7 @@ public class BatchController {
 
     /**
      * Update the parameter list for the job
-     * 
+     *
      * @param jobName
      *            for which parameters needs to be updated
      * @param paramsMap
@@ -351,9 +354,8 @@ public class BatchController {
     @RequestMapping(value = "/updatejobproperty", method = RequestMethod.POST)
     @ResponseBody
     public void updateJobProperty(@RequestBody OneTimeJobScheduleParams params) {
-        LOGGER.info(String.format(
-                "Request to update job properties for job %s started",
-                params.getJobName()));
+        LOGGER.info("Request to update job properties for job {} started",
+                params.getJobName());
         StopWatch sw = new StopWatch();
         sw.start();
         try {
@@ -367,14 +369,14 @@ public class BatchController {
             jobService.updateJobProperty(params.getJobName(),
                     params.getParamsMap());
         } catch (BatchException e) {
-            LOGGER.error(String
-                    .format("Error occured while processing request to update job properties for job %s",
-                            params.getJobName()));
+            LOGGER.error(
+                    "Error occured while processing request to update job properties for job {}",
+                    params.getJobName());
             throw new RestException(e, e.getMessage());
         } finally {
-            LOGGER.info(String
-                    .format("Request to update job properties for job %s ended. Time taken (ms) = %d",
-                            params.getJobName(), sw.getTime()));
+            LOGGER.info(
+                    "Request to update job properties for job {} ended. Time taken (ms) = {}",
+                    params.getJobName(), sw.getTime());
             sw.stop();
         }
 
@@ -382,10 +384,9 @@ public class BatchController {
 
     /**
      * It is custom exception to be thrown
-     * 
+     *
      * @param ex
      * @param response
-     * @return
      */
     @ExceptionHandler(value = { RestException.class })
     @ResponseBody
@@ -413,9 +414,8 @@ public class BatchController {
             @RequestParam(value = BatchConstants.JOB_NAME_REQUEST_PARAM) String jobName,
             @RequestParam("executionId") Integer executionId) {
 
-        LOGGER.info(String.format(
-                "Request to restart the execution %d for job %s started",
-                executionId, jobName));
+        LOGGER.info("Request to restart the execution {} for job {} started",
+                executionId, jobName);
         StopWatch sw = new StopWatch();
         sw.start();
         try {
@@ -425,17 +425,15 @@ public class BatchController {
             LOGGER.error(e.getMessage());
             throw new RestException(e, e.getMessage());
         } finally {
-            LOGGER.info(String
-                    .format("Request to restart the execution %d  for job %s ended . Time taken (ms) = %d ",
-                            executionId, jobName, sw.getTime()));
+            LOGGER.info(
+                    "Request to restart the execution {} for job {} ended . Time taken (ms) = {}",
+                    new Object[] { executionId, jobName, sw.getTime() });
             sw.stop();
         }
     }
 
     /**
-     * Ping method to test if application is up. To be removed
-     * 
-     * @return
+     * Ping method to test if application is up
      */
     @RequestMapping("/ping")
     @ResponseBody

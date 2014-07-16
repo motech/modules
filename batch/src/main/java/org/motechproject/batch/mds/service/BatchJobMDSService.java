@@ -9,7 +9,7 @@ import org.motechproject.mds.service.MotechDataService;
 
 /**
  * Class to query BatchJob entity
- * 
+ *
  */
 public interface BatchJobMDSService extends MotechDataService<BatchJob> {
 

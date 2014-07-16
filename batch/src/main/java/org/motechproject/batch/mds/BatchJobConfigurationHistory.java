@@ -9,7 +9,7 @@ import org.motechproject.mds.annotations.Field;
 @Entity
 public class BatchJobConfigurationHistory implements java.io.Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 7878415051804848642L;
 
     @Field(required = true)
     private Integer batchJobId;

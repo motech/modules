@@ -22,31 +22,30 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class BatchJobMDSServiceIT extends BasePaxIT {
 
-	@Inject
-	private BatchJobMDSService batchJobMDSService;
-	private String jobName = "randomJob";
+    @Inject
+    private BatchJobMDSService batchJobMDSService;
 
-	@Test
-	public void testBatchJob() {
-		List<BatchJob> batchJobs = batchJobMDSService.findByJobName(jobName);
-		Assert.assertNotNull(batchJobs);
-		Assert.assertEquals(0, batchJobs.size());
+    private String jobName = "randomJob";
 
-		BatchJob batchJob = new BatchJob();
-		batchJob.setJobName(jobName);
-		batchJob.setCronExpression("0 15 10 * * ? 2020");
-		batchJob.setBatchJobStatusId(1);
-		batchJobMDSService.create(batchJob);
+    @Test
+    public void testBatchJob() {
+        List<BatchJob> batchJobs = batchJobMDSService.findByJobName(jobName);
+        Assert.assertNotNull(batchJobs);
+        Assert.assertEquals(0, batchJobs.size());
 
-		batchJobs = batchJobMDSService.findByJobName(jobName);
-		Assert.assertNotNull(batchJobs);
-		Assert.assertEquals(1, batchJobs.size());
+        BatchJob batchJob = new BatchJob();
+        batchJob.setJobName(jobName);
+        batchJob.setCronExpression("0 15 10 * * ? 2020");
+        batchJob.setBatchJobStatusId(1);
+        batchJobMDSService.create(batchJob);
 
-	}
+        batchJobs = batchJobMDSService.findByJobName(jobName);
+        Assert.assertNotNull(batchJobs);
+        Assert.assertEquals(1, batchJobs.size());
+    }
 
-	@After
-	public void tearDown() {
-		batchJobMDSService.deleteAll();
-	}
-
+    @After
+    public void tearDown() {
+        batchJobMDSService.deleteAll();
+    }
 }
