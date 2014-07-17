@@ -7,5 +7,5 @@ public enum ActivityState {
     NONE,
     STARTED,
     INPROGRESS,
-    FINISHED,
+    COMPLETED,
 }

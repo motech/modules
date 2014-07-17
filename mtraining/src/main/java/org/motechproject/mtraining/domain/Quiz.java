@@ -18,9 +18,9 @@ public class Quiz {
     private List<Question> questions;
 
     @Field
-    private double passPercentage;
+    private Double passPercentage;
 
-    public Quiz(String name, List<Question> questions, double passPercentage) {
+    public Quiz(String name, List<Question> questions, Double passPercentage) {
         this.name = name;
         this.questions = questions;
         this.passPercentage = passPercentage;
@@ -51,7 +51,7 @@ public class Quiz {
         return passPercentage;
     }
 
-    public void setPassPercentage(double passPercentage) {
+    public void setPassPercentage(Double passPercentage) {
 
         this.passPercentage = passPercentage;
     }

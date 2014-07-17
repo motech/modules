@@ -46,7 +46,7 @@ public interface MTrainingService {
 
     /**
      * Delete the course with the given id
-     * @param courseId
+     * @param courseId ID of the course to delete
      */
     void deleteCourse(long courseId);
 
@@ -54,28 +54,76 @@ public interface MTrainingService {
      * Chapter CRUD
      */
 
+    /**
+     * Create a chapter
+     * @param chapter chapter to create
+     * @return chapter created in the store
+     */
     Chapter createChapter(Chapter chapter);
 
+    /**
+     * Get chapter from store by ID
+     * @param chapterId the chapter ID
+     * @return Chapter with id
+     */
     Chapter getChapterById(long chapterId);
 
+    /**
+     *  Get chapter by name
+     * @param chapterName name of the chapter
+     * @return list of chapters with matching name
+     */
     List<Chapter> getChapterByName(String chapterName);
 
+    /**
+     * Update a given chapter
+     * @param chapter chapter to update
+     * @return updated chapter from the store
+     */
     Chapter updateChapter(Chapter chapter);
 
+    /**
+     * Delete a chapter by id
+     * @param chapterId id of the chapter to delete
+     */
     void deleteChapter(long chapterId);
 
     /**
      * Lesson CRUD
      */
 
+    /**
+     * Create a lesson
+     * @param lesson lesson to create in store
+     * @return stored lesson from store
+     */
     Lesson createLesson(Lesson lesson);
 
+    /**
+     * get lesson by name
+     * @param lessonName name of the lesson
+     * @return list of lessons with matching name
+     */
     List<Lesson> getLessonByName(String lessonName);
 
+    /**
+     * get lesson by id
+     * @param id id of the lesson
+     * @return lesson with id
+     */
     Lesson getLessonById(long id);
 
+    /**
+     * update a lesson in the store
+     * @param lesson lesson to update
+     * @return updated lesson from store
+     */
     Lesson updateLesson(Lesson lesson);
 
+    /**
+     * delete a lesson with a given id
+     * @param lessonId id of the lesson to delete
+     */
     void deleteLesson(long lessonId);
 
     /**

@@ -14,11 +14,10 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import javax.inject.Inject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 /**
  * Verify that bookmark service is present and functional
@@ -64,5 +63,12 @@ public class BookmarkServiceIT extends BasePaxIT {
         Map<String, Object> storedProgress = newbie.getProgress();
         assertEquals(storedProgress.get("ResumeTime"), "0:20:25");
 
+    }
+
+    @Test
+    public void testGetAllBookmarks() throws Exception {
+        bookmarkService.createBookmark(new Bookmark("123456", "MyCourse", "MyChapter", null, null));
+        List<Bookmark> retrieved = bookmarkService.getAllBookmarksForUser("123456");
+        assertTrue(retrieved.size() > 0);
     }
 }

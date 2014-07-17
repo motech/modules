@@ -39,6 +39,9 @@ public class ActivityRecord extends MdsEntity {
     @Field
     private ActivityState state;
 
+    public ActivityRecord() {
+    }
+
     public ActivityRecord(String externalId, String courseName, String chapterName, String lessonName, DateTime startTime,
                           DateTime completionTime, ActivityState state) {
         this(externalId, courseName, chapterName, lessonName, null, null, startTime, completionTime, state);
@@ -105,11 +108,11 @@ public class ActivityRecord extends MdsEntity {
         this.quizName = quizName;
     }
 
-    public double getQuizScore() {
+    public Double getQuizScore() {
         return quizScore;
     }
 
-    public void setQuizScore(double quizScore) {
+    public void setQuizScore(Double quizScore) {
         this.quizScore = quizScore;
     }
 

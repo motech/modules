@@ -11,7 +11,7 @@ import org.motechproject.mds.annotations.Field;
 public abstract class MdsEntity {
 
     @Field
-    private Long id;
+    private long id;
 
     @Field
     private DateTime creationDate;
@@ -19,7 +19,7 @@ public abstract class MdsEntity {
     @Field
     private DateTime modificationDate;
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 

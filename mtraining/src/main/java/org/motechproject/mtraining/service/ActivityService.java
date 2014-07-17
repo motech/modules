@@ -14,7 +14,7 @@ public interface ActivityService {
      * @param activityRecord activity to record
      * @return activity record from the operation
      */
-    ActivityRecord addActivity(ActivityRecord activityRecord);
+    ActivityRecord createActivity(ActivityRecord activityRecord);
 
     /**
      * Update the activity for a user (set completion time, etc)
@@ -28,7 +28,7 @@ public interface ActivityService {
      * @param externalId Id of the user
      * @return list of activity records
      */
-    List<ActivityRecord> findActivityForUser(String externalId);
+    List<ActivityRecord> getActivityForUser(String externalId);
 
     /**
      * Get all completed activity for user identified by external id (decided by

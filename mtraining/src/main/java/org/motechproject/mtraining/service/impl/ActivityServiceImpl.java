@@ -24,7 +24,7 @@ public class ActivityServiceImpl implements ActivityService {
      * @return activity record from the operation
      */
     @Override
-    public ActivityRecord addActivity(ActivityRecord activityRecord) {
+    public ActivityRecord createActivity(ActivityRecord activityRecord) {
         return activityDataService.create(activityRecord);
     }
 
@@ -44,7 +44,7 @@ public class ActivityServiceImpl implements ActivityService {
      * @return list of activity records
      */
     @Override
-    public List<ActivityRecord> findActivityForUser(String externalId) {
+    public List<ActivityRecord> getActivityForUser(String externalId) {
         return activityDataService.findRecordsForUser(externalId);
     }
 
@@ -56,7 +56,7 @@ public class ActivityServiceImpl implements ActivityService {
      */
     @Override
     public List<ActivityRecord> getCompletedActivityForUser(String externalId) {
-        return activityDataService.findCompletedRecordsForUser(externalId, ActivityState.FINISHED);
+        return activityDataService.findCompletedRecordsForUser(externalId, ActivityState.COMPLETED);
     }
 
     /**
@@ -65,6 +65,7 @@ public class ActivityServiceImpl implements ActivityService {
      */
     @Override
     public void deleteActivity(long activityRecordId) {
+
         activityDataService.delete("id", activityRecordId);
     }
 
@@ -74,6 +75,7 @@ public class ActivityServiceImpl implements ActivityService {
      */
     @Override
     public void deleteActivityForUser(String externalId) {
+
         activityDataService.delete("externalId", externalId);
     }
 }
