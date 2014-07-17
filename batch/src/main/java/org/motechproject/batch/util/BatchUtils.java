@@ -4,11 +4,10 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 
+import org.motechproject.commons.date.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,15 +53,6 @@ public final class BatchUtils {
     }
 
     public static Date getCurrentDateTime() {
-        SimpleDateFormat format = new SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss.mmm");
-        String dateTime = format.format(new Date());
-        Date date;
-        try {
-            date = format.parse(dateTime);
-        } catch (ParseException e) {
-            date = null;
-        }
-        return date;
+        return DateUtil.now().toDate();
     }
 }

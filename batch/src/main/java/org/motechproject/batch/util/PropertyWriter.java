@@ -20,13 +20,10 @@ public class PropertyWriter {
             .getLogger(PropertyWriter.class);
 
     public PropertyWriter(String fileName, Properties props) {
-        FileWriter w;
-        try {
-            w = new FileWriter(fileName);
+        try (FileWriter w = new FileWriter(fileName)) {
             props.store(w, "FromSqlDbManager");
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }
-
     }
 }
