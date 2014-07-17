@@ -9,7 +9,7 @@ import java.util.Map;
  * Bookmark object to store the progress for the user
  */
 @Entity
-public class Bookmark {
+public class Bookmark extends MdsEntity {
 
     /**
      * external id used by implementation to track user

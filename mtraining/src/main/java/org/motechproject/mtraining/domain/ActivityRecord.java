@@ -10,7 +10,7 @@ import org.motechproject.mds.annotations.Field;
  * This could be used either as a bookmarking system or enrollment system to track progress
  */
 @Entity
-public class ActivityRecord {
+public class ActivityRecord extends MdsEntity {
 
     @Field
     private String externalId;
@@ -39,7 +39,9 @@ public class ActivityRecord {
     @Field
     private ActivityState state;
 
-    public ActivityRecord() {
+    public ActivityRecord(String externalId, String courseName, String chapterName, String lessonName, DateTime startTime,
+                          DateTime completionTime, ActivityState state) {
+        this(externalId, courseName, chapterName, lessonName, null, null, startTime, completionTime, state);
     }
 
     public ActivityRecord(String externalId, String courseName, String chapterName, String lessonName, String quizName,

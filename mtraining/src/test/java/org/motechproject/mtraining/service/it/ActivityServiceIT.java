@@ -1,7 +1,10 @@
 package org.motechproject.mtraining.service.it;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.mtraining.domain.ActivityRecord;
+import org.motechproject.mtraining.domain.ActivityState;
 import org.motechproject.mtraining.service.ActivityService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -28,6 +31,15 @@ public class ActivityServiceIT extends BasePaxIT {
 
     @Test
     public void testActivityServiceInstance() throws Exception {
+
         assertNotNull(activityService);
+    }
+
+    @Test
+    public void testActivityCreation() throws Exception {
+        ActivityRecord ar = activityService.addActivity(new ActivityRecord("12345", "MyCourse", "MyChapter", "MyLesson",
+                DateTime.now(), null, ActivityState.STARTED));
+
+        assertNotNull(ar);
     }
 }
