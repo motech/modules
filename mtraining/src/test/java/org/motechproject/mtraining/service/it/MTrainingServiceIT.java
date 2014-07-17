@@ -88,10 +88,16 @@ public class MTrainingServiceIT extends BasePaxIT {
 
     @Test
     public void testCourseLookup() throws Exception {
-        int courseCount = mTrainingService.getCourseByName("testCourseLookup").size();
-        mTrainingService.createCourse(generateFullCourse("testCourseLookup"));
-        List<Course> lookup = mTrainingService.getCourseByName("testCourseLookup");
-        assertEquals(courseCount + 1, lookup.size());
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+            int courseCount = mTrainingService.getCourseByName("testCourseLookup").size();
+            mTrainingService.createCourse(generateFullCourse("testCourseLookup"));
+            List<Course> lookup = mTrainingService.getCourseByName("testCourseLookup");
+            assertEquals(courseCount + 1, lookup.size());
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
+        }
     }
 
     private Course generateFullCourse(String courseName) {

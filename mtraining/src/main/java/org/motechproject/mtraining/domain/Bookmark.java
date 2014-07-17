@@ -44,7 +44,7 @@ public class Bookmark extends MdsEntity {
 
     public Bookmark() {
     }
-    
+
     public Bookmark(String externalId, String courseIdentifier, String chapterIdentifier, String lessonIdentifier, Map<String, Object> progress) {
         this.externalId = externalId;
         this.courseIdentifier = courseIdentifier;

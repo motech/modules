@@ -41,47 +41,71 @@ public class ActivityServiceIT extends BasePaxIT {
 
     @Test
     public void testActivityCreation() throws Exception {
-        ActivityRecord ar = activityService.createActivity(new ActivityRecord("12345", "MyCourse", "MyChapter", "MyLesson",
-                DateTime.now(), null, ActivityState.STARTED));
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+            ActivityRecord ar = activityService.createActivity(new ActivityRecord("12345", "MyCourse", "MyChapter", "MyLesson",
+                    DateTime.now(), null, ActivityState.STARTED));
 
-        assertNotNull(ar);
+            assertNotNull(ar);
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
+        }
     }
 
     @Test
     public void testActivityQuizCreation() throws Exception {
-        ActivityRecord ar = activityService.createActivity(new ActivityRecord("1222245", "MyCourse", "MyChapter", "MyLesson", "MyQuiz", 89.9,
-                DateTime.now(), DateTime.now().plusDays(1), ActivityState.STARTED));
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+            ActivityRecord ar = activityService.createActivity(new ActivityRecord("1222245", "MyCourse", "MyChapter", "MyLesson", "MyQuiz", 89.9,
+                    DateTime.now(), DateTime.now().plusDays(1), ActivityState.STARTED));
 
-        assertNotNull(ar);
-        assertTrue(89.9 == ar.getQuizScore());
+            assertNotNull(ar);
+            assertTrue(89.9 == ar.getQuizScore());
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
+        }
     }
 
     @Test
     public void testAllActivityForUser() throws Exception {
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
 
-        int previousActivity = activityService.getActivityForUser("2222").size();
+            int previousActivity = activityService.getActivityForUser("2222").size();
 
-        activityService.createActivity(new ActivityRecord("2222", "MyCourse", "MyChapter", "MyLesson1", "MyQuiz", 89.9,
-                DateTime.now(), null, ActivityState.STARTED));
-        activityService.createActivity(new ActivityRecord("2222", "MyCourse", "MyChapter", "MyLesson2", "MyQuiz", 89.9,
-                DateTime.now(), null, ActivityState.STARTED));
-        activityService.createActivity(new ActivityRecord("2222", "MyCourse", "MyChapter", "MyLesson3", "MyQuiz", 89.9,
-                DateTime.now(), null, ActivityState.STARTED));
-        activityService.createActivity(new ActivityRecord("2222", "MyCourse", "MyChapter", "MyLesson4", "MyQuiz", 89.9,
-                DateTime.now(), null, ActivityState.STARTED));
+            activityService.createActivity(new ActivityRecord("2222", "MyCourse", "MyChapter", "MyLesson1", "MyQuiz", 89.9,
+                    DateTime.now(), null, ActivityState.STARTED));
+            activityService.createActivity(new ActivityRecord("2222", "MyCourse", "MyChapter", "MyLesson2", "MyQuiz", 89.9,
+                    DateTime.now(), null, ActivityState.STARTED));
+            activityService.createActivity(new ActivityRecord("2222", "MyCourse", "MyChapter", "MyLesson3", "MyQuiz", 89.9,
+                    DateTime.now(), null, ActivityState.STARTED));
+            activityService.createActivity(new ActivityRecord("2222", "MyCourse", "MyChapter", "MyLesson4", "MyQuiz", 89.9,
+                    DateTime.now(), null, ActivityState.STARTED));
 
-        List<ActivityRecord> latestActivity = activityService.getActivityForUser("2222");
-        assertEquals(previousActivity + 4, latestActivity.size());
+            List<ActivityRecord> latestActivity = activityService.getActivityForUser("2222");
+            assertEquals(previousActivity + 4, latestActivity.size());
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
+        }
     }
 
     @Test
     public void testCompletedActivityForUser() throws Exception {
-        int previousCompleted = activityService.getCompletedActivityForUser("3333").size();
-        activityService.createActivity(new ActivityRecord("3333", "MyCourse", "MyChapter", "MyLesson1", "MyQuiz", 89.9,
-                DateTime.now(), DateTime.now().plusDays(1), ActivityState.COMPLETED));
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+            int previousCompleted = activityService.getCompletedActivityForUser("3333").size();
+            activityService.createActivity(new ActivityRecord("3333", "MyCourse", "MyChapter", "MyLesson1", "MyQuiz", 89.9,
+                    DateTime.now(), DateTime.now().plusDays(1), ActivityState.COMPLETED));
 
-        List<ActivityRecord> ca = activityService.getCompletedActivityForUser("3333");
+            List<ActivityRecord> ca = activityService.getCompletedActivityForUser("3333");
 
-        assertEquals(previousCompleted + 1, ca.size());
+            assertEquals(previousCompleted + 1, ca.size());
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
+        }
     }
 }
