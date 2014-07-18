@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -18,19 +17,38 @@
     <properties>
         <motech.groupId>org.motechproject</motech.groupId>
         <motech.version>0.24-SNAPSHOT</motech.version>
+
         <db.server>localhost</db.server>
         <db.port>5984</db.port>
         <db.prefix>${user.name}_</db.prefix>
+
         <jasmine.server.port>8234</jasmine.server.port>
+
         <external.dependency.release.tag>r027</external.dependency.release.tag>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <modules.root.dir>${basedir}</modules.root.dir>
         <jdk.version>1.7</jdk.version>
+
         <spring.version>3.1.0.RELEASE</spring.version>
         <spring.security.version>${spring.version}</spring.security.version>
         <spring.integration.version>2.1.0.RELEASE</spring.integration.version>
-        <spring.batch.version>3.0.0.M3-r027</spring.batch.version>
+
         <activemq.version>5.4.2-${external.dependency.release.tag}</activemq.version>
+
+        <exam.version>3.4.0</exam.version>
+
+        <check.code.skip>${maven.test.skip}</check.code.skip>
+        <pmd.skip>${check.code.skip}</pmd.skip>
+        <checkstyle.skip>${check.code.skip}</checkstyle.skip>
+        <enforcer.skip>${check.code.skip}</enforcer.skip>
+        <jslint.enable>true</jslint.enable>
+        <unitTests.skip>${skipTests}</unitTests.skip>
+        
+        <scm.connection>scm:git:https://github.com/motech/modules.git</scm.connection>
+        <scm.developerConnection>scm:git:https://github.com/motech/modules.git</scm.developerConnection>
+        <scm.url>https://github.com/motech/modules</scm.url>
+        
+        <spring.batch.version>3.0.0.M3-r027</spring.batch.version>
         <hsqldb.version>1.8.0.9</hsqldb.version>
         <javax.persistence.version>2.1.0</javax.persistence.version>
         <javax.persistence.version>2.1.0</javax.persistence.version>
@@ -53,16 +71,6 @@
         <codehaus.groovy.version>1.8.9</codehaus.groovy.version>
         <javax.el.version>2.2.5</javax.el.version>
         <spring.osgi.core.version>1.2.1</spring.osgi.core.version>
-        <exam.version>3.4.0</exam.version>
-        <check.code.skip>${maven.test.skip}</check.code.skip>
-        <pmd.skip>${check.code.skip}</pmd.skip>
-        <checkstyle.skip>${check.code.skip}</checkstyle.skip>
-        <enforcer.skip>${check.code.skip}</enforcer.skip>
-        <jslint.enable>true</jslint.enable>
-        <unitTests.skip>${skipTests}</unitTests.skip>
-        <scm.connection>scm:git:https://github.com/motech/modules.git</scm.connection>
-        <scm.developerConnection>scm:git:https://github.com/motech/modules.git</scm.developerConnection>
-        <scm.url>https://github.com/motech/modules</scm.url>
     </properties>
 
     <dependencies>
@@ -1118,6 +1126,7 @@
         <module>mtraining</module>
         <module>sms</module>
         <module>message-campaign</module>
+        <module>openmrs-19</module>
         <module>pill-reminder</module>
         <module>schedule-tracking</module>
         <module>batch</module>
@@ -1307,7 +1316,7 @@
                         </goals>
                         <configuration>
                             <rules>
-                                <DependencyConvergence />
+                                <DependencyConvergence/>
                             </rules>
                         </configuration>
                     </execution>
@@ -1319,7 +1328,7 @@
                         <phase>verify</phase>
                         <configuration>
                             <rules>
-                                <NoPackageCyclesRule implementation="PackageCycles" />
+                                <NoPackageCyclesRule implementation="PackageCycles"/>
                             </rules>
                             <skip>${enforcer.skip}</skip>
                         </configuration>
@@ -1450,8 +1459,10 @@
                             <password>${mysql.password}</password>
                             <url>jdbc:mysql://localhost:3306</url>
                         </configuration>
-                        <!-- For each Bundle IT tests in modules migrated to MDS the 'motech_data_services' 
-                            database has to be dropped and created again. -->
+                        <!--
+                            For each Bundle IT tests in modules migrated to MDS the
+                            'motech_data_services' database has to be dropped and created again.
+                        -->
                         <executions>
                             <execution>
                                 <id>drop-db</id>
@@ -1614,4 +1625,3 @@
         <tag>HEAD</tag>
     </scm>
 </project>
-

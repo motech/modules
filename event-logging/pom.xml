@@ -62,9 +62,6 @@
                             org.motechproject.eventlogging.service;version=${project.version}
                         </Export-Package>
                         <Import-Package>
-                            org.ektorp.impl,
-                            org.ektorp.spring,
-                            org.ektorp.support,
                             org.motechproject.event,
                             org.motechproject.event.listener.annotations,
                             org.motechproject.server.config,
