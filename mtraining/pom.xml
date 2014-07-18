@@ -74,6 +74,7 @@
                         <Context-File>META-INF/motech/applicationContext.xml</Context-File>
                         <Export-Package>
                             org.motechproject.mtraining.service;version=${project.version},
+                            org.motechproject.mtraining.service.impl;version=${project.version},
                             org.motechproject.mtraining.repository;version=${project.version},
                             org.motechproject.mtraining.domain;version=${project.version}
                         </Export-Package>
