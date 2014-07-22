@@ -127,6 +127,44 @@ public interface MTrainingService {
     void deleteLesson(long lessonId);
 
     /**
+     * Quiz CRUD
+     */
+
+    /**
+     * Create a quiz
+     * @param quiz New quiz object to store
+     * @return quiz object from store
+     */
+    Quiz createQuiz(Quiz quiz);
+
+    /**
+     * Get a quiz by a name
+     * @param quizName name of the quiz
+     * @return list of quiz objects with the given name
+     */
+    List<Quiz> getQuizByName(String quizName);
+
+    /**
+     * Get a quiz by id
+     * @param id Id of the quiz
+     * @return quiz object with id
+     */
+    Quiz getQuizById(Long id);
+
+    /**
+     * update a quiz object in store
+     * @param quiz quiz object to update
+     * @return updated quiz object from store
+     */
+    Quiz updateQuiz(Quiz quiz);
+
+    /**
+     * delete a quiz with id
+     * @param quizId id of the quiz to delete
+     */
+    void deleteQuiz(long quizId);
+
+    /**
      * get the quiz for a given chapter
      * @param chapterId chapter id to retrieve quiz for
      * @return Quiz object for the chapter

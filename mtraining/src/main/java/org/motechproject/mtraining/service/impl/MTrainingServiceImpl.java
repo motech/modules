@@ -7,6 +7,7 @@ import org.motechproject.mtraining.domain.Quiz;
 import org.motechproject.mtraining.repository.ChapterDataService;
 import org.motechproject.mtraining.repository.CourseDataService;
 import org.motechproject.mtraining.repository.LessonDataService;
+import org.motechproject.mtraining.repository.QuizDataService;
 import org.motechproject.mtraining.service.MTrainingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,9 @@ public class MTrainingServiceImpl implements MTrainingService {
 
     @Autowired
     private LessonDataService lessonDataService;
+
+    @Autowired
+    private QuizDataService quizDataService;
 
     /**
      * Create a course with the given structure
@@ -166,5 +170,39 @@ public class MTrainingServiceImpl implements MTrainingService {
 
         Lesson toDelete = lessonDataService.findLessonById(lessonId);
         lessonDataService.delete(toDelete);
+    }
+
+    /**
+     * Quiz CRUD
+     */
+
+    @Override
+    public Quiz createQuiz(Quiz quiz) {
+
+        return quizDataService.create(quiz);
+    }
+
+    @Override
+    public List<Quiz> getQuizByName(String quizName) {
+
+        return quizDataService.findQuizByName(quizName);
+    }
+
+    @Override
+    public Quiz getQuizById(Long id) {
+
+        return quizDataService.findQuizById(id);
+    }
+
+    @Override
+    public Quiz updateQuiz(Quiz quiz) {
+
+        return quizDataService.update(quiz);
+    }
+
+    @Override
+    public void deleteQuiz(long quizId) {
+        Quiz toDelete = quizDataService.findQuizById(quizId);
+        quizDataService.delete(toDelete);
     }
 }

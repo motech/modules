@@ -9,10 +9,7 @@ import java.util.List;
  * Quiz object to store questions and answer for a chapter
  */
 @Entity
-public class Quiz {
-
-    @Field
-    private String name;
+public class Quiz extends CourseUnitMetadata {
 
     @Field
     private List<Question> questions;
@@ -20,20 +17,17 @@ public class Quiz {
     @Field
     private Double passPercentage;
 
-    public Quiz(String name, List<Question> questions, Double passPercentage) {
-        this.name = name;
+    public Quiz() {
+    }
+
+    public Quiz(String name, CourseUnitState state, String content) {
+        super(name, state, content);
+    }
+
+    public Quiz(String name, CourseUnitState state, String content, List<Question> questions, Double passPercentage) {
+        super(name, state, content);
         this.questions = questions;
         this.passPercentage = passPercentage;
-    }
-
-    public String getName() {
-
-        return this.name;
-    }
-
-    public void setName(String name) {
-
-        this.name = name;
     }
 
     public List<Question> getQuestions() {

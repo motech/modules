@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Verify that mTrainingService present, functional.
@@ -100,6 +101,109 @@ public class MTrainingServiceIT extends BasePaxIT {
         }
     }
 
+    @Test
+    public void testCourseDeletion() throws Exception {
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+            int courseCount = mTrainingService.getCourseByName("testCourseDeletion").size();
+            Course toDelete = mTrainingService.createCourse(generateFullCourse("testCourseDeletion"));
+            List<Course> lookup = mTrainingService.getCourseByName("testCourseLookup");
+            assertEquals(courseCount + 1, lookup.size());
+
+            mTrainingService.deleteCourse(toDelete.getId());
+            lookup = mTrainingService.getCourseByName("testCourseDeletion");
+            assertEquals(courseCount, lookup.size());
+
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
+        }
+    }
+
+    @Test
+    public void testSubChapterDeletion() throws Exception {
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+
+            // build course
+            Course toAdd = generateFullCourse("testSubChapterDeletion");
+            List<Chapter> existing = toAdd.getChapters();
+            existing.add(new Chapter("subChapterToDelete", CourseUnitState.Active, "RandomContentLink"));
+            toAdd.setChapters(existing);
+            Course added = mTrainingService.createCourse(toAdd);
+            Course lookup = mTrainingService.getCourseById(added.getId());
+            assertNotNull(lookup);
+
+            // verify chapter in course
+            boolean found = false;
+            Long chapterId = new Long(-1);
+            for (Chapter current : lookup.getChapters()) {
+                if (current.getName() == "subChapterToDelete") {
+                    found = true;
+                    chapterId = current.getId();
+                }
+            }
+            assertTrue(found);
+
+            // delete chapter in course
+            mTrainingService.deleteChapter(chapterId);
+
+            // lookup course exists and verify that chapter was deleted
+            lookup = mTrainingService.getCourseById(added.getId());
+            assertNotNull(lookup);
+            found = false;
+            for (Chapter current : lookup.getChapters()) {
+                if (current.getName() == "subChapterToDelete") {
+                    found = true;
+                    chapterId = current.getId();
+                }
+            }
+            assertFalse(found);
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
+        }
+    }
+
+    @Test
+    public void testSubUnitCascadeDelete() throws Exception {
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+            Course newCourse = new Course("CascadeCourse", CourseUnitState.Active, "MyRandomCourseContent");
+            Chapter newChapter = new Chapter("CascadeChapter", CourseUnitState.Active, "SomeRandomChapterContent");
+            Lesson newLesson = new Lesson("CascadeLesson", CourseUnitState.Active, "SomeRandomLessonContent");
+            Quiz newQuiz = new Quiz("CascadeQuiz", null, "RandomQuizResourceLink");
+
+            newChapter.setQuiz(newQuiz);
+            newChapter.setLessons(new ArrayList<Lesson>(Arrays.asList(newLesson)));
+            newCourse.setChapters(new ArrayList<Chapter>(Arrays.asList(newChapter)));
+            Course added = mTrainingService.createCourse(newCourse);
+
+            assertNotNull(added);
+            assertNotNull(mTrainingService.getChapterByName("CascadeChapter"));
+            assertNotNull(mTrainingService.getLessonByName("CascadeLesson"));
+            assertNotNull(mTrainingService.getCourseByName("CascadeCourse"));
+
+            Long chapterId = new Long(-1);
+            Long lessonId = new Long(-1);
+            Quiz addedQuiz;
+            for (Chapter current : added.getChapters()) {
+                chapterId = current.getId();
+                addedQuiz = current.getQuiz();
+                for (Lesson currentLesson : current.getLessons()) {
+                    lessonId = currentLesson.getId();
+                }
+            }
+
+
+
+
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
+        }
+    }
+
     private Course generateFullCourse(String courseName) {
         Course myCourse = new Course(courseName, CourseUnitState.Active, "motech.com/courseIntro");
         Chapter chapter1 = new Chapter("chapter1", CourseUnitState.Active, "motech.com/chapter1Intro");
@@ -114,12 +218,12 @@ public class MTrainingServiceIT extends BasePaxIT {
         Question q3 = new Question("motech.com/question3.wav", "b");
         Question q4 = new Question("motech.com/question4.mp4", "a");
 
-        Quiz quiz1 = new Quiz("quiz1", new ArrayList<>(Arrays.asList(q1, q2, q3, q4)), 75.6);
+        Quiz quiz1 = new Quiz("quiz1", CourseUnitState.Active, "RandomResourceLink", new ArrayList<>(Arrays.asList(q1, q2, q3, q4)), 90.9);
 
-        chapter1.setLessons(Arrays.asList(lesson1, lesson2));
+        chapter1.setLessons(new ArrayList<Lesson>(Arrays.asList(lesson1, lesson2)));
         chapter1.setQuiz(quiz1);
-        chapter2.setLessons(Arrays.asList(lesson3));
-        myCourse.setChapters(Arrays.asList(chapter1, chapter2));
+        chapter2.setLessons(new ArrayList<Lesson>(Arrays.asList(lesson3)));
+        myCourse.setChapters(new ArrayList<Chapter>(Arrays.asList(chapter1, chapter2)));
 
         return myCourse;
     }
