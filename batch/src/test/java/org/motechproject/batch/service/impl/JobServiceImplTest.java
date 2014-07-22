@@ -63,6 +63,7 @@ public class JobServiceImplTest {
         batchJob = new BatchJob();
         batchJob.setCronExpression(cronExpression);
         batchJob.setJobName("testJob");
+        batchJob.setBatchJobStatusId(1);
         List<BatchJob> batchJobs = new ArrayList<BatchJob>();
         batchJobs.add(batchJob);
 

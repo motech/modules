@@ -1,7 +1,6 @@
 package org.motechproject.batch.service.impl;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
@@ -13,9 +12,9 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.batch.runtime.BatchRuntime;
+import javax.batch.runtime.JobInstance;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -31,6 +30,7 @@ import org.motechproject.batch.model.JobExecutionHistoryListDTO;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.jsr.launch.JsrJobOperator;
 
 @RunWith(PowerMockRunner.class)
@@ -44,8 +44,12 @@ public class JobTriggerServiceImplTest {
             jobRepo, jobParameterRepo, jobOperator);
 
     List<BatchJob> listBatchJobDTO;
+    List<JobInstance> listBatchJobInstances;
+    List<JobExecution> listBatchJobExecutions;
     BatchJobDTO batchJobDTO;
     BatchJob batchJob;
+    JobInstance jobInstance;
+    JobExecution jobExecution;
     BatchJobParameters batchJobParameters = new BatchJobParameters();
     List<BatchJobParameters> parameters = new ArrayList<BatchJobParameters>();
     List<BatchJob> batchJobs = new ArrayList<BatchJob>();
@@ -92,27 +96,6 @@ public class JobTriggerServiceImplTest {
         jobTriggerServiceImpl.triggerJob(jobName);
         verify(jobOperator, times(1)).start((String) any(), (Properties) any());
 
-    }
-
-    /**
-     * valid scenario
-     *
-     * @throws BatchException
-     */
-    @Ignore
-    @Test
-    public void getJObExecutionHistory_success() throws BatchException {
-        JobExecutionHistoryListDTO listJobExecutionHistory = jobTriggerServiceImpl
-                .getJObExecutionHistory(jobName);
-
-        assertNotNull(listJobExecutionHistory);
-        assertEquals(1, listJobExecutionHistory.getJobExecutionHistoryList()
-                .size());
-
-        assertNotNull(listJobExecutionHistory.getJobExecutionHistoryList()
-                .get(0).getStartTime());
-        assertNotNull(listJobExecutionHistory.getJobExecutionHistoryList()
-                .get(0).getEndTime());
     }
 
     /**

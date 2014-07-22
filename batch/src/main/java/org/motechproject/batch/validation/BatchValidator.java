@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.motechproject.batch.util.BatchConstants;
 import org.quartz.CronExpression;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -30,7 +33,18 @@ public class BatchValidator {
 
         List<String> errors = new ArrayList<String>();
         checkJobName(jobName, errors);
+        checkDate(date, errors);
         return errors;
+    }
+
+    private void checkDate(String date, List<String> errors) {
+        DateTimeFormatter formatter = DateTimeFormat
+                .forPattern(BatchConstants.DATE_FORMAT);
+        try {
+            formatter.parseDateTime(date);
+        } catch (IllegalArgumentException e) {
+            errors.add("Date passed is invalid. Passed value: [" + date + "]");
+        }
     }
 
     public List<String> validateUpdateInputs(String jobName) {
@@ -44,7 +58,6 @@ public class BatchValidator {
 
         List<String> errors = new ArrayList<String>();
         checkJobName(jobName, errors);
-
         checkContentType(contentType, errors);
         return errors;
     }

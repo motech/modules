@@ -1,18 +1,21 @@
 package org.motechproject.batch.model;
 
+import java.util.Map;
+
 import org.joda.time.DateTime;
 
 /**
  * Class containing fields of Batch Job which is to be sent as response
  *
  * @author Naveen
- *
  */
 public class BatchJobDTO {
 
     private long jobId;
     private String jobName;
     private String cronExpression;
+    private String status;
+    private Map<String, String> parametersList;
     private DateTime createTime;
     private DateTime lastUpdated;
     private String createdBy;
@@ -40,6 +43,23 @@ public class BatchJobDTO {
 
     public void setCronExpression(String cronExpression) {
         this.cronExpression = cronExpression;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Map<String, String> getParametersList() {
+        return parametersList;
+    }
+
+    public void setParametersList(
+            Map<String, String> parametersList) {
+        this.parametersList = parametersList;
     }
 
     public DateTime getCreateTime() {

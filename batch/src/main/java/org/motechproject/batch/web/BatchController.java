@@ -10,6 +10,7 @@ import org.motechproject.batch.exception.BatchError;
 import org.motechproject.batch.exception.BatchException;
 import org.motechproject.batch.exception.RestException;
 import org.motechproject.batch.model.BatchJobListDTO;
+import org.motechproject.batch.model.BatchJobUpdateParams;
 import org.motechproject.batch.model.CronJobScheduleParam;
 import org.motechproject.batch.model.JobExecutionHistoryListDTO;
 import org.motechproject.batch.model.OneTimeJobScheduleParams;
@@ -353,7 +354,7 @@ public class BatchController {
     @ResponseStatus(value = HttpStatus.OK)
     @RequestMapping(value = "/updatejobproperty", method = RequestMethod.POST)
     @ResponseBody
-    public void updateJobProperty(@RequestBody OneTimeJobScheduleParams params) {
+    public void updateJobProperty(@RequestBody BatchJobUpdateParams params) {
         LOGGER.info("Request to update job properties for job {} started",
                 params.getJobName());
         StopWatch sw = new StopWatch();

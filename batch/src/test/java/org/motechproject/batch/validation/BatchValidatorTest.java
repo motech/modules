@@ -26,7 +26,7 @@ public class BatchValidatorTest {
     public void setUp() throws Exception {
         jobName = "Co-ordinator";
         cronExpression = "0 0 12 * * ?";
-        date = ""; // not used in method of service class, assigned empty string
+        date = "29/07/2015 01:10:05";
         contentType = "text/xml";
     }
 
@@ -112,20 +112,24 @@ public class BatchValidatorTest {
     }
 
     /**
-     * Invalid scenario: with null argument value of <code>jobName</code>
+     * Invalid scenario: with null argument value of <code>jobName</code> and
+     * invalid <code>date</code>
      */
     @Test
     public void validateOneTimeInputsWithNullJobName() {
         jobName = null;
+        date = "";
         List<String> errors = batchValidator.validateOneTimeInputs(jobName,
                 date);
         Assert.assertNotNull(errors);
-        Assert.assertEquals(1, errors.size());
+        Assert.assertEquals(2, errors.size());
         Assert.assertEquals("Job name must be provided", errors.get(0));
+        Assert.assertEquals("Date passed is invalid. Passed value: [" + date
+                + "]", errors.get(1));
     }
 
     /**
-     * Invalid scenario: with empty argument value of <code>jobName</code> ""
+     * Invalid scenario: with empty argument value of <code>jobName</code>
      */
     @Test
     public void validateOneTimeInputsWithEmptyJobName() {

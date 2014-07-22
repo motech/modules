@@ -82,12 +82,29 @@ public class JobServiceImpl implements JobService {
                 Long l = Long.parseLong(String.valueOf(id));
                 batchJobDto.setJobId(l);
                 batchJobDto.setJobName(batchJob.getJobName());
+                for (JobStatusLookup lookup : JobStatusLookup.values()) {
+                    if (lookup.getId() == batchJob.getBatchJobStatusId()) {
+                        batchJobDto.setStatus(lookup.toString());
+                        break;
+                    }
+                }
                 batchJobDto.setCronExpression(batchJob.getCronExpression());
                 batchJobDto
                         .setCreateTime(new DateTime(creationDate.toString()));
                 batchJobDto.setLastUpdated(new DateTime(modDate.toString()));
-                jobDtoList.add(batchJobDto);
 
+                List<BatchJobParameters> parameters = jobParameterRepo
+                        .findByJobId(Integer.valueOf((int) (long) id));
+                Map<String, String> jobParameters = null;
+                for (BatchJobParameters parameter : parameters) {
+                    if (jobParameters == null) {
+                        jobParameters = new HashMap<String, String>();
+                    }
+                    jobParameters.put(parameter.getParameterName(),
+                            parameter.getParameterValue());
+                }
+                batchJobDto.setParametersList(jobParameters);
+                jobDtoList.add(batchJobDto);
             }
         }
 
@@ -167,7 +184,7 @@ public class JobServiceImpl implements JobService {
         if (dt.isBefore(now)) {
             throw new BatchException(ApplicationErrors.BAD_REQUEST,
                     String.format(
-                            "Date[%s] is in past. Past date is not allowed",
+                            "Date [%s] is in past. Past date is not allowed",
                             params.getDate()));
         }
         String cronString = getCronString(dt);
@@ -268,9 +285,6 @@ public class JobServiceImpl implements JobService {
             parameters.put(MotechSchedulerService.JOB_ID_KEY,
                     String.format("%s_%s", "BATCH", batchJob.getJobName()));
             parameters.put(BatchConstants.JOB_NAME_KEY, batchJob.getJobName());
-            MotechEvent motechEvent = new MotechEvent(
-                    BatchConstants.EVENT_SUBJECT, parameters);
-            schedulerService.updateScheduledJob(motechEvent);
         }
     }
 
@@ -329,4 +343,5 @@ public class JobServiceImpl implements JobService {
         jobs.get(0).setBatchJobStatusId(JobStatusLookup.INACTIVE.getId());
         jobRepo.update(jobs.get(0));
     }
+
 }
