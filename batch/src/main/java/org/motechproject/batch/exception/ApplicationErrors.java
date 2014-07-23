@@ -16,7 +16,6 @@ public enum ApplicationErrors implements BatchErrors {
     JOB_NOT_FOUND(1002, "Job not found",
             HttpStatus.BAD_REQUEST),
     DUPLICATE_JOB(1003, "Duplicate Job", HttpStatus.BAD_REQUEST),
-    NO_SUCH_JOB_FOUND(1004, "No such job found", HttpStatus.BAD_REQUEST),
     DATABASE_OPERATION_FAILED(3003,
             "Error in querying database", HttpStatus.INTERNAL_SERVER_ERROR),
     FILE_READING_WRTING_FAILED(3002, "Error while reading from or writing to file", HttpStatus.INTERNAL_SERVER_ERROR),

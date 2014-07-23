@@ -135,7 +135,7 @@ public class JobTriggerServiceImpl implements JobTriggerService {
         try {
             count = jsrJobOperator.getJobInstanceCount(jobName);
         } catch (NoSuchJobException nsje) {
-            throw new BatchException(ApplicationErrors.NO_SUCH_JOB_FOUND, nsje);
+            throw new BatchException(ApplicationErrors.JOB_NOT_FOUND, nsje);
         }
         List<JobInstance> jobInstances = jsrJobOperator.getJobInstances(
                 jobName, 0, count);
