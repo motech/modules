@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
  * Validates the input parameters of batch service API calls for HTTP requests
  *
  * @author naveen
- *
  */
 @Service
 public class BatchValidator {
@@ -38,12 +37,17 @@ public class BatchValidator {
     }
 
     private void checkDate(String date, List<String> errors) {
-        DateTimeFormatter formatter = DateTimeFormat
-                .forPattern(BatchConstants.DATE_FORMAT);
-        try {
-            formatter.parseDateTime(date);
-        } catch (IllegalArgumentException e) {
-            errors.add("Date passed is invalid. Passed value: [" + date + "]");
+        if (StringUtils.isBlank(date)) {
+            errors.add("Date must be provided.");
+        } else {
+            DateTimeFormatter formatter = DateTimeFormat
+                    .forPattern(BatchConstants.DATE_FORMAT);
+            try {
+                formatter.parseDateTime(date);
+            } catch (IllegalArgumentException e) {
+                errors.add("Date passed is invalid. Passed value: [" + date
+                        + "]");
+            }
         }
     }
 

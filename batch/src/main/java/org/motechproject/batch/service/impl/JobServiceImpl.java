@@ -35,9 +35,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Class to schedule reschedule jobs or update job parameters
- *
+ * 
  * @author Naveen
- *
  */
 
 @Service(value = "jobService")
@@ -79,6 +78,10 @@ public class JobServiceImpl implements JobService {
                         "modificationDate");
                 Object creationDate = jobRepo.getDetachedField(batchJob,
                         "creationDate");
+                Object createdBy = jobRepo
+                        .getDetachedField(batchJob, "creator");
+                Object updatedBy = jobRepo.getDetachedField(batchJob,
+                        "modifiedBy");
                 Long l = Long.parseLong(String.valueOf(id));
                 batchJobDto.setJobId(l);
                 batchJobDto.setJobName(batchJob.getJobName());
@@ -92,7 +95,10 @@ public class JobServiceImpl implements JobService {
                 batchJobDto
                         .setCreateTime(new DateTime(creationDate.toString()));
                 batchJobDto.setLastUpdated(new DateTime(modDate.toString()));
-
+                batchJobDto.setCreatedBy(createdBy == null ? null : createdBy
+                        .toString());
+                batchJobDto.setLastUpdatedBy(updatedBy == null ? null
+                        : updatedBy.toString());
                 List<BatchJobParameters> parameters = jobParameterRepo
                         .findByJobId(Integer.valueOf((int) (long) id));
                 Map<String, String> jobParameters = null;
@@ -196,14 +202,8 @@ public class JobServiceImpl implements JobService {
         jobRepo.create(batchJob);
         long batchId = (long) jobRepo.getDetachedField(batchJob, "id");
 
-        for (String key : params.getParamsMap().keySet()) {
-
-            BatchJobParameters batchJobParms = new BatchJobParameters();
-            batchJobParms.setBatchJobId((int) batchId);
-            batchJobParms.setParameterName(key);
-            batchJobParms.setParameterValue(params.getParamsMap().get(key));
-
-            jobParameterRepo.create(batchJobParms);
+        if (params.getParamsMap() != null) {
+            createBatchJobParams(batchId, params.getParamsMap());
         }
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(MotechSchedulerService.JOB_ID_KEY,
@@ -240,6 +240,20 @@ public class JobServiceImpl implements JobService {
 
         }
 
+    }
+
+    private void createBatchJobParams(long batchId,
+            Map<String, String> paramsMap) {
+
+        for (String key : paramsMap.keySet()) {
+
+            BatchJobParameters batchJobParms = new BatchJobParameters();
+            batchJobParms.setBatchJobId((int) batchId);
+            batchJobParms.setParameterName(key);
+            batchJobParms.setParameterValue(paramsMap.get(key));
+
+            jobParameterRepo.create(batchJobParms);
+        }
     }
 
     @SuppressWarnings("deprecation")
@@ -291,7 +305,7 @@ public class JobServiceImpl implements JobService {
     /**
      * returns a cron string generated from datetime parameter in the form
      * <code>dd/MM/yyyy HH:mm:ss</code>
-     *
+     * 
      * @param date
      *            date parameter from which cron string mwill be generated
      * @return <code>String</code> representing cron expression
