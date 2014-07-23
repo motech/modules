@@ -24,11 +24,18 @@ public interface ActivityService {
     ActivityRecord updateActivity(ActivityRecord activityRecord);
 
     /**
+     * Get an activity by Id
+     * @param activityId Id of the user
+     * @return activity record with id
+     */
+    ActivityRecord getActivityById(long activityId);
+
+    /**
      * Get a list of all activity for a user
      * @param externalId Id of the user
      * @return list of activity records
      */
-    List<ActivityRecord> getActivityForUser(String externalId);
+    List<ActivityRecord> getAllActivityForUser(String externalId);
 
     /**
      * Get all completed activity for user identified by external id (decided by
@@ -48,5 +55,5 @@ public interface ActivityService {
      * Delete all activity for a user (intended for data cleanups)
      * @param externalId Id of the user
      */
-    void deleteActivityForUser(String externalId);
+    void deleteAllActivityForUser(String externalId);
 }

@@ -3,6 +3,7 @@ package org.motechproject.mtraining.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.jdo.annotations.Persistent;
 import java.util.List;
 
 /**
@@ -15,6 +16,7 @@ public class Chapter extends CourseUnitMetadata {
     private List<Lesson> lessons;
 
     @Field
+    @Persistent(defaultFetchGroup = "true")
     private Quiz quiz;
 
     public Chapter() {

@@ -16,6 +16,9 @@
     <logger name="org.springframework.web">
         <level value="ERROR"/>
     </logger>
+    <logger name="DataNucleus.Query">
+        <level value="ALL"/>
+    </logger>
 
     <root>
         <priority value="ERROR"/>

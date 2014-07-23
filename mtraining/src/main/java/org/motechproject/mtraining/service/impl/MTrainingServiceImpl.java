@@ -127,7 +127,6 @@ public class MTrainingServiceImpl implements MTrainingService {
     @Override
     public Chapter updateChapter(Chapter chapter) {
 
-        // TODO: update all top (higher) level objects for versioning
         return chapterDataService.update(chapter);
     }
 
@@ -189,7 +188,7 @@ public class MTrainingServiceImpl implements MTrainingService {
     }
 
     @Override
-    public Quiz getQuizById(Long id) {
+    public Quiz getQuizById(long id) {
 
         return quizDataService.findQuizById(id);
     }

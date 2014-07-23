@@ -15,7 +15,7 @@ public class Quiz extends CourseUnitMetadata {
     private List<Question> questions;
 
     @Field
-    private Double passPercentage;
+    private double passPercentage;
 
     public Quiz() {
     }
@@ -24,7 +24,7 @@ public class Quiz extends CourseUnitMetadata {
         super(name, state, content);
     }
 
-    public Quiz(String name, CourseUnitState state, String content, List<Question> questions, Double passPercentage) {
+    public Quiz(String name, CourseUnitState state, String content, List<Question> questions, double passPercentage) {
         super(name, state, content);
         this.questions = questions;
         this.passPercentage = passPercentage;
@@ -45,7 +45,7 @@ public class Quiz extends CourseUnitMetadata {
         return passPercentage;
     }
 
-    public void setPassPercentage(Double passPercentage) {
+    public void setPassPercentage(double passPercentage) {
 
         this.passPercentage = passPercentage;
     }

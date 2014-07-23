@@ -3,6 +3,7 @@ package org.motechproject.mtraining.service.it;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.mtraining.domain.*;
+import org.motechproject.mtraining.repository.ChapterDataService;
 import org.motechproject.mtraining.service.MTrainingService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -137,7 +138,7 @@ public class MTrainingServiceIT extends BasePaxIT {
 
             // verify chapter in course
             boolean found = false;
-            Long chapterId = new Long(-1);
+            long chapterId = -1;
             for (Chapter current : lookup.getChapters()) {
                 if (current.getName() == "subChapterToDelete") {
                     found = true;
@@ -178,47 +179,84 @@ public class MTrainingServiceIT extends BasePaxIT {
             newChapter.setQuiz(newQuiz);
             newChapter.setLessons(new ArrayList<Lesson>(Arrays.asList(newLesson)));
             newCourse.setChapters(new ArrayList<Chapter>(Arrays.asList(newChapter)));
-            Course added = mTrainingService.createCourse(newCourse);
+            Course addedCourse = mTrainingService.createCourse(newCourse);
 
-            assertNotNull(added);
+            assertNotNull(addedCourse);
             assertNotNull(mTrainingService.getChapterByName("CascadeChapter"));
             assertNotNull(mTrainingService.getLessonByName("CascadeLesson"));
             assertNotNull(mTrainingService.getCourseByName("CascadeCourse"));
 
-            Long chapterId = new Long(-1);
-            Long lessonId = new Long(-1);
-            Quiz addedQuiz;
-            for (Chapter current : added.getChapters()) {
-                chapterId = current.getId();
-                addedQuiz = current.getQuiz();
-                for (Lesson currentLesson : current.getLessons()) {
+            long chapterId = -1;
+            long lessonId = -1;
+            Quiz addedQuiz = new Quiz();
+            for (Chapter currentChapter : addedCourse.getChapters()) {
+                chapterId = currentChapter.getId();
+                addedQuiz = currentChapter.getQuiz();
+                for (Lesson currentLesson : currentChapter.getLessons()) {
                     lessonId = currentLesson.getId();
                 }
             }
-
-
-
 
         } finally {
             Thread.currentThread().setContextClassLoader(old);
         }
     }
 
-    private Course generateFullCourse(String courseName) {
-        Course myCourse = new Course(courseName, CourseUnitState.Active, "motech.com/courseIntro");
-        Chapter chapter1 = new Chapter("chapter1", CourseUnitState.Active, "motech.com/chapter1Intro");
-        Chapter chapter2 = new Chapter("chapter2", CourseUnitState.Active, "motech.com/chapter2Intro");
+    @Test
+    public void testSharedChapterCreation() throws Exception {
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+            Course firstCourse = mTrainingService.createCourse(generateFullCourse("testSharedChapter"));
 
-        Lesson lesson1 = new Lesson("lesson1", CourseUnitState.Active, "motech.com/lesson1Intro");
-        Lesson lesson2 = new Lesson("lesson2", CourseUnitState.Active, "motech.com/lesson2Intro");
-        Lesson lesson3 = new Lesson("lesson3", CourseUnitState.Active, "motech.com/lesson3Intro");
+            Chapter sharedChapter = firstCourse.getChapters().get(0);
+            Course secondCourse = mTrainingService.createCourse(
+                    new Course("secondCourse", CourseUnitState.Active, "RandomCourseIntro", new ArrayList<>(Arrays.asList(sharedChapter))));
+            assertNotNull(secondCourse);
+
+            firstCourse = mTrainingService.getCourseById(firstCourse.getId());
+            assertEquals(firstCourse.getChapters().size(), secondCourse.getChapters().size());
+
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
+        }
+    }
+
+    @Test
+    public void testCourseChapterUpdate() throws Exception {
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+            Course firstCourse = mTrainingService.createCourse(generateFullCourse("testSharedChapter"));
+
+            Chapter chapterToUpdate = firstCourse.getChapters().get(0);
+            chapterToUpdate.setState(CourseUnitState.Inactive);
+            Chapter updatedChapter = mTrainingService.updateChapter(chapterToUpdate);
+            firstCourse = mTrainingService.getCourseById(firstCourse.getId());
+
+            assertEquals(firstCourse.getChapters().get(0).getId(), updatedChapter.getId());
+            assertEquals(firstCourse.getChapters().get(0).getState(), updatedChapter.getState());
+
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
+        }
+    }
+
+    private Course generateFullCourse(String namePrefix) {
+        Course myCourse = new Course(namePrefix, CourseUnitState.Active, "motech.com/courseIntro");
+        Chapter chapter1 = new Chapter(namePrefix + "chapter1", CourseUnitState.Active, "motech.com/chapter1Intro");
+        Chapter chapter2 = new Chapter(namePrefix + "chapter2", CourseUnitState.Active, "motech.com/chapter2Intro");
+
+        Lesson lesson1 = new Lesson(namePrefix + "lesson1", CourseUnitState.Active, "motech.com/lesson1Intro");
+        Lesson lesson2 = new Lesson(namePrefix + "lesson2", CourseUnitState.Active, "motech.com/lesson2Intro");
+        Lesson lesson3 = new Lesson(namePrefix + "lesson3", CourseUnitState.Active, "motech.com/lesson3Intro");
 
         Question q1 = new Question("Why do we exist?", "42");
         Question q2 = new Question("Who can never be sick?", "Chuck Norris");
         Question q3 = new Question("motech.com/question3.wav", "b");
         Question q4 = new Question("motech.com/question4.mp4", "a");
 
-        Quiz quiz1 = new Quiz("quiz1", CourseUnitState.Active, "RandomResourceLink", new ArrayList<>(Arrays.asList(q1, q2, q3, q4)), 90.9);
+        Quiz quiz1 = new Quiz(namePrefix + "quiz1", CourseUnitState.Active, "RandomResourceLink", new ArrayList<>(Arrays.asList(q1, q2, q3, q4)), 90.9);
 
         chapter1.setLessons(new ArrayList<Lesson>(Arrays.asList(lesson1, lesson2)));
         chapter1.setQuiz(quiz1);

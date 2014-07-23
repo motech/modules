@@ -39,12 +39,21 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     /**
+     * Get an activity by Id
+     * @param activityId Id of the user
+     * @return activity record with id
+     */
+    public ActivityRecord getActivityById(long activityId) {
+        return activityDataService.findRecordById(activityId);
+    }
+
+    /**
      * Get a list of all activity for a user
      * @param externalId Id of the user
      * @return list of activity records
      */
     @Override
-    public List<ActivityRecord> getActivityForUser(String externalId) {
+    public List<ActivityRecord> getAllActivityForUser(String externalId) {
         return activityDataService.findRecordsForUser(externalId);
     }
 
@@ -74,8 +83,10 @@ public class ActivityServiceImpl implements ActivityService {
      * @param externalId Id of the user
      */
     @Override
-    public void deleteActivityForUser(String externalId) {
+    public void deleteAllActivityForUser(String externalId) {
 
-        activityDataService.delete("externalId", externalId);
+        for (ActivityRecord current : getAllActivityForUser(externalId)) {
+            activityDataService.delete(current);
+        }
     }
 }

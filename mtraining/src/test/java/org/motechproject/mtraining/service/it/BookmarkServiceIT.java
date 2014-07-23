@@ -80,9 +80,81 @@ public class BookmarkServiceIT extends BasePaxIT {
         ClassLoader old = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+            int existingBookmarkCount = bookmarkService.getAllBookmarksForUser("123456").size();
             bookmarkService.createBookmark(new Bookmark("123456", "MyCourse", "MyChapter", null, null));
-            List<Bookmark> retrieved = bookmarkService.getAllBookmarksForUser("123456");
-            assertTrue(retrieved.size() > 0);
+            bookmarkService.createBookmark(new Bookmark("123456", "MyCourse", "MyChapter", null, null));
+            bookmarkService.createBookmark(new Bookmark("123456", "MyCourse", "MyChapter", null, null));
+            int newBookmarkCount = bookmarkService.getAllBookmarksForUser("123456").size();
+            assertEquals(existingBookmarkCount + 3, newBookmarkCount);
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
+        }
+    }
+
+    @Test
+    public void testUpdateBookmarks() throws Exception {
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+            Bookmark original = bookmarkService.createBookmark(new Bookmark("11111", "MyCourse", "MyChapter", "MyLesson", null));
+            assertEquals(original.getLessonIdentifier(), "MyLesson");
+            original.setLessonIdentifier("MyUpdatedLesson");
+            bookmarkService.updateBookmark(original);
+
+            Bookmark updated = bookmarkService.getBookmarkById(original.getId());
+            assertEquals(updated.getLessonIdentifier(), "MyUpdatedLesson");
+
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
+        }
+    }
+
+    @Test
+    public void testDeleteBookmark() throws Exception {
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+            Bookmark original = bookmarkService.createBookmark(new Bookmark("11111", "MyCourse", "MyChapter", "MyLesson", null));
+            assertNotNull(original);
+            bookmarkService.deleteBookmark(original.getId());
+            assertNull(bookmarkService.getBookmarkById(original.getId()));
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
+        }
+    }
+
+    @Test
+    public void testDeleteAllBookmarks() throws Exception {
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+            bookmarkService.createBookmark(new Bookmark("1212", "MyCourse", "MyChapter", "MyLesson", null));
+            bookmarkService.createBookmark(new Bookmark("1212", "MyCourse", "MyChapter", "MyLesson", null));
+            bookmarkService.createBookmark(new Bookmark("1414", "MyCourse", "MyChapter", "MyLesson", null));
+
+            assertTrue(bookmarkService.getAllBookmarksForUser("1212").size() > 0);
+            assertTrue(bookmarkService.getAllBookmarksForUser("1414").size() > 0);
+
+            bookmarkService.deleteAllBookmarksForUser("1212");
+            assertTrue(bookmarkService.getAllBookmarksForUser("1212").size() == 0);
+            assertTrue(bookmarkService.getAllBookmarksForUser("1414").size() > 0);
+
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
+        }
+    }
+
+    @Test
+    public void testLatestBookmark() throws Exception {
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+            bookmarkService.createBookmark(new Bookmark("1212", "MyCourse", "MyChapter", "MyLesson", null));
+            Thread.sleep(2000);
+            bookmarkService.createBookmark(new Bookmark("1212", "MyCourse", "MyChapter", "MyLessonLatest", null));
+
+            Bookmark latest = bookmarkService.getLatestBookmarkByUserId("1212");
+            assertEquals("MyLessonLatest", latest.getLessonIdentifier());
         } finally {
             Thread.currentThread().setContextClassLoader(old);
         }

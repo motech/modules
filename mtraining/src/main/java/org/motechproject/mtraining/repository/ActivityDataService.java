@@ -17,6 +17,9 @@ import java.util.List;
  */
 public interface ActivityDataService extends MotechDataService<ActivityRecord> {
     @Lookup
+    ActivityRecord findRecordById(@LookupField(name = "id") long id);
+
+    @Lookup
     List<ActivityRecord> findRecordsForUser(@LookupField(name = "externalId") String externalId);
 
     @Lookup

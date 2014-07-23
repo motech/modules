@@ -149,7 +149,7 @@ public interface MTrainingService {
      * @param id Id of the quiz
      * @return quiz object with id
      */
-    Quiz getQuizById(Long id);
+    Quiz getQuizById(long id);
 
     /**
      * update a quiz object in store

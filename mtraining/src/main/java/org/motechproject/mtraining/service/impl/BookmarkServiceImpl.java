@@ -1,12 +1,12 @@
 package org.motechproject.mtraining.service.impl;
 
+import org.joda.time.DateTime;
 import org.motechproject.mtraining.domain.Bookmark;
 import org.motechproject.mtraining.repository.BookmarkDataService;
 import org.motechproject.mtraining.service.BookmarkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,6 +36,7 @@ public class BookmarkServiceImpl implements BookmarkService {
      */
     @Override
     public Bookmark getBookmarkById(long bookmarkId) {
+
         return bookmarkDataService.findBookmarkById(bookmarkId);
     }
 
@@ -47,17 +48,17 @@ public class BookmarkServiceImpl implements BookmarkService {
     @Override
     public Bookmark getLatestBookmarkByUserId(String externalId) {
         Bookmark toReturn  = null;
-        Date latestTimestamp = null;
+        DateTime latestTimestamp = null;
         List<Bookmark> bookmarks = bookmarkDataService.findBookmarksForUser(externalId);
 
         for (Bookmark current : bookmarks) {
-            Date bookmarkDate = (Date) bookmarkDataService.getDetachedField(current, "modifiedDate");
+            DateTime bookmarkDate = (DateTime) bookmarkDataService.getDetachedField(current, "modificationDate");
             if (toReturn == null) {
                 toReturn = current;
                 latestTimestamp = bookmarkDate;
             } else {
 
-                if (bookmarkDate.after(latestTimestamp)) {
+                if (bookmarkDate.isAfter(latestTimestamp)) {
                     toReturn = current;
                     latestTimestamp = bookmarkDate;
                 }
@@ -104,7 +105,8 @@ public class BookmarkServiceImpl implements BookmarkService {
      */
     @Override
     public void deleteAllBookmarksForUser(String externalId) {
-
-        bookmarkDataService.delete("externalId", externalId);
+        for (Bookmark current : getAllBookmarksForUser(externalId)) {
+            bookmarkDataService.delete(current);
+        }
     }
 }
