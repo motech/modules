@@ -48,10 +48,6 @@
             <artifactId>com.springsource.org.apache.httpcomponents.httpclient</artifactId>
         </dependency>
         <dependency>
-            <groupId>net.sourceforge.ehcache</groupId>
-            <artifactId>com.springsource.net.sf.ehcache</artifactId>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>motech-pax-it</artifactId>
             <version>${project.version}</version>
