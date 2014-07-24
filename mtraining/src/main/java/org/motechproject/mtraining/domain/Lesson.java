@@ -8,10 +8,6 @@ import org.motechproject.mds.annotations.Entity;
 @Entity
 public class Lesson extends CourseUnitMetadata {
 
-    public Lesson() {
-        super();
-    }
-
     public Lesson(String name, CourseUnitState state, String content) {
 
         super(name, state, content);

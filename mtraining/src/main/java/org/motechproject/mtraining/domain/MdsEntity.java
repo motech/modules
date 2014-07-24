@@ -6,6 +6,7 @@ import org.motechproject.mds.annotations.Field;
 
 /**
  * Abstract class to expose auto-generated fields in MDS
+ * NOTE: This will no longer be required once https://applab.atlassian.net/browse/MOTECH-1055 gets checked in
  */
 @Entity
 public abstract class MdsEntity {
