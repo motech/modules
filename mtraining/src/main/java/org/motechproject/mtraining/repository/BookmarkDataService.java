@@ -1,10 +1,12 @@
 package org.motechproject.mtraining.repository;
 
-import org.motechproject.mtraining.domain.EnrollmentRecord;
-
 import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
+import org.motechproject.mds.query.QueryParams;
 import org.motechproject.mds.service.MotechDataService;
+import org.motechproject.mtraining.domain.Bookmark;
+
+import java.util.List;
 
 /**
  * Interface for repository that persists simple records and allows CRUD.
@@ -12,7 +14,14 @@ import org.motechproject.mds.service.MotechDataService;
  * as methods for adding, deleting, saving and finding all instances.  In this class we
  * define and custom lookups we may need.
  */
-public interface ActivityRecordsDataService extends MotechDataService<EnrollmentRecord> {
+public interface BookmarkDataService extends MotechDataService<Bookmark> {
+
     @Lookup
-    EnrollmentRecord findRecordByName(@LookupField(name = "name") String recordName);
+    Bookmark findBookmarkById(@LookupField(name = "id") long id);
+
+    @Lookup
+    List<Bookmark> findBookmarksForUser(@LookupField(name = "externalId") String externalId);
+
+    @Lookup
+    List<Bookmark> findBookmarksForUserParams(@LookupField(name = "externalId") String externalId, QueryParams queryParams);
 }
