@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * \ingroup cmslite
- * CMS Lite is lightweight content management based on couchdb storage. It supports storing and retrieving of stream / text along with
+ * CMS Lite is lightweight content management based on MDS storage. It supports storing and retrieving of stream / text along with
  * custom meta data for each language
  */
 @Component
