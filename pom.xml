@@ -48,9 +48,8 @@
         <scm.developerConnection>scm:git:https://github.com/motech/modules.git</scm.developerConnection>
         <scm.url>https://github.com/motech/modules</scm.url>
         
+        <javax.persistence.version>2.1.0</javax.persistence.version>
         <spring.batch.version>3.0.0.M3-r027</spring.batch.version>
-        <javax.persistence.version>2.1.0</javax.persistence.version>
-        <javax.persistence.version>2.1.0</javax.persistence.version>
         <apache.servicemix.bundles.xpp3.version>1.1.4c_7</apache.servicemix.bundles.xpp3.version>
         <apache.servicemix.bundles.ant.version>1.8.1_1</apache.servicemix.bundles.ant.version>
         <apache.servicemix.bundles.javax.inject.version>1_2</apache.servicemix.bundles.javax.inject.version>
