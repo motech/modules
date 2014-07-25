@@ -71,7 +71,7 @@ public class BatchControllerTest {
         paramsList.add(batchJobExecutionParams);
         jobExecutionHistoryList.setJobExecutionHistoryList(paramsList);
         when(jobService.getListOfJobs()).thenReturn(batchJobListDTO);
-        when(jobTriggerService.getJObExecutionHistory(jobName)).thenReturn(
+        when(jobTriggerService.getJobExecutionHistory(jobName)).thenReturn(
                 jobExecutionHistoryList);
         when(batchValidator.validateUpdateInputs(jobName)).thenReturn(errors);
     }
@@ -156,7 +156,7 @@ public class BatchControllerTest {
      * Invalid scenario: mandatory field <code>jobName</code> empty
      */
     @Test
-    public void triggerJobWithEmptyJOBName() {
+    public void triggerJobWithEmptyJobName() {
         jobName = "";
         errors.clear();
         errors.add("Job name must be provided");
@@ -176,7 +176,7 @@ public class BatchControllerTest {
      * Invalid scenario: mandatory field <code>jobName</code> null
      */
     @Test
-    public void triggerJobWithNullJOBName() {
+    public void triggerJobWithNullJobName() {
         jobName = null;
         errors.clear();
         errors.add("Job name must be provided");

@@ -18,7 +18,7 @@ public class RequestLoggingInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request,
             HttpServletResponse response, Object handler) {
-        LOGGER.info("preHandler Called");
+        LOGGER.info("preHandle Called");
         classLoader = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(
                 getClass().getClassLoader());

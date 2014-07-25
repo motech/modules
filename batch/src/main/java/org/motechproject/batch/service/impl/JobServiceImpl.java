@@ -35,7 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Class to schedule reschedule jobs or update job parameters
- * 
+ *
  * @author Naveen
  */
 
@@ -46,7 +46,7 @@ public class JobServiceImpl implements JobService {
     private BatchJobMDSService jobRepo;
 
     private BatchJobParameterMDSService jobParameterRepo;
-    @Autowired
+
     private MotechSchedulerService schedulerService;
 
     @Autowired
@@ -57,9 +57,6 @@ public class JobServiceImpl implements JobService {
         this.jobParameterRepo = jobParameterRepo;
         this.schedulerService = schedulerService;
 
-    }
-
-    public JobServiceImpl() {
     }
 
     @Override
@@ -121,11 +118,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public void scheduleJob(CronJobScheduleParam params) throws BatchException {
         List<BatchJob> jobs = jobRepo.findByJobName(params.getJobName());
-        Boolean jobExists = false;
         if (jobs != null && jobs.size() > 0) {
-            jobExists = true;
-        }
-        if (jobExists) {
             throw new BatchException(ApplicationErrors.DUPLICATE_JOB);
         }
         BatchJob batchJob = new BatchJob();
@@ -161,12 +154,10 @@ public class JobServiceImpl implements JobService {
             if (e.getCause() instanceof ObjectAlreadyExistsException) {
                 throw new BatchException(ApplicationErrors.BAD_REQUEST, e,
                         "Job name already exists");
-            } else {
-                if (e.getCause() instanceof ObjectAlreadyExistsException) {
-                    throw new BatchException(ApplicationErrors.BAD_REQUEST, e,
-                            "Motech Scheduler threw a run time Exception with Message : "
-                                    + e.getMessage());
-                }
+            } else if (e.getCause() instanceof ObjectAlreadyExistsException) {
+                throw new BatchException(ApplicationErrors.BAD_REQUEST, e,
+                        "Motech Scheduler threw a run time Exception with Message : "
+                                + e.getMessage());
             }
         }
     }
@@ -175,11 +166,7 @@ public class JobServiceImpl implements JobService {
     public void scheduleOneTimeJob(OneTimeJobScheduleParams params)
             throws BatchException {
         List<BatchJob> jobs = jobRepo.findByJobName(params.getJobName());
-        Boolean jobExists = false;
         if (jobs != null && jobs.size() > 0) {
-            jobExists = true;
-        }
-        if (jobExists) {
             throw new BatchException(ApplicationErrors.DUPLICATE_JOB);
         }
 
@@ -211,7 +198,7 @@ public class JobServiceImpl implements JobService {
         parameters.put(BatchConstants.JOB_NAME_KEY, batchJob.getJobName());
         MotechEvent motechEvent = new MotechEvent(BatchConstants.EVENT_SUBJECT,
                 parameters);
-        RunOnceSchedulableJob schedulableJob = null;
+        RunOnceSchedulableJob schedulableJob;
         try {
             schedulableJob = new RunOnceSchedulableJob(motechEvent,
                     new SimpleDateFormat(BatchConstants.DATE_FORMAT,
@@ -256,7 +243,6 @@ public class JobServiceImpl implements JobService {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void updateJobProperty(String jobName, Map<String, String> paramsMap)
             throws BatchException {
@@ -305,7 +291,7 @@ public class JobServiceImpl implements JobService {
     /**
      * returns a cron string generated from datetime parameter in the form
      * <code>dd/MM/yyyy HH:mm:ss</code>
-     * 
+     *
      * @param date
      *            date parameter from which cron string mwill be generated
      * @return <code>String</code> representing cron expression
@@ -337,12 +323,8 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public void unscheduleJob(String jobName) throws BatchException {
-        boolean jobExists = true;
         List<BatchJob> jobs = jobRepo.findByJobName(jobName);
         if (jobs == null || jobs.size() == 0) {
-            jobExists = false;
-        }
-        if (!jobExists) {
             throw new BatchException(ApplicationErrors.JOB_NOT_FOUND);
         }
         try {

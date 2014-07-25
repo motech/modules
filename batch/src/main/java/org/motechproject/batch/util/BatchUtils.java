@@ -27,14 +27,15 @@ public final class BatchUtils {
             hostName = InetAddress.getLocalHost().getHostName();
 
             if ("localhost".equalsIgnoreCase(hostName)) {
-                NetworkInterface networkInterface;
+                NetworkInterface networkInterface = NetworkInterface.getByName("eth0");
 
-                networkInterface = NetworkInterface.getByName("eth0");
-
+                if (networkInterface == null) {
+                    return hostName;
+                }
                 Enumeration<InetAddress> a = networkInterface
                         .getInetAddresses();
 
-                for (; a.hasMoreElements();) {
+                while (a.hasMoreElements()) {
                     InetAddress addr = a.nextElement();
                     hostName = addr.getCanonicalHostName();
                     // Check for ipv4 only

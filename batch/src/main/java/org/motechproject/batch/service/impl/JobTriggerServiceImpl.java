@@ -59,11 +59,7 @@ public class JobTriggerServiceImpl implements JobTriggerService {
 
     private Properties getJobParameters(String jobName) throws BatchException {
         List<BatchJob> batchJobList = jobRepo.findByJobName(jobName);
-        boolean jobExists = true;
         if (batchJobList == null || batchJobList.size() == 0) {
-            jobExists = false;
-        }
-        if (!jobExists) {
             throw new BatchException(ApplicationErrors.JOB_NOT_FOUND);
         }
         BatchJob batchJob = batchJobList.get(0);
@@ -97,10 +93,10 @@ public class JobTriggerServiceImpl implements JobTriggerService {
     }
 
     private void storeJobContent(String jobName) throws BatchException {
-        InputStream is = getClass().getClassLoader().getResourceAsStream(
-                BatchConstants.BATCH_XML_CONFIG_PATH + jobName
-                        + BatchConstants.XML_EXTENSION);
-        try {
+        String batchConfigResourcePath = BatchConstants.BATCH_XML_CONFIG_PATH
+                + jobName + BatchConstants.XML_EXTENSION;
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream(
+                batchConfigResourcePath)) {
             if (is != null) {
                 BatchJob batchJob = jobRepo.findByJobName(jobName).get(0);
                 batchJob.setJobContent(IOUtils.toByteArray(is));
@@ -114,19 +110,14 @@ public class JobTriggerServiceImpl implements JobTriggerService {
                     ApplicationErrors.FILE_READING_WRTING_FAILED, e,
                     e.getMessage());
         }
-
     }
 
     @Override
-    public JobExecutionHistoryListDTO getJObExecutionHistory(String jobName)
+    public JobExecutionHistoryListDTO getJobExecutionHistory(String jobName)
             throws BatchException {
-        List<JobExecution> jobExecutions = new ArrayList<JobExecution>();
+        List<JobExecution> jobExecutions = new ArrayList<>();
         List<BatchJob> batchJobList = jobRepo.findByJobName(jobName);
-        boolean jobExists = true;
         if (batchJobList == null || batchJobList.size() == 0) {
-            jobExists = false;
-        }
-        if (!jobExists) {
             throw new BatchException(ApplicationErrors.JOB_NOT_FOUND);
         }
 

@@ -43,7 +43,7 @@ public class BatchException extends Exception {
     }
 
     public String getErrorMessage() {
-        if (reason == null || StringUtils.length(reason) < 1) {
+        if (StringUtils.isEmpty(reason)) {
             return this.getMessage();
         } else {
             return this.getMessage() + ". Reason: " + reason;
@@ -55,7 +55,6 @@ public class BatchException extends Exception {
     }
 
     public String getErrorMessageDetails() {
-
         return getStackTraceString();
     }
 

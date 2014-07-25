@@ -53,30 +53,6 @@ public class BatchController {
     @Autowired
     private BatchValidator batchValidator;
 
-    public JobService getJobService() {
-        return jobService;
-    }
-
-    public void setJobService(JobService jobService) {
-        this.jobService = jobService;
-    }
-
-    public JobTriggerService getJobTriggerService() {
-        return jobTriggerService;
-    }
-
-    public void setJobTriggerService(JobTriggerService jobTriggerService) {
-        this.jobTriggerService = jobTriggerService;
-    }
-
-    public BatchValidator getBatchValidator() {
-        return batchValidator;
-    }
-
-    public void setBatchValidator(BatchValidator batchValidator) {
-        this.batchValidator = batchValidator;
-    }
-
     /**
      * To get list of all the scheduled jobs
      *
@@ -89,7 +65,7 @@ public class BatchController {
         LOGGER.info("Request to get list of batch jobs started");
         StopWatch sw = new StopWatch();
         sw.start();
-        BatchJobListDTO batchJobList = null;
+        BatchJobListDTO batchJobList;
         try {
             batchJobList = jobService.getListOfJobs();
             return batchJobList;
@@ -114,7 +90,7 @@ public class BatchController {
                 jobName);
         StopWatch sw = new StopWatch();
         sw.start();
-        JobExecutionHistoryListDTO jobExecutionHistoryList = null;
+        JobExecutionHistoryListDTO jobExecutionHistoryList;
         try {
             List<String> errors = batchValidator.validateUpdateInputs(jobName);
             if (!errors.isEmpty()) {
@@ -123,7 +99,7 @@ public class BatchController {
                         errors.toString());
             }
             jobExecutionHistoryList = jobTriggerService
-                    .getJObExecutionHistory(jobName);
+                    .getJobExecutionHistory(jobName);
             return jobExecutionHistoryList;
         } catch (BatchException e) {
             LOGGER.error(
@@ -172,12 +148,9 @@ public class BatchController {
      * Schedule a cron job given job name, cron expression and parameters for
      * the job
      *
-     * @param jobName
-     *            jobName for the job to be scheduled
-     * @param cronExpression
-     *            cron expression for the job
-     * @param paramsMap
-     *
+     * @param params
+     *            - <code>CronJobScheduleParam</code> object containing jobName,
+     *            paramsMap and cronExpression
      * @throws BatchException
      */
     @ResponseStatus(value = HttpStatus.OK)
@@ -218,7 +191,6 @@ public class BatchController {
      *            jobName for the job to be rescheduled
      * @param cronExpression
      *            cron expression for the job
-     * @param paramsMap
      *
      * @throws BatchException
      */
@@ -300,13 +272,9 @@ public class BatchController {
     /**
      * schedules a job to be run at one particular time in future
      *
-     * @param jobName
-     *            jobName for the job to be scheduled
-     * @param date
-     *            Date in <code>String</code> form
-     * @param paramsMap
-     *            List of parameters which needs to be passed when we run the
-     *            job
+     * @param params
+     *            <code>OneTimeJobScheduleParams</code> object containing
+     *            jobName, paramsMap and date
      *
      * @throws BatchException
      */
@@ -384,7 +352,8 @@ public class BatchController {
     }
 
     /**
-     * It is custom exception to be thrown
+     * It is custom exception to be thrown in case of validation failures or
+     * other internal failures
      *
      * @param ex
      * @param response

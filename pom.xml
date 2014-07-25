@@ -49,7 +49,6 @@
         <scm.url>https://github.com/motech/modules</scm.url>
         
         <spring.batch.version>3.0.0.M3-r027</spring.batch.version>
-        <hsqldb.version>1.8.0.9</hsqldb.version>
         <javax.persistence.version>2.1.0</javax.persistence.version>
         <javax.persistence.version>2.1.0</javax.persistence.version>
         <apache.servicemix.bundles.xpp3.version>1.1.4c_7</apache.servicemix.bundles.xpp3.version>
@@ -163,6 +162,11 @@
     <dependencyManagement>
         <dependencies>
             <!-- Javax -->
+            <dependency>
+                <groupId>org.eclipse.persistence</groupId>
+                <artifactId>javax.persistence</artifactId>
+                <version>${javax.persistence.version}</version>
+            </dependency>
             <dependency>
                 <groupId>javax.validation</groupId>
                 <artifactId>com.springsource.javax.validation</artifactId>

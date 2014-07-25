@@ -8,11 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class is called from applicationBatch, so that baseContext can acces the
+ * This class is called from applicationBatch, so that baseContext can access the
  * file
  *
  * @author haritha
- *
  */
 public class PropertyWriter {
 

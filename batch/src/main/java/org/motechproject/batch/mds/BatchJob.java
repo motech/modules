@@ -55,7 +55,9 @@ public class BatchJob implements java.io.Serializable {
     }
 
     public void setJobContent(byte[] jobContent) {
-        this.jobContent = jobContent.clone();
+        if (jobContent != null) {
+            this.jobContent = jobContent.clone();
+        }
     }
 
     public BatchJob() {

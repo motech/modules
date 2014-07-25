@@ -26,13 +26,9 @@ public interface JobService {
     /**
      * Shedule a new cron job with given job name and cron expression
      *
-     * @param jobName
-     *            job name for the job to be scheduled
-     * @param cronExpression
-     *            cron expression for the job (specified for the timely run of
-     *            the job)
-     * @param paramsMap
-     *            List of parameters to be used while job is being triggered
+     * @param params -
+     *            <code>CronJobScheduleParam</code> object containing jobName,
+     *            paramsMap and cronExpression
      * @throws BatchException
      */
     void scheduleJob(CronJobScheduleParam params) throws BatchException;
@@ -40,12 +36,9 @@ public interface JobService {
     /**
      * Schedule a one time job, to be run once in the future
      *
-     * @param jobName
-     *            job name for the job to be scheduled
-     * @param date
-     *            The date and time at which job will be run
-     * @param paramsMap
-     *            List of parameters to be used while job is being triggered
+     * @param params -
+     *            <code>OneTimeJobScheduleParams</code> object containing
+     *            jobName, paramsMap and date
      * @throws BatchException
      */
     void scheduleOneTimeJob(OneTimeJobScheduleParams params)
@@ -82,9 +75,6 @@ public interface JobService {
      *
      * @param jobName
      *            job name for the job to be scheduled
-     * @param cronExpression
-     *            cron expression for the job (specified for the timely run of
-     *            the job)
      * @throws BatchException
      */
     void unscheduleJob(String jobName) throws BatchException;

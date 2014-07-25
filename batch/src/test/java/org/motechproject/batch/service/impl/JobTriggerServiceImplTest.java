@@ -108,7 +108,7 @@ public class JobTriggerServiceImplTest {
             throws BatchException {
         try {
             JobExecutionHistoryListDTO listJobExecutionHistory = jobTriggerServiceImpl
-                    .getJObExecutionHistory(jobName);
+                    .getJobExecutionHistory(jobName);
         } catch (BatchException e) {
             assertEquals("Job not found", e.getErrorMessage());
             assertEquals(1002, e.getErrorCode());

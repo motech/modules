@@ -29,7 +29,7 @@ public interface JobTriggerService {
      * @return
      * @throws BatchException
      */
-    JobExecutionHistoryListDTO getJObExecutionHistory(String jobName)
+    JobExecutionHistoryListDTO getJobExecutionHistory(String jobName)
             throws BatchException;
 
     /**
