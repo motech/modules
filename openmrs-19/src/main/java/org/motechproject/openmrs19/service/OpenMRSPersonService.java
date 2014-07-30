@@ -12,7 +12,6 @@ public interface OpenMRSPersonService {
      * Persists a person object.
      * 
      * @param person  the person to be saved 
-     * @throws OpenMrsException if the person object violated constraints in the implementing module
      */
     OpenMRSPerson addPerson(OpenMRSPerson person);
 
@@ -26,7 +25,6 @@ public interface OpenMRSPersonService {
      * @param gender  the person's gender
      * @param address  the address of the person
      * @param attributes  a list of attributes for the person
-     * @throws OpenMrsException if the person object violated constraints in the implementing module
      */
     OpenMRSPerson addPerson(String personId, String firstName, String lastName, DateTime dateOfBirth, String gender,
             String address, List<OpenMRSAttribute> attributes);

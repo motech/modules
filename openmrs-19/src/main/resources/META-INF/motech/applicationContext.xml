@@ -7,4 +7,31 @@
     <context:annotation-config />
     <context:component-scan base-package="org.motechproject.openmrs19" />
 
+    <bean id="openMrs19Settings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
+        <property name="configFiles">
+            <list>
+                <value>classpath:openmrs.properties</value>
+            </list>
+        </property>
+        <property name="moduleName" value="openmrs-19" />
+    </bean>
+
+    <bean id="openMrsHttpClient" init-method="readSettings" depends-on="openMrs19Settings"
+          class="org.motechproject.openmrs19.rest.HttpClientFactoryBean">
+        <constructor-arg ref="openMrs19Settings"/>
+    </bean>
+
+    <bean id="requestFactory" class="org.springframework.http.client.CommonsClientHttpRequestFactory">
+        <constructor-arg ref="openMrsHttpClient"/>
+    </bean>
+
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+        <constructor-arg ref="requestFactory"/>
+        <property name="messageConverters">
+            <list>
+                <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
+            </list>
+        </property>
+    </bean>
+
 </beans>

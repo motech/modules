@@ -6,16 +6,12 @@ import org.apache.commons.lang.Validate;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.openmrs19.EventKeys;
-import org.motechproject.openmrs19.helper.EventHelper;
 import org.motechproject.openmrs19.domain.OpenMRSEncounter;
 import org.motechproject.openmrs19.domain.OpenMRSObservation;
 import org.motechproject.openmrs19.domain.OpenMRSPatient;
 import org.motechproject.openmrs19.domain.OpenMRSPerson;
 import org.motechproject.openmrs19.domain.OpenMRSProvider;
-import org.motechproject.openmrs19.domain.OpenMRSUser;
-import org.motechproject.openmrs19.service.OpenMRSEncounterService;
-import org.motechproject.openmrs19.service.OpenMRSPatientService;
-import org.motechproject.openmrs19.rest.HttpException;
+import org.motechproject.openmrs19.helper.EventHelper;
 import org.motechproject.openmrs19.resource.EncounterResource;
 import org.motechproject.openmrs19.resource.model.Concept;
 import org.motechproject.openmrs19.resource.model.Encounter;
@@ -26,11 +22,14 @@ import org.motechproject.openmrs19.resource.model.Observation;
 import org.motechproject.openmrs19.resource.model.Observation.ObservationValue;
 import org.motechproject.openmrs19.resource.model.Patient;
 import org.motechproject.openmrs19.resource.model.Person;
+import org.motechproject.openmrs19.rest.HttpException;
+import org.motechproject.openmrs19.service.OpenMRSEncounterService;
+import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.util.ConverterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,7 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@Component("encounterService")
+@Service("encounterService")
 public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSEncounterServiceImpl.class);
 
@@ -76,13 +75,13 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
                 .withEncounterType(encounter.getEncounterType()).build();
 
         Encounter converted = toEncounter(encounterCopy);
-        Encounter saved = null;
+        Encounter saved;
         OpenMRSEncounter returnedEncounter;
         try {
             saved = encounterResource.createEncounter(converted);
-            returnedEncounter = new OpenMRSEncounter.OpenMRSEncounterBuilder().withId(saved.getUuid()).withProvider((OpenMRSProvider) encounter.getProvider())
-                    .withCreator((OpenMRSUser) encounter.getCreator()).withFacility(encounter.getFacility())
-                    .withDate(encounter.getDate().toDate()).withPatient((OpenMRSPatient) encounter.getPatient())
+            returnedEncounter = new OpenMRSEncounter.OpenMRSEncounterBuilder().withId(saved.getUuid()).withProvider(encounter.getProvider())
+                    .withCreator(encounter.getCreator()).withFacility(encounter.getFacility())
+                    .withDate(encounter.getDate().toDate()).withPatient(encounter.getPatient())
                     .withObservations(encounter.getObservations()).withEncounterType(encounter.getEncounterType()).build();
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_ENCOUNTER_SUBJECT, EventHelper.encounterParameters(returnedEncounter)));
         } catch (HttpException e) {
@@ -188,7 +187,7 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
     public List<OpenMRSEncounter> getAllEncountersByPatientMotechId(String motechId) {
         Validate.notEmpty(motechId, "MoTeCH Id cannot be empty");
 
-        List<OpenMRSEncounter> encounters = new ArrayList<OpenMRSEncounter>();
+        List<OpenMRSEncounter> encounters = new ArrayList<>();
         OpenMRSPatient patient = patientAdapter.getPatientByMotechId(motechId);
 
         if (patient != null) {
@@ -260,7 +259,7 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
     public OpenMRSEncounter getEncounterById(String id) {
         try {
             Encounter encounter = encounterResource.getEncounterById(id);
-            OpenMRSPatient patient = (OpenMRSPatient) patientAdapter.getPatient(encounter.getPatient().getUuid());
+            OpenMRSPatient patient = patientAdapter.getPatient(encounter.getPatient().getUuid());
             OpenMRSPerson person = personAdapter.findByPersonId(encounter.getProvider().getUuid()).get(0);
             OpenMRSProvider provider = new OpenMRSProvider(person);
             provider.setProviderId(person.getPersonId());

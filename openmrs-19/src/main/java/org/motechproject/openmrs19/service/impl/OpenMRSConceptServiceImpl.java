@@ -9,15 +9,15 @@ import org.motechproject.openmrs19.domain.OpenMRSConcept;
 import org.motechproject.openmrs19.domain.OpenMRSConceptName;
 import org.motechproject.openmrs19.exception.OpenMRSException;
 import org.motechproject.openmrs19.helper.EventHelper;
-import org.motechproject.openmrs19.service.OpenMRSConceptService;
-import org.motechproject.openmrs19.rest.HttpException;
 import org.motechproject.openmrs19.resource.ConceptResource;
 import org.motechproject.openmrs19.resource.model.Concept;
 import org.motechproject.openmrs19.resource.model.ConceptListResult;
+import org.motechproject.openmrs19.rest.HttpException;
+import org.motechproject.openmrs19.service.OpenMRSConceptService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,11 +27,11 @@ import java.util.List;
 import java.util.Map;
 
 
-@Component("conceptService")
+@Service("conceptService")
 public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSConceptServiceImpl.class);
 
-    private final Map<String, String> conceptCache = new HashMap<String, String>();
+    private final Map<String, String> conceptCache = new HashMap<>();
     private final ConceptResource conceptResource;
     private final EventRelay eventRelay;
 
@@ -46,7 +46,7 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
             return conceptCache.get(conceptName);
         }
 
-        ConceptListResult results = null;
+        ConceptListResult results;
         try {
             results = conceptResource.queryForConceptsByName(conceptName);
         } catch (HttpException e) {
@@ -68,7 +68,7 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
     public OpenMRSConcept saveConcept(OpenMRSConcept concept) {
         validateConceptBeforeSave(concept);
         Concept converted = fromMrsConcept(concept);
-        Concept created = null;
+        Concept created;
         try {
             created = conceptResource.createConcept(converted);
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_CONCEPT_SUBJECT, EventHelper.conceptParameters(concept)));
@@ -97,7 +97,7 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
     public OpenMRSConcept getConcept(String conceptId) {
         Validate.notEmpty(conceptId, "Concept Id cannot be empty");
 
-        Concept concept = null;
+        Concept concept;
         try {
             concept = conceptResource.getConceptById(conceptId);
         } catch (HttpException e) {
@@ -116,7 +116,7 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
     public List<OpenMRSConcept> search(String name) {
         Validate.notEmpty(name, "Name cannot be empty");
 
-        ConceptListResult result = null;
+        ConceptListResult result;
         try {
             result = conceptResource.queryForConceptsByName(name);
         } catch (HttpException e) {
@@ -156,7 +156,7 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
 
     @Override
     public List<OpenMRSConcept> getAllConcepts() {
-        ConceptListResult result = null;
+        ConceptListResult result;
         try {
             result = conceptResource.getAllConcepts();
         } catch (HttpException e) {
@@ -182,7 +182,7 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
     public OpenMRSConcept updateConcept(OpenMRSConcept concept) {
         Validate.notNull(concept, "Concept cannot be null");
 
-        OpenMRSConcept updatedConcept = null;
+        OpenMRSConcept updatedConcept;
         OpenMRSConcept openMRSConcept = new OpenMRSConcept(concept.getName());
 
         try {

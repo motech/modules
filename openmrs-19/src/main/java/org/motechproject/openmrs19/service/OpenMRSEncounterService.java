@@ -11,7 +11,7 @@ public interface OpenMRSEncounterService {
     /**
      * Stores a given OpenMRSEncounter in the MRS system.
      *
-     * @param  Encounter Object to be saved.
+     * @param  mrsEncounter Object to be saved.
      * @return saved MRS Encounter object
      */
     OpenMRSEncounter createEncounter(OpenMRSEncounter mrsEncounter);
