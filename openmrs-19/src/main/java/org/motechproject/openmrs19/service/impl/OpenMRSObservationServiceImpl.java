@@ -9,22 +9,22 @@ import org.motechproject.openmrs19.domain.OpenMRSObservation;
 import org.motechproject.openmrs19.domain.OpenMRSPatient;
 import org.motechproject.openmrs19.exception.ObservationNotFoundException;
 import org.motechproject.openmrs19.helper.EventHelper;
-import org.motechproject.openmrs19.service.OpenMRSObservationService;
-import org.motechproject.openmrs19.service.OpenMRSPatientService;
-import org.motechproject.openmrs19.rest.HttpException;
 import org.motechproject.openmrs19.resource.ObservationResource;
 import org.motechproject.openmrs19.resource.model.Observation;
 import org.motechproject.openmrs19.resource.model.ObservationListResult;
+import org.motechproject.openmrs19.rest.HttpException;
+import org.motechproject.openmrs19.service.OpenMRSObservationService;
+import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.util.ConverterUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@Component("observationService")
+@Service("observationService")
 public class OpenMRSObservationServiceImpl implements OpenMRSObservationService {
     private static final Logger LOGGER = Logger.getLogger(OpenMRSObservationServiceImpl.class);
 
@@ -50,7 +50,7 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
             return obs;
         }
 
-        ObservationListResult result = null;
+        ObservationListResult result;
         try {
             result = obsResource.queryForObservationsByPatientId(patient.getPatientId());
         } catch (HttpException e) {

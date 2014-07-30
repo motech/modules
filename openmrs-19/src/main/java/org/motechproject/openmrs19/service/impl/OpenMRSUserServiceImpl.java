@@ -3,22 +3,22 @@ package org.motechproject.openmrs19.service.impl;
 import org.apache.commons.lang.Validate;
 import org.motechproject.openmrs19.domain.OpenMRSPerson;
 import org.motechproject.openmrs19.domain.OpenMRSUser;
+import org.motechproject.openmrs19.domain.Password;
 import org.motechproject.openmrs19.exception.OpenMRSException;
 import org.motechproject.openmrs19.exception.UserAlreadyExistsException;
-import org.motechproject.openmrs19.service.OpenMRSUserService;
-import org.motechproject.openmrs19.domain.Password;
-import org.motechproject.openmrs19.rest.HttpException;
 import org.motechproject.openmrs19.resource.UserResource;
 import org.motechproject.openmrs19.resource.model.Role;
 import org.motechproject.openmrs19.resource.model.RoleListResult;
 import org.motechproject.openmrs19.resource.model.User;
 import org.motechproject.openmrs19.resource.model.UserListResult;
+import org.motechproject.openmrs19.rest.HttpException;
+import org.motechproject.openmrs19.service.OpenMRSUserService;
 import org.motechproject.openmrs19.util.ConverterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,13 +26,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component("userService")
+@Service("userService")
 public class OpenMRSUserServiceImpl implements OpenMRSUserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSUserServiceImpl.class);
 
     private static final int DEFAULT_PASSWORD_LENGTH = 8;
-    private final Map<String, String> cachedRoles = new HashMap<String, String>();
+    private final Map<String, String> cachedRoles = new HashMap<>();
 
     private final UserResource userResource;
     private final OpenMRSPersonServiceImpl personAdapter;
@@ -53,7 +53,7 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
 
     @Override
     public List<OpenMRSUser> getAllUsers() {
-        UserListResult result = null;
+        UserListResult result;
         try {
             result = userResource.getAllUsers();
         } catch (HttpException e) {
@@ -95,7 +95,7 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
     public OpenMRSUser getUserByUserName(String username) {
         Validate.notEmpty(username, "Username cannot be empty");
 
-        UserListResult results = null;
+        UserListResult results;
         try {
             results = userResource.queryForUsersByUsername(username);
         } catch (HttpException e) {
@@ -113,9 +113,8 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
         // must retrieve these separately
         User u = results.getResults().get(0);
         OpenMRSPerson person = personAdapter.findByPersonId(u.getPerson().getUuid()).get(0);
-        OpenMRSUser user = convertToMrsUser(u, (OpenMRSPerson) person);
 
-        return user;
+        return convertToMrsUser(u, person);
     }
 
     @Override
@@ -137,12 +136,12 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
         // otherwise it would leave the OpenMRS in an inconsistent state
         getRoleUuidByRoleName(user);
 
-        OpenMRSPerson savedPerson = personAdapter.addPerson((OpenMRSPerson) user.getPerson());
-        user.setPerson((OpenMRSPerson) savedPerson);
+        OpenMRSPerson savedPerson = personAdapter.addPerson(user.getPerson());
+        user.setPerson(savedPerson);
 
         String generatedPassword = password.create();
         User converted = convertToUser(user, generatedPassword);
-        User saved = null;
+        User saved;
         try {
             saved = userResource.createUser(converted);
         } catch (HttpException e) {
@@ -152,7 +151,7 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
 
         user.setUserId(saved.getUuid());
         user.setSystemId(saved.getSystemId());
-        Map<String, Object> values = new HashMap<String, Object>();
+        Map<String, Object> values = new HashMap<>();
         values.put(USER_KEY, user);
         values.put(PASSWORD_KEY, generatedPassword);
 
@@ -171,7 +170,7 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
     }
 
     private List<Role> convertRoles(OpenMRSUser user) {
-        List<Role> roles = new ArrayList<Role>();
+        List<Role> roles = new ArrayList<>();
         Role role = new Role();
         role.setUuid(getRoleUuidByRoleName(user));
         roles.add(role);
@@ -197,7 +196,7 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
     }
 
     private void populateRoleCache() {
-        RoleListResult result = null;
+        RoleListResult result;
         try {
             result = userResource.getAllRoles();
         } catch (HttpException e) {
@@ -209,7 +208,7 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
     }
 
     private Map<String, String> handleResult(List<Role> results) {
-        Map<String, String> roleMap = new HashMap<String, String>();
+        Map<String, String> roleMap = new HashMap<>();
         for (Role role : results) {
             roleMap.put(role.getName(), role.getUuid());
         }
@@ -262,7 +261,7 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
             return null;
         }
 
-        Map<String, Object> values = new HashMap<String, Object>();
+        Map<String, Object> values = new HashMap<>();
         values.put(USER_KEY, user);
         values.put(PASSWORD_KEY, generatedPassword);
 

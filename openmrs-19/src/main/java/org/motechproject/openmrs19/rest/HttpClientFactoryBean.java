@@ -20,7 +20,7 @@ public class HttpClientFactoryBean implements FactoryBean<HttpClient> {
     private HttpClient httpClient;
     private SettingsFacade settingsFacade;
 
-    public HttpClientFactoryBean(@Qualifier("openmrsWsSettings") SettingsFacade settingsFacade) {
+    public HttpClientFactoryBean(@Qualifier("openMrs19Settings") SettingsFacade settingsFacade) {
         this.settingsFacade = settingsFacade;
     }
 

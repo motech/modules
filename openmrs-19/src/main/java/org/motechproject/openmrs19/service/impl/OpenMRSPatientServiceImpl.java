@@ -5,15 +5,12 @@ import org.apache.commons.lang.Validate;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.openmrs19.EventKeys;
-import org.motechproject.openmrs19.exception.OpenMRSException;
-import org.motechproject.openmrs19.exception.PatientNotFoundException;
-import org.motechproject.openmrs19.helper.EventHelper;
 import org.motechproject.openmrs19.domain.OpenMRSFacility;
 import org.motechproject.openmrs19.domain.OpenMRSPatient;
 import org.motechproject.openmrs19.domain.OpenMRSPerson;
-import org.motechproject.openmrs19.service.OpenMRSFacilityService;
-import org.motechproject.openmrs19.service.OpenMRSPatientService;
-import org.motechproject.openmrs19.rest.HttpException;
+import org.motechproject.openmrs19.exception.OpenMRSException;
+import org.motechproject.openmrs19.exception.PatientNotFoundException;
+import org.motechproject.openmrs19.helper.EventHelper;
 import org.motechproject.openmrs19.resource.PatientResource;
 import org.motechproject.openmrs19.resource.model.Identifier;
 import org.motechproject.openmrs19.resource.model.IdentifierType;
@@ -21,11 +18,14 @@ import org.motechproject.openmrs19.resource.model.Location;
 import org.motechproject.openmrs19.resource.model.Patient;
 import org.motechproject.openmrs19.resource.model.PatientListResult;
 import org.motechproject.openmrs19.resource.model.Person;
+import org.motechproject.openmrs19.rest.HttpException;
+import org.motechproject.openmrs19.service.OpenMRSFacilityService;
+import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.util.ConverterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,7 +33,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-@Component("patientService")
+@Service("patientService")
 public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
 
     private static Logger logger = LoggerFactory.getLogger(OpenMRSPatientServiceImpl.class);
@@ -56,7 +56,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
     public OpenMRSPatient getPatientByMotechId(String motechId) {
         Validate.notEmpty(motechId, "Motech Id cannot be empty");
 
-        PatientListResult patientList = null;
+        PatientListResult patientList;
         try {
             patientList = patientResource.queryForPatient(motechId);
         } catch (HttpException e) {
@@ -77,7 +77,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
     public OpenMRSPatient getPatient(String patientId) {
         Validate.notEmpty(patientId, "Patient Id cannot be empty");
 
-        Patient patient = null;
+        Patient patient;
         try {
             patient = patientResource.getPatientById(patientId);
         } catch (HttpException e) {
@@ -85,7 +85,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
             return null;
         }
 
-        String motechIdentifierUuid = null;
+        String motechIdentifierUuid;
         try {
             motechIdentifierUuid = patientResource.getMotechPatientIdentifierUuid();
         } catch (HttpException e) {
@@ -166,7 +166,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
             location.setUuid(patient.getFacility().getFacilityId());
         }
 
-        String motechPatientIdentiferTypeUuid = null;
+        String motechPatientIdentiferTypeUuid;
         try {
             motechPatientIdentiferTypeUuid = patientResource.getMotechPatientIdentifierUuid();
         } catch (HttpException e) {
@@ -187,7 +187,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         identifier.setLocation(location);
         identifier.setIdentifierType(type);
 
-        List<Identifier> identifiers = new ArrayList<Identifier>();
+        List<Identifier> identifiers = new ArrayList<>();
         identifiers.add(identifier);
         converted.setIdentifiers(identifiers);
 
@@ -198,7 +198,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
     public List<OpenMRSPatient> search(String name, String id) {
         Validate.notEmpty(name, "Name cannot be empty");
 
-        PatientListResult result = null;
+        PatientListResult result;
         try {
             result = patientResource.queryForPatient(name);
         } catch (HttpException e) {

@@ -9,13 +9,13 @@
 
     <import resource="classpath*:META-INF/motech/*.xml" />
 
-    <osgi:service ref="encounterAdapter" interface="org.motechproject.mrs.services.MRSEncounterAdapter"/>
-    <osgi:service ref="facilityAdapter" interface="org.motechproject.mrs.services.MRSFacilityAdapter"/>
-    <osgi:service ref="patientAdapter" interface="org.motechproject.mrs.services.MRSPatientAdapter"/>
-    <osgi:service ref="userAdapter" interface="org.motechproject.mrs.services.MRSUserAdapter"/>
-    <osgi:service ref="observationAdapter" interface="org.motechproject.mrs.services.MRSObservationAdapter"/>
-    <osgi:service ref="implReqAdapter" interface="org.motechproject.mrs.services.MRSImplReqAdapter"/>
-    <osgi:service ref="conceptAdapter" interface="org.motechproject.mrs.services.MRSConceptAdapter"/>
+    <osgi:service ref="conceptService" interface="org.motechproject.openmrs19.service.OpenMRSConceptService"/>
+    <osgi:service ref="encounterService" interface="org.motechproject.openmrs19.service.OpenMRSEncounterService"/>
+    <osgi:service ref="facilityService" interface="org.motechproject.openmrs19.service.OpenMRSFacilityService"/>
+    <osgi:service ref="observationService" interface="org.motechproject.openmrs19.service.OpenMRSObservationService"/>
+    <osgi:service ref="patientService" interface="org.motechproject.openmrs19.service.OpenMRSPatientService"/>
+    <osgi:service ref="personService" interface="org.motechproject.openmrs19.service.OpenMRSPersonService"/>
+    <osgi:service ref="userService" interface="org.motechproject.openmrs19.service.OpenMRSUserService"/>
 
     <osgi:reference id="configurationServiceOsgi" interface="org.motechproject.config.service.ConfigurationService" />
 

@@ -9,8 +9,6 @@ import org.motechproject.openmrs19.domain.OpenMRSAttribute;
 import org.motechproject.openmrs19.domain.OpenMRSPerson;
 import org.motechproject.openmrs19.exception.OpenMRSException;
 import org.motechproject.openmrs19.helper.EventHelper;
-import org.motechproject.openmrs19.service.OpenMRSPersonService;
-import org.motechproject.openmrs19.rest.HttpException;
 import org.motechproject.openmrs19.resource.PersonResource;
 import org.motechproject.openmrs19.resource.model.Attribute;
 import org.motechproject.openmrs19.resource.model.Attribute.AttributeType;
@@ -19,11 +17,13 @@ import org.motechproject.openmrs19.resource.model.Concept;
 import org.motechproject.openmrs19.resource.model.Person;
 import org.motechproject.openmrs19.resource.model.Person.PreferredAddress;
 import org.motechproject.openmrs19.resource.model.Person.PreferredName;
+import org.motechproject.openmrs19.rest.HttpException;
+import org.motechproject.openmrs19.service.OpenMRSPersonService;
 import org.motechproject.openmrs19.util.ConverterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,11 +31,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
+@Service("personService")
 public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSPersonServiceImpl.class);
 
-    private final Map<String, String> attributeTypeUuidCache = new HashMap<String, String>();
+    private final Map<String, String> attributeTypeUuidCache = new HashMap<>();
 
     private final PersonResource personResource;
     private final EventRelay eventRelay;
@@ -48,7 +48,7 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
 
     @Override
     public List<OpenMRSPerson> findByPersonId(String uuid) {
-        Person person = null;
+        Person person;
         List<OpenMRSPerson> personList = new ArrayList<>();
         try {
             person = personResource.getPersonById(uuid);
@@ -65,7 +65,7 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
         Validate.notNull(personMrs, "Person cannot be null");
         OpenMRSPerson person = ConverterUtils.createPerson(personMrs);
         Person converted = ConverterUtils.convertToPerson(person, true);
-        Person saved = null;
+        Person saved;
         try {
             saved = personResource.createPerson(converted);
         } catch (HttpException e) {
@@ -92,7 +92,7 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
         person.setAttributes(ConverterUtils.createAttributeList(attributes));
 
         Person converted = ConverterUtils.convertToPerson(person, true);
-        Person saved = null;
+        Person saved;
         try {
             saved = personResource.createPerson(converted);
         } catch (HttpException e) {
@@ -123,7 +123,7 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
 
     private AttributeType getAttributeTypeUuid(String name) {
         if (!attributeTypeUuidCache.containsKey(name)) {
-            AttributeTypeListResult result = null;
+            AttributeTypeListResult result;
             try {
                 result = personResource.queryPersonAttributeTypeByName(name);
             } catch (HttpException e) {
@@ -147,7 +147,7 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
     }
 
     void deleteAllAttributes(OpenMRSPerson person) {
-        Person saved = null;
+        Person saved;
         try {
             saved = personResource.getPersonById(person.getPersonId());
         } catch (HttpException e) {

@@ -35,7 +35,7 @@ public class OpenMRSFacilityServiceImpl implements OpenMRSFacilityService {
 
     @Override
     public List<? extends OpenMRSFacility> getFacilities() {
-        LocationListResult result = null;
+        LocationListResult result;
         try {
             result = locationResource.getAllLocations();
         } catch (HttpException e) {
@@ -57,7 +57,7 @@ public class OpenMRSFacilityServiceImpl implements OpenMRSFacilityService {
     @Override
     public List<? extends OpenMRSFacility> getFacilities(String locationName) {
         Validate.notEmpty(locationName, "Location name cannot be empty");
-        LocationListResult result = null;
+        LocationListResult result;
         try {
             result = locationResource.queryForLocationByName(locationName);
         } catch (HttpException e) {
@@ -71,7 +71,7 @@ public class OpenMRSFacilityServiceImpl implements OpenMRSFacilityService {
     @Override
     public OpenMRSFacility getFacility(String facilityId) {
         Validate.notEmpty(facilityId, "Facility id cannot be empty");
-        Location location = null;
+        Location location;
         try {
             location = locationResource.getLocationById(facilityId);
         } catch (HttpException e) {
@@ -90,7 +90,7 @@ public class OpenMRSFacilityServiceImpl implements OpenMRSFacilityService {
         // fail
         facility.setFacilityId(null);
         Location location = convertMrsFacilityToLocation(facility);
-        Location saved = null;
+        Location saved;
         try {
             saved = locationResource.createLocation(location);
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_FACILITY_SUBJECT, EventHelper.facilityParameters(facility)));
@@ -115,8 +115,8 @@ public class OpenMRSFacilityServiceImpl implements OpenMRSFacilityService {
 
     @Override
     public OpenMRSFacility updateFacility(OpenMRSFacility facility) {
-        Location location = null;
-        OpenMRSFacility updatedLocation = null;
+        Location location;
+        OpenMRSFacility updatedLocation;
         try {
             location = locationResource.getLocationById(facility.getFacilityId());
         } catch (HttpException e) {

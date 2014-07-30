@@ -8,14 +8,13 @@
     <context:property-placeholder location="classpath:activemq.properties, classpath*:openmrs18.properties" />
     <import resource="classpath*:META-INF/motech/*.xml" />
 
-    <bean id="openmrsWsSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType"
-          >
+    <bean id="openmrs19Settings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
         <property name="configFiles">
             <list>
                 <value>classpath:openmrs18.properties</value>
             </list>
         </property>
-        <property name="moduleName" value="openmrs-ws" />
+        <property name="moduleName" value="openmrs-19" />
     </bean>
 
 </beans>
