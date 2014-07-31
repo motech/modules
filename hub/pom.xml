@@ -5,13 +5,13 @@
     <parent>
         <artifactId>modules</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.25-SNAPSHOT</version>
+        <version>0.24-SNAPSHOT</version>
         <relativePath>../</relativePath>
     </parent>
 
     <artifactId>hub</artifactId>
     <groupId>org.motechproject</groupId>
-    <version>0.25-SNAPSHOT</version>
+    <version>0.24-SNAPSHOT</version>
     <name>MOTECH Hub</name>
     <description>MOTECH Hub</description>
     <packaging>bundle</packaging>
