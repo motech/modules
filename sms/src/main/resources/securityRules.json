@@ -1,5 +1,6 @@
 [
        {
+           "active": true,
            "pattern": "/**/sms/status/**",
            "supportedSchemes": [
                "NO_SECURITY"
@@ -14,6 +15,7 @@
            ]
        },
        {
+           "active": true,
            "pattern": "/**/sms/incoming/**",
            "supportedSchemes": [
                "NO_SECURITY"
