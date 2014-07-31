@@ -1,17 +1,17 @@
 package org.motechproject.mtraining.domain;
 
+import org.motechproject.mds.annotations.Entity;
+
 /**
- * Created by kosh on 5/29/14.
+ * Lesson domain object forms the leaf node in the course structure hierarchy. A lesson is typically the
+ * leaf node in the Course structure hierarchy
  */
-public class Lesson {
+@Entity
+public class Lesson extends CourseUnitMetadata {
 
-    private String content;
+    public Lesson(String name, CourseUnitState state, String content) {
 
-    public String getContent() {
-        return content;
+        super(name, state, content);
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
 }
