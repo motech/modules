@@ -34,3 +34,7 @@
 .cms-lite #operations-resource {
     margin: 10px;
 }
+
+.ui-autocomplete {
+    z-index: 9999;
+}
