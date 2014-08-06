@@ -69,7 +69,7 @@ public class IncomingController {
         String recipient = null;
         String message = null;
         String providerMessageId = null;
-        DateTime timestamp = null;
+        DateTime timestamp;
 
         logger.info("Incoming SMS - configName = {}, params = {}", configName, params);
 

@@ -17,7 +17,7 @@ import static org.apache.commons.lang.StringUtils.isNotBlank;
  */
 public class Configs {
     private String defaultConfigName;
-    private List<Config> configs = new ArrayList<Config>();
+    private List<Config> configs = new ArrayList<>();
 
     public Configs() { }
 

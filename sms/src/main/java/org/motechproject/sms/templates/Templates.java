@@ -11,7 +11,7 @@ import java.util.Map;
  * Helper template collection
  */
 public class Templates {
-    private Map<String, Template> templates = new HashMap<String, Template>();
+    private Map<String, Template> templates = new HashMap<>();
 
     public Templates(SettingsFacade settingFacade, List<Template> templates) {
         for (Template template : templates) {
@@ -25,7 +25,7 @@ public class Templates {
     }
 
     public Map<String, TemplateForWeb> templatesForWeb() {
-        Map<String, TemplateForWeb> ret = new HashMap<String, TemplateForWeb>();
+        Map<String, TemplateForWeb> ret = new HashMap<>();
         for (Map.Entry<String, Template> entry : templates.entrySet()) {
             ret.put(entry.getKey(), new TemplateForWeb(entry.getValue()));
         }

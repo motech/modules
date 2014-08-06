@@ -76,7 +76,7 @@ public class SmsHttpService {
         if (method.getClass().equals(PostMethod.class)) {
             PostMethod postMethod = (PostMethod) method;
             RequestEntity requestEntity = postMethod.getRequestEntity();
-            if (requestEntity.getContentType() == MediaType.APPLICATION_FORM_URLENCODED_VALUE) {
+            if (MediaType.APPLICATION_FORM_URLENCODED_VALUE.equals(requestEntity.getContentType())) {
                 StringBuilder sb = new StringBuilder();
                 NameValuePair[] params = postMethod.getParameters();
                 for (NameValuePair param : params) {
@@ -88,7 +88,7 @@ public class SmsHttpService {
                 return "POST Parameters: " + sb.toString();
             } else if (requestEntity.getClass() == StringRequestEntity.class) {
                 // Assume MediaType.APPLICATION_JSON_VALUE
-                return "POST JSON: " + ((StringRequestEntity) requestEntity).getContent().toString();
+                return "POST JSON: " + ((StringRequestEntity) requestEntity).getContent();
             }
         } else if (method.getClass().equals(GetMethod.class)) {
             GetMethod g = (GetMethod) method;
@@ -131,7 +131,7 @@ public class SmsHttpService {
     }
 
     private Map<String, String> generateProps(OutgoingSms sms, Template template, Config config) {
-        Map<String, String> props = new HashMap<String, String>();
+        Map<String, String> props = new HashMap<>();
         props.put("recipients", template.recipientsAsString(sms.getRecipients()));
         props.put("message", sms.getMessage());
         props.put("motechId", sms.getMotechId());
@@ -224,8 +224,8 @@ public class SmsHttpService {
         String httpResponse = null;
         String errorMessage = null;
         Map<String, String> props = generateProps(sms, template, config);
-        List<MotechEvent> events = new ArrayList<MotechEvent>();
-        List<SmsRecord> auditRecords = new ArrayList<SmsRecord>();
+        List<MotechEvent> events = new ArrayList<>();
+        List<SmsRecord> auditRecords = new ArrayList<>();
 
         //
         // Generate the HTTP request
@@ -254,7 +254,7 @@ public class SmsHttpService {
         // Analyze provider's response
         //
         Response templateResponse = template.getOutgoing().getResponse();
-        if (httpStatus == null || !templateResponse.isSuccessStatus(httpStatus)) {
+        if (httpStatus == null || !templateResponse.isSuccessStatus(httpStatus) || httpMethod == null) {
             //
             // HTTP Request Failure
             //

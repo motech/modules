@@ -25,10 +25,7 @@
 
         <spring.version>3.1.0.RELEASE</spring.version>
         <spring.security.version>${spring.version}</spring.security.version>
-        <spring.integration.version>2.1.0.RELEASE</spring.integration.version>
         <spring.batch.version>3.0.0.M3-r027</spring.batch.version>
-
-        <activemq.version>5.4.2-${external.dependency.release.tag}</activemq.version>
 
         <apache.servicemix.bundles.xpp3.version>1.1.4c_7</apache.servicemix.bundles.xpp3.version>
         <apache.servicemix.bundles.ant.version>1.8.1_1</apache.servicemix.bundles.ant.version>
@@ -157,31 +154,6 @@
                 <version>1.1.0</version>
             </dependency>
             <dependency>
-                <groupId>javax.jms</groupId>
-                <artifactId>com.springsource.javax.jms</artifactId>
-                <version>1.1.0</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.ejb</groupId>
-                <artifactId>com.springsource.javax.ejb</artifactId>
-                <version>3.0.0</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.xml.rpc</groupId>
-                <artifactId>com.springsource.javax.xml.rpc</artifactId>
-                <version>1.1.0</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>com.springsource.javax.servlet</artifactId>
-                <version>2.5.0</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.xml.soap</groupId>
-                <artifactId>com.springsource.javax.xml.soap</artifactId>
-                <version>1.3.0</version>
-            </dependency>
-            <dependency>
                 <groupId>javax.activation</groupId>
                 <artifactId>com.springsource.javax.activation</artifactId>
                 <version>1.1.1</version>
@@ -235,16 +207,6 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
-                <artifactId>org.springframework.aspects</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>org.springframework.asm</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
                 <artifactId>org.springframework.web</artifactId>
                 <version>${spring.version}</version>
                 <exclusions>
@@ -267,183 +229,8 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
-                <artifactId>org.springframework.orm</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>org.springframework.jdbc</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>org.springframework.jms</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>org.springframework.transaction</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>org.springframework.security.core</artifactId>
-                <version>${spring.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.aop</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.beans</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.context</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.transaction</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.expression</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.jdbc</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.web</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>org.springframework.security.config</artifactId>
-                <version>${spring.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.aop</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.beans</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.context</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.transaction</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.expression</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.jdbc</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.web</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework.security</groupId>
-                        <artifactId>org.springframework.security.web</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>org.springframework.security.web</artifactId>
-                <version>${spring.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.beans</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.context</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.transaction</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.expression</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.jdbc</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.web</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
                 <artifactId>org.springframework.oxm</artifactId>
                 <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.integration</groupId>
-                <artifactId>spring-integration-core</artifactId>
-                <version>2.1.0.RELEASE</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>spring-aop</artifactId>
-                        <groupId>org.springframework</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>spring-tx</artifactId>
-                        <groupId>org.springframework</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>spring-context</artifactId>
-                        <groupId>org.springframework</groupId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.integration</groupId>
-                <artifactId>spring-integration-jms</artifactId>
-                <version>${spring.integration.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>spring-tx</artifactId>
-                        <groupId>org.springframework</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>spring-jms</artifactId>
-                        <groupId>org.springframework</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework.integration</groupId>
-                        <artifactId>spring-integration-core</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <!-- OSGi -->
             <dependency>
@@ -567,11 +354,6 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>org.motechproject.org.apache.commons.configuration</artifactId>
-                <version>1.8-${external.dependency.release.tag}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>org.motechproject.org.hibernate.validator</artifactId>
                 <version>4.1.0.Final-${external.dependency.release.tag}</version>
@@ -603,45 +385,6 @@
                 <artifactId>com.springsource.org.apache.log4j</artifactId>
                 <version>1.2.16</version>
             </dependency>
-            <!-- Asterisk -->
-            <dependency>
-                <groupId>org.asteriskjava</groupId>
-                <artifactId>asterisk-java</artifactId>
-                <version>1.0.0.M3</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.slf4j</groupId>
-                        <artifactId>slf4j-api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <!-- ActiveMQ -->
-            <dependency>
-                <groupId>org.apache.activemq</groupId>
-                <artifactId>org.motechproject.org.apache.activemq</artifactId>
-                <version>${activemq.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.activemq</groupId>
-                        <artifactId>activemq-core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>javax.annotation</groupId>
-                        <artifactId>com.springsource.javax.annotation</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.activemq</groupId>
-                <artifactId>kahadb</artifactId>
-                <version>5.4.2</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>commons-logging</artifactId>
-                        <groupId>commons-logging</groupId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
             <!-- Fragment -->
             <dependency>
                 <groupId>${project.groupId}</groupId>
@@ -658,11 +401,6 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>org.motechproject.guava</artifactId>
                 <version>0.8.0-${external.dependency.release.tag}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.servicemix.bundles</groupId>
-                <artifactId>org.apache.servicemix.bundles.paranamer</artifactId>
-                <version>2.6_1</version>
             </dependency>
             <dependency>
                 <groupId>org.javassist</groupId>
@@ -727,11 +465,6 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.sonatype.aether</groupId>
-                <artifactId>org.motechproject.aether-api</artifactId>
-                <version>1.13.1-${external.dependency.release.tag}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.thoughtworks.xstream</groupId>
                 <artifactId>org.motechproject.com.thoughtworks.xstream</artifactId>
                 <version>1.4.2-${external.dependency.release.tag}</version>
@@ -757,16 +490,6 @@
                 <version>20080701-${external.dependency.release.tag}</version>
             </dependency>
             <dependency>
-                <groupId>xforms</groupId>
-                <artifactId>org.motechproject.xforms</artifactId>
-                <version>0.7.0-beta-1-${external.dependency.release.tag}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.jcraft.jzlib</groupId>
-                <artifactId>com.springsource.com.jcraft.jzlib</artifactId>
-                <version>1.0.7</version>
-            </dependency>
-            <dependency>
                 <groupId>org.jdom</groupId>
                 <artifactId>com.springsource.org.jdom</artifactId>
                 <version>1.1.0</version>
@@ -775,26 +498,6 @@
                 <groupId>org.aopalliance</groupId>
                 <artifactId>com.springsource.org.aopalliance</artifactId>
                 <version>1.0.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.drools</groupId>
-                <artifactId>drools-api</artifactId>
-                <version>5.1.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.mvel</groupId>
-                <artifactId>org.motechproject.org.mvel</artifactId>
-                <version>2.0beta1-${external.dependency.release.tag}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.geronimo.specs</groupId>
-                <artifactId>com.springsource.javax.management.j2ee</artifactId>
-                <version>1.0.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.objectweb.howl</groupId>
-                <artifactId>com.springsource.org.objectweb.howl</artifactId>
-                <version>1.0.2</version>
             </dependency>
             <dependency>
                 <groupId>org.objectweb.asm</groupId>
@@ -817,41 +520,9 @@
                 <version>1.6.2-${external.dependency.release.tag}</version>
             </dependency>
             <dependency>
-                <groupId>ca.uhn.hapi</groupId>
-                <artifactId>org.motechproject.com.ca.uhn.hapi</artifactId>
-                <version>0.5.0-${external.dependency.release.tag}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.azeckoski</groupId>
-                <artifactId>org.motechproject.org.azeckoski.reflectutils</artifactId>
-                <version>0.9.14-${external.dependency.release.tag}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.subethamail</groupId>
-                <artifactId>org.motechproject.org.subethamail</artifactId>
-                <version>3.1.7-${external.dependency.release.tag}</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>activation</artifactId>
-                        <groupId>javax.activation</groupId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
                 <groupId>net.sourceforge.cglib</groupId>
                 <artifactId>com.springsource.net.sf.cglib</artifactId>
                 <version>2.2.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>com.springsource.org.hibernate</artifactId>
-                <version>3.3.2.GA</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>com.springsource.slf4j.api</artifactId>
-                        <groupId>org.slf4j</groupId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -867,11 +538,6 @@
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.eventadmin</artifactId>
                 <version>1.3.2</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>org.springframework.security.openid</artifactId>
-                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.motechproject</groupId>
@@ -953,21 +619,9 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>com.springsource.org.mortbay.jetty.server</artifactId>
-                <version>6.1.9</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
                 <groupId>org.custommonkey.xmlunit</groupId>
                 <artifactId>com.springsource.org.custommonkey.xmlunit</artifactId>
                 <version>1.2.0</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.liquibase</groupId>
-                <artifactId>liquibase-core</artifactId>
-                <version>1.9.4-mod</version>
                 <scope>test</scope>
             </dependency>
             <!-- OSGi IT -->
@@ -1063,6 +717,11 @@
                         </execution>
                     </executions>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.6</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -1101,17 +760,6 @@
                     <source>${jdk.version}</source>
                     <target>${jdk.version}</target>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>default-testCompile</id>
-                        <phase>test-compile</phase>
-                        <configuration>
-                            <testExcludes>
-                                <exclude>**/ft/*.java</exclude>
-                            </testExcludes>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -1126,11 +774,6 @@
                 </dependencies>
                 <configuration>
                     <skipTests>${unitTests.skip}</skipTests>
-                    <excludes>
-                        <exclude>**/**/*ForTest.java</exclude>
-                        <exclude>**/**/*BundleIT.java</exclude>
-                        <exclude>**/ft/*.java</exclude>
-                    </excludes>
                     <argLine>-XX:-UseSplitVerifier</argLine>
                     <!-- bug in powermock on java7 -->
                     <forkMode>once</forkMode>
@@ -1245,7 +888,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-resources-plugin</artifactId>
-                        <version>2.6</version>
                         <executions>
                             <execution>
                                 <id>copy-test-config-files</id>
@@ -1305,25 +947,7 @@
                                 </goals>
                                 <configuration>
                                     <encoding>UTF-8</encoding>
-                                    <excludes>
-                                        <exclude>**/**/*BundleIT.java</exclude>
-                                    </excludes>
                                     <summaryFile>target/failsafe-reports/failsafe-summary-it.xml</summaryFile>
-                                    <systemPropertiesFile>${modules.root.dir}/maven.properties</systemPropertiesFile>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>integration-test-osgi</id>
-                                <goals>
-                                    <goal>integration-test</goal>
-                                </goals>
-                                <configuration>
-                                    <encoding>UTF-8</encoding>
-                                    <includes>
-                                        <include>**/**/*BundleIT.java</include>
-                                    </includes>
-                                    <summaryFile>target/failsafe-reports/failsafe-summary-it-osgi.xml</summaryFile>
-                                    <forkMode>always</forkMode>
                                     <systemPropertiesFile>${modules.root.dir}/maven.properties</systemPropertiesFile>
                                 </configuration>
                             </execution>
@@ -1335,7 +959,6 @@
                                 <configuration>
                                     <summaryFiles>
                                         <summaryFile>target/failsafe-reports/failsafe-summary-it.xml</summaryFile>
-                                        <summaryFile>target/failsafe-reports/failsafe-summary-it-osgi.xml</summaryFile>
                                     </summaryFiles>
                                 </configuration>
                             </execution>

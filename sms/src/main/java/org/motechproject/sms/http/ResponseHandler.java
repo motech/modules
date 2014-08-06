@@ -21,8 +21,8 @@ public abstract class ResponseHandler {
     private Template template;
     private Config config;
     private Response templateOutgoingResponse;
-    private List<MotechEvent> events = new ArrayList<MotechEvent>();
-    private List<SmsRecord> auditRecords = new ArrayList<SmsRecord>();
+    private List<MotechEvent> events = new ArrayList<>();
+    private List<SmsRecord> auditRecords = new ArrayList<>();
     private Logger logger = LoggerFactory.getLogger(ResponseHandler.class);
     private MotechStatusMessage motechStatusMessage;
 

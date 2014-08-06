@@ -11,7 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
     <version>0.25-SNAPSHOT</version>
     <description>SMS Module</description>
-    <groupId>org.motechproject</groupId>
+
     <artifactId>sms</artifactId>
     <name>SMS Module</name>
     <packaging>bundle</packaging>
@@ -26,10 +26,6 @@
             <groupId>${motech.groupId}</groupId>
             <artifactId>motech-platform-server-config</artifactId>
             <version>${motech.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>com.springsource.org.apache.commons.httpclient</artifactId>
         </dependency>
         <dependency>
             <groupId>org.codehaus.jackson</groupId>

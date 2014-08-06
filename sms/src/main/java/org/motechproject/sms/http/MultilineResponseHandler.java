@@ -58,7 +58,7 @@ public class MultilineResponseHandler extends ResponseHandler {
                 } else {
                     String failureMessage = messageAndRecipient[0];
                     String recipient = messageAndRecipient[1];
-                    List<String> recipients = Arrays.asList(new String[]{recipient});
+                    List<String> recipients = Arrays.asList(recipient);
                     getEvents().add(outboundEvent(getConfig().retryOrAbortSubject(failureCount), getConfig().getName(),
                             recipients, sms.getMessage(), sms.getMotechId(), null, failureCount, null, null));
                     getLogger().info("Failed to send SMS: {}", failureMessage);
@@ -69,7 +69,7 @@ public class MultilineResponseHandler extends ResponseHandler {
             } else {
                 String messageId = messageIdAndRecipient[0];
                 String recipient = messageIdAndRecipient[1];
-                List<String> recipients = Arrays.asList(new String[]{recipient});
+                List<String> recipients = Arrays.asList(recipient);
                 //todo: HIPAA concerns?
                 getLogger().info(String.format("Sent messageId %s '%s' to %s", messageId, messageForLog(sms),
                         recipient));

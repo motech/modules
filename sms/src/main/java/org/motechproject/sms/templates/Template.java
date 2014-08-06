@@ -41,11 +41,11 @@ public class Template {
                 Map<String, String> jsonParams = getJsonParameters(outgoing.getRequest().getBodyParameters(), props);
                 Gson gson = new Gson();
                 String json = gson.toJson(jsonParams);
-                StringRequestEntity requestEntity = null;
+                StringRequestEntity requestEntity;
                 try {
                     requestEntity = new StringRequestEntity(json, MediaType.APPLICATION_JSON_VALUE, "UTF-8");
                 } catch  (UnsupportedEncodingException e) {
-                    throw new IllegalStateException(String.format("Template error: {}: invalid json: {}", name,
+                    throw new IllegalStateException(String.format("Template error: %s: invalid json: %s", name,
                             e.toString()));
                 }
                 ((PostMethod) httpMethod).setRequestEntity(requestEntity);
@@ -62,7 +62,7 @@ public class Template {
     }
 
     private NameValuePair[] addQueryParameters(Map<String, String> props) {
-        List<NameValuePair> queryStringValues = new ArrayList<NameValuePair>();
+        List<NameValuePair> queryStringValues = new ArrayList<>();
         Map<String, String> queryParameters = outgoing.getRequest().getQueryParameters();
         for (Map.Entry< String, String > entry : queryParameters.entrySet()) {
             String value = placeHolderOrLiteral(entry.getValue(), props);
@@ -72,7 +72,7 @@ public class Template {
     }
 
     private Map<String, String> getJsonParameters(Map<String, String> bodyParameters, Map<String, String> props) {
-        Map<String, String> ret = new HashMap<String, String>();
+        Map<String, String> ret = new HashMap<>();
         for (Map.Entry<String, String> entry: bodyParameters.entrySet()) {
             String value = placeHolderOrLiteral(entry.getValue(), props);
             ret.put(entry.getKey(), value);

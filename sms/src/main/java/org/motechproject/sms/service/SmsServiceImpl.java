@@ -97,13 +97,13 @@ public class SmsServiceImpl implements SmsService {
     private List<List<String>> splitRecipientList(List<String> list, Integer maxSize) {
         List<List<String>> ret = new ArrayList<>();
         int i = 0;
-        ArrayList<String> chunk = new ArrayList<String>();
+        ArrayList<String> chunk = new ArrayList<>();
         for (String val : list) {
             chunk.add(val);
             i++;
             if (i % maxSize == 0) {
                 ret.add(chunk);
-                chunk = new ArrayList<String>();
+                chunk = new ArrayList<>();
             }
         }
         if (chunk.size() > 0) {
