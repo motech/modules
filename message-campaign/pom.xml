@@ -37,34 +37,8 @@
             <version>${motech.version}</version>
         </dependency>
         <dependency>
-            <groupId>${motech.groupId}</groupId>
-            <artifactId>motech-platform-osgi-web-util</artifactId>
-            <version>${motech.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${motech.groupId}</groupId>
-            <artifactId>motech-platform-osgi-extender-fragment</artifactId>
-            <version>${motech.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>org.motechproject.com.google.code.gson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>org.motechproject.org.json</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>com.springsource.org.apache.commons.io</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>org.springframework.web.servlet</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>org.springframework.context.support</artifactId>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
@@ -75,16 +49,8 @@
             <artifactId>org.motechproject.org.codehaus.jackson</artifactId>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>com.springsource.javax.servlet</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>com.springsource.org.apache.commons.fileupload</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>com.springsource.org.apache.commons.codec</artifactId>
         </dependency>
         <!-- Test -->
         <dependency>
@@ -102,11 +68,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test-mvc</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

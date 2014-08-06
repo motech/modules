@@ -151,11 +151,6 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>motech-platform-osgi-web-util</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>motech-platform-commons-date</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -211,7 +206,6 @@
             <groupId>org.springframework.batch.infrastructure</groupId>
             <artifactId>org.motechproject.org.springframework.batch.infrastructure</artifactId>
             <version>${spring.batch.version}</version>
-
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework</groupId>

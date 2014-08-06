@@ -29,29 +29,10 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${motech.groupId}</groupId>
-            <artifactId>motech-platform-commons-couchdb</artifactId>
-            <version>${motech.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${motech.groupId}</groupId>
-            <artifactId>motech-platform-osgi-web-util</artifactId>
-            <version>${motech.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.asteriskjava</groupId>
             <artifactId>asterisk-java</artifactId>
         </dependency>
         <!-- OSGI dependencies -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>com.springsource.javax.servlet</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>org.springframework.web.servlet</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>com.springsource.org.apache.commons.codec</artifactId>
@@ -85,7 +66,6 @@
                             org.asteriskjava.live,
                             org.ektorp.impl,
                             org.ektorp.spring,
-                            org.motechproject.commons.couchdb.service,
                             org.motechproject.event.listener.annotations,
                             org.motechproject.server.config,
                             org.motechproject.server.config.service,
@@ -93,10 +73,8 @@
                             org.springframework.beans.factory.xml,
                             org.springframework.context.config,
                             org.springframework.context.support,
-                            org.springframework.web.servlet.mvc,
                             org.springframework.security.config,
                             org.eclipse.gemini.blueprint.config,
-                            org.springframework.web.servlet.config,
                             *
                         </Import-Package>
                         <Embed-Transitive>true</Embed-Transitive>
