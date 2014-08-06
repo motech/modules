@@ -29,27 +29,13 @@
             <version>${motech.version}</version>
         </dependency>
         <dependency>
-            <groupId>${motech.groupId}</groupId>
-            <artifactId>motech-platform-server-config</artifactId>
-            <version>${motech.version}</version>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>ivr-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>org.motechproject.org.codehaus.jackson</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.ektorp</groupId>
             <artifactId>org.motechproject.org.ektorp</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${motech.groupId}</groupId>
-            <artifactId>motech-platform-osgi-web-util</artifactId>
-            <version>${motech.version}</version>
         </dependency>
         <!-- Test -->
         <dependency>
@@ -57,11 +43,6 @@
             <artifactId>motech-testing-utils</artifactId>
             <version>${motech.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>${motech.groupId}</groupId>
-            <artifactId>motech-platform-osgi-extender-fragment</artifactId>
-            <version>${motech.version}</version>
         </dependency>
     </dependencies>
     <build>
@@ -82,10 +63,7 @@
                             org.motechproject.commons.couchdb.service,
                             org.motechproject.event.listener,
                             org.motechproject.event.listener.annotations,
-                            org.motechproject.server.config,
                             org.motechproject.ivr.domain,
-                            org.motechproject.server.config.service,
-                            org.motechproject.config.service,
                             org.springframework.ui.velocity,
                             org.springframework.web.servlet.config,
                             org.springframework.web.servlet.mvc,

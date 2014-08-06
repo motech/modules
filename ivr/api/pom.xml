@@ -25,11 +25,6 @@
     <dependencies>
         <dependency>
             <groupId>${motech.groupId}</groupId>
-            <artifactId>motech-platform-server-config</artifactId>
-            <version>${motech.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${motech.groupId}</groupId>
             <artifactId>motech-platform-commons-couchdb</artifactId>
             <version>${motech.version}</version>
         </dependency>
@@ -43,54 +38,13 @@
             <version>${motech.version}</version>
         </dependency>
         <dependency>
-            <groupId>junit-addons</groupId>
-            <artifactId>junit-addons</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>com.springsource.org.apache.commons.codec</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>com.springsource.org.apache.commons.lang</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>org.springframework.web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>org.springframework.web.servlet</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${motech.groupId}</groupId>
-            <artifactId>motech-platform-osgi-web-util</artifactId>
-            <version>${motech.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${motech.groupId}</groupId>
-            <artifactId>motech-platform-commons-api</artifactId>
-            <version>${motech.version}</version>
         </dependency>
         <dependency>
             <groupId>${motech.groupId}</groupId>
             <artifactId>motech-platform-commons-date</artifactId>
             <version>${motech.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>com.springsource.javax.servlet</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${motech.groupId}</groupId>
-            <artifactId>motech-platform-osgi-extender-fragment</artifactId>
-            <version>${motech.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${motech.groupId}</groupId>
-            <artifactId>motech-testing-utils</artifactId>
-            <version>${motech.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -140,13 +94,9 @@
                         </Export-Package>
                         <Import-Package>
                             org.motechproject.commons.couchdb.service,
-                            org.motechproject.server.config,
-                            org.motechproject.server.config.service,
-                            org.motechproject.config.service,
                             org.springframework.beans.factory.xml,
                             org.springframework.context.config,
                             org.springframework.stereotype,
-                            org.springframework.web.servlet.mvc,
                             *
                         </Import-Package>
                     </instructions>

@@ -94,11 +94,6 @@
         </dependency>
         <!-- SLF4J -->
         <dependency>
-            <groupId>org.eclipse.gemini</groupId>
-            <artifactId>org.eclipse.gemini.blueprint.extender</artifactId>
-        </dependency>
-        <!-- SLF4J -->
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>com.springsource.slf4j.api</artifactId>
         </dependency>
@@ -114,11 +109,6 @@
         <dependency>
             <groupId>org.apache.log4j</groupId>
             <artifactId>com.springsource.org.apache.log4j</artifactId>
-        </dependency>
-        <!-- Others -->
-        <dependency>
-            <groupId>com.googlecode.lambdaj</groupId>
-            <artifactId>org.motechproject.com.googlecode.lambdaj</artifactId>
         </dependency>
         <!-- Test -->
         <dependency>
@@ -145,10 +135,6 @@
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-pax-it</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.motechproject</groupId>
-            <artifactId>motech-platform-osgi-extender-fragment</artifactId>
         </dependency>
     </dependencies>
 
@@ -482,41 +468,6 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>org.eclipse.gemini</groupId>
-                <artifactId>org.eclipse.gemini.blueprint.extender</artifactId>
-                <version>1.0.2.RELEASE</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.aop</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.beans</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.context</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>org.springframework.context.support</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.eclipse.osgi</groupId>
-                        <artifactId>org.eclipse.osgi</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.eclipse.osgi</groupId>
-                        <artifactId>org.eclipse.osgi.services</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.http.bridge</artifactId>
                 <version>2.2.0</version>
@@ -737,17 +688,6 @@
                 <groupId>org.antlr</groupId>
                 <artifactId>com.springsource.antlr</artifactId>
                 <version>2.7.6</version>
-            </dependency>
-            <dependency>
-                <groupId>com.googlecode.lambdaj</groupId>
-                <artifactId>org.motechproject.com.googlecode.lambdaj</artifactId>
-                <version>2.3.3-${external.dependency.release.tag}</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>lambdaj</artifactId>
-                        <groupId>com.googlecode.lambdaj</groupId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.quartz-scheduler</groupId>
