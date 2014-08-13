@@ -11,17 +11,22 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   mtraining
    alerts
+   appointments
+   batch
    call_flow
    cms_lite
    commcare
-   ivr/index
-   sms
+   event_logging
+   hindi_transliteration
+   http_agent
+   hub
    message_campaign
+   mtraining
+   openmrs_19
    pill_reminder
    schedule_tracking
-   sample_schedule
+   sms
    packages
 
 Indices and tables
