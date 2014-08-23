@@ -1,0 +1,34 @@
+[
+    {
+        "active": true,
+        "pattern": "/**/ivr/status/**",
+        "supportedSchemes": [
+            "NO_SECURITY"
+        ],
+        "protocol": "HTTP",
+        "priority": 2,
+        "rest": true,
+        "origin": "SYSTEM_MODULE_IVR",
+        "version": "0.25",
+        "methodsRequired": [
+            "GET",
+            "POST"
+        ]
+    },
+    {
+        "active": true,
+        "pattern": "/**/ivr/call/**",
+        "supportedSchemes": [
+            "USERNAME_PASSWORD"
+        ],
+        "protocol": "HTTP",
+        "priority": 2,
+        "rest": true,
+        "origin": "SYSTEM_MODULE_IVR",
+        "version": "0.25",
+        "methodsRequired": [
+            "GET",
+            "POST"
+        ]
+    }
+]

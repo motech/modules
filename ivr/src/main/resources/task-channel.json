@@ -1,0 +1,98 @@
+{
+    "displayName": "ivr_task_name",
+    "moduleName": "${project.artifactId}",
+    "moduleVersion": "${parsedVersion.osgiVersion}",
+    "triggerTaskEvents" : [
+        {
+            "subject" : "ivr_call_status",
+            "displayName" : "ivr_task_call_status",
+            "eventParameters" : [
+                {
+                    "eventKey" : "motechTimestamp",
+                    "type" : "DATE",
+                    "displayName" : "ivr_task_motechTimestamp"
+                },
+                {
+                    "eventKey" : "providerTimestamp",
+                    "type" : "DATE",
+                    "displayName" : "ivr_task_providerTimestamp"
+                },
+                {
+                    "eventKey" : "config",
+                    "displayName" : "ivr_task_config"
+                },
+                {
+                    "eventKey" : "from",
+                    "displayName" : "ivr_task_from"
+                },
+                {
+                    "eventKey" : "to",
+                    "displayName" : "ivr_task_to"
+                },
+                {
+                    "eventKey" : "call_direction",
+                    "displayName" : "ivr_task_call_direction"
+                },
+                {
+                    "eventKey" : "call_status",
+                    "displayName" : "ivr_task_call_status"
+                },
+                {
+                    "eventKey" : "motech_call_id",
+                    "displayName" : "ivr_task_motech_call_id"
+                },
+                {
+                    "eventKey" : "provider_call_id",
+                    "displayName" : "ivr_task_provider_call_id"
+                },
+                {
+                    "eventKey" : "provider_extra_data",
+                    "type" : "MAP",
+                    "displayName" : "ivr_task_provider_extra_data"
+                }
+            ]
+        },
+        {
+            "subject" : "ivr_call_initiated",
+            "displayName" : "ivr_task_call_initiated",
+            "eventParameters" : [
+                {
+                    "eventKey" : "timestamp",
+                    "type" : "DATE",
+                    "displayName" : "ivr_task_timestamp"
+                },
+                {
+                    "eventKey" : "config",
+                    "displayName" : "ivr_task_config"
+                },
+                {
+                    "eventKey" : "to",
+                    "displayName" : "ivr_task_to"
+                },
+                {
+                    "eventKey" : "provider_extra_data",
+                    "type" : "MAP",
+                    "displayName" : "ivr_task_provider_extra_data"
+                }
+            ]
+        }
+    ],
+    "actionTaskEvents": [
+        {
+            "subject" : "ivr_initiate_call",
+            "displayName" : "ivr_task_initiate_call",
+            "actionParameters" : [
+                {
+                    "key" : "config",
+                    "displayName" : "ivr_task_config"
+                },
+                {
+                    "key" : "params",
+                    "type" : "MAP",
+                    "displayName" : "ivr_task_params",
+                    "required": false
+                }
+            ]
+        }
+    ]
+}
