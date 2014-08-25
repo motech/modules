@@ -95,8 +95,8 @@ public class JobTriggerServiceImpl implements JobTriggerService {
     private void storeJobContent(String jobName) throws BatchException {
         String batchConfigResourcePath = BatchConstants.BATCH_XML_CONFIG_PATH
                 + jobName + BatchConstants.XML_EXTENSION;
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream(
-                batchConfigResourcePath)) {
+        try (InputStream is = Thread.currentThread().getContextClassLoader()
+                .getResourceAsStream(batchConfigResourcePath)) {
             if (is != null) {
                 BatchJob batchJob = jobRepo.findByJobName(jobName).get(0);
                 batchJob.setJobContent(IOUtils.toByteArray(is));
