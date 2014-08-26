@@ -21,6 +21,7 @@ Contents:
    hindi_transliteration
    http_agent
    hub
+   ivr
    message_campaign
    mtraining
    openmrs_19
