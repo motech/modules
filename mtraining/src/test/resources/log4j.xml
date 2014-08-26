@@ -10,12 +10,13 @@
         </layout>
     </appender>
 
-    <logger name="archetype.test.service">
-        <level value="WARN"/>
-    </logger>
     <logger name="org.springframework.web">
         <level value="ERROR"/>
     </logger>
+
+    <!--<logger name="DataNucleus.Query">
+        <level value="ALL"/>
+    </logger>-->
 
     <root>
         <priority value="ERROR"/>

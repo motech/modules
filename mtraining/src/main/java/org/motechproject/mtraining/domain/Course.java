@@ -1,42 +1,45 @@
 package org.motechproject.mtraining.domain;
 
 import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.Field;
 
 import java.util.List;
 
 /**
- * Created by kosh on 5/29/14.
+ * Course metadata containing chapter information
+ * Structure -
+ * Course is a collection of chapters
+ * Chapter is a collection of lessons
+ * Every Chapter has a quiz associated with it
+ * Quiz is a collection of questions
+ * Question contains pointer to question resource and answer resource
  */
 @Entity
-public class Course extends BaseMeta {
+public class Course extends CourseUnitMetadata {
 
-    private int version;
+    /**
+     * List of chapters in the course
+     */
+    @Field
+    private List<Chapter> chapters;
 
-    private String location;
+    public Course(String name, CourseUnitState state, String content) {
 
-    private List<Module> modules;
-
-    public int getVersion() {
-        return version;
+        this(name, state, content, null);
     }
 
-    public void setVersion(int version) {
-        this.version = version;
+    public Course(String name, CourseUnitState state, String content, List<Chapter> chapters) {
+        super(name, state, content);
+        this.chapters = chapters;
     }
 
-    public String getLocation() {
-        return location;
+    public List<Chapter> getChapters() {
+
+        return chapters;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
+    public void setChapters(List<Chapter> chapters) {
 
-    public List<Module> getModules() {
-        return modules;
-    }
-
-    public void setModules(List<Module> modules) {
-        this.modules = modules;
+        this.chapters = chapters;
     }
 }
