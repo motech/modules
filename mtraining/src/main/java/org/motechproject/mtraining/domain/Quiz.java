@@ -1,39 +1,58 @@
 package org.motechproject.mtraining.domain;
 
+import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.Field;
+
 import java.util.List;
 
 /**
- * Created by kosh on 5/29/14.
+ * Quiz object to store questions and answer for a chapter
  */
-public class Quiz {
+@Entity
+public class Quiz extends CourseUnitMetadata {
 
-    private String name;
-
+    /**
+     * List of questions for the quiz
+     */
+    @Field
     private List<Question> questions;
 
+    /**
+     * Pass percentage for the quiz
+     */
+    @Field
     private double passPercentage;
 
-    public String getName() {
-        return name;
+    public Quiz() {
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Quiz(String name, CourseUnitState state, String content) {
+        super(name, state, content);
+    }
+
+    public Quiz(String name, CourseUnitState state, String content, List<Question> questions, double passPercentage) {
+        super(name, state, content);
+        this.questions = questions;
+        this.passPercentage = passPercentage;
     }
 
     public List<Question> getQuestions() {
+
         return questions;
     }
 
     public void setQuestions(List<Question> questions) {
+
         this.questions = questions;
     }
 
     public double getPassPercentage() {
+
         return passPercentage;
     }
 
     public void setPassPercentage(double passPercentage) {
+
         this.passPercentage = passPercentage;
     }
 }

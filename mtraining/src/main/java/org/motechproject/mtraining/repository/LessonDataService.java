@@ -1,10 +1,11 @@
 package org.motechproject.mtraining.repository;
 
-import org.motechproject.mtraining.domain.EnrollmentRecord;
-
 import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
+import org.motechproject.mtraining.domain.Lesson;
+
+import java.util.List;
 
 /**
  * Interface for repository that persists simple records and allows CRUD.
@@ -12,7 +13,11 @@ import org.motechproject.mds.service.MotechDataService;
  * as methods for adding, deleting, saving and finding all instances.  In this class we
  * define and custom lookups we may need.
  */
-public interface ActivityRecordsDataService extends MotechDataService<EnrollmentRecord> {
+public interface LessonDataService extends MotechDataService<Lesson> {
+
     @Lookup
-    EnrollmentRecord findRecordByName(@LookupField(name = "name") String recordName);
+    List<Lesson> findLessonByName(@LookupField(name = "name") String lessonName);
+
+    @Lookup
+    Lesson findLessonById(@LookupField(name = "id") Long id);
 }
