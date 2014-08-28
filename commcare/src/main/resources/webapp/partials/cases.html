@@ -68,9 +68,9 @@
                         </div>
                     </div>
 
-                    <button class="btn btn-default" data-toggle="modal" href="#case-schema-{{$parent.$index}}-{{$index}}-json" data-target="_self">{{msg('commcare.json')}}</button>
+                    <button class="btn btn-default" data-toggle="modal" href="#case-schema-{{$parent.$index}}-{{$index}}-json">{{msg('commcare.json')}}</button>
 
-                    <div id="case-schema-{{$parent.$index}}-{{$index}}-json" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div id="case-schema-{{$parent.$index}}-{{$index}}-json" class="modal fade" tabindex="-1" role="dialog">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -80,7 +80,7 @@
                                 </div>
 
                                 <div class="modal-body">
-                                    {{formatJson(case)}}
+                                    <pre>{{formatJson(case)}}</pre>
                                 </div>
                             </div>
                         </div>

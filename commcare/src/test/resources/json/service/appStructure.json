@@ -1,11 +1,12 @@
 {"meta":{
     "limit":20,
-    "next":"?limit=2&offset=2",
+    "next": null,
     "offset":0,
-    "previous":"?limit=2&offset=0",
+    "previous": null,
     "total_count":4
 }, "objects":[
     {
+        "id": "h1k38soa0293jd84fjs8d9fk23jf48f0sd8gh3n8",
         "modules": [
         {
             "case_properties": ["name", "user_bednet"],

@@ -42,10 +42,12 @@ public class CommcareAppStructureServiceImplTest {
     @Test
     public void testAllApplications() {
 
-        when(commcareHttpClient.appStructureRequest()).thenReturn(appStructureResponse());
+        when(commcareHttpClient.appStructureRequest(20, 1)).thenReturn(appStructureResponse());
 
         List<CommcareApplicationJson> applications = appStructureService.getAllApplications();
         assertTrue(!applications.isEmpty());
+
+        String applicationId = applications.get(0).getCommcareAppId();
 
         List<CommcareModuleJson> modules = applications.get(0).getModules();
         assertTrue(!modules.isEmpty());
@@ -79,6 +81,7 @@ public class CommcareAppStructureServiceImplTest {
         assertEquals("no", options.get(1).getValue());
         assertEquals("myApplication", applications.get(0).getApplicationName());
         assertEquals("", applications.get(0).getResourceUri());
+        assertEquals("h1k38soa0293jd84fjs8d9fk23jf48f0sd8gh3n8", applicationId);
     }
 
     private String appStructureResponse() {

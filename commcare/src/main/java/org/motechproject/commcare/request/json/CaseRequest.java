@@ -28,8 +28,16 @@ public class CaseRequest {
         this.limit = limit;
     }
 
+    public int getLimit() {
+        return limit;
+    }
+
     public void setOffset(int offset) {
         this.offset = offset;
+    }
+
+    public int getOffset() {
+        return offset;
     }
 
     public String toQueryString() {
@@ -43,8 +51,8 @@ public class CaseRequest {
         if (type != null) {
             queryParams.add(concat("type", type));
         }
-        queryParams.add(concat("limit", limit));
-        queryParams.add(concat("offset", offset));
+        queryParams.add(concat("limit", limit < 1 ? 20 : limit));
+        queryParams.add(concat("offset", offset < 0 ? 0 : offset));
 
         return StringUtils.join(queryParams, "&");
     }

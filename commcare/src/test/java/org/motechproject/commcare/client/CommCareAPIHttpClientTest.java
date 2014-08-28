@@ -36,7 +36,7 @@ public class CommCareAPIHttpClientTest {
 
     @Test
     public void shouldConstructCommcareUserUrl() {
-        assertThat(commCareAPIHttpClient.commcareUserUrl(), IsEqual.equalTo(String.format("%s/%s/api/v%s/user/?format=json", baseUrl, domain, apiVersion)));
+        assertThat(commCareAPIHttpClient.commcareUsersUrl(100, 2), IsEqual.equalTo(String.format("%s/%s/api/v%s/user/?format=json&limit=100&offset=100", baseUrl, domain, apiVersion)));
     }
 
     @Test

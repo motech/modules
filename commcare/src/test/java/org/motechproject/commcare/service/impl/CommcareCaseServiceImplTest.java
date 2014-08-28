@@ -60,15 +60,16 @@ public class CommcareCaseServiceImplTest {
     }
 
     @Test
-    public void testAllCasesByUserId() {
+    public void testCasesByUserId() {
         String userId = "testId";
 
         CaseRequest request = new CaseRequest();
         request.setUserId(userId);
-
+        request.setLimit(20);
+        request.setOffset(0);
         when(commcareHttpClient.casesRequest(request)).thenReturn(casesResponse());
 
-        List<CaseInfo> cases = caseService.getAllCasesByUserId(userId);
+        List<CaseInfo> cases = caseService.getCasesByUserId(userId, 20, 1);
 
         assertEquals(asList("3ECE7ROKGQ7U1XX1DOL0PNRJW", "63ZB8WGEQY3TJ23PHB2EGD39J", "EP60PTXTZW6HD42KPSY9U018V",
                 "EPKT93XZQ8COVAIQZ7DMQXO7S"), extract(cases, on(CaseInfo.class).getCaseId()));

@@ -44,12 +44,16 @@ public class CommCareAPIHttpClient {
         return this.postRequest(commcareCaseUploadUrl(), caseXml);
     }
 
-    public String usersRequest() {
-        return this.getRequest(commcareUserUrl(), null);
+    public String userRequest(String userId) {
+        return this.getRequest(commcareUserUrl(userId), null);
     }
 
-    public String appStructureRequest() {
-        return this.getRequest(commcareAppStructureUrl(), null);
+    public String usersRequest(Integer pageSize, Integer pageNumber) {
+        return this.getRequest(commcareUsersUrl(pageSize, pageNumber), null);
+    }
+
+    public String appStructureRequest(Integer pageSize, Integer pageNumber) {
+        return this.getRequest(commcareAppStructureUrl(pageSize, pageNumber), null);
     }
 
     public String formRequest(String formId) {
@@ -59,13 +63,13 @@ public class CommCareAPIHttpClient {
     public String casesRequest(CaseRequest caseRequest) {
         return this.getRequest(commcareCasesUrl(), caseRequest);
     }
-    
+
     public String singleCaseRequest(String caseId) {
         return this.getRequest(commcareCaseUrl(caseId), null);
     }
 
-    public String fixturesRequest() {
-        return this.getRequest(commcareFixturesUrl(), null);
+    public String fixturesRequest(Integer pageSize, Integer pageNumber) {
+        return this.getRequest(commcareFixturesUrl(pageSize, pageNumber), null);
     }
 
     public String fixtureRequest(String fixtureId) {
@@ -81,8 +85,8 @@ public class CommCareAPIHttpClient {
         return this.dataForwardingEndpointPutRequest(combinedUri, dataForwardingEndpointJson);
     }
 
-    public String dataForwardingEndpointsRequest() {
-        return this.getRequest(commcareDataForwardingEndpointUrl(), null);
+    public String dataForwardingEndpointsRequest(Integer pageSize, Integer pageNumber) {
+        return this.getRequest(commcareDataForwardingEndpointsUrl(pageSize, pageNumber), null);
     }
 
     public boolean verifyConnection() {
@@ -235,12 +239,18 @@ public class CommCareAPIHttpClient {
 
     }
 
-    String commcareUserUrl() {
-        return String.format("%s/%s/api/v%s/user/?format=json", getCommcareBaseUrl(), getCommcareDomain(), getCommcareApiVersion());
+    String commcareUsersUrl(Integer pageSize, Integer pageNumber) {
+        return String.format("%s/%s/api/v%s/user/?format=json%s", getCommcareBaseUrl(), getCommcareDomain(), getCommcareApiVersion(),
+                buildPaginationParams(pageSize, pageNumber));
     }
 
-    String commcareAppStructureUrl() {
-        return String.format("%s/%s/api/v%s/application/", getCommcareBaseUrl(), getCommcareDomain(), getCommcareApiVersion());
+    String commcareUserUrl(String id) {
+        return String.format("%s/%s/api/v%s/user/%s/?format=json", getCommcareBaseUrl(), getCommcareDomain(), getCommcareApiVersion(), id);
+    }
+
+    String commcareAppStructureUrl(Integer pageSize, Integer pageNumber) {
+        return String.format("%s/%s/api/v%s/application/?format=json%s", getCommcareBaseUrl(), getCommcareDomain(), getCommcareApiVersion(),
+                buildPaginationParams(pageSize, pageNumber));
     }
 
     String commcareFormUrl(String formId) {
@@ -255,6 +265,10 @@ public class CommCareAPIHttpClient {
         return String.format("%s%s/", commcareFixturesUrl(), fixtureId);
     }
 
+    String commcareFixturesUrl(Integer pageSize, Integer pageNumber) {
+        return String.format("%s?format=json%s", commcareFixturesUrl(), buildPaginationParams(pageSize, pageNumber));
+    }
+
     String commcareCasesUrl() {
         return String.format("%s/%s/api/v%s/case/", getCommcareBaseUrl(), getCommcareDomain(), getCommcareApiVersion());
     }
@@ -264,7 +278,11 @@ public class CommCareAPIHttpClient {
     }
 
     private String commcareDataForwardingEndpointUrl() {
-        return String.format("%s/%s/api/v0.4/data-forwarding/", getCommcareBaseUrl(), getCommcareDomain());
+        return String.format("%s/%s/api/v0.4/data-forwarding/?format=json", getCommcareBaseUrl(), getCommcareDomain());
+    }
+
+    private String commcareDataForwardingEndpointsUrl(Integer pageSize, Integer pageNumber) {
+        return String.format("%s%s", commcareDataForwardingEndpointUrl(), buildPaginationParams(pageSize, pageNumber));
     }
 
     String commcareCaseUploadUrl() {
@@ -279,6 +297,19 @@ public class CommCareAPIHttpClient {
         }
 
         return commcareBaseUrl;
+    }
+
+    private String buildPaginationParams(Integer pageSize, Integer pageNumber) {
+        StringBuilder sb = new StringBuilder();
+
+        if (pageSize != null && pageSize > 0) {
+            sb.append("&limit=" + pageSize.toString());
+        }
+        if (pageNumber != null && pageNumber > 0) {
+            sb.append("&offset=" + ((pageNumber - 1) * (pageSize != null && pageSize >= 0 ? pageSize : 0)));
+        }
+
+        return sb.toString();
     }
 
     private String getCommcareDomain() {

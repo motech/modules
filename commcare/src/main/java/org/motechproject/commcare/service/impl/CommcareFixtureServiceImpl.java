@@ -17,6 +17,7 @@ import java.util.List;
 
 @Service
 public class CommcareFixtureServiceImpl implements CommcareFixtureService {
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private MotechJsonReader motechJsonReader;
@@ -30,10 +31,8 @@ public class CommcareFixtureServiceImpl implements CommcareFixtureService {
     }
 
     @Override
-    public List<CommcareFixture> getAllFixtures() {
-
-        String response = commcareHttpClient.fixturesRequest();
-
+    public List<CommcareFixture> getFixtures(Integer pageSize, Integer pageNumber) {
+        String response = commcareHttpClient.fixturesRequest(pageSize, pageNumber);
         Type commcareFixtureType = new TypeToken<CommcareFixturesJson>() { } .getType();
         CommcareFixturesJson allFixtures = (CommcareFixturesJson) motechJsonReader.readFromString(response, commcareFixtureType);
 

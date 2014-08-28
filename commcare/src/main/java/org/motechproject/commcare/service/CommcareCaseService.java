@@ -33,26 +33,40 @@ public interface CommcareCaseService {
     List<CaseInfo> getAllCases();
 
     /**
-     * Query CommCareHQ for all cases of a given case type.
+     * Query CommCareHQ for all cases of a given case type and page.
      * @param type The type of case on CommCareHQ
-     * @return A list of CaseInfo objects representing all cases of the given type found on the configured domain of CommCareHQ
+     * @param pageSize
+     * @param pageNumber
+     * @return A list of CaseInfo objects representing cases of the given type and page found on the configured domain of CommCareHQ
      */
-    List<CaseInfo> getAllCasesByType(String type);
+    List<CaseInfo> getCasesByType(String type, Integer pageSize, Integer pageNumber);
 
     /**
      * Query CommCareHQ for all cases under a given user id.
      * @param userId The user id from CommCareHQ
-     * @return A list of CaseInfo objects representing all cases under the given user id found on the configured domain of CommCareHQ
+     * @param pageSize
+     * @param pageNumber
+     * @return A list of CaseInfo objects representing cases under the given user id and page found on the configured domain of CommCareHQ
      */
-    List<CaseInfo> getAllCasesByUserId(String userId);
+    List<CaseInfo> getCasesByUserId(String userId, Integer pageSize, Integer pageNumber);
 
     /**
-     * Query CommCareHQ for all cases of a given case type under a given user id.
+     * Query CommCareHQ for all cases of a given case type, user id and page.
      * @param userId The user id from CommCareHQ
      * @param type The type of case on CommCareHQ
-     * @return A list of CaseInfo objects representing all cases of the given type under the given user id found on the configured domain of CommCareHQ
+     * @param pageSize
+     * @param pageNumber
+     * @return A list of CaseInfo objects representing cases of the given type, user id and page found on the configured domain of CommCareHQ
      */
-    List<CaseInfo> getAllCasesByUserIdAndType(String userId, String type);
+    List<CaseInfo> getCasesByUserIdAndType(String userId, String type, Integer pageSize, Integer pageNumber);
+
+    /**
+     * Query CommCareHQ for all cases of a given page.
+     * @param pageSize
+     * @param pageNumber
+     * @return A list of CaseInfo objects representing cases of the given page found on the configured domain of CommCareHQ
+     */
+    List<CaseInfo> getCases(Integer pageSize, Integer pageNumber);
 
     /**
      * Upload case xml wrapped in a minimal xform instance to CommCareHQ.

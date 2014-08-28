@@ -25,29 +25,23 @@ public class CommcareUserServiceImpl implements CommcareUserService {
         this.motechJsonReader = new MotechJsonReader();
     }
 
-    @Override
-    public List<CommcareUser> getAllUsers() {
-
-        String response = commcareHttpClient.usersRequest();
-
+     @Override
+    public List<CommcareUser> getCommcareUsers(Integer pageSize, Integer pageNumber) {
+        String response = commcareHttpClient.usersRequest(pageSize, pageNumber);
         Type commcareUserType = new TypeToken<CommcareUsersJson>() {
-        } .getType();
+                } .getType();
+        CommcareUsersJson allUsers = (CommcareUsersJson) motechJsonReader.readFromString(response, commcareUserType);
 
-        CommcareUsersJson allUsers = (CommcareUsersJson) motechJsonReader
-                .readFromString(response, commcareUserType);
-
-        return allUsers.getObjects();
-
+         return allUsers.getObjects();
     }
 
     @Override
     public CommcareUser getCommcareUserById(String id) {
-        List<CommcareUser> userList = getAllUsers();
-        for (CommcareUser user : userList) {
-            if (user.getId().equals(id)) {
-                return user;
-            }
-        }
-        return null;
+        String response = commcareHttpClient.userRequest(id);
+        Type commcareUserType = new TypeToken<CommcareUser>() {
+        } .getType();
+        CommcareUser user = (CommcareUser) motechJsonReader.readFromString(response, commcareUserType);
+
+        return user;
     }
 }

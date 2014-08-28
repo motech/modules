@@ -16,6 +16,14 @@ public interface CommcareDataForwardingEndpointService {
     List<CommcareDataForwardingEndpoint> getAllDataForwardingEndpoints();
 
     /**
+     * Queries CommCareHQ for a list of data forwarding rules(located on the given page) on the configured domain.
+     * @param pageSize
+     * @param pageNumber
+     * @return A list of CommcareDataForwardingEndpoints that represent the information about each data forwarding rule located on the given pagefrom CommCareHQ
+     */
+    List<CommcareDataForwardingEndpoint> getDataForwardingEndpoints(Integer pageSize, Integer pageNumber);
+
+    /**
      * Creates a new data forwarding rule for the CommCareHQ.
      * @return true - if data was successfully sent; otherwise - false
      */

@@ -1,5 +1,6 @@
 package org.motechproject.commcare.domain;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
@@ -10,10 +11,12 @@ import java.util.Map;
 @Entity(name = "Form Schema")
 public class FormSchemaJson {
 
+    @Expose
     @Field(displayName = "Form Names")
     @SerializedName("name")
     private Map<String, String> formNames;
 
+    @Expose
     @Field(displayName = "Form Questions")
     @SerializedName("questions")
     private List<FormSchemaQuestionJson> questions;

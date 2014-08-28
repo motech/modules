@@ -21,6 +21,9 @@ public class CommcareUserServiceImplTest {
 
     private CommcareUserServiceImpl userService;
 
+    public Integer pageSize = 20;
+    public Integer pageNumber = 1;
+
     @Mock
     private CommCareAPIHttpClient commcareHttpClient;
 
@@ -31,10 +34,11 @@ public class CommcareUserServiceImplTest {
     }
 
     @Test
-    public void testAllUsers() {
-        when(commcareHttpClient.usersRequest()).thenReturn(usersResponse());
+    public void testUsers() {
 
-        List<CommcareUser> users = userService.getAllUsers();
+        when(commcareHttpClient.usersRequest(pageSize, pageNumber)).thenReturn(usersResponse());
+
+        List<CommcareUser> users = userService.getCommcareUsers(pageSize, pageNumber);
 
         assertEquals(asList("3F2504E04F8911D39A0C0305E82C3301", "5d622c4336d118a9020d1c758e71de51",
                 "5d622c4336d118a9020d1c758e71f368", "5d622c4336d118a9020d1c758e71ea2f"),
@@ -45,7 +49,7 @@ public class CommcareUserServiceImplTest {
     public void testGetUserWhenUserExists() {
         String userId = "5d622c4336d118a9020d1c758e71de51";
 
-        when(commcareHttpClient.usersRequest()).thenReturn(usersResponse());
+        when(commcareHttpClient.userRequest(userId)).thenReturn(usersResponse());
 
         CommcareUser user = userService.getCommcareUserById(userId);
 
@@ -56,7 +60,7 @@ public class CommcareUserServiceImplTest {
     public void testGetUserWhenUserDoesNotExist() {
         String userId = "badId";
 
-        when(commcareHttpClient.usersRequest()).thenReturn(usersResponse());
+        when(commcareHttpClient.usersRequest(pageSize, pageNumber)).thenReturn(usersResponse());
 
         CommcareUser user = userService.getCommcareUserById(userId);
 

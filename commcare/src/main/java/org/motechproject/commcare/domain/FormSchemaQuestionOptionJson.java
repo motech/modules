@@ -1,5 +1,6 @@
 package org.motechproject.commcare.domain;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
@@ -7,10 +8,12 @@ import org.motechproject.mds.annotations.Field;
 @Entity(name = "Form Schema Question Option")
 public class FormSchemaQuestionOptionJson {
 
+    @Expose
     @Field(displayName = "Label")
     @SerializedName("label")
     private String label;
 
+    @Expose
     @Field(displayName = "Value")
     @SerializedName("value")
     private String value;

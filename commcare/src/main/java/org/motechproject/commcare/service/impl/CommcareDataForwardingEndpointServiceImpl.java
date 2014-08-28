@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.lang.StringUtils;
 import org.motechproject.commcare.domain.CommcareDataForwardingEndpoint;
 import org.motechproject.commcare.domain.CommcareDataForwardingEndpointsJson;
 import org.motechproject.commcare.service.CommcareDataForwardingEndpointService;
@@ -13,10 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class CommcareDataForwardingEndpointServiceImpl implements CommcareDataForwardingEndpointService {
+
+    static final int DEFAULT_PAGE_SIZE = 20;
 
     private MotechJsonReader motechJsonReader;
 
@@ -30,16 +34,33 @@ public class CommcareDataForwardingEndpointServiceImpl implements CommcareDataFo
 
     @Override
     public List<CommcareDataForwardingEndpoint> getAllDataForwardingEndpoints() {
-        String response = commcareHttpClient.dataForwardingEndpointsRequest();
-
+        CommcareDataForwardingEndpointsJson dataForwardingEndpoints = null;
         Type commcareDataForwardingEndpointType = new TypeToken<CommcareDataForwardingEndpointsJson>() {
-        } .getType();
+                } .getType();
+        List<CommcareDataForwardingEndpoint> allDataForwardingEndpoints = new ArrayList<>();
+        Integer pageNumber = 1;
 
-        CommcareDataForwardingEndpointsJson allDataForwardingEndpoints =
-                (CommcareDataForwardingEndpointsJson) motechJsonReader
+        do {
+            String response = commcareHttpClient.dataForwardingEndpointsRequest(DEFAULT_PAGE_SIZE, pageNumber);
+            dataForwardingEndpoints = (CommcareDataForwardingEndpointsJson) motechJsonReader
+                            .readFromString(response, commcareDataForwardingEndpointType);
+            allDataForwardingEndpoints.addAll(dataForwardingEndpoints.getObjects());
+            pageNumber++;
+        } while (allDataForwardingEndpoints != null
+                && StringUtils.isNotBlank(dataForwardingEndpoints.getMeta().getNextPageQueryString()));
+
+        return allDataForwardingEndpoints;
+    }
+
+    @Override
+    public List<CommcareDataForwardingEndpoint> getDataForwardingEndpoints(Integer pageSize, Integer pageNumber) {
+        String response = commcareHttpClient.dataForwardingEndpointsRequest(pageSize, pageNumber);
+        Type commcareDataForwardingEndpointType = new TypeToken<CommcareDataForwardingEndpointsJson>() {
+                } .getType();
+        CommcareDataForwardingEndpointsJson appStructureResponseJson = (CommcareDataForwardingEndpointsJson) motechJsonReader
                 .readFromString(response, commcareDataForwardingEndpointType);
 
-        return allDataForwardingEndpoints.getObjects();
+        return appStructureResponseJson.getObjects();
     }
 
     @Override

@@ -10,10 +10,12 @@ import java.util.List;
 public interface CommcareFixtureService {
 
     /**
-     * Queries CommCareHQ for a list of all fixtures on the configured domain.
-     * @return A list of CommcareFixture that represent the information about each fixture from CommCareHQ
+     * Queries CommCareHQ for a list of fixtures(located on the given page) on the configured domain.
+     * @param pageSize
+     * @param pageNumber
+     * @return A list of CommcareFixture that represent the information about each fixture located on the given page from CommCareHQ
      */
-    List<CommcareFixture> getAllFixtures();
+    List<CommcareFixture> getFixtures(Integer pageSize, Integer pageNumber);
 
     /**
      * Queries CommCareHQ for a specific fixture

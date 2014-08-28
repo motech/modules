@@ -66,7 +66,7 @@ public class SchemaControllerTest {
     private List<CommcareApplicationJson> application() throws IOException {
         try (InputStream in = getClass().getClassLoader().getResourceAsStream("json/service/appStructure.json")) {
             Type appStructureResponseType = new TypeToken<AppStructureResponseJson>() {}.getType();
-            return ((AppStructureResponseJson) motechJsonReader.readFromStream(in, appStructureResponseType))
+            return ((AppStructureResponseJson) motechJsonReader.readFromStreamOnlyExposeAnnotations(in, appStructureResponseType))
                     .getApplications();
         }
     }

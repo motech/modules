@@ -34,7 +34,7 @@ public class CommcareDataForwardingEndpointServiceImplTest {
 
     @Test
     public void testAllDataForwardingEndpoints() {
-        when(commcareHttpClient.dataForwardingEndpointsRequest()).thenReturn(dataForwardingEndpointsGetResponse());
+        when(commcareHttpClient.dataForwardingEndpointsRequest(20, 1)).thenReturn(dataForwardingEndpointsGetResponse());
 
         List<CommcareDataForwardingEndpoint> dataForwardingEndpoints = dataForwardingEndpointService.getAllDataForwardingEndpoints();
 

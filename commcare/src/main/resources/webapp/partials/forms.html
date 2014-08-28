@@ -18,9 +18,9 @@
 
                         <div class="form-schema-group">
                             <span>{{ form.formNames["en"] }}</span>
-                            <button class="btn btn-default" data-toggle="modal" href="#form-schema-{{$parent.$index}}-{{$index}}">{{msg('commcare.view')}}</button>
+                            <button class="btn btn-default" data-toggle="modal" href="#form-schema-{{$parent.$parent.$index}}-{{$parent.$index}}-{{$index}}">{{msg('commcare.view')}}</button>
 
-                            <div id="form-schema-{{$parent.$index}}-{{$index}}" class="modal fade" tabindex="-1" role="dialog">
+                            <div id="form-schema-{{$parent.$parent.$index}}-{{$parent.$index}}-{{$index}}" class="modal fade" tabindex="-1" role="dialog">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
 
@@ -34,8 +34,8 @@
                                             <table class="table table-striped">
                                                 <tbody>
                                                 <tr ng-repeat="question in form.questions">
-                                                    <td>{{question.questionLabel}}</td>
-                                                    <td>
+                                                    <td class="question">{{question.questionLabel}}</td>
+                                                    <td class="questionData">
                                                         <table class="table table-bordered">
                                                             <tr>
                                                                 <td>{{msg('commcare.form.question.repeat')}}</td>
@@ -66,9 +66,9 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <button class="btn btn-default" data-toggle="modal" href="#form-schema-{{$parent.$index}}-{{$index}}-json" data-target="_self">{{msg('commcare.json')}}</button>
+                                    <button class="btn btn-default" data-toggle="modal" href="#form-schema-{{$parent.$parent.$index}}-{{$parent.$index}}-{{$index}}-json">{{msg('commcare.json')}}</button>
 
-                                    <div id="form-schema-{{$parent.$index}}-{{$index}}-json" class="modal fade" tabindex="-1" role="dialog">
+                                    <div id="form-schema-{{$parent.$parent.$index}}-{{$parent.$index}}-{{$index}}-json" class="modal fade" tabindex="-1" role="dialog">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
 
