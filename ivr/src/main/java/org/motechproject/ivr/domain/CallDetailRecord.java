@@ -5,6 +5,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.Ignore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +19,7 @@ public class CallDetailRecord {
     private static final DateTimeFormatter DT_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSSS");
     private static final Logger LOGGER = LoggerFactory.getLogger(CallDetailRecord.class);
 
-    @Field(required = true)
+    @Field
     private String motechTimestamp;
 
     @Field
@@ -72,6 +73,7 @@ public class CallDetailRecord {
         }
     }
 
+    @Ignore
     public static String getCurrentTimestamp() {
         return DT_FORMATTER.print(DateTime.now());
     }
