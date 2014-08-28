@@ -1,78 +1,78 @@
 {
-    "displayName": "ivr_task_name",
+    "displayName": "ivr.task.name",
     "moduleName": "${project.artifactId}",
     "moduleVersion": "${parsedVersion.osgiVersion}",
     "triggerTaskEvents" : [
         {
             "subject" : "ivr_call_status",
-            "displayName" : "ivr_task_call_status",
+            "displayName" : "ivr.task.call.status",
             "eventParameters" : [
                 {
-                    "eventKey" : "motechTimestamp",
+                    "eventKey" : "motech_timestamp",
                     "type" : "DATE",
-                    "displayName" : "ivr_task_motechTimestamp"
+                    "displayName" : "ivr.task.motech.timestamp"
                 },
                 {
-                    "eventKey" : "providerTimestamp",
+                    "eventKey" : "provider_timestamp",
                     "type" : "DATE",
-                    "displayName" : "ivr_task_providerTimestamp"
+                    "displayName" : "ivr.task.provider.timestamp"
                 },
                 {
                     "eventKey" : "config",
-                    "displayName" : "ivr_task_config"
+                    "displayName" : "ivr.task.config"
                 },
                 {
                     "eventKey" : "from",
-                    "displayName" : "ivr_task_from"
+                    "displayName" : "ivr.task.from"
                 },
                 {
                     "eventKey" : "to",
-                    "displayName" : "ivr_task_to"
+                    "displayName" : "ivr.task.to"
                 },
                 {
                     "eventKey" : "call_direction",
-                    "displayName" : "ivr_task_call_direction"
+                    "displayName" : "ivr.task.call.direction"
                 },
                 {
                     "eventKey" : "call_status",
-                    "displayName" : "ivr_task_call_status"
+                    "displayName" : "ivr.task.call.status"
                 },
                 {
                     "eventKey" : "motech_call_id",
-                    "displayName" : "ivr_task_motech_call_id"
+                    "displayName" : "ivr.task.motech.call.id"
                 },
                 {
                     "eventKey" : "provider_call_id",
-                    "displayName" : "ivr_task_provider_call_id"
+                    "displayName" : "ivr.task.provider.call.id"
                 },
                 {
                     "eventKey" : "provider_extra_data",
                     "type" : "MAP",
-                    "displayName" : "ivr_task_provider_extra_data"
+                    "displayName" : "ivr.task.provider.extra.data"
                 }
             ]
         },
         {
             "subject" : "ivr_call_initiated",
-            "displayName" : "ivr_task_call_initiated",
+            "displayName" : "ivr.task.call.initiated",
             "eventParameters" : [
                 {
                     "eventKey" : "timestamp",
                     "type" : "DATE",
-                    "displayName" : "ivr_task_timestamp"
+                    "displayName" : "ivr.task.timestamp"
                 },
                 {
                     "eventKey" : "config",
-                    "displayName" : "ivr_task_config"
+                    "displayName" : "ivr.task.config"
                 },
                 {
                     "eventKey" : "to",
-                    "displayName" : "ivr_task_to"
+                    "displayName" : "ivr.task.to"
                 },
                 {
                     "eventKey" : "provider_extra_data",
                     "type" : "MAP",
-                    "displayName" : "ivr_task_provider_extra_data"
+                    "displayName" : "ivr.task.provider.extra.data"
                 }
             ]
         }
@@ -80,16 +80,16 @@
     "actionTaskEvents": [
         {
             "subject" : "ivr_initiate_call",
-            "displayName" : "ivr_task_initiate_call",
+            "displayName" : "ivr.task.initiate.call",
             "actionParameters" : [
                 {
                     "key" : "config",
-                    "displayName" : "ivr_task_config"
+                    "displayName" : "ivr.task.config"
                 },
                 {
                     "key" : "params",
                     "type" : "MAP",
-                    "displayName" : "ivr_task_params",
+                    "displayName" : "ivr.task.params",
                     "required": false
                 }
             ]
