@@ -49,19 +49,21 @@ public class StatusController {
     }
 
     /**
-     * Listens to HTTP calls to http://{server}:{port}/module/ivr/status/{config}?param1=val1&param2=val2&... from IVR
+     * Listens to HTTP calls to http://{server}:{port}/module/ivr/status/{config}?key1=val1&key2=val2&... from IVR
      * providers. Creates a corresponding CDR entity in the database. Sends a MOTECH message with the CDR data in the
      * payload and the call status as the subject.
      *
      * @param configName
      * @param params
+     * @return "<?xml version=\"1.0\"?><response>OK</response>"
      */
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     @RequestMapping(value = "/{configName}", produces = "text/xml")
-    public void handle(@PathVariable String configName, @RequestParam Map<String, String> params,
-                       @RequestHeader Map<String, String> headers) {
-        LOGGER.debug(String.format("handle(configName = %s, params = %s, headers = %s)", configName, params, headers));
+    public String handle(@PathVariable String configName, @RequestParam Map<String, String> params,
+                         @RequestHeader Map<String, String> headers) {
+        LOGGER.debug(String.format("handle(configName = %s, parameters = %s, headers = %s)", configName, params,
+                headers));
 
         Config config = null;
 
@@ -78,6 +80,9 @@ public class StatusController {
         CallDetailRecord callDetailRecord = new CallDetailRecord();
 
         callDetailRecord.setConfigName(configName);
+
+        //todo: some providers send session information (including caller id) through the headers, so we should add
+        //todo: a config setting that scans the headers for CDR info in addition to the query parameters
 
         for (Map.Entry<String, String> entry : params.entrySet()) {
             if (config.shouldIgnoreField(entry.getKey())) {
@@ -96,5 +101,7 @@ public class StatusController {
         // Save the CDR
         LOGGER.debug("Saving CallDetailRecord {}", callDetailRecord);
         callDetailRecordDataService.create(callDetailRecord);
+
+        return "<?xml version=\"1.0\"?><response>OK</response>";
     }
 }
