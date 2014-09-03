@@ -1,4 +1,4 @@
-import sh
+from subprocess import call
 import sys
 from xml.dom.minidom import parse
 
@@ -11,4 +11,4 @@ mv[0].childNodes[0].data = sys.argv[1]
 f = open("pom.xml", 'w')
 dom.writexml(f)
 f.close()
-sh.git("commit", "-am", "Update version")
+call(["commit", "-am", "Update version"])
