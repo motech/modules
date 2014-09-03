@@ -3,14 +3,14 @@
     <parent>
         <artifactId>modules</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.24</version>
+        <version>0.24.1-SNAPSHOT</version>
         <relativePath>../</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.motechproject</groupId>
     <artifactId>cms-lite</artifactId>
     <name>CMS Lite Module</name>
-    <version>0.24</version>
+    <version>0.24.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>
