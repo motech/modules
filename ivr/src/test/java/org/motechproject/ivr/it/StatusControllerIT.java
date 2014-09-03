@@ -14,7 +14,7 @@ import org.motechproject.ivr.domain.CallStatus;
 import org.motechproject.ivr.domain.Config;
 import org.motechproject.ivr.repository.CallDetailRecordDataService;
 import org.motechproject.ivr.repository.ConfigDataService;
-import org.motechproject.ivr.utils.SimpleHttpClient;
+import org.motechproject.testing.osgi.http.SimpleHttpClient;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
