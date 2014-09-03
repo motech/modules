@@ -123,7 +123,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>motech-platform-commons-date</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
@@ -137,7 +137,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>motech-platform-dataservices</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
         </dependency>
     </dependencies>
     <profiles>
