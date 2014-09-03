@@ -11,4 +11,4 @@ mv[0].childNodes[0].data = sys.argv[1]
 f = open("pom.xml", 'w')
 dom.writexml(f)
 f.close()
-call(["commit", "-am", "Update version"])
+call(["git", "commit", "-am", "Update version"])
