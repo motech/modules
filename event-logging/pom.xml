@@ -20,22 +20,22 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>motech-platform-server-config</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>motech-platform-event</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>motech-platform-dataservices</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>motech-pax-it</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

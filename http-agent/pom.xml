@@ -25,7 +25,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>motech-platform-event</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>motech-pax-it</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -119,7 +119,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>motech-platform-osgi-web-util</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -150,17 +150,17 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>motech-platform-osgi-web-util</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>motech-platform-commons-date</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>motech-platform-event</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
@@ -169,13 +169,13 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>motech-testing-utils</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>motech-pax-it</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -199,12 +199,12 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>motech-platform-dataservices</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-platform-osgi-extender-fragment</artifactId>
-            <version>${project.version}</version>
+            <version>${motech.version}</version>
         </dependency>
     </dependencies>
     <profiles>
