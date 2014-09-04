@@ -13,7 +13,7 @@ import org.motechproject.ivr.domain.Config;
 import org.motechproject.ivr.domain.HttpMethod;
 import org.motechproject.ivr.repository.CallDetailRecordDataService;
 import org.motechproject.ivr.repository.ConfigDataService;
-import org.motechproject.ivr.utils.SimpleHttpServer;
+import org.motechproject.testing.osgi.http.SimpleHttpServer;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
