@@ -6,6 +6,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
+import org.motechproject.mds.annotations.UIDisplayable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,33 +21,47 @@ public class CallDetailRecord {
     private static final Logger LOGGER = LoggerFactory.getLogger(CallDetailRecord.class);
 
     @Field
+    @UIDisplayable(position = 0)
+    private long id;
+
+    @Field
+    @UIDisplayable(position = 9)
     private String motechTimestamp;
 
     @Field
+    @UIDisplayable(position = 10)
     private String providerTimestamp;
 
     @Field
+    @UIDisplayable(position = 1)
     private String configName;
 
     @Field
+    @UIDisplayable(position = 2)
     private String from;
 
     @Field
+    @UIDisplayable(position = 3)
     private String to;
 
     @Field
+    @UIDisplayable(position = 4)
     private CallDirection callDirection;
 
     @Field
+    @UIDisplayable(position = 5)
     private CallStatus callStatus;
 
     @Field
+    @UIDisplayable(position = 7)
     private String motechCallId;
 
     @Field
+    @UIDisplayable(position = 8)
     private String providerCallId;
 
     @Field
+    @UIDisplayable(position = 6)
     private Map<String, String> providerExtraData;
 
     public CallDetailRecord() {
@@ -71,6 +86,10 @@ public class CallDetailRecord {
         if (providerExtraData != null) {
             this.providerExtraData = providerExtraData;
         }
+    }
+
+    public long getId() {
+        return id;
     }
 
     @Ignore
