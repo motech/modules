@@ -29,6 +29,10 @@ public class Configs {
         throw new IllegalStateException("Trying to get default config, but no default config has been set.");
     }
 
+    public boolean isEmpty() {
+        return configs.isEmpty();
+    }
+
     public String getDefaultConfigName() {
         return defaultConfigName;
     }

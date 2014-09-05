@@ -124,6 +124,13 @@ public class SmsServiceImpl implements SmsService {
 
         //todo: cache that?
         Configs configs = new ConfigReader(settingsFacade).getConfigs();
+        if (configs.isEmpty()) {
+            String message = String.format("Trying to send an SMS, but there are no SMS configs on this server. " +
+                    "outgoingSms = %s", sms.toString());
+            logger.error(message);
+            throw new IllegalStateException(message);
+        }
+
         Config config;
         Template template;
 

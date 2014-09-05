@@ -23,8 +23,6 @@ import java.util.regex.Pattern;
  */
 public class Template {
 
-    public static final String MESSAGE_PLACEHOLDER = "$message";
-    public static final String RECIPIENTS_PLACEHOLDER = "$recipients";
     public static final Pattern FIND_TOKEN_PATTERN = Pattern.compile("\\[(\\w*)\\]");
 
     private Outgoing outgoing;

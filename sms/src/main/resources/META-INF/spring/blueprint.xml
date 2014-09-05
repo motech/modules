@@ -57,6 +57,8 @@
                   interface="org.motechproject.sms.service.SmsService"
                   auto-export="interfaces"/>
 
+    <osgi:service ref="smsAuditService" interface="org.motechproject.sms.audit.SmsAuditService" />
+
     <osgi:reference id="configurationService"
                     interface="org.motechproject.config.service.ConfigurationService"/>
 
@@ -69,6 +71,6 @@
 
     <osgi:reference id="statusMessageService" interface="org.motechproject.admin.service.StatusMessageService"/>
 
-    <osgi:reference id="smsRecordsDataServiceOSGi" interface="org.motechproject.sms.audit.SmsRecordsDataService"/>
+    <osgi:reference id="smsRecordsDataService" interface="org.motechproject.sms.audit.SmsRecordsDataService"/>
 
 </beans>

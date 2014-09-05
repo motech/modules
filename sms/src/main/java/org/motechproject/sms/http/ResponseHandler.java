@@ -1,8 +1,8 @@
 package org.motechproject.sms.http;
 
 import org.apache.commons.httpclient.Header;
+import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.sms.alert.MotechStatusMessage;
 import org.motechproject.sms.audit.SmsRecord;
 import org.motechproject.sms.configs.Config;
 import org.motechproject.sms.service.OutgoingSms;
@@ -10,6 +10,7 @@ import org.motechproject.sms.templates.Response;
 import org.motechproject.sms.templates.Template;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,18 +19,20 @@ import java.util.List;
  * figures out success or failure from an sms provider response
  */
 public abstract class ResponseHandler {
+    private static final String SMS_MODULE = "motech-sms";
     private Template template;
     private Config config;
     private Response templateOutgoingResponse;
     private List<MotechEvent> events = new ArrayList<>();
     private List<SmsRecord> auditRecords = new ArrayList<>();
     private Logger logger = LoggerFactory.getLogger(ResponseHandler.class);
-    private MotechStatusMessage motechStatusMessage;
 
-    ResponseHandler(Template template, Config config, MotechStatusMessage motechStatusMessage) {
+    @Autowired
+    private StatusMessageService statusMessageService;
+
+    ResponseHandler(Template template, Config config) {
         this.template = template;
         this.config = config;
-        this.motechStatusMessage = motechStatusMessage;
         templateOutgoingResponse = template.getOutgoing().getResponse();
     }
 
@@ -71,7 +74,7 @@ public abstract class ResponseHandler {
         return logger;
     }
 
-    public MotechStatusMessage getMotechStatusMessage() {
-        return motechStatusMessage;
+    public void warn(String message) {
+        statusMessageService.warn(message, SMS_MODULE);
     }
 }
