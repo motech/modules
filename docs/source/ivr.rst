@@ -1,3 +1,5 @@
+.. _ivr-module:
+
 ==========
 IVR Module
 ==========

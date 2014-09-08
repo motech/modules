@@ -1,3 +1,5 @@
+.. _cms-lite-module:
+
 ===============
 CMS Lite Module
 ===============

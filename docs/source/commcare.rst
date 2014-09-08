@@ -1,6 +1,7 @@
+.. _commcare-module:
+
+===============
 CommCare Module
 ===============
 
-Text to come.
-
-
+To be written.
