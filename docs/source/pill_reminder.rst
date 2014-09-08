@@ -1,3 +1,6 @@
+.. _pill-reminder-module:
+
+====================
 Pill Reminder Module
 ====================
 

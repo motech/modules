@@ -1,3 +1,4 @@
+====================================================
 Schedule Definition for the Schedule Tracking Module
 ====================================================
 
@@ -228,4 +229,3 @@ The above is a floating alert configuration. The only difference between it and 
 .. note::
 
   By default, the floating value is false.
-

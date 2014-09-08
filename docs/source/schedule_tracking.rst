@@ -1,3 +1,6 @@
+.. _schedule-tracking-module:
+
+========================
 Schedule Tracking Module
 ========================
 
