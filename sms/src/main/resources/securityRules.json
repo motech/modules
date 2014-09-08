@@ -1,32 +1,47 @@
 [
-       {
-           "active": true,
-           "pattern": "/**/sms/status/**",
-           "supportedSchemes": [
-               "NO_SECURITY"
-           ],
-           "protocol": "HTTP",
-           "priority": 2,
-           "rest": true,
-           "origin": "SYSTEM_MODULE_SMS",
-           "version": "0.22",
-           "methodsRequired": [
-               "ANY"
-           ]
-       },
-       {
-           "active": true,
-           "pattern": "/**/sms/incoming/**",
-           "supportedSchemes": [
-               "NO_SECURITY"
-           ],
-           "protocol": "HTTP",
-           "priority": 2,
-           "rest": true,
-           "origin": "SYSTEM_MODULE_SMS",
-           "version": "0.22",
-           "methodsRequired": [
-               "ANY"
-           ]
-       }
+    {
+        "active": true,
+        "pattern": "/**/sms/status/**",
+        "supportedSchemes": [
+            "NO_SECURITY"
+        ],
+        "protocol": "HTTP",
+        "priority": 2,
+        "rest": true,
+        "origin": "SYSTEM_MODULE_SMS",
+        "version": "0.25",
+        "methodsRequired": [
+            "ANY"
+        ]
+    },
+    {
+        "active": true,
+        "pattern": "/**/sms/status/**",
+        "supportedSchemes": [
+            "NO_SECURITY"
+        ],
+        "protocol": "HTTP",
+        "priority": 2,
+        "rest": true,
+        "origin": "SYSTEM_MODULE_SMS",
+        "version": "0.25",
+        "methodsRequired": [
+            "ANY"
+        ]
+    },
+    {
+        "active": true,
+        "pattern": "/**/sms/send/**",
+        "supportedSchemes": [
+            "BASIC"
+        ],
+        "protocol": "HTTP",
+        "priority": 2,
+        "rest": true,
+        "origin": "SYSTEM_MODULE_SMS",
+        "version": "0.25",
+        "methodsRequired": [
+            "ANY"
+        ]
+    }
 ]

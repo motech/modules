@@ -2,7 +2,6 @@ package org.motechproject.sms.http;
 
 import org.apache.commons.httpclient.Header;
 import org.motechproject.sms.SmsEventSubjects;
-import org.motechproject.sms.alert.MotechStatusMessage;
 import org.motechproject.sms.audit.DeliveryStatus;
 import org.motechproject.sms.audit.SmsRecord;
 import org.motechproject.sms.configs.Config;
@@ -19,8 +18,8 @@ import static org.motechproject.sms.audit.SmsDirection.OUTBOUND;
  */
 public class MultilineSingleResponseHandler extends ResponseHandler {
 
-    MultilineSingleResponseHandler(Template template, Config config, MotechStatusMessage motechStatusMessage) {
-        super(template, config, motechStatusMessage);
+    MultilineSingleResponseHandler(Template template, Config config) {
+        super(template, config);
     }
 
     @Override

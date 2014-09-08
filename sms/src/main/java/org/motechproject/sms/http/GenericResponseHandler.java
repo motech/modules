@@ -2,7 +2,6 @@ package org.motechproject.sms.http;
 
 import org.apache.commons.httpclient.Header;
 import org.motechproject.sms.SmsEventSubjects;
-import org.motechproject.sms.alert.MotechStatusMessage;
 import org.motechproject.sms.audit.DeliveryStatus;
 import org.motechproject.sms.audit.SmsRecord;
 import org.motechproject.sms.configs.Config;
@@ -18,8 +17,8 @@ import static org.motechproject.sms.audit.SmsDirection.OUTBOUND;
  */
 public class GenericResponseHandler extends ResponseHandler {
 
-    GenericResponseHandler(Template template, Config config, MotechStatusMessage motechStatusMessage) {
-        super(template, config, motechStatusMessage);
+    GenericResponseHandler(Template template, Config config) {
+        super(template, config);
     }
 
     private String extractProviderMessageId(Header[] headers, String response) {
@@ -34,7 +33,7 @@ public class GenericResponseHandler extends ResponseHandler {
             if (providerMessageId == null) {
                 String message = String.format("Unable to find provider message id in '%s' header",
                         getTemplateOutgoingResponse().getHeaderMessageId());
-                getMotechStatusMessage().alert(message);
+                warn(message);
                 getLogger().error(message);
             }
         } else if (getTemplateOutgoingResponse().hasSingleSuccessMessageId()) {

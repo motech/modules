@@ -1,9 +1,9 @@
 package org.motechproject.sms.web;
 
 import org.joda.time.DateTime;
+import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.server.config.SettingsFacade;
-import org.motechproject.sms.alert.MotechStatusMessage;
 import org.motechproject.sms.audit.DeliveryStatus;
 import org.motechproject.sms.audit.SmsAuditService;
 import org.motechproject.sms.audit.SmsRecord;
@@ -39,13 +39,16 @@ import static org.motechproject.sms.audit.SmsDirection.INBOUND;
 public class IncomingController {
 
     @Autowired
-    private MotechStatusMessage motechStatusMessage;
+    private StatusMessageService statusMessageService;
+
     private Logger logger = LoggerFactory.getLogger(IncomingController.class);
     private ConfigReader configReader;
     private Configs configs;
     private Templates templates;
     private EventRelay eventRelay;
     private SmsAuditService smsAuditService;
+
+    private static final String SMS_MODULE = "motech-sms";
 
     @Autowired
     public IncomingController(@Qualifier("smsSettings") SettingsFacade settingsFacade, EventRelay eventRelay,
@@ -79,7 +82,7 @@ public class IncomingController {
         } else {
             String msg = String.format("Invalid config in incoming request: %s, params: %s", configName, params);
             logger.error(msg);
-            motechStatusMessage.alert(msg);
+            statusMessageService.warn(msg, SMS_MODULE);
             return;
         }
         Template template = templates.getTemplate(config.getTemplateName());

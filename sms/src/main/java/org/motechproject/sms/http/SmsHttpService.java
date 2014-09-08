@@ -9,11 +9,11 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.config.service.ConfigurationService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.server.config.SettingsFacade;
-import org.motechproject.sms.alert.MotechStatusMessage;
 import org.motechproject.sms.audit.SmsAuditService;
 import org.motechproject.sms.audit.SmsRecord;
 import org.motechproject.sms.configs.Config;
@@ -49,27 +49,30 @@ import static org.motechproject.sms.audit.SmsDirection.OUTBOUND;
 @Service
 public class SmsHttpService {
 
+    private static final String SMS_MODULE = "motech-sms";
     private Logger logger = LoggerFactory.getLogger(SmsHttpService.class);
     private ConfigReader configReader;
     private Configs configs;
     private Templates templates;
-    @Autowired
     private EventRelay eventRelay;
-    @Autowired
     private HttpClient commonsHttpClient;
-    @Autowired
     private SmsAuditService smsAuditService;
-    @Autowired
     private ConfigurationService configurationService;
-    @Autowired
-    private MotechStatusMessage motechStatusMessage;
+    private StatusMessageService statusMessageService;
 
     @Autowired
-    public SmsHttpService(@Qualifier("smsSettings") SettingsFacade settingsFacade, TemplateReader templateReader) {
+    public SmsHttpService(@Qualifier("smsSettings") SettingsFacade settingsFacade, TemplateReader templateReader,
+                          EventRelay eventRelay, HttpClient commonsHttpClient, SmsAuditService smsAuditService,
+                          ConfigurationService configurationService, StatusMessageService statusMessageService) {
 
         //todo: unified module-wide caching & refreshing strategy
         configReader = new ConfigReader(settingsFacade);
         templates = templateReader.getTemplates();
+        this.eventRelay = eventRelay;
+        this.commonsHttpClient = commonsHttpClient;
+        this.smsAuditService = smsAuditService;
+        this.configurationService = configurationService;
+        this.statusMessageService = statusMessageService;
     }
 
     private static String printableMethodParams(HttpMethod method) {
@@ -113,7 +116,7 @@ public class SmsHttpService {
             } else {
                 message = String.format("Config %s: missing username and password", config.getName());
             }
-            motechStatusMessage.alert(message);
+            statusMessageService.warn(message, SMS_MODULE);
             throw new IllegalStateException(message);
         }
     }
@@ -162,12 +165,12 @@ public class SmsHttpService {
         if (httpStatus == null) {
             String msg = String.format("Delivery to SMS provider failed: %s", errorMessage);
             logger.error(msg);
-            motechStatusMessage.alert(msg);
+            statusMessageService.warn(msg, SMS_MODULE);
         } else {
             errorMessage = templateResponse.extractGeneralFailureMessage(httpResponse);
             if (errorMessage == null) {
-                motechStatusMessage.alert(String.format("Unable to extract failure message for '%s' config: %s",
-                        config.getName(), httpResponse));
+                statusMessageService.warn(String.format("Unable to extract failure message for '%s' config: %s",
+                        config.getName(), httpResponse), SMS_MODULE);
                 errorMessage = httpResponse;
             }
             logger.error("Delivery to SMS provider failed with HTTP {}: {}", httpStatus, errorMessage);
@@ -187,12 +190,12 @@ public class SmsHttpService {
         ResponseHandler handler;
         if (templateResponse.supportsSingleRecipientResponse()) {
             if (sms.getRecipients().size() == 1 && templateResponse.supportsSingleRecipientResponse()) {
-                handler = new MultilineSingleResponseHandler(template, config, motechStatusMessage);
+                handler = new MultilineSingleResponseHandler(template, config);
             } else {
-                handler = new MultilineResponseHandler(template, config, motechStatusMessage);
+                handler = new MultilineResponseHandler(template, config);
             }
         } else {
-            handler = new GenericResponseHandler(template, config, motechStatusMessage);
+            handler = new GenericResponseHandler(template, config);
         }
 
         return handler;
@@ -273,7 +276,7 @@ public class SmsHttpService {
                 // exceptions generated above should only come from config/template issues, try to display something
                 // useful in the motech messages and tomcat log
                 logger.error(e.getMessage());
-                motechStatusMessage.alert(e.getMessage());
+                statusMessageService.warn(e.getMessage(), SMS_MODULE);
                 throw e;
             }
             events = handler.getEvents();

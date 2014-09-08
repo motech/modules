@@ -17,7 +17,7 @@ import static org.motechproject.commons.api.MotechEnumUtils.toEnumSet;
 /**
  * Reading and writing to the SMS audit log
  */
-@Service
+@Service("smsAuditService")
 public class SmsAuditServiceImpl implements SmsAuditService {
     private SmsRecordsDataService smsRecordsDataService;
     private Logger logger = LoggerFactory.getLogger(SmsAuditServiceImpl.class);
