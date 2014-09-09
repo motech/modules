@@ -29,6 +29,7 @@ public class Configs {
         throw new IllegalStateException("Trying to get default config, but no default config has been set.");
     }
 
+    @JsonIgnore
     public boolean isEmpty() {
         return configs.isEmpty();
     }

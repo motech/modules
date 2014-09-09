@@ -33,7 +33,7 @@ public class SmsAuditServiceIT extends BasePaxIT{
     @Before
     public void waitForBeans() {
         // To prevent the annoying "BeanFactory not initialized or already closed" errors
-        try { Thread.sleep(2000); } catch (InterruptedException e) {  }
+        try { Thread.sleep(IntegrationTests.BUNDLE_MS_WAIT_TIME); } catch (InterruptedException e) {  }
     }
 
     @Before

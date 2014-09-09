@@ -9,4 +9,5 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({SmsAuditServiceIT.class, IncomingControllerIT.class, SendControllerIT.class})
 public class IntegrationTests {
+    public static final int BUNDLE_MS_WAIT_TIME = 1000;
 }
