@@ -155,6 +155,15 @@
         return {
             restrict: 'A',
             link: function(scope, element, attrs) {
+                try {
+                    if (typeof($('#outsideSmsLoggingTable')[0].grid) !== 'undefined') {
+                        return;
+                    }
+                }
+                catch (e) {
+                    return;
+                }
+
                 var elem = angular.element(element), filters;
 
                 elem.jqGrid({
