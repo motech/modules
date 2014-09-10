@@ -1,11 +1,9 @@
 package org.motechproject.sms.web;
 
-import org.motechproject.server.config.SettingsFacade;
-import org.motechproject.sms.configs.ConfigReader;
 import org.motechproject.sms.configs.Configs;
+import org.motechproject.sms.service.ConfigService;
+import org.motechproject.sms.service.TemplateService;
 import org.motechproject.sms.templates.TemplateForWeb;
-import org.motechproject.sms.templates.TemplateReader;
-import org.motechproject.sms.templates.Templates;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -27,36 +25,34 @@ import java.util.Map;
  */
 @Controller
 public class SettingsController {
-    private SettingsFacade settingsFacade;
-    private TemplateReader templateReader;
+    private TemplateService templateService;
+    private ConfigService configService;
 
     @Autowired
-    public SettingsController(@Qualifier("smsSettings") SettingsFacade settingsFacade, TemplateReader templateReader) {
-        this.settingsFacade = settingsFacade;
-        this.templateReader = templateReader;
+    public SettingsController(@Qualifier("templateService") TemplateService templateService,
+                              @Qualifier("configService") ConfigService configService) {
+        this.templateService = templateService;
+        this.configService = configService;
     }
 
     @RequestMapping(value = "/templates", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, TemplateForWeb> getTemplates() {
-        Templates templates = templateReader.getTemplates();
-        return templates.templatesForWeb();
+        return templateService.allTemplatesForWeb();
     }
 
     @RequestMapping(value = "/configs", method = RequestMethod.GET)
     @ResponseBody
     public Configs getConfigs() {
-        ConfigReader configReader = new ConfigReader(settingsFacade);
-        return configReader.getConfigs();
+        return configService.getConfigs();
     }
 
     @RequestMapping(value = "/configs", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Configs setConfigs(@RequestBody Configs configs) {
-        ConfigReader configReader = new ConfigReader(settingsFacade);
-        configReader.setConfigs(configs);
-        return configReader.getConfigs();
+        configService.updateConfigs(configs);
+        return configService.getConfigs();
     }
 
     @ExceptionHandler(Exception.class)

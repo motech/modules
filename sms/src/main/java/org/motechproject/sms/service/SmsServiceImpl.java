@@ -3,20 +3,15 @@ package org.motechproject.sms.service;
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
-import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.sms.SmsEventParams;
 import org.motechproject.sms.SmsEventSubjects;
 import org.motechproject.sms.audit.DeliveryStatus;
 import org.motechproject.sms.audit.SmsAuditService;
 import org.motechproject.sms.audit.SmsRecord;
 import org.motechproject.sms.configs.Config;
-import org.motechproject.sms.configs.ConfigReader;
-import org.motechproject.sms.configs.Configs;
 import org.motechproject.sms.templates.Template;
-import org.motechproject.sms.templates.TemplateReader;
-import org.motechproject.sms.templates.Templates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,24 +34,22 @@ import static org.motechproject.sms.audit.SmsDirection.OUTBOUND;
 @Service("smsService")
 public class SmsServiceImpl implements SmsService {
 
-    private SettingsFacade settingsFacade;
     private Logger logger = LoggerFactory.getLogger(SmsServiceImpl.class);
     private EventRelay eventRelay;
     private MotechSchedulerService schedulerService;
-    private Templates templates;
+    private TemplateService templateService;
     private SmsAuditService smsAuditService;
+    private ConfigService configService;
 
     @Autowired
-    public SmsServiceImpl(@Qualifier("smsSettings") SettingsFacade settingsFacade, EventRelay eventRelay,
-                          MotechSchedulerService schedulerService, TemplateReader templateReader,
+    public SmsServiceImpl(EventRelay eventRelay, MotechSchedulerService schedulerService,
+                          @Qualifier("templateService") TemplateService templateService,
+                          @Qualifier("configService") ConfigService configService,
                           SmsAuditService smsAuditService) {
-        //todo: persist configs or reload them for each call?
-        //todo: right now I'm doing the latter...
-        //todo: ... but I'm not wed to it.
-        this.settingsFacade = settingsFacade;
         this.eventRelay = eventRelay;
         this.schedulerService = schedulerService;
-        templates = templateReader.getTemplates();
+        this.templateService = templateService;
+        this.configService = configService;
         this.smsAuditService = smsAuditService;
     }
 
@@ -122,25 +115,15 @@ public class SmsServiceImpl implements SmsService {
      */
     public void send(OutgoingSms sms) {
 
-        //todo: cache that?
-        Configs configs = new ConfigReader(settingsFacade).getConfigs();
-        if (configs.isEmpty()) {
+        if (!configService.hasConfigs()) {
             String message = String.format("Trying to send an SMS, but there are no SMS configs on this server. " +
                     "outgoingSms = %s", sms.toString());
             logger.error(message);
             throw new IllegalStateException(message);
         }
 
-        Config config;
-        Template template;
-
-        if (sms.hasConfig()) {
-            config = configs.getConfig(sms.getConfig());
-        } else {
-            logger.debug("No config specified, using default config.");
-            config = configs.getDefaultConfig();
-        }
-        template = templates.getTemplate(config.getTemplateName());
+        Config config = configService.getConfigOrDefault(sms.getConfig());
+        Template template = templateService.getTemplate(config.getTemplateName());
 
         //todo: die if things aren't right, right?
         //todo: SMS_SCHEDULE_FUTURE_SMS research if any sms provider provides that, for now assume not.

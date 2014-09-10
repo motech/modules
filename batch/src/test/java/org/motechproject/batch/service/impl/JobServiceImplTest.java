@@ -1,17 +1,7 @@
 package org.motechproject.batch.service.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +20,16 @@ import org.motechproject.batch.model.CronJobScheduleParam;
 import org.motechproject.batch.model.OneTimeJobScheduleParams;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.springframework.http.HttpStatus;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class JobServiceImplTest {
@@ -58,7 +58,7 @@ public class JobServiceImplTest {
 
     @Before
     public void setUp() throws BatchException {
-        date = "10/09/2014 10:20:16";
+        date = DateTime.now().plusYears(1).toString(DateTimeFormat.forPattern("dd/MM/Y HH:mm:ss"));
         cronExpression = "0 15 10 * * ? 2014";
         batchJob = new BatchJob();
         batchJob.setCronExpression(cronExpression);

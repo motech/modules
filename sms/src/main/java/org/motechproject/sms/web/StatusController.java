@@ -4,7 +4,6 @@ import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.mds.query.QueryParams;
 import org.motechproject.mds.util.Order;
-import org.motechproject.server.config.SettingsFacade;
 import org.motechproject.sms.SmsEventSubjects;
 import org.motechproject.sms.audit.DeliveryStatus;
 import org.motechproject.sms.audit.SmsAuditService;
@@ -12,12 +11,10 @@ import org.motechproject.sms.audit.SmsRecord;
 import org.motechproject.sms.audit.SmsRecordSearchCriteria;
 import org.motechproject.sms.audit.SmsRecords;
 import org.motechproject.sms.configs.Config;
-import org.motechproject.sms.configs.ConfigReader;
-import org.motechproject.sms.configs.Configs;
+import org.motechproject.sms.service.ConfigService;
+import org.motechproject.sms.service.TemplateService;
 import org.motechproject.sms.templates.Status;
 import org.motechproject.sms.templates.Template;
-import org.motechproject.sms.templates.TemplateReader;
-import org.motechproject.sms.templates.Templates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,30 +44,29 @@ import static org.motechproject.sms.audit.SmsDirection.OUTBOUND;
 @RequestMapping(value = "/status")
 public class StatusController {
 
-    private Logger logger = LoggerFactory.getLogger(StatusController.class);
-
-    @Autowired
-    private StatusMessageService statusMessageService;
-
-    private ConfigReader configReader;
-    private Configs configs;
-    private Templates templates;
-    private EventRelay eventRelay;
-    private SmsAuditService smsAuditService;
-
     private static final int RECORD_FIND_RETRY_COUNT = 3;
     private static final int RECORD_FIND_TIMEOUT = 500;
     private static final String SMS_MODULE = "motech-sms";
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(StatusController.class);
+
+    private StatusMessageService statusMessageService;
+    private EventRelay eventRelay;
+    private SmsAuditService smsAuditService;
+    private TemplateService templateService;
+    private ConfigService configService;
+
+
     @Autowired
-    public StatusController(@Qualifier("smsSettings") SettingsFacade settingsFacade, EventRelay eventRelay,
-                            TemplateReader templateReader, SmsAuditService smsAuditService) {
+    public StatusController(@Qualifier("templateService") TemplateService templateService,
+                            @Qualifier("configService") ConfigService configService,
+                            EventRelay eventRelay, StatusMessageService statusMessageService,
+                            SmsAuditService smsAuditService
+                            ) {
+        this.templateService = templateService;
+        this.configService = configService;
         this.eventRelay = eventRelay;
-        configReader = new ConfigReader(settingsFacade);
-        //todo: this means we'd crash/error out when a new config is created and we get a status update callback before
-        //todo: restarting the module  -  so for now we'll read configs each time handle() gets called
-        //todo: but ultimately we'll want something like: configs = configReader.getConfigs()
-        templates = templateReader.getTemplates();
+        this.statusMessageService = statusMessageService;
         this.smsAuditService = smsAuditService;
     }
 
@@ -95,7 +91,7 @@ public class StatusController {
         do {
             //seems that lucene takes a while to index, so try a couple of times and delay in between
             if (retry > 0) {
-                logger.debug("Trying again to find log record with motechId {}, try {}", providerMessageId, retry + 1);
+                LOGGER.debug("Trying again to find log record with motechId {}, try {}", providerMessageId, retry + 1);
                 try {
                     Thread.sleep(RECORD_FIND_TIMEOUT);
                 } catch (InterruptedException e) {
@@ -116,7 +112,7 @@ public class StatusController {
                     .withMotechId(providerMessageId)
                     .withQueryParams(queryParams));
             if (!CollectionUtils.isEmpty(smsRecords.getRecords())) {
-                logger.debug("Found log record with matching motechId {}", providerMessageId);
+                LOGGER.debug("Found log record with matching motechId {}", providerMessageId);
                 existingSmsRecord = smsRecords.getRecords().get(0);
             }
         } else {
@@ -124,14 +120,14 @@ public class StatusController {
             //todo: an exact match. Remove when we switch to SEUSS.
             existingSmsRecord = findFirstByProviderMessageId(smsRecords, providerMessageId);
             if (existingSmsRecord != null) {
-                logger.debug("Found log record with matching providerId {}", providerMessageId);
+                LOGGER.debug("Found log record with matching providerId {}", providerMessageId);
             }
         }
 
         if (existingSmsRecord == null) {
             String msg = String.format("Received status update but couldn't find a log record with matching " +
                     "ProviderMessageId or motechId: %s", providerMessageId);
-            logger.error(msg);
+            LOGGER.error(msg);
             statusMessageService.warn(msg, SMS_MODULE);
         }
 
@@ -173,7 +169,7 @@ public class StatusController {
         } else {
             String msg = String.format("Likely template error, unable to extract status string. Config: %s, Parameters: %s",
                     configName, params);
-            logger.error(msg);
+            LOGGER.error(msg);
             statusMessageService.warn(msg, SMS_MODULE);
             smsRecord.setDeliveryStatus(DeliveryStatus.FAILURE_CONFIRMED);
             eventRelay.sendEventMessage(outboundEvent(SmsEventSubjects.FAILURE_CONFIRMED, configName, recipients,
@@ -187,22 +183,16 @@ public class StatusController {
     @ResponseBody
     @RequestMapping(value = "/{configName}")
     public void handle(@PathVariable String configName, @RequestParam Map<String, String> params) {
-        logger.info("SMS Status - configName = {}, params = {}", configName, params);
+        LOGGER.info("SMS Status - configName = {}, params = {}", configName, params);
 
-        //todo: for now re-read configs every call, we'll change to the new config notifications when it's ready
-        configs = configReader.getConfigs();
-
-        Config config;
-        if (configs.hasConfig(configName)) {
-            config = configs.getConfig(configName);
-        } else {
-            String msg = String.format("Received SMS Status for '%s' config but no matching config: %s", configName,
-                    params);
-            logger.error(msg);
+        if (configService.hasConfig(configName)) {
+            String msg = String.format("Received SMS Status for '%s' config but no matching config: %s, " +
+                            "will try the default config", configName, params);
+            LOGGER.error(msg);
             statusMessageService.warn(msg, SMS_MODULE);
-            config = configs.getDefaultConfig();
         }
-        Template template = templates.getTemplate(config.getTemplateName());
+        Config config = configService.getConfigOrDefault(configName);
+        Template template = templateService.getTemplate(config.getTemplateName());
         Status status = template.getStatus();
 
         if (status.hasMessageIdKey() && params != null && params.containsKey(status.getMessageIdKey())) {
@@ -211,13 +201,13 @@ public class StatusController {
             } else {
                 String msg = String.format("We have a message id, but don't know how to extract message status, this is most likely a template error. Config: %s, Parameters: %s",
                         configName, params);
-                logger.error(msg);
+                LOGGER.error(msg);
                 statusMessageService.warn(msg, SMS_MODULE);
             }
         } else {
             String msg = String.format("Status message received from provider, but no template support! Config: %s, Parameters: %s",
                     configName, params);
-            logger.error(msg);
+            LOGGER.error(msg);
             statusMessageService.warn(msg, SMS_MODULE);
         }
     }

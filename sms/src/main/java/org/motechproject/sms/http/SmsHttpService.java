@@ -13,18 +13,15 @@ import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.config.service.ConfigurationService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.server.config.SettingsFacade;
 import org.motechproject.sms.audit.SmsAuditService;
 import org.motechproject.sms.audit.SmsRecord;
 import org.motechproject.sms.configs.Config;
 import org.motechproject.sms.configs.ConfigProp;
-import org.motechproject.sms.configs.ConfigReader;
-import org.motechproject.sms.configs.Configs;
+import org.motechproject.sms.service.ConfigService;
 import org.motechproject.sms.service.OutgoingSms;
+import org.motechproject.sms.service.TemplateService;
 import org.motechproject.sms.templates.Response;
 import org.motechproject.sms.templates.Template;
-import org.motechproject.sms.templates.TemplateReader;
-import org.motechproject.sms.templates.Templates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,28 +47,26 @@ import static org.motechproject.sms.audit.SmsDirection.OUTBOUND;
 public class SmsHttpService {
 
     private static final String SMS_MODULE = "motech-sms";
-    private Logger logger = LoggerFactory.getLogger(SmsHttpService.class);
-    private ConfigReader configReader;
-    private Configs configs;
-    private Templates templates;
+    private static final Logger LOGGER = LoggerFactory.getLogger(SmsHttpService.class);
+    private TemplateService templateService;
+    private ConfigService configService;
+    private ConfigurationService configurationService;
     private EventRelay eventRelay;
     private HttpClient commonsHttpClient;
     private SmsAuditService smsAuditService;
-    private ConfigurationService configurationService;
     private StatusMessageService statusMessageService;
 
     @Autowired
-    public SmsHttpService(@Qualifier("smsSettings") SettingsFacade settingsFacade, TemplateReader templateReader,
-                          EventRelay eventRelay, HttpClient commonsHttpClient, SmsAuditService smsAuditService,
-                          ConfigurationService configurationService, StatusMessageService statusMessageService) {
-
-        //todo: unified module-wide caching & refreshing strategy
-        configReader = new ConfigReader(settingsFacade);
-        templates = templateReader.getTemplates();
-        this.eventRelay = eventRelay;
-        this.commonsHttpClient = commonsHttpClient;
-        this.smsAuditService = smsAuditService;
+    public SmsHttpService(@Qualifier("templateService") TemplateService templateService,
+                          @Qualifier("configService") ConfigService configService,
+                          ConfigurationService configurationService, SmsAuditService smsAuditService,
+                          EventRelay eventRelay, HttpClient httpClient, StatusMessageService statusMessageService) {
+        this.templateService = templateService;
+        this.configService = configService;
         this.configurationService = configurationService;
+        this.smsAuditService = smsAuditService;
+        this.eventRelay = eventRelay;
+        this.commonsHttpClient = httpClient;
         this.statusMessageService = statusMessageService;
     }
 
@@ -125,7 +120,7 @@ public class SmsHttpService {
         //todo: serialize access to configs, ie: one provider may allow 100 sms/min and another may allow 10...
         //This prevents us from sending more messages per second than the provider allows
         Integer milliseconds = template.getOutgoing().getMillisecondsBetweenMessages();
-        logger.debug("Sleeping thread id {} for {}ms", Thread.currentThread().getId(), milliseconds);
+        LOGGER.debug("Sleeping thread id {} for {}ms", Thread.currentThread().getId(), milliseconds);
         try {
             Thread.sleep(milliseconds);
         } catch (InterruptedException ex) {
@@ -148,9 +143,9 @@ public class SmsHttpService {
         // ***** WARNING *****
         // This displays usernames & passwords in the server log! But then again, so does the settings UI...
         // ***** WARNING *****
-        if (logger.isDebugEnabled()) {
+        if (LOGGER.isDebugEnabled()) {
             for (Map.Entry<String, String> entry : props.entrySet()) {
-                logger.debug("PROP {}: {}", entry.getKey(), entry.getValue());
+                LOGGER.debug("PROP {}: {}", entry.getKey(), entry.getValue());
             }
         }
 
@@ -164,7 +159,7 @@ public class SmsHttpService {
 
         if (httpStatus == null) {
             String msg = String.format("Delivery to SMS provider failed: %s", errorMessage);
-            logger.error(msg);
+            LOGGER.error(msg);
             statusMessageService.warn(msg, SMS_MODULE);
         } else {
             errorMessage = templateResponse.extractGeneralFailureMessage(httpResponse);
@@ -173,7 +168,7 @@ public class SmsHttpService {
                         config.getName(), httpResponse), SMS_MODULE);
                 errorMessage = httpResponse;
             }
-            logger.error("Delivery to SMS provider failed with HTTP {}: {}", httpStatus, errorMessage);
+            LOGGER.error("Delivery to SMS provider failed with HTTP {}: {}", httpStatus, errorMessage);
         }
 
         for (String recipient : sms.getRecipients()) {
@@ -203,8 +198,8 @@ public class SmsHttpService {
 
     private HttpMethod prepHttpMethod(Template template, Map<String, String> props, Config config) {
         HttpMethod method = template.generateRequestFor(props);
-        if (logger.isDebugEnabled()) {
-            logger.debug(printableMethodParams(method));
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(printableMethodParams(method));
         }
 
         if (template.getOutgoing().hasAuthentication()) {
@@ -215,12 +210,8 @@ public class SmsHttpService {
 
     public synchronized void send(OutgoingSms sms) {
 
-        //todo: right now we reload the configs for every call, but when we switch to the new config system we should
-        //todo: be able to cache that and only reload when the config system detects a change.
-        configs = configReader.getConfigs();
-
-        Config config = configs.getConfigOrDefault(sms.getConfig());
-        Template template = templates.getTemplate(config.getTemplateName());
+        Config config = configService.getConfigOrDefault(sms.getConfig());
+        Template template = templateService.getTemplate(config.getTemplateName());
         HttpMethod httpMethod = null;
         Integer failureCount = sms.getFailureCount();
         Integer httpStatus = null;
@@ -275,7 +266,7 @@ public class SmsHttpService {
             } catch (IllegalStateException e) {
                 // exceptions generated above should only come from config/template issues, try to display something
                 // useful in the motech messages and tomcat log
-                logger.error(e.getMessage());
+                LOGGER.error(e.getMessage());
                 statusMessageService.warn(e.getMessage(), SMS_MODULE);
                 throw e;
             }
