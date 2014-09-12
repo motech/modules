@@ -24,7 +24,7 @@ public class BatchJob implements java.io.Serializable {
     private String cronExpression;
 
     @Field
-    private byte[] jobContent;
+    private Byte[] jobContent;
 
     public String getJobName() {
         return jobName;
@@ -50,11 +50,11 @@ public class BatchJob implements java.io.Serializable {
         this.cronExpression = cronExpression;
     }
 
-    public byte[] getJobContent() {
+    public Byte[] getJobContent() {
         return jobContent.clone();
     }
 
-    public void setJobContent(byte[] jobContent) {
+    public void setJobContent(Byte[] jobContent) {
         if (jobContent != null) {
             this.jobContent = jobContent.clone();
         }

@@ -15,6 +15,7 @@ import javax.batch.runtime.JobExecution;
 import javax.batch.runtime.JobInstance;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.motechproject.batch.exception.ApplicationErrors;
 import org.motechproject.batch.exception.BatchException;
 import org.motechproject.batch.mds.BatchJob;
@@ -99,7 +100,7 @@ public class JobTriggerServiceImpl implements JobTriggerService {
                 .getResourceAsStream(batchConfigResourcePath)) {
             if (is != null) {
                 BatchJob batchJob = jobRepo.findByJobName(jobName).get(0);
-                batchJob.setJobContent(IOUtils.toByteArray(is));
+                batchJob.setJobContent(ArrayUtils.toObject(IOUtils.toByteArray(is)));
                 jobRepo.update(batchJob);
             } else {
                 throw new BatchException(

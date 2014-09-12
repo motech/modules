@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,7 +60,7 @@ public class JobServiceImplTest {
 
     @Before
     public void setUp() throws BatchException {
-        date = "10/09/2014 10:20:16";
+        date = DateTime.now().plusYears(1).toString(DateTimeFormat.forPattern("dd/MM/Y HH:mm:ss"));
         cronExpression = "0 15 10 * * ? 2014";
         batchJob = new BatchJob();
         batchJob.setCronExpression(cronExpression);
