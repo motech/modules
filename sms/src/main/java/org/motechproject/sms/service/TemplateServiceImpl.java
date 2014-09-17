@@ -47,6 +47,7 @@ public class TemplateServiceImpl implements TemplateService {
 
         templates = new HashMap<>();
         for (Template template : templateList) {
+            template.readDefaults(this.settingsFacade);
             templates.put(template.getName(), template);
         }
     }

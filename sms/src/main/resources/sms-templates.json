@@ -8,7 +8,7 @@
             "from"
         ],
         "outgoing":{
-            "msxSmsSize":"160",
+            "maxSmsSize":"160",
             "maxRecipient":"3",
             "millisecondsBetweenMessages":"1",
             "exponentialBackOffRetries":"true",
@@ -58,7 +58,7 @@
             "api_key"
         ],
         "outgoing":{
-            "msxSmsSize":"160",
+            "maxSmsSize":"160",
             "millisecondsBetweenMessages":"1",
             "exponentialBackOffRetries":"false",
             "maxRecipient":"1",
@@ -91,7 +91,7 @@
             "from"
         ],
         "outgoing":{
-            "msxSmsSize":"160",
+            "maxSmsSize":"160",
             "maxRecipient":"1",
             "millisecondsBetweenMessages":"1",
             "exponentialBackOffRetries":"true",
@@ -134,7 +134,7 @@
             "from"
         ],
         "outgoing":{
-            "msxSmsSize":"160",
+            "maxSmsSize":"160",
             "hasAuthentication":"true",
             "millisecondsBetweenMessages":"1",
             "exponentialBackOffRetries":"true",
@@ -180,7 +180,7 @@
             "from"
         ],
         "outgoing":{
-            "msxSmsSize":"160",
+            "maxSmsSize":"160",
             "hasAuthentication":"true",
             "millisecondsBetweenMessages":"1",
             "exponentialBackOffRetries":"true",
@@ -219,7 +219,7 @@
             "from"
         ],
         "outgoing":{
-            "msxSmsSize":"160",
+            "maxSmsSize":"160",
             "hasAuthentication":"true",
             "millisecondsBetweenMessages":"1",
             "exponentialBackOffRetries":"true",
@@ -265,7 +265,7 @@
             "from"
         ],
         "outgoing":{
-            "msxSmsSize":"160",
+            "maxSmsSize":"160",
             "millisecondsBetweenMessages":"6000",
             "exponentialBackOffRetries":"true",
             "maxRecipient":"1",
