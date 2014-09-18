@@ -42,7 +42,7 @@ public class CommcareCaseServiceImplTest {
     public void testAllCases() {
         when(commcareHttpClient.casesRequest(Matchers.any(CaseRequest.class))).thenReturn(casesResponse());
 
-        List<CaseInfo> cases = caseService.getAllCases();
+        List<CaseInfo> cases = caseService.getCases(50, 1);
 
         assertEquals(asList("3ECE7ROKGQ7U1XX1DOL0PNRJW", "63ZB8WGEQY3TJ23PHB2EGD39J", "EP60PTXTZW6HD42KPSY9U018V",
                 "EPKT93XZQ8COVAIQZ7DMQXO7S"), extract(cases, on(CaseInfo.class).getCaseId()));
@@ -96,7 +96,7 @@ public class CommcareCaseServiceImplTest {
     {
         when(commcareHttpClient.casesRequest(Matchers.any(CaseRequest.class))).thenReturn(casesResponse());
 
-        List<CaseInfo> cases = caseService.getAllCases();
+        List<CaseInfo> cases = caseService.getCases(50, 1);
 
         assertEquals(asList("2012-04-09T19:48:07Z", "2012-04-12T18:49:15Z", "2012-04-12T15:59:01Z",
                 "2012-04-10T14:31:44Z"), extract(cases, on(CaseInfo.class).getServerDateModified()));

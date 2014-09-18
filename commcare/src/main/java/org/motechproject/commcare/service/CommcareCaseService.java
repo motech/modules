@@ -2,6 +2,7 @@ package org.motechproject.commcare.service;
 
 import org.motechproject.commcare.domain.CaseInfo;
 import org.motechproject.commcare.domain.CaseTask;
+import org.motechproject.commcare.domain.CasesInfo;
 import org.motechproject.commcare.response.OpenRosaResponse;
 
 import java.util.List;
@@ -25,12 +26,6 @@ public interface CommcareCaseService {
      * @return A CaseInfo object representing the state of the case or null if that case does not exist.
      */
     CaseInfo getCaseByCaseId(String caseId);
-
-    /**
-     * Query CommCareHQ for all cases.
-     * @return A list of CaseInfo objects representing all cases found on the configured domain of CommCareHQ
-     */
-    List<CaseInfo> getAllCases();
 
     /**
      * Query CommCareHQ for all cases of a given case type and page.
@@ -67,6 +62,14 @@ public interface CommcareCaseService {
      * @return A list of CaseInfo objects representing cases of the given page found on the configured domain of CommCareHQ
      */
     List<CaseInfo> getCases(Integer pageSize, Integer pageNumber);
+
+    /**
+     * Query CommCareHQ for all cases of the given page and cases metadata
+     * @param pageSize
+     * @param pageNumber
+     * @return CasesInfo wrapper, containing CaseInfo objects and case metadata from CommCareHQ
+     */
+    CasesInfo getCasesWithMetadata(Integer pageSize, Integer pageNumber);
 
     /**
      * Upload case xml wrapped in a minimal xform instance to CommCareHQ.

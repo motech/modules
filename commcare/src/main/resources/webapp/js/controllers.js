@@ -174,15 +174,28 @@
 
     controllers.controller('CaseSchemasCtrl', function ($scope, Cases) {
         $scope.caseError = false;
-        $scope.formatJson=function(jsonResponse){return JSON.stringify(jsonResponse, null,4);};
-        blockUI();
-        $scope.cases = Cases.query(function() {
-            $scope.caseError = false;
-            unblockUI();
-        }, function() {
-            $scope.caseError = true;
-            unblockUI();
-        });
+
+        $scope.formatJson=function(jsonResponse) {
+            return JSON.stringify(jsonResponse, null, 4);
+        };
+
+        $scope.formatModalContent = function (rowObject) {
+            var contentView = '';
+            $.each(rowObject, function( key, value ) {
+                if (key !== 'xformIds' && key !== 'indices' && key !== 'fieldValues') {
+                    contentView = contentView + '<div><label class="col-md-4 control-label">'
+                        + $scope.msg("commcare.case.field." + key) + ':</label><div class="input-xlarge-fluid form-list-inline">' + value + '</div></div>';
+                } else {
+                    var strValue = '';
+                    $.each(value, function( key2, value2 ) {
+                        strValue = strValue + '<div>' + key2 + ': ' + value2 + '</div>';
+                    });
+                    contentView = contentView + '<div><label class="col-md-4 control-label">'
+                    + $scope.msg("commcare.case.field." + key) + ':</label><div class="input-xlarge-fluid form-list-inline">' + strValue + '</div></div>';
+                }
+            });
+            return contentView;
+        };
     });
 
 }());

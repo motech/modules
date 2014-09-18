@@ -1,17 +1,19 @@
 package org.motechproject.commcare.service.impl;
 
 import com.google.gson.reflect.TypeToken;
-import org.apache.commons.lang.StringUtils;
+import org.motechproject.commcare.client.CommCareAPIHttpClient;
 import org.motechproject.commcare.domain.CaseInfo;
 import org.motechproject.commcare.domain.CaseJson;
 import org.motechproject.commcare.domain.CaseResponseJson;
 import org.motechproject.commcare.domain.CaseTask;
+import org.motechproject.commcare.domain.CasesInfo;
+import org.motechproject.commcare.domain.CommcareMetadataInfo;
+import org.motechproject.commcare.domain.CommcareMetadataJson;
 import org.motechproject.commcare.exception.CaseParserException;
 import org.motechproject.commcare.gateway.CaseTaskXmlConverter;
 import org.motechproject.commcare.request.json.CaseRequest;
 import org.motechproject.commcare.response.OpenRosaResponse;
 import org.motechproject.commcare.service.CommcareCaseService;
-import org.motechproject.commcare.client.CommCareAPIHttpClient;
 import org.motechproject.commons.api.json.MotechJsonReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +28,6 @@ import java.util.Map;
 
 @Service
 public class CommcareCaseServiceImpl implements CommcareCaseService {
-
-    static final int MAX_CASE_PAGE_SIZE = 100;
 
     @Autowired
     private CaseTaskXmlConverter converter;
@@ -49,7 +49,7 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
         CaseRequest request = new CaseRequest();
         request.setCaseId(caseId);
         request.setUserId(userId);
-        List<CaseJson> caseResponses = getCases(request);
+        List<CaseJson> caseResponses = getCaseResponse(request).getCases();
         List<CaseInfo> cases = generateCasesFromCaseResponse(caseResponses);
         if (cases.size() == 0) {
             return null;
@@ -67,35 +67,12 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
     }
 
     @Override
-    public List<CaseInfo> getAllCases() {
-        CaseRequest caseRequest = new CaseRequest();
-        caseRequest.setLimit(MAX_CASE_PAGE_SIZE);
-        caseRequest.setOffset(0);
-        List<CaseJson> caseJsons = new ArrayList<>();
-        CaseResponseJson caseResponseJson = null;
-
-        do {
-            try {
-                String response = commcareHttpClient.casesRequest(caseRequest);
-                caseResponseJson = parseCasesFromResponse(response);
-                caseJsons.addAll(caseResponseJson.getCases());
-            } catch (Exception e) {
-                logger.error(String.format("Exception while trying to read in case JSON: %s", e.getMessage()), e);
-                return new ArrayList<>();
-            }
-            caseRequest.setOffset(caseRequest.getOffset() + caseResponseJson.getMetadata().getLimit());
-        } while (caseResponseJson != null && !StringUtils.isBlank(caseResponseJson.getMetadata().getNextPageQueryString()));
-
-        return generateCasesFromCaseResponse(caseJsons);
-    }
-
-    @Override
     public List<CaseInfo> getCasesByType(String type, Integer pageSize, Integer pageNumber) {
         CaseRequest request = new CaseRequest();
         request.setType(type);
         request.setLimit(pageSize);
         request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
-        List<CaseJson> caseResponses = getCases(request);
+        List<CaseJson> caseResponses = getCaseResponse(request).getCases();
         return generateCasesFromCaseResponse(caseResponses);
     }
 
@@ -105,7 +82,7 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
         request.setUserId(userId);
         request.setLimit(pageSize);
         request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
-        List<CaseJson> caseResponses = getCases(request);
+        List<CaseJson> caseResponses = getCaseResponse(request).getCases();
         return generateCasesFromCaseResponse(caseResponses);
     }
 
@@ -116,24 +93,36 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
         request.setType(type);
         request.setLimit(pageSize);
         request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
-        List<CaseJson> caseResponses = getCases(request);
+        List<CaseJson> caseResponses = getCaseResponse(request).getCases();
         return generateCasesFromCaseResponse(caseResponses);
     }
 
     @Override
     public List<CaseInfo> getCases(Integer pageSize, Integer pageNumber) {
+        CaseRequest request = prepareCaseRequest(pageSize, pageNumber);
+        return generateCasesFromCaseResponse(getCaseResponse(request).getCases());
+    }
+
+    @Override
+    public CasesInfo getCasesWithMetadata(Integer pageSize, Integer pageNumber) {
+        CaseRequest request = prepareCaseRequest(pageSize, pageNumber);
+        CaseResponseJson caseResponseJson = getCaseResponse(request);
+
+        return new CasesInfo(generateCasesFromCaseResponse(getCaseResponse(request).getCases()),
+                populateCaseMetadata(caseResponseJson.getMetadata()));
+    }
+
+    private CaseRequest prepareCaseRequest(Integer pageSize, Integer pageNumber) {
         CaseRequest request = new CaseRequest();
         request.setLimit(pageSize);
         request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
-        return generateCasesFromCaseResponse(getCases(request));
+
+        return request;
     }
 
-    private List<CaseJson> getCases(CaseRequest caseRequest) {
-        List<CaseJson> caseJsons = new ArrayList<>();
+    private CaseResponseJson getCaseResponse(CaseRequest caseRequest) {
         String response = commcareHttpClient.casesRequest(caseRequest);
-        CaseResponseJson caseResponseJson = parseCasesFromResponse(response);
-        caseJsons.addAll(caseResponseJson.getCases());
-        return caseJsons;
+        return parseCasesFromResponse(response);
     }
 
     private CaseResponseJson parseCasesFromResponse(String response) {
@@ -156,7 +145,7 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
 
     private List<CaseInfo> generateCasesFromCaseResponse(
             List<CaseJson> caseResponses) {
-        List<CaseInfo> caseList = new ArrayList<CaseInfo>();
+        List<CaseInfo> caseList = new ArrayList<>();
 
         if (caseResponses == null) {
             return Collections.emptyList();
@@ -210,6 +199,18 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
         caseInfo.setUserId(caseResponse.getUserId());
 
         return caseInfo;
+    }
+
+    private CommcareMetadataInfo populateCaseMetadata(CommcareMetadataJson metadataJson) {
+        CommcareMetadataInfo metadataInfo = new CommcareMetadataInfo();
+
+        metadataInfo.setLimit(metadataJson.getLimit());
+        metadataInfo.setNextPageQueryString(metadataJson.getNextPageQueryString());
+        metadataInfo.setOffset(metadataJson.getOffset());
+        metadataInfo.setPreviousPageQueryString(metadataJson.getPreviousPageQueryString());
+        metadataInfo.setTotalCount(metadataJson.getTotalCount());
+
+        return metadataInfo;
     }
 
     @Override

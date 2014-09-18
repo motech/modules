@@ -11,10 +11,10 @@
             </div>
 
             <div class="form-group">
-                <div ng-show="isVerifyError()" class="connection-status connection-error">
+                <div ng-show="isVerifyError()" class="connection-status connection-error alert alert-danger margin-before row">
                     {{verifyErrorMessage}}
                 </div>
-                <div ng-show="isVerifySuccess()" class="connection-status connection-success">
+                <div ng-show="isVerifySuccess()" class="connection-status connection-success alert alert-success margin-before row">
                     <div>
                         <span class="icon-ok"></span>
                         <span>{{verifySuccessMessage}}</span>
