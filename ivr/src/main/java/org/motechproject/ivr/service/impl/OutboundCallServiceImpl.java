@@ -11,20 +11,21 @@ import org.apache.http.params.BasicHttpParams;
 import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.ivr.service.CallInitiationException;
-import org.motechproject.ivr.event.EventParams;
-import org.motechproject.ivr.event.EventSubjects;
 import org.motechproject.ivr.domain.CallDetailRecord;
 import org.motechproject.ivr.domain.CallDirection;
 import org.motechproject.ivr.domain.CallStatus;
 import org.motechproject.ivr.domain.Config;
 import org.motechproject.ivr.domain.HttpMethod;
+import org.motechproject.ivr.event.EventParams;
+import org.motechproject.ivr.event.EventSubjects;
 import org.motechproject.ivr.repository.CallDetailRecordDataService;
-import org.motechproject.ivr.repository.ConfigDataService;
+import org.motechproject.ivr.service.CallInitiationException;
+import org.motechproject.ivr.service.ConfigService;
 import org.motechproject.ivr.service.OutboundCallService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -38,16 +39,17 @@ import java.util.UUID;
 public class OutboundCallServiceImpl implements OutboundCallService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OutboundCallServiceImpl.class);
-    private ConfigDataService configDataService;
+    private ConfigService configService;
     private CallDetailRecordDataService callDetailRecordDataService;
     private EventRelay eventRelay;
     private StatusMessageService statusMessageService;
     private static final String MODULE_NAME = "ivr";
 
     @Autowired
-    public OutboundCallServiceImpl(ConfigDataService configDataService, StatusMessageService statusMessageService,
+    public OutboundCallServiceImpl(@Qualifier("configService") ConfigService configService,
+                                   StatusMessageService statusMessageService,
                                    CallDetailRecordDataService callDetailRecordDataService, EventRelay eventRelay) {
-        this.configDataService = configDataService;
+        this.configService = configService;
         this.statusMessageService = statusMessageService;
         this.callDetailRecordDataService = callDetailRecordDataService;
         this.eventRelay = eventRelay;
@@ -66,17 +68,16 @@ public class OutboundCallServiceImpl implements OutboundCallService {
     public void initiateCall(String configName, Map<String, String> parameters) {
         LOGGER.debug("initiateCall(configName = {}, params = {})", configName, parameters);
 
-        Config config = null;
         Map<String, String> params = new HashMap<>(parameters);
 
-        config = configDataService.findByName(configName);
-        LOGGER.debug("initiateCall(): read the following config from the database: {}", config);
-        if (null == config) {
-            String message = String.format("Invalid config: {}", configName);
-            LOGGER.warn(message);
-            statusMessageService.warn(message, MODULE_NAME);
-            throw new CallInitiationException(message);
+        if (!configService.hasConfig(configName)) {
+            String msg = String.format("Invalid config: '%s'", configName);
+            LOGGER.error(msg);
+            statusMessageService.warn(msg, MODULE_NAME);
+            throw new CallInitiationException(msg);
         }
+
+        Config config = configService.getConfig(configName);
 
         String motechCallId = UUID.randomUUID().toString();
         Map<String, String> completeParams = new HashMap<>(params);

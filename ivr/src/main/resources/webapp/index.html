@@ -1,0 +1,29 @@
+<div id="inner-center" class="ivr inner-center ui-layout-center ui-layout-pane ui-layout-pane-center">
+    <div class="header-footer-breadcrumb">
+        <ul class="breadcrumb" role="navigation">
+            <li><a role="menu" href=".">{{msg('server.home')}}</a></li>
+            <li><a role="menu" href="#/settings">{{msg('motech-ivr')}}</a></li>
+            <li ng-show="active('#/ivr/settings')" ng-class="active('#/ivr/settings')">{{msg('ivr.web.settings.title')}}</li>
+        </ul>
+    </div>
+    <div class="header-footer">
+        <ul id="content-tabs" class="nav nav-tabs">
+            <li ng-class="active('#/ivr/settings')"><a href="#/ivr/settings">{{msg('ivr.web.settings.title')}}</a></li>
+        </ul>
+    </div>
+    <div class="ui-layout-content">
+        <div class="tab-content" id="tab-content">
+            <div id="main-content" class="active">
+                <div ng-view></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="inner-east" class="ivr inner-east ui-layout-pane ui-layout-pane-east">
+    <div class="header-toolbar header-footer"></div>
+    <div class="ui-layout-content">
+        <div class="inside">
+        </div>
+    </div>
+</div>

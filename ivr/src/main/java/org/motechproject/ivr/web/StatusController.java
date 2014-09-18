@@ -3,16 +3,17 @@ package org.motechproject.ivr.web;
 import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.ivr.event.EventParams;
-import org.motechproject.ivr.event.EventSubjects;
 import org.motechproject.ivr.domain.CallDetailRecord;
 import org.motechproject.ivr.domain.Config;
+import org.motechproject.ivr.event.EventParams;
+import org.motechproject.ivr.event.EventSubjects;
 import org.motechproject.ivr.repository.CallDetailRecordDataService;
-import org.motechproject.ivr.repository.ConfigDataService;
 import org.motechproject.ivr.service.CallInitiationException;
+import org.motechproject.ivr.service.ConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,17 +35,18 @@ public class StatusController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StatusController.class);
     private CallDetailRecordDataService callDetailRecordDataService;
-    private ConfigDataService configDataService;
+    private ConfigService configService;
     private StatusMessageService statusMessageService;
     private EventRelay eventRelay;
     private static final String MODULE_NAME = "ivr";
 
     @Autowired
     public StatusController(CallDetailRecordDataService callDetailRecordDataService, EventRelay eventRelay,
-                            ConfigDataService configDataService, StatusMessageService statusMessageService) {
+                            @Qualifier("configService") ConfigService configService,
+                            StatusMessageService statusMessageService) {
         this.callDetailRecordDataService = callDetailRecordDataService;
         this.eventRelay = eventRelay;
-        this.configDataService = configDataService;
+        this.configService = configService;
         this.statusMessageService = statusMessageService;
     }
 
@@ -55,7 +57,7 @@ public class StatusController {
      *
      * @param configName
      * @param params
-     * @return "<?xml version=\"1.0\"?><response>OK</response>"
+     * @return static XML content with an OK response element.
      */
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -65,16 +67,14 @@ public class StatusController {
         LOGGER.debug(String.format("handle(configName = %s, parameters = %s, headers = %s)", configName, params,
                 headers));
 
-        Config config = null;
-
-        config = configDataService.findByName(configName);
-        LOGGER.debug("handle(): read the following config from the database: {}", config);
-        if (null == config) {
-            String message = String.format("Invalid config: {}", configName);
-            LOGGER.warn(message);
-            statusMessageService.warn(message, MODULE_NAME);
-            throw new CallInitiationException(message);
+        if (!configService.hasConfig(configName)) {
+            String msg = String.format("Invalid config: '%s'", configName);
+            LOGGER.error(msg);
+            statusMessageService.warn(msg, MODULE_NAME);
+            throw new CallInitiationException(msg);
         }
+
+        Config config = configService.getConfig(configName);
 
         // Construct a CDR from the URL query parameters passed in the callback
         CallDetailRecord callDetailRecord = new CallDetailRecord();

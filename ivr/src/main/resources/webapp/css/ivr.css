@@ -1,0 +1,92 @@
+.ivr .panel-default > .panel-heading {
+     border: 0 none;
+     line-height: 28px;
+     padding: 4px 10px;
+     background: #D9EDF7;
+     background: -moz-linear-gradient(top,  #D9EDF7 0%, #B9DEF0 100%);
+     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#D9EDF7), color-stop(100%,#B9DEF0));
+     background: -webkit-linear-gradient(top,  #D9EDF7 0%, #B9DEF0 100%);
+     background: -o-linear-gradient(top,  #D9EDF7 0%, #B9DEF0 100%);
+     background: -ms-linear-gradient(top,  #D9EDF7 0%, #B9DEF0 100%);
+     background: linear-gradient(to bottom,  #D9EDF7 0%, #B9DEF0 100%);
+     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#D9EDF7', endColorstr='#B9DEF0',GradientType=0 );
+ }
+
+.ivr .panel {
+     margin: 2px 0 0;
+     border: 1px solid #D1E6F9;
+     background-color: #F6FBFF;
+ }
+
+.ivr .panel-heading:hover, .ivr .panel-toggle:hover {
+    text-decoration: none;
+}
+
+.ivr .panel-heading {
+    cursor: pointer;
+}
+
+.ivr .panel-inner {
+    padding: 0px;
+}
+
+.ivr .tooltip.in {
+    opacity: 0.9;
+    filter: alpha(opacity=90);
+    font-weight: normal;
+}
+
+.ivr .animate-repeat.ng-enter, .ivr .animate-repeat.ng-leave, .ivr .animate-repeat.ng-move {
+    -webkit-transition:all linear 1s;
+    -moz-transition:all linear 1s;
+    -o-transition:all linear 1s;
+    transition:all linear 1s;
+}
+
+.ivr .animate-repeat.ng-enter {
+    opacity:0;
+}
+.ivr .animate-repeat.ng-enter.ng-enter-active {
+    opacity:1;
+}
+
+.ivr .animate-repeat.ng-leave {
+    opacity:1;
+}
+.ivr .animate-repeat.ng-leave.ng-leave-active {
+    opacity:0;
+}
+
+.ivr .animate-repeat.ng-move { }
+.ivr .animate-repeat.ng-move.ng-move-active { }
+
+.ivr .communication {
+    min-height: 60px;
+}
+
+.ivr input.ng-invalid:focus {
+    color: #B94A48 !important;
+    border-color: #E9322D !important;
+    box-shadow: 0 0 6px #F8B9B7 !important;
+}
+
+.ivr .btn-group > .btn.active {
+    z-index: 1;
+}
+
+.ui-datepicker.ui-widget {
+    font-size: 0.9em;
+}
+
+.ivr .ui-timepicker-div select {
+    width: auto;
+    height: 24px;
+    line-height: 18px;
+    padding: 1px 3px;
+    margin: 0 0 0 5px;
+}
+
+.ivr .char-counter {
+    color: silver;
+    font-size: 8pt;
+}

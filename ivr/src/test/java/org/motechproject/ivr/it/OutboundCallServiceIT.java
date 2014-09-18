@@ -4,15 +4,15 @@ import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.ivr.service.OutboundCallService;
-import org.motechproject.testing.osgi.BasePaxIT;
-import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.ivr.domain.CallDetailRecord;
 import org.motechproject.ivr.domain.CallStatus;
 import org.motechproject.ivr.domain.Config;
 import org.motechproject.ivr.domain.HttpMethod;
 import org.motechproject.ivr.repository.CallDetailRecordDataService;
-import org.motechproject.ivr.repository.ConfigDataService;
+import org.motechproject.ivr.service.ConfigService;
+import org.motechproject.ivr.service.OutboundCallService;
+import org.motechproject.testing.osgi.BasePaxIT;
+import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.testing.osgi.http.SimpleHttpServer;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -20,6 +20,7 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,12 +43,10 @@ public class OutboundCallServiceIT extends BasePaxIT {
     @Inject
     private CallDetailRecordDataService callDetailRecordDataService;
     @Inject
-    private ConfigDataService configDataService;
+    private ConfigService configService;
 
     @Before
-    public void setup() throws Exception {
-        getLogger().info("setup()");
-        configDataService.deleteAll();
+    public void setUp() {
         callDetailRecordDataService.deleteAll();
     }
 
@@ -60,8 +59,7 @@ public class OutboundCallServiceIT extends BasePaxIT {
 
         //Create a config
         Config config = new Config("conf123", null, null, HttpMethod.GET, httpServerURI);
-        getLogger().debug("verifyServiceFunctional - We create a config  {}", config.toString());
-        configDataService.create(config);
+        configService.updateConfigs(Arrays.asList(config));
 
         Map<String, String> params = new HashMap<>();
         outboundCallService.initiateCall(config.getName(), params);
@@ -81,7 +79,7 @@ public class OutboundCallServiceIT extends BasePaxIT {
         //Create a config
         Config config = new Config("conf456", null, null, HttpMethod.GET, httpServerURI);
         getLogger().debug("shouldHandleInvalidServerResponse - We create a config  {}", config.toString());
-        configDataService.create(config);
+        configService.updateConfigs(Arrays.asList(config));
 
         boolean exceptionThrown = false;
         Map<String, String> params = new HashMap<>();

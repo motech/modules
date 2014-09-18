@@ -16,52 +16,65 @@ import java.util.Map;
 @Entity
 public class CallDetailRecord {
 
+    private static final int COL1 = 0;
+    private static final int COL2 = 1;
+    private static final int COL3 = 2;
+    private static final int COL4 = 3;
+    private static final int COL5 = 4;
+    private static final int COL6 = 5;
+    private static final int COL7 = 6;
+    private static final int COL8 = 7;
+    private static final int COL9 = 8;
+    private static final int COL10 = 9;
+    private static final int COL11 = 10;
     private static final int MAX_ENTITY_STRING_LENGTH = 255;
     private static final DateTimeFormatter DT_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSSS");
     private static final Logger LOGGER = LoggerFactory.getLogger(CallDetailRecord.class);
 
+
+
     @Field
-    @UIDisplayable(position = 0)
+    @UIDisplayable(position = COL1)
     private long id;
 
     @Field
-    @UIDisplayable(position = 9)
+    @UIDisplayable(position = COL10)
     private String motechTimestamp;
 
     @Field
-    @UIDisplayable(position = 10)
+    @UIDisplayable(position = COL11)
     private String providerTimestamp;
 
     @Field
-    @UIDisplayable(position = 1)
+    @UIDisplayable(position = COL2)
     private String configName;
 
     @Field
-    @UIDisplayable(position = 2)
+    @UIDisplayable(position = COL3)
     private String from;
 
     @Field
-    @UIDisplayable(position = 3)
+    @UIDisplayable(position = COL4)
     private String to;
 
     @Field
-    @UIDisplayable(position = 4)
+    @UIDisplayable(position = COL5)
     private CallDirection callDirection;
 
     @Field
-    @UIDisplayable(position = 5)
+    @UIDisplayable(position = COL6)
     private CallStatus callStatus;
 
     @Field
-    @UIDisplayable(position = 7)
+    @UIDisplayable(position = COL8)
     private String motechCallId;
 
     @Field
-    @UIDisplayable(position = 8)
+    @UIDisplayable(position = COL9)
     private String providerCallId;
 
     @Field
-    @UIDisplayable(position = 6)
+    @UIDisplayable(position = COL7)
     private Map<String, String> providerExtraData;
 
     public CallDetailRecord() {

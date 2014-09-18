@@ -6,14 +6,14 @@ import org.apache.http.client.utils.URIBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.testing.osgi.BasePaxIT;
-import org.motechproject.testing.osgi.TestContext;
-import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.ivr.domain.CallDetailRecord;
 import org.motechproject.ivr.domain.CallStatus;
 import org.motechproject.ivr.domain.Config;
 import org.motechproject.ivr.repository.CallDetailRecordDataService;
-import org.motechproject.ivr.repository.ConfigDataService;
+import org.motechproject.ivr.service.ConfigService;
+import org.motechproject.testing.osgi.BasePaxIT;
+import org.motechproject.testing.osgi.TestContext;
+import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.testing.osgi.http.SimpleHttpClient;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -36,8 +36,9 @@ public class StatusControllerIT extends BasePaxIT {
 
     @Inject
     private CallDetailRecordDataService callDetailRecordDataService;
+
     @Inject
-    private ConfigDataService configDataService;
+    private ConfigService configService;
 
     @Before
     public void setup() {
@@ -47,12 +48,14 @@ public class StatusControllerIT extends BasePaxIT {
 
     @Test
     public void shouldNotLogWhenPassedInvalidConfig() throws Exception {
-        getLogger().info("shouldNotLogWhenPassedIvalidConfig");
+
+        //Create a config
+        configService.updateConfigs(Arrays.asList(new Config("foo", null, null, null, null)));
 
         //Create & send a CDR status callback
         URIBuilder builder = new URIBuilder();
         builder.setScheme("http").setHost("localhost").setPort(TestContext.getJettyPort())
-                .setPath("/ivr/status/fubar");
+                .setPath("/ivr/status/bar");
         URI uri = builder.build();
         HttpGet httpGet = new HttpGet(uri);
         assertTrue(SimpleHttpClient.execHttpRequest(httpGet, HttpStatus.SC_INTERNAL_SERVER_ERROR));
@@ -67,12 +70,8 @@ public class StatusControllerIT extends BasePaxIT {
         getLogger().info("verifyControllerFunctional");
 
         //Create a config
-        List<String> ignoredStatusFields = new ArrayList<>(Arrays.asList("ignoreme", "ignoreme2"));
-        Map<String, String> statusMap = new HashMap<>();
-        statusMap.put("FROM", "from");
-
-        Config config = new Config("foo", ignoredStatusFields, statusMap, null, null);
-        configDataService.create(config);
+        List<String> ignoredStatusFields = Arrays.asList("ignoreme", "ignoreme2");
+        configService.updateConfigs(Arrays.asList(new Config("foo", ignoredStatusFields, "FROM:from", null, null)));
 
         //Create & send a CDR status callback
         String motechCallId = UUID.randomUUID().toString();

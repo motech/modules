@@ -1,10 +1,8 @@
 package org.motechproject.ivr.domain;
 
-import org.motechproject.mds.annotations.Entity;
-import org.motechproject.mds.annotations.Field;
+import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
-import javax.jdo.annotations.Column;
-import javax.jdo.annotations.Unique;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,53 +10,66 @@ import java.util.Map;
 /**
  * IVR provider configuration, represents how the IVR module interacts with an IVR provider
  */
-@Entity
 public class Config {
-
-    // See http://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
-    private static final int MAX_URL_SIZE = 2000;
 
     /**
      * How a config is identified
      */
-    @Field
-    @Unique
     private String name;
 
     /**
      * List of fields the IVR provider sends to the status controller which shouldn't be included (ie: ignored) in
      * the CDR data
      */
-    @Field
     private List<String> ignoredStatusFields;
 
     /**
-     * Template string used to issue an HTTP GET call to the IVR provider in order to initiate an outgoing (MT) call.
+     * Template string used to issue an HTTP call to the IVR provider in order to initiate an outgoing (MT) call.
      * [xxx] placeholders are replaced with the values provided in the initiateCall() method.
      */
-    @Field
-    @Column(length = MAX_URL_SIZE)
     private String outgoingCallUriTemplate;
 
     /**
      * Which HTTP method should be used to trigger an outgoing call from the IVR provider
      */
-    @Field
     private HttpMethod outgoingCallMethod;
 
     /**
      * A map of parameters to be substituted in the outgoing URI template
      */
-    @Field
+    @JsonIgnore
     private Map<String, String> statusFieldMap = new HashMap<>();
+    /**
+     * This field is used to pass the status field back & forth to the UI
+     */
+    private String statusFieldMapString;
 
-    public Config(String name, List<String> ignoredStatusFields, Map<String, String> statusFieldMap,
+    public Config(String name, List<String> ignoredStatusFields, String statusFieldMapString,
                   HttpMethod outgoingCallMethod, String outgoingCallUriTemplate) {
         this.name = name;
         this.ignoredStatusFields = ignoredStatusFields;
         this.outgoingCallUriTemplate = outgoingCallUriTemplate;
         this.outgoingCallMethod = outgoingCallMethod;
-        this.statusFieldMap = statusFieldMap;
+        this.statusFieldMapString = statusFieldMapString;
+        this.statusFieldMap = parseStatusMapString(statusFieldMapString);
+    }
+
+    private Map<String, String> parseStatusMapString(String string) {
+        //todo: replace that with guava Splitter when guava 18.0 is available in external-osgi-bundles
+        Map<String, String> map = new HashMap<>();
+        if (StringUtils.isBlank(string)) {
+            return map;
+        }
+        String[] strings = string.split("\\s*,\\s*");
+        for (String s : strings) {
+            String[] kv = s.split("\\s*:\\s*");
+            if (kv.length == 2) {
+                map.put(kv[0], kv[1]);
+            } else {
+                throw new IllegalArgumentException(String.format("%s is an invalid map", string));
+            }
+        }
+        return map;
     }
 
     public String getName() {
@@ -74,20 +85,41 @@ public class Config {
         return (null != ignoredStatusFields && ignoredStatusFields.contains(fieldName));
     }
 
+    public void setStatusFieldMapString(String statusFieldMapString) {
+        this.statusFieldMapString = statusFieldMapString;
+        this.statusFieldMap = parseStatusMapString(statusFieldMapString);
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public List<String> getIgnoredStatusFields() {
         return ignoredStatusFields;
+    }
+
+    public void setIgnoredStatusFields(List<String> ignoredStatusFields) {
+        this.ignoredStatusFields = ignoredStatusFields;
     }
 
     public String getOutgoingCallUriTemplate() {
         return outgoingCallUriTemplate;
     }
 
+    public void setOutgoingCallUriTemplate(String outgoingCallUriTemplate) {
+        this.outgoingCallUriTemplate = outgoingCallUriTemplate;
+    }
+
     public HttpMethod getOutgoingCallMethod() {
         return outgoingCallMethod;
     }
 
-    public Map<String, String> getStatusFieldMap() {
-        return statusFieldMap;
+    public void setOutgoingCallMethod(HttpMethod outgoingCallMethod) {
+        this.outgoingCallMethod = outgoingCallMethod;
+    }
+
+    public String getStatusFieldMapString() {
+        return statusFieldMapString;
     }
 
     /**
@@ -122,11 +154,12 @@ public class Config {
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
+        int result = name.hashCode();
         result = 31 * result + (ignoredStatusFields != null ? ignoredStatusFields.hashCode() : 0);
         result = 31 * result + (outgoingCallUriTemplate != null ? outgoingCallUriTemplate.hashCode() : 0);
         result = 31 * result + (outgoingCallMethod != null ? outgoingCallMethod.hashCode() : 0);
         result = 31 * result + (statusFieldMap != null ? statusFieldMap.hashCode() : 0);
+        result = 31 * result + (statusFieldMapString != null ? statusFieldMapString.hashCode() : 0);
         return result;
     }
 
@@ -134,10 +167,11 @@ public class Config {
     public String toString() {
         return "Config{" +
                 "name='" + name + '\'' +
-                ", ignoredStatusFields='" + ignoredStatusFields + '\'' +
+                ", ignoredStatusFields=" + ignoredStatusFields +
                 ", outgoingCallUriTemplate='" + outgoingCallUriTemplate + '\'' +
-                ", outgoingCallMethod='" + outgoingCallMethod + '\'' +
-                ", statusFieldMap='" + statusFieldMap + '\'' +
+                ", outgoingCallMethod=" + outgoingCallMethod +
+                ", statusFieldMap=" + statusFieldMap +
+                ", statusFieldMapString='" + statusFieldMapString + '\'' +
                 '}';
     }
 }

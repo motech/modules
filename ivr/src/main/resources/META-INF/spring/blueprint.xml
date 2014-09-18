@@ -4,29 +4,49 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:osgi="http://www.eclipse.org/gemini/blueprint/schema/blueprint"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.1.xsd
        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
-       http://www.eclipse.org/gemini/blueprint/schema/blueprint http://www.eclipse.org/gemini/blueprint/schema/blueprint/gemini-blueprint.xsd">
+       http://www.eclipse.org/gemini/blueprint/schema/blueprint
+       http://www.eclipse.org/gemini/blueprint/schema/blueprint/gemini-blueprint.xsd">
 
     <mvc:annotation-driven/>
     <context:annotation-config/>
     <context:component-scan base-package="org.motechproject.ivr"/>
 
+    <bean id="ivrSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
+        <property name="moduleName" value="motech-ivr"/>
+        <property name="rawConfigFiles">
+            <list>
+                <value>classpath:ivr-configs.json</value>
+            </list>
+        </property>
+    </bean>
+
     <bean id="moduleRegistrationData" class="org.motechproject.osgi.web.ModuleRegistrationData">
+        <constructor-arg name="url" value="../ivr/resources/index.html"/>
         <constructor-arg name="moduleName" value="motech-ivr"/>
+        <constructor-arg name="angularModules">
+            <list>
+                <value>ivr</value>
+            </list>
+        </constructor-arg>
         <constructor-arg name="i18n">
             <map>
                 <entry key="messages" value="../ivr/resources/messages/"/>
             </map>
         </constructor-arg>
+        <property name="settingsURL" value="/ivr/settings" />
+        <property name="defaultURL" value="/ivr/settings"/>
     </bean>
 
     <osgi:service ref="outboundCallService" interface="org.motechproject.ivr.service.OutboundCallService" />
+    <osgi:service ref="configService" interface="org.motechproject.ivr.service.ConfigService" />
 
     <osgi:reference id="callRecordDataService" interface="org.motechproject.ivr.repository.CallDetailRecordDataService" />
-    <osgi:reference id="configDataService" interface="org.motechproject.ivr.repository.ConfigDataService" />
     <osgi:reference id="statusMessageService" interface="org.motechproject.admin.service.StatusMessageService"/>
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>
-
+    <osgi:reference id="configServiceRef" interface="org.motechproject.config.service.ConfigurationService" />
 </beans>
