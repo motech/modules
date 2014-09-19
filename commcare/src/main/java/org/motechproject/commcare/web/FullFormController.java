@@ -28,7 +28,8 @@ import static org.motechproject.commcare.events.constants.EventDataKeys.FAILED_F
 import static org.motechproject.commcare.parser.FullFormParser.FORM;
 
 /**
- * Controller that handles the incoming full form feed from CommCareHQ.
+ * Controller that handles the incoming full form feed from CommCareHQ. The path to this endpoint
+ * has to be configured on the CommCareHQ side.
  */
 @Controller
 public class FullFormController {

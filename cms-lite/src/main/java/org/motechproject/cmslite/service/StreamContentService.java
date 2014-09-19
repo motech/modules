@@ -8,7 +8,8 @@ import org.motechproject.mds.service.MotechDataService;
 import java.util.List;
 
 /**
- * MDS data service for {@link StreamContent}s.
+ * Data Service interface for {@link StreamContent}s. The implementation is provided
+ * by the Motech Data Services module.
  */
 public interface StreamContentService extends MotechDataService<StreamContent> {
     @Lookup

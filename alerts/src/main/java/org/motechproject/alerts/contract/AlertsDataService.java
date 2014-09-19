@@ -11,6 +11,10 @@ import org.motechproject.alerts.domain.AlertType;
 
 import java.util.List;
 
+/**
+ * Data Service interface for {@link org.motechproject.alerts.domain.Alert}s. The implementation
+ * is provided by the Motech Data Services module.
+ */
 public interface AlertsDataService extends MotechDataService<Alert> {
 
     @Lookup

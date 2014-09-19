@@ -18,23 +18,23 @@ import java.util.Set;
 public interface EnrollmentDataService extends MotechDataService<Enrollment> {
 
     @Lookup
-    Enrollment findByExternalIdScheduleNameAndStatus(@LookupField(name="externalId") String externalId,
-                                                     @LookupField(name="scheduleName") String scheduleName,
-                                                     @LookupField(name="status") EnrollmentStatus status);
+    Enrollment findByExternalIdScheduleNameAndStatus(@LookupField(name = "externalId") String externalId,
+                                                     @LookupField(name = "scheduleName") String scheduleName,
+                                                     @LookupField(name = "status") EnrollmentStatus status);
 
     @Lookup
-    Enrollment findById(@LookupField(name="id") Long id);
+    Enrollment findById(@LookupField(name = "id") Long id);
 
     @Lookup
-    List<Enrollment> findByExternalId(@LookupField(name="externalId") String externalId);
+    List<Enrollment> findByExternalId(@LookupField(name = "externalId") String externalId);
 
     @Lookup
-    List<Enrollment> findByStatus(@LookupField(name="status") EnrollmentStatus enrollmentStatus);
+    List<Enrollment> findByStatus(@LookupField(name = "status") EnrollmentStatus enrollmentStatus);
 
     @Lookup
-    List<Enrollment> findByMilestoneName(@LookupField(name="currentMilestoneName") String milestoneName);
+    List<Enrollment> findByMilestoneName(@LookupField(name = "currentMilestoneName") String milestoneName);
 
     @Lookup
-    List<Enrollment> findByScheduleName(@LookupField(name="scheduleName") Set<String> scheduleName);
+    List<Enrollment> findByScheduleName(@LookupField(name = "scheduleName") Set<String> scheduleName);
 
 }
