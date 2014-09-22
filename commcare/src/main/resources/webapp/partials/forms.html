@@ -1,32 +1,32 @@
 <div class="row">
-    <div class="col-lg-9 col-md-12 col-sm-12">
+    <div class="col-lg-12 col-md-12 col-sm-12 row">
 
-        <div ng-show="formError" class="connection-status connection-error">
+        <div ng-show="formError" class="connection-status connection-error alert alert-danger">
             {{msg('commcare.error.schema')}}
         </div>
 
         <div ng-repeat="application in applications">
 
-            <h1>{{application.applicationName}}</h1>
+            <h4 class="margin-before2 frame-title">{{application.applicationName}}</h4>
 
             <div ng-repeat="module in application.modules">
 
-                <fieldset>
-                    <legend>{{msg('commcare.module')}} {{$index+1}}</legend>
+                <div class="case-schema">
+                    <div class="module-header">{{msg('commcare.module')}} {{$index+1}}</div>
 
-                    <div ng-repeat="form in module.formSchemas">
+                    <div class="case-schema-group" ng-repeat="form in module.formSchemas">
 
                         <div class="form-schema-group">
                             <span>{{ form.formNames["en"] }}</span>
                             <button class="btn btn-default" data-toggle="modal" href="#form-schema-{{$parent.$parent.$index}}-{{$parent.$index}}-{{$index}}">{{msg('commcare.view')}}</button>
 
-                            <div id="form-schema-{{$parent.$parent.$index}}-{{$parent.$index}}-{{$index}}" class="modal fade" tabindex="-1" role="dialog">
+                            <div id="form-schema-{{$parent.$parent.$index}}-{{$parent.$index}}-{{$index}}" class="modal fade commcare" tabindex="-1" role="dialog">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
 
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                            <h4 class="modal-title">{{msg('commcare.module')}}: <b>{{msg('commcare.module')}} {{$index+1}}</b>&nbsp;&nbsp;Form: <b>{{ form.formNames["en"] }}</b></h4>
+                                            <h4 class="modal-title">{{msg('commcare.module')}}: <em>{{msg('commcare.module')}} {{$index+1}}</em>&nbsp;&nbsp;Form: <em>{{ form.formNames["en"] }}</em></h4>
                                         </div>
 
                                         <div class="modal-body">
@@ -65,26 +65,41 @@
                                                 </tbody>
                                             </table>
                                         </div>
-                                    </div>
-                                    <button class="btn btn-default" data-toggle="modal" href="#form-schema-{{$parent.$parent.$index}}-{{$parent.$index}}-{{$index}}-json">{{msg('commcare.json')}}</button>
 
-                                    <div id="form-schema-{{$parent.$parent.$index}}-{{$parent.$index}}-{{$index}}-json" class="modal fade" tabindex="-1" role="dialog">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                    <h4 class="modal-title">{{msg('commcare.module')}}: <b>{{msg('commcare.module')}} {{$index+1}}</b>&nbsp;&nbsp;Form: <b>{{ form.formNames["en"] }}</b></h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                   <pre>{{formatJson(form)}}</pre>
-                                                </div>
-                                            </div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-default" data-dismiss="modal">
+                                                {{msg('commcare.btn.close')}}
+                                            </button>
                                         </div>
+
                                     </div>
+
 
                                 </div>
                             </div>
+                            <button class="btn btn-default" data-toggle="modal" href="#form-schema-{{$parent.$parent.$index}}-{{$parent.$index}}-{{$index}}-json">{{msg('commcare.json')}}</button>
+
+                            <div id="form-schema-{{$parent.$parent.$index}}-{{$parent.$index}}-{{$index}}-json" class="modal fade commcare schema" tabindex="-1" role="dialog">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title">{{msg('commcare.module')}}: <em>{{msg('commcare.module')}} {{$index+1}}</em>&nbsp;&nbsp;Form: <em>{{ form.formNames["en"] }}</em></h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <pre>{{formatJson(form)}}</pre>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button class="btn btn-default" data-dismiss="modal">
+                                                {{msg('commcare.btn.close')}}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
 
                     </div>
