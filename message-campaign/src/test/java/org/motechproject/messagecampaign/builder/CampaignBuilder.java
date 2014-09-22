@@ -52,10 +52,12 @@ public class CampaignBuilder {
 
         final OffsetCampaignMessage offsetCampaignMessage1 = new CampaignMessageBuilder().offsetCampaignMessage("OM1", "1 Week", "child-info-week-1", new Time(9, 30));
         final OffsetCampaignMessage offsetCampaignMessage2 = new CampaignMessageBuilder().offsetCampaignMessage("OM2", "2 Weeks", "child-info-week-1a", new Time(9, 30));
+        final OffsetCampaignMessage offsetCampaignMessage3 = new CampaignMessageBuilder().offsetCampaignMessage("OM3", "1 Month", "child-info-month-1", new Time(9, 30));
 
         LinkedList<OffsetCampaignMessage> campaignMessages = new LinkedList<OffsetCampaignMessage>() {{
             add(offsetCampaignMessage1);
             add(offsetCampaignMessage2);
+            add(offsetCampaignMessage3);
         }};
 
         campaign.setMessages(campaignMessages);
