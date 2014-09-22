@@ -46,6 +46,7 @@
     <osgi:service ref="configService" interface="org.motechproject.ivr.service.ConfigService" />
 
     <osgi:reference id="callRecordDataService" interface="org.motechproject.ivr.repository.CallDetailRecordDataService" />
+    <osgi:reference id="templateDataService" interface="org.motechproject.ivr.repository.TemplateDataService" />
     <osgi:reference id="statusMessageService" interface="org.motechproject.admin.service.StatusMessageService"/>
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>
     <osgi:reference id="configServiceRef" interface="org.motechproject.config.service.ConfigurationService" />

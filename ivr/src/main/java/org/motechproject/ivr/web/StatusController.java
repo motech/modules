@@ -1,14 +1,8 @@
 package org.motechproject.ivr.web;
 
 import org.motechproject.admin.service.StatusMessageService;
-import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.ivr.domain.CallDetailRecord;
-import org.motechproject.ivr.domain.Config;
-import org.motechproject.ivr.event.EventParams;
-import org.motechproject.ivr.event.EventSubjects;
 import org.motechproject.ivr.repository.CallDetailRecordDataService;
-import org.motechproject.ivr.service.CallInitiationException;
 import org.motechproject.ivr.service.ConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Map;
 
+import static org.motechproject.ivr.web.LogAndEventHelper.sendAndLogEvent;
+
 /**
  * Responds to HTTP queries to {motech-server}/module/ivr/status/{configName} by creating a CallDetailRecord entry in
  * the database and posting a corresponding Motech event on the queue.
@@ -34,11 +30,11 @@ import java.util.Map;
 public class StatusController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StatusController.class);
+    public static final String XML_OK_RESPONSE = "<?xml version=\"1.0\"?><response>OK</response>";
     private CallDetailRecordDataService callDetailRecordDataService;
     private ConfigService configService;
     private StatusMessageService statusMessageService;
     private EventRelay eventRelay;
-    private static final String MODULE_NAME = "ivr";
 
     @Autowired
     public StatusController(CallDetailRecordDataService callDetailRecordDataService, EventRelay eventRelay,
@@ -67,41 +63,9 @@ public class StatusController {
         LOGGER.debug(String.format("handle(configName = %s, parameters = %s, headers = %s)", configName, params,
                 headers));
 
-        if (!configService.hasConfig(configName)) {
-            String msg = String.format("Invalid config: '%s'", configName);
-            LOGGER.error(msg);
-            statusMessageService.warn(msg, MODULE_NAME);
-            throw new CallInitiationException(msg);
-        }
+        sendAndLogEvent(configService, callDetailRecordDataService, statusMessageService, eventRelay, configName,
+                params);
 
-        Config config = configService.getConfig(configName);
-
-        // Construct a CDR from the URL query parameters passed in the callback
-        CallDetailRecord callDetailRecord = new CallDetailRecord();
-
-        callDetailRecord.setConfigName(configName);
-
-        //todo: some providers send session information (including caller id) through the headers, so we should add
-        //todo: a config setting that scans the headers for CDR info in addition to the query parameters
-
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            if (config.shouldIgnoreField(entry.getKey())) {
-                LOGGER.debug("Ignoring provider field '{}' with value '{}'", entry.getKey(), entry.getValue());
-            } else {
-                callDetailRecord.setField(config.mapStatusField(entry.getKey()), entry.getValue());
-            }
-        }
-
-        // Generate a MOTECH event
-        Map<String, Object> eventParams = EventParams.eventParamsFromCallDetailRecord(callDetailRecord);
-        MotechEvent event = new MotechEvent(EventSubjects.CALL_STATUS, eventParams);
-        LOGGER.debug("Sending MotechEvent {}", event.toString());
-        eventRelay.sendEventMessage(event);
-
-        // Save the CDR
-        LOGGER.debug("Saving CallDetailRecord {}", callDetailRecord);
-        callDetailRecordDataService.create(callDetailRecord);
-
-        return "<?xml version=\"1.0\"?><response>OK</response>";
+        return XML_OK_RESPONSE;
     }
 }
