@@ -12,6 +12,8 @@ public class CaseRequest {
     private int limit;
     private int offset;
 
+    private final static int DEFAULT_LIMIT = 20;
+
     public void setUserId(String userId) {
         this.userId = userId;
     }
@@ -51,7 +53,7 @@ public class CaseRequest {
         if (type != null) {
             queryParams.add(concat("type", type));
         }
-        queryParams.add(concat("limit", limit < 1 ? 20 : limit));
+        queryParams.add(concat("limit", limit < 1 ? DEFAULT_LIMIT : limit));
         queryParams.add(concat("offset", offset < 0 ? 0 : offset));
 
         return StringUtils.join(queryParams, "&");

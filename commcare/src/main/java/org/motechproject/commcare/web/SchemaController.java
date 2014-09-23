@@ -17,7 +17,9 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Controller that handles the incoming full form feed from CommCareHQ.
+ * The <code>SchemaController</code> is a spring controller class, providing
+ * a way to access data shown in the module UI. It returns Commcare Application schema,
+ * containing forms and Cases.
  */
 @Controller
 public class SchemaController {

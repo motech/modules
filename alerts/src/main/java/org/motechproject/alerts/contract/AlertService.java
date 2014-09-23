@@ -48,6 +48,12 @@ public interface AlertService {
     @Deprecated
     Alert get(String id);
 
+    /**
+     * Fetches an alert by id
+     *
+     * @param id Id of the alert
+     * @return Alert object with the given id if found
+     */
     Alert get(Long id);
 
     /**
@@ -60,5 +66,11 @@ public interface AlertService {
     @Deprecated
     void update(String alertId, UpdateCriteria updateCriteria);
 
+    /**
+     * Updates an alert by alert id
+     *
+     * @param alertId        Id of the alert to be updated
+     * @param updateCriteria criteria which specifies the fields to be updated and their new values
+     */
     void update(Long alertId, UpdateCriteria updateCriteria);
 }

@@ -86,9 +86,45 @@ public interface CMSLiteService {
      */
     boolean isStringContentAvailable(String language, String name);
 
+    /**
+     * Retrieves a list of all String and Stream contents. Returned list is defined
+     * as a generic Content, containing basic information such as language, name and metadata.
+     * To make better use of instances retrieved this way an <code>instanceof</code> check should be
+     * performed, followed by a cast to either <code>StringContent</code> or <code>StreamContent</code>
+     *
+     * @see org.motechproject.cmslite.model.StringContent
+     * @see org.motechproject.cmslite.model.StreamContent
+     *
+     * @return list of all contents
+     */
     List<Content> getAllContents();
-    StringContent getStringContent(String stringContentId);
-    StreamContent getStreamContent(String stringContentId);
 
+    /**
+     * Retrieved <code>StringContent</code> by its ID.
+     *
+     * @see org.motechproject.cmslite.model.StringContent
+     *
+     * @param stringContentId ID of a StringContent to retrieved
+     * @return StringContent of a given ID
+     */
+    StringContent getStringContent(String stringContentId);
+
+    /**
+     * Retrieved <code>StreamContent</code> by its ID.
+     *
+     * @see org.motechproject.cmslite.model.StreamContent
+     *
+     * @param streamContentId ID of a StreamContent to retrieved
+     * @return StreamContent of a given ID
+     */
+    StreamContent getStreamContent(String streamContentId);
+
+    /**
+     * Helper method, retrieving data of a <code>StreamContent</code>. The data is returned
+     * as a byte array.
+     *
+     * @param instance Instance of a StreamContent
+     * @return byte array, containing data of a StreamContent
+     */
     Byte[] retrieveStreamContentData(StreamContent instance);
 }
