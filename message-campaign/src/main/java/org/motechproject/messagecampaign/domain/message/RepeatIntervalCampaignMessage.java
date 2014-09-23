@@ -4,6 +4,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.joda.time.Period;
 import org.motechproject.commons.date.model.Time;
+import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.messagecampaign.web.util.TimeSerializer;
@@ -21,8 +22,7 @@ public class RepeatIntervalCampaignMessage implements CampaignMessage {
 
     @Ignore
     public long getRepeatIntervalInMillis() {
-        final int millisInASec = 1000;
-        return repeatInterval.toStandardSeconds().getSeconds() * millisInASec;
+        return repeatInterval.toDurationFrom(DateUtil.now()).getMillis();
     }
 
     @JsonProperty

@@ -14,12 +14,12 @@ import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.messagecampaign.builder.CampaignBuilder;
 import org.motechproject.messagecampaign.builder.EnrollRequestBuilder;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
+import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.campaign.Campaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
 import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
 import org.motechproject.messagecampaign.scheduler.exception.CampaignEnrollmentException;
-import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.userspecified.CampaignRecord;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
@@ -27,7 +27,6 @@ import org.motechproject.scheduler.service.MotechSchedulerService;
 import java.util.Date;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static org.joda.time.Period.days;
 import static org.joda.time.Period.minutes;
@@ -164,7 +163,7 @@ public class OffsetCampaignSchedulerServiceTest {
 
         offsetCampaignScheduler.start(enrollment);
         ArgumentCaptor<RunOnceSchedulableJob> capture = ArgumentCaptor.forClass(RunOnceSchedulableJob.class);
-        verify(schedulerService, times(2)).scheduleRunOnceJob(capture.capture());
+        verify(schedulerService, times(3)).scheduleRunOnceJob(capture.capture());
 
         List<RunOnceSchedulableJob> allJobs = capture.getAllValues();
 
@@ -177,6 +176,11 @@ public class OffsetCampaignSchedulerServiceTest {
         Assert.assertEquals(startDate2.toString(), allJobs.get(1).getStartDate().toString());
         Assert.assertEquals("org.motechproject.messagecampaign.fired-campaign-message", allJobs.get(1).getMotechEvent().getSubject());
         assertMotechEvent(allJobs.get(1), "MessageJob.testCampaign.12345.child-info-week-1a", "child-info-week-1a");
+
+        Date startDate3 = DateUtil.newDateTime(DateUtil.today().plusMonths(1), request.deliverTime().getHour(), request.deliverTime().getMinute(), 0).toDate();
+        Assert.assertEquals(startDate3.toString(), allJobs.get(2).getStartDate().toString());
+        Assert.assertEquals("org.motechproject.messagecampaign.fired-campaign-message", allJobs.get(2).getMotechEvent().getSubject());
+        assertMotechEvent(allJobs.get(2), "MessageJob.testCampaign.12345.child-info-month-1", "child-info-month-1");
     }
 
     @Test
