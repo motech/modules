@@ -4,7 +4,7 @@
     /* App Module */
 
     var cmslite = angular.module('cmslite', ['motech-dashboard', 'cmslite.controllers', 'cmslite.services', 'cmslite.directives',
-                                 'ngCookies', 'ngRoute', 'motech-widgets']);
+                                 'ngCookies', 'motech-widgets']);
     $.ajax({
         url: '../cmsliteapi/resource/all/languages',
         success:  function(data) {

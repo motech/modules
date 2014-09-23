@@ -1,8 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('ivr', ['motech-dashboard', 'ivr.controllers', 'ivr.directives', 'ngCookies', 'ui.bootstrap',
-        'ngRoute']).config(
+    angular.module('ivr', ['motech-dashboard', 'ivr.controllers', 'ivr.directives', 'ngCookies', 'ui.bootstrap']).config(
     ['$routeProvider',
         function ($routeProvider) {
             $routeProvider.

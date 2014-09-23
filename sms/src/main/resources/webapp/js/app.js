@@ -3,7 +3,7 @@
 
     /* App Module */
 
-    angular.module('sms', ['motech-dashboard', 'sms.controllers', 'sms.directives', 'ngCookies', 'ui.bootstrap', 'ngRoute', 'ngSanitize']).config(
+    angular.module('sms', ['motech-dashboard', 'sms.controllers', 'sms.directives', 'ngCookies', 'ui.bootstrap', 'ngSanitize']).config(
     ['$routeProvider',
         function ($routeProvider) {
             $routeProvider.
