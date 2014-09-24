@@ -5,6 +5,8 @@ import com.google.common.collect.Multimap;
 import org.motechproject.commcare.domain.FormValueElement;
 import org.motechproject.commcare.exception.FullFormParserException;
 import org.motechproject.commcare.parser.FullFormParser;
+import org.motechproject.commcare.service.impl.CommcareFormsEventParser;
+import org.motechproject.commons.api.TasksEventParser;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,18 +15,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
-import static org.motechproject.commcare.events.constants.EventDataKeys.RECEIVED_ON;
+
 import static org.motechproject.commcare.events.constants.EventDataKeys.ATTRIBUTES;
 import static org.motechproject.commcare.events.constants.EventDataKeys.ELEMENT_NAME;
+import static org.motechproject.commcare.events.constants.EventDataKeys.FAILED_FORM_MESSAGE;
+import static org.motechproject.commcare.events.constants.EventDataKeys.RECEIVED_ON;
 import static org.motechproject.commcare.events.constants.EventDataKeys.SUB_ELEMENTS;
 import static org.motechproject.commcare.events.constants.EventDataKeys.VALUE;
 import static org.motechproject.commcare.events.constants.EventSubjects.DEVICE_LOG_EVENT;
 import static org.motechproject.commcare.events.constants.EventSubjects.FORMS_EVENT;
 import static org.motechproject.commcare.events.constants.EventSubjects.FORMS_FAIL_EVENT;
-import static org.motechproject.commcare.events.constants.EventDataKeys.FAILED_FORM_MESSAGE;
 import static org.motechproject.commcare.parser.FullFormParser.FORM;
 
 /**
@@ -55,6 +59,9 @@ public class FullFormController {
             parameters.put(ELEMENT_NAME, formValueElement.getElementName());
             parameters.put(ATTRIBUTES, formValueElement.getAttributes());
             parameters.put(SUB_ELEMENTS, convertToMap(formValueElement.getSubElements()));
+
+            //Add info about custom event parser for tasks module
+            parameters.put(TasksEventParser.CUSTOM_PARSER_EVENT_KEY, CommcareFormsEventParser.PARSER_NAME);
 
             if (FORM.equals(formValueElement.getElementName())) {
                 eventRelay.sendEventMessage(new MotechEvent(FORMS_EVENT, parameters));

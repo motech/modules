@@ -3,6 +3,8 @@ package org.motechproject.commcare.events;
 import org.motechproject.commcare.domain.CaseXml;
 import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.commcare.events.constants.EventSubjects;
+import org.motechproject.commcare.service.impl.CommcareCaseEventParser;
+import org.motechproject.commons.api.TasksEventParser;
 import org.motechproject.event.MotechEvent;
 
 import java.util.HashMap;
@@ -133,13 +135,14 @@ public class CaseEvent {
     }
 
     public MotechEvent toMotechEventWithoutData() {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
+        HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(EventDataKeys.CASE_ID, this.caseId);
+        parameters.put(TasksEventParser.CUSTOM_PARSER_EVENT_KEY, CommcareCaseEventParser.PARSER_NAME);
         return new MotechEvent(EventSubjects.CASE_EVENT, parameters);
     }
 
     public MotechEvent toMotechEventWithData() {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
+        HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(EventDataKeys.SERVER_MODIFIED_ON, this.serverModifiedOn);
         parameters.put(EventDataKeys.CASE_ID, this.caseId);
         parameters.put(EventDataKeys.USER_ID, this.userId);
@@ -150,6 +153,7 @@ public class CaseEvent {
         parameters.put(EventDataKeys.DATE_MODIFIED, this.dateModified);
         parameters.put(EventDataKeys.OWNER_ID, this.ownerId);
         parameters.put(EventDataKeys.CASE_DATA_XMLNS, this.caseDataXmlns);
+        parameters.put(TasksEventParser.CUSTOM_PARSER_EVENT_KEY, CommcareCaseEventParser.PARSER_NAME);
         return new MotechEvent(EventSubjects.CASE_EVENT, parameters);
     }
 

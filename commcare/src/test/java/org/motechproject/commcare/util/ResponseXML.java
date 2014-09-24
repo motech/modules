@@ -1,0 +1,73 @@
+package org.motechproject.commcare.util;
+
+public final class ResponseXML {
+
+    public static final String FORM_NAME = "New Form";
+    public static final String CASE_TYPE = "pregnancy";
+
+    public static String getFormXML() {
+        return "<data uiVersion=\"1\"\n" +
+                "      version=\"41\"\n" +
+                "      name=\"" + FORM_NAME + "\"\n" +
+                "      xmlns:jrm=\"http://dev.commcarehq.org/jr/xforms\"\n" +
+                "      xmlns=\"http://openrosa.org/formdesigner/84FA38A2-93C1-4B9E-AA2A-0E082995FF9E\">\n" +
+                "  <is_pregnant>true</is_pregnant>\n" +
+                "  <delivery_date_known>false</delivery_date_known>\n" +
+                "  <n0:case case_id=\"e098a110-6b83-4ff7-9093-d8e0e8bfb9a3\"\n" +
+                "           user_id=\"9ad3659b9c0f8c5d141d2d06857874df\"\n" +
+                "           date_modified=\"2012-10-23T17:15:21.966-04\"\n" +
+                "           xmlns:n0=\"http://commcarehq.org/case/transaction/v2\">\n" +
+                "    <n0:update>\n" +
+                "      <n0:number>8</n0:number>\n" +
+                "    </n0:update>\n" +
+                "  </n0:case>\n" +
+                "  <cc_delegation_stub delegation_id=\"0e6db0c4-d07f-435c-89e5-64855440605c\">\n" +
+                "    <n1:case case_id=\"0e6db0c4-d07f-435c-89e5-64855440605c\"\n" +
+                "             user_id=\"9ad3659b9c0f8c5d141d2d06857874df\"\n" +
+                "             date_modified=\"2012-10-23T17:15:21.966-04\"\n" +
+                "             xmlns:n1=\"http://commcarehq.org/case/transaction/v2\">\n" +
+                "      <n1:close />\n" +
+                "    </n1:case>\n" +
+                "  </cc_delegation_stub>\n" +
+                "  <n2:meta xmlns:n2=\"http://openrosa.org/jr/xforms\">\n" +
+                "  <n2:deviceid>cloudcare</n2:deviceid>\n" +
+                "  <n2:timestart>2012-10-23T17:15:18.324-04</n2:timestart>\n" +
+                "  <n2:timeend>2012-10-23T17:15:21.966-04</n2:timeend>\n" +
+                "  <n2:username>test</n2:username>\n" +
+                "  <n2:userid>9ad3659b9c0f8c5d141d2d06857874df</n2:userid>\n" +
+                "  <n2:instanceid>c24a85f9-703d-434c-b087-5759f3fa9937</n2:instanceid>\n" +
+                "  <n3:appversion xmlns:n3=\"http://commcarehq.org/xforms\">2.0</n3:appversion>\n" +
+                "  </n2:meta>\n" +
+                "</data>";
+    }
+
+    public static String getCaseXML() {
+        return "<case case_id=\"e6552468-e7ac-4bd1-86bd-4fd72094ccc2\" date_modified=\"2014-09-24T13:14:50Z\"" +
+                " user_id=\"2a34e758b7ed8a686e7fe8de29c3078c\" xmlns=\"http://commcarehq.org/case/transaction/v2\">" +
+                "<create>" +
+                "   <case_type>" + CASE_TYPE + "</case_type>" +
+                "   <case_name>Susanna Bones</case_name>" +
+                "   <owner_id>2a34e758b7ed8a686e7fe8de29c3078c</owner_id>" +
+                "</create>" +
+                "<update>" +
+                "   <external_id>123456</external_id>" +
+                "   <dob>1990-09-09</dob>" +
+                "   <dob_calc>1990-09-09</dob_calc>" +
+                "   <dob_known>yes</dob_known>" +
+                "   <edd>2014-09-27</edd>" +
+                "   <edd_calc>2014-09-27</edd_calc>" +
+                "   <edd_known>yes</edd_known>" +
+                "   <first_name>Susanna</first_name>" +
+                "   <full_name>Susanna Bones</full_name>" +
+                "   <health_id>123456</health_id>" +
+                "   <household_head_health_id>123456</household_head_health_id>" +
+                "   <mobile_phone_number>1234567890</mobile_phone_number>" +
+                "   <surname>Bones</surname>" +
+                "</update>" +
+                "</case>";
+    }
+
+    public static String getDeviceReportXML() {
+        return "<?xml version=\'1.0\' encoding=\'UTF-8\' standalone=\'no\'?> <device_report xmlns=\"http://code.javarosa.org/devicereport\"> <device_id>DEVICEIDJ0j09s0u</device_id></device_report>";
+    }
+}

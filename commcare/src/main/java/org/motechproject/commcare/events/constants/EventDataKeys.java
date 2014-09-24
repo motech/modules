@@ -31,6 +31,14 @@ public final class EventDataKeys {
     public static final String ATTRIBUTES = "attributes";
     public static final String VALUE = "value";
 
+    public static final String META_INSTANCE_ID = "/data/meta/instanceid";
+    public static final String META_USER_ID = "/data/meta/userid";
+    public static final String META_DEVICE_ID = "/data/meta/deviceid";
+    public static final String META_USERNAME = "/data/meta/username";
+    public static final String META_APP_VERSION = "/data/meta/appversion";
+    public static final String META_TIME_START = "/data/meta/timestart";
+    public static final String META_TIME_END = "/data/meta/timeend";
+
     //FullFormsExceptionEvent
     public static final String FAILED_FORM_MESSAGE = "failedMessage";
 

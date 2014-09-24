@@ -22,6 +22,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 
+import static org.motechproject.commcare.events.constants.EventDataKeys.FIELD_VALUES;
+
 /**
  * Controller that handles the incoming case feed from CommCareHQ. Maps to
  * /commcare/cases.
@@ -59,7 +61,7 @@ public class CasesController {
         return forwardedRequest.toString();
     }
 
-    @RequestMapping({ "/cases" })
+    @RequestMapping("/cases")
     public ModelAndView receiveCase(HttpServletRequest request, HttpServletResponse response) {
 
         String caseXml = "";
@@ -93,7 +95,7 @@ public class CasesController {
             if (caseEventStrategy.equals(FULL_DATA_EVENT)) {
                 caseEvent = caseEvent.eventFromCase(caseInstance);
                 motechCaseEvent = caseEvent.toMotechEventWithData();
-                motechCaseEvent.getParameters().put("fieldValues",
+                motechCaseEvent.getParameters().put(FIELD_VALUES,
                         caseEvent.getFieldValues());
             } else if (caseEventStrategy.equals(PARTIAL_DATA_EVENT)) {
                 motechCaseEvent = caseEvent.toMotechEventWithData();
