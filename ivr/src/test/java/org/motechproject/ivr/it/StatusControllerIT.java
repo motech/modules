@@ -99,5 +99,6 @@ public class StatusControllerIT extends BasePaxIT {
         assertEquals(CallStatus.ANSWERED, callDetailRecord.getCallStatus());
         assertEquals(1, callDetailRecord.getProviderExtraData().keySet().size());
         assertEquals(callDetailRecord.getProviderExtraData().get("foo"), "bar");
+        assertNull(callDetailRecord.getTemplateName());
     }
 }

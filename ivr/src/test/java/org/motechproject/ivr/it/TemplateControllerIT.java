@@ -114,5 +114,6 @@ public class TemplateControllerIT extends BasePaxIT {
         assertEquals(2, callDetailRecord.getProviderExtraData().keySet().size());
         assertEquals(callDetailRecord.getProviderExtraData().get("foo"), "bar");
         assertEquals(callDetailRecord.getProviderExtraData().get("var"), "world");
+        assertEquals(callDetailRecord.getTemplateName(), "tmpl");
     }
 }

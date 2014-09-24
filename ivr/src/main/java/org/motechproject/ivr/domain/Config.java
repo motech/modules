@@ -144,7 +144,7 @@ public class Config {
         return fieldName;
     }
 
-    @Override
+    @Override //NO CHECKSTYLE CyclomaticComplexity
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -153,11 +153,32 @@ public class Config {
             return false;
         }
 
-        //todo: I'm using a string compare because comparing the statusFieldMap field (of type Map<String, CallStatus>) fails
-        //todo: change to a proper full fledged equals when https://applab.atlassian.net/browse/MOTECH-1186 is fixed
-        return this.toString().equals(o.toString());
-    }
+        Config config = (Config) o;
 
+        if (ignoredStatusFields != null ? !ignoredStatusFields.equals(config.ignoredStatusFields) : config
+                .ignoredStatusFields != null) {
+            return false;
+        }
+        if (!name.equals(config.name)) {
+            return false;
+        }
+        if (outgoingCallMethod != config.outgoingCallMethod) {
+            return false;
+        }
+        if (outgoingCallUriTemplate != null ? !outgoingCallUriTemplate.equals(config.outgoingCallUriTemplate) :
+                config.outgoingCallUriTemplate != null) {
+            return false;
+        }
+        if (statusFieldMap != null ? !statusFieldMap.equals(config.statusFieldMap) : config.statusFieldMap != null) {
+            return false;
+        }
+        if (statusFieldMapString != null ? !statusFieldMapString.equals(config.statusFieldMapString) :
+                config.statusFieldMapString != null) {
+            return false;
+        }
+
+        return true;
+    }
     @Override
     public int hashCode() {
         int result = name.hashCode();

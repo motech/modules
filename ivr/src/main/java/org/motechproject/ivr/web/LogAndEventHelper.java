@@ -38,7 +38,7 @@ public final class LogAndEventHelper {
      */
     public static void sendAndLogEvent(ConfigService configService, CallDetailRecordDataService cdrService,
                                        StatusMessageService messageService, EventRelay eventRelay, String configName,
-                                       Map<String, String> params) {
+                                       String templateName, Map<String, String> params) {
         if (!configService.hasConfig(configName)) {
             String msg = String.format("Invalid config: '%s'", configName);
             LOGGER.error(msg);
@@ -52,6 +52,7 @@ public final class LogAndEventHelper {
         CallDetailRecord callDetailRecord = new CallDetailRecord();
 
         callDetailRecord.setConfigName(configName);
+        callDetailRecord.setTemplateName(templateName);
 
         //todo: some providers send session information (including caller id) through the headers, so we should add
         //todo: a config setting that scans the headers for CDR info in addition to the query parameters

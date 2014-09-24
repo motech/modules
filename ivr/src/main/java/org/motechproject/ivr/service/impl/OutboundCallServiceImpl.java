@@ -61,7 +61,7 @@ public class OutboundCallServiceImpl implements OutboundCallService {
                 params.toString(), motechCallId));
 
         callDetailRecordDataService.create(new CallDetailRecord(config.getName(), null, params.get("from"),
-                params.get("to"), CallDirection.OUTBOUND, callStatus, motechCallId, null, params));
+                params.get("to"), CallDirection.OUTBOUND, callStatus, null, motechCallId, null, params));
     }
 
     @Override

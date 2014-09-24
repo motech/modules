@@ -64,7 +64,7 @@ public class StatusController {
                 headers));
 
         sendAndLogEvent(configService, callDetailRecordDataService, statusMessageService, eventRelay, configName,
-                params);
+                null, params);
 
         return XML_OK_RESPONSE;
     }

@@ -79,7 +79,7 @@ public class TemplateController {
                 configName, templateName, params, headers));
 
         sendAndLogEvent(configService, callDetailRecordDataService, statusMessageService, eventRelay, configName,
-                params);
+                templateName, params);
 
         // Render the template
         VelocityContext context = new VelocityContext();

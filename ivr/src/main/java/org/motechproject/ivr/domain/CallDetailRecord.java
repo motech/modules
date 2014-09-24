@@ -27,6 +27,7 @@ public class CallDetailRecord {
     private static final int COL9 = 8;
     private static final int COL10 = 9;
     private static final int COL11 = 10;
+    private static final int COL12 = 11;
     private static final int MAX_ENTITY_STRING_LENGTH = 255;
     private static final DateTimeFormatter DT_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSSS");
     private static final Logger LOGGER = LoggerFactory.getLogger(CallDetailRecord.class);
@@ -38,11 +39,11 @@ public class CallDetailRecord {
     private long id;
 
     @Field
-    @UIDisplayable(position = COL10)
+    @UIDisplayable(position = COL11)
     private String motechTimestamp;
 
     @Field
-    @UIDisplayable(position = COL11)
+    @UIDisplayable(position = COL12)
     private String providerTimestamp;
 
     @Field
@@ -66,15 +67,19 @@ public class CallDetailRecord {
     private CallStatus callStatus;
 
     @Field
-    @UIDisplayable(position = COL8)
-    private String motechCallId;
+    @UIDisplayable(position = COL7)
+    private String templateName;
 
     @Field
     @UIDisplayable(position = COL9)
+    private String motechCallId;
+
+    @Field
+    @UIDisplayable(position = COL10)
     private String providerCallId;
 
     @Field
-    @UIDisplayable(position = COL7)
+    @UIDisplayable(position = COL8)
     private Map<String, String> providerExtraData;
 
     public CallDetailRecord() {
@@ -85,7 +90,7 @@ public class CallDetailRecord {
 
     public CallDetailRecord(String configName,  //NO CHECKSTYLE ParameterNumber
                             String providerTimestamp, String from, String to, CallDirection callDirection,
-                            CallStatus callStatus, String motechCallId, String providerCallId,
+                            CallStatus callStatus, String templateName, String motechCallId, String providerCallId,
                             Map<String, String> providerExtraData) {
         this();
         this.configName = configName;
@@ -94,6 +99,7 @@ public class CallDetailRecord {
         this.to = to;
         this.callDirection = callDirection;
         this.callStatus = callStatus;
+        this.templateName = templateName;
         this.motechCallId = motechCallId;
         this.providerCallId = providerCallId;
         if (providerExtraData != null) {
@@ -156,6 +162,14 @@ public class CallDetailRecord {
 
     public CallStatus getCallStatus() {
         return callStatus;
+    }
+
+    public String getTemplateName() {
+        return templateName;
+    }
+
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
     }
 
     public String getMotechCallId() {
@@ -246,18 +260,46 @@ public class CallDetailRecord {
 
         CallDetailRecord that = (CallDetailRecord) o;
 
-        return !((callDirection != that.callDirection) ||
-                (callStatus != that.callStatus) ||
-                (!configName.equals(that.configName)) ||
-                (from != null ? !from.equals(that.from) : that.from != null) ||
-                (motechCallId != null ? !motechCallId.equals(that.motechCallId) : that.motechCallId != null) ||
-                (providerCallId != null ? !providerCallId.equals(that.providerCallId) : that.providerCallId != null) ||
-                (providerExtraData != null ?
-                        !providerExtraData.equals(that.providerExtraData) : that.providerExtraData != null) ||
-                (!motechTimestamp.equals(that.motechTimestamp)) ||
-                (!providerTimestamp.equals(that.providerTimestamp)) ||
-                (to != null ? !to.equals(that.to) : that.to != null));
+        if (id != that.id) {
+            return false;
+        }
+        if (callDirection != that.callDirection) {
+            return false;
+        }
+        if (callStatus != that.callStatus) {
+            return false;
+        }
+        if (!configName.equals(that.configName)) {
+            return false;
+        }
+        if (from != null ? !from.equals(that.from) : that.from != null) {
+            return false;
+        }
+        if (motechCallId != null ? !motechCallId.equals(that.motechCallId) : that.motechCallId != null) {
+            return false;
+        }
+        if (motechTimestamp != null ? !motechTimestamp.equals(that.motechTimestamp) : that.motechTimestamp != null) {
+            return false;
+        }
+        if (providerCallId != null ? !providerCallId.equals(that.providerCallId) : that.providerCallId != null) {
+            return false;
+        }
+        if (providerExtraData != null ? !providerExtraData.equals(that.providerExtraData) : that.providerExtraData !=
+                null) {
+            return false;
+        }
+        if (providerTimestamp != null ? !providerTimestamp.equals(that.providerTimestamp) : that.providerTimestamp !=
+                null) {
+            return false;
+        }
+        if (templateName != null ? !templateName.equals(that.templateName) : that.templateName != null) {
+            return false;
+        }
+        if (to != null ? !to.equals(that.to) : that.to != null) {
+            return false;
+        }
 
+        return true;
     }
 
     @Override //NO CHECKSTYLE CyclomaticComplexity
@@ -269,6 +311,7 @@ public class CallDetailRecord {
         result = 31 * result + (to != null ? to.hashCode() : 0);
         result = 31 * result + (callDirection != null ? callDirection.hashCode() : 0);
         result = 31 * result + (callStatus != null ? callStatus.hashCode() : 0);
+        result = 31 * result + (templateName != null ? templateName.hashCode() : 0);
         result = 31 * result + (motechCallId != null ? motechCallId.hashCode() : 0);
         result = 31 * result + (providerCallId != null ? providerCallId.hashCode() : 0);
         result = 31 * result + (providerExtraData != null ? providerExtraData.hashCode() : 0);
@@ -285,6 +328,7 @@ public class CallDetailRecord {
                 ", to='" + to + '\'' +
                 ", callDirection=" + callDirection +
                 ", callStatus=" + callStatus +
+                ", templateName=" + templateName +
                 ", motechCallId='" + motechCallId + '\'' +
                 ", providerCallId='" + providerCallId + '\'' +
                 ", providerExtraData=" + providerExtraData +
