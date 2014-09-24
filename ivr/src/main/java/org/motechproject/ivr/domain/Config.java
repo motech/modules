@@ -132,6 +132,12 @@ public class Config {
      * @return
      */
     public String mapStatusField(String fieldName) {
+        // When a Config is deserialized from json, the statusFieldMapString may be set, but no constructor or setter is
+        // called, so it's possible that the statusFieldMap is null when statusFieldMapString isn't blank, if that's the
+        // case then just parse statusFieldMapString when it's needed the first time.
+        if (null == statusFieldMap && !StringUtils.isBlank(statusFieldMapString)) {
+            statusFieldMap = parseStatusMapString(statusFieldMapString);
+        }
         if (null != statusFieldMap && statusFieldMap.containsKey(fieldName)) {
             return statusFieldMap.get(fieldName);
         }
