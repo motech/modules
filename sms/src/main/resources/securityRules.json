@@ -16,7 +16,7 @@
     },
     {
         "active": true,
-        "pattern": "/**/sms/status/**",
+        "pattern": "/**/sms/incoming/**",
         "supportedSchemes": [
             "NO_SECURITY"
         ],
