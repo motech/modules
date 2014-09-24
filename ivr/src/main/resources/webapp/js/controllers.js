@@ -8,7 +8,7 @@
      * Settings
      *
      */
-    controllers.controller('SettingsController', function ($scope, $http, $timeout) {
+    controllers.controller('IvrSettingsController', function ($scope, $http, $timeout) {
         $scope.errors = [];
         $scope.messages = [];
         $scope.dupeNames = [];
