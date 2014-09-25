@@ -2,6 +2,7 @@ package org.motechproject.ivr.web;
 
 import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.listener.EventRelay;
+import org.motechproject.ivr.event.EventSubjects;
 import org.motechproject.ivr.repository.CallDetailRecordDataService;
 import org.motechproject.ivr.service.ConfigService;
 import org.slf4j.Logger;
@@ -63,8 +64,8 @@ public class StatusController {
         LOGGER.debug(String.format("handle(configName = %s, parameters = %s, headers = %s)", configName, params,
                 headers));
 
-        sendAndLogEvent(configService, callDetailRecordDataService, statusMessageService, eventRelay, configName,
-                null, params);
+        sendAndLogEvent(EventSubjects.CALL_STATUS, configService, callDetailRecordDataService, statusMessageService,
+                eventRelay, configName, null, params);
 
         return XML_OK_RESPONSE;
     }

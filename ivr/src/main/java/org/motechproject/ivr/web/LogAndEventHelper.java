@@ -6,9 +6,7 @@ import org.motechproject.event.listener.EventRelay;
 import org.motechproject.ivr.domain.CallDetailRecord;
 import org.motechproject.ivr.domain.Config;
 import org.motechproject.ivr.event.EventParams;
-import org.motechproject.ivr.event.EventSubjects;
 import org.motechproject.ivr.repository.CallDetailRecordDataService;
-import org.motechproject.ivr.service.CallInitiationException;
 import org.motechproject.ivr.service.ConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,14 +34,15 @@ public final class LogAndEventHelper {
      * @param configName
      * @param params
      */
-    public static void sendAndLogEvent(ConfigService configService, CallDetailRecordDataService cdrService,
-                                       StatusMessageService messageService, EventRelay eventRelay, String configName,
-                                       String templateName, Map<String, String> params) {
+    public static void sendAndLogEvent(String eventSubject, ConfigService configService,
+                                       CallDetailRecordDataService cdrService, StatusMessageService messageService,
+                                       EventRelay eventRelay, String configName, String templateName,
+                                       Map<String, String> params) {
         if (!configService.hasConfig(configName)) {
             String msg = String.format("Invalid config: '%s'", configName);
             LOGGER.error(msg);
             messageService.warn(msg, MODULE_NAME);
-            throw new CallInitiationException(msg);
+            throw new IvrControllerException(msg);
         }
 
         Config config = configService.getConfig(configName);
@@ -67,7 +66,7 @@ public final class LogAndEventHelper {
 
         // Generate a MOTECH event
         Map<String, Object> eventParams = EventParams.eventParamsFromCallDetailRecord(callDetailRecord);
-        MotechEvent event = new MotechEvent(EventSubjects.CALL_STATUS, eventParams);
+        MotechEvent event = new MotechEvent(eventSubject, eventParams);
         LOGGER.debug("Sending MotechEvent {}", event.toString());
         eventRelay.sendEventMessage(event);
 

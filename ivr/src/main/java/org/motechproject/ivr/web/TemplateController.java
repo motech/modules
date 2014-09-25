@@ -4,7 +4,9 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.listener.EventRelay;
+import org.motechproject.ivr.domain.Config;
 import org.motechproject.ivr.domain.Template;
+import org.motechproject.ivr.event.EventSubjects;
 import org.motechproject.ivr.repository.CallDetailRecordDataService;
 import org.motechproject.ivr.repository.TemplateDataService;
 import org.motechproject.ivr.service.ConfigService;
@@ -37,6 +39,7 @@ import static org.motechproject.ivr.web.LogAndEventHelper.sendAndLogEvent;
 @RequestMapping(value = "/template")
 public class TemplateController {
 
+    private static final String MODULE_NAME = "ivr";
     private static final Logger LOGGER = LoggerFactory.getLogger(StatusController.class);
     private CallDetailRecordDataService callDetailRecordDataService;
     private TemplateDataService templateDataService;
@@ -78,16 +81,26 @@ public class TemplateController {
         LOGGER.debug(String.format("handle(configName = %s, templateName = %s, parameters = %s, headers = %s)",
                 configName, templateName, params, headers));
 
-        sendAndLogEvent(configService, callDetailRecordDataService, statusMessageService, eventRelay, configName,
-                templateName, params);
+        sendAndLogEvent(EventSubjects.TEMPLATE_REQUEST, configService, callDetailRecordDataService,
+                statusMessageService, eventRelay, configName, templateName, params);
+
+        Template template = templateDataService.findByName(templateName);
+        if (null == template) {
+            String msg = String.format("Invalid template: '%s'", templateName);
+            LOGGER.error(msg);
+            statusMessageService.warn(msg, MODULE_NAME);
+            throw new IvrControllerException(msg);
+        }
+
+        // No need to test for the existence of the config since it's already been done in the sendAndLogEvent() call
+        Config config = configService.getConfig(configName);
 
         // Render the template
         VelocityContext context = new VelocityContext();
         for (Map.Entry<String, String> entry : params.entrySet()) {
-            context.put(entry.getKey(), entry.getValue());
+            context.put(config.mapStatusField(entry.getKey()), entry.getValue());
         }
         StringWriter writer = new StringWriter();
-        Template template = templateDataService.findByName(templateName);
         try {
             Velocity.evaluate(context, writer, String.format("%s-%s", configName, templateName), template.getValue());
         } catch (IOException e) {
