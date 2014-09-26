@@ -41,6 +41,13 @@ public class SchemaController {
     public CasesRecords caseList(GridSettings settings) {
         Boolean sortAscending = true;
 
+        String dateModifiedStart = "1900-01-01";
+        String dateModifiedEnd = "2200-01-01";
+        int recordCount = 0;
+        int rowCount = 1;
+        List<CaseInfo> caseRecordsList = null;
+        CasesInfo casesInfo = null;
+
         if (settings.getSortDirection() != null) {
             sortAscending = "asc".equals(settings.getSortDirection());
         }
@@ -50,21 +57,58 @@ public class SchemaController {
             settings.setRows(10);
         }
 
-        CasesInfo casesInfo = caseService.getCasesWithMetadata(settings.getRows(), settings.getPage());
-        List<CaseInfo> caseRecordsList = casesInfo.getCaseInfoList();
+        if (settings.getDateModifiedStart() != null && !settings.getDateModifiedStart().isEmpty()) {
+            dateModifiedStart = settings.getDateModifiedStart();
+        }
 
-        if (sortAscending) {
+        if (settings.getDateModifiedEnd() != null && !settings.getDateModifiedEnd().isEmpty()) {
+            dateModifiedEnd = settings.getDateModifiedEnd();
+        }
+
+        settings.isFilter();
+
+        switch (settings.getFilter()) {
+            case "filerByName":
+                casesInfo = caseService.getCasesByCasesNameWithMetadata(settings.getCaseName(), settings.getRows(), settings.getPage());
+                caseRecordsList = casesInfo.getCaseInfoList();
+                recordCount = casesInfo.getMetadataInfo().getTotalCount();
+                break;
+            case "filterByDateModified":
+                casesInfo = caseService.getCasesByCasesTimeWithMetadata(dateModifiedStart, dateModifiedEnd, settings.getRows(), settings.getPage());
+                caseRecordsList = casesInfo.getCaseInfoList();
+                recordCount = casesInfo.getMetadataInfo().getTotalCount();
+                break;
+            case "filterByAll":
+                casesInfo = caseService.getCasesByCasesNameAndTimeWithMetadata(settings.getCaseName(), dateModifiedStart, dateModifiedEnd, settings.getRows(), settings.getPage());
+                caseRecordsList = casesInfo.getCaseInfoList();
+                recordCount = casesInfo.getMetadataInfo().getTotalCount();
+                break;
+            default:
+                casesInfo = caseService.getCasesWithMetadata(settings.getRows(), settings.getPage());
+                caseRecordsList = casesInfo.getCaseInfoList();
+                recordCount = casesInfo.getMetadataInfo().getTotalCount();
+        }
+
+        sortCases(sortAscending, caseRecordsList);
+        rowCount = (int) Math.ceil(recordCount / (double) settings.getRows());
+
+        return new CasesRecords(settings.getPage(), rowCount, recordCount, caseRecordsList);
+    }
+
+    private List<CaseInfo> sortCases(Boolean sortAscending, List<CaseInfo> caseRecordsList) {
+
+        if (caseRecordsList != null && sortAscending) {
             Collections.sort(
-                    caseRecordsList, new Comparator<CaseInfo>() {
+                caseRecordsList, new Comparator<CaseInfo>() {
                     @Override
                     public int compare(CaseInfo o1, CaseInfo o2) {
                         return o1.getCaseName().compareToIgnoreCase(o2.getCaseName());
                     }
                 }
             );
-        } else {
+        } else if (caseRecordsList != null) {
             Collections.sort(
-                caseRecordsList, Collections.reverseOrder(new Comparator<CaseInfo>() {
+            caseRecordsList, Collections.reverseOrder(new Comparator<CaseInfo>() {
                 @Override
                 public int compare(CaseInfo o1, CaseInfo o2) {
                     return o1.getCaseName().compareToIgnoreCase(o2.getCaseName());
@@ -73,9 +117,6 @@ public class SchemaController {
             );
         }
 
-        int recordCount = casesInfo.getMetadataInfo().getTotalCount();
-        int rowCount = (int) Math.ceil(recordCount / (double) settings.getRows());
-
-        return new CasesRecords(settings.getPage(), rowCount, recordCount, caseRecordsList);
+        return caseRecordsList;
     }
 }

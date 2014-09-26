@@ -88,6 +88,7 @@
 
                         timeoutHnd = setTimeout(function () {
                             jQuery('#' + attrs.smsJqgridSearch).jqGrid('setGridParam', {
+                                page: 1,
                                 url: '../sms/log' + params
                             }).trigger('reloadGrid');
                         }, time || 0);

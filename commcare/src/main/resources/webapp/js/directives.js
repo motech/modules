@@ -58,6 +58,135 @@
         };
     });
 
+    directives.directive('commcareGridDatePickerFrom', function() {
+        return {
+            restrict: 'A',
+            link: function (scope, element, attrs) {
+                var elem = angular.element(element),
+                endDateTextBox = angular.element('#commcareDateTo');
+
+                elem.datepicker({
+                    changeYear: true,
+                    changeMonth: true,
+                    showButtonPanel: true,
+                    dateFormat: 'yy-mm-dd',
+                    onSelect: function (selectedDate) {
+                        endDateTextBox.datepicker('option', 'minDate', elem.datepicker('getDate'));
+                        $(this).change();
+                    },
+                    onChangeMonthYear: function (year, month, inst) {
+                        var curDate = $(this).datepicker("getDate");
+                        if (curDate === null) {
+                            return;
+                        }
+                        if (curDate.getYear() !== year || curDate.getMonth() !== month - 1) {
+                            curDate.setYear(year);
+                            curDate.setMonth(month - 1);
+                            $(this).datepicker("setDate", curDate);
+                            $(this).change();
+                        }
+                    }
+                });
+            }
+        };
+    });
+
+    directives.directive('commcareGridDatePickerTo', function() {
+        return {
+            restrict: 'A',
+            link: function (scope, element, attrs) {
+                var elem = angular.element(element),
+                startDateTextBox = angular.element('#commcareDateFrom');
+
+                elem.datepicker({
+                    changeYear: true,
+                    changeMonth: true,
+                    showButtonPanel: true,
+                    dateFormat: 'yy-mm-dd',
+                    onSelect: function (selectedDate) {
+                        startDateTextBox.datepicker('option', 'maxDate', elem.datepicker('getDate'));
+                        $(this).change();
+                    },
+                    onChangeMonthYear: function (year, month, inst) {
+                        var curDate = $(this).datepicker("getDate");
+                        if (curDate === null) {
+                            return;
+                        }
+                        if (curDate.getYear() !== year || curDate.getMonth() !== month - 1) {
+                            curDate.setYear(year);
+                            curDate.setMonth(month - 1);
+                            $(this).datepicker("setDate", curDate);
+                            $(this).change();
+                        }
+                    }
+                });
+            }
+        };
+    });
+
+    directives.directive('commcareCaseJqgridSearch', function () {
+        return {
+            restrict: 'A',
+            link: function (scope, element, attrs) {
+                var elem = angular.element(element),
+                    eventType = elem.data('event-type'),
+                    timeoutHnd,
+                    filter = function (time) {
+                        var field = elem.data('search-field'),
+                            type = elem.data('field-type') || 'string',
+                            url = parseUri(jQuery('#' + attrs.commcareCaseJqgridSearch).jqGrid('getGridParam', 'url')),
+                            query = {},
+                            params = '?',
+                            array = [],
+                            prop;
+
+                        // copy existing url parameters
+                        for (prop in url.queryKey) {
+                            if (prop !== field) {
+                                query[prop] = url.queryKey[prop];
+                            }
+                        }
+
+                        // set parameter for given element
+                        query[field] = elem.val();
+
+                        // create raw parameters
+                        for (prop in query) {
+                            params += prop + '=' + query[prop] + '&';
+                        }
+
+                        // remove last '&'
+                        params = params.slice(0, params.length - 1);
+
+                        if (timeoutHnd) {
+                            clearTimeout(timeoutHnd);
+                        }
+
+                        timeoutHnd = setTimeout(function () {
+                            jQuery('#' + attrs.commcareCaseJqgridSearch).jqGrid('setGridParam', {
+                                page: 1,
+                                url: '../commcare/caseList' + params
+                            }).trigger('reloadGrid');
+                        }, time || 0);
+                    };
+
+                switch (eventType) {
+                case 'change':
+                    elem.change(function () {
+                        filter(1000);
+                    });
+                    break;
+                case 'click':
+                    $('#search-case').click(function () {
+                        filter(500);
+                    });
+                    break;
+                default:
+                }
+            }
+        };
+    });
+
     directives.directive('commcareCaseJqgrid', function ($compile) {
         return {
             restrict: 'A',
@@ -65,7 +194,7 @@
                 var elem = angular.element(element);
 
                 elem.jqGrid({
-                    url: '../commcare/caseList',
+                    url: '../commcare/caseList?caseName=&dateModifiedStart=&dateModifiedEnd=',
                     datatype: 'json',
                     jsonReader:{
                         repeatitems:false
@@ -93,7 +222,7 @@
                             var div = $('<div>'),
                             button1 = $('<button>'),
                             button2 = $('<button>'),
-                            title = '<h4 class="modal-title">' + scope.msg('commcare.case.name') + ': <em>' + rowObject.caseName + '</em></h4>',
+                            title = '<h4 class="modal-title">' + scope.msg('commcare.caseName') + ': <em>' + rowObject.caseName + '</em></h4>',
                             contentView = '<div class="form-horizontal list-lightblue">' + scope.formatModalContent(rowObject) + '</div>',
                             contentJson = '<pre>' + scope.formatJson(rowObject) + '</pre>';
                             button1
@@ -120,20 +249,17 @@
                         angular.forEach(elem.find('button'), function(value) {
                             $compile(value)(scope);
                         });
-                        $('#commcare-case').children('div').width('100%');
-                        $('.ui-jqgrid-htable').addClass("table-lightblue");
-                        $('.ui-jqgrid-btable').addClass("table-lightblue");
-                        $('.ui-jqgrid-htable').width('100%');
-                        $('.ui-jqgrid-bdiv').width('100%');
-                        $('.ui-jqgrid-hdiv').width('100%');
-                        $('.ui-jqgrid-view').width('100%');
-                        $('#t_commcare-case').width('auto');
-                        $('.ui-jqgrid-pager').width('100%');
-                        $('.ui-jqgrid-hbox').css({'padding-right':'0'});
-                        $('.ui-jqgrid-hbox').width('100%');
-                        $('#commcare-case').children('div').each(function() {
-                            $(this).find('table').width('100%');
-                        });
+                        $('#commcareCase').children().width('100%');
+                        $('#commcareCase .ui-jqgrid-htable').addClass('table-lightblue');
+                        $('#commcareCase .ui-jqgrid-btable').addClass("table-lightblue");
+                        $('#commcareCase .ui-jqgrid-htable').width('100%');
+                        $('#commcareCase .ui-jqgrid-btable').width('100%');
+                        $('#commcareCase .ui-jqgrid-bdiv').width('100%');
+                        $('#commcareCase .ui-jqgrid-hdiv').width('100%').show();
+                        $('#commcareCase .ui-jqgrid-hbox').css({'padding-right':'0'});
+                        $('#commcareCase .ui-jqgrid-hbox').width('100%');
+                        $('#commcareCase .ui-jqgrid-view').width('100%');
+                        $('#commcareCase .ui-jqgrid-pager').width('100%');
                     }
                 });
 

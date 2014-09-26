@@ -87,6 +87,45 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
     }
 
     @Override
+    public CasesInfo getCasesByCasesNameWithMetadata(String caseName, Integer pageSize, Integer pageNumber) {
+        CaseRequest request = new CaseRequest();
+        request.setCaseName(caseName);
+        request.setLimit(pageSize);
+        request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
+        CaseResponseJson caseResponseJson = getCaseResponse(request);
+
+        return new CasesInfo(generateCasesFromCaseResponse(getCaseResponse(request).getCases()),
+                populateCaseMetadata(caseResponseJson.getMetadata()));
+    }
+
+    @Override
+    public CasesInfo getCasesByCasesTimeWithMetadata(String dateModifiedStart, String dateModifiedEnd, Integer pageSize, Integer pageNumber) {
+        CaseRequest request = new CaseRequest();
+        request.setDateModifiedStart(dateModifiedStart);
+        request.setDateModifiedEnd(dateModifiedEnd);
+        request.setLimit(pageSize);
+        request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
+        CaseResponseJson caseResponseJson = getCaseResponse(request);
+
+        return new CasesInfo(generateCasesFromCaseResponse(getCaseResponse(request).getCases()),
+                populateCaseMetadata(caseResponseJson.getMetadata()));
+    }
+
+    @Override
+    public CasesInfo getCasesByCasesNameAndTimeWithMetadata(String caseName, String dateModifiedStart, String dateModifiedEnd, Integer pageSize, Integer pageNumber) {
+        CaseRequest request = new CaseRequest();
+        request.setCaseName(caseName);
+        request.setDateModifiedStart(dateModifiedStart);
+        request.setDateModifiedEnd(dateModifiedEnd);
+        request.setLimit(pageSize);
+        request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
+        CaseResponseJson caseResponseJson = getCaseResponse(request);
+
+        return new CasesInfo(generateCasesFromCaseResponse(getCaseResponse(request).getCases()),
+                populateCaseMetadata(caseResponseJson.getMetadata()));
+    }
+
+    @Override
     public List<CaseInfo> getCasesByUserIdAndType(String userId, String type, Integer pageSize, Integer pageNumber) {
         CaseRequest request = new CaseRequest();
         request.setUserId(userId);

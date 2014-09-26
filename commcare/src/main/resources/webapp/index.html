@@ -1,7 +1,3 @@
-<script type="text/javascript">
-    innerLayout();
-</script>
-
 <div id="inner-center" class="commcare inner-center ui-layout-center ui-layout-pane ui-layout-pane-center">
     <div class="header-footer-breadcrumb">
         <ul class="breadcrumb" role="navigation">
@@ -31,8 +27,33 @@
 <div id="inner-east" class="commcare inner-east ui-layout-pane ui-layout-pane-east">
     <div class="header-toolbar header-footer"></div>
     <!------------------------  Filters  ------------------------>
-    <div class="inbox-header">{{msg('commcare')}}</div>
+    <div class="inbox-header">{{msg('commcare.filters')}}</div>
     <div class="ui-layout-content">
-        <div class="inside"></div>
+        <div class="inside">
+            <fieldset class="inside">
+                <legend>{{msg('commcare.caseName')}}</legend>
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm search-query"
+                               placeholder="{{msg('commcare.searchByName')}}" data-event-type="click"
+                               data-search-field="caseName" commcare-case-jqgrid-search="case-table">
+                        <span class="input-group-btn">
+                            <button id="search-case" class="btn btn-default btn-sm" type="button">{{msg('commcare.search')}}</button>
+                        </span>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="inside">
+                <legend>{{msg('commcare.dateModifiedRange')}}</legend>
+                <div class="form-group">
+                    <input id="commcareDateFrom" commcare-grid-date-picker-from="" type="datetime" class="form-control input-sm search-query"
+                           placeholder="{{msg('commcare.from')}}" data-event-type="change" data-search-field="dateModifiedStart" commcare-case-jqgrid-search="case-table">
+                </div>
+                <div class="form-group">
+                    <input id="commcareDateTo" commcare-grid-date-picker-to="" type="datetime" class="form-control input-sm search-query"
+                           placeholder="{{msg('commcare.to')}}" data-event-type="change" data-search-field="dateModifiedEnd" commcare-case-jqgrid-search="case-table">
+                </div>
+            </fieldset>
+        </div>
     </div>
 </div>

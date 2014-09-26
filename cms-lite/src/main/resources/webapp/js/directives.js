@@ -88,6 +88,7 @@
 
                         timeoutHnd = setTimeout(function () {
                             jQuery('#' + attrs.cmsLiteJqgridSearch).jqGrid('setGridParam', {
+                                page: 1,
                                 url: '../cmsliteapi/resource' + params
                             }).trigger('reloadGrid');
                         }, time || 0);

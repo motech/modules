@@ -72,6 +72,36 @@ public interface CommcareCaseService {
     CasesInfo getCasesWithMetadata(Integer pageSize, Integer pageNumber);
 
     /**
+     * Query CommCareHQ for all cases of a given case name, page and cases metadata.
+     * @param caseName The case name of case on CommCareHQ
+     * @param pageSize
+     * @param pageNumber
+     * @return CasesInfo wrapper, containing CaseInfo objects and case metadata from CommCareHQ
+     */
+    CasesInfo getCasesByCasesNameWithMetadata(String caseName, Integer pageSize, Integer pageNumber);
+
+    /**
+     * Query CommCareHQ for all cases of a given date modified range, page and cases metadata.
+     * @param dateModifiedStart
+     * @param dateModifiedEnd
+     * @param pageSize
+     * @param pageNumber
+     * @return CasesInfo wrapper, containing CaseInfo objects and case metadata from CommCareHQ.
+     */
+    CasesInfo getCasesByCasesTimeWithMetadata(String dateModifiedStart, String dateModifiedEnd, Integer pageSize, Integer pageNumber);
+
+    /**
+     * Query CommCareHQ for all cases of a given case name, date modified range, page and cases metadata.
+     * @param caseName The case name of case on CommCareHQ
+     * @param dateModifiedStart
+     * @param dateModifiedEnd
+     * @param pageSize
+     * @param pageNumber
+     * @return CasesInfo wrapper, containing CaseInfo objects and case metadata from CommCareHQ
+     */
+    CasesInfo getCasesByCasesNameAndTimeWithMetadata(String caseName, String dateModifiedStart, String dateModifiedEnd, Integer pageSize, Integer pageNumber);
+
+    /**
      * Upload case xml wrapped in a minimal xform instance to CommCareHQ.
      * @param caseTask An object representing the case information and case actions to be submitted as case xml
      * @return An informational object representing the status, nature and message of the response from CommCareHQ when attempting to upload this instance of case xml. Returns null if your case xml was incorrect.

@@ -12,6 +12,9 @@ public class CaseRequest {
     private String userId;
     private String caseId;
     private String type;
+    private String caseName;
+    private String dateModifiedStart;
+    private String dateModifiedEnd;
     private int limit;
     private int offset;
 
@@ -25,6 +28,18 @@ public class CaseRequest {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public void setCaseName(String caseName) {
+        this.caseName = caseName;
+    }
+
+    public void setDateModifiedStart(String dateModifiedStart) {
+        this.dateModifiedStart = dateModifiedStart;
+    }
+
+    public void setDateModifiedEnd(String dateModifiedEnd) {
+        this.dateModifiedEnd = dateModifiedEnd;
     }
 
     public void setLimit(int limit) {
@@ -53,6 +68,15 @@ public class CaseRequest {
         }
         if (type != null) {
             queryParams.add(concat("type", type));
+        }
+        if (caseName != null) {
+            queryParams.add(concat("case_name", caseName));
+        }
+        if (dateModifiedStart != null) {
+            queryParams.add(concat("date_modified_start", dateModifiedStart));
+        }
+        if (dateModifiedEnd != null) {
+            queryParams.add(concat("date_modified_end", dateModifiedEnd));
         }
         queryParams.add(concat("limit", limit < 1 ? DEFAULT_LIMIT : limit));
         queryParams.add(concat("offset", offset < 0 ? 0 : offset));

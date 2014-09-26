@@ -1,11 +1,17 @@
 <div class="row">
 
+    <div id="operations-case" class="frame-title form-group">
+        <button type="button" class="btn btn-default" id="commcare-case-filters">
+            <i class="icon-filter icon-white"></i>&nbsp;{{msg('commcare.filters')}}
+        </button>
+    </div>
+
     <div ng-show="casesError" class="connection-status connection-error alert alert-danger margin-before row">
         {{msg('commcare.error.cases')}}
     </div>
 
     <div id="commcareCase" class="overrideJqgridTable">
-        <table id="caseTable" commcare-case-jqgrid="page-commcare-case-table"></table>
+        <table id="case-table" commcare-case-jqgrid="page-commcare-case-table"></table>
         <div id="page-commcare-case-table"></div>
     </div>
 
@@ -14,7 +20,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">{{msg('commcare.case.name')}}:</h4>
+                    <h4 class="modal-title">{{msg('commcare.caseName')}}:</h4>
                 </div>
 
                 <div id="modal-body-case" class="modal-body"></div>

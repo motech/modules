@@ -209,3 +209,7 @@ td.questionData .table {
 .case-schema > div.case-schema-group:nth-child(2n+1) {
     background: #F3FBFE;
 }
+
+.ui-datepicker.ui-widget {
+    font-size: 0.9em;
+}

@@ -175,6 +175,15 @@
     controllers.controller('CaseSchemasCtrl', function ($scope, Cases) {
         $scope.caseError = false;
 
+        innerLayout({
+            spacing_closed: 30,
+            east__minSize: 200,
+            east__maxSize: 350
+        }, {
+            show: true,
+            button: '#commcare-case-filters'
+        });
+
         $scope.formatJson=function(jsonResponse) {
             return JSON.stringify(jsonResponse, null, 4);
         };
