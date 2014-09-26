@@ -5,6 +5,131 @@
 
     /*
      *
+     * Templates
+     *
+     */
+    controllers.controller('IvrTemplatesController', function ($scope, $http, $timeout) {
+        $scope.errors = [];
+        $scope.messages = [];
+        $scope.dupeNames = [];
+
+        innerLayout({
+            spacing_closed: 30,
+            east__minSize: 200,
+            east__maxSize: 350
+        });
+
+        function autoExpandSingleAccordion() {
+            if ($scope.accordions.length === 1) {
+                $scope.accordions[0] = true;
+            }
+        }
+
+        function setAccordions(templates) {
+            var i;
+            $scope.accordions = [];
+            $scope.dupeNames = [];
+            for (i = 0 ; i<templates.length ; i = i + 1) {
+                $scope.accordions.push(false);
+                $scope.dupeNames.push(false);
+            }
+            autoExpandSingleAccordion();
+        }
+
+        $scope.checkForDuplicateNames = function(index) {
+            var i;
+            for (i = 0 ; i < $scope.templates.length ; i = i + 1) {
+                if (i!==index && $scope.templates[i].name === $scope.templates[index].name) {
+                    $scope.dupeNames[index] = true;
+                    return;
+                }
+            }
+            $scope.dupeNames[index] = false;
+        };
+
+        $scope.anyDuplicateNames = function() {
+            var i;
+            for (i = 0 ; i < $scope.dupeNames.length ; i = i + 1) {
+                if ($scope.dupeNames[i]) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        $http.get('../ivr/ivr-templates')
+            .success(function(response){
+                $scope.templates = response;
+                $scope.originalTemplates = angular.copy($scope.templates);
+                setAccordions($scope.templates);
+            })
+            .error(function(response) {
+                $scope.errors.push($scope.msg('ivr.web.templates.noTemplate', response));
+            });
+
+        $scope.collapseAccordions = function () {
+            var key;
+            for (key in $scope.accordions) {
+                $scope.accordions[key] = false;
+            }
+            autoExpandSingleAccordion();
+        };
+
+        $scope.deleteTemplate = function(index) {
+            $scope.templates.splice(index, 1);
+            $scope.accordions.splice(index, 1);
+            $scope.dupeNames.splice(index, 1);
+            autoExpandSingleAccordion();
+        };
+
+        $scope.isDirty = function () {
+            if ($scope.originalTemplates === null || $scope.templates === null) {
+                return false;
+            }
+
+            return !angular.equals($scope.originalTemplates, $scope.templates);
+        };
+
+        $scope.reset = function () {
+            $scope.templates = angular.copy($scope.originalTemplates);
+            setAccordions($scope.templates);
+        };
+
+        $scope.addTemplate = function () {
+            var newLength, newTemplate = {
+                'name':'',
+                'value':''
+            };
+            newLength = $scope.templates.push(newTemplate);
+            $scope.accordions.push(true);
+            autoExpandSingleAccordion();
+            $scope.dupeNames.push(false);
+        };
+
+        function hideMsgLater(index) {
+            return $timeout(function() {
+                $scope.messages.splice(index, 1);
+            }, 5000);
+        }
+
+        $scope.submit = function () {
+            $http.post('../ivr/ivr-templates', $scope.templates)
+                .success(function (response) {
+                    $scope.templates = response;
+                    $scope.originalTemplates = angular.copy($scope.templates);
+                    setAccordions($scope.templates);
+                    var index = $scope.messages.push($scope.msg('ivr.web.templates.saved'));
+                    hideMsgLater(index-1);
+                })
+                .error (function (response) {
+                //todo: better than that!
+                handleWithStackTrace('ivr.error.header', 'ivr.error.body', response);
+            });
+        };
+    });
+
+    /*
+     *
      * Settings
      *
      */
@@ -102,7 +227,7 @@
                 'outgoingCallMethod':'GET',
                 'ignoredStatusFields':[],
                 'statusFieldMapString':''
-                };
+            };
             newLength = $scope.configs.push(newConfig);
             $scope.accordions.push(true);
             autoExpandSingleAccordion();
@@ -142,9 +267,10 @@
                     hideMsgLater(index-1);
                 })
                 .error (function (response) {
-                    //todo: better than that!
-                    handleWithStackTrace('ivr.error.header', 'ivr.error.body', response);
-                });
+                //todo: better than that!
+                handleWithStackTrace('ivr.error.header', 'ivr.error.body', response);
+            });
         };
     });
+
 }());

@@ -53,59 +53,6 @@
             ]
         },
         {
-            "subject" : "ivr_template_request",
-            "displayName" : "ivr.task.template.request",
-            "eventParameters" : [
-                {
-                    "eventKey" : "motech_timestamp",
-                    "type" : "DATE",
-                    "displayName" : "ivr.task.motech.timestamp"
-                },
-                {
-                    "eventKey" : "provider_timestamp",
-                    "type" : "DATE",
-                    "displayName" : "ivr.task.provider.timestamp"
-                },
-                {
-                    "eventKey" : "config",
-                    "displayName" : "ivr.task.config"
-                },
-                {
-                    "eventKey" : "template",
-                    "displayName" : "ivr.task.template"
-                },
-                {
-                    "eventKey" : "from",
-                    "displayName" : "ivr.task.from"
-                },
-                {
-                    "eventKey" : "to",
-                    "displayName" : "ivr.task.to"
-                },
-                {
-                    "eventKey" : "call_direction",
-                    "displayName" : "ivr.task.call.direction"
-                },
-                {
-                    "eventKey" : "call_status",
-                    "displayName" : "ivr.task.call.status"
-                },
-                {
-                    "eventKey" : "motech_call_id",
-                    "displayName" : "ivr.task.motech.call.id"
-                },
-                {
-                    "eventKey" : "provider_call_id",
-                    "displayName" : "ivr.task.provider.call.id"
-                },
-                {
-                    "eventKey" : "provider_extra_data",
-                    "type" : "MAP",
-                    "displayName" : "ivr.task.provider.extra.data"
-                }
-            ]
-        },
-        {
             "subject" : "ivr_call_initiated",
             "displayName" : "ivr.task.call.initiated",
             "eventParameters" : [

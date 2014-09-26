@@ -1,0 +1,68 @@
+<div class="row">
+    <h4 class="frame-title">{{msg('ivr.web.templates.title')}}</h4>
+    <div class="inside">
+
+        <div class="alert alert-danger alert-block" ng-show="templates.length <= 0">
+            {{msg('ivr.web.templates.noTemplateError')}}
+        </div>
+        <div ng-show="errors.length > 0">
+            <div class="alert alert-error alert-block" ng-repeat="error in errors" ng-cloak>
+                {{error}}
+            </div>
+        </div>
+        <div ng-repeat="message in messages" class="alert alert-success alert-block animate-repeat">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{message}}
+        </div>
+
+        <div class="form-group">
+            <button type="button" class="btn btn-success" ng-click="addTemplate()"><i class="icon-plus icon-white"></i>
+                {{msg('ivr.web.templates.addTemplate')}}
+            </button>
+        </div>
+
+        <form name="form" class="form-horizontal inside" novalidate>
+
+            <div class="row">
+                <div class="panel-group">
+                    <div class="panel panel-default ivr-template" ng-repeat="tmpl in templates">
+
+                        <div class="panel-heading" ng-click="accordions[$index] = !accordions[$index]">
+                            {{tmpl.name}}
+                            <i ng-class="{'icon-chevron-down': accordions[$index], 'icon-chevron-right': !accordions[$index]}" class="icon-fixed-width icon-large pointer"></i>
+                        </div>
+                        <div id="panel{{$index}}" class="panel-collapse collapse" ng-class="{true:'in', false:''}[accordions[$index]]">
+
+                            <div class="form-group margin-before2" ng-class="{'has-error': !tmpl.name || dupeNames[$index]}">
+                                <label class="col-md-2 control-label">{{msg('ivr.web.templates.templateName')}}</label>
+                                <div class="col-md-3" tooltip="{{msg('ivr.web.templates.templateName.tooltip')}}">
+                                    <input type="text" class="form-control" ng-model="tmpl.name" required ng-focus="accordions[$index]" ng-change="keepDefaultTemplate(); checkForDuplicateNames($index);">
+                                    <span ng-hide="tmpl.name" class="help-block">{{msg('ivr.web.required_field')}}</span>
+                                    <span ng-show="dupeNames[$index]" class="help-block">{{msg('ivr.web.templates.duplicateTemplateName')}}</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="value{{$index}}">{{msg('ivr.web.templates.value')}}</label>
+                                <div class="col-md-9">
+                                    <textarea class="form-control" id="value{{$index}}" type="text" ng-model="tmpl.value" rows="10" style="font-family:monospace; font-size: small;"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button class="btn btn-sm btn-danger" ng-click="deleteTemplate($index)"> <i class="icon-trash"></i> {{msg('ivr.web.templates.delete')}} </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>&nbsp;</div>
+                    <div class="form-inline" ng-show="isDirty()">
+                        <button class="btn btn-default" ng-click="reset()">{{msg('ivr.web.templates.cancel')}}</button>
+                        <button class="btn btn-primary" ng-disabled="!form.$valid || anyDuplicateNames()" ng-click="submit()">{{msg('ivr.web.templates.save')}}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

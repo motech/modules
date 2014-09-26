@@ -4,27 +4,29 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.ivr.domain.Config;
 import org.motechproject.ivr.domain.Template;
-import org.motechproject.ivr.event.EventSubjects;
 import org.motechproject.ivr.repository.CallDetailRecordDataService;
-import org.motechproject.ivr.repository.TemplateDataService;
 import org.motechproject.ivr.service.ConfigService;
+import org.motechproject.ivr.service.TemplateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.List;
 import java.util.Map;
 
 import static org.motechproject.ivr.web.LogAndEventHelper.sendAndLogEvent;
@@ -36,24 +38,22 @@ import static org.motechproject.ivr.web.LogAndEventHelper.sendAndLogEvent;
  * See https://velocity.apache.org/ for the template language rules.
  */
 @Controller
-@RequestMapping(value = "/template")
 public class TemplateController {
 
-    private static final String MODULE_NAME = "ivr";
     private static final Logger LOGGER = LoggerFactory.getLogger(StatusController.class);
     private CallDetailRecordDataService callDetailRecordDataService;
-    private TemplateDataService templateDataService;
+    private TemplateService templateService;
     private ConfigService configService;
     private StatusMessageService statusMessageService;
     private EventRelay eventRelay;
 
     @Autowired
     public TemplateController(CallDetailRecordDataService callDetailRecordDataService,
-                              TemplateDataService templateDataService, EventRelay eventRelay,
+                              TemplateService templateService, EventRelay eventRelay,
                               @Qualifier("configService") ConfigService configService,
                               StatusMessageService statusMessageService) {
         this.callDetailRecordDataService = callDetailRecordDataService;
-        this.templateDataService = templateDataService;
+        this.templateService = templateService;
         this.eventRelay = eventRelay;
         this.configService = configService;
         this.statusMessageService = statusMessageService;
@@ -75,32 +75,22 @@ public class TemplateController {
      */
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    @RequestMapping(value = "/{configName}/{templateName}", produces = "text/xml")
+    @RequestMapping(value = "/template/{configName}/{templateName}", produces = "text/xml")
     public String handle(@PathVariable String configName, @PathVariable String templateName,
                          @RequestParam Map<String, String> params, @RequestHeader Map<String, String> headers) {
         LOGGER.debug(String.format("handle(configName = %s, templateName = %s, parameters = %s, headers = %s)",
                 configName, templateName, params, headers));
 
-        sendAndLogEvent(EventSubjects.TEMPLATE_REQUEST, configService, callDetailRecordDataService,
-                statusMessageService, eventRelay, configName, templateName, params);
-
-        Template template = templateDataService.findByName(templateName);
-        if (null == template) {
-            String msg = String.format("Invalid template: '%s'", templateName);
-            LOGGER.error(msg);
-            statusMessageService.warn(msg, MODULE_NAME);
-            throw new IvrControllerException(msg);
-        }
-
-        // No need to test for the existence of the config since it's already been done in the sendAndLogEvent() call
-        Config config = configService.getConfig(configName);
+        sendAndLogEvent(configService, callDetailRecordDataService, statusMessageService, eventRelay, configName,
+                templateName, params);
 
         // Render the template
         VelocityContext context = new VelocityContext();
         for (Map.Entry<String, String> entry : params.entrySet()) {
-            context.put(config.mapStatusField(entry.getKey()), entry.getValue());
+            context.put(entry.getKey(), entry.getValue());
         }
         StringWriter writer = new StringWriter();
+        Template template = templateService.getTemplate(templateName);
         try {
             Velocity.evaluate(context, writer, String.format("%s-%s", configName, templateName), template.getValue());
         } catch (IOException e) {
@@ -109,4 +99,27 @@ public class TemplateController {
 
         return writer.toString();
     }
+
+    @RequestMapping(value = "/ivr-templates", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Template> getTemplates() {
+        return templateService.allTemplates();
+    }
+
+
+    @RequestMapping(value = "/ivr-templates", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<Template> updateTemplates(@RequestBody List<Template> templates) {
+        templateService.updateTemplates(templates);
+        return templateService.allTemplates();
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public String handleException(Exception e) throws IOException {
+        return e.getMessage();
+    }
+
 }

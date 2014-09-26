@@ -3,11 +3,12 @@
         <ul class="breadcrumb" role="navigation">
             <li><a role="menu" href=".">{{msg('server.home')}}</a></li>
             <li><a role="menu" href="#/settings">{{msg('motech-ivr')}}</a></li>
-            <li ng-show="active('#/ivr/settings')" ng-class="active('#/ivr/settings')">{{msg('ivr.web.settings.title')}}</li>
+            <li ng-show="active('#/ivr/templates')" ng-class="active('#/ivr/templates')">{{msg('ivr.web.templates.title')}}</li>
         </ul>
     </div>
     <div class="header-footer">
         <ul id="content-tabs" class="nav nav-tabs">
+            <li ng-class="active('#/ivr/templates')"><a href="#/ivr/templates">{{msg('ivr.web.templates.title')}}</a></li>
             <li ng-class="active('#/ivr/settings')"><a href="#/ivr/settings">{{msg('ivr.web.settings.title')}}</a></li>
         </ul>
     </div>

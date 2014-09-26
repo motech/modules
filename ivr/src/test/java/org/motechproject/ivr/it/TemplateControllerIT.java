@@ -11,8 +11,8 @@ import org.motechproject.ivr.domain.CallStatus;
 import org.motechproject.ivr.domain.Config;
 import org.motechproject.ivr.domain.Template;
 import org.motechproject.ivr.repository.CallDetailRecordDataService;
-import org.motechproject.ivr.repository.TemplateDataService;
 import org.motechproject.ivr.service.ConfigService;
+import org.motechproject.ivr.service.TemplateService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.TestContext;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -24,11 +24,14 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 
 
 /**
@@ -43,7 +46,7 @@ public class TemplateControllerIT extends BasePaxIT {
     private CallDetailRecordDataService callDetailRecordDataService;
 
     @Inject
-    private TemplateDataService templateDataService;
+    private TemplateService templateService;
 
     @Inject
     private ConfigService configService;
@@ -51,7 +54,7 @@ public class TemplateControllerIT extends BasePaxIT {
     @Before
     public void setup() {
         getLogger().info("setup");
-        templateDataService.deleteAll();
+        templateService.updateTemplates(new ArrayList<Template>());
         callDetailRecordDataService.deleteAll();
     }
 
@@ -83,7 +86,7 @@ public class TemplateControllerIT extends BasePaxIT {
         configService.updateConfigs(Arrays.asList(new Config("conf", ignoredStatusFields, "FROM:from", null, null)));
 
         //Create a template
-        templateDataService.create(new Template("tmpl", "Hello, ${var}!"));
+        templateService.updateTemplates(Arrays.asList(new Template("tmpl", "Hello, ${var}!")));
 
         //Create & send a CDR status callback
         String motechCallId = UUID.randomUUID().toString();

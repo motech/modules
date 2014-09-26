@@ -1,26 +1,22 @@
 package org.motechproject.ivr.domain;
 
-import org.motechproject.mds.annotations.Entity;
-import org.motechproject.mds.annotations.Field;
-
-import javax.jdo.annotations.Column;
-import javax.jdo.annotations.Unique;
-
 /**
  * Represents a user-defined template, basically a string identified by a name which typically will be CCXML/VXML to be
  * returned to an IVR provider.
  * See https://velocity.apache.org/ for the template language rules.
  */
-@Entity
 public class Template {
-    private static final int MAX_TEMPLATE_SIZE = 10240;
-
-    @Field(required = true)
-    @Unique
+    /**
+     * Template name, how it's identified by the IVR provider. The {template} part in:
+     * http://server/motech-platform-server/module/ivr/template/{config}/{template}
+     */
     private String name;
-
-    @Field(required = true)
-    @Column(length = MAX_TEMPLATE_SIZE)
+    /**
+     * The template contents: what's returned to the IVR provider when it sends a /template HTTP request
+     *
+     * Note: this is a velocity template which is merged with the values provided in the query param
+     *       see https://velocity.apache.org/engine/
+     */
     private String value;
 
     public Template(String name, String value) {
@@ -28,12 +24,20 @@ public class Template {
         this.value = value;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getValue() {
         return value;
     }
 
-    public String getName() {
-        return name;
+    public void setValue(String value) {
+        this.value = value;
     }
 
     @Override

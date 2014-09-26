@@ -5,9 +5,7 @@
     ['$routeProvider',
         function ($routeProvider) {
             $routeProvider.
-                when('/ivr', {templateUrl: '../ivr/resources/partials/settings.html',
-                    controller: 'IvrSettingsController'}).
-                when('/ivr/settings', {templateUrl: '../ivr/resources/partials/settings.html',
-                controller: 'IvrSettingsController'});
+                when('/ivr/templates', {templateUrl: '../ivr/resources/partials/templates.html', controller: 'IvrTemplatesController'}).
+                when('/ivr/settings',  {templateUrl: '../ivr/resources/partials/settings.html',  controller: 'IvrSettingsController'});
     }]);
 }());

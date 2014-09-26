@@ -21,6 +21,7 @@
         <property name="rawConfigFiles">
             <list>
                 <value>classpath:ivr-configs.json</value>
+                <value>classpath:ivr-templates.json</value>
             </list>
         </property>
     </bean>
@@ -39,14 +40,14 @@
             </map>
         </constructor-arg>
         <property name="settingsURL" value="/ivr/settings" />
-        <property name="defaultURL" value="/ivr/settings"/>
+        <property name="defaultURL" value="/ivr/templates"/>
     </bean>
 
     <osgi:service ref="outboundCallService" interface="org.motechproject.ivr.service.OutboundCallService" />
     <osgi:service ref="configService" interface="org.motechproject.ivr.service.ConfigService" />
+    <osgi:service ref="templateService" interface="org.motechproject.ivr.service.TemplateService" />
 
     <osgi:reference id="callRecordDataService" interface="org.motechproject.ivr.repository.CallDetailRecordDataService" />
-    <osgi:reference id="templateDataService" interface="org.motechproject.ivr.repository.TemplateDataService" />
     <osgi:reference id="statusMessageService" interface="org.motechproject.admin.service.StatusMessageService"/>
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>
     <osgi:reference id="configServiceRef" interface="org.motechproject.config.service.ConfigurationService" />

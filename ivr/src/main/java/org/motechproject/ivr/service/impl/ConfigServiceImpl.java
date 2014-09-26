@@ -39,12 +39,14 @@ public class ConfigServiceImpl implements ConfigService {
         List<Config> configList = null;
         try (InputStream is = settingsFacade.getRawConfig(CONFIG_FILE_NAME)) {
             String jsonText = IOUtils.toString(is);
-            LOGGER.debug("Read the following json from {}:\n{}", CONFIG_FILE_NAME, jsonText);
+            LOGGER.debug("Loading {}", CONFIG_FILE_NAME);
             Gson gson = new Gson();
             configList = gson.fromJson(jsonText, new TypeToken<List<Config>>() { } .getType());
         } catch (Exception e) {
-            LOGGER.debug("There seems to be a problem with the json text in {}: {}", CONFIG_FILE_NAME, e.getMessage());
-            throw new JsonIOException("Malformed " + CONFIG_FILE_NAME + " file? " + e.toString(), e);
+            String message = String.format("There seems to be a problem with the json text in %s: %s", CONFIG_FILE_NAME,
+                    e.getMessage());
+            LOGGER.debug(message);
+            throw new JsonIOException(message, e);
         }
 
         configs = new HashMap<>();
