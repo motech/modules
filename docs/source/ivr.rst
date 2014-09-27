@@ -4,6 +4,9 @@
 IVR Module
 ==========
 
+.. warning:: The IVR module was recently changed. This document isn't up-to-date. We're working on updating it.
+
+
 Overview
 ========
 
