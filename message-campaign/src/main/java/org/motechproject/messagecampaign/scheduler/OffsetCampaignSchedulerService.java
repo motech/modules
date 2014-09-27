@@ -2,9 +2,7 @@ package org.motechproject.messagecampaign.scheduler;
 
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
-import org.joda.time.Duration;
 import org.motechproject.commons.date.model.Time;
-import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.messagecampaign.EventKeys;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
@@ -39,9 +37,9 @@ public class OffsetCampaignSchedulerService extends CampaignSchedulerService<Off
         OffsetCampaignMessage offsetMessage = (OffsetCampaignMessage) message;
 
         Time deliverTime = deliverTimeFor(enrollment, message);
-        Duration offset = offsetMessage.getTimeOffset().toDurationFrom(DateUtil.now());
         DateTime jobTime = (newDateTime(enrollment.getReferenceDate(), deliverTime)).toLocalDateTime()
-                .plusSeconds(offset.toStandardSeconds().getSeconds()).toDateTime();
+                .plus(offsetMessage.getTimeOffset()).toDateTime();
+
         if (jobTime.isAfter(now())) {
             MotechEvent motechEvent = new MotechEvent(EventKeys.SEND_MESSAGE, jobParams(message.getMessageKey(), enrollment));
             RunOnceSchedulableJob runOnceSchedulableJob = new RunOnceSchedulableJob(motechEvent, jobTime.toDate());
