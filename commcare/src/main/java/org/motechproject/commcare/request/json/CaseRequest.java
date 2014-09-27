@@ -6,13 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CaseRequest {
+
+    private static final int DEFAULT_LIMIT = 20;
+
     private String userId;
     private String caseId;
     private String type;
     private int limit;
     private int offset;
-
-    private final static int DEFAULT_LIMIT = 20;
 
     public void setUserId(String userId) {
         this.userId = userId;
