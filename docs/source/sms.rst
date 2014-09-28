@@ -105,7 +105,7 @@ API
 
 The SMS module provides a single service interface for raising SendSMS events in the system. The SMS API will split a single message into multiple messages based on a maximum character count of 160. Each split message will have its own send SMS event raised in the system.
 
-    .. image:: img/SendSmsDiagram.bmp
+    .. image:: img/SendSmsDiagram.png
 
 It is possible to listen for an inbound SMS by implementing an event handler. Use the @MotechListener annotation to listen for the inbound SMS event:
 
