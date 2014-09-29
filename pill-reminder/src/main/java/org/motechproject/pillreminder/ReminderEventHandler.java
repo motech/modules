@@ -51,7 +51,7 @@ public class ReminderEventHandler extends MotechObject {
         Date endTime = dosageTime.plusHours(scheduleDetails.getPillWindowInHours()).plusMinutes(1).toDate();
         MotechEvent repeatingReminderEvent = createNewMotechEvent(dosage, pillRegimen, motechEvent, EventKeys.PILLREMINDER_REMINDER_EVENT_SUBJECT_SCHEDULER);
 
-        repeatingReminderEvent.getParameters().put(MotechSchedulerService.JOB_ID_KEY, dosage.getId());
+        repeatingReminderEvent.getParameters().put(MotechSchedulerService.JOB_ID_KEY, String.valueOf(dosage.getId()));
         final long millisInMinute = 60 * 1000;
         RepeatingSchedulableJob retryRemindersJob = new RepeatingSchedulableJob()
             .setMotechEvent(repeatingReminderEvent)
