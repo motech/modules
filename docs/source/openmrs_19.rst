@@ -1,4 +1,4 @@
-.. openmrs-module:
+.. _openmrs-module:
 
 ==============
 OpenMRS Module
