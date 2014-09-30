@@ -7,6 +7,7 @@ public final class EventSubjects {
 
     private EventSubjects() { }
     public static final String CALL_STATUS = "ivr_call_status";
+    public static final String TEMPLATE_REQUEST = "ivr_template_request";
     public static final String CALL_INITIATED = "ivr_call_initiated";
     public static final String INITIATE_CALL = "ivr_initiate_call";
 }
