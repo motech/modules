@@ -1,9 +1,5 @@
 package org.motechproject.hub.service.impl.it;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,14 +8,17 @@ import org.motechproject.hub.mds.HubSubscription;
 import org.motechproject.hub.mds.HubTopic;
 import org.motechproject.hub.mds.service.HubSubscriptionMDSService;
 import org.motechproject.hub.mds.service.HubTopicMDSService;
+import org.motechproject.hub.mds.service.it.BaseHubIT;
 import org.motechproject.hub.model.Modes;
 import org.motechproject.hub.service.SubscriptionService;
-import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
+
+import javax.inject.Inject;
+import java.util.List;
 
 /**
  * This class tests the service <code>SubscriptionService</code>
@@ -30,7 +29,7 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
-public class SubscriptionServiceIT extends BasePaxIT {
+public class SubscriptionServiceIT extends BaseHubIT {
 
     @Inject
     private SubscriptionService subscriptionService;

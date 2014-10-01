@@ -1,9 +1,5 @@
 package org.motechproject.hub.mds.service.it;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,17 +7,19 @@ import org.motechproject.hub.mds.HubPublisherTransaction;
 import org.motechproject.hub.mds.HubTopic;
 import org.motechproject.hub.mds.service.HubPublisherTransactionMDSService;
 import org.motechproject.hub.mds.service.HubTopicMDSService;
-import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
+import javax.inject.Inject;
+import java.util.List;
+
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
-public class HubPublisherTransactionMDSServiceIT extends BasePaxIT {
+public class HubPublisherTransactionMDSServiceIT extends BaseHubIT {
 
     @Inject
     private HubPublisherTransactionMDSService hubPublisherTransactionMDSService;
