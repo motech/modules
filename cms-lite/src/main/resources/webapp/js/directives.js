@@ -118,15 +118,7 @@
                     jsonReader:{
                         repeatitems:false
                     },
-                    prmNames: {
-                        sort: 'sortColumn',
-                        order: 'sortDirection'
-                    },
-                    shrinkToFit: true,
-                    autowidth: true,
                     rownumbers: true,
-                    rowNum: 10,
-                    rowList: [10, 20, 50],
                     colModel: [{
                         name: 'name',
                         index: 'name',
@@ -159,10 +151,7 @@
                         }
                     }],
                     pager: '#' + attrs.cmsLiteGrid,
-                    width: '100%',
-                    height: 'auto',
                     sortname: 'name',
-                    sortorder: 'asc',
                     viewrecords: true,
                     gridComplete: function () {
                         $.ajax({

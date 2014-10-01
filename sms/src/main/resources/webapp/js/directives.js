@@ -172,13 +172,6 @@
                     jsonReader:{
                         repeatitems:false
                     },
-                    prmNames: {
-                        sort: 'sortColumn',
-                        order: 'sortDirection'
-                    },
-                    autowidth: true,
-                    rowNum: 10,
-                    rowList: [10, 20, 50],
                     colModel: [{
                         name: 'config',
                         index: 'config',
@@ -223,8 +216,6 @@
                         width: 250
                     }],
                     pager: '#' + attrs.smsLoggingGrid,
-                    width: '100%',
-                    height: 'auto',
                     sortname: 'timestamp',
                     sortorder: 'desc',
                     viewrecords: true,
