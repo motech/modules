@@ -72,7 +72,7 @@ public class TemplateServiceImpl implements TemplateService {
         if (templates.containsKey(name)) {
             return templates.get(name);
         }
-        String message = String.format("Unknown template: '%s'.");
+        String message = String.format("Unknown template: '%s'.", name);
         LOGGER.error(message);
         throw new IllegalArgumentException(message);
     }

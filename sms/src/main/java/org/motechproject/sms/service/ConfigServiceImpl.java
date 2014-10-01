@@ -89,6 +89,7 @@ public class ConfigServiceImpl implements ConfigService {
         String jsonText = gson.toJson(configs, Configs.class);
         ByteArrayResource resource = new ByteArrayResource(jsonText.getBytes());
         settingsFacade.saveRawConfig(SMS_CONFIGS_FILE_NAME, resource);
+        loadConfigs();
     }
 
     public boolean hasConfigs() {

@@ -185,7 +185,7 @@ public class StatusController {
     public void handle(@PathVariable String configName, @RequestParam Map<String, String> params) {
         LOGGER.info("SMS Status - configName = {}, params = {}", configName, params);
 
-        if (configService.hasConfig(configName)) {
+        if (!configService.hasConfig(configName)) {
             String msg = String.format("Received SMS Status for '%s' config but no matching config: %s, " +
                             "will try the default config", configName, params);
             LOGGER.error(msg);
