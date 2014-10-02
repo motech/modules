@@ -70,15 +70,7 @@
                     jsonReader:{
                         repeatitems:false
                     },
-                    prmNames: {
-                        sort: 'sortColumn',
-                        order: 'sortDirection'
-                    },
-                    shrinkToFit: true,
-                    autowidth: true,
                     rownumbers: true,
-                    rowNum: 10,
-                    rowList: [10, 20, 50],
                     colModel: [{
                         label: 'Case Name',
                         name: 'caseName',
@@ -122,10 +114,7 @@
                         }
                     }],
                     pager: '#' + attrs.commcareCaseJqgrid,
-                    width: '100%',
-                    height: 'auto',
                     sortname: 'caseName',
-                    sortorder: 'asc',
                     viewrecords: true,
                     gridComplete: function () {
                         angular.forEach(elem.find('button'), function(value) {
