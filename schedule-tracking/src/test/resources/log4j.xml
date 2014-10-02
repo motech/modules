@@ -15,7 +15,7 @@
     </logger>
 
     <logger name="org.motechproject">
-        <level value="WARN" />
+        <level value="DEBUG" />
     </logger>
 
     <root>
