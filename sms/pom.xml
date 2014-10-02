@@ -109,7 +109,8 @@
                         <Resource-Path>sms/resources</Resource-Path>
                         <Export-Package>
                             org.motechproject.sms.service;version=${project.version},
-                            org.motechproject.sms.audit;version=${project.version}
+                            org.motechproject.sms.audit;version=${project.version},
+                            org.motechproject.sms.configs;version=${project.version}
                         </Export-Package>
                     </instructions>
                 </configuration>
