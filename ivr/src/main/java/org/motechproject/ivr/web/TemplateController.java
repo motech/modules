@@ -10,6 +10,7 @@ import org.motechproject.ivr.event.EventSubjects;
 import org.motechproject.ivr.repository.CallDetailRecordDataService;
 import org.motechproject.ivr.service.ConfigService;
 import org.motechproject.ivr.service.TemplateService;
+import org.motechproject.mds.service.MDSLookupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,17 +49,19 @@ public class TemplateController {
     private ConfigService configService;
     private StatusMessageService statusMessageService;
     private EventRelay eventRelay;
+    private MDSLookupService mdsLookupService;
 
     @Autowired
     public TemplateController(CallDetailRecordDataService callDetailRecordDataService,
                               TemplateService templateService, EventRelay eventRelay,
                               @Qualifier("configService") ConfigService configService,
-                              StatusMessageService statusMessageService) {
+                              StatusMessageService statusMessageService, MDSLookupService mdsLookupService) {
         this.callDetailRecordDataService = callDetailRecordDataService;
         this.templateService = templateService;
         this.eventRelay = eventRelay;
         this.configService = configService;
         this.statusMessageService = statusMessageService;
+        this.mdsLookupService = mdsLookupService;
         try {
             Velocity.init();
         } catch (Exception e) {
@@ -91,17 +94,24 @@ public class TemplateController {
         // No need to test for the existence of the config since it's already been done in the sendAndLogEvent() call
         Config config = configService.getConfig(configName);
 
-        // Render the template
+        // Populate the context
         VelocityContext context = new VelocityContext();
         for (Map.Entry<String, String> entry : params.entrySet()) {
             context.put(config.mapStatusField(entry.getKey()), entry.getValue());
         }
+        // Add MDS access
+        context.put("dataServices", mdsLookupService);
+
+        // Merge the template
         StringWriter writer = new StringWriter();
         try {
             Velocity.evaluate(context, writer, String.format("%s-%s", configName, templateName), template.getValue());
         } catch (IOException e) {
             throw new IllegalStateException(String.format("Error evaluating template: %s", e.toString()), e);
         }
+
+        LOGGER.debug("Merged {}:\n**********\n**********\n{}\n**********\n**********\n", templateName,
+                writer.toString());
 
         return writer.toString();
     }

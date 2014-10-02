@@ -87,6 +87,7 @@
                         <Resource-Path>ivr/resources</Resource-Path>
                         <Import-Package>
                             org.motechproject.config.service,
+                            org.motechproject.mds.service,
                             *
                         </Import-Package>>
                         <Export-Package>

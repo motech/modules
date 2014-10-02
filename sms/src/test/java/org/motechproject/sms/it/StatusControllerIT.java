@@ -48,6 +48,12 @@ public class StatusControllerIT extends BasePaxIT {
     @Inject
     private SmsRecordsDataService smsRecordsDataService;
 
+    @Before
+    @After
+    public void cleanupDatabase() {
+        getLogger().info("cleanupDatabase");
+        smsRecordsDataService.deleteAll();
+    }
 
     @Before
     public void waitForBeans() {

@@ -1,6 +1,7 @@
 package org.motechproject.sms.it;
 
 import org.joda.time.DateTime;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,12 +33,15 @@ public class SmsAuditServiceIT extends BasePaxIT{
 
     @Before
     public void waitForBeans() {
+        getLogger().info("waitForBeans");
         // To prevent the annoying "BeanFactory not initialized or already closed" errors
         try { Thread.sleep(IntegrationTests.BUNDLE_MS_WAIT_TIME); } catch (InterruptedException e) {  }
     }
 
     @Before
+    @After
     public void cleanupDatabase() {
+        getLogger().info("cleanupDatabase");
         smsRecordsDataService.deleteAll();
     }
 

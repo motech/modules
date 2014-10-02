@@ -1,5 +1,7 @@
 package org.motechproject.ivr.it;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ivr.domain.Config;
@@ -14,6 +16,7 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -27,6 +30,20 @@ public class ConfigServiceIT extends BasePaxIT {
 
     @Inject
     private ConfigService configService;
+
+    private List<Config> backupConfigs;
+
+    @Before
+    public void backupConfigs() {
+        getLogger().info("backupConfigs");
+        backupConfigs = configService.allConfigs();
+    }
+
+    @After
+    public void restoreConfigs() {
+        getLogger().info("restoreConfigs");
+        configService.updateConfigs(backupConfigs);
+    }
 
     @Test
     public void verifyServiceFunctional() {

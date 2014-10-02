@@ -1,6 +1,7 @@
 package org.motechproject.ivr.it;
 
 import org.apache.http.HttpStatus;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,8 +46,24 @@ public class OutboundCallServiceIT extends BasePaxIT {
     @Inject
     private ConfigService configService;
 
+    private List<Config> backupConfigs;
+
     @Before
-    public void setUp() {
+    public void backupConfigs() {
+        getLogger().info("backupConfigs");
+        backupConfigs = configService.allConfigs();
+    }
+
+    @After
+    public void restoreConfigs() {
+        getLogger().info("restoreConfigs");
+        configService.updateConfigs(backupConfigs);
+    }
+
+    @Before
+    @After
+    public void clearDatabase() {
+        getLogger().info("clearDatabase");
         callDetailRecordDataService.deleteAll();
     }
 

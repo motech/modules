@@ -3,12 +3,14 @@ package org.motechproject.ivr.it;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ivr.domain.CallDetailRecord;
 import org.motechproject.ivr.domain.CallStatus;
 import org.motechproject.ivr.domain.Config;
+import org.motechproject.ivr.domain.Template;
 import org.motechproject.ivr.repository.CallDetailRecordDataService;
 import org.motechproject.ivr.service.ConfigService;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -40,9 +42,24 @@ public class StatusControllerIT extends BasePaxIT {
     @Inject
     private ConfigService configService;
 
+    private List<Config> backupConfigs;
+
     @Before
-    public void setup() {
-        getLogger().info("setup");
+    public void backupConfigs() {
+        getLogger().info("backupConfigs");
+        backupConfigs = configService.allConfigs();
+    }
+
+    @After
+    public void restoreConfigs() {
+        getLogger().info("restoreConfigs");
+        configService.updateConfigs(backupConfigs);
+    }
+
+    @Before
+    @After
+    public void clearDatabase() {
+        getLogger().info("clearDatabase");
         callDetailRecordDataService.deleteAll();
     }
 

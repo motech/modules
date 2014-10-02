@@ -51,4 +51,7 @@
     <osgi:reference id="statusMessageService" interface="org.motechproject.admin.service.StatusMessageService"/>
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>
     <osgi:reference id="configServiceRef" interface="org.motechproject.config.service.ConfigurationService" />
+
+    <osgi:reference id="mdsLookupService" interface="org.motechproject.mds.service.MDSLookupService" />
+
 </beans>
