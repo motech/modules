@@ -43,9 +43,9 @@
 
                             <div class="form-group">
                                 <label class="col-md-2 control-label" for="outgoingCallUriTemplate{{$index}}">{{msg('ivr.web.settings.outgoingCallUriTemplate')}}</label>
-                                <div class="col-md-6"
+                                <div class="col-md-9"
                                      tooltip="{{msg('ivr.web.settings.outgoingCallUriTemplate.tooltip')}}">
-                                    <input class="form-control" id="outgoingCallUriTemplate{{$index}}" type="text" ng-model="conf.outgoingCallUriTemplate">
+                                    <textarea spellcheck="false" class="form-control" id="outgoingCallUriTemplate{{$index}}" type="text" ng-model="conf.outgoingCallUriTemplate"  rows="2" style="font-family:monospace; font-size: small;"></textarea>
                                 </div>
                             </div>
 
