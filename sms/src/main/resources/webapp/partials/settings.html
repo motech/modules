@@ -34,7 +34,7 @@
                         <div id="panel{{$index}}" class="panel-collapse collapse" ng-class="{true:'in', false:''}[accordions[$index]]">
 
                             <div class="form-group margin-before2" ng-class="{'has-error': !conf.name || dupeNames[$index]}">
-                                <label class="col-md-2 control-label">{{msg('sms.settings.name')}}</label>
+                                <label class="col-md-3 control-label">{{msg('sms.settings.name')}}</label>
                                 <div class="col-md-3" tooltip="{{msg('sms.settings.name.tooltip')}}">
                                     <input type="text" class="form-control" ng-model="conf.name" required ng-focus="accordions[$index]" ng-change="keepDefaultConfig(); checkForDuplicateNames($index);">
                                     <span ng-hide="conf.name" class="help-block">{{msg('sms.web.required_field')}}</span>
@@ -43,37 +43,37 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-md-2 control-label">{{msg('sms.settings.template')}}</label>
+                                <label class="col-md-3 control-label">{{msg('sms.settings.template')}}</label>
                                 <div class="col-md-3" tooltip="{{msg('sms.settings.template.tooltip')}}">
                                     <select class="form-control" ng-model="conf.templateName" ng-options="key as val.name for (key, val) in templates" ng-change="changeTemplateProperties(conf)" required></select>
                                 </div>
                             </div>
 
                             <div class="form-group" ng-class="{'has-error': !conf.maxRetries}">
-                                <label class="col-md-2 control-label">{{msg('sms.settings.max_retries')}}</label>
-                                <div class="col-md-3" tooltip="{{msg('sms.settings.max_retries.tooltip')}}">
+                                <label class="col-md-3 control-label">{{msg('sms.settings.max_retries')}}</label>
+                                <div class="col-md-1" tooltip="{{msg('sms.settings.max_retries.tooltip')}}">
                                     <input class="form-control" type="text" ng-pattern="/^[0-9]+$/" ng-model="conf.maxRetries" required>
                                     <span ng-hide="conf.maxRetries" class="help-block">{{msg('sms.web.required_field')}}</span>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-md-2 control-label" for="split_header{{$index}}">{{msg('sms.settings.split_header')}}</label>
-                                <div class="col-md-3" tooltip="{{msg('sms.settings.split_header.tooltip')}}">
+                                <label class="col-md-3 control-label" for="split_header{{$index}}">{{msg('sms.settings.split_header')}}</label>
+                                <div class="col-md-2" tooltip="{{msg('sms.settings.split_header.tooltip')}}">
                                     <input class="form-control" id="split_header{{$index}}" type="text" ng-model="conf.splitHeader">
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-md-2 control-label" for="split_footer{{$index}}">{{msg('sms.settings.split_footer')}}</label>
-                                <div class="col-md-3" tooltip="{{msg('sms.settings.split_footer.tooltip')}}">
+                                <label class="col-md-3 control-label" for="split_footer{{$index}}">{{msg('sms.settings.split_footer')}}</label>
+                                <div class="col-md-2" tooltip="{{msg('sms.settings.split_footer.tooltip')}}">
                                     <input class="form-control" id="split_footer{{$index}}" type="text" ng-model="conf.splitFooter">
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-md-2 control-label">{{msg('sms.settings.split_exclude')}}</label>
-                                <div class="col-md-3 form-inline" tooltip="{{msg('sms.settings.split_exclude.tooltip')}}">
+                                <label class="col-md-3 control-label">{{msg('sms.settings.split_exclude')}}</label>
+                                <div class="col-md-1 form-inline" tooltip="{{msg('sms.settings.split_exclude.tooltip')}}">
                                     <div class="checkbox">
                                         <input class="" type="checkbox" ng-model="conf.excludeLastFooter">
                                     </div>
@@ -81,15 +81,15 @@
                             </div>
 
                             <div ng-repeat="prop in conf.props" class="form-group" ng-class="{'has-error': !prop.value}">
-                                <label class="col-md-2 control-label" for="{{$index}}.{{prop.name}}">{{betterMsg(prop.name, conf.templateName)}}</label>
-                                <div class="col-md-3" tooltip="{{tooltipOrBlank(prop.name, conf.templateName)}}">
+                                <label class="col-md-3 control-label" for="{{$index}}.{{prop.name}}">{{betterMsg(prop.name, conf.templateName)}}</label>
+                                <div class="col-md-6" tooltip="{{tooltipOrBlank(prop.name, conf.templateName)}}">
                                     <input id="{{$index}}.{{prop.name}}" class="form-control" type="text" ng-model="prop.value" required>
                                     <span ng-hide="prop.value" class="help-block">{{msg('sms.web.required_field')}}</span>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <div class="col-sm-offset-2 col-sm-10">
+                                <div class="col-sm-offset-3 col-sm-10">
                                     <button class="btn btn-sm btn-primary" ng-show="config.configs.length > 1" ng-disabled="config.defaultConfigName == conf.name" ng-click="setDefaultConfig(conf.name, $index)"> <i class="icon-star"></i> {{msg('sms.settings.set_default')}} </button>
                                     <button class="btn btn-sm btn-danger" ng-click="deleteConfig($index)"> <i class="icon-trash"></i> {{msg('sms.settings.delete')}} </button>
                                 </div>

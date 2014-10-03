@@ -90,3 +90,8 @@
     color: silver;
     font-size: 8pt;
 }
+
+.ivr .small-mono {
+    font-family:monospace;
+    font-size: small;
+}
