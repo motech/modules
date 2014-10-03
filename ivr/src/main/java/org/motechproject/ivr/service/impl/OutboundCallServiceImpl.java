@@ -2,12 +2,15 @@ package org.motechproject.ivr.service.impl;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
+import org.apache.http.message.BasicNameValuePair;
 import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
@@ -28,7 +31,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -126,27 +133,50 @@ public class OutboundCallServiceImpl implements OutboundCallService {
         eventRelay.sendEventMessage(event);
     }
 
-    private HttpUriRequest generateHttpRequest(Config config, Map<String, String> params) {
-        LOGGER.debug("generateHttpRequest(config = {}, params = {})", config, params);
+    private String mergeUriAndRemoveParams(String uriTemplate, Map<String, String> params) {
+        String mergedURI = uriTemplate;
 
-        String uri = config.getOutgoingCallUriTemplate();
-        BasicHttpParams httpParams = new BasicHttpParams();
-        for (Map.Entry<String, String> entry : params.entrySet()) {
+        Iterator<Map.Entry<String, String>> it = params.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, String> entry = it.next();
             String placeholder = String.format("[%s]", entry.getKey());
-            if (uri.contains(placeholder)) {
-                uri = uri.replace(placeholder, entry.getValue());
-            } else {
-                httpParams.setParameter(entry.getKey(), entry.getValue());
+            if (mergedURI.contains(placeholder)) {
+                mergedURI = mergedURI.replace(placeholder, entry.getValue());
+                it.remove();
             }
         }
 
+        return mergedURI;
+    }
+
+    private HttpUriRequest generateHttpRequest(Config config, Map<String, String> params) {
+        LOGGER.debug("generateHttpRequest(config = {}, params = {})", config, params);
+
+        String uri = mergeUriAndRemoveParams(config.getOutgoingCallUriTemplate(), params);
+
         HttpUriRequest request;
-        if (HttpMethod.GET == config.getOutgoingCallMethod()) {
-            request = new HttpGet(uri);
-        } else {
-            request = new HttpPost(uri);
+        URIBuilder builder;
+        try {
+            builder = new URIBuilder(uri);
+
+            if (HttpMethod.GET == config.getOutgoingCallMethod()) {
+                for (Map.Entry<String, String> entry : params.entrySet()) {
+                    builder.setParameter(entry.getKey(), entry.getValue());
+                }
+                request = new HttpGet(builder.build());
+            } else {
+                ArrayList<NameValuePair> postParameters = new ArrayList<>();
+                for (Map.Entry<String, String> entry : params.entrySet()) {
+                    builder.setParameter(entry.getKey(), entry.getValue());
+                    postParameters.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+                }
+                HttpPost post = new HttpPost(uri);
+                post.setEntity(new UrlEncodedFormEntity(postParameters));
+                request = post;
+            }
+        } catch (URISyntaxException | UnsupportedEncodingException e) {
+            throw new IllegalStateException("Unexpected error creating a URI", e);
         }
-        request.setParams(httpParams);
 
         LOGGER.debug("Generated {}", request.toString());
 
