@@ -8,26 +8,27 @@ Welcome to the MOTECH Modules documentation!
 
 Contents:
 
-.. toctree::
-   :maxdepth: 2
+..  toctree::
+    :maxdepth: 2
+    :numbered:
 
-   alerts
-   appointments
-   batch
-   cms_lite
-   commcare
-   event_logging
-   hindi_transliteration
-   http_agent
-   hub
-   ivr
-   message_campaign
-   mtraining
-   openmrs_19
-   pill_reminder
-   schedule_tracking
-   sms
-   packages
+    alerts
+    appointments
+    batch
+    cms_lite
+    commcare
+    event_logging
+    hindi_transliteration
+    http_agent
+    hub
+    ivr
+    message_campaign
+    mtraining
+    openmrs_19
+    pill_reminder
+    schedule_tracking
+    sms
+    packages
 
 Indices and tables
 ==================

@@ -1,5 +1,3 @@
-.. sectnum::
-
 .. _ivr-module:
 
 ==========
@@ -82,14 +80,15 @@ Motech Task Trigger
 ``/template`` REST request
 ==========================
 
-    VXML [#]_ template requests are sent to the IVR module by IVR providers using REST calls,
+    Text [#]_ template requests are sent to the IVR module by IVR providers using REST calls,
     typically using VXML's ``<submit>`` element. Apart from returning text templates,
     this REST request works exactly the same as the :ref:`ivr-status-request`,
     it stores ``CallDetailRecord`` entities, sends Motech events and triggers Motech Tasks.
 
     .. [#]
-        Some non VXML providers, for example India's `KooKoo <http://kookoo.in>`_, operate the same way except the
-        templates are not VXML but generally some sort of proprietary XML.
+        Text or CCXML or VXML or anything really. Some non VXML providers like, for example,
+        India's `KooKoo <http://kookoo.in>`_, operate the same way except the templates are not VXML but
+        generally some sort of proprietary XML.
 
 Velocity
 --------
@@ -118,7 +117,7 @@ Velocity
         Hello, Frank.
         $
 
-    All query parameters are available are available. But wait, there's more! Read on...
+    All query parameters are available. But wait, there's more! Read on...
 
 The ``$dataServices`` element
 -----------------------------
@@ -136,11 +135,14 @@ The ``$dataServices`` element
 
     The methods above use the following arguments:
         * ``entityClassName``: the fully qualified class name for that entity, for example
-          ``org.motechproject.ivr.domain.CallDetailRecord``
+          for a DDE [#]_ ``org.motechproject.ivr.domain.CallDetailRecord`` or for a EUDE [#]_ named ``Patient`` :
+          ``org.motechproject.mds.entity.Patient``
         * ``lookupName``: the name [#]_ of the lookup to use
         * ``params``: a map containig zero or more key:value pairs corresponding to the arguments required by the
           given lookup, see how to use a map in the following sample template.
 
+        .. [#] Developer Defined Entity
+        .. [#] End User Defined Entity
         .. [#] Don't confuse the lookup name (ie: 'Find by name') with the lookup method name (ie: 'findByName').
 
     So, let's say, for example, we created a ``Patient`` MDS entity with a ``name`` and a ``number`` field and a
@@ -197,7 +199,7 @@ Initiating Outbound Calls
 Initiating an outbound call via an API call
 -------------------------------------------
 
-    Module writers can use the :java:ref:`org.motechproject.ivr.service.OutboundCallService.initiateCall` method.
+    Module writers can use the :java:ref:`org.motechproject.ivr.service.OutboundCallService` ``initiateCall`` method.
 
 
 Initiating an outbound call via a REST call
@@ -207,8 +209,7 @@ Initiating an outbound call via a REST call
 
     Where ``{config}`` is used for ``configName`` and the HTTP query parameters are used for ``params``
 
-    .. note::
-        The default security rules for the ``/call`` http endpoint are ``USERNAME_PASSWORD``.
+    .. note:: The default security rules for the ``/call`` http endpoint are ``USERNAME_PASSWORD``.
 
 
 Initiating an outbound call via the :ref:`tasks`
