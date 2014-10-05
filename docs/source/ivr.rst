@@ -1,3 +1,5 @@
+.. sectnum::
+
 .. _ivr-module:
 
 ==========
@@ -77,19 +79,17 @@ Motech Task Trigger
 
     The **ivr_call_status** event subject is also a Motech Task Trigger.
 
-.. _ivr-template-request:
-
 ``/template`` REST request
 ==========================
 
     VXML [#]_ template requests are sent to the IVR module by IVR providers using REST calls,
     typically using VXML's ``<submit>`` element. Apart from returning text templates,
-    the :ref:`ivr-template-request` works exactly the same as the `ivr-status-request`_,
+    this REST request works exactly the same as the :ref:`ivr-status-request`,
     it stores ``CallDetailRecord`` entities, sends Motech events and triggers Motech Tasks.
 
     .. [#]
-        Some non VXML providers, for example India's KooKoo, operate the same way except the templates are not VXML but
-        generally some sort of proprietary XML.
+        Some non VXML providers, for example India's `KooKoo <http://kookoo.in>`_, operate the same way except the
+        templates are not VXML but generally some sort of proprietary XML.
 
 Velocity
 --------
@@ -105,6 +105,7 @@ Velocity
     module to return the template by CURLing:
 
     ::
+
         $curl -w "\n" "http://localhost:8080/motech-platform-server/module/ivr/template/voxeo/hello"
         Hello, $world.
         $
@@ -112,6 +113,7 @@ Velocity
     Nothing special, eh? But now add a query parameter named ``world`` with some value:
 
     ::
+
         $curl -w "\n" "http://localhost:8080/motech-platform-server/module/ivr/template/voxeo/hello?world=Frank"
         Hello, Frank.
         $
@@ -121,15 +123,16 @@ Velocity
 The ``$dataServices`` element
 -----------------------------
 
-    In addition to query parameters, the special element ``$dataServices`` is available inside your templates. It can
-    be used to query the :ref:`database <data_services>`_ using the following methods:
-
+    In addition to query parameters, the special element ``$dataServices`` [#]_ is available inside your templates. It
+    can be used to query the :ref:`database <data_services>` using the following methods:
 
     * ``findOne(entityClassName, lookupName, params)``: returns one entity instance
     * ``findMany(entityClassName, lookupName, params)``: returns a list of entity instances
     * ``count(entityClassName, lookupName, params)``: returns a number of entity instances
     * ``retrieveAll(entityClassName)``: returns all instances of an entity
     * ``countAll(entityClassName)``: returns the number of all instances of an entity
+
+    .. [#] Using a query parameter named ``$dataServices`` is not a good idea and will produced undefined results.
 
     The methods above use the following arguments:
         * ``entityClassName``: the fully qualified class name for that entity, for example
@@ -140,9 +143,13 @@ The ``$dataServices`` element
 
         .. [#] Don't confuse the lookup name (ie: 'Find by name') with the lookup method name (ie: 'findByName').
 
-    Consider the following template:
+    So, let's say, for example, we created a ``Patient`` MDS entity with a ``name`` and a ``number`` field and a
+    'Lookup by Number' lookup which takes a ``number`` argument. The following template would extract the name of the
+    patient whose number is '123':
 
-    .. warning:: Under Construction - coming soon...
+    ::
+
+        Hello, $dataServices.findOne("org.motechproject.mds.entity.Patient", "Lookup by Number", {"number" : "123"}).name
 
 REST call
 ---------
@@ -153,20 +160,20 @@ REST call
 
         http://{motech-server}/{motech-war-file}/module/ivr/template/{config}
 
-    See `ivr-status-request`_ for additional details.
+    See :ref:`ivr-status-request` for additional details.
 
 Motech Event
 ------------
 
-    The event sent is similar to that in `ivr-status-request`_ with two exceptions: the subject is
+    The event sent is similar to that in :ref:`ivr-status-request` with two exceptions: the subject is
     **ivr_template_request** and the event payload contains an additional ``template`` element which contains the name
     of the requested template.
 
 Motech Task Trigger
 -------------------
 
-    The Motech Task Trigger is also similar to that in `ivr-status-request`_ with the same two exceptions as above,
-    a different title and an additional element to the payload.
+    The Motech Task Trigger is also similar to that in :ref:`ivr-status-request` with the same two exceptions as above,
+    a different title and an additional element, you guessed it: the template name,  to the payload.
 
 Initiating Outbound Calls
 =========================
@@ -233,13 +240,15 @@ Settings
           A map where each key corresponds to a field name coming from the IVR provider and each value corresponds to
           the matching IVR ``CallDetailRecord`` field.
         * ``outgoingCallUriTemplate``:
-          A URI template where any [``xxx``] string will be replaced by the value identified by the ``xxx`` key in the
-          provided ``params`` map. Additionally, the entire ``params`` map is added as request parameters to the HTTP
-          call.
+          A URI template where any ``[xxx]`` string will be replaced by the value identified by the ``xxx`` [#]_ key in
+          the provided ``params`` map. Additionally, the entire ``params`` map is added as request parameters to the
+          HTTP call.
         * ``ignoredStatusFields``:
           A list of fields to be ignored when receiving IVR Call Status from the provider. All other fields received
           during IVR Call Status and not mapped to CDR fields are added to the ``providerExtraData``
           ``CallDetailRecord`` map field.
+
+        .. [#] Note: no square brackets
 
 Call Detail Records
 ===================

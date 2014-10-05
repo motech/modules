@@ -14,7 +14,6 @@ Contents:
    alerts
    appointments
    batch
-   call_flow
    cms_lite
    commcare
    event_logging
