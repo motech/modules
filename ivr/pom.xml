@@ -89,11 +89,11 @@
                             org.motechproject.config.service,
                             org.motechproject.mds.service,
                             *
-                        </Import-Package>>
+                        </Import-Package>
                         <Export-Package>
-                            ${motech.groupId}.ivr.service;version=${project.version},
-                            ${motech.groupId}.ivr.repository;version=${project.version},
-                            ${motech.groupId}.ivr.domain;version=${project.version},
+                            org.motechproject.ivr.service;version=${project.version},
+                            org.motechproject.ivr.repository;version=${project.version},
+                            org.motechproject.ivr.domain;version=${project.version},
                         </Export-Package>
                     </instructions>
                 </configuration>
