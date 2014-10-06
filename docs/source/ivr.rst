@@ -134,11 +134,11 @@ The ``$dataServices`` element
     .. [#] Using a query parameter named ``$dataServices`` is not a good idea and will produced undefined results.
 
     The methods above use the following arguments:
-        * ``entityClassName``: the fully qualified class name for that entity, for example
+        :entityClassName: the fully qualified class name for that entity, for example
           for a DDE [#]_ ``org.motechproject.ivr.domain.CallDetailRecord`` or for a EUDE [#]_ named ``Patient`` :
           ``org.motechproject.mds.entity.Patient``
-        * ``lookupName``: the name [#]_ of the lookup to use
-        * ``params``: a map containig zero or more key:value pairs corresponding to the arguments required by the
+        :lookupName: the name [#]_ of the lookup to use
+        :params: a map containig zero or more key:value pairs corresponding to the arguments required by the
           given lookup, see how to use a map in the following sample template.
 
         .. [#] Developer Defined Entity

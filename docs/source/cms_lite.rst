@@ -29,7 +29,10 @@ Content is stored in MOTECH Data Services (MDS).
 OSGi Service APIs
 =================
 
-The CMS Lite module exposes its operations through an OSGi service interface called CMSLiteService. It also exports the :doc:`StreamContent </org/motechproject/cmslite/api/model/StreamContent>` and :doc:`StringContent </org/motechproject/cmslite/api/model/StringContent>` classes as part of its data model, which are used in the APIs and examples below.
+The CMS Lite module exposes its operations through an OSGi service interface called CMSLiteService. It also exports
+the :java:ref:`StreamContent <org.motechproject.cmslite.api.model.StreamContent>` and
+:java:ref:`StringContent <org.motechproject.cmslite.api.model.StringContent>` classes as part of its data model,
+which are used in the APIs and examples below.
 
 CMSLiteService
 --------------
