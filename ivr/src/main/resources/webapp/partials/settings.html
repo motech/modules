@@ -33,7 +33,7 @@
                         <div id="panel{{$index}}" class="panel-collapse collapse" ng-class="{true:'in', false:''}[accordions[$index]]">
 
                             <div class="form-group margin-before2" ng-class="{'has-error': !conf.name || dupeNames[$index]}">
-                                <label class="col-md-2 control-label">{{msg('ivr.web.settings.configName')}}</label>
+                                <label class="col-md-3 control-label">{{msg('ivr.web.settings.configName')}}</label>
                                 <div class="col-md-3" tooltip="{{msg('ivr.web.settings.configName.tooltip')}}">
                                     <input type="text" class="form-control" ng-model="conf.name" required ng-focus="accordions[$index]" ng-change="keepDefaultConfig(); checkForDuplicateNames($index);">
                                     <span ng-hide="conf.name" class="help-block">{{msg('ivr.web.required_field')}}</span>
@@ -42,15 +42,14 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-md-2 control-label" for="outgoingCallUriTemplate{{$index}}">{{msg('ivr.web.settings.outgoingCallUriTemplate')}}</label>
-                                <div class="col-md-9"
-                                     tooltip="{{msg('ivr.web.settings.outgoingCallUriTemplate.tooltip')}}">
-                                    <textarea spellcheck="false" class="form-control" id="outgoingCallUriTemplate{{$index}}" type="text" ng-model="conf.outgoingCallUriTemplate"  rows="2" style="font-family:monospace; font-size: small;"></textarea>
+                                <label class="col-md-3 control-label" for="outgoingCallUriTemplate{{$index}}">{{msg('ivr.web.settings.outgoingCallUriTemplate')}}</label>
+                                <div class="col-md-8" tooltip="{{msg('ivr.web.settings.outgoingCallUriTemplate.tooltip')}}">
+                                    <textarea spellcheck="false" class="form-control small-mono" id="outgoingCallUriTemplate{{$index}}" type="text" ng-model="conf.outgoingCallUriTemplate" rows="2"></textarea>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-md-2 control-label">{{msg('ivr.web.settings.outgoingCallMethod')}}</label>
+                                <label class="col-md-3 control-label">{{msg('ivr.web.settings.outgoingCallMethod')}}</label>
                                 <div class="col-md-6" class="btn-group col-sm-5" tooltip="{{msg ('ivr.web.settings.outgoingCallUriTemplate.tooltip')}}">
                                     <label class="radio-inline" for="outgoingCallMethodGet{{$index}}">
                                         <input name="outgoingCallMethod{{$index}}" id="outgoingCallMethodGet{{$index}}" type="radio" ng-model="conf.outgoingCallMethod" value="GET">
@@ -64,23 +63,21 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-md-2 control-label" for="ignoredStatusFields{{$index}}">{{msg('ivr.web.settings.ignoredStatusFields')}}</label>
-                                <div class="col-md-6"
-                                     tooltip="{{msg('ivr.web.settings.ignoredStatusFields.tooltip')}}">
-                                    <input class="form-control" id="ignoredStatusFields{{$index}}" type="text" ng-model="conf.ignoredStatusFields" ng-list=",">
+                                <label class="col-md-3 control-label" for="ignoredStatusFields{{$index}}">{{msg('ivr.web.settings.ignoredStatusFields')}}</label>
+                                <div class="col-md-8" tooltip="{{msg('ivr.web.settings.ignoredStatusFields.tooltip')}}">
+                                    <input class="form-control small-mono" id="ignoredStatusFields{{$index}}" type="text" ng-model="conf.ignoredStatusFields" ng-list=",">
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-md-2 control-label" for="statusFieldMap{{$index}}">{{msg('ivr.web.settings.statusFieldMap')}}</label>
-                                <div class="col-md-6"
-                                     tooltip="{{msg('ivr.web.settings.statusFieldMap.tooltip')}}">
-                                    <input class="form-control" id="statusFieldMap{{$index}}" type="text" ng-pattern="/^(\s*\w*\s*:\s*\w*\s*)?(,\s*\w*\s*:\s*\w*\s*)*$/" ng-model="conf.statusFieldMapString">
+                                <label class="col-md-3 control-label" for="statusFieldMap{{$index}}">{{msg('ivr.web.settings.statusFieldMap')}}</label>
+                                <div class="col-md-8" tooltip="{{msg('ivr.web.settings.statusFieldMap.tooltip')}}">
+                                    <input class="form-control small-mono" id="statusFieldMap{{$index}}" type="text" ng-pattern="/^(\s*\w*\s*:\s*\w*\s*)?(,\s*\w*\s*:\s*\w*\s*)*$/" ng-model="conf.statusFieldMapString">
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <div class="col-sm-offset-2 col-sm-10">
+                                <div class="col-sm-offset-3 col-sm-10">
                                     <button class="btn btn-sm btn-danger" ng-click="deleteConfig($index)"> <i class="icon-trash"></i> {{msg('ivr.web.settings.delete')}} </button>
                                 </div>
                             </div>
