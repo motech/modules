@@ -45,9 +45,10 @@ Specifying the characteristics of a schedule and its milestones is typically acc
 Window durations can be customized.
 
 Sample Schedule Definition
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------
 
-For a sample schedule definition, including specifying window times, absolute window schedules, alerts, and floating alerts, see :doc:`sample_schedule`.
+For a sample schedule definition, including specifying window times, absolute window schedules, alerts,
+and floating alerts, see :ref:`sample-schedule-definition`.
 
 OSGi Service APIs
 -----------------

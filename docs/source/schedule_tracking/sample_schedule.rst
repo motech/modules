@@ -1,8 +1,10 @@
+.. _sample-schedule-definition:
+
 ====================================================
 Schedule Definition for the Schedule Tracking Module
 ====================================================
 
-For more information about the Schedule Tracking module, see :doc:`schedule_tracking`.
+For more information about the Schedule Tracking module, see :ref:`schedule-tracking-module`.
 
 Sample Schedule Definition
 --------------------------
