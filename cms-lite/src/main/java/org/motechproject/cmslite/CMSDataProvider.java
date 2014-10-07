@@ -35,7 +35,7 @@ public class CMSDataProvider extends AbstractDataProvider {
 
     @Override
     public String getName() {
-        return "CMS";
+        return "cmslite";
     }
 
     @Override
