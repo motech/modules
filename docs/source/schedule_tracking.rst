@@ -48,7 +48,7 @@ Sample Schedule Definition
 --------------------------
 
 For a sample schedule definition, including specifying window times, absolute window schedules, alerts,
-and floating alerts, see :ref:`sample-schedule-definition`.
+and floating alerts, see :std:ref:`sample-schedule-definition`.
 
 OSGi Service APIs
 -----------------
