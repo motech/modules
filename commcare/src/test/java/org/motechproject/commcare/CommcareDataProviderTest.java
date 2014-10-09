@@ -4,6 +4,14 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.motechproject.commcare.domain.CaseInfo;
+import org.motechproject.commcare.domain.CommcareFixture;
+import org.motechproject.commcare.domain.CommcareForm;
+import org.motechproject.commcare.domain.CommcareUser;
+import org.motechproject.commcare.service.impl.CommcareCaseServiceImpl;
+import org.motechproject.commcare.service.impl.CommcareFixtureServiceImpl;
+import org.motechproject.commcare.service.impl.CommcareFormServiceImpl;
+import org.motechproject.commcare.service.impl.CommcareUserServiceImpl;
 import org.motechproject.commons.api.MotechObject;
 import org.springframework.core.io.ResourceLoader;
 
@@ -11,18 +19,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-
-import org.motechproject.commcare.domain.CommcareUser;
-import org.motechproject.commcare.domain.CommcareFixture;
-import org.motechproject.commcare.domain.CommcareForm;
-import org.motechproject.commcare.domain.CaseInfo;
-import org.motechproject.commcare.service.impl.CommcareCaseServiceImpl;
-import org.motechproject.commcare.service.impl.CommcareFixtureServiceImpl;
-import org.motechproject.commcare.service.impl.CommcareFormServiceImpl;
-import org.motechproject.commcare.service.impl.CommcareUserServiceImpl;
 
 
 public class CommcareDataProviderTest {
@@ -37,11 +37,9 @@ public class CommcareDataProviderTest {
     @Mock
     private CommcareFixture commcareFixture;
 
-    @Mock
-    private CommcareForm commcareForm;
+    private CommcareForm commcareForm = new CommcareForm();
 
-    @Mock
-    private CaseInfo caseInfo;
+    private CaseInfo caseInfo =  new CaseInfo();
 
     @Mock
     private ResourceLoader resourceLoader;
@@ -114,7 +112,6 @@ public class CommcareDataProviderTest {
         String commcareFixtureClass = CommcareFixture.class.getSimpleName();
         String caseInfoClass = CaseInfo.class.getSimpleName();
 
-
         // when
         Object userContent = provider.lookup(commcareUserClass, "id", lookupFields);
         Object formContent = provider.lookup(commcareFormClass, "id", lookupFields);
@@ -135,7 +132,6 @@ public class CommcareDataProviderTest {
         String commcareFormClass = CommcareForm.class.getSimpleName();
         String commcareFixtureClass = CommcareFixture.class.getSimpleName();
         String caseInfoClass = CaseInfo.class.getSimpleName();
-
 
         // when
         Object userContent = provider.lookup(commcareUserClass, "id", lookupFields);
@@ -165,14 +161,20 @@ public class CommcareDataProviderTest {
 
         // when
         CommcareUser commcareUser1 = (CommcareUser) provider.lookup(commcareUserClass, "id", lookupFields);
-        CommcareForm commcareForm1 = (CommcareForm) provider.lookup(commcareFormClass, "id", lookupFields);
+        Map<String, Object> commcareForm1 = (Map) provider.lookup(commcareFormClass, "id", lookupFields);
         CommcareFixture commcareFixture1 = (CommcareFixture) provider.lookup(commcareFixtureClass, "id", lookupFields);
-        CaseInfo caseInfo1 = (CaseInfo) provider.lookup(caseInfoClass, "id", lookupFields);
+        Map<String, Object> caseInfo1 = (Map) provider.lookup(caseInfoClass, "id", lookupFields);
 
         // then
         assertEquals(this.commcareUser, commcareUser1);
-        assertEquals(this.commcareForm, commcareForm1);
         assertEquals(this.commcareFixture, commcareFixture1);
-        assertEquals(this.caseInfo, caseInfo1);
+
+        assertTrue(commcareForm1.containsKey("id"));
+        assertTrue(commcareForm1.containsKey("metadata"));
+        assertTrue(commcareForm1.containsKey("version"));
+
+        assertTrue(caseInfo1.containsKey("caseId"));
+        assertTrue(caseInfo1.containsKey("caseName"));
+        assertTrue(caseInfo1.containsKey("serverDateModified"));
     }
 }

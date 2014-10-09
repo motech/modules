@@ -1,6 +1,8 @@
 package org.motechproject.commcare.tasks;
 
-import org.motechproject.commcare.service.CommcareApplicationDataService;
+import org.motechproject.commcare.CommcareDataProvider;
+import org.motechproject.commcare.service.CommcareSchemaService;
+import org.motechproject.commcare.tasks.builder.ChannelRequestBuilder;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,24 +20,27 @@ import javax.annotation.PostConstruct;
 public class CommcareTasksNotifier {
 
     private BundleContext bundleContext;
-    private CommcareApplicationDataService commcareApplicationDataService;
+    private CommcareSchemaService schemaService;
+    private CommcareDataProvider dataProvider;
 
     @Autowired
-    public CommcareTasksNotifier(BundleContext bundleContext, CommcareApplicationDataService commcareApplicationDataService) {
+    public CommcareTasksNotifier(BundleContext bundleContext, CommcareSchemaService schemaService, CommcareDataProvider dataProvider) {
         this.bundleContext = bundleContext;
-        this.commcareApplicationDataService = commcareApplicationDataService;
+        this.schemaService = schemaService;
+        this.dataProvider = dataProvider;
     }
 
     @PostConstruct
-    public void updateTaskChannel() {
+    public void updateTasksInfo() {
         ServiceReference serviceReference = bundleContext.getServiceReference("org.motechproject.tasks.service.ChannelService");
         if (serviceReference != null) {
             Object service = bundleContext.getService(serviceReference);
             if (service != null) {
-                ChannelRequestBuilder channelRequestBuilder = new ChannelRequestBuilder(commcareApplicationDataService, bundleContext);
+                ChannelRequestBuilder channelRequestBuilder = new ChannelRequestBuilder(schemaService, bundleContext);
                 TasksChannelServiceInstance instance = new TasksChannelServiceInstance(service, channelRequestBuilder);
                 instance.updateTaskChannel();
             }
         }
+        dataProvider.updateDataProvider();
     }
 }

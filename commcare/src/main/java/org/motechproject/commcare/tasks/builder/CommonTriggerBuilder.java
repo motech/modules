@@ -1,4 +1,4 @@
-package org.motechproject.commcare.tasks;
+package org.motechproject.commcare.tasks.builder;
 
 import org.motechproject.tasks.contract.EventParameterRequest;
 import org.motechproject.tasks.contract.TriggerEventRequest;

@@ -1,10 +1,8 @@
-package org.motechproject.commcare.tasks;
+package org.motechproject.commcare.tasks.builder;
 
-import org.motechproject.commcare.domain.CommcareApplicationJson;
-import org.motechproject.commcare.domain.CommcareModuleJson;
 import org.motechproject.commcare.domain.FormSchemaJson;
 import org.motechproject.commcare.domain.FormSchemaQuestionJson;
-import org.motechproject.commcare.service.CommcareApplicationDataService;
+import org.motechproject.commcare.service.CommcareSchemaService;
 import org.motechproject.tasks.contract.EventParameterRequest;
 import org.motechproject.tasks.contract.TriggerEventRequest;
 
@@ -27,19 +25,19 @@ import static org.motechproject.commcare.events.constants.EventSubjects.FORMS_EV
  */
 public class FormTriggerBuilder implements TriggerBuilder {
 
-    private CommcareApplicationDataService applicationDataService;
+    private CommcareSchemaService schemaService;
 
     private static final String RECEIVED_FORM_PREFIX = "Received Form: ";
 
-    public FormTriggerBuilder(CommcareApplicationDataService applicationDataService) {
-        this.applicationDataService = applicationDataService;
+    public FormTriggerBuilder(CommcareSchemaService schemaService) {
+        this.schemaService = schemaService;
     }
 
     @Override
     public List<TriggerEventRequest> buildTriggers() {
         List<TriggerEventRequest> triggers = new ArrayList<>();
 
-        for (FormSchemaJson form : getAllFormSchemas()) {
+        for (FormSchemaJson form : schemaService.getAllFormSchemas()) {
             List<EventParameterRequest> parameters = new ArrayList<>();
             String formName = form.getFormNames().get("en");
             addMetadataFields(parameters);
@@ -63,17 +61,4 @@ public class FormTriggerBuilder implements TriggerBuilder {
         parameters.add(new EventParameterRequest("commcare.form.field.timeStart", META_TIME_START));
         parameters.add(new EventParameterRequest("commcare.form.field.timeEnd", META_TIME_END));
     }
-
-    private List<FormSchemaJson> getAllFormSchemas() {
-        List<FormSchemaJson> allFormSchemas = new ArrayList<>();
-
-        for (CommcareApplicationJson app : applicationDataService.retrieveAll()) {
-            for (CommcareModuleJson module : app.getModules()) {
-                allFormSchemas.addAll(module.getFormSchemas());
-            }
-        }
-
-        return allFormSchemas;
-    }
-
 }
