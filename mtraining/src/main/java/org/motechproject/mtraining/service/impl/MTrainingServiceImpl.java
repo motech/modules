@@ -72,6 +72,15 @@ public class MTrainingServiceImpl implements MTrainingService {
     }
 
     /**
+     * Get all courses
+     * @return list of courses
+     */
+    @Override
+    public List<Course> getAllCourses() {
+        return courseDataService.retrieveAll();
+    }
+
+    /**
      * Update a course with the given structure
      * @param course Course structure to update
      * @return updated version of the course
@@ -131,6 +140,11 @@ public class MTrainingServiceImpl implements MTrainingService {
     }
 
     @Override
+    public List<Chapter> getAllChapters() {
+        return chapterDataService.retrieveAll();
+    }
+
+    @Override
     public Chapter updateChapter(Chapter chapter) {
 
         return chapterDataService.update(chapter);
@@ -162,6 +176,11 @@ public class MTrainingServiceImpl implements MTrainingService {
     public Lesson getLessonById(long lessonId) {
 
         return lessonDataService.findLessonById(lessonId);
+    }
+
+    @Override
+    public List<Lesson> getAllLessons() {
+        return lessonDataService.retrieveAll();
     }
 
     @Override
@@ -197,6 +216,11 @@ public class MTrainingServiceImpl implements MTrainingService {
     public Quiz getQuizById(long id) {
 
         return quizDataService.findQuizById(id);
+    }
+
+    @Override
+    public List<Quiz> getAllQuizzes() {
+        return quizDataService.retrieveAll();
     }
 
     @Override
