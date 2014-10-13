@@ -21,6 +21,15 @@
         <property name="moduleName" value="commcare"/>
     </bean>
 
+    <bean id="commcareVelocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+        <property name="velocityProperties">
+            <value>
+                resource.loader=class
+                class.resource.loader.class=org.motechproject.commcare.tasks.VelocityResourceLoader
+            </value>
+        </property>
+    </bean>
+
     <bean id="multiThreadedHttpConnectionManager"
           class="org.apache.commons.httpclient.MultiThreadedHttpConnectionManager"/>
 

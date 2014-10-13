@@ -40,6 +40,6 @@ public class AppSchemaChangeEventHandler {
             commcareApplicationDataService.create(app);
         }
 
-        commcareTasksNotifier.updateTaskChannel();
+        commcareTasksNotifier.updateTasksInfo();
     }
 }

@@ -1,6 +1,6 @@
-package org.motechproject.commcare.tasks;
+package org.motechproject.commcare.tasks.builder;
 
-import org.motechproject.commcare.service.CommcareApplicationDataService;
+import org.motechproject.commcare.service.CommcareSchemaService;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.ChannelRequest;
 import org.motechproject.tasks.contract.TriggerEventRequest;
@@ -13,22 +13,22 @@ import java.util.List;
  * The <code>ChannelRequestBuilder</code> class is responsible for building the
  * {@link org.motechproject.tasks.contract.ChannelRequest}. Such request is later on
  * used to register the channel for the Commcare module. To build the necessary triggers,
- * we use classes implementing {@link org.motechproject.commcare.tasks.TriggerBuilder}.
+ * we use classes implementing {@link TriggerBuilder}.
  */
 public class ChannelRequestBuilder {
     private static final String DISPLAY_NAME = "commcare";
 
     private BundleContext bundleContext;
-    private CommcareApplicationDataService commcareApplicationDataService;
+    private CommcareSchemaService schemaService;
 
-    public ChannelRequestBuilder(CommcareApplicationDataService commcareApplicationDataService, BundleContext bundleContext) {
-        this.commcareApplicationDataService = commcareApplicationDataService;
+    public ChannelRequestBuilder(CommcareSchemaService schemaService, BundleContext bundleContext) {
+        this.schemaService = schemaService;
         this.bundleContext = bundleContext;
     }
 
     public ChannelRequest buildChannelRequest() {
-        FormTriggerBuilder formTriggerBuilder = new FormTriggerBuilder(commcareApplicationDataService);
-        CaseTriggerBuilder caseTriggerBuilder = new CaseTriggerBuilder(commcareApplicationDataService);
+        FormTriggerBuilder formTriggerBuilder = new FormTriggerBuilder(schemaService);
+        CaseTriggerBuilder caseTriggerBuilder = new CaseTriggerBuilder(schemaService);
         CommonTriggerBuilder commonTriggerBuilder = new CommonTriggerBuilder();
 
         List<TriggerEventRequest> triggers = formTriggerBuilder.buildTriggers();

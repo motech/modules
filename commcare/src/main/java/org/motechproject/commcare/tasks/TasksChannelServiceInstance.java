@@ -1,5 +1,6 @@
 package org.motechproject.commcare.tasks;
 
+import org.motechproject.commcare.tasks.builder.ChannelRequestBuilder;
 import org.motechproject.tasks.contract.ChannelRequest;
 import org.motechproject.tasks.service.ChannelService;
 
