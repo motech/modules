@@ -39,6 +39,12 @@ public interface MTrainingService {
     List<Course> getCourseByName(String courseName);
 
     /**
+     * Get all courses
+     * @return list of courses
+     */
+    List<Course> getAllCourses();
+
+    /**
      * Update a course with the given structure
      * @param course Course structure to update
      * @return
@@ -75,6 +81,12 @@ public interface MTrainingService {
      * @return list of chapters with matching name
      */
     List<Chapter> getChapterByName(String chapterName);
+
+    /**
+     * Get all chapters
+     * @return list of chapters
+     */
+    List<Chapter> getAllChapters();
 
     /**
      * Update a given chapter
@@ -115,6 +127,12 @@ public interface MTrainingService {
     Lesson getLessonById(long id);
 
     /**
+     * Get all lessons
+     * @return list of lessons
+     */
+    List<Lesson> getAllLessons();
+
+    /**
      * update a lesson in the store
      * @param lesson lesson to update
      * @return updated lesson from store
@@ -151,6 +169,12 @@ public interface MTrainingService {
      * @return quiz object with id
      */
     Quiz getQuizById(long id);
+
+    /**
+     * Get all quizzes
+     * @return list of quizzes
+     */
+    List<Quiz> getAllQuizzes();
 
     /**
      * update a quiz object in store
