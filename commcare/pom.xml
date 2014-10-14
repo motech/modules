@@ -71,7 +71,16 @@
                     <groupId>commons-digester</groupId>
                     <artifactId>commons-digester</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>antlr</groupId>
+                    <artifactId>antlr</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+        <!-- Required by velocity-tools, we define it ourselves to avoid dependency-convergence error -->
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>com.springsource.antlr</artifactId>
         </dependency>
         <dependency>
             <groupId>${motech.groupId}</groupId>
