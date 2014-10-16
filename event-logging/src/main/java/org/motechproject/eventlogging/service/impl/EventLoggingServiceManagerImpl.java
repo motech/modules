@@ -60,8 +60,11 @@ public class EventLoggingServiceManagerImpl implements EventLoggingServiceManage
         List<String> subjectList = new ArrayList<>(subjectsToListenOn);
 
         if (eventListener != null) {
+            logger.debug("Event Listener not null - attempting to register");
             eventListenerRegistryService.registerListener(eventListener, subjectList);
         }
+
+        logger.info("Event Listener registered");
     }
 
     @Override
