@@ -137,10 +137,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-            </plugin>
-            <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <execution>
@@ -165,53 +161,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>IT</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>2.17</version>
-                        <executions>
-                            <!-- Execute only the test suite -->
-                            <execution>
-                                <id>integration-test</id>
-                                <goals>
-                                    <goal>integration-test</goal>
-                                </goals>
-                                <configuration>
-                                    <encoding>UTF-8</encoding>
-                                    <includes>
-                                        <include>**/**/*IntegrationTests.java</include>
-                                    </includes>
-                                    <summaryFile>target/failsafe-reports/failsafe-summary-it.xml</summaryFile>
-                                    <forkCount>1</forkCount>
-                                </configuration>
-                            </execution>
-                            <!-- Don't run the old OSGi test execution -->
-                            <execution>
-                                <id>integration-test-osgi</id>
-                                <phase>none</phase>
-                            </execution>
-                            <!-- Only one summary file -->
-                            <execution>
-                                <id>verify</id>
-                                <goals>
-                                    <goal>verify</goal>
-                                </goals>
-                                <configuration>
-                                    <summaryFiles>
-                                        <summaryFile>target/failsafe-reports/failsafe-summary-it.xml</summaryFile>
-                                    </summaryFiles>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

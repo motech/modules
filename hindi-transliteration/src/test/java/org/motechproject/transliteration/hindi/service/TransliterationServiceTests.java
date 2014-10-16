@@ -7,9 +7,6 @@ import org.motechproject.transliteration.hindi.service.TransliterationServiceImp
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-/**
- * Created by kosh on 3/13/14.
- */
 public class TransliterationServiceTests {
     TransliterationServiceImpl engine = new TransliterationServiceImpl();
 

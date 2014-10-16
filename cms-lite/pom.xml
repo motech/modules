@@ -7,7 +7,7 @@
         <relativePath>../</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.motechproject</groupId>
+
     <artifactId>cms-lite</artifactId>
     <name>CMS Lite Module</name>
     <version>0.25-SNAPSHOT</version>
@@ -107,10 +107,6 @@
                         </Import-Package>
                     </instructions>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
             </plugin>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>

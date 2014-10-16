@@ -33,8 +33,7 @@
 
     <osgi:reference id="eventListenerRegistryServiceOsgi" interface="org.motechproject.event.listener.EventListenerRegistryService"/>
 
-    <osgi:reference id="eventRelayOsgi"
-                    interface="org.motechproject.event.listener.EventRelay" />
+    <osgi:reference id="eventRelayOsgi" interface="org.motechproject.event.listener.EventRelay" />
 
     <osgi:reference id="EnrollmentServiceOSGi" interface="org.motechproject.scheduletracking.repository.dataservices.EnrollmentDataService" />
 

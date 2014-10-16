@@ -898,6 +898,10 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
 
@@ -966,6 +970,15 @@
                                     <goal>integration-test</goal>
                                 </goals>
                                 <configuration>
+                                    <includes>
+                                        <include>**/**/*IT.java</include>
+                                        <include>**/**/*IntegrationTests.java</include>
+                                    </includes>
+                                    <excludes>
+                                        <exclude>**/**/*BundleIT.java</exclude>
+                                        <exclude>**/**/*PaxIT.java</exclude>
+                                        <exclude>**/**/*ContextIT.java</exclude>
+                                    </excludes>
                                     <encoding>UTF-8</encoding>
                                     <summaryFile>target/failsafe-reports/failsafe-summary-it.xml</summaryFile>
                                     <systemPropertiesFile>${modules.root.dir}/maven.properties</systemPropertiesFile>

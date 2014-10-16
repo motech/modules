@@ -12,7 +12,6 @@
     </parent>
 
     <name>Http Agent Module</name>
-    <groupId>org.motechproject</groupId>
     <artifactId>http-agent</artifactId>
     <version>0.25-SNAPSHOT</version>
     <packaging>bundle</packaging>
@@ -61,10 +60,6 @@
                         </Import-Package>
                     </instructions>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
