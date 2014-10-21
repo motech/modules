@@ -23,8 +23,8 @@
     <osgi:service id="scheduleTrackingServiceOsgi" auto-export="interfaces" ref="scheduleTrackingService"
                   interface="org.motechproject.scheduletracking.service.ScheduleTrackingService"/>
 
-    <osgi:service id="enrollmentActionServiceOsgi" ref="enrollmentActionService"
-                  interface="org.motechproject.scheduletracking.service.EnrollmentActionService"/>
+    <osgi:service id="scheduletrackingTasksActionFacadeOsgi" ref="scheduletrackingTasksActionFacade"
+                  interface="org.motechproject.scheduletracking.service.ScheduletrackingTasksActionFacade"/>
 
     <osgi:reference id="schedulerServiceOsgi"
                     interface="org.motechproject.scheduler.service.MotechSchedulerService"/>

@@ -2,7 +2,7 @@ package org.motechproject.scheduletracking.service.impl;
 
 import org.joda.time.DateTime;
 import org.motechproject.commons.date.model.Time;
-import org.motechproject.scheduletracking.service.EnrollmentActionService;
+import org.motechproject.scheduletracking.service.ScheduletrackingTasksActionFacade;
 import org.motechproject.scheduletracking.service.EnrollmentRequest;
 import org.motechproject.scheduletracking.service.ScheduleTrackingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Arrays;
 
 
-public class EnrollmentActionServiceImpl implements EnrollmentActionService {
+public class ScheduletrackingTasksActionFacadeImpl implements ScheduletrackingTasksActionFacade {
 
     @Autowired
     private ScheduleTrackingService scheduleTrackingService;

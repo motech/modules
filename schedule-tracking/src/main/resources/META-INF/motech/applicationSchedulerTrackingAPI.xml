@@ -16,7 +16,7 @@
     <bean id="scheduleTrackingService"
           class="org.motechproject.scheduletracking.service.impl.ScheduleTrackingServiceImpl"/>
 
-    <bean id="enrollmentActionService"
-          class="org.motechproject.scheduletracking.service.impl.EnrollmentActionServiceImpl"/>
+    <bean id="scheduletrackingTasksActionFacade"
+          class="org.motechproject.scheduletracking.service.impl.ScheduletrackingTasksActionFacadeImpl"/>
 
 </beans>

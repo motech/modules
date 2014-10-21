@@ -7,7 +7,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.motechproject.commons.date.model.Time;
-import org.motechproject.scheduletracking.service.EnrollmentActionService;
+import org.motechproject.scheduletracking.service.ScheduletrackingTasksActionFacade;
 import org.motechproject.scheduletracking.service.EnrollmentRequest;
 import org.motechproject.scheduletracking.service.ScheduleTrackingService;
 
@@ -18,10 +18,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.motechproject.commons.date.util.DateUtil.newDateTime;
 
-public class EnrollmentActionServiceTest {
+public class ScheduletrackingTasksActionFacadeTest {
 
     @InjectMocks
-    private EnrollmentActionService enrollmentActionService = new EnrollmentActionServiceImpl();
+    private ScheduletrackingTasksActionFacade scheduletrackingTasksActionFacade = new ScheduletrackingTasksActionFacadeImpl();
 
     @Mock
     ScheduleTrackingService scheduleTrackingService;
@@ -42,7 +42,7 @@ public class EnrollmentActionServiceTest {
         String enrollmentTime = "20:30";
         String startingMilestoneName = "startingMilestoneName";
 
-        enrollmentActionService.enroll(externalId, scheduleName, preferredAlertTime, referenceDate, referenceTime, enrollmentDate, enrollmentTime, startingMilestoneName);
+        scheduletrackingTasksActionFacade.enroll(externalId, scheduleName, preferredAlertTime, referenceDate, referenceTime, enrollmentDate, enrollmentTime, startingMilestoneName);
 
         ArgumentCaptor<EnrollmentRequest> captor = ArgumentCaptor.forClass(EnrollmentRequest.class);
 
@@ -65,7 +65,7 @@ public class EnrollmentActionServiceTest {
         String externalId = "externalId";
         String scheduleName = "scheduleName";
 
-        enrollmentActionService.unenroll(externalId, scheduleName);
+        scheduletrackingTasksActionFacade.unenroll(externalId, scheduleName);
 
         verify(scheduleTrackingService).unenroll(externalId, Arrays.asList(scheduleName));
     }
