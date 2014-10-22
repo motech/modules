@@ -4,14 +4,11 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.commcare.events.constants.EventSubjects;
 import org.motechproject.commcare.service.CommcareSchemaService;
+import org.motechproject.commcare.util.DummyCommcareSchema;
 import org.motechproject.tasks.contract.EventParameterRequest;
 import org.motechproject.tasks.contract.TriggerEventRequest;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -19,6 +16,12 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+
+import static org.motechproject.commcare.util.DummyCommcareSchema.CASE_FIELD1;
+import static org.motechproject.commcare.util.DummyCommcareSchema.CASE_FIELD2;
+import static org.motechproject.commcare.util.DummyCommcareSchema.CASE_FIELD3;
+import static org.motechproject.commcare.util.DummyCommcareSchema.CASE_FIELD4;
+import static org.motechproject.commcare.util.DummyCommcareSchema.CASE_FIELD5;
 
 public class CaseTriggerBuilderTest {
 
@@ -32,7 +35,7 @@ public class CaseTriggerBuilderTest {
     @Test
     public void shouldBuildProperTriggerRequestForCases() {
         initMocks(this);
-        when(schemaService.getAllCaseTypes()).thenReturn(getCases());
+        when(schemaService.getAllCaseTypes()).thenReturn(DummyCommcareSchema.getCases());
         caseTriggerBuilder = new CaseTriggerBuilder(schemaService);
 
         List<TriggerEventRequest> triggerEventRequests = caseTriggerBuilder.buildTriggers();
@@ -40,7 +43,7 @@ public class CaseTriggerBuilderTest {
         assertFalse(triggerEventRequests.isEmpty());
 
         // One trigger for cases is always built, therefore we should always have one case more
-        assertEquals(getCases().size() + 1, triggerEventRequests.size());
+        assertEquals(DummyCommcareSchema.getCases().size() + 1, triggerEventRequests.size());
 
         for(TriggerEventRequest request : triggerEventRequests) {
 
@@ -51,15 +54,15 @@ public class CaseTriggerBuilderTest {
                 case "org.motechproject.commcare.api.case.birth":
                     assertEquals(3 + CASE_PREDEFINED_FIELDS, request.getEventParameters().size());
                     assertEquals("Received Case: birth", request.getDisplayName());
-                    assertTrue(hasEventKey(request.getEventParameters(), "motherName"));
-                    assertTrue(hasEventKey(request.getEventParameters(), "childName"));
-                    assertTrue(hasEventKey(request.getEventParameters(), "dob"));
+                    assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD1));
+                    assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD2));
+                    assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD3));
                     break;
                 case "org.motechproject.commcare.api.case.appointment":
                     assertEquals(2 + CASE_PREDEFINED_FIELDS, request.getEventParameters().size());
                     assertEquals("Received Case: appointment", request.getDisplayName());
-                    assertTrue(hasEventKey(request.getEventParameters(), "visitDate"));
-                    assertTrue(hasEventKey(request.getEventParameters(), "isPregnant"));
+                    assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD4));
+                    assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD5));
                     break;
                 case "org.motechproject.commcare.api.case":
                     assertEquals(1, request.getEventParameters().size());
@@ -79,23 +82,5 @@ public class CaseTriggerBuilderTest {
         }
 
         return false;
-    }
-
-    private Map<String, Set<String>> getCases() {
-        Map<String, Set<String>> cases = new HashMap<>();
-        Set<String> fields1 = new HashSet<>();
-        Set<String> fields2 = new HashSet<>();
-
-        fields1.add("motherName");
-        fields1.add("childName");
-        fields1.add("dob");
-
-        fields2.add("visitDate");
-        fields2.add("isPregnant");
-
-        cases.put("birth", fields1);
-        cases.put("appointment", fields2);
-
-        return cases;
     }
 }

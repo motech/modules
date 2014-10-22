@@ -4,6 +4,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({CommcareBundleIT.class, CommcareApplicationDataServiceBundleIT.class})
+@Suite.SuiteClasses({CommcareTasksIntegrationBundleIT.class, CommcareBundleIT.class, CommcareApplicationDataServiceBundleIT.class})
 public class CommcareIntegrationTests {
 }

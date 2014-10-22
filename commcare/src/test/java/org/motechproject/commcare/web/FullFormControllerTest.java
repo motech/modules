@@ -30,6 +30,10 @@ import static org.motechproject.commcare.events.constants.EventDataKeys.VALUE;
 import static org.motechproject.commcare.events.constants.EventSubjects.DEVICE_LOG_EVENT;
 import static org.motechproject.commcare.events.constants.EventSubjects.FORMS_EVENT;
 
+import static org.motechproject.commcare.util.ResponseXML.ATTR1;
+import static org.motechproject.commcare.util.ResponseXML.ATTR2;
+import static org.motechproject.commcare.util.ResponseXML.ATTR2_VALUE;
+
 public class FullFormControllerTest {
 
     @Mock
@@ -118,11 +122,11 @@ public class FullFormControllerTest {
         Multimap<String, Object> subElements = (Multimap<String, Object>) parameters.get(SUB_ELEMENTS);
         assertEquals(5, subElements.size());
 
-        assertHasKeys(subElements, "is_pregnant", "delivery_date_known", "case", "cc_delegation_stub", "meta");
+        assertHasKeys(subElements, ATTR1, ATTR2, "case", "cc_delegation_stub", "meta");
 
-        List isPregnant = new ArrayList(subElements.get("is_pregnant"));
+        List isPregnant = new ArrayList(subElements.get(ATTR2));
         assertEquals(1, isPregnant.size());
-        assertEquals("true", ((Map<String, Object>) isPregnant.get(0)).get(EventDataKeys.VALUE));
+        assertEquals(ATTR2_VALUE, ((Map<String, Object>) isPregnant.get(0)).get(EventDataKeys.VALUE));
     }
 
     private void assertHasKeys(Multimap<String, Object> map, String... keys) {

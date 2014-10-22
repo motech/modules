@@ -22,6 +22,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import static org.motechproject.commcare.util.ResponseXML.ATTR1_VALUE;
+import static org.motechproject.commcare.util.ResponseXML.ATTR2_VALUE;
+
 public class CommcareEventParsersTest {
 
     @Mock
@@ -85,12 +88,12 @@ public class CommcareEventParsersTest {
 
         Map<String, Object> parsedParameters = formsEventParser.parseEventParameters(eventSubject, eventParameters);
 
-        assertTrue(parsedParameters.containsKey("/data/is_pregnant"));
-        assertTrue(parsedParameters.containsKey("/data/delivery_date_known"));
+        assertTrue(parsedParameters.containsKey("/data/pregnant"));
+        assertTrue(parsedParameters.containsKey("/data/dob"));
         assertTrue(parsedParameters.containsKey("/data/meta/username"));
 
-        assertEquals("true", parsedParameters.get("/data/is_pregnant"));
-        assertEquals("false", parsedParameters.get("/data/delivery_date_known"));
+        assertEquals(ATTR1_VALUE, parsedParameters.get("/data/pregnant"));
+        assertEquals(ATTR2_VALUE, parsedParameters.get("/data/dob"));
         assertEquals("test", parsedParameters.get("/data/meta/username"));
     }
 
