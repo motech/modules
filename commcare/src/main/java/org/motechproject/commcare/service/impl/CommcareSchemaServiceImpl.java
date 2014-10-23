@@ -22,13 +22,13 @@ import java.util.Set;
 @Service
 public class CommcareSchemaServiceImpl implements CommcareSchemaService {
 
-    private CommcareApplicationDataService applicationDataService;
+    private CommcareApplicationDataService commcareApplicationDataService;
 
     @Override
     public List<FormSchemaJson> getAllFormSchemas() {
         List<FormSchemaJson> allFormSchemas = new ArrayList<>();
 
-        for (CommcareApplicationJson app : applicationDataService.retrieveAll()) {
+        for (CommcareApplicationJson app : commcareApplicationDataService.retrieveAll()) {
             for (CommcareModuleJson module : app.getModules()) {
                 allFormSchemas.addAll(module.getFormSchemas());
             }
@@ -41,7 +41,7 @@ public class CommcareSchemaServiceImpl implements CommcareSchemaService {
     public Map<String, Set<String>> getAllCaseTypes() {
         Map<String, Set<String>> allCaseTypes = new HashMap<>();
 
-        for (CommcareApplicationJson app : applicationDataService.retrieveAll()) {
+        for (CommcareApplicationJson app : commcareApplicationDataService.retrieveAll()) {
             for (CommcareModuleJson module : app.getModules()) {
                 String caseType = module.getCaseType();
                 if (!allCaseTypes.containsKey(caseType)) {
@@ -54,7 +54,7 @@ public class CommcareSchemaServiceImpl implements CommcareSchemaService {
     }
 
     @Autowired
-    public void setApplicationDataService(CommcareApplicationDataService applicationDataService) {
-        this.applicationDataService = applicationDataService;
+    public void setCommcareApplicationDataService(CommcareApplicationDataService commcareApplicationDataService) {
+        this.commcareApplicationDataService = commcareApplicationDataService;
     }
 }

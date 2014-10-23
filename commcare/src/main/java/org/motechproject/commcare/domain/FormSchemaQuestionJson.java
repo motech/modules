@@ -2,36 +2,30 @@ package org.motechproject.commcare.domain;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import org.motechproject.mds.annotations.Entity;
-import org.motechproject.mds.annotations.Field;
 
+import java.io.Serializable;
 import java.util.List;
 
-@Entity(name = "Form Schema Question")
-public class FormSchemaQuestionJson {
+public class FormSchemaQuestionJson implements Serializable {
+    private static final long serialVersionUID = -2133822667622624721L;
 
     @Expose
-    @Field(displayName = "Question Label")
     @SerializedName("label")
     private String questionLabel;
 
     @Expose
-    @Field(displayName = "Question Repeat")
     @SerializedName("repeat")
     private String questionRepeat;
 
     @Expose
-    @Field(displayName = "Question Tag")
     @SerializedName("tag")
     private String questionTag;
 
     @Expose
-    @Field(displayName = "Question Value")
     @SerializedName("value")
     private String questionValue;
 
     @Expose
-    @Field(displayName = "Form Question Options")
     @SerializedName("options")
     private List<FormSchemaQuestionOptionJson> options;
 

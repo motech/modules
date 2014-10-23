@@ -37,7 +37,7 @@ public class CommcareApplicationDataServiceBundleIT extends BasePaxIT {
     private static final String CASE_PROPERTY_2 = "user_bednet";
 
     @Inject
-    private CommcareApplicationDataService commareApplicationDataService;
+    private CommcareApplicationDataService commcareApplicationDataService;
 
     private MotechJsonReader motechJsonReader = new MotechJsonReader();
 
@@ -46,10 +46,10 @@ public class CommcareApplicationDataServiceBundleIT extends BasePaxIT {
         List<CommcareApplicationJson> commcareApplicationJsonList = application();
 
         for (CommcareApplicationJson app : commcareApplicationJsonList) {
-            commareApplicationDataService.create(app);
+            commcareApplicationDataService.create(app);
         }
 
-        List<CommcareApplicationJson> commcareApplications = commareApplicationDataService.retrieveAll();
+        List<CommcareApplicationJson> commcareApplications = commcareApplicationDataService.retrieveAll();
 
         assertEquals(1, commcareApplications.size());
 
@@ -68,12 +68,12 @@ public class CommcareApplicationDataServiceBundleIT extends BasePaxIT {
 
     @Before
     public void setUp() {
-        commareApplicationDataService.deleteAll();
+        commcareApplicationDataService.deleteAll();
     }
 
     @After
     public void tearDown() {
-        commareApplicationDataService.deleteAll();
+        commcareApplicationDataService.deleteAll();
     }
 
     private List<CommcareApplicationJson> application() throws IOException {

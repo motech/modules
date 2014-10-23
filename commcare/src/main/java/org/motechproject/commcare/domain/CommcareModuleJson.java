@@ -2,26 +2,22 @@ package org.motechproject.commcare.domain;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import org.motechproject.mds.annotations.Entity;
-import org.motechproject.mds.annotations.Field;
 
+import java.io.Serializable;
 import java.util.List;
 
-@Entity(name = "Commcare Module")
-public class CommcareModuleJson {
+public class CommcareModuleJson implements Serializable {
+    private static final long serialVersionUID = 4408034863223848508L;
 
     @Expose
-    @Field(displayName = "Case Properties")
     @SerializedName("case_properties")
     private List<String> caseProperties;
 
     @Expose
-    @Field(displayName = "Case Type")
     @SerializedName("case_type")
     private String caseType;
 
     @Expose
-    @Field(displayName = "Form Schemas")
     @SerializedName("forms")
     private List<FormSchemaJson> formSchemas;
 

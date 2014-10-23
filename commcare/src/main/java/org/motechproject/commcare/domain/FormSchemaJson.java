@@ -2,22 +2,19 @@ package org.motechproject.commcare.domain;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import org.motechproject.mds.annotations.Entity;
-import org.motechproject.mds.annotations.Field;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-@Entity(name = "Form Schema")
-public class FormSchemaJson {
+public class FormSchemaJson implements Serializable {
+    private static final long serialVersionUID = 3033023909405645226L;
 
     @Expose
-    @Field(displayName = "Form Names")
     @SerializedName("name")
     private Map<String, String> formNames;
 
     @Expose
-    @Field(displayName = "Form Questions")
     @SerializedName("questions")
     private List<FormSchemaQuestionJson> questions;
 

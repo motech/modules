@@ -34,12 +34,15 @@ public class AppSchemaChangeEventHandler {
     @MotechListener(subjects = SCHEMA_CHANGE_EVENT)
     public void schemaChange(MotechEvent event) {
         List<CommcareApplicationJson> applications = appStructureService.getAllApplications();
-        commcareApplicationDataService.deleteAll();
 
-        for (CommcareApplicationJson app : applications) {
-            commcareApplicationDataService.create(app);
+        if (!applications.equals(commcareApplicationDataService.retrieveAll())) {
+            commcareApplicationDataService.deleteAll();
+
+            for (CommcareApplicationJson app : applications) {
+                commcareApplicationDataService.create(app);
+            }
+
+            commcareTasksNotifier.updateTasksInfo();
         }
-
-        commcareTasksNotifier.updateTasksInfo();
     }
 }
