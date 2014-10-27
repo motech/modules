@@ -13,7 +13,7 @@ import java.util.Objects;
  * \ingroup cmslite
  * Represents stream content along with checksum.
  */
-@Entity
+@Entity(recordHistory = true)
 @Unique(name = "languageAndName", members = {"language", "name" })
 public class StreamContent implements Content {
 

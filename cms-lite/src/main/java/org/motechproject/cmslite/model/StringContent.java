@@ -11,7 +11,7 @@ import java.util.Objects;
  * \ingroup cmslite
  * Represents Text Content.
  */
-@Entity
+@Entity(recordHistory = true)
 @Unique(name = "languageAndName", members = {"language", "name" })
 public class StringContent implements Content {
 
