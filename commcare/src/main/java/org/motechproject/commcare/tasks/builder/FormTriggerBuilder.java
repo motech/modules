@@ -9,6 +9,7 @@ import org.motechproject.tasks.contract.TriggerEventRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.motechproject.commcare.events.constants.EventDataKeys.CASE_ID;
 import static org.motechproject.commcare.events.constants.EventDataKeys.META_APP_VERSION;
 import static org.motechproject.commcare.events.constants.EventDataKeys.META_DEVICE_ID;
 import static org.motechproject.commcare.events.constants.EventDataKeys.META_INSTANCE_ID;
@@ -16,6 +17,8 @@ import static org.motechproject.commcare.events.constants.EventDataKeys.META_TIM
 import static org.motechproject.commcare.events.constants.EventDataKeys.META_TIME_START;
 import static org.motechproject.commcare.events.constants.EventDataKeys.META_USERNAME;
 import static org.motechproject.commcare.events.constants.EventDataKeys.META_USER_ID;
+import static org.motechproject.commcare.events.constants.EventDataKeys.REGISTERED_CASE_NAME;
+import static org.motechproject.commcare.events.constants.EventDataKeys.REGISTERED_CASE_TYPE;
 import static org.motechproject.commcare.events.constants.EventSubjects.FORMS_EVENT;
 
 /**
@@ -41,6 +44,7 @@ public class FormTriggerBuilder implements TriggerBuilder {
             List<EventParameterRequest> parameters = new ArrayList<>();
             String formName = form.getFormNames().get("en");
             addMetadataFields(parameters);
+            addCaseFields(parameters);
 
             for (FormSchemaQuestionJson question : form.getQuestions()) {
                 parameters.add(new EventParameterRequest(question.getQuestionLabel(), question.getQuestionValue()));
@@ -50,6 +54,12 @@ public class FormTriggerBuilder implements TriggerBuilder {
         }
 
         return triggers;
+    }
+
+    private void addCaseFields(List<EventParameterRequest> parameters) {
+        parameters.add(new EventParameterRequest("commcare.case.field.caseId", CASE_ID));
+        parameters.add(new EventParameterRequest("commcare.case.field.caseType", REGISTERED_CASE_TYPE));
+        parameters.add(new EventParameterRequest("commcare.case.field.caseName", REGISTERED_CASE_NAME));
     }
 
     private void addMetadataFields(List<EventParameterRequest> parameters) {

@@ -39,6 +39,10 @@ public final class EventDataKeys {
     public static final String META_TIME_START = "/data/meta/timestart";
     public static final String META_TIME_END = "/data/meta/timeend";
 
+    public static final String REGISTERED_CASE_TYPE = "/data/case/create/case_type";
+    public static final String REGISTERED_CASE_NAME = "/data/case/create/case_name";
+
+
     //FullFormsExceptionEvent
     public static final String FAILED_FORM_MESSAGE = "failedMessage";
 
