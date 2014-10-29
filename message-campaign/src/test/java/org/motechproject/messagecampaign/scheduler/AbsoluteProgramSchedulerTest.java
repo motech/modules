@@ -8,10 +8,10 @@ import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.messagecampaign.builder.CampaignBuilder;
 import org.motechproject.messagecampaign.builder.EnrollRequestBuilder;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
-import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaign;
-import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
+import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaign;
+import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.userspecified.CampaignRecord;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
@@ -19,7 +19,6 @@ import org.motechproject.scheduler.service.MotechSchedulerService;
 import java.util.Date;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -58,7 +57,7 @@ public class AbsoluteProgramSchedulerTest {
         absoluteCampaignScheduler.start(enrollment);
 
         ArgumentCaptor<RunOnceSchedulableJob> capture = ArgumentCaptor.forClass(RunOnceSchedulableJob.class);
-        verify(schedulerService, times(2)).scheduleRunOnceJob(capture.capture());
+        verify(schedulerService, times(3)).scheduleRunOnceJob(capture.capture());
 
         List<RunOnceSchedulableJob> allJobs = capture.getAllValues();
 
@@ -71,6 +70,12 @@ public class AbsoluteProgramSchedulerTest {
         assertEquals(startDate2.toString(), allJobs.get(1).getStartDate().toString());
         assertEquals("org.motechproject.messagecampaign.fired-campaign-message", allJobs.get(1).getMotechEvent().getSubject());
         assertMotechEvent(allJobs.get(1), "MessageJob.testCampaign.12345.random-2", "random-2");
+
+        RunOnceSchedulableJob endOfCampaignJob = allJobs.get(2);
+        assertEquals(startDate2, endOfCampaignJob.getStartDate());
+        assertEquals("org.motechproject.messagecampaign.campaign-completed", endOfCampaignJob.getMotechEvent().getSubject());
+        assertEquals("testCampaign", endOfCampaignJob.getMotechEvent().getParameters().get("CampaignName"));
+        assertEquals("12345", endOfCampaignJob.getMotechEvent().getParameters().get("ExternalID"));
     }
 
     private void assertMotechEvent(RunOnceSchedulableJob runOnceSchedulableJob, String expectedJobId, Object messageKey) {

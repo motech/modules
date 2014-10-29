@@ -1,5 +1,7 @@
 package org.motechproject.messagecampaign.domain.campaign;
 
+import org.joda.time.Period;
+import org.motechproject.commons.date.util.JodaFormatter;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
 
@@ -8,7 +10,7 @@ import java.util.List;
 @Entity
 public class OffsetCampaign implements Campaign<OffsetCampaignMessage> {
 
-    private String maxDuration;
+    private Period maxDuration;
     private String name;
     private List<OffsetCampaignMessage> messages;
 
@@ -32,11 +34,11 @@ public class OffsetCampaign implements Campaign<OffsetCampaignMessage> {
         return name;
     }
 
-    public String maxDuration() {
+    public Period maxDuration() {
         return maxDuration;
     }
 
     public void maxDuration(String maxDuration) {
-        this.maxDuration = maxDuration;
+        this.maxDuration = new JodaFormatter().parsePeriod(maxDuration);
     }
 }

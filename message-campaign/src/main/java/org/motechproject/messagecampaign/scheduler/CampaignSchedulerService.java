@@ -2,13 +2,15 @@ package org.motechproject.messagecampaign.scheduler;
 
 import org.joda.time.DateTime;
 import org.motechproject.commons.date.model.Time;
+import org.motechproject.event.MotechEvent;
 import org.motechproject.messagecampaign.EventKeys;
 import org.motechproject.messagecampaign.builder.SchedulerPayloadBuilder;
+import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.campaign.Campaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.scheduler.exception.CampaignEnrollmentException;
-import org.motechproject.messagecampaign.dao.CampaignRecordService;
+import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 
 import java.util.ArrayList;
@@ -37,15 +39,28 @@ public abstract class CampaignSchedulerService<M extends CampaignMessage, C exte
     public void start(CampaignEnrollment enrollment) {
         C campaign = (C) getCampaignRecordService().findByName(enrollment.getCampaignName()).build();
         for (M message : campaign.getMessages()) {
-            scheduleMessageJob(enrollment, message);
+            scheduleMessageJob(enrollment, campaign, message);
         }
+
+        scheduleEndOfCampaignEvent(campaign, enrollment);
     }
 
-    public abstract void stop(CampaignEnrollment enrollment);
+    public void stop(CampaignEnrollment enrollment) {
+        schedulerService.safeUnscheduleRunOnceJob(EventKeys.CAMPAIGN_COMPLETED,
+                jobIdFactory.campaignCompletedJobIdFor(enrollment.getCampaignName(), enrollment.getExternalId()));
+        unscheduleMessageJobs(enrollment);
+    }
+
+    protected abstract void unscheduleMessageJobs(CampaignEnrollment enrollment);
 
     public Map<String, List<DateTime>> getCampaignTimings(DateTime startDate, DateTime endDate, CampaignEnrollment enrollment) {
-        Map<String, List<DateTime>> messageTimingsMap = new HashMap<>();
         C campaign = (C) getCampaignRecordService().findByName(enrollment.getCampaignName()).build();
+        return getCampaignTimings(startDate, endDate, enrollment, campaign);
+    }
+
+    protected Map<String, List<DateTime>> getCampaignTimings(DateTime startDate, DateTime endDate, CampaignEnrollment enrollment,
+                                                             C campaign) {
+        Map<String, List<DateTime>> messageTimingsMap = new HashMap<>();
         for (M message : campaign.getMessages()) {
             String externalJobIdPrefix = messageJobIdFor(message.getMessageKey(), enrollment.getExternalId(), enrollment.getCampaignName());
             List<DateTime> dates = convertToDateTimeList(schedulerService.getScheduledJobTimingsWithPrefix(EventKeys.SEND_MESSAGE, externalJobIdPrefix, startDate.toDate(), endDate.toDate()));
@@ -55,7 +70,9 @@ public abstract class CampaignSchedulerService<M extends CampaignMessage, C exte
         return messageTimingsMap;
     }
 
-    protected abstract void scheduleMessageJob(CampaignEnrollment enrollment, CampaignMessage message);
+    protected abstract DateTime campaignEndDate(C campaign, CampaignEnrollment enrollment);
+
+    protected abstract void scheduleMessageJob(CampaignEnrollment enrollment, C campaign, M message);
 
     protected Time deliverTimeFor(CampaignEnrollment enrollment, CampaignMessage message) {
         Time deliveryTime = enrollment.getDeliverTime() != null ? enrollment.getDeliverTime() : message.getStartTime();
@@ -96,6 +113,37 @@ public abstract class CampaignSchedulerService<M extends CampaignMessage, C exte
         }
 
         return list;
+    }
+
+    protected DateTime findLastDateTime(Map<String, List<DateTime>> timingsMap) {
+        DateTime finalFireTime = null;
+        for (List<DateTime> dateTimeList : timingsMap.values()) {
+            for (DateTime dateTime : dateTimeList) {
+                if (finalFireTime == null || dateTime.isAfter(finalFireTime)) {
+                    finalFireTime = dateTime;
+                }
+            }
+        }
+        return finalFireTime;
+    }
+
+    protected void scheduleEndOfCampaignEvent(C campaign, CampaignEnrollment enrollment) {
+        DateTime endDate = campaignEndDate(campaign, enrollment);
+
+        if (endDate != null) {
+            String campaignName = campaign.getName();
+            String externalId = enrollment.getExternalId();
+
+            Map<String, Object> params = new SchedulerPayloadBuilder()
+                .withExternalId(externalId)
+                .withCampaignName(campaignName)
+                .withJobId(jobIdFactory.campaignCompletedJobIdFor(campaignName, externalId))
+                .payload();
+
+            MotechEvent endOfCampaignEvent = new MotechEvent(EventKeys.CAMPAIGN_COMPLETED, params);
+
+            schedulerService.scheduleRunOnceJob(new RunOnceSchedulableJob(endOfCampaignEvent, endDate.toDate()));
+        }
     }
 }
 

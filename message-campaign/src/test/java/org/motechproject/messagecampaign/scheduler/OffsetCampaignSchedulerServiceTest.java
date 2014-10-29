@@ -15,7 +15,6 @@ import org.motechproject.messagecampaign.builder.CampaignBuilder;
 import org.motechproject.messagecampaign.builder.EnrollRequestBuilder;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
-import org.motechproject.messagecampaign.domain.campaign.Campaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
 import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
@@ -65,7 +64,7 @@ public class OffsetCampaignSchedulerServiceTest {
         try {
             fakeNow(newDateTime(2010, 10, 1));
 
-            Campaign campaign = new OffsetCampaign();
+            OffsetCampaign campaign = new OffsetCampaign();
             campaign.setName("camp");
 
             when(campaignRecordService.findByName("camp")).thenReturn(campaignRecord);
@@ -77,7 +76,7 @@ public class OffsetCampaignSchedulerServiceTest {
             offsetCampaignMessage.setMessageKey("foo");
             offsetCampaignMessage.setStartTime(5, 30);
 
-            offsetCampaignSchedulerService.scheduleMessageJob(enrollment, offsetCampaignMessage);
+            offsetCampaignSchedulerService.scheduleMessageJob(enrollment, campaign, offsetCampaignMessage);
 
             ArgumentCaptor<RunOnceSchedulableJob> jobCaptor = ArgumentCaptor.forClass(RunOnceSchedulableJob.class);
             verify(schedulerService).scheduleRunOnceJob(jobCaptor.capture());
@@ -94,7 +93,7 @@ public class OffsetCampaignSchedulerServiceTest {
         try {
             fakeNow(newDateTime(2010, 10, 1));
 
-            Campaign campaign = new OffsetCampaign();
+            OffsetCampaign campaign = new OffsetCampaign();
             campaign.setName("camp");
             when(campaignRecordService.findByName("camp")).thenReturn(campaignRecord);
             when(campaignRecord.build()).thenReturn(campaign);
@@ -106,7 +105,7 @@ public class OffsetCampaignSchedulerServiceTest {
             offsetCampaignMessage.setMessageKey("foo");
             offsetCampaignMessage.setStartTime(5, 30);
 
-            offsetCampaignSchedulerService.scheduleMessageJob(enrollment, offsetCampaignMessage);
+            offsetCampaignSchedulerService.scheduleMessageJob(enrollment, campaign, offsetCampaignMessage);
 
             ArgumentCaptor<RunOnceSchedulableJob> jobCaptor = ArgumentCaptor.forClass(RunOnceSchedulableJob.class);
             verify(schedulerService).scheduleRunOnceJob(jobCaptor.capture());
@@ -123,7 +122,7 @@ public class OffsetCampaignSchedulerServiceTest {
         try {
             fakeNow(newDateTime(2010, 10, 1));
 
-            Campaign campaign = new OffsetCampaign();
+            OffsetCampaign campaign = new OffsetCampaign();
             campaign.setName("camp");
             when(campaignRecordService.findByName("camp")).thenReturn(campaignRecord);
             when(campaignRecord.build()).thenReturn(campaign);
@@ -135,7 +134,7 @@ public class OffsetCampaignSchedulerServiceTest {
             offsetCampaignMessage.setMessageKey("foo");
             offsetCampaignMessage.setStartTime(5, 30);
 
-            offsetCampaignSchedulerService.scheduleMessageJob(enrollment, offsetCampaignMessage);
+            offsetCampaignSchedulerService.scheduleMessageJob(enrollment, campaign, offsetCampaignMessage);
 
             ArgumentCaptor<RunOnceSchedulableJob> jobCaptor = ArgumentCaptor.forClass(RunOnceSchedulableJob.class);
             verify(schedulerService).scheduleRunOnceJob(jobCaptor.capture());
@@ -163,24 +162,30 @@ public class OffsetCampaignSchedulerServiceTest {
 
         offsetCampaignScheduler.start(enrollment);
         ArgumentCaptor<RunOnceSchedulableJob> capture = ArgumentCaptor.forClass(RunOnceSchedulableJob.class);
-        verify(schedulerService, times(3)).scheduleRunOnceJob(capture.capture());
+        verify(schedulerService, times(4)).scheduleRunOnceJob(capture.capture());
 
         List<RunOnceSchedulableJob> allJobs = capture.getAllValues();
 
         Date startDate1 = DateUtil.newDateTime(DateUtil.today().plusDays(7), request.deliverTime().getHour(), request.deliverTime().getMinute(), 0).toDate();
-        Assert.assertEquals(startDate1.toString(), allJobs.get(0).getStartDate().toString());
+        Assert.assertEquals(startDate1, allJobs.get(0).getStartDate());
         Assert.assertEquals("org.motechproject.messagecampaign.fired-campaign-message", allJobs.get(0).getMotechEvent().getSubject());
         assertMotechEvent(allJobs.get(0), "MessageJob.testCampaign.12345.child-info-week-1", "child-info-week-1");
 
         Date startDate2 = DateUtil.newDateTime(DateUtil.today().plusDays(14), request.deliverTime().getHour(), request.deliverTime().getMinute(), 0).toDate();
-        Assert.assertEquals(startDate2.toString(), allJobs.get(1).getStartDate().toString());
+        Assert.assertEquals(startDate2, allJobs.get(1).getStartDate());
         Assert.assertEquals("org.motechproject.messagecampaign.fired-campaign-message", allJobs.get(1).getMotechEvent().getSubject());
         assertMotechEvent(allJobs.get(1), "MessageJob.testCampaign.12345.child-info-week-1a", "child-info-week-1a");
 
         Date startDate3 = DateUtil.newDateTime(DateUtil.today().plusMonths(1), request.deliverTime().getHour(), request.deliverTime().getMinute(), 0).toDate();
-        Assert.assertEquals(startDate3.toString(), allJobs.get(2).getStartDate().toString());
+        Assert.assertEquals(startDate3, allJobs.get(2).getStartDate());
         Assert.assertEquals("org.motechproject.messagecampaign.fired-campaign-message", allJobs.get(2).getMotechEvent().getSubject());
         assertMotechEvent(allJobs.get(2), "MessageJob.testCampaign.12345.child-info-month-1", "child-info-month-1");
+
+        RunOnceSchedulableJob endOfCampaignJob = allJobs.get(3);
+        Assert.assertEquals(startDate3, endOfCampaignJob.getStartDate());
+        Assert.assertEquals("org.motechproject.messagecampaign.campaign-completed", endOfCampaignJob.getMotechEvent().getSubject());
+        Assert.assertEquals("testCampaign", endOfCampaignJob.getMotechEvent().getParameters().get("CampaignName"));
+        Assert.assertEquals("12345", endOfCampaignJob.getMotechEvent().getParameters().get("ExternalID"));
     }
 
     @Test
@@ -194,11 +199,12 @@ public class OffsetCampaignSchedulerServiceTest {
         campaignMessage.setName(campaignName);
         campaignMessage.setStartTime(null);
         campaignMessage.setTimeOffset(new Period(timeOffsetGreaterThanADay * 1000));
+        OffsetCampaign campaign = new CampaignBuilder().defaultOffsetCampaign();
 
         expectedException.expect(CampaignEnrollmentException.class);
         expectedException.expectMessage(String.format("Cannot enroll %s for message campaign %s - Start time not defined for campaign. Define it in campaign-message.json or at enrollment time", externalId, campaignName));
 
-        offsetCampaignSchedulerService.scheduleMessageJob(enrollment, campaignMessage);
+        offsetCampaignSchedulerService.scheduleMessageJob(enrollment, campaign, campaignMessage);
 
         verifyZeroInteractions(schedulerService);
     }

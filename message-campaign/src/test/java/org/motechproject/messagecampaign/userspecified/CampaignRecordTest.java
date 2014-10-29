@@ -51,7 +51,7 @@ public class CampaignRecordTest {
         assertTrue(campaign instanceof OffsetCampaign);
         OffsetCampaign offsetCampaign = (OffsetCampaign) campaign;
         assertEquals(campaignRecord.getName(), offsetCampaign.getName());
-        assertEquals(campaignRecord.getMaxDuration(), offsetCampaign.maxDuration());
+        assertEquals(new JodaFormatter().parsePeriod(campaignRecord.getMaxDuration()), offsetCampaign.maxDuration());
         List<OffsetCampaignMessage> messages = offsetCampaign.getMessages();
         assertEquals(1, messages.size());
 

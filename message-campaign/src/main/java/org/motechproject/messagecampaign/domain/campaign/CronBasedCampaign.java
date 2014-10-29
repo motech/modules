@@ -1,5 +1,7 @@
 package org.motechproject.messagecampaign.domain.campaign;
 
+import org.joda.time.Period;
+import org.motechproject.commons.date.util.JodaFormatter;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.messagecampaign.domain.message.CronBasedCampaignMessage;
 
@@ -8,7 +10,7 @@ import java.util.List;
 @Entity
 public class CronBasedCampaign implements Campaign<CronBasedCampaignMessage> {
 
-    private String maxDuration;
+    private Period maxDuration;
     private String name;
     private List<CronBasedCampaignMessage> messages;
 
@@ -33,10 +35,10 @@ public class CronBasedCampaign implements Campaign<CronBasedCampaignMessage> {
     }
 
     public void maxDuration(String maxDuration) {
-        this.maxDuration = maxDuration;
+        this.maxDuration = new JodaFormatter().parsePeriod(maxDuration);
     }
 
-    public String maxDuration() {
+    public Period maxDuration() {
         return maxDuration;
     }
 }
