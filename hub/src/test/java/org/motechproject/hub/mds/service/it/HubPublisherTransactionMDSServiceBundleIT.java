@@ -23,6 +23,7 @@ import java.util.List;
 public class HubPublisherTransactionMDSServiceBundleIT extends BasePaxIT {
 
     private static final String TOPIC_URL = "http://topic/url";
+    private static final int CONTENT_ID = 7622;
 
     @Inject
     private HubPublisherTransactionMDSService hubPublisherTransactionMDSService;
@@ -49,6 +50,7 @@ public class HubPublisherTransactionMDSServiceBundleIT extends BasePaxIT {
 
         HubPublisherTransaction hubPublisherTransaction = new HubPublisherTransaction();
         hubPublisherTransaction.setHubTopicId(topicId);
+        hubPublisherTransaction.setContentId(CONTENT_ID);
         hubPublisherTransactionMDSService.create(hubPublisherTransaction);
 
         hubPublisherTransactions = hubPublisherTransactionMDSService

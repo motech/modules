@@ -46,6 +46,7 @@ public class CommcareApplicationDataServiceBundleIT extends BasePaxIT {
         List<CommcareApplicationJson> commcareApplicationJsonList = application();
 
         for (CommcareApplicationJson app : commcareApplicationJsonList) {
+            app.setModules(app.getModules());
             commcareApplicationDataService.create(app);
         }
 

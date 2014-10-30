@@ -13,6 +13,7 @@ import org.motechproject.mds.annotations.Ignore;
 import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.Persistent;
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,14 +42,14 @@ public class CommcareApplicationJson {
     private List<CommcareModuleJson> modules;
 
     @Field(displayName = "Commcare Modules", type = "text")
-    @Persistent(defaultFetchGroup="true")
+    @Persistent(defaultFetchGroup = "true")
     private String serializedModules;
 
     public CommcareApplicationJson(String commcareAppId, String applicationName, String resourceUri, List<CommcareModuleJson> modules) {
         this.commcareAppId = commcareAppId;
         this.applicationName = applicationName;
         this.resourceUri = resourceUri;
-        this.modules = modules;
+        setModules(modules);
     }
 
     public String getApplicationName() {
@@ -74,10 +75,10 @@ public class CommcareApplicationJson {
             deserializeModules();
             return modules;
         }
-        return null;
+        return Collections.emptyList();
     }
 
-    public void setModules(List<CommcareModuleJson> modules) {
+    public final void setModules(List<CommcareModuleJson> modules) {
         this.modules = modules;
         serializeModules();
     }
