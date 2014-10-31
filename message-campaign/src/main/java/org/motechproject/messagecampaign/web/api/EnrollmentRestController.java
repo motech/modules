@@ -141,6 +141,20 @@ public class EnrollmentRestController {
         }
     }
 
+    @RequestMapping(value = "/{campaignName}/users/{externalId}/latest", method = RequestMethod.GET)
+    @PreAuthorize(HAS_MANAGE_ENROLLMENTS_ROLE)
+    @ResponseBody
+    public String getLatestCampaingMessageKey(@PathVariable String campaignName, @PathVariable String externalId) {
+        return messageCampaignService.getLatestCampaignMessage(campaignName, externalId);
+    }
+
+    @RequestMapping(value = "/{campaignName}/users/{externalId}/next", method = RequestMethod.GET)
+    @PreAuthorize(HAS_MANAGE_ENROLLMENTS_ROLE)
+    @ResponseBody
+    public String getNextCampaingMessageKey(@PathVariable String campaignName, @PathVariable String externalId) {
+        return messageCampaignService.getNextCampaignMessage(campaignName, externalId);
+    }
+
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     @PreAuthorize(HAS_MANAGE_ENROLLMENTS_ROLE)
     @ResponseBody

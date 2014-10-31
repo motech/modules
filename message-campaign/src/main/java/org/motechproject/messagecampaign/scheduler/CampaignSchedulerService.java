@@ -4,11 +4,12 @@ import org.joda.time.DateTime;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.messagecampaign.EventKeys;
 import org.motechproject.messagecampaign.builder.SchedulerPayloadBuilder;
+import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.campaign.Campaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.scheduler.exception.CampaignEnrollmentException;
-import org.motechproject.messagecampaign.dao.CampaignRecordService;
+import org.motechproject.scheduler.contract.JobId;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 
 import java.util.ArrayList;
@@ -42,6 +43,8 @@ public abstract class CampaignSchedulerService<M extends CampaignMessage, C exte
     }
 
     public abstract void stop(CampaignEnrollment enrollment);
+
+    public abstract JobId getJobId(String messageKey, String externalId, String campaingName);
 
     public Map<String, List<DateTime>> getCampaignTimings(DateTime startDate, DateTime endDate, CampaignEnrollment enrollment) {
         Map<String, List<DateTime>> messageTimingsMap = new HashMap<>();
