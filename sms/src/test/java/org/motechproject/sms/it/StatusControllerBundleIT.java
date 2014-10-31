@@ -3,11 +3,14 @@ package org.motechproject.sms.it;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.commons.api.Range;
 import org.motechproject.sms.audit.DeliveryStatus;
+import org.motechproject.sms.audit.SmsDirection;
 import org.motechproject.sms.audit.SmsRecord;
 import org.motechproject.sms.audit.SmsRecordsDataService;
 import org.motechproject.sms.configs.Config;
@@ -26,6 +29,7 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -107,7 +111,8 @@ public class StatusControllerBundleIT extends BasePaxIT {
         assertTrue(SimpleHttpClient.execHttpRequest(httpGet, HttpStatus.SC_OK));
 
         //Verify we logged this
-        List<SmsRecord> smsRecords = smsRecordsDataService.findByCriteria(null, null, null, null, null, null, null,
+        List<SmsRecord> smsRecords = smsRecordsDataService.findByCriteria(null, new HashSet<SmsDirection>(), null, null,
+                new Range<DateTime>(null, null), new HashSet<DeliveryStatus>(), null,
                 null, messageId, null, null);
         assertEquals(1, smsRecords.size());
         assertEquals(smsRecords.get(0).getDeliveryStatus(), DeliveryStatus.DELIVERY_CONFIRMED);
