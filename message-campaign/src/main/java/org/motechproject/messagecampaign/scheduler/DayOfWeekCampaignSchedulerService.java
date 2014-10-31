@@ -1,23 +1,25 @@
 package org.motechproject.messagecampaign.scheduler;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.Period;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.messagecampaign.EventKeys;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.DayOfWeekCampaign;
-import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.domain.message.DayOfWeek;
 import org.motechproject.messagecampaign.domain.message.DayOfWeekCampaignMessage;
+import org.motechproject.scheduler.contract.CronJobId;
 import org.motechproject.scheduler.contract.DayOfWeekSchedulableJob;
 import org.motechproject.scheduler.contract.JobId;
-import org.motechproject.scheduler.contract.RepeatingJobId;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class DayOfWeekCampaignSchedulerService extends CampaignSchedulerService<DayOfWeekCampaignMessage, DayOfWeekCampaign> {
@@ -28,14 +30,14 @@ public class DayOfWeekCampaignSchedulerService extends CampaignSchedulerService<
     }
 
     @Override
-    protected void scheduleMessageJob(CampaignEnrollment enrollment, CampaignMessage message) {
-        DayOfWeekCampaign campaign = (DayOfWeekCampaign) getCampaignRecordService().findByName(enrollment.getCampaignName()).build();
+    protected void scheduleMessageJob(CampaignEnrollment enrollment, DayOfWeekCampaign campaign, DayOfWeekCampaignMessage message) {
         MotechEvent motechEvent = new MotechEvent(EventKeys.SEND_MESSAGE, jobParams(message.getMessageKey(), enrollment));
         LocalDate start = enrollment.getReferenceDate();
         LocalDate end = start.plus(campaign.maxDuration());
-        DayOfWeekCampaignMessage dayOfWeekMessage = (DayOfWeekCampaignMessage) message;
-        List<DayOfWeek> daysOfWeek = dayOfWeekMessage.getDaysOfWeek();
-        getSchedulerService().scheduleDayOfWeekJob(new DayOfWeekSchedulableJob(motechEvent, start, end, castDaysOfWeekList(daysOfWeek), deliverTimeFor(enrollment, message), true));
+
+        List<DayOfWeek> daysOfWeek = message.getDaysOfWeek();
+        getSchedulerService().scheduleDayOfWeekJob(new DayOfWeekSchedulableJob(motechEvent, start, end,
+                castDaysOfWeekList(daysOfWeek), deliverTimeFor(enrollment, message), true));
     }
 
     private List<org.motechproject.commons.date.model.DayOfWeek> castDaysOfWeekList(List<DayOfWeek> daysOfWeek) {
@@ -52,7 +54,7 @@ public class DayOfWeekCampaignSchedulerService extends CampaignSchedulerService<
     }
 
     @Override
-    public void stop(CampaignEnrollment enrollment) {
+    public void unscheduleMessageJobs(CampaignEnrollment enrollment) {
         DayOfWeekCampaign campaign = (DayOfWeekCampaign) getCampaignRecordService().findByName(enrollment.getCampaignName()).build();
         for (DayOfWeekCampaignMessage message : campaign.getMessages()) {
             getSchedulerService().safeUnscheduleJob(EventKeys.SEND_MESSAGE, messageJobIdFor(message.getMessageKey(), enrollment.getExternalId(), enrollment.getCampaignName()));
@@ -61,6 +63,18 @@ public class DayOfWeekCampaignSchedulerService extends CampaignSchedulerService<
 
     @Override
     public JobId getJobId(String messageKey, String externalId, String campaingName) {
-        return new RepeatingJobId(EventKeys.SEND_MESSAGE, messageJobIdFor(messageKey, externalId, campaingName));
+        return new CronJobId(EventKeys.SEND_MESSAGE, messageJobIdFor(messageKey, externalId, campaingName));
+    }
+
+    @Override
+    protected DateTime campaignEndDate(DayOfWeekCampaign campaign, CampaignEnrollment enrollment) {
+        Period maxDuration = campaign.maxDuration();
+        LocalDate endDate = enrollment.getReferenceDate().plus(maxDuration);
+        DateTime endDt = endDate.toDateMidnight().toDateTime();
+        DateTime startDt = enrollment.getReferenceDate().toDateTimeAtStartOfDay();
+
+        Map<String, List<DateTime>> timings = getCampaignTimings(startDt, endDt, enrollment, campaign);
+
+        return findLastDateTime(timings);
     }
 }

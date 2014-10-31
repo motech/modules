@@ -80,7 +80,7 @@ public class CampaignRecordServiceBundleIT extends BasePaxIT {
         CronBasedCampaign campaign = (CronBasedCampaign) campaignRecordService.findByName(campaignName).build();
         assertNotNull(campaign);
         assertEquals(campaignName, campaign.getName());
-        assertEquals("5 weeks", campaign.maxDuration());
+        assertEquals("5 years", campaign.maxDuration());
         List<CronBasedCampaignMessage> messages = campaign.getMessages();
         assertEquals(1, messages.size());
         assertMessageWithCronSchedule(messages.get(0), "First", new String[]{"IVR", "SMS"}, "cron-message", "0 11 11 11 11 ?");

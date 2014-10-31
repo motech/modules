@@ -75,13 +75,13 @@ public class MessageCampaignBundleIT extends BasePaxIT {
     @Test
     public void testMessageCampaignService() {
         CampaignRecord campaign = new CampaignRecord();
-        campaign.setName("PREGNANCY");
+        campaign.setName("PREGNANCY_CMP");
         campaign.setCampaignType(CampaignType.ABSOLUTE);
 
         messageCampaignService.saveCampaign(campaign);
 
         String externalId = "MessageCampaignBundleIT-" + UUID.randomUUID();
-        CampaignRequest campaignRequest = new CampaignRequest(externalId, "PREGNANCY", new LocalDate(2020, 7, 10), null);
+        CampaignRequest campaignRequest = new CampaignRequest(externalId, "PREGNANCY_CMP", new LocalDate(2020, 7, 10), null);
 
         try {
             messageCampaignService.enroll(campaignRequest);
