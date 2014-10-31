@@ -11,6 +11,8 @@ public final class ResponseXML {
     public static final String ATTR2 = "dob";
     public static final String ATTR2_VALUE = "1980-01-01";
 
+    public static final String CASE_ID = "e098a110-6b83-4ff7-9093-d8e0e8bfb9a3";
+
 
     public static String getFormXML() {
         return "<data uiVersion=\"1\"\n" +
@@ -20,7 +22,7 @@ public final class ResponseXML {
                 "      xmlns=\"http://openrosa.org/formdesigner/84FA38A2-93C1-4B9E-AA2A-0E082995FF9E\">\n" +
                 "  <" + ATTR1 + ">" + ATTR1_VALUE + "</" + ATTR1 + ">\n" +
                 "  <" + ATTR2 + ">" + ATTR2_VALUE + "</" + ATTR2 + ">\n" +
-                "  <n0:case case_id=\"e098a110-6b83-4ff7-9093-d8e0e8bfb9a3\"\n" +
+                "  <n0:case case_id=\"" + CASE_ID + "\"\n" +
                 "           user_id=\"9ad3659b9c0f8c5d141d2d06857874df\"\n" +
                 "           date_modified=\"2012-10-23T17:15:21.966-04\"\n" +
                 "           xmlns:n0=\"http://commcarehq.org/case/transaction/v2\">\n" +

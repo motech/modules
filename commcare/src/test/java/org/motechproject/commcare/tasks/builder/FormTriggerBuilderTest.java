@@ -30,7 +30,7 @@ public class FormTriggerBuilderTest {
 
     private FormTriggerBuilder formTriggerBuilder;
 
-    private static final int FORM_PREDEFINED_FIELDS = 7;
+    private static final int FORM_PREDEFINED_FIELDS = 10;
 
     @Test
     public void shouldBuildProperTriggerRequestForCases() {

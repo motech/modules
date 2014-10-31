@@ -15,19 +15,22 @@ public class CommcareValidatingChannelImpl implements CommcareValidatingChannel 
     private boolean executed;
     private String pregnant;
     private String dob;
+    private String caseId;
 
     @PostConstruct
     public void setUp() {
         executed = false;
         pregnant = "";
         dob = "";
+        caseId = "";
     }
 
     @Override
-    public void execute(String pregnant, String dob) {
+    public void execute(String pregnant, String dob, String caseId) {
         executed = true;
         this.pregnant = pregnant;
         this.dob = dob;
+        this.caseId = caseId;
     }
 
     @Override
@@ -37,6 +40,6 @@ public class CommcareValidatingChannelImpl implements CommcareValidatingChannel 
 
     @Override
     public boolean verify() {
-        return pregnant.equals(ResponseXML.ATTR1_VALUE) && dob.equals(ResponseXML.ATTR2_VALUE);
+        return pregnant.equals(ResponseXML.ATTR1_VALUE) && dob.equals(ResponseXML.ATTR2_VALUE) && caseId.equals(ResponseXML.CASE_ID);
     }
 }

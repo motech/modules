@@ -1,13 +1,16 @@
 package org.motechproject.commcare.service.impl;
 
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import org.motechproject.commons.api.TasksEventParser;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static org.motechproject.commcare.events.constants.EventDataKeys.ATTRIBUTES;
+import static org.motechproject.commcare.events.constants.EventDataKeys.CASE_ID;
 import static org.motechproject.commcare.events.constants.EventDataKeys.SUB_ELEMENTS;
 import static org.motechproject.commcare.events.constants.EventDataKeys.VALUE;
 
@@ -28,6 +31,7 @@ public class CommcareFormsEventParser implements TasksEventParser {
     public Map<String, Object> parseEventParameters(String subject, Map<String, Object> entryParameters) {
         Map<String, Object> parsedParameters = new HashMap<>();
         addParameters(entryParameters, parsedParameters, INITIAL_PARAM_PREFIX);
+        addCaseIdIfPresent(entryParameters, parsedParameters);
 
         return parsedParameters;
     }
@@ -53,6 +57,14 @@ public class CommcareFormsEventParser implements TasksEventParser {
 
             // Call our method recursively for subelements
             addParameters(entry.getValue(), parsedParameters, paramPrefix + "/" + entry.getKey());
+        }
+    }
+
+    private void addCaseIdIfPresent(Map<String, Object> entryParameters, Map<String, Object> parsedParameters) {
+        if (((LinkedHashMultimap) entryParameters.get(SUB_ELEMENTS)).asMap().containsKey("case")) {
+            Map caseMap = (Map) ((Set) ((LinkedHashMultimap) entryParameters.get(SUB_ELEMENTS)).asMap().get("case")).toArray()[0];
+            Map<String, Object> caseAttrs = (Map<String, Object>) caseMap.get(ATTRIBUTES);
+            parsedParameters.put(CASE_ID, caseAttrs.get("case_id"));
         }
     }
 }

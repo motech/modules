@@ -109,9 +109,11 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     private void createDummyActionChannel(Channel channel) {
         ActionParameterRequest actionParameterRequest = new ActionParameterRequest(ResponseXML.ATTR1, ResponseXML.ATTR1, 0);
         ActionParameterRequest actionParameterRequest2 = new ActionParameterRequest(ResponseXML.ATTR2, ResponseXML.ATTR2, 1);
+        ActionParameterRequest actionParameterRequest3 = new ActionParameterRequest("caseId", ResponseXML.CASE_ID, 2);
         SortedSet<ActionParameterRequest> actionParameterRequests = new TreeSet<>();
         actionParameterRequests.add(actionParameterRequest);
         actionParameterRequests.add(actionParameterRequest2);
+        actionParameterRequests.add(actionParameterRequest3);
 
         ActionEventRequest actionEventRequest = new ActionEventRequest("dummyAction", "validate", null,
                 TEST_INTERFACE, "execute", actionParameterRequests);
@@ -131,6 +133,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         Map<String, String> values = new HashMap<>();
         values.put(ResponseXML.ATTR1, "{{trigger./data/pregnant}}");
         values.put(ResponseXML.ATTR2, "{{trigger./data/dob}}");
+        values.put("caseId", "{{trigger.caseId}}");
         actionInformation.setValues(values);
 
         Task task = new Task("CommcareTestTask", triggerInformation, Arrays.asList(actionInformation));
@@ -162,12 +165,12 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         TriggerEvent form1Trigger = channel.getTrigger(expectedForm1);
         assertEquals("org.motechproject.commcare.api.forms", form1Trigger.getTriggerListenerSubject());
         assertTriggerParameters(form1Trigger.getEventParameters(),
-                Arrays.asList("/data/pregnant", "/data/dob", "/data/meta/username"));
+                Arrays.asList("/data/pregnant", "/data/dob", "/data/meta/username", "caseId"));
 
         TriggerEvent form2Trigger = channel.getTrigger(expectedForm2);
         assertEquals("org.motechproject.commcare.api.forms", form2Trigger.getTriggerListenerSubject());
         assertTriggerParameters(form2Trigger.getEventParameters(),
-                Arrays.asList("/data/patient_name", "/data/last_visit", "/data/medications", "/data/meta/username"));
+                Arrays.asList("/data/patient_name", "/data/last_visit", "/data/medications", "/data/meta/username", "/data/case/create/case_type"));
 
         TriggerEvent caseTrigger = channel.getTrigger(expectedCaseBirth);
         assertEquals("org.motechproject.commcare.api.case", caseTrigger.getTriggerListenerSubject());
