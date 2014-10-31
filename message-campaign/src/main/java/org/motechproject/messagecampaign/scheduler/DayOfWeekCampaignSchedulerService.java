@@ -3,13 +3,15 @@ package org.motechproject.messagecampaign.scheduler;
 import org.joda.time.LocalDate;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.messagecampaign.EventKeys;
-import org.motechproject.messagecampaign.domain.message.DayOfWeek;
+import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.DayOfWeekCampaign;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
+import org.motechproject.messagecampaign.domain.message.DayOfWeek;
 import org.motechproject.messagecampaign.domain.message.DayOfWeekCampaignMessage;
-import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.scheduler.contract.DayOfWeekSchedulableJob;
+import org.motechproject.scheduler.contract.JobId;
+import org.motechproject.scheduler.contract.RepeatingJobId;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -55,5 +57,10 @@ public class DayOfWeekCampaignSchedulerService extends CampaignSchedulerService<
         for (DayOfWeekCampaignMessage message : campaign.getMessages()) {
             getSchedulerService().safeUnscheduleJob(EventKeys.SEND_MESSAGE, messageJobIdFor(message.getMessageKey(), enrollment.getExternalId(), enrollment.getCampaignName()));
         }
+    }
+
+    @Override
+    public JobId getJobId(String messageKey, String externalId, String campaingName) {
+        return new RepeatingJobId(EventKeys.SEND_MESSAGE, messageJobIdFor(messageKey, externalId, campaingName));
     }
 }

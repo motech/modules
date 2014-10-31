@@ -48,6 +48,16 @@ public interface MessageCampaignService {
 
     void deleteCampaign(String campaignName);
 
+    /**
+     * Return last message we attempted to send for the given campaign enrollment
+     */
+    String getLatestCampaignMessage(String campaignName, String externalId);
+
+    /**
+     * Return next message that will be sent for given enrollment.
+     */
+    String getNextCampaignMessage(String campaignName, String externalId);
+
     CampaignRecord getCampaignRecord(String campaignName);
 
     List<CampaignRecord> getAllCampaignRecords();

@@ -9,15 +9,19 @@ import org.motechproject.event.listener.EventRelay;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.messagecampaign.EventKeys;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
+import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
+import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.CampaignNotFoundException;
+import org.motechproject.messagecampaign.domain.campaign.Campaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
+import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.loader.CampaignJsonLoader;
 import org.motechproject.messagecampaign.scheduler.CampaignSchedulerFactory;
 import org.motechproject.messagecampaign.scheduler.CampaignSchedulerService;
-import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
-import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.userspecified.CampaignRecord;
 import org.motechproject.messagecampaign.web.ex.EnrollmentNotFoundException;
+import org.motechproject.scheduler.contract.JobId;
+import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.server.config.SettingsFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -43,6 +47,8 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
     private CampaignSchedulerFactory campaignSchedulerFactory;
     private CampaignRecordService campaignRecordService;
     private EventRelay relay;
+    private MotechSchedulerService schedulerService;
+
     @Autowired
     @Qualifier("messageCampaignSettings")
     private SettingsFacade settingsFacade;
@@ -55,7 +61,8 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
 
     @Autowired
     public MessageCampaignServiceImpl(EnrollmentService enrollmentService, CampaignEnrollmentDataService campaignEnrollmentDataService, CampaignEnrollmentRecordMapper campaignEnrollmentRecordMapper,
-                                      CampaignSchedulerFactory campaignSchedulerFactory, CampaignRecordService campaignRecordService, EventRelay relay) {
+                                      CampaignSchedulerFactory campaignSchedulerFactory, CampaignRecordService campaignRecordService,
+                                      EventRelay relay, MotechSchedulerService schedulerService) {
         this.enrollmentService = enrollmentService;
         this.campaignEnrollmentDataService = campaignEnrollmentDataService;
         this.campaignEnrollmentRecordMapper = campaignEnrollmentRecordMapper;
@@ -63,6 +70,7 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
         this.campaignSchedulerFactory = campaignSchedulerFactory;
         this.campaignRecordService = campaignRecordService;
         this.relay = relay;
+        this.schedulerService = schedulerService;
     }
 
     public void enroll(CampaignRequest request) {
@@ -167,6 +175,64 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
 
             campaignRecordService.delete(campaignRecord);
         }
+    }
+
+    @Override
+    public String getLatestCampaignMessage(String campaignName, String externalId) {
+        CampaignEnrollment enrollment = campaignEnrollmentDataService.findByExternalIdAndCampaignName(externalId, campaignName);
+        Campaign campaign = campaignRecordService.findByName(enrollment.getCampaignName()).build();
+        DateTime latestDate = null;
+        CampaignMessage latestMessage = null;
+
+        for (Object message : campaign.getMessages()) {
+            CampaignMessage campaignMessage = (CampaignMessage) message;
+            CampaignSchedulerService campaignSchedulerService = campaignSchedulerFactory.getCampaignScheduler(enrollment.getCampaignName());
+            JobId jobId = campaignSchedulerService.getJobId(campaignMessage.getMessageKey(),
+                    enrollment.getExternalId(), enrollment.getCampaignName());
+            DateTime date = schedulerService.getPreviousFireDate(jobId);
+
+            if (date == null || date.isAfterNow()) {
+                continue;
+            }
+
+            if (latestMessage == null) {
+                latestMessage = campaignMessage;
+                latestDate = date;
+            } else if (latestDate.isBefore(date)) {
+                latestDate = date;
+                latestMessage = campaignMessage;
+            }
+        }
+        return (latestMessage == null) ? null : latestMessage.getMessageKey();
+    }
+
+    @Override
+    public String getNextCampaignMessage(String campaignName, String externalId) {
+        CampaignEnrollment enrollment = campaignEnrollmentDataService.findByExternalIdAndCampaignName(externalId, campaignName);
+        Campaign campaign = campaignRecordService.findByName(enrollment.getCampaignName()).build();
+        DateTime nextDate = null;
+        CampaignMessage nextMessage = null;
+
+        for (Object message : campaign.getMessages()) {
+            CampaignMessage campaignMessage = (CampaignMessage) message;
+            CampaignSchedulerService campaignSchedulerService = campaignSchedulerFactory.getCampaignScheduler(enrollment.getCampaignName());
+            JobId jobId = campaignSchedulerService.getJobId(campaignMessage.getMessageKey(),
+                    enrollment.getExternalId(), enrollment.getCampaignName());
+            DateTime date = schedulerService.getNextFireDate(jobId);
+
+            if (date == null || date.isBeforeNow()) {
+                continue;
+            }
+
+            if (nextMessage == null) {
+                nextMessage = campaignMessage;
+                nextDate = date;
+            } else if (nextDate.isAfter(date)) {
+                nextDate = date;
+                nextMessage = campaignMessage;
+            }
+        }
+        return (nextMessage == null) ? null : nextMessage.getMessageKey();
     }
 
     @Override

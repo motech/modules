@@ -4,11 +4,13 @@ import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.messagecampaign.EventKeys;
+import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.message.AbsoluteCampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
-import org.motechproject.messagecampaign.dao.CampaignRecordService;
+import org.motechproject.scheduler.contract.JobId;
+import org.motechproject.scheduler.contract.RunOnceJobId;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,5 +50,10 @@ public class AbsoluteCampaignSchedulerService extends CampaignSchedulerService<A
         for (AbsoluteCampaignMessage message : campaign.getMessages()) {
             getSchedulerService().safeUnscheduleRunOnceJob(EventKeys.SEND_MESSAGE, messageJobIdFor(message.getMessageKey(), enrollment.getExternalId(), enrollment.getCampaignName()));
         }
+    }
+
+    @Override
+    public JobId getJobId(String messageKey, String externalId, String campaingName) {
+        return new RunOnceJobId(EventKeys.SEND_MESSAGE, messageJobIdFor(messageKey, externalId, campaingName));
     }
 }
