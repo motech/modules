@@ -91,7 +91,8 @@
     font-size: 8pt;
 }
 
+/*todo: We should change input box to textarea box if we need more space for data. We cannot decrease font size.
+*/
 .ivr .small-mono {
-    font-family:monospace;
     font-size: small;
 }

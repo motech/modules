@@ -35,17 +35,17 @@
 
                             <div class="form-group margin-before2" ng-class="{'has-error': !tmpl.name || dupeNames[$index]}">
                                 <label class="col-md-2 control-label">{{msg('ivr.web.templates.templateName')}}</label>
-                                <div class="col-md-3" tooltip="{{msg('ivr.web.templates.templateName.tooltip')}}">
+                                <div class="col-md-3">
                                     <input type="text" class="form-control" ng-model="tmpl.name" required ng-focus="accordions[$index]" ng-change="keepDefaultTemplate(); checkForDuplicateNames($index);">
-                                    <span ng-hide="tmpl.name" class="help-block">{{msg('ivr.web.required_field')}}</span>
-                                    <span ng-show="dupeNames[$index]" class="help-block">{{msg('ivr.web.templates.duplicateTemplateName')}}</span>
+                                    <span ng-hide="tmpl.name" class="form-hint form-hint-bottom">{{msg('ivr.web.required_field')}}</span>
+                                    <span ng-show="dupeNames[$index]" class="form-hint form-hint-bottom">{{msg('ivr.web.templates.duplicateTemplateName')}}</span>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="col-md-2 control-label" for="value{{$index}}">{{msg('ivr.web.templates.value')}}</label>
                                 <div class="col-md-9">
-                                    <textarea spellcheck="false" class="form-control small-mono" id="value{{$index}}" type="text" ng-model="tmpl.value" rows="10"></textarea>
+                                    <textarea spellcheck="false" class="form-control" id="value{{$index}}" type="text" ng-model="tmpl.value" rows="10"></textarea>
                                 </div>
                             </div>
 
