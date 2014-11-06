@@ -28,10 +28,10 @@
                 <label class="col-md-2 control-label" for="recipients">
                     {{msg('sms.web.send.recipients')}}
                 </label>
-                <div class="col-md-4" tooltip="{{msg('sms.web.send.recipients.tooltip')}}">
+                <div class="col-md-4" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('sms.web.send.recipients.tooltip')}}">
                     <input name="recipients" id="recipients" class="form-control" type="text" ng-model="sms.recipients" ng-pattern="/^[+]?[0-9]+(,[+]?[0-9]+)*$/" ng-list required ng-focus="true">
-                    <span ng-show="form.recipients.$error.required" class="help-block">{{msg('sms.web.required_field', msg('sms.web.send.recipients_field'))}}</span>
-                    <span ng-show="form.recipients.$error.pattern" class="help-block">{{msg('sms.web.send.bad-number_format', msg('sms.web.send.recipients_field'))}}</span>
+                    <span ng-show="form.recipients.$error.required" class="form-hint form-hint-bottom">{{msg('sms.web.required_field', msg('sms.web.send.recipients_field'))}}</span>
+                    <span ng-show="form.recipients.$error.pattern" class="form-hint form-hint-bottom">{{msg('sms.web.send.bad-number_format', msg('sms.web.send.recipients_field'))}}</span>
                 </div>
             </div>
 
@@ -39,7 +39,7 @@
                 <label class="col-md-2 control-label" for="message">{{msg('sms.web.send.message')}}<br/><span class="char-counter">{{sms.message.length}}</span></label>
                 <div class="col-md-4">
                     <textarea name="message" id="message" class="form-control textarea" rows="5" required ng-model="sms.message"></textarea>
-                    <span ng-show="form.message.$error.required" class="help-block">{{msg('sms.web.required_field', msg('sms.web.send.message_field'))}}</span>
+                    <span ng-show="form.message.$error.required" class="form-hint form-hint-bottom">{{msg('sms.web.required_field', msg('sms.web.send.message_field'))}}</span>
                 </div>
             </div>
 
