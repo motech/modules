@@ -50,7 +50,7 @@
 
                             <div class="form-group">
                                 <label class="col-md-3 control-label">{{msg('ivr.web.settings.outgoingCallMethod')}}</label>
-                                <div class="col-md-3" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg ('ivr.web.settings.outgoingCallUriTemplate')}}">
+                                <div class="col-md-3" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('ivr.web.settings.outgoingCallMethod.tooltip')}}">
                                     <label class="radio-inline" for="outgoingCallMethodGet{{$index}}">
                                         <input name="outgoingCallMethod{{$index}}" id="outgoingCallMethodGet{{$index}}" type="radio" ng-model="conf.outgoingCallMethod" value="GET">
                                         GET
