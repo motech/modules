@@ -234,23 +234,6 @@
             $scope.dupeNames.push(false);
         };
 
-        $scope.tooltipOrBlank = function (name, templateName) {
-            var key, ret;
-            if (templateName !== null) {
-                key = "ivr.settings.prop." + name + '.' + templateName + ".tooltip";
-                ret = $scope.msg(key);
-                if (ret !== "[" + key + "]") {
-                    return ret;
-                }
-            }
-            key = "ivr.settings.prop." + name + ".tooltip";
-            ret = $scope.msg(key);
-            if (ret === "[" + key + "]") {
-                ret = "";
-            }
-            return ret;
-        };
-
         function hideMsgLater(index) {
             return $timeout(function() {
                 $scope.messages.splice(index, 1);
