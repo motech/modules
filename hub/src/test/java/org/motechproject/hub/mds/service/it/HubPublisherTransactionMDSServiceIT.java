@@ -48,6 +48,7 @@ public class HubPublisherTransactionMDSServiceIT extends BaseHubIT {
 
         HubPublisherTransaction hubPublisherTransaction = new HubPublisherTransaction();
         hubPublisherTransaction.setHubTopicId(topicId);
+        hubPublisherTransaction.setContentId(12);
         hubPublisherTransactionMDSService.create(hubPublisherTransaction);
 
         hubPublisherTransactions = hubPublisherTransactionMDSService
