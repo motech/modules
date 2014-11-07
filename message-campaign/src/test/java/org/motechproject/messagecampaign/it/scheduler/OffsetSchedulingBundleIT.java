@@ -2,6 +2,7 @@ package org.motechproject.messagecampaign.it.scheduler;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
 import org.motechproject.messagecampaign.service.CampaignEnrollmentsQuery;
@@ -18,6 +19,11 @@ public class OffsetSchedulingBundleIT extends BaseSchedulingIT {
 
     private static final String EXTERNAL_ID = "entity_1";
     private static final String CAMPAIGN_NAME = "Relative Dates Message Program";
+
+    @Before
+    public void setUp() {
+        getMessageCampaignService().unenroll(EXTERNAL_ID, CAMPAIGN_NAME);
+    }
 
     @Test
     public void shouldScheduleMessages() throws SchedulerException {

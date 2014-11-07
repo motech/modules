@@ -1,6 +1,7 @@
 package org.motechproject.messagecampaign.userspecified;
 
 import org.motechproject.commons.date.util.JodaFormatter;
+import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.messagecampaign.domain.campaign.Campaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignType;
@@ -21,8 +22,11 @@ public class CampaignRecord {
     @Unique
     private String name;
 
+    @Cascade(delete = true)
     private List<CampaignMessageRecord> messages = new ArrayList<>();
+
     private CampaignType campaignType;
+
     private String maxDuration;
 
     public Campaign build() {
