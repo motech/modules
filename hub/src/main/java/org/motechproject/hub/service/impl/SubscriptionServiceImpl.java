@@ -167,13 +167,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             hubSubscriptionMDSService.create(hubSubscription);
 
         } else if (hubSubscriptions.size() > 1) {
-            LOGGER.error(
-                    "There are multiple subscriptions for the topic {} and callback url '{}'",
-                    new Object[] { topic, callbackUrl });
+            LOGGER.error("There are multiple subscriptions for the topic {} and callback url '{}'",
+                    topic, callbackUrl);
         } else {
-            LOGGER.error(
-                    "The topic {} is already subscribed to the callback url '{}'. Starting intent verification...",
-                    new Object[] { topic, callbackUrl });
+            LOGGER.error("The topic {} is already subscribed to the callback url '{}'. Starting intent verification...",
+                    topic, callbackUrl);
         }
     }
 
@@ -221,9 +219,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             } else if (hubSubscriptions.size() == 1) {
                 hubSubscriptionMDSService.delete(hubSubscriptions.get(0));
             } else {
-                LOGGER.error(
-                        "There are multiple subscriptions for the topic {} and callback url '{}'",
-                        new Object[] { topic, callbackUrl });
+                LOGGER.error("There are multiple subscriptions for the topic {} and callback url '{}'",
+                        topic, callbackUrl);
             }
         }
     }

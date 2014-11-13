@@ -395,9 +395,8 @@ public class BatchController {
             LOGGER.error(e.getMessage());
             throw new RestException(e, e.getMessage());
         } finally {
-            LOGGER.info(
-                    "Request to restart the execution {} for job {} ended . Time taken (ms) = {}",
-                    new Object[] {executionId, jobName, sw.getTime()});
+            LOGGER.info("Request to restart the execution {} for job {} ended . Time taken (ms) = {}",
+                    executionId, jobName, sw.getTime());
             sw.stop();
         }
     }

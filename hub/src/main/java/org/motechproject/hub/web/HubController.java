@@ -113,9 +113,7 @@ public class HubController {
             @RequestParam(value = HubConstants.HUB_SECRET_PARAM, required = false) String secret)
             throws HubException {
 
-        LOGGER.info(
-                "Request to {} started for topic {} from subscriber's callback url '{}'",
-                new Object[] { mode, topic, callbackUrl });
+        LOGGER.info("Request to {} started for topic {} from subscriber's callback url '{}'", mode, topic, callbackUrl);
         StopWatch sw = new StopWatch();
         sw.start();
         try {
@@ -131,14 +129,12 @@ public class HubController {
                     leaseSeconds, secret);
 
         } catch (HubException e) {
-            LOGGER.error(
-                    "Error occured while processing request to {} for topic {} from subscriber's callback url {}",
-                    new Object[] { mode, topic, callbackUrl });
+            LOGGER.error("Error occured while processing request to {} for topic {} from subscriber's callback url {}",
+                    mode, topic, callbackUrl);
             throw new RestException(e, e.getMessage() + e.getReason());
         } finally {
-            LOGGER.info(
-                    "Request to {} ended for topic {} from subscriber's callback url '{}'. Time taken (ms) = {}",
-                    new Object[] { mode, topic, callbackUrl, sw.getTime() });
+            LOGGER.info("Request to {} ended for topic {} from subscriber's callback url '{}'. Time taken (ms) = {}",
+                    mode, topic, callbackUrl, sw.getTime());
             sw.stop();
         }
     }
@@ -152,8 +148,7 @@ public class HubController {
             @RequestParam(value = HubConstants.HUB_URL_PARAM) String url)
             throws HubException {
 
-        LOGGER.info("Request to {} started for resource {}", new Object[] {
-                mode, url });
+        LOGGER.info("Request to {} started for resource {}", mode, url);
         StopWatch sw = new StopWatch();
         sw.start();
         try {
@@ -166,14 +161,10 @@ public class HubController {
             contentDistributionService.distribute(url);
 
         } catch (HubException e) {
-            LOGGER.error(
-                    "Error occured while processing request to {} the resource {}",
-                    new Object[] { mode, url });
+            LOGGER.error("Error occured while processing request to {} the resource {}", mode, url);
             throw new RestException(e, e.getMessage() + e.getReason());
         } finally {
-            LOGGER.info(
-                    "Request to {} ended for resource {}. Time taken (ms) = {}",
-                    new Object[] { mode, url, sw.getTime() });
+            LOGGER.info("Request to {} ended for resource {}. Time taken (ms) = {}", mode, url, sw.getTime());
             sw.stop();
         }
     }
