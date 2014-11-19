@@ -177,9 +177,11 @@
 
     controllers.controller('SettingsCtrl', function ($scope) {
         $scope.uploadSettings = function () {
+            blockUI();
             $("#messageCampaignSettingsForm").ajaxSubmit({
                 success: function() {
                     motechAlert('msgCampaign.settings.success.saved', 'msgCampaign.saved');
+                    unblockUI();
                 },
                 error: function(error) {
                     if (error.status === 403) {
@@ -187,6 +189,7 @@
                     } else {
                         motechAlert('msgCampaign.settings.error.save', 'msgCampaign.error');
                     }
+                    unblockUI();
                 }
             });
         };
