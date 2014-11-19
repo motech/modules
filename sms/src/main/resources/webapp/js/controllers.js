@@ -174,6 +174,12 @@
             autoExpandSingleAccordion();
         };
 
+        $scope.scrollTop = function () {
+            $(".sms .ui-layout-content").animate({
+                scrollTop: 0
+            }, 600);
+        };
+
         /*  TODO
             This replaces the configuration's properties with the ones from the selected template.
             Do we want to 'remember' the old template properties in case the user chooses to select the old template
@@ -229,6 +235,7 @@
             $scope.config = angular.copy($scope.originalConfig);
             $scope.setNewDefaultConfig();
             setAccordions($scope.config.configs);
+            $scope.scrollTop();
         };
 
         $scope.addConfig = function () {
@@ -299,6 +306,7 @@
                     setAccordions($scope.config.configs);
                     var index = $scope.messages.push($scope.msg('sms.settings.saved'));
                     hideMsgLater(index-1);
+                    $scope.scrollTop();
                 })
                 .error (function (response) {
                     //todo: better than that!
