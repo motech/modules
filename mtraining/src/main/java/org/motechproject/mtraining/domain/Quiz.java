@@ -23,9 +23,6 @@ public class Quiz extends CourseUnitMetadata {
     @Field
     private double passPercentage;
 
-    public Quiz() {
-    }
-
     public Quiz(String name, CourseUnitState state, String content) {
         super(name, state, content);
     }

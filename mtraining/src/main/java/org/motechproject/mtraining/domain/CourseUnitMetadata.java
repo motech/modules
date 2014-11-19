@@ -1,6 +1,10 @@
 package org.motechproject.mtraining.domain;
 
 import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.domain.MdsEntity;
+
+import javax.jdo.annotations.Persistent;
 
 /**
  * Common metadata shared by all course sub classes
@@ -11,11 +15,15 @@ public class CourseUnitMetadata extends MdsEntity {
     /**
      * Name of the course unit
      */
+    @Field
+    @Persistent(defaultFetchGroup = "true")
     private String name;
 
     /**
      * Status of the course unit
      */
+    @Field
+    @Persistent(defaultFetchGroup = "true")
     private CourseUnitState state;
 
     /**
@@ -23,16 +31,9 @@ public class CourseUnitMetadata extends MdsEntity {
      * where to find the content in the external system. For example, this could be a
      * resource pointer for an audio file in an IVR system.
      */
+    @Field
+    @Persistent(defaultFetchGroup = "true")
     private String content;
-
-    /**
-     * Constructor with 0 arguments
-     */
-    public CourseUnitMetadata() {
-        this.name = "";
-        this.state = CourseUnitState.Inactive;
-        this.content = "";
-    }
 
     /**
      * Constructor with all arguments
