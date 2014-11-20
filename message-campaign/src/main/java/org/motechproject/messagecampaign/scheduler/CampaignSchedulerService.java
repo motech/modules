@@ -133,7 +133,7 @@ public abstract class CampaignSchedulerService<M extends CampaignMessage, C exte
     protected void scheduleEndOfCampaignEvent(C campaign, CampaignEnrollment enrollment) {
         DateTime endDate = campaignEndDate(campaign, enrollment);
 
-        if (endDate != null) {
+        if (endDate != null && endDate.isAfterNow()) {
             String campaignName = campaign.getName();
             String externalId = enrollment.getExternalId();
 
@@ -146,6 +146,10 @@ public abstract class CampaignSchedulerService<M extends CampaignMessage, C exte
             MotechEvent endOfCampaignEvent = new MotechEvent(EventKeys.CAMPAIGN_COMPLETED, params);
 
             schedulerService.scheduleRunOnceJob(new RunOnceSchedulableJob(endOfCampaignEvent, endDate.toDate()));
+        } else if (endDate != null && endDate.isBeforeNow()) {
+            throw new IllegalArgumentException(
+                    String.format("No messages scheduled for enrollment with ID %s for campaign %s, last message was scheduled in the past(%s)",
+                            enrollment.getExternalId(), enrollment.getCampaignName(), endDate.toString()));
         }
     }
 }

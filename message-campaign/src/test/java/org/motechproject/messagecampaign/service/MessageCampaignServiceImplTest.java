@@ -35,7 +35,6 @@ import org.motechproject.scheduler.contract.CronJobId;
 import org.motechproject.scheduler.contract.JobId;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -167,8 +166,8 @@ public class MessageCampaignServiceImplTest {
         primaryCriterion.fetch(campaignEnrollmentDataService);
         verify(campaignEnrollmentDataService).findByCampaignName("testCampaign");
 
-        verify(enrollmentService).unregister(enrollment1.getExternalId(), enrollment2.getCampaignName());
-        verify(enrollmentService).unregister(enrollment2.getExternalId(), enrollment2.getCampaignName());
+        verify(enrollmentService).unregister("external_id_1", "testCampaign");
+        verify(enrollmentService).unregister("external_id_2", "testCampaign");
         verify(campaignSchedulerFactory, times(2)).getCampaignScheduler("testCampaign");
         verify(campaignScheduler).stop(enrollment1);
         verify(campaignScheduler).stop(enrollment2);
@@ -266,9 +265,12 @@ public class MessageCampaignServiceImplTest {
 
     @Test
     public void shouldRemoveCampaigns() {
+        CampaignEnrollment enrollment = new CampaignEnrollment("extID", "PREGNANCY");
+
+        when(campaignSchedulerFactory.getCampaignScheduler("PREGNANCY")).thenReturn(campaignSchedulerService);
         when(campaignRecordService.findByName("PREGNANCY")).thenReturn(campaignRecord);
         when(enrollmentService.search(any(CampaignEnrollmentsQuery.class)))
-                .thenReturn(Collections.<CampaignEnrollment>emptyList());
+                .thenReturn(asList(enrollment));
 
         messageCampaignService.deleteCampaign("PREGNANCY");
 
@@ -282,6 +284,9 @@ public class MessageCampaignServiceImplTest {
         primaryCriterion.fetch(campaignEnrollmentDataService);
         verify(campaignEnrollmentDataService).findByCampaignName("PREGNANCY");
         assertTrue(captor.getValue().getSecondaryCriteria().isEmpty());
+
+        verify(campaignSchedulerService).stop(enrollment);
+        verify(enrollmentService).delete(enrollment);
     }
 
     @Test

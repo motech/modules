@@ -3,6 +3,7 @@ package org.motechproject.messagecampaign.it.scheduler;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
+import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.commons.date.util.DateTimeSourceUtil;
@@ -23,6 +24,11 @@ public class DayOfWeekCampaignSchedulingBundleIT extends BaseSchedulingIT {
 
     private static final String EXTERNAL_ID = "entity_1";
     private static final String CAMPAIGN_NAME = "DayOfWeekCampaign";
+
+    @Before
+    public void setUp() {
+        getMessageCampaignService().unenroll(EXTERNAL_ID, CAMPAIGN_NAME);
+    }
 
     @Test
     public void shouldScheduleMessageAtItsStartTime() throws SchedulerException {

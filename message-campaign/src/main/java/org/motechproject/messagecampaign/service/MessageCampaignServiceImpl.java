@@ -23,6 +23,8 @@ import org.motechproject.messagecampaign.web.ex.EnrollmentNotFoundException;
 import org.motechproject.scheduler.contract.JobId;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.server.config.SettingsFacade;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -40,6 +42,8 @@ import java.util.Map;
  */
 @Service("messageCampaignService")
 public class MessageCampaignServiceImpl implements MessageCampaignService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(MessageCampaignServiceImpl.class);
 
     private EnrollmentService enrollmentService;
     private CampaignEnrollmentRecordMapper campaignEnrollmentRecordMapper;
@@ -73,13 +77,16 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
         this.schedulerService = schedulerService;
     }
 
+    @Override
     public void enroll(CampaignRequest request) {
         CampaignEnrollment enrollment = new CampaignEnrollment(request.externalId(), request.campaignName());
         enrollment.setReferenceDate(request.referenceDate());
         enrollment.setDeliverTime(request.deliverTime());
-        enrollmentService.register(enrollment);
+
         CampaignSchedulerService campaignScheduler = campaignSchedulerFactory.getCampaignScheduler(request.campaignName());
         campaignScheduler.start(enrollment);
+
+        enrollmentService.register(enrollment);
 
         Map<String, Object> param = new HashMap<>();
         param.put(EventKeys.EXTERNAL_ID_KEY, enrollment.getExternalId());
@@ -91,16 +98,21 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
 
     @Override
     public void unenroll(String externalId, String campaignName) {
-        enrollmentService.unregister(externalId, campaignName);
         CampaignEnrollment enrollment = campaignEnrollmentDataService.findByExternalIdAndCampaignName(externalId, campaignName);
-        campaignSchedulerFactory.getCampaignScheduler(campaignName).stop(enrollment);
 
-        Map<String, Object> param = new HashMap<>();
-        param.put(EventKeys.EXTERNAL_ID_KEY, externalId);
-        param.put(EventKeys.CAMPAIGN_NAME_KEY, campaignName);
-        MotechEvent event = new MotechEvent(EventKeys.UNENROLLED_USER_SUBJECT, param);
+        if (enrollment != null) {
+            campaignSchedulerFactory.getCampaignScheduler(campaignName).stop(enrollment);
+            enrollmentService.unregister(externalId, campaignName);
 
-        relay.sendEventMessage(event);
+            Map<String, Object> param = new HashMap<>();
+            param.put(EventKeys.EXTERNAL_ID_KEY, externalId);
+            param.put(EventKeys.CAMPAIGN_NAME_KEY, campaignName);
+            MotechEvent event = new MotechEvent(EventKeys.UNENROLLED_USER_SUBJECT, param);
+
+            relay.sendEventMessage(event);
+        } else {
+            LOG.warn("No enrollment with ExternalID {} registered in campaign {}", externalId, campaignName);
+        }
     }
 
     @Override
@@ -148,11 +160,7 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
 
     @Override
     public void stopAll(CampaignEnrollmentsQuery query) {
-        List<CampaignEnrollment> enrollments = enrollmentService.search(query);
-        for (CampaignEnrollment enrollment : enrollments) {
-            enrollmentService.unregister(enrollment.getExternalId(), enrollment.getCampaignName());
-            campaignSchedulerFactory.getCampaignScheduler(enrollment.getCampaignName()).stop(enrollment);
-        }
+        stopAll(query, false);
     }
 
     @Override
@@ -171,7 +179,7 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
             throw new CampaignNotFoundException("Campaign not found: " + campaignName);
         } else {
             CampaignEnrollmentsQuery enrollmentsQuery = new CampaignEnrollmentsQuery().withCampaignName(campaignName);
-            stopAll(enrollmentsQuery);
+            stopAll(enrollmentsQuery, true);
 
             campaignRecordService.delete(campaignRecord);
         }
@@ -270,6 +278,19 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
 
         if (StringUtils.isNotBlank(uploadSize)) {
             commonsMultipartResolver.setMaxUploadSize(Long.valueOf(uploadSize));
+        }
+    }
+
+    private void stopAll(CampaignEnrollmentsQuery query, boolean deleteEnrollments) {
+        List<CampaignEnrollment> enrollments = enrollmentService.search(query);
+        for (CampaignEnrollment enrollment : enrollments) {
+            campaignSchedulerFactory.getCampaignScheduler(enrollment.getCampaignName()).stop(enrollment);
+
+            if (deleteEnrollments) {
+                enrollmentService.delete(enrollment);
+            } else {
+                enrollmentService.unregister(enrollment.getExternalId(), enrollment.getCampaignName());
+            }
         }
     }
 }

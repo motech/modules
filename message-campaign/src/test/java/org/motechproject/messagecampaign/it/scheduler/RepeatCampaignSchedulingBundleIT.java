@@ -3,6 +3,7 @@ package org.motechproject.messagecampaign.it.scheduler;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
+import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.commons.date.util.DateTimeSourceUtil;
@@ -22,6 +23,13 @@ public class RepeatCampaignSchedulingBundleIT extends BaseSchedulingIT {
 
     private static final String EXTERNAL_ID = "entity_1";
     private static final String CAMPAIGN_NAME = "WeeklyCampaign";
+    private static final String HOURLY_CAMPAIGN_NAME = "HourlyCampaign";
+
+    @Before
+    public void setUp() {
+        getMessageCampaignService().unenroll(EXTERNAL_ID, CAMPAIGN_NAME);
+        getMessageCampaignService().unenroll(EXTERNAL_ID, HOURLY_CAMPAIGN_NAME);
+    }
 
     @Test
     public void shouldScheduleAllMessagesOfCampaignAtMessageStartTime() throws SchedulerException {
@@ -103,7 +111,7 @@ public class RepeatCampaignSchedulingBundleIT extends BaseSchedulingIT {
 
     @Test
     public void shouldScheduleMessagesEvery12Hours() throws SchedulerException {
-        CampaignRequest campaignRequest = new CampaignRequest(EXTERNAL_ID, "HourlyCampaign", new LocalDate(2020, 7, 10), new Time(4, 30));
+        CampaignRequest campaignRequest = new CampaignRequest(EXTERNAL_ID, HOURLY_CAMPAIGN_NAME, new LocalDate(2020, 7, 10), new Time(4, 30));
         getMessageCampaignService().enroll(campaignRequest);
         List<DateTime> fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.HourlyCampaign.entity_1.message_key_1-repeat");
         assertEquals(asList(
