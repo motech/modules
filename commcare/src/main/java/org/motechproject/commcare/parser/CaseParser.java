@@ -47,7 +47,8 @@ public class CaseParser<T> {
         CaseXml ccCase = createCase(item);
         updateAction(ccCase, item);
 
-        Element dataItem = (Element) document.getElementsByTagName("data").item(0);
+        Element dataItem = (Element) document.getElementsByTagName("data")
+                .item(0);
         updateDataFields(ccCase, dataItem);
 
         return ccCase;
@@ -104,13 +105,15 @@ public class CaseParser<T> {
 
     private void populateValuesFor(CaseXml ccCase, Element item, String tagName) {
         Node matchingNode = getMatchingNode(item, tagName);
-        NodeList childNodes = matchingNode.getChildNodes();
+        if (matchingNode != null) {
+            NodeList childNodes = matchingNode.getChildNodes();
 
-        for (int i = 0; i < childNodes.getLength(); i++) {
-            Node childNode = childNodes.item(i);
-            if (!childNode.getNodeName().contains("text")) {
-                ccCase.addFieldValue(childNode.getNodeName(),
-                        childNode.getTextContent());
+            for (int i = 0; i < childNodes.getLength(); i++) {
+                Node childNode = childNodes.item(i);
+                if (!childNode.getNodeName().contains("text")) {
+                    ccCase.addFieldValue(childNode.getNodeName(), childNode
+                            .getTextContent());
+                }
             }
         }
     }
