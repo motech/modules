@@ -7,14 +7,14 @@
     <parent>
         <artifactId>modules</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.24.3</version>
+        <version>0.24.4-SNAPSHOT</version>
         <relativePath>../</relativePath>
     </parent>
 
     <name>Http Agent Module</name>
     <groupId>org.motechproject</groupId>
     <artifactId>http-agent</artifactId>
-    <version>0.24.3</version>
+    <version>0.24.4-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
     <properties>

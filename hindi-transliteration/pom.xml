@@ -6,12 +6,12 @@
     <parent>
       <artifactId>modules</artifactId>
       <groupId>org.motechproject</groupId>
-      <version>0.24.3</version>
+      <version>0.24.4-SNAPSHOT</version>
     </parent>
 
     <groupId>org.motechproject</groupId>
     <artifactId>hindi-transliteration</artifactId>
-    <version>0.24.3</version>
+    <version>0.24.4-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>Hindi Transliteration</name>
 
