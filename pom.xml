@@ -14,7 +14,7 @@
 
     <properties>
         <motech.groupId>org.motechproject</motech.groupId>
-        <motech.version>0.24.2</motech.version>
+        <motech.version>0.24.3</motech.version>
 
         <db.server>localhost</db.server>
         <db.port>5984</db.port>
@@ -1318,7 +1318,7 @@
                         </goals>
                         <configuration>
                             <rules>
-                                <DependencyConvergence />
+                                <DependencyConvergence/>
                             </rules>
                         </configuration>
                     </execution>
@@ -1330,7 +1330,7 @@
                         <phase>verify</phase>
                         <configuration>
                             <rules>
-                                <NoPackageCyclesRule implementation="PackageCycles" />
+                                <NoPackageCyclesRule implementation="PackageCycles"/>
                             </rules>
                             <skip>${enforcer.skip}</skip>
                         </configuration>
