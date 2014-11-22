@@ -106,6 +106,7 @@
                             org.motechproject.scheduler.service,
                             org.motechproject.commons.sql.service,
                             org.motechproject.server.config,
+                            org.postgresql,
                             org.springframework.jdbc.core,
                             *
                         </Import-Package>
@@ -373,6 +374,10 @@
             <groupId>org.motechproject</groupId>
             <artifactId>motech-platform-dataservices</artifactId>
             <version>${motech.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>org.motechproject.org.postgresql</artifactId>
         </dependency>
     </dependencies>
 

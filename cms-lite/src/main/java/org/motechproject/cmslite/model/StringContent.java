@@ -12,10 +12,10 @@ import java.util.Objects;
  * Represents Text Content.
  */
 @Entity(recordHistory = true)
-@Unique(name = "languageAndName", members = {"language", "name" })
+@Unique(name = "stringLanguageAndName", members = {"language", "name" })
 public class StringContent implements Content {
 
-    @Field(required = true)
+    @Field(required = true, type = "text")
     private String value;
 
     @Field(required = true)

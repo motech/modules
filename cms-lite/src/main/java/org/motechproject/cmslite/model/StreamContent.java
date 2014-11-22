@@ -14,7 +14,7 @@ import java.util.Objects;
  * Represents stream content along with checksum.
  */
 @Entity(recordHistory = true)
-@Unique(name = "languageAndName", members = {"language", "name" })
+@Unique(name = "streamLanguageAndName", members = {"language", "name" })
 public class StreamContent implements Content {
 
     @Field(required =  true)
