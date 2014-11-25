@@ -8,8 +8,6 @@
     <context:annotation-config/>
     <context:component-scan base-package="org.motechproject.alerts"/>
 
-    <bean id="alertApiSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
-        <property name="moduleName" value="alerts-api" />
-    </bean>
+    <bean id="alertApiSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType" />
 
 </beans>

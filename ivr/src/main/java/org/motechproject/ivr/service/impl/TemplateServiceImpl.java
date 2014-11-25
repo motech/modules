@@ -30,7 +30,7 @@ import java.util.Map;
 @Service("templateService")
 public class TemplateServiceImpl implements TemplateService {
     private static final String TEMPLATE_FILE_NAME = "ivr-templates.json";
-    private static final String TEMPLATE_FILE_PATH = "/org.motechproject.motech-ivr-bundle/raw/" + TEMPLATE_FILE_NAME;
+    private static final String TEMPLATE_FILE_PATH = "/org.motechproject.ivr/raw/" + TEMPLATE_FILE_NAME;
     private static final Logger LOGGER = LoggerFactory.getLogger(TemplateServiceImpl.class);
     private SettingsFacade settingsFacade;
     private Map<String, Template> templates = new HashMap<>();

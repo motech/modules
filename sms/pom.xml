@@ -86,7 +86,7 @@
                             <filesets>
                                 <fileset>
                                     <directory>
-                                        ${user.home}/.motech/config/org.motechproject.motech-sms-bundle
+                                        ${user.home}/.motech/config/org.motechproject.sms
                                     </directory>
                                     <includes>
                                         <include>**/*</include>

@@ -17,7 +17,6 @@
     <context:component-scan base-package="org.motechproject.ivr"/>
 
     <bean id="ivrSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
-        <property name="moduleName" value="motech-ivr"/>
         <property name="rawConfigFiles">
             <list>
                 <value>classpath:ivr-configs.json</value>

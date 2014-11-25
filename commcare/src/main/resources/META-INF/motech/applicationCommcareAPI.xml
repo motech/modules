@@ -18,7 +18,6 @@
                 <value>classpath:commcare.properties</value>
             </list>
         </property>
-        <property name="moduleName" value="commcare"/>
     </bean>
 
     <bean id="commcareVelocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">

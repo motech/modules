@@ -10,7 +10,5 @@
     <context:annotation-config/>
 
 
-    <bean id="pillReminderSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
-        <property name="moduleName" value="pill-reminder"/>
-    </bean>
+    <bean id="pillReminderSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType" />
 </beans>

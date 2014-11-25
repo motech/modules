@@ -30,13 +30,13 @@ import java.util.Map;
 @Service("configService")
 public class ConfigServiceImpl implements ConfigService {
     private static final String CONFIG_FILE_NAME = "ivr-configs.json";
-    private static final String CONFIG_FILE_PATH = "/org.motechproject.motech-ivr-bundle/raw/" + CONFIG_FILE_NAME;
+    private static final String CONFIG_FILE_PATH = "/org.motechproject.ivr/raw/" + CONFIG_FILE_NAME;
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigServiceImpl.class);
     private SettingsFacade settingsFacade;
     private Map<String, Config> configs = new HashMap<>();
 
     private synchronized void loadConfigs() {
-        List<Config> configList = null;
+        List<Config> configList;
         try (InputStream is = settingsFacade.getRawConfig(CONFIG_FILE_NAME)) {
             String jsonText = IOUtils.toString(is);
             LOGGER.debug("Loading {}", CONFIG_FILE_NAME);

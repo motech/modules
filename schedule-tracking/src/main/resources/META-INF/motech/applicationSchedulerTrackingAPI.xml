@@ -9,9 +9,7 @@
     <context:annotation-config/>
     <context:component-scan base-package="org.motechproject.scheduletracking"/>
 
-    <bean id="scheduleTrackingSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
-        <property name="moduleName" value="scheduletracking"/>
-    </bean>
+    <bean id="scheduleTrackingSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType" />
 
     <bean id="scheduleTrackingService"
           class="org.motechproject.scheduletracking.service.impl.ScheduleTrackingServiceImpl"/>

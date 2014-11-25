@@ -36,7 +36,6 @@
                 <value>classpath:application.properties</value>
             </list>
         </property>
-        <property name="moduleName" value="hub" />
     </bean>
 
 </beans>

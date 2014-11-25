@@ -110,7 +110,7 @@
                             <filesets>
                                 <fileset>
                                     <directory>
-                                        ${user.home}/.motech/config/org.motechproject.motech-message-campaign-bundle
+                                        ${user.home}/.motech/config/org.motechproject.message-campaign
                                     </directory>
                                     <includes>
                                         <include>**/*</include>
@@ -250,7 +250,7 @@
                                 </goals>
                                 <configuration>
                                     <outputDirectory>
-                                        ${user.home}/.motech/config/org.motechproject.motech-message-campaign-bundle/raw
+                                        ${user.home}/.motech/config/org.motechproject.message-campaign/raw
                                     </outputDirectory>
                                     <resources>
                                         <resource>
@@ -280,7 +280,7 @@
                                         <fileset>
                                             <directory>${user.home}/.motech/config</directory>
                                             <includes>
-                                                <include>org.motechproject.motech-message-campaign-bundle/**</include>
+                                                <include>org.motechproject.message-campaign/**</include>
                                             </includes>
                                             <followSymlinks>false</followSymlinks>
                                         </fileset>
@@ -299,7 +299,7 @@
                                         <fileset>
                                             <directory>${user.home}/.motech/config</directory>
                                             <includes>
-                                                <include>org.motechproject.motech-message-campaign-bundle/**</include>
+                                                <include>org.motechproject.message-campaign/**</include>
                                             </includes>
                                             <followSymlinks>false</followSymlinks>
                                         </fileset>

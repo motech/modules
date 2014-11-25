@@ -14,7 +14,6 @@
                 <value>classpath:openmrs19.properties</value>
             </list>
         </property>
-        <property name="moduleName" value="openmrs-19" />
     </bean>
 
 </beans>

@@ -13,7 +13,6 @@
                 <value>classpath:openmrs.properties</value>
             </list>
         </property>
-        <property name="moduleName" value="openmrs-19" />
     </bean>
 
     <bean id="openMrsHttpClient" init-method="readSettings" depends-on="openMrs19Settings"

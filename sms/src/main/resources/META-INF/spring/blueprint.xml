@@ -15,7 +15,6 @@
     <context:component-scan base-package="org.motechproject.sms"/>
 
     <bean id="smsSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
-        <property name="moduleName" value="motech-sms"/>
         <property name="rawConfigFiles">
             <list>
                 <value>classpath:sms-configs.json</value>

@@ -13,7 +13,6 @@
     <mvc:annotation-driven/>
 
     <bean id="messageCampaignSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
-        <property name="moduleName" value="message-campaign"/>
         <property name="rawConfigFiles">
             <list>
                 <value>classpath:message-campaigns.json</value>

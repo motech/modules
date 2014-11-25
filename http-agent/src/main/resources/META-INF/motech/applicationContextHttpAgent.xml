@@ -17,7 +17,6 @@
                 <value>classpath:http-agent.properties</value>
             </list>
         </property>
-        <property name="moduleName" value="http-agent"/>
     </bean>
 
     <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">

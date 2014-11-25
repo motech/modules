@@ -14,7 +14,6 @@
                 <value>classpath:event-mappings.json</value>
             </list>
         </property>
-        <property name="moduleName" value="event-logging"/>
     </bean>
 
 </beans>

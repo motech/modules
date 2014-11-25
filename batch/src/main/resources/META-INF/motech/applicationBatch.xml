@@ -28,7 +28,6 @@
 
     <bean id="configSettings" class="org.motechproject.server.config.SettingsFacade"
         autowire="byType">
-        <property name="moduleName" value="batch" />
         <property name="configFiles">
             <list>
                 <value>classpath:application.properties</value>
