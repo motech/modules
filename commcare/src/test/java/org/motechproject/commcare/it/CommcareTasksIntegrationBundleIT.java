@@ -18,8 +18,11 @@ import org.motechproject.commcare.tasks.action.CommcareValidatingChannel;
 import org.motechproject.commcare.util.DummyCommcareSchema;
 import org.motechproject.commcare.util.ResponseXML;
 import org.motechproject.tasks.contract.ActionEventRequest;
+import org.motechproject.tasks.contract.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
+import org.motechproject.tasks.contract.ActionParameterRequestBuilder;
 import org.motechproject.tasks.domain.ActionEvent;
+import org.motechproject.tasks.domain.ActionEventBuilder;
 import org.motechproject.tasks.domain.Channel;
 import org.motechproject.tasks.domain.EventParameter;
 import org.motechproject.tasks.domain.Task;
@@ -107,18 +110,22 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     }
 
     private void createDummyActionChannel(Channel channel) {
-        ActionParameterRequest actionParameterRequest = new ActionParameterRequest(ResponseXML.ATTR1, ResponseXML.ATTR1, 0);
-        ActionParameterRequest actionParameterRequest2 = new ActionParameterRequest(ResponseXML.ATTR2, ResponseXML.ATTR2, 1);
-        ActionParameterRequest actionParameterRequest3 = new ActionParameterRequest("caseId", ResponseXML.CASE_ID, 2);
+        ActionParameterRequest actionParameterRequest = new ActionParameterRequestBuilder().setKey(ResponseXML.ATTR1)
+                .setDisplayName(ResponseXML.ATTR1).setOrder(0).createActionParameterRequest();
+        ActionParameterRequest actionParameterRequest2 = new ActionParameterRequestBuilder().setKey(ResponseXML.ATTR2)
+                .setDisplayName(ResponseXML.ATTR2).setOrder(1).createActionParameterRequest();
+        ActionParameterRequest actionParameterRequest3 = new ActionParameterRequestBuilder().setKey("caseId")
+                .setDisplayName(ResponseXML.CASE_ID).setOrder(2).createActionParameterRequest();
         SortedSet<ActionParameterRequest> actionParameterRequests = new TreeSet<>();
         actionParameterRequests.add(actionParameterRequest);
         actionParameterRequests.add(actionParameterRequest2);
         actionParameterRequests.add(actionParameterRequest3);
 
-        ActionEventRequest actionEventRequest = new ActionEventRequest("dummyAction", "validate", null,
-                TEST_INTERFACE, "execute", actionParameterRequests);
+        ActionEventRequest actionEventRequest = new ActionEventRequestBuilder().setDisplayName("dummyAction")
+                .setSubject("validate").setDescription(null).setServiceInterface(TEST_INTERFACE)
+                .setServiceMethod("execute").setActionParameters(actionParameterRequests).createActionEventRequest();
 
-        channel.addActionTaskEvent(new ActionEvent(actionEventRequest));
+        channel.addActionTaskEvent(ActionEventBuilder.fromActionEventRequest(actionEventRequest).createActionEvent());
         getChannelService().addOrUpdate(channel);
     }
 

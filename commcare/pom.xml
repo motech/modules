@@ -99,11 +99,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>org.motechproject.org.hibernate.validator</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>${motech.groupId}</groupId>
             <artifactId>motech-tasks-test-utils</artifactId>
             <version>${motech.version}</version>
