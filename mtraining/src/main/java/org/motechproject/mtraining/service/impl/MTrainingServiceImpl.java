@@ -127,6 +127,11 @@ public class MTrainingServiceImpl implements MTrainingService {
         return chapterDataService.create(chapter);
     }
 
+    /**
+     * Retrieve the chapter by the given name
+     * @param chapterName name of the chapter
+     * @return list of chapters that match a chapter name
+     */
     @Override
     public List<Chapter> getChapterByName(String chapterName) {
 
