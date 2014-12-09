@@ -214,7 +214,7 @@ public class CallDetailRecord {
                 switch (key) {
                     case "callStatus":
                         try {
-                            object = CallStatus.valueOf(value);
+                            object = CallStatus.valueOf(value.trim().toUpperCase().replace("-", "_"));
                         } catch (IllegalArgumentException e) {
                             // Always add unknown call status to the provider extra data, for inspection
                             LOGGER.warn("Unknown callStatus: {}", value);

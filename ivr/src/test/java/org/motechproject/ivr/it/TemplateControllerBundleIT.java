@@ -76,7 +76,7 @@ public class TemplateControllerBundleIT extends BasePaxIT {
     public void shouldNotLogWhenPassedInvalidConfig() throws Exception {
 
         //Create a config
-        configService.updateConfigs(Arrays.asList(new Config("foo", null, null, null, null)));
+        configService.updateConfigs(Arrays.asList(new Config("foo", null, null, null, null, null, null, false, null)));
 
         //Create & send a CDR status callback
         URIBuilder builder = new URIBuilder();
@@ -97,7 +97,7 @@ public class TemplateControllerBundleIT extends BasePaxIT {
 
         //Create a config
         List<String> ignoredStatusFields = Arrays.asList("ignoreme", "ignoreme2");
-        configService.updateConfigs(Arrays.asList(new Config("conf", ignoredStatusFields, "FROM:from", null, null)));
+        configService.updateConfigs(Arrays.asList(new Config("conf", null, null, ignoredStatusFields, "FROM:from", null, null, false, null)));
 
         // Create a CDR we can use as a datasource in the template. A more elegant way to do that would be to create
         // an EUDE, but this works just as well.

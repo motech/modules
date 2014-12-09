@@ -14,7 +14,7 @@ public class CallDetailRecordTest {
     public void shouldSetCallDetailStatus() {
         CallDetailRecord callDetailRecord = new CallDetailRecord();
         callDetailRecord.setField("callStatus", "answered");
-        assertEquals("answered", callDetailRecord.getProviderExtraData().get("callStatus"));
+        assertEquals(CallStatus.ANSWERED, callDetailRecord.getCallStatus());
     }
 
     @Test
