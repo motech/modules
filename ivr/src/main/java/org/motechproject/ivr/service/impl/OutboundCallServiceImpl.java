@@ -1,16 +1,21 @@
 package org.motechproject.ivr.service.impl;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
@@ -31,11 +36,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -67,8 +75,17 @@ public class OutboundCallServiceImpl implements OutboundCallService {
         LOGGER.debug(String.format("addCallDetailRecord(config = %s, params = %s, motechCallId = %s)", config.getName(),
                 params.toString(), motechCallId));
 
-        callDetailRecordDataService.create(new CallDetailRecord(config.getName(), null, params.get("from"),
-                params.get("to"), CallDirection.OUTBOUND, callStatus, null, motechCallId, null, params));
+        CallDetailRecord callDetailRecord = new CallDetailRecord(config.getName(), null, null, null, CallDirection.OUTBOUND, callStatus, null, motechCallId, null, null);
+
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            if (config.shouldIgnoreField(entry.getKey())) {
+                LOGGER.debug("Ignoring provider field '{}' with value '{}'", entry.getKey(), entry.getValue());
+            } else {
+                callDetailRecord.setField(config.mapStatusField(entry.getKey()), entry.getValue());
+            }
+        }
+
+        callDetailRecordDataService.create(callDetailRecord);
     }
 
     @Override
@@ -115,20 +132,30 @@ public class OutboundCallServiceImpl implements OutboundCallService {
             throw new CallInitiationException(message);
         }
 
+        Map<String, Object> completeJsonMap = new HashMap<String, Object>();
+        if (config.isJsonResponse()) {
+            try (InputStream json = response.getEntity().getContent()) {
+                String jsonString = IOUtils.toString(json);
+
+                // Grab key-value pairs from the keys the implementer defines during configuration.
+                Map<String, String> extraParamsFromJson = getAdditionalParamsFromJson(jsonString, config.getJsonExtraParamsList());
+
+                // Parse the complete JSON map, to be sent with the Motech event.
+                completeJsonMap = getCompleteJsonMap(jsonString);
+                params.putAll(extraParamsFromJson);
+            } catch (IOException e) {
+                String message = String.format("Could not parse for JSON for entity: %s", response.getEntity());
+                LOGGER.info(message);
+                statusMessageService.warn(message, MODULE_NAME);
+            }
+
+        }
+
         // Add a CDR to the database
         addCallDetailRecord(CallStatus.MOTECH_INITIATED, config, params, motechCallId);
 
         // Generate a MOTECH event
-        Map<String, Object> eventParams = new HashMap<>();
-        eventParams.put(EventParams.CONFIG, config.getName());
-        eventParams.put(EventParams.MOTECH_TIMESTAMP, CallDetailRecord.getCurrentTimestamp());
-        if (params.containsKey("to")) {
-            eventParams.put(EventParams.TO, params.get("to"));
-        }
-        if (params.entrySet().size() > 0) {
-            eventParams.put(EventParams.PROVIDER_EXTRA_DATA, params);
-        }
-        MotechEvent event = new MotechEvent(EventSubjects.CALL_INITIATED, eventParams);
+        MotechEvent event = generateMotechEvent(config.getName(), params, completeJsonMap);
         LOGGER.debug("Sending MotechEvent {}", event.toString());
         eventRelay.sendEventMessage(event);
     }
@@ -147,6 +174,23 @@ public class OutboundCallServiceImpl implements OutboundCallService {
         }
 
         return mergedURI;
+    }
+
+    private MotechEvent generateMotechEvent(String configName, Map<String, String> params, Map<String, Object> completeJsonMap) {
+        Map<String, Object> eventParams = new HashMap<>();
+        eventParams.put(EventParams.CONFIG, configName);
+        eventParams.put(EventParams.MOTECH_TIMESTAMP, CallDetailRecord.getCurrentTimestamp());
+        if (params.containsKey("to")) {
+            eventParams.put(EventParams.TO, params.get("to"));
+        }
+        if (params.entrySet().size() > 0) {
+            eventParams.put(EventParams.PROVIDER_EXTRA_DATA, params);
+        }
+        if (!completeJsonMap.isEmpty()) {
+            eventParams.put(EventParams.PROVIDER_JSON_RESPONSE, completeJsonMap);
+        }
+
+        return new MotechEvent(EventSubjects.CALL_INITIATED, eventParams);
     }
 
     private HttpUriRequest generateHttpRequest(Config config, Map<String, String> params) {
@@ -178,9 +222,59 @@ public class OutboundCallServiceImpl implements OutboundCallService {
             throw new IllegalStateException("Unexpected error creating a URI", e);
         }
 
+        // Add basic auth headers to the request if username and password were provided.
+        if (config.getUsername() != null && config.getPassword() != null) {
+            request.addHeader(BasicScheme.authenticate(
+                    new UsernamePasswordCredentials(config.getUsername(), config.getPassword()),
+                    "UTF-8",
+                    false));
+        }
+
         LOGGER.debug("Generated {}", request.toString());
 
         return request;
+    }
+
+    /**
+     * Extracts key-value pairs as strings from the provider's JSON response, with the keys defined by the implementer
+     * during configuration.
+     *
+     * @param jsonString
+     *   The provider's JSON response.
+     * @param jsonExtraParamsList
+     *   The list of JSON keys for which to extract a value.
+     * @return
+     */
+    private Map<String, String> getAdditionalParamsFromJson(String jsonString, List<String> jsonExtraParamsList) {
+        Map<String, String> data = new HashMap<String, String>();
+
+        try {
+            JsonNode rootNode = new ObjectMapper().readValue(jsonString, JsonNode.class);
+            for (String key : jsonExtraParamsList) {
+                JsonNode valueNode = rootNode.findValue(key);
+                if (valueNode != null) {
+                    data.put(key, valueNode.asText());
+                }
+            }
+        } catch (IOException e) {
+            String message = String.format("Could not parse for JSON: %s", jsonString);
+            LOGGER.info(message);
+            statusMessageService.warn(message, MODULE_NAME);
+        }
+
+        return data;
+    }
+
+    private Map<String, Object> getCompleteJsonMap(String jsonString) {
+        Map<String, Object> data = new HashMap<String, Object>();
+        try {
+            data = new ObjectMapper().readValue(jsonString, Map.class);
+        } catch (IOException e) {
+            String message = String.format("Could not parse for JSON: %s", jsonString);
+            LOGGER.info(message);
+            statusMessageService.warn(message, MODULE_NAME);
+        }
+        return data;
     }
 
 }

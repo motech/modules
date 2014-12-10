@@ -54,6 +54,11 @@ public final class EventParams {
     public static final String PROVIDER_EXTRA_DATA = "provider_extra_data";
 
     /**
+     * Provider JSON response
+     */
+    public static final String PROVIDER_JSON_RESPONSE = "provider_json_response";
+
+    /**
      * Create a MOTECH event parameters map payload from a given {@link org.motechproject.ivr.domain.CallDetailRecord}.
      *
      * @param callDetailRecord

@@ -18,6 +18,16 @@ public class Config {
     private String name;
 
     /**
+     * Username for HTTP services that require authentication.
+     */
+    private String username;
+
+    /**
+     * Password for HTTP services that require authentication.
+     */
+    private String password;
+
+    /**
      * List of fields the IVR provider sends to the status controller which shouldn't be included (ie: ignored) in
      * the CDR data
      */
@@ -39,19 +49,33 @@ public class Config {
      */
     @JsonIgnore
     private Map<String, String> statusFieldMap = new HashMap<>();
+
+    /**
+     * If the call provider returns JSON data upon placing an outbound call.
+     */
+    private boolean jsonResponse;
+
+    /**
+     * Values to be extracted from call provider JSON and saved as (extra) parameters.
+     */
+    private List<String> jsonExtraParamsList;
     /**
      * This field is used to pass the status field back & forth to the UI
      */
     private String statusFieldMapString;
 
-    public Config(String name, List<String> ignoredStatusFields, String statusFieldMapString,
-                  HttpMethod outgoingCallMethod, String outgoingCallUriTemplate) {
+    public Config(String name, String username, String password, List<String> ignoredStatusFields, String statusFieldMapString,
+                  HttpMethod outgoingCallMethod, String outgoingCallUriTemplate, boolean jsonResponse, List<String> jsonExtraParamsList) {
         this.name = name;
+        this.username = username;
+        this.password = password;
         this.ignoredStatusFields = ignoredStatusFields;
         this.outgoingCallUriTemplate = outgoingCallUriTemplate;
         this.outgoingCallMethod = outgoingCallMethod;
         this.statusFieldMapString = statusFieldMapString;
         this.statusFieldMap = parseStatusMapString(statusFieldMapString);
+        this.jsonResponse = jsonResponse;
+        this.jsonExtraParamsList = jsonExtraParamsList;
     }
 
     private Map<String, String> parseStatusMapString(String string) {
@@ -94,6 +118,22 @@ public class Config {
         this.name = name;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public List<String> getIgnoredStatusFields() {
         return ignoredStatusFields;
     }
@@ -116,6 +156,22 @@ public class Config {
 
     public void setOutgoingCallMethod(HttpMethod outgoingCallMethod) {
         this.outgoingCallMethod = outgoingCallMethod;
+    }
+
+    public boolean isJsonResponse() {
+        return jsonResponse;
+    }
+
+    public void setJsonResponse(boolean jsonResponse) {
+        this.jsonResponse = jsonResponse;
+    }
+
+    public List<String> getJsonExtraParamsList() {
+        return jsonExtraParamsList;
+    }
+
+    public void setJsonExtraParamsList(List<String> jsonExtraParamsList) {
+        this.jsonExtraParamsList = jsonExtraParamsList;
     }
 
     public String getStatusFieldMapString() {

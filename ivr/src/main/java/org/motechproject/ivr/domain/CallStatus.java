@@ -35,5 +35,22 @@ public enum CallStatus {
     /**
      * I don't know what happened
      */
-    UNKNOWN
+    UNKNOWN,
+
+    // Verboice Call Statuses
+
+    /**
+     * The call was successfully queued on Verboice's servers
+     */
+    QUEUED,
+
+    /**
+     * The remote end of an outgoing call is ringing.
+     */
+    RINGING,
+
+    /**
+     * The session has successfully completed.
+     */
+    COMPLETED
 }
