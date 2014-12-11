@@ -42,16 +42,22 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-md-3 control-label" for="username{{$index}}">{{msg('ivr.web.settings.username')}}</label>
-                                <div class="col-md-3" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('ivr.web.settings.username.tooltip')}}">
-                                    <input type="text" class="form-control" id="username{{$index}}" ng-model="conf.username"/>
+                                <label class="col-md-3 control-label" for="authRequired{{$index}}">{{msg('ivr.web.settings.authRequired')}}</label>
+                                <div class="col-md-1" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('ivr.web.settings.authRequired.tooltip')}}">
+                                    <label>
+                                        <input type="checkbox" id="authRequired{{$index}}" ng-model="conf.authRequired"/>
+                                    </label>
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label class="col-md-3 control-label" for="password{{$index}}">{{msg('ivr.web.settings.password')}}</label>
-                                <div class="col-md-3" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('ivr.web.settings.password.tooltip')}}">
-                                    <input type="password" class="form-control" id="password{{$index}}" ng-model="conf.password"/>
+                            <div class="form-group" ng-show="conf.authRequired">
+                                <label class="col-md-3 control-label">{{msg('ivr.web.settings.credentials')}}</label>
+                                <div class="col-md-4" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('ivr.web.settings.username.tooltip')}}">
+                                    <input type="text" class="form-control" id="username{{$index}}" ng-model="conf.username" placeholder="{{msg('ivr.web.settings.username')}}"/>
+                                </div>
+
+                                <div class="col-md-4" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('ivr.web.settings.password.tooltip')}}">
+                                    <input type="password" class="form-control" id="password{{$index}}" ng-model="conf.password" placeholder="{{msg('ivr.web.settings.password')}}"/>
                                 </div>
                             </div>
 
@@ -92,14 +98,14 @@
 
                             <div class="form-group">
                                 <label class="col-md-3 control-label" for="jsonResponse{{$index}}">{{msg('ivr.web.settings.jsonResponse')}}</label>
-                                <div class="col-md-3" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('ivr.web.settings.jsonResponse.tooltip')}}">
-                                    <div class="checkbox">
+                                <div class="col-md-1" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('ivr.web.settings.jsonResponse.tooltip')}}">
+                                    <label>
                                         <input id="jsonResponse{{$index}}" type="checkbox" ng-model="conf.jsonResponse"/>
-                                    </div>
+                                    </label>
                                 </div>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group" ng-show="conf.jsonResponse">
                                 <label class="col-md-3 control-label" for="jsonExtraParamsList{{$index}}">{{msg('ivr.web.settings.jsonExtraParamsList')}}</label>
                                 <div class="col-md-8" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('ivr.web.settings.jsonExtraParamsList.tooltip')}}">
                                     <input class="form-control small-mono" id="jsonExtraParamsList{{$index}}" type="text" ng-model="conf.jsonExtraParamsList" ng-list=",">
