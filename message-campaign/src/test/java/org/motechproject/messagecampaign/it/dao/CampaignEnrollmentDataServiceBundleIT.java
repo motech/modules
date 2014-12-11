@@ -23,6 +23,8 @@ import static ch.lambdaj.Lambda.on;
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
+import static org.junit.matchers.JUnitMatchers.hasItems;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -83,7 +85,9 @@ public class CampaignEnrollmentDataServiceBundleIT extends BasePaxIT {
         campaignEnrollmentDataService.create(completedEnrollment);
 
         List<CampaignEnrollment> filteredEnrollments = campaignEnrollmentDataService.findByStatus(CampaignEnrollmentStatus.ACTIVE);
-        assertEquals(asList(new String[]{"active_external_id_1", "active_external_id_2"}), extract(filteredEnrollments, on(CampaignEnrollment.class).getExternalId()));
+
+        List<String> actual = extract(filteredEnrollments, on(CampaignEnrollment.class).getExternalId());
+        assertThat(actual, hasItems("active_external_id_1", "active_external_id_2"));
 
         filteredEnrollments = campaignEnrollmentDataService.findByStatus(CampaignEnrollmentStatus.INACTIVE);
         assertEquals(asList(new String[]{"some_external_id"}), extract(filteredEnrollments, on(CampaignEnrollment.class).getExternalId()));
