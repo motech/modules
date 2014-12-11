@@ -222,8 +222,7 @@ public class OutboundCallServiceImpl implements OutboundCallService {
             throw new IllegalStateException("Unexpected error creating a URI", e);
         }
 
-        // Add basic auth headers to the request if username and password were provided.
-        if (config.getUsername() != null && config.getPassword() != null) {
+        if (config.isAuthRequired()) {
             request.addHeader(BasicScheme.authenticate(
                     new UsernamePasswordCredentials(config.getUsername(), config.getPassword()),
                     "UTF-8",
@@ -258,7 +257,7 @@ public class OutboundCallServiceImpl implements OutboundCallService {
             }
         } catch (IOException e) {
             String message = String.format("Could not parse for JSON: %s", jsonString);
-            LOGGER.info(message);
+            LOGGER.warn(message);
             statusMessageService.warn(message, MODULE_NAME);
         }
 
@@ -271,7 +270,7 @@ public class OutboundCallServiceImpl implements OutboundCallService {
             data = new ObjectMapper().readValue(jsonString, Map.class);
         } catch (IOException e) {
             String message = String.format("Could not parse for JSON: %s", jsonString);
-            LOGGER.info(message);
+            LOGGER.warn(message);
             statusMessageService.warn(message, MODULE_NAME);
         }
         return data;

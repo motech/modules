@@ -18,6 +18,11 @@ public class Config {
     private String name;
 
     /**
+     * If the HTTP service requires authentication.
+     */
+    private boolean authRequired;
+
+    /**
      * Username for HTTP services that require authentication.
      */
     private String username;
@@ -64,9 +69,10 @@ public class Config {
      */
     private String statusFieldMapString;
 
-    public Config(String name, String username, String password, List<String> ignoredStatusFields, String statusFieldMapString,
+    public Config(String name, boolean authRequired, String username, String password, List<String> ignoredStatusFields, String statusFieldMapString,
                   HttpMethod outgoingCallMethod, String outgoingCallUriTemplate, boolean jsonResponse, List<String> jsonExtraParamsList) {
         this.name = name;
+        this.authRequired = authRequired;
         this.username = username;
         this.password = password;
         this.ignoredStatusFields = ignoredStatusFields;
@@ -116,6 +122,14 @@ public class Config {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isAuthRequired() {
+        return authRequired;
+    }
+
+    public void setAuthRequired(boolean authRequired) {
+        this.authRequired = authRequired;
     }
 
     public String getUsername() {
