@@ -44,6 +44,11 @@ import static org.motechproject.ivr.web.LogAndEventHelper.sendAndLogEvent;
 public class TemplateController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StatusController.class);
+    private static final String LOG4J = "org.apache.velocity.runtime.log.Log4JLogChute";
+    private static final String LOGSYSTEM_CLASS = "runtime.log.logsystem.class";
+    private static final String LOGSYSTEM_LOGGER = "runtime.log.logsystem.log4j.logger";
+
+
     private CallDetailRecordDataService callDetailRecordDataService;
     private TemplateService templateService;
     private ConfigService configService;
@@ -63,6 +68,8 @@ public class TemplateController {
         this.statusMessageService = statusMessageService;
         this.mdsLookupService = mdsLookupService;
         try {
+            Velocity.setProperty(LOGSYSTEM_CLASS, LOG4J);
+            Velocity.setProperty(LOGSYSTEM_LOGGER, LOG4J);
             Velocity.init();
         } catch (Exception e) {
             throw new IllegalStateException(String.format("Error initializing template engine: %s", e.toString()), e);
