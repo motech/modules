@@ -950,26 +950,6 @@
                                     </resources>
                                 </configuration>
                             </execution>
-                            <!-- Different scheduler config for Postgres and Mysql -->
-                            <execution>
-                                <id>copy-quartz-config-file</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>
-                                        ${user.home}/.motech/config/org.motechproject.motech-scheduler
-                                    </outputDirectory>
-                                    <overwrite>true</overwrite>
-                                    <resources>
-                                        <resource>
-                                            <directory>${modules.root.dir}/testdata/${motech.sql.dbtype}</directory>
-                                            <include>quartz.properties</include>
-                                        </resource>
-                                    </resources>
-                                </configuration>
-                            </execution>
                         </executions>
                     </plugin>
                     <plugin>
