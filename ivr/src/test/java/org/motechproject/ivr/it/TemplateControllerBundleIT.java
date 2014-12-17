@@ -15,7 +15,7 @@ import org.motechproject.ivr.repository.CallDetailRecordDataService;
 import org.motechproject.ivr.service.ConfigService;
 import org.motechproject.ivr.service.TemplateService;
 import org.motechproject.testing.osgi.BasePaxIT;
-import org.motechproject.testing.osgi.TestContext;
+import org.motechproject.testing.utils.TestContext;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.testing.osgi.http.SimpleHttpClient;
 import org.ops4j.pax.exam.ExamFactory;

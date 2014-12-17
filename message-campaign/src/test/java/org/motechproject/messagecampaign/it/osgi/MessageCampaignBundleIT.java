@@ -22,7 +22,7 @@ import org.motechproject.messagecampaign.service.MessageCampaignService;
 import org.motechproject.messagecampaign.userspecified.CampaignRecord;
 import org.motechproject.security.service.MotechUserService;
 import org.motechproject.testing.osgi.BasePaxIT;
-import org.motechproject.testing.osgi.TestContext;
+import org.motechproject.testing.utils.TestContext;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;

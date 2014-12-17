@@ -17,7 +17,7 @@ import org.motechproject.sms.configs.Config;
 import org.motechproject.sms.configs.Configs;
 import org.motechproject.sms.service.ConfigService;
 import org.motechproject.testing.osgi.BasePaxIT;
-import org.motechproject.testing.osgi.TestContext;
+import org.motechproject.testing.utils.TestContext;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.testing.osgi.http.SimpleHttpClient;
 import org.ops4j.pax.exam.ExamFactory;
