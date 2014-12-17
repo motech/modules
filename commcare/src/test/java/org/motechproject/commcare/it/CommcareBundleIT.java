@@ -9,7 +9,7 @@ import org.motechproject.commcare.service.CommcareCaseService;
 import org.motechproject.commcare.service.CommcareFormService;
 import org.motechproject.commcare.service.CommcareUserService;
 import org.motechproject.testing.osgi.BasePaxIT;
-import org.motechproject.testing.osgi.TestContext;
+import org.motechproject.testing.utils.TestContext;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
