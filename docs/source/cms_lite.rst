@@ -99,6 +99,33 @@ Testing Whether Content Exists
       // Content exists
   }
 
+Retrieving content through HTTP
+===============================
+
+Content stored in the cms-lite module can be retrieved by doing a single HTTP GET request. Two HTTP endpoints are exposed -
+one for string content, the other one for stream content. You need to provide the language and name of the desired resource in the url.
+
+* String content:
+
+    ::
+
+        http://{motech-server}/module/cmsliteapi/string/{language}/{name}
+
+* Stream content:
+
+    ::
+
+        http://{motech-server}/module/cmsliteapi/stream/{language}/{name}
+
+
+.. note::
+
+    There are no special security rules defined for these endpoints, meaning that the client must handle authenticating
+    with MOTECH in order to be able to use them. You can set up security rules that will disable the security for these
+    endpoints in case for example your IVR requires to retrieve them without auth. Doing that will make them publicly
+    available though, so use your own judgement regarding this. Check the :std:ref:`Security Rules <security_rules>`
+    documentation for more info on setting up custom security rules.
+
 Events Consumed and Emitted
 ===========================
 
