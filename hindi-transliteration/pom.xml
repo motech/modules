@@ -31,7 +31,6 @@
                         <Blueprint-Enabled>true</Blueprint-Enabled>
                         <Context-Path>transliteration</Context-Path>
                         <Resource-Path>hindi-transliteration/resources</Resource-Path>
-                        <Context-File>META-INF/motech/applicationContext.xml</Context-File>
                         <Export-Package>
                             org.motechproject.transliteration.hindi.service;version=${project.version},
                         </Export-Package>

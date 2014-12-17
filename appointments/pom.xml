@@ -59,7 +59,6 @@
                     <instructions>
                         <Blueprint-Enabled>true</Blueprint-Enabled>
                         <Resource-Path>appointments/resources</Resource-Path>
-                        <Context-File>META-INF/motech/applicationContext.xml</Context-File>
                         <Export-Package>
                             org.motechproject.appointments.service;version=${project.version},
                             org.motechproject.appointments.repository;version=${project.version},

@@ -52,7 +52,6 @@
                     <instructions>
                         <Blueprint-Enabled>true</Blueprint-Enabled>
                         <Resource-Path>mtraining/resources</Resource-Path>
-                        <Context-File>META-INF/motech/applicationContext.xml</Context-File>
                         <Export-Package>
                             org.motechproject.mtraining.service;version=${project.version},
                             org.motechproject.mtraining.repository;version=${project.version},
