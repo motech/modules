@@ -51,9 +51,9 @@ public class SmsAuditServiceBundleIT extends BasePaxIT{
 
         SmsRecord smsRecord = new SmsRecord("config", SmsDirection.INBOUND, "from", "message", DateTime.now(),
                 DeliveryStatus.PENDING, "status", "mid", "pid", null);
-        smsAuditService.log(smsRecord);
+        smsRecordsDataService.create(smsRecord);
 
-        List<SmsRecord> smsRecords = smsRecordsDataService.retrieveAll();
+        List<SmsRecord> smsRecords = smsAuditService.findAllSmsRecords();
         assertEquals(1, smsRecords.size());
         assertEquals(smsRecords.get(0), smsRecord);
     }

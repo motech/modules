@@ -4,8 +4,8 @@ import org.joda.time.DateTime;
 import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.sms.audit.DeliveryStatus;
-import org.motechproject.sms.audit.SmsAuditService;
 import org.motechproject.sms.audit.SmsRecord;
+import org.motechproject.sms.audit.SmsRecordsDataService;
 import org.motechproject.sms.configs.Config;
 import org.motechproject.sms.service.ConfigService;
 import org.motechproject.sms.service.TemplateService;
@@ -41,16 +41,16 @@ public class IncomingController {
     private TemplateService templateService;
     private ConfigService configService;
     private EventRelay eventRelay;
-    private SmsAuditService smsAuditService;
+    private SmsRecordsDataService smsRecordsDataService;
     private StatusMessageService statusMessageService;
 
 
     @Autowired
-    public IncomingController(@Qualifier("smsAuditService") SmsAuditService smsAuditService,
+    public IncomingController(SmsRecordsDataService smsRecordsDataService,
                               @Qualifier("templateService") TemplateService templateService,
                               @Qualifier("configService") ConfigService configService,
                               StatusMessageService statusMessageService, EventRelay eventRelay) {
-        this.smsAuditService = smsAuditService;
+        this.smsRecordsDataService = smsRecordsDataService;
         this.templateService = templateService;
         this.configService = configService;
         this.statusMessageService = statusMessageService;
@@ -118,7 +118,7 @@ public class IncomingController {
 
         eventRelay.sendEventMessage(inboundEvent(config.getName(), sender, recipient, message, providerMessageId,
                 timestamp));
-        smsAuditService.log(new SmsRecord(config.getName(), INBOUND, sender, message, now(), DeliveryStatus.RECEIVED,
+        smsRecordsDataService.create(new SmsRecord(config.getName(), INBOUND, sender, message, now(), DeliveryStatus.RECEIVED,
                 null, null, providerMessageId, null));
     }
 }

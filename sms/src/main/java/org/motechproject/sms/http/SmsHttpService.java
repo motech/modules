@@ -13,8 +13,8 @@ import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.config.service.ConfigurationService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.sms.audit.SmsAuditService;
 import org.motechproject.sms.audit.SmsRecord;
+import org.motechproject.sms.audit.SmsRecordsDataService;
 import org.motechproject.sms.configs.Config;
 import org.motechproject.sms.configs.ConfigProp;
 import org.motechproject.sms.service.ConfigService;
@@ -53,21 +53,21 @@ public class SmsHttpService {
     private ConfigurationService configurationService;
     private EventRelay eventRelay;
     private HttpClient commonsHttpClient;
-    private SmsAuditService smsAuditService;
     private StatusMessageService statusMessageService;
+    private SmsRecordsDataService smsRecordsDataService;
 
     @Autowired
     public SmsHttpService(@Qualifier("templateService") TemplateService templateService,
                           @Qualifier("configService") ConfigService configService,
-                          ConfigurationService configurationService, SmsAuditService smsAuditService,
-                          EventRelay eventRelay, HttpClient httpClient, StatusMessageService statusMessageService) {
+                          ConfigurationService configurationService, EventRelay eventRelay,
+                          HttpClient httpClient, SmsRecordsDataService smsRecordsDataService) {
         this.templateService = templateService;
         this.configService = configService;
         this.configurationService = configurationService;
-        this.smsAuditService = smsAuditService;
         this.eventRelay = eventRelay;
         this.commonsHttpClient = httpClient;
         this.statusMessageService = statusMessageService;
+        this.smsRecordsDataService = smsRecordsDataService;
     }
 
     private static String printableMethodParams(HttpMethod method) {
@@ -285,7 +285,7 @@ public class SmsHttpService {
         // ...and audit all the records that need auditing
         //
         for (SmsRecord smsRecord : auditRecords) {
-            smsAuditService.log(smsRecord);
+            smsRecordsDataService.create(smsRecord);
         }
     }
 }

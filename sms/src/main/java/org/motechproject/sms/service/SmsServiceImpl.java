@@ -8,8 +8,8 @@ import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.sms.SmsEventParams;
 import org.motechproject.sms.SmsEventSubjects;
 import org.motechproject.sms.audit.DeliveryStatus;
-import org.motechproject.sms.audit.SmsAuditService;
 import org.motechproject.sms.audit.SmsRecord;
+import org.motechproject.sms.audit.SmsRecordsDataService;
 import org.motechproject.sms.configs.Config;
 import org.motechproject.sms.templates.Template;
 import org.slf4j.Logger;
@@ -38,19 +38,19 @@ public class SmsServiceImpl implements SmsService {
     private EventRelay eventRelay;
     private MotechSchedulerService schedulerService;
     private TemplateService templateService;
-    private SmsAuditService smsAuditService;
     private ConfigService configService;
+    private SmsRecordsDataService smsRecordsDataService;
 
     @Autowired
     public SmsServiceImpl(EventRelay eventRelay, MotechSchedulerService schedulerService,
                           @Qualifier("templateService") TemplateService templateService,
                           @Qualifier("configService") ConfigService configService,
-                          SmsAuditService smsAuditService) {
+                          SmsRecordsDataService smsRecordsDataService) {
         this.eventRelay = eventRelay;
         this.schedulerService = schedulerService;
         this.templateService = templateService;
         this.configService = configService;
-        this.smsAuditService = smsAuditService;
+        this.smsRecordsDataService = smsRecordsDataService;
     }
 
     private static List<String> splitMessage(String message, int maxSize, String header, String footer,
@@ -164,7 +164,7 @@ public class SmsServiceImpl implements SmsService {
                     //without that it seems Quartz doesn't fire events in the order they were scheduled
                     dt = dt.plus(1);
                     for (String recipient : recipients) {
-                        smsAuditService.log(new SmsRecord(config.getName(), OUTBOUND, recipient, part, now(),
+                        smsRecordsDataService.create(new SmsRecord(config.getName(), OUTBOUND, recipient, part, now(),
                                 DeliveryStatus.SCHEDULED, null, motechId, null, null));
                     }
                 }
@@ -175,7 +175,7 @@ public class SmsServiceImpl implements SmsService {
                             part, motechId, null, null, null, null));
                     logger.info("Sending message [{}] to [{}].", part.replace("\n", "\\n"), recipients);
                     for (String recipient : recipients) {
-                        smsAuditService.log(new SmsRecord(config.getName(), OUTBOUND, recipient, part, now(),
+                        smsRecordsDataService.create(new SmsRecord(config.getName(), OUTBOUND, recipient, part, now(),
                                 DeliveryStatus.PENDING, null, motechId, null, null));
                     }
                 }

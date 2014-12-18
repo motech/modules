@@ -10,6 +10,7 @@ import org.motechproject.sms.audit.SmsAuditService;
 import org.motechproject.sms.audit.SmsRecord;
 import org.motechproject.sms.audit.SmsRecordSearchCriteria;
 import org.motechproject.sms.audit.SmsRecords;
+import org.motechproject.sms.audit.SmsRecordsDataService;
 import org.motechproject.sms.configs.Config;
 import org.motechproject.sms.service.ConfigService;
 import org.motechproject.sms.service.TemplateService;
@@ -55,19 +56,20 @@ public class StatusController {
     private SmsAuditService smsAuditService;
     private TemplateService templateService;
     private ConfigService configService;
-
+    private SmsRecordsDataService smsRecordsDataService;
 
     @Autowired
     public StatusController(@Qualifier("templateService") TemplateService templateService,
                             @Qualifier("configService") ConfigService configService,
                             EventRelay eventRelay, StatusMessageService statusMessageService,
-                            SmsAuditService smsAuditService
+                            SmsAuditService smsAuditService, SmsRecordsDataService smsRecordsDataService
                             ) {
         this.templateService = templateService;
         this.configService = configService;
         this.eventRelay = eventRelay;
         this.statusMessageService = statusMessageService;
         this.smsAuditService = smsAuditService;
+        this.smsRecordsDataService = smsRecordsDataService;
     }
 
     private SmsRecord findFirstByProviderMessageId(SmsRecords smsRecords, String providerMessageId) {
@@ -176,7 +178,7 @@ public class StatusController {
                     smsRecord.getMessageContent(), smsRecord.getMotechId(), providerMessageId, null, null,
                     now()));
         }
-        smsAuditService.log(smsRecord);
+        smsRecordsDataService.create(smsRecord);
     }
 
     @ResponseStatus(HttpStatus.OK)

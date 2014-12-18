@@ -4,8 +4,6 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.motechproject.commons.api.Range;
 import org.motechproject.mds.query.QueryParams;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,17 +18,10 @@ import static org.motechproject.commons.api.MotechEnumUtils.toEnumSet;
 @Service("smsAuditService")
 public class SmsAuditServiceImpl implements SmsAuditService {
     private SmsRecordsDataService smsRecordsDataService;
-    private Logger logger = LoggerFactory.getLogger(SmsAuditServiceImpl.class);
 
     @Autowired
     public SmsAuditServiceImpl(SmsRecordsDataService smsRecordsDataService) {
         this.smsRecordsDataService = smsRecordsDataService;
-    }
-
-    @Override
-    public void log(SmsRecord smsRecord) {
-        logger.info(smsRecord.toString());
-        smsRecordsDataService.create(smsRecord);
     }
 
     @Override
