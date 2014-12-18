@@ -39,7 +39,7 @@ public class Appointment {
     @Field
     private boolean sendReminders;
 
-    // Reminder interval in seconds
+    // Reminder interval
     @Field
     private Period reminderInterval;
 
