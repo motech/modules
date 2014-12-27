@@ -34,7 +34,7 @@ public final class LogAndEventHelper {
      * @param configName
      * @param params
      */
-    public static void sendAndLogEvent(String eventSubject, ConfigService configService,
+    public static void sendAndLogEvent(String eventSubject, ConfigService configService, //NO CHECKSTYLE ArgumentCount
                                        CallDetailRecordDataService cdrService, StatusMessageService messageService,
                                        EventRelay eventRelay, String configName, String templateName,
                                        Map<String, String> params) {

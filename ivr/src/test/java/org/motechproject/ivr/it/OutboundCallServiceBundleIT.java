@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ivr.domain.CallDetailRecord;
-import org.motechproject.ivr.domain.CallStatus;
 import org.motechproject.ivr.domain.Config;
 import org.motechproject.ivr.domain.HttpMethod;
 import org.motechproject.ivr.repository.CallDetailRecordDataService;
@@ -112,6 +111,6 @@ public class OutboundCallServiceBundleIT extends BasePaxIT {
         //And we're expecting to see one FAILED CDR in the database
         List<CallDetailRecord> callDetailRecords = callDetailRecordDataService.retrieveAll();
         assertEquals(1, callDetailRecords.size());
-        assertEquals(CallStatus.FAILED, callDetailRecords.get(0).getCallStatus());
+        assertEquals(CallDetailRecord.CALL_FAILED, callDetailRecords.get(0).getCallStatus());
     }
 }

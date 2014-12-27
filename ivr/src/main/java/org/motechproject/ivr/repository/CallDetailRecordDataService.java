@@ -1,6 +1,5 @@
 package org.motechproject.ivr.repository;
 
-import org.motechproject.ivr.domain.CallStatus;
 import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
@@ -20,5 +19,5 @@ public interface CallDetailRecordDataService extends MotechDataService<CallDetai
 
     @Lookup
     List<CallDetailRecord> findByProviderCallIdAndCallStatus(@LookupField(name = "providerCallId") String providerCallId,
-                                                             @LookupField(name = "callStatus") CallStatus callStatus);
+                                                             @LookupField(name = "callStatus") String callStatus);
 }

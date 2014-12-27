@@ -69,8 +69,10 @@ public class Config {
      */
     private String statusFieldMapString;
 
-    public Config(String name, boolean authRequired, String username, String password, List<String> ignoredStatusFields, String statusFieldMapString,
-                  HttpMethod outgoingCallMethod, String outgoingCallUriTemplate, boolean jsonResponse, List<String> jsonExtraParamsList) {
+
+    public Config(String name, boolean authRequired, String username, String password, //NO CHECKSTYLE ArgumentCount
+                  List<String> ignoredStatusFields, String statusFieldMapString, HttpMethod outgoingCallMethod,
+                  String outgoingCallUriTemplate, boolean jsonResponse, List<String> jsonExtraParamsList) {
         this.name = name;
         this.authRequired = authRequired;
         this.username = username;
@@ -216,46 +218,42 @@ public class Config {
 
     @Override //NO CHECKSTYLE CyclomaticComplexity
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Config)) {
-            return false;
-        }
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
 
         Config config = (Config) o;
 
-        if (ignoredStatusFields != null ? !ignoredStatusFields.equals(config.ignoredStatusFields) : config
-                .ignoredStatusFields != null) {
-            return false;
-        }
-        if (!name.equals(config.name)) {
-            return false;
-        }
-        if (outgoingCallMethod != config.outgoingCallMethod) {
-            return false;
-        }
-        if (outgoingCallUriTemplate != null ? !outgoingCallUriTemplate.equals(config.outgoingCallUriTemplate) :
-                config.outgoingCallUriTemplate != null) {
-            return false;
-        }
-        if (statusFieldMap != null ? !statusFieldMap.equals(config.statusFieldMap) : config.statusFieldMap != null) {
-            return false;
-        }
-        if (statusFieldMapString != null ? !statusFieldMapString.equals(config.statusFieldMapString) :
-                config.statusFieldMapString != null) {
-            return false;
-        }
+        if (authRequired != config.authRequired) { return false; }
+        if (jsonResponse != config.jsonResponse) { return false; }
+        if (ignoredStatusFields != null ? !ignoredStatusFields.equals(config.ignoredStatusFields) : config.ignoredStatusFields != null)
+            { return false; }
+        if (jsonExtraParamsList != null ? !jsonExtraParamsList.equals(config.jsonExtraParamsList) : config.jsonExtraParamsList != null)
+            { return false; }
+        if (!name.equals(config.name)) { return false; }
+        if (outgoingCallMethod != config.outgoingCallMethod) { return false; }
+        if (!outgoingCallUriTemplate.equals(config.outgoingCallUriTemplate)) { return false; }
+        if (password != null ? !password.equals(config.password) : config.password != null) { return false; }
+        if (statusFieldMap != null ? !statusFieldMap.equals(config.statusFieldMap) : config.statusFieldMap != null)
+            { return false; }
+        if (statusFieldMapString != null ? !statusFieldMapString.equals(config.statusFieldMapString) : config.statusFieldMapString != null)
+            { return false; }
+        if (username != null ? !username.equals(config.username) : config.username != null) { return false; }
 
         return true;
     }
+
     @Override
     public int hashCode() {
         int result = name.hashCode();
+        result = 31 * result + (authRequired ? 1 : 0);
+        result = 31 * result + (username != null ? username.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (ignoredStatusFields != null ? ignoredStatusFields.hashCode() : 0);
-        result = 31 * result + (outgoingCallUriTemplate != null ? outgoingCallUriTemplate.hashCode() : 0);
-        result = 31 * result + (outgoingCallMethod != null ? outgoingCallMethod.hashCode() : 0);
+        result = 31 * result + outgoingCallUriTemplate.hashCode();
+        result = 31 * result + outgoingCallMethod.hashCode();
         result = 31 * result + (statusFieldMap != null ? statusFieldMap.hashCode() : 0);
+        result = 31 * result + (jsonResponse ? 1 : 0);
+        result = 31 * result + (jsonExtraParamsList != null ? jsonExtraParamsList.hashCode() : 0);
         result = 31 * result + (statusFieldMapString != null ? statusFieldMapString.hashCode() : 0);
         return result;
     }
@@ -264,10 +262,15 @@ public class Config {
     public String toString() {
         return "Config{" +
                 "name='" + name + '\'' +
+                ", authRequired=" + authRequired +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
                 ", ignoredStatusFields=" + ignoredStatusFields +
                 ", outgoingCallUriTemplate='" + outgoingCallUriTemplate + '\'' +
                 ", outgoingCallMethod=" + outgoingCallMethod +
                 ", statusFieldMap=" + statusFieldMap +
+                ", jsonResponse=" + jsonResponse +
+                ", jsonExtraParamsList=" + jsonExtraParamsList +
                 ", statusFieldMapString='" + statusFieldMapString + '\'' +
                 '}';
     }

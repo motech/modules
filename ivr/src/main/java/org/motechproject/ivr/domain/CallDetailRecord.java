@@ -32,7 +32,8 @@ public class CallDetailRecord {
     private static final DateTimeFormatter DT_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSSS");
     private static final Logger LOGGER = LoggerFactory.getLogger(CallDetailRecord.class);
 
-
+    public static final String CALL_FAILED = "FAILED";
+    public static final String CALL_INITIATED = "INITIATED";
 
     @Field
     @UIDisplayable(position = COL1)
@@ -64,7 +65,7 @@ public class CallDetailRecord {
 
     @Field
     @UIDisplayable(position = COL6)
-    private CallStatus callStatus;
+    private String callStatus;
 
     @Field
     @UIDisplayable(position = COL7)
@@ -84,13 +85,12 @@ public class CallDetailRecord {
 
     public CallDetailRecord() {
         providerExtraData = new HashMap<>();
-        callStatus = CallStatus.UNKNOWN;
         this.motechTimestamp = DT_FORMATTER.print(DateTime.now());
     }
 
     public CallDetailRecord(String configName,  //NO CHECKSTYLE ParameterNumber
                             String providerTimestamp, String from, String to, CallDirection callDirection,
-                            CallStatus callStatus, String templateName, String motechCallId, String providerCallId,
+                            String callStatus, String templateName, String motechCallId, String providerCallId,
                             Map<String, String> providerExtraData) {
         this();
         this.configName = configName;
@@ -160,7 +160,7 @@ public class CallDetailRecord {
         return callDirection;
     }
 
-    public CallStatus getCallStatus() {
+    public String getCallStatus() {
         return callStatus;
     }
 
@@ -212,16 +212,6 @@ public class CallDetailRecord {
             Object object;
             try {
                 switch (key) {
-                    case "callStatus":
-                        try {
-                            object = CallStatus.valueOf(value.trim().toUpperCase().replace("-", "_"));
-                        } catch (IllegalArgumentException e) {
-                            // Always add unknown call status to the provider extra data, for inspection
-                            LOGGER.warn("Unknown callStatus: {}", value);
-                            providerExtraData.put(key, value);
-                            object = CallStatus.UNKNOWN;
-                        }
-                        break;
                     case  "callDirection":
                         try {
                             object = CallDirection.valueOf(value);

@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ivr.domain.CallDetailRecord;
-import org.motechproject.ivr.domain.CallStatus;
 import org.motechproject.ivr.domain.Config;
 import org.motechproject.ivr.domain.Template;
 import org.motechproject.ivr.repository.CallDetailRecordDataService;
@@ -136,7 +135,7 @@ public class TemplateControllerBundleIT extends BasePaxIT {
         assertEquals("+12066661212", callDetailRecord.getTo());
         assertFalse(callDetailRecord.getProviderExtraData().containsKey("ignoreme"));
         assertFalse(callDetailRecord.getProviderExtraData().containsKey("ignoreme2"));
-        assertEquals(CallStatus.ANSWERED, callDetailRecord.getCallStatus());
+        assertEquals("ANSWERED", callDetailRecord.getCallStatus());
         assertEquals(2, callDetailRecord.getProviderExtraData().keySet().size());
         assertEquals(callDetailRecord.getProviderExtraData().get("foo"), "bar");
         assertEquals(callDetailRecord.getProviderExtraData().get("var"), "world");

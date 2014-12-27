@@ -21,7 +21,6 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.ivr.domain.CallDetailRecord;
 import org.motechproject.ivr.domain.CallDirection;
-import org.motechproject.ivr.domain.CallStatus;
 import org.motechproject.ivr.domain.Config;
 import org.motechproject.ivr.domain.HttpMethod;
 import org.motechproject.ivr.event.EventParams;
@@ -73,10 +72,10 @@ public class OutboundCallServiceImpl implements OutboundCallService {
         this.eventRelay = eventRelay;
     }
 
-    private void addCallDetailRecord(CallStatus callStatus, Config config, Map<String, String> params,
+    private void addCallDetailRecord(String callStatus, Config config, Map<String, String> params,
                                      String motechCallId) {
-        LOGGER.debug(String.format("addCallDetailRecord(config = %s, params = %s, motechCallId = %s)", config.getName(),
-                params.toString(), motechCallId));
+        LOGGER.debug(String.format("addCallDetailRecord(callStatus = %s, config = %s, params = %s, motechCallId = %s)",
+                callStatus, config.getName(), params.toString(), motechCallId));
 
         CallDetailRecord callDetailRecord = new CallDetailRecord(config.getName(), null, null, null, CallDirection.OUTBOUND, callStatus, null, motechCallId, null, null);
 
@@ -119,7 +118,7 @@ public class OutboundCallServiceImpl implements OutboundCallService {
             LOGGER.info(message);
             statusMessageService.warn(message, MODULE_NAME);
             params.put("ErrorMessage", message);
-            addCallDetailRecord(CallStatus.FAILED, config, params, motechCallId);
+            addCallDetailRecord(CallDetailRecord.CALL_FAILED, config, params, motechCallId);
             throw new CallInitiationException(message, e);
         }
         StatusLine statusLine = response.getStatusLine();
@@ -131,7 +130,7 @@ public class OutboundCallServiceImpl implements OutboundCallService {
             LOGGER.info(message);
             statusMessageService.warn(message, MODULE_NAME);
             params.put("ErrorMessage", message);
-            addCallDetailRecord(CallStatus.FAILED, config, params, motechCallId);
+            addCallDetailRecord(CallDetailRecord.CALL_FAILED, config, params, motechCallId);
             throw new CallInitiationException(message);
         }
 
@@ -155,7 +154,7 @@ public class OutboundCallServiceImpl implements OutboundCallService {
         }
 
         // Add a CDR to the database
-        addCallDetailRecord(CallStatus.MOTECH_INITIATED, config, params, motechCallId);
+        addCallDetailRecord(CallDetailRecord.CALL_INITIATED, config, params, motechCallId);
 
         // Generate a MOTECH event
         MotechEvent event = generateMotechEvent(config.getName(), params, completeJsonMap);

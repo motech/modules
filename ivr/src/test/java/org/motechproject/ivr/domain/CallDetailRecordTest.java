@@ -14,17 +14,7 @@ public class CallDetailRecordTest {
     public void shouldSetCallDetailStatus() {
         CallDetailRecord callDetailRecord = new CallDetailRecord();
         callDetailRecord.setField("callStatus", "answered");
-        assertEquals(CallStatus.ANSWERED, callDetailRecord.getCallStatus());
-    }
-
-    @Test
-    public void shouldSetUnknownCallDetailStatus() {
-        CallDetailRecord callDetailRecord = new CallDetailRecord();
-        callDetailRecord.setField( "callStatus", "foo");
-        assertEquals(CallStatus.UNKNOWN, callDetailRecord.getCallStatus());
-        assertEquals(1, callDetailRecord.getProviderExtraData().size());
-        assertTrue(callDetailRecord.getProviderExtraData().keySet().contains("callStatus"));
-        assertTrue(callDetailRecord.getProviderExtraData().values().contains("foo"));
+        assertEquals("answered", callDetailRecord.getCallStatus());
     }
 
     @Test
@@ -37,15 +27,6 @@ public class CallDetailRecordTest {
         String value = sb.toString();
         callDetailRecord.setField( "from", value);
         assertEquals(callDetailRecord.getFrom().length(), 255);
-    }
-
-    @Test
-    public void shouldSetCallDetailStatusAsUnknown() {
-        CallDetailRecord callDetailRecord = new CallDetailRecord();
-        callDetailRecord.setField( "callStatus", "fubar");
-        assertEquals(CallStatus.UNKNOWN, callDetailRecord.getCallStatus());
-        assertTrue(callDetailRecord.getProviderExtraData().containsKey("callStatus"));
-        assertEquals("fubar", callDetailRecord.getProviderExtraData().get("callStatus"));
     }
 
     @Test
