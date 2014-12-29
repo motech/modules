@@ -3,7 +3,6 @@ package org.motechproject.messagecampaign.scheduler;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
-import org.motechproject.commons.date.util.JodaFormatter;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.messagecampaign.EventKeys;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
@@ -24,8 +23,6 @@ import java.util.Map;
 @Component
 public class CronBasedCampaignSchedulerService extends CampaignSchedulerService<CronBasedCampaignMessage, CronBasedCampaign> {
 
-    private JodaFormatter jodaFormatter = new JodaFormatter();
-
     @Autowired
     public CronBasedCampaignSchedulerService(MotechSchedulerService schedulerService, CampaignRecordService campaignRecordService) {
         super(schedulerService, campaignRecordService);
@@ -36,7 +33,7 @@ public class CronBasedCampaignSchedulerService extends CampaignSchedulerService<
         MotechEvent motechEvent = new MotechEvent(EventKeys.SEND_MESSAGE, jobParams(message.getMessageKey(), enrollment));
 
         LocalDate startDate = enrollment.getReferenceDate();
-        Period maxDuration = jodaFormatter.parsePeriod(campaign.maxDuration());
+        Period maxDuration = campaign.getMaxDuration();
         Date endDate = (maxDuration == null) ? null : startDate.plus(maxDuration).toDate();
 
         CronSchedulableJob schedulableJob = new CronSchedulableJob(motechEvent, message.getCron(), startDate.toDate(), endDate);
@@ -45,7 +42,7 @@ public class CronBasedCampaignSchedulerService extends CampaignSchedulerService<
 
     @Override
     public void unscheduleMessageJobs(CampaignEnrollment enrollment) {
-        CronBasedCampaign campaign = (CronBasedCampaign) getCampaignRecordService().findByName(enrollment.getCampaignName()).build();
+        CronBasedCampaign campaign = (CronBasedCampaign) getCampaignRecordService().findByName(enrollment.getCampaignName()).toCampaign();
         for (CronBasedCampaignMessage message : campaign.getMessages()) {
             getSchedulerService().safeUnscheduleJob(EventKeys.SEND_MESSAGE, messageJobIdFor(message.getMessageKey(), enrollment.getExternalId(), enrollment.getCampaignName()));
         }
@@ -58,7 +55,7 @@ public class CronBasedCampaignSchedulerService extends CampaignSchedulerService<
 
     @Override
     protected DateTime campaignEndDate(CronBasedCampaign campaign, CampaignEnrollment enrollment) {
-        Period maxDuration = jodaFormatter.parsePeriod(campaign.maxDuration());
+        Period maxDuration = campaign.getMaxDuration();
         LocalDate endDate = enrollment.getReferenceDate().plus(maxDuration);
         DateTime endDt = endDate.toDateMidnight().toDateTime();
         DateTime startDt = enrollment.getReferenceDate().toDateTimeAtStartOfDay();

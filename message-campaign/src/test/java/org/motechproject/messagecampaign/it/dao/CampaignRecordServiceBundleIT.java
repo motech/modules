@@ -15,8 +15,8 @@ import org.motechproject.messagecampaign.domain.message.AbsoluteCampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CronBasedCampaignMessage;
 import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
-import org.motechproject.messagecampaign.userspecified.CampaignMessageRecord;
-import org.motechproject.messagecampaign.userspecified.CampaignRecord;
+import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
+import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
@@ -48,7 +48,7 @@ public class CampaignRecordServiceBundleIT extends BasePaxIT {
     public void getAbsoluteDatesMessageProgramTest() {
         String campaignName = "Absolute Dates Message Program";
 
-        AbsoluteCampaign campaign = (AbsoluteCampaign) campaignRecordService.findByName(campaignName).build();
+        AbsoluteCampaign campaign = (AbsoluteCampaign) campaignRecordService.findByName(campaignName).toCampaign();
         assertNotNull(campaign);
         assertEquals(campaignName, campaign.getName());
         List<AbsoluteCampaignMessage> messages = campaign.getMessages();
@@ -63,7 +63,7 @@ public class CampaignRecordServiceBundleIT extends BasePaxIT {
     public void getRelativeDatesMessageProgramTest() {
         String campaignName = "Relative Dates Message Program";
 
-        OffsetCampaign campaign = (OffsetCampaign) campaignRecordService.findByName(campaignName).build();
+        OffsetCampaign campaign = (OffsetCampaign) campaignRecordService.findByName(campaignName).toCampaign();
         assertNotNull(campaign);
         assertEquals(campaignName, campaign.getName());
         List<OffsetCampaignMessage> messages = campaign.getMessages();
@@ -77,10 +77,10 @@ public class CampaignRecordServiceBundleIT extends BasePaxIT {
     public void getCronBasedMessageProgramTest() {
         String campaignName = "Cron based Message Program";
 
-        CronBasedCampaign campaign = (CronBasedCampaign) campaignRecordService.findByName(campaignName).build();
+        CronBasedCampaign campaign = (CronBasedCampaign) campaignRecordService.findByName(campaignName).toCampaign();
         assertNotNull(campaign);
         assertEquals(campaignName, campaign.getName());
-        assertEquals("5 years", campaign.maxDuration());
+        assertEquals(new JodaFormatter().parsePeriod("5 years"), campaign.getMaxDuration());
         List<CronBasedCampaignMessage> messages = campaign.getMessages();
         assertEquals(1, messages.size());
         assertMessageWithCronSchedule(messages.get(0), "First", new String[]{"IVR", "SMS"}, "cron-message", "0 11 11 11 11 ?");

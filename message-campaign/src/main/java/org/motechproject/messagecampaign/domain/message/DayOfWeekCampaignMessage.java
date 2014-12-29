@@ -1,89 +1,51 @@
 package org.motechproject.messagecampaign.domain.message;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.motechproject.commons.date.model.Time;
-import org.motechproject.mds.annotations.Entity;
-import org.motechproject.messagecampaign.web.util.TimeSerializer;
+import org.motechproject.messagecampaign.exception.CampaignMessageValidationException;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-public class DayOfWeekCampaignMessage implements CampaignMessage {
+public class DayOfWeekCampaignMessage extends CampaignMessage {
 
-    @JsonProperty
-    private List<String> formats;
-
-    @JsonProperty
-    private String name;
-
-    @JsonProperty
-    private List<String> languages;
-
-    @JsonProperty
-    private String messageKey;
-
-    @JsonProperty
-    @JsonSerialize(using = TimeSerializer.class)
-    private Time startTime;
-
-    @JsonProperty
     private List<DayOfWeek> daysOfWeek;
 
-    public DayOfWeekCampaignMessage() {
-        this(new ArrayList<DayOfWeek>());
+    public DayOfWeekCampaignMessage(CampaignMessageRecord messageRecord) {
+        super(messageRecord);
+        this.daysOfWeek = retrieveDaysOfWeek(messageRecord.getRepeatOn());
     }
 
-    public DayOfWeekCampaignMessage(List<DayOfWeek> daysOfWeek) {
+    public DayOfWeekCampaignMessage(Time startTime, List<DayOfWeek> daysOfWeek) {
+        this(null, null, null, null, startTime, daysOfWeek);
+    }
+
+    public DayOfWeekCampaignMessage(String name, List<String> formats, List<String> languages, String messageKey, Time startTime, List<DayOfWeek> daysOfWeek) {
+        super(name, formats, languages, messageKey, startTime);
         this.daysOfWeek = daysOfWeek;
     }
 
     public List<DayOfWeek> getDaysOfWeek() {
         return daysOfWeek;
     }
-    
-    public String getName() {
-        return name;
+
+    public void setDaysOfWeek(List<DayOfWeek> daysOfWeek) {
+        this.daysOfWeek = daysOfWeek;
     }
 
-    public List<String> getFormats() {
-        return formats;
+    private List<DayOfWeek> retrieveDaysOfWeek(List<String> days) {
+        List<DayOfWeek> daysList = new ArrayList<>();
+        for (String day : days) {
+            daysList.add(DayOfWeek.parse(day));
+        }
+        return daysList;
     }
 
-    public List<String> getLanguages() {
-        return languages;
-    }
-
-    public String getMessageKey() {
-        return messageKey;
-    }
-
-    public void setFormats(List<String> formats) {
-        this.formats = formats;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setLanguages(List<String> languages) {
-        this.languages = languages;
-    }
-
-    public void setMessageKey(String messageKey) {
-        this.messageKey = messageKey;
-    }
-
-    public Time getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Time startTime) {
-        this.startTime = startTime;
-    }
-
-    public void setStartTime(int hour, int minute) {
-        this.startTime = new Time(hour, minute);
+    @Override
+    public void validate() {
+        if (daysOfWeek == null) {
+            throw new CampaignMessageValidationException("DaysOfWeek cannot be null in " + DayOfWeekCampaignMessage.class.getName());
+        } else if (getStartTime() == null) {
+            throw new CampaignMessageValidationException("StartTime cannot be null in " + DayOfWeekCampaignMessage.class.getName());
+        }
     }
 }

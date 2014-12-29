@@ -33,7 +33,7 @@ public class DayOfWeekCampaignSchedulerService extends CampaignSchedulerService<
     protected void scheduleMessageJob(CampaignEnrollment enrollment, DayOfWeekCampaign campaign, DayOfWeekCampaignMessage message) {
         MotechEvent motechEvent = new MotechEvent(EventKeys.SEND_MESSAGE, jobParams(message.getMessageKey(), enrollment));
         LocalDate start = enrollment.getReferenceDate();
-        LocalDate end = start.plus(campaign.maxDuration());
+        LocalDate end = start.plus(campaign.getMaxDuration());
 
         List<DayOfWeek> daysOfWeek = message.getDaysOfWeek();
         getSchedulerService().scheduleDayOfWeekJob(new DayOfWeekSchedulableJob(motechEvent, start, end,
@@ -55,7 +55,7 @@ public class DayOfWeekCampaignSchedulerService extends CampaignSchedulerService<
 
     @Override
     public void unscheduleMessageJobs(CampaignEnrollment enrollment) {
-        DayOfWeekCampaign campaign = (DayOfWeekCampaign) getCampaignRecordService().findByName(enrollment.getCampaignName()).build();
+        DayOfWeekCampaign campaign = (DayOfWeekCampaign) getCampaignRecordService().findByName(enrollment.getCampaignName()).toCampaign();
         for (DayOfWeekCampaignMessage message : campaign.getMessages()) {
             getSchedulerService().safeUnscheduleJob(EventKeys.SEND_MESSAGE, messageJobIdFor(message.getMessageKey(), enrollment.getExternalId(), enrollment.getCampaignName()));
         }
@@ -68,7 +68,7 @@ public class DayOfWeekCampaignSchedulerService extends CampaignSchedulerService<
 
     @Override
     protected DateTime campaignEndDate(DayOfWeekCampaign campaign, CampaignEnrollment enrollment) {
-        Period maxDuration = campaign.maxDuration();
+        Period maxDuration = campaign.getMaxDuration();
         LocalDate endDate = enrollment.getReferenceDate().plus(maxDuration);
         DateTime endDt = endDate.toDateMidnight().toDateTime();
         DateTime startDt = enrollment.getReferenceDate().toDateTimeAtStartOfDay();

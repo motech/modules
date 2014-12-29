@@ -16,21 +16,20 @@ import org.motechproject.messagecampaign.builder.EnrollRequestBuilder;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
 import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
-import org.motechproject.messagecampaign.domain.CampaignNotFoundException;
+import org.motechproject.messagecampaign.exception.CampaignNotFoundException;
 import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaign;
 import org.motechproject.messagecampaign.domain.campaign.Campaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollmentStatus;
 import org.motechproject.messagecampaign.domain.campaign.CampaignType;
 import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaign;
-import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CronBasedCampaignMessage;
 import org.motechproject.messagecampaign.scheduler.CampaignSchedulerFactory;
 import org.motechproject.messagecampaign.scheduler.CampaignSchedulerService;
 import org.motechproject.messagecampaign.scheduler.JobIdFactory;
 import org.motechproject.messagecampaign.search.Criterion;
-import org.motechproject.messagecampaign.userspecified.CampaignRecord;
-import org.motechproject.messagecampaign.web.ex.EnrollmentNotFoundException;
+import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
+import org.motechproject.messagecampaign.exception.EnrollmentNotFoundException;
 import org.motechproject.scheduler.contract.CronJobId;
 import org.motechproject.scheduler.contract.JobId;
 import org.motechproject.scheduler.service.MotechSchedulerService;
@@ -88,7 +87,7 @@ public class MessageCampaignServiceImplTest {
         Campaign campaign = mock(Campaign.class);
 
         when(campaignRecordService.findByName("testCampaign")).thenReturn(campaignRecord);
-        when(campaignRecord.build()).thenReturn(campaign);
+        when(campaignRecord.toCampaign()).thenReturn(campaign);
 
         CampaignSchedulerService campaignScheduler = mock(CampaignSchedulerService.class);
         when(campaignSchedulerFactory.getCampaignScheduler("testCampaign")).thenReturn(campaignScheduler);
@@ -117,7 +116,7 @@ public class MessageCampaignServiceImplTest {
     public void shouldUnRegisterEnrollmentWhenScheduleIsStopped() {
         Campaign campaign = mock(Campaign.class);
         when(campaignRecordService.findByName("testCampaign")).thenReturn(campaignRecord);
-        when(campaignRecord.build()).thenReturn(campaign);
+        when(campaignRecord.toCampaign()).thenReturn(campaign);
         CampaignSchedulerService campaignScheduler = mock(CampaignSchedulerService.class);
         when(campaignSchedulerFactory.getCampaignScheduler("testCampaign")).thenReturn(campaignScheduler);
 
@@ -144,7 +143,7 @@ public class MessageCampaignServiceImplTest {
     public void shouldUnregisterAllCampaignsMatchingQuery() {
         Campaign campaign = mock(Campaign.class);
         when(campaignRecordService.findByName("testCampaign")).thenReturn(campaignRecord);
-        when(campaignRecord.build()).thenReturn(campaign);
+        when(campaignRecord.toCampaign()).thenReturn(campaign);
 
         CampaignEnrollment enrollment1 = new CampaignEnrollment("external_id_1", "testCampaign");
         CampaignEnrollment enrollment2 = new CampaignEnrollment("external_id_2", "testCampaign");
@@ -179,7 +178,7 @@ public class MessageCampaignServiceImplTest {
 
         AbsoluteCampaign absoluteCampaign = mock(AbsoluteCampaign.class);
         when(campaignRecordService.findByName("campaign-name")).thenReturn(campaignRecord);
-        when(campaignRecord.build()).thenReturn(absoluteCampaign);
+        when(campaignRecord.toCampaign()).thenReturn(absoluteCampaign);
 
         CampaignSchedulerService campaignScheduler = mock(CampaignSchedulerService.class);
         when(campaignSchedulerFactory.getCampaignScheduler("campaign-name")).thenReturn(campaignScheduler);
@@ -220,7 +219,7 @@ public class MessageCampaignServiceImplTest {
         AbsoluteCampaign campaign = mock(AbsoluteCampaign.class);
 
         when(campaignRecordService.findByName("campaign")).thenReturn(campaignRecord);
-        when(campaignRecord.build()).thenReturn(campaign);
+        when(campaignRecord.toCampaign()).thenReturn(campaign);
 
         CampaignSchedulerService campaignScheduler = mock(CampaignSchedulerService.class);
         when(campaignSchedulerFactory.getCampaignScheduler("campaign")).thenReturn(campaignScheduler);
@@ -241,7 +240,7 @@ public class MessageCampaignServiceImplTest {
         AbsoluteCampaign campaign = mock(AbsoluteCampaign.class);
 
         when(campaignRecordService.findByName("campaign")).thenReturn(campaignRecord);
-        when(campaignRecord.build()).thenReturn(campaign);
+        when(campaignRecord.toCampaign()).thenReturn(campaign);
 
         CampaignSchedulerService campaignScheduler = mock(CampaignSchedulerService.class);
         when(campaignSchedulerFactory.getCampaignScheduler("campaign")).thenReturn(campaignScheduler);
@@ -365,19 +364,18 @@ public class MessageCampaignServiceImplTest {
     }
 
     @Test
-    public void shouldGetLatestCampaingMessage() {
+    public void shouldGetLatestCampaignMessage() {
         CampaignEnrollment enrollment = new CampaignEnrollment("externalId", "campaignName");
         CampaignRecord record = new CampaignRecord();
         record.setCampaignType(CampaignType.CRON);
         record.setName("campaignName");
 
-        CampaignMessage messageRecord1 = new CronBasedCampaignMessage();
+        CronBasedCampaignMessage messageRecord1 = new CronBasedCampaignMessage("0 11 11 11 11 ?");
         messageRecord1.setMessageKey("messageKey1");
-        CampaignMessage messageRecord2 = new CronBasedCampaignMessage();
+        CronBasedCampaignMessage messageRecord2 = new CronBasedCampaignMessage("0 11 11 11 11 ?");
         messageRecord2.setMessageKey("messageKey2");
 
-        Campaign campaign = new CronBasedCampaign();
-        campaign.setMessages(asList(messageRecord1, messageRecord2));
+        CronBasedCampaign campaign = new CronBasedCampaign("campaignName", asList(messageRecord1, messageRecord2));
 
         JobIdFactory factory = new JobIdFactory();
         JobId jobId1 = new CronJobId(EventKeys.SEND_MESSAGE, factory.getMessageJobIdFor(messageRecord1.getMessageKey(),
@@ -391,7 +389,7 @@ public class MessageCampaignServiceImplTest {
         when(campaignEnrollmentDataService.findByExternalIdAndCampaignName(enrollment.getExternalId(),
                 enrollment.getCampaignName())).thenReturn(enrollment);
         when(campaignRecordService.findByName(enrollment.getCampaignName())).thenReturn(campaignRecord);
-        when(campaignRecord.build()).thenReturn(campaign);
+        when(campaignRecord.toCampaign()).thenReturn(campaign);
         when(schedulerService.getPreviousFireDate(jobId1)).thenReturn(new DateTime(2002, 5, 15, 12, 0));
         when(schedulerService.getPreviousFireDate(jobId2)).thenReturn(new DateTime(2002, 5, 15, 11, 55));
 
@@ -401,17 +399,16 @@ public class MessageCampaignServiceImplTest {
     }
 
     @Test
-    public void shouldNotGetLatestCampaingMessageIfNothingSent() {
+    public void shouldNotGetLatestCampaignMessageIfNothingSent() {
         CampaignEnrollment enrollment = new CampaignEnrollment("externalId", "campaignName");
         CampaignRecord record = new CampaignRecord();
         record.setCampaignType(CampaignType.CRON);
         record.setName("campaignName");
 
-        CampaignMessage messageRecord1 = new CronBasedCampaignMessage();
+        CronBasedCampaignMessage messageRecord1 = new CronBasedCampaignMessage("0 11 11 11 11 ?");
         messageRecord1.setMessageKey("messageKey1");
 
-        Campaign campaign = new CronBasedCampaign();
-        campaign.setMessages(asList(messageRecord1));
+        CronBasedCampaign campaign = new CronBasedCampaign("campaignName", asList(messageRecord1));
 
         JobIdFactory factory = new JobIdFactory();
         JobId jobId1 = new CronJobId(EventKeys.SEND_MESSAGE, factory.getMessageJobIdFor(messageRecord1.getMessageKey(),
@@ -422,7 +419,7 @@ public class MessageCampaignServiceImplTest {
         when(campaignEnrollmentDataService.findByExternalIdAndCampaignName(enrollment.getExternalId(),
                 enrollment.getCampaignName())).thenReturn(enrollment);
         when(campaignRecordService.findByName(enrollment.getCampaignName())).thenReturn(campaignRecord);
-        when(campaignRecord.build()).thenReturn(campaign);
+        when(campaignRecord.toCampaign()).thenReturn(campaign);
         when(schedulerService.getPreviousFireDate(jobId1)).thenReturn(new DateTime(2020, 5, 15, 12, 0));
 
         String latestCampaignMessage = messageCampaignService.getLatestCampaignMessage("campaignName", "externalId");
@@ -431,19 +428,18 @@ public class MessageCampaignServiceImplTest {
     }
 
     @Test
-    public void shouldGetNextCampaingMessage() {
+    public void shouldGetNextCampaignMessage() {
         CampaignEnrollment enrollment = new CampaignEnrollment("externalId", "campaignName");
         CampaignRecord record = new CampaignRecord();
         record.setCampaignType(CampaignType.CRON);
         record.setName("campaignName");
 
-        CampaignMessage messageRecord1 = new CronBasedCampaignMessage();
+        CronBasedCampaignMessage messageRecord1 = new CronBasedCampaignMessage("0 11 11 11 11 ?");
         messageRecord1.setMessageKey("messageKey1");
-        CampaignMessage messageRecord2 = new CronBasedCampaignMessage();
+        CronBasedCampaignMessage messageRecord2 = new CronBasedCampaignMessage("0 11 11 11 11 ?");
         messageRecord2.setMessageKey("messageKey2");
 
-        Campaign campaign = new CronBasedCampaign();
-        campaign.setMessages(asList(messageRecord1, messageRecord2));
+        CronBasedCampaign campaign = new CronBasedCampaign("campaignName", asList(messageRecord1, messageRecord2));
 
         JobIdFactory factory = new JobIdFactory();
         JobId jobId1 = new CronJobId(EventKeys.SEND_MESSAGE, factory.getMessageJobIdFor(messageRecord1.getMessageKey(),
@@ -457,7 +453,7 @@ public class MessageCampaignServiceImplTest {
         when(campaignEnrollmentDataService.findByExternalIdAndCampaignName(enrollment.getExternalId(),
                 enrollment.getCampaignName())).thenReturn(enrollment);
         when(campaignRecordService.findByName(enrollment.getCampaignName())).thenReturn(campaignRecord);
-        when(campaignRecord.build()).thenReturn(campaign);
+        when(campaignRecord.toCampaign()).thenReturn(campaign);
         when(schedulerService.getNextFireDate(jobId1)).thenReturn(new DateTime(2020, 5, 15, 12, 0));
         when(schedulerService.getNextFireDate(jobId2)).thenReturn(new DateTime(2020, 5, 15, 11, 55));
 
@@ -467,17 +463,16 @@ public class MessageCampaignServiceImplTest {
     }
 
     @Test
-    public void shouldNotGetNextCampaingMessageIfNothingMoreToSend() {
+    public void shouldNotGetNextCampaignMessageIfNothingMoreToSend() {
         CampaignEnrollment enrollment = new CampaignEnrollment("externalId", "campaignName");
         CampaignRecord record = new CampaignRecord();
         record.setCampaignType(CampaignType.CRON);
         record.setName("campaignName");
 
-        CampaignMessage messageRecord1 = new CronBasedCampaignMessage();
+        CronBasedCampaignMessage messageRecord1 = new CronBasedCampaignMessage("0 11 11 11 11 ?");
         messageRecord1.setMessageKey("messageKey1");
 
-        Campaign campaign = new CronBasedCampaign();
-        campaign.setMessages(asList(messageRecord1));
+        CronBasedCampaign campaign = new CronBasedCampaign("campaignName", asList(messageRecord1));
 
         JobIdFactory factory = new JobIdFactory();
         JobId jobId1 = new CronJobId(EventKeys.SEND_MESSAGE, factory.getMessageJobIdFor(messageRecord1.getMessageKey(),
@@ -488,7 +483,7 @@ public class MessageCampaignServiceImplTest {
         when(campaignEnrollmentDataService.findByExternalIdAndCampaignName(enrollment.getExternalId(),
                 enrollment.getCampaignName())).thenReturn(enrollment);
         when(campaignRecordService.findByName(enrollment.getCampaignName())).thenReturn(campaignRecord);
-        when(campaignRecord.build()).thenReturn(campaign);
+        when(campaignRecord.toCampaign()).thenReturn(campaign);
         when(schedulerService.getNextFireDate(jobId1)).thenReturn(new DateTime(1920, 5, 15, 12, 0));
 
         String nextCampaignMessage = messageCampaignService.getNextCampaignMessage("campaignName", "externalId");

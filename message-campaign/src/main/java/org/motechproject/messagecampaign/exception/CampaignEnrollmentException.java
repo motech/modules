@@ -1,4 +1,4 @@
-package org.motechproject.messagecampaign.scheduler.exception;
+package org.motechproject.messagecampaign.exception;
 
 /**
  * Signals than an exception occurred during campaign enrollment process

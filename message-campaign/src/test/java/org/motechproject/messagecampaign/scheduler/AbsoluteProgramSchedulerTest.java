@@ -12,7 +12,7 @@ import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
-import org.motechproject.messagecampaign.userspecified.CampaignRecord;
+import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 
@@ -46,12 +46,12 @@ public class AbsoluteProgramSchedulerTest {
     @Test
     public void shouldScheduleJobs() {
         CampaignRequest request = new EnrollRequestBuilder().withDefaults().build();
-        AbsoluteCampaign campaign = new CampaignBuilder().defaultAbsoluteCampaign();
+        AbsoluteCampaign campaign = CampaignBuilder.defaultAbsoluteCampaign();
 
         AbsoluteCampaignSchedulerService absoluteCampaignScheduler = new AbsoluteCampaignSchedulerService(schedulerService, campaignRecordService);
 
         when(campaignRecordService.findByName("testCampaign")).thenReturn(campaignRecord);
-        when(campaignRecord.build()).thenReturn(campaign);
+        when(campaignRecord.toCampaign()).thenReturn(campaign);
 
         CampaignEnrollment enrollment = new CampaignEnrollment("12345", "testCampaign");
         absoluteCampaignScheduler.start(enrollment);

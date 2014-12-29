@@ -1,15 +1,10 @@
-package org.motechproject.messagecampaign.userspecified;
+package org.motechproject.messagecampaign.domain.campaign;
 
-import org.motechproject.commons.date.util.JodaFormatter;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
-import org.motechproject.messagecampaign.domain.campaign.Campaign;
-import org.motechproject.messagecampaign.domain.campaign.CampaignType;
-import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaign;
-import org.motechproject.messagecampaign.domain.campaign.DayOfWeekCampaign;
-import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
-import org.motechproject.messagecampaign.domain.campaign.RepeatIntervalCampaign;
-import org.motechproject.messagecampaign.domain.message.CampaignMessage;
+import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.Ignore;
+import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
 
 import javax.jdo.annotations.Unique;
 import java.util.ArrayList;
@@ -25,34 +20,19 @@ public class CampaignRecord {
     @Cascade(delete = true)
     private List<CampaignMessageRecord> messages = new ArrayList<>();
 
+    @Field(required = true)
     private CampaignType campaignType;
 
     private String maxDuration;
 
-    public Campaign build() {
+    public Campaign toCampaign() {
         Campaign campaign = campaignType.instance();
-        campaign.setMessages(buildCampaignMessages());
-        campaign.setName(this.name);
 
-        if (campaign instanceof OffsetCampaign) {
-            ((OffsetCampaign) campaign).maxDuration(maxDuration);
-        } else if (campaign instanceof RepeatIntervalCampaign) {
-            ((RepeatIntervalCampaign) campaign).maxDuration(new JodaFormatter().parsePeriod(maxDuration));
-        } else if (campaign instanceof DayOfWeekCampaign) {
-            ((DayOfWeekCampaign) campaign).maxDuration(new JodaFormatter().parsePeriod(maxDuration));
-        } else if (campaign instanceof CronBasedCampaign) {
-            ((CronBasedCampaign) campaign).maxDuration(maxDuration);
-        }
+        campaign.setMessageRecords(messages);
+        campaign.setName(name);
+        campaign.setMaxDuration(maxDuration);
 
         return campaign;
-    }
-
-    private List<CampaignMessage> buildCampaignMessages() {
-        List<CampaignMessage> campaignMessages = new ArrayList<>();
-        for (CampaignMessageRecord messageRecord : this.messages) {
-            campaignMessages.add(messageRecord.build(campaignType));
-        }
-        return campaignMessages;
     }
 
     public String getName() {
@@ -87,6 +67,7 @@ public class CampaignRecord {
         this.maxDuration = maxDuration;
     }
 
+    @Ignore
     public void updateFrom(CampaignRecord other) {
         name = other.name;
         messages = other.messages;
@@ -105,8 +86,8 @@ public class CampaignRecord {
 
         CampaignRecord other = (CampaignRecord) o;
 
-        return Objects.equals(campaignType, other.campaignType) && Objects.equals(maxDuration, other.maxDuration)
-                && Objects.equals(messages, other.messages) && Objects.equals(name, other.name);
+        return Objects.equals(this.campaignType, other.campaignType) && Objects.equals(this.maxDuration, other.maxDuration)
+                && Objects.equals(this.messages, other.messages) && Objects.equals(this.name, other.name);
     }
 
     @Override

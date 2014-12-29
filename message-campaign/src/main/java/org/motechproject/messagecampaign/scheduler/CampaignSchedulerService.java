@@ -9,7 +9,7 @@ import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.campaign.Campaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
-import org.motechproject.messagecampaign.scheduler.exception.CampaignEnrollmentException;
+import org.motechproject.messagecampaign.exception.CampaignEnrollmentException;
 import org.motechproject.scheduler.contract.JobId;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
@@ -38,7 +38,7 @@ public abstract class CampaignSchedulerService<M extends CampaignMessage, C exte
     }
 
     public void start(CampaignEnrollment enrollment) {
-        C campaign = (C) getCampaignRecordService().findByName(enrollment.getCampaignName()).build();
+        C campaign = (C) getCampaignRecordService().findByName(enrollment.getCampaignName()).toCampaign();
         for (M message : campaign.getMessages()) {
             scheduleMessageJob(enrollment, campaign, message);
         }
@@ -57,7 +57,7 @@ public abstract class CampaignSchedulerService<M extends CampaignMessage, C exte
     public abstract JobId getJobId(String messageKey, String externalId, String campaingName);
 
     public Map<String, List<DateTime>> getCampaignTimings(DateTime startDate, DateTime endDate, CampaignEnrollment enrollment) {
-        C campaign = (C) getCampaignRecordService().findByName(enrollment.getCampaignName()).build();
+        C campaign = (C) getCampaignRecordService().findByName(enrollment.getCampaignName()).toCampaign();
         return getCampaignTimings(startDate, endDate, enrollment, campaign);
     }
 
@@ -87,7 +87,7 @@ public abstract class CampaignSchedulerService<M extends CampaignMessage, C exte
     }
 
     protected Map<String, Object> jobParams(String messageKey, CampaignEnrollment enrollment) {
-        Campaign campaign = getCampaignRecordService().findByName(enrollment.getCampaignName()).build();
+        Campaign campaign = getCampaignRecordService().findByName(enrollment.getCampaignName()).toCampaign();
         return new SchedulerPayloadBuilder()
                 .withJobId(messageJobIdFor(messageKey, enrollment.getExternalId(), enrollment.getCampaignName()))
                 .withCampaignName(campaign.getName())

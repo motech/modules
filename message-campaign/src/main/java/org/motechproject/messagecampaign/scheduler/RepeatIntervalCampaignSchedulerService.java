@@ -37,7 +37,7 @@ public class RepeatIntervalCampaignSchedulerService extends CampaignSchedulerSer
     protected void scheduleMessageJob(CampaignEnrollment enrollment, RepeatIntervalCampaign campaign, RepeatIntervalCampaignMessage message) {
         MotechEvent motechEvent = new MotechEvent(EventKeys.SEND_MESSAGE, jobParams(message.getMessageKey(), enrollment));
         DateTime start = newDateTime(enrollment.getReferenceDate(), deliverTimeFor(enrollment, message));
-        DateTime end = start.plus(campaign.maxDuration());
+        DateTime end = start.plus(campaign.getMaxDuration());
         RepeatingSchedulableJob job = new RepeatingSchedulableJob()
                 .setMotechEvent(motechEvent)
                 .setStartTime(start.toDate())
@@ -50,7 +50,7 @@ public class RepeatIntervalCampaignSchedulerService extends CampaignSchedulerSer
 
     @Override
     public void unscheduleMessageJobs(CampaignEnrollment enrollment) {
-        RepeatIntervalCampaign campaign = (RepeatIntervalCampaign) getCampaignRecordService().findByName(enrollment.getCampaignName()).build();
+        RepeatIntervalCampaign campaign = (RepeatIntervalCampaign) getCampaignRecordService().findByName(enrollment.getCampaignName()).toCampaign();
         for (RepeatIntervalCampaignMessage message : campaign.getMessages()) {
             getSchedulerService().safeUnscheduleRepeatingJob(EventKeys.SEND_MESSAGE, messageJobIdFor(message.getMessageKey(), enrollment.getExternalId(), enrollment.getCampaignName()));
         }
@@ -62,7 +62,7 @@ public class RepeatIntervalCampaignSchedulerService extends CampaignSchedulerSer
     }
 
     protected DateTime campaignEndDate(RepeatIntervalCampaign campaign, CampaignEnrollment enrollment) {
-        Period maxDuration = campaign.maxDuration();
+        Period maxDuration = campaign.getMaxDuration();
         LocalDate endDate = enrollment.getReferenceDate().plus(maxDuration);
         DateTime endDt = endDate.toDateMidnight().toDateTime();
         DateTime startDt = enrollment.getReferenceDate().toDateTimeAtStartOfDay();

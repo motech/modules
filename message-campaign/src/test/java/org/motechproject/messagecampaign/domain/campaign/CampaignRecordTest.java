@@ -1,16 +1,13 @@
-package org.motechproject.messagecampaign.userspecified;
+package org.motechproject.messagecampaign.domain.campaign;
 
 import org.junit.Test;
 import org.motechproject.commons.date.util.JodaFormatter;
 import org.motechproject.messagecampaign.builder.CampaignMessageRecordTestBuilder;
 import org.motechproject.messagecampaign.builder.CampaignRecordBuilder;
-import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaign;
-import org.motechproject.messagecampaign.domain.campaign.Campaign;
-import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaign;
-import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
 import org.motechproject.messagecampaign.domain.message.AbsoluteCampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CronBasedCampaignMessage;
 import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
+import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
 
 import java.util.List;
 
@@ -27,7 +24,7 @@ public class CampaignRecordTest {
         messageRecord = CampaignMessageRecordTestBuilder.createAbsoluteCampaignMessageRecord("Message 1", "message-key");
         campaignRecord = CampaignRecordBuilder.absoluteCampaignRecord("Campaign 1", messageRecord);
 
-        Campaign campaign = campaignRecord.build();
+        Campaign campaign = campaignRecord.toCampaign();
         assertTrue(campaign instanceof AbsoluteCampaign);
         AbsoluteCampaign absoluteCampaign = (AbsoluteCampaign) campaign;
         assertEquals(campaignRecord.getName(), absoluteCampaign.getName());
@@ -47,11 +44,11 @@ public class CampaignRecordTest {
         messageRecord = CampaignMessageRecordTestBuilder.createOffsetCampaignMessageRecord("Message 1", "message-key");
         campaignRecord = CampaignRecordBuilder.offsetCampaignRecord("Campaign 1", messageRecord);
 
-        Campaign campaign = campaignRecord.build();
+        Campaign campaign = campaignRecord.toCampaign();
         assertTrue(campaign instanceof OffsetCampaign);
         OffsetCampaign offsetCampaign = (OffsetCampaign) campaign;
         assertEquals(campaignRecord.getName(), offsetCampaign.getName());
-        assertEquals(campaignRecord.getMaxDuration(), offsetCampaign.maxDuration());
+        assertEquals(new JodaFormatter().parsePeriod(campaignRecord.getMaxDuration()), offsetCampaign.getMaxDuration());
         List<OffsetCampaignMessage> messages = offsetCampaign.getMessages();
         assertEquals(1, messages.size());
 
@@ -69,7 +66,7 @@ public class CampaignRecordTest {
         messageRecord = CampaignMessageRecordTestBuilder.createCronBasedCampaignMessageRecord("Message 1", "message-key");
         campaignRecord = CampaignRecordBuilder.cronBasedCampaignRecord("Campaign 1", messageRecord);
 
-        Campaign campaign = campaignRecord.build();
+        Campaign campaign = campaignRecord.toCampaign();
         assertTrue(campaign instanceof CronBasedCampaign);
         CronBasedCampaign cronBasedCampaign = (CronBasedCampaign) campaign;
         assertEquals(campaignRecord.getName(), cronBasedCampaign.getName());

@@ -1,4 +1,4 @@
-package org.motechproject.messagecampaign.userspecified;
+package org.motechproject.messagecampaign.exception;
 
 public class UnknownCampaignTypeException extends RuntimeException {
 

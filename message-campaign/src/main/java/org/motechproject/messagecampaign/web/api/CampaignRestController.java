@@ -1,8 +1,8 @@
 package org.motechproject.messagecampaign.web.api;
 
-import org.motechproject.messagecampaign.domain.CampaignNotFoundException;
+import org.motechproject.messagecampaign.exception.CampaignNotFoundException;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
-import org.motechproject.messagecampaign.userspecified.CampaignRecord;
+import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
 import org.motechproject.messagecampaign.web.model.CampaignDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

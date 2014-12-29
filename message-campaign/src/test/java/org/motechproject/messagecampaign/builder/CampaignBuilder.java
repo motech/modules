@@ -2,6 +2,7 @@ package org.motechproject.messagecampaign.builder;
 
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.commons.date.util.DateUtil;
+import org.motechproject.commons.date.util.JodaFormatter;
 import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaign;
 import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaign;
 import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
@@ -9,58 +10,43 @@ import org.motechproject.messagecampaign.domain.message.AbsoluteCampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CronBasedCampaignMessage;
 import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
 
-import java.util.LinkedList;
+import java.util.Arrays;
 
-public class CampaignBuilder {
+public final class CampaignBuilder {
 
+    public static AbsoluteCampaign defaultAbsoluteCampaign() {
+        AbsoluteCampaignMessage campaignMessage1 = new AbsoluteCampaignMessage("AM1", Arrays.asList("IVR"),
+                Arrays.asList("en"), "random-1", new Time(9, 30), DateUtil.today().plusDays(1));
 
-    public AbsoluteCampaign defaultAbsoluteCampaign() {
-        AbsoluteCampaign campaign = new AbsoluteCampaign();
-        campaign.setName("testCampaign");
+        AbsoluteCampaignMessage campaignMessage2 = new AbsoluteCampaignMessage("AM2", Arrays.asList("IVR"),
+                Arrays.asList("en"), "random-2", new Time(9, 30), DateUtil.today().plusDays(2));
 
-        final AbsoluteCampaignMessage absoluteCampaignMessage1 = new CampaignMessageBuilder().absoluteCampaignMessage("AM1", DateUtil.today().plusDays(1), "random-1", new Time(9, 30));
-        final AbsoluteCampaignMessage absoluteCampaignMessage2 = new CampaignMessageBuilder().absoluteCampaignMessage("AM2", DateUtil.today().plusDays(2), "random-2", new Time(9, 30));
+        return new AbsoluteCampaign("testCampaign", Arrays.asList(campaignMessage1, campaignMessage2));
+    }
 
-        LinkedList<AbsoluteCampaignMessage> campaignMessages = new LinkedList<AbsoluteCampaignMessage>() {{
-            add(absoluteCampaignMessage1);
-            add(absoluteCampaignMessage2);
-        }};
+    public static CronBasedCampaign defaultCronBasedCampaign() {
+        CronBasedCampaignMessage campaignMessage1 = new CronBasedCampaignMessage("CM1", Arrays.asList("IVR"),
+                Arrays.asList("en"), "cron-message1", "0 11 11 11 11 ?");
 
-        campaign.setMessages(campaignMessages);
+        CronBasedCampaignMessage campaignMessage2 = new CronBasedCampaignMessage("CM2", Arrays.asList("IVR"),
+                Arrays.asList("en"), "cron-message2", "0 11 11 11 11 ?");
+
+        CronBasedCampaign campaign = new CronBasedCampaign("testCampaign", Arrays.asList(campaignMessage1, campaignMessage2));
+        campaign.setMaxDuration("1 Week");
+
         return campaign;
     }
 
-    public CronBasedCampaign defaultCronBasedCampaign() {
-        CronBasedCampaign campaign = new CronBasedCampaign();
-        campaign.setName("testCampaign");
-        campaign.maxDuration("1 Week");
-        final CronBasedCampaignMessage campaignMessage1 = new CampaignMessageBuilder().cronBasedCampaignMessage("CM1", "0 11 11 11 11 ?", "cron-message1");
-        final CronBasedCampaignMessage campaignMessage2 = new CampaignMessageBuilder().cronBasedCampaignMessage("CM2", "0 11 11 11 12 ?", "cron-message2");
+    public static OffsetCampaign defaultOffsetCampaign() {
+        OffsetCampaignMessage campaignMessage1 = new OffsetCampaignMessage("OM1", Arrays.asList("IVR"),
+                Arrays.asList("en"), "child-info-week-1", new Time(9, 30), new JodaFormatter().parsePeriod("1 Week"));
 
-        LinkedList<CronBasedCampaignMessage> campaignMessages = new LinkedList<CronBasedCampaignMessage>() {{
-            add(campaignMessage1);
-            add(campaignMessage2);
-        }};
+        OffsetCampaignMessage campaignMessage2 = new OffsetCampaignMessage("OM2", Arrays.asList("IVR"),
+                Arrays.asList("en"), "child-info-week-1a", new Time(9, 30), new JodaFormatter().parsePeriod("2 Weeks"));
 
-        campaign.setMessages(campaignMessages);
-        return campaign;
-    }
+        OffsetCampaignMessage campaignMessage3 = new OffsetCampaignMessage("OM3", Arrays.asList("IVR"),
+                Arrays.asList("en"), "child-info-month-1", new Time(9, 30), new JodaFormatter().parsePeriod("1 Month"));
 
-    public OffsetCampaign defaultOffsetCampaign() {
-        OffsetCampaign campaign = new OffsetCampaign();
-        campaign.setName("testCampaign");
-
-        final OffsetCampaignMessage offsetCampaignMessage1 = new CampaignMessageBuilder().offsetCampaignMessage("OM1", "1 Week", "child-info-week-1", new Time(9, 30));
-        final OffsetCampaignMessage offsetCampaignMessage2 = new CampaignMessageBuilder().offsetCampaignMessage("OM2", "2 Weeks", "child-info-week-1a", new Time(9, 30));
-        final OffsetCampaignMessage offsetCampaignMessage3 = new CampaignMessageBuilder().offsetCampaignMessage("OM3", "1 Month", "child-info-month-1", new Time(9, 30));
-
-        LinkedList<OffsetCampaignMessage> campaignMessages = new LinkedList<OffsetCampaignMessage>() {{
-            add(offsetCampaignMessage1);
-            add(offsetCampaignMessage2);
-            add(offsetCampaignMessage3);
-        }};
-
-        campaign.setMessages(campaignMessages);
-        return campaign;
+        return new OffsetCampaign("testCampaign", Arrays.asList(campaignMessage1, campaignMessage2, campaignMessage3));
     }
 }

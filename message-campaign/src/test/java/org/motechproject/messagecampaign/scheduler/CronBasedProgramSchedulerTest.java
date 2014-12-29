@@ -13,13 +13,12 @@ import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaign;
 import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
-import org.motechproject.messagecampaign.userspecified.CampaignRecord;
+import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
 import org.motechproject.scheduler.contract.CronSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -47,12 +46,12 @@ public class CronBasedProgramSchedulerTest {
     @Test
     public void shouldScheduleJobs() {
         CampaignRequest request = new EnrollRequestBuilder().withDefaults().withReferenceDate(today()).build();
-        CronBasedCampaign campaign = new CampaignBuilder().defaultCronBasedCampaign();
+        CronBasedCampaign campaign = CampaignBuilder.defaultCronBasedCampaign();
 
         CronBasedCampaignSchedulerService cronBasedCampaignScheduler = new CronBasedCampaignSchedulerService(schedulerService, campaignRecordService);
 
         when(campaignRecordService.findByName("testCampaign")).thenReturn(campaignRecord);
-        when(campaignRecord.build()).thenReturn(campaign);
+        when(campaignRecord.toCampaign()).thenReturn(campaign);
 
         CampaignEnrollment enrollment = new CampaignEnrollment("12345", "testCampaign");
         enrollment.setReferenceDate(today());

@@ -1,13 +1,13 @@
 package org.motechproject.messagecampaign.builder;
 
 import org.motechproject.messagecampaign.domain.campaign.CampaignType;
-import org.motechproject.messagecampaign.userspecified.CampaignMessageRecord;
-import org.motechproject.messagecampaign.userspecified.CampaignRecord;
+import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
+import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CampaignRecordBuilder {
+public final class CampaignRecordBuilder {
 
     public static CampaignRecord absoluteCampaignRecord(String name, CampaignMessageRecord absoluteCampaignMessageRecord) {
         List<CampaignMessageRecord> campaignMessageRecords = new ArrayList<CampaignMessageRecord>();

@@ -1,49 +1,33 @@
 package org.motechproject.messagecampaign.domain.campaign;
 
 import org.joda.time.Period;
-import org.motechproject.mds.annotations.Entity;
 import org.motechproject.messagecampaign.domain.message.DayOfWeekCampaignMessage;
+import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
+import org.motechproject.messagecampaign.exception.CampaignValidationException;
 
 import java.util.List;
 
-@Entity
-public class DayOfWeekCampaign implements Campaign<DayOfWeekCampaignMessage> {
+public class DayOfWeekCampaign extends Campaign<DayOfWeekCampaignMessage> {
 
-    private Period maxDuration;
-    private String name;
-    private List<DayOfWeekCampaignMessage> messages;
+    public DayOfWeekCampaign() {
 
-    public DayOfWeekCampaign name(String name) {
-        setName(name);
-        return this;
+    }
+
+    public DayOfWeekCampaign(String name, List<DayOfWeekCampaignMessage> messages, Period maxDuration) {
+        super(name, messages, maxDuration);
     }
 
     @Override
-    public void setName(String name) {
-        this.name = name;
+    public DayOfWeekCampaignMessage getCampaignMessage(CampaignMessageRecord messageRecord) {
+        return new DayOfWeekCampaignMessage(messageRecord);
     }
 
     @Override
-    public void setMessages(List<DayOfWeekCampaignMessage> messages) {
-        this.messages = messages;
+    public void validate() {
+        super.validate();
+        if (getMaxDuration() == null) {
+            throw new CampaignValidationException("MaxDuration cannot be null in " + getName());
+        }
     }
 
-    @Override
-    public List<DayOfWeekCampaignMessage> getMessages() {
-        return messages;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    public DayOfWeekCampaign maxDuration(Period maxDuration) {
-        this.maxDuration = maxDuration;
-        return this;
-    }
-
-    public Period maxDuration() {
-        return maxDuration;
-    }
 }

@@ -3,7 +3,7 @@ package org.motechproject.messagecampaign.dao;
 import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
-import org.motechproject.messagecampaign.userspecified.CampaignMessageRecord;
+import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
 
 import java.util.List;
 

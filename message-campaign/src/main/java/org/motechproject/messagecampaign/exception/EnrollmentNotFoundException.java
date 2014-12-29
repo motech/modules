@@ -1,4 +1,4 @@
-package org.motechproject.messagecampaign.web.ex;
+package org.motechproject.messagecampaign.exception;
 
 
 public class EnrollmentNotFoundException extends RuntimeException {

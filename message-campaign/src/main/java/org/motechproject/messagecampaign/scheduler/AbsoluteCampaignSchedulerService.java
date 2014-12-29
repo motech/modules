@@ -47,7 +47,7 @@ public class AbsoluteCampaignSchedulerService extends CampaignSchedulerService<A
 
     @Override
     public void unscheduleMessageJobs(CampaignEnrollment enrollment) {
-        AbsoluteCampaign campaign = (AbsoluteCampaign) getCampaignRecordService().findByName(enrollment.getCampaignName()).build();
+        AbsoluteCampaign campaign = (AbsoluteCampaign) getCampaignRecordService().findByName(enrollment.getCampaignName()).toCampaign();
         for (AbsoluteCampaignMessage message : campaign.getMessages()) {
             getSchedulerService().safeUnscheduleRunOnceJob(EventKeys.SEND_MESSAGE, messageJobIdFor(message.getMessageKey(), enrollment.getExternalId(), enrollment.getCampaignName()));
         }

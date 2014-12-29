@@ -10,15 +10,15 @@ import org.motechproject.messagecampaign.EventKeys;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
 import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
-import org.motechproject.messagecampaign.domain.CampaignNotFoundException;
+import org.motechproject.messagecampaign.exception.CampaignNotFoundException;
 import org.motechproject.messagecampaign.domain.campaign.Campaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.loader.CampaignJsonLoader;
 import org.motechproject.messagecampaign.scheduler.CampaignSchedulerFactory;
 import org.motechproject.messagecampaign.scheduler.CampaignSchedulerService;
-import org.motechproject.messagecampaign.userspecified.CampaignRecord;
-import org.motechproject.messagecampaign.web.ex.EnrollmentNotFoundException;
+import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
+import org.motechproject.messagecampaign.exception.EnrollmentNotFoundException;
 import org.motechproject.scheduler.contract.JobId;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.server.config.SettingsFacade;
@@ -185,7 +185,7 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
     @Override
     public String getLatestCampaignMessage(String campaignName, String externalId) {
         CampaignEnrollment enrollment = campaignEnrollmentDataService.findByExternalIdAndCampaignName(externalId, campaignName);
-        Campaign campaign = campaignRecordService.findByName(enrollment.getCampaignName()).build();
+        Campaign campaign = campaignRecordService.findByName(enrollment.getCampaignName()).toCampaign();
         DateTime latestDate = null;
         CampaignMessage latestMessage = null;
 
@@ -214,7 +214,7 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
     @Override
     public String getNextCampaignMessage(String campaignName, String externalId) {
         CampaignEnrollment enrollment = campaignEnrollmentDataService.findByExternalIdAndCampaignName(externalId, campaignName);
-        Campaign campaign = campaignRecordService.findByName(enrollment.getCampaignName()).build();
+        Campaign campaign = campaignRecordService.findByName(enrollment.getCampaignName()).toCampaign();
         DateTime nextDate = null;
         CampaignMessage nextMessage = null;
 
@@ -260,6 +260,7 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
         try (InputStream inputStream = settingsFacade.getRawConfig(MESSAGE_CAMPAIGNS_JSON_FILENAME)) {
             List<CampaignRecord> records = new CampaignJsonLoader().loadCampaigns(inputStream);
             for (CampaignRecord campaign : records) {
+                campaign.toCampaign().validate();
                 CampaignRecord record = campaignRecordService.findByName(campaign.getName());
                 if (record == null) {
                     campaignRecordService.create(campaign);
@@ -287,6 +288,7 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
         try (InputStream inputStream = settingsFacade.getRawConfig(MESSAGE_CAMPAIGNS_JSON_FILENAME)) {
             List<CampaignRecord> records = new CampaignJsonLoader().loadCampaigns(inputStream);
             for (CampaignRecord record : records) {
+                record.toCampaign().validate();
                 if(campaignRecordService.findByName(record.getName()) == null) {
                     campaignRecordService.create(record);
                 }

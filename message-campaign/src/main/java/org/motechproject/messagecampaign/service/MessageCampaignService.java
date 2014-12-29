@@ -2,7 +2,7 @@ package org.motechproject.messagecampaign.service;
 
 import org.joda.time.DateTime;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
-import org.motechproject.messagecampaign.userspecified.CampaignRecord;
+import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
 
 import java.io.IOException;
 import java.util.List;

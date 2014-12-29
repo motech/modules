@@ -2,6 +2,7 @@ package org.motechproject.messagecampaign.web.controller;
 
 import com.google.gson.JsonParseException;
 import org.apache.commons.io.IOUtils;
+import org.motechproject.messagecampaign.exception.CampaignValidationException;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
 import org.motechproject.server.config.SettingsFacade;
 import org.osgi.framework.BundleException;
@@ -48,7 +49,7 @@ public class SettingsController {
                     resource);
 
             messageCampaignService.loadCampaigns();
-        } catch (JsonParseException e) {
+        } catch (JsonParseException | CampaignValidationException e) {
             //revert to previous config
             if (oldConfig != null) {
                 settingsFacade.saveRawConfig(MessageCampaignService.MESSAGE_CAMPAIGNS_JSON_FILENAME,

@@ -1,83 +1,53 @@
 package org.motechproject.messagecampaign.domain.message;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.joda.time.Period;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.commons.date.util.DateUtil;
-import org.motechproject.mds.annotations.Entity;
-import org.motechproject.mds.annotations.Ignore;
-import org.motechproject.messagecampaign.web.util.TimeSerializer;
+import org.motechproject.commons.date.util.JodaFormatter;
+import org.motechproject.messagecampaign.exception.CampaignMessageValidationException;
 
 import java.util.List;
 
-@Entity
-public class RepeatIntervalCampaignMessage implements CampaignMessage {
+public class RepeatIntervalCampaignMessage extends CampaignMessage {
 
     private Period repeatInterval;
 
-    public RepeatIntervalCampaignMessage(Period repeatInterval) {
+    public RepeatIntervalCampaignMessage(CampaignMessageRecord messageRecord) {
+        super(messageRecord);
+        setRepeatInterval(messageRecord.getRepeatEvery());
+    }
+
+    public RepeatIntervalCampaignMessage(Time startTime, Period repeatInterval) {
+        this(null, null, null, null, startTime, repeatInterval);
+    }
+
+    public RepeatIntervalCampaignMessage(String name, List<String> formats, List<String> languages, String messageKey, Time startTime, Period repeatInterval) {
+        super(name, formats, languages, messageKey, startTime);
         this.repeatInterval = repeatInterval;
     }
 
-    @Ignore
     public long getRepeatIntervalInMillis() {
         return repeatInterval.toDurationFrom(DateUtil.now()).getMillis();
     }
 
-    @JsonProperty
-    private String name;
-    @JsonProperty
-    private List<String> formats;
-    @JsonProperty
-    private List<String> languages;
-    @JsonProperty
-    private String messageKey;
-    @JsonProperty
-    @JsonSerialize(using = TimeSerializer.class)
-    private Time startTime;
-
-    public String getName() {
-        return name;
+    public Period getRepeatInterval() {
+        return repeatInterval;
     }
 
-    public List<String> getFormats() {
-        return formats;
+    public final void setRepeatInterval(Period repeatInterval) {
+        this.repeatInterval = repeatInterval;
     }
 
-    public List<String> getLanguages() {
-        return languages;
+    public final void setRepeatInterval(String repeatInterval) {
+        this.repeatInterval = new JodaFormatter().parsePeriod(repeatInterval);
     }
 
-    public String getMessageKey() {
-        return messageKey;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setFormats(List<String> formats) {
-        this.formats = formats;
-    }
-
-    public void setLanguages(List<String> languages) {
-        this.languages = languages;
-    }
-
-    public void setMessageKey(String messageKey) {
-        this.messageKey = messageKey;
-    }
-
-    public Time getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Time startTime) {
-        this.startTime = startTime;
-    }
-
-    public void setStartTime(int hour, int minute) {
-        this.startTime = new Time(hour, minute);
+    @Override
+    public void validate() {
+        if (repeatInterval == null) {
+            throw new CampaignMessageValidationException("RepeatInterval cannot be null in " + RepeatIntervalCampaignMessage.class.getName());
+        } else if (getStartTime() == null) {
+            throw new CampaignMessageValidationException("StartTime cannot be null in " + RepeatIntervalCampaignMessage.class.getName());
+        }
     }
 }

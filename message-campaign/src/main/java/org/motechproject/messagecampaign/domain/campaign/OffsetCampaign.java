@@ -1,42 +1,28 @@
 package org.motechproject.messagecampaign.domain.campaign;
 
-import org.motechproject.mds.annotations.Entity;
+import org.joda.time.Period;
 import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
+import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
 
 import java.util.List;
 
-@Entity
-public class OffsetCampaign implements Campaign<OffsetCampaignMessage> {
+public class OffsetCampaign extends Campaign<OffsetCampaignMessage> {
 
-    private String maxDuration;
-    private String name;
-    private List<OffsetCampaignMessage> messages;
+    public OffsetCampaign() {
 
-    @Override
-    public void setName(String name) {
-        this.name = name;
+    }
+
+    public OffsetCampaign(String name, List<OffsetCampaignMessage> messages) {
+        this(name, messages, null);
+    }
+
+    public OffsetCampaign(String name, List<OffsetCampaignMessage> messages, Period maxDuration) {
+        super(name, messages, maxDuration);
     }
 
     @Override
-    public void setMessages(List<OffsetCampaignMessage> messages) {
-        this.messages = messages;
+    public OffsetCampaignMessage getCampaignMessage(CampaignMessageRecord messageRecord) {
+        return new OffsetCampaignMessage(messageRecord);
     }
 
-    @Override
-    public List<OffsetCampaignMessage> getMessages() {
-        return messages;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    public String maxDuration() {
-        return maxDuration;
-    }
-
-    public void maxDuration(String maxDuration) {
-        this.maxDuration = maxDuration;
-    }
 }

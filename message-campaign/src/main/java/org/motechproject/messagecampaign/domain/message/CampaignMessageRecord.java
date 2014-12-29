@@ -1,30 +1,17 @@
-package org.motechproject.messagecampaign.userspecified;
+package org.motechproject.messagecampaign.domain.message;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.joda.time.LocalDate;
-import org.motechproject.commons.date.model.Time;
-import org.motechproject.commons.date.util.JodaFormatter;
 import org.motechproject.mds.annotations.Entity;
-import org.motechproject.messagecampaign.domain.message.DayOfWeek;
-import org.motechproject.messagecampaign.domain.campaign.CampaignType;
-import org.motechproject.messagecampaign.domain.message.AbsoluteCampaignMessage;
-import org.motechproject.messagecampaign.domain.message.CampaignMessage;
-import org.motechproject.messagecampaign.domain.message.CronBasedCampaignMessage;
-import org.motechproject.messagecampaign.domain.message.DayOfWeekCampaignMessage;
-import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
-import org.motechproject.messagecampaign.domain.message.RepeatIntervalCampaignMessage;
 import org.motechproject.messagecampaign.web.util.LocalDateSerializer;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static org.motechproject.commons.date.model.Time.parseTime;
-
 @Entity
 public class CampaignMessageRecord {
-    private static final long serialVersionUID = -1781293196314540037L;
+
     @JsonProperty
     private String name;
     @JsonProperty
@@ -48,87 +35,6 @@ public class CampaignMessageRecord {
     private String cron;
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     private List<String> repeatOn;
-
-    public CampaignMessage build(CampaignType type) {
-        if (type == CampaignType.ABSOLUTE) {
-            return buildAbsolute();
-        }
-        if (type == CampaignType.OFFSET) {
-            return buildOffset();
-        }
-        if (type == CampaignType.REPEAT_INTERVAL) {
-            return buildRepeatIntervalCampaignMessage();
-        }
-        if (type == CampaignType.DAY_OF_WEEK) {
-            return buildDayOfWeekCampaignMessage();
-        }
-        if (type == CampaignType.CRON) {
-            return buildCron();
-        }
-        throw new UnknownCampaignTypeException("Unknown campaign type");
-    }
-
-    private CampaignMessage buildDayOfWeekCampaignMessage() {
-        DayOfWeekCampaignMessage message = new DayOfWeekCampaignMessage(retrieveDaysOfWeek(repeatOn));
-        message.setName(getName());
-        message.setFormats(getFormats());
-        message.setLanguages(getLanguages());
-        message.setMessageKey(getMessageKey());
-        message.setStartTime(parseTime(startTime, ":"));
-        return message;
-    }
-
-    private List<DayOfWeek> retrieveDaysOfWeek(List<String> days) {
-        List<DayOfWeek> daysOfWeek = new ArrayList<>();
-        for (String day : days) {
-            daysOfWeek.add(DayOfWeek.parse(day));
-        }
-        return daysOfWeek;
-    }
-
-    private CampaignMessage buildRepeatIntervalCampaignMessage() {
-        RepeatIntervalCampaignMessage message = new RepeatIntervalCampaignMessage(new JodaFormatter().
-                parsePeriod(getRepeatEvery()));
-        message.setName(getName());
-        message.setFormats(getFormats());
-        message.setLanguages(getLanguages());
-        message.setMessageKey(getMessageKey());
-        message.setStartTime(parseTime(startTime, ":"));
-        return message;
-    }
-
-    private CampaignMessage buildCron() {
-        CronBasedCampaignMessage message = new CronBasedCampaignMessage();
-        message.setName(name);
-        message.setFormats(formats);
-        message.setLanguages(languages);
-        message.setMessageKey(messageKey);
-        message.setCron(cron);
-        message.setStartTime(parseTime(startTime, ":"));
-        return message;
-    }
-
-    private CampaignMessage buildAbsolute() {
-        AbsoluteCampaignMessage message = new AbsoluteCampaignMessage();
-        message.setName(name);
-        message.setFormats(formats);
-        message.setLanguages(languages);
-        message.setMessageKey(messageKey);
-        message.setDate(date);
-        message.setStartTime(parseTime(startTime, ":"));
-        return message;
-    }
-
-    private CampaignMessage buildOffset() {
-        OffsetCampaignMessage message = new OffsetCampaignMessage();
-        message.setName(name);
-        message.setFormats(formats);
-        message.setLanguages(languages);
-        message.setMessageKey(messageKey);
-        message.setTimeOffset(new JodaFormatter().parsePeriod(timeOffset));
-        message.setStartTime(Time.parseTime(startTime, ":"));
-        return message;
-    }
 
     public String getName() {
         return name;

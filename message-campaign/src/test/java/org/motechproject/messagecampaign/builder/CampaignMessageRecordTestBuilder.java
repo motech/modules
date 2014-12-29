@@ -1,7 +1,7 @@
 package org.motechproject.messagecampaign.builder;
 
 import org.joda.time.LocalDate;
-import org.motechproject.messagecampaign.userspecified.CampaignMessageRecord;
+import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,21 +1,28 @@
 package org.motechproject.messagecampaign.domain.message;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.joda.time.LocalDate;
 import org.motechproject.commons.date.model.Time;
-import org.motechproject.mds.annotations.Entity;
-import org.motechproject.messagecampaign.web.util.LocalDateSerializer;
-import org.motechproject.messagecampaign.web.util.TimeSerializer;
+import org.motechproject.messagecampaign.exception.CampaignMessageValidationException;
 
 import java.util.List;
 
-@Entity
-public class AbsoluteCampaignMessage implements CampaignMessage {
+public class AbsoluteCampaignMessage extends CampaignMessage {
 
-    @JsonProperty
-    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate date;
+
+    public AbsoluteCampaignMessage(CampaignMessageRecord messageRecord) {
+        super(messageRecord);
+        this.date = messageRecord.getDate();
+    }
+
+    public AbsoluteCampaignMessage(Time startTime, LocalDate date) {
+        this(null, null, null, null, startTime, date);
+    }
+
+    public AbsoluteCampaignMessage(String name, List<String> formats, List<String> languages, String messageKey, Time startTime, LocalDate date) {
+        super(name, formats, languages, messageKey, startTime);
+        this.date = date;
+    }
 
     public LocalDate getDate() {
         return this.date;
@@ -25,60 +32,13 @@ public class AbsoluteCampaignMessage implements CampaignMessage {
         this.date = date;
     }
 
-    @JsonProperty
-    @JsonSerialize(using = TimeSerializer.class)
-    private Time startTime;
-
-    @JsonProperty
-    private String name;
-    @JsonProperty
-    private List<String> formats;
-    @JsonProperty
-    private String messageKey;
-    @JsonProperty
-    private List<String> languages;
-
-    public String getName() {
-        return name;
+    @Override
+    public void validate() {
+        if (date == null) {
+            throw new CampaignMessageValidationException("Date cannot be null in " + AbsoluteCampaignMessage.class.getName());
+        } else if (getStartTime() == null) {
+            throw new CampaignMessageValidationException("StartTime cannot be null in " + AbsoluteCampaignMessage.class.getName());
+        }
     }
 
-    public List<String> getFormats() {
-        return formats;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setFormats(List<String> formats) {
-        this.formats = formats;
-    }
-
-    public List<String> getLanguages() {
-        return languages;
-    }
-
-    public String getMessageKey() {
-        return messageKey;
-    }
-
-    public void setLanguages(List<String> languages) {
-        this.languages = languages;
-    }
-
-    public void setMessageKey(String messageKey) {
-        this.messageKey = messageKey;
-    }
-
-    public Time getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Time startTime) {
-        this.startTime = startTime;
-    }
-
-    public void setStartTime(int hour, int minute) {
-        this.startTime = new Time(hour, minute);
-    }
 }

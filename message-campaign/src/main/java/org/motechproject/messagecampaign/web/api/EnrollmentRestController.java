@@ -1,13 +1,13 @@
 package org.motechproject.messagecampaign.web.api;
 
 import org.motechproject.messagecampaign.contract.CampaignRequest;
-import org.motechproject.messagecampaign.domain.CampaignNotFoundException;
+import org.motechproject.messagecampaign.exception.CampaignNotFoundException;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollmentStatus;
 import org.motechproject.messagecampaign.service.CampaignEnrollmentsQuery;
 import org.motechproject.messagecampaign.service.EnrollmentService;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
-import org.motechproject.messagecampaign.web.ex.EnrollmentNotFoundException;
+import org.motechproject.messagecampaign.exception.EnrollmentNotFoundException;
 import org.motechproject.messagecampaign.web.model.EnrollmentDto;
 import org.motechproject.messagecampaign.web.model.EnrollmentList;
 import org.motechproject.messagecampaign.web.model.EnrollmentRequest;

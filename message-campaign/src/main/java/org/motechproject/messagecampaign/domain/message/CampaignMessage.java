@@ -1,29 +1,78 @@
 package org.motechproject.messagecampaign.domain.message;
 
 import org.motechproject.commons.date.model.Time;
+import org.motechproject.commons.date.util.StringUtil;
 
 import java.util.List;
 
-public interface CampaignMessage {
-    String getName();
+import static org.motechproject.commons.date.model.Time.parseTime;
 
-    List<String> getFormats();
+public abstract class CampaignMessage {
+    private String name;
+    private List<String> formats;
+    private List<String> languages;
+    private String messageKey;
+    private Time startTime;
 
-    List<String> getLanguages();
+    public CampaignMessage(CampaignMessageRecord messageRecord) {
+        this (messageRecord.getName(), messageRecord.getFormats(), messageRecord.getLanguages(), messageRecord.getMessageKey(),
+                parseTime(messageRecord.getStartTime(), ":"));
+    }
 
-    String getMessageKey();
+    public CampaignMessage(String name, List<String> formats, List<String> languages, String messageKey, Time startTime) {
+        this.name = name;
+        this.formats = formats;
+        this.languages = languages;
+        this.messageKey = messageKey;
+        this.startTime = startTime;
+    }
 
-    void setName(String name);
+    public String getName() {
+        return name;
+    }
 
-    void setFormats(List<String> formats);
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    void setLanguages(List<String> languages);
+    public List<String> getFormats() {
+        return formats;
+    }
 
-    void setMessageKey(String messageKey);
+    public void setFormats(List<String> formats) {
+        this.formats = formats;
+    }
 
-    Time getStartTime();
+    public List<String> getLanguages() {
+        return languages;
+    }
 
-    void setStartTime(Time startTime);
+    public void setLanguages(List<String> languages) {
+        this.languages = languages;
+    }
 
-    void setStartTime(int hour, int minute);
+    public String getMessageKey() {
+        return messageKey;
+    }
+
+    public void setMessageKey(String messageKey) {
+        this.messageKey = messageKey;
+    }
+
+    public Time getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Time startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setStartTime(String startTime) {
+      if (!StringUtil.isNullOrEmpty(startTime)) {
+          this.startTime = parseTime(startTime, ":");
+      }
+    }
+
+    public abstract void validate();
+
 }

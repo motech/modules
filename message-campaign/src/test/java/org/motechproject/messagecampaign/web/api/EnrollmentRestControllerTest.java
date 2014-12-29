@@ -17,7 +17,7 @@ import org.motechproject.messagecampaign.search.Criterion;
 import org.motechproject.messagecampaign.service.CampaignEnrollmentsQuery;
 import org.motechproject.messagecampaign.service.EnrollmentService;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
-import org.motechproject.messagecampaign.web.ex.EnrollmentNotFoundException;
+import org.motechproject.messagecampaign.exception.EnrollmentNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.server.MockMvc;
