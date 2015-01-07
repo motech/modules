@@ -22,12 +22,17 @@ import org.motechproject.messagecampaign.service.MessageCampaignService;
 import org.motechproject.messagecampaign.userspecified.CampaignRecord;
 import org.motechproject.security.service.MotechUserService;
 import org.motechproject.testing.osgi.BasePaxIT;
-import org.motechproject.testing.utils.TestContext;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
+import org.motechproject.testing.utils.TestContext;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 
 import javax.inject.Inject;
 import javax.xml.bind.DatatypeConverter;
@@ -38,6 +43,14 @@ import java.util.UUID;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.motechproject.security.constants.PermissionNames.ACTIVATE_USER_PERMISSION;
+import static org.motechproject.security.constants.PermissionNames.ADD_USER_PERMISSION;
+import static org.motechproject.security.constants.PermissionNames.DELETE_USER_PERMISSION;
+import static org.motechproject.security.constants.PermissionNames.EDIT_USER_PERMISSION;
+import static org.motechproject.security.constants.PermissionNames.MANAGE_USER_PERMISSION;
+import static org.motechproject.security.constants.PermissionNames.UPDATE_SECURITY_PERMISSION;
+import static org.motechproject.security.constants.PermissionNames.VIEW_SECURITY;
+import static org.motechproject.security.constants.PermissionNames.VIEW_USER_PERMISSION;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -125,7 +138,9 @@ public class MessageCampaignBundleIT extends BasePaxIT {
 
     @Test
     public void testControllersAsUnathorizedUser() throws Exception {
+        setUpSecurityContext("admin", "admin");
         motechUserService.register("user-mc-noauth", "pass", "testmcnoauth@test.com", null, asList("Admin User"), Locale.ENGLISH);
+        clearSecurityContext();
 
         HttpGet request = new HttpGet(String.format("http://localhost:%d/messagecampaign/web-api/enrollments/users", PORT));
         request.setHeader("Authorization", "Basic " + DatatypeConverter.printBase64Binary("user-mc-noauth:pass".getBytes("UTF-8")).trim());
@@ -142,7 +157,9 @@ public class MessageCampaignBundleIT extends BasePaxIT {
 
     @Test
     public void testControllersAsAuthorizedUser() throws Exception {
+        setUpSecurityContext("admin", "admin");
         motechUserService.register("user-mc-auth", "pass", "testmcauth@test.com", "test", asList("Campaign Manager"), Locale.ENGLISH);
+        clearSecurityContext();
 
         HttpGet request = new HttpGet(String.format("http://localhost:%d/messagecampaign/web-api/campaigns", PORT));
         request.addHeader("Authorization", "Basic " + DatatypeConverter.printBase64Binary("user-mc-auth:pass".getBytes("UTF-8")).trim());
@@ -154,5 +171,22 @@ public class MessageCampaignBundleIT extends BasePaxIT {
         request.addHeader("Authorization", "Basic " + DatatypeConverter.printBase64Binary("user-mc-auth:pass".getBytes("UTF-8")).trim());
         response = getHttpClient().execute(request);
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+    }
+
+    protected void setUpSecurityContext(String username, String password) {
+        Authentication auth = new UsernamePasswordAuthenticationToken(new User(username, password, getPermissions()), password, getPermissions());
+        SecurityContextHolder.getContext().setAuthentication(auth);
+    }
+
+    protected void clearSecurityContext() {
+        SecurityContextHolder.clearContext();
+    }
+
+    private List<SimpleGrantedAuthority> getPermissions() {
+        return asList(new SimpleGrantedAuthority(ADD_USER_PERMISSION), new SimpleGrantedAuthority(EDIT_USER_PERMISSION),
+                new SimpleGrantedAuthority(MANAGE_USER_PERMISSION), new SimpleGrantedAuthority(EDIT_USER_PERMISSION),
+                new SimpleGrantedAuthority(ACTIVATE_USER_PERMISSION), new SimpleGrantedAuthority(VIEW_USER_PERMISSION),
+                new SimpleGrantedAuthority(DELETE_USER_PERMISSION), new SimpleGrantedAuthority(UPDATE_SECURITY_PERMISSION),
+                new SimpleGrantedAuthority(VIEW_SECURITY));
     }
 }
