@@ -10,17 +10,17 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public class DefaultmentCaptureEventTest {
+public class MilestoneDefaultedEventTest {
     @Test
     public void shouldCreateMotechEvent() {
         Long enrollmentId = 567L;
         String jobId = "jobId";
         final String externalId = "externalId";
 
-        DefaultmentCaptureEvent defaultmentCaptureEvent = new DefaultmentCaptureEvent(enrollmentId, jobId, externalId);
-        MotechEvent motechEvent = defaultmentCaptureEvent.toMotechEvent();
+        MilestoneDefaultedEvent milestoneDefaultedEvent = new MilestoneDefaultedEvent(enrollmentId, jobId, externalId);
+        MotechEvent motechEvent = milestoneDefaultedEvent.toMotechEvent();
 
-        assertEquals(EventSubjects.DEFAULTMENT_CAPTURE, motechEvent.getSubject());
+        assertEquals(EventSubjects.MILESTONE_DEFAULTED, motechEvent.getSubject());
         Map<String, Object> parameters = motechEvent.getParameters();
         assertEquals(enrollmentId, parameters.get(EventDataKeys.ENROLLMENT_ID));
         assertEquals(jobId, parameters.get(MotechSchedulerService.JOB_ID_KEY));

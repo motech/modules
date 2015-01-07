@@ -8,7 +8,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.scheduletracking.domain.Enrollment;
 import org.motechproject.scheduletracking.domain.EnrollmentBuilder;
 import org.motechproject.scheduletracking.domain.Schedule;
-import org.motechproject.scheduletracking.events.DefaultmentCaptureEvent;
+import org.motechproject.scheduletracking.events.MilestoneDefaultedEvent;
 import org.motechproject.scheduletracking.repository.dataservices.EnrollmentDataService;
 
 import static org.mockito.Mockito.verify;
@@ -35,7 +35,7 @@ public class EndOfMilestoneListenerTest {
         enrollment.setId(1L);
         when(enrollmentDataService.findById(1L)).thenReturn(enrollment);
 
-        MotechEvent event = new DefaultmentCaptureEvent(1L, "job_id", "externalId").toMotechEvent();
+        MotechEvent event = new MilestoneDefaultedEvent(1L, "job_id", "externalId").toMotechEvent();
         endOfMilestoneListener.handle(event);
         verify(enrollmentDataService).update(enrollment);
     }

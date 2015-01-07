@@ -102,7 +102,7 @@ public class EnrollmentServiceImplTest extends BaseUnitTest {
         assertEnrollment(enrollment, externalId, scheduleName, milestone, ACTIVE, schedule, metadata);
 
         verify(enrollmentAlertService, times(0)).unscheduleAllAlerts(Matchers.<Enrollment>any());
-        verify(enrollmentDefaultmentService, times(0)).unscheduleDefaultmentCaptureJob(Matchers.<Enrollment>any());
+        verify(enrollmentDefaultmentService, times(0)).unscheduleMilestoneDefaultedJob(Matchers.<Enrollment>any());
     }
 
     @Test
@@ -137,7 +137,7 @@ public class EnrollmentServiceImplTest extends BaseUnitTest {
         verify(enrollmentAlertService).unscheduleAllAlerts(enrollmentArgumentCaptor.capture());
         assertEnrollment(enrollmentArgumentCaptor.getValue(), externalId, scheduleName, new Milestone("milestone", null, null, null, null), EnrollmentStatus.ACTIVE, schedule, metadata);
 
-        verify(enrollmentDefaultmentService).unscheduleDefaultmentCaptureJob(enrollmentArgumentCaptor.capture());
+        verify(enrollmentDefaultmentService).unscheduleMilestoneDefaultedJob(enrollmentArgumentCaptor.capture());
         assertEnrollment(enrollmentArgumentCaptor.getValue(), externalId, scheduleName, new Milestone("milestone", null, null, null, null), EnrollmentStatus.ACTIVE, schedule, metadata);
 
         verify(enrollmentAlertService, times(1)).scheduleAlertsForCurrentMilestone(enrollmentArgumentCaptor.capture());
@@ -227,7 +227,7 @@ public class EnrollmentServiceImplTest extends BaseUnitTest {
         enrollmentService.fulfillCurrentMilestone(enrollment, null);
 
         verify(enrollmentAlertService).unscheduleAllAlerts(enrollment);
-        verify(enrollmentDefaultmentService).unscheduleDefaultmentCaptureJob(enrollment);
+        verify(enrollmentDefaultmentService).unscheduleMilestoneDefaultedJob(enrollment);
 
         ArgumentCaptor<Enrollment> updatedEnrollmentCaptor = ArgumentCaptor.forClass(Enrollment.class);
         verify(enrollmentAlertService).scheduleAlertsForCurrentMilestone(updatedEnrollmentCaptor.capture());
@@ -283,7 +283,7 @@ public class EnrollmentServiceImplTest extends BaseUnitTest {
         enrollmentService.fulfillCurrentMilestone(enrollment, null);
 
         verify(enrollmentAlertService).unscheduleAllAlerts(enrollment);
-        verify(enrollmentDefaultmentService).unscheduleDefaultmentCaptureJob(enrollment);
+        verify(enrollmentDefaultmentService).unscheduleMilestoneDefaultedJob(enrollment);
         verify(enrollmentAlertService, times(0)).scheduleAlertsForCurrentMilestone(enrollment);
         verify(enrollmentDefaultmentService, times(0)).scheduleJobToCaptureDefaultment(enrollment);
     }
@@ -314,7 +314,7 @@ public class EnrollmentServiceImplTest extends BaseUnitTest {
         assertEquals(false, enrollment.isActive());
 
         verify(enrollmentAlertService).unscheduleAllAlerts(enrollment);
-        verify(enrollmentDefaultmentService).unscheduleDefaultmentCaptureJob(enrollment);
+        verify(enrollmentDefaultmentService).unscheduleMilestoneDefaultedJob(enrollment);
     }
 
     @Test

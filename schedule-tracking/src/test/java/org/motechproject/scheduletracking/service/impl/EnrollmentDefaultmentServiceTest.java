@@ -15,7 +15,7 @@ import org.motechproject.scheduletracking.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.domain.Milestone;
 import org.motechproject.scheduletracking.domain.Schedule;
 import org.motechproject.scheduletracking.domain.WindowName;
-import org.motechproject.scheduletracking.events.DefaultmentCaptureEvent;
+import org.motechproject.scheduletracking.events.MilestoneDefaultedEvent;
 import org.motechproject.scheduletracking.events.constants.EventSubjects;
 
 import static junit.framework.Assert.assertEquals;
@@ -59,7 +59,7 @@ public class EnrollmentDefaultmentServiceTest {
         verify(schedulerService).safeScheduleRunOnceJob(runOnceJobArgumentCaptor.capture());
 
         RunOnceSchedulableJob job = runOnceJobArgumentCaptor.getValue();
-        DefaultmentCaptureEvent event = new DefaultmentCaptureEvent(job.getMotechEvent());
+        MilestoneDefaultedEvent event = new MilestoneDefaultedEvent(job.getMotechEvent());
         assertEquals("1", event.getJobId());
         assertEquals(now.plusWeeks(4).toDate(), job.getStartDate());
         assertEquals(externalId, event.getExternalId());
@@ -85,13 +85,13 @@ public class EnrollmentDefaultmentServiceTest {
     }
 
     @Test
-    public void shouldUnscheduleDefaultmentCaptureJob() {
+    public void shouldUnscheduleMilestoneDefaultedJob() {
         Schedule schedule = new Schedule("some_schedule");
         Enrollment enrollment = new EnrollmentBuilder().withExternalId("entity_1").withSchedule(schedule).withCurrentMilestoneName("milestone").withStartOfSchedule(weeksAgo(0)).withEnrolledOn(weeksAgo(0)).withPreferredAlertTime(new Time(8, 10)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
         enrollment.setId(1L);
 
-        enrollmentDefaultmentService.unscheduleDefaultmentCaptureJob(enrollment);
+        enrollmentDefaultmentService.unscheduleMilestoneDefaultedJob(enrollment);
 
-        verify(schedulerService).safeUnscheduleAllJobs(String.format("%s-1", EventSubjects.DEFAULTMENT_CAPTURE));
+        verify(schedulerService).safeUnscheduleAllJobs(String.format("%s-1", EventSubjects.MILESTONE_DEFAULTED));
     }
 }

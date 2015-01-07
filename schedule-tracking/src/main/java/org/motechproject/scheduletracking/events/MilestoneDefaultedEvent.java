@@ -7,18 +7,18 @@ import org.motechproject.scheduletracking.events.constants.EventSubjects;
 
 import java.util.HashMap;
 
-public class DefaultmentCaptureEvent {
+public class MilestoneDefaultedEvent {
     private String jobId;
     private Long enrollmentId;
     private String externalId;
 
-    public DefaultmentCaptureEvent(MotechEvent event) {
+    public MilestoneDefaultedEvent(MotechEvent event) {
         this.jobId = (String) event.getParameters().get(MotechSchedulerService.JOB_ID_KEY);
         this.enrollmentId = (Long) event.getParameters().get(EventDataKeys.ENROLLMENT_ID);
         this.externalId = (String) event.getParameters().get(EventDataKeys.EXTERNAL_ID);
     }
 
-    public DefaultmentCaptureEvent(Long enrollmentId, String jobId, String externalId) {
+    public MilestoneDefaultedEvent(Long enrollmentId, String jobId, String externalId) {
         this.jobId = jobId;
         this.enrollmentId = enrollmentId;
         this.externalId = externalId;
@@ -29,7 +29,7 @@ public class DefaultmentCaptureEvent {
         data.put(EventDataKeys.ENROLLMENT_ID, enrollmentId);
         data.put(EventDataKeys.EXTERNAL_ID, externalId);
         data.put(MotechSchedulerService.JOB_ID_KEY, jobId);
-        return new MotechEvent(EventSubjects.DEFAULTMENT_CAPTURE, data);
+        return new MotechEvent(EventSubjects.MILESTONE_DEFAULTED, data);
     }
 
     public Long getEnrollmentId() {

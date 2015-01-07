@@ -17,7 +17,7 @@ public final class EventDataKeys {
     public static final String REFERENCE_DATE = "reference_date";
     public static final String MILESTONE_DATA = "milestone_data";
 
-    // DefaultmentCaptureEvent
+    // MilestoneDefaultedEvent
     public static final String ENROLLMENT_ID = "enrollment_id";
 
     // Enroll and Unenroll event

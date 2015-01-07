@@ -7,12 +7,12 @@ import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
 import org.motechproject.scheduletracking.domain.Enrollment;
 import org.motechproject.scheduletracking.domain.Milestone;
 import org.motechproject.scheduletracking.domain.Schedule;
-import org.motechproject.scheduletracking.events.DefaultmentCaptureEvent;
+import org.motechproject.scheduletracking.events.MilestoneDefaultedEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static org.motechproject.commons.date.util.DateUtil.now;
-import static org.motechproject.scheduletracking.events.constants.EventSubjects.DEFAULTMENT_CAPTURE;
+import static org.motechproject.scheduletracking.events.constants.EventSubjects.MILESTONE_DEFAULTED;
 
 @Component
 public class EnrollmentDefaultmentService {
@@ -37,11 +37,11 @@ public class EnrollmentDefaultmentService {
             return;
         }
 
-        MotechEvent event = new DefaultmentCaptureEvent(enrollment.getId(), enrollment.getId().toString(), enrollment.getExternalId()).toMotechEvent();
+        MotechEvent event = new MilestoneDefaultedEvent(enrollment.getId(), enrollment.getId().toString(), enrollment.getExternalId()).toMotechEvent();
         schedulerService.safeScheduleRunOnceJob(new RunOnceSchedulableJob(event, milestoneEndDateTime.toDate()));
     }
 
-    public void unscheduleDefaultmentCaptureJob(Enrollment enrollment) {
-        schedulerService.safeUnscheduleAllJobs(String.format("%s-%s", DEFAULTMENT_CAPTURE, enrollment.getId()));
+    public void unscheduleMilestoneDefaultedJob(Enrollment enrollment) {
+        schedulerService.safeUnscheduleAllJobs(String.format("%s-%s", MILESTONE_DEFAULTED, enrollment.getId()));
     }
 }

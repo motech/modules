@@ -50,8 +50,8 @@
       ]
     },
     {
-      "displayName" : "scheduleTracking.defaultmentCapture",
-      "subject" : "org.motechproject.scheduletracking.defaultment.capture",
+      "displayName" : "scheduleTracking.milestoneDefaulted",
+      "subject" : "org.motechproject.scheduletracking.milestone.defaulted",
       "eventParameters" : [
         {
           "eventKey" : "enrollment_id",
@@ -124,8 +124,8 @@
   ],
   "actionTaskEvents" : [
     {
-      "displayName" : "scheduleTracking.defaultmentCapture",
-      "subject" : "org.motechproject.scheduletracking.defaultment.capture",
+      "displayName" : "scheduleTracking.milestoneDefaulted",
+      "subject" : "org.motechproject.scheduletracking.milestone.defaulted",
       "actionParameters" : [
         {
           "key" : "enrollment_id",

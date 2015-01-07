@@ -275,13 +275,13 @@ Events Consumed and Emitted
 Consumed Event
 ^^^^^^^^^^^^^^
 
-DEFAULTMENT_CAPTURE
+MILESTONE_DEFAULTED
 """""""""""""""""""
 
-This module exposes an EndOfMilestoneListener, which handles and consumes events with the subject EventSubjects.DEFAULTMENT_CAPTURE.
+This module exposes an EndOfMilestoneListener, which handles and consumes events with the subject EventSubjects.MILESTONE_DEFAULTED.
 ::
 
-  EventSubjects.DEFAULTMENT_CAPTURE (org.motechproject.scheduletracking.defaultment.capture)
+  EventSubjects.MILESTONE_DEFAULTED (org.motechproject.scheduletracking.milestone.defaulted)
 
       Parameters/Payload:
 
@@ -316,13 +316,13 @@ The EnrollmentAlertService emits events with the subject EventSubjects.MILESTONE
 
 Milestone alert events are scheduled for the current milestone per each alert definition.
 
-DEFAULTMENT_CAPTURE
+MILESTONE_DEFAULTED
 """""""""""""""""""
 
-The EnrollmentDefaultmentService emits events with the subject EventSubjects.DEFAULTMENT_CAPTURE.
+The EnrollmentDefaultmentService emits events with the subject EventSubjects.MILESTONE_DEFAULTED.
 ::
 
-  EventSubjects.DEFAULTMENT_CAPTURE (org.motechproject.scheduletracking.defaultment.capture)
+  EventSubjects.MILESTONE_DEFAULTED (org.motechproject.scheduletracking.milestone.defaulted)
 
       Parameters/Payload:
 

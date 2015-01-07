@@ -104,7 +104,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
     private void unscheduleJobs(Enrollment enrollment) {
         enrollmentAlertService.unscheduleAllAlerts(enrollment);
-        enrollmentDefaultmentService.unscheduleDefaultmentCaptureJob(enrollment);
+        enrollmentDefaultmentService.unscheduleMilestoneDefaultedJob(enrollment);
     }
 
     @Override

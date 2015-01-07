@@ -42,7 +42,7 @@ public class ScheduleTrackingTaskBundleIT extends AbstractTaskBundleIT {
         Channel channel = findChannel(CHANNEL_NAME);
 
         assertMileStoneAlertTrigger(channel.getTriggerTaskEvents());
-        assertDefaultmentCaptureTrigger(channel.getTriggerTaskEvents());
+        assertMilestoneDefaultedTrigger(channel.getTriggerTaskEvents());
     }
 
     private void assertMileStoneAlertTrigger(List<TriggerEvent> triggerTaskEvents) {
@@ -61,15 +61,15 @@ public class ScheduleTrackingTaskBundleIT extends AbstractTaskBundleIT {
         assertTrue(hasEventParameterKey(EventDataKeys.MILESTONE_DATA, milestoneAlertTrigger.getEventParameters()));
     }
 
-    private void assertDefaultmentCaptureTrigger(List<TriggerEvent> triggerTaskEvents) {
-        TriggerEvent defaultmentCaptureTrigger = findTriggerEventBySubject(triggerTaskEvents,
-                EventSubjects.DEFAULTMENT_CAPTURE);
+    private void assertMilestoneDefaultedTrigger(List<TriggerEvent> triggerTaskEvents) {
+        TriggerEvent milestoneDefaultedTrigger = findTriggerEventBySubject(triggerTaskEvents,
+                EventSubjects.MILESTONE_DEFAULTED);
 
-        assertNotNull(defaultmentCaptureTrigger);
-        assertTrue(hasEventParameterKey(EventDataKeys.ENROLLMENT_ID, defaultmentCaptureTrigger.getEventParameters()));
-        assertTrue(hasEventParameterKey(EventDataKeys.EXTERNAL_ID, defaultmentCaptureTrigger.getEventParameters()));
+        assertNotNull(milestoneDefaultedTrigger);
+        assertTrue(hasEventParameterKey(EventDataKeys.ENROLLMENT_ID, milestoneDefaultedTrigger.getEventParameters()));
+        assertTrue(hasEventParameterKey(EventDataKeys.EXTERNAL_ID, milestoneDefaultedTrigger.getEventParameters()));
         assertTrue(hasEventParameterKey(MotechSchedulerService.JOB_ID_KEY,
-                defaultmentCaptureTrigger.getEventParameters()));
+                milestoneDefaultedTrigger.getEventParameters()));
     }
 
     public void testTaskActions() throws IOException {
@@ -79,13 +79,13 @@ public class ScheduleTrackingTaskBundleIT extends AbstractTaskBundleIT {
     }
 
     private void assertDefaultCaptureAction(List<ActionEvent> actionTaskEvents) {
-        ActionEvent defaultmentCaptureAction = findActionEventBySubject(actionTaskEvents, EventSubjects.DEFAULTMENT_CAPTURE);
+        ActionEvent milestoneDefaultedAction = findActionEventBySubject(actionTaskEvents, EventSubjects.MILESTONE_DEFAULTED);
 
-        assertNotNull(defaultmentCaptureAction);
-        assertTrue(hasActionParameterKey(EventDataKeys.ENROLLMENT_ID, defaultmentCaptureAction.getActionParameters()));
-        assertTrue(hasActionParameterKey(EventDataKeys.EXTERNAL_ID, defaultmentCaptureAction.getActionParameters()));
+        assertNotNull(milestoneDefaultedAction);
+        assertTrue(hasActionParameterKey(EventDataKeys.ENROLLMENT_ID, milestoneDefaultedAction.getActionParameters()));
+        assertTrue(hasActionParameterKey(EventDataKeys.EXTERNAL_ID, milestoneDefaultedAction.getActionParameters()));
         assertTrue(hasActionParameterKey(MotechSchedulerService.JOB_ID_KEY,
-                defaultmentCaptureAction.getActionParameters()));
+                milestoneDefaultedAction.getActionParameters()));
     }
 
 }
