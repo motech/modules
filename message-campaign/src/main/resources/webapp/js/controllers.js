@@ -175,7 +175,7 @@
         });
     });
 
-    controllers.controller('SettingsCtrl', function ($scope) {
+    controllers.controller('MCSettingsCtrl', function ($scope) {
         $scope.uploadSettings = function () {
             blockUI();
             $("#messageCampaignSettingsForm").ajaxSubmit({
