@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
 import org.motechproject.messagecampaign.userspecified.CampaignRecord;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -64,5 +65,5 @@ public interface MessageCampaignService {
 
     void campaignCompleted(String externalId, String campaignName);
 
-    void loadCampaigns();
+    void loadCampaigns() throws IOException;
 }

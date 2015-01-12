@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -254,17 +255,44 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
         unenroll(externalId, campaignName);
     }
 
-    @PostConstruct
     @Override
-    public void loadCampaigns() {
-        InputStream inputStream = settingsFacade.getRawConfig(MESSAGE_CAMPAIGNS_JSON_FILENAME);
-        if (inputStream != null) {
+    public void loadCampaigns() throws IOException {
+        try (InputStream inputStream = settingsFacade.getRawConfig(MESSAGE_CAMPAIGNS_JSON_FILENAME)) {
+            List<CampaignRecord> records = new CampaignJsonLoader().loadCampaigns(inputStream);
+            for (CampaignRecord campaign : records) {
+                CampaignRecord record = campaignRecordService.findByName(campaign.getName());
+                if (record == null) {
+                    campaignRecordService.create(campaign);
+                } else {
+                    record.setCampaignType(campaign.getCampaignType());
+                    record.setMaxDuration(campaign.getMaxDuration());
+                    record.setMessages(campaign.getMessages());
+                    campaignRecordService.update(record);
+                    List<CampaignEnrollment> enrollments = campaignEnrollmentDataService.findByCampaignName(record.getName());
+                    for (CampaignEnrollment enrollment : enrollments) {
+                        CampaignRequest request = new CampaignRequest();
+                        request.setCampaignName(record.getName());
+                        request.setExternalId(enrollment.getExternalId());
+                        request.setStartTime(enrollment.getDeliverTime());
+                        request.setReferenceDate(enrollment.getReferenceDate());
+                        updateEnrollment(request, enrollment.getId());
+                    }
+                }
+            }
+        }
+    }
+
+    @PostConstruct
+    public void loadCampaignsJson() {
+        try (InputStream inputStream = settingsFacade.getRawConfig(MESSAGE_CAMPAIGNS_JSON_FILENAME)) {
             List<CampaignRecord> records = new CampaignJsonLoader().loadCampaigns(inputStream);
             for (CampaignRecord record : records) {
                 if(campaignRecordService.findByName(record.getName()) == null) {
                     campaignRecordService.create(record);
                 }
             }
+        } catch (IOException e) {
+            LOG.error("Error while reading Message Campaign JSON file", e);
         }
     }
 
