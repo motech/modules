@@ -61,7 +61,7 @@ public class UpdateCriteria {
     }
 
     /**
-     * Marks that name field of alert is to be updated and stores the new value
+     * Marks that priority field of alert is to be updated and stores the new value
      *
      * @param newPriority New value for the priority field of alert
      * @return Instance with the current criterion added to it.
@@ -72,7 +72,7 @@ public class UpdateCriteria {
     }
 
     /**
-     * Marks that name field of alert is to be updated and stores the new value
+     * Marks that data field of alert is to be updated and stores the new value
      *
      * @param newData New property => value pairs to be added / updated to the data field of alert
      * @return Instance with the current criterion added to it.
