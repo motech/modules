@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.sms.SmsEventParams;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -66,10 +67,18 @@ public class OutgoingSms {
         this.deliveryTime = deliveryTime;
     }
 
+    public OutgoingSms(String config, String recipient, String message, DateTime deliveryTime) {
+        this(config, Arrays.asList(recipient), message, deliveryTime);
+    }
+
     public OutgoingSms(String config, List<String> recipients, String message) {
         this.recipients = recipients;
         this.message = message;
         this.config = config;
+    }
+
+    public OutgoingSms(String config, String recipient, String message) {
+        this(config, Arrays.asList(recipient), message);
     }
 
     public OutgoingSms(List<String> recipients, String message, DateTime deliveryTime) {
@@ -78,10 +87,17 @@ public class OutgoingSms {
         this.deliveryTime = deliveryTime;
     }
 
-    public OutgoingSms(List<String> recipients, String message) {
+    public OutgoingSms(String recipient, String message, DateTime deliveryTime) {
+        this(Arrays.asList(recipient), message, deliveryTime);
+    }
 
+    public OutgoingSms(List<String> recipients, String message) {
         this.recipients = recipients;
         this.message = message;
+    }
+
+    public OutgoingSms(String recipient, String message) {
+        this(Arrays.asList(recipient), message);
     }
 
     public String getConfig() {
