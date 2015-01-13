@@ -3,7 +3,6 @@ package org.motechproject.messagecampaign.service;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.motechproject.config.core.constants.ConfigurationConstants;
-import org.motechproject.config.service.ConfigurationService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.event.listener.annotations.MotechListener;
@@ -59,9 +58,6 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
 
     @Autowired
     private CommonsMultipartResolver commonsMultipartResolver;
-
-    @Autowired
-    private ConfigurationService configurationService;
 
     @Autowired
     public MessageCampaignServiceImpl(EnrollmentService enrollmentService, CampaignEnrollmentDataService campaignEnrollmentDataService, CampaignEnrollmentRecordMapper campaignEnrollmentRecordMapper,
@@ -274,7 +270,7 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
 
     @MotechListener(subjects = ConfigurationConstants.FILE_CHANGED_EVENT_SUBJECT)
     public void changeMaxUploadSize(MotechEvent event) {
-        String uploadSize = configurationService.getPlatformSettings().getUploadSize();
+        String uploadSize = settingsFacade.getPlatformSettings().getUploadSize();
 
         if (StringUtils.isNotBlank(uploadSize)) {
             commonsMultipartResolver.setMaxUploadSize(Long.valueOf(uploadSize));

@@ -3,7 +3,6 @@ package org.motechproject.commcare.web;
 import org.motechproject.commcare.domain.CommcareDataForwardingEndpoint;
 import org.motechproject.commcare.domain.SettingsDto;
 import org.motechproject.commcare.service.CommcareDataForwardingEndpointService;
-import org.motechproject.config.service.ConfigurationService;
 import org.motechproject.server.config.SettingsFacade;
 import org.osgi.framework.BundleException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +32,6 @@ public class SettingsController {
     private static final String FORWARD_FORM_STUBS_KEY = "forwardFormStubs";
     private static final String FORWARD_SCHEMA_CHANGES_KEY = "forwardAppStructure";
 
-    @Autowired
-    private ConfigurationService settingsService;
 
     @Autowired
     private CommcareDataForwardingEndpointService forwardingEndpointService;
@@ -116,18 +113,18 @@ public class SettingsController {
     }
 
     private String getCasesUrl() {
-        return settingsService.getPlatformSettings().getServerUrl() + "/module/commcare/cases/";
+        return settingsFacade.getPlatformSettings().getServerUrl() + "/module/commcare/cases/";
     }
 
     private String getFormsUrl() {
-        return settingsService.getPlatformSettings().getServerUrl() + "/module/commcare/forms/";
+        return settingsFacade.getPlatformSettings().getServerUrl() + "/module/commcare/forms/";
     }
 
     private String getFormStubsUrl() {
-        return settingsService.getPlatformSettings().getServerUrl() + "/module/commcare/stub/";
+        return settingsFacade.getPlatformSettings().getServerUrl() + "/module/commcare/stub/";
     }
 
     private String getSchemaChangeUrl() {
-        return settingsService.getPlatformSettings().getServerUrl() + "/module/commcare/appSchemaChange/";
+        return settingsFacade.getPlatformSettings().getServerUrl() + "/module/commcare/appSchemaChange/";
     }
 }

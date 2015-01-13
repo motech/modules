@@ -95,4 +95,9 @@ public class ConfigServiceImpl implements ConfigService {
     public boolean hasConfigs() {
         return !configs.isEmpty();
     }
+
+    @Override
+    public String getServerUrl() {
+        return settingsFacade.getPlatformSettings().getServerUrl();
+    }
 }

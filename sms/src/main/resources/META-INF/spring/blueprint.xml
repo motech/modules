@@ -66,9 +66,6 @@
 
     <osgi:service ref="smsAuditService" interface="org.motechproject.sms.audit.SmsAuditService" />
 
-    <osgi:reference id="configurationService"
-                    interface="org.motechproject.config.service.ConfigurationService"/>
-
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay" />
 
     <osgi:reference id="eventListenerRegistryService"

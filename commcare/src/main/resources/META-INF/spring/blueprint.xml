@@ -62,9 +62,6 @@
     <osgi:reference id="eventListenerRegistry"
                     interface="org.motechproject.event.listener.EventListenerRegistryService"/>
 
-    <osgi:reference id="configurationService"
-                    interface="org.motechproject.config.service.ConfigurationService"/>
-
     <osgi:reference id="commcareApplicationDataService"
                     interface="org.motechproject.commcare.service.CommcareApplicationDataService"/>
 

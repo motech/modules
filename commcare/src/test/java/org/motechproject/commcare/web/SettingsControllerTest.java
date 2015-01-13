@@ -3,15 +3,12 @@ package org.motechproject.commcare.web;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.motechproject.commcare.domain.CommcareDataForwardingEndpoint;
 import org.motechproject.commcare.domain.SettingsDto;
 import org.motechproject.commcare.service.CommcareDataForwardingEndpointService;
 import org.motechproject.server.config.SettingsFacade;
-import org.motechproject.config.service.ConfigurationService;
 import org.motechproject.server.config.domain.SettingsRecord;
 import org.osgi.framework.BundleException;
 
@@ -48,9 +45,6 @@ public class SettingsControllerTest {
 
     @Mock
     private SettingsRecord motechSettings;
-
-    @Mock
-    private ConfigurationService settingsService;
 
     @Mock
     private CommcareDataForwardingEndpointService forwardingEndpointService;
@@ -92,7 +86,7 @@ public class SettingsControllerTest {
 
     @Test
     public void testSaveSettings() throws BundleException {
-        when(settingsService.getPlatformSettings()).thenReturn(motechSettings);
+        when(settingsFacade.getPlatformSettings()).thenReturn(motechSettings);
         when(motechSettings.getServerUrl()).thenReturn("http://motechtest.org");
 
         SettingsDto dto = new SettingsDto();

@@ -10,7 +10,6 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.motechproject.admin.service.StatusMessageService;
-import org.motechproject.config.service.ConfigurationService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.sms.audit.SmsRecord;
@@ -48,9 +47,9 @@ public class SmsHttpService {
 
     private static final String SMS_MODULE = "motech-sms";
     private static final Logger LOGGER = LoggerFactory.getLogger(SmsHttpService.class);
+
     private TemplateService templateService;
     private ConfigService configService;
-    private ConfigurationService configurationService;
     private EventRelay eventRelay;
     private HttpClient commonsHttpClient;
     private StatusMessageService statusMessageService;
@@ -59,11 +58,10 @@ public class SmsHttpService {
     @Autowired
     public SmsHttpService(@Qualifier("templateService") TemplateService templateService,
                           @Qualifier("configService") ConfigService configService,
-                          ConfigurationService configurationService, EventRelay eventRelay,
-                          HttpClient httpClient, SmsRecordsDataService smsRecordsDataService) {
+                          EventRelay eventRelay, HttpClient httpClient, SmsRecordsDataService smsRecordsDataService,
+                          StatusMessageService statusMessageService) {
         this.templateService = templateService;
         this.configService = configService;
-        this.configurationService = configurationService;
         this.eventRelay = eventRelay;
         this.commonsHttpClient = httpClient;
         this.statusMessageService = statusMessageService;
@@ -133,8 +131,7 @@ public class SmsHttpService {
         props.put("recipients", template.recipientsAsString(sms.getRecipients()));
         props.put("message", sms.getMessage());
         props.put("motechId", sms.getMotechId());
-        props.put("callback", configurationService.getPlatformSettings().getServerUrl() + "/module/sms/status/" +
-                config.getName());
+        props.put("callback", configService.getServerUrl() + "/module/sms/status/" + config.getName());
 
         for (ConfigProp configProp : config.getProps()) {
             props.put(configProp.getName(), configProp.getValue());

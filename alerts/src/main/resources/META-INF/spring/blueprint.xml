@@ -14,8 +14,6 @@
     <context:annotation-config/>
     <mvc:annotation-driven/>
 
-    <osgi:reference id="configurationServiceOsgi" interface="org.motechproject.config.service.ConfigurationService"/>
-
     <osgi:reference id="eventListenerRegistryServiceOsgi" interface="org.motechproject.event.listener.EventListenerRegistryService"/>
 
     <osgi:reference id="alertsDataServiceOSGi" interface="org.motechproject.alerts.contract.AlertsDataService"/>

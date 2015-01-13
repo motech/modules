@@ -12,7 +12,6 @@ import org.motechproject.commcare.service.CommcareDataForwardingEndpointService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.server.config.SettingsFacade;
-import org.motechproject.config.service.ConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -32,8 +31,6 @@ import static org.motechproject.commcare.events.constants.EventSubjects.SCHEMA_C
 @Controller
 @RequestMapping("/connection")
 public class StubConnectionController {
-    @Autowired
-    private ConfigurationService settingsService;
 
     @Autowired
     private SettingsFacade settingsFacade;
@@ -114,19 +111,19 @@ public class StubConnectionController {
     }
 
     private String getCasesUrl() {
-        return settingsService.getPlatformSettings().getServerUrl() + "/module/commcare/cases/";
+        return settingsFacade.getPlatformSettings().getServerUrl() + "/module/commcare/cases/";
     }
 
     private String getFormsUrl() {
-        return settingsService.getPlatformSettings().getServerUrl() + "/module/commcare/forms/";
+        return settingsFacade.getPlatformSettings().getServerUrl() + "/module/commcare/forms/";
     }
 
     private String getFormStubsUrl() {
-        return settingsService.getPlatformSettings().getServerUrl() + "/module/commcare/stub/";
+        return settingsFacade.getPlatformSettings().getServerUrl() + "/module/commcare/stub/";
     }
 
     private String getAppStructureUrl() {
-        return settingsService.getPlatformSettings().getServerUrl() + "/module/commcare/appSchemaChange/";
+        return settingsFacade.getPlatformSettings().getServerUrl() + "/module/commcare/appSchemaChange/";
     }
 }
 

@@ -18,4 +18,5 @@ public interface ConfigService {
     Config getConfigOrDefault(String name);
     void updateConfigs(Configs configs);
     boolean hasConfigs();
+    String getServerUrl();
 }

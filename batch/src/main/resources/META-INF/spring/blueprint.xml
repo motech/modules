@@ -14,8 +14,9 @@
         interface="org.motechproject.batch.service.JobTriggerService" />
 
     <context:annotation-config />
+
     <bean id="multipartResolver"
-        class="org.springframework.web.multipart.commons.CommonsMultipartResolver"></bean>
+        class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 
     <osgi:reference id="jobRepo"
         interface="org.motechproject.batch.mds.service.BatchJobMDSService" />
