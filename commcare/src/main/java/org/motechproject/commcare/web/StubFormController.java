@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 public class StubFormController {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOG = LoggerFactory.getLogger(StubFormController.class);
 
     private EventRelay eventRelay;
 
@@ -38,14 +38,14 @@ public class StubFormController {
 
     @RequestMapping({ "/stub" })
     public ModelAndView receiveFormEvent(@RequestBody String body, HttpServletResponse response) {
-
+        LOG.trace("Received request for mapping /stub: {}", body);
 
         FormStubJson formStub = null;
 
         try {
             formStub = (FormStubJson) jsonReader.readFromString(body, FormStubJson.class);
         } catch (JsonParseException e) {
-            logger.warn("Unable to parse Json: " + e.getMessage());
+            LOG.warn("Unable to parse Json: " + e.getMessage());
             MotechEvent formFailEvent = new MotechEvent(EventSubjects.FORM_STUB_FAIL_EVENT);
             eventRelay.sendEventMessage(formFailEvent);
             return null;
@@ -60,7 +60,7 @@ public class StubFormController {
 
             eventRelay.sendEventMessage(formEvent);
         } else {
-            logger.error("Unable to parse form stub: " + body);
+            LOG.error("Unable to parse form stub: " + body);
         }
 
         return null;

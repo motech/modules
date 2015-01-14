@@ -9,6 +9,8 @@ import org.motechproject.commcare.service.impl.CommcareFormsEventParser;
 import org.motechproject.commons.api.TasksEventParser;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -37,6 +39,7 @@ import static org.motechproject.commcare.parser.FullFormParser.FORM;
  */
 @Controller
 public class FullFormController {
+    private static final Logger LOG = LoggerFactory.getLogger(FullFormController.class);
     private EventRelay eventRelay;
 
     @Autowired
@@ -47,6 +50,8 @@ public class FullFormController {
     @RequestMapping(value = "/forms")
     @ResponseStatus(HttpStatus.OK)
     public void receiveForm(@RequestBody String body, HttpServletRequest request) {
+        LOG.trace("Received request for mapping /forms: {}", body);
+
         FullFormParser parser = new FullFormParser(body);
         FormValueElement formValueElement = null;
         Map<String, Object> parameters = new HashMap<>();

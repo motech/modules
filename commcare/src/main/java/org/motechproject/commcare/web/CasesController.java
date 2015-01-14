@@ -63,7 +63,6 @@ public class CasesController {
 
     @RequestMapping("/cases")
     public ModelAndView receiveCase(HttpServletRequest request, HttpServletResponse response) {
-
         String caseXml = "";
 
         try {
@@ -71,6 +70,8 @@ public class CasesController {
         } catch (IOException e1) {
             LOG.error(e1.getMessage(), e1);
         }
+        LOG.trace("Received request for mapping /cases: {}", caseXml);
+
         CaseParser<CaseXml> parser = new CaseParser<>(CaseXml.class, caseXml);
 
         CaseXml caseInstance = null;

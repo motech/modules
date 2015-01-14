@@ -2,6 +2,8 @@ package org.motechproject.commcare.web;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -12,6 +14,7 @@ import static org.motechproject.commcare.events.constants.EventSubjects.SCHEMA_C
 
 @Controller
 public class AppSchemaChangeController {
+    private static final Logger LOG = LoggerFactory.getLogger(AppSchemaChangeController.class);
     private EventRelay eventRelay;
 
     @Autowired
@@ -22,6 +25,7 @@ public class AppSchemaChangeController {
     @RequestMapping(value = "/appSchemaChange")
     @ResponseStatus(HttpStatus.OK)
     public void receiveSchemaChange() {
+        LOG.trace("Received schema change request.");
         eventRelay.sendEventMessage(new MotechEvent(SCHEMA_CHANGE_EVENT));
     }
 }
