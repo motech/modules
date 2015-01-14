@@ -41,8 +41,18 @@ public interface MessageCampaignService {
 
     Map<String, List<DateTime>> getCampaignTimings(String externalId, String campaignName, DateTime startDate, DateTime endDate);
 
+    /**
+     * Updates existing campaign enrollment with data specified in the request.
+     *
+     * @param enrollRequest
+     * @param enrollmentId
+     */
     void updateEnrollment(CampaignRequest enrollRequest, Long enrollmentId);
 
+    /**
+     * Unenrolls all campaigns enrollment which match criteria provided by a CampaignEnrollmentsQuery object.
+     * @param query
+     */
     void stopAll(CampaignEnrollmentsQuery query);
 
     void saveCampaign(CampaignRecord campaign);
