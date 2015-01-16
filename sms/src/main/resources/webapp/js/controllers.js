@@ -8,7 +8,7 @@
      * Send
      *
      */
-    controllers.controller('SendController', function ($log, $scope, $timeout, $http) {
+    controllers.controller('SmsSendCtrl', function ($log, $scope, $timeout, $http) {
         $scope.sms = {};
         $scope.dt = "now";
         $scope.messages = [];
@@ -72,7 +72,7 @@
      *
      */
 
-    controllers.controller('LogController', function ($scope, $http) {
+    controllers.controller('SmsLogCtrl', function ($scope, $http) {
         $scope.log = [];
 
         innerLayout({
@@ -90,7 +90,7 @@
      * Settings
      *
      */
-    controllers.controller('SettingsController', function ($scope, $http, $timeout) {
+    controllers.controller('SmsSettingsCtrl', function ($scope, $http, $timeout) {
         $scope.errors = [];
         $scope.messages = [];
         $scope.dupeNames = [];

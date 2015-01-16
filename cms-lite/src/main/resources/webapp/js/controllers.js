@@ -6,7 +6,7 @@
 
     var controllers = angular.module('cmslite.controllers', []);
 
-    controllers.controller('ResourceCtrl', function ($scope, $rootScope, $http, Resources) {
+    controllers.controller('CmsResourceCtrl', function ($scope, $rootScope, $http, Resources) {
         innerLayout({
             spacing_closed: 30,
             east__minSize: 200,

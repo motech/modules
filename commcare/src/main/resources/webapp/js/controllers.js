@@ -5,7 +5,7 @@
 
     var controllers = angular.module('commcare.controllers', []);
 
-    controllers.controller('SettingsCtrl', function ($scope, Settings, Connection, CommcarePermissions) {
+    controllers.controller('CommcareSettingsCtrl', function ($scope, Settings, Connection, CommcarePermissions) {
 
         $scope.permissions = CommcarePermissions.query();
 
@@ -159,7 +159,7 @@
 
     });
 
-    controllers.controller('ModulesCtrl', function ($scope, Schema) {
+    controllers.controller('CommcareModulesCtrl', function ($scope, Schema) {
         $scope.formError = false;
         $scope.formatJson=function(jsonResponse){return JSON.stringify(jsonResponse, null,4);};
         blockUI();
@@ -172,7 +172,7 @@
         });
     });
 
-    controllers.controller('CaseSchemasCtrl', function ($scope, Cases) {
+    controllers.controller('CommcareCaseSchemasCtrl', function ($scope, Cases) {
         $scope.caseError = false;
 
         innerLayout({

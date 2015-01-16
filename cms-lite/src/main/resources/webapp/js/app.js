@@ -22,7 +22,7 @@
             $routeProvider.when('/cmslite/resources',
                 {
                     templateUrl: '../cmsliteapi/resources/partials/resources.html',
-                    controller: 'ResourceCtrl'
+                    controller: 'CmsResourceCtrl'
                 }
             );
         }

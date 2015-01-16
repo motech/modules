@@ -3,14 +3,14 @@
 
     var controllers = angular.module('messageCampaign.controllers', []);
 
-    controllers.controller('CampaignsCtrl', function ($scope, Campaigns) {
+    controllers.controller('MCCampaignsCtrl', function ($scope, Campaigns) {
 
         $scope.$on('$viewContentLoaded', function () {
             $scope.campaigns = Campaigns.query();
         });
     });
 
-     controllers.controller('EnrollmentsCtrl', function ($scope, $routeParams, Enrollments) {
+     controllers.controller('MCEnrollmentsCtrl', function ($scope, $routeParams, Enrollments) {
 
         $scope.campaignName = $routeParams.campaignName;
 

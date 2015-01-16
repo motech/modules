@@ -8,7 +8,7 @@
      * Templates
      *
      */
-    controllers.controller('IvrTemplatesController', function ($scope, $http, $timeout) {
+    controllers.controller('IvrTemplatesCtrl', function ($scope, $http, $timeout) {
         $scope.errors = [];
         $scope.messages = [];
         $scope.dupeNames = [];
@@ -133,7 +133,7 @@
      * Settings
      *
      */
-    controllers.controller('IvrSettingsController', function ($scope, $http, $timeout) {
+    controllers.controller('IvrSettingsCtrl', function ($scope, $http, $timeout) {
         $scope.errors = [];
         $scope.messages = [];
         $scope.dupeNames = [];

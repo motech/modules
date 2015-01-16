@@ -7,8 +7,8 @@
     ['$routeProvider',
         function ($routeProvider) {
             $routeProvider.
-                when('/sms/send', {templateUrl: '../sms/resources/partials/send.html', controller: 'SendController'}).
-                when('/sms/log', {templateUrl: '../sms/resources/partials/log.html', controller: 'LogController'}).
-                when('/sms/settings', {templateUrl: '../sms/resources/partials/settings.html', controller: 'SettingsController'});
+                when('/sms/send', {templateUrl: '../sms/resources/partials/send.html', controller: 'SmsSendCtrl'}).
+                when('/sms/log', {templateUrl: '../sms/resources/partials/log.html', controller: 'SmsLogCtrl'}).
+                when('/sms/settings', {templateUrl: '../sms/resources/partials/settings.html', controller: 'SmsSettingsCtrl'});
     }]);
 }());
