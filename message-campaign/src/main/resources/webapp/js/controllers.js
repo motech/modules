@@ -187,7 +187,7 @@
                     if (error.status === 403) {
                         motechAlert('msgCampaign.settings.error.permission', 'msgCampaign.error');
                     } else {
-                        motechAlert('msgCampaign.settings.error.save', 'msgCampaign.error');
+                        jAlert(error.responseText, $scope.msg('msgCampaign.error'));
                     }
                     unblockUI();
                 }
