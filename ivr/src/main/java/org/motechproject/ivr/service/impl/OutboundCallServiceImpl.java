@@ -41,6 +41,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -59,6 +60,8 @@ public class OutboundCallServiceImpl implements OutboundCallService {
     private EventRelay eventRelay;
     private StatusMessageService statusMessageService;
     private static final String MODULE_NAME = "ivr";
+    public static final List<Integer> ACCEPTABLE_IVR_RESPONSE_STATUSES = Arrays.asList(HttpStatus.SC_OK,
+            HttpStatus.SC_ACCEPTED, HttpStatus.SC_CREATED);
 
     @Autowired
     public OutboundCallServiceImpl(@Qualifier("configService") ConfigService configService,
@@ -123,7 +126,7 @@ public class OutboundCallServiceImpl implements OutboundCallService {
 
         //todo: it's possible that some IVR providers return an HTTP 200 and an error code in the response body.
         //todo: If we encounter such a provider, we'll have to beef up the response processing here
-        if (statusLine.getStatusCode() != HttpStatus.SC_OK) {
+        if (!ACCEPTABLE_IVR_RESPONSE_STATUSES.contains(statusLine.getStatusCode())) {
             String message = String.format("Could not initiate call: %s", statusLine.toString());
             LOGGER.info(message);
             statusMessageService.warn(message, MODULE_NAME);
