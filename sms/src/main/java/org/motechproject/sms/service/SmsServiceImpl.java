@@ -34,7 +34,8 @@ import static org.motechproject.sms.audit.SmsDirection.OUTBOUND;
 @Service("smsService")
 public class SmsServiceImpl implements SmsService {
 
-    private Logger logger = LoggerFactory.getLogger(SmsServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SmsServiceImpl.class);
+
     private EventRelay eventRelay;
     private MotechSchedulerService schedulerService;
     private TemplateService templateService;
@@ -118,7 +119,7 @@ public class SmsServiceImpl implements SmsService {
         if (!configService.hasConfigs()) {
             String message = String.format("Trying to send an SMS, but there are no SMS configs on this server. " +
                     "outgoingSms = %s", sms.toString());
-            logger.error(message);
+            LOGGER.error(message);
             throw new IllegalStateException(message);
         }
 
@@ -158,7 +159,7 @@ public class SmsServiceImpl implements SmsService {
                     event.getParameters().put(MotechSchedulerService.JOB_ID_KEY, motechId);
                     event.getParameters().put(SmsEventParams.DELIVERY_TIME, dt);
                     schedulerService.safeScheduleRunOnceJob(new RunOnceSchedulableJob(event, dt.toDate()));
-                    logger.info(String.format("Scheduling message [%s] to [%s] at %s.",
+                    LOGGER.info(String.format("Scheduling message [%s] to [%s] at %s.",
                             part.replace("\n", "\\n"), recipients, sms.getDeliveryTime()));
                     //add one millisecond to the next sms part so they will be delivered in order
                     //without that it seems Quartz doesn't fire events in the order they were scheduled
@@ -173,7 +174,7 @@ public class SmsServiceImpl implements SmsService {
                     String motechId = generateMotechId();
                     eventRelay.sendEventMessage(outboundEvent(SmsEventSubjects.PENDING, config.getName(), recipients,
                             part, motechId, null, null, null, null));
-                    logger.info("Sending message [{}] to [{}].", part.replace("\n", "\\n"), recipients);
+                    LOGGER.info("Sending message [{}] to [{}].", part.replace("\n", "\\n"), recipients);
                     for (String recipient : recipients) {
                         smsRecordsDataService.create(new SmsRecord(config.getName(), OUTBOUND, recipient, part, now(),
                                 DeliveryStatus.PENDING, null, motechId, null, null));

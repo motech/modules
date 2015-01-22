@@ -22,7 +22,7 @@ import java.util.Map;
 @RequestMapping(value = "/call")
 public class CallController {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(CallController.class);
     private OutboundCallService outboundCallService;
 
     @Autowired
@@ -42,7 +42,7 @@ public class CallController {
     public void handle(@PathVariable String configName, @RequestParam Map<String, String> params,
                        @RequestHeader Map<String, String> headers) {
 
-        logger.debug(String.format("handle(configName = %s, params = %s, headers = %s)", configName, params, headers));
+        LOGGER.debug(String.format("handle(configName = %s, params = %s, headers = %s)", configName, params, headers));
 
         outboundCallService.initiateCall(configName, params);
     }

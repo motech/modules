@@ -24,7 +24,7 @@ import static org.motechproject.commons.date.util.DateUtil.newDateTime;
 @Component
 public class AbsoluteCampaignSchedulerService extends CampaignSchedulerService<AbsoluteCampaignMessage, AbsoluteCampaign> {
 
-    private Logger logger = Logger.getLogger(this.getClass());
+    private static final Logger LOGGER = Logger.getLogger(AbsoluteCampaignSchedulerService.class);
 
     @Autowired
     public AbsoluteCampaignSchedulerService(MotechSchedulerService schedulerService, CampaignRecordService campaignRecordService) {
@@ -41,7 +41,7 @@ public class AbsoluteCampaignSchedulerService extends CampaignSchedulerService<A
         try {
             getSchedulerService().scheduleRunOnceJob(runOnceSchedulableJob);
         } catch (IllegalArgumentException e) {
-            logger.info("Unable to schedule absolute campaign message " + campaignMessage.getMessageKey() + " for ID: " + enrollment.getExternalId() + " enrolled in campaign: " + enrollment.getCampaignName() + " - Message date is in the past");
+            LOGGER.info("Unable to schedule absolute campaign message " + campaignMessage.getMessageKey() + " for ID: " + enrollment.getExternalId() + " enrolled in campaign: " + enrollment.getCampaignName() + " - Message date is in the past");
         }
     }
 

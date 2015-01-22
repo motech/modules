@@ -44,7 +44,7 @@ public class ResourceController {
 
     private static final String NOT_FOUND_RESPONSE = "Content not found";
 
-    private static final Logger LOG = LoggerFactory.getLogger(ResourceController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ResourceController.class);
 
     @Autowired
     private CMSLiteService cmsLiteService;
@@ -207,7 +207,7 @@ public class ResourceController {
     @RequestMapping(value = "/stream/{language}/{name}", method = RequestMethod.GET)
     public void getStreamContent(@PathVariable String language, @PathVariable String name, HttpServletResponse response)
             throws IOException {
-        LOG.info(String.format("Getting resource for : stream:%s:%s", language, name));
+        LOGGER.info(String.format("Getting resource for : stream:%s:%s", language, name));
 
         try (OutputStream out = response.getOutputStream()) {
 
@@ -220,7 +220,7 @@ public class ResourceController {
 
             out.write(ArrayUtils.toPrimitive(streamContent.getContent()));
         } catch (Exception e) {
-            LOG.error(String.format("Content not found for : stream:%s:%s%n:%s", language, name,
+            LOGGER.error(String.format("Content not found for : stream:%s:%s%n:%s", language, name,
                     Arrays.toString(e.getStackTrace())));
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, NOT_FOUND_RESPONSE);
         }
@@ -229,7 +229,7 @@ public class ResourceController {
     @RequestMapping(value = "/string/{language}/{name}", method = RequestMethod.GET)
     public void getStringContent(@PathVariable String language, @PathVariable String name, HttpServletResponse response)
             throws IOException {
-        LOG.info(String.format("Getting resource for : string:%s:%s", language, name));
+        LOGGER.info(String.format("Getting resource for : string:%s:%s", language, name));
 
         PrintWriter writer = null;
 
@@ -244,7 +244,7 @@ public class ResourceController {
 
             writer.print(stringContent.getValue());
         } catch (Exception e) {
-            LOG.error(String.format("Content not found for : string:%s:%s%n:%s", language, name,
+            LOGGER.error(String.format("Content not found for : string:%s:%s%n:%s", language, name,
                     Arrays.toString(e.getStackTrace())));
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, NOT_FOUND_RESPONSE);
         } finally {

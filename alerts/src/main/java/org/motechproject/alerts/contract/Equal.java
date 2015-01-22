@@ -15,7 +15,7 @@ import static org.apache.commons.beanutils.PropertyUtils.getProperty;
  * @param <T> the type of object value.
  */
 class Equal<T> implements Predicate {
-    private static final Logger LOG = LoggerFactory.getLogger(Equal.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Equal.class);
 
     private String propertyName;
     private T propertyValue;
@@ -35,28 +35,28 @@ class Equal<T> implements Predicate {
 
             IllegalArgumentException iae = new IllegalArgumentException(errorMsg, e);
             if (!initCause(iae, e)) {
-                LOG.error(errorMsg, e);
+                LOGGER.error(errorMsg, e);
             }
             throw iae;
         } catch (IllegalAccessException e) {
             String errorMsg = "Unable to access the property provided.";
             IllegalArgumentException iae = new IllegalArgumentException(errorMsg, e);
             if (!initCause(iae, e)) {
-                LOG.error(errorMsg, e);
+                LOGGER.error(errorMsg, e);
             }
             throw iae;
         } catch (InvocationTargetException e) {
             String errorMsg = "Exception occurred in property's getter";
             IllegalArgumentException iae = new IllegalArgumentException(errorMsg, e);
             if (!initCause(iae, e)) {
-                LOG.error(errorMsg, e);
+                LOGGER.error(errorMsg, e);
             }
             throw iae;
         } catch (NoSuchMethodException e) {
             String errorMsg = "Property not found.";
             IllegalArgumentException iae = new IllegalArgumentException(errorMsg, e);
             if (!initCause(iae, e)) {
-                LOG.error(errorMsg, e);
+                LOGGER.error(errorMsg, e);
             }
             throw iae;
         }

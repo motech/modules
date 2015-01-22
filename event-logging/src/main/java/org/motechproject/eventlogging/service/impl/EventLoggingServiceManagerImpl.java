@@ -20,7 +20,7 @@ import java.util.Set;
 @Component
 public class EventLoggingServiceManagerImpl implements EventLoggingServiceManager {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(EventLoggingServiceManagerImpl.class);
 
     private List<EventLoggingService> eventLoggingServices = new ArrayList<>();
 
@@ -52,19 +52,19 @@ public class EventLoggingServiceManagerImpl implements EventLoggingServiceManage
             String classFullName = eventLoggingService.getClass().getName();
             eventListener = new MotechListenerEventProxy(classFullName, eventLoggingService, method);
         } catch (NoSuchMethodException e) {
-            logger.warn("Unable to write to: add listener for " + eventLoggingService.getClass().getName());
+            LOGGER.warn("Unable to write to: add listener for " + eventLoggingService.getClass().getName());
         } catch (SecurityException e) {
-            logger.warn("Unable to write to: add listener for " + eventLoggingService.getClass().getName());
+            LOGGER.warn("Unable to write to: add listener for " + eventLoggingService.getClass().getName());
         }
 
         List<String> subjectList = new ArrayList<>(subjectsToListenOn);
 
         if (eventListener != null) {
-            logger.debug("Event Listener not null - attempting to register");
+            LOGGER.debug("Event Listener not null - attempting to register");
             eventListenerRegistryService.registerListener(eventListener, subjectList);
         }
 
-        logger.info("Event Listener registered");
+        LOGGER.info("Event Listener registered");
     }
 
     @Override

@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class CaseMapper<T> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CaseMapper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CaseMapper.class);
 
     private Class<T> clazz;
 
@@ -27,7 +27,7 @@ public class CaseMapper<T> {
             BeanUtils.copyProperties(instance, ccCase);
             BeanUtils.populate(instance, ccCase.getFieldValues());
         } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
 
         return instance;
@@ -49,7 +49,7 @@ public class CaseMapper<T> {
             ccCase.setFieldValues(valueMap);
 
         } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
 
         return ccCase;

@@ -43,7 +43,7 @@ import java.util.Map;
 @Service("messageCampaignService")
 public class MessageCampaignServiceImpl implements MessageCampaignService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MessageCampaignServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessageCampaignServiceImpl.class);
 
     private EnrollmentService enrollmentService;
     private CampaignEnrollmentRecordMapper campaignEnrollmentRecordMapper;
@@ -108,7 +108,7 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
 
             relay.sendEventMessage(event);
         } else {
-            LOG.warn("No enrollment with ExternalID {} registered in campaign {}", externalId, campaignName);
+            LOGGER.warn("No enrollment with ExternalID {} registered in campaign {}", externalId, campaignName);
         }
     }
 
@@ -294,7 +294,7 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
                 }
             }
         } catch (IOException e) {
-            LOG.error("Error while reading Message Campaign JSON file", e);
+            LOGGER.error("Error while reading Message Campaign JSON file", e);
         }
     }
 

@@ -30,7 +30,7 @@ import static org.motechproject.commcare.events.constants.EventDataKeys.FIELD_VA
  */
 @Controller
 public class CasesController {
-    private static final Logger LOG = LoggerFactory.getLogger(CasesController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CasesController.class);
 
     private static final String CASE_EVENT_STRATEGY_KEY = "eventStrategy";
     private static final String FULL_DATA_EVENT = "full";
@@ -68,9 +68,9 @@ public class CasesController {
         try {
             caseXml = getRequestBodyAsString(request);
         } catch (IOException e1) {
-            LOG.error(e1.getMessage(), e1);
+            LOGGER.error(e1.getMessage(), e1);
         }
-        LOG.trace("Received request for mapping /cases: {}", caseXml);
+        LOGGER.trace("Received request for mapping /cases: {}", caseXml);
 
         CaseParser<CaseXml> parser = new CaseParser<>(CaseXml.class, caseXml);
 

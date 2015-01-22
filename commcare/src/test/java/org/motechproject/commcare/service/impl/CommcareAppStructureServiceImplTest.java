@@ -26,7 +26,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class CommcareAppStructureServiceImplTest {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommcareAppStructureServiceImplTest.class);
 
     private CommcareAppStructureServiceImpl appStructureService;
 
@@ -89,7 +89,7 @@ public class CommcareAppStructureServiceImplTest {
             URL url = this.getClass().getClassLoader().getResource("json/service/appStructure.json");
             return FileUtils.readFileToString(new File(url.getFile()));
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
             return null;
         }
     }

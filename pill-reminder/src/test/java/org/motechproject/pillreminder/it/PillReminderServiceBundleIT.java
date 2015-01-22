@@ -28,7 +28,6 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -45,7 +44,7 @@ import static org.junit.Assert.assertNotNull;
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class PillReminderServiceBundleIT extends BasePaxIT {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PillReminderServiceBundleIT.class);
+    private final Logger logger = getLogger();
 
     private static final String EXTERNAL_ID = UUID.randomUUID().toString();
 
@@ -69,7 +68,7 @@ public class PillReminderServiceBundleIT extends BasePaxIT {
 
     @Test
     public void shouldSaveTheDailyPillRegimenAndScheduleJob() throws SchedulerException {
-        LOG.debug("Running shouldSaveTheDailyPillRegimenAndScheduleJob");
+        logger.debug("Running shouldSaveTheDailyPillRegimenAndScheduleJob");
 
         ArrayList<MedicineRequest> medicineRequests = new ArrayList<>();
         MedicineRequest medicineRequest1 = new MedicineRequest("m1", startDate, endDate);
@@ -83,9 +82,9 @@ public class PillReminderServiceBundleIT extends BasePaxIT {
         int scheduledJobsNum = scheduler.getTriggerKeys(
                 GroupMatcher.triggerGroupEquals(MotechSchedulerServiceImpl.JOB_GROUP_NAME)).size();
 
-        LOG.debug("We had {} jobs", scheduledJobsNum);
+        logger.debug("We had {} jobs", scheduledJobsNum);
         pillReminderService.createNew(new DailyPillRegimenRequest(EXTERNAL_ID, 2, 15, 5, dosageContracts));
-        LOG.debug("We have {} jobs", scheduler.getTriggerKeys(GroupMatcher.triggerGroupEquals(MotechSchedulerServiceImpl.JOB_GROUP_NAME)).size());
+        logger.debug("We have {} jobs", scheduler.getTriggerKeys(GroupMatcher.triggerGroupEquals(MotechSchedulerServiceImpl.JOB_GROUP_NAME)).size());
 
         assertEquals(scheduledJobsNum + 1,
                 scheduler.getTriggerKeys(
@@ -94,7 +93,7 @@ public class PillReminderServiceBundleIT extends BasePaxIT {
 
     @Test
     public void shouldRenewThePillRegimenAndScheduleJob() throws SchedulerException {
-        LOG.info("Running shouldRenewThePillRegimenAndScheduleJob");
+        logger.info("Running shouldRenewThePillRegimenAndScheduleJob");
 
         ArrayList<MedicineRequest> medicineRequests = new ArrayList<>();
         MedicineRequest medicineRequest1 = new MedicineRequest("m1", startDate, endDate);
@@ -108,9 +107,9 @@ public class PillReminderServiceBundleIT extends BasePaxIT {
         int scheduledJobsNum = scheduler.getTriggerKeys(
                 GroupMatcher.triggerGroupEquals(MotechSchedulerServiceImpl.JOB_GROUP_NAME)).size();
 
-        LOG.debug("We had {} jobs", scheduledJobsNum);
+        logger.debug("We had {} jobs", scheduledJobsNum);
         pillReminderService.createNew(new DailyPillRegimenRequest(EXTERNAL_ID, 2, 15, 5, dosageContracts));
-        LOG.debug("We have {} jobs", scheduler.getTriggerKeys(GroupMatcher.triggerGroupEquals(MotechSchedulerServiceImpl.JOB_GROUP_NAME)).size());
+        logger.debug("We have {} jobs", scheduler.getTriggerKeys(GroupMatcher.triggerGroupEquals(MotechSchedulerServiceImpl.JOB_GROUP_NAME)).size());
 
         ArrayList<DosageRequest> newDosageContracts = new ArrayList<>();
         newDosageContracts.add(new DosageRequest(
@@ -119,7 +118,7 @@ public class PillReminderServiceBundleIT extends BasePaxIT {
                 4, 5, Arrays.asList(new MedicineRequest("m2", DateUtil.today(), DateUtil.today().plusDays(100)))));
 
         pillReminderService.renew(new DailyPillRegimenRequest(EXTERNAL_ID, 2, 15, 5, newDosageContracts));
-        LOG.debug("After renewal we have {} jobs",
+        logger.debug("After renewal we have {} jobs",
                 scheduler.getTriggerKeys(GroupMatcher.triggerGroupEquals(MotechSchedulerServiceImpl.JOB_GROUP_NAME)).size());
 
         assertEquals(scheduledJobsNum + 2,
@@ -132,7 +131,7 @@ public class PillReminderServiceBundleIT extends BasePaxIT {
 
     @Test
     public void shouldFindAndUpdateDosageCurrentDate() {
-        LOG.info("Running shouldFindAndUpdateDosageCurrentDate");
+        logger.info("Running shouldFindAndUpdateDosageCurrentDate");
 
         Medicine medicine = new Medicine("m1", startDate, endDate);
         Medicine medicine2 = new Medicine("m2", startDate, startDate.plusMonths(3));

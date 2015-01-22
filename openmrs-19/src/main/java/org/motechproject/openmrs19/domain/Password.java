@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Password {
-    private final Logger logger = LoggerFactory.getLogger(Password.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Password.class);
 
     private static final int NUMBER_OF_NUMERIC_CHARS_TO_APPEND = 3;
     private Integer length;
@@ -36,7 +36,7 @@ public class Password {
         sb.append(PASSWORD_NUMBER_CHARS[((int) (Math.random() * PASSWORD_NUMBER_CHARS.length))]);
         sb.append(PASSWORD_LOWER_CHARS[((int) (Math.random() * PASSWORD_NUMBER_CHARS.length))]);
         sb.append(PASSWORD_UPPER_CHARS[((int) (Math.random() * PASSWORD_NUMBER_CHARS.length))]);
-        logger.info("password: " + sb.toString());
+        LOGGER.info("password: " + sb.toString());
         return sb.toString();
     }
 

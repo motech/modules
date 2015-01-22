@@ -22,7 +22,7 @@ import java.util.Map;
 @Component
 public class PillRegimenJobScheduler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PillRegimenJobScheduler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PillRegimenJobScheduler.class);
 
     private MotechSchedulerService schedulerService;
 
@@ -40,8 +40,8 @@ public class PillRegimenJobScheduler {
 
     public void unscheduleJobs(PillRegimen regimen) {
         for (Dosage dosage : regimen.getDosages()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Unscheduling jobs for dosage with id {}", dosage.getId());
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Unscheduling jobs for dosage with id {}", dosage.getId());
             }
 
             schedulerService.safeUnscheduleJob(EventKeys.PILLREMINDER_REMINDER_EVENT_SUBJECT_SCHEDULER,
@@ -58,8 +58,8 @@ public class PillRegimenJobScheduler {
                 .withExternalId(pillRegimen.getExternalId())
                 .payload();
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Scheduling reminder job: JobId='%s', DosageId='%d', ExternalId='%s'",
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(String.format("Scheduling reminder job: JobId='%s', DosageId='%d', ExternalId='%s'",
                     dosage.getId().toString(), dosage.getId(), pillRegimen.getExternalId()));
         }
 
