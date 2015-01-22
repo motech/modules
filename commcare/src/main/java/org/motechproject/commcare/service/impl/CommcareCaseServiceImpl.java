@@ -29,14 +29,14 @@ import java.util.Map;
 @Service
 public class CommcareCaseServiceImpl implements CommcareCaseService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommcareCaseServiceImpl.class);
+
     @Autowired
     private CaseTaskXmlConverter converter;
 
     private MotechJsonReader motechJsonReader;
 
     private CommCareAPIHttpClient commcareHttpClient;
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     public CommcareCaseServiceImpl(CommCareAPIHttpClient commcareHttpClient) {
@@ -176,7 +176,7 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
             caseReturned = (CaseJson) motechJsonReader
                     .readFromString(response, CaseJson.class);
         } catch (Exception e) {
-            logger.warn("Exception while trying to read in case JSON: " + e.getMessage());
+            LOGGER.warn("Exception while trying to read in case JSON: " + e.getMessage());
         }
 
         return caseReturned;

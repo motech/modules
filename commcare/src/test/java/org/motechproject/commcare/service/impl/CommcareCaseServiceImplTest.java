@@ -25,7 +25,8 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class CommcareCaseServiceImplTest {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommcareCaseServiceImplTest.class);
 
     private CommcareCaseServiceImpl caseService;
 
@@ -107,7 +108,7 @@ public class CommcareCaseServiceImplTest {
             URL url = this.getClass().getClassLoader().getResource("json/service/cases.json");
             return FileUtils.readFileToString(new File(url.getFile()));
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
             return null;
         }
     }

@@ -36,7 +36,7 @@ import java.util.List;
 @Service("patientService")
 public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
 
-    private static Logger logger = LoggerFactory.getLogger(OpenMRSPatientServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSPatientServiceImpl.class);
 
     private final PatientResource patientResource;
     private final OpenMRSPersonServiceImpl personAdapter;
@@ -60,14 +60,14 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         try {
             patientList = patientResource.queryForPatient(motechId);
         } catch (HttpException e) {
-            logger.error("Failed search for patient by MoTeCH Id: " + motechId);
+            LOGGER.error("Failed search for patient by MoTeCH Id: " + motechId);
             return null;
         }
 
         if (patientList.getResults().size() == 0) {
             return null;
         } else if (patientList.getResults().size() > 1) {
-            logger.warn("Search for patient by id returned more than 1 result");
+            LOGGER.warn("Search for patient by id returned more than 1 result");
         }
 
         return getPatient(patientList.getResults().get(0).getUuid());
@@ -81,7 +81,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         try {
             patient = patientResource.getPatientById(patientId);
         } catch (HttpException e) {
-            logger.error("Failed to get patient by id: " + patientId);
+            LOGGER.error("Failed to get patient by id: " + patientId);
             return null;
         }
 
@@ -89,13 +89,13 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         try {
             motechIdentifierUuid = patientResource.getMotechPatientIdentifierUuid();
         } catch (HttpException e) {
-            logger.error("There was an exception retrieving the MoTeCH Identifier Type UUID");
+            LOGGER.error("There was an exception retrieving the MoTeCH Identifier Type UUID");
             return null;
         }
 
         Identifier identifier = patient.getIdentifierByIdentifierType(motechIdentifierUuid);
         if (identifier == null) {
-            logger.warn("No MoTeCH Id found on Patient with id: " + patient.getUuid());
+            LOGGER.warn("No MoTeCH Id found on Patient with id: " + patient.getUuid());
         }
 
         // since OpenMRS 1.9, patient identifiers no longer require an explicit
@@ -140,7 +140,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
                 openMRSPatient.getFacility());
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_PATIENT_SUBJECT, EventHelper.patientParameters(savedPatient)));
         } catch (HttpException e) {
-            logger.error("Failed to create a patient in OpenMRS with MoTeCH Id: " + patient.getMotechId());
+            LOGGER.error("Failed to create a patient in OpenMRS with MoTeCH Id: " + patient.getMotechId());
             return null;
         }
 
@@ -170,12 +170,12 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         try {
             motechPatientIdentiferTypeUuid = patientResource.getMotechPatientIdentifierUuid();
         } catch (HttpException e) {
-            logger.error("There was an exception retrieving the MoTeCH Identifier Type UUID");
+            LOGGER.error("There was an exception retrieving the MoTeCH Identifier Type UUID");
             return null;
         }
 
         if (StringUtils.isBlank(motechPatientIdentiferTypeUuid)) {
-            logger.error("Cannot save a patient until a MoTeCH Patient Idenitifer Type is created in the OpenMRS");
+            LOGGER.error("Cannot save a patient until a MoTeCH Patient Idenitifer Type is created in the OpenMRS");
             return null;
         }
 
@@ -202,7 +202,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         try {
             result = patientResource.queryForPatient(name);
         } catch (HttpException e) {
-            logger.error("Failed search for patient name: " + name);
+            LOGGER.error("Failed search for patient name: " + name);
             return Collections.emptyList();
         }
 
@@ -273,7 +273,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         try {
             patientResource.updatePatientMotechId(patient.getPatientId(), patient.getMotechId());
         } catch (HttpException e) {
-            logger.error("Failed to update OpenMRS patient with id: " + patient.getPatientId());
+            LOGGER.error("Failed to update OpenMRS patient with id: " + patient.getPatientId());
             throw new OpenMRSException(e);
         }
 
@@ -289,7 +289,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
 
         OpenMRSPatient patient = getPatientByMotechId(motechId);
         if (patient == null) {
-            logger.error("Cannot decease patient because no patient exist with motech id: " + motechId);
+            LOGGER.error("Cannot decease patient because no patient exist with motech id: " + motechId);
             throw new PatientNotFoundException("No Patient found with Motech Id: " + motechId);
         }
 

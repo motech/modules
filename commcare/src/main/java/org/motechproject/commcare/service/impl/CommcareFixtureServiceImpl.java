@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 public class CommcareFixtureServiceImpl implements CommcareFixtureService {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommcareFixtureServiceImpl.class);
 
     private MotechJsonReader motechJsonReader;
 
@@ -50,7 +50,7 @@ public class CommcareFixtureServiceImpl implements CommcareFixtureService {
         try {
             fixture = (CommcareFixture) motechJsonReader.readFromString(returnJson, commcareFixtureType);
         } catch (JsonParseException e) {
-            logger.info("Unable to parse JSON from Commcare: " + returnJson);
+            LOGGER.info("Unable to parse JSON from Commcare: " + returnJson);
         }
 
         return fixture;

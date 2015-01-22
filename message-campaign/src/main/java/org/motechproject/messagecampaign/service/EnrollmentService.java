@@ -16,7 +16,7 @@ import java.util.Objects;
 @Service
 public class EnrollmentService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EnrollmentService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EnrollmentService.class);
 
     @Autowired
     private CampaignEnrollmentDataService campaignEnrollmentDataService;
@@ -30,9 +30,9 @@ public class EnrollmentService {
             campaignEnrollmentDataService.update(existingEnrollment);
         } else if (Objects.equals(existingEnrollment.getReferenceDate(), enrollment.getReferenceDate()) &&
                 Objects.equals(existingEnrollment.getDeliverTime(), enrollment.getDeliverTime())) {
-            LOG.warn("Attempted to register duplicate enrollment with ExternalID {} and Campaign name {}, with the" +
-                    "same reference date and deliver time: {}/{}", new Object[]{ enrollment.getExternalId(),
-                enrollment.getCampaignName(), enrollment.getReferenceDate(), enrollment.getDeliverTime() });
+            LOGGER.warn("Attempted to register duplicate enrollment with ExternalID {} and Campaign name {}, with the" +
+                    "same reference date and deliver time: {}/{}", new Object[]{enrollment.getExternalId(),
+                    enrollment.getCampaignName(), enrollment.getReferenceDate(), enrollment.getDeliverTime()});
         } else {
             throw new IllegalArgumentException(String.format("Enrollment with ExternalID %s for Campaign %s, already exists, with different " +
                     "reference date and delivery time: %s/%s", enrollment.getExternalId(), enrollment.getCampaignName(),

@@ -28,7 +28,8 @@ import java.io.UnsupportedEncodingException;
 
 @Component
 public class CommCareAPIHttpClient {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommCareAPIHttpClient.class);
 
     private HttpClient commonsHttpClient;
     private SettingsFacade settingsFacade;
@@ -109,7 +110,7 @@ public class CommCareAPIHttpClient {
             stringEntity = new StringRequestEntity(body, "application/json",
                     "ISO-8859-1");
         } catch (UnsupportedEncodingException e) {
-            logger.warn("UnsupportedEncodingException, this should not occur: " + e.getMessage()); //This exception cannot happen here
+            LOGGER.warn("UnsupportedEncodingException, this should not occur: " + e.getMessage()); //This exception cannot happen here
         }
 
         postMethod.setRequestEntity(stringEntity);
@@ -125,9 +126,9 @@ public class CommCareAPIHttpClient {
         try {
             status = commonsHttpClient.executeMethod(httpMethod);
         } catch (HttpException e) {
-            logger.warn("HttpException while sending request to CommCareHQ: " + e.getMessage());
+            LOGGER.warn("HttpException while sending request to CommCareHQ: " + e.getMessage());
         } catch (IOException e) {
-            logger.warn("IOException while sending request to CommcareHQ: " + e.getMessage());
+            LOGGER.warn("IOException while sending request to CommcareHQ: " + e.getMessage());
         } finally {
             httpMethod.releaseConnection();
         }
@@ -145,7 +146,7 @@ public class CommCareAPIHttpClient {
             stringEntity = new StringRequestEntity(body, "application/json",
                     "ISO-8859-1");
         } catch (UnsupportedEncodingException e) {
-            logger.warn("UnsupportedEncodingException, this should not occur: " + e.getMessage()); //This exception cannot happen here
+            LOGGER.warn("UnsupportedEncodingException, this should not occur: " + e.getMessage()); //This exception cannot happen here
         }
 
         putMethod.setRequestEntity(stringEntity);
@@ -175,9 +176,9 @@ public class CommCareAPIHttpClient {
             InputStream responseBodyAsStream = getMethod.getResponseBodyAsStream();
             return IOUtils.toString(responseBodyAsStream);
         } catch (HttpException e) {
-            logger.warn("HttpException while sending request to CommCare: " + e.getMessage());
+            LOGGER.warn("HttpException while sending request to CommCare: " + e.getMessage());
         } catch (IOException e) {
-            logger.warn("IOException while sending request to CommCare: " + e.getMessage());
+            LOGGER.warn("IOException while sending request to CommCare: " + e.getMessage());
         } finally {
             getMethod.releaseConnection();
         }
@@ -204,7 +205,7 @@ public class CommCareAPIHttpClient {
             stringEntity = new StringRequestEntity(body, "text/xml",
                     "ISO-8859-1");
         } catch (UnsupportedEncodingException e) {
-            logger.warn("UnsupportedEncodingException, this should not occur: " + e.getMessage()); //This exception cannot happen here
+            LOGGER.warn("UnsupportedEncodingException, this should not occur: " + e.getMessage()); //This exception cannot happen here
         }
 
         postMethod.setRequestEntity(stringEntity);
@@ -219,9 +220,9 @@ public class CommCareAPIHttpClient {
             status = commonsHttpClient.executeMethod(postMethod);
             response = postMethod.getResponseBodyAsString();
         } catch (HttpException e) {
-            logger.warn("HttpException while posting case xml to CommCareHQ: " + e.getMessage());
+            LOGGER.warn("HttpException while posting case xml to CommCareHQ: " + e.getMessage());
         } catch (IOException e) {
-            logger.warn("IOException while posting case xml to CommcareHQ: " + e.getMessage());
+            LOGGER.warn("IOException while posting case xml to CommcareHQ: " + e.getMessage());
         }
 
         OpenRosaResponseParser responseParser = new OpenRosaResponseParser();

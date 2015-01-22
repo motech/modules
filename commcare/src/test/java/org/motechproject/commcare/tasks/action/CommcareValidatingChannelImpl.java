@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct;
 @Service("commcareValidatingChannelImpl")
 public class CommcareValidatingChannelImpl implements CommcareValidatingChannel {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CommcareValidatingChannelImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommcareValidatingChannelImpl.class);
 
     private boolean executed;
     private String pregnant;

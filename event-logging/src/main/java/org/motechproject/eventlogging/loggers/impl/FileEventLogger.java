@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class FileEventLogger extends EventLogger {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileEventLogger.class);
 
     private List<File> loggingFiles;
 
@@ -61,12 +61,12 @@ public class FileEventLogger extends EventLogger {
             try {
                 fileToLogTo.createNewFile();
             } catch (IOException e) {
-                logger.warn("Unable to create file: " + fileToLogTo.getAbsolutePath());
+                LOGGER.warn("Unable to create file: " + fileToLogTo.getAbsolutePath());
             }
             if (fileToLogTo.canWrite()) {
                 writeToFile(informationToLog, fileToLogTo);
             } else {
-                logger.warn("Unable to write to: " + fileToLogTo.getAbsolutePath());
+                LOGGER.warn("Unable to write to: " + fileToLogTo.getAbsolutePath());
             }
         }
 
@@ -80,7 +80,7 @@ public class FileEventLogger extends EventLogger {
             fileWriter.newLine();
             fileWriter.flush();
         } catch (IOException e) {
-            logger.warn("Error when trying to log to file " + fileToLogTo + ": " + e.getMessage());
+            LOGGER.warn("Error when trying to log to file " + fileToLogTo + ": " + e.getMessage());
         }
     }
 }

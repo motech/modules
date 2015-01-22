@@ -30,7 +30,7 @@ public class HttpClientEventListener {
     public static final String HTTP_READ_TIMEOUT = "http.read.timeout";
     public static final int HUNDRED = 100;
 
-    private Logger logger = Logger.getLogger(HttpClientEventListener.class);
+    private static final Logger LOGGER = Logger.getLogger(HttpClientEventListener.class);
 
     private RestTemplate basicRestTemplate;
     private SettingsFacade settings;
@@ -70,7 +70,7 @@ public class HttpClientEventListener {
         HttpEntity<Object> entity = new HttpEntity<>(requestData,
                 createHttpHeaders(headers));
 
-        logger.info(String.format("Posting Http request -- Url: %s, Data: %s",
+        LOGGER.info(String.format("Posting Http request -- Url: %s, Data: %s",
                 url, String.valueOf(requestData)));
 
         executeFor(url, entity, method, username, password);
@@ -100,7 +100,7 @@ public class HttpClientEventListener {
         Callable<ResponseEntity<?>> task = new Callable<ResponseEntity<?>>() {
             public ResponseEntity<?> call() throws HttpException {
 
-                logger.info(String.format(
+                LOGGER.info(String.format(
                         "Posting Http request -- Url: %s, Data: %s", url,
                         String.valueOf(requestData)));
                 ResponseEntity<?> response = executeForReturnType(url,
@@ -119,7 +119,7 @@ public class HttpClientEventListener {
         try {
             retValue = r.call();
         } catch (Exception e) { // Http request failed for all retries
-            logger.info(String
+            LOGGER.info(String
                     .format("Posting Http request -- Url: %s, Data: %s failed after %s retries at interval of %s ms.",
                             url, String.valueOf(requestData),
                             String.valueOf(retryCount),

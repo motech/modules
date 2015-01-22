@@ -15,7 +15,6 @@ import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ import static org.junit.Assert.assertTrue;
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class AppointmentServiceBundleIT extends BasePaxIT {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = getLogger();
 
     @Inject
     private AppointmentService appointmentService;

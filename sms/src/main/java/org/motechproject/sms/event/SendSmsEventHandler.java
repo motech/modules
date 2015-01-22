@@ -18,8 +18,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class SendSmsEventHandler {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SendSmsEventHandler.class);
+
     private SmsHttpService smsHttpService;
-    private Logger logger = LoggerFactory.getLogger(SendSmsEventHandler.class);
     private SmsService smsService;
 
     @Autowired
@@ -30,14 +31,14 @@ public class SendSmsEventHandler {
 
     @MotechListener (subjects = { SmsEventSubjects.SEND_SMS })
     public void handleExternal(MotechEvent event) {
-        logger.info("Handling external event {}: {}", event.getSubject(),
+        LOGGER.info("Handling external event {}: {}", event.getSubject(),
                 event.getParameters().get("message").toString().replace("\n", "\\n"));
         smsService.send(new OutgoingSms(event));
     }
 
     @MotechListener (subjects = { SmsEventSubjects.PENDING, SmsEventSubjects.SCHEDULED, SmsEventSubjects.RETRYING })
     public void handleInternal(MotechEvent event) {
-        logger.info("Handling internal event {}: {}", event.getSubject(),
+        LOGGER.info("Handling internal event {}: {}", event.getSubject(),
                 event.getParameters().get("message").toString().replace("\n", "\\n"));
         smsHttpService.send(new OutgoingSms(event));
     }

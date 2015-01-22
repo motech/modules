@@ -28,7 +28,7 @@ import static org.motechproject.commons.date.util.DateUtil.now;
 @Component
 public class OffsetCampaignSchedulerService extends CampaignSchedulerService<OffsetCampaignMessage, OffsetCampaign> {
 
-    private Logger logger = Logger.getLogger(this.getClass());
+    private static final Logger LOGGER = Logger.getLogger(OffsetCampaignSchedulerService.class);
 
     @Autowired
     public OffsetCampaignSchedulerService(MotechSchedulerService schedulerService, CampaignRecordService campaignRecordService) {
@@ -48,7 +48,7 @@ public class OffsetCampaignSchedulerService extends CampaignSchedulerService<Off
             try {
                 getSchedulerService().scheduleRunOnceJob(runOnceSchedulableJob);
             } catch (IllegalArgumentException e) {
-                logger.info("Unable to schedule offset campaign message " + message.getMessageKey() + " for ID: " +
+                LOGGER.info("Unable to schedule offset campaign message " + message.getMessageKey() + " for ID: " +
                         enrollment.getExternalId() + " enrolled in campaign: " + enrollment.getCampaignName() + " - Message date is in the past");
             }
         }

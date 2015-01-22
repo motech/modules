@@ -20,7 +20,7 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 
 public class EventCaptor implements EventListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EventCaptor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EventCaptor.class);
 
     private static final long DELAY_THRESHOLD = 5000;
     public static final int STEP_BACK = 20;
@@ -39,7 +39,7 @@ public class EventCaptor implements EventListener {
             quartzSchedulerThread = accessPrivateField(quartzScheduler, "schedThread", QuartzSchedulerThread.class);
             sigLock = accessPrivateField(quartzSchedulerThread, "sigLock", Object.class);
         } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -65,7 +65,7 @@ public class EventCaptor implements EventListener {
             } catch (EventTimeoutException e) {
                 fail(format("No event raised at %s.\n%s", time, eventLog(expectedTimes, eventTimes)));
             } catch (InterruptedException e) {
-                LOG.error(e.getMessage(), e);
+                LOGGER.error(e.getMessage(), e);
             }
         }
         assertEventTimes(expectedTimes, eventTimes);
@@ -101,7 +101,7 @@ public class EventCaptor implements EventListener {
             schedField.setAccessible(true);
             return returnType.cast(schedField.get(scheduler));
         } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
             return null;
         }
     }

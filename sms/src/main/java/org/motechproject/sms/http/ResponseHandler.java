@@ -20,12 +20,12 @@ import java.util.List;
  */
 public abstract class ResponseHandler {
     private static final String SMS_MODULE = "motech-sms";
+    private static final Logger LOGGER = LoggerFactory.getLogger(ResponseHandler.class);
     private Template template;
     private Config config;
     private Response templateOutgoingResponse;
     private List<MotechEvent> events = new ArrayList<>();
     private List<SmsRecord> auditRecords = new ArrayList<>();
-    private Logger logger = LoggerFactory.getLogger(ResponseHandler.class);
 
     @Autowired
     private StatusMessageService statusMessageService;
@@ -71,7 +71,7 @@ public abstract class ResponseHandler {
     }
 
     protected Logger getLogger() {
-        return logger;
+        return LOGGER;
     }
 
     public void warn(String message) {

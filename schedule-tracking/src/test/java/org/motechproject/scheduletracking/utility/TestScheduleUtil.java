@@ -27,7 +27,7 @@ public class TestScheduleUtil {
 
     private static final DateTimeSource DATE_TIME_SOURCE = new DefaultDateTimeSource();
 
-    private static final Logger LOG = LoggerFactory.getLogger(TestScheduleUtil.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestScheduleUtil.class);
 
     public static String getScheduleJsonFromFile(BundleContext bundleContext, String path, String filename) {
         Enumeration<URL> enumeration = bundleContext.getBundle().findEntries(path, filename, false);
@@ -41,7 +41,7 @@ public class TestScheduleUtil {
                 in = url.openStream();
                 byteArr = IOUtils.toByteArray(in);
             } catch (IOException e) {
-                LOG.warn("There was a problem with retrieving json file with schedule.");
+                LOGGER.warn("There was a problem with retrieving json file with schedule.");
             } finally {
                 IOUtils.closeQuietly(in);
             }
@@ -63,7 +63,7 @@ public class TestScheduleUtil {
                 in = url.openStream();
                 byteArr = IOUtils.toByteArray(in);
             } catch (IOException e) {
-                LOG.warn("There was a problem with retrieving json file with schedule.");
+                LOGGER.warn("There was a problem with retrieving json file with schedule.");
             } finally {
                 IOUtils.closeQuietly(in);
             }
