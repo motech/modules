@@ -3,7 +3,9 @@ package org.motechproject.eventlogging.domain;
 
 import org.joda.time.DateTime;
 import org.motechproject.commons.date.util.DateUtil;
+import org.motechproject.mds.annotations.CrudEvents;
 import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.event.CrudEventType;
 
 import java.util.Map;
 
@@ -12,6 +14,7 @@ import java.util.Map;
  * that is persisted in the database.
  */
 @Entity
+@CrudEvents(CrudEventType.NONE)
 public class EventLog {
 
     private String subject;
