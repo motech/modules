@@ -1,36 +1,46 @@
 package org.motechproject.openmrs19.resource.model;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.annotations.Expose;
+
 import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-
-import java.lang.reflect.Type;
-import java.util.Date;
-import java.util.List;
-
 public class Person {
     private String uuid;
+    @Expose
     private String display;
+    @Expose
     private String gender;
+    @Expose
     private Integer age;
+    @Expose
     private Date birthdate;
+    @Expose
     private boolean birthdateEstimated;
+    @Expose
     private boolean dead;
+    @Expose
     private Concept causeOfDeath;
+    @Expose
     private Date deathDate;
 
+    @Expose
     private PreferredName preferredName;
+    @Expose
     private List<PreferredName> names;
 
+    @Expose
     private PreferredAddress preferredAddress;
+    @Expose
     private List<PreferredAddress> addresses;
 
+    @Expose
     private List<Attribute> attributes;
 
     public static class PersonSerializer implements JsonSerializer<Person> {
@@ -42,9 +52,13 @@ public class Person {
 
     public static class PreferredName {
         private String uuid;
+        @Expose
         private String display;
+        @Expose
         private String givenName;
+        @Expose
         private String middleName;
+        @Expose
         private String familyName;
 
         public String getUuid() {
@@ -111,6 +125,7 @@ public class Person {
 
     public static class PreferredAddress {
         private String uuid;
+        @Expose
         private String address1;
 
         public String getUuid() {
