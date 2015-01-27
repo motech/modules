@@ -62,10 +62,8 @@ public class SettingsController {
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/settings", method = RequestMethod.POST)
     public void saveSettings(@RequestBody SettingsDto settings) throws BundleException {
-        settingsFacade.setProperty(COMMCARE_BASE_URL_KEY, settings.getCommcareBaseUrl());
-        settingsFacade.setProperty(COMMCARE_DOMAIN_KEY, settings.getCommcareDomain());
-        settingsFacade.setProperty(USERNAME_KEY, settings.getUsername());
-        settingsFacade.setProperty(PASSWORD_KEY, settings.getPassword());
+        // not used for saving connection settings, that's handled by StubConnectionController
+
         if (settings.getEventStrategy() != null) {
             settingsFacade.setProperty(CASE_EVENT_STRATEGY_KEY, settings.getEventStrategy());
         }

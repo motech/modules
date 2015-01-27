@@ -91,11 +91,17 @@ public class CommCareAPIHttpClient {
     }
 
     public boolean verifyConnection() {
-        HttpMethod getMethod = new GetMethod(commcareDataForwardingEndpointUrl());
+        HttpMethod getMethod = new GetMethod(commcareCasesUrl());
 
         authenticate();
 
         int status = executeMethod(getMethod);
+
+        if (status == HttpStatus.SC_OK) {
+            LOGGER.info("Connection to Commcare verified");
+        } else {
+            LOGGER.error("Unable to connect to Commcare, response status: {}", status);
+        }
 
         return status == HttpStatus.SC_OK;
     }

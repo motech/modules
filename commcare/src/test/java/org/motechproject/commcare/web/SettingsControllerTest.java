@@ -101,6 +101,6 @@ public class SettingsControllerTest {
 
         controller.saveSettings(dto);
 
-        verify(settingsFacade, times(8)).setProperty(anyString(), anyString());
+        verify(settingsFacade, times(4)).setProperty(anyString(), anyString());
     }
 }
