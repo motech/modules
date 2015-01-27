@@ -3,6 +3,8 @@ package org.motechproject.openmrs19.resource.impl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.motechproject.openmrs19.OpenMrsInstance;
+import org.motechproject.openmrs19.resource.model.Provider;
+import org.motechproject.openmrs19.resource.model.Provider.ProviderSerializer;
 import org.motechproject.openmrs19.rest.HttpException;
 import org.motechproject.openmrs19.rest.RestClient;
 import org.motechproject.openmrs19.resource.EncounterResource;
@@ -47,6 +49,7 @@ public class EncounterResourceImpl implements EncounterResource {
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
                 .registerTypeAdapter(Patient.class, new PatientSerializer())
                 .registerTypeAdapter(Person.class, new PersonSerializer())
+                .registerTypeAdapter(Provider.class, new ProviderSerializer())
                 .registerTypeAdapter(Concept.class, new ConceptSerializer())
                 .registerTypeAdapter(EncounterType.class, new EncounterTypeSerializer())
                 .registerTypeAdapter(ObservationValue.class, new ObservationValueSerializer()).create();
