@@ -32,6 +32,12 @@ import static org.motechproject.commcare.events.constants.EventSubjects.SCHEMA_C
 @Controller
 @RequestMapping("/connection")
 public class StubConnectionController {
+
+    private static final String COMMCARE_BASE_URL_KEY = "commcareBaseUrl";
+    private static final String COMMCARE_DOMAIN_KEY = "commcareDomain";
+    private static final String USERNAME_KEY = "username";
+    private static final String PASSWORD_KEY = "password";
+
     @Autowired
     private ConfigurationService settingsService;
 
@@ -58,13 +64,13 @@ public class StubConnectionController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/verify", method = RequestMethod.POST)
-    public void verifySettings(@RequestBody CommcareAccountSettings settings) throws CommcareAuthenticationException, CommcareConnectionFailureException {
-        settingsFacade.setProperty(FORWARD_CASES_KEY, String.valueOf(false));
-        settingsFacade.setProperty(FORWARD_FORMS_KEY, String.valueOf(false));
-        settingsFacade.setProperty(FORWARD_FORM_STUBS_KEY, String.valueOf(false));
-        settingsFacade.setProperty(FORWARD_APP_STRUCTURE_KEY, String.valueOf(false));
+    public void saveSettings(@RequestBody CommcareAccountSettings settings) throws CommcareAuthenticationException, CommcareConnectionFailureException {
+        settingsFacade.setProperty(COMMCARE_BASE_URL_KEY, settings.getCommcareBaseUrl());
+        settingsFacade.setProperty(COMMCARE_DOMAIN_KEY, settings.getCommcareDomain());
+        settingsFacade.setProperty(USERNAME_KEY, settings.getUsername());
+        settingsFacade.setProperty(PASSWORD_KEY, settings.getPassword());
 
-        if (commcareAccountService.verifySettings(settings)) {
+        if (commcareAccountService.verifySettings()) {
             checkForwardingSettings();
             eventRelay.sendEventMessage(new MotechEvent(SCHEMA_CHANGE_EVENT));
         }

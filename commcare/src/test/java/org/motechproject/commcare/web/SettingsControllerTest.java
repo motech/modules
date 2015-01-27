@@ -3,15 +3,13 @@ package org.motechproject.commcare.web;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.motechproject.commcare.domain.CommcareDataForwardingEndpoint;
 import org.motechproject.commcare.domain.SettingsDto;
 import org.motechproject.commcare.service.CommcareDataForwardingEndpointService;
-import org.motechproject.server.config.SettingsFacade;
 import org.motechproject.config.service.ConfigurationService;
+import org.motechproject.server.config.SettingsFacade;
 import org.motechproject.server.config.domain.SettingsRecord;
 import org.osgi.framework.BundleException;
 
@@ -107,6 +105,6 @@ public class SettingsControllerTest {
 
         controller.saveSettings(dto);
 
-        verify(settingsFacade, times(8)).setProperty(anyString(), anyString());
+        verify(settingsFacade, times(4)).setProperty(anyString(), anyString());
     }
 }
