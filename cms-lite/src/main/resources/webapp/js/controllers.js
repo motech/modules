@@ -6,7 +6,7 @@
 
     var controllers = angular.module('cmslite.controllers', []);
 
-    controllers.controller('CmsResourceCtrl', function ($scope, $rootScope, $http, Resources) {
+    controllers.controller('CmsResourceCtrl', function ($scope, $rootScope, $http, Resources, $location) {
         innerLayout({
             spacing_closed: 30,
             east__minSize: 200,
@@ -44,20 +44,30 @@
             $('#newResourceModal').modal('show');
         };
 
+        $scope.getResourceUrl = function(language, name, type){
+            var resourceUrl=  $location.absUrl() ;
+            resourceUrl =  resourceUrl.substring(0, resourceUrl.length - 31) ;
+            resourceUrl =  resourceUrl + '/cmsliteapi/'+type+'/'+language+'/'+name;
+            return resourceUrl;
+        };
+
         $scope.showResource = function(type, language, name) {
             switch (type) {
             case 'string':
                 $scope.select = Resources.get({ type: type, language: language, name: name}, function () {
+                    $scope.resourceUrl = $scope.getResourceUrl($scope.select.language, $scope.select.name, type);
                     $('#stringResourceModal').modal('show');
                 });
                 break;
             case 'stream':
                 $scope.select = Resources.get({ type: type, language: language, name: name}, function () {
+                    $scope.resourceUrl = $scope.getResourceUrl($scope.select.language, $scope.select.name, type);
                     $('#streamResourceModal').modal('show');
                 });
                 break;
             }
         };
+
 
         $scope.editStringResource = function() {
             if ($scope.validateField('stringResourceForm', 'value')) {
