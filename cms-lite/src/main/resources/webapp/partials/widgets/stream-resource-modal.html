@@ -14,7 +14,7 @@
                     <div class="form-group">
                         <!-- read mode -->
                         <div class="col-sm-12" ui-if="mode == 'read'">
-                            <a href="../cmsliteapi/stream/{{select.language}}/{{select.name}}">{{msg('cmslite.button.openRawFile')}}</a>
+                            <p>{{msg('cmslite.resource.address')}}: {{resourceUrl}}</p>
                         </div>
 
                         <!-- write mode -->
@@ -37,7 +37,13 @@
                     </div>
                 </form>
             </div>
+
             <div class="modal-footer">
+                <a ui-if="mode == 'read'"  class="btn btn-default pull-left"
+                        href="../cmsliteapi/stream/{{select.language}}/{{select.name}}"
+                        target="_blank">
+                    {{msg('cmslite.button.goTo')}}
+                </a>
                 <!-- read mode -->
                 <button ui-if="mode == 'read'" class="btn btn-primary" ng-click="changeMode('write')">
                     {{msg('cmslite.button.replace')}}

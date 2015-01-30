@@ -14,7 +14,8 @@
                         <!-- read mode -->
                         <div class="col-sm-12" ui-if="mode == 'read'">
                             <p>{{select.value}}</p>
-                            <span class="count-characters">{{msg('cmslite.info.characters')}}: {{select.value.length}}</span>
+                            <p class="count-characters">{{msg('cmslite.info.characters')}}: {{select.value.length}}</p>
+                            <p>{{msg('cmslite.resource.address')}}: {{resourceUrl}}</p>
                         </div>
 
                         <!-- write mode -->
@@ -29,6 +30,11 @@
             </div>
             <div class="modal-footer">
                 <!-- read mode -->
+                <a ui-if="mode == 'read'"  class="btn btn-default pull-left"
+                   href="../cmsliteapi/string/{{select.language}}/{{select.name}}"
+                   target="_blank">
+                    {{msg('cmslite.button.goTo')}}
+                </a>
                 <button ui-if="mode == 'read'" class="btn btn-primary" ng-click="changeMode('write')">
                     {{msg('cmslite.button.edit')}}
                 </button>
