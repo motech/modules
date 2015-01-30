@@ -117,7 +117,7 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
         converted.setPatient(patient);
 
         Person person = new Person();
-        person.setUuid(encounter.getProvider().getProviderId());
+        person.setUuid(encounter.getProvider().getPerson().getId());
         converted.setProvider(person);
 
         converted.setObs(convertToObservations(encounter.getObservations()));

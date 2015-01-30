@@ -57,9 +57,14 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
             throw new OpenMRSException("Can't create an encounter because no concept was found with name: " + conceptName);
         }
 
-        Concept concept = results.getResults().get(0);
-        conceptCache.put(conceptName, concept.getUuid());
-        return concept.getUuid();
+        for (Concept concept : results.getResults()) {
+            if (concept.getDisplay().equals(conceptName)) {
+                conceptCache.put(conceptName, concept.getUuid());
+                return concept.getUuid();
+            }
+        }
+
+        return null;
     }
 
     @Override
