@@ -273,8 +273,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         try {
             patientResource.updatePatientMotechId(patient.getPatientId(), patient.getMotechId());
         } catch (HttpException e) {
-            LOGGER.error("Failed to update OpenMRS patient with id: " + patient.getPatientId());
-            throw new OpenMRSException(e);
+            throw new OpenMRSException("Failed to update OpenMRS patient with id: " + patient.getPatientId(), e);
         }
 
         OpenMRSPatient updatedPatient = new OpenMRSPatient(openMRSPatient.getPatientId(), patient.getMotechId(), person, openMRSPatient.getFacility());
@@ -289,8 +288,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
 
         OpenMRSPatient patient = getPatientByMotechId(motechId);
         if (patient == null) {
-            LOGGER.error("Cannot decease patient because no patient exist with motech id: " + motechId);
-            throw new PatientNotFoundException("No Patient found with Motech Id: " + motechId);
+            throw new PatientNotFoundException("Cannot decease patient because no patient found with Motech Id: " + motechId);
         }
 
         personAdapter.savePersonCauseOfDeath(patient.getPatientId(), dateOfDeath, conceptName);

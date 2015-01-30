@@ -45,7 +45,6 @@ public class TemplateServiceImpl implements TemplateService {
         } catch (Exception e) {
             String message = String.format("There seems to be a problem with the json text in %s: %s",
                     TEMPLATE_FILE_NAME, e.getMessage());
-            LOGGER.debug(message);
             throw new JsonIOException(message, e);
         }
 
@@ -74,9 +73,7 @@ public class TemplateServiceImpl implements TemplateService {
         if (templates.containsKey(name)) {
             return templates.get(name);
         }
-        String message = String.format("Unknown template: '%s'.", name);
-        LOGGER.error(message);
-        throw new IllegalArgumentException(message);
+        throw new IllegalArgumentException(String.format("Unknown template: '%s'.", name));
     }
 
     public List<Template> allTemplates() {

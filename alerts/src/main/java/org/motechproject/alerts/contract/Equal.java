@@ -1,12 +1,9 @@
 package org.motechproject.alerts.contract;
 
 import org.apache.commons.collections.Predicate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 
-import static org.apache.commons.beanutils.BeanUtils.initCause;
 import static org.apache.commons.beanutils.PropertyUtils.getProperty;
 
 /**
@@ -15,7 +12,6 @@ import static org.apache.commons.beanutils.PropertyUtils.getProperty;
  * @param <T> the type of object value.
  */
 class Equal<T> implements Predicate {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Equal.class);
 
     private String propertyName;
     private T propertyValue;
@@ -31,34 +27,13 @@ class Equal<T> implements Predicate {
         try {
             evaluation = evaluateValue(propertyValue, (T) getProperty(object, propertyName));
         } catch (IllegalArgumentException e) {
-            String errorMsg = "Problem during evaluation. Null value encountered in property path";
-
-            IllegalArgumentException iae = new IllegalArgumentException(errorMsg, e);
-            if (!initCause(iae, e)) {
-                LOGGER.error(errorMsg, e);
-            }
-            throw iae;
+            throw new IllegalArgumentException("Problem during evaluation. Null value encountered in property path", e);
         } catch (IllegalAccessException e) {
-            String errorMsg = "Unable to access the property provided.";
-            IllegalArgumentException iae = new IllegalArgumentException(errorMsg, e);
-            if (!initCause(iae, e)) {
-                LOGGER.error(errorMsg, e);
-            }
-            throw iae;
+            throw new IllegalArgumentException("Unable to access the property provided.", e);
         } catch (InvocationTargetException e) {
-            String errorMsg = "Exception occurred in property's getter";
-            IllegalArgumentException iae = new IllegalArgumentException(errorMsg, e);
-            if (!initCause(iae, e)) {
-                LOGGER.error(errorMsg, e);
-            }
-            throw iae;
+            throw new IllegalArgumentException("Exception occurred in property's getter", e);
         } catch (NoSuchMethodException e) {
-            String errorMsg = "Property not found.";
-            IllegalArgumentException iae = new IllegalArgumentException(errorMsg, e);
-            if (!initCause(iae, e)) {
-                LOGGER.error(errorMsg, e);
-            }
-            throw iae;
+            throw new IllegalArgumentException("Property not found.", e);
         }
 
         return evaluation;

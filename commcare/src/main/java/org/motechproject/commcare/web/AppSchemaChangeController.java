@@ -14,7 +14,7 @@ import static org.motechproject.commcare.events.constants.EventSubjects.SCHEMA_C
 
 @Controller
 public class AppSchemaChangeController {
-    private static final Logger LOG = LoggerFactory.getLogger(AppSchemaChangeController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AppSchemaChangeController.class);
     private EventRelay eventRelay;
 
     @Autowired
@@ -25,7 +25,7 @@ public class AppSchemaChangeController {
     @RequestMapping(value = "/appSchemaChange")
     @ResponseStatus(HttpStatus.OK)
     public void receiveSchemaChange() {
-        LOG.trace("Received schema change request.");
+        LOGGER.trace("Received schema change request.");
         eventRelay.sendEventMessage(new MotechEvent(SCHEMA_CHANGE_EVENT));
     }
 }

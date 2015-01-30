@@ -78,15 +78,12 @@ public class SpringRestfulClientImpl implements RestClient {
             return command.execute();
         } catch (HttpClientErrorException e) {
             LOGGER.debug("RESPONSE: " + e.getResponseBodyAsString());
-            LOGGER.warn("Request failed with client error: " + e.getMessage());
-            throw new HttpException(e.getMessage(), e);
+            throw new HttpException("Request failed with client error: " + e.getMessage(), e);
         } catch (HttpServerErrorException e) {
             LOGGER.debug("RESPONSE: " + e.getResponseBodyAsString());
-            LOGGER.warn("Request failed with server error:" + e.getMessage());
-            throw new HttpException(e.getMessage(), e);
+            throw new HttpException("Request failed with server error:" + e.getMessage(), e);
         } catch (ResourceAccessException e) {
-            LOGGER.warn("Request failed with IOException: " + e.getMessage());
-            throw new HttpException(e.getMessage(), e);
+            throw new HttpException("Request failed with IOException: " + e.getMessage(), e);
         }
     }
 

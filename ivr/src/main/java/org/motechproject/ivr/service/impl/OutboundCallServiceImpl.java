@@ -98,7 +98,6 @@ public class OutboundCallServiceImpl implements OutboundCallService {
 
         if (!configService.hasConfig(configName)) {
             String msg = String.format("Invalid config: '%s'", configName);
-            LOGGER.error(msg);
             statusMessageService.warn(msg, MODULE_NAME);
             throw new CallInitiationException(msg);
         }
@@ -115,7 +114,6 @@ public class OutboundCallServiceImpl implements OutboundCallService {
             response = new DefaultHttpClient().execute(request);
         } catch (Exception e) {
             String message = String.format("Could not initiate call, unexpected exception: %s", e.toString());
-            LOGGER.info(message);
             statusMessageService.warn(message, MODULE_NAME);
             params.put("ErrorMessage", message);
             addCallDetailRecord(CallDetailRecord.CALL_FAILED, config, params, motechCallId);
@@ -127,7 +125,6 @@ public class OutboundCallServiceImpl implements OutboundCallService {
         //todo: If we encounter such a provider, we'll have to beef up the response processing here
         if (!ACCEPTABLE_IVR_RESPONSE_STATUSES.contains(statusLine.getStatusCode())) {
             String message = String.format("Could not initiate call: %s", statusLine.toString());
-            LOGGER.info(message);
             statusMessageService.warn(message, MODULE_NAME);
             params.put("ErrorMessage", message);
             addCallDetailRecord(CallDetailRecord.CALL_FAILED, config, params, motechCallId);

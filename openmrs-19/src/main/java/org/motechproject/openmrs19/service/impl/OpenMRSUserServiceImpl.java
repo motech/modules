@@ -124,8 +124,7 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
         Validate.notNull(user.getPerson(), "Person cannot be null");
 
         if (getUserByUserName(user.getUserName()) != null) {
-            LOGGER.warn("Already found user with username: " + user.getUserName());
-            throw new UserAlreadyExistsException();
+            throw new UserAlreadyExistsException("Already found user with username: " + user.getUserName());
         }
 
         // attempt to retrieve the roleUuid before saving the person
@@ -179,7 +178,6 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
 
     private String getRoleUuidByRoleName(OpenMRSUser user) {
         if (!roleIsPresentInOpenMrs(user.getSecurityRole())) {
-            LOGGER.error("Could not find a role in OpenMRS with name: " + user.getSecurityRole());
             throw new OpenMRSException("No OpenMRS role found with name: " + user.getSecurityRole());
         }
 
@@ -222,7 +220,6 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
 
         OpenMRSUser user = getUserByUserName(username);
         if (user == null) {
-            LOGGER.warn("No user foudn with username: " + username);
             throw new UsernameNotFoundException("No user found with username: " + username);
         }
 

@@ -70,7 +70,7 @@ public class BatchController {
             batchJobList = jobService.getListOfJobs();
             return batchJobList;
         } catch (BatchException e) {
-            LOGGER.error("Error occured while processing request to get list of jobs");
+            LOGGER.error("Error occurred while processing request to get list of jobs");
             throw new RestException(e, e.getMessage());
         } finally {
             LOGGER.info(
@@ -94,7 +94,6 @@ public class BatchController {
         try {
             List<String> errors = batchValidator.validateUpdateInputs(jobName);
             if (!errors.isEmpty()) {
-                LOGGER.error("Error occured while processing request to get job history");
                 throw new BatchException(ApplicationErrors.BAD_REQUEST,
                         errors.toString());
             }
@@ -103,7 +102,7 @@ public class BatchController {
             return jobExecutionHistoryList;
         } catch (BatchException e) {
             LOGGER.error(
-                    "Error occured while processing request to get execution history for job {}",
+                    "Error occurred while processing request to get execution history for job {}",
                     jobName);
             throw new RestException(e, e.getMessage());
         } finally {
@@ -133,7 +132,7 @@ public class BatchController {
             return jobTriggerService.triggerJob(jobName);
         } catch (BatchException e) {
             LOGGER.error(
-                    "Error occured while processing request to trigger job {}",
+                    "Error occurred while processing request to trigger job {}",
                     jobName);
             throw new RestException(e, e.getMessage());
         } finally {
@@ -314,10 +313,8 @@ public class BatchController {
     /**
      * Update the parameter list for the job
      *
-     * @param jobName
-     *            for which parameters needs to be updated
-     * @param paramsMap
-     *            the <code>map</code> of parameters to be added or modified
+     * @param jobName  the name of the job for which parameters needs to be updated
+     * @param paramsMap   the <code>map</code> of parameters to be added or modified
      */
     @ResponseStatus(value = HttpStatus.OK)
     @RequestMapping(value = "/updatejobproperty", method = RequestMethod.POST)

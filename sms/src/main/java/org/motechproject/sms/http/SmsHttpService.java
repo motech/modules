@@ -263,7 +263,6 @@ public class SmsHttpService {
             } catch (IllegalStateException e) {
                 // exceptions generated above should only come from config/template issues, try to display something
                 // useful in the motech messages and tomcat log
-                LOGGER.error(e.getMessage());
                 statusMessageService.warn(e.getMessage(), SMS_MODULE);
                 throw e;
             }

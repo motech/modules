@@ -39,7 +39,7 @@ import static org.motechproject.commcare.parser.FullFormParser.FORM;
  */
 @Controller
 public class FullFormController {
-    private static final Logger LOG = LoggerFactory.getLogger(FullFormController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FullFormController.class);
     private EventRelay eventRelay;
 
     @Autowired
@@ -50,7 +50,7 @@ public class FullFormController {
     @RequestMapping(value = "/forms")
     @ResponseStatus(HttpStatus.OK)
     public void receiveForm(@RequestBody String body, HttpServletRequest request) {
-        LOG.trace("Received request for mapping /forms: {}", body);
+        LOGGER.trace("Received request for mapping /forms: {}", body);
 
         FullFormParser parser = new FullFormParser(body);
         FormValueElement formValueElement = null;

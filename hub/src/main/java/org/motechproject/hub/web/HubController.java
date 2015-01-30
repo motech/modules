@@ -161,7 +161,7 @@ public class HubController {
             contentDistributionService.distribute(url);
 
         } catch (HubException e) {
-            LOGGER.error("Error occured while processing request to {} the resource {}", mode, url);
+            LOGGER.error("Error occurred while processing request to {} the resource {}", mode, url);
             throw new RestException(e, e.getMessage() + e.getReason());
         } finally {
             LOGGER.info("Request to {} ended for resource {}. Time taken (ms) = {}", mode, url, sw.getTime());

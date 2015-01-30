@@ -50,12 +50,10 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
         try {
             results = conceptResource.queryForConceptsByName(conceptName);
         } catch (HttpException e) {
-            LOGGER.error("There was an error retrieving the uuid of the concept with concept name: " + conceptName);
-            throw new OpenMRSException(e);
+            throw new OpenMRSException("There was an error retrieving the uuid of the concept with concept name: " + conceptName, e);
         }
 
         if (results.getResults().isEmpty()) {
-            LOGGER.error("Could not find a concept with name: " + conceptName);
             throw new OpenMRSException("Can't create an encounter because no concept was found with name: " + conceptName);
         }
 

@@ -78,8 +78,7 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_OBSERVATION_SUBJECT, EventHelper.observationParameters(mrsObservation)));
         } catch (HttpException e) {
             if (HttpStatus.NOT_FOUND.equals(e.getStatusCode())) {
-                LOGGER.warn("No Observation found with uuid: " + mrsObservation.getObservationId());
-                throw new ObservationNotFoundException(mrsObservation.getObservationId(), e);
+                throw new ObservationNotFoundException("No Observation found with uuid: " + mrsObservation.getObservationId(), e);
             }
 
             LOGGER.error("Could not void observation with uuid: " + mrsObservation.getObservationId());

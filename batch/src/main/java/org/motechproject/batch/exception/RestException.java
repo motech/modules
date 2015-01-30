@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 
 /**
- * Exception thrown for Http Requests incase of any exception
+ * Exception thrown for Http Requests in case of any exception.
  *
  * @author naveen
  *

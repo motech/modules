@@ -40,7 +40,6 @@ public final class LogAndEventHelper {
                                        Map<String, String> params) {
         if (!configService.hasConfig(configName)) {
             String msg = String.format("Invalid config: '%s'", configName);
-            LOGGER.error(msg);
             messageService.warn(msg, MODULE_NAME);
             throw new IvrControllerException(msg);
         }

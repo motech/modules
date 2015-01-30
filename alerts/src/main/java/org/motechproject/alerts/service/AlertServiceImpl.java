@@ -26,7 +26,7 @@ import java.util.Map;
  */
 @Service
 public class AlertServiceImpl implements AlertService {
-    private final Logger logger = LoggerFactory.getLogger(AlertServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AlertServiceImpl.class);
 
     private AlertsDataService alertsDataService;
     private AlertFilter alertFilter;
@@ -80,7 +80,7 @@ public class AlertServiceImpl implements AlertService {
         Alert alert = alertsDataService.retrieve("id", id);
 
         if (alert == null) {
-            logger.error("No Alert found for the given id: {}.", id);
+            LOGGER.error("No Alert found for the given id: {}.", id);
         }
 
         return alert;

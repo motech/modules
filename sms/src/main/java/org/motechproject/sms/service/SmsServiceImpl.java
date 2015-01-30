@@ -119,7 +119,6 @@ public class SmsServiceImpl implements SmsService {
         if (!configService.hasConfigs()) {
             String message = String.format("Trying to send an SMS, but there are no SMS configs on this server. " +
                     "outgoingSms = %s", sms.toString());
-            LOGGER.error(message);
             throw new IllegalStateException(message);
         }
 

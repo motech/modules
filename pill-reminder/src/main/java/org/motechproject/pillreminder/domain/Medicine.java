@@ -73,7 +73,7 @@ public class Medicine {
 
     public void validate() {
         if (getEndDate() != null && getStartDate().isAfter(getEndDate())) {
-             throw(new ValidationException(MEDICINE_END_DATE_CANNOT_BE_BEFORE_START_DATE));
+             throw new ValidationException(MEDICINE_END_DATE_CANNOT_BE_BEFORE_START_DATE);
         }
     }
 }

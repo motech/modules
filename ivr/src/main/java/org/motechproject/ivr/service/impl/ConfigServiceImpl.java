@@ -74,9 +74,7 @@ public class ConfigServiceImpl implements ConfigService {
         if (configs.containsKey(name)) {
             return configs.get(name);
         }
-        String message = String.format("Unknown config: '%s'.", name);
-        LOGGER.error(message);
-        throw new IllegalArgumentException(message);
+        throw new IllegalArgumentException(String.format("Unknown config: '%s'.", name));
     }
 
     public List<Config> allConfigs() {

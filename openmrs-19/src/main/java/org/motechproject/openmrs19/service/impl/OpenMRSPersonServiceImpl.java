@@ -69,8 +69,7 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
         try {
             saved = personResource.createPerson(converted);
         } catch (HttpException e) {
-            LOGGER.error("Failed to create person for: " + person.getFullName());
-            throw new OpenMRSException(e);
+            throw new OpenMRSException("Failed to create person for: " + person.getFullName(), e);
         }
 
         person.setId(saved.getUuid());
@@ -96,8 +95,7 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
         try {
             saved = personResource.createPerson(converted);
         } catch (HttpException e) {
-            LOGGER.error("Failed to create person for: " + person.getFirstName() + " " + person.getMiddleName() + " " + person.getLastName());
-            throw new OpenMRSException(e);
+            throw new OpenMRSException("Failed to create person for: " + person.getFirstName() + " " + person.getMiddleName() + " " + person.getLastName(), e);
         }
 
         person.setPersonId(saved.getUuid());
@@ -127,12 +125,10 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
             try {
                 result = personResource.queryPersonAttributeTypeByName(name);
             } catch (HttpException e) {
-                LOGGER.error("HTTP request failed to get attribute type uuid for attribute with name: " + name);
-                throw new OpenMRSException(e);
+                throw new OpenMRSException("HTTP request failed to get attribute type uuid for attribute with name: " + name, e);
             }
 
             if (result.getResults().size() == 0) {
-                LOGGER.error("No attribute found with name: " + name);
                 throw new OpenMRSException("No attribute with name: " + name + " found in OpenMRS");
             } else if (result.getResults().size() > 1) {
                 LOGGER.warn("Found more than 1 attribute with name: " + name);
@@ -151,8 +147,7 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
         try {
             saved = personResource.getPersonById(person.getPersonId());
         } catch (HttpException e) {
-            LOGGER.error("Failed to retrieve person when deleting attributes with uuid: " + person.getPersonId());
-            throw new OpenMRSException(e);
+            throw new OpenMRSException("Failed to retrieve person when deleting attributes with uuid: " + person.getPersonId(), e);
         }
 
         List<Attribute> attributes = saved.getAttributes();
@@ -192,8 +187,7 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
             personResource.updatePerson(converted);
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.UPDATED_PERSON_SUBJECT, EventHelper.personParameters(person)));
         } catch (HttpException e) {
-            LOGGER.error("Failed to update a person in OpenMRS with id: " + person.getPersonId());
-            throw new OpenMRSException(e);
+            throw new OpenMRSException("Failed to update a person in OpenMRS with id: " + person.getPersonId(), e);
         }
         return findByPersonId(person.getId()).get(0);
     }
@@ -211,8 +205,7 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
         try {
             personResource.updatePerson(person);
         } catch (HttpException e) {
-            LOGGER.error("Failed to save cause of death observation for patient id: " + patientId);
-            throw new OpenMRSException(e);
+            throw new OpenMRSException("Failed to save cause of death observation for patient id: " + patientId, e);
         }
     }
 
@@ -222,8 +215,7 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
             personResource.removePerson(personMrs.getPersonId());
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.DELETED_PERSON_SUBJECT, EventHelper.personParameters(personMrs)));
         } catch (HttpException e) {
-            LOGGER.error("Failed to remove person for: " + personMrs.getLastName());
-            throw new OpenMRSException(e);
+            throw new OpenMRSException("Failed to remove person for: " + personMrs.getLastName(), e);
         }
     }
 
