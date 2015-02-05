@@ -43,6 +43,11 @@ public class CommcareAppStructureServiceImpl implements CommcareAppStructureServ
         } while (appStructureResponseJson != null
                 && StringUtils.isNotBlank(appStructureResponseJson.getMetadata().getNextPageQueryString()));
 
+        // Make sure the modules get serialized
+        for (CommcareApplicationJson applicationJson : commcareApp) {
+            applicationJson.serializeModules();
+        }
+
         return commcareApp;
     }
 
