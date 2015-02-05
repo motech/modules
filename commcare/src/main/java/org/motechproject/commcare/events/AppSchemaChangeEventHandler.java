@@ -32,7 +32,7 @@ public class AppSchemaChangeEventHandler {
     private CommcareTasksNotifier commcareTasksNotifier;
 
     @MotechListener(subjects = SCHEMA_CHANGE_EVENT)
-    public void schemaChange(MotechEvent event) {
+    public synchronized void schemaChange(MotechEvent event) {
         List<CommcareApplicationJson> applications = appStructureService.getAllApplications();
 
         if (!applications.equals(commcareApplicationDataService.retrieveAll())) {

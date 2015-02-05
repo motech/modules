@@ -45,6 +45,10 @@ public class CommcareApplicationJson {
     @Persistent(defaultFetchGroup = "true")
     private String serializedModules;
 
+    public CommcareApplicationJson() {
+        this(null, null, null, null);
+    }
+
     public CommcareApplicationJson(String commcareAppId, String applicationName, String resourceUri, List<CommcareModuleJson> modules) {
         this.commcareAppId = commcareAppId;
         this.applicationName = applicationName;
@@ -106,7 +110,7 @@ public class CommcareApplicationJson {
         deserializeModules();
     }
 
-    private void serializeModules() {
+    public final void serializeModules() {
         if (modules != null) {
             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
             this.serializedModules = gson.toJson(modules);
