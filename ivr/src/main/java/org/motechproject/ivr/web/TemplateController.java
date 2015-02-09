@@ -106,6 +106,10 @@ public class TemplateController {
         for (Map.Entry<String, String> entry : params.entrySet()) {
             context.put(config.mapStatusField(entry.getKey()), entry.getValue());
         }
+
+
+        context.put("headers", headers);
+
         // Add MDS access
         context.put("dataServices", mdsLookupService);
 
