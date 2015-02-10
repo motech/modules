@@ -120,6 +120,9 @@
                     setAccordions($scope.templates);
                     var index = $scope.messages.push($scope.msg('ivr.web.templates.saved'));
                     hideMsgLater(index-1);
+                    $('.ui-layout-content').animate({
+                        scrollTop: 0
+                    });
                 })
                 .error (function (response) {
                 //todo: better than that!
