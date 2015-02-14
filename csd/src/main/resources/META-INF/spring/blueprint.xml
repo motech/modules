@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:osgi="http://www.eclipse.org/gemini/blueprint/schema/blueprint"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.1.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+       http://www.eclipse.org/gemini/blueprint/schema/blueprint
+       http://www.eclipse.org/gemini/blueprint/schema/blueprint/gemini-blueprint.xsd">
+
+    <mvc:annotation-driven/>
+    <context:annotation-config/>
+    <context:component-scan base-package="org.motechproject.csd"/>
+
+    <bean id="moduleRegistrationData" class="org.motechproject.osgi.web.ModuleRegistrationData">
+        <constructor-arg name="moduleName" value="csd" />
+        <constructor-arg name="i18n">
+            <map>
+                <entry key="messages" value="../csd/resources/messages/"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <osgi:service ref="facilityService" interface="org.motechproject.csd.service.FacilityService" />
+
+    <osgi:reference id="facilityDataService" interface="org.motechproject.csd.mds.FacilityDataService" />
+    <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>
+
+</beans>

@@ -714,6 +714,7 @@
         <module>batch</module>
         <module>hub</module>
         <module>ivr</module>
+        <module>csd</module>
     </modules>
 
     <build>
