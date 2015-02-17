@@ -11,6 +11,8 @@ import org.motechproject.ivr.repository.CallDetailRecordDataService;
 import org.motechproject.ivr.service.ConfigService;
 import org.motechproject.ivr.service.TemplateService;
 import org.motechproject.mds.service.MDSLookupService;
+import org.motechproject.mds.util.ServiceUtil;
+import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +52,9 @@ public class TemplateController {
     private StatusMessageService statusMessageService;
     private EventRelay eventRelay;
     private MDSLookupService mdsLookupService;
+
+    @Autowired
+    private BundleContext bundleContext;
 
     @Autowired
     public TemplateController(CallDetailRecordDataService callDetailRecordDataService,
@@ -102,6 +107,21 @@ public class TemplateController {
         // Add MDS access
         context.put("dataServices", mdsLookupService);
 
+        StringBuilder notFoundServices = new StringBuilder();
+
+        for (Map.Entry<String, String> entry : config.getServicesMap().entrySet()) {
+            Object service = ServiceUtil.getServiceForInterfaceName(bundleContext, entry.getValue());
+            if (service != null) {
+                context.put(entry.getKey(), service);
+            } else {
+                notFoundServices.append(entry.getValue());
+                notFoundServices.append("\n");
+            }
+        }
+
+        if (!notFoundServices.toString().isEmpty()) {
+            throw new IllegalStateException("Cannot load following services:\n" + notFoundServices.toString());
+        }
         // Merge the template
         StringWriter writer = new StringWriter();
         try {
@@ -135,6 +155,7 @@ public class TemplateController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public String handleException(Exception e) throws IOException {
+        LOGGER.error("Error processing template", e);
         return e.getMessage();
     }
 

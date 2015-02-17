@@ -96,3 +96,7 @@
 .ivr .small-mono {
     font-size: small;
 }
+
+.ivr .popover{
+    max-width: 50%;
+}
