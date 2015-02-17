@@ -97,6 +97,13 @@
                             </div>
 
                             <div class="form-group">
+                                <label class="col-md-3 control-label" for="statusFieldMap{{$index}}">{{msg('ivr.web.settings.servicesMap')}}</label>
+                                <div class="col-md-8" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('ivr.web.settings.servicesMap.tooltip')}}">
+                                    <input class="form-control small-mono" id="servicesMap{{$index}}" type="text" ng-pattern="/^(\s*\w*\s*:\s*[\w\.]*\s*)?(,\s*\w*\s*:\s*[\w\.]*\s*)*$/" ng-model="conf.servicesMapString">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <label class="col-md-3 control-label" for="jsonResponse{{$index}}">{{msg('ivr.web.settings.jsonResponse')}}</label>
                                 <div class="col-md-1" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('ivr.web.settings.jsonResponse.tooltip')}}">
                                     <label>
