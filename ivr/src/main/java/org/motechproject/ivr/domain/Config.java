@@ -1,5 +1,6 @@
 package org.motechproject.ivr.domain;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -56,6 +57,12 @@ public class Config {
     private Map<String, String> statusFieldMap = new HashMap<>();
 
     /**
+     * A map of services that can be injected in IVR Velocity templates
+     */
+    @JsonIgnore
+    private Map<String, String> servicesMap = new HashMap<>();
+
+    /**
      * If the call provider returns JSON data upon placing an outbound call.
      */
     private boolean jsonResponse;
@@ -69,9 +76,13 @@ public class Config {
      */
     private String statusFieldMapString;
 
+    /**
+     * This field is used to pass the services back & forth to the UI
+     */
+    private String servicesMapString;
 
     public Config(String name, boolean authRequired, String username, String password, //NO CHECKSTYLE ArgumentCount
-                  List<String> ignoredStatusFields, String statusFieldMapString, HttpMethod outgoingCallMethod,
+                  List<String> ignoredStatusFields, String statusFieldMapString, String servicesMapString, HttpMethod outgoingCallMethod,
                   String outgoingCallUriTemplate, boolean jsonResponse, List<String> jsonExtraParamsList) {
         this.name = name;
         this.authRequired = authRequired;
@@ -81,12 +92,14 @@ public class Config {
         this.outgoingCallUriTemplate = outgoingCallUriTemplate;
         this.outgoingCallMethod = outgoingCallMethod;
         this.statusFieldMapString = statusFieldMapString;
-        this.statusFieldMap = parseStatusMapString(statusFieldMapString);
+        this.statusFieldMap = parseStringToMap(statusFieldMapString);
+        this.servicesMapString = servicesMapString;
+        this.servicesMap = parseStringToMap(servicesMapString);
         this.jsonResponse = jsonResponse;
         this.jsonExtraParamsList = jsonExtraParamsList;
     }
 
-    private Map<String, String> parseStatusMapString(String string) {
+    private Map<String, String> parseStringToMap(String string) {
         //todo: replace that with guava Splitter when guava 18.0 is available in external-osgi-bundles
         Map<String, String> map = new HashMap<>();
         if (StringUtils.isBlank(string)) {
@@ -119,7 +132,12 @@ public class Config {
 
     public void setStatusFieldMapString(String statusFieldMapString) {
         this.statusFieldMapString = statusFieldMapString;
-        this.statusFieldMap = parseStatusMapString(statusFieldMapString);
+        this.statusFieldMap = parseStringToMap(statusFieldMapString);
+    }
+
+    public void setServicesMapString(String servicesMapString) {
+        this.servicesMapString = servicesMapString;
+        this.servicesMap = parseStringToMap(servicesMapString);
     }
 
     public void setName(String name) {
@@ -194,6 +212,17 @@ public class Config {
         return statusFieldMapString;
     }
 
+    public String getServicesMapString() {
+        return servicesMapString;
+    }
+
+    public Map<String, String> getServicesMap() {
+        if (MapUtils.isEmpty(servicesMap)) {
+            servicesMap = parseStringToMap(servicesMapString);
+        }
+        return servicesMap;
+    }
+
     /**
      * When pinging Motech back to provide call status, IVR providers sometimes send fields with different names than
      * those that are used by the system. For example the originating number is sometimes provided as 'callerid' whereas
@@ -208,7 +237,7 @@ public class Config {
         // called, so it's possible that the statusFieldMap is null when statusFieldMapString isn't blank, if that's the
         // case then just parse statusFieldMapString when it's needed the first time.
         if (null == statusFieldMap && !StringUtils.isBlank(statusFieldMapString)) {
-            statusFieldMap = parseStatusMapString(statusFieldMapString);
+            statusFieldMap = parseStringToMap(statusFieldMapString);
         }
         if (null != statusFieldMap && statusFieldMap.containsKey(fieldName)) {
             return statusFieldMap.get(fieldName);
@@ -238,11 +267,17 @@ public class Config {
         if (statusFieldMapString != null ? !statusFieldMapString.equals(config.statusFieldMapString) : config.statusFieldMapString != null)
             { return false; }
         if (username != null ? !username.equals(config.username) : config.username != null) { return false; }
+        if (servicesMap != null ? !servicesMap.equals(config.servicesMap) : config.servicesMap != null) {
+            return false;
+        }
+        if (servicesMapString != null ? !servicesMapString.equals(config.servicesMapString) : config.servicesMapString != null) {
+            return false;
+        }
 
         return true;
     }
 
-    @Override
+    @Override //NO CHECKSTYLE CyclomaticComplexity
     public int hashCode() {
         int result = name.hashCode();
         result = 31 * result + (authRequired ? 1 : 0);
@@ -255,6 +290,8 @@ public class Config {
         result = 31 * result + (jsonResponse ? 1 : 0);
         result = 31 * result + (jsonExtraParamsList != null ? jsonExtraParamsList.hashCode() : 0);
         result = 31 * result + (statusFieldMapString != null ? statusFieldMapString.hashCode() : 0);
+        result = 31 * result + (servicesMap != null ? servicesMap.hashCode() : 0);
+        result = 31 * result + (servicesMapString != null ? servicesMapString.hashCode() : 0);
         return result;
     }
 
@@ -272,6 +309,8 @@ public class Config {
                 ", jsonResponse=" + jsonResponse +
                 ", jsonExtraParamsList=" + jsonExtraParamsList +
                 ", statusFieldMapString='" + statusFieldMapString + '\'' +
+                ", servicesMap=" + servicesMap +
+                ", servicesMapString='" + servicesMapString + '\'' +
                 '}';
     }
 }
