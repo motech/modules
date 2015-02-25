@@ -153,6 +153,15 @@ The ``$dataServices`` element
 
         Hello, $dataServices.findOne("org.motechproject.mds.entity.Patient", "Lookup by Number", {"number" : "123"}).name
 
+Injecting custom services
+-------------------------
+
+    Not only the ``$dataServices`` element can be used in IVR templates. It is also possible to inject any arbitrary
+    OSGi service into the Velocity context. All services configured in the ``servicesMap`` field of the :std:ref:`configuration <config>`
+    field will be available to the template executed with that configuration. All these services will be injected
+    as variables, so for example if your configuration is as follows: ``myService:org.example.service.MyService``, then
+    ``org.example.service.MyService`` will be available as ``$myService`` in the Velocity template.
+
 REST call
 ---------
 
@@ -223,6 +232,8 @@ Initiating an outbound call via the :ref:`tasks`
         :alt: IVR Module - Initiate outbound call via the Tasks Module - UI
         :align: center
 
+.. _config:
+
 Settings
 ========
 
@@ -236,18 +247,30 @@ Settings
         Configs consist of:
 
         * ``name``: The config name
+        * ``authenticationRequired``:
+            Select if the IVR provider requires authentication headers when initiating outbound calls.
+        * ``username``:
+            Optional username for providers that require authentication.
+        * ``password``:
+            Optional password for providers that require authentication.
         * ``outgoingCallMethod``: Which HTTP method to use, either ``GET`` or ``POST``.
         * ``statusFieldMap``:
-          A map where each key corresponds to a field name coming from the IVR provider and each value corresponds to
-          the matching IVR ``CallDetailRecord`` field.
+            A map where each key corresponds to a field name coming from the IVR provider and each value corresponds to
+            the matching IVR ``CallDetailRecord`` field.
         * ``outgoingCallUriTemplate``:
-          A URI template where any ``[xxx]`` string will be replaced by the value identified by the ``xxx`` [#]_ key in
-          the provided ``params`` map. Additionally, the entire ``params`` map is added as request parameters to the
-          HTTP call.
+            A URI template where any ``[xxx]`` string will be replaced by the value identified by the ``xxx`` [#]_ key in
+            the provided ``params`` map. Additionally, the entire ``params`` map is added as request parameters to the
+            HTTP call.
         * ``ignoredStatusFields``:
-          A list of fields to be ignored when receiving IVR Call Status from the provider. All other fields received
-          during IVR Call Status and not mapped to CDR fields are added to the ``providerExtraData``
+            A list of fields to be ignored when receiving IVR Call Status from the provider. All other fields received
+            during IVR Call Status and not mapped to CDR fields are added to the ``providerExtraData``
           ``CallDetailRecord`` map field.
+        * ``servicesMap``:
+            A map (in the "key1: value1, key2: value2" notation) of services that can be injected
+            in Velocity templates where key is the name used in Velocity and value is the class of the OSGi service, for example
+            to inject ``org.motechproject.mds.service.EntityService`` as ``entityService``, use ``entityService: org.motechproject.mds.service.EntityService``
+        * ``jsonResponse``:
+            Select if the provider returns JSON data after placing an outbound call.
 
         .. [#] Note: no square brackets
 
