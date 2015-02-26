@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.assertEquals;
+
 
 /**
  * Facility Unit Tests
@@ -15,8 +15,6 @@ public class FacilityTest {
 
     @Test
     public void verifyMappedStatusFields() {
-        Facility facility = new Facility("uuid", "primaryName");
-        assertEquals("uuid", facility.getUuid());
-        assertEquals("primaryName", facility.getPrimaryName());
+
     }
 }
