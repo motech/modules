@@ -28,6 +28,37 @@
     <osgi:service ref="facilityService" interface="org.motechproject.csd.service.FacilityService" />
 
     <osgi:reference id="facilityDataService" interface="org.motechproject.csd.mds.FacilityDataService" />
+    <osgi:reference id="addressDataService" interface="org.motechproject.csd.mds.AddressDataService" />
+    <osgi:reference id="addressLineDataService" interface="org.motechproject.csd.mds.AddressLineDataService" />
+    <osgi:reference id="codedTypeDataService" interface="org.motechproject.csd.mds.CodedTypeDataService" />
+    <osgi:reference id="contactPointDataService" interface="org.motechproject.csd.mds.ContactPointDataService" />
+    <osgi:reference id="credentialDataService" interface="org.motechproject.csd.mds.CredentialDataService" />
+    <osgi:reference id="csdDataService" interface="org.motechproject.csd.mds.CSDDataService" />
+    <osgi:reference id="extensionDataService" interface="org.motechproject.csd.mds.ExtensionDataService" />
+    <osgi:reference id="facilityDirectoryDataService" interface="org.motechproject.csd.mds.FacilityDirectoryDataService" />
+    <osgi:reference id="facilityOrganizationDataService" interface="org.motechproject.csd.mds.FacilityOrganizationDataService" />
+    <osgi:reference id="facilityOrganizationsDataService" interface="org.motechproject.csd.mds.FacilityOrganizationsDataService" />
+    <osgi:reference id="facilityOrganizationServiceDataService" interface="org.motechproject.csd.mds.FacilityOrganizationServiceDataService" />
+    <osgi:reference id="geocodeDataService" interface="org.motechproject.csd.mds.GeocodeDataService" />
+    <osgi:reference id="nameDataService" interface="org.motechproject.csd.mds.NameDataService" />
+    <osgi:reference id="operatingHoursDataService" interface="org.motechproject.csd.mds.OperatingHoursDataService" />
+    <osgi:reference id="organizationContactDataService" interface="org.motechproject.csd.mds.OrganizationContactDataService" />
+    <osgi:reference id="organizationDataService" interface="org.motechproject.csd.mds.OrganizationDataService" />
+    <osgi:reference id="organizationDirectoryDataService" interface="org.motechproject.csd.mds.OrganizationDirectoryDataService" />
+    <osgi:reference id="otherIDDataService" interface="org.motechproject.csd.mds.OtherIDDataService" />
+    <osgi:reference id="otherNameDataService" interface="org.motechproject.csd.mds.OtherNameDataService" />
+    <osgi:reference id="personDataService" interface="org.motechproject.csd.mds.PersonDataService" />
+    <osgi:reference id="personNameDataService" interface="org.motechproject.csd.mds.PersonNameDataService" />
+    <osgi:reference id="providerDataService" interface="org.motechproject.csd.mds.ProviderDataService" />
+    <osgi:reference id="providerDirectoryDataService" interface="org.motechproject.csd.mds.ProviderDirectoryDataService" />
+    <osgi:reference id="providerFacilitiesDataService" interface="org.motechproject.csd.mds.ProviderFacilitiesDataService" />
+    <osgi:reference id="providerFacilityDataService" interface="org.motechproject.csd.mds.ProviderFacilityDataService" />
+    <osgi:reference id="providerOrganizationDataService" interface="org.motechproject.csd.mds.ProviderOrganizationDataService" />
+    <osgi:reference id="providerOrganizationsDataService" interface="org.motechproject.csd.mds.ProviderOrganizationsDataService" />
+    <osgi:reference id="recordDataService" interface="org.motechproject.csd.mds.RecordDataService" />
+    <osgi:reference id="serviceDataService" interface="org.motechproject.csd.mds.ServiceDataService" />
+    <osgi:reference id="serviceDirectoryDataService" interface="org.motechproject.csd.mds.ServiceDirectoryDataService" />
+
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>
 
 </beans>
