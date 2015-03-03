@@ -4,11 +4,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.cmslite.CMSDataProvider;
 import org.motechproject.cmslite.model.StreamContent;
 import org.motechproject.cmslite.model.StringContent;
 import org.motechproject.cmslite.service.CMSLiteService;
-import org.motechproject.commons.api.MotechObject;
+import org.motechproject.commons.api.Range;
 import org.springframework.core.io.ResourceLoader;
 
 import java.util.HashMap;
@@ -56,7 +55,7 @@ public class CMSDataProviderTest {
     @Test
     public void shouldReturnNullWhenClassIsNotSupported() {
         // given
-        String clazz = MotechObject.class.getSimpleName();
+        String clazz = Range.class.getSimpleName();
 
         // when
         Object object = provider.lookup(clazz, "id", lookupFields);

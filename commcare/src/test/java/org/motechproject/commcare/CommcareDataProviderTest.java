@@ -12,7 +12,7 @@ import org.motechproject.commcare.service.impl.CommcareCaseServiceImpl;
 import org.motechproject.commcare.service.impl.CommcareFixtureServiceImpl;
 import org.motechproject.commcare.service.impl.CommcareFormServiceImpl;
 import org.motechproject.commcare.service.impl.CommcareUserServiceImpl;
-import org.motechproject.commons.api.MotechObject;
+import org.motechproject.commons.api.Range;
 import org.springframework.core.io.ResourceLoader;
 
 import java.util.HashMap;
@@ -82,7 +82,7 @@ public class CommcareDataProviderTest {
     @Test
     public void shouldReturnNullWhenClassIsNotSupported() {
         // given
-        String clazz = MotechObject.class.getSimpleName();
+        String clazz = Range.class.getSimpleName();
 
         // when
         Object object = provider.lookup(clazz, "id", lookupFields);
