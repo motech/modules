@@ -56,7 +56,7 @@ public class CMSDataProvider extends AbstractDataProvider {
                 }
             }
         } catch (ClassNotFoundException | ContentNotFoundException e) {
-            logError("Cannot lookup object: {type: %s, fields: %s}", type, lookupFields.keySet(), e);
+            getLogger().error("Cannot lookup object: {type: %s, fields: %s}", type, lookupFields.keySet(), e);
         }
         return obj;
     }

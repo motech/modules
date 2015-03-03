@@ -1,7 +1,6 @@
 package org.motechproject.pillreminder;
 
 import org.joda.time.DateTime;
-import org.motechproject.commons.api.MotechObject;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.event.listener.annotations.MotechListener;
@@ -18,7 +17,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Component
-public class ReminderEventHandler extends MotechObject {
+public class ReminderEventHandler {
     private EventRelay eventRelay;
     private PillRegimenDataService pillRegimenDataService;
     private MotechSchedulerService schedulerService;
