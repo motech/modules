@@ -4,9 +4,12 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Order;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 
 @Entity
+@XmlType(propOrder = { "names", "languages", "operatingHours", "freeBusyURI", "extensions" })
 public class FacilityOrganizationService extends AbstractUniqueID {
 
     @Order(column = "facility_organization_service_names_idx")
@@ -18,7 +21,7 @@ public class FacilityOrganizationService extends AbstractUniqueID {
     private List<CodedType> languages;
 
     @Order(column = "facility_organization_service_operatingHours_idx")
-    @Field(name = "facility_organization_service_operatingHours")
+    @Field(name = "facility_organization_service_operating_hours")
     private List<OperatingHours> operatingHours;
 
     @Field
@@ -48,6 +51,7 @@ public class FacilityOrganizationService extends AbstractUniqueID {
         return names;
     }
 
+    @XmlElement(name = "name")
     public void setNames(List<Name> names) {
         this.names = names;
     }
@@ -56,6 +60,7 @@ public class FacilityOrganizationService extends AbstractUniqueID {
         return languages;
     }
 
+    @XmlElement(name = "language")
     public void setLanguages(List<CodedType> languages) {
         this.languages = languages;
     }
@@ -80,6 +85,7 @@ public class FacilityOrganizationService extends AbstractUniqueID {
         return extensions;
     }
 
+    @XmlElement(name = "extension")
     public void setExtensions(List<Extension> extensions) {
         this.extensions = extensions;
     }

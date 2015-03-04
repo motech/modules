@@ -3,7 +3,12 @@ package org.motechproject.csd.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlValue;
+
 @Entity
+@XmlType
 public class CodedType {
 
     /* The value of Coded Type eg <CodedType>MyValue</CodeType> */
@@ -36,6 +41,7 @@ public class CodedType {
         return value;
     }
 
+    @XmlValue
     public void setValue(String value) {
         this.value = value;
     }
@@ -44,6 +50,7 @@ public class CodedType {
         return code;
     }
 
+    @XmlAttribute(required = true)
     public void setCode(String code) {
         this.code = code;
     }
@@ -52,6 +59,7 @@ public class CodedType {
         return codingScheme;
     }
 
+    @XmlAttribute(required = true)
     public void setCodingScheme(String codingScheme) {
         this.codingScheme = codingScheme;
     }

@@ -3,7 +3,12 @@ package org.motechproject.csd.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlValue;
+
 @Entity
+@XmlType
 public class OtherName {
 
     /* Text value of this node */
@@ -23,6 +28,24 @@ public class OtherName {
 
     public OtherName(String value, String lang) {
         this.value = value;
+        this.lang = lang;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    @XmlValue
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public String getLang() {
+        return lang;
+    }
+
+    @XmlAttribute(name = "lang", namespace = "http://www.w3.org/XML/1998/namespace")
+    public void setLang(String lang) {
         this.lang = lang;
     }
 

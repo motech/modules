@@ -1,9 +1,16 @@
 package org.motechproject.csd.domain;
 
 import org.joda.time.DateTime;
+import org.motechproject.csd.adapters.DateTimeAdapter;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlSchemaType;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+@XmlType
 @Entity
 public class Record {
 
@@ -39,6 +46,9 @@ public class Record {
         return created;
     }
 
+    @XmlAttribute
+    @XmlSchemaType(name = "dateTime")
+    @XmlJavaTypeAdapter(type = DateTime.class, value = DateTimeAdapter.class)
     public void setCreated(DateTime created) {
         this.created = created;
     }
@@ -47,6 +57,8 @@ public class Record {
         return sourceDirectory;
     }
 
+    @XmlAttribute
+    @XmlSchemaType(name = "anyURI")
     public void setSourceDirectory(String sourceDirectory) {
         this.sourceDirectory = sourceDirectory;
     }
@@ -55,6 +67,7 @@ public class Record {
         return status;
     }
 
+    @XmlAttribute
     public void setStatus(String status) {
         this.status = status;
     }
@@ -63,6 +76,9 @@ public class Record {
         return updated;
     }
 
+    @XmlAttribute
+    @XmlSchemaType(name = "dateTime")
+    @XmlJavaTypeAdapter(type = DateTime.class, value = DateTimeAdapter.class)
     public void setUpdated(DateTime updated) {
         this.updated = updated;
     }

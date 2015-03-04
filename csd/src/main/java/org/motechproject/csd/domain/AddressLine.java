@@ -3,7 +3,12 @@ package org.motechproject.csd.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlValue;
+
 @Entity
+@XmlType
 public class AddressLine {
 
     @Field
@@ -29,6 +34,7 @@ public class AddressLine {
         return value;
     }
 
+    @XmlValue
     public void setValue(String value) {
         this.value = value;
     }
@@ -37,6 +43,7 @@ public class AddressLine {
         return component;
     }
 
+    @XmlAttribute
     public void setComponent(String component) {
         this.component = component;
     }

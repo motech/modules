@@ -4,9 +4,13 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Order;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 
 @Entity
+@XmlType(propOrder = { "commonNames", "honorific", "forename", "otherNames", "surname", "suffix" })
 public class PersonName {
 
     @Order(column = "person_name_common_names_idx")
@@ -53,6 +57,7 @@ public class PersonName {
         return commonNames;
     }
 
+    @XmlElement(name = "commonName", required = true)
     public void setCommonNames(List<String> commonNames) {
         this.commonNames = commonNames;
     }
@@ -81,6 +86,7 @@ public class PersonName {
         return lang;
     }
 
+    @XmlElement(name = "otherName")
     public void setOtherNames(List<CodedType> otherNames) {
         this.otherNames = otherNames;
     }
@@ -101,6 +107,7 @@ public class PersonName {
         this.suffix = suffix;
     }
 
+    @XmlAttribute(name = "lang", namespace = "http://www.w3.org/XML/1998/namespace")
     public void setLang(String lang) {
         this.lang = lang;
     }

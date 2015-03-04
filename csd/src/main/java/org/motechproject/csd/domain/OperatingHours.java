@@ -1,19 +1,27 @@
 package org.motechproject.csd.domain;
 
 import org.joda.time.DateTime;
+import org.motechproject.csd.adapters.DateAdapter;
+import org.motechproject.csd.adapters.DayOfTheWeekAdapter;
+import org.motechproject.csd.adapters.TimeAdapter;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlSchemaType;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.List;
 
 @Entity
+@XmlType(propOrder = { "openFlag", "daysOfTheWeek", "beginningHour", "endingHour", "beginEffectiveDate", "endEffectiveDate" })
 public class OperatingHours {
 
     @Field(required = true)
     private boolean openFlag;
 
     @Field
-    private List<DayOfTheWeek> dayOfTheWeek;
+    private List<DayOfTheWeek> daysOfTheWeek;
 
     @Field
     private DateTime beginningHour;
@@ -35,9 +43,9 @@ public class OperatingHours {
         this.beginEffectiveDate = beginEffectiveDate;
     }
 
-    public OperatingHours(boolean openFlag, List<DayOfTheWeek> dayOfTheWeek, DateTime beginningHour, DateTime endingHour, DateTime beginEffectiveDate, DateTime endEffectiveDate) {
+    public OperatingHours(boolean openFlag, List<DayOfTheWeek> daysOfTheWeek, DateTime beginningHour, DateTime endingHour, DateTime beginEffectiveDate, DateTime endEffectiveDate) {
         this.openFlag = openFlag;
-        this.dayOfTheWeek = dayOfTheWeek;
+        this.daysOfTheWeek = daysOfTheWeek;
         this.beginningHour = beginningHour;
         this.endingHour = endingHour;
         this.beginEffectiveDate = beginEffectiveDate;
@@ -48,22 +56,28 @@ public class OperatingHours {
         return openFlag;
     }
 
+    @XmlElement(required = true)
     public void setOpenFlag(boolean openFlag) {
         this.openFlag = openFlag;
     }
 
-    public List<DayOfTheWeek> getDayOfTheWeek() {
-        return dayOfTheWeek;
+    public List<DayOfTheWeek> getDaysOfTheWeek() {
+        return daysOfTheWeek;
     }
 
-    public void setDayOfTheWeek(List<DayOfTheWeek> dayOfTheWeek) {
-        this.dayOfTheWeek = dayOfTheWeek;
+    @XmlElement(name = "dayOfTheWeek")
+    @XmlSchemaType(name = "integer")
+    @XmlJavaTypeAdapter(type = DayOfTheWeek.class, value = DayOfTheWeekAdapter.class)
+    public void setDaysOfTheWeek(List<DayOfTheWeek> daysOfTheWeek) {
+        this.daysOfTheWeek = daysOfTheWeek;
     }
 
     public DateTime getBeginningHour() {
         return beginningHour;
     }
 
+    @XmlSchemaType(name = "time")
+    @XmlJavaTypeAdapter(type = DateTime.class, value = TimeAdapter.class)
     public void setBeginningHour(DateTime beginningHour) {
         this.beginningHour = beginningHour;
     }
@@ -72,6 +86,8 @@ public class OperatingHours {
         return endingHour;
     }
 
+    @XmlSchemaType(name = "time")
+    @XmlJavaTypeAdapter(type = DateTime.class, value = TimeAdapter.class)
     public void setEndingHour(DateTime endingHour) {
         this.endingHour = endingHour;
     }
@@ -80,6 +96,9 @@ public class OperatingHours {
         return beginEffectiveDate;
     }
 
+    @XmlElement(required = true)
+    @XmlSchemaType(name = "date")
+    @XmlJavaTypeAdapter(type = DateTime.class, value = DateAdapter.class)
     public void setBeginEffectiveDate(DateTime beginEffectiveDate) {
         this.beginEffectiveDate = beginEffectiveDate;
     }
@@ -88,6 +107,8 @@ public class OperatingHours {
         return endEffectiveDate;
     }
 
+    @XmlSchemaType(name = "date")
+    @XmlJavaTypeAdapter(type = DateTime.class, value = DateAdapter.class)
     public void setEndEffectiveDate(DateTime endEffectiveDate) {
         this.endEffectiveDate = endEffectiveDate;
     }
@@ -112,7 +133,7 @@ public class OperatingHours {
         if (beginningHour != null ? !beginningHour.equals(that.beginningHour) : that.beginningHour != null) {
             return false;
         }
-        if (dayOfTheWeek != null ? !dayOfTheWeek.equals(that.dayOfTheWeek) : that.dayOfTheWeek != null) {
+        if (daysOfTheWeek != null ? !daysOfTheWeek.equals(that.daysOfTheWeek) : that.daysOfTheWeek != null) {
             return false;
         }
         if (endEffectiveDate != null ? !endEffectiveDate.equals(that.endEffectiveDate) : that.endEffectiveDate != null) {
@@ -128,7 +149,7 @@ public class OperatingHours {
     @Override
     public int hashCode() {
         int result = (openFlag ? 1 : 0);
-        result = 31 * result + (dayOfTheWeek != null ? dayOfTheWeek.hashCode() : 0);
+        result = 31 * result + (daysOfTheWeek != null ? daysOfTheWeek.hashCode() : 0);
         result = 31 * result + (beginningHour != null ? beginningHour.hashCode() : 0);
         result = 31 * result + (endingHour != null ? endingHour.hashCode() : 0);
         result = 31 * result + beginEffectiveDate.hashCode();
@@ -140,7 +161,7 @@ public class OperatingHours {
     public String toString() {
         return "OperatingHours{" +
                 "openFlag=" + openFlag +
-                ", dayOfTheWeek=" + dayOfTheWeek +
+                ", daysOfTheWeek=" + daysOfTheWeek +
                 ", beginningHour=" + beginningHour +
                 ", endingHour=" + endingHour +
                 ", beginEffectiveDate=" + beginEffectiveDate +

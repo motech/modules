@@ -3,9 +3,13 @@ package org.motechproject.csd.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 
 @Entity
+@XmlType
 public class Address {
 
     @Field(required = true)
@@ -30,6 +34,7 @@ public class Address {
         return addressLines;
     }
 
+    @XmlElement(name = "addressLine", required = true)
     public void setAddressLines(List<AddressLine> addressLines) {
         this.addressLines = addressLines;
     }
@@ -38,6 +43,7 @@ public class Address {
         return type;
     }
 
+    @XmlAttribute
     public void setType(String type) {
         this.type = type;
     }

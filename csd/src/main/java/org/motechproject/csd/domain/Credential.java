@@ -1,13 +1,19 @@
 package org.motechproject.csd.domain;
 
 import org.joda.time.DateTime;
+import org.motechproject.csd.adapters.DateAdapter;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Order;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlSchemaType;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.List;
 
 @Entity
+@XmlType(propOrder = { "codedType", "number", "issuingAuthority", "credentialIssueDate", "credentialRenewalDate", "extensions" })
 public class Credential {
 
     @Field(required = true)
@@ -50,6 +56,7 @@ public class Credential {
         return codedType;
     }
 
+    @XmlElement(required = true)
     public void setCodedType(CodedType codedType) {
         this.codedType = codedType;
     }
@@ -58,6 +65,7 @@ public class Credential {
         return number;
     }
 
+    @XmlElement(required = true)
     public void setNumber(String number) {
         this.number = number;
     }
@@ -74,6 +82,8 @@ public class Credential {
         return credentialIssueDate;
     }
 
+    @XmlSchemaType(name = "date")
+    @XmlJavaTypeAdapter(type = DateTime.class, value = DateAdapter.class)
     public void setCredentialIssueDate(DateTime credentialIssueDate) {
         this.credentialIssueDate = credentialIssueDate;
     }
@@ -82,6 +92,8 @@ public class Credential {
         return credentialRenewalDate;
     }
 
+    @XmlSchemaType(name = "date")
+    @XmlJavaTypeAdapter(type = DateTime.class, value = DateAdapter.class)
     public void setCredentialRenewalDate(DateTime credentialRenewalDate) {
         this.credentialRenewalDate = credentialRenewalDate;
     }
@@ -90,6 +102,7 @@ public class Credential {
         return extensions;
     }
 
+    @XmlElement(name = "extension")
     public void setExtensions(List<Extension> extensions) {
         this.extensions = extensions;
     }

@@ -1,13 +1,19 @@
 package org.motechproject.csd.domain;
 
 import org.joda.time.DateTime;
+import org.motechproject.csd.adapters.DateAdapter;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Order;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlSchemaType;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.List;
 
 @Entity
+@XmlType(propOrder = { "names", "contactPoints", "addresses", "gender", "dateOfBirth" })
 public class Person {
 
     @Order(column = "person_names_idx")
@@ -47,6 +53,7 @@ public class Person {
         return names;
     }
 
+    @XmlElement(name = "name", required = true)
     public void setNames(List<PersonName> names) {
         this.names = names;
     }
@@ -55,10 +62,12 @@ public class Person {
         return contactPoints;
     }
 
+    @XmlElement(name = "contactPoint")
     public void setContactPoints(List<ContactPoint> contactPoints) {
         this.contactPoints = contactPoints;
     }
 
+    @XmlElement(name = "address")
     public List<Address> getAddresses() {
         return addresses;
     }
@@ -79,6 +88,8 @@ public class Person {
         return dateOfBirth;
     }
 
+    @XmlSchemaType(name = "date")
+    @XmlJavaTypeAdapter(type = DateTime.class, value = DateAdapter.class)
     public void setDateOfBirth(DateTime dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }

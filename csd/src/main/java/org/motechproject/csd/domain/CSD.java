@@ -3,7 +3,13 @@ package org.motechproject.csd.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
 @Entity
+@XmlRootElement(name = "CSD")
+@XmlType(propOrder = { "organizationDirectory", "serviceDirectory", "facilityDirectory", "providerDirectory" })
 public class CSD {
 
     @Field(required = true)
@@ -33,6 +39,7 @@ public class CSD {
         return organizationDirectory;
     }
 
+    @XmlElement(required = true)
     public void setOrganizationDirectory(OrganizationDirectory organizationDirectory) {
         this.organizationDirectory = organizationDirectory;
     }
@@ -41,6 +48,7 @@ public class CSD {
         return serviceDirectory;
     }
 
+    @XmlElement(required = true)
     public void setServiceDirectory(ServiceDirectory serviceDirectory) {
         this.serviceDirectory = serviceDirectory;
     }
@@ -49,6 +57,7 @@ public class CSD {
         return facilityDirectory;
     }
 
+    @XmlElement(required = true)
     public void setFacilityDirectory(FacilityDirectory facilityDirectory) {
         this.facilityDirectory = facilityDirectory;
     }
@@ -57,6 +66,7 @@ public class CSD {
         return providerDirectory;
     }
 
+    @XmlElement(required = true)
     public void setProviderDirectory(ProviderDirectory providerDirectory) {
         this.providerDirectory = providerDirectory;
     }

@@ -4,9 +4,12 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Order;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 
 @Entity
+@XmlType(propOrder = { "otherIDs", "codedTypes", "demographic", "languages", "providerOrganizations", "providerFacilities", "credentials", "specialties", "extensions", "record" })
 public class Provider extends AbstractUniqueID {
 
     @Order(column = "provider_other_ids_idx")
@@ -75,6 +78,7 @@ public class Provider extends AbstractUniqueID {
         return otherIDs;
     }
 
+    @XmlElement(name = "otherID")
     public void setOtherIDs(List<OtherID> otherIDs) {
         this.otherIDs = otherIDs;
     }
@@ -83,6 +87,7 @@ public class Provider extends AbstractUniqueID {
         return demographic;
     }
 
+    @XmlElement(required = true)
     public void setDemographic(Person demographic) {
         this.demographic = demographic;
     }
@@ -91,6 +96,7 @@ public class Provider extends AbstractUniqueID {
         return languages;
     }
 
+    @XmlElement(name = "language")
     public void setLanguages(List<CodedType> languages) {
         this.languages = languages;
     }
@@ -99,6 +105,7 @@ public class Provider extends AbstractUniqueID {
         return providerOrganizations;
     }
 
+    @XmlElement(name = "organizations")
     public void setProviderOrganizations(ProviderOrganizations providerOrganizations) {
         this.providerOrganizations = providerOrganizations;
     }
@@ -107,6 +114,7 @@ public class Provider extends AbstractUniqueID {
         return providerFacilities;
     }
 
+    @XmlElement(name = "facilities")
     public void setProviderFacilities(ProviderFacilities providerFacilities) {
         this.providerFacilities = providerFacilities;
     }
@@ -115,6 +123,7 @@ public class Provider extends AbstractUniqueID {
         return credentials;
     }
 
+    @XmlElement(name = "credential")
     public void setCredentials(List<Credential> credentials) {
         this.credentials = credentials;
     }
@@ -123,6 +132,7 @@ public class Provider extends AbstractUniqueID {
         return specialties;
     }
 
+    @XmlElement(name = "specialty")
     public void setSpecialties(List<CodedType> specialties) {
         this.specialties = specialties;
     }
@@ -131,6 +141,7 @@ public class Provider extends AbstractUniqueID {
         return codedTypes;
     }
 
+    @XmlElement(name = "codedType", required = true)
     public void setCodedTypes(List<CodedType> codedTypes) {
         this.codedTypes = codedTypes;
     }
@@ -139,6 +150,7 @@ public class Provider extends AbstractUniqueID {
         return record;
     }
 
+    @XmlElement(required = true)
     public void setRecord(Record record) {
         this.record = record;
     }
@@ -147,6 +159,7 @@ public class Provider extends AbstractUniqueID {
         return extensions;
     }
 
+    @XmlElement(name = "extension")
     public void setExtensions(List<Extension> extensions) {
         this.extensions = extensions;
     }

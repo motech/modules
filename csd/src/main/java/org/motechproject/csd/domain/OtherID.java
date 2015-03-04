@@ -3,7 +3,11 @@ package org.motechproject.csd.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlType;
+
 @Entity
+@XmlType
 public class OtherID {
 
     @Field(required = true)
@@ -28,6 +32,7 @@ public class OtherID {
         return assigningAuthorityName;
     }
 
+    @XmlAttribute(required = true)
     public void setAssigningAuthorityName(String assigningAuthorityName) {
         this.assigningAuthorityName = assigningAuthorityName;
     }
@@ -36,6 +41,7 @@ public class OtherID {
         return code;
     }
 
+    @XmlAttribute(required = true)
     public void setCode(String code) {
         this.code = code;
     }

@@ -4,9 +4,12 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Order;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 
 @Entity
+@XmlType(propOrder = { "services", "extensions" })
 public class FacilityOrganization extends AbstractUniqueID {
 
     @Order(column = "facility_organization_services_idx")
@@ -34,6 +37,7 @@ public class FacilityOrganization extends AbstractUniqueID {
         return services;
     }
 
+    @XmlElement(name = "service")
     public void setServices(List<FacilityOrganizationService> services) {
         this.services = services;
     }
@@ -42,6 +46,7 @@ public class FacilityOrganization extends AbstractUniqueID {
         return extensions;
     }
 
+    @XmlElement(name = "extension")
     public void setExtensions(List<Extension> extensions) {
         this.extensions = extensions;
     }

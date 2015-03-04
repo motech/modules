@@ -4,9 +4,12 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Order;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 
 @Entity
+@XmlType
 public class ProviderOrganizations {
 
     @Order(column = "provider_organizations_organization_idx")
@@ -24,6 +27,7 @@ public class ProviderOrganizations {
         return providerOrganizations;
     }
 
+    @XmlElement(name = "organization", required = true)
     public void setProviderOrganizations(List<ProviderOrganization> providerOrganizations) {
         this.providerOrganizations = providerOrganizations;
     }

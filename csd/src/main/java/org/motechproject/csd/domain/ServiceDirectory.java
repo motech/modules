@@ -4,9 +4,12 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Order;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 
 @Entity
+@XmlType
 public class ServiceDirectory {
 
     @Order(column = "service_directory_services_idx")
@@ -24,6 +27,7 @@ public class ServiceDirectory {
         return services;
     }
 
+    @XmlElement(name = "service")
     public void setServices(List<Service> services) {
         this.services = services;
     }

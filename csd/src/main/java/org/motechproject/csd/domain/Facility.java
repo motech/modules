@@ -4,12 +4,15 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Order;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 
 /**
  * Facility
  */
 @Entity
+@XmlType(propOrder = { "otherIDs", "codedTypes", "primaryName", "otherNames", "addresses", "contacts", "geocode", "languages", "contactPoints", "facilityOrganizations", "operatingHours", "extensions", "record" })
 public class Facility extends AbstractUniqueID {
 
     @Field
@@ -101,6 +104,7 @@ public class Facility extends AbstractUniqueID {
         return facilityOrganizations;
     }
 
+    @XmlElement(name = "organizations")
     public void setFacilityOrganizations(FacilityOrganizations facilityOrganizations) {
         this.facilityOrganizations = facilityOrganizations;
     }
@@ -117,6 +121,7 @@ public class Facility extends AbstractUniqueID {
         return otherIDs;
     }
 
+    @XmlElement(name = "otherID")
     public void setOtherIDs(List<OtherID> otherIDs) {
         this.otherIDs = otherIDs;
     }
@@ -125,6 +130,7 @@ public class Facility extends AbstractUniqueID {
         return primaryName;
     }
 
+    @XmlElement(required = true)
     public void setPrimaryName(String primaryName) {
         this.primaryName = primaryName;
     }
@@ -133,6 +139,7 @@ public class Facility extends AbstractUniqueID {
         return otherNames;
     }
 
+    @XmlElement(name = "otherName")
     public void setOtherNames(List<OtherName> otherNames) {
         this.otherNames = otherNames;
     }
@@ -141,6 +148,7 @@ public class Facility extends AbstractUniqueID {
         return addresses;
     }
 
+    @XmlElement(name = "address")
     public void setAddresses(List<Address> addresses) {
         this.addresses = addresses;
     }
@@ -149,6 +157,7 @@ public class Facility extends AbstractUniqueID {
         return contacts;
     }
 
+    @XmlElement(name = "contact")
     public void setContacts(List<OrganizationContact> contacts) {
         this.contacts = contacts;
     }
@@ -157,6 +166,7 @@ public class Facility extends AbstractUniqueID {
         return languages;
     }
 
+    @XmlElement(name = "language")
     public void setLanguages(List<CodedType> languages) {
         this.languages = languages;
     }
@@ -165,6 +175,7 @@ public class Facility extends AbstractUniqueID {
         return contactPoints;
     }
 
+    @XmlElement(name = "contactPoint")
     public void setContactPoints(List<ContactPoint> contactPoints) {
         this.contactPoints = contactPoints;
     }
@@ -173,6 +184,7 @@ public class Facility extends AbstractUniqueID {
         return codedTypes;
     }
 
+    @XmlElement(name = "codedType", required = true)
     public void setCodedTypes(List<CodedType> codedTypes) {
         this.codedTypes = codedTypes;
     }
@@ -181,6 +193,7 @@ public class Facility extends AbstractUniqueID {
         return extensions;
     }
 
+    @XmlElement(name = "extension")
     public void setExtensions(List<Extension> extensions) {
         this.extensions = extensions;
     }
@@ -189,6 +202,7 @@ public class Facility extends AbstractUniqueID {
         return record;
     }
 
+    @XmlElement(required = true)
     public void setRecord(Record record) {
         this.record = record;
     }

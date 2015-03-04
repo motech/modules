@@ -3,6 +3,8 @@ package org.motechproject.csd.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.xml.bind.annotation.XmlAttribute;
+
 @Entity
 public abstract class AbstractUniqueID {
 
@@ -20,6 +22,7 @@ public abstract class AbstractUniqueID {
      * Should be a valid UUID represented as an URN. Example:
      * "urn:uuid:53347B2E-185E-4BC3-BCDA-7FAB5D521FE7"
      */
+    @XmlAttribute
     public void setEntityID(String entityID) {
         this.entityID = entityID;
     }

@@ -3,7 +3,11 @@ package org.motechproject.csd.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlType;
+
 @Entity
+@XmlType
 public class Extension {
 
     @Field(required = true)
@@ -24,6 +28,7 @@ public class Extension {
         return type;
     }
 
+    @XmlAttribute(required = true)
     public void setType(String type) {
         this.type = type;
     }
@@ -32,6 +37,7 @@ public class Extension {
         return urn;
     }
 
+    @XmlAttribute(required = true)
     public void setUrn(String urn) {
         this.urn = urn;
     }

@@ -4,9 +4,12 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Order;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 
 @Entity
+@XmlType(propOrder = { "codedType", "extensions", "record" })
 public class Service extends AbstractUniqueID {
 
     @Field(required = true)
@@ -39,6 +42,7 @@ public class Service extends AbstractUniqueID {
         return record;
     }
 
+    @XmlElement(required = true)
     public void setRecord(Record record) {
         this.record = record;
     }
@@ -47,6 +51,7 @@ public class Service extends AbstractUniqueID {
         return codedType;
     }
 
+    @XmlElement(required = true)
     public void setCodedType(CodedType codedType) {
         this.codedType = codedType;
     }
@@ -55,6 +60,7 @@ public class Service extends AbstractUniqueID {
         return extensions;
     }
 
+    @XmlElement(name = "extension")
     public void setExtensions(List<Extension> extensions) {
         this.extensions = extensions;
     }

@@ -2,11 +2,16 @@ package org.motechproject.csd.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.Ignore;
 
 import javax.jdo.annotations.Order;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 
 @Entity
+@XmlType(propOrder = { "names", "organization", "languages", "operatingHours", "freeBusyURI", "extensions" })
 public class ProviderFacilityService extends AbstractUniqueID {
 
     @Order(column = "provider_facility_service_names_idx")
@@ -15,6 +20,9 @@ public class ProviderFacilityService extends AbstractUniqueID {
 
     @Field
     private String providerOrganization;
+
+    @Ignore
+    private UniqueID organization;
 
     @Order(column = "provider_facility_service_languages_idx")
     @Field(name = "provider_facility_service_languages")
@@ -43,6 +51,7 @@ public class ProviderFacilityService extends AbstractUniqueID {
         setEntityID(entityID);
         this.names = names;
         this.providerOrganization = providerOrganization;
+        organization = new UniqueID(providerOrganization);
         this.languages = languages;
         this.operatingHours = operatingHours;
         this.freeBusyURI = freeBusyURI;
@@ -53,6 +62,7 @@ public class ProviderFacilityService extends AbstractUniqueID {
         return languages;
     }
 
+    @XmlElement(name = "language")
     public void setLanguages(List<CodedType> languages) {
         this.languages = languages;
     }
@@ -61,6 +71,7 @@ public class ProviderFacilityService extends AbstractUniqueID {
         return names;
     }
 
+    @XmlElement(name = "name")
     public void setNames(List<Name> names) {
         this.names = names;
     }
@@ -73,18 +84,30 @@ public class ProviderFacilityService extends AbstractUniqueID {
         this.operatingHours = operatingHours;
     }
 
+    @XmlTransient
     public String getProviderOrganization() {
         return providerOrganization;
     }
 
     public void setProviderOrganization(String providerOrganization) {
         this.providerOrganization = providerOrganization;
+        organization = new UniqueID(providerOrganization);
+    }
+
+    public UniqueID getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(UniqueID organization) {
+        this.organization = organization;
+        providerOrganization = organization.getEntityID();
     }
 
     public List<Extension> getExtensions() {
         return extensions;
     }
 
+    @XmlElement(name = "extension")
     public void setExtensions(List<Extension> extensions) {
         this.extensions = extensions;
     }

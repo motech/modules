@@ -2,11 +2,16 @@ package org.motechproject.csd.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.Ignore;
 
 import javax.jdo.annotations.Order;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 
 @Entity
+@XmlType(propOrder = { "otherIDs", "codedTypes", "primaryName", "otherNames", "addresses", "contacts", "credentials", "languages", "specializations", "contactPoints", "parent", "extensions", "record" })
 public class Organization extends AbstractUniqueID {
 
     @Order(column = "organization_other_ids_idx")
@@ -51,6 +56,9 @@ public class Organization extends AbstractUniqueID {
     @Field
     private String parentOrganization;
 
+    @Ignore
+    private UniqueID parent;
+
     @Order(column = "organization_extensions_idx")
     @Field(name = "organization_extensions")
     private List<Extension> extensions;
@@ -74,6 +82,7 @@ public class Organization extends AbstractUniqueID {
         setEntityID(entityID);
         this.credentials = credentials;
         this.parentOrganization = parentOrganization;
+        parent = new UniqueID(parentOrganization);
         this.specializations = specializations;
         this.otherIDs = otherIDs;
         this.primaryName = primaryName;
@@ -91,6 +100,7 @@ public class Organization extends AbstractUniqueID {
         return primaryName;
     }
 
+    @XmlElement(required = true)
     public void setPrimaryName(String primaryName) {
         this.primaryName = primaryName;
     }
@@ -99,6 +109,7 @@ public class Organization extends AbstractUniqueID {
         return otherNames;
     }
 
+    @XmlElement(name = "otherName")
     public void setOtherNames(List<OtherName> otherNames) {
         this.otherNames = otherNames;
     }
@@ -107,6 +118,7 @@ public class Organization extends AbstractUniqueID {
         return otherIDs;
     }
 
+    @XmlElement(name = "otherID")
     public void setOtherIDs(List<OtherID> otherIDs) {
         this.otherIDs = otherIDs;
     }
@@ -115,6 +127,7 @@ public class Organization extends AbstractUniqueID {
         return addresses;
     }
 
+    @XmlElement(name = "address")
     public void setAddresses(List<Address> addresses) {
         this.addresses = addresses;
     }
@@ -123,6 +136,7 @@ public class Organization extends AbstractUniqueID {
         return contacts;
     }
 
+    @XmlElement(name = "contact")
     public void setContacts(List<OrganizationContact> contacts) {
         this.contacts = contacts;
     }
@@ -131,6 +145,7 @@ public class Organization extends AbstractUniqueID {
         return credentials;
     }
 
+    @XmlElement(name = "credential")
     public void setCredentials(List<Credential> credentials) {
         this.credentials = credentials;
     }
@@ -139,6 +154,7 @@ public class Organization extends AbstractUniqueID {
         return languages;
     }
 
+    @XmlElement(name = "language")
     public void setLanguages(List<CodedType> languages) {
         this.languages = languages;
     }
@@ -147,6 +163,7 @@ public class Organization extends AbstractUniqueID {
         return specializations;
     }
 
+    @XmlElement(name = "specialization")
     public void setSpecializations(List<CodedType> specializations) {
         this.specializations = specializations;
     }
@@ -155,6 +172,7 @@ public class Organization extends AbstractUniqueID {
         return contactPoints;
     }
 
+    @XmlElement(name = "contactPoint")
     public void setContactPoints(List<ContactPoint> contactPoints) {
         this.contactPoints = contactPoints;
     }
@@ -163,6 +181,7 @@ public class Organization extends AbstractUniqueID {
         return codedTypes;
     }
 
+    @XmlElement(name = "codedType", required = true)
     public void setCodedTypes(List<CodedType> codedTypes) {
         this.codedTypes = codedTypes;
     }
@@ -171,22 +190,35 @@ public class Organization extends AbstractUniqueID {
         return record;
     }
 
+    @XmlElement(required = true)
     public void setRecord(Record record) {
         this.record = record;
     }
 
+    @XmlTransient
     public String getParentOrganization() {
         return parentOrganization;
     }
 
     public void setParentOrganization(String parentOrganization) {
         this.parentOrganization = parentOrganization;
+        parent = new UniqueID(parentOrganization);
+    }
+
+    public UniqueID getParent() {
+        return parent;
+    }
+
+    public void setParent(UniqueID parent) {
+        this.parent = parent;
+        parentOrganization = parent.getEntityID();
     }
 
     public List<Extension> getExtensions() {
         return extensions;
     }
 
+    @XmlElement(name = "extension")
     public void setExtensions(List<Extension> extensions) {
         this.extensions = extensions;
     }

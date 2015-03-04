@@ -3,7 +3,11 @@ package org.motechproject.csd.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
+
 @Entity
+@XmlType(propOrder = { "codedType", "equipment", "purpose", "certificate" })
 public class ContactPoint {
 
     @Field(required = true)
@@ -36,6 +40,7 @@ public class ContactPoint {
         return codedType;
     }
 
+    @XmlElement(required = true)
     public void setCodedType(CodedType codedType) {
         this.codedType = codedType;
     }
