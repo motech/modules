@@ -3,7 +3,7 @@ package org.motechproject.alerts.contract;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.joda.time.DateTime;
-import org.motechproject.commons.api.CastUtils;
+import org.motechproject.commons.api.ClassUtils;
 import org.motechproject.commons.api.Range;
 import org.motechproject.alerts.domain.Alert;
 
@@ -88,9 +88,6 @@ public enum Criterion {
 
     private static List<Alert> select(List<Alert> alerts, Predicate predicate) {
         Collection collection = CollectionUtils.select(alerts, predicate);
-        return CastUtils.cast(Alert.class, enumeration(collection));
+        return ClassUtils.filterByClass(Alert.class, enumeration(collection));
     }
-
 }
-
-
