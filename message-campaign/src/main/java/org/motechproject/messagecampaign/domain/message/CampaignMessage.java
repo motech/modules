@@ -1,7 +1,7 @@
 package org.motechproject.messagecampaign.domain.message;
 
+import org.apache.commons.lang.StringUtils;
 import org.motechproject.commons.date.model.Time;
-import org.motechproject.commons.date.util.StringUtil;
 
 import java.util.List;
 
@@ -68,7 +68,7 @@ public abstract class CampaignMessage {
     }
 
     public void setStartTime(String startTime) {
-      if (!StringUtil.isNullOrEmpty(startTime)) {
+      if (StringUtils.isNotBlank(startTime)) {
           this.startTime = parseTime(startTime, ":");
       }
     }

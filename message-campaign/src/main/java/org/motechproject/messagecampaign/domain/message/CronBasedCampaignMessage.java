@@ -1,6 +1,6 @@
 package org.motechproject.messagecampaign.domain.message;
 
-import org.motechproject.commons.date.util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 import org.motechproject.messagecampaign.exception.CampaignMessageValidationException;
 
 import java.util.List;
@@ -33,9 +33,8 @@ public class CronBasedCampaignMessage extends CampaignMessage {
 
     @Override
     public void validate() {
-        if (StringUtil.isNullOrEmpty(cron)) {
+        if (StringUtils.isBlank(cron)) {
             throw new CampaignMessageValidationException("Cron cannot be null or empty in " + CronBasedCampaignMessage.class.getName());
         }
     }
-
 }

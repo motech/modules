@@ -1,5 +1,6 @@
 package org.motechproject.scheduletracking.service.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.event.listener.EventRelay;
@@ -19,7 +20,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-import static org.motechproject.commons.date.util.StringUtil.isNullOrEmpty;
 import static org.motechproject.scheduletracking.domain.EnrollmentStatus.COMPLETED;
 import static org.motechproject.scheduletracking.domain.EnrollmentStatus.UNENROLLED;
 
@@ -71,7 +71,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     @Override
     public void fulfillCurrentMilestone(Enrollment enrollment, DateTime fulfillmentDateTime) {
         Schedule schedule = scheduleDataService.findByName(enrollment.getScheduleName());
-        if (isNullOrEmpty(enrollment.getCurrentMilestoneName())) {
+        if (StringUtils.isBlank(enrollment.getCurrentMilestoneName())) {
             throw new NoMoreMilestonesToFulfillException();
         }
 
