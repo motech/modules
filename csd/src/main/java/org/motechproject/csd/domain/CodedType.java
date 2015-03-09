@@ -9,6 +9,26 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 
+/**
+ * The text content of this element may optionally be used to provide translations to the local language of a coded value.
+ *
+ * <p>Java class for codedtype complex type.
+ *
+ * <p>The following schema fragment specifies the expected content contained within this class.
+ *
+ * <pre>
+ * &lt;complexType name="codedtype">
+ *   &lt;simpleContent>
+ *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
+ *       &lt;attribute name="code" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
+ *       &lt;attribute name="codingScheme" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
+ *     &lt;/extension>
+ *   &lt;/simpleContent>
+ * &lt;/complexType>
+ * </pre>
+ *
+ *
+ */
 @Entity
 @XmlType
 @XmlAccessorType(XmlAccessType.NONE)

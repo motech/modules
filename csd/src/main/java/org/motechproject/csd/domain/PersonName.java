@@ -11,6 +11,23 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 
+/**
+ * <p>Java class for anonymous complex type.
+ *
+ * <p>The following schema fragment specifies the expected content contained within this class.
+ *
+ * <pre>
+ * &lt;complexType>
+ *   &lt;complexContent>
+ *     &lt;extension base="{urn:ihe:iti:csd:2013}name">
+ *       &lt;attribute ref="{http://www.w3.org/XML/1998/namespace}lang"/>
+ *     &lt;/extension>
+ *   &lt;/complexContent>
+ * &lt;/complexType>
+ * </pre>
+ *
+ *
+ */
 @Entity
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "commonNames", "honorific", "forename", "otherNames", "surname", "suffix" })

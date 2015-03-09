@@ -10,6 +10,27 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 
+/**
+ * <p>Java class for service complex type.
+ *
+ * <p>The following schema fragment specifies the expected content contained within this class.
+ *
+ * <pre>
+ * &lt;complexType name="service">
+ *   &lt;complexContent>
+ *     &lt;extension base="{urn:ihe:iti:csd:2013}uniqueID">
+ *       &lt;sequence>
+ *         &lt;element name="codedType" type="{urn:ihe:iti:csd:2013}codedtype"/>
+ *         &lt;element name="extension" type="{urn:ihe:iti:csd:2013}extension" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="record" type="{urn:ihe:iti:csd:2013}record"/>
+ *       &lt;/sequence>
+ *     &lt;/extension>
+ *   &lt;/complexContent>
+ * &lt;/complexType>
+ * </pre>
+ *
+ *
+ */
 @Entity
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "codedType", "extensions", "record" })

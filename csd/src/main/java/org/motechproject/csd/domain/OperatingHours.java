@@ -15,6 +15,30 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.List;
 
+/**
+ * <p>Java class for operatingHours complex type.
+ *
+ * <p>The following schema fragment specifies the expected content contained within this class.
+ *
+ * <pre>
+ * &lt;complexType name="operatingHours">
+ *   &lt;complexContent>
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;sequence>
+ *         &lt;element name="openFlag" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
+ *         &lt;element name="dayOfTheWeek" type="{http://www.w3.org/2001/XMLSchema}integer" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="beginningHour" type="{http://www.w3.org/2001/XMLSchema}time" minOccurs="0"/>
+ *         &lt;element name="endingHour" type="{http://www.w3.org/2001/XMLSchema}time" minOccurs="0"/>
+ *         &lt;element name="beginEffectiveDate" type="{http://www.w3.org/2001/XMLSchema}date"/>
+ *         &lt;element name="endEffectiveDate" type="{http://www.w3.org/2001/XMLSchema}date" minOccurs="0"/>
+ *       &lt;/sequence>
+ *     &lt;/restriction>
+ *   &lt;/complexContent>
+ * &lt;/complexType>
+ * </pre>
+ *
+ *
+ */
 @Entity
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "openFlag", "daysOfTheWeek", "beginningHour", "endingHour", "beginEffectiveDate", "endEffectiveDate" })

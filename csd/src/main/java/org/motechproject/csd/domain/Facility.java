@@ -11,7 +11,89 @@ import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 
 /**
- * Facility
+ * <p>Java class for facility complex type.
+ *
+ * <p>The following schema fragment specifies the expected content contained within this class.
+ *
+ * <pre>
+ * &lt;complexType name="facility">
+ *   &lt;complexContent>
+ *     &lt;extension base="{urn:ihe:iti:csd:2013}uniqueID">
+ *       &lt;sequence>
+ *         &lt;element name="otherID" type="{urn:ihe:iti:csd:2013}otherID" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="codedType" type="{urn:ihe:iti:csd:2013}codedtype" maxOccurs="unbounded"/>
+ *         &lt;element name="primaryName" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="otherName" maxOccurs="unbounded" minOccurs="0">
+ *           &lt;complexType>
+ *             &lt;simpleContent>
+ *               &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
+ *                 &lt;attribute ref="{http://www.w3.org/XML/1998/namespace}lang"/>
+ *               &lt;/extension>
+ *             &lt;/simpleContent>
+ *           &lt;/complexType>
+ *         &lt;/element>
+ *         &lt;element name="address" type="{urn:ihe:iti:csd:2013}address" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="contact" maxOccurs="unbounded" minOccurs="0">
+ *           &lt;complexType>
+ *             &lt;complexContent>
+ *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *                 &lt;choice>
+ *                   &lt;element name="provider" type="{urn:ihe:iti:csd:2013}uniqueID"/>
+ *                   &lt;element name="person" type="{urn:ihe:iti:csd:2013}person"/>
+ *                 &lt;/choice>
+ *               &lt;/restriction>
+ *             &lt;/complexContent>
+ *           &lt;/complexType>
+ *         &lt;/element>
+ *         &lt;element name="geocode" type="{urn:ihe:iti:csd:2013}geocode" minOccurs="0"/>
+ *         &lt;element name="language" type="{urn:ihe:iti:csd:2013}codedtype" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="contactPoint" type="{urn:ihe:iti:csd:2013}contactPoint" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="organizations" minOccurs="0">
+ *           &lt;complexType>
+ *             &lt;complexContent>
+ *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *                 &lt;sequence>
+ *                   &lt;element name="organization" maxOccurs="unbounded">
+ *                     &lt;complexType>
+ *                       &lt;complexContent>
+ *                         &lt;extension base="{urn:ihe:iti:csd:2013}uniqueID">
+ *                           &lt;sequence>
+ *                             &lt;element name="service" maxOccurs="unbounded" minOccurs="0">
+ *                               &lt;complexType>
+ *                                 &lt;complexContent>
+ *                                   &lt;extension base="{urn:ihe:iti:csd:2013}uniqueID">
+ *                                     &lt;sequence>
+ *                                       &lt;element name="name" type="{urn:ihe:iti:csd:2013}name" maxOccurs="unbounded" minOccurs="0"/>
+ *                                       &lt;element name="language" type="{urn:ihe:iti:csd:2013}codedtype" maxOccurs="unbounded" minOccurs="0"/>
+ *                                       &lt;element name="operatingHours" type="{urn:ihe:iti:csd:2013}operatingHours" maxOccurs="unbounded" minOccurs="0"/>
+ *                                       &lt;element name="freeBusyURI" type="{http://www.w3.org/2001/XMLSchema}anyURI" minOccurs="0"/>
+ *                                       &lt;element name="extension" type="{urn:ihe:iti:csd:2013}extension" maxOccurs="unbounded" minOccurs="0"/>
+ *                                     &lt;/sequence>
+ *                                   &lt;/extension>
+ *                                 &lt;/complexContent>
+ *                               &lt;/complexType>
+ *                             &lt;/element>
+ *                             &lt;element name="extension" type="{urn:ihe:iti:csd:2013}extension" maxOccurs="unbounded" minOccurs="0"/>
+ *                           &lt;/sequence>
+ *                         &lt;/extension>
+ *                       &lt;/complexContent>
+ *                     &lt;/complexType>
+ *                   &lt;/element>
+ *                 &lt;/sequence>
+ *               &lt;/restriction>
+ *             &lt;/complexContent>
+ *           &lt;/complexType>
+ *         &lt;/element>
+ *         &lt;element name="operatingHours" type="{urn:ihe:iti:csd:2013}operatingHours" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="extension" type="{urn:ihe:iti:csd:2013}extension" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="record" type="{urn:ihe:iti:csd:2013}record"/>
+ *       &lt;/sequence>
+ *     &lt;/extension>
+ *   &lt;/complexContent>
+ * &lt;/complexType>
+ * </pre>
+ *
+ *
  */
 @Entity
 @XmlAccessorType(XmlAccessType.NONE)

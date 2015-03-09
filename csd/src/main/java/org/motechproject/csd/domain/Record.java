@@ -12,6 +12,26 @@ import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+/**
+ * <p>Java class for record complex type.
+ *
+ * <p>The following schema fragment specifies the expected content contained within this class.
+ *
+ * <pre>
+ * &lt;complexType name="record">
+ *   &lt;complexContent>
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;attribute name="created" use="required" type="{http://www.w3.org/2001/XMLSchema}dateTime" />
+ *       &lt;attribute name="updated" use="required" type="{http://www.w3.org/2001/XMLSchema}dateTime" />
+ *       &lt;attribute name="status" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="sourceDirectory" type="{http://www.w3.org/2001/XMLSchema}anyURI" />
+ *     &lt;/restriction>
+ *   &lt;/complexContent>
+ * &lt;/complexType>
+ * </pre>
+ *
+ *
+ */
 @Entity
 @XmlType
 @XmlAccessorType(XmlAccessType.NONE)
