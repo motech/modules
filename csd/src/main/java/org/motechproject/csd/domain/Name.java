@@ -12,8 +12,7 @@ import java.util.List;
 @XmlType(propOrder = { "commonNames", "honorific", "forename", "otherNames", "surname", "suffix" })
 public class Name {
 
-    @Order(column = "name_common_names_idx")
-    @Field(name = "name_common_names", required = true)
+    @Field(required = true)
     private List<String> commonNames;
 
     @Field

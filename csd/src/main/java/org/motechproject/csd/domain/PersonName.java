@@ -13,8 +13,7 @@ import java.util.List;
 @XmlType(propOrder = { "commonNames", "honorific", "forename", "otherNames", "surname", "suffix" })
 public class PersonName {
 
-    @Order(column = "person_name_common_names_idx")
-    @Field(name = "person_name_common_names", required = true)
+    @Field(required = true)
     private List<String> commonNames;
 
     @Field
@@ -70,6 +69,14 @@ public class PersonName {
         this.honorific = honorific;
     }
 
+    public String getSuffix() {
+        return suffix;
+    }
+
+    public void setSuffix(String suffix) {
+        this.suffix = suffix;
+    }
+    
     public String getForename() {
         return forename;
     }
@@ -86,6 +93,11 @@ public class PersonName {
         return lang;
     }
 
+    @XmlAttribute(name = "lang", namespace = "http://www.w3.org/XML/1998/namespace")
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
+
     @XmlElement(name = "otherName")
     public void setOtherNames(List<CodedType> otherNames) {
         this.otherNames = otherNames;
@@ -97,19 +109,6 @@ public class PersonName {
 
     public void setSurname(String surname) {
         this.surname = surname;
-    }
-
-    public String getSuffix() {
-        return suffix;
-    }
-
-    public void setSuffix(String suffix) {
-        this.suffix = suffix;
-    }
-
-    @XmlAttribute(name = "lang", namespace = "http://www.w3.org/XML/1998/namespace")
-    public void setLang(String lang) {
-        this.lang = lang;
     }
 
     @Override //NO CHECKSTYLE CyclomaticComplexity
