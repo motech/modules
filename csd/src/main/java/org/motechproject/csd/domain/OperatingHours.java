@@ -7,6 +7,8 @@ import org.motechproject.csd.adapters.TimeAdapter;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
@@ -14,6 +16,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.List;
 
 @Entity
+@XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "openFlag", "daysOfTheWeek", "beginningHour", "endingHour", "beginEffectiveDate", "endEffectiveDate" })
 public class OperatingHours {
 
@@ -76,6 +79,7 @@ public class OperatingHours {
         return beginningHour;
     }
 
+    @XmlElement
     @XmlSchemaType(name = "time")
     @XmlJavaTypeAdapter(type = DateTime.class, value = TimeAdapter.class)
     public void setBeginningHour(DateTime beginningHour) {
@@ -86,6 +90,7 @@ public class OperatingHours {
         return endingHour;
     }
 
+    @XmlElement
     @XmlSchemaType(name = "time")
     @XmlJavaTypeAdapter(type = DateTime.class, value = TimeAdapter.class)
     public void setEndingHour(DateTime endingHour) {
@@ -107,6 +112,7 @@ public class OperatingHours {
         return endEffectiveDate;
     }
 
+    @XmlElement
     @XmlSchemaType(name = "date")
     @XmlJavaTypeAdapter(type = DateTime.class, value = DateAdapter.class)
     public void setEndEffectiveDate(DateTime endEffectiveDate) {

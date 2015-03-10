@@ -3,10 +3,13 @@ package org.motechproject.csd.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 @Entity
+@XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "codedType", "equipment", "purpose", "certificate" })
 public class ContactPoint {
 
@@ -49,6 +52,7 @@ public class ContactPoint {
         return equipment;
     }
 
+    @XmlElement
     public void setEquipment(String equipment) {
         this.equipment = equipment;
     }
@@ -57,6 +61,7 @@ public class ContactPoint {
         return purpose;
     }
 
+    @XmlElement
     public void setPurpose(String purpose) {
         this.purpose = purpose;
     }
@@ -65,6 +70,7 @@ public class ContactPoint {
         return certificate;
     }
 
+    @XmlElement
     public void setCertificate(String certificate) {
         this.certificate = certificate;
     }

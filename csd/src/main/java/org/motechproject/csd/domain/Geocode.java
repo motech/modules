@@ -3,10 +3,13 @@ package org.motechproject.csd.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 @Entity
+@XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "latitude", "longitude", "altitude", "coordinateSystem" })
 public class Geocode {
 
@@ -59,6 +62,7 @@ public class Geocode {
         return altitude;
     }
 
+    @XmlElement
     public void setAltitude(double altitude) {
         this.altitude = altitude;
     }
@@ -67,6 +71,7 @@ public class Geocode {
         return coordinateSystem;
     }
 
+    @XmlElement
     public void setCoordinateSystem(String coordinateSystem) {
         this.coordinateSystem = coordinateSystem;
     }

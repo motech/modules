@@ -5,12 +5,15 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
 
 import javax.jdo.annotations.Order;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 
 @Entity
+@XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "otherIDs", "codedTypes", "primaryName", "otherNames", "addresses", "contacts", "credentials", "languages", "specializations", "contactPoints", "parent", "extensions", "record" })
 public class Organization extends AbstractUniqueID {
 
@@ -209,6 +212,7 @@ public class Organization extends AbstractUniqueID {
         return parent;
     }
 
+    @XmlElement
     public void setParent(UniqueID parent) {
         this.parent = parent;
         parentOrganization = parent.getEntityID();

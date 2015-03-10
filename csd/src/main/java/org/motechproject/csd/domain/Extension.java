@@ -3,11 +3,14 @@ package org.motechproject.csd.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
 @Entity
 @XmlType
+@XmlAccessorType(XmlAccessType.NONE)
 public class Extension {
 
     @Field(required = true)

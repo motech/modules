@@ -3,9 +3,12 @@ package org.motechproject.csd.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 
 @Entity
+@XmlAccessorType(XmlAccessType.NONE)
 public abstract class AbstractUniqueID {
 
     @Field(required = true)

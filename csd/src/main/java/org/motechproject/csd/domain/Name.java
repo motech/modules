@@ -4,11 +4,14 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Order;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 
 @Entity
+@XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "commonNames", "honorific", "forename", "otherNames", "surname", "suffix" })
 public class Name {
 
@@ -60,6 +63,7 @@ public class Name {
         return honorific;
     }
 
+    @XmlElement
     public void setHonorific(String honorific) {
         this.honorific = honorific;
     }
@@ -68,6 +72,7 @@ public class Name {
         return forename;
     }
 
+    @XmlElement
     public void setForename(String forename) {
         this.forename = forename;
     }
@@ -85,6 +90,7 @@ public class Name {
         return surname;
     }
 
+    @XmlElement
     public void setSurname(String surname) {
         this.surname = surname;
     }
@@ -93,6 +99,7 @@ public class Name {
         return suffix;
     }
 
+    @XmlElement
     public void setSuffix(String suffix) {
         this.suffix = suffix;
     }

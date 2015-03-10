@@ -6,6 +6,8 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Order;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
@@ -13,6 +15,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.List;
 
 @Entity
+@XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "names", "contactPoints", "addresses", "gender", "dateOfBirth" })
 public class Person {
 
@@ -80,6 +83,7 @@ public class Person {
         return gender;
     }
 
+    @XmlElement
     public void setGender(String gender) {
         this.gender = gender;
     }
@@ -88,6 +92,7 @@ public class Person {
         return dateOfBirth;
     }
 
+    @XmlElement
     @XmlSchemaType(name = "date")
     @XmlJavaTypeAdapter(type = DateTime.class, value = DateAdapter.class)
     public void setDateOfBirth(DateTime dateOfBirth) {

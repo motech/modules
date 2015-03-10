@@ -6,6 +6,8 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Order;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
@@ -13,6 +15,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.List;
 
 @Entity
+@XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "codedType", "number", "issuingAuthority", "credentialIssueDate", "credentialRenewalDate", "extensions" })
 public class Credential {
 
@@ -74,6 +77,7 @@ public class Credential {
         return issuingAuthority;
     }
 
+    @XmlElement
     public void setIssuingAuthority(String issuingAuthority) {
         this.issuingAuthority = issuingAuthority;
     }
@@ -82,6 +86,7 @@ public class Credential {
         return credentialIssueDate;
     }
 
+    @XmlElement
     @XmlSchemaType(name = "date")
     @XmlJavaTypeAdapter(type = DateTime.class, value = DateAdapter.class)
     public void setCredentialIssueDate(DateTime credentialIssueDate) {
@@ -92,6 +97,7 @@ public class Credential {
         return credentialRenewalDate;
     }
 
+    @XmlElement
     @XmlSchemaType(name = "date")
     @XmlJavaTypeAdapter(type = DateTime.class, value = DateAdapter.class)
     public void setCredentialRenewalDate(DateTime credentialRenewalDate) {

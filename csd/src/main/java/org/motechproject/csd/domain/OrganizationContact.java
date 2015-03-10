@@ -4,6 +4,8 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlTransient;
@@ -11,6 +13,7 @@ import javax.xml.bind.annotation.XmlType;
 
 @Entity
 @XmlType
+@XmlAccessorType(XmlAccessType.NONE)
 public class OrganizationContact {
 
     @Field

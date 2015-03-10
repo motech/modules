@@ -5,12 +5,15 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
 
 import javax.jdo.annotations.Order;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 
 @Entity
+@XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "names", "organization", "languages", "operatingHours", "freeBusyURI", "extensions" })
 public class ProviderFacilityService extends AbstractUniqueID {
 
@@ -80,6 +83,7 @@ public class ProviderFacilityService extends AbstractUniqueID {
         return operatingHours;
     }
 
+    @XmlElement
     public void setOperatingHours(List<OperatingHours> operatingHours) {
         this.operatingHours = operatingHours;
     }
@@ -98,6 +102,7 @@ public class ProviderFacilityService extends AbstractUniqueID {
         return organization;
     }
 
+    @XmlElement
     public void setOrganization(UniqueID organization) {
         this.organization = organization;
         providerOrganization = organization.getEntityID();
@@ -116,6 +121,7 @@ public class ProviderFacilityService extends AbstractUniqueID {
         return freeBusyURI;
     }
 
+    @XmlElement
     public void setFreeBusyURI(String freeBusyURI) {
         this.freeBusyURI = freeBusyURI;
     }

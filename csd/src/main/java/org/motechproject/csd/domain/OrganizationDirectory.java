@@ -4,12 +4,15 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Order;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.List;
 
 @Entity
 @XmlType
+@XmlAccessorType(XmlAccessType.NONE)
 public class OrganizationDirectory {
 
     @Order(column = "organization_directory_organizations_idx")

@@ -5,13 +5,16 @@ import org.motechproject.csd.adapters.DateTimeAdapter;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-@XmlType
 @Entity
+@XmlType
+@XmlAccessorType(XmlAccessType.NONE)
 public class Record {
 
     @Field(required = true)

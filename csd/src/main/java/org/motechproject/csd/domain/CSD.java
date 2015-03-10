@@ -3,12 +3,15 @@ package org.motechproject.csd.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 @Entity
 @XmlRootElement(name = "CSD")
+@XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "organizationDirectory", "serviceDirectory", "facilityDirectory", "providerDirectory" })
 public class CSD {
 

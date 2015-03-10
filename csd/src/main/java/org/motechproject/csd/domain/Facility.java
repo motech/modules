@@ -4,6 +4,8 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Order;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.List;
  * Facility
  */
 @Entity
+@XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "otherIDs", "codedTypes", "primaryName", "otherNames", "addresses", "contacts", "geocode", "languages", "contactPoints", "facilityOrganizations", "operatingHours", "extensions", "record" })
 public class Facility extends AbstractUniqueID {
 
@@ -96,6 +99,7 @@ public class Facility extends AbstractUniqueID {
         return geocode;
     }
 
+    @XmlElement
     public void setGeocode(Geocode geocode) {
         this.geocode = geocode;
     }
@@ -113,6 +117,7 @@ public class Facility extends AbstractUniqueID {
         return operatingHours;
     }
 
+    @XmlElement
     public void setOperatingHours(List<OperatingHours> operatingHours) {
         this.operatingHours = operatingHours;
     }
