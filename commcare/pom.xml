@@ -84,8 +84,8 @@
         </dependency>
         <!-- Required by velocity-tools, we define it ourselves to avoid dependency-convergence error -->
         <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>com.springsource.antlr</artifactId>
+            <groupId>org.apache.servicemix.bundles</groupId>
+            <artifactId>org.apache.servicemix.bundles.antlr</artifactId>
         </dependency>
         <dependency>
             <groupId>${motech.groupId}</groupId>
