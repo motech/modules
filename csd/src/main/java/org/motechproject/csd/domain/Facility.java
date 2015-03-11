@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -108,42 +109,42 @@ public class Facility extends AbstractUniqueID {
 
     @Order(column = "facility_operating_hours_idx")
     @Field(name = "facility_operating_hours")
-    private List<OperatingHours> operatingHours;
+    private List<OperatingHours> operatingHours = new ArrayList<>();
 
     @Order(column = "facility_other_ids_idx")
     @Field(name = "facility_other_ids")
-    private List<OtherID> otherIDs;
+    private List<OtherID> otherIDs = new ArrayList<>();
 
     @Field(required = true)
     private String primaryName;
 
     @Order(column = "facility_other_names_idx")
     @Field(name = "facility_other_names")
-    private List<OtherName> otherNames;
+    private List<OtherName> otherNames = new ArrayList<>();
 
     @Order(column = "facility_addresses_idx")
     @Field(name = "facility_addresses")
-    private List<Address> addresses;
+    private List<Address> addresses = new ArrayList<>();
 
     @Order(column = "facility_contacts_idx")
     @Field(name = "facility_contacts")
-    private List<OrganizationContact> contacts;
+    private List<OrganizationContact> contacts = new ArrayList<>();
 
     @Order(column = "facility_languages_idx")
     @Field(name = "facility_languages")
-    private List<CodedType> languages;
+    private List<CodedType> languages = new ArrayList<>();
 
     @Order(column = "facility_contact_points_idx")
     @Field(name = "facility_contact_points")
-    private List<ContactPoint> contactPoints;
+    private List<ContactPoint> contactPoints = new ArrayList<>();
 
     @Order(column = "facility_coded_types_idx")
     @Field(required = true, name = "facility_coded_types")
-    private List<CodedType> codedTypes;
+    private List<CodedType> codedTypes = new ArrayList<>();
 
     @Order(column = "facility_extensions_idx")
     @Field(name = "facility_extensions")
-    private List<Extension> extensions;
+    private List<Extension> extensions = new ArrayList<>();
 
     @Field(required = true)
     private Record record;

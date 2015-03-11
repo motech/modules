@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,22 +41,22 @@ public class FacilityOrganizationService extends AbstractUniqueID {
 
     @Order(column = "facility_organization_service_names_idx")
     @Field(name = "facility_organization_service_names")
-    private List<Name> names;
+    private List<Name> names = new ArrayList<>();
 
     @Order(column = "facility_organization_service_languages_idx")
     @Field(name = "facility_organization_service_languages")
-    private List<CodedType> languages;
+    private List<CodedType> languages = new ArrayList<>();
 
     @Order(column = "facility_organization_service_operatingHours_idx")
     @Field(name = "facility_organization_service_operating_hours")
-    private List<OperatingHours> operatingHours;
+    private List<OperatingHours> operatingHours = new ArrayList<>();
 
     @Field
     private String freeBusyURI;
 
     @Order(column = "facility_organization_service_extensions_idx")
     @Field(name = "facility_organization_service_extensions")
-    private List<Extension> extensions;
+    private List<Extension> extensions = new ArrayList<>();
 
     public FacilityOrganizationService() {
     }

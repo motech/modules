@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,7 +42,7 @@ public class Service extends AbstractUniqueID {
 
     @Order(column = "service_extensions_idx")
     @Field(name = "service_extensions")
-    private List<Extension> extensions;
+    private List<Extension> extensions = new ArrayList<>();
 
     @Field(required = true)
     private Record record;

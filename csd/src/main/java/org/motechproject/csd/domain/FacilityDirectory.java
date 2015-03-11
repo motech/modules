@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,7 +37,7 @@ public class FacilityDirectory {
 
     @Order(column = "service_directory_services_idx")
     @Field(name = "facility_directory_facilities")
-    private List<Facility> facilities;
+    private List<Facility> facilities = new ArrayList<>();
 
     public FacilityDirectory() {
     }

@@ -117,7 +117,7 @@ public class Record {
 
         Record record = (Record) o;
 
-        if (!created.equals(record.created)) {
+        if (!created.isEqual(record.created)) {
             return false;
         }
         if (sourceDirectory != null ? !sourceDirectory.equals(record.sourceDirectory) : record.sourceDirectory != null) {
@@ -126,7 +126,7 @@ public class Record {
         if (!status.equals(record.status)) {
             return false;
         }
-        if (!updated.equals(record.updated)) {
+        if (!updated.isEqual(record.updated)) {
             return false;
         }
 

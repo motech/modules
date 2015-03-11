@@ -106,9 +106,6 @@ public class OrganizationContact {
 
         OrganizationContact that = (OrganizationContact) o;
 
-        if (contact != null ? !contact.equals(that.contact) : that.contact != null) {
-            return false;
-        }
         if (person != null ? !person.equals(that.person) : that.person != null) {
             return false;
         }
@@ -123,7 +120,6 @@ public class OrganizationContact {
     public int hashCode() {
         int result = providerEntityID != null ? providerEntityID.hashCode() : 0;
         result = 31 * result + (person != null ? person.hashCode() : 0);
-        result = 31 * result + (contact != null ? contact.hashCode() : 0);
         return result;
     }
 
@@ -132,7 +128,6 @@ public class OrganizationContact {
         return "OrganizationContact{" +
                 "providerEntityID='" + providerEntityID + '\'' +
                 ", person=" + person +
-                ", contact=" + contact +
                 '}';
     }
 }

@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,11 +52,11 @@ public class FacilityOrganization extends AbstractUniqueID {
 
     @Order(column = "facility_organization_services_idx")
     @Field(name = "facility_organization_services")
-    private List<FacilityOrganizationService> services;
+    private List<FacilityOrganizationService> services = new ArrayList<>();
 
     @Order(column = "facility_organization_extensions_idx")
     @Field(name = "facility_organization_extensions")
-    private List<Extension> extensions;
+    private List<Extension> extensions = new ArrayList<>();
 
     public FacilityOrganization() {
     }

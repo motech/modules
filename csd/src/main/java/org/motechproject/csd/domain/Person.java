@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,15 +53,15 @@ public class Person {
 
     @Order(column = "person_names_idx")
     @Field(name = "person_names", required = true)
-    private List<PersonName> names;
+    private List<PersonName> names = new ArrayList<>();
 
     @Order(column = "person_contact_points_idx")
     @Field(name = "person_contact_points")
-    private List<ContactPoint> contactPoints;
+    private List<ContactPoint> contactPoints = new ArrayList<>();
 
     @Order(column = "person_addresses_idx")
     @Field(name = "person_addresses")
-    private List<Address> addresses;
+    private List<Address> addresses = new ArrayList<>();
 
     @Field
     private String gender;
@@ -147,7 +148,7 @@ public class Person {
         if (contactPoints != null ? !contactPoints.equals(person.contactPoints) : person.contactPoints != null) {
             return false;
         }
-        if (dateOfBirth != null ? !dateOfBirth.equals(person.dateOfBirth) : person.dateOfBirth != null) {
+        if (dateOfBirth != null ? !dateOfBirth.toLocalDate().isEqual(person.dateOfBirth.toLocalDate()) : person.dateOfBirth != null) {
             return false;
         }
         if (gender != null ? !gender.equals(person.gender) : person.gender != null) {

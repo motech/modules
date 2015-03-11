@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,7 +35,7 @@ import java.util.List;
 public class PersonName {
 
     @Field(required = true)
-    private List<String> commonNames;
+    private List<String> commonNames = new ArrayList<>();
 
     @Field
     private String honorific;
@@ -44,7 +45,7 @@ public class PersonName {
 
     @Order(column = "person_name_other_names_idx")
     @Field(name = "person_name_other_names")
-    private List<CodedType> otherNames;
+    private List<CodedType> otherNames = new ArrayList<>();
 
     @Field
     private String surname;
@@ -98,7 +99,7 @@ public class PersonName {
     public void setSuffix(String suffix) {
         this.suffix = suffix;
     }
-    
+
     public String getForename() {
         return forename;
     }

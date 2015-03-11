@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,7 +45,7 @@ import java.util.List;
 public class Address {
 
     @Field(required = true)
-    private List<AddressLine> addressLines;
+    private List<AddressLine> addressLines = new ArrayList<>();
 
     @Field
     private String type;

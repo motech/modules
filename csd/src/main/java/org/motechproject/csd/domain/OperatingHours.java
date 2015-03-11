@@ -13,6 +13,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,7 +49,7 @@ public class OperatingHours {
     private boolean openFlag;
 
     @Field
-    private List<DayOfTheWeek> daysOfTheWeek;
+    private List<DayOfTheWeek> daysOfTheWeek = new ArrayList<>();
 
     @Field
     private DateTime beginningHour;
@@ -157,19 +158,19 @@ public class OperatingHours {
         if (openFlag != that.openFlag) {
             return false;
         }
-        if (!beginEffectiveDate.equals(that.beginEffectiveDate)) {
+        if (!beginEffectiveDate.toLocalDate().isEqual(that.beginEffectiveDate.toLocalDate())) {
             return false;
         }
-        if (beginningHour != null ? !beginningHour.equals(that.beginningHour) : that.beginningHour != null) {
+        if (beginningHour != null ? !beginningHour.toLocalTime().isEqual(that.beginningHour.toLocalTime()) : that.beginningHour != null) {
             return false;
         }
         if (daysOfTheWeek != null ? !daysOfTheWeek.equals(that.daysOfTheWeek) : that.daysOfTheWeek != null) {
             return false;
         }
-        if (endEffectiveDate != null ? !endEffectiveDate.equals(that.endEffectiveDate) : that.endEffectiveDate != null) {
+        if (endEffectiveDate != null ? !endEffectiveDate.toLocalDate().isEqual(that.endEffectiveDate.toLocalDate()) : that.endEffectiveDate != null) {
             return false;
         }
-        if (endingHour != null ? !endingHour.equals(that.endingHour) : that.endingHour != null) {
+        if (endingHour != null ? !endingHour.toLocalTime().isEqual(that.endingHour.toLocalTime()) : that.endingHour != null) {
             return false;
         }
 

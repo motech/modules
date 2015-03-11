@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -61,7 +62,7 @@ public class FacilityOrganizations {
 
     @Order(column = "facility_organizations_organization_idx")
     @Field(required = true, name = "facility_organizations_organization")
-    private List<FacilityOrganization> facilityOrganizations;
+    private List<FacilityOrganization> facilityOrganizations = new ArrayList<>();
 
     public FacilityOrganizations() {
     }

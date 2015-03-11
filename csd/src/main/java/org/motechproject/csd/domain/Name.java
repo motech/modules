@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,7 +48,7 @@ import java.util.List;
 public class Name {
 
     @Field(required = true)
-    private List<String> commonNames;
+    private List<String> commonNames = new ArrayList<>();
 
     @Field
     private String honorific;
@@ -57,7 +58,7 @@ public class Name {
 
     @Order(column = "name_other_names_idx")
     @Field(name = "name_other_names")
-    private List<CodedType> otherNames;
+    private List<CodedType> otherNames = new ArrayList<>();
 
     @Field
     private String surname;

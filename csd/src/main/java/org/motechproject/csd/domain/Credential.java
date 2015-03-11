@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -60,7 +61,7 @@ public class Credential {
 
     @Order(column = "credential_extensions_idx")
     @Field(name = "credential_extensions")
-    private List<Extension> extensions;
+    private List<Extension> extensions = new ArrayList<>();
 
     public Credential() {
     }
@@ -151,10 +152,10 @@ public class Credential {
         if (!codedType.equals(that.codedType)) {
             return false;
         }
-        if (credentialIssueDate != null ? !credentialIssueDate.equals(that.credentialIssueDate) : that.credentialIssueDate != null) {
+        if (credentialIssueDate != null ? !credentialIssueDate.toLocalDate().isEqual(that.credentialIssueDate.toLocalDate()) : that.credentialIssueDate != null) {
             return false;
         }
-        if (credentialRenewalDate != null ? !credentialRenewalDate.equals(that.credentialRenewalDate) : that.credentialRenewalDate != null) {
+        if (credentialRenewalDate != null ? !credentialRenewalDate.toLocalDate().isEqual(that.credentialRenewalDate.toLocalDate()) : that.credentialRenewalDate != null) {
             return false;
         }
         if (extensions != null ? !extensions.equals(that.extensions) : that.extensions != null) {

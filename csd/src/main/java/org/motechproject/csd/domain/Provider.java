@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -104,14 +105,14 @@ public class Provider extends AbstractUniqueID {
 
     @Order(column = "provider_other_ids_idx")
     @Field(name = "provider_other_ids")
-    private List<OtherID> otherIDs;
+    private List<OtherID> otherIDs = new ArrayList<>();
 
     @Field(required = true)
     private Person demographic;
 
     @Order(column = "provider_languages_idx")
     @Field(name = "provider_languages")
-    private List<CodedType> languages;
+    private List<CodedType> languages = new ArrayList<>();
 
     @Field
     private ProviderOrganizations providerOrganizations;
@@ -121,19 +122,19 @@ public class Provider extends AbstractUniqueID {
 
     @Order(column = "provider_credentials_idx")
     @Field(name = "provider_credentials")
-    private List<Credential> credentials;
+    private List<Credential> credentials = new ArrayList<>();
 
     @Order(column = "provider_specialities_idx")
     @Field(name = "provider_specialities")
-    private List<CodedType> specialties;
+    private List<CodedType> specialties = new ArrayList<>();
 
     @Order(column = "provider_coded_types_idx")
     @Field(required = true, name = "provider_coded_types")
-    private List<CodedType> codedTypes;
+    private List<CodedType> codedTypes = new ArrayList<>();
 
     @Order(column = "provider_extensions_idx")
     @Field(name = "provider_extensions")
-    private List<Extension> extensions;
+    private List<Extension> extensions = new ArrayList<>();
 
     @Field(required = true)
     private Record record;

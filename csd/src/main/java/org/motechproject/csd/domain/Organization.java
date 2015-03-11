@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -69,42 +70,42 @@ public class Organization extends AbstractUniqueID {
 
     @Order(column = "organization_other_ids_idx")
     @Field(name = "organization_other_ids")
-    private List<OtherID> otherIDs;
+    private List<OtherID> otherIDs = new ArrayList<>();
 
     @Field(required = true)
     private String primaryName;
 
     @Order(column = "organization_other_names_idx")
     @Field(name = "organization_other_names")
-    private List<OtherName> otherNames;
+    private List<OtherName> otherNames = new ArrayList<>();
 
     @Order(column = "organization_addresses_idx")
     @Field(name = "organization_addresses")
-    private List<Address> addresses;
+    private List<Address> addresses = new ArrayList<>();
 
     @Order(column = "organization_contacts_idx")
     @Field(name = "organization_contacts")
-    private List<OrganizationContact> contacts;
+    private List<OrganizationContact> contacts = new ArrayList<>();
 
     @Order(column = "organization_credentials_idx")
     @Field(name = "organization_credentials")
-    private List<Credential> credentials;
+    private List<Credential> credentials = new ArrayList<>();
 
     @Order(column = "organization_languages_idx")
     @Field(name = "organization_languages")
-    private List<CodedType> languages;
+    private List<CodedType> languages = new ArrayList<>();
 
     @Order(column = "organization_specialization_idx")
     @Field(name = "organization_specialization")
-    private List<CodedType> specializations;
+    private List<CodedType> specializations = new ArrayList<>();
 
     @Order(column = "organization_contact_points_idx")
     @Field(name = "organization_contact_points")
-    private List<ContactPoint> contactPoints;
+    private List<ContactPoint> contactPoints = new ArrayList<>();
 
     @Order(column = "organization_coded_types_idx")
     @Field(required = true, name = "organization_coded_types")
-    private List<CodedType> codedTypes;
+    private List<CodedType> codedTypes = new ArrayList<>();
 
     @Field
     private String parentOrganization;
@@ -114,7 +115,7 @@ public class Organization extends AbstractUniqueID {
 
     @Order(column = "organization_extensions_idx")
     @Field(name = "organization_extensions")
-    private List<Extension> extensions;
+    private List<Extension> extensions = new ArrayList<>();
 
     @Field(required = true)
     private Record record;

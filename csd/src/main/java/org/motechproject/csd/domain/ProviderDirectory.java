@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,7 +37,7 @@ public class ProviderDirectory {
 
     @Order(column = "provider_directory_providers_idx")
     @Field(name = "provider_directory_providers")
-    private List<Provider> providers;
+    private List<Provider> providers = new ArrayList<>();
 
     public ProviderDirectory() {
     }
