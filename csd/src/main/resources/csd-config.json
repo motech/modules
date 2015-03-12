@@ -1,0 +1,7 @@
+{
+    "schedulerEnabled":"false",
+    "periodDays":"0",
+    "periodHours":"4",
+    "periodMinutes":"0",
+    "xmlUrl":"https://raw.githubusercontent.com/openhie/openinfoman/master/resources/service_directories/CSD-Facilities-Connectathon-20150120.xml"
+}
