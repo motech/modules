@@ -27,12 +27,20 @@
     </bean>
 
     <bean id="moduleRegistrationData" class="org.motechproject.osgi.web.ModuleRegistrationData">
+        <constructor-arg name="url" value="../csd/resources/index.html"/>
         <constructor-arg name="moduleName" value="csd" />
+        <constructor-arg name="angularModules">
+            <list>
+                <value>csd</value>
+            </list>
+        </constructor-arg>
         <constructor-arg name="i18n">
             <map>
                 <entry key="messages" value="../csd/resources/messages/"/>
             </map>
         </constructor-arg>
+        <property name="settingsURL" value="/csd/settings" />
+        <property name="defaultURL" value="/csd/csd"/>
     </bean>
 
     <osgi:service ref="configService" interface="org.motechproject.csd.service.ConfigService" />

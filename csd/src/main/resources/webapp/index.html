@@ -1,0 +1,30 @@
+<div id="inner-center" class="csd inner-center ui-layout-center ui-layout-pane ui-layout-pane-center">
+    <div class="header-footer-breadcrumb">
+        <ul class="breadcrumb" role="navigation">
+            <li><a role="menu" href=".">{{msg('server.home')}}</a></li>
+            <li><a role="menu" href="#/settings">{{msg('motech-csd')}}</a></li>
+            <li ng-show="active('#/csd/settings')" ng-class="active('#/csd/settings')">{{msg('csd.web.settings.title')}}</li>
+        </ul>
+    </div>
+    <div class="header-footer">
+        <ul id="content-tabs" class="nav nav-tabs">
+            <li ng-class="active('#/csd/csd')"><a href="#/csd/csd">{{msg('csd.web.csd.title')}}</a></li>
+            <li ng-class="active('#/csd/settings')"><a href="#/csd/settings">{{msg('csd.web.settings.title')}}</a></li>
+        </ul>
+    </div>
+    <div class="ui-layout-content">
+        <div class="tab-content" id="tab-content">
+            <div id="main-content" class="active">
+                <div ng-view></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="inner-east" class="csd inner-east ui-layout-pane ui-layout-pane-east">
+    <div class="header-toolbar header-footer"></div>
+    <div class="ui-layout-content">
+        <div class="inside">
+        </div>
+    </div>
+</div>
