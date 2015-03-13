@@ -14,14 +14,6 @@
         <level value="ALL"/>
     </logger>
 
-    <logger name="org.springframework.web">
-        <level value="ERROR"/>
-    </logger>
-
-    <logger name="org.springframework.ws">
-        <level value="ALL"/>
-    </logger>
-
     <root>
         <priority value="ERROR"/>
         <appender-ref ref="CONSOLE"/>
