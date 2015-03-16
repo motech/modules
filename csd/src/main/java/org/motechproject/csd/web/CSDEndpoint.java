@@ -1,5 +1,6 @@
 package org.motechproject.csd.web;
 
+import org.joda.time.DateTime;
 import org.motechproject.csd.domain.GetModificationsRequest;
 import org.motechproject.csd.domain.GetModificationsResponse;
 import org.motechproject.csd.service.CSDService;
@@ -19,7 +20,8 @@ public class CSDEndpoint {
     @ResponsePayload
     public GetModificationsResponse getModifications(@RequestPayload GetModificationsRequest request) {
         GetModificationsResponse response = new GetModificationsResponse();
-        response.setCSD(csdService.getCSD());
+        DateTime lastModified = new DateTime(request.getLastModified().toGregorianCalendar().getTime());
+        response.setCSD(csdService.getByLastModified(lastModified));
 
         return response;
     }

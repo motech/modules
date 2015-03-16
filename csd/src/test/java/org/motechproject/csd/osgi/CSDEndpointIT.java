@@ -1,5 +1,6 @@
 package org.motechproject.csd.osgi;
 
+import com.google.inject.Inject;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.methods.HttpPost;
@@ -7,6 +8,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.csd.service.CSDService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.testing.utils.TestContext;
@@ -21,19 +23,20 @@ import java.io.InputStream;
 import static org.junit.Assert.*;
 
 /**
- * Verify that RecipeService is present & functional.
+ * Verify that CSDEndpoint is present & functional.
  */
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class CSDEndpointIT extends BasePaxIT {
 
+    @Inject
+    private CSDService csdService;
+
     @Test
     public void verifySoapEndpoint() throws IOException, InterruptedException {
         login();
 
-        // TODO: Use a real SOAP client, not HTTP client
-        // TODO: Some headers are not understood by the server
         HttpPost post;
         try (InputStream in = getClass().getClassLoader().getResourceAsStream("request.xml")) {
             String xml = IOUtils.toString(in);

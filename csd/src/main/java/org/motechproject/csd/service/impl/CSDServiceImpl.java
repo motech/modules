@@ -1,6 +1,11 @@
 package org.motechproject.csd.service.impl;
 
+import org.joda.time.DateTime;
 import org.motechproject.csd.domain.CSD;
+import org.motechproject.csd.domain.FacilityDirectory;
+import org.motechproject.csd.domain.ProviderDirectory;
+import org.motechproject.csd.domain.OrganizationDirectory;
+import org.motechproject.csd.domain.ServiceDirectory;
 import org.motechproject.csd.mds.CSDDataService;
 import org.motechproject.csd.service.CSDService;
 import org.motechproject.csd.service.FacilityDirectoryService;
@@ -51,6 +56,20 @@ public class CSDServiceImpl implements CSDService {
         } else {
             return csdList.get(0);
         }
+    }
+
+    @Override
+    public CSD getByLastModified(DateTime lastModified) {
+        FacilityDirectory facilityDirectory = new FacilityDirectory(
+                facilityDirectoryService.getModifiedAfter(lastModified));
+        ProviderDirectory providerDirectory = new ProviderDirectory(
+                providerDirectoryService.getModifiedAfter(lastModified));
+        OrganizationDirectory organizationDirectory = new OrganizationDirectory(
+                organizationDirectoryService.getModifiedAfter(lastModified));
+        ServiceDirectory serviceDirectory = new ServiceDirectory(
+                serviceDirectoryService.getModifiedAfter(lastModified));
+
+        return new CSD(organizationDirectory, serviceDirectory, facilityDirectory, providerDirectory);
     }
 
     @Override
