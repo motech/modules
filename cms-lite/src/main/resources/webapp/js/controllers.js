@@ -47,7 +47,7 @@
         $scope.getResourceUrl = function(language, name, type){
             var resourceUrl=  $location.absUrl() ;
             resourceUrl =  resourceUrl.substring(0, resourceUrl.length - 31) ;
-            resourceUrl =  resourceUrl + '/cmsliteapi/'+type+'/'+language+'/'+name;
+            resourceUrl =  resourceUrl + '/cmsliteapi/' + type + '/' +language + '/' + name + '/';
             return resourceUrl;
         };
 
@@ -67,7 +67,6 @@
                 break;
             }
         };
-
 
         $scope.editStringResource = function() {
             if ($scope.validateField('stringResourceForm', 'value')) {
