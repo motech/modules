@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 import org.joda.time.MutablePeriod;
 import org.joda.time.Period;
 import org.motechproject.mds.annotations.Entity;
-import org.motechproject.mds.annotations.Ignore;
+import org.motechproject.mds.annotations.Field;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,8 +15,14 @@ import static org.motechproject.commons.date.util.DateUtil.now;
 
 @Entity
 public class Milestone {
+
+    @Field
     private String name;
+
+    @Field
     private Map<String, String> data = new HashMap<>();
+
+    @Field
     private List<MilestoneWindow> milestoneWindows = new ArrayList<>();
 
     public Milestone() {
@@ -64,7 +70,6 @@ public class Milestone {
         getMilestoneWindow(windowName).addAlerts(alertList);
     }
 
-    @Ignore
     public List<Alert> getAlerts() {
         List<Alert> alerts = new ArrayList<Alert>();
         for (MilestoneWindow window : milestoneWindows) {
@@ -73,7 +78,6 @@ public class Milestone {
         return alerts;
     }
 
-    @Ignore
     public Period getMaximumDuration() {
         return getWindowEnd(WindowName.max);
     }

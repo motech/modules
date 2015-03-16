@@ -5,7 +5,6 @@ import org.joda.time.MutablePeriod;
 import org.joda.time.Period;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
-import org.motechproject.mds.annotations.Ignore;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,8 +15,12 @@ import static org.motechproject.commons.date.util.DateUtil.now;
 @Entity
 public class Schedule {
 
+    @Field
     private String name;
+
+    @Field
     private List<Milestone> milestones = new ArrayList<>();
+
     @Field
     private boolean basedOnAbsoluteWindows;
 
@@ -37,7 +40,6 @@ public class Schedule {
         milestones.addAll(Arrays.asList(milestonesList));
     }
 
-    @Ignore
     public Milestone getFirstMilestone() {
         return milestones.get(0);
     }
@@ -63,7 +65,6 @@ public class Schedule {
         return null;
     }
 
-    @Ignore
     public Period getDuration() {
         MutablePeriod duration = new MutablePeriod();
         for (Milestone milestone : milestones) {
@@ -100,7 +101,6 @@ public class Schedule {
         return name != null ? name.hashCode() : 0;
     }
 
-    @Ignore
     public void setBasedOnAbsoluteWindows(boolean value) {
         this.basedOnAbsoluteWindows = value;
     }
@@ -109,7 +109,6 @@ public class Schedule {
         return basedOnAbsoluteWindows;
     }
 
-    @Ignore
     public Schedule merge(Schedule schedule) {
         this.milestones = schedule.milestones;
         this.basedOnAbsoluteWindows = schedule.basedOnAbsoluteWindows;

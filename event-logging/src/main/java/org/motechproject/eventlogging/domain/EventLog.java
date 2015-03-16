@@ -5,6 +5,7 @@ import org.joda.time.DateTime;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.mds.annotations.CrudEvents;
 import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.event.CrudEventType;
 
 import java.util.Map;
@@ -17,8 +18,13 @@ import java.util.Map;
 @CrudEvents(CrudEventType.NONE)
 public class EventLog {
 
+    @Field
     private String subject;
+
+    @Field
     private Map<String, Object> parameters;
+
+    @Field
     private DateTime timeStamp;
 
     /**

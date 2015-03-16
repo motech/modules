@@ -9,21 +9,42 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.joda.time.DateTime;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.Field;
 
 /**
  * SMS audit record for the database
  */
 @Entity
 public class SmsRecord {
+
+    @Field
     private String config;
+
+    @Field
     private SmsDirection smsDirection;
+
+    @Field
     private String phoneNumber;
+
+    @Field
     private String messageContent;
+
+    @Field
     private DateTime timestamp;
+
+    @Field
     private DeliveryStatus deliveryStatus;
+
+    @Field
     private String providerStatus;
+
+    @Field
     private String motechId;
+
+    @Field
     private String providerId;
+
+    @Field
     private String errorMessage;
 
     public SmsRecord() {
