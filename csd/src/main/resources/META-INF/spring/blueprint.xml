@@ -26,6 +26,14 @@
     </bean>
 
     <osgi:service ref="facilityService" interface="org.motechproject.csd.service.FacilityService" />
+    <osgi:service ref="csdService" interface="org.motechproject.csd.service.CSDService" />
+    <osgi:service ref="facilityDirectoryService" interface="org.motechproject.csd.service.FacilityDirectoryService" />
+    <osgi:service ref="organizationService" interface="org.motechproject.csd.service.OrganizationService" />
+    <osgi:service ref="organizationDirectoryService" interface="org.motechproject.csd.service.OrganizationDirectoryService" />
+    <osgi:service ref="providerService" interface="org.motechproject.csd.service.ProviderService" />
+    <osgi:service ref="providerDirectoryService" interface="org.motechproject.csd.service.ProviderDirectoryService" />
+    <osgi:service ref="serviceService" interface="org.motechproject.csd.service.ServiceService" />
+    <osgi:service ref="serviceDirectoryService" interface="org.motechproject.csd.service.ServiceDirectoryService" />
 
     <osgi:reference id="facilityDataService" interface="org.motechproject.csd.mds.FacilityDataService" />
     <osgi:reference id="addressDataService" interface="org.motechproject.csd.mds.AddressDataService" />
