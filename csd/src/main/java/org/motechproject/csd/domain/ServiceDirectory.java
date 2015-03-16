@@ -1,5 +1,6 @@
 package org.motechproject.csd.domain;
 
+import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
@@ -37,6 +38,7 @@ public class ServiceDirectory {
 
     @Order(column = "service_directory_services_idx")
     @Field(name = "service_directory_services")
+    @Cascade(delete = true)
     private List<Service> services = new ArrayList<>();
 
     public ServiceDirectory() {

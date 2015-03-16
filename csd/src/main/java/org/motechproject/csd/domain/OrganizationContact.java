@@ -1,5 +1,6 @@
 package org.motechproject.csd.domain;
 
+import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
@@ -40,6 +41,7 @@ public class OrganizationContact {
     private String providerEntityID;
 
     @Field
+    @Cascade(delete = true)
     private Person person;
 
     @Ignore

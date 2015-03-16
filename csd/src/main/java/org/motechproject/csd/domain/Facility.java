@@ -1,5 +1,6 @@
 package org.motechproject.csd.domain;
 
+import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
@@ -102,17 +103,21 @@ import java.util.List;
 public class Facility extends AbstractUniqueID {
 
     @Field
+    @Cascade(delete = true)
     private Geocode geocode;
 
     @Field
+    @Cascade(delete = true)
     private FacilityOrganizations facilityOrganizations;
 
     @Order(column = "facility_operating_hours_idx")
     @Field(name = "facility_operating_hours")
+    @Cascade(delete = true)
     private List<OperatingHours> operatingHours = new ArrayList<>();
 
     @Order(column = "facility_other_ids_idx")
     @Field(name = "facility_other_ids")
+    @Cascade(delete = true)
     private List<OtherID> otherIDs = new ArrayList<>();
 
     @Field(required = true)
@@ -120,33 +125,41 @@ public class Facility extends AbstractUniqueID {
 
     @Order(column = "facility_other_names_idx")
     @Field(name = "facility_other_names")
+    @Cascade(delete = true)
     private List<OtherName> otherNames = new ArrayList<>();
 
     @Order(column = "facility_addresses_idx")
     @Field(name = "facility_addresses")
+    @Cascade(delete = true)
     private List<Address> addresses = new ArrayList<>();
 
     @Order(column = "facility_contacts_idx")
     @Field(name = "facility_contacts")
+    @Cascade(delete = true)
     private List<OrganizationContact> contacts = new ArrayList<>();
 
     @Order(column = "facility_languages_idx")
     @Field(name = "facility_languages")
+    @Cascade(delete = true)
     private List<CodedType> languages = new ArrayList<>();
 
     @Order(column = "facility_contact_points_idx")
     @Field(name = "facility_contact_points")
+    @Cascade(delete = true)
     private List<ContactPoint> contactPoints = new ArrayList<>();
 
     @Order(column = "facility_coded_types_idx")
     @Field(required = true, name = "facility_coded_types")
+    @Cascade(delete = true)
     private List<CodedType> codedTypes = new ArrayList<>();
 
     @Order(column = "facility_extensions_idx")
     @Field(name = "facility_extensions")
+    @Cascade(delete = true)
     private List<Extension> extensions = new ArrayList<>();
 
-    @Field(required = true)
+    @Field
+    @Cascade(delete = true)
     private Record record;
 
     public Facility() {

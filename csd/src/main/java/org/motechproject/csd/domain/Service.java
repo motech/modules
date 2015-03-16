@@ -1,5 +1,6 @@
 package org.motechproject.csd.domain;
 
+import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
@@ -37,14 +38,17 @@ import java.util.List;
 @XmlType(propOrder = { "codedType", "extensions", "record" })
 public class Service extends AbstractUniqueID {
 
-    @Field(required = true)
+    @Field
+    @Cascade(delete = true)
     private CodedType codedType;
 
     @Order(column = "service_extensions_idx")
     @Field(name = "service_extensions")
+    @Cascade(delete = true)
     private List<Extension> extensions = new ArrayList<>();
 
-    @Field(required = true)
+    @Field
+    @Cascade(delete = true)
     private Record record;
 
     public Service() {

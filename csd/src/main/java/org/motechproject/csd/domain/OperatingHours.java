@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.motechproject.csd.adapters.DateAdapter;
 import org.motechproject.csd.adapters.DayOfTheWeekAdapter;
 import org.motechproject.csd.adapters.TimeAdapter;
+import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
@@ -49,6 +50,7 @@ public class OperatingHours {
     private boolean openFlag;
 
     @Field
+    @Cascade(delete = true)
     private List<DayOfTheWeek> daysOfTheWeek = new ArrayList<>();
 
     @Field

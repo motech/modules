@@ -2,6 +2,7 @@ package org.motechproject.csd.domain;
 
 import org.joda.time.DateTime;
 import org.motechproject.csd.adapters.DateAdapter;
+import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
@@ -53,14 +54,17 @@ public class Person {
 
     @Order(column = "person_names_idx")
     @Field(name = "person_names", required = true)
+    @Cascade(delete = true)
     private List<PersonName> names = new ArrayList<>();
 
     @Order(column = "person_contact_points_idx")
     @Field(name = "person_contact_points")
+    @Cascade(delete = true)
     private List<ContactPoint> contactPoints = new ArrayList<>();
 
     @Order(column = "person_addresses_idx")
     @Field(name = "person_addresses")
+    @Cascade(delete = true)
     private List<Address> addresses = new ArrayList<>();
 
     @Field

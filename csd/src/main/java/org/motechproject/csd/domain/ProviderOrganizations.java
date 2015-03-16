@@ -1,5 +1,6 @@
 package org.motechproject.csd.domain;
 
+import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
@@ -49,6 +50,7 @@ public class ProviderOrganizations {
 
     @Order(column = "provider_organizations_organization_idx")
     @Field(required = true, name = "provider_organizations_organization")
+    @Cascade(delete = true)
     private List<ProviderOrganization> providerOrganizations = new ArrayList<>();
 
     public ProviderOrganizations() {

@@ -1,5 +1,6 @@
 package org.motechproject.csd.domain;
 
+import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
@@ -48,6 +49,7 @@ import java.util.List;
 public class Name {
 
     @Field(required = true)
+    @Cascade(delete = true)
     private List<String> commonNames = new ArrayList<>();
 
     @Field
@@ -58,6 +60,7 @@ public class Name {
 
     @Order(column = "name_other_names_idx")
     @Field(name = "name_other_names")
+    @Cascade(delete = true)
     private List<CodedType> otherNames = new ArrayList<>();
 
     @Field

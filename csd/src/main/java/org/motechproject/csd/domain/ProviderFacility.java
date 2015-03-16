@@ -1,5 +1,6 @@
 package org.motechproject.csd.domain;
 
+import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
@@ -54,14 +55,17 @@ public class ProviderFacility extends AbstractUniqueID {
 
     @Order(column = "provider_facility_services_idx")
     @Field(name = "provider_facility_services")
+    @Cascade(delete = true)
     private List<ProviderFacilityService> services = new ArrayList<>();
 
     @Order(column = "provider_facility_operating_hours_idx")
     @Field(name = "provider_facility_operating_hours")
+    @Cascade(delete = true)
     private List<OperatingHours> operatingHours = new ArrayList<>();
 
     @Order(column = "provider_facility_extensions_idx")
     @Field(name = "provider_facility_extensions")
+    @Cascade(delete = true)
     private List<Extension> extensions = new ArrayList<>();
 
     public ProviderFacility() {

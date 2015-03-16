@@ -1,5 +1,6 @@
 package org.motechproject.csd.domain;
 
+import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
@@ -70,6 +71,7 @@ public class Organization extends AbstractUniqueID {
 
     @Order(column = "organization_other_ids_idx")
     @Field(name = "organization_other_ids")
+    @Cascade(delete = true)
     private List<OtherID> otherIDs = new ArrayList<>();
 
     @Field(required = true)
@@ -77,34 +79,42 @@ public class Organization extends AbstractUniqueID {
 
     @Order(column = "organization_other_names_idx")
     @Field(name = "organization_other_names")
+    @Cascade(delete = true)
     private List<OtherName> otherNames = new ArrayList<>();
 
     @Order(column = "organization_addresses_idx")
     @Field(name = "organization_addresses")
+    @Cascade(delete = true)
     private List<Address> addresses = new ArrayList<>();
 
     @Order(column = "organization_contacts_idx")
     @Field(name = "organization_contacts")
+    @Cascade(delete = true)
     private List<OrganizationContact> contacts = new ArrayList<>();
 
     @Order(column = "organization_credentials_idx")
     @Field(name = "organization_credentials")
+    @Cascade(delete = true)
     private List<Credential> credentials = new ArrayList<>();
 
     @Order(column = "organization_languages_idx")
     @Field(name = "organization_languages")
+    @Cascade(delete = true)
     private List<CodedType> languages = new ArrayList<>();
 
     @Order(column = "organization_specialization_idx")
     @Field(name = "organization_specialization")
+    @Cascade(delete = true)
     private List<CodedType> specializations = new ArrayList<>();
 
     @Order(column = "organization_contact_points_idx")
     @Field(name = "organization_contact_points")
+    @Cascade(delete = true)
     private List<ContactPoint> contactPoints = new ArrayList<>();
 
     @Order(column = "organization_coded_types_idx")
     @Field(required = true, name = "organization_coded_types")
+    @Cascade(delete = true)
     private List<CodedType> codedTypes = new ArrayList<>();
 
     @Field
@@ -115,9 +125,11 @@ public class Organization extends AbstractUniqueID {
 
     @Order(column = "organization_extensions_idx")
     @Field(name = "organization_extensions")
+    @Cascade(delete = true)
     private List<Extension> extensions = new ArrayList<>();
 
-    @Field(required = true)
+    @Field
+    @Cascade(delete = true)
     private Record record;
 
     public Organization() {

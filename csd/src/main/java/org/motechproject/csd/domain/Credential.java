@@ -2,6 +2,7 @@ package org.motechproject.csd.domain;
 
 import org.joda.time.DateTime;
 import org.motechproject.csd.adapters.DateAdapter;
+import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
@@ -45,6 +46,7 @@ import java.util.List;
 public class Credential {
 
     @Field(required = true)
+    @Cascade(delete = true)
     private CodedType codedType;
 
     @Field(required = true)
@@ -61,6 +63,7 @@ public class Credential {
 
     @Order(column = "credential_extensions_idx")
     @Field(name = "credential_extensions")
+    @Cascade(delete = true)
     private List<Extension> extensions = new ArrayList<>();
 
     public Credential() {

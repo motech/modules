@@ -1,8 +1,10 @@
 package org.motechproject.csd.domain;
 
+import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.jdo.annotations.FetchPlan;
 import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -99,44 +101,55 @@ import java.util.List;
  *
  */
 @Entity
+@FetchPlan(maxFetchDepth = 6)
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "otherIDs", "codedTypes", "demographic", "languages", "providerOrganizations", "providerFacilities", "credentials", "specialties", "extensions", "record" })
 public class Provider extends AbstractUniqueID {
 
     @Order(column = "provider_other_ids_idx")
     @Field(name = "provider_other_ids")
+    @Cascade(delete = true)
     private List<OtherID> otherIDs = new ArrayList<>();
 
-    @Field(required = true)
+    @Field
+    @Cascade(delete = true)
     private Person demographic;
 
     @Order(column = "provider_languages_idx")
     @Field(name = "provider_languages")
+    @Cascade(delete = true)
     private List<CodedType> languages = new ArrayList<>();
 
     @Field
+    @Cascade(delete = true)
     private ProviderOrganizations providerOrganizations;
 
     @Field
+    @Cascade(delete = true)
     private ProviderFacilities providerFacilities;
 
     @Order(column = "provider_credentials_idx")
     @Field(name = "provider_credentials")
+    @Cascade(delete = true)
     private List<Credential> credentials = new ArrayList<>();
 
     @Order(column = "provider_specialities_idx")
     @Field(name = "provider_specialities")
+    @Cascade(delete = true)
     private List<CodedType> specialties = new ArrayList<>();
 
     @Order(column = "provider_coded_types_idx")
     @Field(required = true, name = "provider_coded_types")
+    @Cascade(delete = true)
     private List<CodedType> codedTypes = new ArrayList<>();
 
     @Order(column = "provider_extensions_idx")
     @Field(name = "provider_extensions")
+    @Cascade(delete = true)
     private List<Extension> extensions = new ArrayList<>();
 
-    @Field(required = true)
+    @Field
+    @Cascade(delete = true)
     private Record record;
 
     public Provider() {

@@ -1,5 +1,6 @@
 package org.motechproject.csd.domain;
 
+import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
@@ -44,6 +45,7 @@ public class ProviderFacilityService extends AbstractUniqueID {
 
     @Order(column = "provider_facility_service_names_idx")
     @Field(name = "provider_facility_service_names")
+    @Cascade(delete = true)
     private List<Name> names = new ArrayList<>();
 
     @Field
@@ -54,10 +56,12 @@ public class ProviderFacilityService extends AbstractUniqueID {
 
     @Order(column = "provider_facility_service_languages_idx")
     @Field(name = "provider_facility_service_languages")
+    @Cascade(delete = true)
     private List<CodedType> languages = new ArrayList<>();
 
     @Order(column = "provider_facility_service_operating_hours_idx")
     @Field(name = "provider_facility_service_operating_hours")
+    @Cascade(delete = true)
     private List<OperatingHours> operatingHours = new ArrayList<>();
 
     @Field
@@ -65,6 +69,7 @@ public class ProviderFacilityService extends AbstractUniqueID {
 
     @Order(column = "provider_facility_service_extensions_idx")
     @Field(name = "provider_facility_service_extensions")
+    @Cascade(delete = true)
     private List<Extension> extensions = new ArrayList<>();
 
     public ProviderFacilityService() {

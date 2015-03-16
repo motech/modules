@@ -1,5 +1,6 @@
 package org.motechproject.csd.domain;
 
+import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
@@ -45,6 +46,7 @@ import java.util.List;
 public class Address {
 
     @Field(required = true)
+    @Cascade(delete = true)
     private List<AddressLine> addressLines = new ArrayList<>();
 
     @Field
