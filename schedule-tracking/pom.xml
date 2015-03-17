@@ -151,7 +151,8 @@
                             org.motechproject.scheduletracking.events.constants;version=${project.version},
                             org.motechproject.scheduletracking.domain;version=${project.version},
                             org.motechproject.scheduletracking.domain.search;version=${project.version},
-                            org.motechproject.scheduletracking.repository;version=${project.version}
+                            org.motechproject.scheduletracking.repository;version=${project.version},
+                            org.motechproject.scheduletracking.domain.json;version=${project.version},
                         </Export-Package>
                         <Import-Package>
                             org.motechproject.event.listener.annotations,
