@@ -18,6 +18,14 @@
     <context:annotation-config/>
     <context:component-scan base-package="org.motechproject.csd"/>
 
+    <bean id="csdSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
+        <property name="rawConfigFiles">
+            <list>
+                <value>classpath:csd-config.json</value>
+            </list>
+        </property>
+    </bean>
+
     <bean id="moduleRegistrationData" class="org.motechproject.osgi.web.ModuleRegistrationData">
         <constructor-arg name="moduleName" value="csd" />
         <constructor-arg name="i18n">
@@ -27,6 +35,7 @@
         </constructor-arg>
     </bean>
 
+    <osgi:service ref="configService" interface="org.motechproject.csd.service.ConfigService" />
     <osgi:service ref="facilityService" interface="org.motechproject.csd.service.FacilityService" />
     <osgi:service ref="csdService" interface="org.motechproject.csd.service.CSDService" />
     <osgi:service ref="facilityDirectoryService" interface="org.motechproject.csd.service.FacilityDirectoryService" />
