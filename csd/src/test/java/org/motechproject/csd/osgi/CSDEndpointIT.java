@@ -52,4 +52,23 @@ public class CSDEndpointIT extends BasePaxIT {
         assertTrue(response.contains("env:Envelope"));
     }
 
+    @Test
+    public void verifySoapWSAddressingEndpoint() throws IOException, InterruptedException {
+        login();
+
+        HttpPost post;
+        try (InputStream in = getClass().getClassLoader().getResourceAsStream("request-wsa.xml")) {
+            String xml = IOUtils.toString(in);
+            post = new HttpPost(String.format("http://localhost:%d/csd/", TestContext.getJettyPort()));
+            post.setEntity(new StringEntity(xml));
+        }
+
+        post.setHeader(HttpHeaders.CONTENT_TYPE, "application/soap+xml");
+
+        // TODO: Do something more with the response
+        String response = getHttpClient().execute(post, new BasicResponseHandler());
+        assertNotNull(response);
+        assertTrue(response.contains("env:Envelope"));
+    }
+
 }
