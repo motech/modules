@@ -2,16 +2,17 @@
     <h4 class="frame-title">{{msg('csd.web.csd.title')}}</h4>
     <div class="inside">
 
-        <div ng-repeat="error in errors" class="alert alert-danger alert-block">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            {{error}}
+        <div ng-show="errors.length > 0">
+            <div class="alert alert-error alert-block" ng-repeat="error in errors" ng-cloak>
+                {{error}}
+            </div>
         </div>
         <div ng-repeat="message in messages" class="alert alert-success alert-block">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             {{message}}
         </div>
 
-        <div class="panel-group">
+        <div class="panel-grouppanel-group">
             <div class="form-group">
                 <label class="col-md-2 control-label" for="xmlUrl">{{msg('csd.web.settings.xmlUrl')}}</label>
                 <div class="col-md-8" data-toggle="tooltip" data-placement="top" data-trigger="hover">
@@ -21,7 +22,7 @@
     
             <div class="form-group">
                 <button type="button" class="btn btn-success" ng-disabled="isFetchingCSD" ng-click="fetch()">
-                    {{msg('csd.web.csd.fetch')}} <i class="icon-refresh icon-spin" ng-show="isFetchingCSD"/>
+                    {{msg('csd.web.csd.fetch')}}
                 </button>
             </div>
         </div>

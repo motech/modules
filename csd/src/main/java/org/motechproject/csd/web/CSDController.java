@@ -3,8 +3,6 @@ package org.motechproject.csd.web;
 import org.motechproject.csd.client.CSDHttpClient;
 import org.motechproject.csd.service.CSDService;
 import org.motechproject.csd.service.ConfigService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -19,8 +17,6 @@ import java.io.IOException;
 
 @Controller
 public class CSDController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(CSDController.class);
 
     private ConfigService configService;
 
@@ -41,23 +37,22 @@ public class CSDController {
         String xmlUrl = configService.getConfig().getXmlUrl();
 
         if (xmlUrl == null) {
-            throw new IllegalArgumentException("The CSD Registry URL is empty");
+            throw new IllegalArgumentException("Xml url cannot be null");
         }
 
         String xml = csdHttpClient.getXml(xmlUrl);
 
         if (xml == null) {
-            throw new IllegalArgumentException("Couldn't load XML");
+            throw new IllegalArgumentException("Cannot load xml");
         }
 
         csdService.saveFromXml(xml);
     }
 
     @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public String handleException(Exception e) throws IOException {
--        LOGGER.error(e.getMessage(), e);
         return e.getMessage();
     }
 }
