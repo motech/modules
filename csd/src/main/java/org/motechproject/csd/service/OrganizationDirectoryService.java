@@ -10,7 +10,7 @@ public interface OrganizationDirectoryService {
 
     OrganizationDirectory getOrganizationDirectory();
 
-    OrganizationDirectory update(OrganizationDirectory organizationDirectory);
+    void update(OrganizationDirectory organizationDirectory);
 
     List<Organization> getModifiedAfter(DateTime date);
 }

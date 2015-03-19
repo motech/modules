@@ -43,6 +43,6 @@ public class ServiceServiceImpl implements ServiceService {
         for (Service service : services) {
             update(service);
         }
-        return serviceDataService.retrieveAll();
+        return services;
     }
 }

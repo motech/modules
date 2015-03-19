@@ -44,6 +44,6 @@ public class OrganizationServiceImpl implements OrganizationService {
         for (Organization organization : organizations) {
             update(organization);
         }
-        return organizationDataService.retrieveAll();
+        return organizations;
     }
 }

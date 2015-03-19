@@ -10,7 +10,7 @@ public interface ServiceDirectoryService {
 
     ServiceDirectory getServiceDirectory();
 
-    ServiceDirectory update(ServiceDirectory serviceDirectory);
+    void update(ServiceDirectory serviceDirectory);
 
     List<Service> getModifiedAfter(DateTime date);
 }

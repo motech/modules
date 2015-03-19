@@ -44,6 +44,6 @@ public class ProviderServiceImpl implements ProviderService {
         for (Provider provider : providers) {
             update(provider);
         }
-        return providerDataService.retrieveAll();
+        return providers;
     }
 }

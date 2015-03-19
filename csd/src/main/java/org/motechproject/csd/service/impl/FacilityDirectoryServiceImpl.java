@@ -8,6 +8,8 @@ import org.motechproject.csd.service.FacilityDirectoryService;
 import org.motechproject.csd.service.FacilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,23 +40,24 @@ public class FacilityDirectoryServiceImpl implements FacilityDirectoryService {
     }
 
     @Override
-    public FacilityDirectory update(FacilityDirectory directory) {
+    public void update(final FacilityDirectory directory) {
 
-        if (directory != null) {
-            List<Facility> updatedFacilities = facilityService.update(directory.getFacilities());
-            FacilityDirectory facilityDirectory = getFacilityDirectory();
+        if (directory != null && directory.getFacilities() != null && !directory.getFacilities().isEmpty()) {
+            facilityDirectoryDataService.doInTransaction(new TransactionCallbackWithoutResult() {
+                @Override
+                protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                    List<Facility> updatedFacilities = facilityService.update(directory.getFacilities());
+                    FacilityDirectory facilityDirectory = getFacilityDirectory();
 
-            if (facilityDirectory != null) {
-                facilityDirectory.setFacilities(updatedFacilities);
-            } else {
-                facilityDirectory = new FacilityDirectory(updatedFacilities);
-            }
-
-            facilityDirectoryDataService.update(facilityDirectory);
-            return facilityDirectory;
+                    if (facilityDirectory != null) {
+                        facilityDirectory.getFacilities().addAll(updatedFacilities);
+                        facilityDirectoryDataService.update(facilityDirectory);
+                    } else {
+                        facilityDirectoryDataService.create(directory);
+                    }
+                }
+            });
         }
-
-        return null;
     }
 
     @Override

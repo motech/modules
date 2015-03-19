@@ -47,6 +47,6 @@ public class FacilityServiceImpl implements FacilityService {
         for (Facility facility : facilities) {
             update(facility);
         }
-        return facilityDataService.retrieveAll();
+        return facilities;
     }
 }

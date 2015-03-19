@@ -8,6 +8,8 @@ import org.motechproject.csd.service.ProviderDirectoryService;
 import org.motechproject.csd.service.ProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,23 +40,24 @@ public class ProviderDirectoryServiceImpl implements ProviderDirectoryService {
     }
 
     @Override
-    public ProviderDirectory update(ProviderDirectory directory) {
+    public void update(final ProviderDirectory directory) {
 
-        if (directory != null) {
-            List<Provider> updatedProviders = providerService.update(directory.getProviders());
-            ProviderDirectory providerDirectory = getProviderDirectory();
+        if (directory != null && directory.getProviders() != null && !directory.getProviders().isEmpty()) {
+            providerDirectoryDataService.doInTransaction(new TransactionCallbackWithoutResult() {
+                @Override
+                protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                    List<Provider> updatedProviders = providerService.update(directory.getProviders());
+                    ProviderDirectory providerDirectory = getProviderDirectory();
 
-            if (providerDirectory != null) {
-                providerDirectory.setProviders(updatedProviders);
-            } else {
-                providerDirectory = new ProviderDirectory(updatedProviders);
-            }
-
-            providerDirectoryDataService.update(providerDirectory);
-            return providerDirectory;
+                    if (providerDirectory != null) {
+                        providerDirectory.getProviders().addAll(updatedProviders);
+                        providerDirectoryDataService.update(providerDirectory);
+                    } else {
+                        providerDirectoryDataService.create(directory);
+                    }
+                }
+            });
         }
-
-        return null;
     }
 
     @Override

@@ -10,7 +10,7 @@ public interface ProviderDirectoryService {
 
     ProviderDirectory getProviderDirectory();
 
-    ProviderDirectory update(ProviderDirectory providerDirectory);
+    void update(ProviderDirectory providerDirectory);
 
     List<Provider> getModifiedAfter(DateTime date);
 }

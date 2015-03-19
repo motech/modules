@@ -10,7 +10,7 @@ public interface FacilityDirectoryService {
 
     FacilityDirectory getFacilityDirectory();
 
-    FacilityDirectory update(FacilityDirectory facilityDirectory);
+    void update(FacilityDirectory facilityDirectory);
 
     List<Facility> getModifiedAfter(DateTime date);
 }

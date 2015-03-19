@@ -7,6 +7,8 @@ import org.motechproject.csd.mds.ServiceDirectoryDataService;
 import org.motechproject.csd.service.ServiceDirectoryService;
 import org.motechproject.csd.service.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,23 +39,24 @@ public class ServiceDirectoryServiceImpl implements ServiceDirectoryService {
     }
 
     @Override
-    public ServiceDirectory update(ServiceDirectory directory) {
+    public void update(final ServiceDirectory directory) {
 
-        if (directory != null) {
-            List<Service> updatedServices = serviceService.update(directory.getServices());
-            ServiceDirectory serviceDirectory = getServiceDirectory();
+        if (directory != null && directory.getServices() != null && !directory.getServices().isEmpty()) {
+            serviceDirectoryDataService.doInTransaction(new TransactionCallbackWithoutResult() {
+                @Override
+                protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                    List<Service> updatedServices = serviceService.update(directory.getServices());
+                    ServiceDirectory serviceDirectory = getServiceDirectory();
 
-            if (serviceDirectory != null) {
-                serviceDirectory.setServices(updatedServices);
-            } else {
-                serviceDirectory = new ServiceDirectory(updatedServices);
-            }
-
-            serviceDirectoryDataService.update(serviceDirectory);
-            return serviceDirectory;
+                    if (serviceDirectory != null) {
+                        serviceDirectory.getServices().addAll(updatedServices);
+                        serviceDirectoryDataService.update(serviceDirectory);
+                    } else {
+                        serviceDirectoryDataService.create(directory);
+                    }
+                }
+            });
         }
-
-        return null;
     }
 
     @Override
