@@ -11,11 +11,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class CSDEventListener {
 
-    @Autowired
     private CSDHttpClient csdHttpClient;
 
-    @Autowired
     private CSDService csdService;
+
+    @Autowired
+    public CSDEventListener(CSDHttpClient csdHttpClient, CSDService csdService) {
+        this.csdHttpClient = csdHttpClient;
+        this.csdService = csdService;
+    }
 
     @MotechListener(subjects = { CSDEventKeys.CONSUME_XML_EVENT })
     public void consumeXml(MotechEvent event) {

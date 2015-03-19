@@ -5,7 +5,7 @@ import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormat;
 import org.motechproject.csd.CSDEventKeys;
 import org.motechproject.csd.domain.Config;
-import org.motechproject.csd.scheduler.CSDSchedulerService;
+import org.motechproject.csd.scheduler.CSDScheduler;
 import org.motechproject.csd.service.ConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,12 +30,12 @@ public class ConfigController {
 
     private ConfigService configService;
 
-    private CSDSchedulerService schedulerService;
+    private CSDScheduler csdScheduler;
 
     @Autowired
-    public ConfigController(@Qualifier("configService") ConfigService configService, CSDSchedulerService schedulerService) {
+    public ConfigController(@Qualifier("configService") ConfigService configService, CSDScheduler csdScheduler) {
         this.configService = configService;
-        this.schedulerService = schedulerService;
+        this.csdScheduler = csdScheduler;
     }
 
     @RequestMapping(value = "/csd-config", method = RequestMethod.GET)
@@ -81,10 +81,10 @@ public class ConfigController {
             parameters.put(CSDEventKeys.START_DATE, DateTime.parse(startDate, DateTimeFormat.forPattern(Config.DATE_TIME_PICKER_FORMAT)));
         }
 
-        schedulerService.scheduleXmlConsumerRepeatingJob(parameters);
+        csdScheduler.scheduleXmlConsumerRepeatingJob(parameters);
     }
 
     private void unschedule() {
-        schedulerService.unscheduleXmlConsumerRepeatingJob();
+        csdScheduler.unscheduleXmlConsumerRepeatingJob();
     }
 }

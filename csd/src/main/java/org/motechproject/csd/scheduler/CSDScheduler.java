@@ -13,12 +13,12 @@ import java.util.Date;
 import java.util.Map;
 
 @Component
-public class CSDSchedulerService {
+public class CSDScheduler {
 
     private MotechSchedulerService motechSchedulerService;
 
     @Autowired
-    public CSDSchedulerService(MotechSchedulerService motechSchedulerService) {
+    public CSDScheduler(MotechSchedulerService motechSchedulerService) {
         this.motechSchedulerService = motechSchedulerService;
     }
 
