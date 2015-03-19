@@ -99,9 +99,9 @@ public class CSDServiceImpl implements CSDService {
         try {
             csd = (CSD) MarshallUtils.unmarshall(xml, getClass().getResource("/CSD.xsd"), CSD.class);
         } catch (SAXException e) {
-            throw new IllegalArgumentException("Cannot load Schema", e);
+            throw new IllegalArgumentException("Invalid schema", e);
         } catch (JAXBException e) {
-            throw new IllegalArgumentException("Cannot unmarshall xml", e);
+            throw new IllegalArgumentException("Invalid XML structure", e);
         }
 
         update(csd);
