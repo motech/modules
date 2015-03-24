@@ -45,7 +45,14 @@
                         <Blueprint-Enabled>true</Blueprint-Enabled>
                         <Export-Package>
                             org.motechproject.eventlogging.domain;version=${project.version},
-                            org.motechproject.eventlogging.service;version=${project.version}
+                            org.motechproject.eventlogging.service;version=${project.version},
+                            <!-- The following are required to register own logger -->
+                            org.motechproject.eventlogging.service.impl;version=${project.version},
+                            org.motechproject.eventlogging.matchers;version=${project.version},
+                            org.motechproject.eventlogging.loggers;version=${project.version},
+                            org.motechproject.eventlogging.loggers.impl;version=${project.version},
+                            org.motechproject.eventlogging.converter;version=${project.version},
+                            org.motechproject.eventlogging.converter.impl;version=${project.version}
                         </Export-Package>
                         <Import-Package>
                             org.motechproject.event,
