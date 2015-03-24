@@ -3,7 +3,7 @@
 
     /* App Module */
 
-    angular.module('csd', ['motech-dashboard', 'csd.controllers', 'ngCookies', 'ui.bootstrap']).config(
+    angular.module('csd', ['motech-dashboard', 'csd.controllers', 'csd.directives', 'ngCookies', 'ui.bootstrap']).config(
     ['$routeProvider',
         function ($routeProvider) {
             $routeProvider.

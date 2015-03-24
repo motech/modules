@@ -1,25 +1,29 @@
 package org.motechproject.csd.domain;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 public class Config {
+
+    public static final String DATE_TIME_PICKER_FORMAT = "yyyy-MM-dd HH:mm";
 
     private boolean schedulerEnabled;
 
-    private int periodDays;
+    private String timePeriod;
 
-    private int periodHours;
+    private String timePeriodMultiplier;
 
-    private int periodMinutes;
+    private String startDate;
 
     private String xmlUrl;
 
     public Config() {
     }
 
-    public Config(boolean schedulerEnabled, int periodDays, int periodHours, int periodMinutes, String xmlUrl) {
+    public Config(boolean schedulerEnabled, String timePeriod, String timePeriodMultiplier, String startDate, String xmlUrl) {
         this.schedulerEnabled = schedulerEnabled;
-        this.periodDays = periodDays;
-        this.periodHours = periodHours;
-        this.periodMinutes = periodMinutes;
+        this.timePeriod = timePeriod;
+        this.timePeriodMultiplier = timePeriodMultiplier;
+        this.startDate = startDate;
         this.xmlUrl = xmlUrl;
     }
 
@@ -31,28 +35,55 @@ public class Config {
         this.schedulerEnabled = schedulerEnabled;
     }
 
+    public String getTimePeriod() {
+        return timePeriod;
+    }
+
+    public void setTimePeriod(String timePeriod) {
+        this.timePeriod = timePeriod;
+    }
+
+    public String getTimePeriodMultiplier() {
+        return timePeriodMultiplier;
+    }
+
+    public void setTimePeriodMultiplier(String timePeriodMultiplier) {
+        this.timePeriodMultiplier = timePeriodMultiplier;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    @JsonIgnore
     public int getPeriodDays() {
-        return periodDays;
+        if ("days".equals(timePeriodMultiplier)) {
+            return Integer.valueOf(timePeriod);
+        } else {
+            return 0;
+        }
     }
 
-    public void setPeriodDays(int periodDays) {
-        this.periodDays = periodDays;
-    }
-
+    @JsonIgnore
     public int getPeriodHours() {
-        return periodHours;
+        if ("hours".equals(timePeriodMultiplier)) {
+            return Integer.valueOf(timePeriod);
+        } else {
+            return 0;
+        }
     }
 
-    public void setPeriodHours(int periodHours) {
-        this.periodHours = periodHours;
-    }
-
+    @JsonIgnore
     public int getPeriodMinutes() {
-        return periodMinutes;
-    }
-
-    public void setPeriodMinutes(int periodMinutes) {
-        this.periodMinutes = periodMinutes;
+        if ("minutes".equals(timePeriodMultiplier)) {
+            return Integer.valueOf(timePeriod);
+        } else {
+            return 0;
+        }
     }
 
     public String getXmlUrl() {
@@ -61,56 +92,5 @@ public class Config {
 
     public void setXmlUrl(String xmlUrl) {
         this.xmlUrl = xmlUrl;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        Config config = (Config) o;
-
-        if (periodDays != config.periodDays) {
-            return false;
-        }
-        if (periodHours != config.periodHours) {
-            return false;
-        }
-        if (periodMinutes != config.periodMinutes) {
-            return false;
-        }
-        if (schedulerEnabled != config.schedulerEnabled) {
-            return false;
-        }
-        if (xmlUrl != null ? !xmlUrl.equals(config.xmlUrl) : config.xmlUrl != null) {
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (schedulerEnabled ? 1 : 0);
-        result = 31 * result + periodDays;
-        result = 31 * result + periodHours;
-        result = 31 * result + periodMinutes;
-        result = 31 * result + (xmlUrl != null ? xmlUrl.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Config{" +
-                "schedulerEnabled=" + schedulerEnabled +
-                ", periodDays=" + periodDays +
-                ", periodHours=" + periodHours +
-                ", periodMinutes=" + periodMinutes +
-                ", xmlUrl='" + xmlUrl + '\'' +
-                '}';
     }
 }

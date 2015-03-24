@@ -1,5 +1,8 @@
 package org.motechproject.csd.web;
 
+import org.joda.time.DateTime;
+import org.joda.time.Period;
+import org.joda.time.format.DateTimeFormat;
 import org.motechproject.csd.CSDEventKeys;
 import org.motechproject.csd.domain.Config;
 import org.motechproject.csd.scheduler.CSDSchedulerService;
@@ -63,13 +66,20 @@ public class ConfigController {
     }
 
     private void schedule() {
-        String xml = configService.getConfig().getXmlUrl();
+        String xmlUrl = configService.getConfig().getXmlUrl();
+        Period period = new Period(0, 0, 0, configService.getConfig().getPeriodDays(), configService.getConfig().getPeriodHours(),
+                configService.getConfig().getPeriodMinutes(), 0, 0);
+        String startDate = configService.getConfig().getStartDate();
 
         Map<String, Object> eventParameters = new HashMap<>();
-        eventParameters.put(CSDEventKeys.XML_URL, xml);
+        eventParameters.put(CSDEventKeys.XML_URL, xmlUrl);
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(CSDEventKeys.EVENT_PARAMETERS, eventParameters);
+        parameters.put(CSDEventKeys.PERIOD, period);
+        if (startDate != null && !startDate.isEmpty()) {
+            parameters.put(CSDEventKeys.START_DATE, DateTime.parse(startDate, DateTimeFormat.forPattern(Config.DATE_TIME_PICKER_FORMAT)));
+        }
 
         schedulerService.scheduleXmlConsumerRepeatingJob(parameters);
     }

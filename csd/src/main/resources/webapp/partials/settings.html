@@ -26,7 +26,7 @@
 
                         <div class="form-group margin-before2">
                             <label class="col-md-2 control-label" for="schedulerEnabled">{{msg('csd.web.settings.schedulerEnabled')}}</label>
-                            <div class="col-md-1" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.schedulerEnabled.tooltip')}}">
+                            <div class="col-md-1 checkbox" data-toggle="tooltip" data-placement="top" data-trigger="hover">
                                 <label>
                                     <input type="checkbox" id="schedulerEnabled" ng-model="config.schedulerEnabled"/>
                                 </label>
@@ -34,23 +34,19 @@
                         </div>
 
                         <div class="form-group" ng-show="config.schedulerEnabled">
-                            <label class="col-md-2 control-label" for="periodDays">{{msg('csd.web.settings.periodDays')}}</label>
-                            <div class="col-md-1" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.periodDays.tooltip')}}">
-                                <input class="form-control" id="periodDays" ng-pattern="/^[0-9]+$/" type="text" ng-model="config.periodDays" required>
+                            <label class="col-md-2 control-label" for="period">{{msg('csd.web.settings.startDate')}}</label>
+                            <div class="col-md-3" data-toggle="tooltip" data-placement="top" data-trigger="hover">
+                                <input id="startDate" csd-date-picker="" type="text" class="form-control" placeholder="{{msg('csd.web.settings.startDate.placeholder')}}" ng-model="config.startDate">
                             </div>
                         </div>
 
                         <div class="form-group" ng-show="config.schedulerEnabled">
-                            <label class="col-md-2 control-label" for="periodHours">{{msg('csd.web.settings.periodHours')}}</label>
-                            <div class="col-md-1" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.periodHours.tooltip')}}">
-                                <input class="form-control" id="periodHours" ng-pattern="/^[0-9]+$/" type="text" ng-model="config.periodHours" required>
+                            <label class="col-md-2 control-label" for="period">{{msg('csd.web.settings.period')}}</label>
+                            <div class="col-md-1" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.period.tooltip')}}">
+                                <input class="form-control" id="period" ng-pattern="/^[0-9]+$/" type="text" ng-model="config.timePeriod" required />
                             </div>
-                        </div>
-
-                        <div class="form-group" ng-show="config.schedulerEnabled">
-                            <label class="col-md-2 control-label" for="periodMinutes">{{msg('csd.web.settings.periodMinutes')}}</label>
-                            <div class="col-md-1" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.periodMinutes.tooltip')}}">
-                                <input class="form-control" id="periodMinutes" ng-pattern="/^[0-9]+$/" type="text" ng-model="config.periodMinutes" required>
+                            <div class="col-md-1">
+                                <select class="form-control input-auto" ng-model="config.timePeriodMultiplier" ng-options="k as v for (k , v) in timeMultipliers" ></select>
                             </div>
                         </div>
 

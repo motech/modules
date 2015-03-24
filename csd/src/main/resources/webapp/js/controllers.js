@@ -12,6 +12,12 @@
         $scope.errors = [];
         $scope.messages = [];
 
+        $scope.timeMultipliers = {
+            'minutes': $scope.msg('csd.web.settings.units.minutes'),
+            'hours': $scope.msg('csd.web.settings.units.hours'),
+            'days': $scope.msg('csd.web.settings.units.days')
+        };
+
         innerLayout({
             spacing_closed: 30,
             east__minSize: 200,
