@@ -11,19 +11,54 @@
             {{message}}
         </div>
 
-        <div class="panel-group">
-            <div class="form-group">
-                <label class="col-md-2 control-label" for="xmlUrl">{{msg('csd.web.settings.xmlUrl')}}</label>
-                <div class="col-md-8" data-toggle="tooltip" data-placement="top" data-trigger="hover">
-                    <input class="form-control" id="xmlUrl" type="text" ng-model="config.xmlUrl" ng-disabled="true">
+        <div class="form-horizontal inside">
+            <div class="row">
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="form-group margin-before2">
+                            <label class="col-md-2 control-label" for="xmlUrl">{{msg('csd.web.settings.xmlUrl')}}</label>
+                            <div class="col-md-8" data-toggle="tooltip" data-placement="top" data-trigger="hover">
+                                <input class="form-control" id="xmlUrl" type="text" ng-model="config.xmlUrl" ng-disabled="true">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="col-md-10 btn btn-success" ng-disabled="isFetchingCSD || isLoadingXml || isDownloadingXml" ng-click="fetch()">
+                                    {{msg('csd.web.csd.fetch')}} <i class="icon-refresh icon-spin" ng-show="isFetchingCSD"/>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-    
-            <div class="form-group">
-                <button type="button" class="btn btn-success" ng-disabled="isFetchingCSD" ng-click="fetch()">
-                    {{msg('csd.web.csd.fetch')}} <i class="icon-refresh icon-spin" ng-show="isFetchingCSD"/>
-                </button>
+
+                <div class="panel-group">
+                    <div class="panel panel-default">
+
+                        <div class="form-group margin-before">
+                            <div class="margin-left2">
+                                <h4 class="frame-title">{{msg('csd.web.csd.structure')}}</h4>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 margin-left2">
+                                <button target="_self" href="#showXmlModal" type="button" class="col-md-12 btn btn-success" data-toggle="modal"
+                                        data-backdrop="static" ng-click="showXml()" ng-disabled="isFetchingCSD || isDownloadingXml">
+                                    {{msg('csd.web.csd.showXml.btn')}} <i class="icon-refresh icon-spin" ng-show="isLoadingXml"/>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-2 margin-left2">
+                                <button type="button" class="col-md-12 btn btn-success" ng-disabled="isFetchingCSD || isLoadingXml || isDownloadingXml" ng-click="downloadXml()">
+                                    {{msg('csd.web.csd.downloadXml.btn')}} <i class="icon-refresh icon-spin" ng-show="isDownloadingXml"/>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
+    <div ng-include="'../csd/resources/partials/modals/show-xml.html'"></div>
 </div>

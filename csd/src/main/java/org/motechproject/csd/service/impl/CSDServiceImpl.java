@@ -15,7 +15,9 @@ import org.motechproject.csd.service.ServiceDirectoryService;
 import org.motechproject.csd.util.MarshallUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionCallback;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
@@ -107,5 +109,21 @@ public class CSDServiceImpl implements CSDService {
         }
 
         update(csd);
+    }
+
+    @Override
+    public String getXmlContent() {
+        return csdDataService.doInTransaction(new TransactionCallback<String>() {
+            @Override
+            public String doInTransaction(TransactionStatus transactionStatus) {
+                try {
+                    return MarshallUtils.marshall(getCSD(), getClass().getResource("/CSD.xsd"), CSD.class);
+                } catch (SAXException e) {
+                    throw new IllegalArgumentException("Invalid schema", e);
+                } catch (JAXBException e) {
+                    throw new IllegalArgumentException("Invalid CSD structure", e);
+                }
+            }
+        });
     }
 }

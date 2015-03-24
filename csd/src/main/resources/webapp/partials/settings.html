@@ -13,16 +13,18 @@
 
         <form name="form" class="form-horizontal inside" novalidate>
 
-            <div class="form-group">
-                <label class="col-md-2 control-label" for="xmlUrl">{{msg('csd.web.settings.xmlUrl')}}</label>
-                <div class="col-md-10" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.xmlUrl.tooltip')}}">
-                    <input class="form-control" id="xmlUrl" type="text" ng-model="config.xmlUrl" required>
+            <div class="panel-group">
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="xmlUrl">{{msg('csd.web.settings.xmlUrl')}}</label>
+                    <div class="col-md-10" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.xmlUrl.tooltip')}}">
+                        <input class="form-control" id="xmlUrl" type="text" ng-model="config.xmlUrl" required>
+                    </div>
                 </div>
             </div>
 
             <div class="row">
-                <div class="panel-grouppanel-group">
-                    <div class="panel panel-default csd-config">
+                <div class="panel-group">
+                    <div class="panel panel-default">
 
                         <div class="form-group margin-before2">
                             <label class="col-md-2 control-label" for="schedulerEnabled">{{msg('csd.web.settings.schedulerEnabled')}}</label>
@@ -34,7 +36,7 @@
                         </div>
 
                         <div class="form-group" ng-show="config.schedulerEnabled">
-                            <label class="col-md-2 control-label" for="period">{{msg('csd.web.settings.startDate')}}</label>
+                            <label class="col-md-2 control-label" for="startDate">{{msg('csd.web.settings.startDate')}}</label>
                             <div class="col-md-3" data-toggle="tooltip" data-placement="top" data-trigger="hover">
                                 <input id="startDate" csd-date-picker="" type="text" class="form-control" placeholder="{{msg('csd.web.settings.startDate.placeholder')}}" ng-model="config.startDate">
                             </div>

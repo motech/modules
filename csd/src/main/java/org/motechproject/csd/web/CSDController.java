@@ -56,6 +56,12 @@ public class CSDController {
         csdService.saveFromXml(xml);
     }
 
+    @RequestMapping(value = "/csd-getXml", method = RequestMethod.GET)
+    @ResponseBody
+    public String getXml() {
+        return csdService.getXmlContent();
+    }
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody

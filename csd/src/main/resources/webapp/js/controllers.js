@@ -69,6 +69,8 @@
         $scope.errors = [];
         $scope.messages = [];
         $scope.isFetchingCSD = false;
+        $scope.isLoadingXml = false;
+        $scope.isDownloadingXml = false;
 
         innerLayout({
             spacing_closed: 30,
@@ -102,6 +104,47 @@
                 .error(function(response) {
                     $scope.errors.push($scope.msg('csd.web.csd.fetch.error', response));
                     $scope.isFetchingCSD = false;
+                });
+        };
+
+        $scope.showXml = function () {
+            $scope.isLoadingXml = true;
+            $scope.xml = "";
+            $http.get('../csd/csd-getXml')
+                .success(function(response){
+                    $scope.xml = response;
+                    $scope.isLoadingXml = false;
+                })
+                .error(function(response) {
+                    $scope.errors.push($scope.msg('csd.web.csd.showXml.error', response));
+                    $scope.xml = "";
+                    $scope.isLoadingXml = false;
+                });
+        };
+
+        var saveData = (function () {
+            var a = document.createElement("a");
+            document.body.appendChild(a);
+            a.style = "display: none";
+            return function (data, fileName) {
+                var blob = new Blob([data], {type: "octet/stream"}),
+                    url = window.URL.createObjectURL(blob);
+                a.href = url;
+                a.download = fileName;
+                a.click();
+            };
+        }());
+
+        $scope.downloadXml = function() {
+            $scope.isDownloadingXml = true;
+            $http.get('../csd/csd-getXml')
+                .success(function(response){
+                    saveData(response, "CSD.xml");
+                    $scope.isDownloadingXml = false;
+                })
+                .error(function(response) {
+                    $scope.errors.push($scope.msg('csd.web.csd.downloadXml.error', response));
+                    $scope.isDownloadingXml = false;
                 });
         };
 
