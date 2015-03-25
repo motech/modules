@@ -272,6 +272,11 @@ public class Organization extends AbstractUniqueID {
     }
 
     public UniqueID getParent() {
+        if (parent == null) {
+            if (parentOrganization != null && !parentOrganization.isEmpty()) {
+                parent = new UniqueID(parentOrganization);
+            }
+        }
         return parent;
     }
 

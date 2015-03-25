@@ -129,6 +129,11 @@ public class ProviderFacilityService extends AbstractUniqueID {
     }
 
     public UniqueID getOrganization() {
+        if (organization == null) {
+            if (providerOrganization != null && !providerOrganization.isEmpty()) {
+                organization = new UniqueID(providerOrganization);
+            }
+        }
         return organization;
     }
 

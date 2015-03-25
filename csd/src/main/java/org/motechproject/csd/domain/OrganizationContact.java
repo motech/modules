@@ -85,7 +85,15 @@ public class OrganizationContact {
             @XmlElement(name = "person", type = Person.class),
     })
     public Object getContact() {
-        return contact;
+        if (contact != null) {
+            return contact;
+        } else {
+            if (providerEntityID != null && !providerEntityID.isEmpty()) {
+                return new UniqueID(providerEntityID);
+            } else {
+                return person;
+            }
+        }
     }
 
     public void setContact(Object contact) {
