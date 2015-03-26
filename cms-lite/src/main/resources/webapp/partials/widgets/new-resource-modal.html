@@ -59,8 +59,9 @@
                         <label class="col-sm-3 control-label">{{msg('cmslite.info.fileChosen')}}</label>
 
                         <div class="col-sm-9">
-                            <div class="form-control input-auto uneditable-input input-xlarge fileupload-exists"><i
-                                    class="icon-file"></i>&nbsp;<span class="fileupload-preview"></span></div>
+                            <div class="form-control input-auto uneditable-input input-xlarge fileupload-exists">
+                                <span class="glyphicon glyphicon-file"></span>&nbsp;<span class="fileupload-preview"></span>
+                            </div>
                             <span class="btn btn-default btn-file">
                                 <span class="fileupload-new">{{msg('cmslite.button.selectFile')}}</span>
                                 <span class="fileupload-exists">{{msg('cmslite.button.changeFile')}}</span>
@@ -68,7 +69,7 @@
                             </span>
                             <span class="form-hint stream" style="display: none;">{{msg('cmslite.error.required.stream')}}</span>
                             <a href="#" target="_self" class="btn btn-danger fileupload-exists"
-                               data-dismiss="fileupload"><i class="icon-trash icon-white"></i>&nbsp;{{msg('cmslite.button.remove')}}</a>
+                               data-dismiss="fileupload"><i class="fa fa-trash-o"></i>&nbsp;{{msg('cmslite.button.remove')}}</a>
                         </div>
                     </div>
                     <input type="hidden" id="type" name="type" value="{{resourceType}}">

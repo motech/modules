@@ -16,11 +16,11 @@
                 </div>
                 <div ng-show="isVerifySuccess()" class="connection-status connection-success alert alert-success margin-before row">
                     <div>
-                        <span class="icon-ok"></span>
+                        <span class="fa fa-fw fa-check"></span>
                         <span>{{verifySuccessMessage}}</span>
                     </div>
                     <div ng-repeat="permission in permissions" class="{{permission.granted && 'permission-present' || 'permission-absent'}}">
-                        Motech {{permission.granted && 'can' || 'cannot'}} {{ permission.permissionName}}
+                        <span class="fa fa-fw fa-check"></span> Motech {{permission.granted && 'can' || 'cannot'}} {{ permission.permissionName}}
                     </div>
                 </div>
             </div>
@@ -73,7 +73,7 @@
             <div class="form-group">
                 <label class="col-md-3 col-sm-4 control-label">
                     {{msg('commcare.settings.label.eventStrategy')}}
-                    <i class="icon-info-sign" data-trigger="hover" data-placement="right" bs-popover="{{msg('commcare.settings.tooltip.eventStrategy')}}" data-original-title=""></i>
+                    <span class="glyphicon glyphicon-info-sign" data-trigger="hover" data-placement="right" bs-popover="{{msg('commcare.settings.tooltip.eventStrategy')}}" data-original-title=""></span>
                 </label>
                 <div class="col-md-9 col-sm-8 form-inline">
                     <select class="form-control input-auto" ng-model="settings.eventStrategy" autosave="change" ng-options="option for option in eventStrategyOptions" required ng-disabled="!isVerifySuccess()">
@@ -123,7 +123,7 @@
                     <div class="switch-small" switch=".forwardAppStructureInput" autosave="switch-change" id="forwardAppStructureSwitch">
                         <input type="checkbox" ng-model="settings.forwardAppStructure" class="forwardAppStructureInput" />
                     </div>
-                    <div class="form-hints"/>
+                    <div class="form-hints"></div>
                 </div>
             </div>
 

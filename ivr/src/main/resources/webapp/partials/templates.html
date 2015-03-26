@@ -16,7 +16,7 @@
         </div>
 
         <div class="form-group">
-            <button type="button" class="btn btn-success" ng-click="addTemplate()"><i class="icon-plus icon-white"></i>
+            <button type="button" class="btn btn-success" ng-click="addTemplate()"><i class="fa fa-plus"></i>
                 {{msg('ivr.web.templates.addTemplate')}}
             </button>
         </div>
@@ -28,8 +28,8 @@
                     <div class="panel panel-default ivr-template" ng-repeat="tmpl in templates">
 
                         <div class="panel-heading" ng-click="accordions[$index] = !accordions[$index]">
+                            <i ng-class="{'fa-caret-down': accordions[$index], 'fa-caret-right': !accordions[$index]}" class="fa fa-fw fa-lg pointer"></i>
                             {{tmpl.name}}
-                            <i ng-class="{'icon-chevron-down': accordions[$index], 'icon-chevron-right': !accordions[$index]}" class="icon-fixed-width icon-large pointer"></i>
                         </div>
                         <div id="panel{{$index}}" class="panel-collapse collapse" ng-class="{true:'in', false:''}[accordions[$index]]">
 
@@ -51,7 +51,7 @@
 
                             <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-10">
-                                    <button class="btn btn-sm btn-danger" ng-click="deleteTemplate($index)"> <i class="icon-trash"></i> {{msg('ivr.web.templates.delete')}} </button>
+                                    <button class="btn btn-sm btn-danger" ng-click="deleteTemplate($index)"> <i class="fa fa-fw fa-trash-o"></i> {{msg('ivr.web.templates.delete')}} </button>
                                 </div>
                             </div>
                         </div>
