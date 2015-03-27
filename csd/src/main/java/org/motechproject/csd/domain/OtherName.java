@@ -35,7 +35,7 @@ public class OtherName {
     /* Text value of this node */
     @UIDisplayable(position = 0)
     @Field
-    private String value;
+    private String value = "";
 
     /* Attribute @xml:lang */
     @UIDisplayable(position = 1)

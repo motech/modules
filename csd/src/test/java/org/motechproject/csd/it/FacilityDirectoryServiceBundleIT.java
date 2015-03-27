@@ -7,8 +7,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.csd.domain.CSD;
 import org.motechproject.csd.domain.Facility;
+import org.motechproject.csd.domain.FacilityDirectory;
+import org.motechproject.csd.mds.FacilityDirectoryDataService;
 import org.motechproject.csd.service.CSDService;
-import org.motechproject.csd.service.FacilityService;
+import org.motechproject.csd.service.FacilityDirectoryService;
 import org.motechproject.csd.util.InitialData;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -19,22 +21,27 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
 
+import java.util.Set;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Verify FacilityService is present & functional.
+ * Verify FacilityDirectoryService is present & functional.
  */
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
-public class FacilityServiceBundleIT extends BasePaxIT {
+public class FacilityDirectoryServiceBundleIT extends BasePaxIT {
 
     @Inject
     private CSDService csdService;
 
     @Inject
-    private FacilityService facilityService;
+    private FacilityDirectoryService facilityDirectoryService;
+
+    @Inject
+    private FacilityDirectoryDataService facilityDirectoryDataService;
 
     @Before
     public void cleanBefore() {
@@ -46,10 +53,11 @@ public class FacilityServiceBundleIT extends BasePaxIT {
     public void cleanAfter() {
         getLogger().info("Clean database after test");
         csdService.delete();
+        facilityDirectoryDataService.deleteAll();
     }
 
     @Test
-    public void shouldGetAllFacilities() {
+    public void shouldUpdateFacilityDirectoryEntity() {
         CSD csd = InitialData.getInitialData();
         csd.getProviderDirectory().getProviders().clear();
         csd.getServiceDirectory().getServices().clear();
@@ -57,20 +65,39 @@ public class FacilityServiceBundleIT extends BasePaxIT {
         csdService.create(csd);
         assertTrue(csdService.getCSD().equals(csd));
 
-        assertTrue(facilityService.allFacilities().containsAll(csd.getFacilityDirectory().getFacilities()));
+        csd = InitialData.getInitialData();
+        csd.getFacilityDirectory().getFacilities().iterator().next().setPrimaryName("updated name");
+        csd.getFacilityDirectory().getFacilities().add(InitialData.createFacility(new DateTime(), "newFacility"));
+        facilityDirectoryService.update(csd.getFacilityDirectory());
+        assertTrue(facilityDirectoryService.getFacilityDirectory().equals(csd.getFacilityDirectory()));
     }
 
     @Test
-    public void shouldGetFacilityByEntityID() {
+    public void shouldGetEntitiesUpdatedAfterGivenDate() {
+        DateTime dateUpdated = new DateTime(2020, 1, 1, 1, 1);
+
+        Facility facility = InitialData.createFacility(dateUpdated.plusSeconds(1), "lastUpdated");
+
         CSD csd = InitialData.getInitialData();
         csd.getProviderDirectory().getProviders().clear();
         csd.getServiceDirectory().getServices().clear();
         csd.getOrganizationDirectory().getOrganizations().clear();
-        Facility facility = InitialData.createFacility(new DateTime(), "EntityIDToFind");
         csd.getFacilityDirectory().getFacilities().add(facility);
         csdService.create(csd);
         assertTrue(csdService.getCSD().equals(csd));
 
-        assertEquals(facilityService.getFacilityByEntityID("EntityIDToFind"), facility);
+        Set<Facility> lastUpdated = facilityDirectoryService.getModifiedAfter(dateUpdated);
+
+        assertEquals(1, lastUpdated.size());
+
+        assertEquals(lastUpdated.iterator().next(), facility);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getFacilityDirectoryShouldThrowExceptionIfThereIsMoreThanOneFacilityDirectoryEntityInTheDatabase() {
+        facilityDirectoryDataService.create(new FacilityDirectory());
+        facilityDirectoryDataService.create(new FacilityDirectory());
+
+        facilityDirectoryService.getFacilityDirectory();
     }
 }

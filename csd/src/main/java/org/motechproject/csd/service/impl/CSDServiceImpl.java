@@ -24,7 +24,6 @@ import org.motechproject.csd.util.MarshallUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallback;
 import org.xml.sax.SAXException;
 
@@ -113,6 +112,11 @@ public class CSDServiceImpl implements CSDService {
     }
 
     @Override
+    public void delete() {
+        csdDataService.deleteAll();
+    }
+
+    @Override
     public String getXmlContent() {
         return csdDataService.doInTransaction(new TransactionCallback<String>() {
             @Override
@@ -163,8 +167,7 @@ public class CSDServiceImpl implements CSDService {
         }
     }
 
-    @Transactional
-    private void saveFromXml(String xml) {
+    public void saveFromXml(String xml) {
         CSD csd;
         try {
             csd = (CSD) MarshallUtils.unmarshall(xml, CSDConstants.CSD_SCHEMA, CSD.class);

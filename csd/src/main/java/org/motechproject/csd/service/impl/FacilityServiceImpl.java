@@ -16,10 +16,6 @@ public class FacilityServiceImpl implements FacilityService {
     @Autowired
     private FacilityDataService facilityDataService;
 
-    public Facility getFacility(String uuid) {
-        return null;
-    }
-
     @Override
     public List<Facility> allFacilities() {
         return facilityDataService.retrieveAll();

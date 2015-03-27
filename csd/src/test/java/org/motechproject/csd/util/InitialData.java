@@ -44,59 +44,91 @@ public class InitialData {
 
     public static CSD getInitialData() {
 
-        DateTime date = DateTime.parse("2015-03-05");
-        DateTime dateTime = DateTime.parse("2015-03-05T11:16:53.461+01:00");
-        DateTime time = DateTime.parse("11:16:53", DateTimeFormat.forPattern("HH:mm:ss"));
+        DateTime dateTime = DateTime.parse("2015-03-05T11:16:00.000+01:00");
 
-        Extension extension = new Extension("type", "urn");
-        Geocode geocode = new Geocode(1, 2, 3, "c");
-        OtherName otherName = new OtherName("value", "lang");
-        OtherID otherID = new OtherID("code", "assigningAuthorityName");
-        CodedType codedType = new CodedType("value", "code", "codingScheme");
-        ContactPoint contactPoint = new ContactPoint(codedType, "equipment", "purpose", "certificate");
-        Credential credential = new Credential(codedType, "number", "issuingAuthority", date, date, new HashSet<>(Arrays.asList(extension)));
-        OperatingHours operatingHours = new OperatingHours(true, new ArrayList<>(Arrays.asList(DayOfTheWeek.THURSDAY)), time, time, date, date);
-
-        AddressLine addressLine = new AddressLine("value", "component");
-        Address address = new Address(new HashSet<>(Arrays.asList(addressLine)), "type");
-
-        Record record = new Record(dateTime, dateTime, "status", "sourceDirectory");
-
-        Name name = new Name(new ArrayList<>(Arrays.asList("name")), "honorific", "forename", new HashSet<>(Arrays.asList(codedType)), "surname", "suffix");
-        PersonName personName = new PersonName(new ArrayList<>(Arrays.asList("commonName")), "honorific", "forename", new HashSet<>(Arrays.asList(codedType)), "surname", "suffix", "lang");
-        Person person = new Person(new HashSet<>(Arrays.asList(personName)), new HashSet<>(Arrays.asList(contactPoint)), new HashSet<>(Arrays.asList(address)), "gender", date);
-
-        OrganizationContact organizationContactPerson = new OrganizationContact(person);
-        OrganizationContact organizationContactProvider = new OrganizationContact("ProviderEntityID");
-
-        Organization organization = new Organization("entityID", new HashSet<>(Arrays.asList(credential)), "orgID", new HashSet<>(Arrays.asList(codedType)), new HashSet<>(Arrays.asList(otherID)),
-                "organization_primaryName", new HashSet<>(Arrays.asList(otherName)), new HashSet<>(Arrays.asList(address)), new HashSet<>(Arrays.asList(organizationContactProvider)), new HashSet<>(Arrays.asList(codedType)), new HashSet<>(Arrays.asList(contactPoint)), new HashSet<>(Arrays.asList(codedType)), new HashSet<>(Arrays.asList(extension)), record);
-
-        FacilityOrganizationService facilityOrganizationService = new FacilityOrganizationService("entityID", new HashSet<>(Arrays.asList(name)),
-                new HashSet<>(Arrays.asList(codedType)), new HashSet<>(Arrays.asList(operatingHours)), "freeBusyURI", new HashSet<>(Arrays.asList(extension)));
-        FacilityOrganization facilityOrganization = new FacilityOrganization("entityID", new HashSet<>(Arrays.asList(facilityOrganizationService)), new HashSet<>(Arrays.asList(extension)));
-        FacilityOrganizations facilityOrganizations = new FacilityOrganizations(new HashSet<>(Arrays.asList(facilityOrganization)));
-
-        Facility facility = new Facility("entityID", new HashSet<>(Arrays.asList(codedType)), new HashSet<>(Arrays.asList(extension)), record, new HashSet<>(Arrays.asList(otherID)),
-                "primaryName", new HashSet<>(Arrays.asList(otherName)), new HashSet<>(Arrays.asList(address)), new HashSet<>(Arrays.asList(organizationContactPerson)),
-                new HashSet<>(Arrays.asList(codedType)), new HashSet<>(Arrays.asList(contactPoint)), geocode, facilityOrganizations, new HashSet<>(Arrays.asList(operatingHours)));
-
-        ProviderOrganization providerOrganization = new ProviderOrganization("entityID", new HashSet<>(Arrays.asList(extension)), new HashSet<>(Arrays.asList(address)), new HashSet<>(Arrays.asList(contactPoint)));
-        ProviderOrganizations providerOrganizations = new ProviderOrganizations(new HashSet<>(Arrays.asList(providerOrganization)));
-
-        ProviderFacilityService providerFacilityService = new ProviderFacilityService("entityID", new HashSet<>(Arrays.asList(name)),
-                "provOrgEntityID", new HashSet<>(Arrays.asList(codedType)), new HashSet<>(Arrays.asList(operatingHours)), "freeBusyURI", new HashSet<>(Arrays.asList(extension)));
-        ProviderFacility providerFacility = new ProviderFacility("entityID", new HashSet<>(Arrays.asList(providerFacilityService)), new HashSet<>(Arrays.asList(operatingHours)), new HashSet<>(Arrays.asList(extension)));
-        ProviderFacilities providerFacilities = new ProviderFacilities(new HashSet<>(Arrays.asList(providerFacility)));
-
-        Provider provider = new Provider("entityID", new HashSet<>(Arrays.asList(codedType)), new HashSet<>(Arrays.asList(extension)), record, new HashSet<>(Arrays.asList(otherID)),
-                person, new HashSet<>(Arrays.asList(codedType)), providerOrganizations, providerFacilities, new HashSet<>(Arrays.asList(credential)), new HashSet<>(Arrays.asList(codedType)));
-
-        OrganizationDirectory organizationDirectory = new OrganizationDirectory(new HashSet<>(Arrays.asList(organization)));
-        ServiceDirectory serviceDirectory = new ServiceDirectory(new HashSet<>(Arrays.asList(new Service("entityID", codedType, new HashSet<>(Arrays.asList(extension)), record))));
-        FacilityDirectory facilityDirectory = new FacilityDirectory(new HashSet<>(Arrays.asList(facility)));
-        ProviderDirectory providerDirectory = new ProviderDirectory(new HashSet<>(Arrays.asList(provider)));
+        OrganizationDirectory organizationDirectory = new OrganizationDirectory(new HashSet<>(Arrays.asList(createOrganization(dateTime, "organizationEntityID"))));
+        ServiceDirectory serviceDirectory = new ServiceDirectory(new HashSet<>(Arrays.asList(createService(dateTime, "serviceEntityID"))));
+        FacilityDirectory facilityDirectory = new FacilityDirectory(new HashSet<>(Arrays.asList(createFacility(dateTime, "FacilityEntityID"))));
+        ProviderDirectory providerDirectory = new ProviderDirectory(new HashSet<>(Arrays.asList(createProvider(dateTime, "providerEntityID"))));
 
         return new CSD(organizationDirectory, serviceDirectory, facilityDirectory, providerDirectory);
+    }
+
+    public static Facility createFacility(DateTime updated, String entityID) {
+        return new Facility(entityID, new HashSet<>(Arrays.asList(new CodedType("facilityCodedType", "c"))),
+                new HashSet<>(Arrays.asList(new Extension("facilityExtension", "urn"))), new Record(updated, updated, "status", "facility"),
+                new HashSet<>(Arrays.asList(new OtherID("facility", "a"))), "facility", new HashSet<>(Arrays.asList(new OtherName("facility", "en"))),
+                new HashSet<>(Arrays.asList(createAddress())), new HashSet<>(Arrays.asList(new OrganizationContact(createPerson()))),
+                new HashSet<>(Arrays.asList(new CodedType("facility", "c"))), new HashSet<>(Arrays.asList(createContactPoint())),
+                new Geocode(1, 2, 3, "c"), new FacilityOrganizations(new HashSet<>(Arrays.asList(createFacilityOrganization()))),
+                new HashSet<>(Arrays.asList(createOperatingHours())));
+    }
+
+    public static Organization createOrganization(DateTime updated, String entityID) {
+        return new Organization(entityID, new HashSet<>(Arrays.asList(createCredential())), "orgID", new HashSet<>(Arrays.asList(new CodedType("org", "c"))),
+                new HashSet<>(Arrays.asList(new OtherID("org", "a"))), "organization_primaryName", new HashSet<>(Arrays.asList(new OtherName("organization", "en"))),
+                new HashSet<>(Arrays.asList(createAddress())), new HashSet<>(Arrays.asList(new OrganizationContact("providerEntityID"))),
+                new HashSet<>(Arrays.asList(new CodedType("org", "c"))), new HashSet<>(Arrays.asList(createContactPoint())),
+                new HashSet<>(Arrays.asList(new CodedType("org", "c"))), new HashSet<>(Arrays.asList(new Extension("org", "urn"))),
+                new Record(updated, "status", updated));
+    }
+
+    public static Provider createProvider(DateTime updated, String entityID) {
+        return new Provider(entityID, new HashSet<>(Arrays.asList(new CodedType("provider", "c"))), new HashSet<>(Arrays.asList(new Extension("providerExtension", "urn"))),
+                new Record(updated, "status", updated), new HashSet<>(Arrays.asList(new OtherID("code", "a"))), createPerson(), new HashSet<>(Arrays.asList(new CodedType("c", "c"))),
+                new ProviderOrganizations(new HashSet<>(Arrays.asList(createProviderOrganization()))), new ProviderFacilities(new HashSet<>(Arrays.asList(createProviderFacility()))),
+                new HashSet<>(Arrays.asList(createCredential())), new HashSet<>(Arrays.asList(new CodedType("c", "c"))));
+    }
+
+    public static Service createService(DateTime updated, String entityID) {
+        return new Service(entityID, new CodedType("service", "c"),
+                new HashSet<>(Arrays.asList(new Extension("serviceExtension", "urn"))), new Record(updated, "s", updated));
+    }
+
+    private static ContactPoint createContactPoint() {
+        return new ContactPoint(new CodedType("c", "c"), "equipment", "purpose", "certificate");
+    }
+
+    private static Person createPerson() {
+        return new Person(new HashSet<>(Arrays.asList(new PersonName(new ArrayList<>(Arrays.asList("commonName")), "honorific",
+                "forename", new HashSet<>(Arrays.asList(new CodedType("code", "c"))), "surname", "suffix", "lang"))),
+                new HashSet<>(Arrays.asList(createContactPoint())), new HashSet<>(Arrays.asList(createAddress())), "gender", DateTime.parse("2015-03-05"));
+    }
+
+    private static Address createAddress() {
+        return new Address(new HashSet<>(Arrays.asList(new AddressLine("addressLine", "component"))), "type");
+    }
+
+    private static OperatingHours createOperatingHours() {
+        return new OperatingHours(true, new ArrayList<>(Arrays.asList(DayOfTheWeek.THURSDAY)), DateTime.parse("11:00:00", DateTimeFormat.forPattern("HH:mm:ss")),
+                DateTime.parse("18:00:00", DateTimeFormat.forPattern("HH:mm:ss")), DateTime.parse("2015-03-05"), DateTime.parse("2020-03-05"));
+    }
+
+    private static Credential createCredential() {
+        return new Credential(new CodedType("code", "c"), "number", "issuingAuthority", DateTime.parse("2015-03-05"),
+                DateTime.parse("2015-03-05"), new HashSet<>(Arrays.asList(new Extension("type", "urn"))));
+    }
+
+    private static FacilityOrganization createFacilityOrganization() {
+        return new FacilityOrganization("entityID", new HashSet<>(Arrays.asList(new FacilityOrganizationService("entityID", new HashSet<>(Arrays.asList(createName())),
+                new HashSet<>(Arrays.asList(new CodedType("c", "c"))), new HashSet<>(Arrays.asList(createOperatingHours())), "freeBusyURI",
+                new HashSet<>(Arrays.asList(new Extension("extension", "urn")))))), new HashSet<>(Arrays.asList(new Extension("extension", "urn"))));
+    }
+
+    private static Name createName() {
+        return new Name(new ArrayList<>(Arrays.asList("name")), "honorific", "forename",
+                new HashSet<>(Arrays.asList(new CodedType("code", "c"))), "surname", "suffix");
+    }
+
+    private static ProviderFacility createProviderFacility() {
+        return new ProviderFacility("entityID", new HashSet<>(Arrays.asList(new ProviderFacilityService("entityID", new HashSet<>(Arrays.asList(createName())),
+                "provOrgEntityID", new HashSet<>(Arrays.asList(new CodedType("c", "c"))), new HashSet<>(Arrays.asList(createOperatingHours())),
+                "freeBusyURI", new HashSet<>(Arrays.asList(new Extension("extension", "urn")))))), new HashSet<>(Arrays.asList(createOperatingHours())),
+                new HashSet<>(Arrays.asList(new Extension("extension", "urn"))));
+    }
+
+    private static ProviderOrganization createProviderOrganization() {
+        return new ProviderOrganization("entityID", new HashSet<>(Arrays.asList(new Extension("extension", "urn"))),
+                new HashSet<>(Arrays.asList(createAddress())), new HashSet<>(Arrays.asList(createContactPoint())));
     }
 }

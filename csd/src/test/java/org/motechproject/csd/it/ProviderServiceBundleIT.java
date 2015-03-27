@@ -6,9 +6,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.csd.domain.CSD;
-import org.motechproject.csd.domain.Facility;
+import org.motechproject.csd.domain.Provider;
 import org.motechproject.csd.service.CSDService;
-import org.motechproject.csd.service.FacilityService;
+import org.motechproject.csd.service.ProviderService;
 import org.motechproject.csd.util.InitialData;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -23,18 +23,18 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Verify FacilityService is present & functional.
+ * Verify ProviderService is present & functional.
  */
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
-public class FacilityServiceBundleIT extends BasePaxIT {
+public class ProviderServiceBundleIT extends BasePaxIT {
 
     @Inject
     private CSDService csdService;
 
     @Inject
-    private FacilityService facilityService;
+    private ProviderService providerService;
 
     @Before
     public void cleanBefore() {
@@ -49,28 +49,28 @@ public class FacilityServiceBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void shouldGetAllFacilities() {
+    public void shouldGetAllProviders() {
         CSD csd = InitialData.getInitialData();
-        csd.getProviderDirectory().getProviders().clear();
+        csd.getFacilityDirectory().getFacilities().clear();
         csd.getServiceDirectory().getServices().clear();
         csd.getOrganizationDirectory().getOrganizations().clear();
         csdService.create(csd);
         assertTrue(csdService.getCSD().equals(csd));
 
-        assertTrue(facilityService.allFacilities().containsAll(csd.getFacilityDirectory().getFacilities()));
+        assertTrue(providerService.allProviders().containsAll(csd.getProviderDirectory().getProviders()));
     }
 
     @Test
-    public void shouldGetFacilityByEntityID() {
+    public void shouldGetProviderByEntityID() {
         CSD csd = InitialData.getInitialData();
-        csd.getProviderDirectory().getProviders().clear();
+        csd.getFacilityDirectory().getFacilities().clear();
         csd.getServiceDirectory().getServices().clear();
         csd.getOrganizationDirectory().getOrganizations().clear();
-        Facility facility = InitialData.createFacility(new DateTime(), "EntityIDToFind");
-        csd.getFacilityDirectory().getFacilities().add(facility);
+        Provider provider = InitialData.createProvider(new DateTime(), "EntityIDToFind");
+        csd.getProviderDirectory().getProviders().add(provider);
         csdService.create(csd);
         assertTrue(csdService.getCSD().equals(csd));
 
-        assertEquals(facilityService.getFacilityByEntityID("EntityIDToFind"), facility);
+        assertEquals(providerService.getProviderByEntityID("EntityIDToFind"), provider);
     }
 }

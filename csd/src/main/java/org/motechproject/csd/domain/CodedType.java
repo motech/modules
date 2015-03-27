@@ -38,7 +38,7 @@ public class CodedType {
     /* The value of Coded Type eg <CodedType>MyValue</CodeType> */
     @UIDisplayable(position = 0)
     @Field
-    private String value;
+    private String value = "";
 
     /* Attribute @code */
     @UIDisplayable(position = 1)

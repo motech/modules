@@ -1,53 +1,53 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <CSD xmlns="urn:ihe:iti:csd:2013">
     <organizationDirectory>
-        <organization entityID="entityID">
-            <otherID assigningAuthorityName="assigningAuthorityName" code="code"/>
-            <codedType code="code" codingScheme="codingScheme">value</codedType>
+        <organization entityID="organizationEntityID">
+            <otherID assigningAuthorityName="a" code="org"/>
+            <codedType code="org" codingScheme="c"></codedType>
             <primaryName>organization_primaryName</primaryName>
-            <otherName xml:lang="lang">value</otherName>
+            <otherName xml:lang="en">organization</otherName>
             <address type="type">
-                <addressLine component="component">value</addressLine>
+                <addressLine component="component">addressLine</addressLine>
             </address>
             <contact>
-                <provider entityID="ProviderEntityID"/>
+                <provider entityID="providerEntityID"/>
             </contact>
             <credential>
-                <codedType code="code" codingScheme="codingScheme">value</codedType>
+                <codedType code="code" codingScheme="c"></codedType>
                 <number>number</number>
                 <issuingAuthority>issuingAuthority</issuingAuthority>
                 <credentialIssueDate>2015-03-05</credentialIssueDate>
                 <credentialRenewalDate>2015-03-05</credentialRenewalDate>
                 <extension type="type" urn="urn"/>
             </credential>
-            <language code="code" codingScheme="codingScheme">value</language>
-            <specialization code="code" codingScheme="codingScheme">value</specialization>
+            <language code="org" codingScheme="c"></language>
+            <specialization code="org" codingScheme="c"></specialization>
             <contactPoint>
-                <codedType code="code" codingScheme="codingScheme">value</codedType>
+                <codedType code="c" codingScheme="c"></codedType>
                 <equipment>equipment</equipment>
                 <purpose>purpose</purpose>
                 <certificate>certificate</certificate>
             </contactPoint>
             <parent entityID="orgID"/>
-            <extension type="type" urn="urn"/>
-            <record created="2015-03-05T11:16:53.461+01:00" sourceDirectory="sourceDirectory" status="status" updated="2015-03-05T11:16:53.461+01:00"/>
+            <extension type="org" urn="urn"/>
+            <record created="2015-03-05T11:16:00.000+01:00" status="status" updated="2015-03-05T11:16:00.000+01:00"/>
         </organization>
     </organizationDirectory>
     <serviceDirectory>
-        <service entityID="entityID">
-            <codedType code="code" codingScheme="codingScheme">value</codedType>
-            <extension type="type" urn="urn"/>
-            <record created="2015-03-05T11:16:53.461+01:00" sourceDirectory="sourceDirectory" status="status" updated="2015-03-05T11:16:53.461+01:00"/>
+        <service entityID="serviceEntityID">
+            <codedType code="service" codingScheme="c"></codedType>
+            <extension type="serviceExtension" urn="urn"/>
+            <record created="2015-03-05T11:16:00.000+01:00" status="s" updated="2015-03-05T11:16:00.000+01:00"/>
         </service>
     </serviceDirectory>
     <facilityDirectory>
-        <facility entityID="entityID">
-            <otherID assigningAuthorityName="assigningAuthorityName" code="code"/>
-            <codedType code="code" codingScheme="codingScheme">value</codedType>
-            <primaryName>primaryName</primaryName>
-            <otherName xml:lang="lang">value</otherName>
+        <facility entityID="FacilityEntityID">
+            <otherID assigningAuthorityName="a" code="facility"/>
+            <codedType code="facilityCodedType" codingScheme="c"></codedType>
+            <primaryName>facility</primaryName>
+            <otherName xml:lang="en">facility</otherName>
             <address type="type">
-                <addressLine component="component">value</addressLine>
+                <addressLine component="component">addressLine</addressLine>
             </address>
             <contact>
                 <person>
@@ -55,18 +55,18 @@
                         <commonName>commonName</commonName>
                         <honorific>honorific</honorific>
                         <forename>forename</forename>
-                        <otherName code="code" codingScheme="codingScheme">value</otherName>
+                        <otherName code="code" codingScheme="c"></otherName>
                         <surname>surname</surname>
                         <suffix>suffix</suffix>
                     </name>
                     <contactPoint>
-                        <codedType code="code" codingScheme="codingScheme">value</codedType>
+                        <codedType code="c" codingScheme="c"></codedType>
                         <equipment>equipment</equipment>
                         <purpose>purpose</purpose>
                         <certificate>certificate</certificate>
                     </contactPoint>
                     <address type="type">
-                        <addressLine component="component">value</addressLine>
+                        <addressLine component="component">addressLine</addressLine>
                     </address>
                     <gender>gender</gender>
                     <dateOfBirth>2015-03-05</dateOfBirth>
@@ -78,9 +78,9 @@
                 <altitude>3.0</altitude>
                 <coordinateSystem>c</coordinateSystem>
             </geocode>
-            <language code="code" codingScheme="codingScheme">value</language>
+            <language code="facility" codingScheme="c"></language>
             <contactPoint>
-                <codedType code="code" codingScheme="codingScheme">value</codedType>
+                <codedType code="c" codingScheme="c"></codedType>
                 <equipment>equipment</equipment>
                 <purpose>purpose</purpose>
                 <certificate>certificate</certificate>
@@ -92,71 +92,71 @@
                             <commonName>name</commonName>
                             <honorific>honorific</honorific>
                             <forename>forename</forename>
-                            <otherName code="code" codingScheme="codingScheme">value</otherName>
+                            <otherName code="code" codingScheme="c"></otherName>
                             <surname>surname</surname>
                             <suffix>suffix</suffix>
                         </name>
-                        <language code="code" codingScheme="codingScheme">value</language>
+                        <language code="c" codingScheme="c"></language>
                         <operatingHours>
                             <openFlag>true</openFlag>
                             <dayOfTheWeek>4</dayOfTheWeek>
-                            <beginningHour>11:16:53</beginningHour>
-                            <endingHour>11:16:53</endingHour>
+                            <beginningHour>11:00:00</beginningHour>
+                            <endingHour>18:00:00</endingHour>
                             <beginEffectiveDate>2015-03-05</beginEffectiveDate>
-                            <endEffectiveDate>2015-03-05</endEffectiveDate>
+                            <endEffectiveDate>2020-03-05</endEffectiveDate>
                         </operatingHours>
                         <freeBusyURI>freeBusyURI</freeBusyURI>
-                        <extension type="type" urn="urn"/>
+                        <extension type="extension" urn="urn"/>
                     </service>
-                    <extension type="type" urn="urn"/>
+                    <extension type="extension" urn="urn"/>
                 </organization>
             </organizations>
             <operatingHours>
                 <openFlag>true</openFlag>
                 <dayOfTheWeek>4</dayOfTheWeek>
-                <beginningHour>11:16:53</beginningHour>
-                <endingHour>11:16:53</endingHour>
+                <beginningHour>11:00:00</beginningHour>
+                <endingHour>18:00:00</endingHour>
                 <beginEffectiveDate>2015-03-05</beginEffectiveDate>
-                <endEffectiveDate>2015-03-05</endEffectiveDate>
+                <endEffectiveDate>2020-03-05</endEffectiveDate>
             </operatingHours>
-            <extension type="type" urn="urn"/>
-            <record created="2015-03-05T11:16:53.461+01:00" sourceDirectory="sourceDirectory" status="status" updated="2015-03-05T11:16:53.461+01:00"/>
+            <extension type="facilityExtension" urn="urn"/>
+            <record created="2015-03-05T11:16:00.000+01:00" sourceDirectory="facility" status="status" updated="2015-03-05T11:16:00.000+01:00"/>
         </facility>
     </facilityDirectory>
     <providerDirectory>
-        <provider entityID="entityID">
-            <otherID assigningAuthorityName="assigningAuthorityName" code="code"/>
-            <codedType code="code" codingScheme="codingScheme">value</codedType>
+        <provider entityID="providerEntityID">
+            <otherID assigningAuthorityName="a" code="code"/>
+            <codedType code="provider" codingScheme="c"></codedType>
             <demographic>
                 <name xml:lang="lang">
                     <commonName>commonName</commonName>
                     <honorific>honorific</honorific>
                     <forename>forename</forename>
-                    <otherName code="code" codingScheme="codingScheme">value</otherName>
+                    <otherName code="code" codingScheme="c"></otherName>
                     <surname>surname</surname>
                     <suffix>suffix</suffix>
                 </name>
                 <contactPoint>
-                    <codedType code="code" codingScheme="codingScheme">value</codedType>
+                    <codedType code="c" codingScheme="c"></codedType>
                     <equipment>equipment</equipment>
                     <purpose>purpose</purpose>
                     <certificate>certificate</certificate>
                 </contactPoint>
                 <address type="type">
-                    <addressLine component="component">value</addressLine>
+                    <addressLine component="component">addressLine</addressLine>
                 </address>
                 <gender>gender</gender>
                 <dateOfBirth>2015-03-05</dateOfBirth>
             </demographic>
-            <language code="code" codingScheme="codingScheme">value</language>
+            <language code="c" codingScheme="c"></language>
             <organizations>
                 <organization entityID="entityID">
-                    <extension type="type" urn="urn"/>
+                    <extension type="extension" urn="urn"/>
                     <address type="type">
-                        <addressLine component="component">value</addressLine>
+                        <addressLine component="component">addressLine</addressLine>
                     </address>
                     <contactPoint>
-                        <codedType code="code" codingScheme="codingScheme">value</codedType>
+                        <codedType code="c" codingScheme="c"></codedType>
                         <equipment>equipment</equipment>
                         <purpose>purpose</purpose>
                         <certificate>certificate</certificate>
@@ -170,45 +170,45 @@
                             <commonName>name</commonName>
                             <honorific>honorific</honorific>
                             <forename>forename</forename>
-                            <otherName code="code" codingScheme="codingScheme">value</otherName>
+                            <otherName code="code" codingScheme="c"></otherName>
                             <surname>surname</surname>
                             <suffix>suffix</suffix>
                         </name>
                         <organization entityID="provOrgEntityID"/>
-                        <language code="code" codingScheme="codingScheme">value</language>
+                        <language code="c" codingScheme="c"></language>
                         <operatingHours>
                             <openFlag>true</openFlag>
                             <dayOfTheWeek>4</dayOfTheWeek>
-                            <beginningHour>11:16:53</beginningHour>
-                            <endingHour>11:16:53</endingHour>
+                            <beginningHour>11:00:00</beginningHour>
+                            <endingHour>18:00:00</endingHour>
                             <beginEffectiveDate>2015-03-05</beginEffectiveDate>
-                            <endEffectiveDate>2015-03-05</endEffectiveDate>
+                            <endEffectiveDate>2020-03-05</endEffectiveDate>
                         </operatingHours>
                         <freeBusyURI>freeBusyURI</freeBusyURI>
-                        <extension type="type" urn="urn"/>
+                        <extension type="extension" urn="urn"/>
                     </service>
                     <operatingHours>
                         <openFlag>true</openFlag>
                         <dayOfTheWeek>4</dayOfTheWeek>
-                        <beginningHour>11:16:53</beginningHour>
-                        <endingHour>11:16:53</endingHour>
+                        <beginningHour>11:00:00</beginningHour>
+                        <endingHour>18:00:00</endingHour>
                         <beginEffectiveDate>2015-03-05</beginEffectiveDate>
-                        <endEffectiveDate>2015-03-05</endEffectiveDate>
+                        <endEffectiveDate>2020-03-05</endEffectiveDate>
                     </operatingHours>
-                    <extension type="type" urn="urn"/>
+                    <extension type="extension" urn="urn"/>
                 </facility>
             </facilities>
             <credential>
-                <codedType code="code" codingScheme="codingScheme">value</codedType>
+                <codedType code="code" codingScheme="c"></codedType>
                 <number>number</number>
                 <issuingAuthority>issuingAuthority</issuingAuthority>
                 <credentialIssueDate>2015-03-05</credentialIssueDate>
                 <credentialRenewalDate>2015-03-05</credentialRenewalDate>
                 <extension type="type" urn="urn"/>
             </credential>
-            <specialty code="code" codingScheme="codingScheme">value</specialty>
-            <extension type="type" urn="urn"/>
-            <record created="2015-03-05T11:16:53.461+01:00" sourceDirectory="sourceDirectory" status="status" updated="2015-03-05T11:16:53.461+01:00"/>
+            <specialty code="c" codingScheme="c"></specialty>
+            <extension type="providerExtension" urn="urn"/>
+            <record created="2015-03-05T11:16:00.000+01:00" status="status" updated="2015-03-05T11:16:00.000+01:00"/>
         </provider>
     </providerDirectory>
 </CSD>

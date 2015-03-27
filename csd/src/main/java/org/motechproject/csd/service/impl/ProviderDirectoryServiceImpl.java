@@ -28,7 +28,7 @@ public class ProviderDirectoryServiceImpl implements ProviderDirectoryService {
         List<ProviderDirectory> providerDirectoryList = providerDirectoryDataService.retrieveAll();
 
         if (providerDirectoryList.size() > 1) {
-            throw new IllegalArgumentException("In the database can be only one CSD element");
+            throw new IllegalArgumentException("In the database can be only one ProviderDirectory element");
         }
 
         if (providerDirectoryList.isEmpty()) {

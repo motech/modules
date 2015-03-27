@@ -11,8 +11,6 @@ import java.util.Set;
  */
 public interface FacilityService {
 
-    Facility getFacility(String uuid);
-
     List<Facility> allFacilities();
 
     Facility getFacilityByEntityID(String entityID);

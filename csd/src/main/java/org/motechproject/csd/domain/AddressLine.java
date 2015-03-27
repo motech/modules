@@ -34,7 +34,7 @@ public class AddressLine {
 
     @UIDisplayable(position = 0)
     @Field
-    private String value;
+    private String value = "";
 
     @UIDisplayable(position = 1)
     @Field
