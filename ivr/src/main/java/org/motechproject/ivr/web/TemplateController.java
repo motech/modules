@@ -7,6 +7,9 @@ import org.motechproject.event.listener.EventRelay;
 import org.motechproject.ivr.domain.Config;
 import org.motechproject.ivr.domain.Template;
 import org.motechproject.ivr.event.EventSubjects;
+import org.motechproject.ivr.exception.ConfigNotFoundException;
+import org.motechproject.ivr.exception.IvrTemplateException;
+import org.motechproject.ivr.exception.TemplateNotFoundException;
 import org.motechproject.ivr.repository.CallDetailRecordDataService;
 import org.motechproject.ivr.service.ConfigService;
 import org.motechproject.ivr.service.TemplateService;
@@ -29,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
@@ -162,12 +166,33 @@ public class TemplateController {
         return templateService.allTemplates();
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler({ConfigNotFoundException.class, TemplateNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public String handleNotFoundException(Exception e) throws IOException {
+        LOGGER.error("Error processing template", e);
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(IvrTemplateException.class)
+    @ResponseBody
+    public String handleCustomException(IvrTemplateException e, HttpServletResponse response) throws IOException {
+        LOGGER.error("Error processing template", e);
+
+        if (e.getErrorCode() != null) {
+            response.setStatus(e.getErrorCode().value());
+        } else {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        }
+
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public String handleException(Exception e) throws IOException {
         LOGGER.error("Error processing template", e);
         return e.getMessage();
     }
-
 }

@@ -84,6 +84,7 @@
                             org.motechproject.ivr.service;version=${project.version},
                             org.motechproject.ivr.repository;version=${project.version},
                             org.motechproject.ivr.domain;version=${project.version},
+                            org.motechproject.ivr.exception;version=${project.version},
                         </Export-Package>
                         <Bundle-DocURL>
                             http://modules.motechproject.org/en/latest/ivr.html

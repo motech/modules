@@ -300,3 +300,16 @@ Call Detail Records
           kind of a web interface) about a specific call.
         * ``providerExtraData``: A map containing any additional parameter received from the IVR provider and not mapped
           to any of the above fields.
+
+Custom exception
+================
+
+    There is a custom exception class **IvrTemplateException** that can be thrown from templates. Using this exception you can
+    control the error code in the HTTP response. In the following constructor you can provide a suitable error code::
+
+        public IvrTemplateException(String message, HttpStatus errorCode) {
+            super(message);
+            this.errorCode = errorCode;
+        }
+
+    This will allow you to return an error code that your IVR provider can understand.

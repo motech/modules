@@ -2,6 +2,8 @@ package org.motechproject.ivr.web;
 
 import org.motechproject.ivr.domain.Config;
 import org.motechproject.ivr.service.ConfigService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,8 @@ import java.util.List;
  */
 @Controller
 public class ConfigController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConfigController.class);
+
     private ConfigService configService;
 
     @Autowired
@@ -43,9 +47,10 @@ public class ConfigController {
     }
 
     @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public String handleException(Exception e) throws IOException {
+        LOGGER.error("Error while updating configs", e);
         return e.getMessage();
     }
 }

@@ -9,6 +9,7 @@ import org.motechproject.config.core.constants.ConfigurationConstants;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.ivr.domain.Template;
+import org.motechproject.ivr.exception.TemplateNotFoundException;
 import org.motechproject.ivr.service.TemplateService;
 import org.motechproject.server.config.SettingsFacade;
 import org.slf4j.Logger;
@@ -73,7 +74,7 @@ public class TemplateServiceImpl implements TemplateService {
         if (templates.containsKey(name)) {
             return templates.get(name);
         }
-        throw new IllegalArgumentException(String.format("Unknown template: '%s'.", name));
+        throw new TemplateNotFoundException(String.format("Unknown template: '%s'.", name));
     }
 
     public List<Template> allTemplates() {

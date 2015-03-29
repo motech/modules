@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ivr.domain.Config;
 import org.motechproject.ivr.domain.HttpMethod;
+import org.motechproject.ivr.exception.ConfigNotFoundException;
 import org.motechproject.ivr.service.ConfigService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -54,7 +55,7 @@ public class ConfigServiceBundleIT extends BasePaxIT {
         assertEquals(config, myConfig);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ConfigNotFoundException.class)
     public void shouldNotFindAbsentConfig() {
         configService.updateConfigs(Arrays.asList(new Config("foo", false, null, null, null, null, null, null, null, false, null)));
         configService.getConfig("bar");

@@ -6,6 +6,7 @@ import org.motechproject.event.listener.EventRelay;
 import org.motechproject.ivr.domain.CallDetailRecord;
 import org.motechproject.ivr.domain.Config;
 import org.motechproject.ivr.event.EventParams;
+import org.motechproject.ivr.exception.ConfigNotFoundException;
 import org.motechproject.ivr.repository.CallDetailRecordDataService;
 import org.motechproject.ivr.service.ConfigService;
 import org.slf4j.Logger;
@@ -41,7 +42,7 @@ public final class LogAndEventHelper {
         if (!configService.hasConfig(configName)) {
             String msg = String.format("Invalid config: '%s'", configName);
             messageService.warn(msg, MODULE_NAME);
-            throw new IvrControllerException(msg);
+            throw new ConfigNotFoundException(msg);
         }
 
         Config config = configService.getConfig(configName);

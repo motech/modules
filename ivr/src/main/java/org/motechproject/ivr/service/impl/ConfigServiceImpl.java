@@ -9,6 +9,7 @@ import org.motechproject.config.core.constants.ConfigurationConstants;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.ivr.domain.Config;
+import org.motechproject.ivr.exception.ConfigNotFoundException;
 import org.motechproject.ivr.service.ConfigService;
 import org.motechproject.server.config.SettingsFacade;
 import org.slf4j.Logger;
@@ -74,7 +75,7 @@ public class ConfigServiceImpl implements ConfigService {
         if (configs.containsKey(name)) {
             return configs.get(name);
         }
-        throw new IllegalArgumentException(String.format("Unknown config: '%s'.", name));
+        throw new ConfigNotFoundException(String.format("Unknown config: '%s'.", name));
     }
 
     public List<Config> allConfigs() {
