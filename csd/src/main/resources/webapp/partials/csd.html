@@ -22,7 +22,7 @@
                             </div>
                             <div class="col-md-2">
                                 <button type="button" class="col-md-10 btn btn-success" ng-disabled="isFetchingCSD || isLoadingXml || isDownloadingXml" ng-click="fetch()">
-                                    {{msg('csd.web.csd.fetch')}} <i class="icon-refresh icon-spin" ng-show="isFetchingCSD"/>
+                                    {{msg('csd.web.csd.fetch')}} <i class="fa fa-refresh fa-spin" ng-show="isFetchingCSD"></i>
                                 </button>
                             </div>
                         </div>
@@ -42,7 +42,7 @@
                             <div class="col-md-2 margin-left2">
                                 <button target="_self" href="#showXmlModal" type="button" class="col-md-12 btn btn-success" data-toggle="modal"
                                         data-backdrop="static" ng-click="showXml()" ng-disabled="isFetchingCSD || isDownloadingXml">
-                                    {{msg('csd.web.csd.showXml.btn')}} <i class="icon-refresh icon-spin" ng-show="isLoadingXml"/>
+                                    {{msg('csd.web.csd.showXml.btn')}} <i class="fa fa-refresh fa-spin" ng-show="isLoadingXml"></i>
                                 </button>
                             </div>
                         </div>
@@ -50,7 +50,7 @@
                         <div class="form-group">
                             <div class="col-md-2 margin-left2">
                                 <button type="button" class="col-md-12 btn btn-success" ng-disabled="isFetchingCSD || isLoadingXml || isDownloadingXml" ng-click="downloadXml()">
-                                    {{msg('csd.web.csd.downloadXml.btn')}} <i class="icon-refresh icon-spin" ng-show="isDownloadingXml"/>
+                                    {{msg('csd.web.csd.downloadXml.btn')}} <i class="fa fa-refresh fa-spin" ng-show="isDownloadingXml"></i>
                                 </button>
                             </div>
                         </div>

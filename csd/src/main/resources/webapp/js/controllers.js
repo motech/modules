@@ -71,6 +71,7 @@
         $scope.isFetchingCSD = false;
         $scope.isLoadingXml = false;
         $scope.isDownloadingXml = false;
+        $scope.xml = "";
 
         innerLayout({
             spacing_closed: 30,
@@ -87,19 +88,13 @@
                 $scope.errors.push($scope.msg('csd.web.settings.noConfig', response));
             });
 
-        function hideMsgLater(index) {
-            return $timeout(function() {
-                $scope.messages.splice(index, 1);
-            }, 5000);
-        }
-
         $scope.fetch = function () {
             $scope.isFetchingCSD = true;
             $http.get('../csd/csd-consume')
                 .success(function(response){
-                    var index = $scope.messages.push($scope.msg('csd.web.csd.updatedSuccessful'));
-                    hideMsgLater(index-1);
+                    $scope.messages.push($scope.msg('csd.web.csd.updatedSuccessful'));
                     $scope.isFetchingCSD = false;
+                    $scope.xml = "";
                 })
                 .error(function(response) {
                     $scope.errors.push($scope.msg('csd.web.csd.fetch.error', response));
@@ -108,18 +103,18 @@
         };
 
         $scope.showXml = function () {
-            $scope.isLoadingXml = true;
-            $scope.xml = "";
-            $http.get('../csd/csd-getXml')
-                .success(function(response){
-                    $scope.xml = response;
-                    $scope.isLoadingXml = false;
-                })
-                .error(function(response) {
-                    $scope.errors.push($scope.msg('csd.web.csd.showXml.error', response));
-                    $scope.xml = "";
-                    $scope.isLoadingXml = false;
-                });
+            if (!$scope.xml && !$scope.isLoadingXml) {
+                $scope.isLoadingXml = true;
+                $http.get('../csd/csd-getXml')
+                    .success(function(response){
+                        $scope.xml = response;
+                        $scope.isLoadingXml = false;
+                    })
+                    .error(function(response) {
+                        $scope.errors.push($scope.msg('csd.web.csd.showXml.error', response));
+                        $scope.isLoadingXml = false;
+                    });
+            }
         };
 
         var saveData = (function () {
@@ -137,15 +132,21 @@
 
         $scope.downloadXml = function() {
             $scope.isDownloadingXml = true;
-            $http.get('../csd/csd-getXml')
-                .success(function(response){
-                    saveData(response, "CSD.xml");
-                    $scope.isDownloadingXml = false;
-                })
-                .error(function(response) {
-                    $scope.errors.push($scope.msg('csd.web.csd.downloadXml.error', response));
-                    $scope.isDownloadingXml = false;
-                });
+            if ($scope.xml) {
+                saveData($scope.xml, "CSD.xml");
+                $scope.isDownloadingXml = false;
+            } else {
+                $http.get('../csd/csd-getXml')
+                    .success(function(response){
+                        $scope.xml = response;
+                        saveData(response, "CSD.xml");
+                        $scope.isDownloadingXml = false;
+                    })
+                    .error(function(response) {
+                        $scope.errors.push($scope.msg('csd.web.csd.downloadXml.error', response));
+                        $scope.isDownloadingXml = false;
+                    });
+            }
         };
 
     });
