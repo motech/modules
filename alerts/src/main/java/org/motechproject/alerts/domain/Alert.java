@@ -6,7 +6,6 @@ import org.joda.time.DateTime;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
-import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.mds.annotations.UIDisplayable;
 
 import java.util.HashMap;
@@ -14,11 +13,14 @@ import java.util.Map;
 
 @Entity
 public class Alert implements Comparable<Alert> {
+
+    @Field
     private Long id;
 
     @Field(required = true)
     private String externalId;
 
+    @Field
     @UIDisplayable(position = 0)
     private String name;
 
@@ -26,6 +28,7 @@ public class Alert implements Comparable<Alert> {
     @UIDisplayable(position = 1)
     private AlertType alertType;
 
+    @Field
     @UIDisplayable(position = 4)
     private DateTime dateTime;
 
@@ -37,6 +40,7 @@ public class Alert implements Comparable<Alert> {
     @UIDisplayable(position = 2)
     private AlertStatus status;
 
+    @Field
     @UIDisplayable(position = 5)
     private String description;
 
@@ -100,7 +104,6 @@ public class Alert implements Comparable<Alert> {
         this.alertType = alertType;
     }
 
-    @Ignore
     public long getDateTimeInMillis() {
         return getDateTime().getMillis();
     }

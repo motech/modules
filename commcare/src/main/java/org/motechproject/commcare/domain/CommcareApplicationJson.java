@@ -8,7 +8,6 @@ import com.google.gson.reflect.TypeToken;
 import org.motechproject.commons.api.json.MotechJsonReader;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
-import org.motechproject.mds.annotations.Ignore;
 
 import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.Persistent;
@@ -37,7 +36,6 @@ public class CommcareApplicationJson {
 
     @Expose
     @SerializedName("modules")
-    @Ignore
     @NotPersistent
     private List<CommcareModuleJson> modules;
 

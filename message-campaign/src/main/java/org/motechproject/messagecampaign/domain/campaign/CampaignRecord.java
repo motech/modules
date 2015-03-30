@@ -3,7 +3,6 @@ package org.motechproject.messagecampaign.domain.campaign;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
-import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
 
 import javax.jdo.annotations.Unique;
@@ -15,14 +14,17 @@ import java.util.Objects;
 public class CampaignRecord {
 
     @Unique
+    @Field
     private String name;
 
     @Cascade(delete = true)
+    @Field
     private List<CampaignMessageRecord> messages = new ArrayList<>();
 
     @Field(required = true)
     private CampaignType campaignType;
 
+    @Field
     private String maxDuration;
 
     public Campaign toCampaign() {
@@ -67,7 +69,6 @@ public class CampaignRecord {
         this.maxDuration = maxDuration;
     }
 
-    @Ignore
     public void updateFrom(CampaignRecord other) {
         name = other.name;
         messages = other.messages;

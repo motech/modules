@@ -5,7 +5,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
-import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.mds.annotations.UIDisplayable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,7 +110,6 @@ public class CallDetailRecord {
         return id;
     }
 
-    @Ignore
     public static String getCurrentTimestamp() {
         return DT_FORMATTER.print(DateTime.now());
     }

@@ -50,20 +50,20 @@
                             query[field] = url.queryKey[field].toLowerCase() !== 'true';
 
                             if (query[field]) {
-                                elem.find('i').removeClass('icon-ban-circle').addClass('icon-ok');
+                                elem.find('i').removeClass('fa-square-o').addClass('fa-check-square-o');
                             } else {
-                                elem.find('i').removeClass('icon-ok').addClass('icon-ban-circle');
+                                elem.find('i').removeClass('fa-check-square-o').addClass('fa-square-o');
                             }
                             break;
                         case 'array':
-                            if (elem.children().hasClass("icon-ok")) {
-                                elem.children().removeClass("icon-ok").addClass("icon-ban-circle");
-                            } else if (elem.children().hasClass("icon-ban-circle")) {
-                                elem.children().removeClass("icon-ban-circle").addClass("icon-ok");
+                            if (elem.children().hasClass("fa-check-square-o")) {
+                                elem.children().removeClass("fa-check-square-o").addClass("fa-square-o");
+                            } else if (elem.children().hasClass("fa-square-o")) {
+                                elem.children().removeClass("fa-square-o").addClass("fa-check-square-o");
                             }
 
                             angular.forEach(scope.usedLanguages, function (value) {
-                                if (angular.element('#' + value).children().hasClass("icon-ok") && value !== '') {
+                                if (angular.element('#' + value).children().hasClass("fa-check-square-o") && value !== '') {
                                     array.push(value);
                                 }
                             });

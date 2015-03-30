@@ -42,11 +42,11 @@
                 <legend>{{msg('cmslite.resource.type')}}</legend>
                 <div data-toggle="buttons-checkbox" class="form-group btn-group-vertical">
                     <button class="btn btn-info btn-sm active" type="button" data-field-type="boolean"
-                            data-search-field="string" cms-lite-jqgrid-search="cms-lite-table"><i class="icon-white icon-ok"></i>
+                            data-search-field="string" cms-lite-jqgrid-search="cms-lite-table"><i class="fa fa-fw fa-check-square-o"></i>
                         {{msg('cmslite.resource.type.string')}}
                     </button>
                     <button class="btn btn-info btn-sm active" type="button" data-field-type="boolean"
-                            data-search-field="stream" cms-lite-jqgrid-search="cms-lite-table"><i class="icon-white icon-ok"></i>
+                            data-search-field="stream" cms-lite-jqgrid-search="cms-lite-table"><i class="fa fa-fw fa-check-square-o"></i>
                         {{msg('cmslite.resource.type.stream')}}
                     </button>
                 </div>
@@ -54,7 +54,7 @@
             <fieldset class="inside">
                 <legend>{{msg('cmslite.resource.languages')}}</legend>
                 <div data-toggle="buttons-checkbox" class="form-group btn-group-vertical">
-                    <button id="{{lang}}" ng-repeat="lang in usedLanguages" class="btn btn-info btn-sm" type="button" data-field-type="array" data-search-field="languages" data-search-value="{{lang}}" cms-lite-jqgrid-search="cms-lite-table"><i class="icon-white icon-ban-circle"></i>&nbsp;{{lang}}</button>
+                    <button id="{{lang}}" ng-repeat="lang in usedLanguages" class="btn btn-info btn-sm" type="button" data-field-type="array" data-search-field="languages" data-search-value="{{lang}}" cms-lite-jqgrid-search="cms-lite-table"><i class="fa fa-fw fa-square-o"></i>&nbsp;{{lang}}</button>
                 </div>
             </fieldset>
         </div>

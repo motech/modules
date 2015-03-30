@@ -2,7 +2,7 @@ package org.motechproject.scheduletracking.domain;
 
 import org.joda.time.Period;
 import org.motechproject.mds.annotations.Entity;
-import org.motechproject.mds.annotations.Ignore;
+import org.motechproject.mds.annotations.Field;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,8 +11,13 @@ import java.util.List;
 @Entity
 public class MilestoneWindow {
 
+    @Field
     private WindowName name;
+
+    @Field
     private Period period;
+
+    @Field
     private List<Alert> alerts = new ArrayList<Alert>();
 
     public MilestoneWindow() {
@@ -31,7 +36,6 @@ public class MilestoneWindow {
         return period;
     }
 
-    @Ignore
     public void addAlerts(Alert... alertsList) {
         alerts.addAll(Arrays.asList(alertsList));
     }

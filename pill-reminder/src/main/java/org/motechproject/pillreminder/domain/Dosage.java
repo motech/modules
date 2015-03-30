@@ -8,7 +8,6 @@ import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
-import org.motechproject.mds.annotations.Ignore;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -79,7 +78,6 @@ public class Dosage {
         }
     }
 
-    @Ignore
     public boolean isTodaysDosageResponseCaptured() {
         LocalDate today = DateUtil.today();
         LocalDate yesterday = today.minusDays(1);
@@ -94,7 +92,6 @@ public class Dosage {
         return responseLastCapturedDate.equals(yesterday) && new Time(localNow.getHourOfDay(), localNow.getMinuteOfHour()).isBefore(dosageTime);
     }
 
-    @Ignore
     public LocalDate getStartDate() {
         List<Medicine> sortedList = new ArrayList<>(medicines);
         Collections.sort(sortedList, new Comparator<Medicine>() {
@@ -106,7 +103,6 @@ public class Dosage {
         return sortedList.isEmpty() ? null : sortedList.get(0).getStartDate();
     }
 
-    @Ignore
     public LocalDate getEndDate() {
         Set<Medicine> medicinesWithNonNullEndDate = getMedicinesWithNonNullEndDate();
         if (medicinesWithNonNullEndDate.isEmpty()) {
@@ -123,7 +119,6 @@ public class Dosage {
         return sortedList.isEmpty() ? null : sortedList.get(0).getEndDate();
     }
 
-    @Ignore
     private Set<Medicine> getMedicinesWithNonNullEndDate() {
         Set<Medicine> medicinesWithNonNullEndDate = new HashSet<>();
         for (Medicine medicine : medicines) {
