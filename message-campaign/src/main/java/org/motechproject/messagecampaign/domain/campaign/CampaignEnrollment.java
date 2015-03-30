@@ -16,7 +16,6 @@ import javax.jdo.annotations.Unique;
 @Unique(name = "externalIdAndCampaignName", members = {"externalId", "campaignName" })
 public class CampaignEnrollment {
 
-    @Field
     private Long id;
 
     @Field(required = true)
@@ -25,13 +24,8 @@ public class CampaignEnrollment {
     @Field(required = true)
     private String campaignName;
 
-    @Field
     private CampaignEnrollmentStatus status;
-
-    @Field
     private LocalDate referenceDate;
-
-    @Field
     private Time deliverTime;
 
     private CampaignEnrollment() {

@@ -4,7 +4,6 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.joda.time.LocalDate;
 import org.motechproject.mds.annotations.Entity;
-import org.motechproject.mds.annotations.Field;
 import org.motechproject.messagecampaign.web.util.LocalDateSerializer;
 
 import java.util.List;
@@ -14,44 +13,27 @@ import java.util.Objects;
 public class CampaignMessageRecord {
 
     @JsonProperty
-    @Field
     private String name;
-
     @JsonProperty
-    @Field
     private List<String> formats;
-
     @JsonProperty
-    @Field
     private List<String> languages;
-
     @JsonProperty
-    @Field
     private String messageKey;
-
     @JsonProperty
-    @Field
     private String startTime;
 
     @JsonSerialize(using = LocalDateSerializer.class, include = JsonSerialize.Inclusion.NON_NULL)
     @JsonProperty
-    @Field
     private LocalDate date;
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-    @Field
     private String timeOffset;
-
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-    @Field
     private String repeatEvery;
-
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-    @Field
     private String cron;
-
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-    @Field
     private List<String> repeatOn;
 
     public String getName() {

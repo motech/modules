@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.mds.annotations.Entity;
-import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.Ignore;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -19,37 +19,16 @@ import static org.motechproject.scheduletracking.domain.EnrollmentStatus.COMPLET
 @Entity
 public class Enrollment {
 
-    @Field
     private Long id;
-
-    @Field
     private String externalId;
-
-    @Field
     private String scheduleName;
-
-    @Field
     private String currentMilestoneName;
-
-    @Field
     private DateTime startOfSchedule;
-
-    @Field
     private DateTime enrolledOn;
-
-    @Field
     private Time preferredAlertTime;
-
-    @Field
     private EnrollmentStatus status;
-
-    @Field
     private Map<String, String> metadata;
-
-    @Field
     private Schedule schedule;
-
-    @Field
     private List<MilestoneFulfillment> fulfillments = new LinkedList<>();
 
     public Enrollment() {
@@ -112,6 +91,7 @@ public class Enrollment {
         this.fulfillments = fulfillments;
     }
 
+    @Ignore
     public DateTime getLastFulfilledDate() {
         if (fulfillments.isEmpty()) {
             return null;
@@ -119,10 +99,12 @@ public class Enrollment {
         return fulfillments.get(fulfillments.size() - 1).getFulfillmentDateTime();
     }
 
+    @Ignore
     public boolean isActive() {
         return status.equals(ACTIVE);
     }
 
+    @Ignore
     public boolean isCompleted() {
         return status.equals(COMPLETED);
     }
@@ -162,6 +144,7 @@ public class Enrollment {
         return currentMilestoneStartDate.plus(currentMilestone.getWindowStart(windowName));
     }
 
+    @Ignore
     public DateTime getCurrentMilestoneStartDate() {
         if (schedule.isBasedOnAbsoluteWindows()) {
             DateTime startOfMilestone = getStartOfSchedule();
