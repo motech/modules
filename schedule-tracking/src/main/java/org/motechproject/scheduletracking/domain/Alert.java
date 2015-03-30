@@ -2,24 +2,14 @@ package org.motechproject.scheduletracking.domain;
 
 import org.joda.time.Period;
 import org.motechproject.mds.annotations.Entity;
-import org.motechproject.mds.annotations.Field;
 
 @Entity
 public class Alert {
 
-    @Field
     private Period offset;
-
-    @Field
     private Period interval;
-
-    @Field
     private int count;
-
-    @Field
     private int index;
-
-    @Field
     private boolean floating;
 
     public Alert() {
