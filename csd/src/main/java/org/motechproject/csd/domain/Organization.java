@@ -3,6 +3,7 @@ package org.motechproject.csd.domain;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.Ignore;
 
 import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -119,6 +120,7 @@ public class Organization extends AbstractUniqueID {
     @Field
     private String parentOrganization;
 
+    @Ignore
     private UniqueID parent;
 
     @Order(column = "organization_extensions_idx")
