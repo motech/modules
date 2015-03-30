@@ -1,13 +1,20 @@
 package org.motechproject.csd.service.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.motechproject.csd.client.CSDHttpClient;
+import org.motechproject.csd.client.SOAPClient;
 import org.motechproject.csd.domain.CSD;
+import org.motechproject.csd.domain.CommunicationProtocol;
+import org.motechproject.csd.domain.Config;
 import org.motechproject.csd.domain.FacilityDirectory;
-import org.motechproject.csd.domain.ProviderDirectory;
 import org.motechproject.csd.domain.OrganizationDirectory;
+import org.motechproject.csd.domain.ProviderDirectory;
 import org.motechproject.csd.domain.ServiceDirectory;
 import org.motechproject.csd.mds.CSDDataService;
 import org.motechproject.csd.service.CSDService;
+import org.motechproject.csd.service.ConfigService;
 import org.motechproject.csd.service.FacilityDirectoryService;
 import org.motechproject.csd.service.OrganizationDirectoryService;
 import org.motechproject.csd.service.ProviderDirectoryService;
@@ -21,6 +28,7 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
+import java.util.Date;
 import java.util.List;
 
 @Service("csdService")
@@ -40,6 +48,15 @@ public class CSDServiceImpl implements CSDService {
 
     @Autowired
     private ServiceDirectoryService serviceDirectoryService;
+
+    @Autowired
+    private ConfigService configService;
+
+    @Autowired
+    private CSDHttpClient csdHttpClient;
+
+    @Autowired
+    private SOAPClient soapClient;
 
     @Override
     public CSD create(CSD csd) {
@@ -94,23 +111,6 @@ public class CSDServiceImpl implements CSDService {
         return null;
     }
 
-    @Transactional
-    @Override
-    public void saveFromXml(String xml) {
-
-        CSD csd;
-
-        try {
-            csd = (CSD) MarshallUtils.unmarshall(xml, getClass().getResource("/CSD.xsd"), CSD.class);
-        } catch (SAXException e) {
-            throw new IllegalArgumentException("Invalid schema", e);
-        } catch (JAXBException e) {
-            throw new IllegalArgumentException("Invalid XML structure", e);
-        }
-
-        update(csd);
-    }
-
     @Override
     public String getXmlContent() {
         return csdDataService.doInTransaction(new TransactionCallback<String>() {
@@ -125,5 +125,49 @@ public class CSDServiceImpl implements CSDService {
                 }
             }
         });
+    }
+
+    @Override
+    public void fetchAndUpdate() {
+        Config config = configService.getConfig();
+        String xmlUrl = config.getXmlUrl();
+        CommunicationProtocol communicationProtocol = config.getCommunicationProtocol();
+
+        if (xmlUrl == null) {
+            throw new IllegalArgumentException("The CSD Registry URL is empty");
+        }
+
+        if (communicationProtocol.equals(CommunicationProtocol.REST)) {
+            String xml = csdHttpClient.getXml(xmlUrl);
+            if (xml == null) {
+                throw new IllegalArgumentException("Couldn't load XML");
+            }
+            saveFromXml(xml);
+        } else {
+            DateTime lastModified;
+            if (StringUtils.isNotEmpty(config.getLastModified())) {
+                lastModified = DateTime.parse(config.getLastModified(),
+                        DateTimeFormat.forPattern(Config.DATE_TIME_PICKER_FORMAT));
+            } else {
+                lastModified = new DateTime(new Date(0));
+            }
+            CSD csd = soapClient.getModifications(xmlUrl, lastModified).getCSD();
+            update(csd);
+            config.setLastModified(DateTime.now().toString(Config.DATE_TIME_PICKER_FORMAT));
+        }
+    }
+
+    @Transactional
+    private void saveFromXml(String xml) {
+        CSD csd;
+        try {
+            csd = (CSD) MarshallUtils.unmarshall(xml, getClass().getResource("/CSD.xsd"), CSD.class);
+        } catch (SAXException e) {
+            throw new IllegalArgumentException("Invalid schema", e);
+        } catch (JAXBException e) {
+            throw new IllegalArgumentException("Invalid XML structure", e);
+        }
+
+        update(csd);
     }
 }

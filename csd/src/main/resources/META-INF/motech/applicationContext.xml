@@ -34,4 +34,24 @@
 
     <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
 
+    <bean id="marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+        <property name="classesToBeBound">
+            <list>
+                <value>org.motechproject.csd.domain.GetModificationsRequest</value>
+                <value>org.motechproject.csd.domain.GetModificationsResponse</value>
+            </list>
+        </property>
+        <property name="schema" value="classpath:CSD.xsd"/>
+    </bean>
+
+    <bean id="webServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
+        <constructor-arg ref="messageFactory"/>
+    </bean>
+
+    <bean id="SOAPClient" class="org.motechproject.csd.client.SOAPClient">
+        <property name="webServiceTemplate" ref="webServiceTemplate" />
+        <property name="marshaller" ref="marshaller" />
+        <property name="unmarshaller" ref="marshaller" />
+    </bean>
+
 </beans>
