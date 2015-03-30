@@ -36,7 +36,7 @@ public class CSDEventListenerTest {
         initMocks(this);
 
         when(csdHttpClient.getXml(url)).thenReturn(xml);
-        csdEventListener = new CSDEventListener(csdHttpClient, csdService);
+        csdEventListener = new CSDEventListener(csdService);
     }
 
     @Test
@@ -48,6 +48,6 @@ public class CSDEventListenerTest {
 
         csdEventListener.consumeXml(event);
 
-        verify(csdService).saveFromXml(xml);
+        verify(csdService).fetchAndUpdate();
     }
 }
