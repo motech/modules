@@ -13,7 +13,7 @@ public interface CSDService {
 
     CSD update(CSD csd);
 
-    String getXmlContent();
+    void saveFromXml(String xml);
 
-    void fetchAndUpdate();
+    String getXmlContent();
 }

@@ -22,31 +22,6 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="col-md-2 control-label">{{msg('csd.web.settings.communicationProtocol')}}</label>
-                <div class="col-md-10">
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="communicationProtocols" value="REST" ng-model="config.communicationProtocol">
-                            {{msg('csd.web.settings.REST')}}
-                        </label>
-                    </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="communicationProtocols" value="SOAP" ng-model="config.communicationProtocol">
-                            {{msg('csd.web.settings.SOAP')}}
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group" ng-show="config.communicationProtocol == 'SOAP'">
-                <label class="col-md-2 control-label">{{msg('csd.web.settings.lastModified')}}</label>
-                <div class="col-md-10">
-                    <input class="form-control" csd-date-picker id="lastModified" type="text" ng-model="config.lastModified">
-                </div>
-            </div>
-
             <div class="row">
                 <div class="panel-group">
                     <div class="panel panel-default">

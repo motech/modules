@@ -130,7 +130,6 @@
                             org.springframework.web.servlet.handler,
                             org.springframework.web.servlet.mvc,
                             org.springframework.web.servlet.mvc.method.annotation,
-                            org.springframework.oxm.jaxb,
                             *
                         </Import-Package>
                         <Export-Package>
