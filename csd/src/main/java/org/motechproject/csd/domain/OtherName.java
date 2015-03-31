@@ -99,9 +99,6 @@ public class OtherName {
 
     @Override
     public String toString() {
-        return "OtherName{" +
-                "value='" + value + '\'' +
-                ", lang='" + lang + '\'' +
-                '}';
+        return value;
     }
 }

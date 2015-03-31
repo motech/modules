@@ -179,11 +179,9 @@ public class CSD {
 
     @Override
     public String toString() {
-        return "CSD{" +
-                "organizationDirectory=" + organizationDirectory +
-                ", serviceDirectory=" + serviceDirectory +
-                ", facilityDirectory=" + facilityDirectory +
-                ", providerDirectory=" + providerDirectory +
-                '}';
+        return "organizationDirectory=" + organizationDirectory +
+                " serviceDirectory=" + serviceDirectory +
+                " facilityDirectory=" + facilityDirectory +
+                " providerDirectory=" + providerDirectory;
     }
 }

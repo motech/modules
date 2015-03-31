@@ -141,11 +141,7 @@ public class Geocode {
 
     @Override
     public String toString() {
-        return "Geocode{" +
-                "latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", altitude=" + altitude +
-                ", coordinateSystem='" + coordinateSystem + '\'' +
-                '}';
+        return "latitude=" + latitude +
+                " longitude=" + longitude;
     }
 }

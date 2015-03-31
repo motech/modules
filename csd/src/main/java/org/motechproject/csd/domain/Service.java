@@ -132,10 +132,6 @@ public class Service extends AbstractUniqueID {
 
     @Override
     public String toString() {
-        return "Service{" +
-                "codedType=" + codedType +
-                ", extensions=" + extensions +
-                ", record=" + record +
-                '}';
+        return codedType.toString();
     }
 }

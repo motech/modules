@@ -373,20 +373,6 @@ public class Organization extends AbstractUniqueID {
 
     @Override
     public String toString() {
-        return "Organization{" +
-                "credentials=" + credentials +
-                ", parentOrganization=" + parentOrganization +
-                ", specializations=" + specializations +
-                ", otherIDs=" + otherIDs +
-                ", primaryName='" + primaryName + '\'' +
-                ", otherNames=" + otherNames +
-                ", addresses=" + addresses +
-                ", contacts=" + contacts +
-                ", languages=" + languages +
-                ", contactPoints=" + contactPoints +
-                ", codedTypes=" + codedTypes +
-                ", extensions=" + extensions +
-                ", record=" + record +
-                '}';
+        return primaryName;
     }
 }

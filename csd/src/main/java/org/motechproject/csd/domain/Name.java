@@ -185,13 +185,6 @@ public class Name {
 
     @Override
     public String toString() {
-        return "Name{" +
-                "commonNames=" + commonNames +
-                ", honorific='" + honorific + '\'' +
-                ", forename='" + forename + '\'' +
-                ", otherNames=" + otherNames +
-                ", surname='" + surname + '\'' +
-                ", suffix='" + suffix + '\'' +
-                '}';
+        return commonNames.toString();
     }
 }

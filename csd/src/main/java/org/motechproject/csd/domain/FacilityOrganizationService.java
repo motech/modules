@@ -170,12 +170,9 @@ public class FacilityOrganizationService extends AbstractUniqueID {
 
     @Override
     public String toString() {
-        return "FacilityOrganizationService{" +
-                "names=" + names +
-                ", languages=" + languages +
-                ", operatingHours=" + operatingHours +
-                ", freeBusyURI='" + freeBusyURI + '\'' +
-                ", extensions=" + extensions +
-                '}';
+        if (names != null && !names.isEmpty()) {
+            return names.toString();
+        }
+        return super.toString();
     }
 }

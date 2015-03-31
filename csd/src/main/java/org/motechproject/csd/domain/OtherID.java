@@ -97,9 +97,6 @@ public class OtherID {
 
     @Override
     public String toString() {
-        return "OtherID{" +
-                "code='" + code + '\'' +
-                ", assigningAuthorityName='" + assigningAuthorityName + '\'' +
-                '}';
+        return code;
     }
 }

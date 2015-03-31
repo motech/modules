@@ -386,20 +386,6 @@ public class Facility extends AbstractUniqueID {
 
     @Override
     public String toString() {
-        return "Facility{" +
-                "geocode=" + geocode +
-                ", facilityOrganizations=" + facilityOrganizations +
-                ", operatingHours=" + operatingHours +
-                ", otherIDs=" + otherIDs +
-                ", primaryName='" + primaryName + '\'' +
-                ", otherNames=" + otherNames +
-                ", addresses=" + addresses +
-                ", contacts=" + contacts +
-                ", languages=" + languages +
-                ", contactPoints=" + contactPoints +
-                ", codedTypes=" + codedTypes +
-                ", extensions=" + extensions +
-                ", record=" + record +
-                '}';
+        return primaryName;
     }
 }

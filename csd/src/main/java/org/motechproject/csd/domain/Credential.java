@@ -187,13 +187,6 @@ public class Credential {
 
     @Override
     public String toString() {
-        return "Credential{" +
-                "codedType=" + codedType +
-                ", number='" + number + '\'' +
-                ", issuingAuthority='" + issuingAuthority + '\'' +
-                ", credentialIssueDate=" + credentialIssueDate +
-                ", credentialRenewalDate=" + credentialRenewalDate +
-                ", extensions=" + extensions +
-                '}';
+        return codedType.toString();
     }
 }

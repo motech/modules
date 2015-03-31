@@ -189,14 +189,19 @@ public class PersonName {
 
     @Override
     public String toString() {
-        return "PersonName{" +
-                "commonNames=" + commonNames +
-                ", honorific='" + honorific + '\'' +
-                ", forename='" + forename + '\'' +
-                ", otherNames=" + otherNames +
-                ", surname='" + surname + '\'' +
-                ", suffix='" + suffix + '\'' +
-                ", lang='" + lang + '\'' +
-                '}';
+        String name = "";
+        if (surname != null && !surname.isEmpty()) {
+            name = name + surname;
+        }
+        if (!name.isEmpty()) {
+            name = name + " ";
+        }
+        if (forename != null && !forename.isEmpty()) {
+            name = name + forename;
+        }
+        if (name.isEmpty()) {
+            name = commonNames.toString();
+        }
+        return name;
     }
 }

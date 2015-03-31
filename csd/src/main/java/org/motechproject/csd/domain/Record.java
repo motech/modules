@@ -1,6 +1,7 @@
 package org.motechproject.csd.domain;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.motechproject.csd.adapters.DateTimeAdapter;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
@@ -144,11 +145,8 @@ public class Record {
 
     @Override
     public String toString() {
-        return "Record{" +
-                "created=" + created +
-                ", updated=" + updated +
-                ", status='" + status + '\'' +
-                ", sourceDirectory='" + sourceDirectory + '\'' +
-                '}';
+        return "created=" + created.toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm")) +
+                ", updated=" + updated.toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm")) +
+                ", status='" + status + '\'';
     }
 }

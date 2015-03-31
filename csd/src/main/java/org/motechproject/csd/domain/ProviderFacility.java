@@ -147,10 +147,6 @@ public class ProviderFacility extends AbstractUniqueID {
 
     @Override
     public String toString() {
-        return "ProviderFacility{" +
-                "services=" + services +
-                ", operatingHours=" + operatingHours +
-                ", extensions=" + extensions +
-                '}';
+        return super.toString();
     }
 }

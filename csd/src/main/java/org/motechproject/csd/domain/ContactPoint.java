@@ -138,11 +138,6 @@ public class ContactPoint {
 
     @Override
     public String toString() {
-        return "ContactPoint{" +
-                "codedType=" + codedType +
-                ", equipment='" + equipment + '\'' +
-                ", purpose='" + purpose + '\'' +
-                ", certificate='" + certificate + '\'' +
-                '}';
+        return codedType.toString();
     }
 }

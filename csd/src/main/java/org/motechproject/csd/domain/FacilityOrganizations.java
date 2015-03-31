@@ -107,8 +107,9 @@ public class FacilityOrganizations {
 
     @Override
     public String toString() {
-        return "FacilityOrganizations{" +
-                "facilityOrganizations=" + facilityOrganizations +
-                '}';
+        if (facilityOrganizations != null && !facilityOrganizations.isEmpty()) {
+            return facilityOrganizations.toString();
+        }
+        return "";
     }
 }

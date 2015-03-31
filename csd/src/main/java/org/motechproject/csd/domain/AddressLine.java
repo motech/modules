@@ -98,9 +98,9 @@ public class AddressLine {
 
     @Override
     public String toString() {
-        return "AddressLine{" +
-                "value='" + value + '\'' +
-                ", component='" + component + '\'' +
-                '}';
+        if (component != null && !component.isEmpty()) {
+            return component + "='" + value + '\'';
+        }
+        return  value;
     }
 }

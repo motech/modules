@@ -72,8 +72,6 @@ public abstract class AbstractUniqueID {
 
     @Override
     public String toString() {
-        return "AbstractUniqueID{" +
-                "entityID='" + entityID + '\'' +
-                '}';
+        return entityID;
     }
 }

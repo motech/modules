@@ -96,15 +96,15 @@ public class CodedType {
             return false;
         }
 
-        CodedType codedType1 = (CodedType) o;
+        CodedType codedType = (CodedType) o;
 
-        if (!code.equals(codedType1.code)) {
+        if (!code.equals(codedType.code)) {
             return false;
         }
-        if (!value.equals(codedType1.value)) {
+        if (!codingScheme.equals(codedType.codingScheme)) {
             return false;
         }
-        if (!codingScheme.equals(codedType1.codingScheme)) {
+        if (value != null ? !value.equals(codedType.value) : codedType.value != null) {
             return false;
         }
 
@@ -113,7 +113,7 @@ public class CodedType {
 
     @Override
     public int hashCode() {
-        int result = value.hashCode();
+        int result = value != null ? value.hashCode() : 0;
         result = 31 * result + code.hashCode();
         result = 31 * result + codingScheme.hashCode();
         return result;
@@ -121,10 +121,9 @@ public class CodedType {
 
     @Override
     public String toString() {
-        return "CodedType{" +
-                "value='" + value + '\'' +
-                ", code='" + code + '\'' +
-                ", codingScheme='" + codingScheme + '\'' +
-                '}';
+        if (value != null && !value.isEmpty()) {
+            return value;
+        }
+        return code;
     }
 }

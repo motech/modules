@@ -135,9 +135,10 @@ public class OrganizationContact {
 
     @Override
     public String toString() {
-        return "OrganizationContact{" +
-                "providerEntityID='" + providerEntityID + '\'' +
-                ", person=" + person +
-                '}';
+        if (providerEntityID != null && !providerEntityID.isEmpty()) {
+            return providerEntityID;
+        } else {
+            return person.toString();
+        }
     }
 }

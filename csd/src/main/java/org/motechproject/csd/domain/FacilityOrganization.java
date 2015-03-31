@@ -126,9 +126,6 @@ public class FacilityOrganization extends AbstractUniqueID {
 
     @Override
     public String toString() {
-        return "FacilityOrganization{" +
-                "services=" + services +
-                ", extensions=" + extensions +
-                '}';
+        return super.toString();
     }
 }

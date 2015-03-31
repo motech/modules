@@ -82,8 +82,9 @@ public class FacilityDirectory {
 
     @Override
     public String toString() {
-        return "FacilityDirectory{" +
-                "facilities=" + facilities +
-                '}';
+        if (facilities != null && !facilities.isEmpty()) {
+            return facilities.toString();
+        }
+        return "";
     }
 }

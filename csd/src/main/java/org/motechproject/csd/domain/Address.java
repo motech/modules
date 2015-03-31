@@ -112,9 +112,9 @@ public class Address {
 
     @Override
     public String toString() {
-        return "Address{" +
-                "addressLines=" + addressLines +
-                ", type='" + type + '\'' +
-                '}';
+        if (type != null && !type.isEmpty()) {
+            return type + ": " + addressLines;
+        }
+        return addressLines.toString();
     }
 }

@@ -93,9 +93,7 @@ public class Extension {
 
     @Override
     public String toString() {
-        return "Extension{" +
-                "type='" + type + '\'' +
-                ", urn='" + urn + '\'' +
-                '}';
+        return "type='" + type + '\'' +
+                " urn='" + urn + '\'';
     }
 }

@@ -1,6 +1,7 @@
 package org.motechproject.csd.domain;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.motechproject.csd.adapters.DateAdapter;
 import org.motechproject.csd.adapters.DayOfTheWeekAdapter;
 import org.motechproject.csd.adapters.TimeAdapter;
@@ -192,13 +193,24 @@ public class OperatingHours {
 
     @Override
     public String toString() {
-        return "OperatingHours{" +
-                "openFlag=" + openFlag +
-                ", daysOfTheWeek=" + daysOfTheWeek +
-                ", beginningHour=" + beginningHour +
-                ", endingHour=" + endingHour +
-                ", beginEffectiveDate=" + beginEffectiveDate +
-                ", endEffectiveDate=" + endEffectiveDate +
-                '}';
+        String openingHours = "";
+        String val = "";
+        if (beginningHour != null) {
+            openingHours = openingHours + beginningHour.toString(DateTimeFormat.forPattern("HH:mm"));
+        }
+        openingHours = openingHours + "-";
+        if (endingHour != null) {
+            openingHours = openingHours + endingHour.toString(DateTimeFormat.forPattern("HH:mm"));
+        }
+        if (daysOfTheWeek != null && !daysOfTheWeek.isEmpty()) {
+            val = val + daysOfTheWeek.toString() + " ";
+        }
+        if (!"-".equals(openingHours)) {
+            val = val + openingHours;
+        }
+        if (val.isEmpty()) {
+            return beginEffectiveDate.toString(DateTimeFormat.forPattern("yyyy-MM-dd"));
+        }
+        return val;
     }
 }

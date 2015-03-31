@@ -82,8 +82,9 @@ public class OrganizationDirectory {
 
     @Override
     public String toString() {
-        return "OrganizationDirectory{" +
-                "organizations=" + organizations +
-                '}';
+        if (organizations != null && !organizations.isEmpty()) {
+            return organizations.toString();
+        }
+        return "";
     }
 }

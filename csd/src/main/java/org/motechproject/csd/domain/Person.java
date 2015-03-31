@@ -177,12 +177,6 @@ public class Person {
 
     @Override
     public String toString() {
-        return "Person{" +
-                "names=" + names +
-                ", contactPoints=" + contactPoints +
-                ", addresses=" + addresses +
-                ", gender='" + gender + '\'' +
-                ", dateOfBirth=" + dateOfBirth +
-                '}';
+        return names.toString();
     }
 }

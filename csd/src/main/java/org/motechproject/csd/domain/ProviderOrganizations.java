@@ -94,8 +94,9 @@ public class ProviderOrganizations {
 
     @Override
     public String toString() {
-        return "ProviderOrganizations{" +
-                "providerOrganizations=" + providerOrganizations +
-                '}';
+        if (providerOrganizations != null && !providerOrganizations.isEmpty()) {
+            return providerOrganizations.toString();
+        }
+        return "";
     }
 }

@@ -82,8 +82,9 @@ public class ProviderDirectory {
 
     @Override
     public String toString() {
-        return "ProviderDirectory{" +
-                "providers=" + providers +
-                '}';
+        if (providers != null && !providers.isEmpty()) {
+            return providers.toString();
+        }
+        return  "";
     }
 }

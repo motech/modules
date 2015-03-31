@@ -204,20 +204,16 @@ public class ProviderFacilityService extends AbstractUniqueID {
         result = 31 * result + (providerOrganization != null ? providerOrganization.hashCode() : 0);
         result = 31 * result + (languages != null ? languages.hashCode() : 0);
         result = 31 * result + (operatingHours != null ? operatingHours.hashCode() : 0);
-        result = 31 * result + (freeBusyURI != null ? freeBusyURI.hashCode() : 0);
         result = 31 * result + (extensions != null ? extensions.hashCode() : 0);
+        result = 31 * result + (freeBusyURI != null ? freeBusyURI.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return "ProviderFacilityService{" +
-                "names=" + names +
-                ", providerOrganization=" + providerOrganization +
-                ", languages=" + languages +
-                ", operatingHours=" + operatingHours +
-                ", freeBusyURI='" + freeBusyURI + '\'' +
-                ", extensions=" + extensions +
-                '}';
+        if (names != null && !names.isEmpty()) {
+            return names.toString();
+        }
+        return super.toString();
     }
 }

@@ -82,8 +82,9 @@ public class ServiceDirectory {
 
     @Override
     public String toString() {
-        return "ServiceDirectory{" +
-                "services=" + services +
-                '}';
+        if (services != null && !services.isEmpty()) {
+            return services.toString();
+        }
+        return "";
     }
 }
