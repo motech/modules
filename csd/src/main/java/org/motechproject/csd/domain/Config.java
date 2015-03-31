@@ -16,10 +16,6 @@ public class Config {
 
     private String xmlUrl;
 
-    private CommunicationProtocol communicationProtocol;
-
-    private String lastModified;
-
     public Config() {
     }
 
@@ -96,21 +92,5 @@ public class Config {
 
     public void setXmlUrl(String xmlUrl) {
         this.xmlUrl = xmlUrl;
-    }
-
-    public CommunicationProtocol getCommunicationProtocol() {
-        return communicationProtocol;
-    }
-
-    public void setCommunicationProtocol(CommunicationProtocol communicationProtocol) {
-        this.communicationProtocol = communicationProtocol;
-    }
-
-    public String getLastModified() {
-        return lastModified;
-    }
-
-    public void setLastModified(String lastModified) {
-        this.lastModified = lastModified;
     }
 }
