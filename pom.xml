@@ -121,7 +121,7 @@
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>com.springsource.org.mockito</artifactId>
+            <artifactId>mockito-all</artifactId>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
@@ -171,9 +171,9 @@
                 <version>1.0.0</version>
             </dependency>
             <dependency>
-                <groupId>javax.mail</groupId>
-                <artifactId>com.springsource.javax.mail</artifactId>
-                <version>1.4.5</version>
+                <groupId>org.apache.servicemix.bundles</groupId>
+                <artifactId>org.apache.servicemix.bundles.javax.mail</artifactId>
+                <version>1.4.1_5</version>
             </dependency>
             <!-- Spring -->
             <dependency>
@@ -516,6 +516,17 @@
                 <groupId>com.thoughtworks.xstream</groupId>
                 <artifactId>org.motechproject.com.thoughtworks.xstream</artifactId>
                 <version>1.4.2-${external.dependency.release.tag}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>net.sourceforge.cglib</groupId>
+                        <artifactId>com.springsource.net.sf.cglib</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.servicemix.bundles</groupId>
+                <artifactId>org.apache.servicemix.bundles.xerces</artifactId>
+                <version>2.11.0_1</version>
             </dependency>
             <dependency>
                 <groupId>com.google.code.gson</groupId>
@@ -531,16 +542,6 @@
                 <groupId>org.apache.servicemix.bundles</groupId>
                 <artifactId>org.apache.servicemix.bundles.velocity-tools</artifactId>
                 <version>2.0_1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.json</groupId>
-                <artifactId>com.springsource.org.json</artifactId>
-                <version>1.0.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.json</groupId>
-                <artifactId>org.motechproject.org.json</artifactId>
-                <version>20080701-${external.dependency.release.tag}</version>
             </dependency>
             <dependency>
                 <groupId>org.jdom</groupId>
@@ -583,9 +584,9 @@
                 <version>${fasterxml.jackson.version}</version>
             </dependency>
             <dependency>
-                <groupId>net.sourceforge.cglib</groupId>
-                <artifactId>com.springsource.net.sf.cglib</artifactId>
-                <version>2.2.0</version>
+                <groupId>org.apache.servicemix.bundles</groupId>
+                <artifactId>org.apache.servicemix.bundles.cglib</artifactId>
+                <version>2.2.2_1</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -622,7 +623,7 @@
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
-                <artifactId>com.springsource.org.mockito</artifactId>
+                <artifactId>mockito-all</artifactId>
                 <version>1.8.4</version>
                 <scope>test</scope>
             </dependency>
@@ -720,6 +721,21 @@
                 <artifactId>pax-exam-inject</artifactId>
                 <version>${exam.version}</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.openid4java</groupId>
+                <artifactId>com.springsource.org.openid4java</artifactId>
+                <version>0.9.5</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.commons</groupId>
+                        <artifactId>com.springsource.org.apache.commons.codec</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.commons</groupId>
+                        <artifactId>com.springsource.org.apache.commons.logging</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>

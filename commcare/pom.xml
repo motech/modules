@@ -37,6 +37,10 @@
             <artifactId>org.motechproject.com.thoughtworks.xstream</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.apache.servicemix.bundles</groupId>
+            <artifactId>org.apache.servicemix.bundles.xerces</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>com.springsource.org.apache.commons.httpclient</artifactId>
         </dependency>
@@ -49,12 +53,6 @@
             <groupId>${motech.groupId}</groupId>
             <artifactId>motech-platform-dataservices</artifactId>
             <version>${motech.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.xerces</groupId>
-                    <artifactId>com.springsource.org.apache.xerces</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.servicemix.bundles</groupId>
