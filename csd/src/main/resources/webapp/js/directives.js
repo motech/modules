@@ -6,19 +6,18 @@
     directives.directive('csdDatePicker', function() {
         return {
             restrict: 'A',
-            link: function(scope, element, attrs) {
+            require: 'ngModel',
+            link: function(scope, element, attrs, ngModel) {
                 var elem = angular.element(element);
 
                 elem.datetimepicker({
                     dateFormat: "yy-mm-dd",
                     changeMonth: true,
                     changeYear: true,
-                    minDate: 0,
                     timeFormat: "HH:mm",
-                    minTime: 0,
-                    onSelect: function (selectedDateTime){
+                    onSelect: function (selectedDateTime) {
                         scope.$apply(function() {
-                            scope.config.startDate = selectedDateTime;
+                            ngModel.$setViewValue(selectedDateTime);
                         });
                     }
                 });

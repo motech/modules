@@ -3,5 +3,7 @@
     "timePeriod":"1",
     "timePeriodMultiplier":"minutes",
     "startDate":"",
-    "xmlUrl":"https://raw.githubusercontent.com/openhie/openinfoman/master/resources/service_directories/CSD-Facilities-Connectathon-20150120.xml"
+    "xmlUrl":"https://raw.githubusercontent.com/openhie/openinfoman/master/resources/service_directories/CSD-Facilities-Connectathon-20150120.xml",
+    "communicationProtocol":"REST",
+    "lastModified":null
 }
