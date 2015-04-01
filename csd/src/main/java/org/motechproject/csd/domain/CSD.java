@@ -3,6 +3,7 @@ package org.motechproject.csd.domain;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -78,18 +79,22 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = { "organizationDirectory", "serviceDirectory", "facilityDirectory", "providerDirectory" })
 public class CSD {
 
+    @UIDisplayable(position = 0)
     @Field(required = true)
     @Cascade(delete = true)
     private OrganizationDirectory organizationDirectory;
 
+    @UIDisplayable(position = 1)
     @Field(required = true)
     @Cascade(delete = true)
     private ServiceDirectory serviceDirectory;
 
+    @UIDisplayable(position = 2)
     @Field(required = true)
     @Cascade(delete = true)
     private FacilityDirectory facilityDirectory;
 
+    @UIDisplayable(position = 3)
     @Field(required = true)
     @Cascade(delete = true)
     private ProviderDirectory providerDirectory;

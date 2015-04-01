@@ -8,6 +8,7 @@ import org.motechproject.csd.adapters.TimeAdapter;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -47,22 +48,28 @@ import java.util.List;
 @XmlType(propOrder = { "openFlag", "daysOfTheWeek", "beginningHour", "endingHour", "beginEffectiveDate", "endEffectiveDate" })
 public class OperatingHours {
 
+    @UIDisplayable(position = 3)
     @Field(required = true)
     private boolean openFlag;
 
+    @UIDisplayable(position = 0)
     @Field
     @Cascade(delete = true)
     private List<DayOfTheWeek> daysOfTheWeek = new ArrayList<>();
 
+    @UIDisplayable(position = 1)
     @Field
     private DateTime beginningHour;
 
+    @UIDisplayable(position = 2)
     @Field
     private DateTime endingHour;
 
+    @UIDisplayable(position = 4)
     @Field(required = true)
     private DateTime beginEffectiveDate;
 
+    @UIDisplayable(position = 5)
     @Field
     private DateTime endEffectiveDate;
 

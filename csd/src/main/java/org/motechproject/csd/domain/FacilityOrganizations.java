@@ -3,6 +3,7 @@ package org.motechproject.csd.domain;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -61,6 +62,7 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.NONE)
 public class FacilityOrganizations {
 
+    @UIDisplayable(position = 0)
     @Order(column = "facility_organizations_organization_idx")
     @Field(required = true, name = "facility_organizations_organization")
     @Cascade(delete = true)

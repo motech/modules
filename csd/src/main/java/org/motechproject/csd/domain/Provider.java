@@ -3,6 +3,7 @@ package org.motechproject.csd.domain;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.jdo.annotations.FetchPlan;
 import javax.jdo.annotations.Order;
@@ -111,10 +112,12 @@ public class Provider extends AbstractUniqueID {
     @Cascade(delete = true)
     private List<OtherID> otherIDs = new ArrayList<>();
 
+    @UIDisplayable(position = 0)
     @Field
     @Cascade(delete = true)
     private Person demographic;
 
+    @UIDisplayable(position = 1)
     @Order(column = "provider_languages_idx")
     @Field(name = "provider_languages")
     @Cascade(delete = true)
@@ -133,11 +136,13 @@ public class Provider extends AbstractUniqueID {
     @Cascade(delete = true)
     private List<Credential> credentials = new ArrayList<>();
 
+    @UIDisplayable(position = 2)
     @Order(column = "provider_specialities_idx")
     @Field(name = "provider_specialities")
     @Cascade(delete = true)
     private List<CodedType> specialties = new ArrayList<>();
 
+    @UIDisplayable(position = 3)
     @Order(column = "provider_coded_types_idx")
     @Field(required = true, name = "provider_coded_types")
     @Cascade(delete = true)

@@ -5,6 +5,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.motechproject.csd.adapters.DateTimeAdapter;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -38,15 +39,19 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlAccessorType(XmlAccessType.NONE)
 public class Record {
 
+    @UIDisplayable(position = 0)
     @Field(required = true)
     private DateTime created;
 
+    @UIDisplayable(position = 1)
     @Field(required = true)
     private DateTime updated;
 
+    @UIDisplayable(position = 2)
     @Field(required = true)
     private String status;
 
+    @UIDisplayable(position = 3)
     @Field
     private String sourceDirectory;
 

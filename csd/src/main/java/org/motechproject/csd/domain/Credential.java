@@ -5,6 +5,7 @@ import org.motechproject.csd.adapters.DateAdapter;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -45,19 +46,24 @@ import java.util.List;
 @XmlType(propOrder = { "codedType", "number", "issuingAuthority", "credentialIssueDate", "credentialRenewalDate", "extensions" })
 public class Credential {
 
+    @UIDisplayable(position = 0)
     @Field(required = true)
     @Cascade(delete = true)
     private CodedType codedType;
 
+    @UIDisplayable(position = 1)
     @Field(required = true)
     private String number;
 
+    @UIDisplayable(position = 2)
     @Field
     private String issuingAuthority;
 
+    @UIDisplayable(position = 3)
     @Field
     private DateTime credentialIssueDate;
 
+    @UIDisplayable(position = 4)
     @Field
     private DateTime credentialRenewalDate;
 

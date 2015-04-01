@@ -4,6 +4,7 @@ import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -43,27 +44,32 @@ import java.util.List;
 @XmlType(propOrder = { "names", "organization", "languages", "operatingHours", "freeBusyURI", "extensions" })
 public class ProviderFacilityService extends AbstractUniqueID {
 
+    @UIDisplayable(position = 0)
     @Order(column = "provider_facility_service_names_idx")
     @Field(name = "provider_facility_service_names")
     @Cascade(delete = true)
     private List<Name> names = new ArrayList<>();
 
+    @UIDisplayable(position = 2)
     @Field
     private String providerOrganization;
 
     @Ignore
     private UniqueID organization;
 
+    @UIDisplayable(position = 3)
     @Order(column = "provider_facility_service_languages_idx")
     @Field(name = "provider_facility_service_languages")
     @Cascade(delete = true)
     private List<CodedType> languages = new ArrayList<>();
 
+    @UIDisplayable(position = 1)
     @Order(column = "provider_facility_service_operating_hours_idx")
     @Field(name = "provider_facility_service_operating_hours")
     @Cascade(delete = true)
     private List<OperatingHours> operatingHours = new ArrayList<>();
 
+    @UIDisplayable(position = 4)
     @Field
     private String freeBusyURI;
 

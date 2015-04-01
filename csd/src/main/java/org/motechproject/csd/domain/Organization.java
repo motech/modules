@@ -4,6 +4,7 @@ import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -74,6 +75,7 @@ public class Organization extends AbstractUniqueID {
     @Cascade(delete = true)
     private List<OtherID> otherIDs = new ArrayList<>();
 
+    @UIDisplayable(position = 0)
     @Field(required = true)
     private String primaryName;
 
@@ -82,6 +84,7 @@ public class Organization extends AbstractUniqueID {
     @Cascade(delete = true)
     private List<OtherName> otherNames = new ArrayList<>();
 
+    @UIDisplayable(position = 1)
     @Order(column = "organization_addresses_idx")
     @Field(name = "organization_addresses")
     @Cascade(delete = true)
@@ -102,6 +105,7 @@ public class Organization extends AbstractUniqueID {
     @Cascade(delete = true)
     private List<CodedType> languages = new ArrayList<>();
 
+    @UIDisplayable(position = 2)
     @Order(column = "organization_specialization_idx")
     @Field(name = "organization_specialization")
     @Cascade(delete = true)
@@ -112,6 +116,7 @@ public class Organization extends AbstractUniqueID {
     @Cascade(delete = true)
     private List<ContactPoint> contactPoints = new ArrayList<>();
 
+    @UIDisplayable(position = 3)
     @Order(column = "organization_coded_types_idx")
     @Field(required = true, name = "organization_coded_types")
     @Cascade(delete = true)

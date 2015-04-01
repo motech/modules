@@ -2,6 +2,7 @@ package org.motechproject.csd.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -31,9 +32,11 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.NONE)
 public class OtherID {
 
+    @UIDisplayable(position = 0)
     @Field(required = true)
     private String code;
 
+    @UIDisplayable(position = 1)
     @Field(required = true)
     private String assigningAuthorityName;
 

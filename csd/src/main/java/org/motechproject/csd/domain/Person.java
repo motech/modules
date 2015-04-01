@@ -5,6 +5,7 @@ import org.motechproject.csd.adapters.DateAdapter;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -52,24 +53,29 @@ import java.util.List;
 @XmlType(propOrder = { "names", "contactPoints", "addresses", "gender", "dateOfBirth" })
 public class Person {
 
+    @UIDisplayable(position = 0)
     @Order(column = "person_names_idx")
     @Field(name = "person_names", required = true)
     @Cascade(delete = true)
     private List<PersonName> names = new ArrayList<>();
 
+    @UIDisplayable(position = 1)
     @Order(column = "person_contact_points_idx")
     @Field(name = "person_contact_points")
     @Cascade(delete = true)
     private List<ContactPoint> contactPoints = new ArrayList<>();
 
+    @UIDisplayable(position = 2)
     @Order(column = "person_addresses_idx")
     @Field(name = "person_addresses")
     @Cascade(delete = true)
     private List<Address> addresses = new ArrayList<>();
 
+    @UIDisplayable(position = 3)
     @Field
     private String gender;
 
+    @UIDisplayable(position = 4)
     @Field
     private DateTime dateOfBirth;
 

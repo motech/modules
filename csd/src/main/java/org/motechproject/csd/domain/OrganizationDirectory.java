@@ -3,6 +3,7 @@ package org.motechproject.csd.domain;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -36,6 +37,7 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.NONE)
 public class OrganizationDirectory {
 
+    @UIDisplayable(position = 0)
     @Order(column = "organization_directory_organizations_idx")
     @Field(name = "organization_directory_organizations")
     @Cascade(delete = true)
