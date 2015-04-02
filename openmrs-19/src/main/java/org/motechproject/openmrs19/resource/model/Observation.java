@@ -3,11 +3,13 @@ package org.motechproject.openmrs19.resource.model;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +19,16 @@ public class Observation {
     private Encounter encounter;
     private ObservationValue value;
     private Date obsDatetime;
+    private Person person;
     private List<Observation> groupsMembers;
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
+    }
 
     public static class ObservationValue {
         private String display;
@@ -28,6 +39,37 @@ public class Observation {
 
         public void setDisplay(String display) {
             this.display = display;
+        }
+    }
+
+    public static class ObservationSerializer implements JsonSerializer<Observation> {
+
+        @Override
+        public JsonElement serialize(Observation observation, Type type, JsonSerializationContext jsonSerializationContext) {
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+
+            JsonObject object = new JsonObject();
+            if (observation.uuid != null) {
+                object.addProperty("uuid", observation.uuid);
+            }
+            if (observation.concept != null) {
+                object.addProperty("concept", observation.concept.getUuid());
+            }
+            if (observation.encounter != null) {
+                object.addProperty("encounter", observation.encounter.getUuid());
+            }
+            if (observation.value != null) {
+                object.addProperty("value", observation.value.getDisplay());
+            }
+            if (observation.obsDatetime != null) {
+                object.addProperty("obsDatetime", sdf.format(observation.obsDatetime));
+            }
+            if (observation.person != null) {
+                object.addProperty("person", observation.person.getUuid());
+            }
+
+            return object;
         }
     }
 

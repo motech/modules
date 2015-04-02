@@ -1,5 +1,7 @@
 package org.motechproject.openmrs19.domain;
 
+import java.util.List;
+
 /**
  * Maintains observation types
  */
@@ -10,10 +12,16 @@ public class OpenMRSConcept {
     private String dataType;
     private String conceptClass;
     private String display;
+    private List<OpenMRSConceptName> names;
 
     public OpenMRSConcept(OpenMRSConceptName name) {
         this.name = name;
     }
+
+    public OpenMRSConcept() {
+        this(null);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -80,5 +88,13 @@ public class OpenMRSConcept {
 
     public void setDisplay(String display) {
         this.display = display;
+    }
+
+    public List<OpenMRSConceptName> getNames() {
+        return names;
+    }
+
+    public void setNames(List<OpenMRSConceptName> names) {
+        this.names = names;
     }
 }

@@ -34,25 +34,12 @@ public class OpenMRSPerson {
     private List<OpenMRSAttribute> attributes = new ArrayList<OpenMRSAttribute>();
     private DateTime deathDate;
 
-    public OpenMRSPerson(String id) {
-        this.id = id;
+    public OpenMRSPerson() {
+        this(null);
     }
 
-    public OpenMRSPerson(String id, String firstName, String middleName, // NO CHECKSTYLE ParameterNumber
-        String lastName, String preferredName, String address, DateTime dateOfBirth,
-        Boolean birthDateEstimated, Integer age, String gender, boolean isDead, DateTime deathDate) {
-        this(id);
-        this.firstName = firstName;
-        this.middleName = middleName;
-        this.lastName = lastName;
-        this.preferredName = preferredName;
-        this.address = address;
-        this.dateOfBirth = dateOfBirth;
-        this.birthDateEstimated = birthDateEstimated;
-        this.age = age;
-        this.gender = gender;
-        this.isDead = isDead;
-        this.deathDate = deathDate;
+    public OpenMRSPerson(String id) {
+        this.id = id;
     }
 
     public void setPreferredName(String preferredName) {

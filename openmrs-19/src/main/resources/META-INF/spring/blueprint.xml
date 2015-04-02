@@ -16,6 +16,7 @@
     <osgi:service ref="patientService" interface="org.motechproject.openmrs19.service.OpenMRSPatientService"/>
     <osgi:service ref="personService" interface="org.motechproject.openmrs19.service.OpenMRSPersonService"/>
     <osgi:service ref="userService" interface="org.motechproject.openmrs19.service.OpenMRSUserService"/>
+    <osgi:service ref="providerService" interface="org.motechproject.openmrs19.service.OpenMRSProviderService"/>
 
     <osgi:reference id="eventListenerRegistryServiceOsgi" interface="org.motechproject.event.listener.EventListenerRegistryService"/>
 

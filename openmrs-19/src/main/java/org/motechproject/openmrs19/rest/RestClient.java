@@ -1,5 +1,7 @@
 package org.motechproject.openmrs19.rest;
 
+import org.motechproject.openmrs19.exception.HttpException;
+
 import java.net.URI;
 
 public interface RestClient {

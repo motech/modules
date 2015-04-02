@@ -39,6 +39,10 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>org.motechproject.com.google.code.gson</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>com.springsource.org.apache.commons.httpclient</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <resources>
@@ -142,7 +146,6 @@
             <id>IT</id>
             <build>
                 <plugins>
-                    <!-- Temporarily disabling IT until they can run successfully on build server -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
@@ -161,28 +164,49 @@
                                     <goal>integration-test</goal>
                                 </goals>
                                 <configuration>
-                                    <encoding>UTF-8</encoding>
                                     <excludes>
-                                        <exclude>**/openmrs19/**/*IT.java</exclude>
+                                        <exlude>**/openmrs19/**/*IT.java</exlude>
+                                        <exlude>**/openmrs19/**/*IntegrationTests.java</exlude>
                                     </excludes>
+                                    <encoding>UTF-8</encoding>
                                 </configuration>
                             </execution>
                         </executions>
                     </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>OPENMRSIT</id>
+            <build>
+                <plugins>
                     <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>properties-maven-plugin</artifactId>
-                        <version>1.0-alpha-2</version>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
                         <executions>
                             <execution>
-                                <phase>initialize</phase>
+                                <id>integration-test</id>
                                 <goals>
-                                    <goal>read-project-properties</goal>
+                                    <goal>integration-test</goal>
                                 </goals>
                                 <configuration>
-                                    <files>
-                                        <file>${modules.root.dir}/maven.properties</file>
-                                    </files>
+                                    <includes>
+                                        <include>**/**/*IntegrationTests.java</include>
+                                    </includes>
+                                    <encoding>UTF-8</encoding>
+                                    <summaryFile>target/failsafe-reports/failsafe-summary-it.xml</summaryFile>
+                                    <systemPropertiesFile>${modules.root.dir}/maven.properties</systemPropertiesFile>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>verify</id>
+                                <goals>
+                                    <goal>verify</goal>
+                                </goals>
+                                <configuration>
+                                    <summaryFiles>
+                                        <summaryFile>target/failsafe-reports/failsafe-summary-it.xml</summaryFile>
+                                    </summaryFiles>
                                 </configuration>
                             </execution>
                         </executions>

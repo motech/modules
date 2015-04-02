@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import org.motechproject.openmrs19.OpenMrsInstance;
 import org.motechproject.openmrs19.resource.model.Provider;
 import org.motechproject.openmrs19.resource.model.Provider.ProviderSerializer;
-import org.motechproject.openmrs19.rest.HttpException;
+import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.rest.RestClient;
 import org.motechproject.openmrs19.resource.EncounterResource;
 import org.motechproject.openmrs19.resource.model.Concept;
@@ -56,7 +56,7 @@ public class EncounterResourceImpl implements EncounterResource {
 
         String requestJson = gson.toJson(encounter);
 
-        String responseJson = restClient.postForJson(openmrsInstance.toInstancePath("/encounter"), requestJson);
+        String responseJson = restClient.postForJson(openmrsInstance.toInstancePath("/encounter?v=full"), requestJson);
         return (Encounter) JsonUtils.readJson(responseJson, Encounter.class);
     }
 
@@ -82,4 +82,27 @@ public class EncounterResourceImpl implements EncounterResource {
         return (Encounter) JsonUtils.readJsonWithAdapters(responseJson, Encounter.class, adapters);
     }
 
+    @Override
+    public EncounterType createEncounterType(EncounterType encounterType) throws HttpException {
+        Gson gson = new GsonBuilder().create();
+        String requestJson = gson.toJson(encounterType, EncounterType.class);
+        String responseJson = restClient.postForJson(openmrsInstance.toInstancePath("/encountertype"), requestJson);
+        return (EncounterType) JsonUtils.readJson(responseJson, EncounterType.class);
+    }
+
+    @Override
+    public EncounterType getEncounterTypeByUuid(String uuid) throws HttpException {
+        String responseJson = restClient.getJson(openmrsInstance.toInstancePathWithParams("/encountertype/{uuid}", uuid));
+        return (EncounterType) JsonUtils.readJson(responseJson, EncounterType.class);
+    }
+
+    @Override
+    public void deleteEncounterType(String uuid) throws HttpException {
+        restClient.delete(openmrsInstance.toInstancePathWithParams("/encountertype/{uuid}?purge", uuid));
+    }
+
+    @Override
+    public void deleteEncounter(String uuid) throws HttpException {
+        restClient.delete(openmrsInstance.toInstancePathWithParams("/encounter/{uuid}?purge", uuid));
+    }
 }

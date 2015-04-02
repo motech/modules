@@ -5,7 +5,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.openmrs19.EventKeys;
+import org.motechproject.openmrs19.domain.OpenMRSEncounterType;
+import org.motechproject.openmrs19.service.EventKeys;
 import org.motechproject.openmrs19.domain.OpenMRSEncounter;
 import org.motechproject.openmrs19.domain.OpenMRSObservation;
 import org.motechproject.openmrs19.domain.OpenMRSPatient;
@@ -22,7 +23,7 @@ import org.motechproject.openmrs19.resource.model.Observation;
 import org.motechproject.openmrs19.resource.model.Observation.ObservationValue;
 import org.motechproject.openmrs19.resource.model.Patient;
 import org.motechproject.openmrs19.resource.model.Person;
-import org.motechproject.openmrs19.rest.HttpException;
+import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.util.ConverterUtils;
@@ -219,7 +220,7 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
         Map<String, OpenMRSPerson> providers = new HashMap<>();
         for (Encounter encounter : result.getResults()) {
             String providerUuid = encounter.getProvider().getUuid();
-            OpenMRSPerson provider = personAdapter.findByPersonId(providerUuid).get(0);
+            OpenMRSPerson provider = personAdapter.getByUuid(providerUuid);
             providers.put(providerUuid, provider);
         }
 
@@ -239,7 +240,7 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
     private OpenMRSEncounter convertToMrsEncounter(Encounter encounter, OpenMRSProvider mrsPerson, OpenMRSPatient patient) {
 
         return new OpenMRSEncounter.OpenMRSEncounterBuilder().withId(encounter.getUuid()).withProvider(mrsPerson)
-                .withFacility(ConverterUtils.convertLocationToMrsLocation(encounter.getLocation()))
+                .withFacility(ConverterUtils.toOpenMRSFacility(encounter.getLocation()))
                 .withDate(encounter.getEncounterDatetime()).withPatient(patient)
                 .withObservations(convertToMrsObservation(encounter.getObs()))
                 .withEncounterType(encounter.getEncounterType().getName()).build();
@@ -249,7 +250,7 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
         Set<OpenMRSObservation> mrsObs = new HashSet<>();
 
         for (Observation ob : obs) {
-            mrsObs.add(ConverterUtils.convertObservationToMrsObservation(ob));
+            mrsObs.add(ConverterUtils.toOpenMRSObservation(ob));
         }
 
         return mrsObs;
@@ -260,7 +261,7 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
         try {
             Encounter encounter = encounterResource.getEncounterById(id);
             OpenMRSPatient patient = patientAdapter.getPatient(encounter.getPatient().getUuid());
-            OpenMRSPerson person = personAdapter.findByPersonId(encounter.getProvider().getUuid()).get(0);
+            OpenMRSPerson person = personAdapter.getByUuid(encounter.getProvider().getUuid());
             OpenMRSProvider provider = new OpenMRSProvider(person);
             provider.setProviderId(person.getPersonId());
             return convertToMrsEncounter(encounter, provider, patient);
@@ -278,6 +279,46 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
         removeEncounters(previousEncounters, encounterType);
 
         return previousEncounters;
+    }
+
+    @Override
+    public void deleteEncounter(String uuid) {
+        try {
+            encounterResource.deleteEncounter(uuid);
+            eventRelay.sendEventMessage(new MotechEvent(EventKeys.DELETED_ENCOUNTER_SUBJECT, EventHelper.encounterParameters(uuid)));
+        } catch (HttpException e) {
+            LOGGER.error("Error deleting encounter with UUID: " + uuid);
+        }
+    }
+
+    @Override
+    public OpenMRSEncounterType createEncounterType(OpenMRSEncounterType encounterType) {
+        try {
+            EncounterType converted = ConverterUtils.toEncounterType(encounterType);
+            return ConverterUtils.toOpenMRSEncounterType(encounterResource.createEncounterType(converted));
+        } catch (HttpException e) {
+            LOGGER.error("Error while creating encounter type with name: " + encounterType.getName());
+            return null;
+        }
+    }
+
+    @Override
+    public OpenMRSEncounterType getEncounterTypeByUuid(String uuid) {
+        try {
+            return ConverterUtils.toOpenMRSEncounterType(encounterResource.getEncounterTypeByUuid(uuid));
+        } catch (HttpException e) {
+            LOGGER.error("Error while fetching encounter type with UUID: " + uuid);
+            return null;
+        }
+    }
+
+    @Override
+    public void deleteEncounterType(String uuid) {
+        try {
+            encounterResource.deleteEncounterType(uuid);
+        } catch (HttpException e) {
+            LOGGER.error("Error deleting encounter type with UUID: " + uuid);
+        }
     }
 
     private void removeEncounters(List<OpenMRSEncounter> previousEncounters, String encounterType) {

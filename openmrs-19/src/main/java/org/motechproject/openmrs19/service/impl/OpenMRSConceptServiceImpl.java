@@ -1,27 +1,25 @@
 package org.motechproject.openmrs19.service.impl;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.openmrs19.EventKeys;
 import org.motechproject.openmrs19.domain.OpenMRSConcept;
-import org.motechproject.openmrs19.domain.OpenMRSConceptName;
+import org.motechproject.openmrs19.exception.ConceptNameAlreadyInUseException;
+import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.exception.OpenMRSException;
 import org.motechproject.openmrs19.helper.EventHelper;
 import org.motechproject.openmrs19.resource.ConceptResource;
 import org.motechproject.openmrs19.resource.model.Concept;
 import org.motechproject.openmrs19.resource.model.ConceptListResult;
-import org.motechproject.openmrs19.rest.HttpException;
+import org.motechproject.openmrs19.service.EventKeys;
 import org.motechproject.openmrs19.service.OpenMRSConceptService;
+import org.motechproject.openmrs19.util.ConverterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,143 +66,158 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
     }
 
     @Override
-    public OpenMRSConcept saveConcept(OpenMRSConcept concept) {
-        validateConceptBeforeSave(concept);
-        Concept converted = fromMrsConcept(concept);
-        Concept created;
+    public OpenMRSConcept createConcept(OpenMRSConcept concept) throws ConceptNameAlreadyInUseException {
+
+        validateConceptForSave(concept);
+        validateConceptNameUsage(concept);
+
+        Concept converted = ConverterUtils.toConcept(concept);
+
+        OpenMRSConcept created;
+
         try {
-            created = conceptResource.createConcept(converted);
-            eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_CONCEPT_SUBJECT, EventHelper.conceptParameters(concept)));
+
+            created = ConverterUtils.toOpenMRSConcept(conceptResource.createConcept(converted));
+            conceptCache.put(created.getName().getName(), created.getUuid());
+            eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_CONCEPT_SUBJECT, EventHelper.conceptParameters(created)));
+
         } catch (HttpException e) {
             LOGGER.error("Failed to create a concept in OpenMRS with name: " + concept.getName());
-            return null;
+            created = null;
         }
 
-        return new OpenMRSConcept(new OpenMRSConceptName(created.getName().getName()));
-    }
-
-    private Concept fromMrsConcept(OpenMRSConcept concept) {
-        Concept converted = new Concept();
-        converted.setName(new Concept.ConceptName());
-        converted.getName().setName(concept.getName().getName());
-
-        return converted;
-    }
-
-    private void validateConceptBeforeSave(OpenMRSConcept concept) {
-        Validate.notNull(concept, "Concept cannot be null");
-        Validate.notNull(concept.getName(), "Concept name cannot be null");
+        return created;
     }
 
     @Override
-    public OpenMRSConcept getConcept(String conceptId) {
-        Validate.notEmpty(conceptId, "Concept Id cannot be empty");
+    public OpenMRSConcept getConceptById(String uuid) {
 
-        Concept concept;
+        Validate.notEmpty(uuid, "Concept Id cannot be empty");
+
+        OpenMRSConcept concept;
+
         try {
-            concept = conceptResource.getConceptById(conceptId);
+
+            concept = ConverterUtils.toOpenMRSConcept(conceptResource.getConceptById(uuid));
+
         } catch (HttpException e) {
-            LOGGER.error("Failed to get patient by id: " + conceptId);
-            return null;
+            LOGGER.error("Failed to get concept with ID " + uuid);
+            concept = null;
         }
 
-        return convertToMrsConcept(concept);
-    }
-
-    private OpenMRSConcept convertToMrsConcept(Concept concept) {
-        return new OpenMRSConcept(new OpenMRSConceptName(concept.getName().getName()));
+        return concept;
     }
 
     @Override
     public List<OpenMRSConcept> search(String name) {
+
         Validate.notEmpty(name, "Name cannot be empty");
 
-        ConceptListResult result;
+        List<OpenMRSConcept> concepts;
+
         try {
-            result = conceptResource.queryForConceptsByName(name);
+
+            concepts = ConverterUtils.toOpenMRSConcepts(conceptResource.queryForConceptsByName(name));
+
         } catch (HttpException e) {
             LOGGER.error("Failed search for concept: " + name);
-            return Collections.emptyList();
+            concepts = Collections.emptyList();
         }
 
-        List<OpenMRSConcept> searchResults = new ArrayList<>();
-
-        for (Concept partialConcept : result.getResults()) {
-            OpenMRSConcept concept = getConcept(partialConcept.getUuid());
-            searchResults.add(concept);
-        }
-
-        if (searchResults.size() > 0) {
-            sortResults(searchResults);
-        }
-
-        return searchResults;
-    }
-
-    private void sortResults(List<OpenMRSConcept> searchResults) {
-        Collections.sort(searchResults, new Comparator<OpenMRSConcept>() {
-            @Override
-            public int compare(OpenMRSConcept concept1, OpenMRSConcept concept2) {
-                if (StringUtils.isNotEmpty(concept1.getName().getName()) && StringUtils.isNotEmpty(concept2.getName().getName())) {
-                    return concept1.getName().getName().compareTo(concept2.getName().getName());
-                } else if (StringUtils.isNotEmpty(concept1.getName().getName())) {
-                    return -1;
-                } else if (StringUtils.isNotEmpty(concept2.getName().getName())) {
-                    return 1;
-                }
-                return 0;
-            }
-        });
+        return concepts;
     }
 
     @Override
     public List<OpenMRSConcept> getAllConcepts() {
-        ConceptListResult result;
+
+        List<OpenMRSConcept> concepts;
+
         try {
-            result = conceptResource.getAllConcepts();
+
+            concepts = ConverterUtils.toOpenMRSConcepts(conceptResource.getAllConcepts());
+
         } catch (HttpException e) {
             LOGGER.error("Failed to retrieve all concepts");
-            return Collections.emptyList();
+            concepts = Collections.emptyList();
         }
 
-        return toMrsConcept(result.getResults());
+        return concepts;
     }
 
-    @Override
-    public void deleteConcept(String conceptId) {
+    public List<OpenMRSConcept> getConcepts(int page, int pageSize) {
+
+        List<OpenMRSConcept> concepts;
+
         try {
-            OpenMRSConcept concept = convertToMrsConcept(conceptResource.getConceptById(conceptId));
-            conceptResource.deleteConcept(conceptId);
-            eventRelay.sendEventMessage(new MotechEvent(EventKeys.DELETED_CONCEPT_SUBJECT, EventHelper.conceptParameters(concept)));
+
+            concepts = ConverterUtils.toOpenMRSConcepts(conceptResource.getConcepts(page, pageSize));
+
         } catch (HttpException e) {
-            LOGGER.error("Failed to remove concept for: " + conceptId);
+            LOGGER.error("Error while fetching concepts with pagination!");
+            concepts = Collections.emptyList();
+        }
+
+        return concepts;
+    }
+
+    @Override
+    public void deleteConcept(String uuid) {
+
+        try {
+
+            OpenMRSConcept concept = ConverterUtils.toOpenMRSConcept(conceptResource.getConceptById(uuid));
+            conceptResource.deleteConcept(uuid);
+            conceptCache.remove(concept.getName().getName());
+            eventRelay.sendEventMessage(new MotechEvent(EventKeys.DELETED_CONCEPT_SUBJECT, EventHelper.conceptParameters(concept)));
+
+        } catch (HttpException e) {
+            LOGGER.error("Failed to remove concept with ID " + uuid);
         }
     }
 
     @Override
-    public OpenMRSConcept updateConcept(OpenMRSConcept concept) {
-        Validate.notNull(concept, "Concept cannot be null");
+    public OpenMRSConcept updateConcept(OpenMRSConcept openMRSConcept) {
+
+        validateConceptForUpdate(openMRSConcept);
 
         OpenMRSConcept updatedConcept;
-        OpenMRSConcept openMRSConcept = new OpenMRSConcept(concept.getName());
+
+        Concept concept = ConverterUtils.toConcept(openMRSConcept);
+        concept.setName(null);
+        concept.setDisplay(null);
+        concept.setNames(null);
 
         try {
-            conceptResource.updateConcept(fromMrsConcept(concept));
-            updatedConcept = new OpenMRSConcept(openMRSConcept.getName());
+
+            updatedConcept = ConverterUtils.toOpenMRSConcept(conceptResource.updateConcept(concept));
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.UPDATED_CONCEPT_SUBJECT, EventHelper.conceptParameters(updatedConcept)));
+
         } catch (HttpException e) {
-            LOGGER.error("Failed to update concept with name " + concept.getName());
-            return null;
+            LOGGER.error("Failed to update concept with name " + openMRSConcept.getName());
+            updatedConcept = null;
         }
+
         return updatedConcept;
     }
 
-    private List<OpenMRSConcept> toMrsConcept(List<Concept> results) {
-        List<OpenMRSConcept> mrsConcepts = new ArrayList<>();
-        for (Concept concept : results) {
-            mrsConcepts.add(convertToMrsConcept(concept));
+    private void validateConceptForSave(OpenMRSConcept concept) {
+        Validate.notNull(concept, "Concept cannot be null");
+    }
+
+    private void validateConceptForUpdate(OpenMRSConcept concept) {
+        Validate.notNull(concept);
+        Validate.notNull(concept.getConceptClass());
+        Validate.notNull(concept.getDataType());
+    }
+
+    private void validateConceptNameUsage(OpenMRSConcept concept) throws ConceptNameAlreadyInUseException {
+        List<OpenMRSConcept> concepts = search(concept.getNames().get(0).getName());
+
+        for (OpenMRSConcept existingConcept : concepts) {
+            if (existingConcept.getDisplay().equals(concept.getNames().get(0).getName())) {
+                throw new ConceptNameAlreadyInUseException(String.format("Name \"%s\" already in use!", concept.getNames().get(0).getName()));
+            }
         }
 
-        return mrsConcepts;
     }
 }

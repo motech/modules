@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.motechproject.openmrs19.rest.HttpException;
+import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.resource.model.Concept;
 import org.motechproject.openmrs19.resource.model.Encounter;
 import org.motechproject.openmrs19.resource.model.Encounter.EncounterType;

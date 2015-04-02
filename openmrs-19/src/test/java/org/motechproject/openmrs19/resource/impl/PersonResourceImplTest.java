@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.motechproject.openmrs19.rest.HttpException;
+import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.resource.model.Attribute;
 import org.motechproject.openmrs19.resource.model.Attribute.AttributeType;
 import org.motechproject.openmrs19.resource.model.AttributeTypeListResult;
@@ -64,7 +64,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
         impl.updatePerson(person);
 
         ArgumentCaptor<String> sentJson = ArgumentCaptor.forClass(String.class);
-        Mockito.verify(getClient()).postWithEmptyResponseBody(Mockito.any(URI.class), sentJson.capture());
+        Mockito.verify(getClient()).postForJson(Mockito.any(URI.class), sentJson.capture());
         String expectedJson = readJsonFromFile("json/person-create.json");
 
         Person expectedObj = getGson().fromJson(expectedJson, Person.class);
@@ -126,7 +126,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
         impl.updatePerson(person);
 
         ArgumentCaptor<String> sentJson = ArgumentCaptor.forClass(String.class);
-        Mockito.verify(getClient()).postWithEmptyResponseBody(Mockito.any(URI.class), sentJson.capture());
+        Mockito.verify(getClient()).postForJson(Mockito.any(URI.class), sentJson.capture());
 
         String expectedJson = readJsonFromFile("json/person-update.json");
         Person expectedObj = getGson().fromJson(expectedJson, Person.class);

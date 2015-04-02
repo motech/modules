@@ -4,12 +4,14 @@ public class OpenMRSProvider {
 
     private String providerId;
     private OpenMRSPerson person;
+    private String identifier;
 
     public OpenMRSProvider(OpenMRSPerson person) {
         this.person = person;
     }
 
     public OpenMRSProvider() {
+        this(null);
     }
 
     public OpenMRSPerson getPerson() {
@@ -28,4 +30,11 @@ public class OpenMRSProvider {
         this.providerId = providerId;
     }
 
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
 }

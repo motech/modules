@@ -12,13 +12,17 @@ public class OpenMRSPatient {
     private OpenMRSPerson person;
     private String motechId;
 
+    public OpenMRSPatient() {
+        this(null);
+    }
+
     /**
      * Creates a new Patient
      *
      * @param id Patient ID
      */
     public OpenMRSPatient(String id) {
-        this.id = id;
+        this(id, null, null, null);
     }
 
     /**
@@ -29,9 +33,7 @@ public class OpenMRSPatient {
      * @param mrsFacility Location of the patient
      */
     public OpenMRSPatient(String motechId, OpenMRSPerson person, OpenMRSFacility mrsFacility) {
-        this.facility = mrsFacility;
-        this.person = person;
-        this.motechId = motechId;
+        this(null, motechId, person, mrsFacility);
     }
 
     /**
@@ -43,7 +45,9 @@ public class OpenMRSPatient {
      * @param mrsFacility Location of the patient
      */
     public OpenMRSPatient(String id, String motechId, OpenMRSPerson person, OpenMRSFacility mrsFacility) {
-        this(motechId, person, mrsFacility);
+        this.facility = mrsFacility;
+        this.person = person;
+        this.motechId = motechId;
         this.id = id;
     }
 

@@ -15,7 +15,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 
 /**
- * Maintains patient's data collected during visits (Encounters)
+ * Maintains patients data collected during visits (Encounters)
  *
  * @param <T> Type of the observation's value
  */
@@ -36,14 +36,19 @@ public class OpenMRSObservation<T> {
      * @param value       Value of the observation
      */
     public OpenMRSObservation(Date date, String conceptName, T value) {
-        this.date = date;
-        this.conceptName = conceptName;
-        this.value = value;
+        this(date, conceptName, null, value);
     }
 
+    /**
+     * Creates an observation object with the given details
+     *
+     * @param date        Date of the observation
+     * @param conceptName Name of the concept
+     * @param patientId  the ID of the patient
+     * @param value       Value of the observation
+     */
     public OpenMRSObservation(Date date, String conceptName, String patientId, T value) {
-        this(date, conceptName, value);
-        this.patientId = patientId;
+        this(null, date, conceptName, patientId, value);
     }
 
     /**
@@ -55,8 +60,24 @@ public class OpenMRSObservation<T> {
      * @param value       Value of the observation
      */
     public OpenMRSObservation(String id, Date date, String conceptName, T value) {
-        this(date, conceptName, value);
+        this(id, date, conceptName, null, value);
+    }
+
+    /**
+     * Creates an observation object with the given details
+     *
+     * @param id          Observation id
+     * @param date        Date of the observation
+     * @param conceptName Name of the concept
+     * @param patientId  the ID of the patient
+     * @param value       Value of the observation
+     */
+    public OpenMRSObservation(String id, Date date, String conceptName, String patientId, T value) {
         this.id = id;
+        this.date = date;
+        this.conceptName = conceptName;
+        this.value = value;
+        this.patientId = patientId;
     }
 
     @Deprecated

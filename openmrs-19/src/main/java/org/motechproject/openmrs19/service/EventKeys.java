@@ -1,8 +1,11 @@
-package org.motechproject.openmrs19;
+package org.motechproject.openmrs19.service;
 
 public final class EventKeys {
     public static final String MOTECH_ID = "MotechId";
     public static final String CONCEPT_NAME = "ConceptName";
+    public static final String CONCEPT_UUID = "ConceptUuid";
+    public static final String CONCEPT_DATA_TYPE = "ConceptDataType";
+    public static final String CONCEPT_CONCEPT_CLASS = "ConceptConceptClass";
     public static final String DATE_OF_DEATH = "DateOfDeath";
     public static final String COMMENT = "Comment";
     public static final String PATIENT_ID = "PatientId";
@@ -42,6 +45,7 @@ public final class EventKeys {
     public static final String CREATED_NEW_OBSERVATION_SUBJECT = BASE_SUBJECT + "Observation.Created";
     public static final String CREATED_NEW_ENCOUNTER_SUBJECT = BASE_SUBJECT + "Encounter.Created";
     public static final String UPDATED_ENCOUNTER_SUBJECT = BASE_SUBJECT + "Encounter.Updated";
+    public static final String DELETED_ENCOUNTER_SUBJECT = BASE_SUBJECT + "Encounter.Deleted";
     public static final String CREATED_NEW_FACILITY_SUBJECT = BASE_SUBJECT + "Facility.Create";
     public static final String UPDATED_FACILITY_SUBJECT = BASE_SUBJECT + "Facility.Updated";
     public static final String DELETED_FACILITY_SUBJECT = BASE_SUBJECT + "Facility.Deleted";
@@ -56,6 +60,7 @@ public final class EventKeys {
     public static final String CREATED_NEW_CONCEPT_SUBJECT = BASE_SUBJECT + "Concept.Created";
     public static final String UPDATED_CONCEPT_SUBJECT = BASE_SUBJECT + "Concept.Updated";
     public static final String DELETED_CONCEPT_SUBJECT = BASE_SUBJECT + "Concept.Deleted";
+    public static final String VOIDED_OBSERVATION_SUBJECT = "Observation.Voided";
 
     private EventKeys() { }
 

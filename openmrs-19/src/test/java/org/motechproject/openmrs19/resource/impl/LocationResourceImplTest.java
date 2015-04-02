@@ -1,13 +1,11 @@
 package org.motechproject.openmrs19.resource.impl;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.motechproject.openmrs19.rest.HttpException;
+import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.resource.model.Location;
 import org.motechproject.openmrs19.resource.model.LocationListResult;
 
@@ -57,7 +55,7 @@ public class LocationResourceImplTest extends AbstractResourceImplTest {
         impl.updateLocation(loc);
 
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        Mockito.verify(getClient()).postWithEmptyResponseBody(Mockito.any(URI.class), captor.capture());
+        Mockito.verify(getClient()).postForJson(Mockito.any(URI.class), captor.capture());
 
         String expectedJson = readJsonFromFile("json/location-create.json");
 

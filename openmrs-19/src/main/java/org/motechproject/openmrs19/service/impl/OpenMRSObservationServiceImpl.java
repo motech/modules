@@ -4,15 +4,17 @@ import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.openmrs19.EventKeys;
 import org.motechproject.openmrs19.domain.OpenMRSObservation;
 import org.motechproject.openmrs19.domain.OpenMRSPatient;
+import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.exception.ObservationNotFoundException;
 import org.motechproject.openmrs19.helper.EventHelper;
+import org.motechproject.openmrs19.resource.ConceptResource;
 import org.motechproject.openmrs19.resource.ObservationResource;
+import org.motechproject.openmrs19.resource.model.Concept;
 import org.motechproject.openmrs19.resource.model.Observation;
 import org.motechproject.openmrs19.resource.model.ObservationListResult;
-import org.motechproject.openmrs19.rest.HttpException;
+import org.motechproject.openmrs19.service.EventKeys;
 import org.motechproject.openmrs19.service.OpenMRSObservationService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.util.ConverterUtils;
@@ -30,17 +32,23 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
 
     private final OpenMRSPatientService patientAdapter;
     private final ObservationResource obsResource;
+    private final ConceptResource conceptResource;
     private final EventRelay eventRelay;
 
     @Autowired
-    public OpenMRSObservationServiceImpl(ObservationResource obsResource, OpenMRSPatientService patientAdapter, EventRelay eventRelay) {
+    public OpenMRSObservationServiceImpl(ObservationResource obsResource,
+                                         OpenMRSPatientService patientAdapter,
+                                         ConceptResource conceptResource,
+                                         EventRelay eventRelay) {
         this.obsResource = obsResource;
         this.patientAdapter = patientAdapter;
+        this.conceptResource = conceptResource;
         this.eventRelay = eventRelay;
     }
 
     @Override
     public List<OpenMRSObservation> findObservations(String motechId, String conceptName) {
+
         Validate.notEmpty(motechId, "Motech id cannot be empty");
         Validate.notEmpty(conceptName, "Concept name cannot be empty");
 
@@ -60,7 +68,7 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
 
         for (Observation ob : result.getResults()) {
             if (ob.hasConceptByName(conceptName)) {
-                obs.add(ConverterUtils.convertObservationToMrsObservation(ob));
+                obs.add(ConverterUtils.toOpenMRSObservation(ob));
             }
         }
 
@@ -68,14 +76,14 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
     }
 
     @Override
-    public void voidObservation(OpenMRSObservation mrsObservation, String reason, String mrsUserMotechId)
-            throws ObservationNotFoundException {
+    public void voidObservation(OpenMRSObservation mrsObservation, String reason) throws ObservationNotFoundException {
+
         Validate.notNull(mrsObservation);
         Validate.notEmpty(mrsObservation.getObservationId());
 
         try {
-            obsResource.deleteObservation(mrsObservation.getObservationId(), reason);
-            eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_OBSERVATION_SUBJECT, EventHelper.observationParameters(mrsObservation)));
+            obsResource.voidObservation(mrsObservation.getObservationId(), reason);
+            eventRelay.sendEventMessage(new MotechEvent(EventKeys.VOIDED_OBSERVATION_SUBJECT, EventHelper.observationParameters(mrsObservation)));
         } catch (HttpException e) {
             if (HttpStatus.NOT_FOUND.equals(e.getStatusCode())) {
                 throw new ObservationNotFoundException("No Observation found with uuid: " + mrsObservation.getObservationId(), e);
@@ -87,24 +95,63 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
 
     @Override
     public OpenMRSObservation findObservation(String patientMotechId, String conceptName) {
+
         Validate.notEmpty(patientMotechId, "MoTeCH Id cannot be empty");
         Validate.notEmpty(conceptName, "Concept name cannot be empty");
 
         List<OpenMRSObservation> observations = findObservations(patientMotechId, conceptName);
-        if (observations.size() == 0) {
-            return null;
-        }
 
-        return observations.get(0);
+        return observations.size() == 0 ? null : observations.get(0);
     }
 
     @Override
-    public OpenMRSObservation getObservationById(String id) {
+    public OpenMRSObservation getObservationById(String uuid) {
+
         try {
-            Observation obs = obsResource.getObservationById(id);
-            return ConverterUtils.convertObservationToMrsObservation(obs);
+            return ConverterUtils.toOpenMRSObservation(obsResource.getObservationById(uuid));
         } catch (HttpException e) {
+            LOGGER.error("Error while fetching obs with UUID: " + uuid);
             return null;
+        }
+    }
+
+    @Override
+    public OpenMRSObservation createObservation(OpenMRSObservation openMRSObservation) {
+
+        Validate.notEmpty(openMRSObservation.getPatientId(), "MoTeCH Id cannot be empty");
+        Validate.notEmpty(openMRSObservation.getConceptName(), "Concept name cannot be empty");
+        Validate.notNull(openMRSObservation.getDate());
+
+        try {
+            Concept concept = conceptResource.getConceptByName(openMRSObservation.getConceptName());
+            OpenMRSPatient patient = patientAdapter.getPatientByMotechId(openMRSObservation.getPatientId());
+
+            Validate.notNull(concept);
+            Validate.notNull(patient);
+
+            Observation observation = ConverterUtils.toObservation(openMRSObservation);
+            observation.setConcept(concept);
+            observation.setPerson(ConverterUtils.toPerson(patient.getPerson(), true));
+
+            OpenMRSObservation created = ConverterUtils.toOpenMRSObservation(obsResource.createObservation(observation));
+            eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_OBSERVATION_SUBJECT, EventHelper.observationParameters(created)));
+            return created;
+
+        } catch (HttpException e) {
+            LOGGER.error("Error while creating observation!");
+            return null;
+        }
+
+    }
+
+    @Override
+    public void deleteObservation(String uuid) {
+
+        try {
+            obsResource.deleteObservation(uuid);
+            eventRelay.sendEventMessage(new MotechEvent(EventKeys.DELETED_OBSERVATION_SUBJECT));
+        } catch (HttpException e) {
+            LOGGER.error("Error while deleting observation");
         }
     }
 }

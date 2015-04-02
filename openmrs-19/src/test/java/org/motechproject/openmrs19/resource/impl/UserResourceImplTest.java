@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.motechproject.openmrs19.rest.HttpException;
+import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.resource.model.Person;
 import org.motechproject.openmrs19.resource.model.Role;
 import org.motechproject.openmrs19.resource.model.RoleListResult;
@@ -98,7 +98,7 @@ public class UserResourceImplTest extends AbstractResourceImplTest {
         impl.updateUser(user);
 
         ArgumentCaptor<String> sentJson = ArgumentCaptor.forClass(String.class);
-        Mockito.verify(getClient()).postWithEmptyResponseBody(Mockito.any(URI.class), sentJson.capture());
+        Mockito.verify(getClient()).postForJson(Mockito.any(URI.class), sentJson.capture());
         String expectedJson = "{\"username\":\"motech\"}";
 
         assertEquals(stringToJsonElement(expectedJson), stringToJsonElement(sentJson.getValue()));

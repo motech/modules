@@ -1,7 +1,7 @@
 package org.motechproject.openmrs19.resource.model;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
@@ -14,11 +14,25 @@ import java.lang.reflect.Type;
 public class Provider {
     private String uuid;
     private Person person;
+    private String identifier;
 
     public static class ProviderSerializer implements JsonSerializer<Provider> {
         @Override
         public JsonElement serialize(Provider src, Type typeOfSrc, JsonSerializationContext context) {
-            return new JsonPrimitive(src.getUuid());
+
+            JsonObject object = new JsonObject();
+
+            if (src.uuid != null) {
+                object.addProperty("uuid", src.uuid);
+            }
+            if (src.person != null) {
+                object.addProperty("person", src.person.getUuid());
+            }
+            if (src.identifier != null) {
+                object.addProperty("identifier", src.identifier);
+            }
+
+            return object;
         }
     }
 
@@ -36,6 +50,14 @@ public class Provider {
 
     public void setPerson(Person person) {
         this.person = person;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
 }

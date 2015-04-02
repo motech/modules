@@ -1,6 +1,7 @@
 package org.motechproject.openmrs19.service;
 
 import org.motechproject.openmrs19.domain.OpenMRSEncounter;
+import org.motechproject.openmrs19.domain.OpenMRSEncounterType;
 
 import java.util.List;
 
@@ -42,4 +43,34 @@ public interface OpenMRSEncounterService {
      * identified by MOTECH ID
      */
     List<OpenMRSEncounter> getEncountersByEncounterType(String motechId, String encounterType);
+
+    /**
+     * Deletes encounter with the given UUID.
+     *
+     * @param uuid  the UUID of the encounter
+     */
+    void deleteEncounter(String uuid);
+
+    /**
+     * Creates given encounter type to the OpenMRS server.
+     *
+     * @param encounterType  the encounter type to be created
+     * @return  the created encounter type
+     */
+    OpenMRSEncounterType createEncounterType(OpenMRSEncounterType encounterType);
+
+    /**
+     * Fetches encounter type with the given UUID.
+     *
+     * @param uuid  the UUID of the encounter type
+     * @return  the encounter type with given UUID
+     */
+    OpenMRSEncounterType getEncounterTypeByUuid(String uuid);
+
+    /**
+     * Deletes encounter type with given uuid.
+     *
+     * @param uuid  the UUID of the encounter type to be deleted
+     */
+    void deleteEncounterType(String uuid);
 }

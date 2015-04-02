@@ -9,19 +9,28 @@ import java.util.List;
  */
 public interface OpenMRSFacilityService {
     /**
-     * Saves the given facility in the MRS System.
+     * Creates the given facility on the MRS System.
      *
-     * @param facility  object to be saved
+     * @param facility  object to be created
      * @return the saved instance of the facility
      */
-    OpenMRSFacility saveFacility(OpenMRSFacility facility);
+    OpenMRSFacility createFacility(OpenMRSFacility facility);
+
+    /**
+     * Fetches page with given number with size defined in {@code pageSize}.
+     *
+     * @param page  the number of the page
+     * @param pageSize  the size of the page
+     * @return  the list of facilities on the given page
+     */
+    List<? extends OpenMRSFacility> getFacilities(int page, int pageSize);
 
     /**
      * Gets all the facilities in the MRS system.
      *
-     * @return list of all available facilities
+     * @return  the list of all facilities
      */
-    List<? extends OpenMRSFacility> getFacilities();
+    List<? extends OpenMRSFacility> getAllFacilities();
 
     /**
      * Fetches all facilities that have the given location name.

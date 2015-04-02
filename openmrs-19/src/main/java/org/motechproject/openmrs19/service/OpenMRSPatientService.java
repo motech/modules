@@ -1,5 +1,6 @@
 package org.motechproject.openmrs19.service;
 
+import org.motechproject.openmrs19.domain.OpenMRSConcept;
 import org.motechproject.openmrs19.domain.OpenMRSPatient;
 import org.motechproject.openmrs19.exception.PatientNotFoundException;
 
@@ -11,15 +12,15 @@ import java.util.List;
  */
 public interface OpenMRSPatientService {
     /**
-     * Saves a patient to the MRS system.
+     * Creates the given patient on the OpenMRS server.
      *
-     * @param patient  object to be saved
-     * @return saved instance of the patient
+     * @param patient  the patient to be created
+     * @return  the created patient
      */
-    OpenMRSPatient savePatient(OpenMRSPatient patient);
+    OpenMRSPatient createPatient(OpenMRSPatient patient);
 
     /**
-     * Finds a patient by current Motech ID, and updates the patient's details (including new
+     * Finds a patient by current Motech ID, and updates the patients details (including new
      * Motech ID) in the MRS system.
      *
      * @param patient  patient instance with updated values (Motech IDentifier cannot be changed here)
@@ -29,7 +30,7 @@ public interface OpenMRSPatientService {
     OpenMRSPatient updatePatient(OpenMRSPatient patient, String currentMotechId);
 
     /**
-     * Finds a patient by Motech ID and updates the patient's details in the MRS system.
+     * Finds a patient by Motech ID and updates the patients details in the MRS system.
      *
      * @param patient Patient instance with updated values (Motech IDentifier cannot be changed)
      * @return The Motech IDentifier of the updated patient if successfully updated
@@ -61,24 +62,22 @@ public interface OpenMRSPatientService {
      */
     List<OpenMRSPatient> search(String name, String motechId);
 
-    List<OpenMRSPatient> getAllPatients();
-
     /**
      * Marks a patient as dead with the given date of death and comment.
      *
      * @param motechId  deceased patient's Motech ID
-     * @param conceptName  concept name for tracking deceased patients
+     * @param causeOfDeath  the cause of death
      * @param dateOfDeath  patient's date of death
      * @param comment  additional information for the cause of death
      * @throws PatientNotFoundException when the expected Patient does not exist
      */
-    void deceasePatient(String motechId, String conceptName, Date dateOfDeath, String comment) throws PatientNotFoundException;
+    void deceasePatient(String motechId, OpenMRSConcept causeOfDeath, Date dateOfDeath, String comment) throws PatientNotFoundException;
 
     /**
-     * Deletes a given patient.
+     * Deletes patient with the given UUID.
      *
-     * @param patient  the patient to delete
+     * @param uuid  the UUID of the patient
      * @throws PatientNotFoundException when the expected Patient does not exist
      */
-    void deletePatient(OpenMRSPatient patient) throws PatientNotFoundException;
+    void deletePatient(String uuid) throws PatientNotFoundException;
 }

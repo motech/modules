@@ -59,6 +59,6 @@ public class User {
     }
 
     public String getFirstRole() {
-        return roles.get(0).getName();
+        return roles.get(0).getDisplay();
     }
 }

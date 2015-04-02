@@ -1,6 +1,6 @@
 package org.motechproject.openmrs19.helper;
 
-import org.motechproject.openmrs19.EventKeys;
+import org.motechproject.openmrs19.service.EventKeys;
 import org.motechproject.openmrs19.domain.OpenMRSConcept;
 import org.motechproject.openmrs19.domain.OpenMRSEncounter;
 import org.motechproject.openmrs19.domain.OpenMRSFacility;
@@ -87,6 +87,12 @@ public final class EventHelper {
         return encounterParameters;
     }
 
+    public static Map<String, Object> encounterParameters(String uuid) {
+        Map<String, Object> encounterParameters = new HashMap<>();
+        encounterParameters.put(EventKeys.ENCOUNTER_ID, uuid);
+        return encounterParameters;
+    }
+
     public static Map<String, Object> observationParameters(OpenMRSObservation obs) {
         Map<String, Object> observationParameters = new HashMap<>();
         observationParameters.put(EventKeys.OBSERVATION_DATE, obs.getDate());
@@ -120,7 +126,10 @@ public final class EventHelper {
 
     public static Map<String, Object> conceptParameters(OpenMRSConcept concept) {
         Map<String, Object> conceptParameters = new HashMap<>();
-        conceptParameters.put(EventKeys.CONCEPT_NAME, concept.getName());
+        conceptParameters.put(EventKeys.CONCEPT_NAME, concept.getDisplay());
+        conceptParameters.put(EventKeys.CONCEPT_UUID, concept.getUuid());
+        conceptParameters.put(EventKeys.CONCEPT_DATA_TYPE, concept.getDataType());
+        conceptParameters.put(EventKeys.CONCEPT_CONCEPT_CLASS, concept.getConceptClass());
         return conceptParameters;
     }
 }

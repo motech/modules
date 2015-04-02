@@ -24,6 +24,13 @@ public class Concept {
         }
     }
 
+    public static class ConceptUuidSerializer implements JsonSerializer<Concept> {
+        @Override
+        public JsonElement serialize(Concept concept, Type type, JsonSerializationContext jsonSerializationContext) {
+            return new JsonPrimitive(concept.getUuid());
+        }
+    }
+
     public static class ConceptName {
         private String name;
         private String locale = "en";

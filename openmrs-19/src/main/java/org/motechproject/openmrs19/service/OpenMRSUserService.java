@@ -2,9 +2,9 @@ package org.motechproject.openmrs19.service;
 
 import org.motechproject.openmrs19.domain.OpenMRSUser;
 import org.motechproject.openmrs19.exception.UserAlreadyExistsException;
+import org.motechproject.openmrs19.exception.UserDeleteException;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Interface to handle MRS users (medical staff).
@@ -12,12 +12,12 @@ import java.util.Map;
 public interface OpenMRSUserService {
 
     /**
-     * Key to obtain {@link OpenMRSUser} from {@link #saveUser(OpenMRSUser)} and {@link #updateUser(OpenMRSUser)}
+     * Key to obtain {@link OpenMRSUser} from {@link #createUser(OpenMRSUser)} and {@link #updateUser(OpenMRSUser)}
      */
     String USER_KEY = "mrsUser";
 
     /**
-     * Key to obtain password from {@link #saveUser(OpenMRSUser)} and {@link #updateUser(OpenMRSUser)}
+     * Key to obtain password from {@link #createUser(OpenMRSUser)} and {@link #updateUser(OpenMRSUser)}
      */
     String PASSWORD_KEY = "password";
 
@@ -32,11 +32,11 @@ public interface OpenMRSUserService {
     /**
      * Creates a new user.
      *
-     * @param mrsUser  instance of the User object to be saved
-     * @return a Map containing saved user's data
+     * @param mrsUser  instance of the User object to be created
+     * @return  the created user
      * @throws UserAlreadyExistsException if the user already exists
      */
-    Map<String, Object> saveUser(OpenMRSUser mrsUser) throws UserAlreadyExistsException;
+    OpenMRSUser createUser(OpenMRSUser mrsUser) throws UserAlreadyExistsException;
 
     /**
      * Resets the password of a given user.
@@ -54,12 +54,20 @@ public interface OpenMRSUserService {
     List<OpenMRSUser> getAllUsers();
 
     /**
-     * Finds user by UserName.
+     * Finds user by UUID.
      *
-     * @param userId  user's unique Identifier
+     * @param uuid  the UUID of the user
+     * @return  the user with given UUID, null if not found
+     */
+    OpenMRSUser getUserByUuid(String uuid);
+
+    /**
+     * Finds user by username.
+     *
+     * @param userName  the user's username
      * @return the User object, if found
      */
-    OpenMRSUser getUserByUserName(String userId);
+    OpenMRSUser getUserByUserName(String userName);
 
     /**
      * Updates User attributes.
@@ -67,5 +75,12 @@ public interface OpenMRSUserService {
      * @param mrsUser  MRS User object
      * @return a Map containing saved user's data
      */
-    Map<String, Object> updateUser(OpenMRSUser mrsUser);
+    OpenMRSUser updateUser(OpenMRSUser mrsUser);
+
+    /**
+     * Deletes user with given UUID.
+     *
+     * @param userID  the id of the user.
+     */
+    void deleteUser(String userID) throws UserDeleteException;
 }

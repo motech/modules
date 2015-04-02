@@ -2,8 +2,9 @@ package org.motechproject.openmrs19.resource.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.lang.Validate;
 import org.motechproject.openmrs19.OpenMrsInstance;
-import org.motechproject.openmrs19.rest.HttpException;
+import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.rest.RestClient;
 import org.motechproject.openmrs19.resource.LocationResource;
 import org.motechproject.openmrs19.resource.model.Concept;
@@ -31,6 +32,17 @@ public class LocationResourceImpl implements LocationResource {
         return (LocationListResult) JsonUtils.readJson(json, LocationListResult.class);
     }
 
+    public LocationListResult getLocations(int page, int pageSize) throws HttpException {
+
+        Validate.isTrue(page > 0, "Page number must be a positive value!");
+        Validate.isTrue(pageSize > 0, "Page size must be a positive value!");
+
+        int startIndex = (page - 1) * pageSize;
+        String json = restClient.getJson(openmrsInstance
+                .toInstancePathWithParams("/location?v=full&limit={pageSize}&startIndex={startIndex}", pageSize, startIndex));
+        return (LocationListResult) JsonUtils.readJson(json, LocationListResult.class);
+    }
+
     @Override
     public LocationListResult queryForLocationByName(String locationName) throws HttpException {
         String json = restClient.getJson(openmrsInstance.toInstancePathWithParams("/location?q={name}&v=full",
@@ -54,18 +66,19 @@ public class LocationResourceImpl implements LocationResource {
     }
 
     @Override
-    public void updateLocation(Location location) throws HttpException {
+    public Location updateLocation(Location location) throws HttpException {
         Gson gson = new GsonBuilder().registerTypeAdapter(Concept.class, new Concept.ConceptSerializer()).create();
         // uuid cannot be set on an update call
         String locationUuid = location.getUuid();
         location.setUuid(null);
         String jsonRequest = gson.toJson(location);
-        restClient.postWithEmptyResponseBody(openmrsInstance.toInstancePathWithParams("/location/{uuid}", locationUuid),
+        String responseJson = restClient.postForJson(openmrsInstance.toInstancePathWithParams("/location/{uuid}", locationUuid),
                 jsonRequest);
+        return (Location) JsonUtils.readJson(responseJson, Location.class);
     }
 
     @Override
-    public void removeLocation(String locationId) throws HttpException {
-        restClient.delete(openmrsInstance.toInstancePathWithParams("/location/{uuid}?purge", locationId));
+    public void deleteLocation(String uuid) throws HttpException {
+        restClient.delete(openmrsInstance.toInstancePathWithParams("/location/{uuid}?purge", uuid));
     }
 }

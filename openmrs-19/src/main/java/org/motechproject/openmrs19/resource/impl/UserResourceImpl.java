@@ -3,7 +3,7 @@ package org.motechproject.openmrs19.resource.impl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.motechproject.openmrs19.OpenMrsInstance;
-import org.motechproject.openmrs19.rest.HttpException;
+import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.rest.RestClient;
 import org.motechproject.openmrs19.resource.UserResource;
 import org.motechproject.openmrs19.resource.model.Person;
@@ -64,14 +64,27 @@ public class UserResourceImpl implements UserResource {
     }
 
     @Override
-    public void updateUser(User user) throws HttpException {
+    public User updateUser(User user) throws HttpException {
         Gson gson = getGsonWithAdapters();
         String uuid = user.getUuid();
         user.setUuid(null);
         String requestJson = gson.toJson(user);
 
-        restClient.postWithEmptyResponseBody(openmrsInstance.toInstancePathWithParams("/user/{uuid}", uuid),
+        String responseJson = restClient.postForJson(openmrsInstance.toInstancePathWithParams("/user/{uuid}", uuid),
                 requestJson);
+
+        return (User) JsonUtils.readJson(responseJson, User.class);
+    }
+
+    @Override
+    public void deleteUser(String uuid) throws HttpException {
+        restClient.delete(openmrsInstance.toInstancePathWithParams("/user/{userId}?purge", uuid));
+    }
+
+    @Override
+    public User getUserById(String uuid) throws HttpException {
+        String responseJson = restClient.getJson(openmrsInstance.toInstancePathWithParams("/user/{uuid}", uuid));
+        return (User) JsonUtils.readJson(responseJson, User.class);
     }
 
 }

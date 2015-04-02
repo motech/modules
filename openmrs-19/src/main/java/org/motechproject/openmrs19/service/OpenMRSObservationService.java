@@ -14,10 +14,9 @@ public interface OpenMRSObservationService {
      *
      * @param mrsObservation  OpenMRSObservation to be voided
      * @param reason  reason for voiding the OpenMRSObservation
-     * @param mrsUserMotechId  MOTECH ID of the user whose OpenMRSObservation needs to be voided
      * @throws ObservationNotFoundException  if the expected Observation does not exist
      */
-    void voidObservation(OpenMRSObservation mrsObservation, String reason, String mrsUserMotechId) throws ObservationNotFoundException;
+    void voidObservation(OpenMRSObservation mrsObservation, String reason) throws ObservationNotFoundException;
 
     /**
      * Returns the latest OpenMRSObservation of the MRS patient, given the concept name (e.g. WEIGHT).
@@ -44,4 +43,17 @@ public interface OpenMRSObservationService {
      * @return OpenMRSObservation if present
      */
     OpenMRSObservation getObservationById(String id);
+
+    /**
+     * Saves the given observation on the OpenMRS server.
+     *
+     * @param observation  the observation to be created
+     * @return  the created observation
+     */
+    OpenMRSObservation createObservation(OpenMRSObservation observation);
+
+    /**
+     * Deletes observation with the given ID.
+     */
+    void deleteObservation(String uuid);
 }

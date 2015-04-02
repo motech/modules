@@ -1,5 +1,6 @@
 package org.motechproject.openmrs19.rest;
 
+import org.motechproject.openmrs19.exception.HttpException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestOperations;
 
 import java.net.URI;
+import java.util.Arrays;
 
 /**
  * Implementation of {@link RestClient} based on Spring web client
@@ -62,6 +64,7 @@ public class SpringRestfulClientImpl implements RestClient {
         public String execute() {
             HttpHeaders header = new HttpHeaders();
             header.setContentType(MediaType.APPLICATION_JSON);
+            header.setAccept(Arrays.asList(MediaType.ALL));
             HttpEntity<String> entity = new HttpEntity<String>(json, header);
             ResponseEntity<String> response = restOperations.postForEntity(url, entity, String.class);
             return response.getBody();

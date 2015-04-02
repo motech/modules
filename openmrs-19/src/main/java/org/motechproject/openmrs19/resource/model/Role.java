@@ -10,7 +10,7 @@ import java.lang.reflect.Type;
 public class Role {
 
     private String uuid;
-    private String name;
+    private String display;
 
     public String getUuid() {
         return uuid;
@@ -20,12 +20,12 @@ public class Role {
         this.uuid = uuid;
     }
 
-    public String getName() {
-        return name;
+    public String getDisplay() {
+        return display;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDisplay(String name) {
+        this.display = name;
     }
 
     public static class RoleSerializer implements JsonSerializer<Role> {

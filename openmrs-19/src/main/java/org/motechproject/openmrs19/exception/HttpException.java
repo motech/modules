@@ -1,4 +1,4 @@
-package org.motechproject.openmrs19.rest;
+package org.motechproject.openmrs19.exception;
 
 import org.springframework.http.HttpStatus;
 

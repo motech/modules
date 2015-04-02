@@ -4,8 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.openmrs19.OpenMrsInstance;
-import org.motechproject.openmrs19.rest.HttpException;
-import org.motechproject.openmrs19.rest.RestClient;
+import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.resource.PatientResource;
 import org.motechproject.openmrs19.resource.model.Identifier;
 import org.motechproject.openmrs19.resource.model.IdentifierListResult;
@@ -18,6 +17,7 @@ import org.motechproject.openmrs19.resource.model.PatientIdentifierListResult;
 import org.motechproject.openmrs19.resource.model.PatientListResult;
 import org.motechproject.openmrs19.resource.model.Person;
 import org.motechproject.openmrs19.resource.model.Person.PersonSerializer;
+import org.motechproject.openmrs19.rest.RestClient;
 import org.motechproject.openmrs19.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -83,8 +83,8 @@ public class PatientResourceImpl implements PatientResource {
     }
 
     @Override
-    public void deletePatient(String patientUuid) throws HttpException {
-        restfulClient.delete(openmrsInstance.toInstancePathWithParams("/patient/{uuid}?purge", patientUuid));
+    public void deletePatient(String uuid) throws HttpException {
+        restfulClient.delete(openmrsInstance.toInstancePathWithParams("/patient/{uuid}?purge", uuid));
     }
 
     private PatientIdentifierListResult getAllPatientIdentifierTypes() throws HttpException {

@@ -20,7 +20,7 @@ public class OpenMRSFacility {
      * @param id  facility id
      */
     public OpenMRSFacility(String id) {
-        this.id = id;
+        this(id, null, null, null, null, null);
     }
 
     /**
@@ -33,16 +33,12 @@ public class OpenMRSFacility {
      * @param stateProvince  name of the state/province
      */
     public OpenMRSFacility(String name, String country, String region, String countyDistrict, String stateProvince) {
-        this.name = name;
-        this.country = country;
-        this.region = region;
-        this.countyDistrict = countyDistrict;
-        this.stateProvince = stateProvince;
+        this(null, name, country, region, countyDistrict, stateProvince);
     }
 
     /**
      * Creates a facility object with the given details
-     * 
+     *
      * @param id  facility id
      * @param name  name of the facility
      * @param country  name of the country
@@ -51,7 +47,11 @@ public class OpenMRSFacility {
      * @param stateProvince  name of the state/province
      */
     public OpenMRSFacility(String id, String name, String country, String region, String countyDistrict, String stateProvince) {
-        this(name, country, region, countyDistrict, stateProvince);
+        this.name = name;
+        this.country = country;
+        this.region = region;
+        this.countyDistrict = countyDistrict;
+        this.stateProvince = stateProvince;
         this.id = id;
     }
 

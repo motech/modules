@@ -9,16 +9,16 @@ import java.util.List;
 public interface OpenMRSPersonService {
 
     /**
-     * Persists a person object.
-     * 
-     * @param person  the person to be saved 
+     * Creates the given person on the OpenMRS server.
+     *
+     * @param person  the person to be created
+     * @return  the created person
      */
-    OpenMRSPerson addPerson(OpenMRSPerson person);
+    OpenMRSPerson createPerson(OpenMRSPerson person);
 
     /**
      * Creates and persists a person object from field values.
      *
-     * @param personId  the ID of the person
      * @param firstName  the person's first name
      * @param lastName  the person's last name
      * @param dateOfBirth  the person's date of birth
@@ -26,7 +26,7 @@ public interface OpenMRSPersonService {
      * @param address  the address of the person
      * @param attributes  a list of attributes for the person
      */
-    OpenMRSPerson addPerson(String personId, String firstName, String lastName, DateTime dateOfBirth, String gender,
+    OpenMRSPerson addPerson(String firstName, String lastName, DateTime dateOfBirth, String gender,
             String address, List<OpenMRSAttribute> attributes);
 
     /**
@@ -37,18 +37,18 @@ public interface OpenMRSPersonService {
     OpenMRSPerson updatePerson(OpenMRSPerson person);
 
     /**
-     * Removes a person from storage.
+     * Deletes person with the given UUID from the OpenMRS server.
      *
-     * @param person  the person to remove
+     * @param uuid  the UUID of the person
      */
-    void removePerson(OpenMRSPerson person);
+    void deletePerson(String uuid);
 
     /**
-     * Finds a list of persons by a particular ID.
+     * Finds person by a particular ID.
      *
      * @param personId The ID of the person to search for
      * @return a list of all persons of given ID, of a type from the implementing module
      */
-    List<OpenMRSPerson> findByPersonId(String personId);
+    OpenMRSPerson getByUuid(String personId);
 
 }

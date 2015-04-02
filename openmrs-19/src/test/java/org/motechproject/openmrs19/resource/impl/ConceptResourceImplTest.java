@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.motechproject.openmrs19.rest.HttpException;
+import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.resource.model.Concept;
 import org.motechproject.openmrs19.resource.model.ConceptListResult;
 
@@ -92,7 +92,7 @@ public class ConceptResourceImplTest extends AbstractResourceImplTest {
         impl.updateConcept(concept);
 
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        Mockito.verify(getClient()).postWithEmptyResponseBody(Mockito.any(URI.class), captor.capture());
+        Mockito.verify(getClient()).postForJson(Mockito.any(URI.class), captor.capture());
 
         String expectedJson = readJsonFromFile("json/concept-create.json");
 
