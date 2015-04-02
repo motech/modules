@@ -117,7 +117,12 @@ public class CSDServiceImpl implements CSDService {
             @Override
             public String doInTransaction(TransactionStatus transactionStatus) {
                 try {
-                    return MarshallUtils.marshall(getCSD(), getClass().getResource("/CSD.xsd"), CSD.class);
+                    CSD csd = getCSD();
+                    if (csd != null) {
+                        return MarshallUtils.marshall(csd, getClass().getResource("/CSD.xsd"), CSD.class);
+                    } else {
+                        throw new IllegalArgumentException("There is no CSD structure in the database");
+                    }
                 } catch (SAXException e) {
                     throw new IllegalArgumentException("Invalid schema", e);
                 } catch (JAXBException e) {
