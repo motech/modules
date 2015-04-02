@@ -3,6 +3,7 @@ package org.motechproject.csd.domain;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -48,24 +49,30 @@ import java.util.List;
 @XmlType(propOrder = { "commonNames", "honorific", "forename", "otherNames", "surname", "suffix" })
 public class Name {
 
+    @UIDisplayable(position = 0)
     @Field(required = true)
     @Cascade(delete = true)
     private List<String> commonNames = new ArrayList<>();
 
+    @UIDisplayable(position = 1)
     @Field
     private String honorific;
 
+    @UIDisplayable(position = 2)
     @Field
     private String forename;
 
+    @UIDisplayable(position = 3)
     @Order(column = "name_other_names_idx")
     @Field(name = "name_other_names")
     @Cascade(delete = true)
     private List<CodedType> otherNames = new ArrayList<>();
 
+    @UIDisplayable(position = 4)
     @Field
     private String surname;
 
+    @UIDisplayable(position = 5)
     @Field
     private String suffix;
 

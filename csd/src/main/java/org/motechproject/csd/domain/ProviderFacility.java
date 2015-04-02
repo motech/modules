@@ -3,6 +3,7 @@ package org.motechproject.csd.domain;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -53,16 +54,19 @@ import java.util.List;
 @XmlType(propOrder = { "services", "operatingHours", "extensions" })
 public class ProviderFacility extends AbstractUniqueID {
 
+    @UIDisplayable(position = 0)
     @Order(column = "provider_facility_services_idx")
     @Field(name = "provider_facility_services")
     @Cascade(delete = true)
     private List<ProviderFacilityService> services = new ArrayList<>();
 
+    @UIDisplayable(position = 1)
     @Order(column = "provider_facility_operating_hours_idx")
     @Field(name = "provider_facility_operating_hours")
     @Cascade(delete = true)
     private List<OperatingHours> operatingHours = new ArrayList<>();
 
+    @UIDisplayable(position = 2)
     @Order(column = "provider_facility_extensions_idx")
     @Field(name = "provider_facility_extensions")
     @Cascade(delete = true)

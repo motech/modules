@@ -3,6 +3,7 @@ package org.motechproject.csd.domain;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -37,16 +38,20 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = { "codedType", "equipment", "purpose", "certificate" })
 public class ContactPoint {
 
+    @UIDisplayable(position = 0)
     @Field(required = true)
     @Cascade(delete = true)
     private CodedType codedType;
 
+    @UIDisplayable(position = 1)
     @Field
     private String equipment;
 
+    @UIDisplayable(position = 2)
     @Field
     private String purpose;
 
+    @UIDisplayable(position = 3)
     @Field
     private String certificate;
 

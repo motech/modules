@@ -3,6 +3,7 @@ package org.motechproject.csd.domain;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -110,6 +111,7 @@ public class Facility extends AbstractUniqueID {
     @Cascade(delete = true)
     private FacilityOrganizations facilityOrganizations;
 
+    @UIDisplayable(position = 2)
     @Order(column = "facility_operating_hours_idx")
     @Field(name = "facility_operating_hours")
     @Cascade(delete = true)
@@ -120,6 +122,7 @@ public class Facility extends AbstractUniqueID {
     @Cascade(delete = true)
     private List<OtherID> otherIDs = new ArrayList<>();
 
+    @UIDisplayable(position = 0)
     @Field(required = true)
     private String primaryName;
 
@@ -128,6 +131,7 @@ public class Facility extends AbstractUniqueID {
     @Cascade(delete = true)
     private List<OtherName> otherNames = new ArrayList<>();
 
+    @UIDisplayable(position = 1)
     @Order(column = "facility_addresses_idx")
     @Field(name = "facility_addresses")
     @Cascade(delete = true)

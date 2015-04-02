@@ -2,6 +2,7 @@ package org.motechproject.csd.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -35,15 +36,19 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = { "latitude", "longitude", "altitude", "coordinateSystem" })
 public class Geocode {
 
+    @UIDisplayable(position = 0)
     @Field(required = true)
     private double latitude;
 
+    @UIDisplayable(position = 1)
     @Field(required = true)
     private double longitude;
 
+    @UIDisplayable(position = 2)
     @Field
     private double altitude;
 
+    @UIDisplayable(position = 3)
     @Field
     private String coordinateSystem;
 

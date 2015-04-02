@@ -2,6 +2,7 @@ package org.motechproject.csd.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -32,10 +33,12 @@ import javax.xml.bind.annotation.XmlValue;
 public class OtherName {
 
     /* Text value of this node */
+    @UIDisplayable(position = 0)
     @Field(required = true)
     private String value;
 
     /* Attribute @xml:lang */
+    @UIDisplayable(position = 1)
     @Field
     private String lang;
 
