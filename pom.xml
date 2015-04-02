@@ -36,14 +36,14 @@
         <apache.servicemix.bundles.jopt.simple.version>4.6_1</apache.servicemix.bundles.jopt.simple.version>
         <ibm.jbatch.version>1.0</ibm.jbatch.version>
         <javax.batch.version>1.0</javax.batch.version>
-        <apache.ibatis.version>2.3.4.726</apache.ibatis.version>
+        <apache.ibatis.version>2.3.4.726_4</apache.ibatis.version>
         <mongodb.version>2.12.2</mongodb.version>
         <springsource.hibernate.version>3.6.0.Final-${external.dependency.release.tag}</springsource.hibernate.version>
         <springframework.amqp.version>1.3.3.RELEASE-${external.dependency.release.tag}</springframework.amqp.version>
         <springframework.retry.version>1.1.0.RELEASE-${external.dependency.release.tag}</springframework.retry.version>
         <fasterxml.jackson.version>2.0.2</fasterxml.jackson.version>
         <spring.data.commons.version>1.6.4.RELEASE</spring.data.commons.version>
-        <thoughtworks.xstream.version>1.4.7</thoughtworks.xstream.version>
+        <thoughtworks.xstream.version>1.4.8</thoughtworks.xstream.version>
         <codehaus.jettison.version>1.2</codehaus.jettison.version>
         <gemston.gemfire.version>7.0.1</gemston.gemfire.version>
         <codehaus.groovy.version>1.8.9</codehaus.groovy.version>
@@ -498,21 +498,11 @@
             </dependency>
             <dependency>
                 <groupId>org.hamcrest</groupId>
-                <artifactId>com.springsource.org.hamcrest</artifactId>
-                <version>1.1.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.hamcrest</groupId>
-                <artifactId>com.springsource.org.hamcrest.core</artifactId>
-                <version>1.1.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.hamcrest</groupId>
                 <artifactId>hamcrest-all</artifactId>
                 <version>1.1</version>
                 <scope>test</scope>
             </dependency>
-            <dependency>
+ <!--           <dependency>
                 <groupId>com.thoughtworks.xstream</groupId>
                 <artifactId>org.motechproject.com.thoughtworks.xstream</artifactId>
                 <version>1.4.2-${external.dependency.release.tag}</version>
@@ -522,6 +512,21 @@
                         <artifactId>com.springsource.net.sf.cglib</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>-->
+            <dependency>
+                <groupId>com.thoughtworks.xstream</groupId>
+                <artifactId>xstream</artifactId>
+                <version>${thoughtworks.xstream.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.servicemix.bundles</groupId>
+                <artifactId>org.apache.servicemix.bundles.xpp3</artifactId>
+                <version>1.1.4c_7</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.servicemix.bundles</groupId>
+                <artifactId>org.apache.servicemix.bundles.xmlresolver</artifactId>
+                <version>1.2_1</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.servicemix.bundles</groupId>
@@ -534,9 +539,9 @@
                 <version>1.7.1-${external.dependency.release.tag}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.velocity</groupId>
-                <artifactId>com.springsource.org.apache.velocity</artifactId>
-                <version>1.6.2</version>
+                <groupId>org.apache.servicemix.bundles</groupId>
+                <artifactId>org.apache.servicemix.bundles.velocity</artifactId>
+                <version>1.6.4_4</version>
             </dependency>
                 <dependency>
                 <groupId>org.apache.servicemix.bundles</groupId>
@@ -602,6 +607,22 @@
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.eventadmin</artifactId>
                 <version>1.3.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.servicemix.bundles</groupId>
+                <artifactId>org.apache.servicemix.bundles.ibatis-sqlmap</artifactId>
+                <version>${apache.ibatis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.servicemix.bundles</groupId>
+                <artifactId>org.apache.servicemix.bundles.oscache</artifactId>
+                <version>2.4.1_1</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.servlet</groupId>
+                        <artifactId>servlet-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.motechproject</groupId>

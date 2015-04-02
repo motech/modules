@@ -39,11 +39,7 @@
         <!-- OSGI dependencies -->
         <dependency>
             <groupId>org.hamcrest</groupId>
-            <artifactId>com.springsource.org.hamcrest</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>com.springsource.org.hamcrest.core</artifactId>
+            <artifactId>hamcrest-all</artifactId>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>

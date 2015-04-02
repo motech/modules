@@ -222,9 +222,12 @@
             <version>${javax.batch.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.ibatis</groupId>
-            <artifactId>com.springsource.com.ibatis</artifactId>
-            <version>${apache.ibatis.version}</version>
+            <groupId>org.apache.servicemix.bundles</groupId>
+            <artifactId>org.apache.servicemix.bundles.ibatis-sqlmap</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.servicemix.bundles</groupId>
+            <artifactId>org.apache.servicemix.bundles.oscache</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mongodb</groupId>
