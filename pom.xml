@@ -166,11 +166,6 @@
                 <version>2.4.0</version>
             </dependency>
             <dependency>
-                <groupId>javax.annotation</groupId>
-                <artifactId>com.springsource.javax.annotation</artifactId>
-                <version>1.0.0</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.servicemix.bundles</groupId>
                 <artifactId>org.apache.servicemix.bundles.javax.mail</artifactId>
                 <version>1.4.1_5</version>
@@ -502,17 +497,6 @@
                 <version>1.1</version>
                 <scope>test</scope>
             </dependency>
- <!--           <dependency>
-                <groupId>com.thoughtworks.xstream</groupId>
-                <artifactId>org.motechproject.com.thoughtworks.xstream</artifactId>
-                <version>1.4.2-${external.dependency.release.tag}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>net.sourceforge.cglib</groupId>
-                        <artifactId>com.springsource.net.sf.cglib</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>-->
             <dependency>
                 <groupId>com.thoughtworks.xstream</groupId>
                 <artifactId>xstream</artifactId>
@@ -549,24 +533,9 @@
                 <version>2.0_1</version>
             </dependency>
             <dependency>
-                <groupId>org.jdom</groupId>
-                <artifactId>com.springsource.org.jdom</artifactId>
-                <version>1.1.0</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.servicemix.bundles</groupId>
                 <artifactId>org.apache.servicemix.bundles.aopalliance</artifactId>
                 <version>1.0_6</version>
-            </dependency>
-            <dependency>
-                <groupId>org.objectweb.asm</groupId>
-                <artifactId>com.springsource.org.objectweb.asm</artifactId>
-                <version>2.2.3</version>
-            </dependency>
-            <dependency>
-                <groupId>com.mysql.jdbc</groupId>
-                <artifactId>com.springsource.com.mysql.jdbc</artifactId>
-                <version>5.1.6</version>
             </dependency>
             <dependency>
                 <groupId>org.postgresql</groupId>
@@ -694,12 +663,6 @@
                         <artifactId>hamcrest-library</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.custommonkey.xmlunit</groupId>
-                <artifactId>com.springsource.org.custommonkey.xmlunit</artifactId>
-                <version>1.2.0</version>
-                <scope>test</scope>
             </dependency>
             <!-- OSGi IT -->
             <dependency>
