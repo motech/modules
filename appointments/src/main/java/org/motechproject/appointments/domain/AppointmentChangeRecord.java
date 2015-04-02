@@ -1,13 +1,16 @@
 package org.motechproject.appointments.domain;
 
 import org.joda.time.DateTime;
+import org.motechproject.mds.annotations.CrudEvents;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.event.CrudEventType;
 
 /**
  * AppointmentChangeRecord class to capture the changes in the status of the appointment
  */
 @Entity
+@CrudEvents(CrudEventType.NONE)
 public class AppointmentChangeRecord {
 
     // external Id of the patient

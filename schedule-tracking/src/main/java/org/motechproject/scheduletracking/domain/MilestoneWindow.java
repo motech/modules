@@ -1,14 +1,17 @@
 package org.motechproject.scheduletracking.domain;
 
 import org.joda.time.Period;
+import org.motechproject.mds.annotations.CrudEvents;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Ignore;
+import org.motechproject.mds.event.CrudEventType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @Entity
+@CrudEvents(CrudEventType.NONE)
 public class MilestoneWindow {
 
     private WindowName name;

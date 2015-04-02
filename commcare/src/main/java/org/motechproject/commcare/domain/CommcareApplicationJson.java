@@ -6,9 +6,11 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import org.motechproject.commons.api.json.MotechJsonReader;
+import org.motechproject.mds.annotations.CrudEvents;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
+import org.motechproject.mds.event.CrudEventType;
 
 import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.Persistent;
@@ -18,6 +20,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity(name = "Commcare Application")
+@CrudEvents(CrudEventType.NONE)
 public class CommcareApplicationJson {
 
     @Expose

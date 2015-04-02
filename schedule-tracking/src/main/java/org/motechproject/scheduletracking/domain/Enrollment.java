@@ -3,8 +3,10 @@ package org.motechproject.scheduletracking.domain;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.motechproject.commons.date.model.Time;
+import org.motechproject.mds.annotations.CrudEvents;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Ignore;
+import org.motechproject.mds.event.CrudEventType;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -17,6 +19,7 @@ import static org.motechproject.scheduletracking.domain.EnrollmentStatus.ACTIVE;
 import static org.motechproject.scheduletracking.domain.EnrollmentStatus.COMPLETED;
 
 @Entity
+@CrudEvents(CrudEventType.NONE)
 public class Enrollment {
 
     private Long id;

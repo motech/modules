@@ -1,10 +1,13 @@
 package org.motechproject.pillreminder.domain;
 
 import org.joda.time.LocalDate;
+import org.motechproject.mds.annotations.CrudEvents;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.event.CrudEventType;
 
 @Entity
+@CrudEvents(CrudEventType.NONE)
 public class Medicine {
 
     public static final String MEDICINE_END_DATE_CANNOT_BE_BEFORE_START_DATE =
