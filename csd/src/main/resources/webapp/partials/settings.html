@@ -43,7 +43,7 @@
             <div class="form-group" ng-show="config.communicationProtocol == 'SOAP'">
                 <label class="col-md-2 control-label">{{msg('csd.web.settings.lastModified')}}</label>
                 <div class="col-md-10">
-                    <input class="form-control" csd-date-picker id="lastModified" type="text" ng-model="config.lastModified">
+                    <input class="form-control" csd-last-modified-date-picker id="lastModified" type="text" ng-model="config.lastModified">
                 </div>
             </div>
 
@@ -63,7 +63,7 @@
                         <div class="form-group" ng-show="config.schedulerEnabled">
                             <label class="col-md-2 control-label" for="startDate">{{msg('csd.web.settings.startDate')}}</label>
                             <div class="col-md-3" data-toggle="tooltip" data-placement="top" data-trigger="hover">
-                                <input id="startDate" csd-date-picker="" type="text" class="form-control" placeholder="{{msg('csd.web.settings.startDate.placeholder')}}" ng-model="config.startDate">
+                                <input id="startDate" csd-scheduler-date-picker="" type="text" class="form-control" placeholder="{{msg('csd.web.settings.startDate.placeholder')}}" ng-model="config.startDate">
                             </div>
                         </div>
 
