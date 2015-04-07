@@ -5,13 +5,12 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
 
-import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>Java class for anonymous complex type.
@@ -63,24 +62,23 @@ import java.util.List;
 public class FacilityOrganizations {
 
     @UIDisplayable(position = 0)
-    @Order(column = "facility_organizations_organization_idx")
     @Field(required = true, name = "facility_organizations_organization")
     @Cascade(delete = true)
-    private List<FacilityOrganization> facilityOrganizations = new ArrayList<>();
+    private Set<FacilityOrganization> facilityOrganizations = new HashSet<>();
 
     public FacilityOrganizations() {
     }
 
-    public FacilityOrganizations(List<FacilityOrganization> facilityOrganizations) {
+    public FacilityOrganizations(Set<FacilityOrganization> facilityOrganizations) {
         this.facilityOrganizations = facilityOrganizations;
     }
 
-    public List<FacilityOrganization> getFacilityOrganizations() {
+    public Set<FacilityOrganization> getFacilityOrganizations() {
         return facilityOrganizations;
     }
 
     @XmlElement(name = "organization", required = true)
-    public void setFacilityOrganizations(List<FacilityOrganization> facilityOrganizations) {
+    public void setFacilityOrganizations(Set<FacilityOrganization> facilityOrganizations) {
         this.facilityOrganizations = facilityOrganizations;
     }
 

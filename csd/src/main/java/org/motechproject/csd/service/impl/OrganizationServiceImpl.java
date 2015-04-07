@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service("organizationService")
 public class OrganizationServiceImpl implements OrganizationService {
@@ -40,7 +41,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public List<Organization> update(List<Organization> organizations) {
+    public Set<Organization> update(Set<Organization> organizations) {
         for (Organization organization : organizations) {
             update(organization);
         }

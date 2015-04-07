@@ -7,15 +7,14 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
 
-import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>Java class for person complex type.
@@ -54,22 +53,19 @@ import java.util.List;
 public class Person {
 
     @UIDisplayable(position = 0)
-    @Order(column = "person_names_idx")
     @Field(name = "person_names", required = true)
     @Cascade(delete = true)
-    private List<PersonName> names = new ArrayList<>();
+    private Set<PersonName> names = new HashSet<>();
 
     @UIDisplayable(position = 1)
-    @Order(column = "person_contact_points_idx")
     @Field(name = "person_contact_points")
     @Cascade(delete = true)
-    private List<ContactPoint> contactPoints = new ArrayList<>();
+    private Set<ContactPoint> contactPoints = new HashSet<>();
 
     @UIDisplayable(position = 2)
-    @Order(column = "person_addresses_idx")
     @Field(name = "person_addresses")
     @Cascade(delete = true)
-    private List<Address> addresses = new ArrayList<>();
+    private Set<Address> addresses = new HashSet<>();
 
     @UIDisplayable(position = 3)
     @Field
@@ -82,11 +78,11 @@ public class Person {
     public Person() {
     }
 
-    public Person(List<PersonName> names) {
+    public Person(Set<PersonName> names) {
         this.names = names;
     }
 
-    public Person(List<PersonName> names, List<ContactPoint> contactPoints, List<Address> addresses, String gender, DateTime dateOfBirth) {
+    public Person(Set<PersonName> names, Set<ContactPoint> contactPoints, Set<Address> addresses, String gender, DateTime dateOfBirth) {
         this.names = names;
         this.contactPoints = contactPoints;
         this.addresses = addresses;
@@ -94,30 +90,30 @@ public class Person {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public List<PersonName> getNames() {
+    public Set<PersonName> getNames() {
         return names;
     }
 
     @XmlElement(name = "name", required = true)
-    public void setNames(List<PersonName> names) {
+    public void setNames(Set<PersonName> names) {
         this.names = names;
     }
 
-    public List<ContactPoint> getContactPoints() {
+    public Set<ContactPoint> getContactPoints() {
         return contactPoints;
     }
 
     @XmlElement(name = "contactPoint")
-    public void setContactPoints(List<ContactPoint> contactPoints) {
+    public void setContactPoints(Set<ContactPoint> contactPoints) {
         this.contactPoints = contactPoints;
     }
 
     @XmlElement(name = "address")
-    public List<Address> getAddresses() {
+    public Set<Address> getAddresses() {
         return addresses;
     }
 
-    public void setAddresses(List<Address> addresses) {
+    public void setAddresses(Set<Address> addresses) {
         this.addresses = addresses;
     }
 

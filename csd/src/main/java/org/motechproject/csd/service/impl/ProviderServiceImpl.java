@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service("providerService")
 public class ProviderServiceImpl implements ProviderService {
@@ -40,7 +41,7 @@ public class ProviderServiceImpl implements ProviderService {
     }
 
     @Override
-    public List<Provider> update(List<Provider> providers) {
+    public Set<Provider> update(Set<Provider> providers) {
         for (Provider provider : providers) {
             update(provider);
         }

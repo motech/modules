@@ -11,8 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service("facilityDirectoryService")
 public class FacilityDirectoryServiceImpl implements FacilityDirectoryService {
@@ -46,7 +47,7 @@ public class FacilityDirectoryServiceImpl implements FacilityDirectoryService {
             facilityDirectoryDataService.doInTransaction(new TransactionCallbackWithoutResult() {
                 @Override
                 protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
-                    List<Facility> updatedFacilities = facilityService.update(directory.getFacilities());
+                    Set<Facility> updatedFacilities = facilityService.update(directory.getFacilities());
                     FacilityDirectory facilityDirectory = getFacilityDirectory();
 
                     if (facilityDirectory != null) {
@@ -61,9 +62,9 @@ public class FacilityDirectoryServiceImpl implements FacilityDirectoryService {
     }
 
     @Override
-    public List<Facility> getModifiedAfter(DateTime date) {
+    public Set<Facility> getModifiedAfter(DateTime date) {
         List<Facility> allFacilities = facilityService.allFacilities();
-        List<Facility> modifiedFacilities = new ArrayList<>();
+        Set<Facility> modifiedFacilities = new HashSet<>();
 
         for (Facility facility : allFacilities) {
             if (facility.getRecord().getUpdated().isAfter(date)) {

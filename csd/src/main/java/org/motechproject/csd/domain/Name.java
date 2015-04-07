@@ -5,13 +5,14 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
 
-import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>Java class for name complex type.
@@ -63,10 +64,9 @@ public class Name {
     private String forename;
 
     @UIDisplayable(position = 3)
-    @Order(column = "name_other_names_idx")
     @Field(name = "name_other_names")
     @Cascade(delete = true)
-    private List<CodedType> otherNames = new ArrayList<>();
+    private Set<CodedType> otherNames = new HashSet<>();
 
     @UIDisplayable(position = 4)
     @Field
@@ -83,7 +83,7 @@ public class Name {
         this.commonNames = commonNames;
     }
 
-    public Name(List<String> commonNames, String honorific, String forename, List<CodedType> otherNames, String surname, String suffix) {
+    public Name(List<String> commonNames, String honorific, String forename, Set<CodedType> otherNames, String surname, String suffix) {
         this.commonNames = commonNames;
         this.honorific = honorific;
         this.forename = forename;
@@ -119,12 +119,12 @@ public class Name {
         this.forename = forename;
     }
 
-    public List<CodedType> getOtherNames() {
+    public Set<CodedType> getOtherNames() {
         return otherNames;
     }
 
     @XmlElement(name = "otherName")
-    public void setOtherNames(List<CodedType> otherNames) {
+    public void setOtherNames(Set<CodedType> otherNames) {
         this.otherNames = otherNames;
     }
 

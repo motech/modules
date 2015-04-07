@@ -5,14 +5,12 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
 
-import javax.jdo.annotations.FetchPlan;
-import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>Java class for provider complex type.
@@ -102,15 +100,13 @@ import java.util.List;
  *
  */
 @Entity
-@FetchPlan(maxFetchDepth = 6)
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "otherIDs", "codedTypes", "demographic", "languages", "providerOrganizations", "providerFacilities", "credentials", "specialties", "extensions", "record" })
 public class Provider extends AbstractUniqueID {
 
-    @Order(column = "provider_other_ids_idx")
     @Field(name = "provider_other_ids")
     @Cascade(delete = true)
-    private List<OtherID> otherIDs = new ArrayList<>();
+    private Set<OtherID> otherIDs = new HashSet<>();
 
     @UIDisplayable(position = 0)
     @Field
@@ -118,10 +114,9 @@ public class Provider extends AbstractUniqueID {
     private Person demographic;
 
     @UIDisplayable(position = 1)
-    @Order(column = "provider_languages_idx")
     @Field(name = "provider_languages")
     @Cascade(delete = true)
-    private List<CodedType> languages = new ArrayList<>();
+    private Set<CodedType> languages = new HashSet<>();
 
     @Field
     @Cascade(delete = true)
@@ -131,27 +126,23 @@ public class Provider extends AbstractUniqueID {
     @Cascade(delete = true)
     private ProviderFacilities providerFacilities;
 
-    @Order(column = "provider_credentials_idx")
     @Field(name = "provider_credentials")
     @Cascade(delete = true)
-    private List<Credential> credentials = new ArrayList<>();
+    private Set<Credential> credentials = new HashSet<>();
 
     @UIDisplayable(position = 2)
-    @Order(column = "provider_specialities_idx")
     @Field(name = "provider_specialities")
     @Cascade(delete = true)
-    private List<CodedType> specialties = new ArrayList<>();
+    private Set<CodedType> specialties = new HashSet<>();
 
     @UIDisplayable(position = 3)
-    @Order(column = "provider_coded_types_idx")
     @Field(required = true, name = "provider_coded_types")
     @Cascade(delete = true)
-    private List<CodedType> codedTypes = new ArrayList<>();
+    private Set<CodedType> codedTypes = new HashSet<>();
 
-    @Order(column = "provider_extensions_idx")
     @Field(name = "provider_extensions")
     @Cascade(delete = true)
-    private List<Extension> extensions = new ArrayList<>();
+    private Set<Extension> extensions = new HashSet<>();
 
     @Field
     @Cascade(delete = true)
@@ -160,16 +151,16 @@ public class Provider extends AbstractUniqueID {
     public Provider() {
     }
 
-    public Provider(String entityID, List<CodedType> codedTypes, Record record, Person demographic) {
+    public Provider(String entityID, Set<CodedType> codedTypes, Record record, Person demographic) {
         setEntityID(entityID);
         this.codedTypes = codedTypes;
         this.record = record;
         this.demographic = demographic;
     }
 
-    public Provider(String entityID, List<CodedType> codedTypes, List<Extension> extensions, Record record, List<OtherID> otherIDs, //NO CHECKSTYLE ArgumentCount
-                    Person demographic, List<CodedType> languages, ProviderOrganizations providerOrganizations,
-                    ProviderFacilities providerFacilities, List<Credential> credentials, List<CodedType> specialties) {
+    public Provider(String entityID, Set<CodedType> codedTypes, Set<Extension> extensions, Record record, Set<OtherID> otherIDs, //NO CHECKSTYLE ArgumentCount
+                    Person demographic, Set<CodedType> languages, ProviderOrganizations providerOrganizations,
+                    ProviderFacilities providerFacilities, Set<Credential> credentials, Set<CodedType> specialties) {
         setEntityID(entityID);
         this.codedTypes = codedTypes;
         this.extensions = extensions;
@@ -183,12 +174,12 @@ public class Provider extends AbstractUniqueID {
         this.specialties = specialties;
     }
 
-    public List<OtherID> getOtherIDs() {
+    public Set<OtherID> getOtherIDs() {
         return otherIDs;
     }
 
     @XmlElement(name = "otherID")
-    public void setOtherIDs(List<OtherID> otherIDs) {
+    public void setOtherIDs(Set<OtherID> otherIDs) {
         this.otherIDs = otherIDs;
     }
 
@@ -201,12 +192,12 @@ public class Provider extends AbstractUniqueID {
         this.demographic = demographic;
     }
 
-    public List<CodedType> getLanguages() {
+    public Set<CodedType> getLanguages() {
         return languages;
     }
 
     @XmlElement(name = "language")
-    public void setLanguages(List<CodedType> languages) {
+    public void setLanguages(Set<CodedType> languages) {
         this.languages = languages;
     }
 
@@ -228,30 +219,30 @@ public class Provider extends AbstractUniqueID {
         this.providerFacilities = providerFacilities;
     }
 
-    public List<Credential> getCredentials() {
+    public Set<Credential> getCredentials() {
         return credentials;
     }
 
     @XmlElement(name = "credential")
-    public void setCredentials(List<Credential> credentials) {
+    public void setCredentials(Set<Credential> credentials) {
         this.credentials = credentials;
     }
 
-    public List<CodedType> getSpecialties() {
+    public Set<CodedType> getSpecialties() {
         return specialties;
     }
 
     @XmlElement(name = "specialty")
-    public void setSpecialties(List<CodedType> specialties) {
+    public void setSpecialties(Set<CodedType> specialties) {
         this.specialties = specialties;
     }
 
-    public List<CodedType> getCodedTypes() {
+    public Set<CodedType> getCodedTypes() {
         return codedTypes;
     }
 
     @XmlElement(name = "codedType", required = true)
-    public void setCodedTypes(List<CodedType> codedTypes) {
+    public void setCodedTypes(Set<CodedType> codedTypes) {
         this.codedTypes = codedTypes;
     }
 
@@ -264,12 +255,12 @@ public class Provider extends AbstractUniqueID {
         this.record = record;
     }
 
-    public List<Extension> getExtensions() {
+    public Set<Extension> getExtensions() {
         return extensions;
     }
 
     @XmlElement(name = "extension")
-    public void setExtensions(List<Extension> extensions) {
+    public void setExtensions(Set<Extension> extensions) {
         this.extensions = extensions;
     }
 

@@ -5,13 +5,12 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
 
-import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>Java class for anonymous complex type.
@@ -38,24 +37,23 @@ import java.util.List;
 public class ProviderDirectory {
 
     @UIDisplayable(position = 0)
-    @Order(column = "provider_directory_providers_idx")
     @Field(name = "provider_directory_providers")
     @Cascade(delete = true)
-    private List<Provider> providers = new ArrayList<>();
+    private Set<Provider> providers = new HashSet<>();
 
     public ProviderDirectory() {
     }
 
-    public ProviderDirectory(List<Provider> providers) {
+    public ProviderDirectory(Set<Provider> providers) {
         this.providers = providers;
     }
 
-    public List<Provider> getProviders() {
+    public Set<Provider> getProviders() {
         return providers;
     }
 
     @XmlElement(name = "provider")
-    public void setProviders(List<Provider> providers) {
+    public void setProviders(Set<Provider> providers) {
         this.providers = providers;
     }
 

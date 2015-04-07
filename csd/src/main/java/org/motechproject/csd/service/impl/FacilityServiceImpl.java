@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service("facilityService")
 public class FacilityServiceImpl implements FacilityService {
@@ -43,7 +44,7 @@ public class FacilityServiceImpl implements FacilityService {
     }
 
     @Override
-    public List<Facility> update(List<Facility> facilities) {
+    public Set<Facility> update(Set<Facility> facilities) {
         for (Facility facility : facilities) {
             update(facility);
         }

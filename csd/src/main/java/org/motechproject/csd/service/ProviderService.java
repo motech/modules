@@ -3,6 +3,7 @@ package org.motechproject.csd.service;
 import org.motechproject.csd.domain.Provider;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ProviderService {
 
@@ -14,5 +15,5 @@ public interface ProviderService {
 
     void delete(String entityID);
 
-    List<Provider> update(List<Provider> providers);
+    Set<Provider> update(Set<Provider> providers);
 }

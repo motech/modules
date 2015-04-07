@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 import org.motechproject.csd.domain.Organization;
 import org.motechproject.csd.domain.OrganizationDirectory;
 
-import java.util.List;
+import java.util.Set;
 
 public interface OrganizationDirectoryService {
 
@@ -12,5 +12,5 @@ public interface OrganizationDirectoryService {
 
     void update(OrganizationDirectory organizationDirectory);
 
-    List<Organization> getModifiedAfter(DateTime date);
+    Set<Organization> getModifiedAfter(DateTime date);
 }

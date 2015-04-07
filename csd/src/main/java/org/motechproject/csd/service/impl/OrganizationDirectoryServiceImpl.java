@@ -11,8 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service("organizationDirectoryService")
 public class OrganizationDirectoryServiceImpl implements OrganizationDirectoryService {
@@ -46,7 +47,7 @@ public class OrganizationDirectoryServiceImpl implements OrganizationDirectorySe
             organizationDirectoryDataService.doInTransaction(new TransactionCallbackWithoutResult() {
                 @Override
                 protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
-                    List<Organization> updatedOrganizations = organizationService.update(directory.getOrganizations());
+                    Set<Organization> updatedOrganizations = organizationService.update(directory.getOrganizations());
                     OrganizationDirectory organizationDirectory = getOrganizationDirectory();
 
                     if (organizationDirectory != null) {
@@ -61,9 +62,9 @@ public class OrganizationDirectoryServiceImpl implements OrganizationDirectorySe
     }
 
     @Override
-    public List<Organization> getModifiedAfter(DateTime date) {
+    public Set<Organization> getModifiedAfter(DateTime date) {
         List<Organization> allOrganizations = organizationService.allOrganizations();
-        List<Organization> modifiedOrganizations = new ArrayList<>();
+        Set<Organization> modifiedOrganizations = new HashSet<>();
 
         for (Organization organization : allOrganizations) {
             if (organization.getRecord().getUpdated().isAfter(date)) {

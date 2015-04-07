@@ -11,8 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service("providerDirectoryService")
 public class ProviderDirectoryServiceImpl implements ProviderDirectoryService {
@@ -46,7 +47,7 @@ public class ProviderDirectoryServiceImpl implements ProviderDirectoryService {
             providerDirectoryDataService.doInTransaction(new TransactionCallbackWithoutResult() {
                 @Override
                 protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
-                    List<Provider> updatedProviders = providerService.update(directory.getProviders());
+                    Set<Provider> updatedProviders = providerService.update(directory.getProviders());
                     ProviderDirectory providerDirectory = getProviderDirectory();
 
                     if (providerDirectory != null) {
@@ -61,9 +62,9 @@ public class ProviderDirectoryServiceImpl implements ProviderDirectoryService {
     }
 
     @Override
-    public List<Provider> getModifiedAfter(DateTime date) {
+    public Set<Provider> getModifiedAfter(DateTime date) {
         List<Provider> allProviders = providerService.allProviders();
-        List<Provider> modifiedProviders = new ArrayList<>();
+        Set<Provider> modifiedProviders = new HashSet<>();
 
         for (Provider provider : allProviders) {
             if (provider.getRecord().getUpdated().isAfter(date)) {

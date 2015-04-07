@@ -10,8 +10,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>Java class for address complex type.
@@ -49,7 +49,7 @@ public class Address {
     @UIDisplayable(position = 1)
     @Field(required = true)
     @Cascade(delete = true)
-    private List<AddressLine> addressLines = new ArrayList<>();
+    private Set<AddressLine> addressLines = new HashSet<>();
 
     @UIDisplayable(position = 0)
     @Field
@@ -62,17 +62,17 @@ public class Address {
         this.type = type;
     }
 
-    public Address(List<AddressLine> addressLines, String type) {
+    public Address(Set<AddressLine> addressLines, String type) {
         this.addressLines = addressLines;
         this.type = type;
     }
 
-    public List<AddressLine> getAddressLines() {
+    public Set<AddressLine> getAddressLines() {
         return addressLines;
     }
 
     @XmlElement(name = "addressLine", required = true)
-    public void setAddressLines(List<AddressLine> addressLines) {
+    public void setAddressLines(Set<AddressLine> addressLines) {
         this.addressLines = addressLines;
     }
 

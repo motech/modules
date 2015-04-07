@@ -5,13 +5,12 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
 
-import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>Java class for anonymous complex type.
@@ -55,22 +54,19 @@ import java.util.List;
 public class ProviderFacility extends AbstractUniqueID {
 
     @UIDisplayable(position = 0)
-    @Order(column = "provider_facility_services_idx")
     @Field(name = "provider_facility_services")
     @Cascade(delete = true)
-    private List<ProviderFacilityService> services = new ArrayList<>();
+    private Set<ProviderFacilityService> services = new HashSet<>();
 
     @UIDisplayable(position = 1)
-    @Order(column = "provider_facility_operating_hours_idx")
     @Field(name = "provider_facility_operating_hours")
     @Cascade(delete = true)
-    private List<OperatingHours> operatingHours = new ArrayList<>();
+    private Set<OperatingHours> operatingHours = new HashSet<>();
 
     @UIDisplayable(position = 2)
-    @Order(column = "provider_facility_extensions_idx")
     @Field(name = "provider_facility_extensions")
     @Cascade(delete = true)
-    private List<Extension> extensions = new ArrayList<>();
+    private Set<Extension> extensions = new HashSet<>();
 
     public ProviderFacility() {
     }
@@ -79,37 +75,38 @@ public class ProviderFacility extends AbstractUniqueID {
         setEntityID(entityID);
     }
 
-    public ProviderFacility(String entityID, List<ProviderFacilityService> services, List<OperatingHours> operatingHours, List<Extension> extensions) {
+    public ProviderFacility(String entityID, Set<ProviderFacilityService> services, Set<OperatingHours> operatingHours,
+                            Set<Extension> extensions) {
         setEntityID(entityID);
         this.services = services;
         this.operatingHours = operatingHours;
         this.extensions = extensions;
     }
 
-    public List<ProviderFacilityService> getServices() {
+    public Set<ProviderFacilityService> getServices() {
         return services;
     }
 
     @XmlElement(name = "service")
-    public void setServices(List<ProviderFacilityService> services) {
+    public void setServices(Set<ProviderFacilityService> services) {
         this.services = services;
     }
 
-    public List<OperatingHours> getOperatingHours() {
+    public Set<OperatingHours> getOperatingHours() {
         return operatingHours;
     }
 
     @XmlElement
-    public void setOperatingHours(List<OperatingHours> operatingHours) {
+    public void setOperatingHours(Set<OperatingHours> operatingHours) {
         this.operatingHours = operatingHours;
     }
 
-    public List<Extension> getExtensions() {
+    public Set<Extension> getExtensions() {
         return extensions;
     }
 
     @XmlElement(name = "extension")
-    public void setExtensions(List<Extension> extensions) {
+    public void setExtensions(Set<Extension> extensions) {
         this.extensions = extensions;
     }
 

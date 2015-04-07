@@ -5,13 +5,12 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
 
-import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>Java class for anonymous complex type.
@@ -38,24 +37,23 @@ import java.util.List;
 public class ServiceDirectory {
 
     @UIDisplayable(position = 0)
-    @Order(column = "service_directory_services_idx")
     @Field(name = "service_directory_services")
     @Cascade(delete = true)
-    private List<Service> services = new ArrayList<>();
+    private Set<Service> services = new HashSet<>();
 
     public ServiceDirectory() {
     }
 
-    public ServiceDirectory(List<Service> services) {
+    public ServiceDirectory(Set<Service> services) {
         this.services = services;
     }
 
-    public List<Service> getServices() {
+    public Set<Service> getServices() {
         return services;
     }
 
     @XmlElement(name = "service")
-    public void setServices(List<Service> services) {
+    public void setServices(Set<Service> services) {
         this.services = services;
     }
 

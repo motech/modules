@@ -7,15 +7,14 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
 
-import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>Java class for credential complex type.
@@ -67,10 +66,9 @@ public class Credential {
     @Field
     private DateTime credentialRenewalDate;
 
-    @Order(column = "credential_extensions_idx")
     @Field(name = "credential_extensions")
     @Cascade(delete = true)
-    private List<Extension> extensions = new ArrayList<>();
+    private Set<Extension> extensions = new HashSet<>();
 
     public Credential() {
     }
@@ -80,7 +78,8 @@ public class Credential {
         this.number = number;
     }
 
-    public Credential(CodedType codedType, String number, String issuingAuthority, DateTime credentialIssueDate, DateTime credentialRenewalDate, List<Extension> extensions) {
+    public Credential(CodedType codedType, String number, String issuingAuthority, DateTime credentialIssueDate,
+                      DateTime credentialRenewalDate, Set<Extension> extensions) {
         this.codedType = codedType;
         this.number = number;
         this.issuingAuthority = issuingAuthority;
@@ -138,12 +137,12 @@ public class Credential {
         this.credentialRenewalDate = credentialRenewalDate;
     }
 
-    public List<Extension> getExtensions() {
+    public Set<Extension> getExtensions() {
         return extensions;
     }
 
     @XmlElement(name = "extension")
-    public void setExtensions(List<Extension> extensions) {
+    public void setExtensions(Set<Extension> extensions) {
         this.extensions = extensions;
     }
 

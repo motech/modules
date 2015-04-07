@@ -3,6 +3,7 @@ package org.motechproject.csd.service;
 import org.motechproject.csd.domain.Organization;
 
 import java.util.List;
+import java.util.Set;
 
 public interface OrganizationService {
 
@@ -14,5 +15,5 @@ public interface OrganizationService {
 
     void delete(String entityID);
 
-    List<Organization> update(List<Organization> organizations);
+    Set<Organization> update(Set<Organization> organizations);
 }

@@ -5,13 +5,12 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
 
-import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>Java class for anonymous complex type.
@@ -38,24 +37,23 @@ import java.util.List;
 public class OrganizationDirectory {
 
     @UIDisplayable(position = 0)
-    @Order(column = "organization_directory_organizations_idx")
     @Field(name = "organization_directory_organizations")
     @Cascade(delete = true)
-    private List<Organization> organizations = new ArrayList<>();
+    private Set<Organization> organizations = new HashSet<>();
 
     public OrganizationDirectory() {
     }
 
-    public OrganizationDirectory(List<Organization> organizations) {
+    public OrganizationDirectory(Set<Organization> organizations) {
         this.organizations = organizations;
     }
 
-    public List<Organization> getOrganizations() {
+    public Set<Organization> getOrganizations() {
         return organizations;
     }
 
     @XmlElement(name = "organization")
-    public void setOrganizations(List<Organization> organizations) {
+    public void setOrganizations(Set<Organization> organizations) {
         this.organizations = organizations;
     }
 

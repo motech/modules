@@ -5,13 +5,12 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
 
-import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>Java class for anonymous complex type.
@@ -53,16 +52,14 @@ import java.util.List;
 public class FacilityOrganization extends AbstractUniqueID {
 
     @UIDisplayable(position = 0)
-    @Order(column = "facility_organization_services_idx")
     @Field(name = "facility_organization_services")
     @Cascade(delete = true)
-    private List<FacilityOrganizationService> services = new ArrayList<>();
+    private Set<FacilityOrganizationService> services = new HashSet<>();
 
     @UIDisplayable(position = 1)
-    @Order(column = "facility_organization_extensions_idx")
     @Field(name = "facility_organization_extensions")
     @Cascade(delete = true)
-    private List<Extension> extensions = new ArrayList<>();
+    private Set<Extension> extensions = new HashSet<>();
 
     public FacilityOrganization() {
     }
@@ -71,27 +68,27 @@ public class FacilityOrganization extends AbstractUniqueID {
         setEntityID(entityID);
     }
 
-    public FacilityOrganization(String entityID, List<FacilityOrganizationService> services, List<Extension> extensions) {
+    public FacilityOrganization(String entityID, Set<FacilityOrganizationService> services, Set<Extension> extensions) {
         setEntityID(entityID);
         this.services = services;
         this.extensions = extensions;
     }
 
-    public List<FacilityOrganizationService> getServices() {
+    public Set<FacilityOrganizationService> getServices() {
         return services;
     }
 
     @XmlElement(name = "service")
-    public void setServices(List<FacilityOrganizationService> services) {
+    public void setServices(Set<FacilityOrganizationService> services) {
         this.services = services;
     }
 
-    public List<Extension> getExtensions() {
+    public Set<Extension> getExtensions() {
         return extensions;
     }
 
     @XmlElement(name = "extension")
-    public void setExtensions(List<Extension> extensions) {
+    public void setExtensions(Set<Extension> extensions) {
         this.extensions = extensions;
     }
 

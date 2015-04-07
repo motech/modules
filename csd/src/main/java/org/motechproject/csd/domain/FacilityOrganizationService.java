@@ -5,13 +5,12 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
 
-import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>Java class for anonymous complex type.
@@ -42,31 +41,27 @@ import java.util.List;
 public class FacilityOrganizationService extends AbstractUniqueID {
 
     @UIDisplayable(position = 0)
-    @Order(column = "facility_organization_service_names_idx")
     @Field(name = "facility_organization_service_names")
     @Cascade(delete = true)
-    private List<Name> names = new ArrayList<>();
+    private Set<Name> names = new HashSet<>();
 
     @UIDisplayable(position = 2)
-    @Order(column = "facility_organization_service_languages_idx")
     @Field(name = "facility_organization_service_languages")
     @Cascade(delete = true)
-    private List<CodedType> languages = new ArrayList<>();
+    private Set<CodedType> languages = new HashSet<>();
 
     @UIDisplayable(position = 1)
-    @Order(column = "facility_organization_service_operatingHours_idx")
     @Field(name = "facility_organization_service_operating_hours")
     @Cascade(delete = true)
-    private List<OperatingHours> operatingHours = new ArrayList<>();
+    private Set<OperatingHours> operatingHours = new HashSet<>();
 
     @UIDisplayable(position = 3)
     @Field
     private String freeBusyURI;
 
-    @Order(column = "facility_organization_service_extensions_idx")
     @Field(name = "facility_organization_service_extensions")
     @Cascade(delete = true)
-    private List<Extension> extensions = new ArrayList<>();
+    private Set<Extension> extensions = new HashSet<>();
 
     public FacilityOrganizationService() {
     }
@@ -75,7 +70,8 @@ public class FacilityOrganizationService extends AbstractUniqueID {
         setEntityID(entityID);
     }
 
-    public FacilityOrganizationService(String entityID, List<Name> names, List<CodedType> languages, List<OperatingHours> operatingHours, String freeBusyURI, List<Extension> extensions) {
+    public FacilityOrganizationService(String entityID, Set<Name> names, Set<CodedType> languages,
+                                       Set<OperatingHours> operatingHours, String freeBusyURI, Set<Extension> extensions) {
         setEntityID(entityID);
         this.names = names;
         this.languages = languages;
@@ -84,30 +80,30 @@ public class FacilityOrganizationService extends AbstractUniqueID {
         this.extensions = extensions;
     }
 
-    public List<Name> getNames() {
+    public Set<Name> getNames() {
         return names;
     }
 
     @XmlElement(name = "name")
-    public void setNames(List<Name> names) {
+    public void setNames(Set<Name> names) {
         this.names = names;
     }
 
-    public List<CodedType> getLanguages() {
+    public Set<CodedType> getLanguages() {
         return languages;
     }
 
     @XmlElement(name = "language")
-    public void setLanguages(List<CodedType> languages) {
+    public void setLanguages(Set<CodedType> languages) {
         this.languages = languages;
     }
 
-    public List<OperatingHours> getOperatingHours() {
+    public Set<OperatingHours> getOperatingHours() {
         return operatingHours;
     }
 
     @XmlElement
-    public void setOperatingHours(List<OperatingHours> operatingHours) {
+    public void setOperatingHours(Set<OperatingHours> operatingHours) {
         this.operatingHours = operatingHours;
     }
 
@@ -120,12 +116,12 @@ public class FacilityOrganizationService extends AbstractUniqueID {
         this.freeBusyURI = freeBusyURI;
     }
 
-    public List<Extension> getExtensions() {
+    public Set<Extension> getExtensions() {
         return extensions;
     }
 
     @XmlElement(name = "extension")
-    public void setExtensions(List<Extension> extensions) {
+    public void setExtensions(Set<Extension> extensions) {
         this.extensions = extensions;
     }
 

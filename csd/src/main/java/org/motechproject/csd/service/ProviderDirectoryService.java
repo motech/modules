@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 import org.motechproject.csd.domain.Provider;
 import org.motechproject.csd.domain.ProviderDirectory;
 
-import java.util.List;
+import java.util.Set;
 
 public interface ProviderDirectoryService {
 
@@ -12,5 +12,5 @@ public interface ProviderDirectoryService {
 
     void update(ProviderDirectory providerDirectory);
 
-    List<Provider> getModifiedAfter(DateTime date);
+    Set<Provider> getModifiedAfter(DateTime date);
 }

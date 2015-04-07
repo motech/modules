@@ -5,13 +5,12 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
 
-import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>Java class for anonymous complex type.
@@ -40,22 +39,19 @@ import java.util.List;
 public class ProviderOrganization extends AbstractUniqueID {
 
     @UIDisplayable(position = 2)
-    @Order(column = "provider_organization_extensions_idx")
     @Field(name = "provider_organization_extensions")
     @Cascade(delete = true)
-    private List<Extension> extensions = new ArrayList<>();
+    private Set<Extension> extensions = new HashSet<>();
 
     @UIDisplayable(position = 0)
-    @Order(column = "provider_organization_addresses_idx")
     @Field(name = "provider_organization_addresses")
     @Cascade(delete = true)
-    private List<Address> addresses = new ArrayList<>();
+    private Set<Address> addresses = new HashSet<>();
 
     @UIDisplayable(position = 1)
-    @Order(column = "provider_organization_contact_points_idx")
     @Field(name = "provider_organization_contact_points")
     @Cascade(delete = true)
-    private List<ContactPoint> contactPoints = new ArrayList<>();
+    private Set<ContactPoint> contactPoints = new HashSet<>();
 
     public ProviderOrganization() {
     }
@@ -64,37 +60,37 @@ public class ProviderOrganization extends AbstractUniqueID {
         setEntityID(entityID);
     }
 
-    public ProviderOrganization(String entityID, List<Extension> extensions, List<Address> addresses, List<ContactPoint> contactPoints) {
+    public ProviderOrganization(String entityID, Set<Extension> extensions, Set<Address> addresses, Set<ContactPoint> contactPoints) {
         setEntityID(entityID);
         this.extensions = extensions;
         this.addresses = addresses;
         this.contactPoints = contactPoints;
     }
 
-    public List<Extension> getExtensions() {
+    public Set<Extension> getExtensions() {
         return extensions;
     }
 
     @XmlElement(name = "extension")
-    public void setExtensions(List<Extension> extensions) {
+    public void setExtensions(Set<Extension> extensions) {
         this.extensions = extensions;
     }
 
-    public List<Address> getAddresses() {
+    public Set<Address> getAddresses() {
         return addresses;
     }
 
     @XmlElement(name = "address")
-    public void setAddresses(List<Address> addresses) {
+    public void setAddresses(Set<Address> addresses) {
         this.addresses = addresses;
     }
 
-    public List<ContactPoint> getContactPoints() {
+    public Set<ContactPoint> getContactPoints() {
         return contactPoints;
     }
 
     @XmlElement(name = "contactPoint")
-    public void setContactPoints(List<ContactPoint> contactPoints) {
+    public void setContactPoints(Set<ContactPoint> contactPoints) {
         this.contactPoints = contactPoints;
     }
 

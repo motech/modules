@@ -5,13 +5,12 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
 
-import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>Java class for anonymous complex type.
@@ -50,24 +49,23 @@ import java.util.List;
 public class ProviderOrganizations {
 
     @UIDisplayable(position = 0)
-    @Order(column = "provider_organizations_organization_idx")
     @Field(required = true, name = "provider_organizations_organization")
     @Cascade(delete = true)
-    private List<ProviderOrganization> providerOrganizations = new ArrayList<>();
+    private Set<ProviderOrganization> providerOrganizations = new HashSet<>();
 
     public ProviderOrganizations() {
     }
 
-    public ProviderOrganizations(List<ProviderOrganization> providerOrganizations) {
+    public ProviderOrganizations(Set<ProviderOrganization> providerOrganizations) {
         this.providerOrganizations = providerOrganizations;
     }
 
-    public List<ProviderOrganization> getProviderOrganizations() {
+    public Set<ProviderOrganization> getProviderOrganizations() {
         return providerOrganizations;
     }
 
     @XmlElement(name = "organization", required = true)
-    public void setProviderOrganizations(List<ProviderOrganization> providerOrganizations) {
+    public void setProviderOrganizations(Set<ProviderOrganization> providerOrganizations) {
         this.providerOrganizations = providerOrganizations;
     }
 

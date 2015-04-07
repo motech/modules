@@ -8,38 +8,7 @@
             <otherName xml:lang="lang">value</otherName>
             <address type="type">
                 <addressLine component="component">value</addressLine>
-                <addressLine component="component">value</addressLine>
             </address>
-            <contact>
-                <person>
-                    <name xml:lang="lang">
-                        <commonName>commonName</commonName>
-                        <honorific>honorific</honorific>
-                        <forename>forename</forename>
-                        <otherName code="code" codingScheme="codingScheme">value</otherName>
-                        <surname>surname</surname>
-                        <suffix>suffix</suffix>
-                    </name>
-                    <contactPoint>
-                        <codedType code="code" codingScheme="codingScheme">value</codedType>
-                        <equipment>equipment</equipment>
-                        <purpose>purpose</purpose>
-                        <certificate>certificate</certificate>
-                    </contactPoint>
-                    <contactPoint>
-                        <codedType code="code" codingScheme="codingScheme">value</codedType>
-                        <equipment>equipment</equipment>
-                        <purpose>purpose</purpose>
-                        <certificate>certificate</certificate>
-                    </contactPoint>
-                    <address type="type">
-                        <addressLine component="component">value</addressLine>
-                        <addressLine component="component">value</addressLine>
-                    </address>
-                    <gender>gender</gender>
-                    <dateOfBirth>2015-03-05</dateOfBirth>
-                </person>
-            </contact>
             <contact>
                 <provider entityID="ProviderEntityID"/>
             </contact>
@@ -79,7 +48,6 @@
             <otherName xml:lang="lang">value</otherName>
             <address type="type">
                 <addressLine component="component">value</addressLine>
-                <addressLine component="component">value</addressLine>
             </address>
             <contact>
                 <person>
@@ -97,14 +65,7 @@
                         <purpose>purpose</purpose>
                         <certificate>certificate</certificate>
                     </contactPoint>
-                    <contactPoint>
-                        <codedType code="code" codingScheme="codingScheme">value</codedType>
-                        <equipment>equipment</equipment>
-                        <purpose>purpose</purpose>
-                        <certificate>certificate</certificate>
-                    </contactPoint>
                     <address type="type">
-                        <addressLine component="component">value</addressLine>
                         <addressLine component="component">value</addressLine>
                     </address>
                     <gender>gender</gender>
@@ -181,14 +142,7 @@
                     <purpose>purpose</purpose>
                     <certificate>certificate</certificate>
                 </contactPoint>
-                <contactPoint>
-                    <codedType code="code" codingScheme="codingScheme">value</codedType>
-                    <equipment>equipment</equipment>
-                    <purpose>purpose</purpose>
-                    <certificate>certificate</certificate>
-                </contactPoint>
                 <address type="type">
-                    <addressLine component="component">value</addressLine>
                     <addressLine component="component">value</addressLine>
                 </address>
                 <gender>gender</gender>
@@ -199,7 +153,6 @@
                 <organization entityID="entityID">
                     <extension type="type" urn="urn"/>
                     <address type="type">
-                        <addressLine component="component">value</addressLine>
                         <addressLine component="component">value</addressLine>
                     </address>
                     <contactPoint>

@@ -6,14 +6,13 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.mds.annotations.UIDisplayable;
 
-import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>Java class for organization complex type.
@@ -70,57 +69,48 @@ import java.util.List;
 @XmlType(propOrder = { "otherIDs", "codedTypes", "primaryName", "otherNames", "addresses", "contacts", "credentials", "languages", "specializations", "contactPoints", "parent", "extensions", "record" })
 public class Organization extends AbstractUniqueID {
 
-    @Order(column = "organization_other_ids_idx")
     @Field(name = "organization_other_ids")
     @Cascade(delete = true)
-    private List<OtherID> otherIDs = new ArrayList<>();
+    private Set<OtherID> otherIDs = new HashSet<>();
 
     @UIDisplayable(position = 0)
     @Field(required = true)
     private String primaryName;
 
-    @Order(column = "organization_other_names_idx")
     @Field(name = "organization_other_names")
     @Cascade(delete = true)
-    private List<OtherName> otherNames = new ArrayList<>();
+    private Set<OtherName> otherNames = new HashSet<>();
 
     @UIDisplayable(position = 1)
-    @Order(column = "organization_addresses_idx")
     @Field(name = "organization_addresses")
     @Cascade(delete = true)
-    private List<Address> addresses = new ArrayList<>();
+    private Set<Address> addresses = new HashSet<>();
 
-    @Order(column = "organization_contacts_idx")
     @Field(name = "organization_contacts")
     @Cascade(delete = true)
-    private List<OrganizationContact> contacts = new ArrayList<>();
+    private Set<OrganizationContact> contacts = new HashSet<>();
 
-    @Order(column = "organization_credentials_idx")
     @Field(name = "organization_credentials")
     @Cascade(delete = true)
-    private List<Credential> credentials = new ArrayList<>();
+    private Set<Credential> credentials = new HashSet<>();
 
-    @Order(column = "organization_languages_idx")
     @Field(name = "organization_languages")
     @Cascade(delete = true)
-    private List<CodedType> languages = new ArrayList<>();
+    private Set<CodedType> languages = new HashSet<>();
 
     @UIDisplayable(position = 2)
-    @Order(column = "organization_specialization_idx")
     @Field(name = "organization_specialization")
     @Cascade(delete = true)
-    private List<CodedType> specializations = new ArrayList<>();
+    private Set<CodedType> specializations = new HashSet<>();
 
-    @Order(column = "organization_contact_points_idx")
     @Field(name = "organization_contact_points")
     @Cascade(delete = true)
-    private List<ContactPoint> contactPoints = new ArrayList<>();
+    private Set<ContactPoint> contactPoints = new HashSet<>();
 
     @UIDisplayable(position = 3)
-    @Order(column = "organization_coded_types_idx")
     @Field(required = true, name = "organization_coded_types")
     @Cascade(delete = true)
-    private List<CodedType> codedTypes = new ArrayList<>();
+    private Set<CodedType> codedTypes = new HashSet<>();
 
     @Field
     private String parentOrganization;
@@ -128,10 +118,9 @@ public class Organization extends AbstractUniqueID {
     @Ignore
     private UniqueID parent;
 
-    @Order(column = "organization_extensions_idx")
     @Field(name = "organization_extensions")
     @Cascade(delete = true)
-    private List<Extension> extensions = new ArrayList<>();
+    private Set<Extension> extensions = new HashSet<>();
 
     @Field
     @Cascade(delete = true)
@@ -140,16 +129,16 @@ public class Organization extends AbstractUniqueID {
     public Organization() {
     }
 
-    public Organization(String entityID, List<CodedType> codedTypes, String primaryName, Record record) {
+    public Organization(String entityID, Set<CodedType> codedTypes, String primaryName, Record record) {
         setEntityID(entityID);
         this.codedTypes = codedTypes;
         this.primaryName = primaryName;
         this.record = record;
     }
 
-    public Organization(String entityID, List<Credential> credentials, String parentOrganization, List<CodedType> specializations, List<OtherID> otherIDs, //NO CHECKSTYLE ArgumentCount
-                        String primaryName, List<OtherName> otherNames, List<Address> addresses, List<OrganizationContact> contacts,
-                        List<CodedType> languages, List<ContactPoint> contactPoints, List<CodedType> codedTypes, List<Extension> extensions, Record record) {
+    public Organization(String entityID, Set<Credential> credentials, String parentOrganization, Set<CodedType> specializations, Set<OtherID> otherIDs, //NO CHECKSTYLE ArgumentCount
+                        String primaryName, Set<OtherName> otherNames, Set<Address> addresses, Set<OrganizationContact> contacts,
+                        Set<CodedType> languages, Set<ContactPoint> contactPoints, Set<CodedType> codedTypes, Set<Extension> extensions, Record record) {
         setEntityID(entityID);
         this.credentials = credentials;
         this.parentOrganization = parentOrganization;
@@ -176,84 +165,84 @@ public class Organization extends AbstractUniqueID {
         this.primaryName = primaryName;
     }
 
-    public List<OtherName> getOtherNames() {
+    public Set<OtherName> getOtherNames() {
         return otherNames;
     }
 
     @XmlElement(name = "otherName")
-    public void setOtherNames(List<OtherName> otherNames) {
+    public void setOtherNames(Set<OtherName> otherNames) {
         this.otherNames = otherNames;
     }
 
-    public List<OtherID> getOtherIDs() {
+    public Set<OtherID> getOtherIDs() {
         return otherIDs;
     }
 
     @XmlElement(name = "otherID")
-    public void setOtherIDs(List<OtherID> otherIDs) {
+    public void setOtherIDs(Set<OtherID> otherIDs) {
         this.otherIDs = otherIDs;
     }
 
-    public List<Address> getAddresses() {
+    public Set<Address> getAddresses() {
         return addresses;
     }
 
     @XmlElement(name = "address")
-    public void setAddresses(List<Address> addresses) {
+    public void setAddresses(Set<Address> addresses) {
         this.addresses = addresses;
     }
 
-    public List<OrganizationContact> getContacts() {
+    public Set<OrganizationContact> getContacts() {
         return contacts;
     }
 
     @XmlElement(name = "contact")
-    public void setContacts(List<OrganizationContact> contacts) {
+    public void setContacts(Set<OrganizationContact> contacts) {
         this.contacts = contacts;
     }
 
-    public List<Credential> getCredentials() {
+    public Set<Credential> getCredentials() {
         return credentials;
     }
 
     @XmlElement(name = "credential")
-    public void setCredentials(List<Credential> credentials) {
+    public void setCredentials(Set<Credential> credentials) {
         this.credentials = credentials;
     }
 
-    public List<CodedType> getLanguages() {
+    public Set<CodedType> getLanguages() {
         return languages;
     }
 
     @XmlElement(name = "language")
-    public void setLanguages(List<CodedType> languages) {
+    public void setLanguages(Set<CodedType> languages) {
         this.languages = languages;
     }
 
-    public List<CodedType> getSpecializations() {
+    public Set<CodedType> getSpecializations() {
         return specializations;
     }
 
     @XmlElement(name = "specialization")
-    public void setSpecializations(List<CodedType> specializations) {
+    public void setSpecializations(Set<CodedType> specializations) {
         this.specializations = specializations;
     }
 
-    public List<ContactPoint> getContactPoints() {
+    public Set<ContactPoint> getContactPoints() {
         return contactPoints;
     }
 
     @XmlElement(name = "contactPoint")
-    public void setContactPoints(List<ContactPoint> contactPoints) {
+    public void setContactPoints(Set<ContactPoint> contactPoints) {
         this.contactPoints = contactPoints;
     }
 
-    public List<CodedType> getCodedTypes() {
+    public Set<CodedType> getCodedTypes() {
         return codedTypes;
     }
 
     @XmlElement(name = "codedType", required = true)
-    public void setCodedTypes(List<CodedType> codedTypes) {
+    public void setCodedTypes(Set<CodedType> codedTypes) {
         this.codedTypes = codedTypes;
     }
 
@@ -291,12 +280,12 @@ public class Organization extends AbstractUniqueID {
         parentOrganization = parent.getEntityID();
     }
 
-    public List<Extension> getExtensions() {
+    public Set<Extension> getExtensions() {
         return extensions;
     }
 
     @XmlElement(name = "extension")
-    public void setExtensions(List<Extension> extensions) {
+    public void setExtensions(Set<Extension> extensions) {
         this.extensions = extensions;
     }
 

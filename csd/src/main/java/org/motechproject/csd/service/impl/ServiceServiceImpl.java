@@ -6,6 +6,7 @@ import org.motechproject.csd.service.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Set;
 
 @org.springframework.stereotype.Service("serviceService")
 public class ServiceServiceImpl implements ServiceService {
@@ -39,7 +40,7 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<Service> update(List<Service> services) {
+    public Set<Service> update(Set<Service> services) {
         for (Service service : services) {
             update(service);
         }

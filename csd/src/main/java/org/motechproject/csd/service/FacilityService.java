@@ -4,6 +4,7 @@ package org.motechproject.csd.service;
 import org.motechproject.csd.domain.Facility;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * See {@link org.motechproject.csd.domain.Facility}
@@ -20,5 +21,5 @@ public interface FacilityService {
 
     void delete(String entityID);
 
-    List<Facility> update(List<Facility> facilities);
+    Set<Facility> update(Set<Facility> facilities);
 }

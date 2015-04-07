@@ -5,13 +5,12 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
 
-import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>Java class for service complex type.
@@ -45,10 +44,9 @@ public class Service extends AbstractUniqueID {
     private CodedType codedType;
 
     @UIDisplayable(position = 2)
-    @Order(column = "service_extensions_idx")
     @Field(name = "service_extensions")
     @Cascade(delete = true)
-    private List<Extension> extensions = new ArrayList<>();
+    private Set<Extension> extensions = new HashSet<>();
 
     @UIDisplayable(position = 1)
     @Field
@@ -64,7 +62,7 @@ public class Service extends AbstractUniqueID {
         this.record = record;
     }
 
-    public Service(String entityID, CodedType codedType, List<Extension> extensions, Record record) {
+    public Service(String entityID, CodedType codedType, Set<Extension> extensions, Record record) {
         setEntityID(entityID);
         this.codedType = codedType;
         this.extensions = extensions;
@@ -89,12 +87,12 @@ public class Service extends AbstractUniqueID {
         this.codedType = codedType;
     }
 
-    public List<Extension> getExtensions() {
+    public Set<Extension> getExtensions() {
         return extensions;
     }
 
     @XmlElement(name = "extension")
-    public void setExtensions(List<Extension> extensions) {
+    public void setExtensions(Set<Extension> extensions) {
         this.extensions = extensions;
     }
 

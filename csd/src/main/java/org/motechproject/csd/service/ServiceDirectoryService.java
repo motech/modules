@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 import org.motechproject.csd.domain.Service;
 import org.motechproject.csd.domain.ServiceDirectory;
 
-import java.util.List;
+import java.util.Set;
 
 public interface ServiceDirectoryService {
 
@@ -12,5 +12,5 @@ public interface ServiceDirectoryService {
 
     void update(ServiceDirectory serviceDirectory);
 
-    List<Service> getModifiedAfter(DateTime date);
+    Set<Service> getModifiedAfter(DateTime date);
 }

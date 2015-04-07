@@ -3,6 +3,7 @@ package org.motechproject.csd.service;
 import org.motechproject.csd.domain.Service;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ServiceService {
 
@@ -14,5 +15,5 @@ public interface ServiceService {
 
     void delete(String entityID);
 
-    List<Service> update(List<Service> services);
+    Set<Service> update(Set<Service> services);
 }

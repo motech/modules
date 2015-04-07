@@ -10,8 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @org.springframework.stereotype.Service("serviceDirectoryService")
 public class ServiceDirectoryServiceImpl implements ServiceDirectoryService {
@@ -45,7 +46,7 @@ public class ServiceDirectoryServiceImpl implements ServiceDirectoryService {
             serviceDirectoryDataService.doInTransaction(new TransactionCallbackWithoutResult() {
                 @Override
                 protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
-                    List<Service> updatedServices = serviceService.update(directory.getServices());
+                    Set<Service> updatedServices = serviceService.update(directory.getServices());
                     ServiceDirectory serviceDirectory = getServiceDirectory();
 
                     if (serviceDirectory != null) {
@@ -60,9 +61,9 @@ public class ServiceDirectoryServiceImpl implements ServiceDirectoryService {
     }
 
     @Override
-    public List<Service> getModifiedAfter(DateTime date) {
+    public Set<Service> getModifiedAfter(DateTime date) {
         List<Service> allServices = serviceService.allServices();
-        List<Service> modifiedServices = new ArrayList<>();
+        Set<Service> modifiedServices = new HashSet<>();
 
         for (Service service : allServices) {
             if (service.getRecord().getUpdated().isAfter(date)) {

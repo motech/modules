@@ -6,14 +6,13 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.mds.annotations.UIDisplayable;
 
-import javax.jdo.annotations.Order;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>Java class for anonymous complex type.
@@ -45,10 +44,9 @@ import java.util.List;
 public class ProviderFacilityService extends AbstractUniqueID {
 
     @UIDisplayable(position = 0)
-    @Order(column = "provider_facility_service_names_idx")
     @Field(name = "provider_facility_service_names")
     @Cascade(delete = true)
-    private List<Name> names = new ArrayList<>();
+    private Set<Name> names = new HashSet<>();
 
     @UIDisplayable(position = 2)
     @Field
@@ -58,25 +56,22 @@ public class ProviderFacilityService extends AbstractUniqueID {
     private UniqueID organization;
 
     @UIDisplayable(position = 3)
-    @Order(column = "provider_facility_service_languages_idx")
     @Field(name = "provider_facility_service_languages")
     @Cascade(delete = true)
-    private List<CodedType> languages = new ArrayList<>();
+    private Set<CodedType> languages = new HashSet<>();
 
     @UIDisplayable(position = 1)
-    @Order(column = "provider_facility_service_operating_hours_idx")
     @Field(name = "provider_facility_service_operating_hours")
     @Cascade(delete = true)
-    private List<OperatingHours> operatingHours = new ArrayList<>();
+    private Set<OperatingHours> operatingHours = new HashSet<>();
 
     @UIDisplayable(position = 4)
     @Field
     private String freeBusyURI;
 
-    @Order(column = "provider_facility_service_extensions_idx")
     @Field(name = "provider_facility_service_extensions")
     @Cascade(delete = true)
-    private List<Extension> extensions = new ArrayList<>();
+    private Set<Extension> extensions = new HashSet<>();
 
     public ProviderFacilityService() {
     }
@@ -85,8 +80,8 @@ public class ProviderFacilityService extends AbstractUniqueID {
         setEntityID(entityID);
     }
 
-    public ProviderFacilityService(String entityID, List<Name> names, String providerOrganization, List<CodedType> languages,
-                                   List<OperatingHours> operatingHours, String freeBusyURI, List<Extension> extensions) {
+    public ProviderFacilityService(String entityID, Set<Name> names, String providerOrganization, Set<CodedType> languages,
+                                   Set<OperatingHours> operatingHours, String freeBusyURI, Set<Extension> extensions) {
         setEntityID(entityID);
         this.names = names;
         this.providerOrganization = providerOrganization;
@@ -97,30 +92,30 @@ public class ProviderFacilityService extends AbstractUniqueID {
         this.extensions = extensions;
     }
 
-    public List<CodedType> getLanguages() {
+    public Set<CodedType> getLanguages() {
         return languages;
     }
 
     @XmlElement(name = "language")
-    public void setLanguages(List<CodedType> languages) {
+    public void setLanguages(Set<CodedType> languages) {
         this.languages = languages;
     }
 
-    public List<Name> getNames() {
+    public Set<Name> getNames() {
         return names;
     }
 
     @XmlElement(name = "name")
-    public void setNames(List<Name> names) {
+    public void setNames(Set<Name> names) {
         this.names = names;
     }
 
-    public List<OperatingHours> getOperatingHours() {
+    public Set<OperatingHours> getOperatingHours() {
         return operatingHours;
     }
 
     @XmlElement
-    public void setOperatingHours(List<OperatingHours> operatingHours) {
+    public void setOperatingHours(Set<OperatingHours> operatingHours) {
         this.operatingHours = operatingHours;
     }
 
@@ -149,12 +144,12 @@ public class ProviderFacilityService extends AbstractUniqueID {
         providerOrganization = organization.getEntityID();
     }
 
-    public List<Extension> getExtensions() {
+    public Set<Extension> getExtensions() {
         return extensions;
     }
 
     @XmlElement(name = "extension")
-    public void setExtensions(List<Extension> extensions) {
+    public void setExtensions(Set<Extension> extensions) {
         this.extensions = extensions;
     }
 

@@ -36,7 +36,9 @@ import org.motechproject.csd.domain.Record;
 import org.motechproject.csd.domain.Service;
 import org.motechproject.csd.domain.ServiceDirectory;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
 public class InitialData {
 
@@ -52,49 +54,48 @@ public class InitialData {
         OtherID otherID = new OtherID("code", "assigningAuthorityName");
         CodedType codedType = new CodedType("value", "code", "codingScheme");
         ContactPoint contactPoint = new ContactPoint(codedType, "equipment", "purpose", "certificate");
-        Credential credential = new Credential(codedType, "number", "issuingAuthority", date, date, Arrays.asList(extension));
-        OperatingHours operatingHours = new OperatingHours(true, Arrays.asList(DayOfTheWeek.THURSDAY), time, time, date, date);
+        Credential credential = new Credential(codedType, "number", "issuingAuthority", date, date, new HashSet<>(Arrays.asList(extension)));
+        OperatingHours operatingHours = new OperatingHours(true, new ArrayList<>(Arrays.asList(DayOfTheWeek.THURSDAY)), time, time, date, date);
 
         AddressLine addressLine = new AddressLine("value", "component");
-        Address address = new Address(Arrays.asList(addressLine, addressLine), "type");
+        Address address = new Address(new HashSet<>(Arrays.asList(addressLine)), "type");
 
         Record record = new Record(dateTime, dateTime, "status", "sourceDirectory");
 
-        Name name = new Name(Arrays.asList("name"), "honorific", "forename", Arrays.asList(codedType), "surname", "suffix");
-        PersonName personName = new PersonName(Arrays.asList("commonName"), "honorific", "forename", Arrays.asList(codedType), "surname", "suffix", "lang");
-        Person person = new Person(Arrays.asList(personName), Arrays.asList(contactPoint, contactPoint), Arrays.asList(address), "gender", date);
+        Name name = new Name(new ArrayList<>(Arrays.asList("name")), "honorific", "forename", new HashSet<>(Arrays.asList(codedType)), "surname", "suffix");
+        PersonName personName = new PersonName(new ArrayList<>(Arrays.asList("commonName")), "honorific", "forename", new HashSet<>(Arrays.asList(codedType)), "surname", "suffix", "lang");
+        Person person = new Person(new HashSet<>(Arrays.asList(personName)), new HashSet<>(Arrays.asList(contactPoint)), new HashSet<>(Arrays.asList(address)), "gender", date);
 
         OrganizationContact organizationContactPerson = new OrganizationContact(person);
         OrganizationContact organizationContactProvider = new OrganizationContact("ProviderEntityID");
 
-        Organization organization = new Organization("entityID", Arrays.asList(credential), "orgID", Arrays.asList(codedType), Arrays.asList(otherID),
-                "organization_primaryName", Arrays.asList(otherName), Arrays.asList(address), Arrays.asList(organizationContactPerson,
-                organizationContactProvider), Arrays.asList(codedType), Arrays.asList(contactPoint), Arrays.asList(codedType), Arrays.asList(extension), record);
+        Organization organization = new Organization("entityID", new HashSet<>(Arrays.asList(credential)), "orgID", new HashSet<>(Arrays.asList(codedType)), new HashSet<>(Arrays.asList(otherID)),
+                "organization_primaryName", new HashSet<>(Arrays.asList(otherName)), new HashSet<>(Arrays.asList(address)), new HashSet<>(Arrays.asList(organizationContactProvider)), new HashSet<>(Arrays.asList(codedType)), new HashSet<>(Arrays.asList(contactPoint)), new HashSet<>(Arrays.asList(codedType)), new HashSet<>(Arrays.asList(extension)), record);
 
-        FacilityOrganizationService facilityOrganizationService = new FacilityOrganizationService("entityID", Arrays.asList(name),
-                Arrays.asList(codedType), Arrays.asList(operatingHours), "freeBusyURI", Arrays.asList(extension));
-        FacilityOrganization facilityOrganization = new FacilityOrganization("entityID", Arrays.asList(facilityOrganizationService), Arrays.asList(extension));
-        FacilityOrganizations facilityOrganizations = new FacilityOrganizations(Arrays.asList(facilityOrganization));
+        FacilityOrganizationService facilityOrganizationService = new FacilityOrganizationService("entityID", new HashSet<>(Arrays.asList(name)),
+                new HashSet<>(Arrays.asList(codedType)), new HashSet<>(Arrays.asList(operatingHours)), "freeBusyURI", new HashSet<>(Arrays.asList(extension)));
+        FacilityOrganization facilityOrganization = new FacilityOrganization("entityID", new HashSet<>(Arrays.asList(facilityOrganizationService)), new HashSet<>(Arrays.asList(extension)));
+        FacilityOrganizations facilityOrganizations = new FacilityOrganizations(new HashSet<>(Arrays.asList(facilityOrganization)));
 
-        Facility facility = new Facility("entityID", Arrays.asList(codedType), Arrays.asList(extension), record, Arrays.asList(otherID),
-                "primaryName", Arrays.asList(otherName), Arrays.asList(address), Arrays.asList(organizationContactPerson),
-                Arrays.asList(codedType), Arrays.asList(contactPoint), geocode, facilityOrganizations, Arrays.asList(operatingHours));
+        Facility facility = new Facility("entityID", new HashSet<>(Arrays.asList(codedType)), new HashSet<>(Arrays.asList(extension)), record, new HashSet<>(Arrays.asList(otherID)),
+                "primaryName", new HashSet<>(Arrays.asList(otherName)), new HashSet<>(Arrays.asList(address)), new HashSet<>(Arrays.asList(organizationContactPerson)),
+                new HashSet<>(Arrays.asList(codedType)), new HashSet<>(Arrays.asList(contactPoint)), geocode, facilityOrganizations, new HashSet<>(Arrays.asList(operatingHours)));
 
-        ProviderOrganization providerOrganization = new ProviderOrganization("entityID", Arrays.asList(extension), Arrays.asList(address), Arrays.asList(contactPoint));
-        ProviderOrganizations providerOrganizations = new ProviderOrganizations(Arrays.asList(providerOrganization));
+        ProviderOrganization providerOrganization = new ProviderOrganization("entityID", new HashSet<>(Arrays.asList(extension)), new HashSet<>(Arrays.asList(address)), new HashSet<>(Arrays.asList(contactPoint)));
+        ProviderOrganizations providerOrganizations = new ProviderOrganizations(new HashSet<>(Arrays.asList(providerOrganization)));
 
-        ProviderFacilityService providerFacilityService = new ProviderFacilityService("entityID", Arrays.asList(name),
-                "provOrgEntityID", Arrays.asList(codedType), Arrays.asList(operatingHours), "freeBusyURI", Arrays.asList(extension));
-        ProviderFacility providerFacility = new ProviderFacility("entityID", Arrays.asList(providerFacilityService), Arrays.asList(operatingHours), Arrays.asList(extension));
-        ProviderFacilities providerFacilities = new ProviderFacilities(Arrays.asList(providerFacility));
+        ProviderFacilityService providerFacilityService = new ProviderFacilityService("entityID", new HashSet<>(Arrays.asList(name)),
+                "provOrgEntityID", new HashSet<>(Arrays.asList(codedType)), new HashSet<>(Arrays.asList(operatingHours)), "freeBusyURI", new HashSet<>(Arrays.asList(extension)));
+        ProviderFacility providerFacility = new ProviderFacility("entityID", new HashSet<>(Arrays.asList(providerFacilityService)), new HashSet<>(Arrays.asList(operatingHours)), new HashSet<>(Arrays.asList(extension)));
+        ProviderFacilities providerFacilities = new ProviderFacilities(new HashSet<>(Arrays.asList(providerFacility)));
 
-        Provider provider = new Provider("entityID", Arrays.asList(codedType), Arrays.asList(extension), record, Arrays.asList(otherID),
-                person, Arrays.asList(codedType), providerOrganizations, providerFacilities, Arrays.asList(credential), Arrays.asList(codedType));
+        Provider provider = new Provider("entityID", new HashSet<>(Arrays.asList(codedType)), new HashSet<>(Arrays.asList(extension)), record, new HashSet<>(Arrays.asList(otherID)),
+                person, new HashSet<>(Arrays.asList(codedType)), providerOrganizations, providerFacilities, new HashSet<>(Arrays.asList(credential)), new HashSet<>(Arrays.asList(codedType)));
 
-        OrganizationDirectory organizationDirectory = new OrganizationDirectory(Arrays.asList(organization));
-        ServiceDirectory serviceDirectory = new ServiceDirectory(Arrays.asList(new Service("entityID", codedType, Arrays.asList(extension), record)));
-        FacilityDirectory facilityDirectory = new FacilityDirectory(Arrays.asList(facility));
-        ProviderDirectory providerDirectory = new ProviderDirectory(Arrays.asList(provider));
+        OrganizationDirectory organizationDirectory = new OrganizationDirectory(new HashSet<>(Arrays.asList(organization)));
+        ServiceDirectory serviceDirectory = new ServiceDirectory(new HashSet<>(Arrays.asList(new Service("entityID", codedType, new HashSet<>(Arrays.asList(extension)), record))));
+        FacilityDirectory facilityDirectory = new FacilityDirectory(new HashSet<>(Arrays.asList(facility)));
+        ProviderDirectory providerDirectory = new ProviderDirectory(new HashSet<>(Arrays.asList(provider)));
 
         return new CSD(organizationDirectory, serviceDirectory, facilityDirectory, providerDirectory);
     }
