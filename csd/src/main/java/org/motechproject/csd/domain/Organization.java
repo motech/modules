@@ -122,7 +122,7 @@ public class Organization extends AbstractUniqueID {
     @Cascade(delete = true)
     private Set<Extension> extensions = new HashSet<>();
 
-    @Field
+    @Field(required = true)
     @Cascade(delete = true)
     private Record record;
 

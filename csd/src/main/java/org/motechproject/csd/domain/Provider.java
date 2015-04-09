@@ -109,7 +109,7 @@ public class Provider extends AbstractUniqueID {
     private Set<OtherID> otherIDs = new HashSet<>();
 
     @UIDisplayable(position = 0)
-    @Field
+    @Field(required = true)
     @Cascade(delete = true)
     private Person demographic;
 
@@ -144,7 +144,7 @@ public class Provider extends AbstractUniqueID {
     @Cascade(delete = true)
     private Set<Extension> extensions = new HashSet<>();
 
-    @Field
+    @Field(required = true)
     @Cascade(delete = true)
     private Record record;
 

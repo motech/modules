@@ -39,7 +39,7 @@ import java.util.Set;
 public class Service extends AbstractUniqueID {
 
     @UIDisplayable(position = 0)
-    @Field
+    @Field(required = true)
     @Cascade(delete = true)
     private CodedType codedType;
 
@@ -49,7 +49,7 @@ public class Service extends AbstractUniqueID {
     private Set<Extension> extensions = new HashSet<>();
 
     @UIDisplayable(position = 1)
-    @Field
+    @Field(required = true)
     @Cascade(delete = true)
     private Record record;
 
