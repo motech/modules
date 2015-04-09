@@ -124,9 +124,8 @@ public class ProviderOrganization extends AbstractUniqueID {
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (extensions != null ? extensions.hashCode() : 0);
-        result = 31 * result + (addresses != null ? addresses.hashCode() : 0);
         result = 31 * result + (contactPoints != null ? contactPoints.hashCode() : 0);
+        result = 31 * result + (addresses != null ? addresses.hashCode() : 0);
         return result;
     }
 

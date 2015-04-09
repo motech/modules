@@ -113,10 +113,10 @@ public class Service extends AbstractUniqueID {
         if (!codedType.equals(service.codedType)) {
             return false;
         }
-        if (extensions != null ? !extensions.equals(service.extensions) : service.extensions != null) {
+        if (!record.equals(service.record)) {
             return false;
         }
-        if (!record.equals(service.record)) {
+        if (extensions != null ? !extensions.equals(service.extensions) : service.extensions != null) {
             return false;
         }
 
@@ -126,9 +126,8 @@ public class Service extends AbstractUniqueID {
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + codedType.hashCode();
-        result = 31 * result + (extensions != null ? extensions.hashCode() : 0);
-        result = 31 * result + record.hashCode();
+        result = 31 * result + (codedType != null ? codedType.hashCode() : 0);
+        result = 31 * result + (record != null ? record.hashCode() : 0);
         return result;
     }
 

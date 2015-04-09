@@ -316,25 +316,13 @@ public class Facility extends AbstractUniqueID {
 
         Facility facility = (Facility) o;
 
-        if (facilityOrganizations != null ? !facilityOrganizations.equals(facility.facilityOrganizations) : facility.facilityOrganizations != null) {
+        if (!primaryName.equals(facility.primaryName)) {
             return false;
         }
-        if (geocode != null ? !geocode.equals(facility.geocode) : facility.geocode != null) {
+        if (!codedTypes.equals(facility.codedTypes)) {
             return false;
         }
-        if (operatingHours != null ? !operatingHours.equals(facility.operatingHours) : facility.operatingHours != null) {
-            return false;
-        }
-        if (addresses != null ? !addresses.equals(facility.addresses) : facility.addresses != null) {
-            return false;
-        }
-        if (contactPoints != null ? !contactPoints.equals(facility.contactPoints) : facility.contactPoints != null) {
-            return false;
-        }
-        if (contacts != null ? !contacts.equals(facility.contacts) : facility.contacts != null) {
-            return false;
-        }
-        if (languages != null ? !languages.equals(facility.languages) : facility.languages != null) {
+        if (!record.equals(facility.record)) {
             return false;
         }
         if (otherIDs != null ? !otherIDs.equals(facility.otherIDs) : facility.otherIDs != null) {
@@ -343,16 +331,28 @@ public class Facility extends AbstractUniqueID {
         if (otherNames != null ? !otherNames.equals(facility.otherNames) : facility.otherNames != null) {
             return false;
         }
-        if (!primaryName.equals(facility.primaryName)) {
+        if (addresses != null ? !addresses.equals(facility.addresses) : facility.addresses != null) {
             return false;
         }
-        if (!codedTypes.equals(facility.codedTypes)) {
+        if (geocode != null ? !geocode.equals(facility.geocode) : facility.geocode != null) {
+            return false;
+        }
+        if (operatingHours != null ? !operatingHours.equals(facility.operatingHours) : facility.operatingHours != null) {
+            return false;
+        }
+        if (languages != null ? !languages.equals(facility.languages) : facility.languages != null) {
+            return false;
+        }
+        if (contactPoints != null ? !contactPoints.equals(facility.contactPoints) : facility.contactPoints != null) {
+            return false;
+        }
+        if (contacts != null ? !contacts.equals(facility.contacts) : facility.contacts != null) {
+            return false;
+        }
+        if (facilityOrganizations != null ? !facilityOrganizations.equals(facility.facilityOrganizations) : facility.facilityOrganizations != null) {
             return false;
         }
         if (extensions != null ? !extensions.equals(facility.extensions) : facility.extensions != null) {
-            return false;
-        }
-        if (!record.equals(facility.record)) {
             return false;
         }
 
@@ -362,19 +362,9 @@ public class Facility extends AbstractUniqueID {
     @Override //NO CHECKSTYLE CyclomaticComplexity
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (geocode != null ? geocode.hashCode() : 0);
-        result = 31 * result + (facilityOrganizations != null ? facilityOrganizations.hashCode() : 0);
-        result = 31 * result + (operatingHours != null ? operatingHours.hashCode() : 0);
-        result = 31 * result + (otherIDs != null ? otherIDs.hashCode() : 0);
-        result = 31 * result + primaryName.hashCode();
-        result = 31 * result + (otherNames != null ? otherNames.hashCode() : 0);
-        result = 31 * result + (addresses != null ? addresses.hashCode() : 0);
-        result = 31 * result + (contacts != null ? contacts.hashCode() : 0);
-        result = 31 * result + (languages != null ? languages.hashCode() : 0);
-        result = 31 * result + (contactPoints != null ? contactPoints.hashCode() : 0);
-        result = 31 * result + codedTypes.hashCode();
-        result = 31 * result + (extensions != null ? extensions.hashCode() : 0);
-        result = 31 * result + record.hashCode();
+        result = 31 * result + (codedTypes != null ? codedTypes.hashCode() : 0);
+        result = 31 * result + (primaryName != null ? primaryName.hashCode() : 0);
+        result = 31 * result + (record != null ? record.hashCode() : 0);
         return result;
     }
 

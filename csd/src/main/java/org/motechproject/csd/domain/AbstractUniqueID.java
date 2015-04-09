@@ -67,7 +67,7 @@ public abstract class AbstractUniqueID {
 
     @Override
     public int hashCode() {
-        return entityID.hashCode();
+        return (entityID != null ? entityID.hashCode() : 0);
     }
 
     @Override

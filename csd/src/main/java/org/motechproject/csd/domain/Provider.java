@@ -278,16 +278,25 @@ public class Provider extends AbstractUniqueID {
 
         Provider provider = (Provider) o;
 
-        if (credentials != null ? !credentials.equals(provider.credentials) : provider.credentials != null) {
+        if (!demographic.equals(provider.demographic)) {
             return false;
         }
-        if (!demographic.equals(provider.demographic)) {
+        if (!codedTypes.equals(provider.codedTypes)) {
+            return false;
+        }
+        if (!record.equals(provider.record)) {
+            return false;
+        }
+        if (otherIDs != null ? !otherIDs.equals(provider.otherIDs) : provider.otherIDs != null) {
             return false;
         }
         if (languages != null ? !languages.equals(provider.languages) : provider.languages != null) {
             return false;
         }
-        if (otherIDs != null ? !otherIDs.equals(provider.otherIDs) : provider.otherIDs != null) {
+        if (specialties != null ? !specialties.equals(provider.specialties) : provider.specialties != null) {
+            return false;
+        }
+        if (credentials != null ? !credentials.equals(provider.credentials) : provider.credentials != null) {
             return false;
         }
         if (providerFacilities != null ? !providerFacilities.equals(provider.providerFacilities) : provider.providerFacilities != null) {
@@ -296,16 +305,7 @@ public class Provider extends AbstractUniqueID {
         if (providerOrganizations != null ? !providerOrganizations.equals(provider.providerOrganizations) : provider.providerOrganizations != null) {
             return false;
         }
-        if (specialties != null ? !specialties.equals(provider.specialties) : provider.specialties != null) {
-            return false;
-        }
-        if (!codedTypes.equals(provider.codedTypes)) {
-            return false;
-        }
         if (extensions != null ? !extensions.equals(provider.extensions) : provider.extensions != null) {
-            return false;
-        }
-        if (!record.equals(provider.record)) {
             return false;
         }
 
@@ -315,16 +315,9 @@ public class Provider extends AbstractUniqueID {
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (otherIDs != null ? otherIDs.hashCode() : 0);
-        result = 31 * result + demographic.hashCode();
-        result = 31 * result + (languages != null ? languages.hashCode() : 0);
-        result = 31 * result + (providerOrganizations != null ? providerOrganizations.hashCode() : 0);
-        result = 31 * result + (providerFacilities != null ? providerFacilities.hashCode() : 0);
-        result = 31 * result + (credentials != null ? credentials.hashCode() : 0);
-        result = 31 * result + (specialties != null ? specialties.hashCode() : 0);
-        result = 31 * result + codedTypes.hashCode();
-        result = 31 * result + (extensions != null ? extensions.hashCode() : 0);
-        result = 31 * result + record.hashCode();
+        result = 31 * result + (demographic != null ? demographic.hashCode() : 0);
+        result = 31 * result + (codedTypes != null ? codedTypes.hashCode() : 0);
+        result = 31 * result + (record != null ? record.hashCode() : 0);
         return result;
     }
 

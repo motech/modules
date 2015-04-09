@@ -124,13 +124,13 @@ public class ProviderFacility extends AbstractUniqueID {
 
         ProviderFacility that = (ProviderFacility) o;
 
-        if (extensions != null ? !extensions.equals(that.extensions) : that.extensions != null) {
-            return false;
-        }
         if (operatingHours != null ? !operatingHours.equals(that.operatingHours) : that.operatingHours != null) {
             return false;
         }
         if (services != null ? !services.equals(that.services) : that.services != null) {
+            return false;
+        }
+        if (extensions != null ? !extensions.equals(that.extensions) : that.extensions != null) {
             return false;
         }
 
@@ -142,7 +142,6 @@ public class ProviderFacility extends AbstractUniqueID {
         int result = super.hashCode();
         result = 31 * result + (services != null ? services.hashCode() : 0);
         result = 31 * result + (operatingHours != null ? operatingHours.hashCode() : 0);
-        result = 31 * result + (extensions != null ? extensions.hashCode() : 0);
         return result;
     }
 

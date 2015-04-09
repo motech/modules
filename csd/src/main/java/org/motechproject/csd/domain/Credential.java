@@ -160,19 +160,19 @@ public class Credential {
         if (!codedType.equals(that.codedType)) {
             return false;
         }
+        if (!number.equals(that.number)) {
+            return false;
+        }
         if (credentialIssueDate != null ? !credentialIssueDate.toLocalDate().isEqual(that.credentialIssueDate.toLocalDate()) : that.credentialIssueDate != null) {
             return false;
         }
         if (credentialRenewalDate != null ? !credentialRenewalDate.toLocalDate().isEqual(that.credentialRenewalDate.toLocalDate()) : that.credentialRenewalDate != null) {
             return false;
         }
-        if (extensions != null ? !extensions.equals(that.extensions) : that.extensions != null) {
-            return false;
-        }
         if (issuingAuthority != null ? !issuingAuthority.equals(that.issuingAuthority) : that.issuingAuthority != null) {
             return false;
         }
-        if (!number.equals(that.number)) {
+        if (extensions != null ? !extensions.equals(that.extensions) : that.extensions != null) {
             return false;
         }
 
@@ -186,7 +186,6 @@ public class Credential {
         result = 31 * result + (issuingAuthority != null ? issuingAuthority.hashCode() : 0);
         result = 31 * result + (credentialIssueDate != null ? credentialIssueDate.hashCode() : 0);
         result = 31 * result + (credentialRenewalDate != null ? credentialRenewalDate.hashCode() : 0);
-        result = 31 * result + (extensions != null ? extensions.hashCode() : 0);
         return result;
     }
 

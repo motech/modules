@@ -303,28 +303,16 @@ public class Organization extends AbstractUniqueID {
 
         Organization that = (Organization) o;
 
-        if (addresses != null ? !addresses.equals(that.addresses) : that.addresses != null) {
+        if (!primaryName.equals(that.primaryName)) {
             return false;
         }
         if (!codedTypes.equals(that.codedTypes)) {
             return false;
         }
-        if (contactPoints != null ? !contactPoints.equals(that.contactPoints) : that.contactPoints != null) {
+        if (!record.equals(that.record)) {
             return false;
         }
-        if (contacts != null ? !contacts.equals(that.contacts) : that.contacts != null) {
-            return false;
-        }
-        if (credentials != null ? !credentials.equals(that.credentials) : that.credentials != null) {
-            return false;
-        }
-        if (extensions != null ? !extensions.equals(that.extensions) : that.extensions != null) {
-            return false;
-        }
-        if (languages != null ? !languages.equals(that.languages) : that.languages != null) {
-            return false;
-        }
-        if (otherIDs != null ? !otherIDs.equals(that.otherIDs) : that.otherIDs != null) {
+        if (addresses != null ? !addresses.equals(that.addresses) : that.addresses != null) {
             return false;
         }
         if (otherNames != null ? !otherNames.equals(that.otherNames) : that.otherNames != null) {
@@ -333,13 +321,25 @@ public class Organization extends AbstractUniqueID {
         if (parentOrganization != null ? !parentOrganization.equals(that.parentOrganization) : that.parentOrganization != null) {
             return false;
         }
-        if (!primaryName.equals(that.primaryName)) {
-            return false;
-        }
-        if (!record.equals(that.record)) {
+        if (otherIDs != null ? !otherIDs.equals(that.otherIDs) : that.otherIDs != null) {
             return false;
         }
         if (specializations != null ? !specializations.equals(that.specializations) : that.specializations != null) {
+            return false;
+        }
+        if (contactPoints != null ? !contactPoints.equals(that.contactPoints) : that.contactPoints != null) {
+            return false;
+        }
+        if (credentials != null ? !credentials.equals(that.credentials) : that.credentials != null) {
+            return false;
+        }
+        if (languages != null ? !languages.equals(that.languages) : that.languages != null) {
+            return false;
+        }
+        if (contacts != null ? !contacts.equals(that.contacts) : that.contacts != null) {
+            return false;
+        }
+        if (extensions != null ? !extensions.equals(that.extensions) : that.extensions != null) {
             return false;
         }
 
@@ -349,19 +349,9 @@ public class Organization extends AbstractUniqueID {
     @Override //NO CHECKSTYLE CyclomaticComplexity
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (credentials != null ? credentials.hashCode() : 0);
-        result = 31 * result + (otherIDs != null ? otherIDs.hashCode() : 0);
-        result = 31 * result + primaryName.hashCode();
-        result = 31 * result + (otherNames != null ? otherNames.hashCode() : 0);
-        result = 31 * result + (addresses != null ? addresses.hashCode() : 0);
-        result = 31 * result + (specializations != null ? specializations.hashCode() : 0);
-        result = 31 * result + (contacts != null ? contacts.hashCode() : 0);
-        result = 31 * result + (languages != null ? languages.hashCode() : 0);
-        result = 31 * result + (contactPoints != null ? contactPoints.hashCode() : 0);
-        result = 31 * result + (parentOrganization != null ? parentOrganization.hashCode() : 0);
-        result = 31 * result + codedTypes.hashCode();
-        result = 31 * result + record.hashCode();
-        result = 31 * result + (extensions != null ? extensions.hashCode() : 0);
+        result = 31 * result + (primaryName != null ? primaryName.hashCode() : 0);
+        result = 31 * result + (codedTypes != null ? codedTypes.hashCode() : 0);
+        result = 31 * result + (record != null ? record.hashCode() : 0);
         return result;
     }
 

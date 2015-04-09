@@ -106,10 +106,10 @@ public class FacilityOrganization extends AbstractUniqueID {
 
         FacilityOrganization that = (FacilityOrganization) o;
 
-        if (extensions != null ? !extensions.equals(that.extensions) : that.extensions != null) {
+        if (services != null ? !services.equals(that.services) : that.services != null) {
             return false;
         }
-        if (services != null ? !services.equals(that.services) : that.services != null) {
+        if (extensions != null ? !extensions.equals(that.extensions) : that.extensions != null) {
             return false;
         }
 
