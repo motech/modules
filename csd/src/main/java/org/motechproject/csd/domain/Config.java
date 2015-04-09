@@ -1,6 +1,10 @@
 package org.motechproject.csd.domain;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.joda.time.DateTime;
+
+import java.util.Date;
 
 public class Config {
 
@@ -107,6 +111,10 @@ public class Config {
     }
 
     public String getLastModified() {
+        if (StringUtils.isEmpty(lastModified)) {
+            DateTime dateTime = new DateTime(new Date(0));
+            lastModified = dateTime.toString(Config.DATE_TIME_PICKER_FORMAT);
+        }
         return lastModified;
     }
 
