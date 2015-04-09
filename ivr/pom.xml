@@ -85,6 +85,9 @@
                             org.motechproject.ivr.repository;version=${project.version},
                             org.motechproject.ivr.domain;version=${project.version},
                         </Export-Package>
+                        <Bundle-DocURL>
+                            http://modules.motechproject.org/en/latest/ivr.html
+                        </Bundle-DocURL>
                     </instructions>
                 </configuration>
             </plugin>

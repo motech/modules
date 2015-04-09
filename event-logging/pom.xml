@@ -64,6 +64,9 @@
                             org.springframework.context.config,
                             *
                         </Import-Package>
+                        <Bundle-DocURL>
+                            http://modules.motechproject.org/en/latest/event_logging.html
+                        </Bundle-DocURL>
                     </instructions>
                 </configuration>
             </plugin>

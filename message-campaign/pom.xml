@@ -227,6 +227,9 @@
                             org.quartz.simpl,
                             *
                         </Import-Package>
+                        <Bundle-DocURL>
+                            http://modules.motechproject.org/en/latest/message_campaign.html
+                        </Bundle-DocURL>
                     </instructions>
                 </configuration>
             </plugin>

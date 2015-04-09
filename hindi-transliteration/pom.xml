@@ -35,6 +35,9 @@
                             org.motechproject.transliteration.hindi.service;version=${project.version},
                         </Export-Package>
                         <Import-Package>*</Import-Package>
+                        <Bundle-DocURL>
+                            http://modules.motechproject.org/en/latest/hindi_transliteration.html
+                        </Bundle-DocURL>
                     </instructions>
                 </configuration>
             </plugin>

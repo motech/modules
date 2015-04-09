@@ -62,6 +62,9 @@
                             org.slf4j.impl,
                             *
                         </Import-Package>
+                        <Bundle-DocURL>
+                            http://modules.motechproject.org/en/latest/mtraining.html
+                        </Bundle-DocURL>
                     </instructions>
                 </configuration>
             </plugin>

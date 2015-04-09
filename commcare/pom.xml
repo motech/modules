@@ -209,6 +209,9 @@
                             org.xml.sax;version="0",
                             *
                         </Import-Package>
+                        <Bundle-DocURL>
+                            http://modules.motechproject.org/en/latest/commcare.html
+                        </Bundle-DocURL>
                     </instructions>
                 </configuration>
             </plugin>

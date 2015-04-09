@@ -130,6 +130,9 @@
                             net.sf.cglib.core,
                             *
                         </Import-Package>
+                        <Bundle-DocURL>
+                            http://modules.motechproject.org/en/latest/schedule_tracking.html
+                        </Bundle-DocURL>
                     </instructions>
                 </configuration>
             </plugin>

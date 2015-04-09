@@ -67,6 +67,9 @@
                             org.apache.http.*,
                             *
                         </Import-Package>
+                        <Bundle-DocURL>
+                            http://modules.motechproject.org/en/latest/http_agent.html
+                        </Bundle-DocURL>
                     </instructions>
                 </configuration>
             </plugin>
