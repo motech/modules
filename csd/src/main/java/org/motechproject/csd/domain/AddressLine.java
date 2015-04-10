@@ -82,10 +82,10 @@ public class AddressLine {
 
         AddressLine that = (AddressLine) o;
 
-        if (!value.equals(that.value)) {
+        if (component != null ? !component.equals(that.component) : that.component != null) {
             return false;
         }
-        if (component != null ? !component.equals(that.component) : that.component != null) {
+        if (value != null ? !value.equals(that.value) : that.value != null) {
             return false;
         }
 
@@ -94,7 +94,7 @@ public class AddressLine {
 
     @Override
     public int hashCode() {
-        int result = value.hashCode();
+        int result = value != null ? value.hashCode() : 0;
         result = 31 * result + (component != null ? component.hashCode() : 0);
         return result;
     }

@@ -126,13 +126,13 @@ public class Record {
         if (!created.isEqual(record.created)) {
             return false;
         }
-        if (sourceDirectory != null ? !sourceDirectory.equals(record.sourceDirectory) : record.sourceDirectory != null) {
+        if (!updated.isEqual(record.updated)) {
             return false;
         }
         if (!status.equals(record.status)) {
             return false;
         }
-        if (!updated.isEqual(record.updated)) {
+        if (sourceDirectory != null ? !sourceDirectory.equals(record.sourceDirectory) : record.sourceDirectory != null) {
             return false;
         }
 

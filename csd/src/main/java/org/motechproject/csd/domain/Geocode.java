@@ -114,13 +114,13 @@ public class Geocode {
 
         Geocode geocode = (Geocode) o;
 
-        if (Double.compare(geocode.altitude, altitude) != 0) {
-            return false;
-        }
         if (Double.compare(geocode.latitude, latitude) != 0) {
             return false;
         }
         if (Double.compare(geocode.longitude, longitude) != 0) {
+            return false;
+        }
+        if (Double.compare(geocode.altitude, altitude) != 0) {
             return false;
         }
         if (coordinateSystem != null ? !coordinateSystem.equals(geocode.coordinateSystem) : geocode.coordinateSystem != null) {

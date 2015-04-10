@@ -83,10 +83,10 @@ public class OtherName {
 
         OtherName otherName1 = (OtherName) o;
 
-        if (lang != null ? !lang.equals(otherName1.lang) : otherName1.lang != null) {
+        if (!value.equals(otherName1.value)) {
             return false;
         }
-        if (!value.equals(otherName1.value)) {
+        if (lang != null ? !lang.equals(otherName1.lang) : otherName1.lang != null) {
             return false;
         }
 

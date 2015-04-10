@@ -116,10 +116,10 @@ public class ContactPoint {
 
         ContactPoint that = (ContactPoint) o;
 
-        if (certificate != null ? !certificate.equals(that.certificate) : that.certificate != null) {
+        if (!codedType.equals(that.codedType)) {
             return false;
         }
-        if (!codedType.equals(that.codedType)) {
+        if (certificate != null ? !certificate.equals(that.certificate) : that.certificate != null) {
             return false;
         }
         if (equipment != null ? !equipment.equals(that.equipment) : that.equipment != null) {

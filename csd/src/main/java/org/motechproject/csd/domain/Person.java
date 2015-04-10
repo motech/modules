@@ -148,6 +148,9 @@ public class Person {
 
         Person person = (Person) o;
 
+        if (!names.equals(person.names)) {
+            return false;
+        }
         if (addresses != null ? !addresses.equals(person.addresses) : person.addresses != null) {
             return false;
         }
@@ -160,9 +163,6 @@ public class Person {
         if (gender != null ? !gender.equals(person.gender) : person.gender != null) {
             return false;
         }
-        if (!names.equals(person.names)) {
-            return false;
-        }
 
         return true;
     }
@@ -170,8 +170,6 @@ public class Person {
     @Override
     public int hashCode() {
         int result = names.hashCode();
-        result = 31 * result + (contactPoints != null ? contactPoints.hashCode() : 0);
-        result = 31 * result + (addresses != null ? addresses.hashCode() : 0);
         result = 31 * result + (gender != null ? gender.hashCode() : 0);
         result = 31 * result + (dateOfBirth != null ? dateOfBirth.hashCode() : 0);
         return result;

@@ -139,7 +139,7 @@ public class FacilityOrganizationService extends AbstractUniqueID {
 
         FacilityOrganizationService that = (FacilityOrganizationService) o;
 
-        if (extensions != null ? !extensions.equals(that.extensions) : that.extensions != null) {
+        if (names != null ? !names.equals(that.names) : that.names != null) {
             return false;
         }
         if (freeBusyURI != null ? !freeBusyURI.equals(that.freeBusyURI) : that.freeBusyURI != null) {
@@ -148,10 +148,10 @@ public class FacilityOrganizationService extends AbstractUniqueID {
         if (languages != null ? !languages.equals(that.languages) : that.languages != null) {
             return false;
         }
-        if (names != null ? !names.equals(that.names) : that.names != null) {
+        if (operatingHours != null ? !operatingHours.equals(that.operatingHours) : that.operatingHours != null) {
             return false;
         }
-        if (operatingHours != null ? !operatingHours.equals(that.operatingHours) : that.operatingHours != null) {
+        if (extensions != null ? !extensions.equals(that.extensions) : that.extensions != null) {
             return false;
         }
 
@@ -165,7 +165,6 @@ public class FacilityOrganizationService extends AbstractUniqueID {
         result = 31 * result + (languages != null ? languages.hashCode() : 0);
         result = 31 * result + (operatingHours != null ? operatingHours.hashCode() : 0);
         result = 31 * result + (freeBusyURI != null ? freeBusyURI.hashCode() : 0);
-        result = 31 * result + (extensions != null ? extensions.hashCode() : 0);
         return result;
     }
 
