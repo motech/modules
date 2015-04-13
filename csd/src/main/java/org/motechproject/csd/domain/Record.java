@@ -75,7 +75,7 @@ public class Record {
         return created;
     }
 
-    @XmlAttribute
+    @XmlAttribute(required = true)
     @XmlSchemaType(name = "dateTime")
     @XmlJavaTypeAdapter(type = DateTime.class, value = DateTimeAdapter.class)
     public void setCreated(DateTime created) {
@@ -86,7 +86,7 @@ public class Record {
         return sourceDirectory;
     }
 
-    @XmlAttribute
+    @XmlAttribute(required = true)
     @XmlSchemaType(name = "anyURI")
     public void setSourceDirectory(String sourceDirectory) {
         this.sourceDirectory = sourceDirectory;
@@ -96,7 +96,7 @@ public class Record {
         return status;
     }
 
-    @XmlAttribute
+    @XmlAttribute(required = true)
     public void setStatus(String status) {
         this.status = status;
     }
