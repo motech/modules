@@ -3,10 +3,12 @@ package org.motechproject.ivr.domain;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.motechproject.mds.annotations.CrudEvents;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.mds.annotations.UIDisplayable;
+import org.motechproject.mds.event.CrudEventType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Entity
+@CrudEvents(CrudEventType.NONE)
 public class CallDetailRecord {
 
     private static final int COL1 = 0;

@@ -1,12 +1,15 @@
 package org.motechproject.batch.mds;
 
+import org.motechproject.mds.annotations.CrudEvents;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.event.CrudEventType;
 
 /**
  * Class containing batch job configuration
  */
 @Entity
+@CrudEvents(CrudEventType.NONE)
 public class BatchJobConfigurationHistory implements java.io.Serializable {
 
     private static final long serialVersionUID = 7878415051804848642L;

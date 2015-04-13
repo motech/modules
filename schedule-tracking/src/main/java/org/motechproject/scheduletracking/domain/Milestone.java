@@ -3,8 +3,10 @@ package org.motechproject.scheduletracking.domain;
 import org.joda.time.DateTime;
 import org.joda.time.MutablePeriod;
 import org.joda.time.Period;
+import org.motechproject.mds.annotations.CrudEvents;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Ignore;
+import org.motechproject.mds.event.CrudEventType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +16,7 @@ import java.util.Map;
 import static org.motechproject.commons.date.util.DateUtil.now;
 
 @Entity
+@CrudEvents(CrudEventType.NONE)
 public class Milestone {
     private String name;
     private Map<String, String> data = new HashMap<>();

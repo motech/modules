@@ -6,9 +6,11 @@ import org.joda.time.LocalTime;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.mds.annotations.Cascade;
+import org.motechproject.mds.annotations.CrudEvents;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
+import org.motechproject.mds.event.CrudEventType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
+@CrudEvents(CrudEventType.NONE)
 public class Dosage {
 
     @Field

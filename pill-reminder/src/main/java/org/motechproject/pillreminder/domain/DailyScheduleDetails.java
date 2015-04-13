@@ -1,9 +1,12 @@
 package org.motechproject.pillreminder.domain;
 
+import org.motechproject.mds.annotations.CrudEvents;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.event.CrudEventType;
 
 @Entity
+@CrudEvents(CrudEventType.NONE)
 public class DailyScheduleDetails {
 
     @Field(displayName = "Pill Window in Hours")
