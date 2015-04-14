@@ -1,6 +1,6 @@
 package org.motechproject.csd.scheduler;
 
-import org.motechproject.csd.CSDEventKeys;
+import org.motechproject.csd.constants.CSDEventKeys;
 import org.motechproject.csd.service.CSDService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;

@@ -1,4 +1,4 @@
-package org.motechproject.csd;
+package org.motechproject.csd.constants;
 
 public final class CSDEventKeys {
 

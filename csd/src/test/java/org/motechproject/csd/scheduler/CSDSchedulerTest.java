@@ -5,7 +5,7 @@ import org.joda.time.Period;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.csd.CSDEventKeys;
+import org.motechproject.csd.constants.CSDEventKeys;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.scheduler.contract.RepeatingPeriodSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;

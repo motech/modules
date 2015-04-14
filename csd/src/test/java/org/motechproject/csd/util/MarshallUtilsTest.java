@@ -4,6 +4,7 @@ import junit.framework.Assert;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.motechproject.csd.constants.CSDConstants;
 import org.motechproject.csd.domain.CSD;
 
 import java.io.InputStream;
@@ -22,13 +23,13 @@ public class MarshallUtilsTest {
 
     @Test
     public void marshallerTest() throws Exception {
-        String generatedXml = MarshallUtils.marshall(csd, getClass().getResource("/CSD.xsd"), CSD.class);
+        String generatedXml = MarshallUtils.marshall(csd, CSDConstants.CSD_SCHEMA, CSD.class);
         Assert.assertEquals(xml, generatedXml);
     }
 
     @Test
     public void unmarshallerTest() throws Exception {
-        CSD generatedCSD = (CSD) MarshallUtils.unmarshall(xml, getClass().getResource("/CSD.xsd"), CSD.class);
+        CSD generatedCSD = (CSD) MarshallUtils.unmarshall(xml, CSDConstants.CSD_SCHEMA, CSD.class);
         Assert.assertEquals(csd, generatedCSD);
     }
 }

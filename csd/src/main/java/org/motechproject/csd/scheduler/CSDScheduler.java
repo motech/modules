@@ -2,7 +2,7 @@ package org.motechproject.csd.scheduler;
 
 import org.joda.time.DateTime;
 import org.joda.time.Period;
-import org.motechproject.csd.CSDEventKeys;
+import org.motechproject.csd.constants.CSDEventKeys;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.scheduler.contract.RepeatingPeriodSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;

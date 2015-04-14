@@ -3,7 +3,7 @@ package org.motechproject.csd.web;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormat;
-import org.motechproject.csd.CSDEventKeys;
+import org.motechproject.csd.constants.CSDEventKeys;
 import org.motechproject.csd.domain.Config;
 import org.motechproject.csd.scheduler.CSDScheduler;
 import org.motechproject.csd.service.ConfigService;

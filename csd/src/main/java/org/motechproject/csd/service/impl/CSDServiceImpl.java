@@ -5,6 +5,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.motechproject.csd.client.CSDHttpClient;
 import org.motechproject.csd.client.SOAPClient;
+import org.motechproject.csd.constants.CSDConstants;
 import org.motechproject.csd.domain.CSD;
 import org.motechproject.csd.domain.CommunicationProtocol;
 import org.motechproject.csd.domain.Config;
@@ -119,7 +120,7 @@ public class CSDServiceImpl implements CSDService {
                 try {
                     CSD csd = getCSD();
                     if (csd != null) {
-                        return MarshallUtils.marshall(csd, getClass().getResource("/CSD.xsd"), CSD.class);
+                        return MarshallUtils.marshall(csd, CSDConstants.CSD_SCHEMA, CSD.class);
                     } else {
                         throw new IllegalArgumentException("There is no CSD structure in the database");
                     }
@@ -166,7 +167,7 @@ public class CSDServiceImpl implements CSDService {
     private void saveFromXml(String xml) {
         CSD csd;
         try {
-            csd = (CSD) MarshallUtils.unmarshall(xml, getClass().getResource("/CSD.xsd"), CSD.class);
+            csd = (CSD) MarshallUtils.unmarshall(xml, CSDConstants.CSD_SCHEMA, CSD.class);
         } catch (SAXException e) {
             throw new IllegalArgumentException("Invalid schema", e);
         } catch (JAXBException e) {
