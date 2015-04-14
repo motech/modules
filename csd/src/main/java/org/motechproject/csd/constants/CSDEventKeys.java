@@ -9,7 +9,8 @@ public final class CSDEventKeys {
     public static final String END_DATE = "end_date";
     public static final String PERIOD = "period";
 
-    public static final String CONSUME_XML_EVENT = "consume_xml";
+    public static final String CONSUME_XML_EVENT_BASE = "consume_xml.";
+    public static final String CONSUME_XML_EVENT_WILDCARD = "consume_xml.*";
 
     private CSDEventKeys() {
     }

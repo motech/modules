@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -30,10 +31,10 @@ public class CSDController {
         this.csdService = csdService;
     }
 
-    @RequestMapping(value = "/csd-consume", method = RequestMethod.GET)
+    @RequestMapping(value = "/csd-consume", method = RequestMethod.POST)
     @ResponseBody
-    public void consume() {
-        csdService.fetchAndUpdate();
+    public void consume(@RequestBody String xmlUrl) {
+        csdService.fetchAndUpdate(xmlUrl);
     }
 
     @RequestMapping(value = "/csd-getXml", method = RequestMethod.GET)

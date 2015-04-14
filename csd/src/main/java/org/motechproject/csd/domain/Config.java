@@ -121,4 +121,22 @@ public class Config {
     public void setLastModified(String lastModified) {
         this.lastModified = lastModified;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Config c = (Config) o;
+        return xmlUrl.equals(c.getXmlUrl());
+    }
+
+    @Override
+    public int hashCode() {
+        return xmlUrl.hashCode();
+    }
 }

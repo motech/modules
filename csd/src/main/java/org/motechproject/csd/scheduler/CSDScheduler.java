@@ -22,10 +22,10 @@ public class CSDScheduler {
         this.motechSchedulerService = motechSchedulerService;
     }
 
-    public void scheduleXmlConsumerRepeatingJob(Map<String, Object> parameters) {
+    public void scheduleXmlConsumerRepeatingJob(Map<String, Object> parameters, String key) {
         Map<String, Object> eventParameters = (Map<String, Object>) parameters.get(CSDEventKeys.EVENT_PARAMETERS);
 
-        MotechEvent event = new MotechEvent(CSDEventKeys.CONSUME_XML_EVENT, eventParameters);
+        MotechEvent event = new MotechEvent(CSDEventKeys.CONSUME_XML_EVENT_BASE + key, eventParameters);
 
         DateTime startDateTime = (DateTime) parameters.get(CSDEventKeys.START_DATE);
         if (startDateTime == null) {
@@ -48,7 +48,7 @@ public class CSDScheduler {
         motechSchedulerService.safeScheduleRepeatingPeriodJob(job);
     }
 
-    public void unscheduleXmlConsumerRepeatingJob() {
-        motechSchedulerService.safeUnscheduleAllJobs(CSDEventKeys.CONSUME_XML_EVENT);
+    public void unscheduleXmlConsumerRepeatingJobs() {
+        motechSchedulerService.safeUnscheduleAllJobs(CSDEventKeys.CONSUME_XML_EVENT_BASE);
     }
 }

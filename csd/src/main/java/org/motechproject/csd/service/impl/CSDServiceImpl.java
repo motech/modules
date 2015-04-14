@@ -112,9 +112,8 @@ public class CSDServiceImpl implements CSDService {
     }
 
     @Override
-    public void fetchAndUpdate() {
-        Config config = configService.getConfig();
-        String xmlUrl = config.getXmlUrl();
+    public void fetchAndUpdate(String xmlUrl) {
+        Config config = configService.getConfig(xmlUrl);
         CommunicationProtocol communicationProtocol = config.getCommunicationProtocol();
 
         if (xmlUrl == null) {

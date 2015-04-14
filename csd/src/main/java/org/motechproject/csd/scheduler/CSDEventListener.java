@@ -7,6 +7,8 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 @Component
 public class CSDEventListener {
 
@@ -17,8 +19,9 @@ public class CSDEventListener {
         this.csdService = csdService;
     }
 
-    @MotechListener(subjects = { CSDEventKeys.CONSUME_XML_EVENT })
+    @MotechListener(subjects = { CSDEventKeys.CONSUME_XML_EVENT_WILDCARD })
     public void consumeXml(MotechEvent event) {
-        csdService.fetchAndUpdate();
+        Map<String, Object> params = event.getParameters();
+        csdService.fetchAndUpdate(params.get(CSDEventKeys.XML_URL).toString());
     }
 }

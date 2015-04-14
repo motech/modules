@@ -43,9 +43,9 @@ public class CSDSchedulerTest {
         parameters.put(CSDEventKeys.PERIOD, period);
         parameters.put(CSDEventKeys.START_DATE, startDate);
 
-        csdScheduler.scheduleXmlConsumerRepeatingJob(parameters);
+        csdScheduler.scheduleXmlConsumerRepeatingJob(parameters, "123");
 
-        MotechEvent event = new MotechEvent(CSDEventKeys.CONSUME_XML_EVENT, eventParameters);
+        MotechEvent event = new MotechEvent(CSDEventKeys.CONSUME_XML_EVENT_BASE + "123", eventParameters);
         RepeatingPeriodSchedulableJob job = new RepeatingPeriodSchedulableJob(event, startDate.toDate(), null, period, true);
 
         verify(motechSchedulerService).safeScheduleRepeatingPeriodJob(job);
@@ -53,8 +53,8 @@ public class CSDSchedulerTest {
 
     @Test
     public void shouldUnscheduleJob() {
-        csdScheduler.unscheduleXmlConsumerRepeatingJob();
+        csdScheduler.unscheduleXmlConsumerRepeatingJobs();
 
-        verify(motechSchedulerService).safeUnscheduleAllJobs(CSDEventKeys.CONSUME_XML_EVENT);
+        verify(motechSchedulerService).safeUnscheduleAllJobs(CSDEventKeys.CONSUME_XML_EVENT_BASE);
     }
 }

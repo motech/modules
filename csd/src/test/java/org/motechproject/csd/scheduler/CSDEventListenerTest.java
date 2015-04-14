@@ -44,10 +44,10 @@ public class CSDEventListenerTest {
         Map<String, Object> eventParameters = new HashMap<>();
         eventParameters.put(CSDEventKeys.XML_URL, url);
 
-        MotechEvent event = new MotechEvent(CSDEventKeys.CONSUME_XML_EVENT, eventParameters);
+        MotechEvent event = new MotechEvent(CSDEventKeys.CONSUME_XML_EVENT_BASE + "123", eventParameters);
 
         csdEventListener.consumeXml(event);
 
-        verify(csdService).fetchAndUpdate();
+        verify(csdService).fetchAndUpdate(url);
     }
 }

@@ -17,11 +17,14 @@
                     <div class="panel panel-default">
                         <div class="form-group margin-before2">
                             <label class="col-md-2 control-label" for="xmlUrl">{{msg('csd.web.settings.xmlUrl')}}</label>
-                            <div class="col-md-8">
-                                <input class="form-control" id="xmlUrl" type="text" ng-model="config.xmlUrl" ng-disabled="true">
+                            <div class="col-md-8" data-toggle="tooltip" data-placement="top" data-trigger="hover">
+                                <select class="form-control" id="xmlUrl" ng-model="xmlUrl" ng-disabled="isFetchingCSD"
+                                        ng-options="config.xmlUrl as config.xmlUrl for config in configs">
+                                </select>
                             </div>
                             <div class="col-md-2" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.csd.fetch.tooltip')}}">
-                                <button type="button" class="col-md-10 btn btn-success" ng-disabled="isFetchingCSD || isLoadingXml || isDownloadingXml" ng-click="fetch()">
+                                <button type="button" class="col-md-10 btn btn-success" ng-click="fetch()"
+                                        ng-disabled="isFetchingCSD || isLoadingXml || isDownloadingXml || !hasConfig">
                                     {{msg('csd.web.csd.fetch')}} <i class="fa fa-refresh fa-spin" ng-show="isFetchingCSD"></i>
                                 </button>
                             </div>

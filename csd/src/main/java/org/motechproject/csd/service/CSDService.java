@@ -15,7 +15,7 @@ public interface CSDService {
 
     String getXmlContent();
 
-    void fetchAndUpdate();
+    void fetchAndUpdate(String xmlUrl);
 
     void saveFromXml(String xml);
 }

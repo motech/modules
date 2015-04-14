@@ -18,7 +18,7 @@
     <bean id="csdSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
         <property name="rawConfigFiles">
             <list>
-                <value>classpath:csd-config.json</value>
+                <value>classpath:csd-configs.json</value>
             </list>
         </property>
     </bean>

@@ -11,6 +11,7 @@
     controllers.controller('CsdSettingsCtrl', function ($scope, $http, $timeout) {
         $scope.errors = [];
         $scope.messages = [];
+        $scope.dupeUrls = [];
 
         $scope.timeMultipliers = {
             'minutes': $scope.msg('csd.web.settings.units.minutes'),
@@ -24,19 +25,99 @@
             east__maxSize: 350
         });
 
-        $http.get('../csd/csd-config')
+        function autoExpandSingleAccordion() {
+           if ($scope.accordions.length === 1) {
+               $scope.accordions[0] = true;
+           }
+        }
+
+        function setAccordions(configs) {
+             var i;
+             $scope.accordions = [];
+             $scope.dupeUrls = [];
+             for (i = 0; i<configs.length; i = i + 1) {
+                 $scope.accordions.push(false);
+                 $scope.dupeUrls.push(false);
+             }
+             autoExpandSingleAccordion();
+         }
+
+        $scope.checkForDuplicateUrls = function(index) {
+            var i;
+            for (i = 0; i < $scope.configs.length; i = i + 1) {
+                if (i!==index && $scope.configs[i].xmlUrl === $scope.configs[index].xmlUrl) {
+                    $scope.dupeUrls[index] = true;
+                    return;
+                }
+            }
+            $scope.dupeUrls[index] = false;
+        };
+
+        $scope.anyDuplicateUrls = function() {
+            var i;
+            for (i = 0; i < $scope.dupeUrls.length; i = i + 1) {
+                if ($scope.dupeUrls[i]) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        $http.get('../csd/csd-configs')
             .success(function(response){
-                var i;
-                $scope.config = response;
-                $scope.originalConfig = angular.copy($scope.config);
+                $scope.configs = response;
+                $scope.originalConfigs = angular.copy($scope.configs);
+                setAccordions($scope.configs);
             })
             .error(function(response) {
                 $scope.errors.push($scope.msg('csd.web.settings.noConfig', response));
             });
 
+        $scope.collapseAccordions = function () {
+            var key;
+            for (key in $scope.accordions) {
+                $scope.accordions[key] = false;
+            }
+            autoExpandSingleAccordion();
+        };
+
+        $scope.deleteConfig = function(index) {
+            $scope.configs.splice(index, 1);
+            $scope.accordions.splice(index, 1);
+            $scope.dupeUrls.splice(index, 1);
+            autoExpandSingleAccordion();
+        };
+
+        $scope.isDirty = function () {
+            if ($scope.originalConfigs === null || $scope.configs === null) {
+                return false;
+            }
+
+            return !angular.equals($scope.originalConfigs, $scope.configs);
+        };
+
         $scope.reset = function () {
-            $scope.config = angular.copy($scope.originalConfig);
-            $scope.scrollTop();
+            $scope.configs = angular.copy($scope.originalConfigs);
+            setAccordions($scope.configs);
+        };
+
+        $scope.addConfig = function () {
+            var newLength, newConfig = {
+                'schedulerEnabled':'false',
+                'timePeriod':'1',
+                'timePeriodMultiplier':'minutes',
+                'startDate':'',
+                'xmlUrl':'',
+                'communicationProtocol':'REST',
+                'lastModified':null
+            };
+            if ($scope.configs.length == 0) {
+                newConfig.xmlUrl = 'https://raw.githubusercontent.com/openhie/openinfoman/master/resources/service_directories/CSD-Facilities-Connectathon-20150120.xml';
+            }
+            newLength = $scope.configs.push(newConfig);
+            $scope.accordions.push(true);
+            autoExpandSingleAccordion();
+            $scope.dupeUrls.push(false);
         };
 
         function hideMsgLater(index) {
@@ -46,12 +127,15 @@
         }
 
         $scope.submit = function () {
-            $http.post('../csd/csd-config', $scope.config)
+            $http.post('../csd/csd-configs', $scope.configs)
                 .success(function (response) {
-                    $scope.config = response;
-                    $scope.originalConfig = angular.copy($scope.config);
+                    $scope.configs = response;
+                    $scope.originalConfigs = angular.copy($scope.configs);
                     var index = $scope.messages.push($scope.msg('csd.web.settings.saved'));
                     hideMsgLater(index-1);
+                    $('.ui-layout-content').animate({
+                        scrollTop: 0
+                    });
                 })
                 .error (function (response) {
                     //todo: better than that!
@@ -68,10 +152,12 @@
     controllers.controller('CsdCtrl', function ($scope, $http, $timeout) {
         $scope.errors = [];
         $scope.messages = [];
+        $scope.hasConfig = false;
         $scope.isFetchingCSD = false;
         $scope.isLoadingXml = false;
         $scope.isDownloadingXml = false;
         $scope.xml = "";
+        $scope.xmlUrl = "";
 
         innerLayout({
             spacing_closed: 30,
@@ -79,10 +165,14 @@
             east__maxSize: 350
         });
 
-        $http.get('../csd/csd-config')
+        $http.get('../csd/csd-configs')
             .success(function(response){
                 var i;
-                $scope.config = response;
+                $scope.configs = response;
+                if ($scope.configs.length > 0) {
+                    $scope.xmlUrl = $scope.configs[0].xmlUrl;
+                    $scope.hasConfig = true;
+                }
             })
             .error(function(response) {
                 $scope.errors.push($scope.msg('csd.web.settings.noConfig', response));
@@ -90,7 +180,7 @@
 
         $scope.fetch = function () {
             $scope.isFetchingCSD = true;
-            $http.get('../csd/csd-consume')
+            $http.post('../csd/csd-consume', $scope.xmlUrl)
                 .success(function(response){
                     $scope.messages.push($scope.msg('csd.web.csd.updatedSuccessful'));
                     $scope.isFetchingCSD = false;

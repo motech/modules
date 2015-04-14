@@ -2,89 +2,108 @@
     <h4 class="frame-title">{{msg('csd.web.settings.title')}}</h4>
     <div class="inside">
 
-        <div ng-repeat="error in errors" class="alert alert-danger alert-block">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            {{error}}
+        <div class="alert alert-danger alert-block" ng-show="configs.length <= 0">
+            {{msg('csd.web.settings.noConfigError')}}
+        </div>
+        <div ng-show="errors.length > 0">
+            <div class="alert alert-error alert-block" ng-repeat="error in errors" ng-cloak>
+                {{error}}
+            </div>
         </div>
         <div ng-repeat="message in messages" class="alert alert-success alert-block">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             {{message}}
         </div>
 
+        <div class="form-group">
+            <button type="button" class="btn btn-success" ng-click="addConfig()"><i class="fa fa-plus"></i>
+                {{msg('csd.web.settings.addConfig')}}
+            </button>
+        </div>
+
         <form name="form" class="form-horizontal inside" novalidate>
-
-            <div class="panel-group">
-                <div class="form-group">
-                    <label class="col-md-2 control-label" for="xmlUrl">{{msg('csd.web.settings.xmlUrl')}}</label>
-                    <div class="col-md-10" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.xmlUrl.tooltip')}}">
-                        <input class="form-control" id="xmlUrl" type="text" placeholder="{{msg('csd.web.settings.xmlUrl.placeholder')}}" ng-model="config.xmlUrl" required>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-md-2 control-label">{{msg('csd.web.settings.communicationProtocol')}}</label>
-                <div class="col-md-2">
-                    <div class="radio" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.REST.tooltip')}}">
-                        <label>
-                            <input type="radio" name="communicationProtocols" value="REST" ng-model="config.communicationProtocol">
-                            {{msg('csd.web.settings.REST')}}
-                        </label>
-                    </div>
-                    <div class="radio" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.SOAP.tooltip')}}">
-                        <label>
-                            <input type="radio" name="communicationProtocols" value="SOAP" ng-model="config.communicationProtocol">
-                            {{msg('csd.web.settings.SOAP')}}
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group" ng-show="config.communicationProtocol == 'SOAP'">
-                <label class="col-md-2 control-label">{{msg('csd.web.settings.lastModified')}}</label>
-                <div class="col-md-10">
-                    <input class="form-control" csd-last-modified-date-picker id="lastModified" type="text" ng-model="config.lastModified">
-                </div>
-            </div>
 
             <div class="row">
                 <div class="panel-group">
-                    <div class="panel panel-default">
-
-                        <div class="form-group margin-before2">
-                            <label class="col-md-2 control-label" for="schedulerEnabled">{{msg('csd.web.settings.schedulerEnabled')}}</label>
-                            <div class="col-md-1 checkbox" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.schedulerEnabled.tooltip')}}">
-                                <label>
-                                    <input type="checkbox" id="schedulerEnabled" ng-model="config.schedulerEnabled"/>
-                                </label>
-                            </div>
+                    <div class="panel panel-default" ng-repeat="config in configs">
+                        <div class="panel-heading" ng-click="accordions[$index] = !accordions[$index]">
+                            <i ng-class="{'fa-caret-down': accordions[$index], 'fa-caret-right': !accordions[$index]}" class="fa fa-fw fa-lg pointer"></i>
+                            {{config.xmlUrl}}
                         </div>
+                        <div id="panel{{$index}}" class="panel-collapse collapse" ng-class="{true:'in', false:''}[accordions[$index]]">
 
-                        <div class="form-group" ng-show="config.schedulerEnabled">
-                            <label class="col-md-2 control-label" for="startDate">{{msg('csd.web.settings.startDate')}}</label>
-                            <div class="col-md-3" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.startDate.tooltip')}}">
-                                <input id="startDate" csd-scheduler-date-picker="" type="text" class="form-control" placeholder="{{msg('csd.web.settings.startDate.placeholder')}}" ng-model="config.startDate">
+                            <div class="form-group margin-before2" ng-class="{'has-error': !config.xmlUrl || dupeUrls[$index]}">
+                                <label class="col-md-2 control-label" for="xmlUrl{{$index}}">{{msg('csd.web.settings.xmlUrl')}}</label>
+                                <div class="col-md-9" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.xmlUrl.tooltip')}}">
+                                    <input class="form-control" id="xmlUrl{{$index}}" type="text" ng-model="config.xmlUrl" required ng-focus="accordions[$index]" ng-change="checkForDuplicateUrls($index);" placeholder="{{msg('csd.web.settings.xmlUrl.placeholder')}}">
+                                    <span ng-hide="config.xmlUrl" class="form-hint form-hint-bottom">{{msg('csd.web.requiredField')}}</span>
+                                    <span ng-show="dupeUrls[$index]" class="form-hint form-hint-bottom">{{msg('csd.web.settings.duplicateConfigUrl')}}</span>
+                                </div>
                             </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{{msg('csd.web.settings.communicationProtocol')}}</label>
+                                <div class="col-md-10" id="communicationProtocols">
+                                    <label class="radio-inline" for="communicationProtocolREST{{$index}}" data-toggle="tooltip" data-container="#communicationProtocols" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.REST.tooltip')}}">
+                                        <input name="communicationProtocol{{$index}}" id="communicationProtocolREST{{$index}}" type="radio" ng-model="config.communicationProtocol" value="REST">
+                                        {{msg('csd.web.settings.REST')}}
+                                    </label>
+                                    <label class="radio-inline" for="communicationProtocolSOAP{{$index}}" data-toggle="tooltip" data-container="#communicationProtocols" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.SOAP.tooltip')}}">
+                                        <input name="communicationProtocol{{$index}}" id="communicationProtocolSOAP{{$index}}" type="radio" ng-model="config.communicationProtocol" value="SOAP">
+                                        {{msg('csd.web.settings.SOAP')}}
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group" ng-show="config.communicationProtocol == 'SOAP'">
+                                <label class="col-md-2 control-label">{{msg('csd.web.settings.lastModified')}}</label>
+                                <div class="col-md-3">
+                                    <input class="form-control" csd-last-modified-date-picker id="lastModified{{$index}}" type="text" ng-model="config.lastModified">
+                                </div>
+                            </div>
+
+                            <div class="form-group margin-before2">
+                                <label class="col-md-2 control-label" for="schedulerEnabled{{$index}}">{{msg('csd.web.settings.schedulerEnabled')}}</label>
+                                <div class="col-md-1 checkbox" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.schedulerEnabled.tooltip')}}">
+                                    <label>
+                                        <input type="checkbox" id="schedulerEnabled{{$index}}" ng-model="config.schedulerEnabled"/>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group" ng-show="config.schedulerEnabled">
+                                <label class="col-md-2 control-label" for="startDate{{$index}}">{{msg('csd.web.settings.startDate')}}</label>
+                                <div class="col-md-3" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.startDate.tooltip')}}">
+                                    <input class="form-control" csd-scheduler-date-picker id="startDate{{$index}}" type="text" ng-model="config.startDate" placeholder="{{msg('csd.web.settings.startDate.placeholder')}}">
+                                </div>
+                            </div>
+
+                            <div class="form-group" ng-show="config.schedulerEnabled">
+                                <label class="col-md-2 control-label" for="period{{$index}}">{{msg('csd.web.settings.period')}}</label>
+                                <div class="col-md-1" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.period.tooltip',  timeMultipliers[config.timePeriodMultiplier])}}">
+                                    <input class="form-control" id="period{{$index}}" ng-pattern="/^[0-9]+$/" type="text" ng-model="config.timePeriod" required />
+                                </div>
+                                <div class="col-md-1">
+                                    <select class="form-control input-auto" ng-model="config.timePeriodMultiplier" ng-options="k as v for (k , v) in timeMultipliers" ></select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-9">
+                                    <button class="btn btn-sm btn-danger" ng-click="deleteConfig($index)"> <i class="fa fa-fw fa-trash-o"></i> {{msg('csd.web.settings.delete')}} </button>
+                                </div>
+                            </div>
+
                         </div>
-
-                        <div class="form-group" ng-show="config.schedulerEnabled">
-                            <label class="col-md-2 control-label" for="period">{{msg('csd.web.settings.period')}}</label>
-                            <div class="col-md-1" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.period.tooltip', timeMultipliers[config.timePeriodMultiplier])}}">
-                                <input class="form-control" id="period" ng-pattern="/^[0-9]+$/" type="text" ng-model="config.timePeriod" required />
-                            </div>
-                            <div class="col-md-1">
-                                <select class="form-control input-auto" ng-model="config.timePeriodMultiplier" ng-options="k as v for (k , v) in timeMultipliers" ></select>
-                            </div>
-                        </div>
-
                     </div>
                     <div>&nbsp;</div>
-                    <div class="form-inline">
+                    <div class="form-inline" ng-show="isDirty()">
                         <button class="btn btn-default" ng-click="reset()">{{msg('csd.web.settings.cancel')}}</button>
-                        <button class="btn btn-primary" ng-disabled="!form.$valid" ng-click="submit()">{{msg('csd.web.settings.save')}}</button>
+                        <button class="btn btn-primary" ng-disabled="!form.$valid || anyDuplicateUrls()" ng-click="submit()">{{msg('csd.web.settings.save')}}</button>
                     </div>
                 </div>
             </div>
+
         </form>
     </div>
 </div>

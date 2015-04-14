@@ -2,9 +2,13 @@ package org.motechproject.csd.service;
 
 import org.motechproject.csd.domain.Config;
 
+import java.util.List;
+
 public interface ConfigService {
 
-    Config getConfig();
+    List<Config> getConfigs();
 
-    void updateConfig(Config config);
+    Config getConfig(String xmlUrl);
+
+    void updateConfigs(List<Config> configs);
 }
