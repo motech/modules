@@ -73,7 +73,7 @@ import javax.xml.bind.annotation.XmlType;
  *
  *
  */
-@Entity
+@Entity(maxFetchDepth = 6)
 @XmlRootElement(name = "CSD")
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "organizationDirectory", "serviceDirectory", "facilityDirectory", "providerDirectory" })

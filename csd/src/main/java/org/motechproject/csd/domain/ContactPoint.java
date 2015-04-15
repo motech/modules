@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlType;
  *
  *
  */
-@Entity
+@Entity(maxFetchDepth = 1)
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "codedType", "equipment", "purpose", "certificate" })
 public class ContactPoint {

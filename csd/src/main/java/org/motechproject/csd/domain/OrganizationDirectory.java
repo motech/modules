@@ -31,7 +31,7 @@ import java.util.Set;
  *
  *
  */
-@Entity
+@Entity(maxFetchDepth = 5)
 @XmlType
 @XmlAccessorType(XmlAccessType.NONE)
 public class OrganizationDirectory {

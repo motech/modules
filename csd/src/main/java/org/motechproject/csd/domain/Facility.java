@@ -97,7 +97,7 @@ import java.util.Set;
  *
  *
  */
-@Entity
+@Entity(maxFetchDepth = 4)
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "otherIDs", "codedTypes", "primaryName", "otherNames", "addresses", "contacts", "geocode", "languages", "contactPoints", "facilityOrganizations", "operatingHours", "extensions", "record" })
 public class Facility extends AbstractUniqueID {

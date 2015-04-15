@@ -43,7 +43,7 @@ import java.util.Set;
  *
  *
  */
-@Entity
+@Entity(maxFetchDepth = 3)
 @XmlType
 @XmlAccessorType(XmlAccessType.NONE)
 public class ProviderOrganizations {

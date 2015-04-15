@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlType;
  *
  *
  */
-@Entity
+@Entity(maxFetchDepth = 3)
 @XmlType
 @XmlAccessorType(XmlAccessType.NONE)
 public class OrganizationContact {

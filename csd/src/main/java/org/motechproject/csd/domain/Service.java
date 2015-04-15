@@ -33,7 +33,7 @@ import java.util.Set;
  *
  *
  */
-@Entity
+@Entity(maxFetchDepth = 1)
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "codedType", "extensions", "record" })
 public class Service extends AbstractUniqueID {

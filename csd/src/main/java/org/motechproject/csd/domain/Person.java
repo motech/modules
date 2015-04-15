@@ -47,7 +47,7 @@ import java.util.Set;
  *
  *
  */
-@Entity
+@Entity(maxFetchDepth = 2)
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "names", "contactPoints", "addresses", "gender", "dateOfBirth" })
 public class Person {
