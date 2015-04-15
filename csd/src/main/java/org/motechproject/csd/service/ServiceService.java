@@ -11,9 +11,7 @@ public interface ServiceService {
 
     Service getServiceByEntityID(String entityID);
 
-    Service update(Service service);
+    Service removeAndCreate(Service service);
 
-    void delete(String entityID);
-
-    Set<Service> update(Set<Service> services);
+    Set<Service> removeAndCreate(Set<Service> services);
 }

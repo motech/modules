@@ -17,9 +17,7 @@ public interface FacilityService {
 
     Facility getFacilityByEntityID(String entityID);
 
-    Facility update(Facility facility);
+    Facility removeAndCreate(Facility facility);
 
-    void delete(String entityID);
-
-    Set<Facility> update(Set<Facility> facilities);
+    Set<Facility> removeAndCreate(Set<Facility> facilities);
 }

@@ -11,9 +11,7 @@ public interface ProviderService {
 
     Provider getProviderByEntityID(String entityID);
 
-    Provider update(Provider provider);
+    Provider removeAndCreate(Provider provider);
 
-    void delete(String entityID);
-
-    Set<Provider> update(Set<Provider> providers);
+    Set<Provider> removeAndCreate(Set<Provider> providers);
 }

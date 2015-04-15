@@ -5,6 +5,7 @@ import org.motechproject.csd.mds.ServiceDataService;
 import org.motechproject.csd.service.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -25,25 +26,21 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public Service update(Service service) {
-        delete(service.getEntityID());
-        return serviceDataService.create(service);
+    public Service removeAndCreate(Service service) {
+        Service serviceToRemove = getServiceByEntityID(service.getEntityID());
+        serviceDataService.create(service);
+        return serviceToRemove;
     }
 
     @Override
-    public void delete(String entityID) {
-        Service service = getServiceByEntityID(entityID);
-
-        if (service != null) {
-            serviceDataService.delete(service);
-        }
-    }
-
-    @Override
-    public Set<Service> update(Set<Service> services) {
+    public Set<Service> removeAndCreate(Set<Service> services) {
+        Set<Service> servicesToRemove = new HashSet<>();
         for (Service service : services) {
-            update(service);
+            Service serviceToRemove = removeAndCreate(service);
+            if (serviceToRemove != null) {
+                servicesToRemove.add(serviceToRemove);
+            }
         }
-        return services;
+        return servicesToRemove;
     }
 }

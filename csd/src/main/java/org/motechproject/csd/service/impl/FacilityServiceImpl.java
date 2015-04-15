@@ -6,6 +6,7 @@ import org.motechproject.csd.service.FacilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -19,6 +20,7 @@ public class FacilityServiceImpl implements FacilityService {
         return null;
     }
 
+    @Override
     public List<Facility> allFacilities() {
         return facilityDataService.retrieveAll();
     }
@@ -29,25 +31,21 @@ public class FacilityServiceImpl implements FacilityService {
     }
 
     @Override
-    public Facility update(Facility facility) {
-        delete(facility.getEntityID());
-        return facilityDataService.create(facility);
+    public Facility removeAndCreate(Facility facility) {
+        Facility facilityToRemove = getFacilityByEntityID(facility.getEntityID());
+        facilityDataService.create(facility);
+        return facilityToRemove;
     }
 
     @Override
-    public void delete(String entityID) {
-        Facility facility = getFacilityByEntityID(entityID);
-
-        if (facility != null) {
-            facilityDataService.delete(facility);
-        }
-    }
-
-    @Override
-    public Set<Facility> update(Set<Facility> facilities) {
+    public Set<Facility> removeAndCreate(Set<Facility> facilities) {
+        Set<Facility> facilitiesToRemove = new HashSet<>();
         for (Facility facility : facilities) {
-            update(facility);
+            Facility facilityToRemove = removeAndCreate(facility);
+            if (facilityToRemove != null) {
+                facilitiesToRemove.add(facilityToRemove);
+            }
         }
-        return facilities;
+        return facilitiesToRemove;
     }
 }

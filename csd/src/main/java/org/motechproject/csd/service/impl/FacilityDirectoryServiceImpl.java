@@ -8,8 +8,6 @@ import org.motechproject.csd.service.FacilityDirectoryService;
 import org.motechproject.csd.service.FacilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import java.util.HashSet;
 import java.util.List;
@@ -44,20 +42,16 @@ public class FacilityDirectoryServiceImpl implements FacilityDirectoryService {
     public void update(final FacilityDirectory directory) {
 
         if (directory != null && directory.getFacilities() != null && !directory.getFacilities().isEmpty()) {
-            facilityDirectoryDataService.doInTransaction(new TransactionCallbackWithoutResult() {
-                @Override
-                protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
-                    Set<Facility> updatedFacilities = facilityService.update(directory.getFacilities());
-                    FacilityDirectory facilityDirectory = getFacilityDirectory();
+            FacilityDirectory facilityDirectory = getFacilityDirectory();
 
-                    if (facilityDirectory != null) {
-                        facilityDirectory.getFacilities().addAll(updatedFacilities);
-                        facilityDirectoryDataService.update(facilityDirectory);
-                    } else {
-                        facilityDirectoryDataService.create(directory);
-                    }
-                }
-            });
+            if (facilityDirectory != null) {
+                Set<Facility> facilitiesToRemove = facilityService.removeAndCreate(directory.getFacilities());
+                facilityDirectory.getFacilities().removeAll(facilitiesToRemove);
+                facilityDirectory.getFacilities().addAll(directory.getFacilities());
+                facilityDirectoryDataService.update(facilityDirectory);
+            } else {
+                facilityDirectoryDataService.create(directory);
+            }
         }
     }
 

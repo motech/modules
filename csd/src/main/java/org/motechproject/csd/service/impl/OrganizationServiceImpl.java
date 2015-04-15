@@ -6,6 +6,7 @@ import org.motechproject.csd.service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -26,25 +27,21 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public Organization update(Organization organization) {
-        delete(organization.getEntityID());
-        return organizationDataService.create(organization);
+    public Organization removeAndCreate(Organization organization) {
+        Organization organizationToRemove = getOrganizationByEntityID(organization.getEntityID());
+        organizationDataService.create(organization);
+        return organizationToRemove;
     }
 
     @Override
-    public void delete(String entityID) {
-        Organization organization = getOrganizationByEntityID(entityID);
-
-        if (organization != null) {
-            organizationDataService.delete(organization);
-        }
-    }
-
-    @Override
-    public Set<Organization> update(Set<Organization> organizations) {
+    public Set<Organization> removeAndCreate(Set<Organization> organizations) {
+        Set<Organization> organizationsToRemove = new HashSet<>();
         for (Organization organization : organizations) {
-            update(organization);
+            Organization organizationToRemove = removeAndCreate(organization);
+            if (organizationToRemove != null) {
+                organizationsToRemove.add(organizationToRemove);
+            }
         }
-        return organizations;
+        return organizationsToRemove;
     }
 }

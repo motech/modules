@@ -6,6 +6,7 @@ import org.motechproject.csd.service.ProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -26,25 +27,21 @@ public class ProviderServiceImpl implements ProviderService {
     }
 
     @Override
-    public Provider update(Provider provider) {
-        delete(provider.getEntityID());
-        return providerDataService.create(provider);
+    public Provider removeAndCreate(Provider provider) {
+        Provider providerToRemove = getProviderByEntityID(provider.getEntityID());
+        providerDataService.create(provider);
+        return providerToRemove;
     }
 
     @Override
-    public void delete(String entityID) {
-        Provider provider = getProviderByEntityID(entityID);
-
-        if (provider != null) {
-            providerDataService.delete(provider);
-        }
-    }
-
-    @Override
-    public Set<Provider> update(Set<Provider> providers) {
+    public Set<Provider> removeAndCreate(Set<Provider> providers) {
+        Set<Provider> providersToRemove = new HashSet<>();
         for (Provider provider : providers) {
-            update(provider);
+            Provider providerToRemove = removeAndCreate(provider);
+            if (providerToRemove != null) {
+                providersToRemove.add(providerToRemove);
+            }
         }
-        return providers;
+        return providersToRemove;
     }
 }

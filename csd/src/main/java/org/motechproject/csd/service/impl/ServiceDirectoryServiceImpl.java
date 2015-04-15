@@ -7,8 +7,6 @@ import org.motechproject.csd.mds.ServiceDirectoryDataService;
 import org.motechproject.csd.service.ServiceDirectoryService;
 import org.motechproject.csd.service.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import java.util.HashSet;
 import java.util.List;
@@ -43,20 +41,16 @@ public class ServiceDirectoryServiceImpl implements ServiceDirectoryService {
     public void update(final ServiceDirectory directory) {
 
         if (directory != null && directory.getServices() != null && !directory.getServices().isEmpty()) {
-            serviceDirectoryDataService.doInTransaction(new TransactionCallbackWithoutResult() {
-                @Override
-                protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
-                    Set<Service> updatedServices = serviceService.update(directory.getServices());
-                    ServiceDirectory serviceDirectory = getServiceDirectory();
+            ServiceDirectory serviceDirectory = getServiceDirectory();
 
-                    if (serviceDirectory != null) {
-                        serviceDirectory.getServices().addAll(updatedServices);
-                        serviceDirectoryDataService.update(serviceDirectory);
-                    } else {
-                        serviceDirectoryDataService.create(directory);
-                    }
-                }
-            });
+            if (serviceDirectory != null) {
+                Set<Service> servicesToRemove = serviceService.removeAndCreate(directory.getServices());
+                serviceDirectory.getServices().removeAll(servicesToRemove);
+                serviceDirectory.getServices().addAll(directory.getServices());
+                serviceDirectoryDataService.update(serviceDirectory);
+            } else {
+                serviceDirectoryDataService.create(directory);
+            }
         }
     }
 

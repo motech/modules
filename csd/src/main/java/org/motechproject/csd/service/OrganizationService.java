@@ -11,9 +11,7 @@ public interface OrganizationService {
 
     Organization getOrganizationByEntityID(String entityID);
 
-    Organization update(Organization organization);
+    Organization removeAndCreate(Organization organization);
 
-    void delete(String entityID);
-
-    Set<Organization> update(Set<Organization> organizations);
+    Set<Organization> removeAndCreate(Set<Organization> organizations);
 }
