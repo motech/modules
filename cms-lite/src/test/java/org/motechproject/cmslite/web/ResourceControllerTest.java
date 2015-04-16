@@ -8,6 +8,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.motechproject.cmslite.model.CMSLiteException;
+import org.motechproject.cmslite.model.ContentNotFoundException;
 import org.motechproject.cmslite.model.StreamContent;
 import org.motechproject.cmslite.model.StringContent;
 import org.motechproject.cmslite.service.CMSLiteService;
@@ -27,6 +28,8 @@ import static org.apache.commons.codec.digest.DigestUtils.md5Hex;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.internal.matchers.IsCollectionContaining.hasItems;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -56,6 +59,9 @@ public class ResourceControllerTest {
 
     @Mock
     private CMSLiteService cmsLiteService;
+
+    @Mock
+    private StreamContent streamContent;
 
     @InjectMocks
     private ResourceController resourceController = new ResourceController();
@@ -242,6 +248,97 @@ public class ResourceControllerTest {
     @Test(expected = CMSLiteException.class)
     public void shouldNotAddStringContentWithoutValue() throws IOException, CMSLiteException {
         resourceController.addContent(STRING_TYPE, STRING_NAME, STRING_LANGUAGE, "", null);
+    }
+
+    @Test
+    public void shouldReturn400WhenInvalidFieldForAvailableFields() throws Exception {
+
+        controller.perform(
+                get("/resource/available/fooField")
+        ).andExpect(
+                status().isBadRequest()
+        );
+    }
+
+    @Test
+    public void shouldReturn400WhenInvalidTypeForGetContent() throws Exception {
+
+        controller.perform(
+                get("/resource/fooType/fooLanguage/fooName")
+        ).andExpect(
+                status().isBadRequest()
+        );
+    }
+
+    @Test
+    public void shouldReturn404WhenResourceNotFound() throws Exception {
+
+        when(cmsLiteService.getStringContent(anyString(), anyString())).thenThrow(new ContentNotFoundException());
+
+        controller.perform(
+                get("/resource/string/fooLanguage/fooName")
+        ).andExpect(
+                status().isNotFound()
+        );
+    }
+
+    @Test
+    public void shouldReturn404WhenEditingNonExistentStringResource() throws Exception {
+
+        when(cmsLiteService.getStringContent(anyString(), anyString())).thenThrow(new ContentNotFoundException());
+
+        controller.perform(
+                post("/resource/string/fooLanguage/fooName")
+                        .param("value", "fooValue")
+        ).andExpect(
+                status().isNotFound()
+        );
+    }
+
+    @Test
+    public void shouldReturn404WhenDeletingNonExistentResource() throws Exception {
+
+        doThrow(new ContentNotFoundException()).when(cmsLiteService).removeStringContent(anyString(), anyString());
+
+        controller.perform(
+                delete("/resource/string/fooLanguage/fooName")
+        ).andExpect(
+                status().isNotFound()
+        );
+    }
+
+    @Test
+    public void shouldReturn400WhenInvalidTypeWhileDeleting() throws Exception {
+
+        controller.perform(
+                delete("/resource/fooType/fooLanguage/fooName")
+        ).andExpect(
+                status().isBadRequest()
+        );
+    }
+
+    @Test
+    public void shouldReturn404WhenStreamResourceNotFound() throws Exception {
+
+        when(cmsLiteService.getStreamContent(anyString(), anyString())).thenThrow(new ContentNotFoundException());
+
+        controller.perform(
+                get("/stream/fooLanguage/fooName")
+        ).andExpect(
+                status().isNotFound()
+        );
+    }
+
+    @Test
+    public void shouldReturn404WhenStringResourceNotFound() throws Exception {
+
+        when(cmsLiteService.getStringContent(anyString(), anyString())).thenThrow(new ContentNotFoundException());
+
+        controller.perform(
+                get("/string/fooLanguage/fooName")
+        ).andExpect(
+                status().isNotFound()
+        );
     }
 
     @Test
