@@ -1,6 +1,5 @@
 package org.motechproject.csd.service.impl;
 
-import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.motechproject.csd.client.CSDHttpClient;
@@ -28,7 +27,6 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
-import java.util.Date;
 import java.util.List;
 
 @Service("csdService")
@@ -154,13 +152,8 @@ public class CSDServiceImpl implements CSDService {
             }
             saveFromXml(xml);
         } else {
-            DateTime lastModified;
-            if (StringUtils.isNotEmpty(config.getLastModified())) {
-                lastModified = DateTime.parse(config.getLastModified(),
-                        DateTimeFormat.forPattern(Config.DATE_TIME_PICKER_FORMAT));
-            } else {
-                lastModified = new DateTime(new Date(0));
-            }
+            DateTime lastModified = DateTime.parse(config.getLastModified(),
+                    DateTimeFormat.forPattern(Config.DATE_TIME_PICKER_FORMAT));
             CSD csd = soapClient.getModifications(xmlUrl, lastModified).getCSD();
             update(csd);
             config.setLastModified(DateTime.now().toString(Config.DATE_TIME_PICKER_FORMAT));
