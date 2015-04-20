@@ -19,6 +19,7 @@
             <button type="button" ng-disabled="!templates" class="btn btn-success" ng-click="addConfig()"><i class="fa fa-plus"></i>
                 {{msg('sms.settings.addConfig')}}
             </button>
+            <a role="button" class="btn btn-default" data-toggle="modal" data-target="#importTemplatesModal" data-backdrop="static"><span class="glyphicon glyphicon-import"></span> {{msg('sms.templates.import')}}</a>
         </div>
 
         <form name="form" class="form-horizontal inside" novalidate>
@@ -106,3 +107,4 @@
         </form>
     </div>
 </div>
+<div ng-include="'../sms/resources/partials/import-modal.html'"></div>

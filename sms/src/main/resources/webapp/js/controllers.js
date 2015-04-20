@@ -101,13 +101,17 @@
             east__maxSize: 350
         });
 
-        $http.get('../sms/templates')
-            .success(function(response){
-                $scope.templates = response;
-            })
-            .error(function(response) {
-                 $scope.errors.push($scope.msg('sms.settings.validate.no_templates', response));
-             });
+        function getTemplates() {
+            $http.get('../sms/templates')
+                .success(function(response){
+                    $scope.templates = response;
+                })
+                .error(function(response) {
+                    $scope.errors.push($scope.msg('sms.settings.validate.no_templates', response));
+                });
+        }
+
+        getTemplates();
 
         function autoExpandSingleAccordion() {
             if ($scope.accordions.length === 1) {
@@ -312,6 +316,28 @@
                     //todo: better than that!
                     handleWithStackTrace('sms.error.header', 'sms.error.body', response);
                 });
+        };
+
+        $scope.importTemplates = function () {
+            blockUI();
+
+            $('#importTemplatesForm').ajaxSubmit({
+                success: function () {
+                    getTemplates();
+                    $('#importTemplatesForm').resetForm();
+                    $('#importTemplatesModal').modal('hide');
+                    handleResponse('sms.success', 'sms.templates.success', '');
+                    unblockUI();
+                },
+                error: function (response) {
+                    handleWithStackTrace('sms.error.header', 'sms.error.body', response);
+                }
+            });
+        };
+
+        $scope.closeImportTemplatesModal = function () {
+            $('#importTemplatesForm').resetForm();
+            $('#importTemplatesModal').modal('hide');
         };
     });
 }());
