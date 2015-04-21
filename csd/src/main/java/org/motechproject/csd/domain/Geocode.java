@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlType;
 @Entity
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "latitude", "longitude", "altitude", "coordinateSystem" })
-public class Geocode {
+public class Geocode extends AbstractID {
 
     @UIDisplayable(position = 0)
     @Field(required = true)

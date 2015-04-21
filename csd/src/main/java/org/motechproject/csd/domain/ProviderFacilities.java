@@ -61,7 +61,7 @@ import java.util.Set;
 @Entity
 @XmlType
 @XmlAccessorType(XmlAccessType.NONE)
-public class ProviderFacilities {
+public class ProviderFacilities extends AbstractID {
 
     @UIDisplayable(position = 0)
     @Field(required = true, name = "provider_facilities_facility")

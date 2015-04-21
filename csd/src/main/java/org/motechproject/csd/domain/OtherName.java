@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlValue;
 @Entity
 @XmlType
 @XmlAccessorType(XmlAccessType.NONE)
-public class OtherName {
+public class OtherName extends AbstractID {
 
     /* Text value of this node */
     @UIDisplayable(position = 0)

@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlValue;
 @Entity
 @XmlType
 @XmlAccessorType(XmlAccessType.NONE)
-public class CodedType {
+public class CodedType extends AbstractID {
 
     /* The value of Coded Type eg <CodedType>MyValue</CodeType> */
     @UIDisplayable(position = 0)

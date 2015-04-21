@@ -46,7 +46,7 @@ import java.util.List;
 @Entity
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "openFlag", "daysOfTheWeek", "beginningHour", "endingHour", "beginEffectiveDate", "endEffectiveDate" })
-public class OperatingHours {
+public class OperatingHours extends AbstractID {
 
     @UIDisplayable(position = 3)
     @Field(required = true)

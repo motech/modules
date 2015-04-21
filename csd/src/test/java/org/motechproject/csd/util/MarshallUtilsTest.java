@@ -5,6 +5,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.csd.constants.CSDConstants;
+import org.motechproject.csd.db.InitialData;
 import org.motechproject.csd.domain.CSD;
 
 import java.io.InputStream;

@@ -34,7 +34,7 @@ import java.util.Set;
 @Entity(maxFetchDepth = 5)
 @XmlType
 @XmlAccessorType(XmlAccessType.NONE)
-public class FacilityDirectory {
+public class FacilityDirectory extends AbstractID {
 
     @UIDisplayable(position = 0)
     @Field(name = "facility_directory_facilities")

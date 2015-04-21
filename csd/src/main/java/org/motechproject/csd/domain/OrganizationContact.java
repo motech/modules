@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlType;
 @Entity(maxFetchDepth = 3)
 @XmlType
 @XmlAccessorType(XmlAccessType.NONE)
-public class OrganizationContact {
+public class OrganizationContact extends AbstractID {
 
     @UIDisplayable(position = 1)
     @Field

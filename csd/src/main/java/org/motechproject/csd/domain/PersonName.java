@@ -35,7 +35,7 @@ import java.util.Set;
 @Entity
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "commonNames", "honorific", "forename", "otherNames", "surname", "suffix" })
-public class PersonName {
+public class PersonName extends AbstractID {
 
     @UIDisplayable(position = 0)
     @Field(required = true)

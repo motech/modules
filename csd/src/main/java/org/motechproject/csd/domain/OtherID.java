@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlType;
 @Entity
 @XmlType
 @XmlAccessorType(XmlAccessType.NONE)
-public class OtherID {
+public class OtherID extends AbstractID {
 
     @UIDisplayable(position = 0)
     @Field(required = true)

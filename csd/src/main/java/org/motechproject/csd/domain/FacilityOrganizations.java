@@ -59,7 +59,7 @@ import java.util.Set;
 @Entity
 @XmlType
 @XmlAccessorType(XmlAccessType.NONE)
-public class FacilityOrganizations {
+public class FacilityOrganizations extends AbstractID {
 
     @UIDisplayable(position = 0)
     @Field(required = true, name = "facility_organizations_organization")

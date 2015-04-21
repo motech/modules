@@ -77,7 +77,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "CSD")
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "organizationDirectory", "serviceDirectory", "facilityDirectory", "providerDirectory" })
-public class CSD {
+public class CSD extends AbstractID {
 
     @UIDisplayable(position = 0)
     @Field(required = true)

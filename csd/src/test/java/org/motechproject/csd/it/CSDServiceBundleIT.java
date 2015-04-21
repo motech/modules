@@ -14,7 +14,7 @@ import org.motechproject.csd.domain.ProviderDirectory;
 import org.motechproject.csd.domain.Service;
 import org.motechproject.csd.domain.ServiceDirectory;
 import org.motechproject.csd.service.CSDService;
-import org.motechproject.csd.util.InitialData;
+import org.motechproject.csd.db.InitialData;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;

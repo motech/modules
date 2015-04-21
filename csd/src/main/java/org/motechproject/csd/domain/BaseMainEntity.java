@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @XmlTransient
 @XmlAccessorType(XmlAccessType.NONE)
-public abstract class BaseMainEntity {
+public abstract class BaseMainEntity extends AbstractID {
 
     private DateTime creationDate;
 

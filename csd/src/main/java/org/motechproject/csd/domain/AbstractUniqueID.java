@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlAttribute;
  */
 @Entity
 @XmlAccessorType(XmlAccessType.NONE)
-public abstract class AbstractUniqueID {
+public abstract class AbstractUniqueID extends AbstractID {
 
     @Field(required = true)
     private String entityID;

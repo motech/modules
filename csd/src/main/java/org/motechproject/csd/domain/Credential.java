@@ -43,7 +43,7 @@ import java.util.Set;
 @Entity
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "codedType", "number", "issuingAuthority", "credentialIssueDate", "credentialRenewalDate", "extensions" })
-public class Credential {
+public class Credential extends AbstractID {
 
     @UIDisplayable(position = 0)
     @Field(required = true)

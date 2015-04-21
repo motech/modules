@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlValue;
 @Entity
 @XmlType
 @XmlAccessorType(XmlAccessType.NONE)
-public class AddressLine {
+public class AddressLine extends AbstractID {
 
     @UIDisplayable(position = 0)
     @Field

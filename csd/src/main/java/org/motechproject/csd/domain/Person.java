@@ -50,7 +50,7 @@ import java.util.Set;
 @Entity(maxFetchDepth = 2)
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "names", "contactPoints", "addresses", "gender", "dateOfBirth" })
-public class Person {
+public class Person extends AbstractID {
 
     @UIDisplayable(position = 0)
     @Field(name = "person_names", required = true)

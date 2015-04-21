@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlType;
 @Entity(maxFetchDepth = 1)
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "codedType", "equipment", "purpose", "certificate" })
-public class ContactPoint {
+public class ContactPoint extends AbstractID {
 
     @UIDisplayable(position = 0)
     @Field(required = true)

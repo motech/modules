@@ -44,7 +44,7 @@ import java.util.Set;
 @Entity
 @XmlType
 @XmlAccessorType(XmlAccessType.NONE)
-public class Address {
+public class Address extends AbstractID {
 
     @UIDisplayable(position = 1)
     @Field(required = true)

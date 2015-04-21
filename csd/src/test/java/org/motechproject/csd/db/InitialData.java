@@ -1,4 +1,4 @@
-package org.motechproject.csd.util;
+package org.motechproject.csd.db;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;

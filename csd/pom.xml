@@ -137,7 +137,8 @@
                             org.motechproject.csd.service;version=${project.version},
                             org.motechproject.csd.mds;version=${project.version},
                             org.motechproject.csd.domain;version=${project.version},
-                            org.motechproject.csd.web;version=${project.version}
+                            org.motechproject.csd.web;version=${project.version},
+                            org.motechproject.csd.util;version=${project.version}
                         </Export-Package>
                     </instructions>
                 </configuration>

@@ -34,7 +34,7 @@ import java.util.Set;
 @Entity(maxFetchDepth = 2)
 @XmlType
 @XmlAccessorType(XmlAccessType.NONE)
-public class ServiceDirectory {
+public class ServiceDirectory extends AbstractID {
 
     @UIDisplayable(position = 0)
     @Field(name = "service_directory_services")

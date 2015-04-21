@@ -34,7 +34,7 @@ import java.util.Set;
 @Entity(maxFetchDepth = 5)
 @XmlType
 @XmlAccessorType(XmlAccessType.NONE)
-public class OrganizationDirectory {
+public class OrganizationDirectory extends AbstractID {
 
     @UIDisplayable(position = 0)
     @Field(name = "organization_directory_organizations")

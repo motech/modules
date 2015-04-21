@@ -54,4 +54,6 @@
         <property name="unmarshaller" ref="marshaller" />
     </bean>
 
+    <bean id="csdReferenceFinder" class="org.motechproject.csd.util.CSDReferenceFinder" />
+
 </beans>
