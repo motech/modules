@@ -1,5 +1,6 @@
 package org.motechproject.csd.service.impl;
 
+import org.joda.time.DateTime;
 import org.motechproject.csd.domain.Service;
 import org.motechproject.csd.mds.ServiceDataService;
 import org.motechproject.csd.service.ServiceService;
@@ -21,26 +22,46 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
+    public void deleteAll() {
+        serviceDataService.deleteAll();
+    }
+
+    @Override
     public Service getServiceByEntityID(String entityID) {
         return serviceDataService.findByEntityID(entityID);
     }
 
     @Override
-    public Service removeAndCreate(Service service) {
-        Service serviceToRemove = getServiceByEntityID(service.getEntityID());
+    public void update(Service service) {
+        delete(service.getEntityID());
         serviceDataService.create(service);
-        return serviceToRemove;
     }
 
     @Override
-    public Set<Service> removeAndCreate(Set<Service> services) {
-        Set<Service> servicesToRemove = new HashSet<>();
+    public void delete(String entityID) {
+        Service service = getServiceByEntityID(entityID);
+        if (service != null) {
+            serviceDataService.delete(service);
+        }
+    }
+
+    @Override
+    public void update(Set<Service> services) {
         for (Service service : services) {
-            Service serviceToRemove = removeAndCreate(service);
-            if (serviceToRemove != null) {
-                servicesToRemove.add(serviceToRemove);
+            update(service);
+        }
+    }
+
+    @Override
+    public Set<Service> getModifiedAfter(DateTime date) {
+        List<Service> allServices = allServices();
+        Set<Service> modifiedServices = new HashSet<>();
+
+        for (Service service : allServices) {
+            if (service.getRecord().getUpdated().isAfter(date)) {
+                modifiedServices.add(service);
             }
         }
-        return servicesToRemove;
+        return modifiedServices;
     }
 }

@@ -276,6 +276,68 @@ public class Organization extends BaseMainEntity {
         this.extensions = extensions;
     }
 
+    @Override //NO CHECKSTYLE CyclomaticComplexity
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+
+        Organization that = (Organization) o;
+
+        if (!primaryName.equals(that.primaryName)) {
+            return false;
+        }
+        if (!codedTypes.equals(that.codedTypes)) {
+            return false;
+        }
+        if (addresses != null ? !addresses.equals(that.addresses) : that.addresses != null) {
+            return false;
+        }
+        if (otherNames != null ? !otherNames.equals(that.otherNames) : that.otherNames != null) {
+            return false;
+        }
+        if (parentOrganization != null ? !parentOrganization.equals(that.parentOrganization) : that.parentOrganization != null) {
+            return false;
+        }
+        if (otherIDs != null ? !otherIDs.equals(that.otherIDs) : that.otherIDs != null) {
+            return false;
+        }
+        if (specializations != null ? !specializations.equals(that.specializations) : that.specializations != null) {
+            return false;
+        }
+        if (contactPoints != null ? !contactPoints.equals(that.contactPoints) : that.contactPoints != null) {
+            return false;
+        }
+        if (credentials != null ? !credentials.equals(that.credentials) : that.credentials != null) {
+            return false;
+        }
+        if (languages != null ? !languages.equals(that.languages) : that.languages != null) {
+            return false;
+        }
+        if (contacts != null ? !contacts.equals(that.contacts) : that.contacts != null) {
+            return false;
+        }
+        if (extensions != null ? !extensions.equals(that.extensions) : that.extensions != null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (primaryName != null ? primaryName.hashCode() : 0);
+        result = 31 * result + (codedTypes != null ? codedTypes.hashCode() : 0);
+        return result;
+    }
+
     @Override
     public String toString() {
         return primaryName;

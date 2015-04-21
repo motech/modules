@@ -5,13 +5,11 @@ import org.motechproject.csd.domain.CSD;
 
 public interface CSDService {
 
-    CSD create(CSD csd);
-
     CSD getCSD();
 
     CSD getByLastModified(DateTime lastModified);
 
-    CSD update(CSD csd);
+    void update(CSD csd);
 
     void delete();
 

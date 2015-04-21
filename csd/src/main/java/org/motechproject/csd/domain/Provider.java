@@ -233,6 +233,15 @@ public class Provider extends BaseMainEntity {
         this.specialties = specialties;
     }
 
+    public Set<Extension> getExtensions() {
+        return extensions;
+    }
+
+    @XmlElement(name = "extension")
+    public void setExtensions(Set<Extension> extensions) {
+        this.extensions = extensions;
+    }
+
     public Set<CodedType> getCodedTypes() {
         return codedTypes;
     }
@@ -242,13 +251,57 @@ public class Provider extends BaseMainEntity {
         this.codedTypes = codedTypes;
     }
 
-    public Set<Extension> getExtensions() {
-        return extensions;
+    @Override //NO CHECKSTYLE CyclomaticComplexity
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+
+        Provider provider = (Provider) o;
+
+        if (!demographic.equals(provider.demographic)) {
+            return false;
+        }
+        if (!codedTypes.equals(provider.codedTypes)) {
+            return false;
+        }
+        if (otherIDs != null ? !otherIDs.equals(provider.otherIDs) : provider.otherIDs != null) {
+            return false;
+        }
+        if (languages != null ? !languages.equals(provider.languages) : provider.languages != null) {
+            return false;
+        }
+        if (specialties != null ? !specialties.equals(provider.specialties) : provider.specialties != null) {
+            return false;
+        }
+        if (credentials != null ? !credentials.equals(provider.credentials) : provider.credentials != null) {
+            return false;
+        }
+        if (providerFacilities != null ? !providerFacilities.equals(provider.providerFacilities) : provider.providerFacilities != null) {
+            return false;
+        }
+        if (providerOrganizations != null ? !providerOrganizations.equals(provider.providerOrganizations) : provider.providerOrganizations != null) {
+            return false;
+        }
+        if (extensions != null ? !extensions.equals(provider.extensions) : provider.extensions != null) {
+            return false;
+        }
+
+        return true;
     }
 
-    @XmlElement(name = "extension")
-    public void setExtensions(Set<Extension> extensions) {
-        this.extensions = extensions;
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (demographic != null ? demographic.hashCode() : 0);
+        result = 31 * result + (codedTypes != null ? codedTypes.hashCode() : 0);
+        return result;
     }
 
     @Override

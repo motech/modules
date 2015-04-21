@@ -19,6 +19,9 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -54,7 +57,7 @@ public class ServiceServiceBundleIT extends BasePaxIT {
         csd.getProviderDirectory().getProviders().clear();
         csd.getFacilityDirectory().getFacilities().clear();
         csd.getOrganizationDirectory().getOrganizations().clear();
-        csdService.create(csd);
+        csdService.update(csd);
         assertTrue(csdService.getCSD().equals(csd));
 
         assertTrue(serviceService.allServices().containsAll(csd.getServiceDirectory().getServices()));
@@ -68,9 +71,47 @@ public class ServiceServiceBundleIT extends BasePaxIT {
         csd.getOrganizationDirectory().getOrganizations().clear();
         Service service = InitialData.createService(new DateTime(), "EntityIDToFind");
         csd.getServiceDirectory().getServices().add(service);
-        csdService.create(csd);
+        csdService.update(csd);
         assertTrue(csdService.getCSD().equals(csd));
 
         assertEquals(serviceService.getServiceByEntityID("EntityIDToFind"), service);
+    }
+
+    @Test
+    public void shouldUpdateServiceDirectoryEntity() {
+        CSD csd = InitialData.getInitialData();
+        csd.getProviderDirectory().getProviders().clear();
+        csd.getFacilityDirectory().getFacilities().clear();
+        csd.getOrganizationDirectory().getOrganizations().clear();
+        csdService.update(csd);
+        assertTrue(csdService.getCSD().equals(csd));
+
+        csd = InitialData.getInitialData();
+        csd.getServiceDirectory().getServices().iterator().next().getCodedType().setCode("new code");
+        csd.getServiceDirectory().getServices().add(InitialData.createService(new DateTime(), "newService"));
+        serviceService.update(csd.getServiceDirectory().getServices());
+        Set<Service> services = new HashSet<>(serviceService.allServices());
+        assertTrue(services.equals(csd.getServiceDirectory().getServices()));
+    }
+
+    @Test
+    public void shouldGetEntitiesUpdatedAfterGivenDate() {
+        DateTime dateUpdated = new DateTime(2020, 1, 1, 1, 1);
+
+        Service service = InitialData.createService(dateUpdated.plusSeconds(1), "lastUpdated");
+
+        CSD csd = InitialData.getInitialData();
+        csd.getProviderDirectory().getProviders().clear();
+        csd.getServiceDirectory().getServices().add(service);
+        csd.getOrganizationDirectory().getOrganizations().clear();
+        csd.getFacilityDirectory().getFacilities().clear();
+        csdService.update(csd);
+        assertTrue(csdService.getCSD().equals(csd));
+
+        Set<Service> lastUpdated = serviceService.getModifiedAfter(dateUpdated);
+
+        assertEquals(1, lastUpdated.size());
+
+        assertEquals(lastUpdated.iterator().next(), service);
     }
 }

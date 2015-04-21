@@ -1,6 +1,7 @@
 package org.motechproject.csd.service;
 
 
+import org.joda.time.DateTime;
 import org.motechproject.csd.domain.Facility;
 
 import java.util.List;
@@ -13,9 +14,15 @@ public interface FacilityService {
 
     List<Facility> allFacilities();
 
+    void deleteAll();
+
     Facility getFacilityByEntityID(String entityID);
 
-    Facility removeAndCreate(Facility facility);
+    void update(Facility facility);
 
-    Set<Facility> removeAndCreate(Set<Facility> facilities);
+    void delete(String entityID);
+
+    void update(Set<Facility> facilities);
+
+    Set<Facility> getModifiedAfter(DateTime date);
 }

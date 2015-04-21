@@ -20,7 +20,7 @@ public class CSDReferenceFinderTest {
         assertEquals(10, fields.size());
 
         fields = csdReferenceFinder.findReferencingFields(Facility.class).values();
-        assertEquals(1, fields.size());
+        assertEquals(0, fields.size());
 
         fields = csdReferenceFinder.findReferencingFields(Geocode.class).values();
         assertEquals(1, fields.size());

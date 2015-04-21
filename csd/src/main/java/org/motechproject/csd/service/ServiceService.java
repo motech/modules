@@ -1,5 +1,6 @@
 package org.motechproject.csd.service;
 
+import org.joda.time.DateTime;
 import org.motechproject.csd.domain.Service;
 
 import java.util.List;
@@ -9,9 +10,15 @@ public interface ServiceService {
 
     List<Service> allServices();
 
+    void deleteAll();
+
     Service getServiceByEntityID(String entityID);
 
-    Service removeAndCreate(Service service);
+    void update(Service service);
 
-    Set<Service> removeAndCreate(Set<Service> services);
+    void delete(String entityID);
+
+    void update(Set<Service> services);
+
+    Set<Service> getModifiedAfter(DateTime date);
 }

@@ -8,11 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.csd.domain.CSD;
 import org.motechproject.csd.domain.Facility;
-import org.motechproject.csd.domain.FacilityDirectory;
-import org.motechproject.csd.domain.OrganizationDirectory;
-import org.motechproject.csd.domain.ProviderDirectory;
 import org.motechproject.csd.domain.Service;
-import org.motechproject.csd.domain.ServiceDirectory;
 import org.motechproject.csd.service.CSDService;
 import org.motechproject.csd.db.InitialData;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -28,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -55,16 +50,9 @@ public class CSDServiceBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void shouldCreateCSDEntity() {
-        CSD csd = InitialData.getInitialData();
-        csdService.create(csd);
-        assertTrue(csdService.getCSD().equals(csd));
-    }
-
-    @Test
     public void shouldUpdateCSDEntity() {
         CSD csd = InitialData.getInitialData();
-        csdService.create(csd);
+        csdService.update(csd);
         assertTrue(csdService.getCSD().equals(csd));
 
         csd = InitialData.getInitialData();
@@ -84,7 +72,7 @@ public class CSDServiceBundleIT extends BasePaxIT {
         CSD csd = InitialData.getInitialData();
         csd.getFacilityDirectory().getFacilities().add(facility);
         csd.getServiceDirectory().getServices().add(service);
-        csdService.create(csd);
+        csdService.update(csd);
         assertTrue(csdService.getCSD().equals(csd));
 
         CSD lastUpdated = csdService.getByLastModified(dateUpdated);
@@ -99,28 +87,9 @@ public class CSDServiceBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void shouldDeleteCSDEntity() {
-        CSD csd = InitialData.getInitialData();
-        csdService.create(csd);
-        assertTrue(csdService.getCSD().equals(csd));
-
-        csdService.delete();
-
-        assertNull(csdService.getCSD());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void getCSDShouldThrowExceptionIfThereIsMoreThanOneCSDEntityInTheDatabase() {
-        csdService.create(new CSD(new OrganizationDirectory(), new ServiceDirectory(), new FacilityDirectory(), new ProviderDirectory()));
-        csdService.create(new CSD(new OrganizationDirectory(), new ServiceDirectory(), new FacilityDirectory(), new ProviderDirectory()));
-
-        csdService.getCSD();
-    }
-
-    @Test
     public void shouldGetXmlContent() throws IOException {
         CSD csd = InitialData.getInitialData();
-        csdService.create(csd);
+        csdService.update(csd);
         assertTrue(csdService.getCSD().equals(csd));
 
         InputStream in = getClass().getResourceAsStream("/initialXml.xml");

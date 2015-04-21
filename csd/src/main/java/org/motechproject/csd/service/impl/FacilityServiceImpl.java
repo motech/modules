@@ -1,5 +1,6 @@
 package org.motechproject.csd.service.impl;
 
+import org.joda.time.DateTime;
 import org.motechproject.csd.domain.Facility;
 import org.motechproject.csd.mds.FacilityDataService;
 import org.motechproject.csd.service.FacilityService;
@@ -22,26 +23,46 @@ public class FacilityServiceImpl implements FacilityService {
     }
 
     @Override
+    public void deleteAll() {
+        facilityDataService.deleteAll();
+    }
+
+    @Override
     public Facility getFacilityByEntityID(String entityID) {
         return facilityDataService.findByEntityID(entityID);
     }
 
     @Override
-    public Facility removeAndCreate(Facility facility) {
-        Facility facilityToRemove = getFacilityByEntityID(facility.getEntityID());
+    public void update(Facility facility) {
+        delete(facility.getEntityID());
         facilityDataService.create(facility);
-        return facilityToRemove;
     }
 
     @Override
-    public Set<Facility> removeAndCreate(Set<Facility> facilities) {
-        Set<Facility> facilitiesToRemove = new HashSet<>();
+    public void delete(String entityID) {
+        Facility facility = getFacilityByEntityID(entityID);
+        if (facility != null) {
+            facilityDataService.delete(facility);
+        }
+    }
+
+    @Override
+    public void update(Set<Facility> facilities) {
         for (Facility facility : facilities) {
-            Facility facilityToRemove = removeAndCreate(facility);
-            if (facilityToRemove != null) {
-                facilitiesToRemove.add(facilityToRemove);
+            update(facility);
+        }
+    }
+
+    @Override
+    public Set<Facility> getModifiedAfter(DateTime date) {
+        List<Facility> allFacilities = allFacilities();
+        Set<Facility> modifiedFacilities = new HashSet<>();
+
+        for (Facility facility : allFacilities) {
+            if (facility.getRecord().getUpdated().isAfter(date)) {
+                modifiedFacilities.add(facility);
             }
         }
-        return facilitiesToRemove;
+        return modifiedFacilities;
     }
 }

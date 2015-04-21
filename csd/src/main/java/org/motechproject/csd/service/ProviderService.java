@@ -1,5 +1,6 @@
 package org.motechproject.csd.service;
 
+import org.joda.time.DateTime;
 import org.motechproject.csd.domain.Provider;
 
 import java.util.List;
@@ -9,9 +10,15 @@ public interface ProviderService {
 
     List<Provider> allProviders();
 
+    void deleteAll();
+
     Provider getProviderByEntityID(String entityID);
 
-    Provider removeAndCreate(Provider provider);
+    void update(Provider provider);
 
-    Set<Provider> removeAndCreate(Set<Provider> providers);
+    void delete(String entityID);
+
+    void update(Set<Provider> providers);
+
+    Set<Provider> getModifiedAfter(DateTime date);
 }

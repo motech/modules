@@ -7,8 +7,12 @@ import org.junit.runner.RunWith;
 import org.motechproject.csd.domain.CSD;
 import org.motechproject.csd.domain.Facility;
 import org.motechproject.csd.domain.Geocode;
+import org.motechproject.csd.domain.Person;
+import org.motechproject.csd.domain.Provider;
+import org.motechproject.csd.mds.PersonDataService;
 import org.motechproject.csd.service.CSDService;
 import org.motechproject.csd.service.FacilityService;
+import org.motechproject.csd.service.ProviderService;
 import org.motechproject.csd.util.CSDReferenceFinder;
 import org.motechproject.csd.db.InitialData;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -42,6 +46,12 @@ public class CSDReferenceFinderBundleIT extends BasePaxIT {
     @Inject
     private FacilityService facilityService;
 
+    @Inject
+    private ProviderService providerService;
+
+    @Inject
+    private PersonDataService personDataService;
+
     private CSDReferenceFinder csdReferenceFinder;
 
     @Before
@@ -63,14 +73,11 @@ public class CSDReferenceFinderBundleIT extends BasePaxIT {
     @Test
     public void shouldFindReferences() {
         CSD csd = InitialData.getInitialData();
-        csdService.create(csd);
+        csdService.update(csd);
         assertTrue(csdService.getCSD().equals(csd));
 
         Facility facility = facilityService.getFacilityByEntityID("FacilityEntityID");
         assertNotNull(facility);
-
-        Set<Object> facilityDirectories = csdReferenceFinder.findReferences(facility);
-        assertEquals(1, facilityDirectories.size());
 
         Geocode geocode = facility.getGeocode();
         assertNotNull(geocode);
@@ -79,11 +86,16 @@ public class CSDReferenceFinderBundleIT extends BasePaxIT {
         assertEquals(1, facilities.size());
         assertTrue(facilities.contains(facility));
 
-        for (Object o : facilities) {
-            Set<Object> parentRefs = csdReferenceFinder.findReferences(o);
-            assertTrue(parentRefs.containsAll(facilityDirectories));
-        }
+        Provider provider = providerService.getProviderByEntityID("providerEntityID");
+        assertNotNull(provider);
+
+        Long personID = provider.getDemographic().getId();
+        
+        Person person = personDataService.findById(personID);
+        assertNotNull(person);
+
+        Set<Object> providers = csdReferenceFinder.findReferences(person);
+        assertEquals(1, providers.size());
+        assertTrue(providers.contains(provider));
     }
-
-
 }

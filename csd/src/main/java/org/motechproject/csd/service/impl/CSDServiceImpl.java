@@ -12,40 +12,34 @@ import org.motechproject.csd.domain.FacilityDirectory;
 import org.motechproject.csd.domain.OrganizationDirectory;
 import org.motechproject.csd.domain.ProviderDirectory;
 import org.motechproject.csd.domain.ServiceDirectory;
-import org.motechproject.csd.mds.CSDDataService;
 import org.motechproject.csd.service.CSDService;
 import org.motechproject.csd.service.ConfigService;
-import org.motechproject.csd.service.FacilityDirectoryService;
-import org.motechproject.csd.service.OrganizationDirectoryService;
-import org.motechproject.csd.service.ProviderDirectoryService;
-import org.motechproject.csd.service.ServiceDirectoryService;
+import org.motechproject.csd.service.FacilityService;
+import org.motechproject.csd.service.OrganizationService;
+import org.motechproject.csd.service.ProviderService;
+import org.motechproject.csd.service.ServiceService;
 import org.motechproject.csd.util.MarshallUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallback;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
-import java.util.List;
+import java.util.HashSet;
 
 @Service("csdService")
 public class CSDServiceImpl implements CSDService {
 
     @Autowired
-    private CSDDataService csdDataService;
+    private FacilityService facilityService;
 
     @Autowired
-    private FacilityDirectoryService facilityDirectoryService;
+    private ProviderService providerService;
 
     @Autowired
-    private ProviderDirectoryService providerDirectoryService;
+    private OrganizationService organizationService;
 
     @Autowired
-    private OrganizationDirectoryService organizationDirectoryService;
-
-    @Autowired
-    private ServiceDirectoryService serviceDirectoryService;
+    private ServiceService serviceService;
 
     @Autowired
     private ConfigService configService;
@@ -57,82 +51,64 @@ public class CSDServiceImpl implements CSDService {
     private SOAPClient soapClient;
 
     @Override
-    public CSD create(CSD csd) {
-        return csdDataService.create(csd);
-    }
-
-    @Override
     public CSD getCSD() {
-        List<CSD> csdList = csdDataService.retrieveAll();
-
-        if (csdList.size() > 1) {
-            throw new IllegalArgumentException("In the database can be only one CSD element");
-        }
-
-        if (csdList.isEmpty()) {
-            return null;
-        } else {
-            return csdList.get(0);
-        }
+        FacilityDirectory facilityDirectory = new FacilityDirectory(new HashSet<>(facilityService.allFacilities()));
+        OrganizationDirectory organizationDirectory = new OrganizationDirectory(new HashSet<>(organizationService.allOrganizations()));
+        ProviderDirectory providerDirectory = new ProviderDirectory(new HashSet<>(providerService.allProviders()));
+        ServiceDirectory serviceDirectory = new ServiceDirectory(new HashSet<>(serviceService.allServices()));
+        return new CSD(organizationDirectory, serviceDirectory, facilityDirectory, providerDirectory);
     }
 
     @Override
     public CSD getByLastModified(DateTime lastModified) {
-        FacilityDirectory facilityDirectory = new FacilityDirectory(
-                facilityDirectoryService.getModifiedAfter(lastModified));
-        ProviderDirectory providerDirectory = new ProviderDirectory(
-                providerDirectoryService.getModifiedAfter(lastModified));
-        OrganizationDirectory organizationDirectory = new OrganizationDirectory(
-                organizationDirectoryService.getModifiedAfter(lastModified));
-        ServiceDirectory serviceDirectory = new ServiceDirectory(
-                serviceDirectoryService.getModifiedAfter(lastModified));
+        FacilityDirectory facilityDirectory = new FacilityDirectory(facilityService.getModifiedAfter(lastModified));
+        ProviderDirectory providerDirectory = new ProviderDirectory(providerService.getModifiedAfter(lastModified));
+        OrganizationDirectory organizationDirectory = new OrganizationDirectory(organizationService.getModifiedAfter(lastModified));
+        ServiceDirectory serviceDirectory = new ServiceDirectory(serviceService.getModifiedAfter(lastModified));
 
         return new CSD(organizationDirectory, serviceDirectory, facilityDirectory, providerDirectory);
     }
 
     @Override
-    public CSD update(CSD csd) {
+    public void update(CSD csd) {
         if (csd != null) {
-            CSD oldCSD = getCSD();
-
-            if (oldCSD != null) {
-                facilityDirectoryService.update(csd.getFacilityDirectory());
-                providerDirectoryService.update(csd.getProviderDirectory());
-                organizationDirectoryService.update(csd.getOrganizationDirectory());
-                serviceDirectoryService.update(csd.getServiceDirectory());
-            } else {
-                return create(csd);
+            if (csd.getFacilityDirectory() != null && csd.getFacilityDirectory().getFacilities() != null) {
+                facilityService.update(csd.getFacilityDirectory().getFacilities());
             }
-
-            return oldCSD;
+            if (csd.getProviderDirectory() != null && csd.getProviderDirectory().getProviders() != null) {
+                providerService.update(csd.getProviderDirectory().getProviders());
+            }
+            if (csd.getOrganizationDirectory() != null && csd.getOrganizationDirectory().getOrganizations() != null) {
+                organizationService.update(csd.getOrganizationDirectory().getOrganizations());
+            }
+            if (csd.getServiceDirectory() != null && csd.getServiceDirectory().getServices() != null) {
+                serviceService.update(csd.getServiceDirectory().getServices());
+            }
         }
-        return null;
     }
 
     @Override
     public void delete() {
-        csdDataService.deleteAll();
+        facilityService.deleteAll();
+        organizationService.deleteAll();
+        providerService.deleteAll();
+        serviceService.deleteAll();
     }
 
     @Override
     public String getXmlContent() {
-        return csdDataService.doInTransaction(new TransactionCallback<String>() {
-            @Override
-            public String doInTransaction(TransactionStatus transactionStatus) {
-                try {
-                    CSD csd = getCSD();
-                    if (csd != null) {
-                        return MarshallUtils.marshall(csd, CSDConstants.CSD_SCHEMA, CSD.class);
-                    } else {
-                        throw new IllegalArgumentException("There is no CSD structure in the database");
-                    }
-                } catch (SAXException e) {
-                    throw new IllegalArgumentException("Invalid schema", e);
-                } catch (JAXBException e) {
-                    throw new IllegalArgumentException("Invalid CSD structure", e);
-                }
+        try {
+            CSD csd = getCSD();
+            if (csd != null) {
+                return MarshallUtils.marshall(csd, CSDConstants.CSD_SCHEMA, CSD.class);
+            } else {
+                throw new IllegalArgumentException("There is no CSD structure in the database");
             }
-        });
+        } catch (SAXException e) {
+            throw new IllegalArgumentException("Invalid schema", e);
+        } catch (JAXBException e) {
+            throw new IllegalArgumentException("Invalid CSD structure", e);
+        }
     }
 
     @Override

@@ -289,6 +289,68 @@ public class Facility extends BaseMainEntity {
         this.extensions = extensions;
     }
 
+    @Override //NO CHECKSTYLE CyclomaticComplexity
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+
+        Facility facility = (Facility) o;
+
+        if (!primaryName.equals(facility.primaryName)) {
+            return false;
+        }
+        if (!codedTypes.equals(facility.codedTypes)) {
+            return false;
+        }
+        if (otherIDs != null ? !otherIDs.equals(facility.otherIDs) : facility.otherIDs != null) {
+            return false;
+        }
+        if (otherNames != null ? !otherNames.equals(facility.otherNames) : facility.otherNames != null) {
+            return false;
+        }
+        if (addresses != null ? !addresses.equals(facility.addresses) : facility.addresses != null) {
+            return false;
+        }
+        if (geocode != null ? !geocode.equals(facility.geocode) : facility.geocode != null) {
+            return false;
+        }
+        if (operatingHours != null ? !operatingHours.equals(facility.operatingHours) : facility.operatingHours != null) {
+            return false;
+        }
+        if (languages != null ? !languages.equals(facility.languages) : facility.languages != null) {
+            return false;
+        }
+        if (contactPoints != null ? !contactPoints.equals(facility.contactPoints) : facility.contactPoints != null) {
+            return false;
+        }
+        if (contacts != null ? !contacts.equals(facility.contacts) : facility.contacts != null) {
+            return false;
+        }
+        if (facilityOrganizations != null ? !facilityOrganizations.equals(facility.facilityOrganizations) : facility.facilityOrganizations != null) {
+            return false;
+        }
+        if (extensions != null ? !extensions.equals(facility.extensions) : facility.extensions != null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (codedTypes != null ? codedTypes.hashCode() : 0);
+        result = 31 * result + (primaryName != null ? primaryName.hashCode() : 0);
+        return result;
+    }
+
     @Override
     public String toString() {
         return primaryName;

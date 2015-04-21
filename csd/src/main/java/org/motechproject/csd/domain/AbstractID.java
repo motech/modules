@@ -1,6 +1,5 @@
 package org.motechproject.csd.domain;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
 

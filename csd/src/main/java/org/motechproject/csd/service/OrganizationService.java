@@ -1,5 +1,6 @@
 package org.motechproject.csd.service;
 
+import org.joda.time.DateTime;
 import org.motechproject.csd.domain.Organization;
 
 import java.util.List;
@@ -9,9 +10,15 @@ public interface OrganizationService {
 
     List<Organization> allOrganizations();
 
+    void deleteAll();
+
     Organization getOrganizationByEntityID(String entityID);
 
-    Organization removeAndCreate(Organization organization);
+    void update(Organization organization);
 
-    Set<Organization> removeAndCreate(Set<Organization> organizations);
+    void delete(String entityID);
+
+    void update(Set<Organization> organizations);
+
+    Set<Organization> getModifiedAfter(DateTime date);
 }

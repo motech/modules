@@ -1,5 +1,6 @@
 package org.motechproject.csd.service.impl;
 
+import org.joda.time.DateTime;
 import org.motechproject.csd.domain.Organization;
 import org.motechproject.csd.mds.OrganizationDataService;
 import org.motechproject.csd.service.OrganizationService;
@@ -22,26 +23,46 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
+    public void deleteAll() {
+        organizationDataService.deleteAll();
+    }
+
+    @Override
     public Organization getOrganizationByEntityID(String entityID) {
         return organizationDataService.findByEntityID(entityID);
     }
 
     @Override
-    public Organization removeAndCreate(Organization organization) {
-        Organization organizationToRemove = getOrganizationByEntityID(organization.getEntityID());
+    public void update(Organization organization) {
+        delete(organization.getEntityID());
         organizationDataService.create(organization);
-        return organizationToRemove;
     }
 
     @Override
-    public Set<Organization> removeAndCreate(Set<Organization> organizations) {
-        Set<Organization> organizationsToRemove = new HashSet<>();
+    public void delete(String entityID) {
+        Organization organization = getOrganizationByEntityID(entityID);
+        if (organization != null) {
+            organizationDataService.delete(organization);
+        }
+    }
+
+    @Override
+    public void update(Set<Organization> organizations) {
         for (Organization organization : organizations) {
-            Organization organizationToRemove = removeAndCreate(organization);
-            if (organizationToRemove != null) {
-                organizationsToRemove.add(organizationToRemove);
+            update(organization);
+        }
+    }
+
+    @Override
+    public Set<Organization> getModifiedAfter(DateTime date) {
+        List<Organization> allOrganizations = allOrganizations();
+        Set<Organization> modifiedOrganizations = new HashSet<>();
+
+        for (Organization organization : allOrganizations) {
+            if (organization.getRecord().getUpdated().isAfter(date)) {
+                modifiedOrganizations.add(organization);
             }
         }
-        return organizationsToRemove;
+        return modifiedOrganizations;
     }
 }
