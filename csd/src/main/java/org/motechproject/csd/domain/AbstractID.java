@@ -9,8 +9,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
-@XmlAccessorType(XmlAccessType.NONE)
 @XmlTransient
+@XmlAccessorType(XmlAccessType.NONE)
 public abstract class AbstractID {
 
     private Long id;
@@ -19,7 +19,7 @@ public abstract class AbstractID {
 
     private DateTime modificationDate;
 
-    @JsonIgnore
+    @XmlTransient
     public Long getId() {
         return id;
     }
