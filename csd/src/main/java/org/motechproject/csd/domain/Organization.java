@@ -67,7 +67,7 @@ import java.util.Set;
 @Entity(maxFetchDepth = 4)
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "otherIDs", "codedTypes", "primaryName", "otherNames", "addresses", "contacts", "credentials", "languages", "specializations", "contactPoints", "parent", "extensions", "record" })
-public class Organization extends AbstractUniqueID {
+public class Organization extends BaseMainEntity {
 
     @Field(name = "organization_other_ids")
     @Cascade(delete = true)
@@ -122,10 +122,6 @@ public class Organization extends AbstractUniqueID {
     @Cascade(delete = true)
     private Set<Extension> extensions = new HashSet<>();
 
-    @Field(required = true)
-    @Cascade(delete = true)
-    private Record record;
-
     public Organization() {
     }
 
@@ -133,7 +129,7 @@ public class Organization extends AbstractUniqueID {
         setEntityID(entityID);
         this.codedTypes = codedTypes;
         this.primaryName = primaryName;
-        this.record = record;
+        setRecord(record);
     }
 
     public Organization(String entityID, Set<Credential> credentials, String parentOrganization, Set<CodedType> specializations, Set<OtherID> otherIDs, //NO CHECKSTYLE ArgumentCount
@@ -153,7 +149,7 @@ public class Organization extends AbstractUniqueID {
         this.contactPoints = contactPoints;
         this.codedTypes = codedTypes;
         this.extensions = extensions;
-        this.record = record;
+        setRecord(record);
     }
 
     public String getPrimaryName() {
@@ -246,15 +242,6 @@ public class Organization extends AbstractUniqueID {
         this.codedTypes = codedTypes;
     }
 
-    public Record getRecord() {
-        return record;
-    }
-
-    @XmlElement(required = true)
-    public void setRecord(Record record) {
-        this.record = record;
-    }
-
     @XmlTransient
     public String getParentOrganization() {
         return parentOrganization;
@@ -287,72 +274,6 @@ public class Organization extends AbstractUniqueID {
     @XmlElement(name = "extension")
     public void setExtensions(Set<Extension> extensions) {
         this.extensions = extensions;
-    }
-
-    @Override //NO CHECKSTYLE CyclomaticComplexity
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-
-        Organization that = (Organization) o;
-
-        if (!primaryName.equals(that.primaryName)) {
-            return false;
-        }
-        if (!codedTypes.equals(that.codedTypes)) {
-            return false;
-        }
-        if (!record.equals(that.record)) {
-            return false;
-        }
-        if (addresses != null ? !addresses.equals(that.addresses) : that.addresses != null) {
-            return false;
-        }
-        if (otherNames != null ? !otherNames.equals(that.otherNames) : that.otherNames != null) {
-            return false;
-        }
-        if (parentOrganization != null ? !parentOrganization.equals(that.parentOrganization) : that.parentOrganization != null) {
-            return false;
-        }
-        if (otherIDs != null ? !otherIDs.equals(that.otherIDs) : that.otherIDs != null) {
-            return false;
-        }
-        if (specializations != null ? !specializations.equals(that.specializations) : that.specializations != null) {
-            return false;
-        }
-        if (contactPoints != null ? !contactPoints.equals(that.contactPoints) : that.contactPoints != null) {
-            return false;
-        }
-        if (credentials != null ? !credentials.equals(that.credentials) : that.credentials != null) {
-            return false;
-        }
-        if (languages != null ? !languages.equals(that.languages) : that.languages != null) {
-            return false;
-        }
-        if (contacts != null ? !contacts.equals(that.contacts) : that.contacts != null) {
-            return false;
-        }
-        if (extensions != null ? !extensions.equals(that.extensions) : that.extensions != null) {
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override //NO CHECKSTYLE CyclomaticComplexity
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (primaryName != null ? primaryName.hashCode() : 0);
-        result = 31 * result + (codedTypes != null ? codedTypes.hashCode() : 0);
-        result = 31 * result + (record != null ? record.hashCode() : 0);
-        return result;
     }
 
     @Override

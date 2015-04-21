@@ -79,7 +79,6 @@
     <osgi:reference id="providerFacilityDataService" interface="org.motechproject.csd.mds.ProviderFacilityDataService" />
     <osgi:reference id="providerOrganizationDataService" interface="org.motechproject.csd.mds.ProviderOrganizationDataService" />
     <osgi:reference id="providerOrganizationsDataService" interface="org.motechproject.csd.mds.ProviderOrganizationsDataService" />
-    <osgi:reference id="recordDataService" interface="org.motechproject.csd.mds.RecordDataService" />
     <osgi:reference id="serviceDataService" interface="org.motechproject.csd.mds.ServiceDataService" />
     <osgi:reference id="serviceDirectoryDataService" interface="org.motechproject.csd.mds.ServiceDirectoryDataService" />
 

@@ -102,7 +102,7 @@ import java.util.Set;
 @Entity(maxFetchDepth = 4)
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "otherIDs", "codedTypes", "demographic", "languages", "providerOrganizations", "providerFacilities", "credentials", "specialties", "extensions", "record" })
-public class Provider extends AbstractUniqueID {
+public class Provider extends BaseMainEntity {
 
     @Field(name = "provider_other_ids")
     @Cascade(delete = true)
@@ -144,17 +144,13 @@ public class Provider extends AbstractUniqueID {
     @Cascade(delete = true)
     private Set<Extension> extensions = new HashSet<>();
 
-    @Field(required = true)
-    @Cascade(delete = true)
-    private Record record;
-
     public Provider() {
     }
 
     public Provider(String entityID, Set<CodedType> codedTypes, Record record, Person demographic) {
         setEntityID(entityID);
         this.codedTypes = codedTypes;
-        this.record = record;
+        setRecord(record);
         this.demographic = demographic;
     }
 
@@ -164,7 +160,7 @@ public class Provider extends AbstractUniqueID {
         setEntityID(entityID);
         this.codedTypes = codedTypes;
         this.extensions = extensions;
-        this.record = record;
+        setRecord(record);
         this.otherIDs = otherIDs;
         this.demographic = demographic;
         this.languages = languages;
@@ -246,15 +242,6 @@ public class Provider extends AbstractUniqueID {
         this.codedTypes = codedTypes;
     }
 
-    public Record getRecord() {
-        return record;
-    }
-
-    @XmlElement(required = true)
-    public void setRecord(Record record) {
-        this.record = record;
-    }
-
     public Set<Extension> getExtensions() {
         return extensions;
     }
@@ -262,63 +249,6 @@ public class Provider extends AbstractUniqueID {
     @XmlElement(name = "extension")
     public void setExtensions(Set<Extension> extensions) {
         this.extensions = extensions;
-    }
-
-    @Override //NO CHECKSTYLE CyclomaticComplexity
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-
-        Provider provider = (Provider) o;
-
-        if (!demographic.equals(provider.demographic)) {
-            return false;
-        }
-        if (!codedTypes.equals(provider.codedTypes)) {
-            return false;
-        }
-        if (!record.equals(provider.record)) {
-            return false;
-        }
-        if (otherIDs != null ? !otherIDs.equals(provider.otherIDs) : provider.otherIDs != null) {
-            return false;
-        }
-        if (languages != null ? !languages.equals(provider.languages) : provider.languages != null) {
-            return false;
-        }
-        if (specialties != null ? !specialties.equals(provider.specialties) : provider.specialties != null) {
-            return false;
-        }
-        if (credentials != null ? !credentials.equals(provider.credentials) : provider.credentials != null) {
-            return false;
-        }
-        if (providerFacilities != null ? !providerFacilities.equals(provider.providerFacilities) : provider.providerFacilities != null) {
-            return false;
-        }
-        if (providerOrganizations != null ? !providerOrganizations.equals(provider.providerOrganizations) : provider.providerOrganizations != null) {
-            return false;
-        }
-        if (extensions != null ? !extensions.equals(provider.extensions) : provider.extensions != null) {
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (demographic != null ? demographic.hashCode() : 0);
-        result = 31 * result + (codedTypes != null ? codedTypes.hashCode() : 0);
-        result = 31 * result + (record != null ? record.hashCode() : 0);
-        return result;
     }
 
     @Override

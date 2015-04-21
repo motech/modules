@@ -100,7 +100,7 @@ import java.util.Set;
 @Entity(maxFetchDepth = 4)
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "otherIDs", "codedTypes", "primaryName", "otherNames", "addresses", "contacts", "geocode", "languages", "contactPoints", "facilityOrganizations", "operatingHours", "extensions", "record" })
-public class Facility extends AbstractUniqueID {
+public class Facility extends BaseMainEntity {
 
     @Field
     @Cascade(delete = true)
@@ -152,17 +152,13 @@ public class Facility extends AbstractUniqueID {
     @Cascade(delete = true)
     private Set<Extension> extensions = new HashSet<>();
 
-    @Field(required = true)
-    @Cascade(delete = true)
-    private Record record;
-
     public Facility() {
     }
 
     public Facility(String entityID, Set<CodedType> codedTypes, Record record, String primaryName) {
         setEntityID(entityID);
         this.codedTypes = codedTypes;
-        this.record = record;
+        setRecord(record);
         this.primaryName = primaryName;
     }
 
@@ -172,7 +168,7 @@ public class Facility extends AbstractUniqueID {
         setEntityID(entityID);
         this.codedTypes = codedTypes;
         this.extensions = extensions;
-        this.record = record;
+        setRecord(record);
         this.otherIDs = otherIDs;
         this.primaryName = primaryName;
         this.otherNames = otherNames;
@@ -291,81 +287,6 @@ public class Facility extends AbstractUniqueID {
     @XmlElement(name = "extension")
     public void setExtensions(Set<Extension> extensions) {
         this.extensions = extensions;
-    }
-
-    public Record getRecord() {
-        return record;
-    }
-
-    @XmlElement(required = true)
-    public void setRecord(Record record) {
-        this.record = record;
-    }
-
-    @Override //NO CHECKSTYLE CyclomaticComplexity
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-
-        Facility facility = (Facility) o;
-
-        if (!primaryName.equals(facility.primaryName)) {
-            return false;
-        }
-        if (!codedTypes.equals(facility.codedTypes)) {
-            return false;
-        }
-        if (!record.equals(facility.record)) {
-            return false;
-        }
-        if (otherIDs != null ? !otherIDs.equals(facility.otherIDs) : facility.otherIDs != null) {
-            return false;
-        }
-        if (otherNames != null ? !otherNames.equals(facility.otherNames) : facility.otherNames != null) {
-            return false;
-        }
-        if (addresses != null ? !addresses.equals(facility.addresses) : facility.addresses != null) {
-            return false;
-        }
-        if (geocode != null ? !geocode.equals(facility.geocode) : facility.geocode != null) {
-            return false;
-        }
-        if (operatingHours != null ? !operatingHours.equals(facility.operatingHours) : facility.operatingHours != null) {
-            return false;
-        }
-        if (languages != null ? !languages.equals(facility.languages) : facility.languages != null) {
-            return false;
-        }
-        if (contactPoints != null ? !contactPoints.equals(facility.contactPoints) : facility.contactPoints != null) {
-            return false;
-        }
-        if (contacts != null ? !contacts.equals(facility.contacts) : facility.contacts != null) {
-            return false;
-        }
-        if (facilityOrganizations != null ? !facilityOrganizations.equals(facility.facilityOrganizations) : facility.facilityOrganizations != null) {
-            return false;
-        }
-        if (extensions != null ? !extensions.equals(facility.extensions) : facility.extensions != null) {
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override //NO CHECKSTYLE CyclomaticComplexity
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (codedTypes != null ? codedTypes.hashCode() : 0);
-        result = 31 * result + (primaryName != null ? primaryName.hashCode() : 0);
-        result = 31 * result + (record != null ? record.hashCode() : 0);
-        return result;
     }
 
     @Override
