@@ -1,6 +1,7 @@
 package org.motechproject.csd.domain;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -14,6 +15,10 @@ public abstract class AbstractID {
 
     private Long id;
 
+    private DateTime creationDate;
+
+    private DateTime modificationDate;
+
     @JsonIgnore
     public Long getId() {
         return id;
@@ -21,5 +26,23 @@ public abstract class AbstractID {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @XmlTransient
+    public DateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(DateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    @XmlTransient
+    public DateTime getModificationDate() {
+        return modificationDate;
+    }
+
+    public void setModificationDate(DateTime modificationDate) {
+        this.modificationDate = modificationDate;
     }
 }

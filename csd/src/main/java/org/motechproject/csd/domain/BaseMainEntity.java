@@ -1,6 +1,5 @@
 package org.motechproject.csd.domain;
 
-import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
@@ -16,10 +15,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlAccessorType(XmlAccessType.NONE)
 public abstract class BaseMainEntity extends AbstractID {
 
-    private DateTime creationDate;
-
-    private DateTime modificationDate;
-
     @Field(required = true)
     private String entityID;
 
@@ -31,24 +26,6 @@ public abstract class BaseMainEntity extends AbstractID {
 
     @Field
     private String sourceDirectory;
-
-    @XmlTransient
-    public DateTime getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(DateTime creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    @XmlTransient
-    public DateTime getModificationDate() {
-        return modificationDate;
-    }
-
-    public void setModificationDate(DateTime modificationDate) {
-        this.modificationDate = modificationDate;
-    }
 
     public String getEntityID() {
         return entityID;
