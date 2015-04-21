@@ -1,11 +1,14 @@
 package org.motechproject.csd.service.impl;
 
+import org.joda.time.DateTime;
 import org.motechproject.csd.domain.Facility;
+import org.motechproject.csd.domain.Record;
 import org.motechproject.csd.mds.FacilityDataService;
 import org.motechproject.csd.service.FacilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -44,4 +47,11 @@ public class FacilityServiceImpl implements FacilityService {
         }
         return facilitiesToRemove;
     }
+
+    @Override
+    public void updateRecord(Facility facility) {
+        Record record = facility.getRecord();
+        record.setUpdated(new DateTime(new Date()));
+    }
+
 }

@@ -2,6 +2,8 @@ package org.motechproject.csd.service;
 
 
 import org.motechproject.csd.domain.Facility;
+import org.motechproject.mds.annotations.InstanceLifecycleListener;
+import org.motechproject.mds.domain.InstanceLifecycleListenerType;
 
 import java.util.List;
 import java.util.Set;
@@ -18,4 +20,8 @@ public interface FacilityService {
     Facility removeAndCreate(Facility facility);
 
     Set<Facility> removeAndCreate(Set<Facility> facilities);
+
+    @InstanceLifecycleListener(InstanceLifecycleListenerType.POST_STORE)
+    void updateRecord(Facility facility);
+
 }
