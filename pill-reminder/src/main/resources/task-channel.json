@@ -9,7 +9,7 @@
       "eventParameters" : [
         {
           "eventKey" : "DosageID",
-          "displayName" : "pillreminder.dossageID"
+          "displayName" : "pillreminder.dosageID"
         },
         {
           "eventKey" : "ExternalID",
@@ -35,31 +35,33 @@
   ],
   "actionTaskEvents" : [
     {
-      "displayName" : "pillreminder.event.subject.scheduler",
-      "subject" : "org.motechproject.pillreminder.scheduler-reminder",
+      "displayName" : "pillreminder.event.subject.dosageStatusKnown",
+      "subject" : "org.motechproject.pillreminder.dosage-status-known",
       "actionParameters" : [
         {
-          "key" : "DosageID",
-          "displayName" : "pillreminder.dossageID"
+          "key" : "PillRegimenID",
+          "displayName" : "pillreminder.pillRegimenID",
+          "type" : "LONG"
         },
+        {
+          "key" : "DosageID",
+          "displayName" : "pillreminder.dosageID",
+          "type" : "LONG"
+        },
+        {
+          "key" : "LastCaptureDate",
+          "displayName" : "pillreminder.lastCaptureDate",
+          "type" : "DATE"
+        }
+      ]
+    },
+    {
+      "displayName" : "pillreminder.event.subject.unsubscribe",
+      "subject" : "org.motechproject.pillreminder.unsubscribe",
+      "actionParameters" : [
         {
           "key" : "ExternalID",
           "displayName" : "pillreminder.externalID"
-        },
-        {
-          "key" : "times-reminders-sent",
-          "displayName" : "pillreminder.times.sent",
-          "type": "INTEGER"
-        },
-        {
-          "key" :  "times-reminders-to-be-sent",
-          "displayName" : "pillreminder.total.times.sent",
-          "type": "INTEGER"
-        },
-        {
-          "key" :  "retry-interval",
-          "displayName" : "pillreminder.retry.interval",
-          "type": "INTEGER"
         }
       ]
     }

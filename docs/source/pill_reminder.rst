@@ -115,11 +115,12 @@ Consumed Events
 
 ::
 
-  EventKeys.PILLREMINDER_REMINDER_EVENT_SUBJECT_SCHEDULER
+  EventKeys.PILLREMINDER_REMINDER_EVENT_SUBJECT_DOSAGE_STATUS_KNOW
+    (Long) EventKeys.PILL_REGIMEN_ID
+    (Long) EventKeys.DOSAGE_ID_KEY
+    (Date) EventKeys.LAST_CAPTURE_DATE
+
+  EventKeys.PILLREMINDER_REMINDER_EVENT_SUBJECT_UNSUBSCRIBE
     (String) EventKeys.EXTERNAL_ID_KEY
-    (String) EventKeys.PILLREMINDER_ID_KEY
-    (String) EventKeys.DOSAGE_ID_KEY
-    (Integer) EventKeys.PILLREMINDER_TIMES_SENT
-    (Integer) EventKeys.PILLREMINDER_TOTAL_TIMES_TO_SEND
 
 The Pill Reminder module exposes this event to the Task module as a task action, allowing other modules to schedule pill reminders using the Task module user interface.

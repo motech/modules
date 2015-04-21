@@ -38,8 +38,10 @@ public class ReminderEventHandlerTest extends BaseUnitTest {
 
     @Mock
     EventRelay eventRelay;
+
     @Mock
     PillRegimenDataService pillRegimenDataService;
+
     @Mock
     MotechSchedulerService schedulerService;
 
