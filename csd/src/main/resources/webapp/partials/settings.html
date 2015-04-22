@@ -17,21 +17,21 @@
                 <div class="form-group">
                     <label class="col-md-2 control-label" for="xmlUrl">{{msg('csd.web.settings.xmlUrl')}}</label>
                     <div class="col-md-10" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.xmlUrl.tooltip')}}">
-                        <input class="form-control" id="xmlUrl" type="text" ng-model="config.xmlUrl" required>
+                        <input class="form-control" id="xmlUrl" type="text" placeholder="{{msg('csd.web.settings.xmlUrl.placeholder')}}" ng-model="config.xmlUrl" required>
                     </div>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-md-2 control-label">{{msg('csd.web.settings.communicationProtocol')}}</label>
-                <div class="col-md-10">
-                    <div class="radio">
+                <div class="col-md-2">
+                    <div class="radio" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.REST.tooltip')}}">
                         <label>
                             <input type="radio" name="communicationProtocols" value="REST" ng-model="config.communicationProtocol">
                             {{msg('csd.web.settings.REST')}}
                         </label>
                     </div>
-                    <div class="radio">
+                    <div class="radio" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.SOAP.tooltip')}}">
                         <label>
                             <input type="radio" name="communicationProtocols" value="SOAP" ng-model="config.communicationProtocol">
                             {{msg('csd.web.settings.SOAP')}}
@@ -53,7 +53,7 @@
 
                         <div class="form-group margin-before2">
                             <label class="col-md-2 control-label" for="schedulerEnabled">{{msg('csd.web.settings.schedulerEnabled')}}</label>
-                            <div class="col-md-1 checkbox" data-toggle="tooltip" data-placement="top" data-trigger="hover">
+                            <div class="col-md-1 checkbox" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.schedulerEnabled.tooltip')}}">
                                 <label>
                                     <input type="checkbox" id="schedulerEnabled" ng-model="config.schedulerEnabled"/>
                                 </label>
@@ -62,14 +62,14 @@
 
                         <div class="form-group" ng-show="config.schedulerEnabled">
                             <label class="col-md-2 control-label" for="startDate">{{msg('csd.web.settings.startDate')}}</label>
-                            <div class="col-md-3" data-toggle="tooltip" data-placement="top" data-trigger="hover">
+                            <div class="col-md-3" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.startDate.tooltip')}}">
                                 <input id="startDate" csd-scheduler-date-picker="" type="text" class="form-control" placeholder="{{msg('csd.web.settings.startDate.placeholder')}}" ng-model="config.startDate">
                             </div>
                         </div>
 
                         <div class="form-group" ng-show="config.schedulerEnabled">
                             <label class="col-md-2 control-label" for="period">{{msg('csd.web.settings.period')}}</label>
-                            <div class="col-md-1" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.period.tooltip')}}">
+                            <div class="col-md-1" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.settings.period.tooltip', timeMultipliers[config.timePeriodMultiplier])}}">
                                 <input class="form-control" id="period" ng-pattern="/^[0-9]+$/" type="text" ng-model="config.timePeriod" required />
                             </div>
                             <div class="col-md-1">
