@@ -3,11 +3,14 @@ package org.motechproject.csd.domain;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import java.util.HashSet;
 import java.util.Set;
@@ -101,7 +104,7 @@ import java.util.Set;
  */
 @Entity(maxFetchDepth = 4)
 @XmlAccessorType(XmlAccessType.NONE)
-@XmlType(propOrder = { "otherIDs", "codedTypes", "demographic", "languages", "providerOrganizations", "providerFacilities", "credentials", "specialties", "extensions", "record" })
+@XmlType(propOrder = { "otherIDs", "codedTypes", "demographic", "languages", "providerOrganizationSet", "providerFacilitySet", "credentials", "specialties", "extensions", "record" })
 public class Provider extends BaseMainEntity {
 
     @Field(name = "provider_other_ids")
@@ -120,11 +123,11 @@ public class Provider extends BaseMainEntity {
 
     @Field
     @Cascade(delete = true)
-    private ProviderOrganizations providerOrganizations;
+    private Set<ProviderOrganization> providerOrganizations = new HashSet<>();
 
     @Field
     @Cascade(delete = true)
-    private ProviderFacilities providerFacilities;
+    private Set<ProviderFacility> providerFacilities = new HashSet<>();
 
     @Field(name = "provider_credentials")
     @Cascade(delete = true)
@@ -155,8 +158,8 @@ public class Provider extends BaseMainEntity {
     }
 
     public Provider(String entityID, Set<CodedType> codedTypes, Set<Extension> extensions, Record record, Set<OtherID> otherIDs, //NO CHECKSTYLE ArgumentCount
-                    Person demographic, Set<CodedType> languages, ProviderOrganizations providerOrganizations,
-                    ProviderFacilities providerFacilities, Set<Credential> credentials, Set<CodedType> specialties) {
+                    Person demographic, Set<CodedType> languages, Set<ProviderOrganization> providerOrganizations,
+                    Set<ProviderFacility> providerFacilities, Set<Credential> credentials, Set<CodedType> specialties) {
         setEntityID(entityID);
         this.codedTypes = codedTypes;
         this.extensions = extensions;
@@ -197,22 +200,50 @@ public class Provider extends BaseMainEntity {
         this.languages = languages;
     }
 
-    public ProviderOrganizations getProviderOrganizations() {
+    @XmlTransient
+    public Set<ProviderOrganization> getProviderOrganizations() {
         return providerOrganizations;
     }
 
-    @XmlElement(name = "organizations")
-    public void setProviderOrganizations(ProviderOrganizations providerOrganizations) {
+    public void setProviderOrganizations(Set<ProviderOrganization> providerOrganizations) {
         this.providerOrganizations = providerOrganizations;
     }
 
-    public ProviderFacilities getProviderFacilities() {
+    @XmlTransient
+    public Set<ProviderFacility> getProviderFacilities() {
         return providerFacilities;
     }
 
-    @XmlElement(name = "facilities")
-    public void setProviderFacilities(ProviderFacilities providerFacilities) {
+    public void setProviderFacilities(Set<ProviderFacility> providerFacilities) {
         this.providerFacilities = providerFacilities;
+    }
+
+    @Ignore
+    public Set<ProviderOrganization> getProviderOrganizationSet() {
+        if (providerOrganizations != null && providerOrganizations.isEmpty()) {
+            return null;
+        }
+        return providerOrganizations;
+    }
+
+    @XmlElementWrapper(name = "organizations")
+    @XmlElement(name = "organization", required = true)
+    public void setProviderOrganizationSet(Set<ProviderOrganization> providerOrganizationSet) {
+        providerOrganizations = providerOrganizationSet;
+    }
+
+    @Ignore
+    public Set<ProviderFacility> getProviderFacilitySet() {
+        if (providerFacilities != null && providerFacilities.isEmpty()) {
+            return null;
+        }
+        return providerFacilities;
+    }
+
+    @XmlElementWrapper(name = "facilities")
+    @XmlElement(name = "facility", required = true)
+    public void setProviderFacilitySet(Set<ProviderFacility> providerFacilitySet) {
+        providerFacilities = providerFacilitySet;
     }
 
     public Set<Credential> getCredentials() {

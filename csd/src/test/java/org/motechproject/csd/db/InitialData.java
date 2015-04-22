@@ -14,7 +14,6 @@ import org.motechproject.csd.domain.Facility;
 import org.motechproject.csd.domain.FacilityDirectory;
 import org.motechproject.csd.domain.FacilityOrganization;
 import org.motechproject.csd.domain.FacilityOrganizationService;
-import org.motechproject.csd.domain.FacilityOrganizations;
 import org.motechproject.csd.domain.Geocode;
 import org.motechproject.csd.domain.Name;
 import org.motechproject.csd.domain.OperatingHours;
@@ -27,11 +26,9 @@ import org.motechproject.csd.domain.Person;
 import org.motechproject.csd.domain.PersonName;
 import org.motechproject.csd.domain.Provider;
 import org.motechproject.csd.domain.ProviderDirectory;
-import org.motechproject.csd.domain.ProviderFacilities;
 import org.motechproject.csd.domain.ProviderFacility;
 import org.motechproject.csd.domain.ProviderFacilityService;
 import org.motechproject.csd.domain.ProviderOrganization;
-import org.motechproject.csd.domain.ProviderOrganizations;
 import org.motechproject.csd.domain.Record;
 import org.motechproject.csd.domain.Service;
 import org.motechproject.csd.domain.ServiceDirectory;
@@ -60,7 +57,7 @@ public class InitialData {
                 new HashSet<>(Arrays.asList(new OtherID("facility", "a"))), "facility", new HashSet<>(Arrays.asList(new OtherName("facility", "en"))),
                 new HashSet<>(Arrays.asList(createAddress())), new HashSet<>(Arrays.asList(new OrganizationContact(createPerson()))),
                 new HashSet<>(Arrays.asList(new CodedType("facility", "c"))), new HashSet<>(Arrays.asList(createContactPoint())),
-                new Geocode(1, 2, 3, "c"), new FacilityOrganizations(new HashSet<>(Arrays.asList(createFacilityOrganization()))),
+                new Geocode(1, 2, 3, "c"), new HashSet<>(Arrays.asList(createFacilityOrganization())),
                 new HashSet<>(Arrays.asList(createOperatingHours())));
     }
 
@@ -76,7 +73,7 @@ public class InitialData {
     public static Provider createProvider(DateTime updated, String entityID) {
         return new Provider(entityID, new HashSet<>(Arrays.asList(new CodedType("provider", "c"))), new HashSet<>(Arrays.asList(new Extension("providerExtension", "urn"))),
                 new Record(updated, "status", updated), new HashSet<>(Arrays.asList(new OtherID("code", "a"))), createPerson(), new HashSet<>(Arrays.asList(new CodedType("c", "c"))),
-                new ProviderOrganizations(new HashSet<>(Arrays.asList(createProviderOrganization()))), new ProviderFacilities(new HashSet<>(Arrays.asList(createProviderFacility()))),
+                new HashSet<>(Arrays.asList(createProviderOrganization())), new HashSet<>(Arrays.asList(createProviderFacility())),
                 new HashSet<>(Arrays.asList(createCredential())), new HashSet<>(Arrays.asList(new CodedType("c", "c"))));
     }
 

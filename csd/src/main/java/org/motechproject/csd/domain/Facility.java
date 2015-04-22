@@ -3,11 +3,14 @@ package org.motechproject.csd.domain;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import java.util.HashSet;
 import java.util.Set;
@@ -99,7 +102,7 @@ import java.util.Set;
  */
 @Entity(maxFetchDepth = 4)
 @XmlAccessorType(XmlAccessType.NONE)
-@XmlType(propOrder = { "otherIDs", "codedTypes", "primaryName", "otherNames", "addresses", "contacts", "geocode", "languages", "contactPoints", "facilityOrganizations", "operatingHours", "extensions", "record" })
+@XmlType(propOrder = { "otherIDs", "codedTypes", "primaryName", "otherNames", "addresses", "contacts", "geocode", "languages", "contactPoints", "facilityOrganizationSet", "operatingHours", "extensions", "record" })
 public class Facility extends BaseMainEntity {
 
     @Field
@@ -108,7 +111,7 @@ public class Facility extends BaseMainEntity {
 
     @Field
     @Cascade(delete = true)
-    private FacilityOrganizations facilityOrganizations;
+    private Set<FacilityOrganization> facilityOrganizations = new HashSet<>();
 
     @UIDisplayable(position = 2)
     @Field(name = "facility_operating_hours")
@@ -164,7 +167,7 @@ public class Facility extends BaseMainEntity {
 
     public Facility(String entityID, Set<CodedType> codedTypes, Set<Extension> extensions, Record record, Set<OtherID> otherIDs, //NO CHECKSTYLE ArgumentCount
                     String primaryName, Set<OtherName> otherNames, Set<Address> addresses, Set<OrganizationContact> contacts, Set<CodedType> languages,
-                    Set<ContactPoint> contactPoints, Geocode geocode, FacilityOrganizations facilityOrganizations, Set<OperatingHours> operatingHours) {
+                    Set<ContactPoint> contactPoints, Geocode geocode, Set<FacilityOrganization> facilityOrganizations, Set<OperatingHours> operatingHours) {
         setEntityID(entityID);
         this.codedTypes = codedTypes;
         this.extensions = extensions;
@@ -190,13 +193,27 @@ public class Facility extends BaseMainEntity {
         this.geocode = geocode;
     }
 
-    public FacilityOrganizations getFacilityOrganizations() {
+    @XmlTransient
+    public Set<FacilityOrganization> getFacilityOrganizations() {
         return facilityOrganizations;
     }
 
-    @XmlElement(name = "organizations")
-    public void setFacilityOrganizations(FacilityOrganizations facilityOrganizations) {
+    public void setFacilityOrganizations(Set<FacilityOrganization> facilityOrganizations) {
         this.facilityOrganizations = facilityOrganizations;
+    }
+
+    @Ignore
+    public Set<FacilityOrganization> getFacilityOrganizationSet() {
+        if (facilityOrganizations != null && facilityOrganizations.isEmpty()) {
+            return null;
+        }
+        return facilityOrganizations;
+    }
+
+    @XmlElementWrapper(name = "organizations")
+    @XmlElement(name = "organization", required = true)
+    public void setFacilityOrganizationSet(Set<FacilityOrganization> facilityOrganizationSet) {
+        facilityOrganizations = facilityOrganizationSet;
     }
 
     public Set<OperatingHours> getOperatingHours() {

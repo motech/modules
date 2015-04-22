@@ -55,7 +55,6 @@
     <osgi:reference id="credentialDataService" interface="org.motechproject.csd.mds.CredentialDataService" />
     <osgi:reference id="extensionDataService" interface="org.motechproject.csd.mds.ExtensionDataService" />
     <osgi:reference id="facilityOrganizationDataService" interface="org.motechproject.csd.mds.FacilityOrganizationDataService" />
-    <osgi:reference id="facilityOrganizationsDataService" interface="org.motechproject.csd.mds.FacilityOrganizationsDataService" />
     <osgi:reference id="facilityOrganizationServiceDataService" interface="org.motechproject.csd.mds.FacilityOrganizationServiceDataService" />
     <osgi:reference id="geocodeDataService" interface="org.motechproject.csd.mds.GeocodeDataService" />
     <osgi:reference id="nameDataService" interface="org.motechproject.csd.mds.NameDataService" />
@@ -67,10 +66,8 @@
     <osgi:reference id="personDataService" interface="org.motechproject.csd.mds.PersonDataService" />
     <osgi:reference id="personNameDataService" interface="org.motechproject.csd.mds.PersonNameDataService" />
     <osgi:reference id="providerDataService" interface="org.motechproject.csd.mds.ProviderDataService" />
-    <osgi:reference id="providerFacilitiesDataService" interface="org.motechproject.csd.mds.ProviderFacilitiesDataService" />
     <osgi:reference id="providerFacilityDataService" interface="org.motechproject.csd.mds.ProviderFacilityDataService" />
     <osgi:reference id="providerOrganizationDataService" interface="org.motechproject.csd.mds.ProviderOrganizationDataService" />
-    <osgi:reference id="providerOrganizationsDataService" interface="org.motechproject.csd.mds.ProviderOrganizationsDataService" />
     <osgi:reference id="serviceDataService" interface="org.motechproject.csd.mds.ServiceDataService" />
 
     <osgi:reference id="schedulerService" interface="org.motechproject.scheduler.service.MotechSchedulerService" />
