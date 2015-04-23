@@ -59,7 +59,7 @@ public class Credential extends AbstractID {
     private String issuingAuthority;
 
     @UIDisplayable(position = 3)
-    @Field
+    @Field(tooltip = "Only date and not time matters in this entity")
     private DateTime credentialIssueDate;
 
     @UIDisplayable(position = 4)

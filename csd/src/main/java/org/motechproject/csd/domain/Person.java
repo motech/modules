@@ -72,7 +72,7 @@ public class Person extends AbstractID {
     private String gender;
 
     @UIDisplayable(position = 4)
-    @Field
+    @Field(tooltip = "Only date and not time matters in this entity")
     private DateTime dateOfBirth;
 
     public Person() {

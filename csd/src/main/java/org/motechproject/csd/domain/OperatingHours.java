@@ -58,19 +58,19 @@ public class OperatingHours extends AbstractID {
     private List<DayOfTheWeek> daysOfTheWeek = new ArrayList<>();
 
     @UIDisplayable(position = 1)
-    @Field
+    @Field(tooltip = "Only time and not date matters in this entity")
     private DateTime beginningHour;
 
     @UIDisplayable(position = 2)
-    @Field
+    @Field(tooltip = "Only time and not date matters in this entity")
     private DateTime endingHour;
 
     @UIDisplayable(position = 4)
-    @Field(required = true)
+    @Field(required = true, tooltip = "Only date and not time matters in this entity")
     private DateTime beginEffectiveDate;
 
     @UIDisplayable(position = 5)
-    @Field
+    @Field(tooltip = "Only date and not time matters in this entity")
     private DateTime endEffectiveDate;
 
     public OperatingHours() {
