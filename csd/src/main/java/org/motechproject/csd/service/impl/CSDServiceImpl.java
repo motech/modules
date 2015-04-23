@@ -121,18 +121,28 @@ public class CSDServiceImpl implements CSDService {
         }
 
         if (communicationProtocol.equals(CommunicationProtocol.REST)) {
-            String xml = csdHttpClient.getXml(xmlUrl);
-            if (xml == null) {
-                throw new IllegalArgumentException("Couldn't load XML");
-            }
-            saveFromXml(xml);
+            fetchAndUpdateUsingREST(xmlUrl);
         } else {
             DateTime lastModified = DateTime.parse(config.getLastModified(),
                     DateTimeFormat.forPattern(Config.DATE_TIME_PICKER_FORMAT));
-            CSD csd = soapClient.getModifications(xmlUrl, lastModified).getCSD();
-            update(csd);
+            fetchAndUpdateUsingSOAP(xmlUrl, lastModified);
             config.setLastModified(DateTime.now().toString(Config.DATE_TIME_PICKER_FORMAT));
         }
+    }
+
+    @Override
+    public void fetchAndUpdateUsingREST(String xmlUrl) {
+        String xml = csdHttpClient.getXml(xmlUrl);
+        if (xml == null) {
+            throw new IllegalArgumentException("Couldn't load XML");
+        }
+        saveFromXml(xml);
+    }
+
+    @Override
+    public void fetchAndUpdateUsingSOAP(String xmlUrl, DateTime lastModified) {
+        CSD csd = soapClient.getModifications(xmlUrl, lastModified).getCSD();
+        update(csd);
     }
 
     public void saveFromXml(String xml) {

@@ -4,146 +4,74 @@
     "moduleVersion": "${parsedVersion.osgiVersion}",
     "triggerTaskEvents" : [
         {
-            "subject" : "csdp_call_status",
-            "displayName" : "csd.task.call.status",
+            "subject" : "csd_update.custom",
+            "displayName" : "csd.task.update.custom",
             "eventParameters" : [
                 {
-                    "eventKey" : "motech_timestamp",
+                    "eventKey" : "update_date",
                     "type" : "DATE",
-                    "displayName" : "csd.task.motech.timestamp"
+                    "displayName" : "csd.task.updateDate"
                 },
                 {
-                    "eventKey" : "provider_timestamp",
-                    "type" : "DATE",
-                    "displayName" : "csd.task.provider.timestamp"
-                },
-                {
-                    "eventKey" : "config",
-                    "displayName" : "csd.task.config"
-                },
-                {
-                    "eventKey" : "from",
-                    "displayName" : "csd.task.from"
-                },
-                {
-                    "eventKey" : "to",
-                    "displayName" : "csd.task.to"
-                },
-                {
-                    "eventKey" : "call_direction",
-                    "displayName" : "csd.task.call.direction"
-                },
-                {
-                    "eventKey" : "call_status",
-                    "displayName" : "csd.task.call.status"
-                },
-                {
-                    "eventKey" : "motech_call_id",
-                    "displayName" : "csd.task.motech.call.id"
-                },
-                {
-                    "eventKey" : "provider_call_id",
-                    "displayName" : "csd.task.provider.call.id"
-                },
-                {
-                    "eventKey" : "provider_extra_data",
-                    "type" : "MAP",
-                    "displayName" : "csd.task.provider.extra.data"
+                    "eventKey" : "xml_url",
+                    "displayName" : "csd.task.xmlUrl"
                 }
             ]
         },
         {
-            "subject" : "csdp_template_request",
-            "displayName" : "csd.task.template.request",
+            "subject" : "csd_update.scheduled",
+            "displayName" : "csd.task.update.scheduled",
             "eventParameters" : [
                 {
-                    "eventKey" : "motech_timestamp",
+                    "eventKey" : "update_date",
                     "type" : "DATE",
-                    "displayName" : "csd.task.motech.timestamp"
+                    "displayName" : "csd.task.updateDate"
                 },
                 {
-                    "eventKey" : "provider_timestamp",
-                    "type" : "DATE",
-                    "displayName" : "csd.task.provider.timestamp"
-                },
-                {
-                    "eventKey" : "config",
-                    "displayName" : "csd.task.config"
-                },
-                {
-                    "eventKey" : "template",
-                    "displayName" : "csd.task.template"
-                },
-                {
-                    "eventKey" : "from",
-                    "displayName" : "csd.task.from"
-                },
-                {
-                    "eventKey" : "to",
-                    "displayName" : "csd.task.to"
-                },
-                {
-                    "eventKey" : "call_direction",
-                    "displayName" : "csd.task.call.direction"
-                },
-                {
-                    "eventKey" : "call_status",
-                    "displayName" : "csd.task.call.status"
-                },
-                {
-                    "eventKey" : "motech_call_id",
-                    "displayName" : "csd.task.motech.call.id"
-                },
-                {
-                    "eventKey" : "provider_call_id",
-                    "displayName" : "csd.task.provider.call.id"
-                },
-                {
-                    "eventKey" : "provider_extra_data",
-                    "type" : "MAP",
-                    "displayName" : "csd.task.provider.extra.data"
+                    "eventKey" : "xml_url",
+                    "displayName" : "csd.task.xmlUrl"
                 }
             ]
         },
         {
-            "subject" : "csdp_call_initiated",
-            "displayName" : "csd.task.call.initiated",
+            "subject" : "csd_update.task",
+            "displayName" : "csd.task.update.task",
             "eventParameters" : [
                 {
-                    "eventKey" : "timestamp",
+                    "eventKey" : "update_date",
                     "type" : "DATE",
-                    "displayName" : "csd.task.timestamp"
+                    "displayName" : "csd.task.updateDate"
                 },
                 {
-                    "eventKey" : "config",
-                    "displayName" : "csd.task.config"
-                },
-                {
-                    "eventKey" : "to",
-                    "displayName" : "csd.task.to"
-                },
-                {
-                    "eventKey" : "provider_extra_data",
-                    "type" : "MAP",
-                    "displayName" : "csd.task.provider.extra.data"
+                    "eventKey" : "xml_url",
+                    "displayName" : "csd.task.xmlUrl"
                 }
             ]
         }
     ],
     "actionTaskEvents": [
         {
-            "subject" : "csdp_initiate_call",
-            "displayName" : "csd.task.initiate.call",
+            "subject" : "csd_task_rest_update",
+            "displayName" : "csd.task.fetchAndUpdate.REST",
             "actionParameters" : [
                 {
-                    "key" : "config",
-                    "displayName" : "csd.task.config"
+                    "key" : "xml_url",
+                    "displayName" : "csd.task.xmlUrl"
+                }
+            ]
+        },
+        {
+            "subject" : "csd_task_soap_update",
+            "displayName" : "csd.task.fetchAndUpdate.SOAP",
+            "actionParameters" : [
+                {
+                    "key" : "xml_url",
+                    "displayName" : "csd.task.xmlUrl"
                 },
                 {
-                    "key" : "params",
-                    "type" : "MAP",
-                    "displayName" : "csd.task.params",
-                    "required": false
+                    "key" : "last_modified",
+                    "type" : "DATE",
+                    "displayName" : "csd.task.lastModified"
                 }
             ]
         }

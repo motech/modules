@@ -1,6 +1,7 @@
 package org.motechproject.csd.web;
 
 import org.apache.commons.lang.StringUtils;
+import org.motechproject.csd.scheduler.CSDScheduler;
 import org.motechproject.csd.service.CSDService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,18 +24,21 @@ public class CSDController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CSDController.class);
 
-
     private CSDService csdService;
 
+    private CSDScheduler csdScheduler;
+
     @Autowired
-    public CSDController(CSDService csdService) {
+    public CSDController(CSDService csdService, CSDScheduler csdScheduler) {
         this.csdService = csdService;
+        this.csdScheduler = csdScheduler;
     }
 
     @RequestMapping(value = "/csd-consume", method = RequestMethod.POST)
     @ResponseBody
     public void consume(@RequestBody String xmlUrl) {
         csdService.fetchAndUpdate(xmlUrl);
+        csdScheduler.sendCustomUpdateEventMessage(xmlUrl);
     }
 
     @RequestMapping(value = "/csd-getXml", method = RequestMethod.GET)

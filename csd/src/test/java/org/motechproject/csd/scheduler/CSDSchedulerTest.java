@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.csd.constants.CSDEventKeys;
 import org.motechproject.event.MotechEvent;
+import org.motechproject.event.listener.EventRelay;
 import org.motechproject.scheduler.contract.RepeatingPeriodSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 
@@ -21,12 +22,15 @@ public class CSDSchedulerTest {
     @Mock
     private MotechSchedulerService motechSchedulerService;
 
+    @Mock
+    private EventRelay eventRelay;
+
     private CSDScheduler csdScheduler;
 
     @Before
     public void setup() throws Exception {
         initMocks(this);
-        csdScheduler = new CSDScheduler(motechSchedulerService);
+        csdScheduler = new CSDScheduler(motechSchedulerService, eventRelay);
     }
 
     @Test

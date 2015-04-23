@@ -1,5 +1,6 @@
 package org.motechproject.csd.scheduler;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -23,6 +24,9 @@ public class CSDEventListenerTest {
     @Mock
     private CSDService csdService;
 
+    @Mock
+    private CSDScheduler csdScheduler;
+
     private CSDEventListener csdEventListener;
 
     private String url;
@@ -36,7 +40,7 @@ public class CSDEventListenerTest {
         initMocks(this);
 
         when(csdHttpClient.getXml(url)).thenReturn(xml);
-        csdEventListener = new CSDEventListener(csdService);
+        csdEventListener = new CSDEventListener(csdService, csdScheduler);
     }
 
     @Test
@@ -49,5 +53,34 @@ public class CSDEventListenerTest {
         csdEventListener.consumeXml(event);
 
         verify(csdService).fetchAndUpdate(url);
+        verify(csdScheduler).sendScheduledUpdateEventMessage(url);
+    }
+
+    @Test
+    public void verifyTaskUpdateUsingREST() {
+        Map<String, Object> eventParameters = new HashMap<>();
+        eventParameters.put(CSDEventKeys.XML_URL, url);
+
+        MotechEvent event = new MotechEvent(CSDEventKeys.CSD_TASK_REST_UPDATE, eventParameters);
+
+        csdEventListener.taskUpdateUsingREST(event);
+
+        verify(csdService).fetchAndUpdateUsingREST(url);
+        verify(csdScheduler).sendTaskUpdateEventMessage(url);
+    }
+
+    @Test
+    public void verifyTaskUpdateUsingSOAP() {
+        Map<String, Object> eventParameters = new HashMap<>();
+        String lastModified = new DateTime().toString();
+        eventParameters.put(CSDEventKeys.XML_URL, url);
+        eventParameters.put(CSDEventKeys.LAST_MODIFIED, lastModified);
+
+        MotechEvent event = new MotechEvent(CSDEventKeys.CSD_TASK_SOAP_UPDATE, eventParameters);
+
+        csdEventListener.taskUpdateUsingSOAP(event);
+
+        verify(csdService).fetchAndUpdateUsingSOAP(url, DateTime.parse(lastModified));
+        verify(csdScheduler).sendTaskUpdateEventMessage(url);
     }
 }

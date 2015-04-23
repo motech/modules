@@ -71,5 +71,6 @@
     <osgi:reference id="serviceDataService" interface="org.motechproject.csd.mds.ServiceDataService" />
 
     <osgi:reference id="schedulerService" interface="org.motechproject.scheduler.service.MotechSchedulerService" />
+    <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>
 
 </beans>

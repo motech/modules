@@ -17,5 +17,9 @@ public interface CSDService {
 
     void fetchAndUpdate(String xmlUrl);
 
+    void fetchAndUpdateUsingREST(String xmlUrl);
+
+    void fetchAndUpdateUsingSOAP(String xmlUrl, DateTime lastModified);
+
     void saveFromXml(String xml);
 }
