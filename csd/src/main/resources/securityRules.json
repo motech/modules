@@ -1,44 +1,29 @@
 [
     {
         "active": true,
-        "pattern": "/**/csd/template/**",
+        "pattern": "/**/csd/csd-consume/**",
         "supportedSchemes": [
-            "NO_SECURITY"
-        ],
-        "protocol": "HTTP",
-        "priority": 2,
-        "rest": true,
-        "origin": "SYSTEM_MODULE_CSDP",
-        "version": "0.26",
-        "methodsRequired": [
-            "GET",
-            "POST"
-        ]
-    },
-    {
-        "active": true,
-        "pattern": "/**/csd/status/**",
-        "supportedSchemes": [
-            "NO_SECURITY"
-        ],
-        "protocol": "HTTP",
-        "priority": 2,
-        "rest": true,
-        "origin": "SYSTEM_MODULE_CSDP",
-        "version": "0.26",
-        "methodsRequired": [
-            "GET",
-            "POST"
-        ]
-    },
-    {
-        "active": true,
-        "pattern": "/**/csd/call/**",
-        "supportedSchemes": [
+            "BASIC",
             "USERNAME_PASSWORD"
         ],
         "protocol": "HTTP",
-        "priority": 2,
+        "priority": 3,
+        "rest": true,
+        "origin": "SYSTEM_MODULE_CSDP",
+        "version": "0.26",
+        "methodsRequired": [
+            "POST"
+        ]
+    },
+    {
+        "active": true,
+        "pattern": "/**/csd/csd-configs/**",
+        "supportedSchemes": [
+            "BASIC",
+            "USERNAME_PASSWORD"
+        ],
+        "protocol": "HTTP",
+        "priority": 3,
         "rest": true,
         "origin": "SYSTEM_MODULE_CSDP",
         "version": "0.26",
