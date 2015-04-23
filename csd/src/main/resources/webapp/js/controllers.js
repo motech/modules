@@ -111,9 +111,6 @@
                 'communicationProtocol':'REST',
                 'lastModified':null
             };
-            if ($scope.configs.length == 0) {
-                newConfig.xmlUrl = 'https://raw.githubusercontent.com/openhie/openinfoman/master/resources/service_directories/CSD-Facilities-Connectathon-20150120.xml';
-            }
             newLength = $scope.configs.push(newConfig);
             $scope.accordions.push(true);
             autoExpandSingleAccordion();
