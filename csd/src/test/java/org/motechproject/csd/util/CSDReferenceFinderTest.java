@@ -12,10 +12,9 @@ import static org.junit.Assert.assertEquals;
 
 public class CSDReferenceFinderTest {
 
-    CSDReferenceFinder csdReferenceFinder = new CSDReferenceFinder();
-
     @Test
-    public void shouldFindReferencingFields() {
+    public void shouldFindReferencingFields() throws Exception {
+        CSDReferenceFinder csdReferenceFinder = new CSDReferenceFinder();
         Collection<Field> fields = csdReferenceFinder.findReferencingFields(CodedType.class).values();
         assertEquals(10, fields.size());
 

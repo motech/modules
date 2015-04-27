@@ -4,6 +4,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.csd.domain.Address;
+import org.motechproject.csd.domain.AddressLine;
 import org.motechproject.csd.domain.CSD;
 import org.motechproject.csd.domain.Facility;
 import org.motechproject.csd.domain.Geocode;
@@ -29,9 +31,6 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 
-/**
- * Verify CSDService is present & functional.
- */
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
@@ -55,7 +54,7 @@ public class CSDReferenceFinderBundleIT extends BasePaxIT {
     private CSDReferenceFinder csdReferenceFinder;
 
     @Before
-    public void before() {
+    public void before() throws Exception {
         this.csdReferenceFinder = new CSDReferenceFinder();
         assertNotNull(bundleContext);
         csdReferenceFinder.setBundleContext(bundleContext);
@@ -97,5 +96,25 @@ public class CSDReferenceFinderBundleIT extends BasePaxIT {
         Set<Object> providers = csdReferenceFinder.findReferences(person);
         assertEquals(1, providers.size());
         assertTrue(providers.contains(provider));
+    }
+
+    @Test
+    public void shouldFindParentEntity() {
+        CSD csd = InitialData.getInitialData();
+        csdService.update(csd);
+        assertTrue(csdService.getCSD().equals(csd));
+
+        Facility facility = facilityService.getFacilityByEntityID("FacilityEntityID");
+        assertNotNull(facility);
+
+        Set<Address> addresses = facility.getAddresses();
+        assertTrue(addresses != null && addresses.size() > 0);
+
+        Set<AddressLine> addressLines = addresses.iterator().next().getAddressLines();
+        assertTrue(addressLines != null && addressLines.size() > 0);
+
+        Object parent = csdReferenceFinder.findParentEntity(addressLines.iterator().next());
+        assertNotNull(parent);
+        assertEquals(facility, parent);
     }
 }
