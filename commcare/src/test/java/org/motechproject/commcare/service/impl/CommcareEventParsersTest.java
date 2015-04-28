@@ -55,7 +55,7 @@ public class CommcareEventParsersTest {
         formsController = new FullFormController(eventRelay);
         casesController = new CasesController(eventRelay, settingsFacade);
         request = new MockHttpServletRequest();
-        request.addHeader("received-on", "2012-07-21T15:22:34");
+        request.addHeader("received-on", "2012-07-21T15:22:34.046462Z");
 
         ArgumentCaptor<MotechEvent> captor = ArgumentCaptor.forClass(MotechEvent.class);
         formsController.receiveForm(ResponseXML.getFormXML(), request);

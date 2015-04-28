@@ -99,8 +99,8 @@ public class CommcareCaseServiceImplTest {
 
         List<CaseInfo> cases = caseService.getCases(50, 1);
 
-        assertEquals(asList("2012-04-09T19:48:07Z", "2012-04-12T18:49:15Z", "2012-04-12T15:59:01Z",
-                "2012-04-10T14:31:44Z"), extract(cases, on(CaseInfo.class).getServerDateModified()));
+        assertEquals(asList("2012-04-09T19:48:07.950000Z", "2012-04-12T18:49:15.950000Z", "2012-04-12T15:59:01.950000Z",
+                "2012-04-10T14:31:44.950000Z"), extract(cases, on(CaseInfo.class).getServerDateModified()));
     }
 
     private String casesResponse() {

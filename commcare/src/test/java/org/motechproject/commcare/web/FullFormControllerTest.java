@@ -49,7 +49,7 @@ public class FullFormControllerTest {
         controller = new FullFormController(eventRelay);
 
         request = new MockHttpServletRequest();
-        request.addHeader("received-on", "2012-07-21T15:22:34");
+        request.addHeader("received-on", "2012-07-21T15:22:34.046462Z");
     }
 
     @Test
@@ -78,7 +78,7 @@ public class FullFormControllerTest {
         assertEquals("device_report", parameters.get(VALUE));
         assertEquals("deviceLog", parameters.get(ELEMENT_NAME));
 
-        assertEquals("2012-07-21T15:22:34", parameters.get(RECEIVED_ON));
+        assertEquals("2012-07-21T15:22:34.046462Z", parameters.get(RECEIVED_ON));
 
         Map<String, String> attributes = (Map<String, String>) parameters.get(ATTRIBUTES);
         assertEquals(1, attributes.size());
@@ -110,7 +110,7 @@ public class FullFormControllerTest {
         assertTrue(parameters.containsKey(TasksEventParser.CUSTOM_PARSER_EVENT_KEY));
         assertEquals(parameters.get(TasksEventParser.CUSTOM_PARSER_EVENT_KEY), CommcareFormsEventParser.PARSER_NAME);
 
-        assertEquals("2012-07-21T15:22:34", parameters.get(RECEIVED_ON));
+        assertEquals("2012-07-21T15:22:34.046462Z", parameters.get(RECEIVED_ON));
 
         Map<String, String> attributes = (Map<String, String>) parameters.get(ATTRIBUTES);
         assertEquals(4, attributes.size());
