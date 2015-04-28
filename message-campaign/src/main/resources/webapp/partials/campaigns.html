@@ -5,12 +5,25 @@
         <tr>
             <th>{{msg('msgCampaign.campaign.Name')}}</th>
             <th>{{msg('msgCampaign.campaign.type')}}</th>
+            <th>{{msg('msgCampaign.actions')}}</th>
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat="campaign in campaigns">
             <td><a href="#/messageCampaign/enrollments/{{campaign.name}}">{{campaign.name}}</a></td>
             <td>{{campaign.type}}</td>
+            <td>
+                <div class="col-md-1">
+                    <a ng-click="editCampaign(campaign.name)">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                </div>
+                <div class="col-md-1">
+                    <a ng-click="deleteCampaign(campaign.name)">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                </div>
+            </td>
         </tr>
         </tbody>
     </table>

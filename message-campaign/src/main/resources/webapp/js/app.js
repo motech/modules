@@ -26,7 +26,8 @@
             .when('/messageCampaign/admin', { templateUrl: '../messagecampaign/resources/partials/admin.html' })
             .when('/messageCampaign/campaignRecord', { redirectTo: '/mds/dataBrowser/' + campaignRecordId + '/messagecampaign' })
             .when('/messageCampaign/campaignMessageRecord', { redirectTo: '/mds/dataBrowser/' + campaignMessageRecordId + '/messagecampaign' })
-            .when('/messageCampaign/settings', {templateUrl: '../messagecampaign/resources/partials/settings.html', controller: 'MCSettingsCtrl'});
+            .when('/messageCampaign/settings', {templateUrl: '../messagecampaign/resources/partials/settings.html', controller: 'MCSettingsCtrl'})
+            .when('/messageCampaign/campaigns/:campaignId', { redirectTo: '/mds/dataBrowser/' + campaignRecordId + '/:campaignId/messagecampaign' });
     }]
     );
 }());

@@ -39,6 +39,19 @@ public class CampaignController {
         return new CampaignDto(campaignRecord);
     }
 
+    @RequestMapping(value = "/campaign-record/{campaignName}", method = RequestMethod.GET)
+    @PreAuthorize(HAS_ROLE_MANAGECAMPAIGNS)
+    @ResponseBody
+    public CampaignRecord getCampaignRecord(@PathVariable String campaignName) {
+        CampaignRecord campaignRecord = messageCampaignService.getCampaignRecord(campaignName);
+
+        if (campaignRecord == null) {
+            throw new CampaignNotFoundException("Campaign not found: " + campaignName);
+        }
+
+        return campaignRecord;
+    }
+
     @RequestMapping(value = "/campaigns", method = RequestMethod.POST)
     @PreAuthorize(HAS_ROLE_MANAGECAMPAIGNS)
     @ResponseStatus(HttpStatus.OK)

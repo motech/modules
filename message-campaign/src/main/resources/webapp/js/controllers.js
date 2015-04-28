@@ -8,6 +8,32 @@
         $scope.$on('$viewContentLoaded', function () {
             $scope.campaigns = Campaigns.query();
         });
+
+        $scope.deleteCampaign = function(campaignName) {
+            motechConfirm("msgCampaign.campaign.deleteConfirmMsg", "msgCampaign.campaign.deleteConfirmTitle",
+                function (response) {
+                    if (!response) {
+                        return;
+                    }
+                    jQuery.ajax({
+                        type: "DELETE",
+                        url: "../messagecampaign/campaigns/" + campaignName,
+                        success: function() {
+                            window.location.reload(true);
+                        }
+                    });
+                });
+        };
+
+        $scope.editCampaign = function(campaignName) {
+            jQuery.ajax({
+                type: "GET",
+                url: "../messagecampaign/campaign-record/" + campaignName,
+                success: function(response) {
+                    window.location.replace('#/messageCampaign/campaigns/' + response.id);
+                }
+            });
+        };
     });
 
      controllers.controller('MCEnrollmentsCtrl', function ($scope, $routeParams, Enrollments) {

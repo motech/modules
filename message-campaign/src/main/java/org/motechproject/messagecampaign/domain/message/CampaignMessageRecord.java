@@ -157,4 +157,17 @@ public class CampaignMessageRecord {
         result = 31 * result + (startTime != null ? startTime.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        if (name != null && messageKey != null) {
+            return name + " - " + messageKey;
+        } else if (name != null) {
+            return name;
+        } else if (messageKey != null) {
+            return messageKey;
+        } else {
+            return super.toString();
+        }
+    }
 }
