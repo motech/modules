@@ -13,12 +13,15 @@ import static org.motechproject.commcare.events.constants.EventDataKeys.ATTRIBUT
 import static org.motechproject.commcare.events.constants.EventDataKeys.CASE_ID;
 import static org.motechproject.commcare.events.constants.EventDataKeys.SUB_ELEMENTS;
 import static org.motechproject.commcare.events.constants.EventDataKeys.VALUE;
+import static org.motechproject.commcare.events.constants.EventSubjects.DEVICE_LOG_EVENT;
+import static org.motechproject.commcare.events.constants.EventSubjects.FORMS_EVENT;
+
 
 /**
  * The <code>CommcareFormsEventParser</code> class is an implementation of
  * {@link org.motechproject.commons.api.TasksEventParser}, that lets Tasks module
  * expose actual Commcare fields, instead of an abstract representation present
- * in the event parameters. Additionaly, the event subject is adjusted that way,
+ * in the event parameters. Additionally, the event subject is adjusted that way,
  * so the same event subject can match more than one trigger on the Tasks side.
  */
 @Service
@@ -29,17 +32,29 @@ public class CommcareFormsEventParser implements TasksEventParser {
 
     @Override
     public Map<String, Object> parseEventParameters(String subject, Map<String, Object> entryParameters) {
-        Map<String, Object> parsedParameters = new HashMap<>();
-        addParameters(entryParameters, parsedParameters, INITIAL_PARAM_PREFIX);
-        addCaseIdIfPresent(entryParameters, parsedParameters);
 
-        return parsedParameters;
+        if (subject.equals(FORMS_EVENT) || subject.equals(DEVICE_LOG_EVENT)) {
+            Map<String, Object> parsedParameters = new HashMap<>();
+            parsedParameters.put("configName", entryParameters.get("configName"));
+            addParameters(entryParameters, parsedParameters, INITIAL_PARAM_PREFIX);
+            addCaseIdIfPresent(entryParameters, parsedParameters);
+            return parsedParameters;
+        } else {
+            return entryParameters;
+        }
     }
 
     @Override
     public String parseEventSubject(String eventSubject, Map<String, Object> eventParameters) {
-        String formName = (String) ((Map) eventParameters.get(ATTRIBUTES)).get("name");
-        return eventSubject.concat(".").concat(formName);
+
+        String configName = (String) eventParameters.get("configName");
+
+        if (eventSubject.equals(FORMS_EVENT)) {
+            String formName = (String) ((Map) eventParameters.get(ATTRIBUTES)).get("name");
+            return eventSubject.concat(".").concat(configName).concat(".").concat(formName);
+        }
+
+        return eventSubject.concat(".").concat(configName);
     }
 
     @Override

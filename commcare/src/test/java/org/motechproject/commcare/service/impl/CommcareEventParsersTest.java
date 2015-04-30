@@ -4,13 +4,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.motechproject.commcare.config.Config;
 import org.motechproject.commcare.events.constants.EventSubjects;
+import org.motechproject.commcare.exception.EndpointNotSupported;
+import org.motechproject.commcare.service.CommcareConfigService;
+import org.motechproject.commcare.util.ConfigsUtils;
 import org.motechproject.commcare.util.ResponseXML;
 import org.motechproject.commcare.web.CasesController;
 import org.motechproject.commcare.web.FullFormController;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.server.config.SettingsFacade;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.Map;
@@ -21,7 +24,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-
 import static org.motechproject.commcare.util.ResponseXML.ATTR1_VALUE;
 import static org.motechproject.commcare.util.ResponseXML.ATTR2_VALUE;
 
@@ -29,8 +31,9 @@ public class CommcareEventParsersTest {
 
     @Mock
     private EventRelay eventRelay;
+
     @Mock
-    private SettingsFacade settingsFacade;
+    private CommcareConfigService configService;
 
     private FullFormController formsController;
     private CasesController casesController;
@@ -42,26 +45,32 @@ public class CommcareEventParsersTest {
     private MotechEvent formsEvent;
     private MotechEvent caseEvent;
 
+    private Config config;
+
     @Before
-    public void setUp() {
+    public void setUp() throws EndpointNotSupported {
         // Initialize parsers
         formsEventParser = new CommcareFormsEventParser();
         caseEventParser = new CommcareCaseEventParser();
 
         initMocks(this);
-        when(settingsFacade.getProperty("eventStrategy")).thenReturn("full");
+
+        config = ConfigsUtils.prepareConfigOne();
+
+        when(configService.getByName(config.getName())).thenReturn(config);
 
         // Mock hitting forms and cases endpoint
-        formsController = new FullFormController(eventRelay);
-        casesController = new CasesController(eventRelay, settingsFacade);
+        formsController = new FullFormController(eventRelay, configService);
+        casesController = new CasesController(eventRelay, configService);
         request = new MockHttpServletRequest();
         request.addHeader("received-on", "2012-07-21T15:22:34.046462Z");
+        request.setPathInfo("/forms/"+ config.getName());
 
         ArgumentCaptor<MotechEvent> captor = ArgumentCaptor.forClass(MotechEvent.class);
         formsController.receiveForm(ResponseXML.getFormXML(), request);
 
         request.setContent(ResponseXML.getCaseXML().getBytes());
-        casesController.receiveCase(request, null);
+        casesController.receiveCase(request, config.getName());
 
         // Capture MotechEvents
         verify(eventRelay, times(2)).sendEventMessage(captor.capture());
@@ -77,8 +86,8 @@ public class CommcareEventParsersTest {
 
         String parsedSubject = formsEventParser.parseEventSubject(eventSubject, eventParameters);
 
-        assertEquals(eventSubject, EventSubjects.FORMS_EVENT);
-        assertEquals(parsedSubject, EventSubjects.FORMS_EVENT + "." + ResponseXML.FORM_NAME);
+        assertEquals(EventSubjects.FORMS_EVENT, eventSubject);
+        assertEquals(EventSubjects.FORMS_EVENT + "." + config.getName() + "." + ResponseXML.FORM_NAME, parsedSubject);
     }
 
     @Test
@@ -104,8 +113,8 @@ public class CommcareEventParsersTest {
 
         String parsedSubject = caseEventParser.parseEventSubject(eventSubject, eventParameters);
 
-        assertEquals(eventSubject, EventSubjects.CASE_EVENT);
-        assertEquals(parsedSubject, EventSubjects.CASE_EVENT + "." + ResponseXML.CASE_TYPE);
+        assertEquals(EventSubjects.CASE_EVENT, eventSubject);
+        assertEquals(EventSubjects.CASE_EVENT + "." + config.getName() + "." + ResponseXML.CASE_TYPE, parsedSubject);
     }
 
     @Test

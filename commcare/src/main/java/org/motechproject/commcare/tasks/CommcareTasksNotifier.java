@@ -1,6 +1,7 @@
 package org.motechproject.commcare.tasks;
 
 import org.motechproject.commcare.CommcareDataProvider;
+import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.service.CommcareSchemaService;
 import org.motechproject.commcare.tasks.builder.ChannelRequestBuilder;
 import org.osgi.framework.BundleContext;
@@ -22,12 +23,15 @@ public class CommcareTasksNotifier {
     private BundleContext bundleContext;
     private CommcareSchemaService schemaService;
     private CommcareDataProvider dataProvider;
+    private CommcareConfigService configService;
 
     @Autowired
-    public CommcareTasksNotifier(BundleContext bundleContext, CommcareSchemaService schemaService, CommcareDataProvider dataProvider) {
+    public CommcareTasksNotifier(BundleContext bundleContext, CommcareDataProvider dataProvider,
+                                 CommcareConfigService configService, CommcareSchemaService schemaService) {
         this.bundleContext = bundleContext;
-        this.schemaService = schemaService;
         this.dataProvider = dataProvider;
+        this.configService = configService;
+        this.schemaService = schemaService;
     }
 
     @PostConstruct
@@ -36,7 +40,8 @@ public class CommcareTasksNotifier {
         if (serviceReference != null) {
             Object service = bundleContext.getService(serviceReference);
             if (service != null) {
-                ChannelRequestBuilder channelRequestBuilder = new ChannelRequestBuilder(schemaService, bundleContext);
+                ChannelRequestBuilder channelRequestBuilder = new ChannelRequestBuilder(configService,
+                        schemaService, bundleContext);
                 TasksChannelServiceInstance instance = new TasksChannelServiceInstance(service, channelRequestBuilder);
                 instance.updateTaskChannel();
             }

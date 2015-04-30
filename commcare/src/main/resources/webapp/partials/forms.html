@@ -1,9 +1,25 @@
-<div class="row">
+<div ng-if="!selectedConfig" class="row inside">
+    <div class="alert alert-info">
+        <span class="fa fw fa-info"></span>
+        <span class="margin-left1">No configurations defined. Please create a configuration in the settings tab.</span>
+    </div>
+</div>
+<div ng-if="selectedConfig" class="row">
+
+    <div class="form-inline inside">
+        <label class="form-group">{{msg('commcare.selectConfig')}}: </label>
+        <select class="form-control largeCombobox" ng-model="$parent.selectedConfig" ng-options="config.name for config in $parent.configurations.configs">
+            <option ng-if="!$parent.selectedConfig" value="">{{msg('commcare.select')}}</option>
+        </select>
+    </div>
+
+    <div ng-if="formError" class="connection-status connection-error alert alert-danger">
+        <span class="fa fw fa-warning"></span>
+        <span class="margin-left1">{{msg('commcare.error.schema')}}</span>
+    </div>
+
     <div class="col-lg-12 col-md-12 col-sm-12 row">
 
-        <div ng-show="formError" class="connection-status connection-error alert alert-danger">
-            {{msg('commcare.error.schema')}}
-        </div>
 
         <div ng-repeat="application in applications">
 

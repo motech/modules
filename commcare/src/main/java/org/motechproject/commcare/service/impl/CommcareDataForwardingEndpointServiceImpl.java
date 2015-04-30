@@ -5,10 +5,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.lang.StringUtils;
+import org.motechproject.commcare.client.CommCareAPIHttpClient;
+import org.motechproject.commcare.config.Config;
 import org.motechproject.commcare.domain.CommcareDataForwardingEndpoint;
 import org.motechproject.commcare.domain.CommcareDataForwardingEndpointsJson;
 import org.motechproject.commcare.service.CommcareDataForwardingEndpointService;
-import org.motechproject.commcare.client.CommCareAPIHttpClient;
 import org.motechproject.commons.api.json.MotechJsonReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class CommcareDataForwardingEndpointServiceImpl implements CommcareDataFo
     }
 
     @Override
-    public List<CommcareDataForwardingEndpoint> getAllDataForwardingEndpoints() {
+    public List<CommcareDataForwardingEndpoint> getAllDataForwardingEndpoints(Config config) {
         CommcareDataForwardingEndpointsJson dataForwardingEndpoints = null;
         Type commcareDataForwardingEndpointType = new TypeToken<CommcareDataForwardingEndpointsJson>() {
                 } .getType();
@@ -41,7 +42,7 @@ public class CommcareDataForwardingEndpointServiceImpl implements CommcareDataFo
         Integer pageNumber = 1;
 
         do {
-            String response = commcareHttpClient.dataForwardingEndpointsRequest(DEFAULT_PAGE_SIZE, pageNumber);
+            String response = commcareHttpClient.dataForwardingEndpointsRequest(config.getAccountConfig(), DEFAULT_PAGE_SIZE, pageNumber);
             dataForwardingEndpoints = (CommcareDataForwardingEndpointsJson) motechJsonReader
                             .readFromString(response, commcareDataForwardingEndpointType);
             allDataForwardingEndpoints.addAll(dataForwardingEndpoints.getObjects());
@@ -53,8 +54,8 @@ public class CommcareDataForwardingEndpointServiceImpl implements CommcareDataFo
     }
 
     @Override
-    public List<CommcareDataForwardingEndpoint> getDataForwardingEndpoints(Integer pageSize, Integer pageNumber) {
-        String response = commcareHttpClient.dataForwardingEndpointsRequest(pageSize, pageNumber);
+    public List<CommcareDataForwardingEndpoint> getDataForwardingEndpoints(Integer pageSize, Integer pageNumber, Config config) {
+        String response = commcareHttpClient.dataForwardingEndpointsRequest(config.getAccountConfig(), pageSize, pageNumber);
         Type commcareDataForwardingEndpointType = new TypeToken<CommcareDataForwardingEndpointsJson>() {
                 } .getType();
         CommcareDataForwardingEndpointsJson appStructureResponseJson = (CommcareDataForwardingEndpointsJson) motechJsonReader
@@ -64,23 +65,23 @@ public class CommcareDataForwardingEndpointServiceImpl implements CommcareDataFo
     }
 
     @Override
-    public boolean createNewDataForwardingRule(CommcareDataForwardingEndpoint newForwardingRule) {
+    public boolean createNewDataForwardingRule(CommcareDataForwardingEndpoint newForwardingRule, Config config) {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         String outputData = gson.toJson(newForwardingRule);
 
-        int response = commcareHttpClient.dataForwardingEndpointUploadRequest(outputData);
+        int response = commcareHttpClient.dataForwardingEndpointUploadRequest(config.getAccountConfig(), outputData);
 
         return response == HttpStatus.SC_CREATED; // HTTP 201
     }
 
     @Override
-    public boolean updateDataForwardingRule(CommcareDataForwardingEndpoint updatedForwardingRule) {
+    public boolean updateDataForwardingRule(CommcareDataForwardingEndpoint updatedForwardingRule, Config config) {
         String resourceId = updatedForwardingRule.getId();
 
         Gson gson = new Gson();
         String outputData = gson.toJson(updatedForwardingRule);
 
-        int response = commcareHttpClient.dataForwardingEndpointUpdateRequest(resourceId, outputData);
+        int response = commcareHttpClient.dataForwardingEndpointUpdateRequest(config.getAccountConfig(), resourceId, outputData);
 
         return response == HttpStatus.SC_NO_CONTENT; // HTTP 204
     }

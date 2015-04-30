@@ -1,7 +1,9 @@
 package org.motechproject.commcare.tasks.builder;
 
+import org.motechproject.commcare.config.Config;
 import org.motechproject.commcare.domain.FormSchemaJson;
 import org.motechproject.commcare.domain.FormSchemaQuestionJson;
+import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.service.CommcareSchemaService;
 import org.motechproject.tasks.contract.EventParameterRequest;
 import org.motechproject.tasks.contract.TriggerEventRequest;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.motechproject.commcare.events.constants.EventDataKeys.CASE_ID;
+import static org.motechproject.commcare.events.constants.EventDataKeys.CONFIG_NAME;
 import static org.motechproject.commcare.events.constants.EventDataKeys.META_APP_VERSION;
 import static org.motechproject.commcare.events.constants.EventDataKeys.META_DEVICE_ID;
 import static org.motechproject.commcare.events.constants.EventDataKeys.META_INSTANCE_ID;
@@ -29,28 +32,33 @@ import static org.motechproject.commcare.events.constants.EventSubjects.FORMS_EV
 public class FormTriggerBuilder implements TriggerBuilder {
 
     private CommcareSchemaService schemaService;
+    private CommcareConfigService configService;
 
     private static final String RECEIVED_FORM_PREFIX = "Received Form: ";
 
-    public FormTriggerBuilder(CommcareSchemaService schemaService) {
+    public FormTriggerBuilder(CommcareSchemaService schemaService, CommcareConfigService configService) {
         this.schemaService = schemaService;
+        this.configService = configService;
     }
 
     @Override
     public List<TriggerEventRequest> buildTriggers() {
         List<TriggerEventRequest> triggers = new ArrayList<>();
 
-        for (FormSchemaJson form : schemaService.getAllFormSchemas()) {
-            List<EventParameterRequest> parameters = new ArrayList<>();
-            String formName = form.getFormNames().get("en");
-            addMetadataFields(parameters);
-            addCaseFields(parameters);
+        for (Config config : configService.getConfigs().getConfigs()) {
+            for (FormSchemaJson form : schemaService.getAllFormSchemas(config.getName())) {
+                List<EventParameterRequest> parameters = new ArrayList<>();
+                String formName = form.getFormNames().get("en");
+                addMetadataFields(parameters);
+                addCaseFields(parameters);
 
-            for (FormSchemaQuestionJson question : form.getQuestions()) {
-                parameters.add(new EventParameterRequest(question.getQuestionLabel(), question.getQuestionValue()));
+                for (FormSchemaQuestionJson question : form.getQuestions()) {
+                    parameters.add(new EventParameterRequest(question.getQuestionLabel(), question.getQuestionValue()));
+                }
+
+                triggers.add(new TriggerEventRequest(RECEIVED_FORM_PREFIX + config.getName() + " - " + formName,
+                        FORMS_EVENT + "." + config.getName() + "." + formName, null, parameters, FORMS_EVENT));
             }
-
-            triggers.add(new TriggerEventRequest(RECEIVED_FORM_PREFIX + formName, FORMS_EVENT + "." + formName, null, parameters, FORMS_EVENT));
         }
 
         return triggers;
@@ -70,5 +78,6 @@ public class FormTriggerBuilder implements TriggerBuilder {
         parameters.add(new EventParameterRequest("commcare.form.field.appVersion", META_APP_VERSION));
         parameters.add(new EventParameterRequest("commcare.form.field.timeStart", META_TIME_START));
         parameters.add(new EventParameterRequest("commcare.form.field.timeEnd", META_TIME_END));
+        parameters.add(new EventParameterRequest("commcare.form.field.configName", CONFIG_NAME));
     }
 }

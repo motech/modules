@@ -3,14 +3,23 @@ package org.motechproject.commcare.web;
 import org.motechproject.commcare.domain.CaseInfo;
 import org.motechproject.commcare.domain.CasesInfo;
 import org.motechproject.commcare.domain.CommcareApplicationJson;
+import org.motechproject.commcare.exception.CommcareAuthenticationException;
+import org.motechproject.commcare.exception.ConfigurationNotFoundException;
 import org.motechproject.commcare.service.CommcareApplicationDataService;
 import org.motechproject.commcare.service.CommcareCaseService;
+import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.web.domain.CasesRecords;
 import org.motechproject.commcare.web.domain.GridSettings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,37 +33,46 @@ import java.util.List;
 @Controller
 public class SchemaController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SchemaController.class);
+
+    private static final int PAGE = 1;
+    private static final int PAGE_SIZE = 10;
+
     @Autowired
     private CommcareApplicationDataService commcareApplicationDataService;
 
     @Autowired
     private CommcareCaseService caseService;
 
-    @RequestMapping(value = "/schema")
+    @Autowired
+    private CommcareConfigService configService;
+
+    @RequestMapping(value = "/schema/{configName}")
     @ResponseBody
-    public List<CommcareApplicationJson> schema() {
-        return commcareApplicationDataService.retrieveAll();
+    public List<CommcareApplicationJson> schema(@PathVariable String configName) {
+        validateConfig(configName);
+        return commcareApplicationDataService.bySourceConfiguration(configName);
     }
 
-    @RequestMapping(value = "/caseList")
+    @RequestMapping(value = "/caseList/{configName}")
     @ResponseBody
-    public CasesRecords caseList(GridSettings settings) {
+    public CasesRecords caseList(GridSettings settings, @PathVariable String configName) {
         Boolean sortAscending = true;
 
         String dateModifiedStart = "1900-01-01";
         String dateModifiedEnd = "2200-01-01";
-        int recordCount = 0;
-        int rowCount = 1;
-        List<CaseInfo> caseRecordsList = null;
-        CasesInfo casesInfo = null;
+        int recordCount;
+        int rowCount;
+        List<CaseInfo> caseRecordsList;
+        CasesInfo casesInfo;
 
         if (settings.getSortDirection() != null) {
             sortAscending = "asc".equals(settings.getSortDirection());
         }
 
         if (settings.getPage() == null) {
-            settings.setPage(1);
-            settings.setRows(10);
+            settings.setPage(PAGE);
+            settings.setRows(PAGE_SIZE);
         }
 
         if (settings.getDateModifiedStart() != null && !settings.getDateModifiedStart().isEmpty()) {
@@ -69,22 +87,25 @@ public class SchemaController {
 
         switch (settings.getFilter()) {
             case "filerByName":
-                casesInfo = caseService.getCasesByCasesNameWithMetadata(settings.getCaseName(), settings.getRows(), settings.getPage());
+                casesInfo = caseService.getCasesByCasesNameWithMetadata(settings.getCaseName(), settings.getRows(),
+                        settings.getPage(), configName);
                 caseRecordsList = casesInfo.getCaseInfoList();
                 recordCount = casesInfo.getMetadataInfo().getTotalCount();
                 break;
             case "filterByDateModified":
-                casesInfo = caseService.getCasesByCasesTimeWithMetadata(dateModifiedStart, dateModifiedEnd, settings.getRows(), settings.getPage());
+                casesInfo = caseService.getCasesByCasesTimeWithMetadata(dateModifiedStart, dateModifiedEnd,
+                        settings.getRows(), settings.getPage(), configName);
                 caseRecordsList = casesInfo.getCaseInfoList();
                 recordCount = casesInfo.getMetadataInfo().getTotalCount();
                 break;
             case "filterByAll":
-                casesInfo = caseService.getCasesByCasesNameAndTimeWithMetadata(settings.getCaseName(), dateModifiedStart, dateModifiedEnd, settings.getRows(), settings.getPage());
+                casesInfo = caseService.getCasesByCasesNameAndTimeWithMetadata(settings.getCaseName(), dateModifiedStart,
+                        dateModifiedEnd, settings.getRows(), settings.getPage(), configName);
                 caseRecordsList = casesInfo.getCaseInfoList();
                 recordCount = casesInfo.getMetadataInfo().getTotalCount();
                 break;
             default:
-                casesInfo = caseService.getCasesWithMetadata(settings.getRows(), settings.getPage());
+                casesInfo = caseService.getCasesWithMetadata(settings.getRows(), settings.getPage(), configName);
                 caseRecordsList = casesInfo.getCaseInfoList();
                 recordCount = casesInfo.getMetadataInfo().getTotalCount();
         }
@@ -93,6 +114,28 @@ public class SchemaController {
         rowCount = (int) Math.ceil(recordCount / (double) settings.getRows());
 
         return new CasesRecords(settings.getPage(), rowCount, recordCount, caseRecordsList);
+    }
+
+    @ExceptionHandler(ConfigurationNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public String handleNotFound(Exception e) {
+        LOGGER.error(e.getMessage());
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(CommcareAuthenticationException.class)
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public String handleCommcareAuthenticationException(CommcareAuthenticationException exception) {
+        return exception.getMessage();
+    }
+
+    private void validateConfig(String configName) {
+
+        if (!configService.exists(configName)) {
+            throw new ConfigurationNotFoundException("Configuration with name\"" + configName + "\" doesn't exists!");
+        }
     }
 
     private List<CaseInfo> sortCases(Boolean sortAscending, List<CaseInfo> caseRecordsList) {

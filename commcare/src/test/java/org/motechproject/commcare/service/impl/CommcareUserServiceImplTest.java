@@ -3,8 +3,11 @@ package org.motechproject.commcare.service.impl;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.commcare.domain.CommcareUser;
 import org.motechproject.commcare.client.CommCareAPIHttpClient;
+import org.motechproject.commcare.config.Config;
+import org.motechproject.commcare.domain.CommcareUser;
+import org.motechproject.commcare.service.CommcareConfigService;
+import org.motechproject.commcare.util.ConfigsUtils;
 
 import java.util.List;
 
@@ -27,21 +30,31 @@ public class CommcareUserServiceImplTest {
     @Mock
     private CommCareAPIHttpClient commcareHttpClient;
 
+    @Mock
+    private CommcareConfigService configService;
+
+    private Config config;
+
     @Before
     public void setUp() {
         initMocks(this);
-        userService = new CommcareUserServiceImpl(commcareHttpClient);
+
+        config = ConfigsUtils.prepareConfigOne();
+
+        when(configService.getByName(config.getName())).thenReturn(config);
+
+        userService = new CommcareUserServiceImpl(commcareHttpClient, configService);
     }
 
     @Test
     public void testUsers() {
 
-        when(commcareHttpClient.usersRequest(pageSize, pageNumber)).thenReturn(usersResponse());
+        when(commcareHttpClient.usersRequest(config.getAccountConfig(), pageSize, pageNumber)).thenReturn(usersResponse());
 
-        List<CommcareUser> users = userService.getCommcareUsers(pageSize, pageNumber);
+        List<CommcareUser> users = userService.getCommcareUsers(pageSize, pageNumber, config.getName());
 
         assertEquals(asList("3F2504E04F8911D39A0C0305E82C3301", "5d622c4336d118a9020d1c758e71de51",
-                "5d622c4336d118a9020d1c758e71f368", "5d622c4336d118a9020d1c758e71ea2f"),
+                        "5d622c4336d118a9020d1c758e71f368", "5d622c4336d118a9020d1c758e71ea2f"),
                 extract(users, on(CommcareUser.class).getId()));
     }
 
@@ -49,9 +62,9 @@ public class CommcareUserServiceImplTest {
     public void testGetUserWhenUserExists() {
         String userId = "5d622c4336d118a9020d1c758e71de51";
 
-        when(commcareHttpClient.userRequest(userId)).thenReturn(usersResponse());
+        when(commcareHttpClient.userRequest(config.getAccountConfig(), userId)).thenReturn(usersResponse());
 
-        CommcareUser user = userService.getCommcareUserById(userId);
+        CommcareUser user = userService.getCommcareUserById(userId, config.getName());
 
         assertNotNull(user);
     }
@@ -60,9 +73,9 @@ public class CommcareUserServiceImplTest {
     public void testGetUserWhenUserDoesNotExist() {
         String userId = "badId";
 
-        when(commcareHttpClient.usersRequest(pageSize, pageNumber)).thenReturn(usersResponse());
+        when(commcareHttpClient.usersRequest(config.getAccountConfig(), pageSize, pageNumber)).thenReturn(usersResponse());
 
-        CommcareUser user = userService.getCommcareUserById(userId);
+        CommcareUser user = userService.getCommcareUserById(userId, config.getName());
 
         assertNull(user);
     }

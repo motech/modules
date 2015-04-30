@@ -1,24 +1,30 @@
 package org.motechproject.commcare.web;
 
+import org.motechproject.commcare.config.Config;
 import org.motechproject.commcare.domain.CaseXml;
 import org.motechproject.commcare.events.CaseEvent;
 import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.commcare.events.constants.EventSubjects;
 import org.motechproject.commcare.exception.CaseParserException;
+import org.motechproject.commcare.exception.ConfigurationNotFoundException;
+import org.motechproject.commcare.exception.EndpointNotSupported;
 import org.motechproject.commcare.parser.CaseParser;
+import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.server.config.SettingsFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 
@@ -29,20 +35,46 @@ import static org.motechproject.commcare.events.constants.EventDataKeys.FIELD_VA
  * /commcare/cases.
  */
 @Controller
+@RequestMapping("/cases")
 public class CasesController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CasesController.class);
 
-    private static final String CASE_EVENT_STRATEGY_KEY = "eventStrategy";
     private static final String FULL_DATA_EVENT = "full";
     private static final String PARTIAL_DATA_EVENT = "partial";
 
     private EventRelay eventRelay;
-    private SettingsFacade settingsFacade;
+    private CommcareConfigService configService;
 
     @Autowired
-    public CasesController(final EventRelay eventRelay, @Qualifier("commcareAPISettings") final SettingsFacade settingsFacade) {
+    public CasesController(final EventRelay eventRelay, final CommcareConfigService configService) {
         this.eventRelay = eventRelay;
-        this.settingsFacade = settingsFacade;
+        this.configService = configService;
+    }
+
+    @RequestMapping
+    public ModelAndView receiveCaseForDefaultConfig(HttpServletRequest request) throws EndpointNotSupported {
+        return doReceiveCase(request, configService.getDefault());
+    }
+
+    @RequestMapping("/{configName}")
+    public ModelAndView receiveCase(HttpServletRequest request, @PathVariable String configName) throws EndpointNotSupported {
+        return doReceiveCase(request, configService.getByName(configName));
+    }
+
+    @ExceptionHandler(ConfigurationNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public String handleNotFound(Exception e) {
+        LOGGER.error(e.getMessage());
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(EndpointNotSupported.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public String handleBadRequest(Exception e) {
+        LOGGER.error(e.getMessage());
+        return e.getMessage();
     }
 
     private String getRequestBodyAsString(HttpServletRequest request) throws IOException {
@@ -61,8 +93,8 @@ public class CasesController {
         return forwardedRequest.toString();
     }
 
-    @RequestMapping("/cases")
-    public ModelAndView receiveCase(HttpServletRequest request, HttpServletResponse response) {
+    private ModelAndView doReceiveCase(HttpServletRequest request, Config config) throws EndpointNotSupported {
+
         String caseXml = "";
 
         try {
@@ -71,6 +103,10 @@ public class CasesController {
             LOGGER.error(e1.getMessage(), e1);
         }
         LOGGER.trace("Received request for mapping /cases: {}", caseXml);
+
+        if (!config.isForwardCases()) {
+            throw new EndpointNotSupported(String.format("Configuration \"%s\" doesn't support endpoint for cases!", config.getName()));
+        }
 
         CaseParser<CaseXml> parser = new CaseParser<>(CaseXml.class, caseXml);
 
@@ -89,15 +125,16 @@ public class CasesController {
 
             caseInstance.setServerModifiedOn(request.getHeader("server-modified-on"));
             CaseEvent caseEvent = new CaseEvent(caseInstance.getCaseId());
+            caseEvent.setConfigName(config.getName());
+            caseEvent.setCaseType(caseInstance.getCaseType());
 
             MotechEvent motechCaseEvent;
-            String caseEventStrategy = settingsFacade.getProperty(CASE_EVENT_STRATEGY_KEY);
+            String caseEventStrategy = config.getEventStrategy();
 
             if (caseEventStrategy.equals(FULL_DATA_EVENT)) {
-                caseEvent = caseEvent.eventFromCase(caseInstance);
+                caseEvent = CaseEvent.fromCaseXml(caseInstance, config.getName());
                 motechCaseEvent = caseEvent.toMotechEventWithData();
-                motechCaseEvent.getParameters().put(FIELD_VALUES,
-                        caseEvent.getFieldValues());
+                motechCaseEvent.getParameters().put(FIELD_VALUES, caseEvent.getFieldValues());
             } else if (caseEventStrategy.equals(PARTIAL_DATA_EVENT)) {
                 motechCaseEvent = caseEvent.toMotechEventWithData();
             } else {
@@ -108,9 +145,5 @@ public class CasesController {
         }
 
         return null;
-    }
-
-    public void setEventRelay(EventRelay eventRelay) {
-        this.eventRelay = eventRelay;
     }
 }

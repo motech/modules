@@ -3,8 +3,11 @@ package org.motechproject.commcare.service.impl;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.commcare.domain.CommcareFixture;
 import org.motechproject.commcare.client.CommCareAPIHttpClient;
+import org.motechproject.commcare.config.Config;
+import org.motechproject.commcare.domain.CommcareFixture;
+import org.motechproject.commcare.service.CommcareConfigService;
+import org.motechproject.commcare.util.ConfigsUtils;
 
 import java.util.List;
 
@@ -21,17 +24,27 @@ public class CommcareFixtureServiceImplTest {
     @Mock
     private CommCareAPIHttpClient commcareHttpClient;
 
+    @Mock
+    private CommcareConfigService configService;
+
+    private Config config;
+
     @Before
     public void setUp() {
         initMocks(this);
-        fixtureService = new CommcareFixtureServiceImpl(commcareHttpClient);
+
+        config = ConfigsUtils.prepareConfigOne();
+
+        when(configService.getByName(config.getName())).thenReturn(config);
+
+        fixtureService = new CommcareFixtureServiceImpl(commcareHttpClient, configService);
     }
 
     @Test
     public void testAllFixtures() {
-        when(commcareHttpClient.fixturesRequest(30, 1)).thenReturn(fixturesResponse());
+        when(commcareHttpClient.fixturesRequest(config.getAccountConfig(), 30, 1)).thenReturn(fixturesResponse());
 
-        List<CommcareFixture> fixtures = fixtureService.getFixtures(30, 1);
+        List<CommcareFixture> fixtures = fixtureService.getFixtures(30, 1, config.getName());
 
         assertEquals(fixtures.size(), 30);
     }
@@ -40,9 +53,9 @@ public class CommcareFixtureServiceImplTest {
     public void testGetFixtureWhenFixtureExists() {
         String fixtureId = "753e8f42bf7d88965be84d3ace555d77";
 
-        when(commcareHttpClient.fixtureRequest(fixtureId)).thenReturn(fixtureResponse());
+        when(commcareHttpClient.fixtureRequest(config.getAccountConfig(), fixtureId)).thenReturn(fixtureResponse());
 
-        CommcareFixture fixture = fixtureService.getCommcareFixtureById(fixtureId);
+        CommcareFixture fixture = fixtureService.getCommcareFixtureById(fixtureId, config.getName());
 
         assertNotNull(fixture);
         assertEquals(fixture.getId(), fixtureId);
@@ -53,9 +66,9 @@ public class CommcareFixtureServiceImplTest {
     public void testGetUserWhenUserDoesNotExist() {
         String fixtureId = "badId";
 
-        when(commcareHttpClient.fixtureRequest(fixtureId)).thenReturn("");
+        when(commcareHttpClient.fixtureRequest(config.getAccountConfig(), fixtureId)).thenReturn("");
 
-        CommcareFixture fixture = fixtureService.getCommcareFixtureById(fixtureId);
+        CommcareFixture fixture = fixtureService.getCommcareFixtureById(fixtureId, config.getName());
 
         assertNull(fixture);
     }

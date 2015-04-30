@@ -5,26 +5,38 @@
 
     var services = angular.module('commcare.services', ['ngResource']);
 
-    services.factory('Settings', function($resource) {
-        return $resource('../commcare/settings');
+    services.factory('Configurations', function($resource) {
+        return $resource('../commcare/configs/:name', {}, {
+            create: {
+                method: 'GET',
+                url: '../commcare/configs/new'
+            },
+            makeDefault: {
+                method: 'POST',
+                url: '../commcare/configs/default'
+            },
+            verify: {
+                method: 'POST',
+                url: '../commcare/configs/verify'
+            },
+            getBaseEndpointUrl: {
+                method: 'GET',
+                url: '../commcare/configs/endpointBaseUrl'
+            }}
+        );
     });
 
     services.factory('Schema', function($resource) {
-        return $resource('../commcare/schema');
-    });
-
-    services.factory('Cases', function($resource) {
-        return $resource('../commcare/caseList');
-    });
-
-    services.factory('Connection', function($resource) {
-        return $resource('../commcare/connection/verify', {}, {
-            verify: { method: 'POST' }
+        return $resource('../commcare/schema/:name', {}, {
+            get: {
+                method: 'GET',
+                isArray: true
+            }
         });
     });
 
-    services.factory('CommcarePermissions', function($resource) {
-        return $resource('../commcare/connection/permissions');
+    services.factory('Cases', function($resource) {
+        return $resource('../commcare/caseList/:name');
     });
 
 }());

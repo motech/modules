@@ -5,8 +5,7 @@ public final class EventSubjects {
 
     public static final String CASE_EVENT = BASE_SUBJECT + "case";
 
-    public static final String MALFORMED_CASE_EXCEPTION = BASE_SUBJECT
-            + "exception";
+    public static final String MALFORMED_CASE_EXCEPTION = BASE_SUBJECT + "exception";
 
     public static final String FORM_STUB_EVENT = BASE_SUBJECT + "formstub";
 
@@ -19,6 +18,12 @@ public final class EventSubjects {
     public static final String SCHEMA_CHANGE_EVENT = BASE_SUBJECT + "schemachange";
 
     public static final String DEVICE_LOG_EVENT = BASE_SUBJECT + "devicelog";
+
+    public static final String CONFIG_CREATED = BASE_SUBJECT + "configcreated";
+
+    public static final String CONFIG_DELETED = BASE_SUBJECT + "configdeleted";
+
+    public static final String CONFIG_UPDATED = BASE_SUBJECT + "configupdated";
 
     private EventSubjects() {
     }

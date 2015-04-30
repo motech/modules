@@ -3,11 +3,15 @@ package org.motechproject.commcare.service.impl;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.motechproject.commcare.domain.CaseInfo;
-import org.motechproject.commcare.request.json.CaseRequest;
 import org.motechproject.commcare.client.CommCareAPIHttpClient;
+import org.motechproject.commcare.config.AccountConfig;
+import org.motechproject.commcare.config.Config;
+import org.motechproject.commcare.domain.CaseInfo;
+import org.motechproject.commcare.gateway.CaseTaskXmlConverter;
+import org.motechproject.commcare.request.json.CaseRequest;
+import org.motechproject.commcare.service.CommcareConfigService;
+import org.motechproject.commcare.util.ConfigsUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +25,7 @@ import static ch.lambdaj.Lambda.on;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -31,17 +36,30 @@ public class CommcareCaseServiceImplTest {
     private CommcareCaseServiceImpl caseService;
 
     @Mock
+    private CaseTaskXmlConverter converter;
+
+    @Mock
     private CommCareAPIHttpClient commcareHttpClient;
+
+    @Mock
+    private CommcareConfigService configService;
+
+    private Config config;
 
     @Before
     public void setUp() {
         initMocks(this);
-        caseService = new CommcareCaseServiceImpl(commcareHttpClient);
+
+        config = ConfigsUtils.prepareConfigOne();
+
+        when(configService.getDefault()).thenReturn(config);
+
+        caseService = new CommcareCaseServiceImpl(converter, commcareHttpClient, configService);
     }
 
     @Test
     public void testAllCases() {
-        when(commcareHttpClient.casesRequest(Matchers.any(CaseRequest.class))).thenReturn(casesResponse());
+        when(commcareHttpClient.casesRequest(any(AccountConfig.class), any(CaseRequest.class))).thenReturn(casesResponse());
 
         List<CaseInfo> cases = caseService.getCases(50, 1);
 
@@ -53,7 +71,7 @@ public class CommcareCaseServiceImplTest {
     public void testCaseByCaseId() {
         String caseId = "testCase";
 
-        when(commcareHttpClient.singleCaseRequest(caseId)).thenReturn(individualCase());
+        when(commcareHttpClient.singleCaseRequest(config.getAccountConfig(), caseId)).thenReturn(individualCase());
 
         CaseInfo caseInstance = caseService.getCaseByCaseId(caseId);
 
@@ -68,7 +86,7 @@ public class CommcareCaseServiceImplTest {
         request.setUserId(userId);
         request.setLimit(20);
         request.setOffset(0);
-        when(commcareHttpClient.casesRequest(request)).thenReturn(casesResponse());
+        when(commcareHttpClient.casesRequest(config.getAccountConfig(), request)).thenReturn(casesResponse());
 
         List<CaseInfo> cases = caseService.getCasesByUserId(userId, 20, 1);
 
@@ -85,7 +103,7 @@ public class CommcareCaseServiceImplTest {
         request.setUserId(userId);
         request.setCaseId(caseId);
 
-        when(commcareHttpClient.casesRequest(request)).thenReturn(casesResponse());
+        when(commcareHttpClient.casesRequest(config.getAccountConfig(), request)).thenReturn(casesResponse());
 
         CaseInfo caseInstance = caseService.getCaseByCaseIdAndUserId(caseId, userId);
 
@@ -95,7 +113,7 @@ public class CommcareCaseServiceImplTest {
     @Test
     public void testAllCaseServerDateModified()
     {
-        when(commcareHttpClient.casesRequest(Matchers.any(CaseRequest.class))).thenReturn(casesResponse());
+        when(commcareHttpClient.casesRequest(any(AccountConfig.class), any(CaseRequest.class))).thenReturn(casesResponse());
 
         List<CaseInfo> cases = caseService.getCases(50, 1);
 
@@ -116,5 +134,4 @@ public class CommcareCaseServiceImplTest {
     private String individualCase() {
         return "{\"date_closed\": null, \"domain\": \"usm-motech\", \"xform_ids\": [\"UPMW4L9RB4JWYFQYRDRWFKETV\"], \"version\": \"1.0\", \"server_date_opened\": \"2012-04-12T18:59:04Z\", \"properties\": {\"case_type\": \"checkup\", \"date_opened\": \"2012-04-12T14:58:58Z\", \"external_id\": \"Gddd\", \"owner_id\": null, \"case_name\": \"Gddd\"}, \"server_date_modified\": \"2012-04-12T18:59:04Z\", \"user_id\": \"5d622c4336d118a9020d1c758e71f368\", \"date_modified\": \"2012-04-12T14:58:58Z\", \"case_id\": \"JQHFW1DBNQRQJ8VVKZ0M7RKJ4\", \"closed\": false, \"indices\": {\"parent\":{\"case_id\":\"ca43088e-471b-451c-b036-44edf63ad123\",\"case_type\":\"mother\"}}}";
     }
-
 }

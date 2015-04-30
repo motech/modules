@@ -14,6 +14,8 @@ public class CommcareFixture {
     @SerializedName("fixture_type")
     private String fixtureType;
 
+    private String configName;
+
     private Map<String, String> fields;
 
     public String getId() {
@@ -38,5 +40,13 @@ public class CommcareFixture {
 
     public void setFields(Map<String, String> fields) {
         this.fields = fields;
+    }
+
+    public String getConfigName() {
+        return configName;
+    }
+
+    public void setConfigName(String configName) {
+        this.configName = configName;
     }
 }

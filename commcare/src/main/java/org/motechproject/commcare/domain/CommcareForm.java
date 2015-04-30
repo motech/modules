@@ -17,6 +17,7 @@ public class CommcareForm {
     private String type;
     private String uiversion;
     private String version;
+    private String configName;
     private boolean archived;
 
     public FormValueElement getForm() {
@@ -80,4 +81,11 @@ public class CommcareForm {
         this.archived = archived;
     }
 
+    public String getConfigName() {
+        return configName;
+    }
+
+    public void setConfigName(String configName) {
+        this.configName = configName;
+    }
 }

@@ -5,8 +5,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.motechproject.commcare.config.Config;
 import org.motechproject.commcare.events.constants.EventDataKeys;
+import org.motechproject.commcare.exception.EndpointNotSupported;
+import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.service.impl.CommcareFormsEventParser;
+import org.motechproject.commcare.util.ConfigsUtils;
 import org.motechproject.commcare.util.ResponseXML;
 import org.motechproject.commons.api.TasksEventParser;
 import org.motechproject.event.MotechEvent;
@@ -20,6 +24,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.motechproject.commcare.events.constants.EventDataKeys.ATTRIBUTES;
@@ -29,7 +34,6 @@ import static org.motechproject.commcare.events.constants.EventDataKeys.SUB_ELEM
 import static org.motechproject.commcare.events.constants.EventDataKeys.VALUE;
 import static org.motechproject.commcare.events.constants.EventSubjects.DEVICE_LOG_EVENT;
 import static org.motechproject.commcare.events.constants.EventSubjects.FORMS_EVENT;
-
 import static org.motechproject.commcare.util.ResponseXML.ATTR1;
 import static org.motechproject.commcare.util.ResponseXML.ATTR2;
 import static org.motechproject.commcare.util.ResponseXML.ATTR2_VALUE;
@@ -39,21 +43,29 @@ public class FullFormControllerTest {
     @Mock
     private EventRelay eventRelay;
 
+    @Mock
+    private CommcareConfigService configService;
+
     private FullFormController controller;
     private MockHttpServletRequest request;
+    private Config config;
 
     @Before
     public void setUp() throws Exception {
         initMocks(this);
 
-        controller = new FullFormController(eventRelay);
+        controller = new FullFormController(eventRelay, configService);
+
+        config = ConfigsUtils.prepareConfigOne();
+        when(configService.getByName(config.getName())).thenReturn(config);
 
         request = new MockHttpServletRequest();
         request.addHeader("received-on", "2012-07-21T15:22:34.046462Z");
+        request.setPathInfo("/forms/" + config.getName());
     }
 
     @Test
-    public void testIncomingFormsFailure() {
+    public void testIncomingFormsFailure() throws EndpointNotSupported {
         ArgumentCaptor<MotechEvent> captor = ArgumentCaptor.forClass(MotechEvent.class);
 
         controller.receiveForm("", request);
@@ -61,7 +73,7 @@ public class FullFormControllerTest {
     }
 
     @Test
-    public void testIncomingDeviceReport() {
+    public void testIncomingDeviceReport() throws EndpointNotSupported {
         ArgumentCaptor<MotechEvent> captor = ArgumentCaptor.forClass(MotechEvent.class);
 
         controller.receiveForm(ResponseXML.getDeviceReportXML(), request);
@@ -91,7 +103,7 @@ public class FullFormControllerTest {
     }
 
     @Test
-    public void testIncomingFormsSuccess() {
+    public void testIncomingFormsSuccess() throws EndpointNotSupported {
         ArgumentCaptor<MotechEvent> captor = ArgumentCaptor.forClass(MotechEvent.class);
 
         controller.receiveForm(ResponseXML.getFormXML(), request);

@@ -1,10 +1,13 @@
 package org.motechproject.commcare.service.impl;
 
-import org.junit.Test;
 import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.commcare.client.CommCareAPIHttpClient;
+import org.motechproject.commcare.config.Config;
 import org.motechproject.commcare.domain.CommcareDataForwardingEndpoint;
+import org.motechproject.commcare.service.CommcareConfigService;
+import org.motechproject.commcare.util.ConfigsUtils;
 
 import java.util.List;
 
@@ -12,7 +15,6 @@ import static ch.lambdaj.Lambda.extract;
 import static ch.lambdaj.Lambda.on;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -26,17 +28,25 @@ public class CommcareDataForwardingEndpointServiceImplTest {
     @Mock
     private CommCareAPIHttpClient commcareHttpClient;
 
+    @Mock
+    private CommcareConfigService configService;
+
+    private Config config;
+
     @Before
     public void setUp() {
         initMocks(this);
+
+        config = ConfigsUtils.prepareConfigOne();
+
         dataForwardingEndpointService = new CommcareDataForwardingEndpointServiceImpl(commcareHttpClient);
     }
 
     @Test
     public void testAllDataForwardingEndpoints() {
-        when(commcareHttpClient.dataForwardingEndpointsRequest(20, 1)).thenReturn(dataForwardingEndpointsGetResponse());
+        when(commcareHttpClient.dataForwardingEndpointsRequest(config.getAccountConfig(), 20, 1)).thenReturn(dataForwardingEndpointsGetResponse());
 
-        List<CommcareDataForwardingEndpoint> dataForwardingEndpoints = dataForwardingEndpointService.getAllDataForwardingEndpoints();
+        List<CommcareDataForwardingEndpoint> dataForwardingEndpoints = dataForwardingEndpointService.getAllDataForwardingEndpoints(config);
 
         assertEquals(asList("ccbadc6655b2e7692dccbbd884c14418", "ccbadc6655b2e7692dccbbd884c148b3",
                 "ccbadc6655b2e7692dccbbd884c13d60"),
@@ -45,7 +55,7 @@ public class CommcareDataForwardingEndpointServiceImplTest {
 
     @Test
     public void testCreatingNewDataForwardingRule() {
-        when(commcareHttpClient.dataForwardingEndpointUploadRequest(dataForwardingEndpointJson())).thenReturn(HTTP_CODE_CREATED);
+        when(commcareHttpClient.dataForwardingEndpointUploadRequest(config.getAccountConfig(), dataForwardingEndpointJson())).thenReturn(HTTP_CODE_CREATED);
 
         CommcareDataForwardingEndpoint dataForwardingEndpoint = new CommcareDataForwardingEndpoint();
         dataForwardingEndpoint.setDomain("demo");
@@ -55,14 +65,14 @@ public class CommcareDataForwardingEndpointServiceImplTest {
         dataForwardingEndpoint.setUrl("http://www.example.com/case-endpoint/");
         dataForwardingEndpoint.setVersion("2.0");
 
-        boolean creatingNewRuleStatus = dataForwardingEndpointService.createNewDataForwardingRule(dataForwardingEndpoint);
+        boolean creatingNewRuleStatus = dataForwardingEndpointService.createNewDataForwardingRule(dataForwardingEndpoint, config);
 
         assertTrue(creatingNewRuleStatus);
     }
 
     @Test
     public void testUpdatingDataForwardingRule() {
-        when(commcareHttpClient.dataForwardingEndpointUpdateRequest(updatedResourceId(), dataForwardingEndpointJsonFull())).thenReturn(HTTP_CODE_NOCONTENT);
+        when(commcareHttpClient.dataForwardingEndpointUpdateRequest(config.getAccountConfig(), updatedResourceId(), dataForwardingEndpointJsonFull())).thenReturn(HTTP_CODE_NOCONTENT);
 
         CommcareDataForwardingEndpoint dataForwardingEndpoint = new CommcareDataForwardingEndpoint();
         dataForwardingEndpoint.setDomain("demo");
@@ -72,7 +82,7 @@ public class CommcareDataForwardingEndpointServiceImplTest {
         dataForwardingEndpoint.setUrl("http://www.example.com/case-endpoint/");
         dataForwardingEndpoint.setVersion("2.0");
 
-        boolean updatingDataForwardingEndpointStatus = dataForwardingEndpointService.updateDataForwardingRule(dataForwardingEndpoint);
+        boolean updatingDataForwardingEndpointStatus = dataForwardingEndpointService.updateDataForwardingRule(dataForwardingEndpoint, config);
 
         assertTrue(updatingDataForwardingEndpointStatus);
     }

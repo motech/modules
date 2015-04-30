@@ -2,10 +2,11 @@ package org.motechproject.commcare.service.impl;
 
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
+import org.motechproject.commcare.client.CommCareAPIHttpClient;
 import org.motechproject.commcare.domain.CommcareFixture;
 import org.motechproject.commcare.domain.CommcareFixturesJson;
+import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.service.CommcareFixtureService;
-import org.motechproject.commcare.client.CommCareAPIHttpClient;
 import org.motechproject.commons.api.json.MotechJsonReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,19 +21,21 @@ public class CommcareFixtureServiceImpl implements CommcareFixtureService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommcareFixtureServiceImpl.class);
 
+    private CommCareAPIHttpClient commcareHttpClient;
+    private CommcareConfigService configService;
     private MotechJsonReader motechJsonReader;
 
-    private CommCareAPIHttpClient commcareHttpClient;
-
     @Autowired
-    public CommcareFixtureServiceImpl(CommCareAPIHttpClient commcareHttpClient) {
+    public CommcareFixtureServiceImpl(CommCareAPIHttpClient commcareHttpClient, CommcareConfigService configService) {
         this.commcareHttpClient = commcareHttpClient;
+        this.configService = configService;
         this.motechJsonReader = new MotechJsonReader();
     }
 
     @Override
-    public List<CommcareFixture> getFixtures(Integer pageSize, Integer pageNumber) {
-        String response = commcareHttpClient.fixturesRequest(pageSize, pageNumber);
+    public List<CommcareFixture> getFixtures(Integer pageSize, Integer pageNumber, String configName) {
+        String response = commcareHttpClient.fixturesRequest(configService.getByName(configName).getAccountConfig(),
+                pageSize, pageNumber);
         Type commcareFixtureType = new TypeToken<CommcareFixturesJson>() { } .getType();
         CommcareFixturesJson allFixtures = (CommcareFixturesJson) motechJsonReader.readFromString(response, commcareFixtureType);
 
@@ -41,8 +44,8 @@ public class CommcareFixtureServiceImpl implements CommcareFixtureService {
     }
 
     @Override
-    public CommcareFixture getCommcareFixtureById(String id) {
-        String returnJson = commcareHttpClient.fixtureRequest(id);
+    public CommcareFixture getCommcareFixtureById(String id, String configName) {
+        String returnJson = commcareHttpClient.fixtureRequest(configService.getByName(configName).getAccountConfig(), id);
 
         Type commcareFixtureType = new TypeToken<CommcareFixture>() { } .getType();
         CommcareFixture fixture = null;
@@ -54,5 +57,15 @@ public class CommcareFixtureServiceImpl implements CommcareFixtureService {
         }
 
         return fixture;
+    }
+
+    @Override
+    public List<CommcareFixture> getFixtures(Integer pageSize, Integer pageNumber) {
+        return getFixtures(pageSize, pageNumber, null);
+    }
+
+    @Override
+    public CommcareFixture getCommcareFixtureById(String id) {
+        return getCommcareFixtureById(id, null);
     }
 }

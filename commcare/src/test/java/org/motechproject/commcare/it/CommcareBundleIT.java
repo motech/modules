@@ -40,7 +40,7 @@ public class CommcareBundleIT extends BasePaxIT {
     public void testSettingsController() throws IOException, InterruptedException {
         login();
 
-        final String response = getHttpClient().get(String.format("http://localhost:%d/commcare/settings",
+        final String response = getHttpClient().get(String.format("http://localhost:%d/commcare/configs",
                 TestContext.getJettyPort()), new BasicResponseHandler());
 
         assertNotNull(response);

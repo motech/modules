@@ -7,13 +7,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.motechproject.commcare.events.constants.EventDataKeys.CASE_TYPE;
+import static org.motechproject.commcare.events.constants.EventDataKeys.CONFIG_NAME;
 import static org.motechproject.commcare.events.constants.EventDataKeys.FIELD_VALUES;
 
 /**
  * The <code>CommcareCaseEventParser</code> class is an implementation of
  * {@link org.motechproject.commons.api.TasksEventParser}, that lets Tasks module
  * expose actual Commcare fields, instead of the single map of fields present
- * in the event parameters. Additionaly, the event subject is adjusted that way,
+ * in the event parameters. Additionally, the event subject is adjusted that way,
  * so the same event subject can match more than one trigger on the Tasks side.
  */
 @Service
@@ -39,6 +40,9 @@ public class CommcareCaseEventParser implements TasksEventParser {
     public String parseEventSubject(String eventSubject, Map<String, Object> eventParameters) {
         String subject = eventSubject;
         String casePostfix = (String) eventParameters.get(CASE_TYPE);
+        String configName = (String) eventParameters.get(CONFIG_NAME);
+
+        subject = subject.concat(".").concat(configName);
 
         if (casePostfix != null) {
             subject = subject.concat(".").concat(casePostfix);

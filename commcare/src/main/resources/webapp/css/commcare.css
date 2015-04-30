@@ -56,6 +56,11 @@
     margin-right: 5%;
 }
 
+.largeCombobox {
+    min-width: 170px;
+    max-width: 170px;
+}
+
 .form-hint-error:before {
     color: #d45252;
     content: "\25C0";

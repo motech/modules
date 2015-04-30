@@ -1,20 +1,24 @@
 package org.motechproject.commcare.it;
 
+import com.google.gson.Gson;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.StringEntity;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.commcare.config.Config;
 import org.motechproject.commcare.domain.CommcareApplicationJson;
 import org.motechproject.commcare.domain.CommcareModuleJson;
 import org.motechproject.commcare.service.CommcareApplicationDataService;
 import org.motechproject.commcare.tasks.CommcareTasksNotifier;
 import org.motechproject.commcare.tasks.action.CommcareValidatingChannel;
+import org.motechproject.commcare.util.ConfigsUtils;
 import org.motechproject.commcare.util.DummyCommcareSchema;
 import org.motechproject.commcare.util.ResponseXML;
 import org.motechproject.tasks.contract.ActionEventRequest;
@@ -30,9 +34,9 @@ import org.motechproject.tasks.domain.TaskActionInformation;
 import org.motechproject.tasks.domain.TaskTriggerInformation;
 import org.motechproject.tasks.domain.TriggerEvent;
 import org.motechproject.tasks.osgi.test.AbstractTaskBundleIT;
-import org.motechproject.testing.utils.TestContext;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.testing.osgi.helper.ServiceRetriever;
+import org.motechproject.testing.utils.TestContext;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
@@ -62,8 +66,10 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
     @Inject
     private CommcareApplicationDataService applicationDataService;
+
     @Inject
     private BundleContext bundleContext;
+
     @Inject
     private CommcareValidatingChannel validatingChannel;
 
@@ -76,8 +82,10 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     private static final Integer MAX_RETRIES_BEFORE_FAIL = 20;
     private static final Integer WAIT_TIME = 2000;
 
+    private Config config;
+
     @Before
-    public void setUp() {
+    public void setUp() throws IOException, InterruptedException {
         clearDB();
         commcareTasksNotifier = (CommcareTasksNotifier) ServiceRetriever.getWebAppContext(bundleContext, COMMCARE_CHANNEL_NAME).getBean("commcareTasksNotifier");
     }
@@ -89,6 +97,9 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
     @Test
     public void testCommcareTasksIntegration() throws InterruptedException, IOException {
+        config = ConfigsUtils.prepareConfigOne();
+        createConfiguration(config);
+
         createMockCommcareSchema();
         commcareTasksNotifier.updateTasksInfo();
 
@@ -131,7 +142,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
     private void createTestTask() {
         TaskTriggerInformation triggerInformation = new TaskTriggerInformation("trigger", COMMCARE_CHANNEL_NAME, COMMCARE_CHANNEL_NAME, VERSION,
-                "org.motechproject.commcare.api.forms.form1", "org.motechproject.commcare.api.forms");
+                "org.motechproject.commcare.api.forms." + config.getName() + ".form1", "org.motechproject.commcare.api.forms");
 
         TaskActionInformation actionInformation = new TaskActionInformation("action", COMMCARE_CHANNEL_NAME, COMMCARE_CHANNEL_NAME, VERSION,
                 TEST_INTERFACE, "execute");
@@ -160,13 +171,13 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         TaskTriggerInformation expectedForm2 = new TaskTriggerInformation();
         TaskTriggerInformation expectedCaseBirth = new TaskTriggerInformation();
 
-        expectedForm1.setSubject("org.motechproject.commcare.api.forms.form1");
+        expectedForm1.setSubject("org.motechproject.commcare.api.forms." + config.getName() + ".form1");
         assertTrue(channel.containsTrigger(expectedForm1));
 
-        expectedForm2.setSubject("org.motechproject.commcare.api.forms.form2");
+        expectedForm2.setSubject("org.motechproject.commcare.api.forms." + config.getName() + ".form2");
         assertTrue(channel.containsTrigger(expectedForm2));
 
-        expectedCaseBirth.setSubject("org.motechproject.commcare.api.case.birth");
+        expectedCaseBirth.setSubject("org.motechproject.commcare.api.case." + config.getName() + ".birth");
         assertTrue(channel.containsTrigger(expectedCaseBirth));
 
         TriggerEvent form1Trigger = channel.getTrigger(expectedForm1);
@@ -204,14 +215,26 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         moduleJson.setCaseProperties(new ArrayList<>(DummyCommcareSchema.getCases().get("birth")));
 
         CommcareApplicationJson applicationJson = new CommcareApplicationJson("123", "TestApp", "none", Arrays.asList(moduleJson));
+        applicationJson.setConfigName(config.getName());
 
         applicationDataService.create(applicationJson);
     }
 
     private HttpResponse sendMockForm() throws IOException, InterruptedException {
-        HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/commcare/forms", PORT));
+        HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/commcare/forms/%s", PORT, config.getName()));
         HttpEntity body = new ByteArrayEntity(ResponseXML.getFormXML().getBytes("UTF-8"));
         httpPost.setEntity(body);
+        return getHttpClient().execute(httpPost);
+    }
+
+    private HttpResponse createConfiguration(Config config) throws IOException, InterruptedException {
+        HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/commcare/configs", PORT));
+        httpPost.addHeader("content-type", "application/json");
+
+        Gson gson = new Gson();
+
+        httpPost.setEntity(new StringEntity(gson.toJson(config)));
+
         return getHttpClient().execute(httpPost);
     }
 

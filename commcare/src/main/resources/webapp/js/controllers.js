@@ -5,31 +5,175 @@
 
     var controllers = angular.module('commcare.controllers', []);
 
-    controllers.controller('CommcareSettingsCtrl', function ($scope, Settings, Connection, CommcarePermissions) {
+    controllers.controller('CommcareBaseCtrl', function($scope, Configurations) {
 
-        $scope.permissions = CommcarePermissions.query();
+        $scope.getDefault = function() {
+            var i;
+
+            for (i = 0; i < $scope.configurations.configs.length; i += 1) {
+                if ($scope.configurations.configs[i].name === $scope.configurations.defaultConfigName) {
+                    return $scope.configurations.configs[i];
+                }
+            }
+
+            return undefined;
+        };
+
+        $scope.getConfigurations = function () {
+            $scope.configurations = Configurations.get(function success(data) {
+                var i;
+
+                for (i = 0; i < data.configs.length; i += 1) {
+                    if (data.configs[i].name === data.defaultConfigName) {
+                        $scope.selectedConfig = data.configs[i];
+                        return;
+                    }
+                }
+            });
+        };
+
+        $scope.getConfigurations();
+    });
+
+    controllers.controller('CommcareSettingsCtrl', function ($scope, Configurations) {
 
         $scope.eventStrategyOptions = [ 'minimal', 'partial', 'full' ];
 
-        $scope.settings = Settings.get(function success() {
-            if (!$scope.settings.eventStrategy) {
-                $scope.settings.eventStrategy = $scope.eventStrategyOptions[0];
+        $scope.selectedConfigBackup = undefined;
+
+        $scope.rollback = false;
+
+        $scope.newConfig = false;
+
+        $scope.configOutdated = false;
+
+        $scope.copyConfig = function(config) {
+            var copy = {};
+
+            copy.name = config.name;
+            copy.accountConfig = {};
+            copy.accountConfig.baseUrl = config.accountConfig.baseUrl;
+            copy.accountConfig.domain = config.accountConfig.domain;
+            copy.accountConfig.username = config.accountConfig.username;
+            copy.accountConfig.password = config.accountConfig.password;
+            copy.eventStrategy = config.eventStrategy;
+            copy.forwardForms = config.forwardForms;
+            copy.forwardSchema = config.forwardSchema;
+            copy.forwardStubs = config.forwardStubs;
+            copy.forwardCases = config.forwardCases;
+
+            return copy;
+        };
+
+        $scope.$watch('selectedConfig', function(newValue, oldValue) {
+
+            if ($scope.newConfig || $scope.configOutdated) {
+                if (!$scope.rollback) {
+                    jConfirm(jQuery.i18n.prop('commcare.confirm.discardChanges'), jQuery.i18n.prop("commcare.header.confirm"), function (val) {
+                        if (!val) {
+                            $scope.rollback = true;
+                            $scope.$parent.selectedConfig = $scope.$parent.configurations.configs[$scope.$parent.configurations.configs.indexOf(oldValue)];
+                            $scope.$parent.$apply();
+                        } else if ($scope.newConfig) {
+                            $scope.$parent.configurations.configs.splice($scope.$parent.configurations.configs.indexOf(oldValue), 1);
+                            $scope.$parent.$apply();
+                            $scope.configOutdated = false;
+                            if (newValue === undefined || newValue.name !== "") {
+                                $scope.newConfig = false;
+                            }
+                            $scope.clearMessages();
+                        } else if ($scope.configOutdated) {
+                            $scope.$parent.configurations.configs[$scope.$parent.configurations.configs.indexOf(oldValue)] = $scope.selectedConfigBackup;
+                            $scope.configOutdated = false;
+                            if (newValue.name === "") {
+                                $scope.newConfig = true;
+                            }
+                            $scope.clearMessages();
+                        }
+                    });
+                } else {
+                    $scope.rollback = false;
+                }
+            } else if (newValue.name === "") {
+                $scope.newConfig = true;
+                $scope.clearMessages();
+            } else {
+                $scope.selectedConfigBackup = $scope.copyConfig(newValue);
+                $scope.configOutdated = false;
+                $scope.newConfig = false;
+                $scope.clearMessages();
             }
-            $scope.verify();
         });
+
+        $scope.draftChanged = function() {
+            $scope.configOutdated = true;
+            $scope.clearMessages();
+        };
+
+
+        Configurations.getBaseEndpointUrl(function(data) {
+            if (data.message !== "null/module/commcare/" && data.message !=="/module/commcare/") {
+                $scope.baseUrl = data.message;
+            }
+        });
+
+        $scope.isDefaultConfig = function() {
+            return $scope.selectedConfig.name === $scope.configurations.defaultConfigName;
+        };
+
+        $scope.addConfig = function() {
+            blockUI();
+            Configurations.create(
+                function success(data) {
+                    $scope.$parent.configurations.configs.push(data);
+                    $scope.$parent.selectedConfig = data;
+                    if ($scope.$parent.selectedConfig.eventStrategy === "") {
+                        $scope.$parent.selectedConfig.eventStrategy = $scope.eventStrategyOptions[0];
+                    }
+                    unblockUI();
+                },
+                function failure() {
+                    unblockUI();
+                }
+            );
+        };
+
+        $scope.deleteConfig = function() {
+            if (!$scope.newConfig) {
+                blockUI();
+                Configurations.remove({'name': $scope.selectedConfig.name},
+                    function success() {
+                        $scope.$parent.selectedConfig = undefined;
+                        $scope.getConfigurations();
+                        unblockUI();
+                    },
+                    function failure() {
+                        unblockUI();
+                    }
+                );
+            } else {
+                $scope.$parent.selectedConfig = $scope.getDefault();
+            }
+        };
+
+        $scope.saveAllowed = function() {
+            return $scope.validateConfig()
+                && $scope.validateConfigName()
+                && $scope.validateUrlAndDomain()
+                && $scope.configOutdated;
+        };
 
         $scope.verify = function() {
             blockUI();
-            Connection.verify($scope.settings.accountSettings,
+            Configurations.verify($scope.selectedConfig,
                 function success()  {
                     $scope.verifySuccessMessage = $scope.msg('commcare.verify.success');
                     $scope.verifyErrorMessage = '';
                     $scope.connectionVerified = true;
-                    $scope.getVerifiedSettings();
                     unblockUI();
                 },
                 function failure(response) {
-                    $scope.verifyErrorMessage = response.data.message;
+                    $scope.verifyErrorMessage = response.data;
                     $scope.verifySuccessMessage = '';
                     $scope.connectionVerified = false;
                     $('.commcare .switch-small').bootstrapSwitch('setActive', false);
@@ -37,145 +181,160 @@
                 });
         };
 
+        $scope.validateConfig = function() {
+            return $scope.hasValue('name')
+                && $scope.hasValue('eventStrategy')
+                && $scope.hasValue('forwardCases')
+                && $scope.hasValue('forwardForms')
+                && $scope.hasValue('forwardStubs')
+                && $scope.hasValue('forwardSchema')
+                && $scope.hasAccountValue('baseUrl')
+                && $scope.hasAccountValue('domain')
+                && $scope.hasAccountValue('username')
+                && $scope.hasAccountValue('password');
+        };
+
+        $scope.validateConfigName = function() {
+
+            if ($scope.selectedConfig.name.indexOf(' ') !== -1) {
+                return false;
+            }
+
+            var i, count = 0;
+
+            for (i = 0; i < $scope.configurations.configs.length; i += 1) {
+                if ($scope.selectedConfig.name === $scope.configurations.configs[i].name) {
+                    if (count > 0) {
+                        return false;
+                    } else {
+                        count += 1;
+                    }
+                }
+            }
+
+            return true;
+        };
+
+        $scope.validateUrlAndDomain = function () {
+
+            var i, count = 0;
+
+            for (i = 0; i < $scope.configurations.configs.length; i += 1) {
+                if ($scope.selectedConfig.accountConfig.baseUrl === $scope.configurations.configs[i].accountConfig.baseUrl &&
+                    $scope.selectedConfig.accountConfig.domain === $scope.configurations.configs[i].accountConfig.domain) {
+
+                    if (count > 0) {
+                        return false;
+                    } else {
+                        count += 1;
+                    }
+                }
+            }
+
+            return true;
+        };
 
         $scope.isVerifyError = function() {
-            return $scope.connectionVerified === false;
+            return $scope.validateConfig() === true && $scope.connectionVerified === false;
         };
 
         $scope.isVerifySuccess = function() {
-            return $scope.canMakeConnection() === true && $scope.connectionVerified === true;
-        };
-
-        $scope.hasValue = function(prop) {
-            return $scope.settings.hasOwnProperty(prop) && $scope.settings[prop] !== undefined;
+            return $scope.validateConfig() === true && $scope.connectionVerified === true;
         };
 
         $scope.hasAccountValue = function(prop) {
-            return $scope.settings.hasOwnProperty('accountSettings') && $scope.settings.accountSettings[prop] !== undefined;
+            return $scope.selectedConfig.accountConfig[prop] !== null &&
+                $scope.selectedConfig.accountConfig[prop] !== undefined &&
+                $scope.selectedConfig.accountConfig[prop] !== "";
         };
 
-        $scope.canMakeConnection = function() {
-            return $scope.hasAccountValue('commcareBaseUrl') &&
-                $scope.hasAccountValue('commcareDomain') &&
-                $scope.hasAccountValue('username') &&
-                $scope.hasAccountValue('password');
+        $scope.hasValue = function(prop) {
+            return $scope.selectedConfig[prop] !== null &&
+                $scope.selectedConfig[prop] !== undefined &&
+                $scope.selectedConfig[prop] !== "";
         };
 
-        $scope.saveSettings = function(element) {
-            $scope.settings.$save(
+        $scope.makeDefault = function() {
+            blockUI();
+            Configurations.makeDefault($scope.selectedConfig.name,
                 function success() {
-                    var controlWrapper = $(element).next('.form-hints');
-
-                    $(controlWrapper).children('.save-status').remove();
-                    controlWrapper.append("<span class='save-status form-hint-success'><i class='fa fa-check'></i> {0}</span>".format($scope.msg('commcare.settings.success.value.saved')));
-
-                    $(controlWrapper.children('.save-status')[0]).delay(5000).fadeOut(function() {
-                        $(this).remove();
-                    });
+                    $scope.getConfigurations();
+                    unblockUI();
                 },
-                function error() {
-                    var controlWrapper = $(element).next('.form-hints');
+                function failure() {
+                    unblockUI();
+                }
+            );
+        };
 
-                    $(controlWrapper).children('.save-status').remove();
-                    controlWrapper.append("<span class='save-status form-hint'><i class='fa fa-times'></i> {0}</span>".format($scope.msg('commcare.settings.error.value.saved')));
-
-                    $(controlWrapper.children('.save-status')[0]).delay(10000).fadeOut(function() {
-                        $(this).remove();
-                    });
+        $scope.saveConfig = function(element) {
+            blockUI();
+            Configurations.save($scope.selectedConfig,
+                function success(data) {
+                    $scope.verifySuccessMessage = $scope.msg('commcare.save.success');
+                    $scope.verifyErrorMessage = '';
+                    $scope.connectionVerified = true;
+                    if ($scope.configurations.defaultConfigName === "") {
+                        $scope.configurations.defaultConfigName = $scope.selectedConfig.name;
+                    }
+                    $scope.updateConfig(data);
+                    $scope.newConfig = false;
+                    $scope.configOutdated = false;
+                    unblockUI();
+                },
+                function failure(response) {
+                    $scope.verifySuccessMessage = '';
+                    $scope.verifyErrorMessage =  response.data;
+                    $scope.connectionVerified = false;
+                    unblockUI();
                 });
         };
 
-        /* In CommCare API v0.4 deleting forwarding rules is not supported */
-        $scope.blockSwitch = function(element) {
-            $(element).bootstrapSwitch('setActive', false);
-            $(element).click(function () {
-                var controlWrapper = $(element).next('.form-hints');
+        $scope.updateConfig = function (config) {
+            var i;
 
-                $(controlWrapper).children('.save-status').remove();
-                controlWrapper.append("<span class='save-status form-hint'><i class='fa fa-times'></i> {0}</span>".format($scope.msg('commcare.settings.error.rule')));
-
-                $(controlWrapper.children('.save-status')[0]).delay(10000).fadeOut(function() {
-                    $(this).remove();
-                });
-            });
-        };
-
-        $scope.getVerifiedSettings = function() {
-            $scope.settings = Settings.get(function success() {
-                if (!$scope.settings.eventStrategy) {
-                    $scope.settings.eventStrategy = $scope.eventStrategyOptions[0];
+            for (i = 0; i < $scope.$parent.configurations.configs.length; i += 1) {
+                if ($scope.$parent.configurations.configs[i].name === config.name) {
+                    $scope.$parent.configurations.configs[i] = config;
+                    $scope.$parent.selectedConfig = $scope.configurations.configs[i];
+                    return;
                 }
-                if($scope.settings.forwardForms) {
-                    $('#forwardFormsSwitch').bootstrapSwitch('setState', true);
-                    $scope.blockSwitch('#forwardFormsSwitch');
-                } else {
-                    $('#forwardFormsSwitch').bootstrapSwitch('setState', false);
-                    $('#forwardFormsSwitch').bootstrapSwitch('setActive', true);
-                }
-                if($scope.settings.forwardCases) {
-                    $('#forwardCasesSwitch').bootstrapSwitch('setState', true);
-                    $scope.blockSwitch('#forwardCasesSwitch');
-                } else {
-                    $('#forwardCasesSwitch').bootstrapSwitch('setState', false);
-                    $('#forwardCasesSwitch').bootstrapSwitch('setActive', true);
-                }
-                if($scope.settings.forwardFormStubs) {
-                    $('#forwardFormStubsSwitch').bootstrapSwitch('setState', true);
-                    $scope.blockSwitch('#forwardFormStubsSwitch');
-                } else {
-                    $('#forwardFormStubsSwitch').bootstrapSwitch('setState', false);
-                    $('#forwardFormStubsSwitch').bootstrapSwitch('setActive', true);
-                }
-                if($scope.settings.forwardAppStructure) {
-                    $('#forwardAppStructureSwitch').bootstrapSwitch('setState', true);
-                    $scope.blockSwitch('#forwardAppStructureSwitch');
-                } else {
-                    $('#forwardAppStructureSwitch').bootstrapSwitch('setState', false);
-                    $('#forwardAppStructureSwitch').bootstrapSwitch('setActive', true);
-                }
-            });
-        };
-
-        $('#forwardFormsSwitch').change(function () {
-            if($scope.settings.forwardForms) {
-                $scope.blockSwitch(this);
             }
-        });
-        $('#forwardCasesSwitch').change(function () {
-              if($scope.settings.forwardCases) {
-                 $scope.blockSwitch(this);
-              }
-        });
-        $('#forwardFormStubsSwitch').change(function () {
-              if($scope.settings.forwardFormStubs) {
-                 $scope.blockSwitch(this);
-              }
-        });
-        $('#forwardAppStructureSwitch').change(function () {
-              if($scope.settings.forwardAppStructure) {
-                 $scope.blockSwitch(this);
-              }
-        });
+        };
 
-        innerLayout({});
+        $scope.clearMessages = function() {
+            $scope.connectionVerified = undefined;
+            $scope.verifySuccessMessage = "";
+            $scope.verifyErrorMessage = "";
+        };
     });
 
     controllers.controller('CommcareModulesCtrl', function ($scope, Schema) {
+
         $scope.formError = false;
-        $scope.formatJson=function(jsonResponse){return JSON.stringify(jsonResponse, null,4);};
-        blockUI();
-        $scope.applications = Schema.query(function() {
-            $scope.formError = false;
-            unblockUI();
-        }, function() {
-            $scope.formError = true;
-            unblockUI();
+
+        $scope.downloadingCases = false;
+
+        $scope.formatJson = function(jsonResponse) {
+            return JSON.stringify(jsonResponse, null,4);
+        };
+
+        $scope.$watch('selectedConfig', function() {
+            if (!$scope.$parent.selectedConfig) {
+                return;
+            }
+            blockUI();
+            $scope.applications = Schema.query({name: $scope.selectedConfig.name}, function() {
+                $scope.formError = false;
+                unblockUI();
+            }, function() {
+                $scope.formError = true;
+                unblockUI();
+            });
         });
-        innerLayout({});
     });
 
-    controllers.controller('CommcareCaseSchemasCtrl', function ($scope, Cases) {
-        $scope.caseError = false;
+    controllers.controller('CommcareCaseSchemasCtrl', function ($scope, Cases, Configurations) {
 
         innerLayout({
             spacing_closed: 30,

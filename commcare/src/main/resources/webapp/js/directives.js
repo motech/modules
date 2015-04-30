@@ -165,7 +165,7 @@
                         timeoutHnd = setTimeout(function () {
                             jQuery('#' + attrs.commcareCaseJqgridSearch).jqGrid('setGridParam', {
                                 page: 1,
-                                url: '../commcare/caseList' + params
+                                url: '../commcare/caseList/' + scope.selectedConfig.name + params
                             }).trigger('reloadGrid');
                         }, time || 0);
                     };
@@ -191,56 +191,67 @@
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
-                var elem = angular.element(element);
+                var params, elem = angular.element(element);
 
-                elem.jqGrid({
-                    url: '../commcare/caseList?caseName=&dateModifiedStart=&dateModifiedEnd=',
+                scope.$watch('$parent.selectedConfig', function() {
+                    scope.downloadingCases = true;
+                    scope.loadingError = undefined;
+                    elem.jqGrid('setGridParam', {
+                        url: '../commcare/caseList/' + scope.$parent.selectedConfig.name + '?caseName=&dateModifiedStart=&dateModifiedEnd=',
+                        viewrecords: false
+                    }).trigger('reloadGrid');
+                });
+
+                params = {
                     datatype: 'json',
                     jsonReader:{
                         repeatitems:false
                     },
                     rownumbers: true,
-                    colModel: [{
-                        label: 'Case Name',
-                        name: 'caseName',
-                        index: 'caseName',
-                        width: '200'
-                    }, {
-                        label: 'Case Type',
-                        name: 'caseType',
-                        index: 'caseType',
-                        sortable: false,
-                        width: '200'
-                    }, {
-                        label: 'Action',
-                        name: 'action',
-                        sortable: false,
-                        index: 'action',
-                        align: 'center',
-                        title: false,
-                        formatter: function (cellVal, options, rowObject) {
-                            var div = $('<div>'),
-                            button1 = $('<button>'),
-                            button2 = $('<button>'),
-                            title = '<h4 class="modal-title">' + scope.msg('commcare.caseName') + ': <em>' + rowObject.caseName + '</em></h4>',
-                            contentView = '<div class="form-horizontal list-lightblue">' + scope.formatModalContent(rowObject) + '</div>',
-                            contentJson = '<pre>' + scope.formatJson(rowObject) + '</pre>';
-                            button1
-                                .append(scope.msg('commcare.view'))
-                                .attr('datatitle', title)
-                                .attr('showmodal', contentView)
-                                .addClass('btn btn-default btn-xs');
-                            button2
-                                .append(scope.msg('commcare.json'))
-                                .attr('datatitle', title)
-                                .attr('showmodal', contentJson)
-                                .addClass('btn btn-default btn-xs');
-                            div
-                                .addClass('button-group')
-                                .append(button1)
-                                .append(button2);
-                            return '<div>' + div.html() + '</div>';
-                        }
+                    colModel: [
+                        {
+                            label: 'Case Name',
+                            name: 'caseName',
+                            index: 'caseName',
+                            width: '200'
+                        },
+                        {
+                            label: 'Case Type',
+                            name: 'caseType',
+                            index: 'caseType',
+                            sortable: false,
+                            width: '200'
+                        },
+                        {
+                            label: 'Action',
+                            name: 'action',
+                            sortable: false,
+                            index: 'action',
+                            align: 'center',
+                            title: false,
+                            formatter: function (cellVal, options, rowObject) {
+                                var div = $('<div>'),
+                                button1 = $('<button>'),
+                                button2 = $('<button>'),
+                                title = '<h4 class="modal-title">' + scope.msg('commcare.caseName') + ': <em>' + rowObject.caseName + '</em></h4>',
+                                contentView = '<div class="form-horizontal list-lightblue">' + scope.formatModalContent(rowObject) + '</div>',
+                                contentJson = '<pre>' + scope.formatJson(rowObject) + '</pre>';
+                                button1
+                                    .append(scope.msg('commcare.view'))
+                                    .attr('datatitle', title)
+                                    .attr('showmodal', contentView)
+                                    .addClass('btn btn-default btn-xs');
+                                button2
+                                    .append(scope.msg('commcare.json'))
+                                    .attr('datatitle', title)
+                                    .attr('showmodal', contentJson)
+                                    .addClass('btn btn-default btn-xs');
+                                div
+                                    .addClass('button-group')
+                                    .append(button1)
+                                    .append(button2);
+                                return '<div>' + div.html() + '</div>';
+                            }
                     }],
                     pager: '#' + attrs.commcareCaseJqgrid,
                     sortname: 'caseName',
@@ -260,9 +271,27 @@
                         $('#commcareCase .ui-jqgrid-hbox').width('100%');
                         $('#commcareCase .ui-jqgrid-view').width('100%');
                         $('#commcareCase .ui-jqgrid-pager').width('100%');
+                        scope.downloadingCases = false;
+                        scope.$apply();
+                    },
+                    loadError: function(request, status, error) {
+                        scope.downloadingCases = false;
+                        scope.loadingError = request.responseText;
+                        elem.jqGrid('clearGridData');
+                        scope.$apply();
                     }
-                });
+                };
 
+                if (scope.$parent.selectedConfig) {
+                    params.url = '../commcare/caseList/' + scope.$parent.selectedConfig.name + '?caseName=&dateModifiedStart=&dateModifiedEnd=';
+                }
+
+                if (scope.$parent.selectedConfig !== undefined) {
+                    scope.downloadingCases = true;
+                    scope.$apply();
+                }
+
+                elem.jqGrid(params);
             }
         };
     });

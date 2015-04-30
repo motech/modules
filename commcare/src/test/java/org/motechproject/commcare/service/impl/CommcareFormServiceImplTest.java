@@ -5,10 +5,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.motechproject.commcare.config.AccountConfig;
+import org.motechproject.commcare.config.Config;
 import org.motechproject.commcare.domain.CommcareForm;
 import org.motechproject.commcare.domain.FormNode;
 import org.motechproject.commcare.domain.FormValueElement;
 import org.motechproject.commcare.client.CommCareAPIHttpClient;
+import org.motechproject.commcare.service.CommcareConfigService;
+import org.motechproject.commcare.util.ConfigsUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,24 +20,36 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class CommcareFormServiceImplTest {
 
     private CommcareFormServiceImpl formService;
+
     @Mock
     private CommCareAPIHttpClient commcareHttpClient;
+
+    @Mock
+    private CommcareConfigService configService;
+
+    private Config config;
 
     @Before
     public void setUp() {
         initMocks(this);
-        formService = new CommcareFormServiceImpl(commcareHttpClient);
+
+        config = ConfigsUtils.prepareConfigOne();
+
+        when(configService.getByName(null)).thenReturn(config);
+
+        formService = new CommcareFormServiceImpl(commcareHttpClient, configService);
     }
 
     @Test
     public void testFormOne() {
-        when(commcareHttpClient.formRequest(Matchers.anyString())).thenReturn(jsonRegistrationForm());
+        when(commcareHttpClient.formRequest(Matchers.any(AccountConfig.class), Matchers.anyString())).thenReturn(jsonRegistrationForm());
 
         CommcareForm form = formService.retrieveForm("testForm1");
 
@@ -85,7 +101,7 @@ public class CommcareFormServiceImplTest {
 
     @Test
     public void testFormTwo() {
-        when(commcareHttpClient.formRequest(Matchers.anyString())).thenReturn(jsonFormTwo());
+        when(commcareHttpClient.formRequest(any(AccountConfig.class), Matchers.anyString())).thenReturn(jsonFormTwo());
 
         CommcareForm form = formService.retrieveForm("testForm2");
 
@@ -130,7 +146,7 @@ public class CommcareFormServiceImplTest {
 
     @Test
     public void shouldSearchFromStartElement() {
-        when(commcareHttpClient.formRequest(Matchers.anyString())).thenReturn(jsonTestForm());
+        when(commcareHttpClient.formRequest(any(AccountConfig.class), Matchers.anyString())).thenReturn(jsonTestForm());
 
         CommcareForm form = formService.retrieveForm("testForm");
 
@@ -153,7 +169,7 @@ public class CommcareFormServiceImplTest {
 
     @Test
     public void shouldSearchFromRootPath() {
-        when(commcareHttpClient.formRequest(Matchers.anyString())).thenReturn(jsonTestForm());
+        when(commcareHttpClient.formRequest(any(AccountConfig.class), Matchers.anyString())).thenReturn(jsonTestForm());
         CommcareForm form = formService.retrieveForm("testForm");
         FormValueElement rootElement = form.getForm();
 
@@ -165,7 +181,7 @@ public class CommcareFormServiceImplTest {
 
     @Test
     public void shouldSearchFromRootPathWithoutRestrictedElements() {
-        when(commcareHttpClient.formRequest(Matchers.anyString())).thenReturn(jsonTestForm());
+        when(commcareHttpClient.formRequest(any(AccountConfig.class), Matchers.anyString())).thenReturn(jsonTestForm());
         CommcareForm form = formService.retrieveForm("testForm");
         FormValueElement rootElement = form.getForm();
 
@@ -177,7 +193,7 @@ public class CommcareFormServiceImplTest {
 
     @Test
     public void shouldSearchByCurrentPath() {
-        when(commcareHttpClient.formRequest(Matchers.anyString())).thenReturn(jsonTestForm());
+        when(commcareHttpClient.formRequest(any(AccountConfig.class), Matchers.anyString())).thenReturn(jsonTestForm());
         CommcareForm form = formService.retrieveForm("testForm");
         FormValueElement rootElement = form.getForm().getElement("subelement1");
 
@@ -188,7 +204,7 @@ public class CommcareFormServiceImplTest {
 
     @Test
     public void shouldSearchForAttributes() {
-        when(commcareHttpClient.formRequest(Matchers.anyString())).thenReturn(jsonRegistrationForm());
+        when(commcareHttpClient.formRequest(any(AccountConfig.class), Matchers.anyString())).thenReturn(jsonRegistrationForm());
         CommcareForm form = formService.retrieveForm("testForm");
         FormValueElement rootElement = form.getForm();
 
@@ -200,7 +216,7 @@ public class CommcareFormServiceImplTest {
 
     @Test
     public void shouldSearchForValue() {
-        when(commcareHttpClient.formRequest(Matchers.anyString())).thenReturn(jsonRegistrationForm());
+        when(commcareHttpClient.formRequest(any(AccountConfig.class), Matchers.anyString())).thenReturn(jsonRegistrationForm());
         CommcareForm form = formService.retrieveForm("testForm");
         FormValueElement rootElement = form.getForm();
 

@@ -1,5 +1,6 @@
 package org.motechproject.commcare.tasks.builder;
 
+import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.service.CommcareSchemaService;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.ChannelRequest;
@@ -19,17 +20,20 @@ public class ChannelRequestBuilder {
     private static final String DISPLAY_NAME = "commcare";
 
     private BundleContext bundleContext;
+    private CommcareConfigService configService;
     private CommcareSchemaService schemaService;
 
-    public ChannelRequestBuilder(CommcareSchemaService schemaService, BundleContext bundleContext) {
+    public ChannelRequestBuilder(CommcareConfigService configService, CommcareSchemaService schemaService,
+                                 BundleContext bundleContext) {
         this.schemaService = schemaService;
+        this.configService = configService;
         this.bundleContext = bundleContext;
     }
 
     public ChannelRequest buildChannelRequest() {
-        FormTriggerBuilder formTriggerBuilder = new FormTriggerBuilder(schemaService);
-        CaseTriggerBuilder caseTriggerBuilder = new CaseTriggerBuilder(schemaService);
-        CommonTriggerBuilder commonTriggerBuilder = new CommonTriggerBuilder();
+        FormTriggerBuilder formTriggerBuilder = new FormTriggerBuilder(schemaService, configService);
+        CaseTriggerBuilder caseTriggerBuilder = new CaseTriggerBuilder(schemaService, configService);
+        CommonTriggerBuilder commonTriggerBuilder = new CommonTriggerBuilder(configService);
 
         List<TriggerEventRequest> triggers = formTriggerBuilder.buildTriggers();
         triggers.addAll(caseTriggerBuilder.buildTriggers());

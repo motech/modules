@@ -1,9 +1,13 @@
 package org.motechproject.commcare.tasks.builder;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.motechproject.commcare.config.Configs;
 import org.motechproject.commcare.events.constants.EventSubjects;
+import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.service.CommcareSchemaService;
+import org.motechproject.commcare.util.ConfigsUtils;
 import org.motechproject.commcare.util.DummyCommcareSchema;
 import org.motechproject.tasks.contract.EventParameterRequest;
 import org.motechproject.tasks.contract.TriggerEventRequest;
@@ -16,7 +20,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-
 import static org.motechproject.commcare.util.DummyCommcareSchema.FORM_QUESTION1;
 import static org.motechproject.commcare.util.DummyCommcareSchema.FORM_QUESTION2;
 import static org.motechproject.commcare.util.DummyCommcareSchema.FORM_QUESTION3;
@@ -28,15 +31,25 @@ public class FormTriggerBuilderTest {
     @Mock
     private CommcareSchemaService schemaService;
 
+    @Mock
+    private CommcareConfigService configService;
+
+    private Configs configs = ConfigsUtils.prepareConfigsWithOneConfig();
+
     private FormTriggerBuilder formTriggerBuilder;
 
-    private static final int FORM_PREDEFINED_FIELDS = 10;
+    private static final int FORM_PREDEFINED_FIELDS = 11;
+
+    @Before
+    public void setUp() {
+        initMocks(this);
+        when(configService.getConfigs()).thenReturn(configs);
+        when(schemaService.getAllFormSchemas(configs.getDefaultConfigName())).thenReturn(DummyCommcareSchema.getForms());
+        formTriggerBuilder = new FormTriggerBuilder(schemaService, configService);
+    }
 
     @Test
     public void shouldBuildProperTriggerRequestForCases() {
-        initMocks(this);
-        when(schemaService.getAllFormSchemas()).thenReturn(DummyCommcareSchema.getForms());
-        formTriggerBuilder = new FormTriggerBuilder(schemaService);
 
         List<TriggerEventRequest> triggers = formTriggerBuilder.buildTriggers();
 
@@ -50,15 +63,15 @@ public class FormTriggerBuilderTest {
 
             String subject = request.getSubject();
             switch (subject) {
-                case "org.motechproject.commcare.api.forms.form1":
+                case "org.motechproject.commcare.api.forms.ConfigOne.form1":
                     assertEquals(2 + FORM_PREDEFINED_FIELDS, request.getEventParameters().size());
-                    assertEquals("Received Form: form1", request.getDisplayName());
+                    assertEquals("Received Form: ConfigOne - form1", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION1));
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION2));
                     break;
-                case "org.motechproject.commcare.api.forms.form2":
+                case "org.motechproject.commcare.api.forms.ConfigOne.form2":
                     assertEquals(3 + FORM_PREDEFINED_FIELDS, request.getEventParameters().size());
-                    assertEquals("Received Form: form2", request.getDisplayName());
+                    assertEquals("Received Form: ConfigOne - form2", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION3));
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION4));
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION5));

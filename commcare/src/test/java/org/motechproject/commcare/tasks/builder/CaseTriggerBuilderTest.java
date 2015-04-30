@@ -1,9 +1,13 @@
 package org.motechproject.commcare.tasks.builder;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.motechproject.commcare.config.Configs;
 import org.motechproject.commcare.events.constants.EventSubjects;
+import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.service.CommcareSchemaService;
+import org.motechproject.commcare.util.ConfigsUtils;
 import org.motechproject.commcare.util.DummyCommcareSchema;
 import org.motechproject.tasks.contract.EventParameterRequest;
 import org.motechproject.tasks.contract.TriggerEventRequest;
@@ -16,7 +20,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-
 import static org.motechproject.commcare.util.DummyCommcareSchema.CASE_FIELD1;
 import static org.motechproject.commcare.util.DummyCommcareSchema.CASE_FIELD2;
 import static org.motechproject.commcare.util.DummyCommcareSchema.CASE_FIELD3;
@@ -28,15 +31,25 @@ public class CaseTriggerBuilderTest {
     @Mock
     private CommcareSchemaService schemaService;
 
+    @Mock
+    private CommcareConfigService configService;
+
+    private Configs configs = ConfigsUtils.prepareConfigsWithOneConfig();
+
     private CaseTriggerBuilder caseTriggerBuilder;
 
-    private static final int CASE_PREDEFINED_FIELDS = 8;
+    private static final int CASE_PREDEFINED_FIELDS = 9;
+
+    @Before
+    public void setUp() {
+        initMocks(this);
+        when(configService.getConfigs()).thenReturn(configs);
+        when(schemaService.getAllCaseTypes(configs.getDefaultConfigName())).thenReturn(DummyCommcareSchema.getCases());
+        caseTriggerBuilder = new CaseTriggerBuilder(schemaService, configService);
+    }
 
     @Test
     public void shouldBuildProperTriggerRequestForCases() {
-        initMocks(this);
-        when(schemaService.getAllCaseTypes()).thenReturn(DummyCommcareSchema.getCases());
-        caseTriggerBuilder = new CaseTriggerBuilder(schemaService);
 
         List<TriggerEventRequest> triggerEventRequests = caseTriggerBuilder.buildTriggers();
 
@@ -51,21 +64,21 @@ public class CaseTriggerBuilderTest {
 
             String subject = request.getSubject();
             switch (subject) {
-                case "org.motechproject.commcare.api.case.birth":
+                case "org.motechproject.commcare.api.case.ConfigOne.birth":
                     assertEquals(3 + CASE_PREDEFINED_FIELDS, request.getEventParameters().size());
-                    assertEquals("Received Case: birth", request.getDisplayName());
+                    assertEquals("Received Case: ConfigOne - birth", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD1));
                     assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD2));
                     assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD3));
                     break;
-                case "org.motechproject.commcare.api.case.appointment":
+                case "org.motechproject.commcare.api.case.ConfigOne.appointment":
                     assertEquals(2 + CASE_PREDEFINED_FIELDS, request.getEventParameters().size());
-                    assertEquals("Received Case: appointment", request.getDisplayName());
+                    assertEquals("Received Case: ConfigOne - appointment", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD4));
                     assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD5));
                     break;
-                case "org.motechproject.commcare.api.case":
-                    assertEquals(1, request.getEventParameters().size());
+                case "org.motechproject.commcare.api.case.ConfigOne":
+                    assertEquals(2, request.getEventParameters().size());
                     assertEquals("caseId", request.getEventParameters().get(0).getEventKey());
                     break;
                 default:

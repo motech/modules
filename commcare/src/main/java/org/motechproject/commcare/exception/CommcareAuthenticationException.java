@@ -1,6 +1,6 @@
 package org.motechproject.commcare.exception;
 
-public class CommcareAuthenticationException extends Exception {
+public class CommcareAuthenticationException extends RuntimeException {
 
     public CommcareAuthenticationException(String message) {
         super(message);

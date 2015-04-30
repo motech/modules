@@ -2,6 +2,7 @@ package org.motechproject.commcare.service.impl;
 
 import com.google.gson.reflect.TypeToken;
 import org.motechproject.commcare.client.CommCareAPIHttpClient;
+import org.motechproject.commcare.config.Config;
 import org.motechproject.commcare.domain.CaseInfo;
 import org.motechproject.commcare.domain.CaseJson;
 import org.motechproject.commcare.domain.CaseResponseJson;
@@ -14,6 +15,7 @@ import org.motechproject.commcare.gateway.CaseTaskXmlConverter;
 import org.motechproject.commcare.request.json.CaseRequest;
 import org.motechproject.commcare.response.OpenRosaResponse;
 import org.motechproject.commcare.service.CommcareCaseService;
+import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commons.api.json.MotechJsonReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,26 +33,30 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommcareCaseServiceImpl.class);
 
-    @Autowired
     private CaseTaskXmlConverter converter;
 
     private MotechJsonReader motechJsonReader;
 
     private CommCareAPIHttpClient commcareHttpClient;
 
+    private CommcareConfigService configService;
+
     @Autowired
-    public CommcareCaseServiceImpl(CommCareAPIHttpClient commcareHttpClient) {
+    public CommcareCaseServiceImpl(CaseTaskXmlConverter converter, CommCareAPIHttpClient commcareHttpClient,
+                                   CommcareConfigService configService) {
+        this.converter = converter;
         this.commcareHttpClient = commcareHttpClient;
+        this.configService = configService;
         this.motechJsonReader = new MotechJsonReader();
     }
 
     @Override
-    public CaseInfo getCaseByCaseIdAndUserId(String caseId, String userId) {
+    public CaseInfo getCaseByCaseIdAndUserId(String caseId, String userId, String configName) {
         CaseRequest request = new CaseRequest();
         request.setCaseId(caseId);
         request.setUserId(userId);
-        List<CaseJson> caseResponses = getCaseResponse(request).getCases();
-        List<CaseInfo> cases = generateCasesFromCaseResponse(caseResponses);
+        List<CaseJson> caseResponses = getCaseResponse(request, getConfiguration(configName)).getCases();
+        List<CaseInfo> cases = generateCasesFromCaseResponse(caseResponses, configName);
         if (cases.size() == 0) {
             return null;
         }
@@ -58,97 +64,186 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
     }
 
     @Override
-    public CaseInfo getCaseByCaseId(String caseId) {
-        String response = commcareHttpClient.singleCaseRequest(caseId);
+    public CaseInfo getCaseByCaseId(String caseId, String configName) {
+        String response = commcareHttpClient.singleCaseRequest(getConfiguration(configName).getAccountConfig(), caseId);
 
         CaseJson caseResponses = parseSingleCaseFromResponse(response);
 
-        return generateCaseFromCaseResponse(caseResponses);
+        return generateCaseFromCaseResponse(caseResponses, configName);
+    }
+
+    @Override
+    public List<CaseInfo> getCasesByType(String type, Integer pageSize, Integer pageNumber, String configName) {
+        CaseRequest request = new CaseRequest();
+        request.setType(type);
+        request.setLimit(pageSize);
+        request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
+        List<CaseJson> caseResponses = getCaseResponse(request, getConfiguration(configName)).getCases();
+        return generateCasesFromCaseResponse(caseResponses, configName);
+    }
+
+    @Override
+    public List<CaseInfo> getCasesByUserId(String userId, Integer pageSize, Integer pageNumber, String configName) { //ONLY TEST
+        CaseRequest request = new CaseRequest();
+        request.setUserId(userId);
+        request.setLimit(pageSize);
+        request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
+        List<CaseJson> caseResponses = getCaseResponse(request, getConfiguration(configName)).getCases();
+        return generateCasesFromCaseResponse(caseResponses, configName);
+    }
+
+    @Override
+    public CasesInfo getCasesByCasesNameWithMetadata(String caseName, Integer pageSize, Integer pageNumber, String configName) {
+        CaseRequest request = new CaseRequest();
+        request.setCaseName(caseName);
+        request.setLimit(pageSize);
+        request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
+
+        Config config = getConfiguration(configName);
+
+        CaseResponseJson caseResponseJson = getCaseResponse(request, config);
+
+        return new CasesInfo(generateCasesFromCaseResponse(getCaseResponse(request, config).getCases(), configName),
+                populateCaseMetadata(caseResponseJson.getMetadata()));
+    }
+
+    @Override
+    public CasesInfo getCasesByCasesTimeWithMetadata(String dateModifiedStart, String dateModifiedEnd, Integer pageSize,
+                                                     Integer pageNumber, String configName) {
+        CaseRequest request = new CaseRequest();
+        request.setDateModifiedStart(dateModifiedStart);
+        request.setDateModifiedEnd(dateModifiedEnd);
+        request.setLimit(pageSize);
+        request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
+
+        Config config = getConfiguration(configName);
+
+        CaseResponseJson caseResponseJson = getCaseResponse(request, config);
+
+        return new CasesInfo(generateCasesFromCaseResponse(getCaseResponse(request, config).getCases(), configName),
+                populateCaseMetadata(caseResponseJson.getMetadata()));
+    }
+
+    @Override
+    public CasesInfo getCasesByCasesNameAndTimeWithMetadata(String caseName, String dateModifiedStart,
+                                                            String dateModifiedEnd, Integer pageSize,
+                                                            Integer pageNumber, String configName) {
+        CaseRequest request = new CaseRequest();
+        request.setCaseName(caseName);
+        request.setDateModifiedStart(dateModifiedStart);
+        request.setDateModifiedEnd(dateModifiedEnd);
+        request.setLimit(pageSize);
+        request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
+
+        Config config = getConfiguration(configName);
+
+        CaseResponseJson caseResponseJson = getCaseResponse(request, config);
+
+        return new CasesInfo(generateCasesFromCaseResponse(getCaseResponse(request, config).getCases(), configName),
+                populateCaseMetadata(caseResponseJson.getMetadata()));
+    }
+
+    @Override
+    public List<CaseInfo> getCasesByUserIdAndType(String userId, String type, Integer pageSize, Integer pageNumber,
+                                                  String configName) {
+        CaseRequest request = new CaseRequest();
+        request.setUserId(userId);
+        request.setType(type);
+        request.setLimit(pageSize);
+        request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
+        List<CaseJson> caseResponses = getCaseResponse(request, getConfiguration(configName)).getCases();
+        return generateCasesFromCaseResponse(caseResponses, configName);
+    }
+
+    @Override
+    public List<CaseInfo> getCases(Integer pageSize, Integer pageNumber, String configName) {
+        CaseRequest request = prepareCaseRequest(pageSize, pageNumber);
+        return generateCasesFromCaseResponse(getCaseResponse(request, getConfiguration(configName)).getCases(), configName);
+    }
+
+    @Override
+    public CasesInfo getCasesWithMetadata(Integer pageSize, Integer pageNumber, String configName) {
+        CaseRequest request = prepareCaseRequest(pageSize, pageNumber);
+        Config config = getConfiguration(configName);
+        CaseResponseJson caseResponseJson = getCaseResponse(request, config);
+
+        return new CasesInfo(generateCasesFromCaseResponse(getCaseResponse(request, config).getCases(), configName),
+                populateCaseMetadata(caseResponseJson.getMetadata()));
+    }
+
+    @Override
+    public OpenRosaResponse uploadCase(CaseTask caseTask, String configName) {
+
+        String caseXml = converter.convertToCaseXml(caseTask);
+        String fullXml = "<?xml version='1.0'?>\n" + caseXml;
+
+        OpenRosaResponse response;
+
+        try {
+            response = commcareHttpClient.caseUploadRequest(getConfiguration(configName).getAccountConfig(), fullXml);
+        } catch (CaseParserException e) {
+            return null;
+        }
+
+        return response;
+    }
+
+    @Override
+    public CaseInfo getCaseByCaseIdAndUserId(String caseId, String userId) {
+        return getCaseByCaseIdAndUserId(caseId, userId, null);
+    }
+
+    @Override
+    public CaseInfo getCaseByCaseId(String caseId) {
+        return getCaseByCaseId(caseId, null);
     }
 
     @Override
     public List<CaseInfo> getCasesByType(String type, Integer pageSize, Integer pageNumber) {
-        CaseRequest request = new CaseRequest();
-        request.setType(type);
-        request.setLimit(pageSize);
-        request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
-        List<CaseJson> caseResponses = getCaseResponse(request).getCases();
-        return generateCasesFromCaseResponse(caseResponses);
+        return getCasesByType(type, pageSize, pageNumber, null);
     }
 
     @Override
-    public List<CaseInfo> getCasesByUserId(String userId, Integer pageSize, Integer pageNumber) { //ONLY TEST
-        CaseRequest request = new CaseRequest();
-        request.setUserId(userId);
-        request.setLimit(pageSize);
-        request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
-        List<CaseJson> caseResponses = getCaseResponse(request).getCases();
-        return generateCasesFromCaseResponse(caseResponses);
-    }
-
-    @Override
-    public CasesInfo getCasesByCasesNameWithMetadata(String caseName, Integer pageSize, Integer pageNumber) {
-        CaseRequest request = new CaseRequest();
-        request.setCaseName(caseName);
-        request.setLimit(pageSize);
-        request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
-        CaseResponseJson caseResponseJson = getCaseResponse(request);
-
-        return new CasesInfo(generateCasesFromCaseResponse(getCaseResponse(request).getCases()),
-                populateCaseMetadata(caseResponseJson.getMetadata()));
-    }
-
-    @Override
-    public CasesInfo getCasesByCasesTimeWithMetadata(String dateModifiedStart, String dateModifiedEnd, Integer pageSize, Integer pageNumber) {
-        CaseRequest request = new CaseRequest();
-        request.setDateModifiedStart(dateModifiedStart);
-        request.setDateModifiedEnd(dateModifiedEnd);
-        request.setLimit(pageSize);
-        request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
-        CaseResponseJson caseResponseJson = getCaseResponse(request);
-
-        return new CasesInfo(generateCasesFromCaseResponse(getCaseResponse(request).getCases()),
-                populateCaseMetadata(caseResponseJson.getMetadata()));
-    }
-
-    @Override
-    public CasesInfo getCasesByCasesNameAndTimeWithMetadata(String caseName, String dateModifiedStart, String dateModifiedEnd, Integer pageSize, Integer pageNumber) {
-        CaseRequest request = new CaseRequest();
-        request.setCaseName(caseName);
-        request.setDateModifiedStart(dateModifiedStart);
-        request.setDateModifiedEnd(dateModifiedEnd);
-        request.setLimit(pageSize);
-        request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
-        CaseResponseJson caseResponseJson = getCaseResponse(request);
-
-        return new CasesInfo(generateCasesFromCaseResponse(getCaseResponse(request).getCases()),
-                populateCaseMetadata(caseResponseJson.getMetadata()));
+    public List<CaseInfo> getCasesByUserId(String userId, Integer pageSize, Integer pageNumber) {
+        return getCasesByUserId(userId, pageSize, pageNumber, null);
     }
 
     @Override
     public List<CaseInfo> getCasesByUserIdAndType(String userId, String type, Integer pageSize, Integer pageNumber) {
-        CaseRequest request = new CaseRequest();
-        request.setUserId(userId);
-        request.setType(type);
-        request.setLimit(pageSize);
-        request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
-        List<CaseJson> caseResponses = getCaseResponse(request).getCases();
-        return generateCasesFromCaseResponse(caseResponses);
+        return getCasesByUserIdAndType(userId, type, pageSize, pageNumber, null);
     }
 
     @Override
     public List<CaseInfo> getCases(Integer pageSize, Integer pageNumber) {
-        CaseRequest request = prepareCaseRequest(pageSize, pageNumber);
-        return generateCasesFromCaseResponse(getCaseResponse(request).getCases());
+        return getCases(pageSize, pageNumber, null);
     }
 
     @Override
     public CasesInfo getCasesWithMetadata(Integer pageSize, Integer pageNumber) {
-        CaseRequest request = prepareCaseRequest(pageSize, pageNumber);
-        CaseResponseJson caseResponseJson = getCaseResponse(request);
+        return getCasesWithMetadata(pageSize, pageNumber, null);
+    }
 
-        return new CasesInfo(generateCasesFromCaseResponse(getCaseResponse(request).getCases()),
-                populateCaseMetadata(caseResponseJson.getMetadata()));
+    @Override
+    public CasesInfo getCasesByCasesNameWithMetadata(String caseName, Integer pageSize, Integer pageNumber) {
+        return getCasesByCasesNameWithMetadata(caseName, pageSize, pageNumber, null);
+    }
+
+    @Override
+    public CasesInfo getCasesByCasesTimeWithMetadata(String dateModifiedStart, String dateModifiedEnd, Integer pageSize,
+                                                     Integer pageNumber) {
+        return getCasesByCasesTimeWithMetadata(dateModifiedStart, dateModifiedEnd, pageSize, pageNumber, null);
+    }
+
+    @Override
+    public CasesInfo getCasesByCasesNameAndTimeWithMetadata(String caseName, String dateModifiedStart,
+                                                            String dateModifiedEnd, Integer pageSize, Integer pageNumber) {
+        return getCasesByCasesNameAndTimeWithMetadata(caseName, dateModifiedStart, dateModifiedEnd, pageSize, pageNumber,
+                null);
+    }
+
+    @Override
+    public OpenRosaResponse uploadCase(CaseTask caseTask) {
+        return uploadCase(caseTask, null);
     }
 
     private CaseRequest prepareCaseRequest(Integer pageSize, Integer pageNumber) {
@@ -159,8 +254,8 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
         return request;
     }
 
-    private CaseResponseJson getCaseResponse(CaseRequest caseRequest) {
-        String response = commcareHttpClient.casesRequest(caseRequest);
+    private CaseResponseJson getCaseResponse(CaseRequest caseRequest, Config config) {
+        String response = commcareHttpClient.casesRequest(config.getAccountConfig(), caseRequest);
         return parseCasesFromResponse(response);
     }
 
@@ -182,8 +277,7 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
         return caseReturned;
     }
 
-    private List<CaseInfo> generateCasesFromCaseResponse(
-            List<CaseJson> caseResponses) {
+    private List<CaseInfo> generateCasesFromCaseResponse(List<CaseJson> caseResponses, String configName) {
         List<CaseInfo> caseList = new ArrayList<>();
 
         if (caseResponses == null) {
@@ -191,17 +285,17 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
         }
 
         for (CaseJson caseResponse : caseResponses) {
-            caseList.add(populateCaseInfo(caseResponse));
+            caseList.add(populateCaseInfo(caseResponse, configName));
         }
 
         return caseList;
     }
 
-    private CaseInfo generateCaseFromCaseResponse(CaseJson caseResponse) {
-        return populateCaseInfo(caseResponse);
+    private CaseInfo generateCaseFromCaseResponse(CaseJson caseResponse, String configName) {
+        return populateCaseInfo(caseResponse, configName);
     }
 
-    private CaseInfo populateCaseInfo(CaseJson caseResponse) {
+    private CaseInfo populateCaseInfo(CaseJson caseResponse, String configName) {
         if (caseResponse == null) {
             return null;
         }
@@ -236,6 +330,7 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
         caseInfo.setXformIds(caseResponse.getXformIds());
         caseInfo.setCaseId(caseResponse.getCaseId());
         caseInfo.setUserId(caseResponse.getUserId());
+        caseInfo.setConfigName(configName);
 
         return caseInfo;
     }
@@ -252,20 +347,16 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
         return metadataInfo;
     }
 
-    @Override
-    public OpenRosaResponse uploadCase(CaseTask caseTask) {
+    private Config getConfiguration(String name) {
 
-        String caseXml = converter.convertToCaseXml(caseTask);
-        String fullXml = "<?xml version='1.0'?>\n" + caseXml;
+        Config configuration;
 
-        OpenRosaResponse response;
-
-        try {
-            response = commcareHttpClient.caseUploadRequest(fullXml);
-        } catch (CaseParserException e) {
-            return null;
+        if (name == null) {
+            configuration = configService.getDefault();
+        } else {
+            configuration = configService.getByName(name);
         }
 
-        return response;
+        return configuration;
     }
 }

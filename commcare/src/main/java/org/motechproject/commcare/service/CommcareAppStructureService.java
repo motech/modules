@@ -8,7 +8,15 @@ public interface CommcareAppStructureService {
 
     /**
      * Query CommCareHQ for structures of all applications.
-     * @return A list of CommcareApplicationJson objects representing all applications found on the configured domain of CommCareHQ
+     *
+     * @param configName  the name of the configuration used for connecting to CommcareHQ, null means default configuration
+     * @return  the list of the CommcareApplicationJson objects representing all applications found on the configured
+     *          domain of CommCareHQ
+     */
+    List<CommcareApplicationJson> getAllApplications(String configName);
+
+    /**
+     * Same as {@link #getAllApplications(String) getAllApplications} but uses default Commcare configuration.
      */
     List<CommcareApplicationJson> getAllApplications();
 }

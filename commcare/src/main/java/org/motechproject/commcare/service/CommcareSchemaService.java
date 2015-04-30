@@ -14,8 +14,13 @@ import java.util.Set;
 public interface CommcareSchemaService {
 
     /**
-     * Retrieves form schemas for all modules from MOTECH databse.
+     * Retrieves form schemas for all modules from MOTECH database for given configuration..
      * @return List of all from schemas
+     */
+    List<FormSchemaJson> getAllFormSchemas(String configName);
+
+    /**
+     * Same as {@link #getAllFormSchemas(String) getAllFormSchemas} but uses default CommcareHQ configuration.
      */
     List<FormSchemaJson> getAllFormSchemas();
 
@@ -23,6 +28,11 @@ public interface CommcareSchemaService {
      * Retrieves case types and fields that are assigned to the case type.
      * @return Map of case types. Key represents a case type, while a value is a
      *         collection of fields assigned to the case type.
+     */
+    Map<String, Set<String>> getAllCaseTypes(String configName);
+
+    /**
+     * Same as {@link #getAllCaseTypes(String) getAllCaseTypes} but uses default CommcareHQ configuration.
      */
     Map<String, Set<String>> getAllCaseTypes();
 }

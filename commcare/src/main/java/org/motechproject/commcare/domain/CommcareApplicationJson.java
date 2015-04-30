@@ -48,6 +48,9 @@ public class CommcareApplicationJson {
     @Persistent(defaultFetchGroup = "true")
     private String serializedModules;
 
+    @Field(displayName = "Source configuration")
+    private String configName;
+
     public CommcareApplicationJson() {
         this(null, null, null, null);
     }
@@ -149,5 +152,13 @@ public class CommcareApplicationJson {
                 Objects.equals(this.applicationName, other.applicationName) &&
                 Objects.equals(this.resourceUri, other.resourceUri) &&
                 Objects.equals(this.getSerializedModules(), other.getSerializedModules());
+    }
+
+    public String getConfigName() {
+        return configName;
+    }
+
+    public void setConfigName(String domain) {
+        this.configName = domain;
     }
 }

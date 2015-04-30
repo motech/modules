@@ -22,6 +22,7 @@ public class CaseInfo {
     private String caseName;
     private Map<String, String> fieldValues;
     private String serverDateModified;
+    private String configName;
     private boolean closed;
     private Map<String, Map<String, String>> indices;
 
@@ -143,5 +144,13 @@ public class CaseInfo {
 
     public void setIndices(Map<String, Map<String, String>> indices) {
         this.indices = indices;
+    }
+
+    public String getConfigName() {
+        return configName;
+    }
+
+    public void setConfigName(String configName) {
+        this.configName = configName;
     }
 }

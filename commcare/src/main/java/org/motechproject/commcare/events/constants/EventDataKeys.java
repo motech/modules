@@ -30,6 +30,8 @@ public final class EventDataKeys {
     public static final String SUB_ELEMENTS = "subElements";
     public static final String ATTRIBUTES = "attributes";
     public static final String VALUE = "value";
+    public static final String META_BASE_URL = "configBaseUrl";
+    public static final String META_DOMAIN = "configDomain";
 
     public static final String META_INSTANCE_ID = "/data/meta/instanceid";
     public static final String META_USER_ID = "/data/meta/userid";
@@ -41,6 +43,11 @@ public final class EventDataKeys {
 
     public static final String REGISTERED_CASE_TYPE = "/data/case/create/case_type";
     public static final String REGISTERED_CASE_NAME = "/data/case/create/case_name";
+
+    //ConfigurationEvent
+    public static final String CONFIG_NAME = "configName";
+    public static final String CONFIG_DOMAIN = "configDomain";
+    public static final String CONFIG_BASE_URL = "configBaseUrl";
 
 
     //FullFormsExceptionEvent

@@ -18,6 +18,11 @@
                 <value>classpath:commcare.properties</value>
             </list>
         </property>
+        <property name="rawConfigFiles">
+            <list>
+                <value>classpath:commcare-configs.json</value>
+            </list>
+        </property>
     </bean>
 
     <bean id="commcareVelocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">

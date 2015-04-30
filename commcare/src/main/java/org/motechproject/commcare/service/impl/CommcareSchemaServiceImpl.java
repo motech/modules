@@ -25,10 +25,10 @@ public class CommcareSchemaServiceImpl implements CommcareSchemaService {
     private CommcareApplicationDataService commcareApplicationDataService;
 
     @Override
-    public List<FormSchemaJson> getAllFormSchemas() {
+    public List<FormSchemaJson> getAllFormSchemas(String configName) {
         List<FormSchemaJson> allFormSchemas = new ArrayList<>();
 
-        for (CommcareApplicationJson app : commcareApplicationDataService.retrieveAll()) {
+        for (CommcareApplicationJson app : commcareApplicationDataService.bySourceConfiguration(configName)) {
             for (CommcareModuleJson module : app.getModules()) {
                 allFormSchemas.addAll(module.getFormSchemas());
             }
@@ -38,10 +38,10 @@ public class CommcareSchemaServiceImpl implements CommcareSchemaService {
     }
 
     @Override
-    public Map<String, Set<String>> getAllCaseTypes() {
+    public Map<String, Set<String>> getAllCaseTypes(String configName) {
         Map<String, Set<String>> allCaseTypes = new HashMap<>();
 
-        for (CommcareApplicationJson app : commcareApplicationDataService.retrieveAll()) {
+        for (CommcareApplicationJson app : commcareApplicationDataService.bySourceConfiguration(configName)) {
             for (CommcareModuleJson module : app.getModules()) {
                 String caseType = module.getCaseType();
                 if (!allCaseTypes.containsKey(caseType)) {
@@ -51,6 +51,16 @@ public class CommcareSchemaServiceImpl implements CommcareSchemaService {
         }
 
         return allCaseTypes;
+    }
+
+    @Override
+    public List<FormSchemaJson> getAllFormSchemas() {
+        return getAllFormSchemas(null);
+    }
+
+    @Override
+    public Map<String, Set<String>> getAllCaseTypes() {
+        return getAllCaseTypes(null);
     }
 
     @Autowired

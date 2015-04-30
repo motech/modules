@@ -1,26 +1,51 @@
-<div class="row">
-    <div class="col-lg-9 col-md-12 col-sm-12">
-        <form class="commcare form-horizontal inside" novalidate>
+<div class="row" xmlns="http://www.w3.org/1999/html">
 
-            <h4 class="form-group">{{msg('commcare.settings.section.accountSettings')}}</h4>
+     <div class="form-inline inside">
+
+         <div class="form-inline form-group">
+             <label>{{msg('commcare.selectConfig')}}: </label>
+             <select class="largeCombobox form-control " ng-change="updateSelectedConfig($parent.selectedConfig, oldValue)" ng-click="oldValue = $parent.selectedConfig" ng-model="$parent.selectedConfig" ng-options="config.name for config in $parent.configurations.configs">
+             </select>
+         </div>
+         <div class="btn-group form-group">
+             <a ng-click="addConfig()" type="button" class="form-group btn btn-success">
+                 <i class="fa fa-plus"></i> {{msg('commcare.addConfig')}}
+             </a>
+             <a ng-if="selectedConfig" ng-disabled="!saveAllowed()" ng-click="saveConfig()" type="button" class="btn btn-primary">
+                 <i class="fa fw fa-save"></i> {{msg('commcare.save')}}
+             </a>
+             <a ng-if="selectedConfig" ng-click="deleteConfig()" type="button" class="btn btn-danger input-small">
+                 <i class="fa fa-fw fa-trash-o"></i> {{msg('commcare.delete')}}
+             </a>
+             <a ng-if="selectedConfig" ng-disabled="isDefaultConfig() || newConfig" ng-click="makeDefault()" type="button" class="btn btn-warning">
+                 <i class="fa fw" ng-class="{'fa-square-o': !isDefaultConfig() || newConfig, 'fa-check-square-o': isDefaultConfig() && !newConfig}"></i> {{msg('commcare.makeDefault')}}
+             </a>
+             <a ng-if="selectedConfig" ng-disabled="!validateConfig()" ng-click="verify()" type="button" class="btn btn-info">
+                 <i class="fa fw fa-check-circle-o"></i> {{msg('commcare.verify')}}
+             </a>
+         </div>
+     </div>
+
+    <form ng-if="selectedConfig" class="commcare inside form-horizontal" novalidate>
+        <div ng-if="isVerifyError()" class="connection-status connection-error alert alert-danger">
+            <span class="fa fw fa-warning"></span>
+            <span class="margin-left1">{{verifyErrorMessage}}</span>
+        </div>
+        <div ng-if="isVerifySuccess()" class="connection-status connection-success alert alert-success">
+            <span class="fa fw fa-check"></span>
+            <span class="margin-left1">{{verifySuccessMessage}}</span>
+        </div>
+
+        <div class="row inside form-group">
+            <h4 class="inside form-group">{{msg('commcare.settings.section.accountSettings')}}</h4>
 
             <div class="form-group">
-                <div class="col-md-offset-3 col-sm-offset-4 col-md-9 col-sm-8">
-                    <input ng-disabled="!canMakeConnection()" ng-click="verify()" type="button" value="{{msg('commcare.verify')}}" class="btn btn-primary"/>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div ng-show="isVerifyError()" class="connection-status connection-error alert alert-danger margin-before row">
-                    {{verifyErrorMessage}}
-                </div>
-                <div ng-show="isVerifySuccess()" class="connection-status connection-success alert alert-success margin-before row">
-                    <div>
-                        <span class="fa fa-fw fa-check"></span>
-                        <span>{{verifySuccessMessage}}</span>
-                    </div>
-                    <div ng-repeat="permission in permissions" class="{{permission.granted && 'permission-present' || 'permission-absent'}}">
-                        <span class="fa fa-fw fa-check"></span> Motech {{permission.granted && 'can' || 'cannot'}} {{ permission.permissionName}}
+                <label class="col-md-3 col-sm-4 control-label" for="name">{{msg('commcare.settings.label.configName')}}</label>
+                <div class="col-md-9 col-sm-8 form-inline">
+                    <input class="form-control input-xlarge-fluid" ng-change="draftChanged()" ng-model="selectedConfig.name" type="text" id="name" placeholder="{{msg('commcare.settings.label.configName')}}" />
+                    <div class="form-hints">
+                        <span ng-hide="selectedConfig.name" class="form-hint-error">{{msg('commcare.settings.error.commcareConfigName')}}</span>
+                        <span ng-if="selectedConfig.name && !validateConfigName()" class="form-hint-error">Configuration name in use or/and it contains white spaces</span>
                     </div>
                 </div>
             </div>
@@ -28,29 +53,28 @@
             <div class="form-group">
                 <label class="col-md-3 col-sm-4 control-label" for="commcareBaseUrl">{{msg('commcare.settings.label.commcareBaseUrl')}}</label>
                 <div class="col-md-9 col-sm-8 form-inline">
-                    <input class="form-control input-xlarge-fluid" ng-model="settings.accountSettings.commcareBaseUrl" type="text" id="commcareBaseUrl" placeholder="{{msg('commcare.settings.label.commcareBaseUrl')}}" />
+                    <input class="form-control input-xlarge-fluid" ng-change="draftChanged()" ng-model="selectedConfig.accountConfig.baseUrl" type="text" id="commcareBaseUrl" placeholder="{{msg('commcare.settings.label.commcareBaseUrl')}}" />
                     <div class="form-hints">
-                        <span ng-hide="hasAccountValue('commcareBaseUrl')" class="form-hint-error">{{msg('commcare.settings.error.commcareBaseUrl')}}</span>
+                        <span ng-hide="hasAccountValue('baseUrl')" class="form-hint-error">{{msg('commcare.settings.error.commcareBaseUrl')}}</span>
+                        <span ng-if="!validateUrlAndDomain()" class="form-hint-error">Base URL and domain combination must be unique</span>
                     </div>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-md-3 col-sm-4 control-label" for="commcareDomain">{{msg('commcare.settings.label.commcareDomain')}}</label>
-
                 <div class="col-md-9 col-sm-8 form-inline">
-                    <input class="form-control input-xlarge-fluid" ng-model="settings.accountSettings.commcareDomain" type="text" id="commcareDomain" placeholder="{{msg('commcare.settings.label.commcareDomain')}}" required/>
+                    <input class="form-control input-group input-xlarge-fluid" ng-change="draftChanged()" ng-change="draftChanged()" ng-model="selectedConfig.accountConfig.domain" type="text" id="commcareDomain" placeholder="{{msg('commcare.settings.label.commcareDomain')}}" required/>
                     <div class="form-hints">
-                        <span ng-hide="hasAccountValue('commcareDomain')" class="form-hint-error">{{msg('commcare.settings.error.commcareDomain')}}</span>
+                        <span ng-hide="hasAccountValue('domain')" class="form-hint-error">{{msg('commcare.settings.error.commcareDomain')}}</span>
                     </div>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-md-3 col-sm-4 control-label" for="username">{{msg('commcare.settings.label.username')}}</label>
-
                 <div class="col-md-9 col-sm-8 form-inline">
-                    <input class="form-control input-xlarge-fluid" ng-model="settings.accountSettings.username" type="text" id="username" placeholder="{{msg('commcare.settings.label.username')}}" required/>
+                    <input class="form-control input-xlarge-fluid" ng-change="draftChanged()" ng-model="selectedConfig.accountConfig.username" type="text" id="username" placeholder="{{msg('commcare.settings.label.username')}}" required/>
                     <div class="form-hints">
                         <span ng-hide="hasAccountValue('username')" class="form-hint-error">{{msg('commcare.settings.error.username')}}</span>
                     </div>
@@ -61,14 +85,16 @@
                 <label class="col-md-3 col-sm-4 control-label" for="password">{{msg('commcare.settings.label.password')}}</label>
 
                 <div class="col-md-9 col-sm-8 form-inline">
-                    <input class="form-control input-xlarge-fluid" ng-model="settings.accountSettings.password" type="password" id="password" placeholder="{{msg('commcare.settings.label.password')}}" required/>
+                    <input class="form-control input-xlarge-fluid" ng-change="draftChanged()" ng-model="selectedConfig.accountConfig.password" type="password" id="password" placeholder="{{msg('commcare.settings.label.password')}}" required/>
                     <div class="form-hints">
                         <span ng-hide="hasAccountValue('password')" class="form-hint-error">{{msg('commcare.settings.error.password')}}</span>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <h4 class="form-group">{{msg('commcare.settings.section.eventForwarding')}}</h4>
+        <div clas="row inside form-group">
+            <h4 class="form-groupinside ">{{msg('commcare.settings.section.eventForwarding')}}</h4>
 
             <div class="form-group">
                 <label class="col-md-3 col-sm-4 control-label">
@@ -76,57 +102,75 @@
                     <span class="glyphicon glyphicon-info-sign" data-trigger="hover" data-placement="right" bs-popover="{{msg('commcare.settings.tooltip.eventStrategy')}}" data-original-title=""></span>
                 </label>
                 <div class="col-md-9 col-sm-8 form-inline">
-                    <select class="form-control input-auto" ng-model="settings.eventStrategy" autosave="change" ng-options="option for option in eventStrategyOptions" required ng-disabled="!isVerifySuccess()">
-                        <option value="">-- {{msg('commcare.select')}} --</option>
+                    <select class="form-control input-auto" ng-change="draftChanged()" ng-model="selectedConfig.eventStrategy" autosave="change" ng-options="option for option in eventStrategyOptions" required>
+                        <option ng-if="!selectedConfig.eventStrategy" value="">-- {{msg('commcare.select')}} --</option>
                     </select>
                     <div class="form-hints">
-                        <span ng-hide="hasValue('eventStrategy')" class="form-hint-error">{{msg('commcare.settings.error.eventStrategy')}}</span>
+                        <span ng-hide="selectedConfig.eventStrategy" class="form-hint-error">{{msg('commcare.settings.error.eventStrategy')}}</span>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <h4 class="form-group">{{msg('commcare.settings.section.dataForwarding')}}</h4>
+        <div class="row inside form-group">
+            <h4 class="inside form-group">
+                {{msg('commcare.settings.section.dataForwarding')}}
+                <span ng-if="baseUrl" class="glyphicon glyphicon-info-sign" data-trigger="hover" data-placement="right" bs-popover="{{msg('commcare.settings.tooltip.forwardingRules')}}" data-original-title=""></span>
+            </h4>
 
-            <div class="form-group">
+            <div ng-if="!baseUrl" class="alert alert-info">
+                <span class="fa fw fa-info"></span>
+                <span class="margin-left1">To be able to set forwarding rules you must set server.url property in the Admin settings</span>
+            </div>
+
+            <div class="form-group" ng-if="baseUrl">
                 <label class="col-md-3 col-sm-4 control-label">{{msg('commcare.settings.label.forwardForms')}}</label>
-                <div class="col-md-9 col-sm-8 form-inline">
-                    <div class="switch switch-small" switch=".forwardFormsInput" autosave="switch-change" id="forwardFormsSwitch">
-                        <input type="checkbox" ng-model="settings.forwardForms" class="forwardFormsInput" />
+                <div class="col-md-9 input-group">
+                    <span ng-class="{'input-group-addon' : selectedConfig.name}">
+                         <input ng-disabled="!newConfig && selectedConfig.forwardForms" ng-change="draftChanged()" type="checkbox" ng-model="selectedConfig.forwardForms" class="forwardFormsInput" />
+                    </span>
+                    <div ng-if="selectedConfig.name" class="form-control input-xlarge-fluid">
+                        {{baseUrl}}forms/{{selectedConfig.name}}
                     </div>
-                    <div class="form-hints"></div>
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" ng-if="baseUrl">
                 <label class="col-md-3 col-sm-4 control-label">{{msg('commcare.settings.label.forwardCases')}}</label>
-                <div class="col-md-9 col-sm-8 form-inline">
-                    <div class="switch-small" switch=".forwardCasesInput" autosave="switch-change" id="forwardCasesSwitch">
-                        <input type="checkbox" ng-model="settings.forwardCases" class="forwardCasesInput" />
+                <div class="col-md-9 input-group">
+                    <span ng-class="{'input-group-addon' : selectedConfig.name}">
+                         <input ng-disabled="!newConfig && selectedConfig.forwardCases" ng-change="draftChanged()" type="checkbox" ng-model="selectedConfig.forwardCases" class="forwardCasesInput" />
+                    </span>
+                    <div ng-if="selectedConfig.name" class="form-control input-xlarge-fluid">
+                        {{baseUrl}}cases/{{selectedConfig.name}}
                     </div>
-                    <div class="form-hints"></div>
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" ng-if="baseUrl">
                 <label class="col-md-3 col-sm-4 control-label">{{msg('commcare.settings.label.forwardFormStubs')}}</label>
-                <div class="col-md-9 col-sm-8 form-inline">
-                    <div class="switch-small" switch=".forwardFormStubsInput" autosave="switch-change" id="forwardFormStubsSwitch">
-                        <input type="checkbox" ng-model="settings.forwardFormStubs" class="forwardFormStubsInput" />
+                <div class="col-md-9 input-group">
+                    <span ng-class="{'input-group-addon' : selectedConfig.name}">
+                         <input ng-disabled="!newConfig && selectedConfig.forwardStubs" ng-change="draftChanged()" type="checkbox" ng-model="selectedConfig.forwardStubs" class="forwardFormStubsInput" />
+                    </span>
+                    <div ng-if="selectedConfig.name" class="form-control input-xlarge-fluid">
+                        {{baseUrl}}stub/{{selectedConfig.name}}
                     </div>
-                    <div class="form-hints"></div>
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" ng-if="baseUrl">
                 <label class="col-md-3 col-sm-4 control-label">{{msg('commcare.settings.label.forwardAppStructure')}}</label>
-                <div class="col-md-9 col-sm-8 form-inline">
-                    <div class="switch-small" switch=".forwardAppStructureInput" autosave="switch-change" id="forwardAppStructureSwitch">
-                        <input type="checkbox" ng-model="settings.forwardAppStructure" class="forwardAppStructureInput" />
+                <div class="col-md-9 form-inline input-group">
+                    <span ng-class="{'input-group-addon' : selectedConfig.name}">
+                         <input ng-disabled="!newConfig && selectedConfig.forwardSchema" ng-change="draftChanged()" type="checkbox" ng-model="selectedConfig.forwardSchema" class="forwardAppStructureInput"/>
+                    </span>
+                    <div ng-if="selectedConfig.name" class="form-control input-xlarge-fluid">
+                        {{baseUrl}}appSchemaChange/{{selectedConfig.name}}
                     </div>
-                    <div class="form-hints"></div>
                 </div>
             </div>
+        </div>
 
-        </form>
-    </div>
+    </form>
 </div>

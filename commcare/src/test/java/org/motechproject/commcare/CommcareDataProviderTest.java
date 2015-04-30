@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.motechproject.commcare.config.Config;
 import org.motechproject.commcare.domain.CaseInfo;
 import org.motechproject.commcare.domain.CommcareFixture;
 import org.motechproject.commcare.domain.CommcareForm;
@@ -12,6 +13,7 @@ import org.motechproject.commcare.service.impl.CommcareCaseServiceImpl;
 import org.motechproject.commcare.service.impl.CommcareFixtureServiceImpl;
 import org.motechproject.commcare.service.impl.CommcareFormServiceImpl;
 import org.motechproject.commcare.service.impl.CommcareUserServiceImpl;
+import org.motechproject.commcare.util.ConfigsUtils;
 import org.motechproject.commons.api.Range;
 import org.springframework.core.io.ResourceLoader;
 
@@ -56,6 +58,7 @@ public class CommcareDataProviderTest {
     @Mock
     private CommcareCaseServiceImpl commcareCaseService;
 
+    private Config config = ConfigsUtils.prepareConfigOne();
 
 
     private CommcareDataProvider provider;
@@ -107,10 +110,10 @@ public class CommcareDataProviderTest {
     @Test
     public void shouldReturnNullWhenListIsNull() {
         // given
-        String commcareUserClass = CommcareUser.class.getSimpleName();
-        String commcareFormClass = CommcareForm.class.getSimpleName();
-        String commcareFixtureClass = CommcareFixture.class.getSimpleName();
-        String caseInfoClass = CaseInfo.class.getSimpleName();
+        String commcareUserClass = CommcareUser.class.getSimpleName() + "-" + config.getName();
+        String commcareFormClass = CommcareForm.class.getSimpleName() + "-" + config.getName();
+        String commcareFixtureClass = CommcareFixture.class.getSimpleName() + "-" + config.getName();
+        String caseInfoClass = CaseInfo.class.getSimpleName() + "-" + config.getName();
 
         // when
         Object userContent = provider.lookup(commcareUserClass, "id", lookupFields);
@@ -128,10 +131,10 @@ public class CommcareDataProviderTest {
     @Test
     public void shouldReturnNullWhenListIsEmpty() {
         // given
-        String commcareUserClass = CommcareUser.class.getSimpleName();
-        String commcareFormClass = CommcareForm.class.getSimpleName();
-        String commcareFixtureClass = CommcareFixture.class.getSimpleName();
-        String caseInfoClass = CaseInfo.class.getSimpleName();
+        String commcareUserClass = CommcareUser.class.getSimpleName() + "-" + config.getName();
+        String commcareFormClass = CommcareForm.class.getSimpleName() + "-" + config.getName();
+        String commcareFixtureClass = CommcareFixture.class.getSimpleName() + "-" + config.getName();
+        String caseInfoClass = CaseInfo.class.getSimpleName() + "-" + config.getName();
 
         // when
         Object userContent = provider.lookup(commcareUserClass, "id", lookupFields);
@@ -149,15 +152,15 @@ public class CommcareDataProviderTest {
     @Test
     public void shouldReturnObject() {
         // given
-        String commcareUserClass = CommcareUser.class.getSimpleName();
-        String commcareFormClass = CommcareForm.class.getSimpleName();
-        String commcareFixtureClass = CommcareFixture.class.getSimpleName();
-        String caseInfoClass = CaseInfo.class.getSimpleName();
+        String commcareUserClass = CommcareUser.class.getSimpleName() + "-" + config.getName();
+        String commcareFormClass = CommcareForm.class.getSimpleName() + "-" + config.getName();
+        String commcareFixtureClass = CommcareFixture.class.getSimpleName() + "-" + config.getName();
+        String caseInfoClass = CaseInfo.class.getSimpleName() + "-" + config.getName();
 
-        when(commcareUserService.getCommcareUserById(FIELD_VALUE)).thenReturn(commcareUser);
-        when(commcareFixtureService.getCommcareFixtureById(FIELD_VALUE)).thenReturn(commcareFixture);
-        when(commcareFormService.retrieveForm(FIELD_VALUE)).thenReturn(commcareForm);
-        when(commcareCaseService.getCaseByCaseId(FIELD_VALUE)).thenReturn(caseInfo);
+        when(commcareUserService.getCommcareUserById(FIELD_VALUE, config.getName())).thenReturn(commcareUser);
+        when(commcareFixtureService.getCommcareFixtureById(FIELD_VALUE, config.getName())).thenReturn(commcareFixture);
+        when(commcareFormService.retrieveForm(FIELD_VALUE, config.getName())).thenReturn(commcareForm);
+        when(commcareCaseService.getCaseByCaseId(FIELD_VALUE, config.getName())).thenReturn(caseInfo);
 
         // when
         CommcareUser commcareUser1 = (CommcareUser) provider.lookup(commcareUserClass, "id", lookupFields);

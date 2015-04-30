@@ -26,6 +26,7 @@ public class CaseEvent {
     private String caseName;
     private String ownerId;
     private String caseDataXmlns;
+    private String configName;
 
     public CaseEvent(String caseId) {
         this.caseId = caseId;
@@ -44,6 +45,7 @@ public class CaseEvent {
         this.caseName = ((String) event.getParameters().get(EventDataKeys.CASE_NAME));
         this.ownerId = ((String) event.getParameters().get(EventDataKeys.OWNER_ID));
         this.caseDataXmlns = ((String) event.getParameters().get(EventDataKeys.CASE_DATA_XMLNS));
+        this.configName = ((String) event.getParameters().get(EventDataKeys.CONFIG_NAME));
     }
 
     public String getServerModifiedOn() {
@@ -138,13 +140,16 @@ public class CaseEvent {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(EventDataKeys.CASE_ID, this.caseId);
         parameters.put(TasksEventParser.CUSTOM_PARSER_EVENT_KEY, CommcareCaseEventParser.PARSER_NAME);
+        parameters.put(EventDataKeys.CONFIG_NAME, this.configName);
         return new MotechEvent(EventSubjects.CASE_EVENT, parameters);
     }
 
     public MotechEvent toMotechEventWithData() {
+
+        MotechEvent event = toMotechEventWithoutData();
+
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(EventDataKeys.SERVER_MODIFIED_ON, this.serverModifiedOn);
-        parameters.put(EventDataKeys.CASE_ID, this.caseId);
         parameters.put(EventDataKeys.USER_ID, this.userId);
         parameters.put(EventDataKeys.CASE_ACTION, this.action);
         parameters.put(EventDataKeys.API_KEY, this.apiKey);
@@ -153,23 +158,33 @@ public class CaseEvent {
         parameters.put(EventDataKeys.DATE_MODIFIED, this.dateModified);
         parameters.put(EventDataKeys.OWNER_ID, this.ownerId);
         parameters.put(EventDataKeys.CASE_DATA_XMLNS, this.caseDataXmlns);
-        parameters.put(TasksEventParser.CUSTOM_PARSER_EVENT_KEY, CommcareCaseEventParser.PARSER_NAME);
-        return new MotechEvent(EventSubjects.CASE_EVENT, parameters);
+        event.getParameters().putAll(parameters);
+
+        return event;
     }
 
-    public CaseEvent eventFromCase(CaseXml caseInstance) {
-        setServerModifiedOn(caseInstance.getServerModifiedOn());
-        setCaseId(caseInstance.getCaseId());
-        setUserId(caseInstance.getUserId());
-        setAction(caseInstance.getAction());
-        setApiKey(caseInstance.getApiKey());
-        setCaseName(caseInstance.getCaseName());
-        setCaseType(caseInstance.getCaseType());
-        setDateModified(caseInstance.getDateModified());
-        setFieldValues(caseInstance.getFieldValues());
-        setOwnerId(caseInstance.getOwnerId());
-        setCaseDataXmlns(caseInstance.getCaseDataXmlns());
+    public static CaseEvent fromCaseXml(CaseXml caseInstance, String configName) {
+        CaseEvent event = new CaseEvent(caseInstance.getCaseId());
+        event.setServerModifiedOn(caseInstance.getServerModifiedOn());
+        event.setCaseId(caseInstance.getCaseId());
+        event.setUserId(caseInstance.getUserId());
+        event.setAction(caseInstance.getAction());
+        event.setApiKey(caseInstance.getApiKey());
+        event.setCaseName(caseInstance.getCaseName());
+        event.setCaseType(caseInstance.getCaseType());
+        event.setDateModified(caseInstance.getDateModified());
+        event.setFieldValues(caseInstance.getFieldValues());
+        event.setOwnerId(caseInstance.getOwnerId());
+        event.setCaseDataXmlns(caseInstance.getCaseDataXmlns());
+        event.setConfigName(configName);
+        return event;
+    }
 
-        return this;
+    public String getConfigName() {
+        return configName;
+    }
+
+    public void setConfigName(String configName) {
+        this.configName = configName;
     }
 }

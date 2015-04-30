@@ -7,9 +7,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.motechproject.commcare.config.Config;
 import org.motechproject.commcare.domain.AppStructureResponseJson;
 import org.motechproject.commcare.domain.CommcareApplicationJson;
 import org.motechproject.commcare.service.CommcareApplicationDataService;
+import org.motechproject.commcare.service.CommcareConfigService;
+import org.motechproject.commcare.util.ConfigsUtils;
 import org.motechproject.commons.api.json.MotechJsonReader;
 import org.springframework.test.web.server.MockMvc;
 import org.springframework.test.web.server.setup.MockMvcBuilders;
@@ -30,6 +33,9 @@ public class SchemaControllerTest {
     @Mock
     private CommcareApplicationDataService commcareApplicationDataService;
 
+    @Mock
+    private CommcareConfigService configService;
+
     @InjectMocks
     private SchemaController schemaController = new SchemaController();
 
@@ -37,10 +43,13 @@ public class SchemaControllerTest {
 
     private MotechJsonReader motechJsonReader = new MotechJsonReader();
     private ObjectMapper objectMapper = new ObjectMapper();
+    private Config config;
 
     @Before
     public void setUp() throws Exception {
         initMocks(this);
+
+        config = ConfigsUtils.prepareConfigOne();
 
         controller = MockMvcBuilders.standaloneSetup(schemaController).build();
     }
@@ -48,12 +57,13 @@ public class SchemaControllerTest {
     @Test
     public void shouldReturnAppStructure() throws Exception {
         List<CommcareApplicationJson> apps = application();
-        when(commcareApplicationDataService.retrieveAll()).thenReturn(apps);
+        when(configService.exists(config.getName())).thenReturn(true);
+        when(commcareApplicationDataService.bySourceConfiguration(config.getName())).thenReturn(apps);
 
         final String expectedResponse = objectMapper.writeValueAsString(apps);
 
         controller.perform(
-                get("/schema")
+                get("/schema/" + config.getName())
         ).andExpect(
                 status().is(HttpStatus.SC_OK)
         ).andExpect(

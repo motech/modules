@@ -3,9 +3,11 @@ package org.motechproject.commcare.service.impl;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.commcare.client.CommCareAPIHttpClient;
+import org.motechproject.commcare.config.Config;
 import org.motechproject.commcare.domain.AppStructureResponseJson;
 import org.motechproject.commcare.domain.CommcareApplicationJson;
 import org.motechproject.commcare.service.CommcareAppStructureService;
+import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commons.api.json.MotechJsonReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,42 +25,67 @@ public class CommcareAppStructureServiceImpl implements CommcareAppStructureServ
 
     private CommCareAPIHttpClient commcareHttpClient;
 
+    private CommcareConfigService configService;
+
     @Autowired
-    public CommcareAppStructureServiceImpl(CommCareAPIHttpClient commcareHttpClient) {
+    public CommcareAppStructureServiceImpl(CommCareAPIHttpClient commcareHttpClient, CommcareConfigService configService) {
         this.commcareHttpClient = commcareHttpClient;
+        this.configService = configService;
         this.motechJsonReader = new MotechJsonReader();
     }
 
     @Override
-    public List<CommcareApplicationJson> getAllApplications() {
+    public List<CommcareApplicationJson> getAllApplications(String configName) {
         AppStructureResponseJson appStructureResponseJson = null;
         Integer pageNumber = 1;
-        List<CommcareApplicationJson> commcareApp = new ArrayList<>();
+        List<CommcareApplicationJson> commmcareApps = new ArrayList<>();
+        Config config = configService.getByName(configName);
 
         do {
-            String response = commcareHttpClient.appStructureRequest(DEFAULT_PAGE_SIZE, pageNumber);
-            appStructureResponseJson = parseApplicationsFromResponse(response);
-            commcareApp.addAll(appStructureResponseJson.getApplications());
+            String response = commcareHttpClient.appStructureRequest(config.getAccountConfig(), DEFAULT_PAGE_SIZE, pageNumber);
+            appStructureResponseJson = parseApplicationsFromResponse(response, config.getName());
+            commmcareApps.addAll(appStructureResponseJson.getApplications());
             pageNumber++;
         } while (appStructureResponseJson != null
                 && StringUtils.isNotBlank(appStructureResponseJson.getMetadata().getNextPageQueryString()));
 
         // Make sure the modules get serialized
-        for (CommcareApplicationJson applicationJson : commcareApp) {
+        for (CommcareApplicationJson applicationJson : commmcareApps) {
             applicationJson.serializeModules();
         }
 
-        return commcareApp;
+        return commmcareApps;
     }
 
-    public List<CommcareApplicationJson> getApplications(Integer pageSize, Integer pageNumber) {
-        String response = commcareHttpClient.appStructureRequest(pageSize, pageNumber);
-        AppStructureResponseJson appStructureResponseJson = parseApplicationsFromResponse(response);
+    public List<CommcareApplicationJson> getApplications(Integer pageSize, Integer pageNumber, String configName) {
+        Config config = configService.getByName(configName);
+        String response = commcareHttpClient.appStructureRequest(config.getAccountConfig(), pageSize, pageNumber);
+        AppStructureResponseJson appStructureResponseJson = parseApplicationsFromResponse(response, config.getName());
         return appStructureResponseJson.getApplications();
     }
 
-    private AppStructureResponseJson parseApplicationsFromResponse(String response) {
+    @Override
+    public List<CommcareApplicationJson> getAllApplications() {
+        return getAllApplications(null);
+    }
+
+    public List<CommcareApplicationJson> getApplications(Integer pageSize, Integer pageNumber) {
+        return getApplications(pageSize, pageNumber, null);
+    }
+
+    private AppStructureResponseJson parseApplicationsFromResponse(String response, String configName) {
         Type appStructureResponseType = new TypeToken<AppStructureResponseJson>() { } .getType();
-        return (AppStructureResponseJson) motechJsonReader.readFromStringOnlyExposeAnnotations(response, appStructureResponseType);
+        AppStructureResponseJson structure = (AppStructureResponseJson) motechJsonReader
+                .readFromStringOnlyExposeAnnotations(response, appStructureResponseType);
+
+        setDomain(structure, configName);
+
+        return structure;
+    }
+
+    private void setDomain(AppStructureResponseJson responseJson, String configName) {
+        for (CommcareApplicationJson application : responseJson.getApplications()) {
+            application.setConfigName(configName);
+        }
     }
 }

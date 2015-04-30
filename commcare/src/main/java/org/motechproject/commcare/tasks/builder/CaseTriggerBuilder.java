@@ -1,5 +1,7 @@
 package org.motechproject.commcare.tasks.builder;
 
+import org.motechproject.commcare.config.Config;
+import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.service.CommcareSchemaService;
 import org.motechproject.tasks.contract.EventParameterRequest;
 import org.motechproject.tasks.contract.TriggerEventRequest;
@@ -14,6 +16,7 @@ import static org.motechproject.commcare.events.constants.EventDataKeys.CASE_ACT
 import static org.motechproject.commcare.events.constants.EventDataKeys.CASE_ID;
 import static org.motechproject.commcare.events.constants.EventDataKeys.CASE_NAME;
 import static org.motechproject.commcare.events.constants.EventDataKeys.CASE_TYPE;
+import static org.motechproject.commcare.events.constants.EventDataKeys.CONFIG_NAME;
 import static org.motechproject.commcare.events.constants.EventDataKeys.DATE_MODIFIED;
 import static org.motechproject.commcare.events.constants.EventDataKeys.OWNER_ID;
 import static org.motechproject.commcare.events.constants.EventDataKeys.USER_ID;
@@ -27,38 +30,53 @@ import static org.motechproject.commcare.events.constants.EventSubjects.CASE_EVE
 public class CaseTriggerBuilder implements TriggerBuilder {
 
     private CommcareSchemaService schemaService;
+    private CommcareConfigService configService;
 
     private static final String RECEIVED_CASE_PREFIX = "Received Case: ";
 
-    public CaseTriggerBuilder(CommcareSchemaService schemaService) {
+    public CaseTriggerBuilder(CommcareSchemaService schemaService, CommcareConfigService configService) {
         this.schemaService = schemaService;
+        this.configService = configService;
     }
 
     @Override
     public List<TriggerEventRequest> buildTriggers() {
         List<TriggerEventRequest> triggers = new ArrayList<>();
 
-        for (Map.Entry<String, Set<String>> entry : schemaService.getAllCaseTypes().entrySet()) {
-            List<EventParameterRequest> parameterRequests = new ArrayList<>();
-            addCommonCaseFields(parameterRequests);
+        for (Config config : configService.getConfigs().getConfigs()) {
+            for (Map.Entry<String, Set<String>> entry : schemaService.getAllCaseTypes(config.getName()).entrySet()) {
+                List<EventParameterRequest> parameterRequests = new ArrayList<>();
+                parameterRequests.add(new EventParameterRequest("commcare.field.configName", CONFIG_NAME));
+                addCommonCaseFields(parameterRequests);
 
-            for (String caseProperty : entry.getValue()) {
-                parameterRequests.add(new EventParameterRequest(caseProperty, caseProperty));
+                for (String caseProperty : entry.getValue()) {
+                    parameterRequests.add(new EventParameterRequest(caseProperty, caseProperty));
+                }
+
+                triggers.add(new TriggerEventRequest(RECEIVED_CASE_PREFIX + config.getName() + " - " + entry.getKey(),
+                        CASE_EVENT + "." + config.getName() + "." + entry.getKey(), null, parameterRequests, CASE_EVENT));
             }
-
-            triggers.add(new TriggerEventRequest(RECEIVED_CASE_PREFIX + entry.getKey(), CASE_EVENT + "." + entry.getKey(), null, parameterRequests, CASE_EVENT));
         }
 
-        addTriggerForMinimalStrategy(triggers);
+        triggers.addAll(buildTriggersForMinimalStrategy());
 
         return triggers;
     }
 
-    private void addTriggerForMinimalStrategy(List<TriggerEventRequest> triggers) {
-        List<EventParameterRequest> parameterRequests = new ArrayList<>();
-        parameterRequests.add(new EventParameterRequest("commcare.caseId", CASE_ID));
+    private List<TriggerEventRequest> buildTriggersForMinimalStrategy() {
 
-        triggers.add(new TriggerEventRequest("Received Case ID", CASE_EVENT, null, parameterRequests, CASE_EVENT));
+        List<TriggerEventRequest> triggers = new ArrayList<>();
+
+        for (Config config : configService.getConfigs().getConfigs()) {
+            List<EventParameterRequest> parameterRequests = new ArrayList<>();
+            parameterRequests.add(new EventParameterRequest("commcare.caseId", CASE_ID));
+            parameterRequests.add(new EventParameterRequest("commcare.field.configName", CONFIG_NAME));
+
+            triggers.add(new TriggerEventRequest("Received Case ID - " + config.getName(),
+                    CASE_EVENT + "." + config.getName(), null, parameterRequests, CASE_EVENT));
+        }
+
+        return triggers;
     }
 
     private void addCommonCaseFields(List<EventParameterRequest> parameters) {

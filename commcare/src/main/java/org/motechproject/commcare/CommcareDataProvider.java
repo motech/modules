@@ -72,16 +72,17 @@ public class CommcareDataProvider extends AbstractDataProvider {
 
         if (supports(type) && lookupFields.containsKey(ID_FIELD)) {
             String id = lookupFields.get(ID_FIELD);
+            String configName = type.substring(type.lastIndexOf('-') + 1);
 
             if (type.startsWith(COMMCARE_USER)) {
-                obj = getUser(id);
+                obj = getUser(id, configName);
             } else if (type.startsWith(COMMCARE_FIXTURE)) {
-                obj = getFixture(id);
+                obj = getFixture(id, configName);
             } else if (type.startsWith(CASE_INFO)) {
-                CaseInfo caseInfo = getCase(id);
+                CaseInfo caseInfo = getCase(id, configName);
                 obj = caseInfo == null ? null : convertCaseToMap(caseInfo);
             } else if (type.startsWith(COMMCARE_FORM)) {
-                CommcareForm commcareForm = getForm(id);
+                CommcareForm commcareForm = getForm(id, configName);
                 obj = commcareForm == null ? null : convertFormToMap(commcareForm);
             }
         }
@@ -146,20 +147,20 @@ public class CommcareDataProvider extends AbstractDataProvider {
         return resultMap;
     }
 
-    private CommcareUser getUser(String id) {
-        return commcareUserService.getCommcareUserById(id);
+    private CommcareUser getUser(String id, String configName) {
+        return commcareUserService.getCommcareUserById(id, configName);
     }
 
-    private CommcareFixture getFixture(String id) {
-        return commcareFixtureService.getCommcareFixtureById(id);
+    private CommcareFixture getFixture(String id, String configName) {
+        return commcareFixtureService.getCommcareFixtureById(id, configName);
     }
 
-    private CaseInfo getCase(String id) {
-        return commcareCaseService.getCaseByCaseId(id);
+    private CaseInfo getCase(String id, String configName) {
+        return commcareCaseService.getCaseByCaseId(id, configName);
     }
 
-    private CommcareForm getForm(String id) {
-        return commcareFormService.retrieveForm(id);
+    private CommcareForm getForm(String id, String configName) {
+        return commcareFormService.retrieveForm(id, configName);
     }
 
     @Autowired

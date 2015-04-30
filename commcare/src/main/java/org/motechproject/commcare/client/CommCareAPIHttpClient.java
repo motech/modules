@@ -3,23 +3,24 @@ package org.motechproject.commcare.client;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
-import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.motechproject.commcare.config.AccountConfig;
 import org.motechproject.commcare.exception.CaseParserException;
+import org.motechproject.commcare.exception.CommcareAuthenticationException;
 import org.motechproject.commcare.parser.OpenRosaResponseParser;
 import org.motechproject.commcare.request.json.CaseRequest;
 import org.motechproject.commcare.response.OpenRosaResponse;
-import org.motechproject.server.config.SettingsFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -32,68 +33,66 @@ public class CommCareAPIHttpClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommCareAPIHttpClient.class);
 
     private HttpClient commonsHttpClient;
-    private SettingsFacade settingsFacade;
 
     @Autowired
-    public CommCareAPIHttpClient(final HttpClient commonsHttpClient, @Qualifier("commcareAPISettings") final SettingsFacade settingsFacade) {
+    public CommCareAPIHttpClient(final HttpClient commonsHttpClient) {
         this.commonsHttpClient = commonsHttpClient;
-        this.settingsFacade = settingsFacade;
     }
 
-    public OpenRosaResponse caseUploadRequest(String caseXml)
+    public OpenRosaResponse caseUploadRequest(AccountConfig accountConfig, String caseXml)
             throws CaseParserException {
-        return this.postRequest(commcareCaseUploadUrl(), caseXml);
+        return this.postRequest(accountConfig, commcareCaseUploadUrl(accountConfig), caseXml);
     }
 
-    public String userRequest(String userId) {
-        return this.getRequest(commcareUserUrl(userId), null);
+    public String userRequest(AccountConfig accountConfig, String userId) {
+        return this.getRequest(accountConfig, commcareUserUrl(accountConfig, userId), null);
     }
 
-    public String usersRequest(Integer pageSize, Integer pageNumber) {
-        return this.getRequest(commcareUsersUrl(pageSize, pageNumber), null);
+    public String usersRequest(AccountConfig accountConfig, Integer pageSize, Integer pageNumber) {
+        return this.getRequest(accountConfig, commcareUsersUrl(accountConfig, pageSize, pageNumber), null);
     }
 
-    public String appStructureRequest(Integer pageSize, Integer pageNumber) {
-        return this.getRequest(commcareAppStructureUrl(pageSize, pageNumber), null);
+    public String appStructureRequest(AccountConfig accountConfig, Integer pageSize, Integer pageNumber) {
+        return this.getRequest(accountConfig, commcareAppStructureUrl(accountConfig, pageSize, pageNumber), null);
     }
 
-    public String formRequest(String formId) {
-        return this.getRequest(commcareFormUrl(formId), null);
+    public String formRequest(AccountConfig accountConfig, String formId) {
+        return this.getRequest(accountConfig, commcareFormUrl(accountConfig, formId), null);
     }
 
-    public String casesRequest(CaseRequest caseRequest) {
-        return this.getRequest(commcareCasesUrl(), caseRequest);
+    public String casesRequest(AccountConfig accountConfig, CaseRequest caseRequest) {
+        return this.getRequest(accountConfig, commcareCasesUrl(accountConfig), caseRequest);
     }
 
-    public String singleCaseRequest(String caseId) {
-        return this.getRequest(commcareCaseUrl(caseId), null);
+    public String singleCaseRequest(AccountConfig accountConfig, String caseId) {
+        return this.getRequest(accountConfig, commcareCaseUrl(accountConfig, caseId), null);
     }
 
-    public String fixturesRequest(Integer pageSize, Integer pageNumber) {
-        return this.getRequest(commcareFixturesUrl(pageSize, pageNumber), null);
+    public String fixturesRequest(AccountConfig accountConfig, Integer pageSize, Integer pageNumber) {
+        return this.getRequest(accountConfig, commcareFixturesUrl(accountConfig, pageSize, pageNumber), null);
     }
 
-    public String fixtureRequest(String fixtureId) {
-        return this.getRequest(commcareFixtureUrl(fixtureId), null);
+    public String fixtureRequest(AccountConfig accountConfig, String fixtureId) {
+        return this.getRequest(accountConfig, commcareFixtureUrl(accountConfig, fixtureId), null);
     }
 
-    public int dataForwardingEndpointUploadRequest(String dataForwardingEndpointJson) {
-        return this.dataForwardingEndpointPostRequest(commcareDataForwardingEndpointUrl(), dataForwardingEndpointJson);
+    public int dataForwardingEndpointUploadRequest(AccountConfig accountConfig, String dataForwardingEndpointJson) {
+        return this.dataForwardingEndpointPostRequest(accountConfig, commcareDataForwardingEndpointUrl(accountConfig), dataForwardingEndpointJson);
     }
 
-    public int dataForwardingEndpointUpdateRequest(String resourceUri, String dataForwardingEndpointJson) {
-        String combinedUri = commcareDataForwardingEndpointUrl() + resourceUri + '/';
-        return this.dataForwardingEndpointPutRequest(combinedUri, dataForwardingEndpointJson);
+    public int dataForwardingEndpointUpdateRequest(AccountConfig accountConfig, String resourceUri, String dataForwardingEndpointJson) {
+        String combinedUri = commcareDataForwardingEndpointUrl(accountConfig) + resourceUri + '/';
+        return this.dataForwardingEndpointPutRequest(accountConfig, combinedUri, dataForwardingEndpointJson);
     }
 
-    public String dataForwardingEndpointsRequest(Integer pageSize, Integer pageNumber) {
-        return this.getRequest(commcareDataForwardingEndpointsUrl(pageSize, pageNumber), null);
+    public String dataForwardingEndpointsRequest(AccountConfig accountConfig, Integer pageSize, Integer pageNumber) {
+        return this.getRequest(accountConfig, commcareDataForwardingEndpointsUrl(accountConfig, pageSize, pageNumber), null);
     }
 
-    public boolean verifyConnection() {
-        HttpMethod getMethod = new GetMethod(commcareCasesUrl());
+    public boolean verifyConnection(AccountConfig accountConfig) {
+        HttpMethod getMethod = new GetMethod(commcareCasesUrl(accountConfig.getBaseUrl(), accountConfig.getDomain()));
 
-        authenticate();
+        authenticate(accountConfig);
 
         int status = executeMethod(getMethod);
 
@@ -106,7 +105,7 @@ public class CommCareAPIHttpClient {
         return status == HttpStatus.SC_OK;
     }
 
-    private int dataForwardingEndpointPostRequest(String requestUrl, String body) {
+    private int dataForwardingEndpointPostRequest(AccountConfig accountConfig, String requestUrl, String body) {
 
         PostMethod postMethod = new PostMethod(requestUrl);
 
@@ -121,7 +120,7 @@ public class CommCareAPIHttpClient {
 
         postMethod.setRequestEntity(stringEntity);
 
-        authenticate();
+        authenticate(accountConfig);
 
         return executeMethod(postMethod);
     }
@@ -142,7 +141,7 @@ public class CommCareAPIHttpClient {
         return status;
     }
 
-    private int dataForwardingEndpointPutRequest(String requestUrl, String body) {
+    private int dataForwardingEndpointPutRequest(AccountConfig accountConfig, String requestUrl, String body) {
 
         PutMethod putMethod = new PutMethod(requestUrl);
 
@@ -157,15 +156,15 @@ public class CommCareAPIHttpClient {
 
         putMethod.setRequestEntity(stringEntity);
 
-        authenticate();
+        authenticate(accountConfig);
 
         return executeMethod(putMethod);
     }
 
-    private HttpMethod buildRequest(String url, CaseRequest caseRequest) {
+    private HttpMethod buildRequest(AccountConfig accountConfig, String url, CaseRequest caseRequest) {
         HttpMethod requestMethod = new GetMethod(url);
 
-        authenticate();
+        authenticate(accountConfig);
         if (caseRequest != null) {
             requestMethod.setQueryString(caseRequest.toQueryString());
         }
@@ -173,14 +172,21 @@ public class CommCareAPIHttpClient {
         return requestMethod;
     }
 
-    private String getRequest(String requestUrl, CaseRequest caseRequest) {
+    private String getRequest(AccountConfig accountConfig, String requestUrl, CaseRequest caseRequest) {
 
-        HttpMethod getMethod = buildRequest(requestUrl, caseRequest);
+        HttpMethod getMethod = buildRequest(accountConfig, requestUrl, caseRequest);
 
         try {
             commonsHttpClient.executeMethod(getMethod);
-            InputStream responseBodyAsStream = getMethod.getResponseBodyAsStream();
-            return IOUtils.toString(responseBodyAsStream);
+
+            switch (getMethod.getStatusCode()) {
+                case HttpStatus.SC_UNAUTHORIZED:
+                    throw new CommcareAuthenticationException("Couldn't authenticate to CommcareHQ server! Are given credentials correct?");
+                default:
+                    InputStream responseBodyAsStream = getMethod.getResponseBodyAsStream();
+                    return IOUtils.toString(responseBodyAsStream);
+            }
+
         } catch (HttpException e) {
             LOGGER.warn("HttpException while sending request to CommCare: " + e.getMessage());
         } catch (IOException e) {
@@ -192,15 +198,29 @@ public class CommCareAPIHttpClient {
         return null;
     }
 
-    private void authenticate() {
-        commonsHttpClient.getParams().setAuthenticationPreemptive(true);
+    private void authenticate(AccountConfig accountConfig) {
 
-        commonsHttpClient.getState().setCredentials(
-                AuthScope.ANY,
-                new UsernamePasswordCredentials(getUsername(), getPassword()));
+        UsernamePasswordCredentials oldCredentials = (UsernamePasswordCredentials) commonsHttpClient.getState().getCredentials(AuthScope.ANY);
+
+        if (credentialsChanged(oldCredentials, accountConfig)) {
+            commonsHttpClient.getState().clear();
+
+            commonsHttpClient.getParams().setAuthenticationPreemptive(true);
+
+            commonsHttpClient.getState().setCredentials(
+                    AuthScope.ANY,
+                    new UsernamePasswordCredentials(accountConfig.getUsername(), accountConfig.getPassword()));
+        }
     }
 
-    private OpenRosaResponse postRequest(String requestUrl, String body)
+    private boolean credentialsChanged(UsernamePasswordCredentials oldCredentials, AccountConfig newCredentials) {
+
+        return oldCredentials == null
+                || !StringUtils.equals(oldCredentials.getUserName(), newCredentials.getUsername())
+                || !StringUtils.equals(oldCredentials.getPassword(), newCredentials.getPassword());
+    }
+
+    private OpenRosaResponse postRequest(AccountConfig accountConfig, String requestUrl, String body)
             throws CaseParserException {
 
         PostMethod postMethod = new PostMethod(requestUrl);
@@ -216,7 +236,7 @@ public class CommCareAPIHttpClient {
 
         postMethod.setRequestEntity(stringEntity);
 
-        authenticate();
+        authenticate(accountConfig);
 
         String response = "";
 
@@ -246,58 +266,70 @@ public class CommCareAPIHttpClient {
 
     }
 
-    String commcareUsersUrl(Integer pageSize, Integer pageNumber) {
-        return String.format("%s/%s/api/v%s/user/?format=json%s", getCommcareBaseUrl(), getCommcareDomain(), getCommcareApiVersion(),
+    String commcareUsersUrl(AccountConfig accountConfig, Integer pageSize, Integer pageNumber) {
+        return String.format("%s/%s/api/v%s/user/?format=json%s", getCommcareBaseUrl(accountConfig.getBaseUrl()),
+                accountConfig.getDomain(), getCommcareApiVersion(), buildPaginationParams(pageSize, pageNumber));
+    }
+
+    String commcareUserUrl(AccountConfig accountConfig, String id) {
+        return String.format("%s/%s/api/v%s/user/%s/?format=json", getCommcareBaseUrl(accountConfig.getBaseUrl()),
+                accountConfig.getDomain(), getCommcareApiVersion(), id);
+    }
+
+    String commcareAppStructureUrl(AccountConfig accountConfig, Integer pageSize, Integer pageNumber) {
+        return String.format("%s/%s/api/v%s/application/?format=json%s", getCommcareBaseUrl(accountConfig.getBaseUrl()),
+                accountConfig.getDomain(), getCommcareApiVersion(), buildPaginationParams(pageSize, pageNumber));
+    }
+
+    String commcareFormUrl(AccountConfig accountConfig, String formId) {
+        return String.format("%s/%s/api/v%s/form/%s/?format=json", getCommcareBaseUrl(accountConfig.getBaseUrl()),
+                accountConfig.getDomain(), getCommcareApiVersion(), formId);
+    }
+
+    String commcareFixturesUrl(AccountConfig accountConfig) {
+        return String.format("%s/%s/api/v%s/fixture/", getCommcareBaseUrl(accountConfig.getBaseUrl()),
+                accountConfig.getDomain(), getCommcareApiVersion());
+    }
+
+    String commcareFixtureUrl(AccountConfig accountConfig, String fixtureId) {
+        return String.format("%s%s/", commcareFixturesUrl(accountConfig), fixtureId);
+    }
+
+    String commcareFixturesUrl(AccountConfig accountConfig, Integer pageSize, Integer pageNumber) {
+        return String.format("%s?format=json%s", commcareFixturesUrl(accountConfig),
                 buildPaginationParams(pageSize, pageNumber));
     }
 
-    String commcareUserUrl(String id) {
-        return String.format("%s/%s/api/v%s/user/%s/?format=json", getCommcareBaseUrl(), getCommcareDomain(), getCommcareApiVersion(), id);
+    String commcareCasesUrl(AccountConfig accountConfig) {
+        return String.format("%s/%s/api/v%s/case/", getCommcareBaseUrl(accountConfig.getBaseUrl()),
+                accountConfig.getDomain(), getCommcareApiVersion());
     }
 
-    String commcareAppStructureUrl(Integer pageSize, Integer pageNumber) {
-        return String.format("%s/%s/api/v%s/application/?format=json%s", getCommcareBaseUrl(), getCommcareDomain(), getCommcareApiVersion(),
-                buildPaginationParams(pageSize, pageNumber));
+    String commcareCasesUrl(String baseUrl, String domain) {
+        return String.format("%s/%s/api/v%s/case/", baseUrl, domain, getCommcareApiVersion());
     }
 
-    String commcareFormUrl(String formId) {
-        return String.format("%s/%s/api/v%s/form/%s/?format=json", getCommcareBaseUrl(), getCommcareDomain(), getCommcareApiVersion(), formId);
+    String commcareCaseUrl(AccountConfig accountConfig, String caseId) {
+        return String.format("%s/%s/api/v%s/case/%s/", getCommcareBaseUrl(accountConfig.getBaseUrl()),
+                accountConfig.getDomain(), getCommcareApiVersion(), caseId);
     }
 
-    String commcareFixturesUrl() {
-        return String.format("%s/%s/api/v%s/fixture/", getCommcareBaseUrl(), getCommcareDomain(), getCommcareApiVersion());
+    private String commcareDataForwardingEndpointUrl(AccountConfig accountConfig) {
+        return String.format("%s/%s/api/v0.4/data-forwarding/?format=json",
+                getCommcareBaseUrl(accountConfig.getBaseUrl()), accountConfig.getDomain());
     }
 
-    String commcareFixtureUrl(String fixtureId) {
-        return String.format("%s%s/", commcareFixturesUrl(), fixtureId);
+    private String commcareDataForwardingEndpointsUrl(AccountConfig accountConfig, Integer pageSize, Integer pageNumber) {
+        return String.format("%s%s", commcareDataForwardingEndpointUrl(accountConfig), buildPaginationParams(pageSize, pageNumber));
     }
 
-    String commcareFixturesUrl(Integer pageSize, Integer pageNumber) {
-        return String.format("%s?format=json%s", commcareFixturesUrl(), buildPaginationParams(pageSize, pageNumber));
+    String commcareCaseUploadUrl(AccountConfig accountConfig) {
+        return String.format("%s/%s/receiver/", getCommcareBaseUrl(accountConfig.getBaseUrl()),
+                accountConfig.getDomain());
     }
 
-    String commcareCasesUrl() {
-        return String.format("%s/%s/api/v%s/case/", getCommcareBaseUrl(), getCommcareDomain(), getCommcareApiVersion());
-    }
-
-    String commcareCaseUrl(String caseId) {
-        return String.format("%s/%s/api/v%s/case/%s/", getCommcareBaseUrl(), getCommcareDomain(), getCommcareApiVersion(), caseId);
-    }
-
-    private String commcareDataForwardingEndpointUrl() {
-        return String.format("%s/%s/api/v0.4/data-forwarding/?format=json", getCommcareBaseUrl(), getCommcareDomain());
-    }
-
-    private String commcareDataForwardingEndpointsUrl(Integer pageSize, Integer pageNumber) {
-        return String.format("%s%s", commcareDataForwardingEndpointUrl(), buildPaginationParams(pageSize, pageNumber));
-    }
-
-    String commcareCaseUploadUrl() {
-        return String.format("%s/%s/receiver/", getCommcareBaseUrl(), getCommcareDomain());
-    }
-
-    private String getCommcareBaseUrl() {
-        String commcareBaseUrl = settingsFacade.getProperty("commcareBaseUrl");
+    private String getCommcareBaseUrl(String baseUrl) {
+        String commcareBaseUrl = baseUrl;
 
         if (commcareBaseUrl.endsWith("/")) {
             commcareBaseUrl = commcareBaseUrl.substring(0, commcareBaseUrl.length() - 1);
@@ -319,19 +351,8 @@ public class CommCareAPIHttpClient {
         return sb.toString();
     }
 
-    private String getCommcareDomain() {
-        return settingsFacade.getProperty("commcareDomain");
-    }
 
     private String getCommcareApiVersion() {
-        return settingsFacade.getProperty("apiVersion");
-    }
-
-    private String getUsername() {
-        return settingsFacade.getProperty("username");
-    }
-
-    private String getPassword() {
-        return settingsFacade.getProperty("password");
+        return "0.4";
     }
 }
