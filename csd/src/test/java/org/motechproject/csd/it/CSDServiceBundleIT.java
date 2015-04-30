@@ -6,11 +6,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.csd.domain.Address;
+import org.motechproject.csd.domain.AddressLine;
 import org.motechproject.csd.domain.CSD;
 import org.motechproject.csd.domain.Facility;
 import org.motechproject.csd.domain.Service;
+import org.motechproject.csd.mds.AddressLineDataService;
 import org.motechproject.csd.service.CSDService;
 import org.motechproject.csd.db.InitialData;
+import org.motechproject.csd.service.FacilityService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
@@ -22,9 +26,9 @@ import javax.inject.Inject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Verify CSDService is present & functional.
@@ -36,6 +40,12 @@ public class CSDServiceBundleIT extends BasePaxIT {
 
     @Inject
     private CSDService csdService;
+
+    @Inject
+    private FacilityService facilityService;
+
+    @Inject
+    private AddressLineDataService addressLineDataService;
 
     @Before
     public void cleanBefore() {
@@ -108,5 +118,31 @@ public class CSDServiceBundleIT extends BasePaxIT {
         CSD csd = InitialData.getInitialData();
 
         assertTrue(csdService.getCSD().equals(csd));
+    }
+
+    @Test
+    public void shouldUpdateParentModificationDate() {
+        CSD csd = InitialData.getInitialData();
+        csdService.update(csd);
+        assertTrue(csdService.getCSD().equals(csd));
+
+        Facility facility = facilityService.getFacilityByEntityID("FacilityEntityID");
+        assertNotNull(facility);
+        DateTime modificationDate = facility.getModificationDate();
+        assertNotNull(modificationDate);
+
+        Set<Address> addresses = facility.getAddresses();
+        assertTrue(addresses != null && addresses.size() > 0);
+
+        Set<AddressLine> addressLines = addresses.iterator().next().getAddressLines();
+        assertTrue(addressLines != null && addressLines.size() > 0);
+
+        addressLineDataService.update(addressLines.iterator().next());
+
+        facility = facilityService.getFacilityByEntityID("FacilityEntityID");
+        DateTime newModificationDate = facility.getModificationDate();
+        assertNotNull(newModificationDate);
+
+        assertNotSame(modificationDate, newModificationDate);
     }
 }

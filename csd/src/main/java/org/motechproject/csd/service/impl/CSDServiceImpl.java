@@ -5,6 +5,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.motechproject.csd.client.CSDHttpClient;
 import org.motechproject.csd.client.SOAPClient;
 import org.motechproject.csd.constants.CSDConstants;
+import org.motechproject.csd.domain.BaseMainEntity;
 import org.motechproject.csd.domain.CSD;
 import org.motechproject.csd.domain.CommunicationProtocol;
 import org.motechproject.csd.domain.Config;
@@ -18,7 +19,13 @@ import org.motechproject.csd.service.FacilityService;
 import org.motechproject.csd.service.OrganizationService;
 import org.motechproject.csd.service.ProviderService;
 import org.motechproject.csd.service.ServiceService;
+import org.motechproject.csd.util.CSDReferenceFinder;
 import org.motechproject.csd.util.MarshallUtils;
+import org.motechproject.mds.helper.DataServiceHelper;
+import org.motechproject.mds.service.MotechDataService;
+import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
@@ -49,6 +56,14 @@ public class CSDServiceImpl implements CSDService {
 
     @Autowired
     private SOAPClient soapClient;
+
+    @Autowired
+    private BundleContext bundleContext;
+
+    @Autowired
+    private CSDReferenceFinder csdReferenceFinder;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CSDServiceImpl.class);
 
     @Override
     public CSD getCSD() {
@@ -156,5 +171,18 @@ public class CSDServiceImpl implements CSDService {
         }
 
         update(csd);
+    }
+
+    public void updateParentModificationDate(Object o) {
+        if (!(o instanceof BaseMainEntity)) {
+            BaseMainEntity parentEntity = csdReferenceFinder.findParentEntity(o);
+            if (parentEntity != null) {
+                MotechDataService dataService = DataServiceHelper.getDataService(bundleContext, o.getClass().getName());
+                parentEntity.setModificationDate(DateTime.now());
+                dataService.update(parentEntity);
+            } else {
+                LOGGER.warn("Could not find parent entity for " + o);
+            }
+        }
     }
 }
