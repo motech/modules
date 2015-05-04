@@ -1,3 +1,18 @@
 <div ng-controller="MCCampaignsCtrl" class="row">
     <h4 class="frame-title">{{ msg('msgCampaign.title')}}&nbsp;-&nbsp;{{ msg('msgCampaign.admin')}}</h4>
+    <table class="table table-bundles table-bordered table-striped table-lightblue table-condensed">
+        <thead>
+        <tr>
+            <th>{{msg('messageCampaign')}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><a href="#/messageCampaign/campaignRecord">{{msg('msgCampaign.admin.campaignRecord')}}</a></td>
+        </tr>
+        <tr>
+            <td><a href="#/messageCampaign/campaignMessageRecord">{{msg('msgCampaign.admin.campaignMessageRecord')}}</a></td>
+        </tr>
+        </tbody>
+    </table>
 </div>

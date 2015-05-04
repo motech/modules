@@ -2,6 +2,7 @@ package org.motechproject.messagecampaign.web.controller;
 
 import com.google.gson.JsonParseException;
 import org.apache.commons.io.IOUtils;
+import org.motechproject.messagecampaign.Constants;
 import org.motechproject.messagecampaign.exception.CampaignValidationException;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
 import org.motechproject.server.config.SettingsFacade;
@@ -63,6 +64,13 @@ public class SettingsController {
 
             throw new IllegalArgumentException(e);
         }
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value = "/mds-databrowser-config", method = RequestMethod.GET)
+    @ResponseBody
+    public String getCustomUISettings() throws IOException {
+        return IOUtils.toString(settingsFacade.getRawConfig(Constants.UI_CONFIG));
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

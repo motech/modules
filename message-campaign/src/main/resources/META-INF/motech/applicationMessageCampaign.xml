@@ -16,6 +16,7 @@
         <property name="rawConfigFiles">
             <list>
                 <value>classpath:message-campaigns.json</value>
+                <value>classpath:custom-ui.js</value>
             </list>
         </property>
     </bean>

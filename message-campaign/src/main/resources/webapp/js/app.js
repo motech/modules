@@ -1,14 +1,32 @@
 (function () {
     'use strict';
 
-        angular.module('messageCampaign', ['motech-dashboard', 'messageCampaign.services', 'messageCampaign.controllers', 'ngCookies'])
-        .config(['$routeProvider', function ($routeProvider) {
+    var messageCampaignModule = angular.module('messageCampaign', ['motech-dashboard', 'messageCampaign.services', 'messageCampaign.controllers', 'ngCookies', 'mds']), campaignRecordId, campaignMessageRecordId;
 
-            $routeProvider
-                .when('/messageCampaign/campaigns', { templateUrl: '../messagecampaign/resources/partials/campaigns.html', controller: 'MCCampaignsCtrl' })
-                .when('/messageCampaign/enrollments/:campaignName', { templateUrl: '../messagecampaign/resources/partials/enrollments.html', controller: 'MCEnrollmentsCtrl' })
-                .when('/messageCampaign/admin', { templateUrl: '../messagecampaign/resources/partials/admin.html' })
-                .when('/messageCampaign/settings', {templateUrl: '../messagecampaign/resources/partials/settings.html', controller: 'MCSettingsCtrl'});
-        }]
+    $.ajax({
+        url: '../mds/entities/getEntity/MOTECH Message Campaign/CampaignRecord',
+        success:  function(data) {
+            campaignRecordId = data.id;
+        },
+        async: false
+    });
+
+    $.ajax({
+        url: '../mds/entities/getEntity/MOTECH Message Campaign/CampaignMessageRecord',
+        success:  function(data) {
+            campaignMessageRecordId = data.id;
+        },
+        async: false
+    });
+
+    messageCampaignModule.config(['$routeProvider', function ($routeProvider) {
+        $routeProvider
+            .when('/messageCampaign/campaigns', { templateUrl: '../messagecampaign/resources/partials/campaigns.html', controller: 'MCCampaignsCtrl' })
+            .when('/messageCampaign/enrollments/:campaignName', { templateUrl: '../messagecampaign/resources/partials/enrollments.html', controller: 'MCEnrollmentsCtrl' })
+            .when('/messageCampaign/admin', { templateUrl: '../messagecampaign/resources/partials/admin.html' })
+            .when('/messageCampaign/campaignRecord', { redirectTo: '/mds/dataBrowser/' + campaignRecordId + '/messagecampaign' })
+            .when('/messageCampaign/campaignMessageRecord', { redirectTo: '/mds/dataBrowser/' + campaignMessageRecordId + '/messagecampaign' })
+            .when('/messageCampaign/settings', {templateUrl: '../messagecampaign/resources/partials/settings.html', controller: 'MCSettingsCtrl'});
+    }]
     );
 }());
