@@ -15,10 +15,14 @@
             {{message}}
         </div>
 
-        <div class="form-group">
-            <button type="button" class="btn btn-success" ng-click="addConfig()"><i class="fa fa-plus"></i>
-                {{msg('csd.web.settings.addConfig')}}
-            </button>
+        <div class="row">
+            <div class="col-md-3">
+                <div data-toggle="tooltip" data-placement="bottom" data-trigger="hover" bs-popover="{{msg('csd.web.settings.addConfig.tooltip')}}">
+                    <button type="button" class="btn btn-success" ng-click="addConfig()"><i class="fa fa-plus"></i>
+                        {{msg('csd.web.settings.addConfig')}}
+                    </button>
+                </div>
+            </div>
         </div>
 
         <form name="form" class="form-horizontal inside" novalidate>
