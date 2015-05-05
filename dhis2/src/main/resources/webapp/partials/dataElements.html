@@ -1,0 +1,16 @@
+<div>
+    <div>
+        <label>{{msg('dhis2.search')}}</label>
+        <input type="text" ng-model="search.name" >
+    </div>
+    <table class="table table-hover table-striped" d>
+        <tr>
+            <th>{{msg('dhis2.name')}}</th>
+            <th>{{msg('dhis2.id')}}</th>
+        </tr>
+        <tr ng-repeat="dataElement in dataElements | filter:search:strict">
+            <td>{{dataElement.name}}</td>
+            <td>{{dataElement.uuid}}</td>
+        </tr>
+    </table>
+</div>
