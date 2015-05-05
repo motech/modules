@@ -1,0 +1,35 @@
+[
+  {
+    "active": true,
+    "pattern": "/**/dhis2/dhis2-settings/**",
+    "supportedSchemes": [
+      "BASIC"
+    ],
+    "protocol": "HTTP",
+    "priority": 2,
+    "rest": true,
+    "origin": "SYSTEM_MODULE_DHIS2",
+    "version": "0.26",
+    "methodsRequired": [
+      "GET",
+      "POST"
+    ],
+    "permissionAccess": ["configureDhis"]
+  },
+  {
+    "active": true,
+    "pattern": "/**/dhis2/sync/**",
+    "supportedSchemes": [
+      "BASIC"
+    ],
+    "protocol": "HTTP",
+    "priority": 2,
+    "rest": true,
+    "origin": "SYSTEM_MODULE_DHIS2",
+    "version": "0.26",
+    "methodsRequired": [
+      "GET"
+    ],
+    "permissionAccess": ["syncDhis"]
+  }
+]

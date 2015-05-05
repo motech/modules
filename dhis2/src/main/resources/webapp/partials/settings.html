@@ -1,0 +1,51 @@
+<div class="row">
+    <div class="inside">
+        <div class="row">
+            <div class="panel-group">
+                <div class="panel panel-default dhis2-config">
+                    <div class="panel-heading">
+                        {{msg('dhis2.web.settings.configPanelTitle')}}
+                    </div>
+                    <div class="panel-body">
+                        <form name="form" class="form-horizontal inside" novalidate>
+                            <div class="form-group">
+                                <label for="serverURI" class="col-md-3 control-label">{{msg('dhis2.web.settings.serverURI')}}</label>
+                                <div class="col-md-8">
+                                    <input id="serverURI" type="text" class="form-control" ng-model="settings.serverURI">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="username" class="col-md-3 control-label">{{msg('dhis2.web.settings.username')}}</label>
+                                <div class="col-md-8">
+                                    <input id="username" type="text" class="form-control" ng-model="settings.username">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="password" class="col-md-3 control-label">{{msg('dhis2.web.settings.password')}}</label>
+                                <div class="col-md-8">
+                                    <input id="password" type="password" class="form-control" ng-model="settings.password">
+                                </div>
+                            </div>
+                            <div class="col-md-offset-3 col-md-9">
+                                <button class="btn btn-default">{{msg('dhis2.web.settings.cancel')}}</button>
+                                <button class="btn btn-primary" ng-click="submit()">{{msg('dhis2.web.settings.save')}}</button>
+                            </div>
+                            <div ng-show="retrievalError" class="alert alert-danger">{{msg('dhis2.web.settings.error.retrieval')}}</div>
+                            <div ng-show="updateError" class="alert alert-danger">{{msg('dhis2.web.settings.error.update')}}</div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h5>{{msg('dhis2.web.settings.syncHeader')}}</h5>
+        <div class="form-group">
+            <button class="btn btn-primary" ng-click="sync()" ng-disabled="blocked"  >
+                {{msg('dhis2.sync')}}
+            </button>
+            <div ng-show="blocked" class ="alert alert-info">{{msg('dhis2.sync.wait')}}</div>
+            <div ng-show="success == 'true' " class ="alert alert-success">{{msg('dhis2.sync.success')}}</div>
+            <div ng-show="success == 'false' " class ="alert alert-danger">{{msg('dhis2.sync.fail')}}</div>
+        </div>
+    </div>
+</div>
