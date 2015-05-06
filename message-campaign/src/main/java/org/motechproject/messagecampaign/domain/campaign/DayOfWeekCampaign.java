@@ -1,8 +1,6 @@
 package org.motechproject.messagecampaign.domain.campaign;
 
 import org.joda.time.Period;
-import org.motechproject.messagecampaign.domain.message.DayOfWeekCampaignMessage;
-import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
 import org.motechproject.messagecampaign.exception.CampaignValidationException;
 
 import java.util.List;

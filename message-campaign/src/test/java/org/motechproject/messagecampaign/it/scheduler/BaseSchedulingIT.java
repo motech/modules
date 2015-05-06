@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.motechproject.commons.date.util.datetime.DateTimeSource;
 import org.motechproject.commons.date.util.datetime.DefaultDateTimeSource;
+import org.motechproject.messagecampaign.dao.CampaignMessageRecordService;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -46,6 +47,11 @@ public abstract class BaseSchedulingIT extends BasePaxIT {
     @Inject
     private MotechSchedulerService schedulerService;
 
+    @Inject
+    private CampaignMessageRecordService campaignMessageRecordService;
+
+    final Object lock = new Object();
+
     @Before
     public void setup() {
         scheduler = (Scheduler) getQuartzScheduler(bundleContext);
@@ -58,6 +64,10 @@ public abstract class BaseSchedulingIT extends BasePaxIT {
 
     protected MessageCampaignService getMessageCampaignService() {
         return messageCampaignService;
+    }
+
+    protected CampaignMessageRecordService getCampaignMessageRecordService() {
+        return campaignMessageRecordService;
     }
 
     protected List<DateTime> getFireTimes(String triggerKey) throws SchedulerException {

@@ -6,9 +6,9 @@ import org.motechproject.commons.date.util.JodaFormatter;
 import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaign;
 import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaign;
 import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
-import org.motechproject.messagecampaign.domain.message.AbsoluteCampaignMessage;
-import org.motechproject.messagecampaign.domain.message.CronBasedCampaignMessage;
-import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.OffsetCampaignMessage;
 
 import java.util.Arrays;
 

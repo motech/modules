@@ -25,6 +25,8 @@ public final class EventKeys {
     public static final String ENROLL_USER_SUBJECT = BASE_SUBJECT + "enroll-user";
     public static final String UNENROLL_USER_SUBJECT = BASE_SUBJECT + "unenroll-user";
 
+    public static final String CAMPAIGN_RECORD_UPDATED = "mds.crud.messagecampaign.CampaignRecord.UPDATE";
+    public static final String CAMPAIGN_MESSAGE_RECORD_UPDATED = "mds.crud.messagecampaign.CampaignMessageRecord.UPDATE";
 
     private EventKeys() {
     }

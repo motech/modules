@@ -35,6 +35,9 @@
     <osgi:service id="messageCampaignServiceOsgi" ref="messageCampaignService"
                   interface="org.motechproject.messagecampaign.service.MessageCampaignService"/>
 
+    <osgi:service ref="messageCampaignLifecycleListener"
+                  interface="org.motechproject.messagecampaign.handler.MessageCampaignLifecycleListener" />
+
     <osgi:reference id="schedulerServiceOsgi"
                     interface="org.motechproject.scheduler.service.MotechSchedulerService"/>
 

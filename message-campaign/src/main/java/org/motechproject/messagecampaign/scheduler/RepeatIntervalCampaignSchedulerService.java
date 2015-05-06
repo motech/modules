@@ -8,7 +8,8 @@ import org.motechproject.messagecampaign.EventKeys;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.RepeatIntervalCampaign;
-import org.motechproject.messagecampaign.domain.message.RepeatIntervalCampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.CampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.RepeatIntervalCampaignMessage;
 import org.motechproject.scheduler.contract.JobId;
 import org.motechproject.scheduler.contract.RepeatingJobId;
 import org.motechproject.scheduler.contract.RepeatingSchedulableJob;
@@ -54,6 +55,11 @@ public class RepeatIntervalCampaignSchedulerService extends CampaignSchedulerSer
         for (RepeatIntervalCampaignMessage message : campaign.getMessages()) {
             getSchedulerService().safeUnscheduleRepeatingJob(EventKeys.SEND_MESSAGE, messageJobIdFor(message.getMessageKey(), enrollment.getExternalId(), enrollment.getCampaignName()));
         }
+    }
+
+    @Override
+    public void unscheduleMessageJob(CampaignEnrollment enrollment, CampaignMessage message) {
+        getSchedulerService().safeUnscheduleRepeatingJob(EventKeys.SEND_MESSAGE, messageJobIdFor(message.getMessageKey(), enrollment.getExternalId(), enrollment.getCampaignName()));
     }
 
     @Override

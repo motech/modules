@@ -8,7 +8,8 @@ import org.motechproject.messagecampaign.EventKeys;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaign;
-import org.motechproject.messagecampaign.domain.message.CronBasedCampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.CampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaignMessage;
 import org.motechproject.scheduler.contract.CronJobId;
 import org.motechproject.scheduler.contract.CronSchedulableJob;
 import org.motechproject.scheduler.contract.JobId;
@@ -46,6 +47,11 @@ public class CronBasedCampaignSchedulerService extends CampaignSchedulerService<
         for (CronBasedCampaignMessage message : campaign.getMessages()) {
             getSchedulerService().safeUnscheduleJob(EventKeys.SEND_MESSAGE, messageJobIdFor(message.getMessageKey(), enrollment.getExternalId(), enrollment.getCampaignName()));
         }
+    }
+
+    @Override
+    public void unscheduleMessageJob(CampaignEnrollment enrollment, CampaignMessage message) {
+        getSchedulerService().safeUnscheduleJob(EventKeys.SEND_MESSAGE, messageJobIdFor(message.getMessageKey(), enrollment.getExternalId(), enrollment.getCampaignName()));
     }
 
     @Override

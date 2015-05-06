@@ -15,7 +15,9 @@ import org.motechproject.messagecampaign.EventKeys;
 import org.motechproject.messagecampaign.builder.EnrollRequestBuilder;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
 import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
+import org.motechproject.messagecampaign.dao.CampaignMessageRecordService;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
+import org.motechproject.messagecampaign.domain.campaign.CampaignMessage;
 import org.motechproject.messagecampaign.exception.CampaignNotFoundException;
 import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaign;
 import org.motechproject.messagecampaign.domain.campaign.Campaign;
@@ -23,7 +25,7 @@ import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollmentStatus;
 import org.motechproject.messagecampaign.domain.campaign.CampaignType;
 import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaign;
-import org.motechproject.messagecampaign.domain.message.CronBasedCampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaignMessage;
 import org.motechproject.messagecampaign.scheduler.CampaignSchedulerFactory;
 import org.motechproject.messagecampaign.scheduler.CampaignSchedulerService;
 import org.motechproject.messagecampaign.scheduler.JobIdFactory;
@@ -57,6 +59,8 @@ public class MessageCampaignServiceImplTest {
     @Mock
     private CampaignRecordService campaignRecordService;
     @Mock
+    private CampaignMessageRecordService campaignMessageRecordService;
+    @Mock
     private EnrollmentService enrollmentService;
     @Mock
     private MotechSchedulerService schedulerService;
@@ -79,7 +83,7 @@ public class MessageCampaignServiceImplTest {
     public void setUp() {
         initMocks(this);
         messageCampaignService = new MessageCampaignServiceImpl(enrollmentService, campaignEnrollmentDataService, campaignEnrollmentRecordMapper,
-                campaignSchedulerFactory, campaignRecordService, eventRelay, schedulerService);
+                campaignSchedulerFactory, campaignRecordService, campaignMessageRecordService, eventRelay, schedulerService);
     }
 
     @Test

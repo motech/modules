@@ -1,4 +1,4 @@
-package org.motechproject.messagecampaign.domain.message;
+package org.motechproject.messagecampaign.domain.campaign;
 
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.messagecampaign.exception.CampaignMessageValidationException;

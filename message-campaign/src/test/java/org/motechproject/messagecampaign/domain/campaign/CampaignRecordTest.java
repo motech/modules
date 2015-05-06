@@ -4,10 +4,6 @@ import org.junit.Test;
 import org.motechproject.commons.date.util.JodaFormatter;
 import org.motechproject.messagecampaign.builder.CampaignMessageRecordTestBuilder;
 import org.motechproject.messagecampaign.builder.CampaignRecordBuilder;
-import org.motechproject.messagecampaign.domain.message.AbsoluteCampaignMessage;
-import org.motechproject.messagecampaign.domain.message.CronBasedCampaignMessage;
-import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
-import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
 
 import java.util.List;
 

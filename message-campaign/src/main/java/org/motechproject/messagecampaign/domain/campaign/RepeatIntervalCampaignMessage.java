@@ -1,4 +1,4 @@
-package org.motechproject.messagecampaign.domain.message;
+package org.motechproject.messagecampaign.domain.campaign;
 
 import org.joda.time.Period;
 import org.motechproject.commons.date.model.Time;

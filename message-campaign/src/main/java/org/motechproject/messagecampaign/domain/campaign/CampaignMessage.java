@@ -1,4 +1,4 @@
-package org.motechproject.messagecampaign.domain.message;
+package org.motechproject.messagecampaign.domain.campaign;
 
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.commons.date.model.Time;
@@ -13,10 +13,12 @@ public abstract class CampaignMessage {
     private List<String> languages;
     private String messageKey;
     private Time startTime;
+    private CampaignRecord campaign;
 
     public CampaignMessage(CampaignMessageRecord messageRecord) {
         this (messageRecord.getName(), messageRecord.getFormats(), messageRecord.getLanguages(), messageRecord.getMessageKey(),
                 parseTime(messageRecord.getStartTime(), ":"));
+        campaign = messageRecord.getCampaign();
     }
 
     public CampaignMessage(String name, List<String> formats, List<String> languages, String messageKey, Time startTime) {
@@ -71,6 +73,14 @@ public abstract class CampaignMessage {
       if (StringUtils.isNotBlank(startTime)) {
           this.startTime = parseTime(startTime, ":");
       }
+    }
+
+    public CampaignRecord getCampaign() {
+        return campaign;
+    }
+
+    public void setCampaign(CampaignRecord campaign) {
+        this.campaign = campaign;
     }
 
     public abstract void validate();

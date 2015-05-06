@@ -3,6 +3,7 @@ package org.motechproject.messagecampaign.service;
 import org.joda.time.DateTime;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
 import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
+import org.motechproject.messagecampaign.domain.campaign.CampaignMessageRecord;
 
 import java.io.IOException;
 import java.util.List;
@@ -55,6 +56,8 @@ public interface MessageCampaignService {
      */
     void stopAll(CampaignEnrollmentsQuery query);
 
+    void stopAll(CampaignEnrollmentsQuery query, boolean deleteEnrollments);
+
     void saveCampaign(CampaignRecord campaign);
 
     void deleteCampaign(String campaignName);
@@ -76,4 +79,10 @@ public interface MessageCampaignService {
     void campaignCompleted(String externalId, String campaignName);
 
     void loadCampaigns() throws IOException;
+
+    void updateEnrollments(Long campaignId);
+
+    void unscheduleMessageJob(CampaignMessageRecord campaignMessageRecord);
+
+    void rescheduleMessageJob(Long campaignMessageRecordId);
 }

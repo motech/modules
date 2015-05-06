@@ -9,11 +9,14 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.messagecampaign.EventKeys;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
 import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
+import org.motechproject.messagecampaign.dao.CampaignMessageRecordService;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
+import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollmentStatus;
+import org.motechproject.messagecampaign.domain.campaign.CampaignMessageRecord;
 import org.motechproject.messagecampaign.exception.CampaignNotFoundException;
 import org.motechproject.messagecampaign.domain.campaign.Campaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
-import org.motechproject.messagecampaign.domain.message.CampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.CampaignMessage;
 import org.motechproject.messagecampaign.loader.CampaignJsonLoader;
 import org.motechproject.messagecampaign.scheduler.CampaignSchedulerFactory;
 import org.motechproject.messagecampaign.scheduler.CampaignSchedulerService;
@@ -50,6 +53,7 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
     private CampaignEnrollmentDataService campaignEnrollmentDataService;
     private CampaignSchedulerFactory campaignSchedulerFactory;
     private CampaignRecordService campaignRecordService;
+    private CampaignMessageRecordService campaignMessageRecordService;
     private EventRelay relay;
     private MotechSchedulerService schedulerService;
 
@@ -62,7 +66,7 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
 
     @Autowired
     public MessageCampaignServiceImpl(EnrollmentService enrollmentService, CampaignEnrollmentDataService campaignEnrollmentDataService, CampaignEnrollmentRecordMapper campaignEnrollmentRecordMapper,
-                                      CampaignSchedulerFactory campaignSchedulerFactory, CampaignRecordService campaignRecordService,
+                                      CampaignSchedulerFactory campaignSchedulerFactory, CampaignRecordService campaignRecordService, CampaignMessageRecordService campaignMessageRecordService,
                                       EventRelay relay, MotechSchedulerService schedulerService) {
         this.enrollmentService = enrollmentService;
         this.campaignEnrollmentDataService = campaignEnrollmentDataService;
@@ -70,6 +74,7 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
         this.campaignEnrollmentDataService = campaignEnrollmentDataService;
         this.campaignSchedulerFactory = campaignSchedulerFactory;
         this.campaignRecordService = campaignRecordService;
+        this.campaignMessageRecordService = campaignMessageRecordService;
         this.relay = relay;
         this.schedulerService = schedulerService;
     }
@@ -283,6 +288,67 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
         }
     }
 
+    @Override
+    public void updateEnrollments(Long campaignId) {
+        CampaignRecord campaign = campaignRecordService.findById(campaignId);
+        if (campaign == null) {
+            throw new IllegalArgumentException("Couldn't find CampaignRecord with id: " + campaignId);
+        }
+
+        CampaignEnrollmentsQuery query = new CampaignEnrollmentsQuery()
+                .withCampaignName(campaign.getName())
+                .havingState(CampaignEnrollmentStatus.ACTIVE);
+
+        List<CampaignEnrollment> campaignEnrollments = enrollmentService.search(query);
+
+        for (CampaignEnrollment campaignEnrollment : campaignEnrollments) {
+            campaignSchedulerFactory.getCampaignScheduler(campaignEnrollment.getCampaignName()).stop(campaignEnrollment);
+
+            campaignSchedulerFactory.getCampaignScheduler(campaignEnrollment.getCampaignName()).start(campaignEnrollment);
+        }
+    }
+
+    @Override
+    public void unscheduleMessageJob(CampaignMessageRecord campaignMessageRecord) {
+        if (campaignMessageRecord.getCampaign() != null) {
+            Campaign campaign = campaignMessageRecord.getCampaign().toCampaign();
+
+            CampaignEnrollmentsQuery query = new CampaignEnrollmentsQuery()
+                    .withCampaignName(campaign.getName())
+                    .havingState(CampaignEnrollmentStatus.ACTIVE);
+            List<CampaignEnrollment> campaignEnrollments = enrollmentService.search(query);
+
+            CampaignMessage campaignMessage = campaign.getCampaignMessage(campaignMessageRecord);
+
+            for (CampaignEnrollment campaignEnrollment : campaignEnrollments) {
+                campaignSchedulerFactory.getCampaignScheduler(campaignEnrollment.getCampaignName()).unscheduleMessageJob(campaignEnrollment, campaignMessage);
+            }
+        }
+    }
+
+    @Override
+    public void rescheduleMessageJob(Long campaignMessageRecordId) {
+        CampaignMessageRecord campaignMessageRecord = campaignMessageRecordService.findById(campaignMessageRecordId);
+        if (campaignMessageRecord == null) {
+            throw new IllegalArgumentException("Couldn't find CampaignMessageRecord with id: " + campaignMessageRecordId);
+        }
+
+        CampaignRecord campaignRecord = campaignMessageRecord.getCampaign();
+        if (campaignRecord != null) {
+            CampaignEnrollmentsQuery query = new CampaignEnrollmentsQuery()
+                    .withCampaignName(campaignRecord.getName())
+                    .havingState(CampaignEnrollmentStatus.ACTIVE);
+            List<CampaignEnrollment> campaignEnrollments = enrollmentService.search(query);
+
+            Campaign campaign = campaignRecord.toCampaign();
+            CampaignMessage campaignMessage = campaign.getCampaignMessage(campaignMessageRecord);
+
+            for (CampaignEnrollment campaignEnrollment : campaignEnrollments) {
+                campaignSchedulerFactory.getCampaignScheduler(campaignRecord.getName()).rescheduleMessageJob(campaignEnrollment, campaign, campaignMessage);
+            }
+        }
+    }
+
     @PostConstruct
     public void loadCampaignsJson() {
         try (InputStream inputStream = settingsFacade.getRawConfig(MESSAGE_CAMPAIGNS_JSON_FILENAME)) {
@@ -307,7 +373,8 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
         }
     }
 
-    private void stopAll(CampaignEnrollmentsQuery query, boolean deleteEnrollments) {
+    @Override
+    public void stopAll(CampaignEnrollmentsQuery query, boolean deleteEnrollments) {
         List<CampaignEnrollment> enrollments = enrollmentService.search(query);
         for (CampaignEnrollment enrollment : enrollments) {
             campaignSchedulerFactory.getCampaignScheduler(enrollment.getCampaignName()).stop(enrollment);

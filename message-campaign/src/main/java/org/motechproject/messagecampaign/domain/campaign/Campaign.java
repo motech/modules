@@ -2,8 +2,6 @@ package org.motechproject.messagecampaign.domain.campaign;
 
 import org.joda.time.Period;
 import org.motechproject.commons.date.util.JodaFormatter;
-import org.motechproject.messagecampaign.domain.message.CampaignMessage;
-import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
 import org.motechproject.messagecampaign.exception.CampaignValidationException;
 
 import java.util.ArrayList;

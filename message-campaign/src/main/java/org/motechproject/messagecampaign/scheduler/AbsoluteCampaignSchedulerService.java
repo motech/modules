@@ -9,7 +9,8 @@ import org.motechproject.messagecampaign.EventKeys;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
-import org.motechproject.messagecampaign.domain.message.AbsoluteCampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.CampaignMessage;
 import org.motechproject.scheduler.contract.JobId;
 import org.motechproject.scheduler.contract.RunOnceJobId;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
@@ -51,6 +52,11 @@ public class AbsoluteCampaignSchedulerService extends CampaignSchedulerService<A
         for (AbsoluteCampaignMessage message : campaign.getMessages()) {
             getSchedulerService().safeUnscheduleRunOnceJob(EventKeys.SEND_MESSAGE, messageJobIdFor(message.getMessageKey(), enrollment.getExternalId(), enrollment.getCampaignName()));
         }
+    }
+
+    @Override
+    public void unscheduleMessageJob(CampaignEnrollment enrollment, CampaignMessage message) {
+        getSchedulerService().safeUnscheduleRunOnceJob(EventKeys.SEND_MESSAGE, messageJobIdFor(message.getMessageKey(), enrollment.getExternalId(), enrollment.getCampaignName()));
     }
 
     @Override

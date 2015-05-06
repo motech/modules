@@ -6,8 +6,9 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.mds.util.SecurityMode;
-import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
+import org.motechproject.mds.annotations.UIDisplayable;
 
+import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Unique;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +18,26 @@ import java.util.Objects;
 @Access(value = SecurityMode.PERMISSIONS, members = {"manageCampaigns"})
 public class CampaignRecord {
 
+    @Field
+    private Long id;
+
+    @UIDisplayable(position = 0)
     @Unique
+    @Field(required = true, tooltip = "Name of the campaign", placeholder = "campaing name")
     private String name;
 
+    @UIDisplayable(position = 3)
+    @Field
+    @Persistent(mappedBy = "campaign")
     @Cascade(delete = true)
     private List<CampaignMessageRecord> messages = new ArrayList<>();
 
-    @Field(required = true)
+    @UIDisplayable(position = 1)
+    @Field(required = true, tooltip = "The CampaignType determines the type of message that will apply to the campaign")
     private CampaignType campaignType;
 
+    @UIDisplayable(position = 2)
+    @Field(tooltip = "Specifies the maximum duration of the campaign", placeholder = "1 week")
     private String maxDuration;
 
     public Campaign toCampaign() {
@@ -70,6 +82,14 @@ public class CampaignRecord {
         this.maxDuration = maxDuration;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Ignore
     public void updateFrom(CampaignRecord other) {
         name = other.name;
@@ -100,5 +120,10 @@ public class CampaignRecord {
         result = 31 * result + (campaignType != null ? campaignType.hashCode() : 0);
         result = 31 * result + (maxDuration != null ? maxDuration.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

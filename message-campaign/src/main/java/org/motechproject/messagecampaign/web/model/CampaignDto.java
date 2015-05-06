@@ -3,7 +3,7 @@ package org.motechproject.messagecampaign.web.model;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.motechproject.messagecampaign.domain.campaign.CampaignType;
-import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
+import org.motechproject.messagecampaign.domain.campaign.CampaignMessageRecord;
 import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
 
 import java.io.Serializable;
@@ -41,6 +41,9 @@ public class CampaignDto implements Serializable {
 
         campaignRecord.setName(name);
         campaignRecord.setMaxDuration(maxDuration);
+        for (CampaignMessageRecord messageRecord : messages) {
+            messageRecord.setMessageType(type);
+        }
         campaignRecord.setMessages(messages);
         campaignRecord.setCampaignType(type);
 

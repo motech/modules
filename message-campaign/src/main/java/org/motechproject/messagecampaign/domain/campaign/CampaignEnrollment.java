@@ -22,16 +22,21 @@ import javax.jdo.annotations.Unique;
 @Access(value = SecurityMode.PERMISSIONS, members = {"manageEnrollments"})
 public class CampaignEnrollment {
 
+    @Field
     private Long id;
 
-    @Field(required = true)
+    @Field(required = true, tooltip = "A client defined id to identify the enrollment", placeholder = "1234")
     private String externalId;
 
-    @Field(required = true)
+    @Field(required = true, placeholder = "Add the name of the campaign")
     private String campaignName;
 
     private CampaignEnrollmentStatus status;
+
+    @Field(placeholder = "yyyy-mm-dd")
     private LocalDate referenceDate;
+
+    @Field(placeholder = "hh:mm")
     private Time deliverTime;
 
     private CampaignEnrollment() {

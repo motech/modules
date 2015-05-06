@@ -1,7 +1,8 @@
 package org.motechproject.messagecampaign.builder;
 
 import org.joda.time.LocalDate;
-import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
+import org.motechproject.messagecampaign.domain.campaign.CampaignMessageRecord;
+import org.motechproject.messagecampaign.domain.campaign.DayOfWeek;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,14 +57,14 @@ public class CampaignMessageRecordTestBuilder {
         return record;
     }
 
-    public static CampaignMessageRecord createRepeatingMessageRecordWithWeekApplicableDays(String name, String messageKey, List<String> applicableWeekDays) {
+    public static CampaignMessageRecord createRepeatingMessageRecordWithWeekApplicableDays(String name, String messageKey, List<DayOfWeek> applicableWeekDays) {
         CampaignMessageRecord record = createCampaignMessageRecord(name, messageKey, null);
         record.setRepeatOn(applicableWeekDays);
         record.setStartTime("10:30");
         return record;
     }
 
-    public static CampaignMessageRecord createRepeatingMessageRecordWithCalendarWeek(String name, String messageKey, String calendarStartOfWeek, List<String> applicableWeekDays) {
+    public static CampaignMessageRecord createRepeatingMessageRecordWithCalendarWeek(String name, String messageKey, String calendarStartOfWeek, List<DayOfWeek> applicableWeekDays) {
         CampaignMessageRecord record = createRepeatingMessageRecordWithWeekApplicableDays(name, messageKey, applicableWeekDays);
         record.setStartTime("10:30");
         return record;

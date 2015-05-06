@@ -9,7 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.motechproject.messagecampaign.domain.campaign.CampaignType;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
-import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
+import org.motechproject.messagecampaign.domain.campaign.CampaignMessageRecord;
 import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

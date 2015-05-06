@@ -1,7 +1,7 @@
 package org.motechproject.messagecampaign.builder;
 
 import org.motechproject.messagecampaign.domain.campaign.CampaignType;
-import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
+import org.motechproject.messagecampaign.domain.campaign.CampaignMessageRecord;
 import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
 
 import java.util.ArrayList;

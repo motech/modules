@@ -11,11 +11,11 @@ import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignType;
 import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaign;
 import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
-import org.motechproject.messagecampaign.domain.message.AbsoluteCampaignMessage;
-import org.motechproject.messagecampaign.domain.message.CampaignMessage;
-import org.motechproject.messagecampaign.domain.message.CronBasedCampaignMessage;
-import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
-import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
+import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.CampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.OffsetCampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.CampaignMessageRecord;
 import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -98,7 +98,7 @@ public class CampaignRecordServiceBundleIT extends BasePaxIT {
         assertEquals(campaign, campaignRecordService.findByName(campaign.getName()));
 
         // update
-        campaign2.setMaxDuration("20");
+        campaign2.setMaxDuration("20 week");
         campaign.updateFrom(campaign2);
 
         campaign = campaignRecordService.update(campaign);
@@ -168,12 +168,13 @@ public class CampaignRecordServiceBundleIT extends BasePaxIT {
     private CampaignRecord createCampaignRecord() {
         CampaignRecord campaign = new CampaignRecord();
         campaign.setCampaignType(CampaignType.ABSOLUTE);
-        campaign.setMaxDuration("10");
+        campaign.setMaxDuration("10 week");
         campaign.setName("CampaignName");
 
         CampaignMessageRecord message = new CampaignMessageRecord();
         message.setDate(LocalDate.now());
-        message.setStartTime("20:44:00");
+        message.setMessageType(CampaignType.ABSOLUTE);
+        message.setStartTime("20:44");
         message.setMessageKey("key");
         message.setLanguages(asList("lang1", "lang2", "lang3"));
 

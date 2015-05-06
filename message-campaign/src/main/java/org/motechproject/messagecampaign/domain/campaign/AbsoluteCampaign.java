@@ -1,8 +1,5 @@
 package org.motechproject.messagecampaign.domain.campaign;
 
-import org.motechproject.messagecampaign.domain.message.AbsoluteCampaignMessage;
-import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
-
 import java.util.List;
 
 public class AbsoluteCampaign extends Campaign<AbsoluteCampaignMessage> {

@@ -10,7 +10,8 @@ import org.motechproject.messagecampaign.EventKeys;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
-import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.CampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.OffsetCampaignMessage;
 import org.motechproject.scheduler.contract.JobId;
 import org.motechproject.scheduler.contract.RunOnceJobId;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
@@ -65,6 +66,11 @@ public class OffsetCampaignSchedulerService extends CampaignSchedulerService<Off
     @Override
     public JobId getJobId(String messageKey, String externalId, String campaingName) {
         return new RunOnceJobId(EventKeys.SEND_MESSAGE, messageJobIdFor(messageKey, externalId, campaingName));
+    }
+
+    @Override
+    public void unscheduleMessageJob(CampaignEnrollment enrollment, CampaignMessage message) {
+        getSchedulerService().safeUnscheduleRunOnceJob(EventKeys.SEND_MESSAGE, messageJobIdFor(message.getMessageKey(), enrollment.getExternalId(), enrollment.getCampaignName()));
     }
 
     @Override

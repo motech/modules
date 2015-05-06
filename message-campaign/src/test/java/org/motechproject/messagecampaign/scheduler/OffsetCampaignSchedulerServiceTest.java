@@ -17,7 +17,7 @@ import org.motechproject.messagecampaign.contract.CampaignRequest;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
-import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.OffsetCampaignMessage;
 import org.motechproject.messagecampaign.exception.CampaignEnrollmentException;
 import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;

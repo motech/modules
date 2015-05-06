@@ -1,9 +1,8 @@
-package org.motechproject.messagecampaign.domain.message;
+package org.motechproject.messagecampaign.domain.campaign;
 
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.messagecampaign.exception.CampaignMessageValidationException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DayOfWeekCampaignMessage extends CampaignMessage {
@@ -12,7 +11,7 @@ public class DayOfWeekCampaignMessage extends CampaignMessage {
 
     public DayOfWeekCampaignMessage(CampaignMessageRecord messageRecord) {
         super(messageRecord);
-        this.daysOfWeek = retrieveDaysOfWeek(messageRecord.getRepeatOn());
+        this.daysOfWeek = messageRecord.getRepeatOn();
     }
 
     public DayOfWeekCampaignMessage(Time startTime, List<DayOfWeek> daysOfWeek) {
@@ -30,14 +29,6 @@ public class DayOfWeekCampaignMessage extends CampaignMessage {
 
     public void setDaysOfWeek(List<DayOfWeek> daysOfWeek) {
         this.daysOfWeek = daysOfWeek;
-    }
-
-    private List<DayOfWeek> retrieveDaysOfWeek(List<String> days) {
-        List<DayOfWeek> daysList = new ArrayList<>();
-        for (String day : days) {
-            daysList.add(DayOfWeek.parse(day));
-        }
-        return daysList;
     }
 
     @Override

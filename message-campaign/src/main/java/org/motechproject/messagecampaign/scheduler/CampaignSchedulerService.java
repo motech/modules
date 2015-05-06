@@ -8,7 +8,7 @@ import org.motechproject.messagecampaign.builder.SchedulerPayloadBuilder;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.campaign.Campaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
-import org.motechproject.messagecampaign.domain.message.CampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.CampaignMessage;
 import org.motechproject.messagecampaign.exception.CampaignEnrollmentException;
 import org.motechproject.scheduler.contract.JobId;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
@@ -53,6 +53,14 @@ public abstract class CampaignSchedulerService<M extends CampaignMessage, C exte
     }
 
     protected abstract void unscheduleMessageJobs(CampaignEnrollment enrollment);
+
+    public abstract void unscheduleMessageJob(CampaignEnrollment enrollment, CampaignMessage campaignMessage);
+
+    public void rescheduleMessageJob(CampaignEnrollment enrollment, Campaign campaign, CampaignMessage message) {
+        unscheduleMessageJob(enrollment, message);
+        scheduleMessageJob(enrollment, (C) campaign, (M) message);
+        rescheduleEndOfCampaignEvent((C) campaign, enrollment);
+    }
 
     public abstract JobId getJobId(String messageKey, String externalId, String campaingName);
 
@@ -151,6 +159,12 @@ public abstract class CampaignSchedulerService<M extends CampaignMessage, C exte
                     String.format("No messages scheduled for enrollment with ID %s for campaign %s, last message was scheduled in the past(%s)",
                             enrollment.getExternalId(), enrollment.getCampaignName(), endDate.toString()));
         }
+    }
+
+    private void rescheduleEndOfCampaignEvent(C campaign, CampaignEnrollment enrollment) {
+        schedulerService.safeUnscheduleRunOnceJob(EventKeys.CAMPAIGN_COMPLETED,
+                jobIdFactory.campaignCompletedJobIdFor(enrollment.getCampaignName(), enrollment.getExternalId()));
+        scheduleEndOfCampaignEvent(campaign, enrollment);
     }
 }
 
