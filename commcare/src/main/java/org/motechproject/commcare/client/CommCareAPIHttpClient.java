@@ -177,16 +177,19 @@ public class CommCareAPIHttpClient {
         HttpMethod getMethod = buildRequest(accountConfig, requestUrl, caseRequest);
 
         try {
+            LOGGER.debug("Sending GET request {}", requestUrl);
             commonsHttpClient.executeMethod(getMethod);
 
+            LOGGER.debug("{} request response status: {}", requestUrl, getMethod.getStatusCode());
             switch (getMethod.getStatusCode()) {
                 case HttpStatus.SC_UNAUTHORIZED:
                     throw new CommcareAuthenticationException("Couldn't authenticate to CommcareHQ server! Are given credentials correct?");
                 default:
                     InputStream responseBodyAsStream = getMethod.getResponseBodyAsStream();
-                    return IOUtils.toString(responseBodyAsStream);
+                    String responseBody =  IOUtils.toString(responseBodyAsStream);
+                    LOGGER.trace("{} request response body: {}", requestUrl, responseBody);
+                    return responseBody;
             }
-
         } catch (HttpException e) {
             LOGGER.warn("HttpException while sending request to CommCare: " + e.getMessage());
         } catch (IOException e) {

@@ -2,15 +2,19 @@ package org.motechproject.commcare.domain;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.motechproject.commons.api.json.MotechJsonReader;
 import org.motechproject.mds.annotations.CrudEvents;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.mds.event.CrudEventType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.Persistent;
@@ -50,6 +54,8 @@ public class CommcareApplicationJson {
 
     @Field(displayName = "Source configuration")
     private String configName;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommcareApplicationJson.class);
 
     public CommcareApplicationJson() {
         this(null, null, null, null);
@@ -119,7 +125,7 @@ public class CommcareApplicationJson {
     public final void serializeModules() {
         if (modules != null) {
             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-            this.serializedModules = gson.toJson(modules);
+            serializedModules = StringEscapeUtils.escapeJava(gson.toJson(modules));
         }
     }
 
@@ -127,7 +133,12 @@ public class CommcareApplicationJson {
         if (serializedModules != null) {
             Type deserializeType = new TypeToken<List<CommcareModuleJson>>() { } .getType();
             MotechJsonReader motechJsonReader = new MotechJsonReader();
-            this.modules  = (List<CommcareModuleJson>) motechJsonReader.readFromStringOnlyExposeAnnotations(serializedModules, deserializeType);
+            try {
+                modules = (List<CommcareModuleJson>) motechJsonReader.readFromStringOnlyExposeAnnotations(StringEscapeUtils.unescapeJava(serializedModules), deserializeType);
+            } catch (JsonParseException e) {
+                LOGGER.error("Failed to deserialize CommCare schema from its JSON representation in the database. Fix the errors in the schema or force Commcare module to download the fresh schema.", e);
+                modules = Collections.emptyList();
+            }
         }
     }
 
