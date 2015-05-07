@@ -62,6 +62,7 @@ Example
 -------
 
 .. code-block:: json
+
     [{
         "name" : "Absolute Dates Message Program",
          "type" : "ABSOLUTE",
