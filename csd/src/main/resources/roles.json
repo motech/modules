@@ -1,0 +1,8 @@
+[
+  {
+    "roleName": "CSD Manager",
+    "permissionNames": [
+      "manageCSD"
+    ]
+  }
+]

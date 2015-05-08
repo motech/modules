@@ -1,0 +1,24 @@
+<div id="showXmlModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="showXmlModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="showXmlModalLabel">{{msg('csd.web.csd.showXml.title')}}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" ng-show="!isLoadingXml">
+                    <pre>{{xml}}</pre>
+                </div>
+                <div class="form-group centered" ng-show="isLoadingXml">
+                    {{msg('csd.web.csd.showXml.loading')}}
+                    <i class="fa fa-spinner fa-spin"></i>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">
+                    {{msg('csd.web.csd.btn.close')}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

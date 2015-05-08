@@ -1,0 +1,32 @@
+<bindings xmlns="http://java.sun.com/xml/ns/jaxb"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema"
+          xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+          version="2.1">
+
+    <bindings schemaLocation="CSD.xsd">
+        <!-- CSD.xsd line 514 -->
+        <bindings node="//xs:element[@name='careServicesFunction']">
+            <bindings node=".//xs:element[@ref='xs:schema']">
+                <property name="schemaElement"/>
+            </bindings>
+        </bindings>
+    </bindings>
+
+    <bindings schemaLocation="http://www.w3.org/MarkUp/Forms/2002/XForms-Schema.xsd">
+        <!-- XForms-Schema.xsd line 570 -->
+        <bindings node="//xsd:attributeGroup[@name='XML.Events']">
+            <bindings node=".//xsd:attribute[@ref='ev:target']">
+                <property name="targetAttribute"/>
+            </bindings>
+        </bindings>
+        <!-- XForms-Schema.xsd line 413 -->
+        <bindings node="//xsd:element[@name='upload']/xsd:complexType/xsd:sequence/xsd:element[@ref='xforms:mediatype']">
+            <property name="mediaTypeElement"/>
+        </bindings>
+        <!-- XForms-Schema.xsd line 638 -->
+        <bindings node="//xsd:element[@name='setvalue']/xsd:complexType/xsd:simpleContent/xsd:extension/xsd:attribute[@type='xforms:XPathExpression']">
+            <property name="attributeValue"/>
+        </bindings>
+    </bindings>
+
+</bindings>
