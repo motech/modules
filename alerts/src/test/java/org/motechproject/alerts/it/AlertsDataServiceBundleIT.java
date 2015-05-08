@@ -2,17 +2,18 @@ package org.motechproject.alerts.it;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
-import org.motechproject.commons.api.Range;
-import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.alerts.domain.Alert;
 import org.motechproject.alerts.domain.AlertStatus;
 import org.motechproject.alerts.domain.AlertType;
+import org.motechproject.commons.api.Range;
+import org.motechproject.commons.date.util.DateUtil;
 
 import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class AlertsDataServiceBundleIT extends AlertsBaseIT {
 
@@ -83,6 +84,24 @@ public class AlertsDataServiceBundleIT extends AlertsBaseIT {
         alertsDataService.update(alert);
 
         assertEquals(alert1DateTime, alert.getDateTime());
+    }
+
+    @Test
+    public void shouldAllowLargeDescription() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for (int i=0 ; i<100 ; i++) {
+            sb.append(String.format("%10d", i*10));
+        }
+        sb.append("]");
+        String desc = sb.toString();
+        assertTrue(desc.length() > 1000);
+        Alert a = alertsDataService.create(new Alert("externalId123", "name", desc, AlertType.CRITICAL,
+                AlertStatus.NEW, 0, null));
+
+        List<Alert> alerts = alertsDataService.findByExternalId("externalId123");
+        assertEquals(alerts.size(), 1);
+        assertEquals(alerts.get(0).getDescription(), desc);
     }
 
     private Alert createAlert(String externalId, AlertType alertType, AlertStatus alertStatus, int priority, Map<String, String> data, DateTime dateTime) {

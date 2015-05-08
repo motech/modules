@@ -9,11 +9,13 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.mds.annotations.UIDisplayable;
 
+import javax.jdo.annotations.Column;
 import java.util.HashMap;
 import java.util.Map;
 
 @Entity
 public class Alert implements Comparable<Alert> {
+
     private Long id;
 
     @Field(required = true)
@@ -38,6 +40,7 @@ public class Alert implements Comparable<Alert> {
     private AlertStatus status;
 
     @UIDisplayable(position = 5)
+    @Column(length = 5000)
     private String description;
 
     @Field
