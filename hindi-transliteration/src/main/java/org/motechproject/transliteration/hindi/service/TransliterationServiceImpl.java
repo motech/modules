@@ -3,7 +3,6 @@ package org.motechproject.transliteration.hindi.service;
 import org.motechproject.transliteration.hindi.mapping.CharacterMapping;
 import org.motechproject.transliteration.hindi.mapping.HindiMapping;
 import org.motechproject.transliteration.hindi.mapping.ItransAsciiMapping;
-import org.motechproject.transliteration.hindi.service.TransliterationService;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -11,13 +10,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by kosh on 3/14/14.
+ * The implementation of the Hindi transliteration service that transliterates
+ * English strings to Hindi using ITRANS encoding.
  */
 @Service("TransliterationService")
 public class TransliterationServiceImpl implements TransliterationService {
 
-    // Transliterates a given string from English to Hindi using ITRANS encoding
-
+    /**
+     * Transliterates a given string from English to Hindi using ITRANS encoding.
+     * @param data the string to transliterate, in English
+     * @return the input string transliterated to Hindi
+     */
     @Override
     public String transliterate(String data) {
         // Since ITRANS is a case-sensitive encoding, the best results would be achieved by

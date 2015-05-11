@@ -4,9 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by kosh on 3/13/14.
+ * This class defines the mappings in english for devanagiri script based on the ITRANS encoding.
  */
-// Class defines the mappings in english for devanagiri script based on the ITRANS encoding
 public class ItransAsciiMapping implements CharacterMapping {
 
     private static String[] vowels = "a A i I u U RRi RRI LLi LLI  e ai  o au".split(" ");

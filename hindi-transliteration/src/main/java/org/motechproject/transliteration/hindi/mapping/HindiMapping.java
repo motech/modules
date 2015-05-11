@@ -1,14 +1,12 @@
 package org.motechproject.transliteration.hindi.mapping;
 
-import org.motechproject.transliteration.hindi.mapping.CharacterMapping;
-
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
- * Created by kosh on 3/13/14.
- */
-// Class defines the character mapping for Devanagiri script
+ * This class defines the character mapping for Devanagiri script.
+*/
 public class HindiMapping implements CharacterMapping {
     private static String[] vowels = "अ आ इ ई उ ऊ ऋ ॠ ऌ ॡ ऎ ए ऐ ऒ ओ औ".split(" ");
 
