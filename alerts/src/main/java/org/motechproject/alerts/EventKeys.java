@@ -1,5 +1,9 @@
 package org.motechproject.alerts;
 
+/**
+ * They keys and subjects for alert fields in the event parameter map.
+ * These are used for task actions.
+ */
 public final class EventKeys {
     private EventKeys() { }
 

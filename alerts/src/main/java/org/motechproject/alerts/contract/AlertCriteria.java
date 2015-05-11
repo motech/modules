@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * \ingroup alerts
  * Maintains the criteria by which search for alerts to be done
  */
 public class AlertCriteria {

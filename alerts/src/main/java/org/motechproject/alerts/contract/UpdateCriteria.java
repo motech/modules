@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * \ingroup Alerts
-
  * Maintains the fields of alert to be updated and the new values for the them
  */
 public class UpdateCriteria {

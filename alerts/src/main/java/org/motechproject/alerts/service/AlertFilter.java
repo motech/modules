@@ -8,13 +8,26 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
+/**
+ * This class is responsible for taking an {@link org.motechproject.alerts.contract.AlertCriteria}
+ * object and returning the list of matching alerts.
+ */
 public class AlertFilter {
     private AlertsDataService alertsDataService;
 
+    /**
+     * Constructs an instance using the provided data service. The data service will be used for retrieving alerts.
+     * @param alertsDataService the data service for alerts
+     */
     public AlertFilter(final AlertsDataService alertsDataService) {
         this.alertsDataService = alertsDataService;
     }
 
+    /**
+     * Retrieves the list of alerts matching the provided criteria.
+     * @param alertCriteria the criteria for alert retrieval
+     * @return the list of matching alerts
+     */
     public List<Alert> search(AlertCriteria alertCriteria) {
         List<Criterion> filters = alertCriteria.getFilters();
         if (CollectionUtils.isEmpty(filters)) {

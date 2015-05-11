@@ -25,10 +25,18 @@ import static org.motechproject.alerts.EventKeys.CREATE_ALERT_SUBJECT;
 import static org.motechproject.alerts.EventKeys.EXTERNAL_ID_KEY;
 import static org.motechproject.alerts.EventKeys.MARK_ALERT_READ_SUBJECT;
 
+/**
+ * This events handler acts as an entry point for task actions for the alert module.
+ * It also allows creating, closing or marking alerts as read using MOTECH events.
+ */
 @Service
 public class AlertEventHandler {
     private AlertService alertService;
 
+    /**
+     * Creates a new alert from the received event.
+     * @param event the event to build the alert from
+     */
     @MotechListener(subjects = { CREATE_ALERT_SUBJECT })
     public void create(MotechEvent event) {
         String externalId = getValueAsString(event, EXTERNAL_ID_KEY);
@@ -45,6 +53,10 @@ public class AlertEventHandler {
         );
     }
 
+    /**
+     * Closes or marks the alert as read based on the received event.
+     * @param event the event - id of the alert to update is the only expected parameter
+     */
     @MotechListener(subjects = { CLOSE_ALERT_SUBJECT, MARK_ALERT_READ_SUBJECT })
     public void updateStatus(MotechEvent event) {
         Long id = Long.valueOf(getValueAsString(event, ALERT_ID));

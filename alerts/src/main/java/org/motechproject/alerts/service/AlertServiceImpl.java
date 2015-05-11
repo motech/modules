@@ -20,9 +20,7 @@ import java.util.Map;
 
 
 /**
- * \ingroup Alerts
- * <p/>
- * Creates and maintains alerts
+ * Creates and maintains alerts.
  */
 @Service
 public class AlertServiceImpl implements AlertService {

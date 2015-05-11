@@ -12,7 +12,16 @@ import java.util.List;
 
 import static java.util.Collections.enumeration;
 
+/**
+ * An enum that represents a search criteria for alerts. The enum has two methods - fetch and filter,
+ * that will retrieve or filter the data for a criterion respectively.
+ * To be used with {@link org.motechproject.alerts.contract.AlertCriteria}.
+ */
 public enum Criterion {
+
+    /**
+     * A criterion that will return alerts with the matching <b>externalId</b>.
+     */
     EXTERNAL_ID {
         @Override
         public List<Alert> fetch(AlertsDataService alertsDataService, AlertCriteria criteria) {
@@ -26,6 +35,9 @@ public enum Criterion {
 
     },
 
+    /**
+     * A criterion that will return alerts with matching <b>status</b>.
+     */
     ALERT_STATUS {
         @Override
         public List<Alert> fetch(AlertsDataService alertsDataService, AlertCriteria criteria) {
@@ -38,6 +50,9 @@ public enum Criterion {
         }
     },
 
+    /**
+     * A criterion that will return alerts with matching <b>type</b>.
+     */
     ALERT_TYPE {
         @Override
         public List<Alert> fetch(AlertsDataService alertsDataService, AlertCriteria criteria) {
@@ -50,6 +65,9 @@ public enum Criterion {
         }
     },
 
+    /**
+     * A criterion that will return alerts with matching <b>priority</b>.
+     */
     ALERT_PRIORITY {
         @Override
         public List<Alert> fetch(AlertsDataService alertsDataService, AlertCriteria criteria) {
@@ -62,6 +80,9 @@ public enum Criterion {
         }
     },
 
+    /**
+     * A criterion that will return alerts with their <b>dateTime</b> within the date range from the criteria.
+     */
     DATE_RANGE {
         @Override
         public List<Alert> fetch(AlertsDataService alertsDataService, AlertCriteria criteria) {
@@ -82,8 +103,20 @@ public enum Criterion {
         }
     };
 
+    /**
+     * Fetches the data for this criterion from the database using the {@link org.motechproject.alerts.contract.AlertsDataService}.
+     * @param alertsDataService the service used for fetching the data
+     * @param criteria the criteria used for querying the data
+     * @return the list of fetched alerts
+     */
     public abstract List<Alert> fetch(AlertsDataService alertsDataService, AlertCriteria criteria);
 
+    /**
+     * Filters a list of alerts using this criterion. Should create a new list.
+     * @param alerts the list of alerts to filter
+     * @param alertCriteria the criteria used for filtering
+     * @return the matching alerts, a new list
+     */
     public abstract List<Alert> filter(List<Alert> alerts, AlertCriteria alertCriteria);
 
     private static List<Alert> select(List<Alert> alerts, Predicate predicate) {

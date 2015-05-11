@@ -7,13 +7,9 @@ import org.motechproject.alerts.domain.AlertType;
 import java.util.List;
 import java.util.Map;
 
-/**
- * \defgroup alerts Alerts
- */
 
 /**
- * \ingroup alerts
- * Interface to handle alerts
+ * Interface to handle alerts.
  */
 public interface AlertService {
     /**
