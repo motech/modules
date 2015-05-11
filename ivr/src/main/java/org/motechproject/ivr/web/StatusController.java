@@ -52,8 +52,8 @@ public class StatusController {
      * providers. Creates a corresponding CDR entity in the database. Sends a MOTECH message with the CDR data in the
      * payload and the call status as the subject.
      *
-     * @param configName
-     * @param params
+     * @param configName the name of the configuration to use
+     * @param params the request parameters coming from the provider
      * @return static XML content with an OK response element.
      */
     @ResponseStatus(HttpStatus.OK)

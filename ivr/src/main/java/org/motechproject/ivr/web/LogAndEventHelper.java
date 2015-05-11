@@ -28,12 +28,12 @@ public final class LogAndEventHelper {
      * The StatusController and TemplateController classes both have the same way of generating a CDR, sending a Motech
      * event and logging it, so this function is called by both to avoid code duplication.
      *
-     * @param configService
-     * @param cdrService
-     * @param messageService
-     * @param eventRelay
-     * @param configName
-     * @param params
+     * @param configService the service used for config retrieval
+     * @param cdrService the service used for logging call detail records
+     * @param messageService the admin messages service, used for posting admin messages
+     * @param eventRelay the event relay used for publishing MOTECH events
+     * @param configName name of the configuration used
+     * @param params the parameters of the call to log
      */
     public static void sendAndLogEvent(String eventSubject, ConfigService configService, //NO CHECKSTYLE ArgumentCount
                                        CallDetailRecordDataService cdrService, StatusMessageService messageService,

@@ -42,7 +42,7 @@ import static org.motechproject.ivr.web.LogAndEventHelper.sendAndLogEvent;
 
 /**
  * Responds to HTTP queries to {motech-server}/module/ivr/template/{configName}/{templateName} by creating a
- * CallDetailRecord entry in the database, posting a corresponding Motech event on the queue and returning the text
+ * CallDetailRecord entry in the database, posting a corresponding MOTECH event on the queue and returning the text
  * corresponding to the given template name and where all variable are replaced by the values passed as query parameters
  * See https://velocity.apache.org/ for the template language rules.
  */
@@ -50,6 +50,7 @@ import static org.motechproject.ivr.web.LogAndEventHelper.sendAndLogEvent;
 public class TemplateController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TemplateController.class);
+
     private static final String LOG4J = "org.apache.velocity.runtime.log.Log4JLogChute";
     private static final String LOGSYSTEM_CLASS = "runtime.log.logsystem.class";
     private static final String LOGSYSTEM_LOGGER = "runtime.log.logsystem.log4j.logger";
@@ -90,8 +91,8 @@ public class TemplateController {
      * IVR providers. Creates a corresponding CDR entity in the database. Sends a MOTECH message with the CDR data in
      * the payload and the call status as the subject. Returns the template corresponding to the given id.
      *
-     * @param configName
-     * @param params
+     * @param configName the name of the configuration which should be used when processing this template
+     * @param params the request parameters coming from the provider, will be passed to the template
      * @return static XML content with an OK response element.
      */
     @ResponseStatus(HttpStatus.OK)
@@ -151,6 +152,10 @@ public class TemplateController {
         return writer.toString();
     }
 
+    /**
+     * Retrieves all templates.
+     * @return all templates stored
+     */
     @RequestMapping(value = "/ivr-templates", method = RequestMethod.GET)
     @ResponseBody
     public List<Template> getTemplates() {
@@ -158,6 +163,11 @@ public class TemplateController {
     }
 
 
+    /**
+     * Updates the templates. The new templates collection will overwrite the old one.
+     * @param templates the new collection of templates to persist
+     * @return the newly saved templates
+     */
     @RequestMapping(value = "/ivr-templates", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -166,17 +176,32 @@ public class TemplateController {
         return templateService.allTemplates();
     }
 
+    /**
+     * Handles {@link org.motechproject.ivr.exception.ConfigNotFoundException} and {@link org.motechproject.ivr.exception.TemplateNotFoundException}.
+     * Will return error 404 and the message from the exception as the response body.
+     * @param e the exception to handle
+     * @return the message coming from the exception
+     */
     @ExceptionHandler({ConfigNotFoundException.class, TemplateNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
-    public String handleNotFoundException(Exception e) throws IOException {
+    public String handleNotFoundException(Exception e) {
         LOGGER.error("Error processing template", e);
         return e.getMessage();
     }
 
+    /**
+     * Handles the {@link org.motechproject.ivr.exception.IvrTemplateException}. The error code from the exception
+     * will be return (this allows templates to manipulate the error code), code 500 is returned if it is not set.
+     * The message of the exception will be returned as the response body.
+     * @param e the exception to handle
+     * @param response the response object
+     * @return the message from the exception
+     * @see org.motechproject.ivr.exception.IvrTemplateException
+     */
     @ExceptionHandler(IvrTemplateException.class)
     @ResponseBody
-    public String handleCustomException(IvrTemplateException e, HttpServletResponse response) throws IOException {
+    public String handleCustomException(IvrTemplateException e, HttpServletResponse response) {
         LOGGER.error("Error processing template", e);
 
         if (e.getErrorCode() != null) {
@@ -188,10 +213,16 @@ public class TemplateController {
         return e.getMessage();
     }
 
+    /**
+     * Handles all exception that do not match other handlers. Returns error code 500. The exception message
+     * is returned as the response body.
+     * @param e the exception to handle
+     * @return the message from the exception
+     */
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
-    public String handleException(Exception e) throws IOException {
+    public String handleException(Exception e) {
         LOGGER.error("Error processing template", e);
         return e.getMessage();
     }
