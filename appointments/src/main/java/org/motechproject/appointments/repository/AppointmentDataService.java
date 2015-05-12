@@ -9,7 +9,7 @@ import org.motechproject.mds.service.MotechDataService;
 import java.util.List;
 
 /**
- * Interface to utilize the Seuss CRUD operations for appointment service
+ * Interface to utilize the MDS CRUD operations for appointment service
  */
 public interface AppointmentDataService extends MotechDataService<Appointment> {
 
