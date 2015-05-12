@@ -27,7 +27,7 @@ public interface MTrainingService {
     /**
      * Retrieve a course with the given course id
      * @param courseId id of the course to retrieve
-     * @return
+     * @return the course with the given id, or null if it does not exist
      */
     Course getCourseById(long courseId);
 
@@ -47,7 +47,7 @@ public interface MTrainingService {
     /**
      * Update a course with the given structure
      * @param course Course structure to update
-     * @return
+     * @return the newly updated course
      */
     Course updateCourse(Course course);
 
