@@ -11,6 +11,10 @@ import java.util.TreeSet;
 
 import static java.util.Collections.addAll;
 
+/**
+ * Represent a content from CMS-Lite in the jqgrid. Does not carry any actual content, only
+ * information about the name, type and languages of the content.
+ */
 public class ResourceDto implements Serializable {
     private static final long serialVersionUID = 6728665456455509425L;
 
@@ -18,6 +22,10 @@ public class ResourceDto implements Serializable {
     private final String name;
     private final String type;
 
+    /**
+     * Constructs an instance for the given content.
+     * @param content the content this instance should represent
+     */
     public ResourceDto(Content content) {
         this.name = content.getName();
         this.languages.add(content.getLanguage());
@@ -31,24 +39,42 @@ public class ResourceDto implements Serializable {
         }
     }
 
+    /**
+     * @param name the name of the content
+     * @param type the type of the content, either <b>string</b> or <b>stream</b>
+     * @param languages the languages supported by this content
+     */
     public ResourceDto(String name, String type, String... languages) {
         this.name = name;
         this.type = type;
         addAll(this.languages, languages);
     }
 
+    /**
+     * Adds a language to the set of languages for this content.
+     * @param language the language to add
+     */
     public void addLanguage(String language) {
         languages.add(language);
     }
 
+    /**
+     * @return the languages supported by this content
+     */
     public Set<String> getLanguages() {
         return languages;
     }
 
+    /**
+     * @return the name of the content
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @return the type of the content, either <b>string</b> or <b>stream</b>
+     */
     public String getType() {
         return type;
     }

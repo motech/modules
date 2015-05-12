@@ -1,10 +1,5 @@
 package org.motechproject.cmslite.service;
-/**
- * \defgroup cmslite CMS Lite
- * CMS Lite is lightweight content management supports multiple languages.
- */
 
-import org.motechproject.cmslite.model.CMSLiteException;
 import org.motechproject.cmslite.model.Content;
 import org.motechproject.cmslite.model.ContentNotFoundException;
 import org.motechproject.cmslite.model.StreamContent;
@@ -14,81 +9,79 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * \ingroup cmslite
- * CMS Lite is lightweight content management based on MDS storage. It supports storing and retrieving of stream / text along with
- * custom meta data for each language
+ * CMS Lite is a lightweight content management based on MDS storage. It supports storing and retrieving of stream / text along with
+ * custom metadata for each language.
  */
 @Component
 public interface CMSLiteService {
     /**
-     * Get Stream content for given language.
+     * Get Stream content with the given name and language.
      *
-     * @param language
-     * @param name
-     * @return StreamContent with checksum and data type
-     * @throws ContentNotFoundException
+     * @param language the language of the content
+     * @param name the name of the content
+     * @return StreamContent that matches the parameters
+     * @throws ContentNotFoundException if no such content exists
      */
     StreamContent getStreamContent(String language, String name) throws ContentNotFoundException;
 
     /**
-     * Get Text Content for given tag and language.
+     * Get Text Content for given name and language.
      *
-     * @param language
-     * @param name
-     * @return
-     * @throws ContentNotFoundException
+     * @param language the language of the content
+     * @param name the name of the content
+     * @return StringContent that matches the parameters
+     * @throws ContentNotFoundException if no such content exists
      */
     StringContent getStringContent(String language, String name) throws ContentNotFoundException;
 
     /**
-     * Remove stream content for given language.
+     * Remove stream content for a given name and language.
      *
-     * @param language
-     * @param name
-     * @throws ContentNotFoundException
+     * @param language the language of the content to remove
+     * @param name the name of the content to remove
+     * @throws ContentNotFoundException if no such content exists
      */
     void removeStreamContent(String language, String name) throws ContentNotFoundException;
 
     /**
-     * Remove Text Content for given tag and language.
+     * Remove text content for given name and language.
      *
-     * @param language
-     * @param name
-     * @throws ContentNotFoundException
+     * @param language the language of the content to remove
+     * @param name the name of the content to remove
+     * @throws ContentNotFoundException if no such content exists
      */
     void removeStringContent(String language, String name) throws ContentNotFoundException;
 
     /**
-     * Add content to CMS data-store
+     * Add content to CMS data-store.
      *
-     * @param content
-     * @throws CMSLiteException
+     * @param content the content to add
      * @see org.motechproject.cmslite.model.StreamContent
      * @see org.motechproject.cmslite.model.StringContent
      */
-    void addContent(Content content) throws CMSLiteException;
+    void addContent(Content content);
 
     /**
-     * Check if content available in stream format
+     * Check if a stream content with the given name and language exists.
      *
-     * @param language
-     * @param name
-     * @return
+     * @param language the language of the content
+     * @param name the name of the content
+     * @return true if a matching stream content exists, false otherwise
      */
     boolean isStreamContentAvailable(String language, String name);
 
     /**
-     * Check if content available in text format.
+     * Check if a text content with the given name and language exists.
      *
-     * @param language
-     * @param name
-     * @return
+     * @param language the language of the content
+     * @param name the name of the content
+     * @return true if a matching text content exists, false otherwise
      */
     boolean isStringContentAvailable(String language, String name);
 
     /**
      * Retrieves a list of all String and Stream contents. Returned list is defined
-     * as a generic Content, containing basic information such as language, name and metadata.
+     * as a list of generic Content instances, containing basic information such as language, name and metadata.
      * To make better use of instances retrieved this way an <code>instanceof</code> check should be
      * performed, followed by a cast to either <code>StringContent</code> or <code>StreamContent</code>
      *
@@ -107,7 +100,7 @@ public interface CMSLiteService {
      * @param stringContentId ID of a StringContent to retrieved
      * @return StringContent of a given ID
      */
-    StringContent getStringContent(String stringContentId);
+    StringContent getStringContent(long stringContentId);
 
     /**
      * Retrieved <code>StreamContent</code> by its ID.
@@ -117,7 +110,7 @@ public interface CMSLiteService {
      * @param streamContentId ID of a StreamContent to retrieved
      * @return StreamContent of a given ID
      */
-    StreamContent getStreamContent(String streamContentId);
+    StreamContent getStreamContent(long streamContentId);
 
     /**
      * Helper method, retrieving data of a <code>StreamContent</code>. The data is returned

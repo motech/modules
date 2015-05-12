@@ -34,7 +34,7 @@ public class EventLog {
      *
      * @param subject  the event subject
      * @param parameters  map of key-value pairs representing the event parameters
-     * @param timeStamp  the date/time at which the event occured
+     * @param timeStamp  the date/time at which the event occurred
      */
     public EventLog(String subject, Map<String, Object> parameters, DateTime timeStamp) {
         this.subject = subject;
@@ -90,7 +90,7 @@ public class EventLog {
     /**
      * Sets the event timestamp.
      *
-     * @param timeStamp  the date/time at which the event occured
+     * @param timeStamp  the date/time at which the event occurred
      */
     public void setTimeStamp(DateTime timeStamp) {
         this.timeStamp = timeStamp;

@@ -37,6 +37,10 @@ import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.startsWith;
 import static org.apache.commons.lang.StringUtils.startsWithIgnoreCase;
 
+/**
+ * The controller responsible for serving CMS-Lite resources to users through HTTP.
+ * Handles both the grid in the cms-lite UI and REST requests for particular resources.
+ */
 @Controller
 public class ResourceController {
 
@@ -45,13 +49,21 @@ public class ResourceController {
     @Autowired
     private CMSLiteService cmsLiteService;
 
+    /**
+     * Handles the auto-complete feature for cms-lite. Will return auto-completions for the given field.
+     * @param field the field to auto-complete, name and language are currently supported
+     * @param term what should be auto-complete, what the user has entered
+     * @return a set of auto-completion values
+     * @throws CMSLiteException if the field is not supported
+     */
     @RequestMapping(value = "/resource/available/{field}", method = RequestMethod.GET)
     @ResponseBody
-    public Set<String> availableField(@PathVariable String field, @RequestParam String term) throws CMSLiteException {
+    public Set<String> autocompleteField(@PathVariable String field, @RequestParam String term) throws CMSLiteException {
         Set<String> strings = new TreeSet<>();
 
         switch (field) {
             case "name":
+                // TODO: MOTECH-1717 - we retrieve EVERYTHING from the database here, which can lead to obvious problems
                 List<Content> contents = cmsLiteService.getAllContents();
                 for (Content content : contents) {
                     if (startsWith(content.getName(), term)) {
@@ -73,6 +85,12 @@ public class ResourceController {
         return strings;
     }
 
+    /**
+     * Retrieves resource entries for the jqgrid. The returned object will not contain the content,
+     * only their types, names and languages.
+     * @param settings the settings of the grid, filtering and paging information
+     * @return all resources matching the criteria
+     */
     @RequestMapping(value = "/resource", method = RequestMethod.GET)
     @ResponseBody
     public Resources getContents(GridSettings settings) {
@@ -84,6 +102,10 @@ public class ResourceController {
         return new Resources(settings, resourceDtos);
     }
 
+    /**
+     * Returns all languages associated with any content in cms-lite.
+     * @return all languages from the system
+     */
     @RequestMapping(value = "/resource/all/languages", method = RequestMethod.GET)
     @ResponseBody
     public Set<String> getAllLanguages() {
@@ -97,6 +119,15 @@ public class ResourceController {
         return strings;
     }
 
+    /**
+     * Retrieves a content of a given type for the UI.
+     * @param type the type of the content, either <b>stream</b> or <b>string</b>
+     * @param language the language of the content
+     * @param name the name of the content
+     * @return the matching content object
+     * @throws ContentNotFoundException if the content does not exist
+     * @throws CMSLiteException if the provided content type is invalid
+     */
     @RequestMapping(value = "/resource/{type}/{language}/{name}", method = RequestMethod.GET)
     @ResponseBody
     public Content getContent(@PathVariable String type, @PathVariable String language, @PathVariable String name) throws ContentNotFoundException, CMSLiteException {
@@ -116,20 +147,35 @@ public class ResourceController {
         return content;
     }
 
+    /**
+     * Updates an existing string content in the CMS system. Performed by the UI.
+     * @param language the language for the content
+     * @param name the name of the content
+     * @param value the value of the content
+     * @throws ContentNotFoundException if the content does not exist
+     */
     @RequestMapping(value = "/resource/string/{language}/{name}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public void editStringContent(@PathVariable String language, @PathVariable String name,
-                                  @RequestParam String value) throws ContentNotFoundException, CMSLiteException, IOException {
+                                  @RequestParam String value) throws ContentNotFoundException {
         StringContent stringContent = cmsLiteService.getStringContent(language, name);
         stringContent.setValue(value);
 
         cmsLiteService.addContent(stringContent);
     }
 
+    /**
+     * Updates an existing stream content in the CMS system. Performed by the UI.
+     * @param language the language for the content
+     * @param name the name of the content
+     * @param contentFile the file that should be persisted as this content
+     * @throws ContentNotFoundException if the content does not exist
+     * @throws IOException if there were IO issues with the uploaded file
+     */
     @RequestMapping(value = "/resource/stream/{language}/{name}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public void editStreamContent(@PathVariable String language, @PathVariable String name,
-                                  @RequestParam MultipartFile contentFile) throws ContentNotFoundException, CMSLiteException, IOException {
+                                  @RequestParam MultipartFile contentFile) throws ContentNotFoundException, IOException {
         StreamContent streamContent = cmsLiteService.getStreamContent(language, name);
 
         streamContent.setChecksum(md5Hex(contentFile.getBytes()));
@@ -139,6 +185,16 @@ public class ResourceController {
         cmsLiteService.addContent(streamContent);
     }
 
+    /**
+     * Creates a new content in the system. Performed by the UI.
+     * @param type the type of the content, either <b>string</b> or <b>stream</b>
+     * @param name the name of the content
+     * @param language the language of the content
+     * @param value the value of the content in case of a string content
+     * @param contentFile the file to be saved as the content in case of a stream content
+     * @throws CMSLiteException if a wrong combination of parameters was passed
+     * @throws IOException if there were IO issues with the uploaded file
+     */
     @RequestMapping(value = "/resource", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public void addContent(@RequestParam String type,
@@ -189,6 +245,14 @@ public class ResourceController {
         }
     }
 
+    /**
+     * Removes the content of the given type from the CMS system. Performed by the UI.
+     * @param type the type of the content
+     * @param language the language of the content
+     * @param name the name of the content
+     * @throws ContentNotFoundException if the content does not exist
+     * @throws CMSLiteException if a wrong type was provided
+     */
     @RequestMapping(value = "/resource/{type}/{language}/{name}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     public void removeContent(@PathVariable String type, @PathVariable String language, @PathVariable String name) throws ContentNotFoundException, CMSLiteException {
@@ -204,6 +268,16 @@ public class ResourceController {
         }
     }
 
+    /**
+     * Retrieves the given stream content in raw form. Used by external callers to retrieve the content.
+     * This writes the content to the HttpServletResponse object and also sets the mime on that response to the type
+     * of the content.
+     * @param language the language of the content
+     * @param name the name of the content
+     * @param response the http response into which the content will be written to
+     * @throws ContentNotFoundException if the content does not exist
+     * @throws IOException if there was an IO error writing to the response
+     */
     @RequestMapping(value = "/stream/{language}/{name}", method = RequestMethod.GET)
     public void getStreamContent(@PathVariable String language, @PathVariable String name, HttpServletResponse response)
             throws ContentNotFoundException, IOException {
@@ -222,6 +296,15 @@ public class ResourceController {
         }
     }
 
+    /**
+     * Retrieves the given string content in raw form. Used by external callers to retrieve the content.
+     * This writes the content as text to the HttpServletResponse object and also sets the mime to text/plain.
+     * @param language the language of the content
+     * @param name the name of the content
+     * @param response the http response into which the content will be written to
+     * @throws ContentNotFoundException if the content does not exist
+     * @throws IOException if there was an IO error writing to the response
+     */
     @RequestMapping(value = "/string/{language}/{name}", method = RequestMethod.GET)
     public void getStringContent(@PathVariable String language, @PathVariable String name, HttpServletResponse response)
             throws ContentNotFoundException, IOException {
@@ -239,6 +322,12 @@ public class ResourceController {
         }
     }
 
+    /**
+     * Handler for the {@link org.motechproject.cmslite.model.ContentNotFoundException}.
+     * Will return 404 (Not Found) as the HTTP response code and the message from the exception as the body.
+     * @param e the exception to handle
+     * @return the message from the exception, to be displayed as the response body
+     */
     @ExceptionHandler(ContentNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
@@ -246,6 +335,12 @@ public class ResourceController {
         return e.getMessage();
     }
 
+    /**
+     * Handler for the {@link org.motechproject.cmslite.model.CMSLiteException}.
+     * Will return 400 (Bad Request) as the HTTP response code and the message from the exception as the body.
+     * @param e the exception to handle
+     * @return the message from the exception, to be displayed as the response body
+     */
     @ExceptionHandler(CMSLiteException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody

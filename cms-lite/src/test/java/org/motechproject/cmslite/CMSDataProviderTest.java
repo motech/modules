@@ -113,8 +113,8 @@ public class CMSDataProviderTest {
         String stringContentClass = StringContent.class.getSimpleName();
         String streamContentClass = StreamContent.class.getSimpleName();
 
-        when(cmsLiteService.getStringContent(FIELD_VALUE)).thenReturn(stringContent);
-        when(cmsLiteService.getStreamContent(FIELD_VALUE)).thenReturn(streamContent);
+        when(cmsLiteService.getStringContent(12345)).thenReturn(stringContent);
+        when(cmsLiteService.getStreamContent(12345)).thenReturn(streamContent);
 
         // when
         StringContent stringContent = (StringContent) provider.lookup(stringContentClass, "id", lookupFields);

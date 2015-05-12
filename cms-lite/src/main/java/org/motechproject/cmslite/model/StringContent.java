@@ -8,22 +8,34 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * \ingroup cmslite
- * Represents Text Content.
+ * Represents text content. This class is more suited for storing text content than
+ * {@link org.motechproject.cmslite.model.StreamContent}.
  */
 @Entity(recordHistory = true)
 @Unique(name = "stringLanguageAndName", members = {"language", "name" })
 public class StringContent implements Content {
 
+    /**
+     * The content text.
+     */
     @Field(required = true, type = "text")
     private String value;
 
+    /**
+     * The language for the content.
+     */
     @Field(required = true)
     private String language;
 
+    /**
+     * The name identifying the content.
+     */
     @Field(required = true)
     private String name;
 
+    /**
+     * The additional metadata for the content.
+     */
     @Field
     private Map<String, String> metadata;
 
@@ -31,10 +43,21 @@ public class StringContent implements Content {
         this(null, null, null);
     }
 
+    /**
+     * @param language the language for the content
+     * @param name the name identifying the content
+     * @param value the content text
+     */
     public StringContent(String language, String name, String value) {
         this(language, name, value, null);
     }
 
+    /**
+     * @param language the language for the content
+     * @param name the name identifying the content
+     * @param value the content text
+     * @param metadata the additional metadata for the content
+     */
     public StringContent(String language, String name, String value, Map<String, String> metadata) {
         this.name = name;
         this.language = language;
@@ -42,34 +65,58 @@ public class StringContent implements Content {
         this.value = value;
     }
 
+    /**
+     * @return the content text
+     */
     public String getValue() {
         return value;
     }
 
+    /**
+     * @param value the content text
+     */
     public void setValue(String value) {
         this.value = value;
     }
 
+    /**
+     * @return the language for the content
+     */
     public String getLanguage() {
         return language;
     }
 
+    /**
+     * @param language the language for the content
+     */
     public void setLanguage(String language) {
         this.language = language;
     }
 
+    /**
+     * @return the additional metadata for the content
+     */
     public Map<String, String> getMetadata() {
         return metadata;
     }
 
+    /**
+     * @param metadata the additional metadata for the content
+     */
     public void setMetadata(Map<String, String> metadata) {
         this.metadata = metadata;
     }
 
+    /**
+     * @return the name identifying the content
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @param name the name identifying the content
+     */
     public void setName(String name) {
         this.name = name;
     }

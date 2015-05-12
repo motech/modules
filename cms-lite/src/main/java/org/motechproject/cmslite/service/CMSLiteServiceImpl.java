@@ -1,7 +1,6 @@
 package org.motechproject.cmslite.service;
 
 
-import org.motechproject.cmslite.model.CMSLiteException;
 import org.motechproject.cmslite.model.Content;
 import org.motechproject.cmslite.model.ContentNotFoundException;
 import org.motechproject.cmslite.model.StreamContent;
@@ -12,6 +11,10 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The implementation of {@link org.motechproject.cmslite.service.CMSLiteService}. It uses MDS for
+ * storing content in the database.
+ */
 @Service("cmsLiteService")
 public class CMSLiteServiceImpl implements CMSLiteService {
     private StringContentService stringContentService;
@@ -56,15 +59,18 @@ public class CMSLiteServiceImpl implements CMSLiteService {
         return contents;
     }
 
-    public StreamContent getStreamContent(String streamContentId) {
-        return streamContentService.retrieve("id", streamContentId);
-    }
-    public StringContent getStringContent(String stringContentId) {
-        return stringContentService.retrieve("id", stringContentId);
+    @Override
+    public StreamContent getStreamContent(long streamContentId) {
+        return streamContentService.findById(streamContentId);
     }
 
     @Override
-    public void addContent(Content content) throws CMSLiteException {
+    public StringContent getStringContent(long stringContentId) {
+        return stringContentService.findById(stringContentId);
+    }
+
+    @Override
+    public void addContent(Content content) {
         if (content == null || content.getLanguage() == null || content.getName() == null) {
             throw new IllegalArgumentException("Content or language or name should not be null");
         }

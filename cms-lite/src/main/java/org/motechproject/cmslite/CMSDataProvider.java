@@ -13,6 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This is the CMS data provider that is registered with the task module as a data source.
+ * It allows retrieving content from CMS-Lite and using it in tasks.
+ */
 public class CMSDataProvider extends AbstractDataProvider {
     private static final String ID_FIELD = "cmslite.id";
     private static final String NAME_FIELD = "cmslite.dataname";
@@ -75,11 +79,11 @@ public class CMSDataProvider extends AbstractDataProvider {
     }
 
     private Object getStringContent(String stringContentId) {
-        return cmsLiteService.getStringContent(stringContentId);
+        return cmsLiteService.getStringContent(Long.parseLong(stringContentId));
     }
 
     private Object getStreamContent(String streamContentId) {
-        return cmsLiteService.getStreamContent(streamContentId);
+        return cmsLiteService.getStreamContent(Long.parseLong(streamContentId));
     }
 
     private Object getStringContent(String stringContentLanguage, String stringContentName) throws ContentNotFoundException {
