@@ -23,12 +23,14 @@ public interface AppointmentService {
      * Add appointments for users with external id set in the appointment objects
      *
      * @param appointments list of appointment objects to add
+     * @return the newly added appointments
      */
     List<Appointment> addAppointments(List<Appointment> appointments);
 
     /**
      * Remove a given appointment from the store
      * @param appointmentId Appointment to remove
+     * @throws AppointmentException if one of the provided appointments does not exist
      */
     void removeAppointment(String appointmentId) throws AppointmentException;
 
@@ -36,6 +38,7 @@ public interface AppointmentService {
      * Removes all appointments and reminders for given user (identified by externalId)
      *
      * @param appointmentId list of appointments to remove
+     * @throws AppointmentException if one of the provided ids does not match an existing appointment
      */
     void removeAppointments(List<String> appointmentId) throws AppointmentException;
 
@@ -43,12 +46,14 @@ public interface AppointmentService {
      * Update the appointment object in the store
      * @param appointment Appointment object to update
      * @return updated Appointment object to return
+     * @throws AppointmentException if the provided appointment does not exist
      */
     Appointment updateAppointment(Appointment appointment) throws AppointmentException;
     /**
      * Updates the list of appointments
      * @param appointments List of appointment objects
      * @return Updated list of appointments
+     * @throws AppointmentException if one of the provided appointments does not exist
      */
     List<Appointment> updateAppointments(List<Appointment> appointments) throws AppointmentException;
 
@@ -80,6 +85,7 @@ public interface AppointmentService {
      *
      * @param externalId External id of the user
      * @param sendReminders boolean flag to start or stop reminders based on the appointment interval field
+     * @throws AppointmentException if the appointment is not found
      */
     void toggleReminders(String externalId, boolean sendReminders) throws AppointmentException;
 }

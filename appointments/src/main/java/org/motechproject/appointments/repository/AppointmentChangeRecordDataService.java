@@ -10,7 +10,7 @@ import org.motechproject.mds.service.MotechDataService;
 import java.util.List;
 
 /**
- * Interface to utilize the Seuss CRUD operations for appointment record service (logging & reporting)
+ * Interface to utilize the MDS CRUD operations for appointment record service (logging & reporting)
  */
 public interface AppointmentChangeRecordDataService extends MotechDataService<AppointmentChangeRecord> {
 
