@@ -39,13 +39,13 @@ public final class ResponseXML {
                 "    </n1:case>\n" +
                 "  </cc_delegation_stub>\n" +
                 "  <n2:meta xmlns:n2=\"http://openrosa.org/jr/xforms\">\n" +
-                "  <n2:deviceid>cloudcare</n2:deviceid>\n" +
-                "  <n2:timestart>2012-10-23T17:15:18.324-04</n2:timestart>\n" +
-                "  <n2:timeend>2012-10-23T17:15:21.966-04</n2:timeend>\n" +
+                "  <n2:deviceID>cloudcare</n2:deviceID>\n" +
+                "  <n2:timeStart>2012-10-23T17:15:18.324-04</n2:timeStart>\n" +
+                "  <n2:timeEnd>2012-10-23T17:15:21.966-04</n2:timeEnd>\n" +
                 "  <n2:username>test</n2:username>\n" +
-                "  <n2:userid>9ad3659b9c0f8c5d141d2d06857874df</n2:userid>\n" +
-                "  <n2:instanceid>c24a85f9-703d-434c-b087-5759f3fa9937</n2:instanceid>\n" +
-                "  <n3:appversion xmlns:n3=\"http://commcarehq.org/xforms\">2.0</n3:appversion>\n" +
+                "  <n2:userID>9ad3659b9c0f8c5d141d2d06857874df</n2:userID>\n" +
+                "  <n2:instanceID>c24a85f9-703d-434c-b087-5759f3fa9937</n2:instanceID>\n" +
+                "  <n3:appVersion xmlns:n3=\"http://commcarehq.org/xforms\">2.0</n3:appVersion>\n" +
                 "  </n2:meta>\n" +
                 "</data>";
     }
