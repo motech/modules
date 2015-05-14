@@ -1,0 +1,34 @@
+<div id="importTemplatesModal" class="templates modal fade" tabindex="-1" role="dialog" aria-labelledby="importTemplatesModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" ng-click="closeImportTemplatesModal()">&times;</button>
+                <h4 class="modal-title" id="importTemplatesModalLabel">{{msg('sms.templates.import')}}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    {{msg('sms.templates.info')}}
+                </div>
+                <form id="importTemplatesForm" name="importTemplatesForm" class="form-horizontal" action="../sms/templates/import" enctype="multipart/form-data" method="POST">
+                    <div class="form-group fileupload fileupload-new" data-provides="fileupload">
+                        <label class="col-sm-3 control-label">{{msg('sms.templates.fileChosen')}}</label>
+                        <div class="form-inline col-sm-9">
+                            <div class="form-control input-auto uneditable-input input-xlarge fileupload-exists"><span class="glyphicon glyphicon-file"></span>&nbsp;<span class="fileupload-preview"></span></div>
+                            <span class="btn btn-default btn-file">
+                                <span class="fileupload-new">{{msg('sms.button.selectFile')}}</span>
+                                <span class="fileupload-exists">{{msg('sms.button.changeFile')}}</span>
+                                <input type="file" id="jsonFile" name="jsonFile" class="input-file"/>
+                            </span>
+                            <a target="_self" href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload"><i class="fa fa-trash-o"></i>&nbsp;{{msg('sms.button.delete')}}</a>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="importTemplates()">{{msg('sms.button.import')}}</button>
+                <button class="btn btn-default" ng-click="closeImportTemplatesModal()">{{msg('sms.button.close')}}</button>
+            </div>
+        </div>
+    </div>
+</div>

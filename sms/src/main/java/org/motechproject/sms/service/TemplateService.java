@@ -3,6 +3,7 @@ package org.motechproject.sms.service;
 import org.motechproject.sms.templates.Template;
 import org.motechproject.sms.templates.TemplateForWeb;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -12,4 +13,6 @@ import java.util.Map;
 public interface TemplateService {
     Template getTemplate(String name);
     Map<String, TemplateForWeb> allTemplatesForWeb();
+    void importTemplates(List<Template> templateList);
+    void importTemplate(Template template);
 }
