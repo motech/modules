@@ -33,8 +33,8 @@ public class CallController {
     /**
      * Initiates an outbound call
      *
-     * @param configName
-     * @param params
+     * @param configName the name of the configuration to use
+     * @param params the params that will be passed to {@link org.motechproject.ivr.service.OutboundCallService#initiateCall(String, java.util.Map)}
      */
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody

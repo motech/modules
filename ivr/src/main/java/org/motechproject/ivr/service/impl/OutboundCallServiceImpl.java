@@ -131,7 +131,7 @@ public class OutboundCallServiceImpl implements OutboundCallService {
             throw new CallInitiationException(message);
         }
 
-        Map<String, Object> completeJsonMap = new HashMap<String, Object>();
+        Map<String, Object> completeJsonMap = new HashMap<>();
         if (config.isJsonResponse()) {
             try (InputStream json = response.getEntity().getContent()) {
                 String jsonString = IOUtils.toString(json);

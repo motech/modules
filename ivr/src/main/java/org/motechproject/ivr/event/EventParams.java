@@ -61,8 +61,8 @@ public final class EventParams {
     /**
      * Create a MOTECH event parameters map payload from a given {@link org.motechproject.ivr.domain.CallDetailRecord}.
      *
-     * @param callDetailRecord
-     * @return
+     * @param callDetailRecord the call detail record used for constructing the event payload
+     * @return the payload corresponding to the provided call detail record
      */
     public static Map<String, Object> eventParamsFromCallDetailRecord(CallDetailRecord callDetailRecord) {
         Map<String, Object> eventParams = new HashMap<>();

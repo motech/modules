@@ -26,7 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * See {@link org.motechproject.ivr.service.TemplateService}
+ * See {@link org.motechproject.ivr.service.TemplateService}. Templates are stored using
+ * the {@link org.motechproject.server.config.SettingsFacade} as raw configuration files.
  */
 @Service("templateService")
 public class TemplateServiceImpl implements TemplateService {
@@ -37,7 +38,7 @@ public class TemplateServiceImpl implements TemplateService {
     private Map<String, Template> templates = new HashMap<>();
 
     private synchronized void loadTemplates() {
-        List<Template> templateList = null;
+        List<Template> templateList;
         try (InputStream is = settingsFacade.getRawConfig(TEMPLATE_FILE_NAME)) {
             String jsonText = IOUtils.toString(is);
             LOGGER.debug("Reloading {}", TEMPLATE_FILE_NAME);
@@ -70,6 +71,7 @@ public class TemplateServiceImpl implements TemplateService {
         }
     }
 
+    @Override
     public Template getTemplate(String name) {
         if (templates.containsKey(name)) {
             return templates.get(name);
@@ -77,14 +79,17 @@ public class TemplateServiceImpl implements TemplateService {
         throw new TemplateNotFoundException(String.format("Unknown template: '%s'.", name));
     }
 
+    @Override
     public List<Template> allTemplates() {
         return new ArrayList<Template>(templates.values());
     }
 
+    @Override
     public boolean hasTemplate(String name) {
         return templates.containsKey(name);
     }
 
+    @Override
     public void updateTemplates(List<Template> templates) {
         Gson gson = new Gson();
         String jsonText = gson.toJson(templates);

@@ -26,7 +26,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * See {@link org.motechproject.ivr.service.ConfigService}
+ * See {@link org.motechproject.ivr.service.ConfigService}.
+ * Uses the {@link org.motechproject.server.config.SettingsFacade} for storing IVR configurations
+ * inside a json file, since we can have multiple configurations.
  */
 @Service("configService")
 public class ConfigServiceImpl implements ConfigService {
@@ -71,6 +73,7 @@ public class ConfigServiceImpl implements ConfigService {
         }
     }
 
+    @Override
     public Config getConfig(String name) {
         if (configs.containsKey(name)) {
             return configs.get(name);
@@ -78,14 +81,17 @@ public class ConfigServiceImpl implements ConfigService {
         throw new ConfigNotFoundException(String.format("Unknown config: '%s'.", name));
     }
 
+    @Override
     public List<Config> allConfigs() {
         return new ArrayList<Config>(configs.values());
     }
 
+    @Override
     public boolean hasConfig(String name) {
         return configs.containsKey(name);
     }
 
+    @Override
     public void updateConfigs(List<Config> configs) {
         Gson gson = new Gson();
         String jsonText = gson.toJson(configs);
