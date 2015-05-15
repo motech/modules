@@ -33,13 +33,13 @@ public final class EventDataKeys {
     public static final String META_BASE_URL = "configBaseUrl";
     public static final String META_DOMAIN = "configDomain";
 
-    public static final String META_INSTANCE_ID = "/data/meta/instanceid";
-    public static final String META_USER_ID = "/data/meta/userid";
-    public static final String META_DEVICE_ID = "/data/meta/deviceid";
+    public static final String META_INSTANCE_ID = "/data/meta/instanceID";
+    public static final String META_USER_ID = "/data/meta/userID";
+    public static final String META_DEVICE_ID = "/data/meta/deviceID";
     public static final String META_USERNAME = "/data/meta/username";
-    public static final String META_APP_VERSION = "/data/meta/appversion";
-    public static final String META_TIME_START = "/data/meta/timestart";
-    public static final String META_TIME_END = "/data/meta/timeend";
+    public static final String META_APP_VERSION = "/data/meta/appVersion";
+    public static final String META_TIME_START = "/data/meta/timeStart";
+    public static final String META_TIME_END = "/data/meta/timeEnd";
 
     public static final String REGISTERED_CASE_TYPE = "/data/case/create/case_type";
     public static final String REGISTERED_CASE_NAME = "/data/case/create/case_name";
