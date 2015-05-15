@@ -1,0 +1,79 @@
+{
+    "displayName": "csd.task.name",
+    "moduleName": "${project.artifactId}",
+    "moduleVersion": "${parsedVersion.osgiVersion}",
+    "triggerTaskEvents" : [
+        {
+            "subject" : "csd_update.custom",
+            "displayName" : "csd.task.update.custom",
+            "eventParameters" : [
+                {
+                    "eventKey" : "update_date",
+                    "type" : "DATE",
+                    "displayName" : "csd.task.updateDate"
+                },
+                {
+                    "eventKey" : "xml_url",
+                    "displayName" : "csd.task.xmlUrl"
+                }
+            ]
+        },
+        {
+            "subject" : "csd_update.scheduled",
+            "displayName" : "csd.task.update.scheduled",
+            "eventParameters" : [
+                {
+                    "eventKey" : "update_date",
+                    "type" : "DATE",
+                    "displayName" : "csd.task.updateDate"
+                },
+                {
+                    "eventKey" : "xml_url",
+                    "displayName" : "csd.task.xmlUrl"
+                }
+            ]
+        },
+        {
+            "subject" : "csd_update.task",
+            "displayName" : "csd.task.update.task",
+            "eventParameters" : [
+                {
+                    "eventKey" : "update_date",
+                    "type" : "DATE",
+                    "displayName" : "csd.task.updateDate"
+                },
+                {
+                    "eventKey" : "xml_url",
+                    "displayName" : "csd.task.xmlUrl"
+                }
+            ]
+        }
+    ],
+    "actionTaskEvents": [
+        {
+            "subject" : "csd_task_rest_update",
+            "displayName" : "csd.task.fetchAndUpdate.REST",
+            "actionParameters" : [
+                {
+                    "key" : "xml_url",
+                    "displayName" : "csd.task.xmlUrl"
+                }
+            ]
+        },
+        {
+            "subject" : "csd_task_soap_update",
+            "displayName" : "csd.task.fetchAndUpdate.SOAP",
+            "actionParameters" : [
+                {
+                    "key" : "xml_url",
+                    "displayName" : "csd.task.xmlUrl"
+                },
+                {
+                    "key" : "last_modified",
+                    "type" : "DATE",
+                    "displayName" : "csd.task.lastModified"
+                }
+            ]
+        }
+    ]
+}

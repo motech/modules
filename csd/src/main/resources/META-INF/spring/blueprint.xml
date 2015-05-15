@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:osgi="http://www.eclipse.org/gemini/blueprint/schema/blueprint"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+       http://www.eclipse.org/gemini/blueprint/schema/blueprint http://www.eclipse.org/gemini/blueprint/schema/blueprint/gemini-blueprint.xsd">
+
+    <import resource="classpath*:META-INF/motech/applicationContext.xml"/>
+
+    <mvc:annotation-driven/>
+    <context:annotation-config/>
+    <context:component-scan base-package="org.motechproject.csd"/>
+
+    <bean id="csdSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
+        <property name="rawConfigFiles">
+            <list>
+                <value>classpath:csd-configs.json</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="moduleRegistrationData" class="org.motechproject.osgi.web.ModuleRegistrationData">
+        <constructor-arg name="url" value="../csd/resources/index.html"/>
+        <constructor-arg name="moduleName" value="csd" />
+        <constructor-arg name="angularModules">
+            <list>
+                <value>csd</value>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="i18n">
+            <map>
+                <entry key="messages" value="../csd/resources/messages/"/>
+            </map>
+        </constructor-arg>
+        <property name="roleForAccess">
+            <list>
+                <value>manageCSD</value>
+                <value>manageBundles</value>
+            </list>
+        </property>
+        <property name="settingsURL" value="/csd/settings" />
+        <property name="defaultURL" value="/csd/csd"/>
+    </bean>
+
+    <osgi:service ref="configService" interface="org.motechproject.csd.service.ConfigService" />
+    <osgi:service ref="csdService" interface="org.motechproject.csd.service.CSDService" />
+    <osgi:service ref="facilityService" interface="org.motechproject.csd.service.FacilityService" />
+    <osgi:service ref="organizationService" interface="org.motechproject.csd.service.OrganizationService" />
+    <osgi:service ref="providerService" interface="org.motechproject.csd.service.ProviderService" />
+    <osgi:service ref="serviceService" interface="org.motechproject.csd.service.ServiceService" />
+    <osgi:service ref="csdInstanceLifecycleListener" interface="org.motechproject.csd.listener.CSDInstanceLifecycleListener" />
+
+    <osgi:reference id="facilityDataService" interface="org.motechproject.csd.mds.FacilityDataService" />
+    <osgi:reference id="addressDataService" interface="org.motechproject.csd.mds.AddressDataService" />
+    <osgi:reference id="addressLineDataService" interface="org.motechproject.csd.mds.AddressLineDataService" />
+    <osgi:reference id="codedTypeDataService" interface="org.motechproject.csd.mds.CodedTypeDataService" />
+    <osgi:reference id="contactPointDataService" interface="org.motechproject.csd.mds.ContactPointDataService" />
+    <osgi:reference id="credentialDataService" interface="org.motechproject.csd.mds.CredentialDataService" />
+    <osgi:reference id="extensionDataService" interface="org.motechproject.csd.mds.ExtensionDataService" />
+    <osgi:reference id="facilityOrganizationDataService" interface="org.motechproject.csd.mds.FacilityOrganizationDataService" />
+    <osgi:reference id="facilityOrganizationServiceDataService" interface="org.motechproject.csd.mds.FacilityOrganizationServiceDataService" />
+    <osgi:reference id="geocodeDataService" interface="org.motechproject.csd.mds.GeocodeDataService" />
+    <osgi:reference id="nameDataService" interface="org.motechproject.csd.mds.NameDataService" />
+    <osgi:reference id="operatingHoursDataService" interface="org.motechproject.csd.mds.OperatingHoursDataService" />
+    <osgi:reference id="organizationContactDataService" interface="org.motechproject.csd.mds.OrganizationContactDataService" />
+    <osgi:reference id="organizationDataService" interface="org.motechproject.csd.mds.OrganizationDataService" />
+    <osgi:reference id="otherIDDataService" interface="org.motechproject.csd.mds.OtherIDDataService" />
+    <osgi:reference id="otherNameDataService" interface="org.motechproject.csd.mds.OtherNameDataService" />
+    <osgi:reference id="personDataService" interface="org.motechproject.csd.mds.PersonDataService" />
+    <osgi:reference id="personNameDataService" interface="org.motechproject.csd.mds.PersonNameDataService" />
+    <osgi:reference id="providerDataService" interface="org.motechproject.csd.mds.ProviderDataService" />
+    <osgi:reference id="providerFacilityDataService" interface="org.motechproject.csd.mds.ProviderFacilityDataService" />
+    <osgi:reference id="providerOrganizationDataService" interface="org.motechproject.csd.mds.ProviderOrganizationDataService" />
+    <osgi:reference id="serviceDataService" interface="org.motechproject.csd.mds.ServiceDataService" />
+
+    <osgi:reference id="schedulerService" interface="org.motechproject.scheduler.service.MotechSchedulerService" />
+    <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>
+
+</beans>

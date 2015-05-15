@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:csd="urn:ihe:iti:csd:2013">
+    <soap:Header/>
+    <soap:Body>
+        <csd:getModificationsRequest>
+            <csd:lastModified>2002-05-30T09:30:10.5</csd:lastModified>
+        </csd:getModificationsRequest>
+    </soap:Body>
+</soap:Envelope>
