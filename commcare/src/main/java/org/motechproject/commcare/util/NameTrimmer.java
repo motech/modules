@@ -7,6 +7,6 @@ public class NameTrimmer {
 
     public String trim(String expression) {
         // Remove all non-alphanumeric characters
-        return expression.replaceAll("[^a-zA-Z0-9]", "");
+        return expression == null ? "" : expression.replaceAll("[^a-zA-Z0-9]", "");
     }
 }

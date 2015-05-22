@@ -58,10 +58,14 @@ public class CommcareDataProviderBuilder {
             VelocityEngineUtils.mergeTemplate(velocityEngine, COMMCARE_TASK_DATA_PROVIDER, model, writer);
         } catch (Exception e) {
             LOGGER.error("An error occured while trying to merge velocity template " +
-                    COMMCARE_TASK_DATA_PROVIDER + " with data.");
+                    COMMCARE_TASK_DATA_PROVIDER + " with data.", e);
         }
 
-        return writer.toString();
+        String providerJson = writer.toString();
+
+        LOGGER.trace("Generated the following tasks data provider: {}", providerJson);
+
+        return providerJson;
     }
 
     @Resource(name = "commcareVelocityEngine")

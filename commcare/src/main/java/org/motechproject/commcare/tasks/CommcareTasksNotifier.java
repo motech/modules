@@ -4,8 +4,11 @@ import org.motechproject.commcare.CommcareDataProvider;
 import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.service.CommcareSchemaService;
 import org.motechproject.commcare.tasks.builder.ChannelRequestBuilder;
+import org.motechproject.tasks.ex.ValidationException;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +22,8 @@ import javax.annotation.PostConstruct;
  */
 @Component("commcareTasksNotifier")
 public class CommcareTasksNotifier {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommcareTasksNotifier.class);
 
     private BundleContext bundleContext;
     private CommcareSchemaService schemaService;
@@ -36,16 +41,35 @@ public class CommcareTasksNotifier {
 
     @PostConstruct
     public void updateTasksInfo() {
+        LOGGER.info("Updating tasks integration");
+
+        try {
+            updateChannel();
+        } catch (ValidationException e) {
+            LOGGER.error("Channel generated was not accepted by tasks due to validation errors", e);
+        }
+
+        try {
+            dataProvider.updateDataProvider();
+        } catch (ValidationException e) {
+            LOGGER.error("Data Provider generated was not accepted by tasks due to validation errors", e);
+        }
+    }
+
+    private void updateChannel() {
         ServiceReference serviceReference = bundleContext.getServiceReference("org.motechproject.tasks.service.ChannelService");
         if (serviceReference != null) {
             Object service = bundleContext.getService(serviceReference);
             if (service != null) {
+                LOGGER.info("Registering Commcare tasks channel with the channel service");
+
                 ChannelRequestBuilder channelRequestBuilder = new ChannelRequestBuilder(configService,
                         schemaService, bundleContext);
                 TasksChannelServiceInstance instance = new TasksChannelServiceInstance(service, channelRequestBuilder);
                 instance.updateTaskChannel();
+            } else {
+                LOGGER.warn("No channel service present, channel not registered");
             }
         }
-        dataProvider.updateDataProvider();
     }
 }

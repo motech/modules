@@ -52,6 +52,14 @@ public class CommCareAPIHttpClient {
         return this.getRequest(accountConfig, commcareUsersUrl(accountConfig, pageSize, pageNumber), null);
     }
 
+    public String locationRequest(AccountConfig accountConfig, String userId) {
+        return this.getRequest(accountConfig, commcareLocationUrl(accountConfig, userId), null);
+    }
+
+    public String locationsRequest(AccountConfig accountConfig, Integer pageSize, Integer pageNumber) {
+        return this.getRequest(accountConfig, commcareLocationsUrl(accountConfig, pageSize, pageNumber), null);
+    }
+
     public String appStructureRequest(AccountConfig accountConfig, Integer pageSize, Integer pageNumber) {
         return this.getRequest(accountConfig, commcareAppStructureUrl(accountConfig, pageSize, pageNumber), null);
     }
@@ -277,6 +285,16 @@ public class CommCareAPIHttpClient {
     String commcareUserUrl(AccountConfig accountConfig, String id) {
         return String.format("%s/%s/api/v%s/user/%s/?format=json", getCommcareBaseUrl(accountConfig.getBaseUrl()),
                 accountConfig.getDomain(), getCommcareApiVersion(), id);
+    }
+
+    String commcareLocationsUrl(AccountConfig accountConfig, Integer pageSize, Integer pageNumber) {
+        return String.format("%s/%s/api/v0.5/location/?format=json%s", getCommcareBaseUrl(accountConfig.getBaseUrl()),
+                accountConfig.getDomain(), buildPaginationParams(pageSize, pageNumber));
+    }
+
+    String commcareLocationUrl(AccountConfig accountConfig, String id) {
+        return String.format("%s/%s/api/v0.5/location/%s/?format=json", getCommcareBaseUrl(accountConfig.getBaseUrl()),
+                accountConfig.getDomain(), id);
     }
 
     String commcareAppStructureUrl(AccountConfig accountConfig, Integer pageSize, Integer pageNumber) {

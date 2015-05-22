@@ -35,6 +35,17 @@ public class CommCareAPIHttpClientTest {
     }
 
     @Test
+    public void shouldConstructCommcareLocationUrl() {
+        final String locationId = "999";
+        assertThat(commCareAPIHttpClient.commcareLocationUrl(accountConfig, locationId), IsEqual.equalTo(String.format("%s/%s/api/v0.5/location/%s/?format=json", baseUrl, domain, locationId)));
+    }
+
+    @Test
+    public void shouldConstructCommcareLocationsUrl() {
+        assertThat(commCareAPIHttpClient.commcareLocationsUrl(accountConfig, 100, 2), IsEqual.equalTo(String.format("%s/%s/api/v0.5/location/?format=json&limit=100&offset=100", baseUrl, domain)));
+    }
+
+    @Test
     public void shouldConstructCommcareFormUrl() {
         final String formId = "123";
         assertThat(commCareAPIHttpClient.commcareFormUrl(accountConfig, formId), IsEqual.equalTo(String.format("%s/%s/api/v%s/form/%s/?format=json", baseUrl, domain, apiVersion, formId)));

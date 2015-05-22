@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class FormSchemaJson implements Serializable {
     private static final long serialVersionUID = 3033023909405645226L;
@@ -32,5 +33,20 @@ public class FormSchemaJson implements Serializable {
 
     public void setQuestions(List<FormSchemaQuestionJson> questions) {
         this.questions = questions;
+    }
+
+    /**
+     * Gets form name for English locale, or if English locale is not present, then returns the first one found.
+     * @return Form name for English locale, or random one, if not found
+     */
+    public String getFormName() {
+        String value = formNames.get("en");
+
+        if (value == null) {
+            Set<String> locales = formNames.keySet();
+            value = locales.isEmpty() ? "" : formNames.get(locales.iterator().next());
+        }
+
+        return value;
     }
 }

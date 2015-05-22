@@ -8,10 +8,12 @@ import org.motechproject.commcare.config.Config;
 import org.motechproject.commcare.domain.CaseInfo;
 import org.motechproject.commcare.domain.CommcareFixture;
 import org.motechproject.commcare.domain.CommcareForm;
+import org.motechproject.commcare.domain.CommcareLocation;
 import org.motechproject.commcare.domain.CommcareUser;
 import org.motechproject.commcare.service.impl.CommcareCaseServiceImpl;
 import org.motechproject.commcare.service.impl.CommcareFixtureServiceImpl;
 import org.motechproject.commcare.service.impl.CommcareFormServiceImpl;
+import org.motechproject.commcare.service.impl.CommcareLocationServiceImpl;
 import org.motechproject.commcare.service.impl.CommcareUserServiceImpl;
 import org.motechproject.commcare.util.ConfigsUtils;
 import org.motechproject.commons.api.Range;
@@ -37,6 +39,9 @@ public class CommcareDataProviderTest {
     private CommcareUser commcareUser;
 
     @Mock
+    private CommcareLocation commcareLocation;
+
+    @Mock
     private CommcareFixture commcareFixture;
 
     private CommcareForm commcareForm = new CommcareForm();
@@ -51,6 +56,9 @@ public class CommcareDataProviderTest {
 
     @Mock
     private CommcareUserServiceImpl commcareUserService;
+
+    @Mock
+    private CommcareLocationServiceImpl commcareLocationService;
 
     @Mock
     private CommcareFixtureServiceImpl commcareFixtureService;
@@ -77,6 +85,7 @@ public class CommcareDataProviderTest {
 
         provider = new CommcareDataProvider(resourceLoader);
         provider.setCommcareUserService(commcareUserService);
+        provider.setCommcareLocationService(commcareLocationService);
         provider.setCommcareFormService(commcareFormService);
         provider.setCommcareCaseService(commcareCaseService);
         provider.setCommcareFixtureService(commcareFixtureService);
@@ -108,42 +117,24 @@ public class CommcareDataProviderTest {
     }
 
     @Test
-    public void shouldReturnNullWhenListIsNull() {
+    public void shouldReturnNullWhenListIsBlank() {
         // given
         String commcareUserClass = CommcareUser.class.getSimpleName() + "-" + config.getName();
+        String commcareLocationClass = CommcareLocation.class.getSimpleName() + "-" + config.getName();
         String commcareFormClass = CommcareForm.class.getSimpleName() + "-" + config.getName();
         String commcareFixtureClass = CommcareFixture.class.getSimpleName() + "-" + config.getName();
         String caseInfoClass = CaseInfo.class.getSimpleName() + "-" + config.getName();
 
         // when
         Object userContent = provider.lookup(commcareUserClass, "id", lookupFields);
+        Object locationContent = provider.lookup(commcareLocationClass, "id", lookupFields);
         Object formContent = provider.lookup(commcareFormClass, "id", lookupFields);
         Object fixtureContent = provider.lookup(commcareFixtureClass, "id", lookupFields);
         Object caseContent = provider.lookup(caseInfoClass, "id", lookupFields);
 
         // then
         assertNull(userContent);
-        assertNull(formContent);
-        assertNull(fixtureContent);
-        assertNull(caseContent);
-    }
-
-    @Test
-    public void shouldReturnNullWhenListIsEmpty() {
-        // given
-        String commcareUserClass = CommcareUser.class.getSimpleName() + "-" + config.getName();
-        String commcareFormClass = CommcareForm.class.getSimpleName() + "-" + config.getName();
-        String commcareFixtureClass = CommcareFixture.class.getSimpleName() + "-" + config.getName();
-        String caseInfoClass = CaseInfo.class.getSimpleName() + "-" + config.getName();
-
-        // when
-        Object userContent = provider.lookup(commcareUserClass, "id", lookupFields);
-        Object formContent = provider.lookup(commcareFormClass, "id", lookupFields);
-        Object fixtureContent = provider.lookup(commcareFixtureClass, "id", lookupFields);
-        Object caseContent = provider.lookup(caseInfoClass, "id", lookupFields);
-
-        // then
-        assertNull(userContent);
+        assertNull(locationContent);
         assertNull(formContent);
         assertNull(fixtureContent);
         assertNull(caseContent);
@@ -153,23 +144,27 @@ public class CommcareDataProviderTest {
     public void shouldReturnObject() {
         // given
         String commcareUserClass = CommcareUser.class.getSimpleName() + "-" + config.getName();
+        String commcareLocationClass = CommcareLocation.class.getSimpleName() + "-" + config.getName();
         String commcareFormClass = CommcareForm.class.getSimpleName() + "-" + config.getName();
         String commcareFixtureClass = CommcareFixture.class.getSimpleName() + "-" + config.getName();
         String caseInfoClass = CaseInfo.class.getSimpleName() + "-" + config.getName();
 
         when(commcareUserService.getCommcareUserById(FIELD_VALUE, config.getName())).thenReturn(commcareUser);
+        when(commcareLocationService.getCommcareLocationById(FIELD_VALUE, config.getName())).thenReturn(commcareLocation);
         when(commcareFixtureService.getCommcareFixtureById(FIELD_VALUE, config.getName())).thenReturn(commcareFixture);
         when(commcareFormService.retrieveForm(FIELD_VALUE, config.getName())).thenReturn(commcareForm);
         when(commcareCaseService.getCaseByCaseId(FIELD_VALUE, config.getName())).thenReturn(caseInfo);
 
         // when
         CommcareUser commcareUser1 = (CommcareUser) provider.lookup(commcareUserClass, "id", lookupFields);
+        CommcareLocation commcareLocation1 = (CommcareLocation) provider.lookup(commcareLocationClass, "id", lookupFields);
         Map<String, Object> commcareForm1 = (Map) provider.lookup(commcareFormClass, "id", lookupFields);
         CommcareFixture commcareFixture1 = (CommcareFixture) provider.lookup(commcareFixtureClass, "id", lookupFields);
         Map<String, Object> caseInfo1 = (Map) provider.lookup(caseInfoClass, "id", lookupFields);
 
         // then
         assertEquals(this.commcareUser, commcareUser1);
+        assertEquals(this.commcareLocation, commcareLocation1);
         assertEquals(this.commcareFixture, commcareFixture1);
 
         assertTrue(commcareForm1.containsKey("id"));

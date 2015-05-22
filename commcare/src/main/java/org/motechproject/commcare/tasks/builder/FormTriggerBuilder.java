@@ -48,7 +48,7 @@ public class FormTriggerBuilder implements TriggerBuilder {
         for (Config config : configService.getConfigs().getConfigs()) {
             for (FormSchemaJson form : schemaService.getAllFormSchemas(config.getName())) {
                 List<EventParameterRequest> parameters = new ArrayList<>();
-                String formName = form.getFormNames().get("en");
+                String formName = form.getFormName();
                 addMetadataFields(parameters);
                 addCaseFields(parameters);
 

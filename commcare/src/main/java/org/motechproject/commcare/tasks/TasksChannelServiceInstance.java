@@ -3,6 +3,8 @@ package org.motechproject.commcare.tasks;
 import org.motechproject.commcare.tasks.builder.ChannelRequestBuilder;
 import org.motechproject.tasks.contract.ChannelRequest;
 import org.motechproject.tasks.service.ChannelService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The <code>TasksChannelServiceInstance</code> class, holds Tasks-related beans. The reason this class
@@ -11,6 +13,8 @@ import org.motechproject.tasks.service.ChannelService;
  * avoid <code>NoClassDefFoundError</code>.
  */
 public class TasksChannelServiceInstance {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TasksChannelServiceInstance.class);
 
     private ChannelService channelService;
     private ChannelRequestBuilder channelRequestBuilder;
@@ -25,6 +29,7 @@ public class TasksChannelServiceInstance {
     public void updateTaskChannel() {
         ChannelRequest channelRequest = channelRequestBuilder.buildChannelRequest();
         if (channelService != null && !channelRequest.getTriggerTaskEvents().isEmpty()) {
+            LOGGER.trace("Registering channel with the following request: {}", channelRequest);
             channelService.registerChannel(channelRequest);
         }
     }

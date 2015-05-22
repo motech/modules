@@ -1,5 +1,5 @@
 {
-    "name": "Commcare",
+    "name": "commcare",
     "objects": [
             #foreach($config in $configurations)
                 {
@@ -10,7 +10,7 @@
                                 "displayName": "commcare.id",
                                 "fields": [
                                         "id"
-                                    ]
+                                ]
                             }
                         ],
                     "fields": [
@@ -36,8 +36,8 @@
 
                 #foreach ( $form in $config.getForms() )
                     {
-                        "displayName": "Form: $esc.java($form.getFormNames().get("en")) - $esc.java($config.getConfigName())",
-                        "type": "CommcareForm$trimmer.trim($esc.java($form.getFormNames().get("en")))-$esc.java($config.getConfigName())",
+                        "displayName": "Form: $esc.java($form.getFormName()) - $esc.java($config.getConfigName())",
+                        "type": "CommcareForm$trimmer.trim($esc.java($form.getFormName()))-$esc.java($config.getConfigName())",
                         "lookupFields": [
                             {
                                 "displayName": "commcare.id",
@@ -188,11 +188,10 @@
                             {
                                 "displayName": "commcare.id",
                                 "fields": [
-                                        "configName",
                                         "id"
-                                    ]
+                                ]
                             }
-                        ],
+                    ],
                     "fields": [
                             {
                                 "displayName": "commcare.user.field.defaultPhoneNumber",
@@ -236,6 +235,78 @@
                                 "displayName": "commcare.user.field.phoneNumbers",
                                 "fieldKey": "phoneNumbers",
                                 "type": "LIST"
+                            }
+                        ]
+                },
+                {
+                    "displayName": "Location - $esc.java($config.getConfigName())",
+                    "type": "CommcareLocation-$esc.java($config.getConfigName())",
+                    "lookupFields": [
+                            {
+                                "displayName": "commcare.id",
+                                "fields": [
+                                        "id"
+                                ]
+                            }
+                        ],
+                    "fields": [
+                            {
+                                "displayName": "commcare.location.field.createdAt",
+                                "fieldKey": "createdAt"
+                            },
+                            {
+                                "displayName": "commcare.location.field.domain",
+                                "fieldKey": "domain"
+                            },
+                            {
+                                "displayName": "commcare.location.field.externalId",
+                                "fieldKey": "externalId"
+                            },
+                            {
+                                "displayName": "commcare.location.field.lastModified",
+                                "fieldKey": "lastModified"
+                            },
+                            {
+                                "displayName": "commcare.location.field.locationData",
+                                "fieldKey": "locationData",
+                                "type": "MAP"
+                            },
+                            {
+                                "displayName": "commcare.location.field.id",
+                                "fieldKey": "id",
+                                "type": "LONG"
+                            },
+                            {
+                                "displayName": "commcare.location.field.latitude",
+                                "fieldKey": "latitude"
+                            },
+                            {
+                                "displayName": "commcare.location.field.resourceUri",
+                                "fieldKey": "resourceUri"
+                            },
+                            {
+                                "displayName": "commcare.location.field.locationId",
+                                "fieldKey": "locationId"
+                            },
+                            {
+                                "displayName": "commcare.location.field.locationType",
+                                "fieldKey": "locationType"
+                            },
+                            {
+                                "displayName": "commcare.location.field.longitude",
+                                "fieldKey": "longitude"
+                            },
+                            {
+                                "displayName": "commcare.location.field.name",
+                                "fieldKey": "name"
+                            },
+                            {
+                                "displayName": "commcare.location.field.parent",
+                                "fieldKey": "parent"
+                            },
+                            {
+                                "displayName": "commcare.location.field.siteCode",
+                                "fieldKey": "siteCode"
                             }
                         ]
                 }#if( $velocityHasNext ),#end

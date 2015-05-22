@@ -81,7 +81,7 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
     public Config saveConfig(Config config) throws CommcareAuthenticationException, CommcareConnectionFailureException {
 
         if (configs.nameInUse(config.getName())) {
-            if (!ifSameSever(config.getAccountConfig(), configs.getByName(config.getName()).getAccountConfig())) {
+            if (!isSameServer(config.getAccountConfig(), configs.getByName(config.getName()).getAccountConfig())) {
                 eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_UPDATED, prepareParams(config.getName())));
             }
             configs.updateConfig(config);
@@ -252,7 +252,7 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
         updateSchemaForwarding(config, endpoints);
     }
 
-    private boolean ifSameSever(AccountConfig one, AccountConfig two) {
+    private boolean isSameServer(AccountConfig one, AccountConfig two) {
         return one.getBaseUrl().equals(two.getBaseUrl()) && one.getDomain().equals(two.getDomain());
     }
 

@@ -3,6 +3,9 @@ package org.motechproject.commcare.domain;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Representation of the CommCare metadata, present in various Data APIs exposed by CommCare.
+ */
 public class CommcareMetadataJson {
 
     @Expose
