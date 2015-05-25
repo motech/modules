@@ -84,6 +84,8 @@
                             net.sf.cglib.proxy,
                             net.sf.cglib.reflect,
                             org.aopalliance.aop,
+                            org.motechproject.admin.domain,
+                            org.motechproject.admin.messages,
                             org.motechproject.config.service,
                             org.motechproject.event.listener,
                             org.motechproject.mds.service,
