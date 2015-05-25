@@ -1,0 +1,21 @@
+.dhis2-program .list-group li button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.dhis2-program-panel-heading {
+    height:75px;
+}
+
+.dhis2-program-subelement-panel-headng {
+    height:50px;
+}
+
+.alignleft {
+    float: left;
+}
+.alignright {
+    float: right;
+}
+

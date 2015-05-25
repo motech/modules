@@ -1,0 +1,115 @@
+<div class="row">
+    <div class="inside">
+        <div class="row">
+
+            <div class="panel-group">
+                <div>
+                    <div class="panel panel-default dhis2-program" ng-repeat="program in programs">
+
+                        <div class="panel-heading dhis2-program-panel-heading" id="heading"  ng-click="collapse(program)" >
+                            <h2 class="panel-title" >{{program.name}}</h2>
+                        </div>
+
+                        <div ng-if="!program.collapsed">
+                            <ul class="list-group"  >
+
+                                <li class="list-group-item">
+                                    <strong>{{msg('dhis2.id') + ":"}}</strong>
+                                    <p>{{program.uuid}}</p>
+                                </li>
+
+                                <li class="list-group-item">
+                                 <strong>{{msg('dhis2.programs.type') + ":"}}</strong>
+                                    <p>{{msg(getTypeOfProgram(program))}}</p>
+                                </li>
+
+                                <li class="list-group-item" ng-if="program.registration">
+
+                                    <div>
+                                        <strong>{{msg('dhis2.trackedEntity') + ": "}}</strong>
+                                        <p>{{program.trackedEntity.name}}</p>
+                                    </div>
+                                </li>
+
+                                <li class="list-group-item panel panel-default dhis2-program" ng-if="program.attributes.length > 0">
+
+                                    <div class="panel-heading dhis2-program-subelement-panel-heading"
+                                         ng-click="collapse(program.attributes)"  >
+
+                                        <h2 class="panel-title">{{msg('dhis2.trackedEntityAttributes')}}</h2>
+                                    </div>
+
+                                    <ul class="list-group" ng-if="!program.attributes.collapsed">
+                                        <li class="list-group-item">
+                                            <div>
+                                                <strong class="alignleft">{{msg('dhis2.name') + ":"}}</strong>
+                                                <strong class="alignright">{{msg('dhis2.id') + ":"}}</strong>
+                                                <div style="clear: both;"></div>
+
+                                            </div>
+                                        </li>
+
+                                        <li class="list-group-item" ng-repeat="attribute in program.attributes">
+                                            <div>
+                                                <p class="alignleft">{{attribute.name}}</p>
+                                                <p  class="alignright">{{attribute.uuid}}</p>
+                                                <div style="clear: both;"></div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+
+
+                                <li class="list-group-item panel panel-default dhis2-program " >
+
+                                        <div class="panel-heading dhis2-program-subelement-panel-headng" ng-click="collapse(program.stages)">
+                                            <h2 class="panel-title">{{msg('dhis2.programs.stages')}}</h2>
+                                        </div>
+
+                                        <ul class="list-group" ng-if="!program.stages.collapsed">
+
+                                            <li class="list-group-item" >
+                                                <div class="panel panel-default dhis2-program" ng-repeat="stage in program.stages">
+
+                                                    <div class="panel-heading" ng-click="collapse(stage)">
+                                                        <h4 class="panel-title"> {{stage.name}}</h4>
+                                                    </div>
+
+                                                    <div ng-if="!stage.collapsed">
+
+                                                        <ul class="list-group">
+                                                            <li class="list-group-item">
+                                                                <strong>{{msg('dhis2.id') + ":"}}</strong>
+                                                                <p>{{stage.uuid}}</p>
+                                                            </li>
+                                                            <li class="list-group-item">
+                                                                <div>
+                                                                    <strong class="alignleft">{{msg('dhis2.dataElements') +":"}}</strong>
+                                                                    <strong class="alignright">{{msg('dhis2.id') + ":"}}</strong>
+                                                                    <div style="clear: both;"></div>
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="list-group-item" ng-repeat="dataElement in stage.dataElements">
+                                                                <div>
+                                                                    <p class="alignleft">{{dataElement.name}}</p>
+                                                                    <p  class="alignright">{{dataElement.uuid}}</p>
+                                                                    <div style="clear: both;"></div>
+                                                                </div>
+                                                            </li>
+
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                </li>
+                            </ul>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
