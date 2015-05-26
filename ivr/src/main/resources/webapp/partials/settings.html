@@ -43,7 +43,7 @@
 
                             <div class="form-group">
                                 <label class="col-md-3 control-label" for="authRequired{{$index}}">{{msg('ivr.web.settings.authRequired')}}</label>
-                                <div class="col-md-1" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('ivr.web.settings.authRequired.tooltip')}}">
+                                <div class="col-md-1 checkbox" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('ivr.web.settings.authRequired.tooltip')}}">
                                     <label>
                                         <input type="checkbox" id="authRequired{{$index}}" ng-model="conf.authRequired"/>
                                     </label>
@@ -82,6 +82,15 @@
                                 </div>
                             </div>
 
+                            <div class="form-group" ng-show="conf.outgoingCallMethod === 'POST'">
+                                <label class="col-md-3 control-label" for="jsonRequest{{$index}}">{{msg('ivr.web.settings.jsonRequest')}}</label>
+                                <div class="col-md-1 checkbox" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('ivr.web.settings.jsonRequest.tooltip')}}">
+                                    <label>
+                                        <input id="jsonRequest{{$index}}" type="checkbox" ng-model="conf.jsonRequest"/>
+                                    </label>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <label class="col-md-3 control-label" for="ignoredStatusFields{{$index}}">{{msg('ivr.web.settings.ignoredStatusFields')}}</label>
                                 <div class="col-md-8" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('ivr.web.settings.ignoredStatusFields.tooltip')}}">
@@ -105,7 +114,7 @@
 
                             <div class="form-group">
                                 <label class="col-md-3 control-label" for="jsonResponse{{$index}}">{{msg('ivr.web.settings.jsonResponse')}}</label>
-                                <div class="col-md-1" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('ivr.web.settings.jsonResponse.tooltip')}}">
+                                <div class="col-md-1 checkbox" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('ivr.web.settings.jsonResponse.tooltip')}}">
                                     <label>
                                         <input id="jsonResponse{{$index}}" type="checkbox" ng-model="conf.jsonResponse"/>
                                     </label>

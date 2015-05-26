@@ -51,6 +51,11 @@ public class Config {
     private HttpMethod outgoingCallMethod;
 
     /**
+     * If request call using a JSON format.
+     */
+    private boolean jsonRequest;
+
+    /**
      * A map of parameters to be substituted in the outgoing URI template
      */
     @JsonIgnore
@@ -83,7 +88,7 @@ public class Config {
 
     public Config(String name, boolean authRequired, String username, String password, //NO CHECKSTYLE ArgumentCount
                   List<String> ignoredStatusFields, String statusFieldMapString, String servicesMapString, HttpMethod outgoingCallMethod,
-                  String outgoingCallUriTemplate, boolean jsonResponse, List<String> jsonExtraParamsList) {
+                  boolean jsonRequest, String outgoingCallUriTemplate, boolean jsonResponse, List<String> jsonExtraParamsList) {
         this.name = name;
         this.authRequired = authRequired;
         this.username = username;
@@ -91,6 +96,7 @@ public class Config {
         this.ignoredStatusFields = ignoredStatusFields;
         this.outgoingCallUriTemplate = outgoingCallUriTemplate;
         this.outgoingCallMethod = outgoingCallMethod;
+        this.jsonRequest = jsonRequest;
         this.statusFieldMapString = statusFieldMapString;
         this.statusFieldMap = parseStringToMap(statusFieldMapString);
         this.servicesMapString = servicesMapString;
@@ -190,6 +196,14 @@ public class Config {
 
     public void setOutgoingCallMethod(HttpMethod outgoingCallMethod) {
         this.outgoingCallMethod = outgoingCallMethod;
+    }
+
+    public boolean isJsonRequest() {
+        return jsonRequest;
+    }
+
+    public void setJsonRequest(boolean jsonRequest) {
+        this.jsonRequest = jsonRequest;
     }
 
     public boolean isJsonResponse() {
