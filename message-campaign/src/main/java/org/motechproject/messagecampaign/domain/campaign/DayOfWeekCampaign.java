@@ -44,6 +44,6 @@ public class DayOfWeekCampaign extends Campaign {
     }
 
     public List<DayOfWeek> getDaysOfWeek(CampaignMessage cm) {
-        throw new RuntimeException("TODO: Not implemented");
+        return daysOfWeek;
     }
 }
