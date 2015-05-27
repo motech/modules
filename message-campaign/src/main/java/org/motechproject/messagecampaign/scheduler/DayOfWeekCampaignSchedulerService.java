@@ -9,7 +9,7 @@ import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.DayOfWeekCampaign;
 import org.motechproject.messagecampaign.domain.message.DayOfWeek;
-import org.motechproject.messagecampaign.domain.message.DayOfWeekCampaignMessage;
+import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.scheduler.contract.CronJobId;
 import org.motechproject.scheduler.contract.DayOfWeekSchedulableJob;
 import org.motechproject.scheduler.contract.JobId;
@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class DayOfWeekCampaignSchedulerService extends CampaignSchedulerService<DayOfWeekCampaignMessage, DayOfWeekCampaign> {
+public class DayOfWeekCampaignSchedulerService extends CampaignSchedulerService<CampaignMessage, DayOfWeekCampaign> {
 
     @Autowired
     public DayOfWeekCampaignSchedulerService(MotechSchedulerService schedulerService, CampaignRecordService campaignRecordService) {
@@ -30,7 +30,7 @@ public class DayOfWeekCampaignSchedulerService extends CampaignSchedulerService<
     }
 
     @Override
-    protected void scheduleMessageJob(CampaignEnrollment enrollment, DayOfWeekCampaign campaign, DayOfWeekCampaignMessage message) {
+    protected void scheduleMessageJob(CampaignEnrollment enrollment, DayOfWeekCampaign campaign, CampaignMessage message) {
         MotechEvent motechEvent = new MotechEvent(EventKeys.SEND_MESSAGE, jobParams(message.getMessageKey(), enrollment));
         LocalDate start = enrollment.getReferenceDate();
         LocalDate end = start.plus(campaign.getMaxDuration());
@@ -56,7 +56,7 @@ public class DayOfWeekCampaignSchedulerService extends CampaignSchedulerService<
     @Override
     public void unscheduleMessageJobs(CampaignEnrollment enrollment) {
         DayOfWeekCampaign campaign = (DayOfWeekCampaign) getCampaignRecordService().findByName(enrollment.getCampaignName()).toCampaign();
-        for (DayOfWeekCampaignMessage message : campaign.getMessages()) {
+        for (CampaignMessage message : campaign.getMessages()) {
             getSchedulerService().safeUnscheduleJob(EventKeys.SEND_MESSAGE, messageJobIdFor(message.getMessageKey(), enrollment.getExternalId(), enrollment.getCampaignName()));
         }
     }

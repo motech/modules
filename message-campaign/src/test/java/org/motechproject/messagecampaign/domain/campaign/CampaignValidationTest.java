@@ -6,7 +6,6 @@ import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.commons.date.util.JodaFormatter;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.domain.message.DayOfWeek;
-import org.motechproject.messagecampaign.domain.message.DayOfWeekCampaignMessage;
 import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
 import org.motechproject.messagecampaign.domain.message.RepeatIntervalCampaignMessage;
 import org.motechproject.messagecampaign.exception.CampaignMessageValidationException;
@@ -27,7 +26,7 @@ public class CampaignValidationTest {
 
     @Test(expected = CampaignValidationException.class)
     public void shouldThrowExceptionWhenDayOfWeekCampaignMaxDurationIsNull() {
-        DayOfWeekCampaignMessage message = new DayOfWeekCampaignMessage(new Time(5,30), new ArrayList<DayOfWeek>());
+        CampaignMessage message = new CampaignMessage(new Time(5,30), new ArrayList<DayOfWeek>());
         campaign = new DayOfWeekCampaign("name", Arrays.asList(message), null);
         campaign.validate();
     }
@@ -48,7 +47,7 @@ public class CampaignValidationTest {
 
     @Test(expected = CampaignMessageValidationException.class)
     public void shouldThrowExceptionWhenDayOfWeekCampaignMessageDaysOfWeekIsNull() {
-        DayOfWeekCampaignMessage message = new DayOfWeekCampaignMessage(null, null);
+        CampaignMessage message = new CampaignMessage(null, null);
         campaign = new DayOfWeekCampaign("name", Arrays.asList(message), new JodaFormatter().parsePeriod("1 Week"));
         campaign.validate();
     }
@@ -77,7 +76,7 @@ public class CampaignValidationTest {
         campaign = new CronBasedCampaign("name", Arrays.asList(cronMessage));
         campaign.validate();
 
-        DayOfWeekCampaignMessage dayOfWeekMessage = new DayOfWeekCampaignMessage(new Time(5,30), new ArrayList<DayOfWeek>());
+        CampaignMessage dayOfWeekMessage = new CampaignMessage(new Time(5,30), new ArrayList<DayOfWeek>());
         campaign = new DayOfWeekCampaign("name", Arrays.asList(dayOfWeekMessage), new JodaFormatter().parsePeriod("1 Week"));
         campaign.validate();
 
