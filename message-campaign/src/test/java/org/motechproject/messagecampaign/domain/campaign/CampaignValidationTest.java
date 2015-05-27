@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.commons.date.util.JodaFormatter;
-import org.motechproject.messagecampaign.domain.message.AbsoluteCampaignMessage;
+import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CronBasedCampaignMessage;
 import org.motechproject.messagecampaign.domain.message.DayOfWeek;
 import org.motechproject.messagecampaign.domain.message.DayOfWeekCampaignMessage;
@@ -35,7 +35,7 @@ public class CampaignValidationTest {
 
     @Test(expected = CampaignMessageValidationException.class)
     public void shouldThrowExceptionWhenAbsoluteCampaignMessageDateIsNull() {
-        AbsoluteCampaignMessage message = new AbsoluteCampaignMessage(null, null);
+        CampaignMessage message = new CampaignMessage(null, null);
         campaign = new AbsoluteCampaign("name", Arrays.asList(message));
         campaign.validate();
     }
@@ -70,7 +70,7 @@ public class CampaignValidationTest {
 
     @Test
     public void shouldNotThrowExceptionWhenAllCampaignsAreValid() {
-        AbsoluteCampaignMessage absoluteMessage = new AbsoluteCampaignMessage(new Time(5,30), DateUtil.today());
+        CampaignMessage absoluteMessage = new CampaignMessage(new Time(5,30), DateUtil.today());
         campaign = new AbsoluteCampaign("name", Arrays.asList(absoluteMessage));
         campaign.validate();
 

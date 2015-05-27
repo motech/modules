@@ -1,6 +1,6 @@
 package org.motechproject.messagecampaign.domain.campaign;
 
-import org.motechproject.messagecampaign.domain.message.AbsoluteCampaignMessage;
+import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
 
 import java.util.List;
@@ -11,13 +11,13 @@ public class AbsoluteCampaign extends Campaign<AbsoluteCampaignMessage> {
 
     }
 
-    public AbsoluteCampaign(String name, List<AbsoluteCampaignMessage> messages) {
+    public AbsoluteCampaign(String name, List<CampaignMessage> messages) {
         super(name, messages);
     }
 
     @Override
-    public AbsoluteCampaignMessage getCampaignMessage(CampaignMessageRecord messageRecord) {
-        return new AbsoluteCampaignMessage(messageRecord);
+    public CampaignMessage getCampaignMessage(CampaignMessageRecord messageRecord) {
+        return new CampaignMessage(messageRecord);
     }
 
 }

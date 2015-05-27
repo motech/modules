@@ -11,7 +11,7 @@ import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignType;
 import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaign;
 import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
-import org.motechproject.messagecampaign.domain.message.AbsoluteCampaignMessage;
+import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage0;
 import org.motechproject.messagecampaign.domain.message.CronBasedCampaignMessage;
 import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
@@ -51,7 +51,7 @@ public class CampaignRecordServiceBundleIT extends BasePaxIT {
         AbsoluteCampaign campaign = (AbsoluteCampaign) campaignRecordService.findByName(campaignName).toCampaign();
         assertNotNull(campaign);
         assertEquals(campaignName, campaign.getName());
-        List<AbsoluteCampaignMessage> messages = campaign.getMessages();
+        List<CampaignMessage> messages = campaign.getMessages();
         assertEquals(2, messages.size());
         DateTime firstDate = new DateTime(2013, 6, 15, 0, 0, 0, 0);
         DateTime secondDate = new DateTime(2013, 6, 22, 0, 0, 0, 0);
@@ -139,7 +139,7 @@ public class CampaignRecordServiceBundleIT extends BasePaxIT {
         campaignRecordService.delete(campaign2);
     }
 
-    private void assertMessageWithAbsoluteSchedule(AbsoluteCampaignMessage message, String name, String[] formats, Object messageKey, LocalDate date) {
+    private void assertMessageWithAbsoluteSchedule(CampaignMessage message, String name, String[] formats, Object messageKey, LocalDate date) {
         assertMessage(message, name, formats, messageKey);
         assertEquals(date, message.getDate());
     }

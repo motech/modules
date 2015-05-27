@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.motechproject.commons.date.util.JodaFormatter;
 import org.motechproject.messagecampaign.builder.CampaignMessageRecordTestBuilder;
 import org.motechproject.messagecampaign.builder.CampaignRecordBuilder;
-import org.motechproject.messagecampaign.domain.message.AbsoluteCampaignMessage;
+import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CronBasedCampaignMessage;
 import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
@@ -28,10 +28,10 @@ public class CampaignRecordTest {
         assertTrue(campaign instanceof AbsoluteCampaign);
         AbsoluteCampaign absoluteCampaign = (AbsoluteCampaign) campaign;
         assertEquals(campaignRecord.getName(), absoluteCampaign.getName());
-        List<AbsoluteCampaignMessage> messages = absoluteCampaign.getMessages();
+        List<CampaignMessage> messages = absoluteCampaign.getMessages();
         assertEquals(1, messages.size());
 
-        AbsoluteCampaignMessage message = messages.get(0);
+        CampaignMessage message = messages.get(0);
         assertEquals(messageRecord.getName(), message.getName());
         assertEquals(messageRecord.getFormats(), message.getFormats());
         assertEquals(messageRecord.getLanguages(), message.getLanguages());

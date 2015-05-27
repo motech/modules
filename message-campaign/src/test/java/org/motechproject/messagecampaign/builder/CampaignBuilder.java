@@ -6,7 +6,7 @@ import org.motechproject.commons.date.util.JodaFormatter;
 import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaign;
 import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaign;
 import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
-import org.motechproject.messagecampaign.domain.message.AbsoluteCampaignMessage;
+import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CronBasedCampaignMessage;
 import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
 
@@ -15,10 +15,10 @@ import java.util.Arrays;
 public final class CampaignBuilder {
 
     public static AbsoluteCampaign defaultAbsoluteCampaign() {
-        AbsoluteCampaignMessage campaignMessage1 = new AbsoluteCampaignMessage("AM1", Arrays.asList("IVR"),
+        CampaignMessage campaignMessage1 = new CampaignMessage("AM1", Arrays.asList("IVR"),
                 Arrays.asList("en"), "random-1", new Time(9, 30), DateUtil.today().plusDays(1));
 
-        AbsoluteCampaignMessage campaignMessage2 = new AbsoluteCampaignMessage("AM2", Arrays.asList("IVR"),
+        CampaignMessage campaignMessage2 = new CampaignMessage("AM2", Arrays.asList("IVR"),
                 Arrays.asList("en"), "random-2", new Time(9, 30), DateUtil.today().plusDays(2));
 
         return new AbsoluteCampaign("testCampaign", Arrays.asList(campaignMessage1, campaignMessage2));
