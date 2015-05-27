@@ -9,20 +9,20 @@ import org.motechproject.messagecampaign.exception.CampaignValidationException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Campaign<T extends CampaignMessage> {
+public abstract class Campaign {
     private String name;
-    private List<T> messages;
+    private List<CampaignMessage> messages;
     private Period maxDuration;
 
     public Campaign () {
 
     }
 
-    public Campaign (String name, List<T> messages) {
+    public Campaign (String name, List<CampaignMessage> messages) {
         this(name, messages, null);
     }
 
-    protected Campaign(String name, List<T> messages, Period maxDuration) {
+    protected Campaign(String name, List<CampaignMessage> messages, Period maxDuration) {
         this.name = name;
         this.messages = messages;
         this.maxDuration = maxDuration;
@@ -36,11 +36,11 @@ public abstract class Campaign<T extends CampaignMessage> {
         this.name = name;
     }
 
-    public List<T> getMessages() {
+    public List<CampaignMessage> getMessages() {
         return messages;
     }
 
-    public void setMessages(List<T> messages) {
+    public void setMessages(List<CampaignMessage> messages) {
         this.messages = messages;
     }
 
@@ -59,15 +59,15 @@ public abstract class Campaign<T extends CampaignMessage> {
     }
 
     public void setMessageRecords(List<CampaignMessageRecord> messageRecords) {
-        List<T> campaignMessages = new ArrayList<>();
+        List<CampaignMessage> campaignMessages = new ArrayList<>();
         for (CampaignMessageRecord messageRecord : messageRecords) {
-            T campaignMessage = getCampaignMessage(messageRecord);
+            CampaignMessage campaignMessage = getCampaignMessage(messageRecord);
             campaignMessages.add(campaignMessage);
         }
         setMessages(campaignMessages);
     }
 
-    public abstract T getCampaignMessage(CampaignMessageRecord messageRecord);
+    public abstract CampaignMessage getCampaignMessage(CampaignMessageRecord messageRecord);
 
     public void validate() {
         if (name == null) {
@@ -75,7 +75,7 @@ public abstract class Campaign<T extends CampaignMessage> {
         } else if (messages == null || messages.isEmpty()) {
             throw new CampaignValidationException("Messages cannot be null or empty in " + name);
         }
-        for (T campaignMessage : getMessages() ) {
+        for (CampaignMessage campaignMessage : getMessages() ) {
             campaignMessage.validate();
         }
     }
