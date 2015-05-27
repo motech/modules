@@ -6,7 +6,6 @@ import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.commons.date.util.JodaFormatter;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.domain.message.DayOfWeek;
-import org.motechproject.messagecampaign.domain.message.RepeatIntervalCampaignMessage;
 import org.motechproject.messagecampaign.exception.CampaignMessageValidationException;
 import org.motechproject.messagecampaign.exception.CampaignValidationException;
 
@@ -60,7 +59,7 @@ public class CampaignValidationTest {
 
     @Test(expected = CampaignMessageValidationException.class)
     public void shouldThrowExceptionWhenRepeatIntervalCampaignMessageRepeatIntervalIsNull() {
-        RepeatIntervalCampaignMessage message = new RepeatIntervalCampaignMessage(null, null);
+        CampaignMessage message = new CampaignMessage(null, null);
         campaign = new RepeatIntervalCampaign("name", Arrays.asList(message));
         campaign.validate();
     }
@@ -83,7 +82,7 @@ public class CampaignValidationTest {
         campaign = new OffsetCampaign("name", Arrays.asList(offsetMessage));
         campaign.validate();
 
-        RepeatIntervalCampaignMessage repeatIntervalMessage = new RepeatIntervalCampaignMessage(new Time(5,30), new JodaFormatter().parsePeriod("1 Week"));
+        CampaignMessage repeatIntervalMessage = new CampaignMessage(new Time(5,30), new JodaFormatter().parsePeriod("1 Week"));
         campaign = new RepeatIntervalCampaign("name", Arrays.asList(repeatIntervalMessage));
         campaign.validate();
     }
