@@ -7,7 +7,7 @@ import org.motechproject.messagecampaign.exception.CampaignValidationException;
 
 import java.util.List;
 
-public class DayOfWeekCampaign extends Campaign<CampaignMessage> {
+public class DayOfWeekCampaign extends Campaign {
 
     public DayOfWeekCampaign() {
 

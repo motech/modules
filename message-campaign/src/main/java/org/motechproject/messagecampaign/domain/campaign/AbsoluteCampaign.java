@@ -5,7 +5,7 @@ import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
 
 import java.util.List;
 
-public class AbsoluteCampaign extends Campaign<CampaignMessage> {
+public class AbsoluteCampaign extends Campaign {
 
     public AbsoluteCampaign() {
 

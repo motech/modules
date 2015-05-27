@@ -6,7 +6,7 @@ import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
 
 import java.util.List;
 
-public class OffsetCampaign extends Campaign<CampaignMessage> {
+public class OffsetCampaign extends Campaign {
 
     public OffsetCampaign() {
 

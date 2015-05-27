@@ -6,7 +6,7 @@ import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
 
 import java.util.List;
 
-public class CronBasedCampaign extends Campaign<CampaignMessage> {
+public class CronBasedCampaign extends Campaign {
 
     public CronBasedCampaign() {
 

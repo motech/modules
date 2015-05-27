@@ -6,7 +6,7 @@ import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
 
 import java.util.List;
 
-public class RepeatIntervalCampaign extends Campaign<CampaignMessage> {
+public class RepeatIntervalCampaign extends Campaign {
 
     public RepeatIntervalCampaign() {
 
