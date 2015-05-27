@@ -10,7 +10,7 @@ import org.motechproject.messagecampaign.EventKeys;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
-import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
+import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.scheduler.contract.JobId;
 import org.motechproject.scheduler.contract.RunOnceJobId;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
@@ -26,7 +26,7 @@ import static org.motechproject.commons.date.util.DateUtil.now;
  */
 
 @Component
-public class OffsetCampaignSchedulerService extends CampaignSchedulerService<OffsetCampaignMessage, OffsetCampaign> {
+public class OffsetCampaignSchedulerService extends CampaignSchedulerService<CampaignMessage, OffsetCampaign> {
 
     private static final Logger LOGGER = Logger.getLogger(OffsetCampaignSchedulerService.class);
 
@@ -36,7 +36,7 @@ public class OffsetCampaignSchedulerService extends CampaignSchedulerService<Off
     }
 
     @Override
-    protected void scheduleMessageJob(CampaignEnrollment enrollment, OffsetCampaign campaign, OffsetCampaignMessage message) {
+    protected void scheduleMessageJob(CampaignEnrollment enrollment, OffsetCampaign campaign, CampaignMessage message) {
         Time deliverTime = deliverTimeFor(enrollment, message);
         DateTime jobTime = (newDateTime(enrollment.getReferenceDate(), deliverTime)).toLocalDateTime()
                 .plus(message.getTimeOffset()).toDateTime();
@@ -57,7 +57,7 @@ public class OffsetCampaignSchedulerService extends CampaignSchedulerService<Off
     @Override
     public void unscheduleMessageJobs(CampaignEnrollment enrollment) {
         OffsetCampaign campaign = (OffsetCampaign) getCampaignRecordService().findByName(enrollment.getCampaignName()).toCampaign();
-        for (OffsetCampaignMessage message : campaign.getMessages()) {
+        for (CampaignMessage message : campaign.getMessages()) {
             getSchedulerService().safeUnscheduleRunOnceJob(EventKeys.SEND_MESSAGE, messageJobIdFor(message.getMessageKey(), enrollment.getExternalId(), enrollment.getCampaignName()));
         }
     }
@@ -72,7 +72,7 @@ public class OffsetCampaignSchedulerService extends CampaignSchedulerService<Off
         LocalDate startDate = enrollment.getReferenceDate();
         DateTime lastFireTime = null;
 
-        for (OffsetCampaignMessage msg : campaign.getMessages()) {
+        for (CampaignMessage msg : campaign.getMessages()) {
             LocalDate fireDate = startDate.plus(msg.getTimeOffset());
             DateTime fireDt = DateUtil.newDateTime(fireDate, msg.getStartTime());
 

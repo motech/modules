@@ -5,7 +5,6 @@ import org.motechproject.commons.date.util.JodaFormatter;
 import org.motechproject.messagecampaign.builder.CampaignMessageRecordTestBuilder;
 import org.motechproject.messagecampaign.builder.CampaignRecordBuilder;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
-import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
 
 import java.util.List;
@@ -48,10 +47,10 @@ public class CampaignRecordTest {
         OffsetCampaign offsetCampaign = (OffsetCampaign) campaign;
         assertEquals(campaignRecord.getName(), offsetCampaign.getName());
         assertEquals(new JodaFormatter().parsePeriod(campaignRecord.getMaxDuration()), offsetCampaign.getMaxDuration());
-        List<OffsetCampaignMessage> messages = offsetCampaign.getMessages();
+        List<CampaignMessage> messages = offsetCampaign.getMessages();
         assertEquals(1, messages.size());
 
-        OffsetCampaignMessage message = messages.get(0);
+        CampaignMessage message = messages.get(0);
         assertEquals(messageRecord.getName(), message.getName());
         assertEquals(messageRecord.getFormats(), message.getFormats());
         assertEquals(messageRecord.getLanguages(), message.getLanguages());

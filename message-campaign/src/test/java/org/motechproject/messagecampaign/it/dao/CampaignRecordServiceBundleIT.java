@@ -13,7 +13,6 @@ import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaign;
 import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage0;
-import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
 import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -65,7 +64,7 @@ public class CampaignRecordServiceBundleIT extends BasePaxIT {
         OffsetCampaign campaign = (OffsetCampaign) campaignRecordService.findByName(campaignName).toCampaign();
         assertNotNull(campaign);
         assertEquals(campaignName, campaign.getName());
-        List<OffsetCampaignMessage> messages = campaign.getMessages();
+        List<CampaignMessage> messages = campaign.getMessages();
         assertEquals(3, messages.size());
         assertMessageWithRelativeSchedule(messages.get(0), "Week 1", new String[]{"IVR"}, "child-info-week-1", "1 Week");
         assertMessageWithRelativeSchedule(messages.get(1), "Week 1A", new String[]{"SMS"}, "child-info-week-1a", "1 Week");
@@ -143,7 +142,7 @@ public class CampaignRecordServiceBundleIT extends BasePaxIT {
         assertEquals(date, message.getDate());
     }
 
-    private void assertMessageWithRelativeSchedule(OffsetCampaignMessage message, String name, String[] formats, Object messageKey, String timeOffset) {
+    private void assertMessageWithRelativeSchedule(CampaignMessage message, String name, String[] formats, Object messageKey, String timeOffset) {
         assertMessage(message, name, formats, messageKey);
         assertEquals(new JodaFormatter().parsePeriod(timeOffset), message.getTimeOffset());
     }

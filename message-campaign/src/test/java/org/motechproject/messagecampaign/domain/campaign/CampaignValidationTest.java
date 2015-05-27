@@ -6,7 +6,6 @@ import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.commons.date.util.JodaFormatter;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.domain.message.DayOfWeek;
-import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
 import org.motechproject.messagecampaign.domain.message.RepeatIntervalCampaignMessage;
 import org.motechproject.messagecampaign.exception.CampaignMessageValidationException;
 import org.motechproject.messagecampaign.exception.CampaignValidationException;
@@ -54,7 +53,7 @@ public class CampaignValidationTest {
 
     @Test(expected = CampaignMessageValidationException.class)
     public void shouldThrowExceptionWhenOffsetCampaignMessageStartTimeIsNull() {
-        OffsetCampaignMessage message = new OffsetCampaignMessage(null, new JodaFormatter().parsePeriod("1 Week"));
+        CampaignMessage message = new CampaignMessage(null, new JodaFormatter().parsePeriod("1 Week"));
         campaign = new OffsetCampaign("name", Arrays.asList(message));
         campaign.validate();
     }
@@ -80,7 +79,7 @@ public class CampaignValidationTest {
         campaign = new DayOfWeekCampaign("name", Arrays.asList(dayOfWeekMessage), new JodaFormatter().parsePeriod("1 Week"));
         campaign.validate();
 
-        OffsetCampaignMessage offsetMessage = new OffsetCampaignMessage(new Time(5,30));
+        CampaignMessage offsetMessage = new CampaignMessage(new Time(5,30));
         campaign = new OffsetCampaign("name", Arrays.asList(offsetMessage));
         campaign.validate();
 

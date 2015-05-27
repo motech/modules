@@ -17,7 +17,7 @@ import org.motechproject.messagecampaign.contract.CampaignRequest;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
-import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
+import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.exception.CampaignEnrollmentException;
 import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
@@ -65,7 +65,7 @@ public class OffsetCampaignSchedulerServiceTest {
         try {
             fakeNow(newDateTime(2010, 10, 1));
 
-            OffsetCampaignMessage offsetCampaignMessage = new OffsetCampaignMessage(new Time(5,30), days(5));
+            CampaignMessage offsetCampaignMessage = new CampaignMessage(new Time(5,30), days(5));
             offsetCampaignMessage.setMessageKey("foo");
 
             OffsetCampaign campaign = new OffsetCampaign("camp", asList(offsetCampaignMessage));
@@ -93,7 +93,7 @@ public class OffsetCampaignSchedulerServiceTest {
         try {
             fakeNow(newDateTime(2010, 10, 1));
 
-            OffsetCampaignMessage offsetCampaignMessage = new OffsetCampaignMessage(new Time(5,30), minutes(5));
+            CampaignMessage offsetCampaignMessage = new CampaignMessage(new Time(5,30), minutes(5));
             offsetCampaignMessage.setMessageKey("foo");
 
             OffsetCampaign campaign = new OffsetCampaign("camp", asList(offsetCampaignMessage));
@@ -122,7 +122,7 @@ public class OffsetCampaignSchedulerServiceTest {
         try {
             fakeNow(newDateTime(2010, 10, 1));
 
-            OffsetCampaignMessage offsetCampaignMessage = new OffsetCampaignMessage(new Time(5,30), days(3));
+            CampaignMessage offsetCampaignMessage = new CampaignMessage(new Time(5,30), days(3));
             offsetCampaignMessage.setMessageKey("foo");
 
             OffsetCampaign campaign = new OffsetCampaign("camp", asList(offsetCampaignMessage));
@@ -195,7 +195,7 @@ public class OffsetCampaignSchedulerServiceTest {
         String campaignName = "campaignName";
         CampaignEnrollment enrollment = new CampaignEnrollment(externalId, campaignName);
         enrollment.setDeliverTime(null);
-        OffsetCampaignMessage campaignMessage = new OffsetCampaignMessage(null, new Period(timeOffsetGreaterThanADay * 1000));
+        CampaignMessage campaignMessage = new CampaignMessage(null, new Period(timeOffsetGreaterThanADay * 1000));
         campaignMessage.setName(campaignName);
         OffsetCampaign campaign = CampaignBuilder.defaultOffsetCampaign();
 
