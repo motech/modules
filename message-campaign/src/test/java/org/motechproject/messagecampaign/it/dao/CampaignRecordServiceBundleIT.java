@@ -7,13 +7,10 @@ import org.junit.runner.RunWith;
 import org.motechproject.commons.date.util.JodaFormatter;
 import org.motechproject.messagecampaign.dao.CampaignMessageRecordService;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
-import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaign;
-import org.motechproject.messagecampaign.domain.campaign.CampaignType;
-import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaign;
-import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
+import org.motechproject.messagecampaign.domain.campaign.*;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
-import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
+import org.motechproject.messagecampaign.domain.campaign.CampaignRecurrence;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
@@ -86,8 +83,8 @@ public class CampaignRecordServiceBundleIT extends BasePaxIT {
     @Test
     public void shouldUpdateRecord() {
 
-        CampaignRecord campaign = createCampaignRecord();
-        CampaignRecord campaign2 = createCampaignRecord();
+        CampaignRecurrence campaign = createCampaignRecord();
+        CampaignRecurrence campaign2 = createCampaignRecord();
 
         // add
         campaignRecordService.create(campaign);
@@ -108,7 +105,7 @@ public class CampaignRecordServiceBundleIT extends BasePaxIT {
     @Test
     public void shouldDeleteCampaignRecords() {
 
-        CampaignRecord campaign = createCampaignRecord();
+        CampaignRecurrence campaign = createCampaignRecord();
 
         campaignRecordService.create(campaign);
 
@@ -122,8 +119,8 @@ public class CampaignRecordServiceBundleIT extends BasePaxIT {
     @Test
     public void shouldFindCampaignsByName() {
 
-        CampaignRecord campaign = createCampaignRecord();
-        CampaignRecord campaign2 = createCampaignRecord();
+        CampaignRecurrence campaign = createCampaignRecord();
+        CampaignRecurrence campaign2 = createCampaignRecord();
         campaign2.setName("Different Name");
 
         campaignRecordService.create(campaign);
@@ -162,8 +159,8 @@ public class CampaignRecordServiceBundleIT extends BasePaxIT {
         assertEquals(new HashSet<>(asList(expectedFormats)), new HashSet<>(actualFormats));
     }
 
-    private CampaignRecord createCampaignRecord() {
-        CampaignRecord campaign = new CampaignRecord();
+    private CampaignRecurrence createCampaignRecord() {
+        CampaignRecurrence campaign = new CampaignRecurrence();
         campaign.setCampaignType(CampaignType.ABSOLUTE);
         campaign.setMaxDuration("10");
         campaign.setName("CampaignName");

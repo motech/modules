@@ -13,7 +13,7 @@ import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaign;
 import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
-import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
+import org.motechproject.messagecampaign.domain.campaign.CampaignRecurrence;
 import org.motechproject.scheduler.contract.CronSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 
@@ -35,7 +35,7 @@ public class CronBasedProgramSchedulerTest {
     @Mock
     private CampaignRecordService campaignRecordService;
     @Mock
-    private CampaignRecord campaignRecord;
+    private CampaignRecurrence campaignRecurrence;
 
     @Before
     public void setUp() {
@@ -50,8 +50,8 @@ public class CronBasedProgramSchedulerTest {
 
         CronBasedCampaignSchedulerService cronBasedCampaignScheduler = new CronBasedCampaignSchedulerService(schedulerService, campaignRecordService);
 
-        when(campaignRecordService.findByName("testCampaign")).thenReturn(campaignRecord);
-        when(campaignRecord.toCampaign()).thenReturn(campaign);
+        when(campaignRecordService.findByName("testCampaign")).thenReturn(campaignRecurrence);
+        when(campaignRecurrence.toCampaign()).thenReturn(campaign);
 
         CampaignEnrollment enrollment = new CampaignEnrollment("12345", "testCampaign");
         enrollment.setReferenceDate(today());

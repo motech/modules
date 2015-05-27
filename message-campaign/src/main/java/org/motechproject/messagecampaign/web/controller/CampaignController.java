@@ -1,8 +1,8 @@
 package org.motechproject.messagecampaign.web.controller;
 
+import org.motechproject.messagecampaign.domain.campaign.CampaignRecurrence;
 import org.motechproject.messagecampaign.exception.CampaignNotFoundException;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
-import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
 import org.motechproject.messagecampaign.web.model.CampaignDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,44 +30,44 @@ public class CampaignController {
     @PreAuthorize(HAS_ROLE_MANAGECAMPAIGNS)
     @ResponseBody
     public CampaignDto getCampaign(@PathVariable String campaignName) {
-        CampaignRecord campaignRecord = messageCampaignService.getCampaignRecord(campaignName);
+        CampaignRecurrence campaignRecurrence = messageCampaignService.getCampaignRecord(campaignName);
 
-        if (campaignRecord == null) {
+        if (campaignRecurrence == null) {
             throw new CampaignNotFoundException("Campaign not found: " + campaignName);
         }
 
-        return new CampaignDto(campaignRecord);
+        return new CampaignDto(campaignRecurrence);
     }
 
     @RequestMapping(value = "/campaign-record/{campaignName}", method = RequestMethod.GET)
     @PreAuthorize(HAS_ROLE_MANAGECAMPAIGNS)
     @ResponseBody
-    public CampaignRecord getCampaignRecord(@PathVariable String campaignName) {
-        CampaignRecord campaignRecord = messageCampaignService.getCampaignRecord(campaignName);
+    public CampaignRecurrence getCampaignRecord(@PathVariable String campaignName) {
+        CampaignRecurrence campaignRecurrence = messageCampaignService.getCampaignRecord(campaignName);
 
-        if (campaignRecord == null) {
+        if (campaignRecurrence == null) {
             throw new CampaignNotFoundException("Campaign not found: " + campaignName);
         }
 
-        return campaignRecord;
+        return campaignRecurrence;
     }
 
     @RequestMapping(value = "/campaigns", method = RequestMethod.POST)
     @PreAuthorize(HAS_ROLE_MANAGECAMPAIGNS)
     @ResponseStatus(HttpStatus.OK)
     public void createCampaign(@RequestBody CampaignDto campaign) {
-        CampaignRecord campaignRecord = campaign.toCampaignRecord();
-        messageCampaignService.saveCampaign(campaignRecord);
+        CampaignRecurrence campaignRecurrence = campaign.toCampaignRecord();
+        messageCampaignService.saveCampaign(campaignRecurrence);
     }
 
     @RequestMapping(value = "/campaigns", method = RequestMethod.GET)
     @PreAuthorize(HAS_ROLE_MANAGECAMPAIGNS)
     @ResponseBody
     public List<CampaignDto> getAllCampaigns() {
-        List<CampaignRecord> campaignRecords = messageCampaignService.getAllCampaignRecords();
+        List<CampaignRecurrence> campaignRecurrences = messageCampaignService.getAllCampaignRecords();
 
         List<CampaignDto> campaignDtos = new ArrayList<>();
-        for (CampaignRecord record : campaignRecords) {
+        for (CampaignRecurrence record : campaignRecurrences) {
             campaignDtos.add(new CampaignDto(record));
         }
 

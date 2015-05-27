@@ -7,7 +7,7 @@ import org.motechproject.messagecampaign.domain.campaign.DayOfWeekCampaign;
 import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
 import org.motechproject.messagecampaign.domain.campaign.RepeatIntervalCampaign;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
-import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
+import org.motechproject.messagecampaign.domain.campaign.CampaignRecurrence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -51,7 +51,7 @@ public class CampaignSchedulerFactory {
 
 
     public CampaignSchedulerService getCampaignScheduler(final String campaignName) {
-        CampaignRecord campaign = campaignRecordService.findByName(campaignName);
+        CampaignRecurrence campaign = campaignRecordService.findByName(campaignName);
 
         if (campaign == null) {
             throw new CampaignNotFoundException(format("Campaign (%s) not found.", campaignName));

@@ -16,10 +16,10 @@ import org.motechproject.messagecampaign.builder.EnrollRequestBuilder;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
+import org.motechproject.messagecampaign.domain.campaign.CampaignRecurrence;
 import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.exception.CampaignEnrollmentException;
-import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 
@@ -49,7 +49,7 @@ public class OffsetCampaignSchedulerServiceTest {
     @Mock
     private CampaignRecordService campaignRecordService;
     @Mock
-    private CampaignRecord campaignRecord;
+    private CampaignRecurrence campaignRecurrence;
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -70,8 +70,8 @@ public class OffsetCampaignSchedulerServiceTest {
 
             OffsetCampaign campaign = new OffsetCampaign("camp", asList(offsetCampaignMessage));
 
-            when(campaignRecordService.findByName("camp")).thenReturn(campaignRecord);
-            when(campaignRecord.toCampaign()).thenReturn(campaign);
+            when(campaignRecordService.findByName("camp")).thenReturn(campaignRecurrence);
+            when(campaignRecurrence.toCampaign()).thenReturn(campaign);
 
             CampaignEnrollment enrollment = new CampaignEnrollment("entity1", "camp");
             enrollment.setReferenceDate(new LocalDate(2010, 10, 3));
@@ -98,8 +98,8 @@ public class OffsetCampaignSchedulerServiceTest {
 
             OffsetCampaign campaign = new OffsetCampaign("camp", asList(offsetCampaignMessage));
 
-            when(campaignRecordService.findByName("camp")).thenReturn(campaignRecord);
-            when(campaignRecord.toCampaign()).thenReturn(campaign);
+            when(campaignRecordService.findByName("camp")).thenReturn(campaignRecurrence);
+            when(campaignRecurrence.toCampaign()).thenReturn(campaign);
 
             CampaignEnrollment enrollment = new CampaignEnrollment("entity1", "camp");
             enrollment.setReferenceDate(new LocalDate(2010, 10, 3));
@@ -127,8 +127,8 @@ public class OffsetCampaignSchedulerServiceTest {
 
             OffsetCampaign campaign = new OffsetCampaign("camp", asList(offsetCampaignMessage));
 
-            when(campaignRecordService.findByName("camp")).thenReturn(campaignRecord);
-            when(campaignRecord.toCampaign()).thenReturn(campaign);
+            when(campaignRecordService.findByName("camp")).thenReturn(campaignRecurrence);
+            when(campaignRecurrence.toCampaign()).thenReturn(campaign);
 
             CampaignEnrollment enrollment = new CampaignEnrollment("entity1", "camp");
             enrollment.setReferenceDate(new LocalDate(2010, 10, 3));
@@ -153,8 +153,8 @@ public class OffsetCampaignSchedulerServiceTest {
 
         OffsetCampaignSchedulerService offsetCampaignScheduler = new OffsetCampaignSchedulerService(schedulerService, campaignRecordService);
 
-        when(campaignRecordService.findByName("testCampaign")).thenReturn(campaignRecord);
-        when(campaignRecord.toCampaign()).thenReturn(campaign);
+        when(campaignRecordService.findByName("testCampaign")).thenReturn(campaignRecurrence);
+        when(campaignRecurrence.toCampaign()).thenReturn(campaign);
 
         CampaignEnrollment enrollment = new CampaignEnrollment("12345", "testCampaign");
         enrollment.setReferenceDate(today());

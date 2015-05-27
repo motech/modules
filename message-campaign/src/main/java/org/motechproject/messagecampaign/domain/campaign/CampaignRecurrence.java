@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-public class CampaignRecord {
+public class CampaignRecurrence {
 
     @Unique
     private String name;
@@ -68,7 +68,7 @@ public class CampaignRecord {
     }
 
     @Ignore
-    public void updateFrom(CampaignRecord other) {
+    public void updateFrom(CampaignRecurrence other) {
         name = other.name;
         messages = other.messages;
         campaignType = other.campaignType;
@@ -84,7 +84,7 @@ public class CampaignRecord {
             return false;
         }
 
-        CampaignRecord other = (CampaignRecord) o;
+        CampaignRecurrence other = (CampaignRecurrence) o;
 
         return Objects.equals(this.campaignType, other.campaignType) && Objects.equals(this.maxDuration, other.maxDuration)
                 && Objects.equals(this.messages, other.messages) && Objects.equals(this.name, other.name);

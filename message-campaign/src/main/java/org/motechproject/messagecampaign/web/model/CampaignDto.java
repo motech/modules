@@ -4,7 +4,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.motechproject.messagecampaign.domain.campaign.CampaignType;
 import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
-import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
+import org.motechproject.messagecampaign.domain.campaign.CampaignRecurrence;
 
 import java.io.Serializable;
 import java.util.List;
@@ -29,22 +29,22 @@ public class CampaignDto implements Serializable {
     public CampaignDto() {
     }
 
-    public CampaignDto(CampaignRecord campaignRecord) {
-        this.name = campaignRecord.getName();
-        this.messages = campaignRecord.getMessages();
-        this.type = campaignRecord.getCampaignType();
-        this.maxDuration = campaignRecord.getMaxDuration();
+    public CampaignDto(CampaignRecurrence campaignRecurrence) {
+        this.name = campaignRecurrence.getName();
+        this.messages = campaignRecurrence.getMessages();
+        this.type = campaignRecurrence.getCampaignType();
+        this.maxDuration = campaignRecurrence.getMaxDuration();
     }
 
-    public CampaignRecord toCampaignRecord() {
-        CampaignRecord campaignRecord = new CampaignRecord();
+    public CampaignRecurrence toCampaignRecord() {
+        CampaignRecurrence campaignRecurrence = new CampaignRecurrence();
 
-        campaignRecord.setName(name);
-        campaignRecord.setMaxDuration(maxDuration);
-        campaignRecord.setMessages(messages);
-        campaignRecord.setCampaignType(type);
+        campaignRecurrence.setName(name);
+        campaignRecurrence.setMaxDuration(maxDuration);
+        campaignRecurrence.setMessages(messages);
+        campaignRecurrence.setCampaignType(type);
 
-        return campaignRecord;
+        return campaignRecurrence;
     }
 
     public String getName() {

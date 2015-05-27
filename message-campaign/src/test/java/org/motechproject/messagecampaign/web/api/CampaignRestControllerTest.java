@@ -8,11 +8,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.motechproject.messagecampaign.domain.campaign.CampaignRecurrence;
 import org.motechproject.messagecampaign.exception.CampaignNotFoundException;
 import org.motechproject.messagecampaign.loader.CampaignJsonLoader;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
-import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.server.MockMvc;
@@ -59,9 +59,9 @@ public class CampaignRestControllerTest {
 
     @Test
     public void shouldReturnCampaignDetails() throws Exception {
-        final CampaignRecord campaignRecord = readSingleCampaign("campaignDetails.json");
+        final CampaignRecurrence campaignRecurrence = readSingleCampaign("campaignDetails.json");
         final String campaignName = "Absolute Dates Message Program";
-        when(messageCampaignService.getCampaignRecord(campaignName)).thenReturn(campaignRecord);
+        when(messageCampaignService.getCampaignRecord(campaignName)).thenReturn(campaignRecurrence);
 
         final String expectedResponse = loadJson("campaignDetails.json");
 
@@ -98,7 +98,7 @@ public class CampaignRestControllerTest {
 
     @Test
     public void shouldCreateNewCampaign() throws Exception {
-        final CampaignRecord campaignRecord = readSingleCampaign("campaignDetails.json");
+        final CampaignRecurrence campaignRecurrence = readSingleCampaign("campaignDetails.json");
 
         controller.perform(
                 post("/web-api/campaigns/")
@@ -108,15 +108,15 @@ public class CampaignRestControllerTest {
                 status().is(HttpStatus.OK.value())
         );
 
-        ArgumentCaptor<CampaignRecord> captor = ArgumentCaptor.forClass(CampaignRecord.class);
+        ArgumentCaptor<CampaignRecurrence> captor = ArgumentCaptor.forClass(CampaignRecurrence.class);
         verify(messageCampaignService).saveCampaign(captor.capture());
 
-        assertEquals(campaignRecord, captor.getValue());
+        assertEquals(campaignRecurrence, captor.getValue());
     }
 
     @Test
     public void shouldRetrieveAllCampaigns() throws Exception {
-        final List<CampaignRecord> expectedRecords = readCampaigns("campaignList.json");
+        final List<CampaignRecurrence> expectedRecords = readCampaigns("campaignList.json");
         when(messageCampaignService.getAllCampaignRecords()).thenReturn(expectedRecords);
 
         final String expectedResponse = loadJson("campaignList.json");
@@ -137,9 +137,9 @@ public class CampaignRestControllerTest {
     @Test
     public void shouldDeleteCampaign() throws Exception {
         final String campaignName = "PREGNANCY";
-        final CampaignRecord campaignRecord = readSingleCampaign("campaignDetails.json");
+        final CampaignRecurrence campaignRecurrence = readSingleCampaign("campaignDetails.json");
 
-        when(messageCampaignService.getCampaignRecord(campaignName)).thenReturn(campaignRecord);
+        when(messageCampaignService.getCampaignRecord(campaignName)).thenReturn(campaignRecurrence);
 
         controller.perform(
                 delete("/web-api/campaigns/{campaignName}", campaignName)
@@ -169,13 +169,13 @@ public class CampaignRestControllerTest {
         verify(messageCampaignService).deleteCampaign(campaignName);
     }
 
-    private List<CampaignRecord> readCampaigns(String filename) throws IOException {
+    private List<CampaignRecurrence> readCampaigns(String filename) throws IOException {
         try (InputStream in = getClass().getClassLoader().getResourceAsStream("rest/campaigns/" + filename)) {
             return campaignJsonLoader.loadCampaigns(in);
         }
     }
 
-    private CampaignRecord readSingleCampaign(String filename) throws IOException {
+    private CampaignRecurrence readSingleCampaign(String filename) throws IOException {
         try (InputStream in = getClass().getClassLoader().getResourceAsStream("rest/campaigns/" + filename)) {
             return campaignJsonLoader.loadSingleCampaign(in);
         }

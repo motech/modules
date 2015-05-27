@@ -4,7 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import org.motechproject.commons.api.MotechException;
 import org.motechproject.commons.api.json.MotechJsonReader;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
-import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
+import org.motechproject.messagecampaign.domain.campaign.CampaignRecurrence;
 import org.motechproject.messagecampaign.web.model.CampaignDto;
 import org.motechproject.server.config.SettingsFacade;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -32,7 +32,7 @@ public class CampaignJsonLoader {
         this.motechJsonReader = motechJsonReader;
     }
 
-    public List<CampaignRecord> loadCampaigns(String filename) {
+    public List<CampaignRecurrence> loadCampaigns(String filename) {
         try (InputStream in = this.getClass().getClassLoader().getResourceAsStream(filename)) {
             return loadCampaigns(in);
         } catch (IOException e) {
@@ -40,13 +40,13 @@ public class CampaignJsonLoader {
         }
     }
 
-    public List<CampaignRecord> loadCampaigns(InputStream in) {
+    public List<CampaignRecurrence> loadCampaigns(InputStream in) {
         List<CampaignDto> dtoList = (List<CampaignDto>) motechJsonReader.readFromStream(
                 in, new TypeToken<List<CampaignDto>>() {
         }.getType()
         );
 
-        List<CampaignRecord> records = new ArrayList<>(dtoList.size());
+        List<CampaignRecurrence> records = new ArrayList<>(dtoList.size());
         for (CampaignDto dto : dtoList) {
             records.add(dto.toCampaignRecord());
         }
@@ -54,7 +54,7 @@ public class CampaignJsonLoader {
         return records;
     }
 
-    public CampaignRecord loadSingleCampaign(InputStream in) {
+    public CampaignRecurrence loadSingleCampaign(InputStream in) {
         CampaignDto campaignDto = (CampaignDto) motechJsonReader.readFromStream(
                 in, new TypeToken<CampaignDto>() {
         }.getType()
@@ -62,7 +62,7 @@ public class CampaignJsonLoader {
         return campaignDto.toCampaignRecord();
     }
 
-    public CampaignRecord loadSingleCampaign(String filename) {
+    public CampaignRecurrence loadSingleCampaign(String filename) {
         try (InputStream in = this.getClass().getClassLoader().getResourceAsStream(filename)) {
             return loadSingleCampaign(in);
         } catch (IOException e) {
@@ -71,8 +71,8 @@ public class CampaignJsonLoader {
     }
 
     public void loadAfterInit() {
-        List<CampaignRecord> records = loadCampaigns(settings.getRawConfig(messageCampaignsJsonFile));
-        for (CampaignRecord record : records) {
+        List<CampaignRecurrence> records = loadCampaigns(settings.getRawConfig(messageCampaignsJsonFile));
+        for (CampaignRecurrence record : records) {
             if (campaignRecordService.findByName(record.getName()) == null) {
                 campaignRecordService.create(record);
             }

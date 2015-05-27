@@ -3,14 +3,14 @@ package org.motechproject.messagecampaign.dao;
 import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
-import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
+import org.motechproject.messagecampaign.domain.campaign.CampaignRecurrence;
 
 /**
- * MDS data service for {@link CampaignRecord}s.
+ * MDS data service for {@link CampaignRecurrence}s.
  */
-public interface CampaignRecordService extends MotechDataService<CampaignRecord> {
+public interface CampaignRecordService extends MotechDataService<CampaignRecurrence> {
 
     @Lookup
-    CampaignRecord findByName(@LookupField(name = "name") String name);
+    CampaignRecurrence findByName(@LookupField(name = "name") String name);
 
 }

@@ -12,20 +12,20 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
-public class CampaignRecordTest {
+public class CampaignRecurrenceTest {
 
-    private CampaignRecord campaignRecord;
+    private CampaignRecurrence campaignRecurrence;
     private CampaignMessageRecord messageRecord;
 
     @Test
     public void testBuildAbsoluteCampaign() {
         messageRecord = CampaignMessageRecordTestBuilder.createAbsoluteCampaignMessageRecord("Message 1", "message-key");
-        campaignRecord = CampaignRecordBuilder.absoluteCampaignRecord("Campaign 1", messageRecord);
+        campaignRecurrence = CampaignRecordBuilder.absoluteCampaignRecord("Campaign 1", messageRecord);
 
-        Campaign campaign = campaignRecord.toCampaign();
+        Campaign campaign = campaignRecurrence.toCampaign();
         assertTrue(campaign instanceof AbsoluteCampaign);
         AbsoluteCampaign absoluteCampaign = (AbsoluteCampaign) campaign;
-        assertEquals(campaignRecord.getName(), absoluteCampaign.getName());
+        assertEquals(campaignRecurrence.getName(), absoluteCampaign.getName());
         List<CampaignMessage> messages = absoluteCampaign.getMessages();
         assertEquals(1, messages.size());
 
@@ -40,13 +40,13 @@ public class CampaignRecordTest {
     @Test
     public void testBuildOffsetCampaign() {
         messageRecord = CampaignMessageRecordTestBuilder.createOffsetCampaignMessageRecord("Message 1", "message-key");
-        campaignRecord = CampaignRecordBuilder.offsetCampaignRecord("Campaign 1", messageRecord);
+        campaignRecurrence = CampaignRecordBuilder.offsetCampaignRecord("Campaign 1", messageRecord);
 
-        Campaign campaign = campaignRecord.toCampaign();
+        Campaign campaign = campaignRecurrence.toCampaign();
         assertTrue(campaign instanceof OffsetCampaign);
         OffsetCampaign offsetCampaign = (OffsetCampaign) campaign;
-        assertEquals(campaignRecord.getName(), offsetCampaign.getName());
-        assertEquals(new JodaFormatter().parsePeriod(campaignRecord.getMaxDuration()), offsetCampaign.getMaxDuration());
+        assertEquals(campaignRecurrence.getName(), offsetCampaign.getName());
+        assertEquals(new JodaFormatter().parsePeriod(campaignRecurrence.getMaxDuration()), offsetCampaign.getMaxDuration());
         List<CampaignMessage> messages = offsetCampaign.getMessages();
         assertEquals(1, messages.size());
 
@@ -62,12 +62,12 @@ public class CampaignRecordTest {
     @Test
     public void testBuildCronBasedCampaign() {
         messageRecord = CampaignMessageRecordTestBuilder.createCronBasedCampaignMessageRecord("Message 1", "message-key");
-        campaignRecord = CampaignRecordBuilder.cronBasedCampaignRecord("Campaign 1", messageRecord);
+        campaignRecurrence = CampaignRecordBuilder.cronBasedCampaignRecord("Campaign 1", messageRecord);
 
-        Campaign campaign = campaignRecord.toCampaign();
+        Campaign campaign = campaignRecurrence.toCampaign();
         assertTrue(campaign instanceof CronBasedCampaign);
         CronBasedCampaign cronBasedCampaign = (CronBasedCampaign) campaign;
-        assertEquals(campaignRecord.getName(), cronBasedCampaign.getName());
+        assertEquals(campaignRecurrence.getName(), cronBasedCampaign.getName());
         List<CampaignMessage> messages = cronBasedCampaign.getMessages();
         assertEquals(1, messages.size());
 
