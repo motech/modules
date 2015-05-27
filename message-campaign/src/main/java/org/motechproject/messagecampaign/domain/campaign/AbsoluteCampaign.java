@@ -4,10 +4,13 @@ import org.joda.time.LocalDate;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
+import org.motechproject.messagecampaign.exception.CampaignMessageValidationException;
 
 import java.util.List;
 
 public class AbsoluteCampaign extends Campaign {
+
+    private LocalDate date;
 
     public AbsoluteCampaign() {
 
@@ -23,10 +26,15 @@ public class AbsoluteCampaign extends Campaign {
     }
 
     public LocalDate getDate(CampaignMessage cm) {
-        // TODO: etc: campaign.getCampaignRecurrence().getMaxDuration();
-        throw new RuntimeException("TODO: Not implemented");
+        return this.date;
     }
-    public Time getStartTime(CampaignMessage cm) {
-        throw new RuntimeException("TODO: Not implemented");
+
+    @Override
+    public void validate2(CampaignMessage cm) {
+        if (date == null) {
+            throw new CampaignMessageValidationException("Date cannot be null in " + AbsoluteCampaign.class.getName());
+        } else if (getStartTime(cm) == null) {
+            throw new CampaignMessageValidationException("StartTime cannot be null in " + AbsoluteCampaign.class.getName());
+        }
     }
 }

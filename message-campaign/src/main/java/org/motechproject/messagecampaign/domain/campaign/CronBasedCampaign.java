@@ -1,12 +1,16 @@
 package org.motechproject.messagecampaign.domain.campaign;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.Period;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
+import org.motechproject.messagecampaign.exception.CampaignMessageValidationException;
 
 import java.util.List;
 
 public class CronBasedCampaign extends Campaign {
+
+    private String cron;
 
     public CronBasedCampaign() {
 
@@ -26,6 +30,13 @@ public class CronBasedCampaign extends Campaign {
     }
 
     public String getCron(CampaignMessage cm) {
-        throw new RuntimeException("TODO: Not implemented");
+        return this.cron;
+    }
+
+    @Override
+    public void validate2(CampaignMessage cm) {
+        if (StringUtils.isBlank(cron)) {
+            throw new CampaignMessageValidationException("Cron cannot be null or empty in " + CronBasedCampaign.class.getName());
+        }
     }
 }

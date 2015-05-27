@@ -3,10 +3,13 @@ package org.motechproject.messagecampaign.domain.campaign;
 import org.joda.time.Period;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
+import org.motechproject.messagecampaign.exception.CampaignMessageValidationException;
 
 import java.util.List;
 
 public class RepeatIntervalCampaign extends Campaign {
+
+    private Period repeatInterval;
 
     public RepeatIntervalCampaign() {
 
@@ -27,5 +30,14 @@ public class RepeatIntervalCampaign extends Campaign {
 
     public long getRepeatIntervalInMillis(CampaignMessage cm) {
         throw new RuntimeException("TODO: Not implemented");
+    }
+
+    @Override
+    public void validate2(CampaignMessage cm) {
+        if (repeatInterval == null) {
+            throw new CampaignMessageValidationException("RepeatInterval cannot be null in " + RepeatIntervalCampaign.class.getName());
+        } else if (getStartTime(cm) == null) {
+            throw new CampaignMessageValidationException("StartTime cannot be null in " + RepeatIntervalCampaign.class.getName());
+        }
     }
 }

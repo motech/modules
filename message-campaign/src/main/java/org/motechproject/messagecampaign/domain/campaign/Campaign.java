@@ -1,6 +1,7 @@
 package org.motechproject.messagecampaign.domain.campaign;
 
 import org.joda.time.Period;
+import org.motechproject.commons.date.model.Time;
 import org.motechproject.commons.date.util.JodaFormatter;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
@@ -70,6 +71,10 @@ public abstract class Campaign {
 
     public abstract CampaignMessage getCampaignMessage(CampaignMessageRecord messageRecord);
 
+    public Time getStartTime(CampaignMessage cm) {
+        throw new RuntimeException("TODO: Not implemented");
+    }
+
     public void validate() {
         if (name == null) {
             throw new CampaignValidationException("Name cannot be null in " + getClass().getName());
@@ -79,6 +84,9 @@ public abstract class Campaign {
         for (CampaignMessage campaignMessage : getMessages() ) {
             campaignMessage.validate();
         }
+    }
+
+    public void validate2(CampaignMessage cm) {
     }
 
     public CampaignRecurrence getCampaignRecurrence() {
