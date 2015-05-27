@@ -5,7 +5,6 @@ import org.motechproject.commons.date.util.JodaFormatter;
 import org.motechproject.messagecampaign.builder.CampaignMessageRecordTestBuilder;
 import org.motechproject.messagecampaign.builder.CampaignRecordBuilder;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
-import org.motechproject.messagecampaign.domain.message.CronBasedCampaignMessage;
 import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
 
@@ -70,10 +69,10 @@ public class CampaignRecordTest {
         assertTrue(campaign instanceof CronBasedCampaign);
         CronBasedCampaign cronBasedCampaign = (CronBasedCampaign) campaign;
         assertEquals(campaignRecord.getName(), cronBasedCampaign.getName());
-        List<CronBasedCampaignMessage> messages = cronBasedCampaign.getMessages();
+        List<CampaignMessage> messages = cronBasedCampaign.getMessages();
         assertEquals(1, messages.size());
 
-        CronBasedCampaignMessage message = messages.get(0);
+        CampaignMessage message = messages.get(0);
         assertEquals(messageRecord.getName(), message.getName());
         assertEquals(messageRecord.getFormats(), message.getFormats());
         assertEquals(messageRecord.getLanguages(), message.getLanguages());

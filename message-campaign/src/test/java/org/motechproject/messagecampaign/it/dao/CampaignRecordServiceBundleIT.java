@@ -13,7 +13,6 @@ import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaign;
 import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage0;
-import org.motechproject.messagecampaign.domain.message.CronBasedCampaignMessage;
 import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
 import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
@@ -81,7 +80,7 @@ public class CampaignRecordServiceBundleIT extends BasePaxIT {
         assertNotNull(campaign);
         assertEquals(campaignName, campaign.getName());
         assertEquals(new JodaFormatter().parsePeriod("5 years"), campaign.getMaxDuration());
-        List<CronBasedCampaignMessage> messages = campaign.getMessages();
+        List<CampaignMessage> messages = campaign.getMessages();
         assertEquals(1, messages.size());
         assertMessageWithCronSchedule(messages.get(0), "First", new String[]{"IVR", "SMS"}, "cron-message", "0 11 11 11 11 ?");
     }
@@ -149,7 +148,7 @@ public class CampaignRecordServiceBundleIT extends BasePaxIT {
         assertEquals(new JodaFormatter().parsePeriod(timeOffset), message.getTimeOffset());
     }
 
-    private void assertMessageWithCronSchedule(CronBasedCampaignMessage message, String name, String[] formats, Object messageKey, String cron) {
+    private void assertMessageWithCronSchedule(CampaignMessage message, String name, String[] formats, Object messageKey, String cron) {
         assertMessage(message, name, formats, messageKey);
         assertEquals(cron, message.getCron());
     }

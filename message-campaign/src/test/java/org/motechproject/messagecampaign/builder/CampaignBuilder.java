@@ -7,7 +7,6 @@ import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaign;
 import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaign;
 import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
-import org.motechproject.messagecampaign.domain.message.CronBasedCampaignMessage;
 import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
 
 import java.util.Arrays;
@@ -25,10 +24,10 @@ public final class CampaignBuilder {
     }
 
     public static CronBasedCampaign defaultCronBasedCampaign() {
-        CronBasedCampaignMessage campaignMessage1 = new CronBasedCampaignMessage("CM1", Arrays.asList("IVR"),
+        CampaignMessage campaignMessage1 = new CampaignMessage("CM1", Arrays.asList("IVR"),
                 Arrays.asList("en"), "cron-message1", "0 11 11 11 11 ?");
 
-        CronBasedCampaignMessage campaignMessage2 = new CronBasedCampaignMessage("CM2", Arrays.asList("IVR"),
+        CampaignMessage campaignMessage2 = new CampaignMessage("CM2", Arrays.asList("IVR"),
                 Arrays.asList("en"), "cron-message2", "0 11 11 11 11 ?");
 
         CronBasedCampaign campaign = new CronBasedCampaign("testCampaign", Arrays.asList(campaignMessage1, campaignMessage2));

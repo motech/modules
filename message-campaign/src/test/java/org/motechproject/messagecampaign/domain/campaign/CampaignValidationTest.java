@@ -5,7 +5,6 @@ import org.motechproject.commons.date.model.Time;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.commons.date.util.JodaFormatter;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
-import org.motechproject.messagecampaign.domain.message.CronBasedCampaignMessage;
 import org.motechproject.messagecampaign.domain.message.DayOfWeek;
 import org.motechproject.messagecampaign.domain.message.DayOfWeekCampaignMessage;
 import org.motechproject.messagecampaign.domain.message.OffsetCampaignMessage;
@@ -42,7 +41,7 @@ public class CampaignValidationTest {
 
     @Test(expected = CampaignMessageValidationException.class)
     public void shouldThrowExceptionWhenCronCampaignMessageCronIsNullOrEmpty() {
-        CronBasedCampaignMessage message = new CronBasedCampaignMessage("");
+        CampaignMessage message = new CampaignMessage("");
         campaign = new CronBasedCampaign("name", Arrays.asList(message));
         campaign.validate();
     }
@@ -74,7 +73,7 @@ public class CampaignValidationTest {
         campaign = new AbsoluteCampaign("name", Arrays.asList(absoluteMessage));
         campaign.validate();
 
-        CronBasedCampaignMessage cronMessage = new CronBasedCampaignMessage("0 11 11 11 11 ?");
+        CampaignMessage cronMessage = new CampaignMessage("0 11 11 11 11 ?");
         campaign = new CronBasedCampaign("name", Arrays.asList(cronMessage));
         campaign.validate();
 
