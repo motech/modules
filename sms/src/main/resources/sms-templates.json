@@ -293,5 +293,41 @@
         },
         "incoming":{
         }
+    },
+    {
+        "name":"Voto",
+        "configurables": [
+            "api_key",
+            "status_callback_url"
+        ],
+        "outgoing":{
+            "maxSmsSize":"160",
+            "millisecondsBetweenMessages":"1",
+            "exponentialBackOffRetries":"true",
+            "maxRecipient":"1",
+            "hasAuthentication":"false",
+            "request":{
+                "type":"POST",
+                "urlPath":"https://go.votomobile.org/motech/api/v1/outgoing_call",
+                "jsonContentType":"true",
+                "bodyParameters":{
+                    "channel":"sms",
+                    "message_id":"[message_id]",
+                    "survey_id":"[survey_id]",
+                    "status_callback_url":"[status_callback_url]",
+                    "subscribers":"[subscribers]",
+                    "api_key":"[api_key]"
+                }
+            },
+            "response":{
+                "successStatus": "200",
+                "multiLineRecipientResponse": "false",
+                "extractGeneralFailureMessage": "^\\{\"status\":[0-9]{3},\"code\":[0-9]*,\"data\":[a-zA-Z0-9]*,\"message\":\"(.*)\",\"more_info\":\".*\"\\}$"
+            }
+        },
+        "status":{
+        },
+        "incoming":{
+        }
     }
 ]

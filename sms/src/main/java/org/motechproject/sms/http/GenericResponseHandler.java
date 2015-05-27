@@ -59,7 +59,7 @@ public class GenericResponseHandler extends ResponseHandler {
                         DeliveryStatus.DISPATCHED, null, sms.getMotechId(), providerMessageId, null));
             }
             getEvents().add(outboundEvent(SmsEventSubjects.DISPATCHED, getConfig().getName(), sms.getRecipients(),
-                    sms.getMessage(), sms.getMotechId(), providerMessageId, null, null, null));
+                    sms.getMessage(), sms.getMotechId(), providerMessageId, null, null, null, sms.getCustomParams()));
 
         } else {
             Integer failureCount = sms.getFailureCount() + 1;
@@ -69,7 +69,7 @@ public class GenericResponseHandler extends ResponseHandler {
                 failureMessage = response;
             }
             getEvents().add(outboundEvent(getConfig().retryOrAbortSubject(failureCount), getConfig().getName(),
-                    sms.getRecipients(), sms.getMessage(), sms.getMotechId(), null, failureCount, null, null));
+                    sms.getRecipients(), sms.getMessage(), sms.getMotechId(), null, failureCount, null, null, sms.getCustomParams()));
             getLogger().debug("Failed to send SMS: {}", failureMessage);
             for (String recipient : sms.getRecipients()) {
                 getAuditRecords().add(new SmsRecord(getConfig().getName(), OUTBOUND, recipient, sms.getMessage(), now(),

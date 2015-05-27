@@ -1,6 +1,9 @@
 package org.motechproject.sms.templates;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -38,7 +41,12 @@ public class Template {
             if (outgoing.getRequest().getJsonContentType()) {
                 Map<String, String> jsonParams = getJsonParameters(outgoing.getRequest().getBodyParameters(), props);
                 Gson gson = new Gson();
-                String json = gson.toJson(jsonParams);
+                JsonObject jsonObject = new JsonObject();
+                for (Map.Entry<String, String> entry : jsonParams.entrySet()) {
+                    JsonElement obj = new JsonParser().parse(entry.getValue());
+                    jsonObject.add(entry.getKey(), obj);
+                }
+                String json = gson.toJson(jsonObject);
                 StringRequestEntity requestEntity;
                 try {
                     requestEntity = new StringRequestEntity(json, MediaType.APPLICATION_JSON_VALUE, "UTF-8");

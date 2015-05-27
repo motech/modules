@@ -43,6 +43,10 @@ public class OutgoingSms {
      * Internal failure counter
      */
     private Integer failureCount = 0;
+    /**
+     * Map of custom parameters
+     */
+    private Map<String, String> customParams;
 
     public OutgoingSms() {
     }
@@ -58,6 +62,7 @@ public class OutgoingSms {
         }
         motechId = (String) params.get(SmsEventParams.MOTECH_ID);
         providerId = (String) params.get(SmsEventParams.PROVIDER_MESSAGE_ID);
+        customParams = (Map<String, String>) params.get(SmsEventParams.CUSTOM_PARAMS);
     }
 
     public OutgoingSms(String config, List<String> recipients, String message, DateTime deliveryTime) {
@@ -167,6 +172,14 @@ public class OutgoingSms {
 
     public void setProviderId(String providerId) {
         this.providerId = providerId;
+    }
+
+    public Map<String, String> getCustomParams() {
+        return customParams;
+    }
+
+    public void setCustomParams(Map<String, String> customParams) {
+        this.customParams = customParams;
     }
 
     @Override

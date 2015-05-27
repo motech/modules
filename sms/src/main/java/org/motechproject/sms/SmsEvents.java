@@ -39,7 +39,7 @@ public final class SmsEvents {
     public static MotechEvent outboundEvent(String subject, String config, //NO CHECKSTYLE ParameterNumber
                                             List<String> recipients, String message, String motechId,
                                             String providerMessageId, Integer failureCount, String providerStatus,
-                                            DateTime timestamp) {
+                                            DateTime timestamp, Map<String, String> customParams) {
         Map<String, Object> params = new HashMap<>();
         params.put(SmsEventParams.CONFIG, config);
         params.put(SmsEventParams.RECIPIENTS, recipients);
@@ -60,6 +60,9 @@ public final class SmsEvents {
             params.put(SmsEventParams.TIMESTAMP, now());
         } else {
             params.put(SmsEventParams.TIMESTAMP, timestamp);
+        }
+        if (customParams != null && !customParams.isEmpty()) {
+            params.put(SmsEventParams.CUSTOM_PARAMS, customParams);
         }
         return new MotechEvent(subject, params);
     }

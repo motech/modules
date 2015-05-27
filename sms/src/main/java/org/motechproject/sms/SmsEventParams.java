@@ -59,4 +59,8 @@ public final class SmsEventParams {
      * provider provided SMS delivery status, sometimes holds more information than what MOTECH models
      */
     public static final String PROVIDER_STATUS = "provider_status";
+    /**
+     * map of custom parameters
+     */
+    public static final String CUSTOM_PARAMS = "custom_params";
 }

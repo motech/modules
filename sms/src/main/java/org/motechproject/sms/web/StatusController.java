@@ -167,7 +167,7 @@ public class StatusController {
             }
             eventRelay.sendEventMessage(outboundEvent(eventSubject, configName, recipients,
                     smsRecord.getMessageContent(), smsRecord.getMotechId(), providerMessageId, null, statusString,
-                    now()));
+                    now(), null));
         } else {
             String msg = String.format("Likely template error, unable to extract status string. Config: %s, Parameters: %s",
                     configName, params);
@@ -176,7 +176,7 @@ public class StatusController {
             smsRecord.setDeliveryStatus(DeliveryStatus.FAILURE_CONFIRMED);
             eventRelay.sendEventMessage(outboundEvent(SmsEventSubjects.FAILURE_CONFIRMED, configName, recipients,
                     smsRecord.getMessageContent(), smsRecord.getMotechId(), providerMessageId, null, null,
-                    now()));
+                    now(), null));
         }
         smsRecordsDataService.create(smsRecord);
     }

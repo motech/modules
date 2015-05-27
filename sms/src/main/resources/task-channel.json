@@ -277,6 +277,12 @@
                                   "required": false
                                 },
                                 {
+                                  "key" : "custom_params",
+                                  "type" : "MAP",
+                                  "displayName" : "sms.task.action.send.custom_params",
+                                  "required": false
+                                },
+                                {
                                   "key" : "delivery_time",
                                   "type" : "DATE",
                                   "displayName" : "sms.task.action.send.delivery_time",

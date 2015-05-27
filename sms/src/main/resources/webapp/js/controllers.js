@@ -13,6 +13,7 @@
         $scope.dt = "now";
         $scope.messages = [];
         $scope.error = "";
+        $scope.customParamsValue = "";
 
         innerLayout({
             spacing_closed: 30,
@@ -36,7 +37,7 @@
         }
 
         $scope.sendSms = function () {
-            var now = new Date(), then;
+            var now = new Date(), then, lines, i, key, value;
             $scope.error = null;
 
             switch ($scope.dt)
@@ -55,6 +56,17 @@
                 then = null;
             }
             $scope.sms.deliveryTime = then;
+            $scope.sms.customParams = {};
+
+            lines = $scope.customParamsValue.split("\n");
+            for (i = 0; i < lines.length; i = i + 1) {
+                key = lines[i].split(":")[0];
+                value = lines[i].substring(key.length + 1).trim();
+                key = key.trim();
+                if (key !== "") {
+                    $scope.sms.customParams[key] = value;
+                }
+            }
             $http.post('../sms/send', $scope.sms)
                 .success(function(response) {
                     var index = $scope.messages.push(response);

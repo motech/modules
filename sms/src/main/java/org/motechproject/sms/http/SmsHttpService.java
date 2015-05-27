@@ -132,6 +132,9 @@ public class SmsHttpService {
         props.put("message", sms.getMessage());
         props.put("motechId", sms.getMotechId());
         props.put("callback", configService.getServerUrl() + "/module/sms/status/" + config.getName());
+        if (sms.getCustomParams() != null) {
+            props.putAll(sms.getCustomParams());
+        }
 
         for (ConfigProp configProp : config.getProps()) {
             props.put(configProp.getName(), configProp.getValue());
@@ -173,7 +176,7 @@ public class SmsHttpService {
                     config.retryOrAbortStatus(failureCount), null, sms.getMotechId(), null, errorMessage));
         }
         events.add(outboundEvent(config.retryOrAbortSubject(failureCount), config.getName(), sms.getRecipients(),
-                sms.getMessage(), sms.getMotechId(), null, sms.getFailureCount() + 1, null, null));
+                sms.getMessage(), sms.getMotechId(), null, sms.getFailureCount() + 1, null, null, sms.getCustomParams()));
 
     }
 

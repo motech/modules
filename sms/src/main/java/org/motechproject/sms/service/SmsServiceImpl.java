@@ -153,7 +153,7 @@ public class SmsServiceImpl implements SmsService {
                 for (String part : messageParts) {
                     String motechId = generateMotechId();
                     MotechEvent event = outboundEvent(SmsEventSubjects.SCHEDULED, config.getName(), recipients, part,
-                            motechId, null, null, null, null);
+                            motechId, null, null, null, null, sms.getCustomParams());
                     //MOTECH scheduler needs unique job ids, so adding motechId as job_id_key will do that
                     event.getParameters().put(MotechSchedulerService.JOB_ID_KEY, motechId);
                     event.getParameters().put(SmsEventParams.DELIVERY_TIME, dt);
@@ -172,7 +172,7 @@ public class SmsServiceImpl implements SmsService {
                 for (String part : messageParts) {
                     String motechId = generateMotechId();
                     eventRelay.sendEventMessage(outboundEvent(SmsEventSubjects.PENDING, config.getName(), recipients,
-                            part, motechId, null, null, null, null));
+                            part, motechId, null, null, null, null, sms.getCustomParams()));
                     LOGGER.info("Sending message [{}] to [{}].", part.replace("\n", "\\n"), recipients);
                     for (String recipient : recipients) {
                         smsRecordsDataService.create(new SmsRecord(config.getName(), OUTBOUND, recipient, part, now(),
