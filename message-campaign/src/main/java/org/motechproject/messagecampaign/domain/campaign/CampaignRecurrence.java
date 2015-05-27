@@ -10,6 +10,7 @@ import javax.jdo.annotations.Unique;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.joda.time.Period;
 
 @Entity
 public class CampaignRecurrence {
@@ -23,14 +24,14 @@ public class CampaignRecurrence {
     @Field(required = true)
     private CampaignType campaignType;
 
-    private String maxDuration;
+    private Period maxDuration;
 
     public Campaign toCampaign() {
         Campaign campaign = campaignType.instance();
 
         campaign.setMessageRecords(messages);
         campaign.setName(name);
-        campaign.setMaxDuration(maxDuration);
+        campaign.setCampaignRecurrence(this);
 
         return campaign;
     }
@@ -59,11 +60,11 @@ public class CampaignRecurrence {
         this.campaignType = type;
     }
 
-    public String getMaxDuration() {
+    public Period getMaxDuration() {
         return maxDuration;
     }
 
-    public void setMaxDuration(String maxDuration) {
+    public void setMaxDuration(Period maxDuration) {
         this.maxDuration = maxDuration;
     }
 

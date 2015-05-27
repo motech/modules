@@ -2,6 +2,7 @@ package org.motechproject.messagecampaign.it.dao;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.Period;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.commons.date.util.JodaFormatter;
@@ -92,7 +93,7 @@ public class CampaignRecordServiceBundleIT extends BasePaxIT {
         assertEquals(campaign, campaignRecordService.findByName(campaign.getName()));
 
         // update
-        campaign2.setMaxDuration("20");
+        campaign2.setMaxDuration(new Period("20"));
         campaign.updateFrom(campaign2);
 
         campaign = campaignRecordService.update(campaign);
@@ -162,7 +163,7 @@ public class CampaignRecordServiceBundleIT extends BasePaxIT {
     private CampaignRecurrence createCampaignRecord() {
         CampaignRecurrence campaign = new CampaignRecurrence();
         campaign.setCampaignType(CampaignType.ABSOLUTE);
-        campaign.setMaxDuration("10");
+        campaign.setMaxDuration(new Period("10"));
         campaign.setName("CampaignName");
 
         CampaignMessageRecord message = new CampaignMessageRecord();

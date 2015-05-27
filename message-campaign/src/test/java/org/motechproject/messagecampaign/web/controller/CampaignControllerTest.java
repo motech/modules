@@ -2,6 +2,7 @@ package org.motechproject.messagecampaign.web.controller;
 
 import org.apache.commons.io.IOUtils;
 import org.joda.time.LocalDate;
+import org.joda.time.Period;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -165,7 +166,7 @@ public class CampaignControllerTest {
         CampaignRecurrence campaignRecurrence = new CampaignRecurrence();
         campaignRecurrence.setName(REPEAT_INTERVAL_CAMPAIGN_NAME);
         campaignRecurrence.setCampaignType(CampaignType.REPEAT_INTERVAL);
-        campaignRecurrence.setMaxDuration("5 weeks");
+        campaignRecurrence.setMaxDuration(new Period("5 weeks"));
 
         CampaignMessageRecord campaignMessageRecord = new CampaignMessageRecord();
         campaignMessageRecord.setName("Weekly Message #1");

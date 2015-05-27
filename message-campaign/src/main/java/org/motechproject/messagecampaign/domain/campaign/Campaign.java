@@ -13,7 +13,6 @@ import java.util.List;
 public abstract class Campaign {
     private String name;
     private List<CampaignMessage> messages;
-    private Period maxDuration;
     private CampaignRecurrence campaignRecurrence;
 
     public Campaign () {
@@ -27,7 +26,7 @@ public abstract class Campaign {
     protected Campaign(String name, List<CampaignMessage> messages, Period maxDuration) {
         this.name = name;
         this.messages = messages;
-        this.maxDuration = maxDuration;
+        // TODO: this.maxDuration = maxDuration;
     }
 
     public String getName() {
@@ -47,17 +46,11 @@ public abstract class Campaign {
     }
 
     public Period getMaxDuration() {
-        return maxDuration;
+        return getCampaignRecurrence().getMaxDuration();
     }
 
     public void setMaxDuration(Period maxDuration) {
-        this.maxDuration = maxDuration;
-    }
-
-    public void setMaxDuration(String maxDuration) {
-        if (maxDuration != null) {
-            this.maxDuration = new JodaFormatter().parsePeriod(maxDuration);
-        }
+        getCampaignRecurrence().setMaxDuration(maxDuration);
     }
 
     public void setMessageRecords(List<CampaignMessageRecord> messageRecords) {
@@ -91,5 +84,9 @@ public abstract class Campaign {
 
     public CampaignRecurrence getCampaignRecurrence() {
         return campaignRecurrence;
+    }
+
+    public void setCampaignRecurrence(CampaignRecurrence campaignRecurrence) {
+        this.campaignRecurrence = campaignRecurrence;
     }
 }

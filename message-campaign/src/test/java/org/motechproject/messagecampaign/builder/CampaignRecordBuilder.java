@@ -1,5 +1,6 @@
 package org.motechproject.messagecampaign.builder;
 
+import org.joda.time.Period;
 import org.motechproject.messagecampaign.domain.campaign.CampaignType;
 import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
 import org.motechproject.messagecampaign.domain.campaign.CampaignRecurrence;
@@ -28,7 +29,7 @@ public final class CampaignRecordBuilder {
         CampaignRecurrence record = new CampaignRecurrence();
         record.setName(name);
         record.setCampaignType(CampaignType.OFFSET);
-        record.setMaxDuration("2 Weeks");
+        record.setMaxDuration(new Period("2 Weeks"));
         record.setMessages(campaignMessageRecords);
 
         return record;

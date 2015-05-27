@@ -30,7 +30,7 @@ public final class CampaignBuilder {
                 Arrays.asList("en"), "cron-message2", "0 11 11 11 11 ?");
 
         CronBasedCampaign campaign = new CronBasedCampaign("testCampaign", Arrays.asList(campaignMessage1, campaignMessage2));
-        campaign.setMaxDuration("1 Week");
+        campaign.setMaxDuration(new JodaFormatter().parsePeriod("1 Week"));
 
         return campaign;
     }

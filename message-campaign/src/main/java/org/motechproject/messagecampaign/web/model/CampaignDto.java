@@ -2,6 +2,7 @@ package org.motechproject.messagecampaign.web.model;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.joda.time.Period;
 import org.motechproject.messagecampaign.domain.campaign.CampaignType;
 import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
 import org.motechproject.messagecampaign.domain.campaign.CampaignRecurrence;
@@ -33,14 +34,14 @@ public class CampaignDto implements Serializable {
         this.name = campaignRecurrence.getName();
         this.messages = campaignRecurrence.getMessages();
         this.type = campaignRecurrence.getCampaignType();
-        this.maxDuration = campaignRecurrence.getMaxDuration();
+        this.maxDuration = campaignRecurrence.getMaxDuration().toString();
     }
 
     public CampaignRecurrence toCampaignRecord() {
         CampaignRecurrence campaignRecurrence = new CampaignRecurrence();
 
         campaignRecurrence.setName(name);
-        campaignRecurrence.setMaxDuration(maxDuration);
+        campaignRecurrence.setMaxDuration(new Period(maxDuration));
         campaignRecurrence.setMessages(messages);
         campaignRecurrence.setCampaignType(type);
 
