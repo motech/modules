@@ -8,7 +8,7 @@ import org.motechproject.messagecampaign.exception.CampaignMessageValidationExce
 
 import java.util.List;
 
-public class RepeatIntervalCampaignMessage extends CampaignMessage0 {
+public class RepeatIntervalCampaignMessage extends CampaignMessage {
 
     private Period repeatInterval;
 

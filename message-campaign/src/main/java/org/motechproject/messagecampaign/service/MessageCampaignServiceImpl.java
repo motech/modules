@@ -13,7 +13,7 @@ import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.exception.CampaignNotFoundException;
 import org.motechproject.messagecampaign.domain.campaign.Campaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
-import org.motechproject.messagecampaign.domain.message.CampaignMessage0;
+import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.loader.CampaignJsonLoader;
 import org.motechproject.messagecampaign.scheduler.CampaignSchedulerFactory;
 import org.motechproject.messagecampaign.scheduler.CampaignSchedulerService;
@@ -187,10 +187,10 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
         CampaignEnrollment enrollment = campaignEnrollmentDataService.findByExternalIdAndCampaignName(externalId, campaignName);
         Campaign campaign = campaignRecordService.findByName(enrollment.getCampaignName()).toCampaign();
         DateTime latestDate = null;
-        CampaignMessage0 latestMessage = null;
+        CampaignMessage latestMessage = null;
 
         for (Object message : campaign.getMessages()) {
-            CampaignMessage0 campaignMessage = (CampaignMessage0) message;
+            CampaignMessage campaignMessage = (CampaignMessage) message;
             CampaignSchedulerService campaignSchedulerService = campaignSchedulerFactory.getCampaignScheduler(enrollment.getCampaignName());
             JobId jobId = campaignSchedulerService.getJobId(campaignMessage.getMessageKey(),
                     enrollment.getExternalId(), enrollment.getCampaignName());
@@ -216,10 +216,10 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
         CampaignEnrollment enrollment = campaignEnrollmentDataService.findByExternalIdAndCampaignName(externalId, campaignName);
         Campaign campaign = campaignRecordService.findByName(enrollment.getCampaignName()).toCampaign();
         DateTime nextDate = null;
-        CampaignMessage0 nextMessage = null;
+        CampaignMessage nextMessage = null;
 
         for (Object message : campaign.getMessages()) {
-            CampaignMessage0 campaignMessage = (CampaignMessage0) message;
+            CampaignMessage campaignMessage = (CampaignMessage) message;
             CampaignSchedulerService campaignSchedulerService = campaignSchedulerFactory.getCampaignScheduler(enrollment.getCampaignName());
             JobId jobId = campaignSchedulerService.getJobId(campaignMessage.getMessageKey(),
                     enrollment.getExternalId(), enrollment.getCampaignName());

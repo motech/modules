@@ -8,7 +8,7 @@ import org.motechproject.messagecampaign.builder.SchedulerPayloadBuilder;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.campaign.Campaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
-import org.motechproject.messagecampaign.domain.message.CampaignMessage0;
+import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.exception.CampaignEnrollmentException;
 import org.motechproject.scheduler.contract.JobId;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
@@ -23,10 +23,10 @@ import java.util.Map;
 /**
  * Abstract class for handling campaign (un)scheduling
  *
- * @param <M> Type of {@link CampaignMessage0}
+ * @param <M> Type of {@link CampaignMessage}
  * @param <C> Type of {@link Campaign}
  */
-public abstract class CampaignSchedulerService<M extends CampaignMessage0, C extends Campaign<M>> {
+public abstract class CampaignSchedulerService<M extends CampaignMessage, C extends Campaign<M>> {
     private MotechSchedulerService schedulerService;
     private CampaignRecordService campaignRecordService;
     private JobIdFactory jobIdFactory;
@@ -77,7 +77,7 @@ public abstract class CampaignSchedulerService<M extends CampaignMessage0, C ext
 
     protected abstract void scheduleMessageJob(CampaignEnrollment enrollment, C campaign, M message);
 
-    protected Time deliverTimeFor(CampaignEnrollment enrollment, CampaignMessage0 message) {
+    protected Time deliverTimeFor(CampaignEnrollment enrollment, CampaignMessage message) {
         Time deliveryTime = enrollment.getDeliverTime() != null ? enrollment.getDeliverTime() : message.getStartTime();
 
         if (deliveryTime == null) {

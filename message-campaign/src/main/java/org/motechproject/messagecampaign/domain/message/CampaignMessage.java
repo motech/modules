@@ -7,19 +7,19 @@ import java.util.List;
 
 import static org.motechproject.commons.date.model.Time.parseTime;
 
-public abstract class CampaignMessage0 {
+public abstract class CampaignMessage {
     private String name;
     private List<String> formats;
     private List<String> languages;
     private String messageKey;
     private Time startTime;
 
-    public CampaignMessage0(CampaignMessageRecord messageRecord) {
+    public CampaignMessage(CampaignMessageRecord messageRecord) {
         this (messageRecord.getName(), messageRecord.getFormats(), messageRecord.getLanguages(), messageRecord.getMessageKey(),
                 parseTime(messageRecord.getStartTime(), ":"));
     }
 
-    public CampaignMessage0(String name, List<String> formats, List<String> languages, String messageKey, Time startTime) {
+    public CampaignMessage(String name, List<String> formats, List<String> languages, String messageKey, Time startTime) {
         this.name = name;
         this.formats = formats;
         this.languages = languages;

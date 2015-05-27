@@ -5,7 +5,7 @@ import org.motechproject.messagecampaign.exception.CampaignMessageValidationExce
 
 import java.util.List;
 
-public class CronBasedCampaignMessage extends CampaignMessage0 {
+public class CronBasedCampaignMessage extends CampaignMessage {
 
     private String cron;
 

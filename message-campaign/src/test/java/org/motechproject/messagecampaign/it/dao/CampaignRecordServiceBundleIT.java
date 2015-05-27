@@ -12,7 +12,6 @@ import org.motechproject.messagecampaign.domain.campaign.CampaignType;
 import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaign;
 import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
-import org.motechproject.messagecampaign.domain.message.CampaignMessage0;
 import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
 import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -152,7 +151,7 @@ public class CampaignRecordServiceBundleIT extends BasePaxIT {
         assertEquals(cron, message.getCron());
     }
 
-    private void assertMessage(CampaignMessage0 message, String name, String[] formats, Object messageKey) {
+    private void assertMessage(CampaignMessage message, String name, String[] formats, Object messageKey) {
         assertEquals(name, message.getName());
         assertCollection(formats, message.getFormats());
         assertCollection(new String[]{"en"}, message.getLanguages());

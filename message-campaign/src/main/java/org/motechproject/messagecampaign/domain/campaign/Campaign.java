@@ -2,14 +2,14 @@ package org.motechproject.messagecampaign.domain.campaign;
 
 import org.joda.time.Period;
 import org.motechproject.commons.date.util.JodaFormatter;
-import org.motechproject.messagecampaign.domain.message.CampaignMessage0;
+import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
 import org.motechproject.messagecampaign.exception.CampaignValidationException;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Campaign<T extends CampaignMessage0> {
+public abstract class Campaign<T extends CampaignMessage> {
     private String name;
     private List<T> messages;
     private Period maxDuration;
