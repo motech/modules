@@ -7,7 +7,7 @@ import org.motechproject.messagecampaign.exception.CampaignMessageValidationExce
 
 import java.util.List;
 
-public class OffsetCampaignMessage extends CampaignMessage {
+public class OffsetCampaignMessage extends CampaignMessage0 {
 
     private Period timeOffset;
 

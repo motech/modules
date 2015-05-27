@@ -6,7 +6,7 @@ import org.motechproject.messagecampaign.exception.CampaignMessageValidationExce
 
 import java.util.List;
 
-public class AbsoluteCampaignMessage extends CampaignMessage {
+public class AbsoluteCampaignMessage extends CampaignMessage0 {
 
     private LocalDate date;
 
