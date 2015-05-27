@@ -36,7 +36,7 @@ public class CronBasedCampaignSchedulerService extends CampaignSchedulerService<
         Period maxDuration = campaign.getMaxDuration();
         Date endDate = (maxDuration == null) ? null : startDate.plus(maxDuration).toDate();
 
-        CronSchedulableJob schedulableJob = new CronSchedulableJob(motechEvent, message.getCron(), startDate.toDate(), endDate);
+        CronSchedulableJob schedulableJob = new CronSchedulableJob(motechEvent, campaign.getCron(message), startDate.toDate(), endDate);
         getSchedulerService().scheduleJob(schedulableJob);
     }
 

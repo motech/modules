@@ -3,6 +3,7 @@ package org.motechproject.messagecampaign.domain.campaign;
 import org.joda.time.Period;
 import org.motechproject.messagecampaign.domain.message.CampaignMessage;
 import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
+import org.motechproject.messagecampaign.domain.message.DayOfWeek;
 import org.motechproject.messagecampaign.exception.CampaignValidationException;
 
 import java.util.List;
@@ -30,4 +31,7 @@ public class DayOfWeekCampaign extends Campaign {
         }
     }
 
+    public List<DayOfWeek> getDaysOfWeek(CampaignMessage cm) {
+        throw new RuntimeException("TODO: Not implemented");
+    }
 }

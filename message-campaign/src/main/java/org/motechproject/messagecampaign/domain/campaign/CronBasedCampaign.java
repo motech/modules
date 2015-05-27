@@ -17,7 +17,7 @@ public class CronBasedCampaign extends Campaign {
     }
 
     public CronBasedCampaign (String name, List<CampaignMessage> messages, Period maxDuration) {
-        super (name, messages, maxDuration);
+        super(name, messages, maxDuration);
     }
 
     @Override
@@ -25,4 +25,7 @@ public class CronBasedCampaign extends Campaign {
         return new CampaignMessage(messageRecord);
     }
 
+    public String getCron(CampaignMessage cm) {
+        throw new RuntimeException("TODO: Not implemented");
+    }
 }

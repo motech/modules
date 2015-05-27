@@ -39,7 +39,7 @@ public class OffsetCampaignSchedulerService extends CampaignSchedulerService<Cam
     protected void scheduleMessageJob(CampaignEnrollment enrollment, OffsetCampaign campaign, CampaignMessage message) {
         Time deliverTime = deliverTimeFor(enrollment, message);
         DateTime jobTime = (newDateTime(enrollment.getReferenceDate(), deliverTime)).toLocalDateTime()
-                .plus(message.getTimeOffset()).toDateTime();
+                .plus(campaign.getTimeOffset(message)).toDateTime();
 
         if (jobTime.isAfter(now())) {
             MotechEvent motechEvent = new MotechEvent(EventKeys.SEND_MESSAGE, jobParams(message.getMessageKey(), enrollment));
@@ -73,7 +73,7 @@ public class OffsetCampaignSchedulerService extends CampaignSchedulerService<Cam
         DateTime lastFireTime = null;
 
         for (CampaignMessage msg : campaign.getMessages()) {
-            LocalDate fireDate = startDate.plus(msg.getTimeOffset());
+            LocalDate fireDate = startDate.plus(campaign.getTimeOffset(msg));
             DateTime fireDt = DateUtil.newDateTime(fireDate, msg.getStartTime());
 
             if (lastFireTime == null || fireDt.isAfter(lastFireTime)) {

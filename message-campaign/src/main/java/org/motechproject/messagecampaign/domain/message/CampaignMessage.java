@@ -9,6 +9,7 @@ import java.util.List;
 import static org.motechproject.commons.date.model.Time.parseTime;
 import org.joda.time.LocalDate;
 import org.motechproject.commons.date.util.DateUtil;
+import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaign;
 import org.motechproject.messagecampaign.domain.campaign.Campaign;
 
 public class CampaignMessage {
@@ -83,24 +84,9 @@ public class CampaignMessage {
     }
 
     // Former functionality of former specific subclasses
-    public LocalDate getDate() {
-        throw new RuntimeException("TODO: Not implemented");
-    }
 
-    public List<DayOfWeek> getDaysOfWeek() {
-        throw new RuntimeException("TODO: Not implemented");
-    }
 
-    public String getCron() {
-        throw new RuntimeException("TODO: Not implemented");
-    }
 
-    public Period getTimeOffset() {
-        throw new RuntimeException("TODO: Not implemented");
-    }
 
-    public long getRepeatIntervalInMillis() {
-        throw new RuntimeException("TODO: Not implemented");
-    }
 
 }

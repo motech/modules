@@ -62,9 +62,9 @@ public class CampaignRecordServiceBundleIT extends BasePaxIT {
         assertEquals(campaignName, campaign.getName());
         List<CampaignMessage> messages = campaign.getMessages();
         assertEquals(3, messages.size());
-        assertMessageWithRelativeSchedule(messages.get(0), "Week 1", new String[]{"IVR"}, "child-info-week-1", "1 Week");
-        assertMessageWithRelativeSchedule(messages.get(1), "Week 1A", new String[]{"SMS"}, "child-info-week-1a", "1 Week");
-        assertMessageWithRelativeSchedule(messages.get(2), "Week 1B", new String[]{"SMS"}, "child-info-week-1b", "9 Days");
+        assertMessageWithRelativeSchedule(campaign, messages.get(0), "Week 1", new String[]{"IVR"}, "child-info-week-1", "1 Week", campaign);
+        assertMessageWithRelativeSchedule(campaign, messages.get(1), "Week 1A", new String[]{"SMS"}, "child-info-week-1a", "1 Week", campaign);
+        assertMessageWithRelativeSchedule(campaign, messages.get(2), "Week 1B", new String[]{"SMS"}, "child-info-week-1b", "9 Days", campaign);
     }
 
     @Test
@@ -138,9 +138,9 @@ public class CampaignRecordServiceBundleIT extends BasePaxIT {
         assertEquals(date, message.getDate());
     }
 
-    private void assertMessageWithRelativeSchedule(CampaignMessage message, String name, String[] formats, Object messageKey, String timeOffset) {
+    private void assertMessageWithRelativeSchedule(OffsetCampaign campaign, CampaignMessage message, String name, String[] formats, Object messageKey, String timeOffset, OffsetCampaign campaign) {
         assertMessage(message, name, formats, messageKey);
-        assertEquals(new JodaFormatter().parsePeriod(timeOffset), message.getTimeOffset());
+        assertEquals(new JodaFormatter().parsePeriod(timeOffset), campaign.getTimeOffset(message));
     }
 
     private void assertMessageWithCronSchedule(CampaignMessage message, String name, String[] formats, Object messageKey, String cron) {

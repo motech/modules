@@ -25,4 +25,7 @@ public class RepeatIntervalCampaign extends Campaign {
         return new CampaignMessage(messageRecord);
     }
 
+    public long getRepeatIntervalInMillis(CampaignMessage cm) {
+        throw new RuntimeException("TODO: Not implemented");
+    }
 }

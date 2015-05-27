@@ -13,6 +13,7 @@ public abstract class Campaign {
     private String name;
     private List<CampaignMessage> messages;
     private Period maxDuration;
+    private CampaignRecurrence campaignRecurrence;
 
     public Campaign () {
 
@@ -78,5 +79,9 @@ public abstract class Campaign {
         for (CampaignMessage campaignMessage : getMessages() ) {
             campaignMessage.validate();
         }
+    }
+
+    public CampaignRecurrence getCampaignRecurrence() {
+        return campaignRecurrence;
     }
 }

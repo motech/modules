@@ -35,7 +35,7 @@ public class AbsoluteCampaignSchedulerService extends CampaignSchedulerService<C
     protected void scheduleMessageJob(CampaignEnrollment enrollment, AbsoluteCampaign campaign, CampaignMessage campaignMessage) {
         Map<String, Object> params = jobParams(campaignMessage.getMessageKey(), enrollment);
         MotechEvent motechEvent = new MotechEvent(EventKeys.SEND_MESSAGE, params);
-        LocalDate startDate = campaignMessage.getDate();
+        LocalDate startDate = campaign.getDate(campaignMessage);
         RunOnceSchedulableJob runOnceSchedulableJob = new RunOnceSchedulableJob(motechEvent, newDateTime(startDate, deliverTimeFor(enrollment, campaignMessage)).toDate());
 
         try {
@@ -62,7 +62,7 @@ public class AbsoluteCampaignSchedulerService extends CampaignSchedulerService<C
     protected DateTime campaignEndDate(AbsoluteCampaign campaign, CampaignEnrollment enrollment) {
         DateTime endDate = null;
         for (CampaignMessage msg : campaign.getMessages()) {
-            DateTime fireTime = DateUtil.newDateTime(msg.getDate(), msg.getStartTime());
+            DateTime fireTime = DateUtil.newDateTime(campaign.getDate(msg), campaign.getStartTime(msg));
             if (endDate == null || fireTime.isAfter(endDate)) {
                 endDate = fireTime;
             }

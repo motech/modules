@@ -25,4 +25,7 @@ public class OffsetCampaign extends Campaign {
         return new CampaignMessage(messageRecord);
     }
 
+    public Period getTimeOffset(CampaignMessage cm) {
+        throw new RuntimeException("TODO: Not implemented");
+    }
 }

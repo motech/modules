@@ -35,7 +35,7 @@ public class DayOfWeekCampaignSchedulerService extends CampaignSchedulerService<
         LocalDate start = enrollment.getReferenceDate();
         LocalDate end = start.plus(campaign.getMaxDuration());
 
-        List<DayOfWeek> daysOfWeek = message.getDaysOfWeek();
+        List<DayOfWeek> daysOfWeek = campaign.getDaysOfWeek(message);
         getSchedulerService().scheduleDayOfWeekJob(new DayOfWeekSchedulableJob(motechEvent, start, end,
                 castDaysOfWeekList(daysOfWeek), deliverTimeFor(enrollment, message), true));
     }
