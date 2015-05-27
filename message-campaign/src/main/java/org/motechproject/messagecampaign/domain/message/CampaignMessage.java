@@ -1,13 +1,16 @@
 package org.motechproject.messagecampaign.domain.message;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.Period;
 import org.motechproject.commons.date.model.Time;
 
 import java.util.List;
 
 import static org.motechproject.commons.date.model.Time.parseTime;
+import org.joda.time.LocalDate;
+import org.motechproject.commons.date.util.DateUtil;
 
-public abstract class CampaignMessage {
+public class CampaignMessage {
     private String name;
     private List<String> formats;
     private List<String> languages;
@@ -73,6 +76,29 @@ public abstract class CampaignMessage {
       }
     }
 
-    public abstract void validate();
+    public void validate() {
+        throw new RuntimeException("TODO: Not implemented");
+    }
+
+    // Former functionality of former specific subclasses
+    public LocalDate getDate() {
+        throw new RuntimeException("TODO: Not implemented");
+    }
+
+    public List<DayOfWeek> getDaysOfWeek() {
+        throw new RuntimeException("TODO: Not implemented");
+    }
+
+    public String getCron() {
+        throw new RuntimeException("TODO: Not implemented");
+    }
+
+    public Period getTimeOffset() {
+        throw new RuntimeException("TODO: Not implemented");
+    }
+
+    public long getRepeatIntervalInMillis() {
+        throw new RuntimeException("TODO: Not implemented");
+    }
 
 }
