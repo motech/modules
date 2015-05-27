@@ -9,6 +9,7 @@ import java.util.List;
 import static org.motechproject.commons.date.model.Time.parseTime;
 import org.joda.time.LocalDate;
 import org.motechproject.commons.date.util.DateUtil;
+import org.motechproject.messagecampaign.domain.campaign.Campaign;
 
 public class CampaignMessage {
     private String name;
@@ -16,6 +17,7 @@ public class CampaignMessage {
     private List<String> languages;
     private String messageKey;
     private Time startTime;
+    private Campaign campaign;
 
     public CampaignMessage(CampaignMessageRecord messageRecord) {
         this (messageRecord.getName(), messageRecord.getFormats(), messageRecord.getLanguages(), messageRecord.getMessageKey(),
