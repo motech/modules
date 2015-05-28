@@ -6,7 +6,6 @@ import org.motechproject.commcare.config.Configs;
 import org.motechproject.commcare.exception.CommcareAuthenticationException;
 import org.motechproject.commcare.exception.CommcareConnectionFailureException;
 import org.motechproject.commcare.service.CommcareConfigService;
-import org.osgi.framework.BundleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -52,8 +51,7 @@ public class ConfigController {
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public Config saveConfig(@RequestBody Config config) throws BundleException, CommcareAuthenticationException,
-            CommcareConnectionFailureException {
+    public Config saveConfig(@RequestBody Config config) throws CommcareConnectionFailureException {
         return configService.saveConfig(config);
     }
 
@@ -65,7 +63,7 @@ public class ConfigController {
 
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/verify")
-    public void verifyConfig(@RequestBody Config config) throws CommcareAuthenticationException {
+    public void verifyConfig(@RequestBody Config config) {
         if (!configService.verifyConfig(config)) {
             throw new CommcareAuthenticationException("Motech was unable to authenticate to CommCareHQ. Please verify your account settings.");
         }

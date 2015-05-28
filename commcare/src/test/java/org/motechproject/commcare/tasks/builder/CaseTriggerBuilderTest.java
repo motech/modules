@@ -66,14 +66,14 @@ public class CaseTriggerBuilderTest {
             switch (subject) {
                 case "org.motechproject.commcare.api.case.ConfigOne.birth":
                     assertEquals(3 + CASE_PREDEFINED_FIELDS, request.getEventParameters().size());
-                    assertEquals("Received Case: ConfigOne - birth", request.getDisplayName());
+                    assertEquals("Received Case: birth [ConfigOne]", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD1));
                     assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD2));
                     assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD3));
                     break;
                 case "org.motechproject.commcare.api.case.ConfigOne.appointment":
                     assertEquals(2 + CASE_PREDEFINED_FIELDS, request.getEventParameters().size());
-                    assertEquals("Received Case: ConfigOne - appointment", request.getDisplayName());
+                    assertEquals("Received Case: appointment [ConfigOne]", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD4));
                     assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD5));
                     break;

@@ -51,13 +51,14 @@ public class CommcareDataProviderBuilder {
         model.put("configurations", configurations);
         model.put("esc", escapeTool);
         model.put("trimmer", trimmer);
+        model.put("DisplayNameHelper", DisplayNameHelper.class);
 
         StringWriter writer = new StringWriter();
 
         try {
             VelocityEngineUtils.mergeTemplate(velocityEngine, COMMCARE_TASK_DATA_PROVIDER, model, writer);
         } catch (Exception e) {
-            LOGGER.error("An error occured while trying to merge velocity template " +
+            LOGGER.error("An error occurred while trying to merge velocity template " +
                     COMMCARE_TASK_DATA_PROVIDER + " with data.", e);
         }
 

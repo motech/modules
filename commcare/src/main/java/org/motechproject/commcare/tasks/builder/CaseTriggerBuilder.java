@@ -32,7 +32,9 @@ public class CaseTriggerBuilder implements TriggerBuilder {
     private CommcareSchemaService schemaService;
     private CommcareConfigService configService;
 
-    private static final String RECEIVED_CASE_PREFIX = "Received Case: ";
+    private static final String RECEIVED_CASE = "Received Case";
+    private static final String RECEIVED_CASE_ID = "Received Case ID";
+
 
     public CaseTriggerBuilder(CommcareSchemaService schemaService, CommcareConfigService configService) {
         this.schemaService = schemaService;
@@ -53,8 +55,10 @@ public class CaseTriggerBuilder implements TriggerBuilder {
                     parameterRequests.add(new EventParameterRequest(caseProperty, caseProperty));
                 }
 
-                triggers.add(new TriggerEventRequest(RECEIVED_CASE_PREFIX + config.getName() + " - " + entry.getKey(),
-                        CASE_EVENT + "." + config.getName() + "." + entry.getKey(), null, parameterRequests, CASE_EVENT));
+                String displayName = DisplayNameHelper.buildDisplayName(RECEIVED_CASE, entry.getKey(), config.getName());
+
+                triggers.add(new TriggerEventRequest(displayName, CASE_EVENT + "." + config.getName() + "." + entry.getKey(),
+                        null, parameterRequests, CASE_EVENT));
             }
         }
 
@@ -72,8 +76,10 @@ public class CaseTriggerBuilder implements TriggerBuilder {
             parameterRequests.add(new EventParameterRequest("commcare.caseId", CASE_ID));
             parameterRequests.add(new EventParameterRequest("commcare.field.configName", CONFIG_NAME));
 
-            triggers.add(new TriggerEventRequest("Received Case ID - " + config.getName(),
-                    CASE_EVENT + "." + config.getName(), null, parameterRequests, CASE_EVENT));
+            String displayName = DisplayNameHelper.buildDisplayName(RECEIVED_CASE_ID, config.getName());
+
+            triggers.add(new TriggerEventRequest(displayName, CASE_EVENT + "." + config.getName(), null,
+                    parameterRequests, CASE_EVENT));
         }
 
         return triggers;

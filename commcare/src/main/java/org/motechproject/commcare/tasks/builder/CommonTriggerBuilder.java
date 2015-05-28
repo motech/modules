@@ -53,8 +53,10 @@ public class CommonTriggerBuilder implements TriggerBuilder {
             parameterRequests.add(new EventParameterRequest("commcare.message", FAILED_FORM_MESSAGE));
             parameterRequests.add(new EventParameterRequest("commcare.field.configName", CONFIG_NAME));
 
-            triggers.add(new TriggerEventRequest("Forms failed - " + config.getName(),
-                    FORMS_FAIL_EVENT + "." + config.getName(), null, parameterRequests, FORMS_FAIL_EVENT));
+            String displayName = DisplayNameHelper.buildDisplayName("Forms failed", config.getName());
+
+            triggers.add(new TriggerEventRequest(displayName, FORMS_FAIL_EVENT + "." + config.getName(), null,
+                    parameterRequests, FORMS_FAIL_EVENT));
         }
 
         return triggers;
@@ -73,8 +75,10 @@ public class CommonTriggerBuilder implements TriggerBuilder {
             parameterRequests.add(new EventParameterRequest("commcare.value", VALUE));
             parameterRequests.add(new EventParameterRequest("commcare.field.configName", CONFIG_NAME));
 
-            triggers.add(new TriggerEventRequest("Received Device Log - " + config.getName(),
-                    DEVICE_LOG_EVENT + "." + config.getName(), null, parameterRequests, DEVICE_LOG_EVENT));
+            String displayName = DisplayNameHelper.buildDisplayName("Received Device Log", config.getName());
+
+            triggers.add(new TriggerEventRequest(displayName, DEVICE_LOG_EVENT + "." + config.getName(), null,
+                    parameterRequests, DEVICE_LOG_EVENT));
         }
 
         return triggers;
@@ -91,8 +95,10 @@ public class CommonTriggerBuilder implements TriggerBuilder {
             parameterRequests.add(new EventParameterRequest("commcare.caseIds", CASE_IDS, "LIST"));
             parameterRequests.add(new EventParameterRequest("commcare.field.configName", CONFIG_NAME));
 
-            triggers.add(new TriggerEventRequest("Received Form Stub - " + config.getName(),
-                    FORM_STUB_EVENT + "." + config.getName(), null, parameterRequests, FORM_STUB_EVENT));
+            String displayName = DisplayNameHelper.buildDisplayName("Received Form Stub", config.getName());
+
+            triggers.add(new TriggerEventRequest(displayName, FORM_STUB_EVENT + "." + config.getName(), null,
+                    parameterRequests, FORM_STUB_EVENT));
         }
 
         return triggers;

@@ -1,9 +1,13 @@
+#macro( buildDisplayName $subject $name $configName )
+    "$esc.java($DisplayNameHelper.buildDisplayName($subject, $name, $configName))"
+#end
+
 {
     "name": "commcare",
     "objects": [
             #foreach($config in $configurations)
                 {
-                    "displayName": "Fixture - $esc.java($config.getConfigName())",
+                    "displayName": #buildDisplayName("Fixture", "", $config.getConfigName()),
                     "type": "CommcareFixture-$esc.java($config.getConfigName())",
                     "lookupFields": [
                             {
@@ -36,7 +40,7 @@
 
                 #foreach ( $form in $config.getForms() )
                     {
-                        "displayName": "Form: $esc.java($form.getFormName()) - $esc.java($config.getConfigName())",
+                        "displayName": #buildDisplayName("Form", $form.getFormName(), $config.getConfigName()),
                         "type": "CommcareForm$trimmer.trim($esc.java($form.getFormName()))-$esc.java($config.getConfigName())",
                         "lookupFields": [
                             {
@@ -53,7 +57,7 @@
                                 },
                                 #foreach ( $question in $form.getQuestions() )
                                 {
-                                   "displayName" : "$esc.java($question.getQuestionLabel())",
+                                   "displayName" : "$esc.java($question.getQuestionValue())",
                                    "fieldKey" : "$esc.java($question.getQuestionValue())"
                                 },
                                 #end
@@ -99,7 +103,7 @@
                 #end
                 #foreach ($entry in $config.getCases().entrySet())
                     {
-                        "displayName": "Case: $esc.java($entry.key) - $esc.java($config.getConfigName())",
+                        "displayName": #buildDisplayName("Case", $entry.key, $config.getConfigName()),
                         "type": "CaseInfo$trimmer.trim($esc.java($entry.key))-$esc.java($config.getConfigName())",
                         "lookupFields": [
                                 {
@@ -182,7 +186,7 @@
                     },
                 #end
                 {
-                    "displayName": "User - $esc.java($config.getConfigName())",
+                    "displayName": #buildDisplayName("User", "", $config.getConfigName()),
                     "type": "CommcareUser-$esc.java($config.getConfigName())",
                     "lookupFields": [
                             {
@@ -239,7 +243,7 @@
                         ]
                 },
                 {
-                    "displayName": "Location - $esc.java($config.getConfigName())",
+                    "displayName": #buildDisplayName("Location", "", $config.getConfigName()),
                     "type": "CommcareLocation-$esc.java($config.getConfigName())",
                     "lookupFields": [
                             {

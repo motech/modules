@@ -65,13 +65,13 @@ public class FormTriggerBuilderTest {
             switch (subject) {
                 case "org.motechproject.commcare.api.forms.ConfigOne.form1":
                     assertEquals(2 + FORM_PREDEFINED_FIELDS, request.getEventParameters().size());
-                    assertEquals("Received Form: ConfigOne - form1", request.getDisplayName());
+                    assertEquals("Received Form: form1 [ConfigOne]", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION1));
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION2));
                     break;
                 case "org.motechproject.commcare.api.forms.ConfigOne.form2":
                     assertEquals(3 + FORM_PREDEFINED_FIELDS, request.getEventParameters().size());
-                    assertEquals("Received Form: ConfigOne - form2", request.getDisplayName());
+                    assertEquals("Received Form: form2 [ConfigOne]", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION3));
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION4));
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION5));

@@ -34,7 +34,7 @@ public class FormTriggerBuilder implements TriggerBuilder {
     private CommcareSchemaService schemaService;
     private CommcareConfigService configService;
 
-    private static final String RECEIVED_FORM_PREFIX = "Received Form: ";
+    private static final String RECEIVED_FORM = "Received Form";
 
     public FormTriggerBuilder(CommcareSchemaService schemaService, CommcareConfigService configService) {
         this.schemaService = schemaService;
@@ -53,11 +53,13 @@ public class FormTriggerBuilder implements TriggerBuilder {
                 addCaseFields(parameters);
 
                 for (FormSchemaQuestionJson question : form.getQuestions()) {
-                    parameters.add(new EventParameterRequest(question.getQuestionLabel(), question.getQuestionValue()));
+                    parameters.add(new EventParameterRequest(question.getQuestionValue(), question.getQuestionValue()));
                 }
 
-                triggers.add(new TriggerEventRequest(RECEIVED_FORM_PREFIX + config.getName() + " - " + formName,
-                        FORMS_EVENT + "." + config.getName() + "." + formName, null, parameters, FORMS_EVENT));
+                String displayName = DisplayNameHelper.buildDisplayName(RECEIVED_FORM, formName, config.getName());
+
+                triggers.add(new TriggerEventRequest(displayName, FORMS_EVENT + "." + config.getName() + "." + formName,
+                        null, parameters, FORMS_EVENT));
             }
         }
 
@@ -78,6 +80,6 @@ public class FormTriggerBuilder implements TriggerBuilder {
         parameters.add(new EventParameterRequest("commcare.form.field.appVersion", META_APP_VERSION));
         parameters.add(new EventParameterRequest("commcare.form.field.timeStart", META_TIME_START));
         parameters.add(new EventParameterRequest("commcare.form.field.timeEnd", META_TIME_END));
-        parameters.add(new EventParameterRequest("commcare.form.field.configName", CONFIG_NAME));
+        parameters.add(new EventParameterRequest("commcare.field.configName", CONFIG_NAME));
     }
 }
