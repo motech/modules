@@ -1,5 +1,6 @@
 package org.motechproject.dhis2.service.impl;
 
+import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.dhis2.domain.TrackedEntityInstanceMapping;
 import org.motechproject.dhis2.repository.TrackedEntityInstanceMappingDataService;
 import org.motechproject.dhis2.service.TrackedEntityInstanceMappingService;
@@ -15,6 +16,11 @@ import java.util.List;
  */
 @Service("trackedEntityInstanceMapperService")
 public class TrackedEntityInstanceMappingServiceImpl implements TrackedEntityInstanceMappingService {
+    private static final String MODULE_NAME = "dhis2";
+
+    @Autowired
+    private StatusMessageService statusMessageService;
+
     @Autowired
     private TrackedEntityInstanceMappingDataService trackedEntityInstanceMappingDataService;
 
@@ -31,6 +37,8 @@ public class TrackedEntityInstanceMappingServiceImpl implements TrackedEntityIns
         TrackedEntityInstanceMapping mapper = trackedEntityInstanceMappingDataService.findByExternalName(externalId);
 
         if (mapper == null) {
+            String msg = String.format("Failed to map for externalId: %s", externalId);
+            statusMessageService.warn(msg, MODULE_NAME);
             throw new TrackedEntityInstanceMappingException("Failed to map for externalId: " + externalId);
         }
 

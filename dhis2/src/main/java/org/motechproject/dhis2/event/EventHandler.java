@@ -172,9 +172,9 @@ public class EventHandler {
         String registationString = (String) params.remove(EventParams.REGISTRATION);
         boolean registration = registationString.contains("true");
 
-        String trackedEntityInstanceId = trackedEntityInstanceMappingService.mapFromExternalId((String) params.remove(EventParams.EXTERNAL_ID));
-
         if (registration) {
+            String externalTrackedEntityInstanceId = (String) params.remove(EventParams.EXTERNAL_ID);
+            String trackedEntityInstanceId = trackedEntityInstanceMappingService.mapFromExternalId(externalTrackedEntityInstanceId);
             dhisEventDto.setTrackedEntityInstance(trackedEntityInstanceId);
         }
 
