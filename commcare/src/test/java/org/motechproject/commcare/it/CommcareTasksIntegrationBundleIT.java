@@ -88,6 +88,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     public void setUp() throws IOException, InterruptedException {
         clearDB();
         commcareTasksNotifier = (CommcareTasksNotifier) ServiceRetriever.getWebAppContext(bundleContext, COMMCARE_CHANNEL_NAME).getBean("commcareTasksNotifier");
+        setUpSecurityContext("motech", "motech", "manageTasks");
     }
 
     @After
