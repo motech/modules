@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,8 +20,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.io.IOException;
 import java.util.List;
 
+import static org.motechproject.csd.constants.CSDConstants.HAS_MANAGE_CSD_PERMISSION;
+
 /**
- * Sends sends & received configs to/from the UI.
+ * Sends & receives configs to/from the UI.
  */
 @Controller
 public class ConfigController {
@@ -30,11 +33,12 @@ public class ConfigController {
     private ConfigService configService;
 
     @Autowired
-    public ConfigController(@Qualifier("configService") ConfigService configService) {
+    public void setConfigService(@Qualifier("configService") ConfigService configService) {
         this.configService = configService;
     }
 
     @RequestMapping(value = "/csd-configs", method = RequestMethod.GET)
+    @PreAuthorize(HAS_MANAGE_CSD_PERMISSION)
     @ResponseBody
     public List<Config> getConfigs() {
         return configService.getConfigs();
@@ -42,6 +46,7 @@ public class ConfigController {
 
     @RequestMapping(value = "/csd-configs", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize(HAS_MANAGE_CSD_PERMISSION)
     @ResponseBody
     public List<Config> updateConfigs(@RequestBody List<Config> configs) {
         configService.updateConfigs(configs);

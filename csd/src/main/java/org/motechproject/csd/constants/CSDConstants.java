@@ -35,6 +35,7 @@ import java.util.List;
 public final class CSDConstants {
 
     public static final URL CSD_SCHEMA = CSDConstants.class.getResource("/CSD.xsd");
+    public static final String HAS_MANAGE_CSD_PERMISSION = "hasRole('manageCSD')";
 
     public static final List<Class<?>> CSD_CLASSES = Arrays.asList(AbstractID.class, AbstractUniqueID.class, Address.class,
             AddressLine.class, BaseMainEntity.class, CodedType.class, ContactPoint.class, Credential.class,
