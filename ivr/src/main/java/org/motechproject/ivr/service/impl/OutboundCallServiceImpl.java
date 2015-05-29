@@ -1,5 +1,10 @@
 package org.motechproject.ivr.service.impl;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -11,6 +16,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -208,13 +215,24 @@ public class OutboundCallServiceImpl implements OutboundCallService {
                 }
                 request = new HttpGet(builder.build());
             } else {
-                ArrayList<NameValuePair> postParameters = new ArrayList<>();
-                for (Map.Entry<String, String> entry : params.entrySet()) {
-                    builder.setParameter(entry.getKey(), entry.getValue());
-                    postParameters.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
-                }
                 HttpPost post = new HttpPost(uri);
-                post.setEntity(new UrlEncodedFormEntity(postParameters));
+                if (config.isJsonRequest()) {
+                    Gson gson = new GsonBuilder().serializeNulls().create();
+                    JsonObject jsonObject = new JsonObject();
+                    for (Map.Entry<String, String> entry : params.entrySet()) {
+                        JsonElement obj = new JsonParser().parse(entry.getValue());
+                        jsonObject.add(entry.getKey(), obj);
+                    }
+                    String json = gson.toJson(jsonObject);
+                    post.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
+                } else {
+                    ArrayList<NameValuePair> postParameters = new ArrayList<>();
+                    for (Map.Entry<String, String> entry : params.entrySet()) {
+                        builder.setParameter(entry.getKey(), entry.getValue());
+                        postParameters.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+                    }
+                    post.setEntity(new UrlEncodedFormEntity(postParameters));
+                }
                 request = post;
             }
         } catch (URISyntaxException | UnsupportedEncodingException e) {

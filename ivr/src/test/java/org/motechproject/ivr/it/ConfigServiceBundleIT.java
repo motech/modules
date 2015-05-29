@@ -48,7 +48,7 @@ public class ConfigServiceBundleIT extends BasePaxIT {
 
     @Test
     public void verifyServiceFunctional() {
-        Config myConfig = new Config("MyConfig", false, null, null, null, null, null, HttpMethod.GET, "http://foo.com/bar", false, null);
+        Config myConfig = new Config("MyConfig", false, null, null, null, null, null, HttpMethod.GET, false, "http://foo.com/bar", false, null);
         configService.updateConfigs(Arrays.asList(myConfig));
 
         Config config = configService.getConfig("MyConfig");
@@ -57,7 +57,7 @@ public class ConfigServiceBundleIT extends BasePaxIT {
 
     @Test(expected = ConfigNotFoundException.class)
     public void shouldNotFindAbsentConfig() {
-        configService.updateConfigs(Arrays.asList(new Config("foo", false, null, null, null, null, null, null, null, false, null)));
+        configService.updateConfigs(Arrays.asList(new Config("foo", false, null, null, null, null, null, null, false, null, false, null)));
         configService.getConfig("bar");
     }
 }
