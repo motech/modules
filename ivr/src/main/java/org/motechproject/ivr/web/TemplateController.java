@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,12 +33,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
 
+import static org.motechproject.ivr.util.Constants.HAS_MANAGE_IVR_ROLE;
 import static org.motechproject.ivr.web.LogAndEventHelper.sendAndLogEvent;
 
 /**
@@ -55,28 +58,16 @@ public class TemplateController {
     private static final String LOGSYSTEM_CLASS = "runtime.log.logsystem.class";
     private static final String LOGSYSTEM_LOGGER = "runtime.log.logsystem.log4j.logger";
 
-
     private CallDetailRecordDataService callDetailRecordDataService;
     private TemplateService templateService;
     private ConfigService configService;
     private StatusMessageService statusMessageService;
     private EventRelay eventRelay;
     private MDSLookupService mdsLookupService;
-
-    @Autowired
     private BundleContext bundleContext;
 
-    @Autowired
-    public TemplateController(CallDetailRecordDataService callDetailRecordDataService,
-                              TemplateService templateService, EventRelay eventRelay,
-                              @Qualifier("configService") ConfigService configService,
-                              StatusMessageService statusMessageService, MDSLookupService mdsLookupService) {
-        this.callDetailRecordDataService = callDetailRecordDataService;
-        this.templateService = templateService;
-        this.eventRelay = eventRelay;
-        this.configService = configService;
-        this.statusMessageService = statusMessageService;
-        this.mdsLookupService = mdsLookupService;
+    @PostConstruct
+    public void setUpVelocityProperties() {
         try {
             Velocity.setProperty(LOGSYSTEM_CLASS, LOG4J);
             Velocity.setProperty(LOGSYSTEM_LOGGER, LOG4J);
@@ -158,6 +149,7 @@ public class TemplateController {
      */
     @RequestMapping(value = "/ivr-templates", method = RequestMethod.GET)
     @ResponseBody
+    @PreAuthorize(HAS_MANAGE_IVR_ROLE)
     public List<Template> getTemplates() {
         return templateService.allTemplates();
     }
@@ -171,6 +163,7 @@ public class TemplateController {
     @RequestMapping(value = "/ivr-templates", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
+    @PreAuthorize(HAS_MANAGE_IVR_ROLE)
     public List<Template> updateTemplates(@RequestBody List<Template> templates) {
         templateService.updateTemplates(templates);
         return templateService.allTemplates();
@@ -225,5 +218,41 @@ public class TemplateController {
     public String handleException(Exception e) {
         LOGGER.error("Error processing template", e);
         return e.getMessage();
+    }
+
+    @Autowired
+    public void setCallDetailRecordDataService(CallDetailRecordDataService callDetailRecordDataService) {
+        this.callDetailRecordDataService = callDetailRecordDataService;
+    }
+
+    @Autowired
+    public void setBundleContext(BundleContext bundleContext) {
+        this.bundleContext = bundleContext;
+    }
+
+    @Autowired
+    public void setMdsLookupService(MDSLookupService mdsLookupService) {
+        this.mdsLookupService = mdsLookupService;
+    }
+
+    @Autowired
+    public void setEventRelay(EventRelay eventRelay) {
+        this.eventRelay = eventRelay;
+    }
+
+    @Autowired
+    public void setStatusMessageService(StatusMessageService statusMessageService) {
+        this.statusMessageService = statusMessageService;
+    }
+
+    @Autowired
+    @Qualifier("configService")
+    public void setConfigService(ConfigService configService) {
+        this.configService = configService;
+    }
+
+    @Autowired
+    public void setTemplateService(TemplateService templateService) {
+        this.templateService = templateService;
     }
 }

@@ -76,8 +76,16 @@
                         <Context-Path>ivr</Context-Path>
                         <Resource-Path>ivr/resources</Resource-Path>
                         <Import-Package>
+                            net.sf.cglib.core,
+                            net.sf.cglib.proxy,
+                            net.sf.cglib.reflect,
+                            org.aopalliance.aop,
+                            org.springframework.aop,
+                            org.springframework.aop.framework,
                             org.motechproject.config.service,
                             org.motechproject.mds.service,
+                            org.motechproject.admin.domain,
+                            org.motechproject.admin.messages,
                             *
                         </Import-Package>
                         <Export-Package>

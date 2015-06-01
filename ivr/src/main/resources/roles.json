@@ -1,0 +1,6 @@
+[
+    {
+        "roleName": "IVR Admin",
+        "permissionNames": ["manageIVR"]
+    }
+]

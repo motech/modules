@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,19 +18,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 
+import static org.motechproject.ivr.util.Constants.HAS_MANAGE_IVR_ROLE;
+
 /**
- * Sends sends & received configs to/from the UI.
+ * Sends & receives configs to/from the UI.
  */
 @Controller
+@PreAuthorize(HAS_MANAGE_IVR_ROLE)
 public class ConfigController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigController.class);
 
     private ConfigService configService;
-
-    @Autowired
-    public ConfigController(@Qualifier("configService") ConfigService configService) {
-        this.configService = configService;
-    }
 
     /**
      * Retrieves all IVR configurations.
@@ -65,5 +64,11 @@ public class ConfigController {
     public String handleException(Exception e) {
         LOGGER.error("Error while updating configs", e);
         return e.getMessage();
+    }
+
+    @Qualifier("configService")
+    @Autowired
+    public void setConfigService(ConfigService configService) {
+        this.configService = configService;
     }
 }
