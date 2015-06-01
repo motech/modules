@@ -194,14 +194,14 @@ Initiating Outbound Calls
 
         :``configName``:
             the name of the IVR provider config where ``outgoingCallUriTemplate`` specifies the IVR provider outbound
-            call URI
+            call URI and ``jsonRequest`` specifies the HTTP ``POST`` method format
         :``params``:
             the parameters needed by the IVR provider to make the call, eg: destination number, resource id,
             status callback URI, security credentials, etc...
 
         The REST call to the IVR provider is constructed by using the config's ``outgoingCallUriTemplate`` field as the
-        base URI, substituting any [xxx] placeholders with the values in ``params`` and also adding ``params`` to the
-        HTTP request parameters.
+        base URI, substituting any [xxx] placeholders with the values in ``params``. If ``jsonRequest`` is selected ``params``
+        are converted into JSON Object otherwise ``params`` are added to the HTTP request parameters.
 
     There are three ways to have the IVR module initiate a call.
 
@@ -254,6 +254,7 @@ Settings
         * ``password``:
             Optional password for providers that require authentication.
         * ``outgoingCallMethod``: Which HTTP method to use, either ``GET`` or ``POST``.
+        * ``jsonRequest``: Select if the IVR provider requires HTTP ``POST`` method using JSON format.
         * ``statusFieldMap``:
             A map where each key corresponds to a field name coming from the IVR provider and each value corresponds to
             the matching IVR ``CallDetailRecord`` field.
