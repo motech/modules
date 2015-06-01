@@ -12,7 +12,6 @@ import org.motechproject.commcare.config.Configs;
 import org.motechproject.commcare.domain.CommcareDataForwardingEndpoint;
 import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.commcare.events.constants.EventSubjects;
-import org.motechproject.commcare.exception.CommcareAuthenticationException;
 import org.motechproject.commcare.exception.CommcareConnectionFailureException;
 import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.service.CommcareDataForwardingEndpointService;
@@ -32,11 +31,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.motechproject.commcare.config.Config.CONFIG_NAME;
 import static org.motechproject.commcare.config.Config.CONFIG_BASE_URL;
 import static org.motechproject.commcare.config.Config.CONFIG_DOMAIN;
-import static org.motechproject.commcare.config.Config.CONFIG_USERNAME;
+import static org.motechproject.commcare.config.Config.CONFIG_NAME;
 import static org.motechproject.commcare.config.Config.CONFIG_PASSWORD;
+import static org.motechproject.commcare.config.Config.CONFIG_USERNAME;
 
 @Service
 public class CommcareConfigServiceImpl implements CommcareConfigService {
@@ -78,7 +77,7 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
     }
 
     @Override
-    public Config saveConfig(Config config) throws CommcareAuthenticationException, CommcareConnectionFailureException {
+    public Config saveConfig(Config config) throws CommcareConnectionFailureException {
 
         if (configs.nameInUse(config.getName())) {
             if (!isSameServer(config.getAccountConfig(), configs.getByName(config.getName()).getAccountConfig())) {

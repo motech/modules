@@ -1,0 +1,6 @@
+[
+  {
+    "roleName": "CMS Lite Admin",
+    "permissionNames": ["manageCMS"]
+  }
+]

@@ -44,9 +44,11 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import org.osgi.framework.BundleContext;
 
 import javax.inject.Inject;
+import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,11 +86,28 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
     private Config config;
 
+    @Override
+    protected Collection<String> getAdditionalTestDependencies() {
+        return Arrays.asList(
+                "org.motechproject:motech-tasks-test-utils",
+                "org.motechproject:motech-tasks",
+                "commons-beanutils:commons-beanutils",
+                "commons-fileupload:commons-fileupload",
+                "org.motechproject:motech-platform-web-security",
+                "org.motechproject:motech-platform-server-bundle",
+                "org.openid4java:com.springsource.org.openid4java",
+                "net.sourceforge.nekohtml:com.springsource.org.cyberneko.html",
+                "org.springframework.security:spring-security-openid"
+        );
+    }
+
     @Before
     public void setUp() throws IOException, InterruptedException {
         clearDB();
+        createAdminUser();
+        login();
         commcareTasksNotifier = (CommcareTasksNotifier) ServiceRetriever.getWebAppContext(bundleContext, COMMCARE_CHANNEL_NAME).getBean("commcareTasksNotifier");
-        setUpSecurityContext("motech", "motech", "manageTasks");
+        setUpSecurityContext("motech", "motech", "manageTasks", "manageCommcare");
     }
 
     @After
@@ -231,6 +250,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     private HttpResponse createConfiguration(Config config) throws IOException, InterruptedException {
         HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/commcare/configs", PORT));
         httpPost.addHeader("content-type", "application/json");
+        httpPost.addHeader("Authorization", "Basic " + DatatypeConverter.printBase64Binary("motech:motech".getBytes("UTF-8")).trim());
 
         Gson gson = new Gson();
 

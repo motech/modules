@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,12 +26,15 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import static org.motechproject.commcare.util.Constants.HAS_MANAGE_COMMCARE_PERMISSION;
+
 /**
  * The <code>SchemaController</code> is a spring controller class, providing
  * a way to access data shown in the module UI. It returns Commcare Application schema,
  * containing forms and Cases.
  */
 @Controller
+@PreAuthorize(HAS_MANAGE_COMMCARE_PERMISSION)
 public class SchemaController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SchemaController.class);

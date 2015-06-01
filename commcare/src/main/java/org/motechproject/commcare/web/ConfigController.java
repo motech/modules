@@ -8,6 +8,7 @@ import org.motechproject.commcare.exception.CommcareConnectionFailureException;
 import org.motechproject.commcare.service.CommcareConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,16 +20,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.IOException;
 
+import static org.motechproject.commcare.util.Constants.HAS_MANAGE_COMMCARE_PERMISSION;
+
 @Controller
 @RequestMapping(value = "/configs")
+@PreAuthorize(HAS_MANAGE_COMMCARE_PERMISSION)
 public class ConfigController {
 
     private CommcareConfigService configService;
-
-    @Autowired
-    public ConfigController(CommcareConfigService configService) {
-        this.configService = configService;
-    }
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
@@ -95,6 +94,11 @@ public class ConfigController {
     @ResponseBody
     public String handleIllegalArgumentException(IllegalArgumentException exception) {
         return exception.getMessage();
+    }
+
+    @Autowired
+    public void setConfigService(CommcareConfigService configService) {
+        this.configService = configService;
     }
 }
 

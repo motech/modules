@@ -2,7 +2,6 @@ package org.motechproject.commcare.service;
 
 import org.motechproject.commcare.config.Config;
 import org.motechproject.commcare.config.Configs;
-import org.motechproject.commcare.exception.CommcareAuthenticationException;
 import org.motechproject.commcare.exception.CommcareConnectionFailureException;
 
 /**
@@ -16,7 +15,7 @@ public interface CommcareConfigService {
      * @param configuration  the configuration to be saved
      * @return  the saved configuration
      */
-    Config saveConfig(Config configuration) throws CommcareAuthenticationException, CommcareConnectionFailureException;
+    Config saveConfig(Config configuration) throws CommcareConnectionFailureException;
 
     /**
      * Deletes the configuration with the given name.
