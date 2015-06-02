@@ -44,6 +44,8 @@ Message fields
 --------------
 - **name**
   The name of the campaign message
+- **messageType**
+  Specifies the type of the message (used only when creating messages through UI)
 - **formats**
   The format(s) for the message
 - **languages**
@@ -231,10 +233,72 @@ Example
 ##################
 Creating campaigns
 ##################
-There are two possibilities to create **Message Campaigns** :
+There are three possibilities to create **Message Campaigns** :
 
-Through the UI
-##############
+Through the UI **Admin** tab
+############################
+You can create Campaigns and Messages through **Admin** tab.
+
+            .. image:: img/message_campaign_admin.png
+                    :scale: 100 %
+                    :alt: Admin tab
+                    :align: center
+
+Creating Messages
+-----------------
+When you're creating Message you need choose the message type, depending on chosen type appropriate fields will be enabled.
+
+Absolute Message
+~~~~~~~~~~~~~~~~
+
+            .. image:: img/message_campaign_add_absolute_message.png
+                    :scale: 100 %
+                    :alt: Creating Absolute Message
+                    :align: center
+
+Offset Message
+~~~~~~~~~~~~~~
+
+            .. image:: img/message_campaign_add_offset_message.png
+                    :scale: 100 %
+                    :alt: Creating Offset Message
+                    :align: center
+
+Repeat Interval Message
+~~~~~~~~~~~~~~~~~~~~~~~
+
+            .. image:: img/message_campaign_add_repeat_interval_message.png
+                    :scale: 100 %
+                    :alt: Creating Repeat Interval Message
+                    :align: center
+
+Cron Message
+~~~~~~~~~~~~
+
+            .. image:: img/message_campaign_add_cron_message.png
+                    :scale: 100 %
+                    :alt: Creating Cron Message
+                    :align: center
+
+Day Of Week Message
+~~~~~~~~~~~~~~~~~~~
+
+            .. image:: img/message_campaign_add_day_of_week_message.png
+                    :scale: 100 %
+                    :alt: Creating Day Of Week Message
+                    :align: center
+
+Creating Campaigns
+------------------
+You can add Messages to the Campaign only if they are the same type as the Campaign.
+
+            .. image:: img/message_campaign_add_campaign.png
+                    :scale: 100 %
+                    :alt: Creating Campaigns
+                    :align: center
+
+Through the UI **Settings** tab
+###############################
 You can upload JSON files entering the **Settings** tab.
 
             .. image:: img/message_campaign_settings.png
@@ -246,6 +310,34 @@ Using configuration file
 ########################
 You can copy a file to the message-campaign directory. The name of the file has to be **message-campaigns.json**.
 Message campaign records will be created after MOTECH started.
+
+#################
+Editing campaigns
+#################
+Campaigns and Messages can be edited through UI.
+
+Editing Campaign
+################
+When you're editing campaign you cannot change campaign name. After saving changes to the campaign all scheduled jobs
+will be removed and new appropriate jobs will be created. When you remove campaign all enrollments and messages
+belonging to that campaign will be removed as well.
+
+            .. image:: img/message_campaign_edit_campaign.png
+                    :scale: 100 %
+                    :alt: Edit Campaign
+                    :align: center
+
+Editing Message
+###############
+When you're editing message you cannot change message type and key. After saving changes to the message all jobs scheduled
+for that message will be removed and new appropriate jobs will be created. When you remove message all jobs scheduled for
+that message will be removed.
+
+            .. image:: img/message_campaign_edit_message.png
+                    :scale: 100 %
+                    :alt: Edit Message
+                    :align: center
+
 
 ################################
 Enrolling a user into a campaign
@@ -361,7 +453,7 @@ would have four scheduled messages due to a maximum duration of five weeks and r
                 "formats" : ["IVR", "SMS"],
                 "languages" : ["en"],
                 "messageKey": "child-info-week-{Offset}-1",
-                "repeatInterval" : "1 Week",
+                "repeatEvery" : "1 Week",
                 "startTime" : "10:30"
             },
             {
@@ -369,7 +461,7 @@ would have four scheduled messages due to a maximum duration of five weeks and r
                 "formats" : ["SMS"],
                 "languages" : ["en"],
                 "messageKey": "child-info-week-{Offset}-2",
-                "repeatInterval" : "9 Days",
+                "repeatEvery" : "9 Days",
                 "startTime" : "10:30"
             },
             {
@@ -377,7 +469,7 @@ would have four scheduled messages due to a maximum duration of five weeks and r
                 "formats" : ["SMS"],
                 "languages" : ["en"],
                 "messageKey": "child-info-week-{Offset}-3",
-                "repeatInterval" : "12 Days",
+                "repeatEvery" : "12 Days",
                 "startTime" : "10:30"
             }
         ]
