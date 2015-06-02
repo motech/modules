@@ -1,9 +1,11 @@
 package org.motechproject.messagecampaign.domain.campaign;
 
+import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
+import org.motechproject.mds.util.SecurityMode;
 import org.motechproject.messagecampaign.domain.message.CampaignMessageRecord;
 
 import javax.jdo.annotations.Unique;
@@ -12,6 +14,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Access(value = SecurityMode.PERMISSIONS, members = {"manageCampaigns"})
 public class CampaignRecord {
 
     @Unique

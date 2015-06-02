@@ -8,12 +8,17 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.joda.time.DateTime;
 import org.motechproject.commons.date.util.DateUtil;
+import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.util.SecurityMode;
+
+import static org.motechproject.sms.util.Constants.VIEW_SMS_LOGS_PERMISSION;
 
 /**
  * SMS audit record for the database
  */
 @Entity
+@Access(value = SecurityMode.PERMISSIONS, members = {VIEW_SMS_LOGS_PERMISSION})
 public class SmsRecord {
     private String config;
     private SmsDirection smsDirection;

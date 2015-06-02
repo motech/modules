@@ -1,9 +1,12 @@
 package org.motechproject.csd.domain;
 
+import org.motechproject.csd.constants.CSDConstants;
+import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
+import org.motechproject.mds.util.SecurityMode;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -36,6 +39,7 @@ import java.util.Set;
 @Entity(maxFetchDepth = 2)
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder = { "extensions", "addresses", "contactPoints" })
+@Access(value = SecurityMode.PERMISSIONS, members = {CSDConstants.MANAGE_CSD})
 public class ProviderOrganization extends AbstractUniqueID {
 
     @UIDisplayable(position = 2)

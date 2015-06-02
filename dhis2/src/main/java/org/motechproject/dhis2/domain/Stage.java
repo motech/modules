@@ -1,7 +1,9 @@
 package org.motechproject.dhis2.domain;
 
+import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.util.SecurityMode;
 
 import javax.jdo.annotations.Unique;
 import java.util.List;
@@ -10,6 +12,7 @@ import java.util.List;
  * Represents a DHIS2 program stage event
  */
 @Entity
+@Access(value = SecurityMode.PERMISSIONS, members = {"configureDhis"})
 public class Stage {
     @Field(required = true)
     @Unique

@@ -1,9 +1,11 @@
 package org.motechproject.cmslite.model;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
+import org.motechproject.mds.util.SecurityMode;
 
 import javax.jdo.annotations.Unique;
 import java.util.Map;
@@ -14,6 +16,7 @@ import java.util.Objects;
  */
 @Entity(recordHistory = true)
 @Unique(name = "streamLanguageAndName", members = {"language", "name" })
+@Access(value = SecurityMode.PERMISSIONS, members = {"manageCMS"})
 public class StreamContent implements Content {
 
     /**

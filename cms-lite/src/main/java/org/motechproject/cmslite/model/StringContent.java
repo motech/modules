@@ -1,7 +1,9 @@
 package org.motechproject.cmslite.model;
 
+import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.util.SecurityMode;
 
 import javax.jdo.annotations.Unique;
 import java.util.Map;
@@ -13,6 +15,7 @@ import java.util.Objects;
  */
 @Entity(recordHistory = true)
 @Unique(name = "stringLanguageAndName", members = {"language", "name" })
+@Access(value = SecurityMode.PERMISSIONS, members = {"manageCMS"})
 public class StringContent implements Content {
 
     /**

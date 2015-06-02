@@ -1,7 +1,9 @@
 package org.motechproject.dhis2.domain;
 
+import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.util.SecurityMode;
 
 import javax.jdo.annotations.Unique;
 
@@ -9,6 +11,7 @@ import javax.jdo.annotations.Unique;
  * Maps an External ID to a DHIS2 ID
  */
 @Entity
+@Access(value = SecurityMode.PERMISSIONS, members = {"configureDhis"})
 public class TrackedEntityInstanceMapping {
 
     @Field

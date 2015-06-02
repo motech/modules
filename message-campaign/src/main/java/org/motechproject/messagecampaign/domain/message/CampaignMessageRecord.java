@@ -3,13 +3,16 @@ package org.motechproject.messagecampaign.domain.message;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.joda.time.LocalDate;
+import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.util.SecurityMode;
 import org.motechproject.messagecampaign.web.util.LocalDateSerializer;
 
 import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Access(value = SecurityMode.PERMISSIONS, members = {"manageCampaigns"})
 public class CampaignMessageRecord {
 
     @JsonProperty

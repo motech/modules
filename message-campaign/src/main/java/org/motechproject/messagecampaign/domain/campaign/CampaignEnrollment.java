@@ -3,10 +3,12 @@ package org.motechproject.messagecampaign.domain.campaign;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.joda.time.LocalDate;
 import org.motechproject.commons.date.model.Time;
+import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.CrudEvents;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.event.CrudEventType;
+import org.motechproject.mds.util.SecurityMode;
 
 import javax.jdo.annotations.Unique;
 
@@ -17,6 +19,7 @@ import javax.jdo.annotations.Unique;
 @Entity
 @CrudEvents(CrudEventType.NONE)
 @Unique(name = "externalIdAndCampaignName", members = {"externalId", "campaignName" })
+@Access(value = SecurityMode.PERMISSIONS, members = {"manageEnrollments"})
 public class CampaignEnrollment {
 
     private Long id;
