@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,22 +20,21 @@ import org.xml.sax.SAXParseException;
 import javax.xml.bind.UnmarshalException;
 import java.io.IOException;
 
+import static org.motechproject.csd.constants.CSDConstants.HAS_MANAGE_CSD_PERMISSION;
+
 @Controller
 public class CSDController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CSDController.class);
 
+    @Autowired
     private CSDService csdService;
 
+    @Autowired
     private CSDScheduler csdScheduler;
 
-    @Autowired
-    public CSDController(CSDService csdService, CSDScheduler csdScheduler) {
-        this.csdService = csdService;
-        this.csdScheduler = csdScheduler;
-    }
-
     @RequestMapping(value = "/csd-consume", method = RequestMethod.POST)
+    @PreAuthorize(HAS_MANAGE_CSD_PERMISSION)
     @ResponseBody
     public void consume(@RequestBody String xmlUrl) {
         csdService.fetchAndUpdate(xmlUrl);
