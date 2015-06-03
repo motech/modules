@@ -1,9 +1,10 @@
 package org.motechproject.sms.web;
 
-import org.motechproject.sms.service.SmsService;
 import org.motechproject.sms.service.OutgoingSms;
+import org.motechproject.sms.service.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,17 +15,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.IOException;
 
+import static org.motechproject.sms.util.Constants.HAS_MANAGE_SMS_ROLE;
+
 /**
  * handles requests to {server}/motech-platform-server/module/sms/send: how the Send SMS dialog sends a message
  */
 @Controller
+@PreAuthorize(HAS_MANAGE_SMS_ROLE)
 public class SendController {
-    private SmsService smsService;
 
     @Autowired
-    public SendController(SmsService smsService) {
-        this.smsService = smsService;
-    }
+    private SmsService smsService;
 
     @RequestMapping(value = "/send", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)

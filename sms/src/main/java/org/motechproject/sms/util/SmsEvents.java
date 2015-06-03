@@ -1,4 +1,4 @@
-package org.motechproject.sms;
+package org.motechproject.sms.util;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;

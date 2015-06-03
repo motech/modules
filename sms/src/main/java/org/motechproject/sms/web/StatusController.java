@@ -4,7 +4,7 @@ import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.mds.query.QueryParams;
 import org.motechproject.mds.util.Order;
-import org.motechproject.sms.SmsEventSubjects;
+import org.motechproject.sms.util.SmsEventSubjects;
 import org.motechproject.sms.audit.DeliveryStatus;
 import org.motechproject.sms.audit.SmsAuditService;
 import org.motechproject.sms.audit.SmsRecord;
@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.motechproject.commons.date.util.DateUtil.now;
-import static org.motechproject.sms.SmsEvents.outboundEvent;
+import static org.motechproject.sms.util.SmsEvents.outboundEvent;
 import static org.motechproject.sms.audit.SmsDirection.OUTBOUND;
 
 /**

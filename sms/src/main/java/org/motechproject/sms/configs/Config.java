@@ -1,6 +1,6 @@
 package org.motechproject.sms.configs;
 
-import org.motechproject.sms.SmsEventSubjects;
+import org.motechproject.sms.util.SmsEventSubjects;
 import org.motechproject.sms.audit.DeliveryStatus;
 
 import java.util.ArrayList;

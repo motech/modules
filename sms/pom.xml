@@ -107,10 +107,22 @@
                         <Blueprint-Enabled>true</Blueprint-Enabled>
                         <Context-Path>sms</Context-Path>
                         <Resource-Path>sms/resources</Resource-Path>
+                        <Import-Package>
+                            net.sf.cglib.core,
+                            net.sf.cglib.proxy,
+                            net.sf.cglib.reflect,
+                            org.aopalliance.aop,
+                            org.springframework.aop,
+                            org.springframework.aop.framework,
+                            org.motechproject.admin.domain,
+                            org.motechproject.admin.messages,
+                            *
+                        </Import-Package>
                         <Export-Package>
                             org.motechproject.sms.service;version=${project.version},
                             org.motechproject.sms.audit;version=${project.version},
-                            org.motechproject.sms.configs;version=${project.version}
+                            org.motechproject.sms.configs;version=${project.version},
+                            org.motechproject.sms.util;version=${project.version}
                         </Export-Package>
                         <Bundle-DocURL>
                             http://modules.motechproject.org/en/latest/sms.html

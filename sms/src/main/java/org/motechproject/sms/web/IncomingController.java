@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.util.Map;
 
 import static org.motechproject.commons.date.util.DateUtil.now;
-import static org.motechproject.sms.SmsEvents.inboundEvent;
+import static org.motechproject.sms.util.SmsEvents.inboundEvent;
 import static org.motechproject.sms.audit.SmsDirection.INBOUND;
 
 /**

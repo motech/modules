@@ -1,4 +1,4 @@
-package org.motechproject.sms;
+package org.motechproject.sms.util;
 
 /**
  * Event subjects, mirrors DeliveryStatus

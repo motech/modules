@@ -5,16 +5,20 @@ import org.motechproject.sms.audit.SmsRecordSearchCriteria;
 import org.motechproject.sms.audit.SmsRecords;
 import org.motechproject.sms.audit.SmsAuditService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import static org.motechproject.sms.util.Constants.HAS_VIEW_SMS_LOGS_ROLE;
 
 /**
  * Returns a list of sms audit records to the UI (which queried the server @
  * {server}/motech-platform-server/module/sms/log
  */
 @Controller
+@PreAuthorize(HAS_VIEW_SMS_LOGS_ROLE)
 public class LogController {
 
     @Autowired

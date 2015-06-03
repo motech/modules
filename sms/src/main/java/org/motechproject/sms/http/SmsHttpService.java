@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.motechproject.commons.date.util.DateUtil.now;
-import static org.motechproject.sms.SmsEvents.outboundEvent;
+import static org.motechproject.sms.util.SmsEvents.outboundEvent;
 import static org.motechproject.sms.audit.SmsDirection.OUTBOUND;
 
 /**

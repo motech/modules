@@ -1,7 +1,7 @@
 package org.motechproject.sms.http;
 
 import org.apache.commons.httpclient.Header;
-import org.motechproject.sms.SmsEventSubjects;
+import org.motechproject.sms.util.SmsEventSubjects;
 import org.motechproject.sms.audit.DeliveryStatus;
 import org.motechproject.sms.audit.SmsRecord;
 import org.motechproject.sms.configs.Config;
@@ -9,7 +9,7 @@ import org.motechproject.sms.service.OutgoingSms;
 import org.motechproject.sms.templates.Template;
 
 import static org.motechproject.commons.date.util.DateUtil.now;
-import static org.motechproject.sms.SmsEvents.outboundEvent;
+import static org.motechproject.sms.util.SmsEvents.outboundEvent;
 import static org.motechproject.sms.audit.SmsDirection.OUTBOUND;
 
 /**

@@ -2,7 +2,7 @@ package org.motechproject.sms.configs;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.motechproject.sms.SmsEventSubjects;
+import org.motechproject.sms.util.SmsEventSubjects;
 import org.motechproject.sms.audit.DeliveryStatus;
 
 import static org.junit.Assert.assertEquals;

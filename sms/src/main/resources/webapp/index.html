@@ -10,9 +10,11 @@
     </div>
     <div class="header-footer">
         <ul id="content-tabs" class="nav nav-tabs">
-            <li ng-class="active('#/sms/send')"><a href="#/sms/send">{{msg('sms.web.send.title')}}</a></li>
-            <li ng-class="active('#/sms/log')"><a href="#/sms/log">{{msg('sms.web.log.title')}}</a></li>
-            <li ng-class="active('#/sms/settings')"><a href="#/sms/settings">{{msg('sms.web.settings.title')}}</a></li>
+            <li ng-class="active('#/sms/' + tab)" ng-repeat="tab in AVAILABLE_TABS">
+                <a href="#/sms/{{tab}}">
+                    {{msg('sms.web.' + tab + '.title')}}
+                </a>
+            </li>
         </ul>
     </div>
     <div class="ui-layout-content">

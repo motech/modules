@@ -2,7 +2,7 @@ package org.motechproject.sms.service;
 
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.sms.SmsEventParams;
+import org.motechproject.sms.util.SmsEventParams;
 
 import java.util.Arrays;
 import java.util.List;

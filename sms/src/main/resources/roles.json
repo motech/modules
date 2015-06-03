@@ -1,0 +1,6 @@
+[
+    {
+        "roleName": "SMS Admin",
+        "permissionNames": ["manageSMS", "viewSMSLogs"]
+    }
+]

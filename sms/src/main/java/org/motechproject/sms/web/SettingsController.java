@@ -9,6 +9,7 @@ import org.motechproject.sms.templates.TemplateForWeb;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,25 +24,20 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Map;
 
+import static org.motechproject.sms.util.Constants.HAS_MANAGE_SMS_ROLE;
+
 //todo: find a way to report useful information if encountering malformed templates?
 
 /**
- * Sends templates to the UI, sends & received configs to/from the UI.
+ * Sends templates to the UI, sends & receives configs to/from the UI.
  */
 @Controller
+@PreAuthorize(HAS_MANAGE_SMS_ROLE)
 public class SettingsController {
+
     private TemplateService templateService;
     private ConfigService configService;
     private TemplateJsonParser templateJsonParser;
-
-    @Autowired
-    public SettingsController(@Qualifier("templateService") TemplateService templateService,
-                              @Qualifier("configService") ConfigService configService,
-                              TemplateJsonParser templateJsonParser) {
-        this.templateService = templateService;
-        this.configService = configService;
-        this.templateJsonParser = templateJsonParser;
-    }
 
     @RequestMapping(value = "/templates", method = RequestMethod.GET)
     @ResponseBody
@@ -78,5 +74,22 @@ public class SettingsController {
     @ResponseBody
     public String handleException(Exception e) throws IOException {
         return e.getMessage();
+    }
+
+    @Autowired
+    @Qualifier("templateService")
+    public void setTemplateService(TemplateService templateService) {
+        this.templateService = templateService;
+    }
+
+    @Autowired
+    @Qualifier("configService")
+    public void setConfigService(ConfigService configService) {
+        this.configService = configService;
+    }
+
+    @Autowired
+    public void setTemplateJsonParser(TemplateJsonParser templateJsonParser) {
+        this.templateJsonParser = templateJsonParser;
     }
 }
