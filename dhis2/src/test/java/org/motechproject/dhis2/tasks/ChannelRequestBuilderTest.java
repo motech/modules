@@ -59,6 +59,7 @@ public class ChannelRequestBuilderTest {
     private List<TrackedEntity> trackedEntities;
 
     private ChannelRequest request;
+    private static final int EXPECTED_ACTIONS_SIZE = 10;
 
     @Before
     public void setup() {
@@ -94,7 +95,7 @@ public class ChannelRequestBuilderTest {
     public void testBuildChannelRequest() throws Exception {
         assertNotNull(request);
         assertEquals(request.getDisplayName(),DisplayNames.DHIS2_DISPLAY_NAME);
-        assertEquals(request.getActionTaskEvents().size(),8);
+        assertEquals(EXPECTED_ACTIONS_SIZE, request.getActionTaskEvents().size());
     }
 
     @Test

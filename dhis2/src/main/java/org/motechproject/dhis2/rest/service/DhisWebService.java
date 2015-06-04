@@ -1,6 +1,8 @@
 package org.motechproject.dhis2.rest.service;
 
 import org.motechproject.dhis2.rest.domain.DataElementDto;
+import org.motechproject.dhis2.rest.domain.DataValueSetDto;
+import org.motechproject.dhis2.rest.domain.DhisDataValueStatusResponse;
 import org.motechproject.dhis2.rest.domain.DhisEventDto;
 import org.motechproject.dhis2.rest.domain.DhisStatusResponse;
 import org.motechproject.dhis2.rest.domain.EnrollmentDto;
@@ -116,6 +118,14 @@ public interface DhisWebService {
      * @returna {@link org.motechproject.dhis2.rest.domain.DhisStatusResponse} indicating success or failure
      */
     DhisStatusResponse createTrackedEntityInstance(TrackedEntityInstanceDto trackedEntity);
+
+    /**
+     * Attempts to send a data value set to DHIS2 via an HTTP post request.
+     *
+     * @param dataValueSetDto
+     * @return
+     */
+    DhisDataValueStatusResponse sendDataValueSet(DataValueSetDto dataValueSetDto);
 }
 
 

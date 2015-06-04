@@ -12,4 +12,7 @@ public interface DataElementDataService extends MotechDataService<DataElement> {
 
     @Lookup
     DataElement findByUuid(@LookupField(name = "uuid") String uuid);
+
+    @Lookup
+    DataElement findByName(@LookupField(name = "name") String name);
 }

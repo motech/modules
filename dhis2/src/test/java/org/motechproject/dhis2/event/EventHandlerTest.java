@@ -9,8 +9,10 @@ import org.motechproject.dhis2.domain.OrgUnit;
 import org.motechproject.dhis2.rest.domain.AttributeDto;
 import org.motechproject.dhis2.rest.domain.DataValueDto;
 import org.motechproject.dhis2.rest.domain.DhisEventDto;
+import org.motechproject.dhis2.rest.domain.DhisStatus;
 import org.motechproject.dhis2.rest.domain.DhisStatusResponse;
 import org.motechproject.dhis2.rest.domain.EnrollmentDto;
+import org.motechproject.dhis2.rest.domain.ImportCountDto;
 import org.motechproject.dhis2.rest.domain.TrackedEntityInstanceDto;
 import org.motechproject.dhis2.rest.service.DhisWebService;
 import org.motechproject.dhis2.service.OrgUnitService;
@@ -60,7 +62,7 @@ public class EventHandlerTest {
     @Before
     public void setup() throws Exception{
 
-        DhisStatusResponse.ImportCount importCount = new DhisStatusResponse.ImportCount();
+        ImportCountDto importCount = new ImportCountDto();
         importCount.setImported(1);
         importCount.setUpdated(0);
         importCount.setIgnored(0);
@@ -68,13 +70,13 @@ public class EventHandlerTest {
 
         response = new DhisStatusResponse();
         response.setReference(INSTANCE_DHIS_ID);
-        response.setStatus(DhisStatusResponse.DhisStatus.SUCCESS);
+        response.setStatus(DhisStatus.SUCCESS);
         response.setImportCount(importCount);
 
 
 
         when(orgUnitService.findByName(ORGUNIT_NAME)).thenReturn(new OrgUnit(ORGUNIT_NAME, ORGUNIT_ID));
-        handler = new EventHandler(dhisWebservice, trackedEntityInstanceMappingService,orgUnitService);
+        handler = new EventHandler(dhisWebservice,trackedEntityInstanceMappingService,orgUnitService);
 
     }
 

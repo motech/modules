@@ -16,6 +16,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.osgi.services.HttpClientBuilderFactory;
 import org.motechproject.admin.service.StatusMessageService;
+import org.motechproject.dhis2.rest.domain.DataValueSetDto;
+import org.motechproject.dhis2.rest.domain.DhisDataValueStatusResponse;
 import org.motechproject.dhis2.service.Settings;
 import org.motechproject.dhis2.rest.domain.BaseDto;
 import org.motechproject.dhis2.rest.domain.DataElementDto;
@@ -56,6 +58,7 @@ public class DhisWebServiceImpl implements DhisWebService {
     private static final String ENROLLMENTS_PATH = "/enrollments";
     private static final String EVENTS_PATH = "/events";
     private static final String TRACKED_ENTITY_INSTANCES_PATH = "/trackedEntityInstances";
+    private static final String DATA_VALUE_SETS_PATH = "/dataValueSets";
 
     private static final String DATA_ELEMENTS = "dataElements";
     private static final String ORG_UNITS = "organisationUnits";
@@ -164,6 +167,14 @@ public class DhisWebServiceImpl implements DhisWebService {
         return createEntity(settings, settings.getServerURI() + API_ENDPOINT + TRACKED_ENTITY_INSTANCES_PATH, json);
     }
 
+    @Override
+    public DhisDataValueStatusResponse sendDataValueSet(DataValueSetDto dataValueSetDto) {
+        String json = parseToJson(dataValueSetDto);
+        Settings settings = settingsService.getSettings();
+
+        return importDataValues(settings, settings.getServerURI() + API_ENDPOINT + DATA_VALUE_SETS_PATH, json);
+    }
+
     /*Gets the resource in the form of a dto*/
     private <T extends BaseDto> T getResource(String uri, Class<T>  clazz) {
         Settings settings = settingsService.getSettings();
@@ -177,7 +188,7 @@ public class DhisWebServiceImpl implements DhisWebService {
 
         T resource;
 
-        try (InputStream content = getContentForResponse(response)){
+        try (InputStream content = getContentForResponse(response)) {
             resource = new ObjectMapper().readValue(content, clazz);
         } catch (Exception e) {
             String msg = String.format("Error parsing resource at uri: %s, exception: %s", uri, e.toString());
@@ -239,7 +250,7 @@ public class DhisWebServiceImpl implements DhisWebService {
 
         DhisStatusResponse status;
 
-        try (InputStream content = getContentForResponse(response)){
+        try (InputStream content = getContentForResponse(response)) {
             status = new ObjectMapper().readValue(content, DhisStatusResponse.class);
         } catch (Exception e) {
             String msg = String.format("Error parsing response from uri: %s, exception: %s", uri, e.toString());
@@ -345,5 +356,20 @@ public class DhisWebServiceImpl implements DhisWebService {
             throw new DhisWebException(msg, e);
         }
         return basicAuthHeader;
+    }
+
+    private DhisDataValueStatusResponse importDataValues(Settings settings, String uri, String json) {
+        HttpUriRequest request = generatePostRequest(settings, uri, json);
+        LOGGER.debug(String.format("Initiating request to create resource: %s, request: %s", json, request.toString()));
+        HttpResponse response = getResponseForRequest(request);
+        LOGGER.debug(String.format("Received response to create resource: %s, request: %s", json, response));
+
+        try (InputStream content = getContentForResponse(response)) {
+            return new ObjectMapper().readValue(content, DhisDataValueStatusResponse.class);
+        } catch (Exception e) {
+            String msg = String.format("Error parsing response from uri: %s, exception: %s", uri, e.toString());
+            statusMessageService.warn(msg, MODULE_NAME);
+            throw new DhisWebException(msg, e);
+        }
     }
 }

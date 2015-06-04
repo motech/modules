@@ -49,4 +49,9 @@ public class DataElementServiceImpl implements DataElementService {
     public void deleteAll() {
         dataElementDataService.deleteAll();
     }
+
+    @Override
+    public DataElement findByName(String name) {
+        return dataElementDataService.findByName(name);
+    }
 }

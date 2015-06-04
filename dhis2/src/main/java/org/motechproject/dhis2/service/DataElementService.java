@@ -9,4 +9,5 @@ import org.motechproject.dhis2.rest.domain.DataElementDto;
 public interface DataElementService extends GenericCrudService<DataElement> {
     DataElement findById(String id);
     DataElement createFromDetails(DataElementDto details);
+    DataElement findByName(String name);
 }
