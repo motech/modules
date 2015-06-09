@@ -1,39 +1,40 @@
 <div class="row">
     <h4 class="frame-title">{{msg('ivr.web.templates.title')}}</h4>
-    <div class="inside">
 
-        <div class="alert alert-danger alert-block" ng-show="templates.length <= 0">
-            {{msg('ivr.web.templates.noTemplateError')}}
+    <div class="alert alert-danger alert-block" ng-show="templates.length <= 0">
+        {{msg('ivr.web.templates.noTemplateError')}}
+    </div>
+    <div ng-show="errors.length > 0">
+        <div class="alert alert-error alert-block" ng-repeat="error in errors" ng-cloak>
+            {{error}}
         </div>
-        <div ng-show="errors.length > 0">
-            <div class="alert alert-error alert-block" ng-repeat="error in errors" ng-cloak>
-                {{error}}
-            </div>
-        </div>
-        <div ng-repeat="message in messages" class="alert alert-success alert-block animate-repeat">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            {{message}}
-        </div>
+    </div>
+    <div ng-repeat="message in messages" class="alert alert-success alert-block animate-repeat">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{message}}
+    </div>
 
+    <div class="toolbox">
         <div class="form-group">
             <button type="button" class="btn btn-success" ng-click="addTemplate()"><i class="fa fa-plus"></i>
                 {{msg('ivr.web.templates.addTemplate')}}
             </button>
         </div>
+    </div>
 
-        <form name="form" class="form-horizontal inside" novalidate>
+    <div class="clearfix">
+        <form name="form" class="form-horizontal" novalidate>
 
-            <div class="row">
-                <div class="panel-group">
-                    <div class="panel panel-default ivr-template" ng-repeat="tmpl in templates">
+            <div class="panel-group">
+                <div class="panel panel-default ivr-template" ng-repeat="tmpl in templates">
 
-                        <div class="panel-heading" ng-click="accordions[$index] = !accordions[$index]">
-                            <i ng-class="{'fa-caret-down': accordions[$index], 'fa-caret-right': !accordions[$index]}" class="fa fa-fw fa-lg pointer"></i>
-                            {{tmpl.name}}
-                        </div>
-                        <div id="panel{{$index}}" class="panel-collapse collapse" ng-class="{true:'in', false:''}[accordions[$index]]">
-
-                            <div class="form-group margin-before2" ng-class="{'has-error': !tmpl.name || dupeNames[$index]}">
+                    <div class="panel-heading" ng-click="accordions[$index] = !accordions[$index]">
+                        <i ng-class="{'fa-caret-down': accordions[$index], 'fa-caret-right': !accordions[$index]}" class="fa fa-fw fa-lg pointer"></i>
+                        {{tmpl.name}}
+                    </div>
+                    <div id="panel{{$index}}" class="panel-collapse collapse" ng-class="{true:'in', false:''}[accordions[$index]]">
+                        <div class="panel-body">
+                            <div class="form-group" ng-class="{'has-error': !tmpl.name || dupeNames[$index]}">
                                 <label class="col-md-2 control-label">{{msg('ivr.web.templates.templateName')}}</label>
                                 <div class="col-md-3">
                                     <input type="text" class="form-control" ng-model="tmpl.name" required ng-focus="accordions[$index]" ng-change="keepDefaultTemplate(); checkForDuplicateNames($index);">
@@ -56,11 +57,12 @@
                             </div>
                         </div>
                     </div>
-                    <div>&nbsp;</div>
-                    <div class="form-inline" ng-show="isDirty()">
-                        <button class="btn btn-default" ng-click="reset()">{{msg('ivr.web.templates.cancel')}}</button>
-                        <button class="btn btn-primary" ng-disabled="!form.$valid || anyDuplicateNames()" ng-click="submit()">{{msg('ivr.web.templates.save')}}</button>
-                    </div>
+                </div>
+            </div>
+            <div class="toolbox">
+                <div class="form-inline" ng-show="isDirty()">
+                    <button class="btn btn-default" ng-click="reset()">{{msg('ivr.web.templates.cancel')}}</button>
+                    <button class="btn btn-primary" ng-disabled="!form.$valid || anyDuplicateNames()" ng-click="submit()">{{msg('ivr.web.templates.save')}}</button>
                 </div>
             </div>
         </form>

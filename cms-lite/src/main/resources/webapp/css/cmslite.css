@@ -4,35 +4,11 @@
     font-size:0.9em;
 }
 
-.cms-lite .content-languages ul {
-    list-style: none;
-}
-
-.cms-lite .pointer {
-    cursor: pointer;
-}
-
-.cms-lite .checkbox.inline {
-    display: inline-block;
-    padding-top: 5px;
-    margin-bottom: 0;
-    margin-right: 20px;
-    vertical-align: middle;
-    white-space: nowrap;
-}
-
-.cms-lite .checkbox.inline + .checkbox.inline {
-    margin-left: 0px;
-}
-
 .cms-lite .fileupload .uneditable-input,
 .cms-lite .fileupload .btn.btn-file,
 .cms-lite .fileupload a.fileupload-exists {
     margin-bottom: 5px;
-}
-
-.cms-lite #operations-resource {
-    margin: 10px;
+    overflow-x: hidden;
 }
 
 .ui-autocomplete {

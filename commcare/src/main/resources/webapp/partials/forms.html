@@ -6,7 +6,7 @@
 </div>
 <div ng-if="selectedConfig" class="row">
 
-    <div class="form-inline inside">
+    <div class="form-inline toolbox">
         <label class="form-group">{{msg('commcare.selectConfig')}}: </label>
         <select class="form-control largeCombobox" ng-model="$parent.selectedConfig" ng-options="config.name for config in $parent.configurations.configs">
             <option ng-if="!$parent.selectedConfig" value="">{{msg('commcare.select')}}</option>

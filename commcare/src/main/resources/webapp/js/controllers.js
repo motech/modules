@@ -65,6 +65,12 @@
             return copy;
         };
 
+        innerLayout({
+            spacing_closed: 30,
+            east__minSize: 200,
+            east__maxSize: 350
+        });
+
         $scope.$watch('selectedConfig', function(newValue, oldValue) {
 
             if ($scope.newConfig || $scope.configOutdated) {
@@ -331,6 +337,12 @@
                 $scope.formError = true;
                 unblockUI();
             });
+        });
+
+        innerLayout({
+            spacing_closed: 30,
+            east__minSize: 200,
+            east__maxSize: 350
         });
     });
 
