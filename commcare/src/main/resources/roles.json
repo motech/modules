@@ -1,0 +1,6 @@
+[
+  {
+    "roleName": "Commcare Admin",
+    "permissionNames": ["manageCommcare"]
+  }
+]

@@ -93,6 +93,10 @@
                         </Export-Package>
                         <Import-Package>
                             javax.servlet.*;resolution:=optional,
+                            net.sf.cglib.core,
+                            net.sf.cglib.proxy,
+                            net.sf.cglib.reflect,
+                            org.aopalliance.aop,
                             org.motechproject.server.config,
                             org.motechproject.server.config.service,
                             org.motechproject.config.service,
@@ -105,6 +109,8 @@
                             org.springframework.context.config,
                             org.springframework.integration.config.xml,
                             org.springframework.integration.jms.config,
+                            org.springframework.aop,
+                            org.springframework.aop.framework,
                             org.springframework.web.context,
                             org.springframework.web.multipart.commons,
                             *

@@ -18,7 +18,7 @@ import java.util.Map;
  * It allows retrieving content from CMS-Lite and using it in tasks.
  */
 public class CMSDataProvider extends AbstractDataProvider {
-    private static final String ID_FIELD = "cmslite.id";
+    private static final String ID_FIELD = "id";
     private static final String NAME_FIELD = "cmslite.dataname";
     private static final String LANGUAGE_FIELD = "cmslite.language";
 

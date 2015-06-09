@@ -4,7 +4,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.commcare.config.Config;
@@ -38,14 +37,16 @@ public class ConfigControllerTest {
     @Mock
     private CommcareDataForwardingEndpointService forwardingEndpointService;
 
-    @InjectMocks
-    private ConfigController controller = new ConfigController(configService);
+    private ConfigController controller;
 
     private Configs configs;
 
     @Before
     public void setUp() {
         initMocks(this);
+
+        controller = new ConfigController();
+        controller.setConfigService(configService);
 
         List<Config> configList = new ArrayList<>();
         configList.add(ConfigsUtils.prepareConfigOne());
