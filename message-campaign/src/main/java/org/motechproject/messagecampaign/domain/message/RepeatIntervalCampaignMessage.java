@@ -30,6 +30,10 @@ public class RepeatIntervalCampaignMessage extends CampaignMessage {
         return repeatInterval.toDurationFrom(DateUtil.now()).getMillis();
     }
 
+    public Integer getRepeatIntervalInSeconds() {
+        return (int) repeatInterval.toDurationFrom(DateUtil.now()).getStandardSeconds();
+    }
+
     public Period getRepeatInterval() {
         return repeatInterval;
     }

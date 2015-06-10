@@ -81,7 +81,7 @@ public class EnrollmentAlertService {
     private void scheduleAlertJob(Alert alert, Enrollment enrollment, Milestone currentMilestone, MilestoneWindow milestoneWindow, MilestoneAlert milestoneAlert) {
         MotechEvent event = new MilestoneEvent(enrollment, milestoneAlert, milestoneWindow).toMotechEvent();
         event.getParameters().put(MotechSchedulerService.JOB_ID_KEY, String.format("%s.%d", enrollment.getId(), alert.getIndex()));
-        long repeatIntervalInMillis = (long) alert.getInterval().toStandardSeconds().getSeconds() * MILLIS_IN_A_SEC;
+        Integer repeatIntervalInSeconds =  alert.getInterval().toStandardSeconds().getSeconds();
 
         AlertWindow alertWindow = createAlertWindowFor(alert, enrollment, currentMilestone, milestoneWindow);
         int numberOfAlertsToSchedule = alertWindow.numberOfAlertsToSchedule();
@@ -107,7 +107,7 @@ public class EnrollmentAlertService {
             // the event for it and decrease the numberOfAlertsToFire since we've
             // already fired one
             if (alertsStartTime.isBefore(now())) {
-                alertsStartTime = alertsStartTime.plus(repeatIntervalInMillis);
+                alertsStartTime = alertsStartTime.plusSeconds(repeatIntervalInSeconds);
                 numberOfAlertsToFire = numberOfAlertsToFire - 1;
                 eventRelay.sendEventMessage(event);
             }
@@ -118,7 +118,7 @@ public class EnrollmentAlertService {
                     .setStartTime(alertsStartTime.toDate())
                     .setEndTime(null)
                     .setRepeatCount(numberOfAlertsToFire)
-                    .setRepeatIntervalInMilliSeconds(repeatIntervalInMillis)
+                    .setRepeatIntervalInSeconds(repeatIntervalInSeconds)
                     .setIgnorePastFiresAtStart(false);
 
             schedulerService.safeScheduleRepeatingJob(job);

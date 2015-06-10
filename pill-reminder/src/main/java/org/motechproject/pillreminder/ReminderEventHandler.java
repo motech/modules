@@ -51,11 +51,11 @@ public class ReminderEventHandler {
         MotechEvent repeatingReminderEvent = createNewMotechEvent(dosage, pillRegimen, motechEvent, EventKeys.PILLREMINDER_REMINDER_EVENT_SUBJECT_SCHEDULER);
 
         repeatingReminderEvent.getParameters().put(MotechSchedulerService.JOB_ID_KEY, String.valueOf(dosage.getId()));
-        final long millisInMinute = 60 * 1000;
+        final int secondsInMinute = 60;
         RepeatingSchedulableJob retryRemindersJob = new RepeatingSchedulableJob()
             .setMotechEvent(repeatingReminderEvent)
             .setStartTime(startTime).setEndTime(endTime)
-            .setRepeatIntervalInMilliSeconds(scheduleDetails.getRepeatIntervalInMinutes() * millisInMinute)
+            .setRepeatIntervalInSeconds(scheduleDetails.getRepeatIntervalInMinutes() * secondsInMinute)
             .setIgnorePastFiresAtStart(false);
         schedulerService.safeScheduleRepeatingJob(retryRemindersJob);
     }

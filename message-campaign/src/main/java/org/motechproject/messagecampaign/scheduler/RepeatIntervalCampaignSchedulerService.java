@@ -42,7 +42,7 @@ public class RepeatIntervalCampaignSchedulerService extends CampaignSchedulerSer
                 .setMotechEvent(motechEvent)
                 .setStartTime(start.toDate())
                 .setEndTime(end.toDate())
-                .setRepeatIntervalInMilliSeconds(message.getRepeatIntervalInMillis())
+                .setRepeatIntervalInSeconds(message.getRepeatIntervalInSeconds())
                 .setIgnorePastFiresAtStart(true)
                 .setUseOriginalFireTimeAfterMisfire(true);
         getSchedulerService().safeScheduleRepeatingJob(job);
