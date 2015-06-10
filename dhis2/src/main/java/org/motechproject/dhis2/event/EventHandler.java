@@ -11,7 +11,6 @@ import org.motechproject.dhis2.rest.domain.EnrollmentDto;
 import org.motechproject.dhis2.rest.domain.TrackedEntityInstanceDto;
 import org.motechproject.dhis2.rest.service.DhisWebService;
 import org.motechproject.dhis2.service.DataElementService;
-import org.motechproject.dhis2.service.OrgUnitService;
 import org.motechproject.dhis2.service.TrackedEntityInstanceMappingService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
@@ -36,24 +35,20 @@ public class EventHandler {
     @Autowired
     private TrackedEntityInstanceMappingService trackedEntityInstanceMappingService;
 
-    @Autowired
-    private OrgUnitService orgUnitService;
 
     @Autowired
     private DataElementService dataElementService;
 
-    public EventHandler(DhisWebService webService,
-                        TrackedEntityInstanceMappingService trackedEntityInstanceMapperService,
-                        OrgUnitService orgUnitService) {
 
+
+    public EventHandler (DhisWebService webService, TrackedEntityInstanceMappingService trackedEntityInstanceMappingService) {
         this.dhisWebService = webService;
-        this.trackedEntityInstanceMappingService = trackedEntityInstanceMapperService;
-        this.orgUnitService = orgUnitService;
-
+        this.trackedEntityInstanceMappingService = trackedEntityInstanceMappingService;
     }
 
 
-    public EventHandler() {
+
+    public EventHandler () {
     }
 
     /**
@@ -63,7 +58,7 @@ public class EventHandler {
      * @param event MotechEvent pertaining to tracked entity instance creation.
      */
     @MotechListener(subjects = EventSubjects.CREATE_ENTITY)
-    public void handleCreate(MotechEvent event) {
+    public void handleCreate (MotechEvent event) {
         Map<String, Object> params = new HashMap<>(event.getParameters());
         String externalUUID = (String) params.remove(EventParams.EXTERNAL_ID);
         TrackedEntityInstanceDto trackedEntityInstance = createTrackedEntityInstanceFromParams(params);
@@ -80,8 +75,8 @@ public class EventHandler {
      *
      * @param event MotechEvent pertaining to enrolling a tracked entity instance in a program.
      */
-    @MotechListener(subjects = {EventSubjects.ENROLL_IN_PROGRAM })
-    public void handleEnrollment(MotechEvent event) {
+    @MotechListener(subjects = {EventSubjects.ENROLL_IN_PROGRAM})
+    public void handleEnrollment (MotechEvent event) {
         Map<String, Object> params = new HashMap<>(event.getParameters());
         EnrollmentDto enrollment = createEnrollmentFromParams(params);
         dhisWebService.createEnrollment(enrollment);
@@ -94,8 +89,8 @@ public class EventHandler {
      *
      * @param event MotechEvent pertaining to a DHIS2 program stage event.
      */
-    @MotechListener(subjects = {EventSubjects.UPDATE_PROGRAM_STAGE })
-    public void handleStageUpdate(MotechEvent event) {
+    @MotechListener(subjects = {EventSubjects.UPDATE_PROGRAM_STAGE})
+    public void handleStageUpdate (MotechEvent event) {
         Map<String, Object> params = new HashMap<>(event.getParameters());
         DhisEventDto dhisEventDto = createDhisEventFromParams(params);
         dhisWebService.createEvent(dhisEventDto);
@@ -108,8 +103,8 @@ public class EventHandler {
      *
      * @param event pertaining to combined DHIS2 tracked entity instance creation and enrollment.
      */
-    @MotechListener(subjects = {EventSubjects.CREATE_AND_ENROLL })
-    public void handleCreateAndEnroll(MotechEvent event) {
+    @MotechListener(subjects = {EventSubjects.CREATE_AND_ENROLL})
+    public void handleCreateAndEnroll (MotechEvent event) {
         Map<String, Object> params = new HashMap<>(event.getParameters());
         Map<String, Object> enrollmentParams = new HashMap<>();
 
@@ -122,10 +117,9 @@ public class EventHandler {
         handleEnrollment(new MotechEvent(EventSubjects.ENROLL_IN_PROGRAM, enrollmentParams));
     }
 
-    private TrackedEntityInstanceDto createTrackedEntityInstanceFromParams(Map<String, Object> params) {
+    private TrackedEntityInstanceDto createTrackedEntityInstanceFromParams (Map<String, Object> params) {
         String trackedEntity = (String) params.remove(EventParams.ENTITY_TYPE);
-        String orgUnitName = (String) params.remove(EventParams.LOCATION);
-        String orgUnitId = orgUnitService.findByName(orgUnitName).getUuid();
+        String orgUnitId = (String) params.remove(EventParams.LOCATION);
 
         List<AttributeDto> attributes = new ArrayList<AttributeDto>();
         for (Entry<String, Object> entry : params.entrySet()) {
@@ -145,7 +139,7 @@ public class EventHandler {
         return trackedEntityInstance;
     }
 
-    private EnrollmentDto createEnrollmentFromParams(Map<String, Object> params) {
+    private EnrollmentDto createEnrollmentFromParams (Map<String, Object> params) {
         String program = (String) params.remove(EventParams.PROGRAM);
 
         String externalId = (String) params.remove(EventParams.EXTERNAL_ID);
@@ -172,7 +166,7 @@ public class EventHandler {
         return enrollment;
     }
 
-    private DhisEventDto createDhisEventFromParams(Map<String, Object> params) {
+    private DhisEventDto createDhisEventFromParams (Map<String, Object> params) {
         DhisEventDto dhisEventDto = new DhisEventDto();
 
         String registationString = (String) params.remove(EventParams.REGISTRATION);
@@ -184,8 +178,7 @@ public class EventHandler {
             dhisEventDto.setTrackedEntityInstance(trackedEntityInstanceId);
         }
 
-        String orgUnitName = (String) params.remove(EventParams.LOCATION);
-        String orgUnitId = orgUnitService.findByName(orgUnitName).getUuid();
+        String orgUnitId = (String) params.remove(EventParams.LOCATION);
         String program = (String) params.remove(EventParams.PROGRAM);
         String date = (String) params.remove(EventParams.DATE);
         String stage = (String) params.remove(EventParams.STAGE);

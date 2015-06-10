@@ -45,19 +45,15 @@ public class EventHandlerTest {
     private static final String DATA_ELEMENT_ID = "dataElementID";
     private static final String DATA_ELEMENT_VALUE = "value";
 
-    private EventHandler handler;
 
     @Mock
     SettingsService settingsService;
     @Mock
     private TrackedEntityInstanceMappingService trackedEntityInstanceMappingService;
     @Mock
-    private OrgUnitService orgUnitService;
-    @Mock
     private DhisWebService dhisWebservice;
-
     private DhisStatusResponse response;
-
+    private EventHandler handler;
 
     @Before
     public void setup() throws Exception{
@@ -72,12 +68,7 @@ public class EventHandlerTest {
         response.setReference(INSTANCE_DHIS_ID);
         response.setStatus(DhisStatus.SUCCESS);
         response.setImportCount(importCount);
-
-
-
-        when(orgUnitService.findByName(ORGUNIT_NAME)).thenReturn(new OrgUnit(ORGUNIT_NAME, ORGUNIT_ID));
-        handler = new EventHandler(dhisWebservice,trackedEntityInstanceMappingService,orgUnitService);
-
+        handler = new EventHandler(dhisWebservice, trackedEntityInstanceMappingService);
     }
 
     @Test
@@ -100,7 +91,7 @@ public class EventHandlerTest {
         Map<String,Object> params = new HashMap<>();
         params.put(EventParams.EXTERNAL_ID,ENTITY_INSTANCE_ID);
         params.put(EventParams.ENTITY_TYPE, ENTITY_TYPE_PERSON );
-        params.put(EventParams.LOCATION,ORGUNIT_NAME);
+        params.put(EventParams.LOCATION,ORGUNIT_ID);
         params.put(ATTRIBUTE_ID, ATTRIBUTE_VALUE);
 
         MotechEvent event = new MotechEvent(EventSubjects.CREATE_ENTITY,params);
@@ -170,7 +161,7 @@ public class EventHandlerTest {
         Map<String, Object> params = new HashMap<>();
         params.put(EventParams.REGISTRATION, REGISTRATION);
         params.put(EventParams.EXTERNAL_ID, ENTITY_INSTANCE_ID);
-        params.put(EventParams.LOCATION, ORGUNIT_NAME);
+        params.put(EventParams.LOCATION, ORGUNIT_ID);
         params.put(EventParams.PROGRAM, PROGRAM_ID);
         params.put(EventParams.DATE, DATE);
         params.put(EventParams.STAGE,STAGE_ID);
@@ -211,7 +202,7 @@ public class EventHandlerTest {
         Map<String,Object> params = new HashMap<>();
         params.put(EventParams.EXTERNAL_ID,ENTITY_INSTANCE_ID);
         params.put(EventParams.ENTITY_TYPE, ENTITY_TYPE_PERSON );
-        params.put(EventParams.LOCATION,ORGUNIT_NAME);
+        params.put(EventParams.LOCATION,ORGUNIT_ID);
         params.put(EventParams.PROGRAM,PROGRAM_ID );
         params.put(EventParams.DATE, DATE);
         params.put(ATTRIBUTE_ID, ATTRIBUTE_VALUE);
