@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSyntaxException;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -43,7 +45,12 @@ public class Template {
                 Gson gson = new Gson();
                 JsonObject jsonObject = new JsonObject();
                 for (Map.Entry<String, String> entry : jsonParams.entrySet()) {
-                    JsonElement obj = new JsonParser().parse(entry.getValue());
+                    JsonElement obj;
+                    try {
+                        obj = new JsonParser().parse(entry.getValue());
+                    } catch (JsonSyntaxException e) {
+                        obj = new JsonPrimitive(entry.getValue());
+                    }
                     jsonObject.add(entry.getKey(), obj);
                 }
                 String json = gson.toJson(jsonObject);
