@@ -39,7 +39,7 @@ public class DhisSchemaController {
 
 
     @ResponseStatus(HttpStatus.OK)
-    @RequestMapping(value="/programs", method = RequestMethod.GET)
+    @RequestMapping(value = "/programs", method = RequestMethod.GET)
     @ResponseBody
     public List<Program> getPrograms() {
         return programService.findAll();
@@ -48,14 +48,14 @@ public class DhisSchemaController {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/trackedEntityAttributes", method = RequestMethod.GET)
-    public List<TrackedEntityAttribute> getAttributes () {
+    public List<TrackedEntityAttribute> getAttributes() {
         return trackedEntityAttributeService.findAll();
     }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/trackedEntities", method = RequestMethod.GET)
-    public List<TrackedEntity> getTrackedEntities () {
+    public List<TrackedEntity> getTrackedEntities() {
         return trackedEntityService.findAll();
     }
 
@@ -63,7 +63,7 @@ public class DhisSchemaController {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/orgUnits", method = RequestMethod.GET)
-    public List<OrgUnit> getOrgUnits () {
+    public List<OrgUnit> getOrgUnits() {
         return orgUnitService.findAll();
     }
 
@@ -71,12 +71,9 @@ public class DhisSchemaController {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/dataElements", method = RequestMethod.GET)
-    public List<DataElement> getDataElements () {
+    public List<DataElement> getDataElements() {
         return dataElementService.findAll();
     }
-
-
-
 
 
 }
