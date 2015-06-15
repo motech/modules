@@ -297,8 +297,7 @@
     {
         "name":"Voto",
         "configurables": [
-            "api_key",
-            "status_callback_url"
+            "api_key"
         ],
         "outgoing":{
             "maxSmsSize":"160",
@@ -314,7 +313,7 @@
                     "channel":"sms",
                     "message_id":"[message_id]",
                     "survey_id":"[survey_id]",
-                    "status_callback_url":"[status_callback_url]",
+                    "status_callback_url":"[callback]",
                     "subscribers":"[subscribers]",
                     "api_key":"[api_key]"
                 }
@@ -322,10 +321,15 @@
             "response":{
                 "successStatus": "200",
                 "multiLineRecipientResponse": "false",
+                "extractSingleSuccessMessageId":"\"data\":([0-9]*),",
                 "extractGeneralFailureMessage": "^\\{\"status\":[0-9]{3},\"code\":[0-9]*,\"data\":[a-zA-Z0-9]*,\"message\":\"(.*)\",\"more_info\":\".*\"\\}$"
             }
         },
         "status":{
+            "messageIdKey": "outgoing_call_id",
+            "statusKey": "delivery_status",
+            "statusFailure": "5|8|9|10|13|14",
+            "statusSuccess": "6"
         },
         "incoming":{
         }
