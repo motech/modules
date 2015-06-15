@@ -129,6 +129,7 @@ public class OutboundCallServiceBundleIT extends BasePaxIT {
         params.put("api_key", "qwerty123");
         params.put("message_id", "123123");
         params.put("channel", "ivr");
+        params.put("status_callback_url", "http://someUrl.com");
         params.put("subscribers", "[{\"phone\":\"48700123123\",\"language\":null}]");
 
         outboundCallService.initiateCall(config.getName(), params);
