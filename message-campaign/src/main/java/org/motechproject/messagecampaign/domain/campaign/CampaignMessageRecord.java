@@ -20,7 +20,6 @@ import java.util.Objects;
 public class CampaignMessageRecord {
 
     @Field
-    @JsonIgnore
     private Long id;
 
     @UIDisplayable(position = 1)
