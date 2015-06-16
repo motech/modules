@@ -35,6 +35,10 @@ public class CommcareDataProviderBuilder {
     private CommcareSchemaService schemaService;
     private CommcareConfigService configService;
 
+    /**
+     * Builds the body of the data provider into JSON form, using all available Commcare configs.
+     * @return the body of the provider, or null if there are no configuration available
+     */
     public String generateDataProvider() {
         Map<String, Object> model = new HashMap<>();
         EscapeTool escapeTool = new EscapeTool();
@@ -46,6 +50,11 @@ public class CommcareDataProviderBuilder {
             configurations.add(new ConfigurationData(config.getName(),
                     schemaService.getAllFormSchemas(config.getName()),
                     schemaService.getAllCaseTypes(config.getName())));
+        }
+
+        if (configurations.isEmpty()) {
+            // return null in case of no configurations - the provider won't get registered
+            return null;
         }
 
         model.put("configurations", configurations);

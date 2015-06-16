@@ -1,5 +1,6 @@
 package org.motechproject.commcare;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.motechproject.commcare.domain.CaseInfo;
 import org.motechproject.commcare.domain.CommcareFixture;
@@ -21,8 +22,7 @@ import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,8 +32,10 @@ import java.util.Map;
 /**
  * The <code>CommcareDataProvider</code> class is responsible for providing
  * lookups for certain CommCare entities. Thanks to this class, users
- * can use Commcare as a data source in Tasks.
+ * can use Commcare as a data source in Tasks. This class handles its registration
+ * as an OSGi service on its own.
  */
+@Service("commcareDataProvider")
 public class CommcareDataProvider extends AbstractDataProvider {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommcareDataProvider.class);
@@ -59,14 +61,7 @@ public class CommcareDataProvider extends AbstractDataProvider {
     private List<String> supportedTypes = new ArrayList<>();
 
 
-    @Autowired
-    public CommcareDataProvider(ResourceLoader resourceLoader) {
-        Resource resource = resourceLoader.getResource("task-data-provider.json");
-
-        if (resource != null) {
-            setBody(resource);
-        }
-
+    public CommcareDataProvider() {
         supportedTypes.addAll(Arrays.asList(COMMCARE_USER, COMMCARE_LOCATION, COMMCARE_FIXTURE, COMMCARE_FORM, CASE_INFO));
     }
 
@@ -123,19 +118,29 @@ public class CommcareDataProvider extends AbstractDataProvider {
         return "org.motechproject.commcare.domain";
     }
 
+    /**
+     * Updates the data provider, by first rebuilding its JSON representation, then re-registering itself as an OSGi
+     * service so that tasks will pick up the change.
+     */
     public void updateDataProvider() {
         LOGGER.info("Updating Commcare tasks data provider");
 
-        setBody(dataProviderBuilder.generateDataProvider());
+        String body = dataProviderBuilder.generateDataProvider();
+
+        setBody(body);
+
         // we unregister the service, then register again
         if (serviceRegistration != null) {
             serviceRegistration.unregister();
             serviceRegistration = null;
         }
 
-        serviceRegistration = bundleContext.registerService(DataProvider.class.getName(), this, null);
-
-        LOGGER.info("Commcare data provider registered");
+        if (StringUtils.isNotBlank(body)) {
+            serviceRegistration = bundleContext.registerService(DataProvider.class.getName(), this, null);
+            LOGGER.info("Commcare data provider registered");
+        } else {
+            LOGGER.info("Omitting registration of empty Commcare data provider");
+        }
     }
 
     private Map<String, Object> convertFormToMap(CommcareForm form) {
