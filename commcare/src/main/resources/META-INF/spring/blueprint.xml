@@ -18,8 +18,6 @@
 
     <security:global-method-security pre-post-annotations="enabled" />
 
-    <bean id="commcareDataProvider" class="org.motechproject.commcare.CommcareDataProvider"/>
-
     <bean id="moduleRegistrationData" class="org.motechproject.osgi.web.ModuleRegistrationData">
         <constructor-arg name="moduleName" value="commcare" />
         <constructor-arg name="url" value="../commcare/resources/index.html" />
@@ -37,9 +35,6 @@
         <property name="defaultURL" value="/commcare/settings" />
         <property name="roleForAccess" value="manageCommcare" />
     </bean>
-
-    <osgi:service id="commcareDataProviderOsgi" auto-export="interfaces" ref="commcareDataProvider"
-                  interface="org.motechproject.commons.api.DataProvider"/>
 
     <osgi:service id="commcareUserServiceOsgi" ref="commcareUserServiceImpl"
                   interface="org.motechproject.commcare.service.CommcareUserService"/>

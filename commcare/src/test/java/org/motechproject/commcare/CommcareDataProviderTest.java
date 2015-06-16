@@ -17,7 +17,6 @@ import org.motechproject.commcare.service.impl.CommcareLocationServiceImpl;
 import org.motechproject.commcare.service.impl.CommcareUserServiceImpl;
 import org.motechproject.commcare.util.ConfigsUtils;
 import org.motechproject.commons.api.Range;
-import org.springframework.core.io.ResourceLoader;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,9 +48,6 @@ public class CommcareDataProviderTest {
     private CaseInfo caseInfo =  new CaseInfo();
 
     @Mock
-    private ResourceLoader resourceLoader;
-
-    @Mock
     private CommcareFormServiceImpl commcareFormService;
 
     @Mock
@@ -81,9 +77,7 @@ public class CommcareDataProviderTest {
     public void setUp() throws Exception {
         initMocks(this);
 
-        when(resourceLoader.getResource("task-data-provider.json")).thenReturn(null);
-
-        provider = new CommcareDataProvider(resourceLoader);
+        provider = new CommcareDataProvider();
         provider.setCommcareUserService(commcareUserService);
         provider.setCommcareLocationService(commcareLocationService);
         provider.setCommcareFormService(commcareFormService);
