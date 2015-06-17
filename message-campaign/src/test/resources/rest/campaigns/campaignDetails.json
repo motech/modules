@@ -3,6 +3,7 @@
     "type" : "ABSOLUTE",
     "messages" : [
         {
+            "id" : null,
             "name" : "First",
             "formats" : ["IVR", "SMS"],
             "languages" : ["en"],
@@ -11,6 +12,7 @@
             "startTime" : "10:30:00"
         },
         {
+            "id" : null,
             "name" : "Second",
             "formats" : ["IVR"],
             "languages" : ["en"],

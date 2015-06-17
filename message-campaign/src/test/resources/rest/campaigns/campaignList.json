@@ -4,6 +4,7 @@
       "type" : "ABSOLUTE",
       "messages" : [
           {
+              "id" : null,
               "name" : "First",
               "formats" : ["IVR", "SMS"],
               "languages" : ["en"],
@@ -12,6 +13,7 @@
               "startTime" : "10:30:00"
           },
           {
+              "id" : null,
               "name" : "Second",
               "formats" : ["IVR"],
               "languages" : ["en"],
@@ -27,6 +29,7 @@
       "maxDuration" : "5 weeks",
       "messages" : [
           {
+              "id" : null,
               "name" : "Weekly Message #1",
               "formats" : ["IVR", "SMS"],
               "languages" : ["en"],
@@ -35,6 +38,7 @@
               "startTime" : "10:30"
           },
           {
+              "id" : null,
               "name" : "Weekly Message #2",
               "formats" : ["SMS"],
               "languages" : ["en"],
@@ -43,6 +47,7 @@
               "startTime" : "10:30"
           },
           {
+              "id" : null,
               "name" : "Weekly Message #3",
               "formats" : ["SMS"],
               "languages" : ["en"],
