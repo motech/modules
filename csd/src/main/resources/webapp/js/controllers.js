@@ -206,7 +206,7 @@
         var saveData = (function () {
             var a = document.createElement("a");
             document.body.appendChild(a);
-            a.style = "display: none";
+            a.style.display = "none";
             return function (data, fileName) {
                 var blob = new Blob([data], {type: "octet/stream"}),
                     url = window.URL.createObjectURL(blob);
