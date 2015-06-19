@@ -2,6 +2,9 @@ package org.motechproject.openmrs19.exception;
 
 import org.springframework.http.HttpStatus;
 
+/**
+ * Thrown when HTTP request failed for any reason. Stores the HTTP response status.
+ */
 public class HttpException extends Exception {
 
     private static final long serialVersionUID = 1L;

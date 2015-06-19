@@ -1,6 +1,10 @@
 package org.motechproject.openmrs19.exception;
 
+/**
+ * Thrown when there were problems while fetching data from OpenMRS server.
+ */
 public class OpenMRSException extends RuntimeException {
+
     public OpenMRSException(Throwable e) {
         super(e);
     }
