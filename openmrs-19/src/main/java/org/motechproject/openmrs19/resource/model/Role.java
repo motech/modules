@@ -7,6 +7,9 @@ import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 
+/**
+ * Represents a single role. A role is a group of privileges in the OpenMRS system. It's a part of the OpenMRS model.
+ */
 public class Role {
 
     private String uuid;
@@ -28,6 +31,10 @@ public class Role {
         this.display = name;
     }
 
+    /**
+     * Implementation of the {@link JsonSerializer} interface for the {@link Role} class. It represents the role as its
+     * ID.
+     */
     public static class RoleSerializer implements JsonSerializer<Role> {
         @Override
         public JsonElement serialize(Role src, Type typeOfSrc, JsonSerializationContext context) {

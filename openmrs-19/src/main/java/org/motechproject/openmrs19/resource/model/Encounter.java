@@ -9,6 +9,11 @@ import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Represents a single OpenMRS encounter. An encounter is a single, specific interaction between the patient and a
+ * provider. It can be any interaction and includes doctor visits, laboratory tests, food distribution, home visits,
+ * counselor appointments, etc. It's a part of the OpenMRS model.
+ */
 public class Encounter {
 
     private String uuid;
@@ -18,45 +23,6 @@ public class Encounter {
     private Patient patient;
     private Person provider;
     private List<Observation> obs;
-
-    public static class EncounterType {
-        private String uuid;
-        private String name;
-        private String description;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
-        public String getUuid() {
-            return uuid;
-        }
-
-        public void setUuid(String uuid) {
-            this.uuid = uuid;
-        }
-    }
-
-    public static class EncounterTypeSerializer implements JsonSerializer<EncounterType> {
-
-        @Override
-        public JsonElement serialize(EncounterType src, Type typeOfSrc, JsonSerializationContext context) {
-            return new JsonPrimitive(src.getName());
-        }
-
-    }
 
     public String getUuid() {
         return uuid;
@@ -112,5 +78,53 @@ public class Encounter {
 
     public void setObs(List<Observation> obs) {
         this.obs = obs;
+    }
+
+    /**
+     * Represent a single type of the encounter.
+     */
+    public static class EncounterType {
+
+        private String uuid;
+        private String name;
+        private String description;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public String getUuid() {
+            return uuid;
+        }
+
+        public void setUuid(String uuid) {
+            this.uuid = uuid;
+        }
+    }
+
+    /**
+     * Implementation of the {@link JsonSerializer} interface for the
+     * {@link org.motechproject.openmrs19.resource.model.Encounter.EncounterType} class. It represents the encounter
+     * as its name.
+     */
+    public static class EncounterTypeSerializer implements JsonSerializer<EncounterType> {
+
+        @Override
+        public JsonElement serialize(EncounterType src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src.getName());
+        }
+
     }
 }

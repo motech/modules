@@ -9,16 +9,29 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a single patient. It's a part of OpenMRS model.
+ */
 public class Patient {
+
     private String uuid;
     private List<Identifier> identifiers = new ArrayList<Identifier>();
     private Person person;
 
-    public static class PatientSerializer implements JsonSerializer<Patient> {
-        @Override
-        public JsonElement serialize(Patient src, Type typeOfSrc, JsonSerializationContext context) {
-            return new JsonPrimitive(src.getUuid());
+    /**
+     * Returns the value of the identifier of the type with the given ID.
+     *
+     * @param uuid  the ID of the identifier type
+     * @return the value of the identifier with the given ID
+     */
+    public Identifier getIdentifierByIdentifierType(String uuid) {
+        for (Identifier identifier : identifiers) {
+            IdentifierType type = identifier.getIdentifierType();
+            if (type.getUuid().equals(uuid)) {
+                return identifier;
+            }
         }
+        return null;
     }
 
     public String getUuid() {
@@ -45,13 +58,14 @@ public class Patient {
         this.person = person;
     }
 
-    public Identifier getIdentifierByIdentifierType(String uuid) {
-        for (Identifier identifier : identifiers) {
-            IdentifierType type = identifier.getIdentifierType();
-            if (type.getUuid().equals(uuid)) {
-                return identifier;
-            }
+    /**
+     * Implementation of the {@link JsonSerializer} interface for the {@link Patient}. It represents the patient as its
+     * ID.
+     */
+    public static class PatientSerializer implements JsonSerializer<Patient> {
+        @Override
+        public JsonElement serialize(Patient src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src.getUuid());
         }
-        return null;
     }
 }

@@ -1,5 +1,10 @@
 package org.motechproject.openmrs19.resource.model;
 
+/**
+ * Represents a single patient identifier. A patient identifier is any unique number that can identify a patient.
+ * Examples are a Medical Record Number, a National ID, a Social Security Number, a driver's license number, etc.
+ * A patient can have any number of identifiers. It's a part of the OpenMRS model.
+ */
 public class Identifier {
 
     private String uuid;

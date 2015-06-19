@@ -46,6 +46,7 @@ public interface LocationResource {
 
     /**
      * Updates location with given data.
+     *
      * @param location  the update source
      * @return  the updated location
      * @throws HttpException  when there were problems while updating location

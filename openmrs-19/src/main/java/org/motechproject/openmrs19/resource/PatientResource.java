@@ -46,6 +46,7 @@ public interface PatientResource {
 
     /**
      * Deletes the patient with the given UUID.
+     *
      * @param uuid  the UUID of the patient
      * @throws HttpException  when there were problems while deleting patient
      */

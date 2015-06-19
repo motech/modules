@@ -8,7 +8,11 @@ import com.google.gson.JsonSerializer;
 import java.lang.reflect.Type;
 import java.util.List;
 
+/**
+ * Represents a single attribute of a user. It's a part of the OpenMRS model.
+ */
 public class Attribute {
+
     private String display;
     private String uuid;
     private String value;
@@ -18,37 +22,6 @@ public class Attribute {
     private AttributeType attributeType;
 
     private List<Link> links;
-
-    public static class Link {
-        private String uri;
-
-        public String getUri() {
-            return uri;
-        }
-
-        public void setUri(String uri) {
-            this.uri = uri;
-        }
-    }
-
-    public static class AttributeType {
-        private String uuid;
-
-        public String getUuid() {
-            return uuid;
-        }
-
-        public void setUuid(String uuid) {
-            this.uuid = uuid;
-        }
-    }
-
-    public static class AttributeTypeSerializer implements JsonSerializer<AttributeType> {
-        @Override
-        public JsonElement serialize(AttributeType src, Type typeOfSrc, JsonSerializationContext context) {
-            return new JsonPrimitive(src.getUuid());
-        }
-    }
 
     public List<Link> getLinks() {
         return links;
@@ -112,5 +85,49 @@ public class Attribute {
 
     public void setAttributeType(AttributeType attributeType) {
         this.attributeType = attributeType;
+    }
+
+    /**
+     * Represents a single link.
+     */
+    public static class Link {
+
+        private String uri;
+
+        public String getUri() {
+            return uri;
+        }
+
+        public void setUri(String uri) {
+            this.uri = uri;
+        }
+    }
+
+    /**
+     * Represents a single attribute type stored as ID.
+     */
+    public static class AttributeType {
+
+        private String uuid;
+
+        public String getUuid() {
+            return uuid;
+        }
+
+        public void setUuid(String uuid) {
+            this.uuid = uuid;
+        }
+    }
+
+    /**
+     * Implementation of the {@link JsonSerializer} interface for the
+     * {@link org.motechproject.openmrs19.resource.model.Attribute.AttributeType} class.
+     */
+    public static class AttributeTypeSerializer implements JsonSerializer<AttributeType> {
+
+        @Override
+        public JsonElement serialize(AttributeType src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src.getUuid());
+        }
     }
 }
