@@ -12,11 +12,25 @@ import org.motechproject.openmrs19.domain.OpenMRSProvider;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Utility class for parsing various classes to a map of parameters that can be attached to a
+ * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
+ */
 public final class EventHelper {
 
+    /**
+     * Utility class, should not be instantiated.
+     */
     private EventHelper() {
     }
 
+    /**
+     * Parses the given {@link OpenMRSPatient} to a map of parameters, which can then be attached to a
+     * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
+     *
+     * @param patient  the patient to be parsed
+     * @return the map of the parameters
+     */
     public static Map<String, Object> patientParameters(OpenMRSPatient patient) {
         Map<String, Object> patientParameters = new HashMap<>();
         patientParameters.put(EventKeys.PATIENT_ID, patient.getPatientId());
@@ -34,6 +48,13 @@ public final class EventHelper {
         return patientParameters;
     }
 
+    /**
+     * Parses the given {@link OpenMRSPerson} to a map of parameters, which can then be attached to a
+     * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
+     *
+     * @param person  the person to be parsed
+     * @return the map of the parameters
+     */
     public static Map<String, Object> personParameters(OpenMRSPerson person) {
         Map<String, Object> personParameters = new HashMap<>();
         personParameters.put(EventKeys.PERSON_ID, person.getPersonId());
@@ -51,6 +72,13 @@ public final class EventHelper {
         return personParameters;
     }
 
+    /**
+     * Parses the given {@link OpenMRSEncounter} to a map of parameters, which can then be attached to a
+     * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
+     *
+     * @param encounter  the encounter to be parsed
+     * @return the map of the parameters
+     */
     public static Map<String, Object> encounterParameters(OpenMRSEncounter encounter) {
         Map<String, Object> encounterParameters = new HashMap<>();
         encounterParameters.put(EventKeys.ENCOUNTER_ID, encounter.getEncounterId());
@@ -87,12 +115,26 @@ public final class EventHelper {
         return encounterParameters;
     }
 
+    /**
+     * Parses the given ID of the encounter to a map with a single parameter, which can then be attached to a
+     * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
+     *
+     * @param uuid  the encounter ID to be parsed
+     * @return the map with single ID parameter
+     */
     public static Map<String, Object> encounterParameters(String uuid) {
         Map<String, Object> encounterParameters = new HashMap<>();
         encounterParameters.put(EventKeys.ENCOUNTER_ID, uuid);
         return encounterParameters;
     }
 
+    /**
+     * Parses the given {@link OpenMRSObservation} to a map of parameters, which can then be attached to a
+     * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
+     *
+     * @param obs  the observation to be parsed
+     * @return the map of the parameters
+     */
     public static Map<String, Object> observationParameters(OpenMRSObservation obs) {
         Map<String, Object> observationParameters = new HashMap<>();
         observationParameters.put(EventKeys.OBSERVATION_DATE, obs.getDate());
@@ -102,6 +144,13 @@ public final class EventHelper {
         return  observationParameters;
     }
 
+    /**
+     * Parses the given {@link OpenMRSFacility} to a map of parameters, which can then be attached to a
+     * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
+     *
+     * @param facility  the facility to be parsed
+     * @return the map of the parameters
+     */
     public static Map<String, Object> facilityParameters(OpenMRSFacility facility) {
         Map<String, Object> facilityParameters = new HashMap<>();
         facilityParameters.put(EventKeys.FACILITY_ID, facility.getFacilityId());
@@ -113,6 +162,13 @@ public final class EventHelper {
         return facilityParameters;
     }
 
+    /**
+     * Parses the given {@link OpenMRSProvider} to a map of parameters, which can then be attached to a
+     * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
+     *
+     * @param provider  the provider to be parsed
+     * @return the map of the parameters
+     */
     public static Map<String, Object> providerParameters(OpenMRSProvider provider) {
         Map<String, Object> providerParameters = new HashMap<>();
         providerParameters.put(EventKeys.PROVIDER_ID, provider.getProviderId());
@@ -124,6 +180,13 @@ public final class EventHelper {
         return providerParameters;
     }
 
+    /**
+     * Parses the given {@link OpenMRSConcept} to a map of parameters, which can then be attached to a
+     * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
+     *
+     * @param concept  the concept to be parsed
+     * @return the map of the parameters
+     */
     public static Map<String, Object> conceptParameters(OpenMRSConcept concept) {
         Map<String, Object> conceptParameters = new HashMap<>();
         conceptParameters.put(EventKeys.CONCEPT_NAME, concept.getDisplay());
