@@ -12,9 +12,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
- * Represents a single OpenMRS Web Application instance
+ * Represents a single OpenMRS Web Application instance.
  */
-
 @Component
 public class OpenMrsInstance {
 
@@ -38,14 +37,12 @@ public class OpenMrsInstance {
         this.motechPatientIdentifierTypeName = settingsFacade.getProperty(OPENMRS_MOTECH_ID_NAME_PROPERTY);
     }
 
-    public String getOpenmrsUrl() {
-        return openmrsUrl;
-    }
-
-    public String getMotechPatientIdentifierTypeName() {
-        return motechPatientIdentifierTypeName;
-    }
-
+    /**
+     * Creates an URI that points to the resource under the given path on the OpenMRS server.
+     *
+     * @param path  the path to the resource
+     * @return the URI pointing to the resource on the OpenMRS server
+     */
     public URI toInstancePath(String path) {
         try {
             return new URI(openmrsUrl + path);
@@ -54,7 +51,23 @@ public class OpenMrsInstance {
         }
     }
 
+    /**
+     * Creates an URI that points to the resource under the given path on the OpenMRS server. The given template path
+     * is first parsed and then given parameters are applied to it resulting in a complete URI.
+     *
+     * @param path  the path template
+     * @param params  the parameters that should be included in the URI
+     * @return the URI pointing to the resource on the OpenMRS server
+     */
     public URI toInstancePathWithParams(String path, Object... params) {
         return new UriTemplate(openmrsUrl + path).expand(params);
+    }
+
+    public String getOpenmrsUrl() {
+        return openmrsUrl;
+    }
+
+    public String getMotechPatientIdentifierTypeName() {
+        return motechPatientIdentifierTypeName;
     }
 }
