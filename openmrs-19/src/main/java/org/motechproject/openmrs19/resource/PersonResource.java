@@ -77,6 +77,7 @@ public interface PersonResource {
 
     /**
      * Update the preferred address of the person with given UUID.
+     *
      * @param uuid  the UUID of the person
      * @param address  the new preferred address
      * @throws HttpException

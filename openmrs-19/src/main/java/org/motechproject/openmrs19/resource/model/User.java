@@ -2,7 +2,11 @@ package org.motechproject.openmrs19.resource.model;
 
 import java.util.List;
 
+/**
+ * Represents a single OpenMRS user. It's a part of the OpenMRS model.
+ */
 public class User {
+
     private String uuid;
     private String username;
     private String password;

@@ -7,7 +7,12 @@ import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 
+/**
+ * Represents a single location. A location is a physical place where patients can be seen. It's a part of the OpenMRS
+ * model.
+ */
 public class Location {
+
     private String uuid;
     private String name;
     private String stateProvince;
@@ -72,6 +77,10 @@ public class Location {
         this.description = description;
     }
 
+    /**
+     * Implementation of the {@link JsonSerializer} interface for the {@link Location} class. It represents the location
+     * as its ID.
+     */
     public static class LocationSerializer implements JsonSerializer<Location> {
         @Override
         public JsonElement serialize(Location src, Type typeOfSrc, JsonSerializationContext context) {
