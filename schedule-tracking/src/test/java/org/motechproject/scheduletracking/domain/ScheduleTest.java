@@ -1,8 +1,8 @@
 package org.motechproject.scheduletracking.domain;
 
 import org.joda.time.DateTime;
+import org.junit.After;
 import org.junit.Test;
-import org.motechproject.testing.utils.BaseUnitTest;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
@@ -10,8 +10,16 @@ import static org.junit.Assert.assertEquals;
 import static org.motechproject.commons.date.util.DateUtil.newDateTime;
 import static org.motechproject.scheduletracking.utility.PeriodUtil.hours;
 import static org.motechproject.scheduletracking.utility.PeriodUtil.weeks;
+import static org.motechproject.testing.utils.TimeFaker.fakeNow;
+import static org.motechproject.testing.utils.TimeFaker.stopFakingTime;
 
-public class ScheduleTest extends BaseUnitTest {
+public class ScheduleTest {
+
+    @After
+    public void tearDown() {
+        stopFakingTime();
+    }
+
     @Test
     public void shouldGetMilestoneByName() {
         Milestone secondMilestone = new Milestone("Second Shot", weeks(1), weeks(1), weeks(1), weeks(1));
@@ -48,9 +56,8 @@ public class ScheduleTest extends BaseUnitTest {
 
     @Test
     public void shouldReturnTrueIfScheduleDurationHasAlreadyExpired() {
-
         DateTime now = newDateTime(2012, 8, 2, 1, 3, 3);
-        mockCurrentDate(now);
+        fakeNow(now);
 
         String milestone1 = "First Shot";
         String milestone2 = "Second Shot";
@@ -74,7 +81,8 @@ public class ScheduleTest extends BaseUnitTest {
         schedule.addMilestones(firstMilestone, secondMilestone);
 
         DateTime now = newDateTime(2012, 8, 2, 1, 3, 3);
-        mockCurrentDate(now);
+        fakeNow(now);
+
         assertTrue(schedule.hasExpiredSince(now.minusHours(6), firstMilestone.getName()));
         assertTrue(schedule.hasExpiredSince(now.minusHours(5).minusMinutes(1), firstMilestone.getName()));
         assertFalse(schedule.hasExpiredSince(now.minusHours(4), firstMilestone.getName()));

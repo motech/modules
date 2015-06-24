@@ -1,7 +1,8 @@
-package org.motechproject.pillreminder;
+package org.motechproject.pillreminder.handler;
 
 
 import org.joda.time.LocalTime;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -11,6 +12,7 @@ import org.motechproject.commons.date.model.Time;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
+import org.motechproject.pillreminder.EventKeys;
 import org.motechproject.pillreminder.builder.SchedulerPayloadBuilder;
 import org.motechproject.pillreminder.builder.testbuilder.DosageBuilder;
 import org.motechproject.pillreminder.builder.testbuilder.PillRegimenBuilder;
@@ -20,7 +22,7 @@ import org.motechproject.pillreminder.domain.Dosage;
 import org.motechproject.pillreminder.domain.PillRegimen;
 import org.motechproject.scheduler.contract.RepeatingSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
-import org.motechproject.testing.utils.BaseUnitTest;
+import org.motechproject.testing.utils.TimeFaker;
 
 import java.util.Map;
 
@@ -33,8 +35,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.motechproject.testing.utils.TimeFaker.fakeNow;
 
-public class ReminderEventHandlerTest extends BaseUnitTest {
+public class ReminderEventHandlerTest {
 
     @Mock
     EventRelay eventRelay;
@@ -58,9 +61,15 @@ public class ReminderEventHandlerTest extends BaseUnitTest {
         pillReminderEventHandler = new ReminderEventHandler(eventRelay, pillRegimenDataService, schedulerService);
     }
 
+    @After
+    public void tearDown() {
+        TimeFaker.stopFakingTime();
+    }
+
     @Test
     public void shouldRaiseEventsForEachPillWindow() {
-        mockCurrentDate(dateTime(DateUtil.today(), reminderStartTime.plusMinutes(25)));
+        fakeNow(DateUtil.today().toDateTime(reminderStartTime.plusMinutes(25)));
+
         int pillWindow = 1;
         String externalId = "externalId";
         long dosageId = 26;
@@ -80,7 +89,8 @@ public class ReminderEventHandlerTest extends BaseUnitTest {
 
     @Test
     public void shouldRaiseEventWithInformationAboutTheNumberOfTimesItHasBeenRaisedIncludingCurrentEvent() {
-        mockCurrentDate(dateTime(DateUtil.today(), reminderStartTime.plusMinutes(25)));
+        fakeNow(DateUtil.today().toDateTime(reminderStartTime.plusMinutes(25)));
+
         String externalId = "externalId";
         long dosageId = 11L;
         ArgumentCaptor<MotechEvent> event = ArgumentCaptor.forClass(MotechEvent.class);
@@ -101,7 +111,8 @@ public class ReminderEventHandlerTest extends BaseUnitTest {
 
     @Test
     public void shouldRaiseEventWithInformationAboutTheNumberOfTimesItWillBeRaisedForEveryPillWindow() {
-        mockCurrentDate(dateTime(DateUtil.today(), reminderStartTime));
+        fakeNow(DateUtil.today().toDateTime(reminderStartTime));
+
         String externalId = "externalId";
         long dosageId = 87;
         ArgumentCaptor<MotechEvent> event = ArgumentCaptor.forClass(MotechEvent.class);
@@ -123,7 +134,8 @@ public class ReminderEventHandlerTest extends BaseUnitTest {
 
     @Test
     public void shouldRaiseEventWithInformationAboutTheRetryIntervalTime() {
-        mockCurrentDate(dateTime(DateUtil.today(), reminderStartTime.plusMinutes(25)));
+        fakeNow(DateUtil.today().toDateTime(reminderStartTime.plusMinutes(25)));
+
         int pillWindow = 0;
         String externalId = "externalId";
         long dosageId = 10L;
@@ -166,7 +178,7 @@ public class ReminderEventHandlerTest extends BaseUnitTest {
 
     @Test
     public void shouldScheduleRepeatRemindersForFirstCall() {
-        mockCurrentDate(dateTime(DateUtil.today(), reminderStartTime));
+        fakeNow(DateUtil.today().toDateTime(reminderStartTime));
         String externalId = "externalId";
         long dosageId = 17;
 

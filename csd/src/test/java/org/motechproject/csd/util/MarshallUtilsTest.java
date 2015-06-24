@@ -17,9 +17,10 @@ public class MarshallUtilsTest {
 
     @Before
     public void setup() throws Exception {
-        InputStream in = getClass().getResourceAsStream("/initialXml.xml");
-        xml = IOUtils.toString(in);
-        csd = InitialData.getInitialData();
+        try (InputStream in = getClass().getResourceAsStream("/initialXml.xml")) {
+            xml = IOUtils.toString(in);
+            csd = InitialData.getInitialData();
+        }
     }
 
     @Test

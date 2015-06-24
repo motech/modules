@@ -21,9 +21,8 @@ import org.motechproject.scheduletracking.domain.exception.NoMoreMilestonesToFul
 import org.motechproject.scheduletracking.events.EnrolledUserEvent;
 import org.motechproject.scheduletracking.events.UnenrolledUserEvent;
 import org.motechproject.scheduletracking.repository.dataservices.EnrollmentDataService;
-import org.motechproject.scheduletracking.service.MilestoneAlerts;
 import org.motechproject.scheduletracking.repository.dataservices.ScheduleDataService;
-import org.motechproject.testing.utils.BaseUnitTest;
+import org.motechproject.scheduletracking.service.MilestoneAlerts;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,8 +40,11 @@ import static org.motechproject.scheduletracking.domain.EnrollmentStatus.ACTIVE;
 import static org.motechproject.scheduletracking.utility.DateTimeUtil.weeksAgo;
 import static org.motechproject.scheduletracking.utility.PeriodUtil.days;
 import static org.motechproject.scheduletracking.utility.PeriodUtil.weeks;
+import static org.motechproject.testing.utils.TimeFaker.fakeNow;
+import static org.motechproject.testing.utils.TimeFaker.stopFakingTime;
 
-public class EnrollmentServiceImplTest extends BaseUnitTest {
+public class EnrollmentServiceImplTest {
+
     private EnrollmentServiceImpl enrollmentService;
 
     @Mock
@@ -160,29 +162,33 @@ public class EnrollmentServiceImplTest extends BaseUnitTest {
         Time preferredAlertTime = new Time(8, 10);
         EnrollmentStatus enrollmentStatus = EnrollmentStatus.DEFAULTED;
 
-        mockCurrentDate(now);
-        Milestone milestone = new Milestone("milestone", weeks(1), weeks(1), weeks(1), weeks(1));
-        Milestone milestone2 = new Milestone("milestone2", weeks(4), weeks(1), weeks(1), weeks(0));
-        Schedule schedule = new Schedule(scheduleName);
-        schedule.addMilestones(milestone, milestone2);
-        when(scheduleDataService.findByName(scheduleName)).thenReturn(schedule);
-        Enrollment dummyEnrollment = new EnrollmentBuilder().withExternalId(externalId).withSchedule(schedule).withCurrentMilestoneName(milestone.getName()).withStartOfSchedule(referenceDateTime).withEnrolledOn(enrollmentDateTime).withPreferredAlertTime(preferredAlertTime).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
-        dummyEnrollment.setId(1L);
-        when(enrollmentDataService.findByExternalIdScheduleNameAndStatus(externalId, scheduleName, EnrollmentStatus.ACTIVE)).thenReturn(null);
+        try {
+            fakeNow(now);
+            Milestone milestone = new Milestone("milestone", weeks(1), weeks(1), weeks(1), weeks(1));
+            Milestone milestone2 = new Milestone("milestone2", weeks(4), weeks(1), weeks(1), weeks(0));
+            Schedule schedule = new Schedule(scheduleName);
+            schedule.addMilestones(milestone, milestone2);
+            when(scheduleDataService.findByName(scheduleName)).thenReturn(schedule);
+            Enrollment dummyEnrollment = new EnrollmentBuilder().withExternalId(externalId).withSchedule(schedule).withCurrentMilestoneName(milestone.getName()).withStartOfSchedule(referenceDateTime).withEnrolledOn(enrollmentDateTime).withPreferredAlertTime(preferredAlertTime).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
+            dummyEnrollment.setId(1L);
+            when(enrollmentDataService.findByExternalIdScheduleNameAndStatus(externalId, scheduleName, EnrollmentStatus.ACTIVE)).thenReturn(null);
 
-        enrollmentService.enroll(externalId, scheduleName, milestone.getName(), referenceDateTime, enrollmentDateTime, preferredAlertTime, null);
-        DateTime enrollmentDateTimeBeforeMilestone2 = now.minusWeeks(6).minusSeconds(1);
-        enrollmentService.enroll(externalId2, scheduleName, milestone2.getName(), null, enrollmentDateTimeBeforeMilestone2, preferredAlertTime, null);
-        DateTime enrollmentDateTimeInMilestone2Start = now.minusWeeks(6);
-        enrollmentService.enroll(externalId3, scheduleName, milestone2.getName(), null, enrollmentDateTimeInMilestone2Start, preferredAlertTime, null);
+            enrollmentService.enroll(externalId, scheduleName, milestone.getName(), referenceDateTime, enrollmentDateTime, preferredAlertTime, null);
+            DateTime enrollmentDateTimeBeforeMilestone2 = now.minusWeeks(6).minusSeconds(1);
+            enrollmentService.enroll(externalId2, scheduleName, milestone2.getName(), null, enrollmentDateTimeBeforeMilestone2, preferredAlertTime, null);
+            DateTime enrollmentDateTimeInMilestone2Start = now.minusWeeks(6);
+            enrollmentService.enroll(externalId3, scheduleName, milestone2.getName(), null, enrollmentDateTimeInMilestone2Start, preferredAlertTime, null);
 
-        verify(enrollmentDataService, times(0)).update(Matchers.<Enrollment>any());
+            verify(enrollmentDataService, times(0)).update(Matchers.<Enrollment>any());
 
-        ArgumentCaptor<Enrollment> enrollmentArgumentCaptor = ArgumentCaptor.forClass(Enrollment.class);
-        verify(enrollmentDataService, times(3)).create(enrollmentArgumentCaptor.capture());
-        assertEnrollment(enrollmentArgumentCaptor.getAllValues().get(0), externalId, scheduleName, milestone, enrollmentStatus, schedule, null);
-        assertEnrollment(enrollmentArgumentCaptor.getAllValues().get(1), externalId2, scheduleName, milestone2, EnrollmentStatus.DEFAULTED, schedule, null);
-        assertEnrollment(enrollmentArgumentCaptor.getAllValues().get(2), externalId3, scheduleName, milestone2, EnrollmentStatus.ACTIVE, schedule, null);
+            ArgumentCaptor<Enrollment> enrollmentArgumentCaptor = ArgumentCaptor.forClass(Enrollment.class);
+            verify(enrollmentDataService, times(3)).create(enrollmentArgumentCaptor.capture());
+            assertEnrollment(enrollmentArgumentCaptor.getAllValues().get(0), externalId, scheduleName, milestone, enrollmentStatus, schedule, null);
+            assertEnrollment(enrollmentArgumentCaptor.getAllValues().get(1), externalId2, scheduleName, milestone2, EnrollmentStatus.DEFAULTED, schedule, null);
+            assertEnrollment(enrollmentArgumentCaptor.getAllValues().get(2), externalId3, scheduleName, milestone2, EnrollmentStatus.ACTIVE, schedule, null);
+        } finally {
+            stopFakingTime();
+        }
     }
 
     private void assertEnrollment(Enrollment enrollment, String externalId, String scheduleName, Milestone milestone, EnrollmentStatus enrollmentStatus, Schedule schedule, Map<String, String> metadata) {

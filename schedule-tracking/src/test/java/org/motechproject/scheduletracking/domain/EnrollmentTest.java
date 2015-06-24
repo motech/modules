@@ -5,7 +5,6 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.commons.date.util.DateUtil;
-import org.motechproject.testing.utils.BaseUnitTest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,8 +17,10 @@ import static org.motechproject.commons.date.util.DateUtil.newDateTime;
 import static org.motechproject.commons.date.util.DateUtil.now;
 import static org.motechproject.scheduletracking.utility.DateTimeUtil.weeksAgo;
 import static org.motechproject.scheduletracking.utility.PeriodUtil.weeks;
+import static org.motechproject.testing.utils.TimeFaker.fakeNow;
+import static org.motechproject.testing.utils.TimeFaker.stopFakingTime;
 
-public class EnrollmentTest extends BaseUnitTest {
+public class EnrollmentTest  {
     @Test
     public void shouldStartWithFirstMilestoneByDefault() {
         Schedule schedule = new Schedule("Yellow Fever Vaccination");
@@ -55,15 +56,19 @@ public class EnrollmentTest extends BaseUnitTest {
 
     @Test
     public void shouldReturnTheDateWhenAMilestoneWasLastFulfilled() {
-        mockCurrentDate(new DateTime(2012, 2, 20, 8, 15, 0, 0));
-        Schedule schedule = new Schedule("Yellow Fever Vaccination");
-        Milestone secondMilestone = new Milestone("Second Shot", weeks(1), weeks(1), weeks(1), weeks(1));
-        Milestone firstMilestone = new Milestone("First Shot", weeks(1), weeks(1), weeks(1), weeks(1));
-        schedule.addMilestones(firstMilestone, secondMilestone);
-        Enrollment enrollment = new EnrollmentBuilder().withExternalId("ID-074285").withSchedule(schedule).withCurrentMilestoneName("First Shot").withStartOfSchedule(weeksAgo(5)).withEnrolledOn(weeksAgo(3)).withPreferredAlertTime(null).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
-        enrollment.getFulfillments().add(new MilestoneFulfillment("First Shot", weeksAgo(0)));
+        fakeNow(new DateTime(2012, 2, 20, 8, 15, 0, 0));
+        try {
+            Schedule schedule = new Schedule("Yellow Fever Vaccination");
+            Milestone secondMilestone = new Milestone("Second Shot", weeks(1), weeks(1), weeks(1), weeks(1));
+            Milestone firstMilestone = new Milestone("First Shot", weeks(1), weeks(1), weeks(1), weeks(1));
+            schedule.addMilestones(firstMilestone, secondMilestone);
+            Enrollment enrollment = new EnrollmentBuilder().withExternalId("ID-074285").withSchedule(schedule).withCurrentMilestoneName("First Shot").withStartOfSchedule(weeksAgo(5)).withEnrolledOn(weeksAgo(3)).withPreferredAlertTime(null).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
+            enrollment.getFulfillments().add(new MilestoneFulfillment("First Shot", weeksAgo(0)));
 
-        assertEquals(weeksAgo(0), enrollment.getLastFulfilledDate());
+            assertEquals(weeksAgo(0), enrollment.getLastFulfilledDate());
+        } finally {
+            stopFakingTime();
+        }
     }
 
     @Test

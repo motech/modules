@@ -1,10 +1,12 @@
-package org.motechproject.pillreminder;
+package org.motechproject.pillreminder.handler;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.event.MotechEvent;
+import org.motechproject.pillreminder.EventKeys;
+import org.motechproject.pillreminder.handler.PillReminderActionEventHandler;
 import org.motechproject.pillreminder.service.PillReminderService;
 
 import static org.mockito.Mockito.verify;

@@ -10,6 +10,7 @@ import org.motechproject.pillreminder.domain.Dosage;
 import org.motechproject.pillreminder.domain.Medicine;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import static ch.lambdaj.Lambda.extract;
@@ -22,7 +23,7 @@ public class DosageResponseBuilderTest {
     @Test
     public void shouldConstructADosageResponseGivenADosage() {
         LocalDate date = DateUtil.today();
-        HashSet<Medicine> medicines = new HashSet<Medicine>();
+        HashSet<Medicine> medicines = new LinkedHashSet<>();
         medicines.add(new Medicine("medicine1", date, date));
         medicines.add(new Medicine("medicine2", date, date));
         Dosage dosage = new Dosage(new Time(10, 5), medicines);
