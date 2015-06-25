@@ -140,7 +140,7 @@ public class MRSEncounterServiceIT extends BasePaxIT {
 
         synchronized (lock) {
             encounterAdapter.deleteEncounter(encounter.getEncounterId());
-            assertNull(encounterAdapter.getEncounterById(encounter.getEncounterId()));
+            assertNull(encounterAdapter.getEncounterByUuid(encounter.getEncounterId()));
 
             lock.wait(60000);
         }
@@ -262,7 +262,7 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         person.setLastName("FooLastName");
         person.setGender("M");
         String personUuid = personAdapter.createPerson(person).getPersonId();
-        personOne = personAdapter.getByUuid(personUuid);
+        personOne = personAdapter.getPersonByUuid(personUuid);
     }
 
     private void preparePersonTwo() {
@@ -271,7 +271,7 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         person.setLastName("FooLastNameTwo");
         person.setGender("F");
         String personUuid = personAdapter.createPerson(person).getPersonId();
-        personTwo = personAdapter.getByUuid(personUuid);
+        personTwo = personAdapter.getPersonByUuid(personUuid);
     }
 
     private void prepareUser() throws UserAlreadyExistsException {
@@ -287,13 +287,13 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         tempProvider.setPerson(personOne);
         tempProvider.setIdentifier("FooIdentifier");
         String providerUuid = providerService.createProvider(tempProvider).getProviderId();
-        provider = providerService.getByUuid(providerUuid);
+        provider = providerService.getProviderByUuid(providerUuid);
     }
 
     private void prepareFacility() {
         OpenMRSFacility tempFacility = new OpenMRSFacility("FooName", "FooCountry", "FooRegion", "FooCountryDistrict", "FooStateProvince");
         String facilityUuid = facilityAdapter.createFacility(tempFacility).getFacilityId();
-        facility = facilityAdapter.getFacility(facilityUuid);
+        facility = facilityAdapter.getFacilityByUuid(facilityUuid);
     }
 
     private void preparePatient() {
@@ -302,7 +302,7 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         tempPatient.setPerson(personTwo);
         tempPatient.setMotechId("666");
         String patientUuid = patientAdapter.createPatient(tempPatient).getPatientId();
-        patient = patientAdapter.getPatient(patientUuid);
+        patient = patientAdapter.getPatientByUuid(patientUuid);
     }
 
     private void prepareEncounterType() {
@@ -317,6 +317,6 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         OpenMRSObservation tempObservation = new OpenMRSObservation<>(format.parse(date), concept.getDisplay(), "true");
         tempObservation.setPatientId(patient.getMotechId());
         String observationUuid = obsAdapter.createObservation(tempObservation).getObservationId();
-        observation = obsAdapter.getObservationById(observationUuid);
+        observation = obsAdapter.getObservationByUuid(observationUuid);
     }
 }

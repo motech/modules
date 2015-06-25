@@ -5,19 +5,22 @@ import org.motechproject.openmrs19.domain.OpenMRSFacility;
 import java.util.List;
 
 /**
- * Interface for fetching and storing facility details.
+ * Interface for handling facilities on the OpenMRS server.
  */
 public interface OpenMRSFacilityService {
+
     /**
-     * Creates the given facility on the MRS System.
+     * Creates the given {@code facility} on the OpenMRS server.
      *
-     * @param facility  object to be created
-     * @return the saved instance of the facility
+     * @param facility  the facility to be created
+     * @return the created facility
      */
     OpenMRSFacility createFacility(OpenMRSFacility facility);
 
     /**
-     * Fetches page with given number with size defined in {@code pageSize}.
+     * Returns a list of the facilities. The returned list will contain maximum of {@code pageSize} facilities fetched
+     * from the page with the given {@code page} number. The list might contain less entries if the given {@code page}
+     * is the last one and there is less than {@code pageSize} facilities on it.
      *
      * @param page  the number of the page
      * @param pageSize  the size of the page
@@ -26,41 +29,40 @@ public interface OpenMRSFacilityService {
     List<? extends OpenMRSFacility> getFacilities(int page, int pageSize);
 
     /**
-     * Gets all the facilities in the MRS system.
+     * Returns a list of all the facilities on the OpenMRS server.
      *
-     * @return  the list of all facilities
+     * @return the list of all facilities
      */
     List<? extends OpenMRSFacility> getAllFacilities();
 
     /**
-     * Fetches all facilities that have the given location name.
+     * Returns a list of facilities that have the given {@code locationName}.
      *
-     * @param locationName  value to be used to search
-     * @return list of matched facilities
+     * @param locationName  the name of the location
+     * @return the list of matching facilities
      */
     List<? extends OpenMRSFacility> getFacilities(String locationName);
 
     /**
-     * Fetches facility by facility ID (not the MOTECH ID of the facility).
+     * Returns the facility with the given {@code uuid}.
      *
-     * @param facilityId ID of the facility to be fetched
-     * @return Facility with the given ID
+     * @param uuid  the UUID of the facility
+     * @return the facility with the given UUID
      */
-    OpenMRSFacility getFacility(String facilityId);
+    OpenMRSFacility getFacilityByUuid(String uuid);
 
     /**
-     * Deletes facility by facility ID (not the MOTECH ID of the facility).
+     * Deletes the facility with the given {@code uuid} from the OpenMRS server.
      *
-     * @param facilityId ID of the facility to be deleted
+     * @param uuid the UUID of the facility
      */
-    void deleteFacility(String facilityId);
+    void deleteFacility(String uuid);
 
     /**
-     * Updates the details of the facility provided, based on facility ID. If no match is found
-     * for the facility ID, returns null.
+     * Updates the facility with the information stored in the given {@code facility}.
      *
-     * @param facility  facility object with the fields to update
-     * @return the updated facility object; null if no facility object with matching ID is found
+     * @param facility  the facility to be used as an update source
+     * @return the updated facility, null if a facility with the UUID given in the {@code facility} doesn't exist
      */
     OpenMRSFacility updateFacility(OpenMRSFacility facility);
 }

@@ -3,7 +3,7 @@ package org.motechproject.openmrs19.service;
 import org.motechproject.openmrs19.domain.OpenMRSProvider;
 
 /**
- * Interface for creating and deleting providers
+ * Interface for handling providers on the OpenMRS server.
  */
 public interface OpenMRSProviderService {
 
@@ -16,15 +16,16 @@ public interface OpenMRSProviderService {
     OpenMRSProvider createProvider(OpenMRSProvider provider);
 
     /**
-     * Fetches provider with given UUID.
+     * Returns the provider with the given {@code uuid}.
      *
      * @param uuid  the UUID of the provider
-     * @return  the provider with given UUID
+     * @return  the provider with the given UUID, null if the provider doesn't exist
      */
-    OpenMRSProvider getByUuid(String uuid);
+    OpenMRSProvider getProviderByUuid(String uuid);
 
     /**
-     * Deletes provider with the given UUID.
+     * Deletes the provider with the given {@code uuid}. If the provider with the given {@code uuid} doesn't exist an
+     * error will be logged.
      *
      * @param uuid  the UUID of the provider
      */

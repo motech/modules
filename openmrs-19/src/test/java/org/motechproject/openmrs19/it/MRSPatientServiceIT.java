@@ -75,7 +75,7 @@ public class MRSPatientServiceIT extends BasePaxIT {
                 EventKeys.UPDATED_PATIENT_SUBJECT, EventKeys.PATIENT_DECEASED_SUBJECT, EventKeys.DELETED_PATIENT_SUBJECT));
 
         String uuid = savePatient(preparePatient()).getPatientId();
-        patient = patientAdapter.getPatient(uuid);
+        patient = patientAdapter.getPatientByUuid(uuid);
         prepareConceptOfDeath();
     }
 
@@ -136,7 +136,7 @@ public class MRSPatientServiceIT extends BasePaxIT {
     @Test
     public void shouldGetByUuid() {
 
-        OpenMRSPatient fetched = patientAdapter.getPatient(patient.getPatientId());
+        OpenMRSPatient fetched = patientAdapter.getPatientByUuid(patient.getPatientId());
 
         assertNotNull(fetched);
         assertEquals(fetched, patient);
@@ -163,7 +163,7 @@ public class MRSPatientServiceIT extends BasePaxIT {
 
         synchronized (lock) {
             patientAdapter.deletePatient(patient.getPatientId());
-            assertNull(patientAdapter.getPatient(patient.getPatientId()));
+            assertNull(patientAdapter.getPatientByUuid(patient.getPatientId()));
 
             lock.wait(60000);
         }
@@ -233,7 +233,7 @@ public class MRSPatientServiceIT extends BasePaxIT {
         String facilityId = patient.getFacility().getFacilityId();
 
         patientAdapter.deletePatient(patient.getPatientId());
-        assertNull(patientAdapter.getPatient(patient.getPatientId()));
+        assertNull(patientAdapter.getPatientByUuid(patient.getPatientId()));
 
         facilityAdapter.deleteFacility(facilityId);
     }
@@ -247,7 +247,7 @@ public class MRSPatientServiceIT extends BasePaxIT {
         concept.setConceptClass("Test");
 
         String uuid =  conceptAdapter.createConcept(concept).getUuid();
-        causeOfDeath = conceptAdapter.getConceptById(uuid);
+        causeOfDeath = conceptAdapter.getConceptByUuid(uuid);
     }
 
     public class MrsListener implements EventListener {

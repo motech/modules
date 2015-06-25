@@ -6,46 +6,49 @@ import org.motechproject.openmrs19.exception.ObservationNotFoundException;
 import java.util.List;
 
 /**
- * Interface for fetching and voiding observation details.
+ * Interface for handling observations on the OpenMRS server.
  */
 public interface OpenMRSObservationService {
-    /**
-     * Voids an observation for the MOTECH user, with the given reason.
-     *
-     * @param mrsObservation  OpenMRSObservation to be voided
-     * @param reason  reason for voiding the OpenMRSObservation
-     * @throws ObservationNotFoundException  if the expected Observation does not exist
-     */
-    void voidObservation(OpenMRSObservation mrsObservation, String reason) throws ObservationNotFoundException;
 
     /**
-     * Returns the latest OpenMRSObservation of the MRS patient, given the concept name (e.g. WEIGHT).
+     * Voids the given {@code observation} with the given {@code reason}.
      *
-     * @param patientMotechId  MOTECH ID of the patient
-     * @param conceptName  concept Name of the OpenMRSObservation
-     * @return OpenMRSObservation if present
+     * @param observation  the observation to be voided
+     * @param reason  the reason for voiding the observation
+     * @throws ObservationNotFoundException if the observation doesn't exist
      */
-    OpenMRSObservation findObservation(String patientMotechId, String conceptName);
+    void voidObservation(OpenMRSObservation observation, String reason) throws ObservationNotFoundException;
 
     /**
-     * Returns all matching OpenMRSObservations of the MRS patient, given the concept name (e.g. WEIGHT).
+     * Returns the latest observation of the concept with the given {@code conceptName} for a patient with the given
+     * {@code motechId}.
      *
-     * @param patientMotechId  MOTECH ID of the patient
-     * @param conceptName  concept Name of the OpenMRSObservation
-     * @return list of OpenMRSObservation objects if present
+     * @param motechId  the MOTECH ID of the patient
+     * @param conceptName  the name of the observation concept
+     * @return  the latest observation for the given concept name and patient MOTECH ID
+     */
+    OpenMRSObservation findObservation(String motechId, String conceptName);
+
+    /**
+     * Returns a list of observations of the concept with the given {@code conceptName} for a patient with the given
+     * {@code motechId}.
+     *
+     * @param patientMotechId  the MOTECH ID of the patient
+     * @param conceptName  the name of the observation concept
+     * @return the list of observations for the given concept name and patient MOTECH ID
      */
     List<OpenMRSObservation> findObservations(String patientMotechId, String conceptName);
 
     /**
-     * Fetches an observation by the given observation ID.
+     * Returns the observation with given {@code uuid}.
      *
-     * @param id  ID of the concept
-     * @return OpenMRSObservation if present
+     * @param uuid  the UUID of the observation
+     * @return the observation with the given UUID, null if the observation doesn't exist
      */
-    OpenMRSObservation getObservationById(String id);
+    OpenMRSObservation getObservationByUuid(String uuid);
 
     /**
-     * Saves the given observation on the OpenMRS server.
+     * Creates the given {@code observation} on the OpenMRS server.
      *
      * @param observation  the observation to be created
      * @return  the created observation
@@ -53,7 +56,10 @@ public interface OpenMRSObservationService {
     OpenMRSObservation createObservation(OpenMRSObservation observation);
 
     /**
-     * Deletes observation with the given ID.
+     * Deletes the observation with the given {@code uuid} from the OpenMRS server. If the observation with the given
+     * {@code uuid} doesn't exist an error will be logged.
+     *
+     * @param uuid  the UUID of the observation
      */
     void deleteObservation(String uuid);
 }

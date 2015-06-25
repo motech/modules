@@ -8,11 +8,12 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Interface for handling patients.
+ * Interface for handling patients on the OpenMRS server.
  */
 public interface OpenMRSPatientService {
+
     /**
-     * Creates the given patient on the OpenMRS server.
+     * Creates the given {@code patient} on the OpenMRS server.
      *
      * @param patient  the patient to be created
      * @return  the created patient
@@ -20,64 +21,67 @@ public interface OpenMRSPatientService {
     OpenMRSPatient createPatient(OpenMRSPatient patient);
 
     /**
-     * Finds a patient by current Motech ID, and updates the patients details (including new
-     * Motech ID) in the MRS system.
+     * Updates the patient with the  given {@code currentMotechId} with the information stored in the given
+     * {@code patient} (including the new MOTECH ID passed in the given {@code patient}).
      *
-     * @param patient  patient instance with updated values (Motech IDentifier cannot be changed here)
-     * @param currentMotechId  current Motech ID of this patient (used for searching)
-     * @return Updated instance of the patient
+     * @param patient  the patient to be used as an update source
+     * @param currentMotechId  the current MOTECH ID of the patient to update (used for searching)
+     * @return the updated patient
      */
     OpenMRSPatient updatePatient(OpenMRSPatient patient, String currentMotechId);
 
     /**
-     * Finds a patient by Motech ID and updates the patients details in the MRS system.
+     * Updates the patient with the information stored in the given {@code patient}.
      *
-     * @param patient Patient instance with updated values (Motech IDentifier cannot be changed)
-     * @return The Motech IDentifier of the updated patient if successfully updated
+     * @param patient  the patient to be used as an update source
+     * @return the updated patient
      */
     OpenMRSPatient updatePatient(OpenMRSPatient patient);
 
     /**
-     * Fetches a patient by the given patient ID.
+     * Returns the patient with the given {@code uuid}.
      *
-     * @param patientId  value to be used to find a patient
-     * @return patient with the given patient ID if one exists
+     * @param uuid  the UUID of the patient
+     * @return the patient with the given UUID, null if the patient doesn't exist
      */
-    OpenMRSPatient getPatient(String patientId);
+    OpenMRSPatient getPatientByUuid(String uuid);
 
     /**
-     * Fetches a patient by Motech ID.
+     * Returns the patient with the given {@code motechId}.
      *
-     * @param motechId Value to be used to find a patient
-     * @return Patient with the given Motech ID if exists
+     * @param motechId  the MOTECH ID of the patient
+     * @return the patient with the given MOTECH ID, null if the patient doesn't exist
      */
     OpenMRSPatient getPatientByMotechId(String motechId);
 
     /**
-     * Searches for patients in the MRS system by patient's name and Motech ID
+     * If the {@code motechId} is null this method will return a list of patients with given {@code name}, else it will
+     * return a list with a single patient that has the given {@code name} and {@code motechId}. If there are no
+     * matching patients an empty list will be returned.
      *
-     * @param name  name of the patient to be searched for
-     * @param motechId  Motech ID of the patient to be searched for
+     * @param name  the name of the patient to be searched for
+     * @param motechId  the MOTECH ID of the patient to be searched for
      * @return list of matched patients
      */
     List<OpenMRSPatient> search(String name, String motechId);
 
     /**
-     * Marks a patient as dead with the given date of death and comment.
+     * Marks a patient with the given {@code motechId} as dead with the given {@code dateOfDeath}, {@code causeOfDeath}
+     * and a {@code comment}.
      *
-     * @param motechId  deceased patient's Motech ID
+     * @param motechId  the MOTECH ID of the patient
      * @param causeOfDeath  the cause of death
-     * @param dateOfDeath  patient's date of death
-     * @param comment  additional information for the cause of death
-     * @throws PatientNotFoundException when the expected Patient does not exist
+     * @param dateOfDeath  the date of death
+     * @param comment  the additional information for the cause of death
+     * @throws PatientNotFoundException if the patient with the given MOTECH ID doesn't exist
      */
     void deceasePatient(String motechId, OpenMRSConcept causeOfDeath, Date dateOfDeath, String comment) throws PatientNotFoundException;
 
     /**
-     * Deletes patient with the given UUID.
+     * Deletes the patient with the given {@code uuid}.
      *
      * @param uuid  the UUID of the patient
-     * @throws PatientNotFoundException when the expected Patient does not exist
+     * @throws PatientNotFoundException if the patient with the given UUID doesn't exist
      */
     void deletePatient(String uuid) throws PatientNotFoundException;
 }

@@ -44,7 +44,7 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
     }
 
     @Override
-    public OpenMRSPerson getByUuid(String uuid) {
+    public OpenMRSPerson getPersonByUuid(String uuid) {
 
         try {
             return ConverterUtils.toOpenMRSPerson(personResource.getPersonById(uuid));
@@ -76,8 +76,8 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
     }
 
     @Override
-    public OpenMRSPerson addPerson(String firstName, String lastName, DateTime dateOfBirth,
-                                   String gender, String address, List<OpenMRSAttribute> attributes)  {
+    public OpenMRSPerson createPerson(String firstName, String lastName, DateTime dateOfBirth,
+                                      String gender, String address, List<OpenMRSAttribute> attributes)  {
 
         OpenMRSPerson person = new OpenMRSPerson();
         person.setFirstName(firstName);

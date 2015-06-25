@@ -138,7 +138,7 @@ public class MRSObservationServiceIT extends BasePaxIT {
 
         synchronized (lock) {
             obsAdapter.deleteObservation(observation.getObservationId());
-            assertNull(obsAdapter.getObservationById(observation.getObservationId()));
+            assertNull(obsAdapter.getObservationByUuid(observation.getObservationId()));
 
             lock.wait(60000);
         }
@@ -201,7 +201,7 @@ public class MRSObservationServiceIT extends BasePaxIT {
             lock.wait(60000);
         }
 
-        assertNull(obsAdapter.getObservationById(observation.getObservationId()));
+        assertNull(obsAdapter.getObservationByUuid(observation.getObservationId()));
     }
 
     public class MrsListener implements EventListener {
@@ -243,13 +243,13 @@ public class MRSObservationServiceIT extends BasePaxIT {
 
         String uuid = personAdapter.createPerson(person).getPersonId();
 
-        this.person = personAdapter.getByUuid(uuid);
+        this.person = personAdapter.getPersonByUuid(uuid);
     }
 
     private void prepareFacility() {
         OpenMRSFacility tempFacility = new OpenMRSFacility("FooName", "FooCountry", "FooRegion", "FooCountryDistrict", "FooStateProvince");
         String facilityUuid = facilityAdapter.createFacility(tempFacility).getFacilityId();
-        facility = facilityAdapter.getFacility(facilityUuid);
+        facility = facilityAdapter.getFacilityByUuid(facilityUuid);
     }
 
     private void preparePatient() {
@@ -258,7 +258,7 @@ public class MRSObservationServiceIT extends BasePaxIT {
         tempPatient.setPerson(person);
         tempPatient.setMotechId("666");
         String patientUuid = patientAdapter.createPatient(tempPatient).getPatientId();
-        patient = patientAdapter.getPatient(patientUuid);
+        patient = patientAdapter.getPatientByUuid(patientUuid);
     }
 
     private void prepareConcept() throws ConceptNameAlreadyInUseException {
@@ -267,6 +267,6 @@ public class MRSObservationServiceIT extends BasePaxIT {
         tempConcept.setDataType("Boolean");
         tempConcept.setConceptClass("Test");
         String conceptUuid = conceptAdapter.createConcept(tempConcept).getUuid();
-        concept = conceptAdapter.getConceptById(conceptUuid);
+        concept = conceptAdapter.getConceptByUuid(conceptUuid);
     }
 }

@@ -220,7 +220,7 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
         Map<String, OpenMRSPerson> providers = new HashMap<>();
         for (Encounter encounter : result.getResults()) {
             String providerUuid = encounter.getProvider().getUuid();
-            OpenMRSPerson provider = personAdapter.getByUuid(providerUuid);
+            OpenMRSPerson provider = personAdapter.getPersonByUuid(providerUuid);
             providers.put(providerUuid, provider);
         }
 
@@ -257,11 +257,11 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
     }
 
     @Override
-    public OpenMRSEncounter getEncounterById(String id) {
+    public OpenMRSEncounter getEncounterByUuid(String uuid) {
         try {
-            Encounter encounter = encounterResource.getEncounterById(id);
-            OpenMRSPatient patient = patientAdapter.getPatient(encounter.getPatient().getUuid());
-            OpenMRSPerson person = personAdapter.getByUuid(encounter.getProvider().getUuid());
+            Encounter encounter = encounterResource.getEncounterById(uuid);
+            OpenMRSPatient patient = patientAdapter.getPatientByUuid(encounter.getPatient().getUuid());
+            OpenMRSPerson person = personAdapter.getPersonByUuid(encounter.getProvider().getUuid());
             OpenMRSProvider provider = new OpenMRSProvider(person);
             provider.setProviderId(person.getPersonId());
             return convertToMrsEncounter(encounter, provider, patient);

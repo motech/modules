@@ -6,6 +6,9 @@ import org.motechproject.openmrs19.domain.OpenMRSPerson;
 
 import java.util.List;
 
+/**
+ * Interface for handling persons on the OpenMRS server.
+ */
 public interface OpenMRSPersonService {
 
     /**
@@ -17,7 +20,7 @@ public interface OpenMRSPersonService {
     OpenMRSPerson createPerson(OpenMRSPerson person);
 
     /**
-     * Creates and persists a person object from field values.
+     * Creates a person on the OpenMRS server based on the given information.
      *
      * @param firstName  the person's first name
      * @param lastName  the person's last name
@@ -26,29 +29,30 @@ public interface OpenMRSPersonService {
      * @param address  the address of the person
      * @param attributes  a list of attributes for the person
      */
-    OpenMRSPerson addPerson(String firstName, String lastName, DateTime dateOfBirth, String gender,
-            String address, List<OpenMRSAttribute> attributes);
+    OpenMRSPerson createPerson(String firstName, String lastName, DateTime dateOfBirth, String gender,
+                               String address, List<OpenMRSAttribute> attributes);
 
     /**
-     * Updates a person object.
+     * Updates the person with the information stored in the given {@code person}.
      *
-     * @param person  the person to update
+     * @param person  the person to be used as an update source
+     * @return the updated person
      */
     OpenMRSPerson updatePerson(OpenMRSPerson person);
 
     /**
-     * Deletes person with the given UUID from the OpenMRS server.
+     * Deletes the person with the given {@code uuid} from the OpenMRS server. If the person with the given
+     * {@code uuid} doesn't exist an error will be logged.
      *
      * @param uuid  the UUID of the person
      */
     void deletePerson(String uuid);
 
     /**
-     * Finds person by a particular ID.
+     * Returns the person with the given {@code uuid}.
      *
-     * @param personId The ID of the person to search for
-     * @return a list of all persons of given ID, of a type from the implementing module
+     * @param uuid  the UUID of the person
+     * @return the person with the given UUID, null if the person doesn't exist
      */
-    OpenMRSPerson getByUuid(String personId);
-
+    OpenMRSPerson getPersonByUuid(String uuid);
 }

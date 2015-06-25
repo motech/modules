@@ -92,7 +92,7 @@ public class MRSPersonServiceIT extends BasePaxIT {
             lock.wait(60000);
         }
 
-        updated = personAdapter.getByUuid(person.getPersonId());
+        updated = personAdapter.getPersonByUuid(person.getPersonId());
 
         assertNotNull(updated);
         assertEquals(updated.getFirstName(), newFirstName);
@@ -111,7 +111,7 @@ public class MRSPersonServiceIT extends BasePaxIT {
 
         synchronized (lock) {
             personAdapter.deletePerson(person.getPersonId());
-            assertNull(personAdapter.getByUuid(person.getPersonId()));
+            assertNull(personAdapter.getPersonByUuid(person.getPersonId()));
 
             lock.wait(60000);
         }
@@ -124,7 +124,7 @@ public class MRSPersonServiceIT extends BasePaxIT {
     @Test
     public void shouldGetById() throws InterruptedException {
 
-        OpenMRSPerson fetched = personAdapter.getByUuid(person.getPersonId());
+        OpenMRSPerson fetched = personAdapter.getPersonByUuid(person.getPersonId());
 
         assertNotNull(fetched);
         assertEquals(fetched.getId(), person.getId());
@@ -174,7 +174,7 @@ public class MRSPersonServiceIT extends BasePaxIT {
     private void deletePerson(OpenMRSPerson person) throws InterruptedException {
 
         personAdapter.deletePerson(person.getPersonId());
-        assertNull(personAdapter.getByUuid(person.getPersonId()));
+        assertNull(personAdapter.getPersonByUuid(person.getPersonId()));
     }
 
     public class MrsListener implements EventListener {

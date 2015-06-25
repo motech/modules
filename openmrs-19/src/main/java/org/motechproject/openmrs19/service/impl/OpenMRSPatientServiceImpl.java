@@ -68,18 +68,18 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
             LOGGER.warn("Search for patient by id returned more than 1 result");
         }
 
-        return getPatient(patientList.getResults().get(0).getUuid());
+        return getPatientByUuid(patientList.getResults().get(0).getUuid());
     }
 
     @Override
-    public OpenMRSPatient getPatient(String patientId) {
-        Validate.notEmpty(patientId, "Patient Id cannot be empty");
+    public OpenMRSPatient getPatientByUuid(String uuid) {
+        Validate.notEmpty(uuid, "Patient Id cannot be empty");
 
         Patient patient;
         try {
-            patient = patientResource.getPatientById(patientId);
+            patient = patientResource.getPatientById(uuid);
         } catch (HttpException e) {
-            LOGGER.error("Failed to get patient by id: " + patientId);
+            LOGGER.error("Failed to get patient by id: " + uuid);
             return null;
         }
 
@@ -100,7 +100,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         } else {
 
             if (identifier.getLocation() != null) {
-                facility = facilityAdapter.getFacility(identifier.getLocation().getUuid());
+                facility = facilityAdapter.getFacilityByUuid(identifier.getLocation().getUuid());
             }
 
             motechId = identifier.getIdentifier();
@@ -162,7 +162,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         List<OpenMRSPatient> patients = new ArrayList<>();
 
         for (Patient partialPatient : result.getResults()) {
-            OpenMRSPatient patient = getPatient(partialPatient.getUuid());
+            OpenMRSPatient patient = getPatientByUuid(partialPatient.getUuid());
             if (id == null) {
                 patients.add(patient);
             } else {

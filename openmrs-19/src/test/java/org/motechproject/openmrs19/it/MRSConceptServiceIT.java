@@ -100,7 +100,7 @@ public class MRSConceptServiceIT extends BasePaxIT {
 
         synchronized (lock) {
             conceptAdapter.deleteConcept(conceptOne.getUuid());
-            assertNull(conceptAdapter.getConceptById(conceptOne.getUuid()));
+            assertNull(conceptAdapter.getConceptByUuid(conceptOne.getUuid()));
 
             lock.wait(60000);
         }
@@ -190,7 +190,7 @@ public class MRSConceptServiceIT extends BasePaxIT {
     private void deleteConcept(OpenMRSConcept concept) throws InterruptedException {
 
         conceptAdapter.deleteConcept(concept.getUuid());
-        assertNull(conceptAdapter.getConceptById(concept.getUuid()));
+        assertNull(conceptAdapter.getConceptByUuid(concept.getUuid()));
 
     }
 

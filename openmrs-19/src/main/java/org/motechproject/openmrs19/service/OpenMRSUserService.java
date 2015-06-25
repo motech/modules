@@ -7,7 +7,7 @@ import org.motechproject.openmrs19.exception.UserDeleteException;
 import java.util.List;
 
 /**
- * Interface to handle MRS users (medical staff).
+ * Interface for handling users on the OpenMRS server.
  */
 public interface OpenMRSUserService {
 
@@ -22,65 +22,67 @@ public interface OpenMRSUserService {
     String PASSWORD_KEY = "password";
 
     /**
-     * Changes the password of the user.
+     * Changes the password of the current user.
      *
-     * @param currentPassword  old password
-     * @param newPassword  new password
+     * @param currentPassword  the current password
+     * @param newPassword  the new password
      */
     void changeCurrentUserPassword(String currentPassword, String newPassword);
 
     /**
-     * Creates a new user.
+     * Creates the given {@code user} on the OpenMRS server.
      *
-     * @param mrsUser  instance of the User object to be created
+     * @param user  the user to be created
      * @return  the created user
      * @throws UserAlreadyExistsException if the user already exists
      */
-    OpenMRSUser createUser(OpenMRSUser mrsUser) throws UserAlreadyExistsException;
+    OpenMRSUser createUser(OpenMRSUser user) throws UserAlreadyExistsException;
 
     /**
-     * Resets the password of a given user.
+     * Resets the password of the user with the given {@code username}.
      *
-     * @param userId  user's unique identifier
-     * @return new password
+     * @param username  the name of the user
+     * @return the new password, null if the user doesn't exist
      */
-    String setNewPasswordForUser(String userId);
+    String setNewPasswordForUser(String username);
 
     /**
-     * Gets all users present in the MRS system.
+     * Returns a list of all users on the OpenMRS server.
      *
-     * @return list of all Users
+     * @return the list of all users
      */
     List<OpenMRSUser> getAllUsers();
 
     /**
-     * Finds user by UUID.
+     * Return the user with the given {@code uuid}.
      *
      * @param uuid  the UUID of the user
-     * @return  the user with given UUID, null if not found
+     * @return the user with the given UUID, null if the user doesn't exist
      */
     OpenMRSUser getUserByUuid(String uuid);
 
     /**
-     * Finds user by username.
+     * Returns the user with the given {@code userName}.
      *
-     * @param userName  the user's username
-     * @return the User object, if found
+     * @param userName  the username of the user
+     * @return the user with the given username, null if the user doesn't exist
      */
     OpenMRSUser getUserByUserName(String userName);
 
     /**
-     * Updates User attributes.
+     * Updates the user with the information stored in the given {@code user}.
      *
-     * @param mrsUser  MRS User object
-     * @return a Map containing saved user's data
+     * @param user  the user to be used as an update source
+     * @return the update user, null if the user doesn't exist
      */
-    OpenMRSUser updateUser(OpenMRSUser mrsUser);
+    OpenMRSUser updateUser(OpenMRSUser user);
 
     /**
-     * Deletes user with given UUID.
+     * Deletes the user with the given {@code uuid}. If the provider with the given {@code uuid} doesn't exist an
+     * error will be logged.
      *
-     * @param userID  the id of the user.
+     * @param uuid  the UUID of the user
+     * @throws UserDeleteException if there were problems while deleting user
      */
-    void deleteUser(String userID) throws UserDeleteException;
+    void deleteUser(String uuid) throws UserDeleteException;
 }

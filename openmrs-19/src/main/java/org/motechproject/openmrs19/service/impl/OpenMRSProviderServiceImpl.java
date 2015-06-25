@@ -37,7 +37,7 @@ public class OpenMRSProviderServiceImpl implements OpenMRSProviderService {
     }
 
     @Override
-    public OpenMRSProvider getByUuid(String uuid) {
+    public OpenMRSProvider getProviderByUuid(String uuid) {
         try {
             return ConverterUtils.toOpenMRSProvider(providerResource.getByUuid(uuid));
         } catch (HttpException e) {

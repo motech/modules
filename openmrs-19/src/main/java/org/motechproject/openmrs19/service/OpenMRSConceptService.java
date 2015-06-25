@@ -6,66 +6,74 @@ import org.motechproject.openmrs19.exception.ConceptNameAlreadyInUseException;
 import java.util.List;
 
 /**
- * Interface for fetching and storing concept details.
+ * Interface for handling concepts on the OpenMRS server.
  */
 public interface OpenMRSConceptService {
 
-    String resolveConceptUuidFromConceptName(String conceptName);
+    /**
+     * Returns the UUID of the concept with the given {@code name}.
+     *
+     * @param name  the name of the concept
+     * @return the UUID of the concept
+     */
+    String resolveConceptUuidFromConceptName(String name);
 
     /**
-     * Creates a concept on the OpenMRS server
+     * Creates the given concept on the OpenMRS server.
      *
-     * @param  concept  the concept to be created
-     * @return saved instance of the concept
-     * @throws ConceptNameAlreadyInUseException  when name of the given in concept is already used by another one
+     * @param concept  the concept to be created
+     * @return the created concept
+     * @throws ConceptNameAlreadyInUseException if the concept with the given name already exists
      */
     OpenMRSConcept createConcept(OpenMRSConcept concept) throws ConceptNameAlreadyInUseException;
 
     /**
-     * Fetches a concept by the given concept ID.
+     * Returns the concept with the given {@code uuid}.
      *
-     * @param uuid  value to be used to find a concept
-     * @return concept with the given concept ID if exists
+     * @param uuid  the UUID of the concept
+     * @return the concept with the given UUID
      */
-    OpenMRSConcept getConceptById(String uuid);
+    OpenMRSConcept getConceptByUuid(String uuid);
 
     /**
-     * Searches for concepts in the MRS system by concept's name.
+     * Returns a list of the concepts with the given {@code phrase} in their names.
      *
-     * @param name  name of the concept to be searched for
-     * @return list of matched Concepts
+     * @param phrase  the phrase to search for
+     * @return the list of concept with names containing the given phrase
      */
-    List<OpenMRSConcept> search(String name);
+    List<OpenMRSConcept> search(String phrase);
 
     /**
-     * Returns basic information (UUID and name) about all the concepts stored on the server.
+     * Returns the basic information (UUID and name) about all the concepts stored on the OpenMRS server.
      *
-     * @return  the list of all concepts
+     * @return the list of all concepts
      */
     List<OpenMRSConcept> getAllConcepts();
 
     /**
-     * Deletes concept with given UUID from the OpenMRS server.
+     * Deletes the concept with the given {@code uuid} from the OpenMRS server.
      *
      * @param uuid  the UUID of the concept
      */
     void deleteConcept(String uuid);
 
     /**
-     * Updates concept with information stored in given concept. Fields name, names and display will be ignored as
-     * changing them is not allowed by the OpenMRS.
+     * Updates the concept with the information stored in the given concept. Fields name, names and display name will be
+     * ignored as changing them is not allowed by the OpenMRS system.
      *
      * @param concept  the concept used as an update source
-     * @return  the concept with updated fields
+     * @return the updated concept
      */
     OpenMRSConcept updateConcept(OpenMRSConcept concept);
 
     /**
-     * Fetches page with given number with size defined in {@code pageSize}.
+     * Returns a list of the concepts. The returned list will contain maximum of {@code pageSize} concepts fetched from
+     * the page with the given {@code page} number. The list might contain less entries if the given {@code page} is the
+     * last one and there is less than {@code pageSize} concepts on it.
      *
      * @param page  the number of the page
      * @param pageSize  the size of the page
-     * @return  the list of concept on the given page
+     * @return  the list of concepts on the given page
      */
     List<OpenMRSConcept> getConcepts(int page, int pageSize);
 

@@ -103,7 +103,7 @@ public class MRSFacilityServiceIT extends BasePaxIT {
 
         synchronized (lock) {
             facilityAdapter.deleteFacility(facilityOne.getFacilityId());
-            assertNull(facilityAdapter.getFacility(facilityOne.getFacilityId()));
+            assertNull(facilityAdapter.getFacilityByUuid(facilityOne.getFacilityId()));
 
             lock.wait(60000);
         }
@@ -142,7 +142,7 @@ public class MRSFacilityServiceIT extends BasePaxIT {
     @Test
     public void shouldFindFacilityById() {
 
-        assertNotNull(facilityAdapter.getFacility(facilityOne.getFacilityId()));
+        assertNotNull(facilityAdapter.getFacilityByUuid(facilityOne.getFacilityId()));
     }
 
     @After
@@ -177,7 +177,7 @@ public class MRSFacilityServiceIT extends BasePaxIT {
     private void deleteFacility(OpenMRSFacility facility) {
         facilityAdapter.deleteFacility(facility.getFacilityId());
 
-        assertNull(facilityAdapter.getFacility(facility.getFacilityId()));
+        assertNull(facilityAdapter.getFacilityByUuid(facility.getFacilityId()));
     }
 
     public class MrsListener implements EventListener {

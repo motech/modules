@@ -76,36 +76,36 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
     }
 
     @Override
-    public void voidObservation(OpenMRSObservation mrsObservation, String reason) throws ObservationNotFoundException {
+    public void voidObservation(OpenMRSObservation observation, String reason) throws ObservationNotFoundException {
 
-        Validate.notNull(mrsObservation);
-        Validate.notEmpty(mrsObservation.getObservationId());
+        Validate.notNull(observation);
+        Validate.notEmpty(observation.getObservationId());
 
         try {
-            obsResource.voidObservation(mrsObservation.getObservationId(), reason);
-            eventRelay.sendEventMessage(new MotechEvent(EventKeys.VOIDED_OBSERVATION_SUBJECT, EventHelper.observationParameters(mrsObservation)));
+            obsResource.voidObservation(observation.getObservationId(), reason);
+            eventRelay.sendEventMessage(new MotechEvent(EventKeys.VOIDED_OBSERVATION_SUBJECT, EventHelper.observationParameters(observation)));
         } catch (HttpException e) {
             if (HttpStatus.NOT_FOUND.equals(e.getStatusCode())) {
-                throw new ObservationNotFoundException("No Observation found with uuid: " + mrsObservation.getObservationId(), e);
+                throw new ObservationNotFoundException("No Observation found with uuid: " + observation.getObservationId(), e);
             }
 
-            LOGGER.error("Could not void observation with uuid: " + mrsObservation.getObservationId());
+            LOGGER.error("Could not void observation with uuid: " + observation.getObservationId());
         }
     }
 
     @Override
-    public OpenMRSObservation findObservation(String patientMotechId, String conceptName) {
+    public OpenMRSObservation findObservation(String motechId, String conceptName) {
 
-        Validate.notEmpty(patientMotechId, "MoTeCH Id cannot be empty");
+        Validate.notEmpty(motechId, "MoTeCH Id cannot be empty");
         Validate.notEmpty(conceptName, "Concept name cannot be empty");
 
-        List<OpenMRSObservation> observations = findObservations(patientMotechId, conceptName);
+        List<OpenMRSObservation> observations = findObservations(motechId, conceptName);
 
         return observations.size() == 0 ? null : observations.get(0);
     }
 
     @Override
-    public OpenMRSObservation getObservationById(String uuid) {
+    public OpenMRSObservation getObservationByUuid(String uuid) {
 
         try {
             return ConverterUtils.toOpenMRSObservation(obsResource.getObservationById(uuid));

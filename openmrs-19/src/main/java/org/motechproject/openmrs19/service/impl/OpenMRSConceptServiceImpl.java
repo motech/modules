@@ -39,25 +39,25 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
         this.eventRelay = eventRelay;
     }
 
-    public String resolveConceptUuidFromConceptName(String conceptName) {
-        if (conceptCache.containsKey(conceptName)) {
-            return conceptCache.get(conceptName);
+    public String resolveConceptUuidFromConceptName(String name) {
+        if (conceptCache.containsKey(name)) {
+            return conceptCache.get(name);
         }
 
         ConceptListResult results;
         try {
-            results = conceptResource.queryForConceptsByName(conceptName);
+            results = conceptResource.queryForConceptsByName(name);
         } catch (HttpException e) {
-            throw new OpenMRSException("There was an error retrieving the uuid of the concept with concept name: " + conceptName, e);
+            throw new OpenMRSException("There was an error retrieving the uuid of the concept with concept name: " + name, e);
         }
 
         if (results.getResults().isEmpty()) {
-            throw new OpenMRSException("Can't create an encounter because no concept was found with name: " + conceptName);
+            throw new OpenMRSException("Can't create an encounter because no concept was found with name: " + name);
         }
 
         for (Concept concept : results.getResults()) {
-            if (concept.getDisplay().equals(conceptName)) {
-                conceptCache.put(conceptName, concept.getUuid());
+            if (concept.getDisplay().equals(name)) {
+                conceptCache.put(name, concept.getUuid());
                 return concept.getUuid();
             }
         }
@@ -90,7 +90,7 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
     }
 
     @Override
-    public OpenMRSConcept getConceptById(String uuid) {
+    public OpenMRSConcept getConceptByUuid(String uuid) {
 
         Validate.notEmpty(uuid, "Concept Id cannot be empty");
 
@@ -109,18 +109,18 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
     }
 
     @Override
-    public List<OpenMRSConcept> search(String name) {
+    public List<OpenMRSConcept> search(String phrase) {
 
-        Validate.notEmpty(name, "Name cannot be empty");
+        Validate.notEmpty(phrase, "Name cannot be empty");
 
         List<OpenMRSConcept> concepts;
 
         try {
 
-            concepts = ConverterUtils.toOpenMRSConcepts(conceptResource.queryForConceptsByName(name));
+            concepts = ConverterUtils.toOpenMRSConcepts(conceptResource.queryForConceptsByName(phrase));
 
         } catch (HttpException e) {
-            LOGGER.error("Failed search for concept: " + name);
+            LOGGER.error("Failed search for concept: " + phrase);
             concepts = Collections.emptyList();
         }
 

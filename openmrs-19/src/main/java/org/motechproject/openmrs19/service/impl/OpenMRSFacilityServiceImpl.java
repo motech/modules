@@ -80,14 +80,14 @@ public class OpenMRSFacilityServiceImpl implements OpenMRSFacilityService {
     }
 
     @Override
-    public OpenMRSFacility getFacility(String facilityId) {
+    public OpenMRSFacility getFacilityByUuid(String uuid) {
 
-        Validate.notEmpty(facilityId, "Facility id cannot be empty");
+        Validate.notEmpty(uuid, "Facility id cannot be empty");
 
         try {
-            return ConverterUtils.toOpenMRSFacility(locationResource.getLocationById(facilityId));
+            return ConverterUtils.toOpenMRSFacility(locationResource.getLocationById(uuid));
         } catch (HttpException e) {
-            LOGGER.error("Failed to fetch information about location with uuid: " + facilityId);
+            LOGGER.error("Failed to fetch information about location with uuid: " + uuid);
             return null;
         }
     }
@@ -115,14 +115,14 @@ public class OpenMRSFacilityServiceImpl implements OpenMRSFacilityService {
     }
 
     @Override
-    public void deleteFacility(String facilityId) {
+    public void deleteFacility(String uuid) {
 
         try {
-            OpenMRSFacility facilityToRemove = ConverterUtils.toOpenMRSFacility(locationResource.getLocationById(facilityId));
-            locationResource.deleteLocation(facilityId);
+            OpenMRSFacility facilityToRemove = ConverterUtils.toOpenMRSFacility(locationResource.getLocationById(uuid));
+            locationResource.deleteLocation(uuid);
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.DELETED_FACILITY_SUBJECT, EventHelper.facilityParameters(facilityToRemove)));
         } catch (HttpException e) {
-            LOGGER.error("Failed to remove facility for: " + facilityId);
+            LOGGER.error("Failed to remove facility for: " + uuid);
         }
     }
 

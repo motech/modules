@@ -1,6 +1,10 @@
 package org.motechproject.openmrs19.service;
 
+/**
+ * Utility class for storing event keys.
+ */
 public final class EventKeys {
+
     public static final String MOTECH_ID = "MotechId";
     public static final String CONCEPT_NAME = "ConceptName";
     public static final String CONCEPT_UUID = "ConceptUuid";
@@ -62,6 +66,8 @@ public final class EventKeys {
     public static final String DELETED_CONCEPT_SUBJECT = BASE_SUBJECT + "Concept.Deleted";
     public static final String VOIDED_OBSERVATION_SUBJECT = "Observation.Voided";
 
+    /**
+     * Utility class, should not be instantiated.
+     */
     private EventKeys() { }
-
 }
