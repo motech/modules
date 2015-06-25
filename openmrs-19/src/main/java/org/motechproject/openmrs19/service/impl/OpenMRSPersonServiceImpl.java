@@ -85,7 +85,7 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
         person.setDateOfBirth(dateOfBirth);
         person.setGender(gender);
         person.setAddress(address);
-        person.setAttributes(ConverterUtils.createAttributeList(attributes));
+        person.setAttributes(ConverterUtils.copyAttributeList(attributes));
 
         return createPerson(person);
     }
