@@ -9,7 +9,7 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
- * Factory bean to create an HTTP client with BASIC authentication
+ * Factory bean for creating a HTTP client with BASIC authentication.
  */
 public class HttpClientFactoryBean implements FactoryBean<HttpClient> {
 
@@ -24,6 +24,10 @@ public class HttpClientFactoryBean implements FactoryBean<HttpClient> {
         this.settingsFacade = settingsFacade;
     }
 
+    /**
+     * Reads the OpenMRS username and password from the settings facade and uses that information for connecting to the
+     * OpenMRS server.
+     */
     public void readSettings() {
         user = settingsFacade.getProperty(OPENMRS_USER);
         password = settingsFacade.getProperty(OPENMRS_PASSWORD);
