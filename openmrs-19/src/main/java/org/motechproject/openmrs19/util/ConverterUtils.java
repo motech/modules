@@ -31,11 +31,25 @@ import org.motechproject.openmrs19.resource.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Utility class for converting entities between the MOTECH and the OpenMRS models. The classes from the  MOTECH model
+ * are used by this module, while the classes from the OpenMRS model are used for passing/retrieving data to/from the
+ * OpenMRS server.
+ */
 public final class ConverterUtils {
 
+    /**
+     * Utility class, should not be instantiated.
+     */
     private ConverterUtils() {
     }
 
+    /**
+     * Converts the given person, represented as the OpenMRS model, to the MOTECH model used by this module.
+     *
+     * @param person  the person(represented as the OpenMRS model) to be converted
+     * @return the person converted to the MOTECH module used by this module
+     */
     public static OpenMRSPerson toOpenMRSPerson(Person person) {
         OpenMRSPerson converted = new OpenMRSPerson();
         converted.setId(person.getUuid());
@@ -78,6 +92,13 @@ public final class ConverterUtils {
         return converted;
     }
 
+    /**
+     * Converts the given person, represented as the MOTECH model, to the model used by the OpenMRS server.
+     *
+     * @param person  the person(represented as the OpenMRS model) to be converted
+     * @param includeNames  defines if the person names and address should be included in the converted object
+     * @return the person converted to the model used by the OpenMRS server
+     */
     public static Person toPerson(OpenMRSPerson person, boolean includeNames) {
         Person converted = new Person();
         converted.setUuid(person.getPersonId());
@@ -110,11 +131,25 @@ public final class ConverterUtils {
         return converted;
     }
 
+    /**
+     * Converts the given location, represented as the OpenMRS model, to the MOTECH model of the facility used by this
+     * module.
+     *
+     * @param location  the location(represented as OpenMRS model) to be converted
+     * @return the location converted to the MOTECH model of the facility used by this module
+     */
     public static OpenMRSFacility toOpenMRSFacility(Location location) {
         return new OpenMRSFacility(location.getUuid(), location.getName(), location.getCountry(), location.getAddress6(),
                 location.getCountyDistrict(), location.getStateProvince());
     }
 
+    /**
+     * Converts the given facility, represented as the MOTECH model, to the OpenMRS model of location used by the
+     * OpenMRS server.
+     *
+     * @param facility  the facility(represented as Motech model) to be converted
+     * @return the facility converted to the OpenMRS model of the location used by the OpenMRS server
+     */
     public static Location toLocation(OpenMRSFacility facility) {
         Location location = new Location();
         location.setAddress6(facility.getRegion());
@@ -127,6 +162,12 @@ public final class ConverterUtils {
         return location;
     }
 
+    /**
+     * Converts the given observation, represented as the OpenMRS, to the MOTECH model used by this module.
+     *
+     * @param ob  the observation(represented as the OpenMRS model) to be converted
+     * @return the observation converted to the MOTECH model used by this module
+     */
     public static OpenMRSObservation toOpenMRSObservation(Observation ob) {
         OpenMRSObservation obs = new OpenMRSObservation(ob.getUuid(), ob.getObsDatetime(), ob.getConcept().getDisplay(), 
             ob.getValue().getDisplay());
@@ -136,6 +177,12 @@ public final class ConverterUtils {
         return obs;
     }
 
+    /**
+     * Converts the given observation, represented as the MOTECH module, to the model used by the OpenMRS server.
+     *
+     * @param openMRSObservation  the observation(represented as MOTECH model) to be converted
+     * @return the observation converted to the model use by the OpenMRS server
+     */
     public static Observation toObservation(OpenMRSObservation openMRSObservation) {
         Observation observation = new Observation();
         observation.setUuid(openMRSObservation.getObservationId());
@@ -154,7 +201,13 @@ public final class ConverterUtils {
         return observation;
     }
 
-    public static OpenMRSPatient createPatient(OpenMRSPatient patient) {
+    /**
+     * Performs a deep copy of the given patient represented as the MOTECH model used by this module.
+     *
+     * @param patient  the patient to be copied
+     * @return the copy of the given patient
+     */
+    public static OpenMRSPatient copyPatient(OpenMRSPatient patient) {
         OpenMRSFacility facility = patient.getFacility();
         OpenMRSFacility openMRSFacility = null;
         if (facility != null) {
@@ -166,7 +219,7 @@ public final class ConverterUtils {
             openMRSFacility.setStateProvince(facility.getStateProvince());
         }
 
-        OpenMRSPerson openMRSPerson = createPerson(patient.getPerson());
+        OpenMRSPerson openMRSPerson = copyPerson(patient.getPerson());
 
         OpenMRSPatient openMRSPatient = new OpenMRSPatient(patient.getMotechId());
         openMRSPatient.setPatientId(patient.getPatientId());
@@ -177,8 +230,14 @@ public final class ConverterUtils {
         return openMRSPatient;
     }
 
-    public static OpenMRSPerson createPerson(OpenMRSPerson personMrs) {
-        List<OpenMRSAttribute> attributeList = createAttributeList(personMrs.getAttributes());
+    /**
+     * Performs a deep copy of the given person represented as the MOTECH model used by this module.
+     *
+     * @param personMrs  the person to be copied
+     * @return the copy of the given person
+     */
+    public static OpenMRSPerson copyPerson(OpenMRSPerson personMrs) {
+        List<OpenMRSAttribute> attributeList = copyAttributeList(personMrs.getAttributes());
 
         OpenMRSPerson person = new OpenMRSPerson();
         person.setId(personMrs.getId());
@@ -200,7 +259,13 @@ public final class ConverterUtils {
         return person;
     }
 
-    public static List<OpenMRSAttribute> createAttributeList(List<OpenMRSAttribute> attributesMrs) {
+    /**
+     * Performs a deep copy of the given list of attributes represented as the MOTECH model used by this module.
+     *
+     * @param attributesMrs  the attribute list to copy
+     * @return the copy of the given list
+     */
+    public static List<OpenMRSAttribute> copyAttributeList(List<OpenMRSAttribute> attributesMrs) {
         List<OpenMRSAttribute> attributeList = new ArrayList<>();
 
         if (attributesMrs != null) {
@@ -211,16 +276,22 @@ public final class ConverterUtils {
         return  attributeList;
     }
 
+    /**
+     * Converts the given concept, represented as the MOTECH model, to the model used by the OpenMRS server.
+     *
+     * @param openMRSConcept  the concept(represented as the MOTECH model) to be converted
+     * @return the concept converted to the model use by the OpenMRS server
+     */
     public static Concept toConcept(OpenMRSConcept openMRSConcept) {
         Concept concept = new Concept();
         concept.setUuid(openMRSConcept.getUuid());
         concept.setDisplay(openMRSConcept.getDisplay());
-        concept.setName(openMRSConcept.getName() != null ? createConceptName(openMRSConcept.getName()) : null);
+        concept.setName(openMRSConcept.getName() != null ? copyConceptName(openMRSConcept.getName()) : null);
 
         if (openMRSConcept.getNames() != null) {
             List<Concept.ConceptName> names = new ArrayList<>();
             for (OpenMRSConceptName conceptName : openMRSConcept.getNames()) {
-                names.add(createConceptName(conceptName));
+                names.add(copyConceptName(conceptName));
             }
             concept.setNames(names);
         }
@@ -240,6 +311,12 @@ public final class ConverterUtils {
         return concept;
     }
 
+    /**
+     * Converts the given concept, represented as the OpenMRS model, to the MOTECH model used by this module.
+     *
+     * @param concept  the concept(represented as the OpenMRS mode) to be converted
+     * @return the concept converted to the MOTECH model use by this module
+     */
     public static OpenMRSConcept toOpenMRSConcept(Concept concept) {
         OpenMRSConcept openMRSConcept = new OpenMRSConcept();
 
@@ -262,6 +339,12 @@ public final class ConverterUtils {
         return openMRSConcept;
     }
 
+    /**
+     * Converts the given user, represented as the OpenMRS model, to the MOTECH model used by this module.
+     *
+     * @param user  the user(represented as the OpenMRS model) to be converted
+     * @return  the user converted to the MOTECH model used by this module
+     */
     public static OpenMRSUser toOpenMRSUser(User user) {
 
         OpenMRSUser openMRSUser = new OpenMRSUser();
@@ -275,19 +358,18 @@ public final class ConverterUtils {
         return openMRSUser;
     }
 
-    private static Concept.ConceptName createConceptName(OpenMRSConceptName openMRSConceptName) {
-        Concept.ConceptName conceptName = new Concept.ConceptName();
-        conceptName.setName(openMRSConceptName.getName());
-        conceptName.setLocale(openMRSConceptName.getLocale());
-        conceptName.setConceptNameType(openMRSConceptName.getConceptNameType());
-
-        return conceptName;
-    }
-
     public static OpenMRSPatient toOpenMRSPatient(Patient patient) {
         return toOpenMRSPatient(patient, null, null);
     }
 
+    /**
+     * Creates an object of the MOTECH model patient based on the given OpenMRS model patient, facility and motechID.
+     *
+     * @param patient  the patient(represented as OpenMRS model)
+     * @param facility  the facility(represented as
+     * @param motechId  the MOTECH ID of the patient
+     * @return
+     */
     public static OpenMRSPatient toOpenMRSPatient(Patient patient, OpenMRSFacility facility, String motechId) {
 
         OpenMRSPatient openMRSPatient = new OpenMRSPatient(patient.getUuid());
@@ -379,5 +461,14 @@ public final class ConverterUtils {
         }
 
         return concepts;
+    }
+
+    private static Concept.ConceptName copyConceptName(OpenMRSConceptName openMRSConceptName) {
+        Concept.ConceptName conceptName = new Concept.ConceptName();
+        conceptName.setName(openMRSConceptName.getName());
+        conceptName.setLocale(openMRSConceptName.getLocale());
+        conceptName.setConceptNameType(openMRSConceptName.getConceptNameType());
+
+        return conceptName;
     }
 }

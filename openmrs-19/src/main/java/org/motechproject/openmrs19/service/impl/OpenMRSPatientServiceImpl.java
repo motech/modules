@@ -114,7 +114,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
 
         validatePatientBeforeSave(patient);
 
-        OpenMRSPatient openMRSPatient = ConverterUtils.createPatient(patient);
+        OpenMRSPatient openMRSPatient = ConverterUtils.copyPatient(patient);
 
         OpenMRSPerson person;
 
@@ -192,8 +192,8 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         Validate.notNull(patient, "Patient cannot be null");
         Validate.notEmpty(patient.getPatientId(), "Patient Id may not be empty");
 
-        OpenMRSPatient openMRSPatient = ConverterUtils.createPatient(patient);
-        OpenMRSPerson person = ConverterUtils.createPerson(patient.getPerson());
+        OpenMRSPatient openMRSPatient = ConverterUtils.copyPatient(patient);
+        OpenMRSPerson person = ConverterUtils.copyPerson(patient.getPerson());
 
         personAdapter.updatePerson(person);
         // the openmrs web service requires an explicit delete request to remove
