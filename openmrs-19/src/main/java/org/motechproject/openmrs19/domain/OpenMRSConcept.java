@@ -3,9 +3,11 @@ package org.motechproject.openmrs19.domain;
 import java.util.List;
 
 /**
- * Maintains observation types
+ * Represents a single concept. Concepts are individual data points collected from a population of patients. It's a part
+ * of the MOTECH model.
  */
 public class OpenMRSConcept {
+
     private OpenMRSConceptName name;
     private String id;
     private String uuid;
@@ -14,12 +16,20 @@ public class OpenMRSConcept {
     private String display;
     private List<OpenMRSConceptName> names;
 
-    public OpenMRSConcept(OpenMRSConceptName name) {
-        this.name = name;
-    }
-
+    /**
+     * Default constructor.
+     */
     public OpenMRSConcept() {
         this(null);
+    }
+
+    /**
+     * Creates a concept with the given {@code name}.
+     *
+     * @param name  the name of the concept
+     */
+    public OpenMRSConcept(OpenMRSConceptName name) {
+        this.name = name;
     }
 
     @Override

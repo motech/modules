@@ -1,7 +1,6 @@
-package org.motechproject.mrs.domain;
+package org.motechproject.openmrs19.domain;
 
 import org.junit.Test;
-import org.motechproject.openmrs19.domain.Password;
 
 import static junit.framework.Assert.assertTrue;
 
@@ -11,7 +10,7 @@ public class PasswordTest {
     public void shouldGeneratePasswordWithUpperCaseLowerCaseAndNumberCharacterCombination() {
         Password password = new Password(9);
         for (int i = 0; i < 15; i++) {
-            assertPassword(password.create());
+            assertPassword(password.generate());
         }
     }
 

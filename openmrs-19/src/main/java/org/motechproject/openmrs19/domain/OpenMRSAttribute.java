@@ -3,7 +3,7 @@ package org.motechproject.openmrs19.domain;
 import org.apache.commons.lang.ObjectUtils;
 
 /**
- * Used for storing user attributes in property => value format
+ * Represents a single attribute of a user. It's a part of the MOTECH model.
  */
 public class OpenMRSAttribute {
 
@@ -11,10 +11,10 @@ public class OpenMRSAttribute {
     private String value;
 
     /**
-     * Creates an attribute with the given name (property) and value
-     * 
-     * @param name  property of the information
-     * @param value  value for the property
+     * Creates an attribute with the given {@code name} and {@code value}.
+     *
+     * @param name  the name of the attribute
+     * @param value  the value the attribute
      */
     public OpenMRSAttribute(String name, String value) {
         this.name = name;

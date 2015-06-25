@@ -3,7 +3,7 @@ package org.motechproject.openmrs19.domain;
 import org.apache.commons.lang.ObjectUtils;
 
 /**
- * Holds the information of MRS Staff
+ * Represents a single OpenMRS user. It's a part of the MOTECH model.
  */
 public class OpenMRSUser {
 
@@ -14,9 +14,10 @@ public class OpenMRSUser {
     private OpenMRSPerson person;
 
     /**
-     * Creates a MRS User
-     * @param id User ID
-     * @return
+     * Sets the ID of this user to {@code id}.
+     *
+     * @param id  the ID to be set
+     * @return the reference to this object
      */
     @Deprecated
     public OpenMRSUser id(String id) {
@@ -24,15 +25,51 @@ public class OpenMRSUser {
         return this;
     }
 
+    /**
+     * Sets the name of this user to {@code userName}.
+     *
+     * @param userName  the user name to be set
+     * @return the reference to this object
+     */
     @Deprecated
     public OpenMRSUser userName(String userName) {
         this.userName = userName;
         return this;
     }
 
+    /**
+     * Sets the security role of this user to {@code securityRole}.
+     *
+     * @param securityRole  the security role to be set
+     * @return the reference to this object
+     */
     @Deprecated
     public OpenMRSUser securityRole(String securityRole) {
         this.securityRole = securityRole;
+        return this;
+    }
+
+    /**
+     * Sets the system ID of this user to {@code systemId}.
+     *
+     * @param systemId  the system ID to be set
+     * @return the reference to this object
+     */
+    @Deprecated
+    public OpenMRSUser systemId(String systemId) {
+        this.systemId = systemId;
+        return this;
+    }
+
+    /**
+     * Sets the person of this user to {@code person}.
+     *
+     * @param person  the person to be set
+     * @return the reference to this object
+     */
+    @Deprecated
+    public OpenMRSUser person(OpenMRSPerson person) {
+        this.person = person;
         return this;
     }
 
@@ -48,20 +85,32 @@ public class OpenMRSUser {
         return systemId;
     }
 
-    @Deprecated
-    public OpenMRSUser systemId(String systemId) {
-        this.systemId = systemId;
-        return this;
-    }
-
     public OpenMRSPerson getPerson() {
         return person;
     }
 
-    @Deprecated
-    public OpenMRSUser person(OpenMRSPerson person) {
+    public String getUserId() {
+        return id;
+    }
+
+    public void setUserId(String userId) {
+        this.id = userId;
+    }
+
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
+
+    public void setSecurityRole(String securityRole) {
+        this.securityRole = securityRole;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setPerson(OpenMRSPerson person) {
         this.person = person;
-        return this;
     }
 
     @Override
@@ -101,29 +150,5 @@ public class OpenMRSUser {
         hash = hash * 31 + ObjectUtils.hashCode(person);
 
         return hash;
-    }
-
-    public String getUserId() {
-        return id;
-    }
-
-    public void setUserId(String userId) {
-        this.id = userId;
-    }
-
-    public void setSystemId(String systemId) {
-        this.systemId = systemId;
-    }
-
-    public void setSecurityRole(String securityRole) {
-        this.securityRole = securityRole;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public void setPerson(OpenMRSPerson person) {
-        this.person = person;
     }
 }

@@ -119,7 +119,7 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
             user.setPerson(savedPerson);
         }
 
-        User converted = convertToUser(user, password.create());
+        User converted = convertToUser(user, password.generate());
 
         try {
             return ConverterUtils.toOpenMRSUser(userResource.createUser(converted));
@@ -140,7 +140,7 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
         }
 
         User tmp = new User();
-        tmp.setPassword(password.create());
+        tmp.setPassword(password.generate());
         tmp.setUuid(user.getUserId());
 
         try {
@@ -158,7 +158,7 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
 
         validateUserForUpdate(user);
 
-        User converted = convertToUser(user, password.create());
+        User converted = convertToUser(user, password.generate());
 
         try {
             return ConverterUtils.toOpenMRSUser(userResource.updateUser(converted));

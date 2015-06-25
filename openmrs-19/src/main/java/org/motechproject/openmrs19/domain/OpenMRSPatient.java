@@ -3,7 +3,7 @@ package org.motechproject.openmrs19.domain;
 import java.util.Objects;
 
 /**
- * Domain to hold patient information
+ * Represents a single patient. It's a part of MOTECH model.
  */
 public class OpenMRSPatient {
 
@@ -17,35 +17,37 @@ public class OpenMRSPatient {
     }
 
     /**
-     * Creates a new Patient
+     * Creates a patient with the given OpenMRS {@code id}.
      *
-     * @param id Patient ID
+     * @param id  the OpenMRS ID of the patient
      */
     public OpenMRSPatient(String id) {
         this(id, null, null, null);
     }
 
     /**
-     * Creates a new Patient
+     * Creates a patient with the given {@code motechId} based on the given {@code person} details and assigns it to the
+     * given {@code facility}.
      *
-     * @param motechId    MOTECH Id of the patient
-     * @param person      Person object containing the personal details of the patient
-     * @param mrsFacility Location of the patient
+     * @param motechId  the MOTECH ID of the patient
+     * @param person  the personal details about the patient
+     * @param facility  the facility by which the patient is treated
      */
-    public OpenMRSPatient(String motechId, OpenMRSPerson person, OpenMRSFacility mrsFacility) {
-        this(null, motechId, person, mrsFacility);
+    public OpenMRSPatient(String motechId, OpenMRSPerson person, OpenMRSFacility facility) {
+        this(null, motechId, person, facility);
     }
 
     /**
-     * Creates a new Patient
+     * Creates a patient with the given {@code motechId} and OpenMRS {@code id} based on the given {@code person}
+     * details and assigns it to the given {@code facility}.
      *
-     * @param id          Patient ID
-     * @param motechId    MOTECH Id of the patient
-     * @param person      Person object containing the personal details of the patient
-     * @param mrsFacility Location of the patient
+     * @param id  the OpenMRS ID of the patient
+     * @param motechId  the MOTECH ID of the patient
+     * @param person  the personal details about the patient
+     * @param facility  the facility by which the patient is treated
      */
-    public OpenMRSPatient(String id, String motechId, OpenMRSPerson person, OpenMRSFacility mrsFacility) {
-        this.facility = mrsFacility;
+    public OpenMRSPatient(String id, String motechId, OpenMRSPerson person, OpenMRSFacility facility) {
+        this.facility = facility;
         this.person = person;
         this.motechId = motechId;
         this.id = id;

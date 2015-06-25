@@ -14,7 +14,8 @@ import static ch.lambdaj.Lambda.select;
 import static org.hamcrest.Matchers.equalTo;
 
 /**
- * Domain to hold personal details of a Person (OpenMRSUser and OpenMRSPatient)
+ * Represents a single person. This class stores personal information about the person. It's used by the
+ * {@link OpenMRSPatient}. It's part of the MOTECH model.
  */
 public class OpenMRSPerson {
 
@@ -30,14 +31,21 @@ public class OpenMRSPerson {
     private String gender;
     private boolean isDead;
 
-
     private List<OpenMRSAttribute> attributes = new ArrayList<OpenMRSAttribute>();
     private DateTime deathDate;
 
+    /**
+     * Default constructor.
+     */
     public OpenMRSPerson() {
         this(null);
     }
 
+    /**
+     * Creates a person with the given OpenMRS {@code id}.
+     *
+     * @param id  the OpenMRS ID of the person
+     */
     public OpenMRSPerson(String id) {
         this.id = id;
     }

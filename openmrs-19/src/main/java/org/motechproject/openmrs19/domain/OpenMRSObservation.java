@@ -15,9 +15,10 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 
 /**
- * Maintains patients data collected during visits (Encounters)
+ * Represents a single observation. An observation is a single piece of information that is recorded about a patient at
+ * a moment in time.
  *
- * @param <T> Type of the observation's value
+ * @param <T>  the type of the observation's value
  */
 public class OpenMRSObservation<T> {
 
@@ -29,48 +30,53 @@ public class OpenMRSObservation<T> {
     private Set<OpenMRSObservation> dependentObservations;
 
     /**
-     * Creates an observation object with the given details
+     * Creates an observation that took place on the {@code date} and recorded a {@code value} for the concept with the
+     * given {@code conceptName}.
      *
-     * @param date        Date of the observation
-     * @param conceptName Name of the concept
-     * @param value       Value of the observation
+     * @param date  the date when the observation took place
+     * @param conceptName  the name of the observed concept
+     * @param value  the value of the observation
      */
     public OpenMRSObservation(Date date, String conceptName, T value) {
         this(date, conceptName, null, value);
     }
 
     /**
-     * Creates an observation object with the given details
+     * Creates an observation that took place on the {@code date} and recorded a {@code value} for the concept with the
+     * given {@code conceptName}. A patient with the given {@code patientId} was a subject of the observation.
      *
-     * @param date        Date of the observation
-     * @param conceptName Name of the concept
+     * @param date  the date when the observation took place
+     * @param conceptName  the name of the observed concept
      * @param patientId  the ID of the patient
-     * @param value       Value of the observation
+     * @param value  the value of the observation
      */
     public OpenMRSObservation(Date date, String conceptName, String patientId, T value) {
         this(null, date, conceptName, patientId, value);
     }
 
     /**
-     * Creates an observation object with the given details
+     * Creates an observation with the given ID that took place on the {@code date} and recorded a {@code value} for the
+     * concept with the given {@code conceptName}.
      *
-     * @param id          Observation id
-     * @param date        Date of the observation
-     * @param conceptName Name of the concept
-     * @param value       Value of the observation
+     * @param id  the ID of the observation
+     * @param date  the date when the observation took place
+     * @param conceptName  the name of the observed concept
+     * @param value  the value of the observation
      */
     public OpenMRSObservation(String id, Date date, String conceptName, T value) {
         this(id, date, conceptName, null, value);
     }
 
     /**
-     * Creates an observation object with the given details
+     * Creates an observation with the given ID that took place on the {@code date} and recorded a {@code value} for the
+     * concept with the given {@code conceptName}. A patient with the given {@code patientId} was a subject of the
+     * observation.
      *
-     * @param id          Observation id
-     * @param date        Date of the observation
-     * @param conceptName Name of the concept
+     * @param id  the ID of the observation
+     * @param date  the date when the observation took place
+     * @param conceptName  the name of the observed concept
      * @param patientId  the ID of the patient
-     * @param value       Value of the observation
+     * @param value  the value of the observation
      */
     public OpenMRSObservation(String id, Date date, String conceptName, String patientId, T value) {
         this.id = id;
