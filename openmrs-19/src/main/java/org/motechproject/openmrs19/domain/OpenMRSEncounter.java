@@ -6,7 +6,9 @@ import java.util.Date;
 import java.util.Set;
 
 /**
- * Class to maintain Patient visits as Encounters
+ * Represents a single OpenMRS encounter. An encounter is a single, specific interaction between the patient and a
+ * provider. It can be any interaction and includes doctor visits, laboratory tests, food distribution, home visits,
+ * counselor appointments, etc. It's a part of the MOTECH model.
  */
 public class OpenMRSEncounter {
 
@@ -19,19 +21,25 @@ public class OpenMRSEncounter {
     private OpenMRSPatient patient;
     private String encounterType;
 
+    /**
+     * Default constructor.
+     */
     public OpenMRSEncounter() {
     }
 
     /**
-     * Creates a MRS encounter object
+     * Creates an encounter of type {@code encounterType} that took place in the {@code facility} on the {@code date}.
+     * The encounter was held by the {@code provider} and its subject was the given {@code patient}. During the
+     * encounter the information about the given {@code observations} were recorder and all the details were entered by
+     * the user {@code creator}.
      *
-     * @param provider      Staff who provides information
-     * @param creator       Staff who enters the details into the OpenMRS system
-     * @param facility      Location of the encounter
-     * @param date          Date of the encounter
-     * @param patient       Patient involved in the encounter
-     * @param observations  Observations collected during the encounter
-     * @param encounterType Type of the encounter.
+     * @param provider  the staff who provides information
+     * @param creator  the staff who enters the details into the OpenMRS system
+     * @param facility  the location of the encounter
+     * @param date  the date of the encounter
+     * @param patient  the patient involved in the encounter
+     * @param observations  the observations collected during the encounter
+     * @param encounterType the type of the encounter.
      */
     public OpenMRSEncounter(OpenMRSProvider provider, OpenMRSUser creator, OpenMRSFacility facility, Date date,
         OpenMRSPatient patient, Set<? extends OpenMRSObservation> observations, String encounterType) {

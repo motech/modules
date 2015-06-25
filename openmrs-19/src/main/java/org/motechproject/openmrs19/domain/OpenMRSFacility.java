@@ -3,11 +3,12 @@ package org.motechproject.openmrs19.domain;
 import java.util.Objects;
 
 /**
- * Maintains details about the facility
+ * Represents a single facility. A facility is a physical place where patients can be seen. It's a part of the MOTECH
+ * model.
  */
 public class OpenMRSFacility {
-    private String id;
 
+    private String id;
     private String name;
     private String country;
     private String region;
@@ -15,36 +16,38 @@ public class OpenMRSFacility {
     private String stateProvince;
 
     /**
-     * Creates a facility with the given facility id
+     * Creates a facility with the given {@code id}.
      *
-     * @param id  facility id
+     * @param id  the ID of the facility
      */
     public OpenMRSFacility(String id) {
         this(id, null, null, null, null, null);
     }
 
     /**
-     * Creates a facility object with the given details
+     * Creates a facility with the given {@code name} that is placed in the given {@code country}, {@code region},
+     * {@code countryDistrict} and {@code stateProvince}.
      *
-     * @param name  name of the facility
-     * @param country  name of the country
-     * @param region  name of the region
-     * @param countyDistrict  name of the county/district
-     * @param stateProvince  name of the state/province
+     * @param name  the name of the facility
+     * @param country  the name of the country where the facility is placed
+     * @param region  the name of the region where the facility is placed
+     * @param countyDistrict  the name of the county/district where the facility is placed
+     * @param stateProvince  the name of the state/province where the facility is placed
      */
     public OpenMRSFacility(String name, String country, String region, String countyDistrict, String stateProvince) {
         this(null, name, country, region, countyDistrict, stateProvince);
     }
 
     /**
-     * Creates a facility object with the given details
+     * Creates a facility with the given {@code name} and {@code id} that is placed in the given {@code country},
+     * {@code region}, {@code countryDistrict} and {@code stateProvince}.
      *
-     * @param id  facility id
-     * @param name  name of the facility
-     * @param country  name of the country
-     * @param region  name of the region
-     * @param countyDistrict  name of the county/district
-     * @param stateProvince  name of the state/province
+     * @param id  the ID of the facility
+     * @param name  the name of the facility
+     * @param country  the name of the country where the facility is placed
+     * @param region  the name of the region where the facility is placed
+     * @param countyDistrict  the name of the county/district where the facility is placed
+     * @param stateProvince  the name of the state/province where the facility is placed
      */
     public OpenMRSFacility(String id, String name, String country, String region, String countyDistrict, String stateProvince) {
         this.name = name;

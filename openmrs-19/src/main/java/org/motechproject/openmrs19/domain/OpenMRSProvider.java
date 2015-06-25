@@ -1,17 +1,29 @@
 package org.motechproject.openmrs19.domain;
 
+/**
+ * Represents a single provider. Provider is a clinician responsible for providing care to a patient. It's part of the
+ * MOTECH model.
+ */
 public class OpenMRSProvider {
 
     private String providerId;
     private OpenMRSPerson person;
     private String identifier;
 
-    public OpenMRSProvider(OpenMRSPerson person) {
-        this.person = person;
-    }
-
+    /**
+     * Default constructor.
+     */
     public OpenMRSProvider() {
         this(null);
+    }
+
+    /**
+     * Creates a provider based on the given {@code person} details.
+     *
+     * @param person  the personal information about the provider
+     */
+    public OpenMRSProvider(OpenMRSPerson person) {
+        this.person = person;
     }
 
     public OpenMRSPerson getPerson() {

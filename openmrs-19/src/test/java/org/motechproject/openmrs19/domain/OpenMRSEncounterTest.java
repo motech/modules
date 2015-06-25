@@ -1,12 +1,7 @@
-package org.motechproject.mrs.domain;
+package org.motechproject.openmrs19.domain;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
-import org.motechproject.openmrs19.domain.OpenMRSEncounter;
-import org.motechproject.openmrs19.domain.OpenMRSFacility;
-import org.motechproject.openmrs19.domain.OpenMRSPatient;
-import org.motechproject.openmrs19.domain.OpenMRSProvider;
-import org.motechproject.openmrs19.domain.OpenMRSUser;
 
 import java.util.Date;
 import java.util.Set;

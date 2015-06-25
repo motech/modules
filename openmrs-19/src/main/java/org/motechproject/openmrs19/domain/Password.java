@@ -3,7 +3,13 @@ package org.motechproject.openmrs19.domain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Random password generator. It generates a random passwords of length specified in the constructor, built from
+ * letters (lower and upper case) and numbers. It's used for generating passwords for new users and users that were
+ * modified.
+ */
 public class Password {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(Password.class);
 
     private static final int NUMBER_OF_NUMERIC_CHARS_TO_APPEND = 3;
@@ -24,11 +30,21 @@ public class Password {
             'W', 'X', 'Y', 'Z'};
     private static final char[] PASSWORD_NUMBER_CHARS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
+    /**
+     * Creates a generator that generates passwords of length {@code length}.
+     *
+     * @param length  the length of the password to generate
+     */
     public Password(Integer length) {
         this.length = length;
     }
 
-    public String create() {
+    /**
+     * Generates a random password of length specified in the constructor.
+     *
+     * @return the generated password
+     */
+    public String generate() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < length - NUMBER_OF_NUMERIC_CHARS_TO_APPEND; i++) {
             sb.append(PASSWORD_CHARS[((int) (Math.random() * PASSWORD_CHARS.length))]);
