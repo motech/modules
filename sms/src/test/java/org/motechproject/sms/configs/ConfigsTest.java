@@ -46,7 +46,7 @@ public class ConfigsTest {
         assertEquals(configTwo, configs.getConfig(NAME_TWO));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void shouldThrowWhenGettingInvalidConfig() {
         Configs configs = new Configs();
         configs.setConfigs(configList);
@@ -91,7 +91,7 @@ public class ConfigsTest {
         assertEquals(configTwo, configs.getConfigOrDefault(NAME_TWO));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void shouldThrowWhenGettingInvalidConfigOrDefault() {
         Configs configs = new Configs();
         configs.setConfigs(configList);

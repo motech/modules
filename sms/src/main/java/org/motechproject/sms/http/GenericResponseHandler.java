@@ -17,30 +17,13 @@ import static org.motechproject.sms.audit.SmsDirection.OUTBOUND;
  */
 public class GenericResponseHandler extends ResponseHandler {
 
+    /**
+     * Constructs an instance using the provided template and configuration.
+     * @param template the template to use
+     * @param config the configuration to use
+     */
     GenericResponseHandler(Template template, Config config) {
         super(template, config);
-    }
-
-    private String extractProviderMessageId(Header[] headers, String response) {
-        String providerMessageId = null;
-
-        if (getTemplateOutgoingResponse().hasHeaderMessageId()) {
-            for (Header header : headers) {
-                if (header.getName().equals(getTemplateOutgoingResponse().getHeaderMessageId())) {
-                    providerMessageId = header.getValue();
-                }
-            }
-            if (providerMessageId == null) {
-                String message = String.format("Unable to find provider message id in '%s' header",
-                        getTemplateOutgoingResponse().getHeaderMessageId());
-                warn(message);
-                getLogger().error(message);
-            }
-        } else if (getTemplateOutgoingResponse().hasSingleSuccessMessageId()) {
-            providerMessageId = getTemplateOutgoingResponse().extractSingleSuccessMessageId(response);
-        }
-
-        return providerMessageId;
     }
 
     @Override
@@ -76,5 +59,27 @@ public class GenericResponseHandler extends ResponseHandler {
                         getConfig().retryOrAbortStatus(failureCount), null, sms.getMotechId(), null, failureMessage));
             }
         }
+    }
+
+    private String extractProviderMessageId(Header[] headers, String response) {
+        String providerMessageId = null;
+
+        if (getTemplateOutgoingResponse().hasHeaderMessageId()) {
+            for (Header header : headers) {
+                if (header.getName().equals(getTemplateOutgoingResponse().getHeaderMessageId())) {
+                    providerMessageId = header.getValue();
+                }
+            }
+            if (providerMessageId == null) {
+                String message = String.format("Unable to find provider message id in '%s' header",
+                        getTemplateOutgoingResponse().getHeaderMessageId());
+                warn(message);
+                getLogger().error(message);
+            }
+        } else if (getTemplateOutgoingResponse().hasSingleSuccessMessageId()) {
+            providerMessageId = getTemplateOutgoingResponse().extractSingleSuccessMessageId(response);
+        }
+
+        return providerMessageId;
     }
 }

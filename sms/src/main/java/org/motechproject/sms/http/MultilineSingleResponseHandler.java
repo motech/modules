@@ -14,10 +14,15 @@ import static org.motechproject.sms.audit.SmsDirection.OUTBOUND;
 
 /**
  * Deals with providers who return multi-line responses, but return a different response when sending only one message,
- * like Clickatell does
+ * like Clickatell does.
  */
 public class MultilineSingleResponseHandler extends ResponseHandler {
 
+    /**
+     * Constructs an instance using the provided template and configuration.
+     * @param template the template to use
+     * @param config the configuration to use
+     */
     MultilineSingleResponseHandler(Template template, Config config) {
         super(template, config);
     }
