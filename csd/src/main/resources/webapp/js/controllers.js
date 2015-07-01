@@ -14,9 +14,9 @@
         $scope.dupeUrls = [];
 
         $scope.timeMultipliers = {
-            'minutes': $scope.msg('csd.web.settings.units.minutes'),
+            'days': $scope.msg('csd.web.settings.units.days'),
             'hours': $scope.msg('csd.web.settings.units.hours'),
-            'days': $scope.msg('csd.web.settings.units.days')
+            'minutes': $scope.msg('csd.web.settings.units.minutes')
         };
 
         innerLayout({
@@ -105,7 +105,7 @@
             var newLength, newConfig = {
                 'schedulerEnabled':'false',
                 'timePeriod':'1',
-                'timePeriodMultiplier':'minutes',
+                'timePeriodMultiplier':'days',
                 'startDate':'',
                 'xmlUrl':'',
                 'communicationProtocol':'REST',
