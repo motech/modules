@@ -4,7 +4,6 @@ import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.mds.query.QueryParams;
 import org.motechproject.mds.util.Order;
-import org.motechproject.sms.util.SmsEventSubjects;
 import org.motechproject.sms.audit.DeliveryStatus;
 import org.motechproject.sms.audit.SmsAuditService;
 import org.motechproject.sms.audit.SmsRecord;
@@ -16,6 +15,7 @@ import org.motechproject.sms.service.ConfigService;
 import org.motechproject.sms.service.TemplateService;
 import org.motechproject.sms.templates.Status;
 import org.motechproject.sms.templates.Template;
+import org.motechproject.sms.util.SmsEventSubjects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +29,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import static org.motechproject.commons.date.util.DateUtil.now;
-import static org.motechproject.sms.util.SmsEvents.outboundEvent;
 import static org.motechproject.sms.audit.SmsDirection.OUTBOUND;
+import static org.motechproject.sms.util.SmsEvents.outboundEvent;
 
 /**
  * Handles message delivery status updates sent by sms providers to
@@ -70,6 +70,45 @@ public class StatusController {
         this.statusMessageService = statusMessageService;
         this.smsAuditService = smsAuditService;
         this.smsRecordsDataService = smsRecordsDataService;
+    }
+
+    /**
+     * Handles a status update from a provider. This method will result in publishing a MOTECH Event and creating
+     * a record in the database.
+     * @param configName the name of the configuration for the provider that is sending the update
+     * @param params params of the request sent by the provider
+     */
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    @RequestMapping(value = "/{configName}")
+    public void handle(@PathVariable String configName, @RequestParam Map<String, String> params) {
+        LOGGER.info("SMS Status - configName = {}, params = {}", configName, params);
+
+        if (!configService.hasConfig(configName)) {
+            String msg = String.format("Received SMS Status for '%s' config but no matching config: %s, " +
+                            "will try the default config", configName, params);
+            LOGGER.error(msg);
+            statusMessageService.warn(msg, SMS_MODULE);
+        }
+        Config config = configService.getConfigOrDefault(configName);
+        Template template = templateService.getTemplate(config.getTemplateName());
+        Status status = template.getStatus();
+
+        if (status.hasMessageIdKey() && params != null && params.containsKey(status.getMessageIdKey())) {
+            if (status.hasStatusKey() && status.hasStatusSuccess()) {
+                analyzeStatus(status, configName, params);
+            } else {
+                String msg = String.format("We have a message id, but don't know how to extract message status, this is most likely a template error. Config: %s, Parameters: %s",
+                        configName, params);
+                LOGGER.error(msg);
+                statusMessageService.warn(msg, SMS_MODULE);
+            }
+        } else {
+            String msg = String.format("Status message received from provider, but no template support! Config: %s, Parameters: %s",
+                    configName, params);
+            LOGGER.error(msg);
+            statusMessageService.warn(msg, SMS_MODULE);
+        }
     }
 
     private SmsRecord findFirstByProviderMessageId(SmsRecords smsRecords, String providerMessageId) {
@@ -150,7 +189,7 @@ public class StatusController {
         String statusString = params.get(status.getStatusKey());
         String providerMessageId = params.get(status.getMessageIdKey());
         SmsRecord smsRecord = findOrCreateSmsRecord(configName, providerMessageId, statusString);
-        List<String> recipients = Arrays.asList(smsRecord.getPhoneNumber());
+        List<String> recipients = Collections.singletonList(smsRecord.getPhoneNumber());
 
         if (statusString != null) {
             String eventSubject;
@@ -179,38 +218,5 @@ public class StatusController {
                     now(), null));
         }
         smsRecordsDataService.create(smsRecord);
-    }
-
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    @RequestMapping(value = "/{configName}")
-    public void handle(@PathVariable String configName, @RequestParam Map<String, String> params) {
-        LOGGER.info("SMS Status - configName = {}, params = {}", configName, params);
-
-        if (!configService.hasConfig(configName)) {
-            String msg = String.format("Received SMS Status for '%s' config but no matching config: %s, " +
-                            "will try the default config", configName, params);
-            LOGGER.error(msg);
-            statusMessageService.warn(msg, SMS_MODULE);
-        }
-        Config config = configService.getConfigOrDefault(configName);
-        Template template = templateService.getTemplate(config.getTemplateName());
-        Status status = template.getStatus();
-
-        if (status.hasMessageIdKey() && params != null && params.containsKey(status.getMessageIdKey())) {
-            if (status.hasStatusKey() && status.hasStatusSuccess()) {
-                analyzeStatus(status, configName, params);
-            } else {
-                String msg = String.format("We have a message id, but don't know how to extract message status, this is most likely a template error. Config: %s, Parameters: %s",
-                        configName, params);
-                LOGGER.error(msg);
-                statusMessageService.warn(msg, SMS_MODULE);
-            }
-        } else {
-            String msg = String.format("Status message received from provider, but no template support! Config: %s, Parameters: %s",
-                    configName, params);
-            LOGGER.error(msg);
-            statusMessageService.warn(msg, SMS_MODULE);
-        }
     }
 }

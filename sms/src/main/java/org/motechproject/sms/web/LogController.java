@@ -24,6 +24,11 @@ public class LogController {
     @Autowired
     private SmsAuditService smsAuditService;
 
+    /**
+     * Retrieves SMS records for the log grid.
+     * @param settings the grid settings controlling what and how should get displayed
+     * @return the records, retrieved based on the grid settings
+     */
     @RequestMapping(value = "/log", method = RequestMethod.GET)
     @ResponseBody
     public SmsLoggingRecords getSmsRecords(GridSettings settings) {

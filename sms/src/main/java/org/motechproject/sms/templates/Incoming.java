@@ -7,13 +7,44 @@ import java.util.regex.Pattern;
  * How providers deal with incoming messages
  */
 public class Incoming {
+
+    /**
+     * The key used by the provider to denote the message.
+     */
     private String messageKey;
+
+    /**
+     * The key used by the provider to denote the sender.
+     */
     private String senderKey;
+
+    /**
+     * The regex pattern used for extracting the sender number frm the sender data sent by the provider.
+     */
     private String senderRegex;
+
+    /**
+     * The key used by the provider to denote the recipient.
+     */
     private String recipientKey;
+
+    /**
+     * The regex pattern used for extracting the sender number frm the sender data sent by the provider.
+     */
     private String recipientRegex;
+
+    /**
+     * The key used by the provider to denote the timestamp.
+     */
     private String timestampKey;
+
+    /**
+     * The key used by the provider to denote the message ID.
+     */
     private String msgIdKey;
+
+    // These patterns are compiled using the regex fields from above
+
     private Pattern extractSenderPattern;
     private Pattern extractRecipientPattern;
 
