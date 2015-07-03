@@ -24,18 +24,42 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Models how we can talk to a specific SMS provider
+ * Models how we can talk to a specific SMS provider.
  */
 public class Template {
 
     public static final Pattern FIND_TOKEN_PATTERN = Pattern.compile("\\[(\\w*)\\]");
 
+    /**
+     * Models the handling of outgoing SMS messages.
+     */
     private Outgoing outgoing;
+
+    /**
+     * Models how the status updates from the provider are being handled.
+     */
     private Status status;
+
+    /**
+     * Models how incoming SMS messages are being handled.
+     */
     private Incoming incoming;
+
+    /**
+     * The unique name of the template.
+     */
     private String name;
+
+    /**
+     * Configurable values that the user can edit on the UI.
+     */
     private List<String> configurables;
 
+    /**
+     * Generates an HTTP request for an outgoing SMS from the provided properties.
+     * @param props the properties used for building the request
+     * @return the HTTP request to execute
+     */
     public HttpMethod generateRequestFor(Map<String, String> props) {
         HttpMethod httpMethod;
         if (HttpMethodType.POST.equals(outgoing.getRequest().getType())) {
@@ -72,6 +96,72 @@ public class Template {
         httpMethod.setQueryString(addQueryParameters(props));
 
         return httpMethod;
+    }
+
+    /**
+     * Formats the recipient list into a single string that can be understood by the provider.
+     * @param recipients the list of recipients
+     * @return the recipient string for the provider
+     */
+    public String recipientsAsString(List<String> recipients) {
+        return StringUtils.join(recipients.iterator(), outgoing.getRequest().getRecipientsSeparator());
+    }
+
+    /**
+     * @return the {@link Outgoing} instance used by this template for outgoing SMS messages
+     */
+    public Outgoing getOutgoing() {
+        return outgoing;
+    }
+
+    /**
+     * @return the {@link Incoming} instance used by this template for incoming SMS messages
+     */
+    public Incoming getIncoming() {
+        return incoming;
+    }
+
+    /**
+     * @return the unique name of this template
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name the unique name of this template
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * @return configurable values that the user can edit on the UI
+     */
+    public List<String> getConfigurables() {
+        return configurables;
+    }
+
+    /**
+     * @return the {@link Status} object used for dealing with status updates from the provider
+     */
+    public Status getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status the {@link Status} object used for dealing with status updates from the provider
+     */
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    /**
+     * Reads the default values from Motech settings, updating this template.
+     * @param settingsFacade the settings facade used for reading the settings
+     */
+    public void readDefaults(SettingsFacade settingsFacade) {
+        outgoing.readDefaults(settingsFacade);
     }
 
     private NameValuePair[] addQueryParameters(Map<String, String> props) {
@@ -118,42 +208,6 @@ public class Template {
         matcher.appendTail(sb);
 
         return sb.toString();
-    }
-
-    public String recipientsAsString(List<String> recipients) {
-        return StringUtils.join(recipients.iterator(), outgoing.getRequest().getRecipientsSeparator());
-    }
-
-    public Outgoing getOutgoing() {
-        return outgoing;
-    }
-
-    public Incoming getIncoming() {
-        return incoming;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<String> getConfigurables() {
-        return configurables;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public void readDefaults(SettingsFacade settingsFacade) {
-        outgoing.readDefaults(settingsFacade);
     }
 
     @Override
