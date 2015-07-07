@@ -31,6 +31,9 @@ public class TasksChannelServiceInstance {
         if (channelService != null && !channelRequest.getTriggerTaskEvents().isEmpty()) {
             LOGGER.trace("Registering channel with the following request: {}", channelRequest);
             channelService.registerChannel(channelRequest);
+        } else if (channelService != null && channelRequest.getTriggerTaskEvents().isEmpty()) {
+            LOGGER.trace("Unregistering channel with the following request: {}", channelRequest);
+            channelService.unregisterChannel(channelRequest.getModuleName());
         }
     }
 }
