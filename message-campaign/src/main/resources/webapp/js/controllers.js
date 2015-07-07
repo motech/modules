@@ -128,6 +128,9 @@
                         formatter:deleteFormatter
                     }
                 ],
+                pager: '#pageEnrollmentsTable',
+                viewrecords: true,
+                loadonce: true,
                 width:getPanelWidth(),
                 height:"auto",
                 multiselect:true
