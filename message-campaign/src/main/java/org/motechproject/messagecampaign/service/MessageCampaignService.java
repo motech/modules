@@ -2,6 +2,7 @@ package org.motechproject.messagecampaign.service;
 
 import org.joda.time.DateTime;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
+import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
 import org.motechproject.messagecampaign.domain.campaign.CampaignMessageRecord;
 
@@ -85,4 +86,8 @@ public interface MessageCampaignService {
     void unscheduleMessageJob(CampaignMessageRecord campaignMessageRecord);
 
     void rescheduleMessageJob(Long campaignMessageRecordId);
+
+    void scheduleJobsForEnrollment(CampaignEnrollment enrollment);
+
+    void unscheduleJobsForEnrollment(CampaignEnrollment enrollment);
 }

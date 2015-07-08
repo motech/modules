@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
+import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -110,6 +111,28 @@ public class MessageCampaignServiceBundleIT extends BasePaxIT {
 
         campaignRecord.setMaxDuration("2 weeks");
         campaignRecordService.update(campaignRecord);
+    }
+
+    @Test
+    public void shouldScheduleAndUnscheduleJobsForEnrollment() throws SchedulerException {
+        CampaignEnrollment enrollment = new CampaignEnrollment("enrollId", "DayOfWeekCampaign");
+        enrollment.setReferenceDate(new LocalDate(2020, 7, 10));
+
+        TriggerKey messageTriggerKey =
+                triggerKey("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.DayOfWeekCampaign.enrollId.message_key_1", "default");
+
+        TriggerKey endOfCampaignTriggerKey =
+                triggerKey("org.motechproject.messagecampaign.campaign-completed-EndOfCampaignJob.DayOfWeekCampaign.enrollId-runonce", "default");
+
+        messageCampaignService.scheduleJobsForEnrollment(enrollment);
+
+        assertTrue(scheduler.checkExists(messageTriggerKey));
+        assertTrue(scheduler.checkExists(endOfCampaignTriggerKey));
+
+        messageCampaignService.unscheduleJobsForEnrollment(enrollment);
+
+        assertFalse(scheduler.checkExists(messageTriggerKey));
+        assertFalse(scheduler.checkExists(endOfCampaignTriggerKey));
     }
 
     private List<DateTime> getFireTimes(String triggerKey) throws SchedulerException {
