@@ -60,6 +60,12 @@ public class IncomingController {
 
     //todo: add provider-specific UI to explain how implementers must setup their providers' incoming callback
 
+    /**
+     * Handles an incoming SMS notification coming from the provider. A MOTECH Event notifying about this will also
+     * get published. The request itself will get handled in the way that the configuration template specifies it.
+     * @param configName the name of the configuration that should handle the SMS
+     * @param params the request params coming from the provider
+     */
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/{configName}")
     public void handleIncoming(@PathVariable String configName, @RequestParam Map<String, String> params) {

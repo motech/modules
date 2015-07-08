@@ -1,5 +1,8 @@
 package org.motechproject.sms.util;
 
+/**
+ * Class holding constant String values related to permissions and roles.
+ */
 public final class Constants {
 
     public static final String MANAGE_SMS_PERMISSION = "manageSMS";

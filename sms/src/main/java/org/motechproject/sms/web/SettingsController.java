@@ -6,6 +6,8 @@ import org.motechproject.sms.json.TemplateJsonParser;
 import org.motechproject.sms.service.ConfigService;
 import org.motechproject.sms.service.TemplateService;
 import org.motechproject.sms.templates.TemplateForWeb;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -35,16 +37,27 @@ import static org.motechproject.sms.util.Constants.HAS_MANAGE_SMS_ROLE;
 @PreAuthorize(HAS_MANAGE_SMS_ROLE)
 public class SettingsController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SendController.class);
+
     private TemplateService templateService;
     private ConfigService configService;
     private TemplateJsonParser templateJsonParser;
 
+    /**
+     * Returns all the templates for the UI.
+     * @return a map of templates, keys are template names
+     */
     @RequestMapping(value = "/templates", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, TemplateForWeb> getTemplates() {
         return templateService.allTemplatesForWeb();
     }
 
+    /**
+     * Imports templates from the uploaded file.
+     * @param jsonFile the file containing the templates
+     * @throws IOException if there was a problem reading the file
+     */
     @RequestMapping(value = "/templates/import", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public void importTemplates(@RequestParam(value = "jsonFile") MultipartFile jsonFile)
@@ -55,12 +68,21 @@ public class SettingsController {
         templateJsonParser.importTemplates(writer.toString());
     }
 
+    /**
+     * Retrieves all configurations for the UI.
+     * @return all configurations in the system
+     */
     @RequestMapping(value = "/configs", method = RequestMethod.GET)
     @ResponseBody
     public Configs getConfigs() {
         return configService.getConfigs();
     }
 
+    /**
+     * Saves the provided configurations, overriding old ones.
+     * @param configs all configurations to save
+     * @return the newly saved configurations
+     */
     @RequestMapping(value = "/configs", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -69,10 +91,16 @@ public class SettingsController {
         return configService.getConfigs();
     }
 
+    /**
+     * Handles exceptions, returns their message as the response body.
+     * @param e the exception to handle
+     * @return the exception message
+     */
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public String handleException(Exception e) throws IOException {
+        LOGGER.error("Error in SMS SettingsController", e);
         return e.getMessage();
     }
 

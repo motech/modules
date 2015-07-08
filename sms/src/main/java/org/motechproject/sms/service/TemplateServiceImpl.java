@@ -26,7 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * See {@link org.motechproject.sms.service.TemplateService}
+ * See {@link org.motechproject.sms.service.TemplateService}.
+ * This implementation uses the MOTECH configuration system to store the templates.
  */
 @Service("templateService")
 public class TemplateServiceImpl implements TemplateService {
