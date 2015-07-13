@@ -349,6 +349,16 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
         }
     }
 
+    @Override
+    public void scheduleJobsForEnrollment(CampaignEnrollment enrollment) {
+        campaignSchedulerFactory.getCampaignScheduler(enrollment.getCampaignName()).start(enrollment);
+    }
+
+    @Override
+    public void unscheduleJobsForEnrollment(CampaignEnrollment enrollment) {
+        campaignSchedulerFactory.getCampaignScheduler(enrollment.getCampaignName()).stop(enrollment);
+    }
+
     @PostConstruct
     public void loadCampaignsJson() {
         try (InputStream inputStream = settingsFacade.getRawConfig(MESSAGE_CAMPAIGNS_JSON_FILENAME)) {
