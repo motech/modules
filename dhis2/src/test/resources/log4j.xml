@@ -11,7 +11,15 @@
     </appender>
 
     <logger name="org.motechproject.dhis2">
+        <level value="TRACE"/>
+    </logger>
+
+    <logger name="org.motechproject.event">
         <level value="DEBUG"/>
+    </logger>
+
+    <logger name="org.motechproject.mds.annotations.internal">
+        <level value="ERROR"/>
     </logger>
 
     <root>

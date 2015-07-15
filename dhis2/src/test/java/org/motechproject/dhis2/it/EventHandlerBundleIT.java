@@ -1,21 +1,19 @@
 package org.motechproject.dhis2.it;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.dhis2.domain.OrgUnit;
-import org.motechproject.dhis2.service.Settings;
 import org.motechproject.dhis2.domain.TrackedEntityInstanceMapping;
 import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.event.EventSubjects;
 import org.motechproject.dhis2.repository.OrgUnitDataService;
 import org.motechproject.dhis2.rest.domain.AttributeDto;
+import org.motechproject.dhis2.service.Settings;
 import org.motechproject.dhis2.service.SettingsService;
 import org.motechproject.dhis2.service.TrackedEntityInstanceMappingService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.testing.osgi.http.SimpleHttpServer;
 import org.ops4j.pax.exam.ExamFactory;
@@ -33,7 +31,7 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
-public class EventHandlerBundleIT extends BasePaxIT {
+public class EventHandlerBundleIT extends BaseDhisIT {
     private final Object waitLock = new Object();
 
     private static final String ENTITY_TYPE_ID = "entityUUID"; // Person
@@ -58,17 +56,13 @@ public class EventHandlerBundleIT extends BasePaxIT {
     private OrgUnitDataService orgUnitDataService;
 
     @Before
-    public void setup() {
+    public void setUp() {
         orgUnitDataService.create(new OrgUnit(ORGUNIT_NAME,ORGUNIT_ID));
     }
 
-    @After
-    public void tearDown() {
-        trackedEntityInstanceMappingService.deleteAll();
-    }
-
     @Test
-    public void testHandleRegistration() throws Exception{
+    public void testHandleRegistration() throws InterruptedException {
+        getLogger().debug("Running testHandleRegistration()");
 
         final String responseBody = "{\"status\":\"SUCCESS\",\"importCount\":{\"imported\":1,\"updated\":0,\"ignored\"" +
                 ":0,\"deleted\":0},\"reference\":\"IbqmvQFz0zW\"}{\"status\":\"SUCCESS\",\"importCount\":{\"imported\"" +
@@ -98,12 +92,13 @@ public class EventHandlerBundleIT extends BasePaxIT {
 
         MotechEvent event = new MotechEvent(EventSubjects.CREATE_ENTITY, params);
 
-        wait2s();
+        getLogger().debug("Sending MOTECH Event");
         eventRelay.sendEventMessage(event);
         wait2s();
 
         TrackedEntityInstanceMapping mapper = trackedEntityInstanceMappingService.findByExternalId(INSTANCE_EXT_ID);
 
+        assertNotNull(mapper);
         assertEquals(mapper.getExternalName(),INSTANCE_EXT_ID);
         assertNotNull(mapper.getDhis2Uuid());
         assertEquals(mapper.getDhis2Uuid(),"IbqmvQFz0zW");

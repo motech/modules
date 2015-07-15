@@ -1,6 +1,5 @@
 package org.motechproject.dhis2.it;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,16 +20,12 @@ import org.motechproject.tasks.domain.ActionEvent;
 import org.motechproject.tasks.domain.ActionParameter;
 import org.motechproject.tasks.domain.Channel;
 import org.motechproject.tasks.service.ChannelService;
-import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
-import org.osgi.framework.BundleContext;
-
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -44,7 +39,7 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
-public class TasksBundleIT extends BasePaxIT{
+public class TasksBundleIT extends BaseDhisIT {
 
     private static final String DATA_ELEMENT_NAME = "DataElementName";
     private static final String DATA_ELEMENT_ID = "DataElementID";
@@ -61,7 +56,6 @@ public class TasksBundleIT extends BasePaxIT{
     private static final String STAGE_NAME_NO_REG = "StageNameNoReg";
     private static final String STAGE_ID_NO_REG = "StageIdNoReg";
     private static final String MODULE_NAME = "org.motechproject.dhis2";
-    private static final int ACTION_EVENT_SIZE = 5;
 
 
     @Inject
@@ -82,7 +76,7 @@ public class TasksBundleIT extends BasePaxIT{
     private Logger logger = getLogger();
 
     @Before
-    public void setup() {
+    public void setUp() {
         populateDatabase();
         logger.debug("updating tasks Channel");
         tasksService.updateChannel();
@@ -92,11 +86,11 @@ public class TasksBundleIT extends BasePaxIT{
     public void testTaskActionsAreCorrect() throws Exception {
 
         logger.debug("Running taskActionsAreCorrect");
-        Channel taskchannel = channelService.getChannel(MODULE_NAME);
+        Channel taskChannel = channelService.getChannel(MODULE_NAME);
 
-        assertNotNull(taskchannel);
-        assertEquals(taskchannel.getModuleName(), MODULE_NAME);
-        List<ActionEvent> actionEvents = taskchannel.getActionTaskEvents();
+        assertNotNull(taskChannel);
+        assertEquals(taskChannel.getModuleName(), MODULE_NAME);
+        List<ActionEvent> actionEvents = taskChannel.getActionTaskEvents();
         assertNotNull(actionEvents);
 
         for (ActionEvent e : actionEvents) {
@@ -260,10 +254,6 @@ public class TasksBundleIT extends BasePaxIT{
         logger.debug("Action Parameter:" + parameter.getKey());
         parameter = actionParameterIterator.next();
         assertEquals(parameter.getKey(), ATTRIBUTE_ID);
-
-
-
-
     }
 
 

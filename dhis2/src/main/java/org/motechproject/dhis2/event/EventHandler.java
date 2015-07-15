@@ -14,6 +14,8 @@ import org.motechproject.dhis2.service.DataElementService;
 import org.motechproject.dhis2.service.TrackedEntityInstanceMappingService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,26 +31,25 @@ import java.util.Map.Entry;
  */
 @Service
 public class EventHandler {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EventHandler.class);
+
     @Autowired
     private DhisWebService dhisWebService;
 
     @Autowired
     private TrackedEntityInstanceMappingService trackedEntityInstanceMappingService;
 
-
     @Autowired
     private DataElementService dataElementService;
-
-
 
     public EventHandler (DhisWebService webService, TrackedEntityInstanceMappingService trackedEntityInstanceMappingService) {
         this.dhisWebService = webService;
         this.trackedEntityInstanceMappingService = trackedEntityInstanceMappingService;
     }
 
-
-
     public EventHandler () {
+        this(null, null);
     }
 
     /**
@@ -59,11 +60,15 @@ public class EventHandler {
      */
     @MotechListener(subjects = EventSubjects.CREATE_ENTITY)
     public void handleCreate (MotechEvent event) {
+        LOGGER.debug("Handling CREATE_ENTITY MotechEvent");
         Map<String, Object> params = new HashMap<>(event.getParameters());
         String externalUUID = (String) params.remove(EventParams.EXTERNAL_ID);
         TrackedEntityInstanceDto trackedEntityInstance = createTrackedEntityInstanceFromParams(params);
+
+        LOGGER.debug("Sending request to create entity to the DHIS Web Service");
         DhisStatusResponse response = dhisWebService.createTrackedEntityInstance(trackedEntityInstance);
 
+        LOGGER.trace("Received response from the DHIS server. Status: {}", response.getStatus());
         if (response.getStatus() == DhisStatus.SUCCESS) {
             trackedEntityInstanceMappingService.create(externalUUID, response.getReference());
         }
