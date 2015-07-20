@@ -52,8 +52,8 @@ public class ResourceComparatorTest {
 
     private GridSettings createGridSettings(String sortColumn, String sortDirection) {
         GridSettings settings = new GridSettings();
-        settings.setSortColumn(sortColumn);
-        settings.setSortDirection(sortDirection);
+        settings.setSidx(sortColumn);
+        settings.setSord(sortDirection);
 
         return settings;
     }

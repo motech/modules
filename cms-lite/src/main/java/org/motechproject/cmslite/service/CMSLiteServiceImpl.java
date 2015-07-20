@@ -22,20 +22,19 @@ public class CMSLiteServiceImpl implements CMSLiteService {
 
     @Override
     public StringContent getStringContent(String language, String name) throws ContentNotFoundException {
-        List<StringContent> stringContents = stringContentService.findByLanguageAndName(language, name);
-        if (stringContents == null || stringContents.size() == 0) {
+        StringContent stringContent = stringContentService.findByLanguageAndName(language, name);
+        if (stringContent == null) {
             throw new ContentNotFoundException();
         }
-        return stringContents.get(0);
+        return stringContent;
     }
 
     @Override
     public StreamContent getStreamContent(String language, String name) throws ContentNotFoundException {
-        List<StreamContent> streamContents = streamContentService.findByLanguageAndName(language, name);
-        if (streamContents == null || streamContents.size() == 0) {
+        StreamContent streamContent = streamContentService.findByLanguageAndName(language, name);
+        if (streamContent == null) {
             throw new ContentNotFoundException();
         }
-        StreamContent streamContent = streamContents.get(0);
         streamContent.setContent(retrieveStreamContentData(streamContent));
         return streamContent;
     }
@@ -84,14 +83,14 @@ public class CMSLiteServiceImpl implements CMSLiteService {
 
     @Override
     public boolean isStreamContentAvailable(String language, String name) {
-        List<StreamContent> streamContents = streamContentService.findByLanguageAndName(language, name);
-        return !(streamContents == null || streamContents.size() == 0);
+        StreamContent streamContent = streamContentService.findByLanguageAndName(language, name);
+        return streamContent != null;
     }
 
     @Override
     public boolean isStringContentAvailable(String language, String name) {
-        List<StringContent> stringContents = stringContentService.findByLanguageAndName(language, name);
-        return !(stringContents == null || stringContents.size() == 0);
+        StringContent stringContent = stringContentService.findByLanguageAndName(language, name);
+        return stringContent != null;
     }
 
     @Override

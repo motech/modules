@@ -29,12 +29,12 @@ public class GridSettings {
     /**
      * The name of the field on which sorting should be performed.
      */
-    private String sortColumn = "";
+    private String sidx = "";
 
     /**
      * The direction of sorting, either asc ord desc.
      */
-    private String sortDirection = "asc";
+    private String sord = "asc";
 
     /**
      * Should stream content be displayed.
@@ -77,7 +77,7 @@ public class GridSettings {
      * @return true if ordering direction is descending, false otherwise
      */
     public boolean isDescending() {
-        return equalsIgnoreCase(sortDirection, "desc");
+        return equalsIgnoreCase(sord, "desc");
     }
 
     /**
@@ -127,34 +127,34 @@ public class GridSettings {
     /**
      * @return the name of the field on which sorting should be performed
      */
-    public String getSortColumn() {
-        return sortColumn;
+    public String getSidx() {
+        return sidx;
     }
 
     /**
      * Sets the name of the field on which sorting should be performed. Blank column name will be ignored.
-     * @param sortColumn the name of the field on which sorting should be performed
+     * @param sidx the name of the field on which sorting should be performed
      */
-    public void setSortColumn(String sortColumn) {
-        if (isNotBlank(sortColumn)) {
-            this.sortColumn = sortColumn;
+    public void setSidx(String sidx) {
+        if (isNotBlank(sidx)) {
+            this.sidx = sidx;
         }
     }
 
     /**
      * @return the sorting direction for these settings, either asc or desc
      */
-    public String getSortDirection() {
-        return sortDirection;
+    public String getSord() {
+        return sord;
     }
 
     /**
      * Sets the sorting direction for these settings. Blank values will be ignored.
-     * @param sortDirection the sorting direction for these settings, either asc or desc
+     * @param sord the sorting direction for these settings, either asc or desc
      */
-    public void setSortDirection(String sortDirection) {
-        if (isNotBlank(sortDirection)) {
-            this.sortDirection = sortDirection;
+    public void setSord(String sord) {
+        if (isNotBlank(sord)) {
+            this.sord = sord;
         }
     }
 
