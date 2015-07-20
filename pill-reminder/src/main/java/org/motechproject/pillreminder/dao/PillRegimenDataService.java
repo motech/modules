@@ -11,9 +11,11 @@ import org.motechproject.pillreminder.domain.PillRegimen;
  */
 public interface PillRegimenDataService extends MotechDataService<PillRegimen> {
 
+    /**
+     * Finds a pill regimen by external ID.
+     * @param externalId the external ID of the pill regimen
+     * @return the matching pill regimen
+     */
     @Lookup(name = "Find by External ID")
     PillRegimen findByExternalId(@LookupField(name = "externalId") String externalId);
-
-    @Lookup(name = "Find by Regimen ID")
-    PillRegimen findById(@LookupField(name = "id") Long id);
 }

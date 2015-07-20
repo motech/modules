@@ -9,10 +9,18 @@ import org.motechproject.pillreminder.domain.PillRegimen;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Builds pill regimen domain objects from provided pill regimen request.
+ */
 public class PillRegimenBuilder {
 
     private DosageBuilder dosageBuilder = new DosageBuilder();
 
+    /**
+     * Builds a pill regimen from daily pill regimen request.
+     * @param dailyPillRegimenRequest the daily pill regimen to base the pill regimen object on
+     * @return the newly built pill regimen domain object
+     */
     public PillRegimen createDailyPillRegimenFrom(DailyPillRegimenRequest dailyPillRegimenRequest) {
         final int pillWindowInHours = dailyPillRegimenRequest.getPillWindowInHours();
         final int reminderRepeatIntervalInMinutes = dailyPillRegimenRequest.getReminderRepeatIntervalInMinutes();
@@ -22,7 +30,7 @@ public class PillRegimenBuilder {
     }
 
     private Set<Dosage> getDosages(DailyPillRegimenRequest pillRegimenRequest) {
-        Set<Dosage> dosages = new HashSet<Dosage>();
+        Set<Dosage> dosages = new HashSet<>();
         for (DosageRequest dosageRequest : pillRegimenRequest.getDosageRequests()) {
             dosages.add(dosageBuilder.createFrom(dosageRequest));
         }

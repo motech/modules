@@ -6,7 +6,6 @@ import org.motechproject.commons.date.model.Time;
 import java.util.List;
 
 /**
- * \ingroup pillreminder
  * Dosage details returned from pill reminder module, represents single dosage detail (morning or evening)
  * Also contains information about last dosage confirmation.
  */
@@ -19,6 +18,15 @@ public class DosageResponse {
     private LocalDate responseLastCapturedDate;
     private List<MedicineResponse> medicines;
 
+    /**
+     * Constructs a dosage response.
+     * @param dosageId unique dosage identifier
+     * @param dosageTime the time of the dosage
+     * @param startDate dosage start date, if there are multiple medicines with different start date then first start date will be returned
+     * @param endDate dosage end date, if there are multiple medicines with different end date then last ending will be returned
+     * @param responseLastCapturedDate last dosage confirmation from subscriber for this dose
+     * @param medicines medicines prescribed
+     */
     public DosageResponse(Long dosageId, Time dosageTime, LocalDate startDate, LocalDate endDate, LocalDate responseLastCapturedDate, List<MedicineResponse> medicines) {
         this.dosageId = dosageId;
         this.dosageHour = dosageTime.getHour();

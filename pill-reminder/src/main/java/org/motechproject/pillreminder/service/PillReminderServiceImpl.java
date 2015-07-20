@@ -11,6 +11,10 @@ import org.motechproject.pillreminder.domain.PillRegimen;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Implementation of the {@link PillReminderService}. Uses {@link PillRegimenJobScheduler} for scheduling
+ * jobs and stores information in MDS using {@link PillRegimenDataService}.
+ */
 @Component
 public class PillReminderServiceImpl implements PillReminderService {
     private PillRegimenDataService pillRegimenDataService;

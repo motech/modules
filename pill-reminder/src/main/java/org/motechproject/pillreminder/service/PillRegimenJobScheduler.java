@@ -19,6 +19,9 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.Map;
 
+/**
+ * The scheduler facade used by the pill reminder module.
+ */
 @Component
 public class PillRegimenJobScheduler {
 
@@ -31,6 +34,11 @@ public class PillRegimenJobScheduler {
         this.schedulerService = schedulerService;
     }
 
+    /**
+     * Schedules a daily job for each dosage of the pill regimen. The jobs will fire events
+     * that will be handled by the pill reminder module.
+     * @param pillRegimen the regimen for which reminders should get scheduled
+     */
     public void scheduleDailyJob(PillRegimen pillRegimen) {
         for (Dosage dosage : pillRegimen.getDosages()) {
             CronSchedulableJob schedulableJob = getSchedulableDailyJob(pillRegimen, dosage);
@@ -38,6 +46,10 @@ public class PillRegimenJobScheduler {
         }
     }
 
+    /**
+     * Unschedules all jobs scheduled for dosages from the given pill regimen.
+     * @param regimen the regimen to unschedule the jobs for
+     */
     public void unscheduleJobs(PillRegimen regimen) {
         for (Dosage dosage : regimen.getDosages()) {
             if (LOGGER.isDebugEnabled()) {

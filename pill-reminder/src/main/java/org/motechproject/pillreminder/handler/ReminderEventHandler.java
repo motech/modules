@@ -11,14 +11,24 @@ import org.motechproject.pillreminder.domain.PillRegimen;
 import org.motechproject.pillreminder.EventKeys;
 import org.motechproject.scheduler.contract.RepeatingSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.Map;
 
+/**
+ * This is the handler responsible for handling reminder events coming from the scheduler.
+ * This is the main heart of the pill reminder module, responsible for receiving the scheduler events
+ * and deciding whether to send the reminder. Sending the reminder amounts to publishing a different event.
+ */
 @Component
 public class ReminderEventHandler {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReminderEventHandler.class);
+
     private EventRelay eventRelay;
     private PillRegimenDataService pillRegimenDataService;
     private MotechSchedulerService schedulerService;
@@ -31,16 +41,39 @@ public class ReminderEventHandler {
         this.schedulerService = schedulerService;
     }
 
+    /**
+     * Handles the event coming from the scheduled reminder job. If the dosage status is marked as captured,
+     * this method will not do anything. If the dosage status is not known, repeating reminders will be scheduled (if
+     * not yet scheduled) and an event signalling a reminder will be published.
+     * @param motechEvent the event from the scheduler to handle
+     */
     @MotechListener(subjects = {EventKeys.PILLREMINDER_REMINDER_EVENT_SUBJECT_SCHEDULER })
     public void handleEvent(MotechEvent motechEvent) {
+        final String externalId = getRegimenExternalId(motechEvent);
+        final Object dosageId = getDosageId(motechEvent); // dosage ID is accepted as String or Long
+
         PillRegimen pillRegimen = getPillRegimen(motechEvent);
         Dosage dosage = getDosage(pillRegimen, motechEvent);
 
-        if (!dosage.isTodaysDosageResponseCaptured()) {
+        if (pillRegimen == null) {
+            LOGGER.warn("Received an event for a non existing Pill Regimen with External ID {}",
+                    externalId);
+        } else if (dosage == null) {
+            LOGGER.warn("Received an event for a non existing Dosage with ID {} for the Pill Regimen with external ID {}",
+                    dosageId, externalId);
+        } else if (!dosage.isTodaysDosageResponseCaptured()) {
+            // a valid reminder
+            logDosageDetails("Sending a reminder", externalId, dosageId);
+
             if (pillRegimen.isFirstReminderFor(dosage)) {
+                // schedule repeating reminders
+                logDosageDetails("Scheduling repeat reminders", externalId, dosageId);
+
                 scheduleRepeatReminders(motechEvent, pillRegimen, dosage);
             }
             eventRelay.sendEventMessage(createNewMotechEvent(dosage, pillRegimen, motechEvent, EventKeys.PILLREMINDER_REMINDER_EVENT_SUBJECT));
+        } else {
+            logDosageDetails("Dosage status already known", externalId, dosageId);
         }
     }
 
@@ -72,13 +105,13 @@ public class ReminderEventHandler {
     }
 
     private PillRegimen getPillRegimen(MotechEvent motechEvent) {
-        final String pillRegimenExternalId = (String) motechEvent.getParameters().get(EventKeys.EXTERNAL_ID_KEY);
+        final String pillRegimenExternalId = getRegimenExternalId(motechEvent);
         return pillRegimenDataService.findByExternalId(pillRegimenExternalId);
     }
 
     private Dosage getDosage(PillRegimen pillRegimen, MotechEvent motechEvent) {
         Long dosageId;
-        Object dosageIdObj = motechEvent.getParameters().get(EventKeys.DOSAGE_ID_KEY);
+        Object dosageIdObj = getDosageId(motechEvent);
 
         if (dosageIdObj instanceof Long) {
             dosageId = (Long) dosageIdObj;
@@ -98,5 +131,17 @@ public class ReminderEventHandler {
             }
         }
         return null;
+    }
+
+    private String getRegimenExternalId(MotechEvent event) {
+        return (String) event.getParameters().get(EventKeys.EXTERNAL_ID_KEY);
+    }
+
+    private Object getDosageId(MotechEvent event) {
+        return event.getParameters().get(EventKeys.DOSAGE_ID_KEY);
+    }
+
+    private void logDosageDetails(String message, String externalId, Object dosageId) {
+        LOGGER.debug("{} for Pill Regimen with External ID {} and Dosage ID {}", message, externalId, dosageId);
     }
 }

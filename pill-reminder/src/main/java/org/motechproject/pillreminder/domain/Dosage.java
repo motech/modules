@@ -19,69 +19,126 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * The domain object representing a medicine dosage within a pill regimen.
+ */
 @Entity
 @CrudEvents(CrudEventType.NONE)
 public class Dosage {
 
+    /**
+     * The unique dosage ID.
+     */
     @Field
     private Long id;
 
+    /**
+     * The time of day at which the dosage should be taken.
+     */
     @Field(displayName = "Dosage Time")
     private Time dosageTime;
 
+    /**
+     * The last captured date when the patient reported taking this dosage.
+     */
     @Field(displayName = "Last Response Captured Date")
     private LocalDate responseLastCapturedDate;
 
+    /**
+     * All the medicines that should be taken as part of this dosage.
+     */
     @Field(displayName = "Medicines")
     @Cascade(delete = true)
     private Set<Medicine> medicines;
 
+    /**
+     * Constructs an instance without setting any fields.
+     */
     public Dosage() {
     }
 
+    /**
+     * Creates a dosage using a medicine and a time of day for taking the medicines.
+     * @param dosageTime the time of day at which this dosage should be taken
+     * @param medicines all medicines that are part of this dosage
+     */
     public Dosage(Time dosageTime, Set<Medicine> medicines) {
         this.dosageTime = dosageTime;
         this.medicines = medicines;
     }
 
+    /**
+     * @return all medicines that are part of this dosage
+     */
     public Set<Medicine> getMedicines() {
         return medicines;
     }
 
+    /**
+     * @param medicines all medicines that are part of this dosage
+     */
     public void setMedicines(Set<Medicine> medicines) {
         this.medicines = medicines;
     }
 
+    /**
+     * @return the time of day at which this dosage should be taken
+     */
     public Time getDosageTime() {
         return dosageTime;
     }
 
+    /**
+     * @param dosageTime the time of day at which this dosage should be taken
+     */
     public void setDosageTime(Time dosageTime) {
         this.dosageTime = dosageTime;
     }
 
+    /**
+     * @return the unique dosage identifier
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * @param id the unique dosage identifier
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * @return the last captured date when the patient reported taking this dosage
+     */
     public LocalDate getResponseLastCapturedDate() {
         return responseLastCapturedDate;
     }
 
+    /**
+     * @param responseLastCapturedDate the last captured date when the patient reported taking this dosage
+     */
     public void setResponseLastCapturedDate(LocalDate responseLastCapturedDate) {
         this.responseLastCapturedDate = responseLastCapturedDate;
     }
 
+    /**
+     * Update this dosage with a new response date from the patient.
+     * If the provided date is null or before the currently set last capture date, it will be ignored.
+     * @param lastCapturedDate the date on which the response was captured
+     */
     public void updateResponseLastCapturedDate(LocalDate lastCapturedDate) {
         if (responseLastCapturedDate == null || responseLastCapturedDate.isBefore(lastCapturedDate)) {
             responseLastCapturedDate = lastCapturedDate;
         }
     }
 
+    /**
+     * Checks if there is a patient response captured for the last dosage time.
+     * This will check if the response was made today or yesterday, provided it's still before today's dosage time.
+     * @return true if the response was captured, false otherwise
+     */
     @Ignore
     public boolean isTodaysDosageResponseCaptured() {
         LocalDate today = DateUtil.today();
@@ -97,6 +154,10 @@ public class Dosage {
         return responseLastCapturedDate.equals(yesterday) && new Time(localNow.getHourOfDay(), localNow.getMinuteOfHour()).isBefore(dosageTime);
     }
 
+    /**
+     * Gets the start date for taking this dosage. It will check all the medicines for the earliest start date.
+     * @return the start date for taking this dosage
+     */
     @Ignore
     public LocalDate getStartDate() {
         List<Medicine> sortedList = new ArrayList<>(medicines);
@@ -109,6 +170,10 @@ public class Dosage {
         return sortedList.isEmpty() ? null : sortedList.get(0).getStartDate();
     }
 
+    /**
+     * Gets the end date for taking this dosage. It will check all the medicines for the latest end date.
+     * @return the end date for taking this dosage, or null if there are no medicines with end dates
+     */
     @Ignore
     public LocalDate getEndDate() {
         Set<Medicine> medicinesWithNonNullEndDate = getMedicinesWithNonNullEndDate();
@@ -126,6 +191,10 @@ public class Dosage {
         return sortedList.isEmpty() ? null : sortedList.get(0).getEndDate();
     }
 
+    /**
+     * Returns medicines with non null end dates.
+     * @return a set with medicines with end dates, never null
+     */
     @Ignore
     private Set<Medicine> getMedicinesWithNonNullEndDate() {
         Set<Medicine> medicinesWithNonNullEndDate = new HashSet<>();
@@ -137,13 +206,22 @@ public class Dosage {
         return medicinesWithNonNullEndDate;
     }
 
+    /**
+     * Validates this dosage by calling {@link Medicine#validate()} on all medicines for this dosage.
+     * @throws ValidationException if one of the medicines fails validation
+     */
     public void validate() {
         for (Medicine medicine : getMedicines()) {
             medicine.validate();
         }
     }
 
+    /**
+     * Returns a datetime for the dosage that should be taken today, by combining the today date and the dosage
+     * time.
+     * @return a datetime for the dosage of today
+     */
     public DateTime todaysDosageTime() {
-        return DateUtil.now().withHourOfDay(dosageTime.getHour()).withMinuteOfHour(dosageTime.getMinute());
+        return DateUtil.newDateTime(DateUtil.today(), dosageTime);
     }
 }
