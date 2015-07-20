@@ -1,7 +1,6 @@
 package org.motechproject.batch.mds.service.it;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +16,9 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import javax.inject.Inject;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 @Ignore
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -31,8 +33,8 @@ public class BatchJobParameterMDSServiceBundleIT extends BasePaxIT {
         int batchJobId = 10000;
         List<BatchJobParameters> batchJobsParameters = batchJobParameterMDSService
                 .findByJobId(batchJobId);
-        Assert.assertNotNull(batchJobsParameters);
-        Assert.assertEquals(0, batchJobsParameters.size());
+        assertNotNull(batchJobsParameters);
+        assertEquals(0, batchJobsParameters.size());
 
         BatchJobParameters batchJobParameters = new BatchJobParameters();
         batchJobParameters.setBatchJobId(batchJobId);
@@ -41,8 +43,8 @@ public class BatchJobParameterMDSServiceBundleIT extends BasePaxIT {
 
         batchJobsParameters = batchJobParameterMDSService
                 .findByJobId(batchJobId);
-        Assert.assertNotNull(batchJobsParameters);
-        Assert.assertEquals(1, batchJobsParameters.size());
+        assertNotNull(batchJobsParameters);
+        assertEquals(1, batchJobsParameters.size());
     }
 
     @After

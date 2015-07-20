@@ -1,5 +1,8 @@
 package org.motechproject.batch.model;
 
+/**
+ * A representation of batch job statuses.
+ */
 public enum JobStatusLookup {
 
     ACTIVE(1),
@@ -7,11 +10,14 @@ public enum JobStatusLookup {
 
     private final int id;
 
+    /**
+     * @return the id of the status
+     */
     public int getId() {
         return id;
     }
 
-    private JobStatusLookup(int id) {
+    JobStatusLookup(int id) {
         this.id = id;
     }
 

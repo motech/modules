@@ -1,5 +1,8 @@
 package org.motechproject.batch.util;
 
+/**
+ * Constants used in the Batch module.
+ */
 public final class BatchConstants {
 
     public static final String DATE_FORMAT = "dd/MM/yyyy HH:mm:ss";
@@ -32,6 +35,5 @@ public final class BatchConstants {
     public static final String XML_EXTENSION = ".xml";
 
     private BatchConstants() {
-
     }
 }

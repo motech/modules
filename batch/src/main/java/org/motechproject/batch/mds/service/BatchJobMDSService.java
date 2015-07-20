@@ -1,19 +1,22 @@
 package org.motechproject.batch.mds.service;
 
-import java.util.List;
-
 import org.motechproject.batch.mds.BatchJob;
 import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
 
 /**
- * Class to query BatchJob entity
- *
+ * Class to query the {@link BatchJob} entity. Implementation will be generated
+ * at runtime by MDS.
  */
 public interface BatchJobMDSService extends MotechDataService<BatchJob> {
 
+    /**
+     * Finds a batch job by name.
+     * @param jobName the name to query for
+     * @return the found job, or null if no found
+     */
     @Lookup(name = "By JobName")
-    List<BatchJob> findByJobName(@LookupField(name = "jobName") String jobName);
+    BatchJob findByJobName(@LookupField(name = "jobName") String jobName);
 
 }

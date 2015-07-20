@@ -1,20 +1,19 @@
 package org.motechproject.batch.service.impl;
 
-import javax.batch.api.Batchlet;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.batch.api.Batchlet;
+
 /**
- * This is a batchlet class used to test trigger job
+ * This is a batchlet class that simply logs its executions.
  *
  * @author naveen
  *
  */
-public class TestBatchlet implements Batchlet {
+public class LoggingBatchlet implements Batchlet {
 
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(TestBatchlet.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoggingBatchlet.class);
 
     @Override
     public String process() {
@@ -24,7 +23,5 @@ public class TestBatchlet implements Batchlet {
 
     @Override
     public void stop() {
-
     }
-
 }

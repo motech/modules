@@ -1,12 +1,17 @@
 package org.motechproject.batch.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * A Spring MVC interceptor for handling incoming requests.
+ * It responsible for setting the correct context classloader for
+ * incoming requests.
+ */
 public class RequestLoggingInterceptor extends HandlerInterceptorAdapter {
 
     private static final Logger LOGGER = LoggerFactory
