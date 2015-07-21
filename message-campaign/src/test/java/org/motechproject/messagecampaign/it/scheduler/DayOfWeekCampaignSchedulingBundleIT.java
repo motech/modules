@@ -15,7 +15,7 @@ import org.motechproject.messagecampaign.domain.campaign.DayOfWeek;
 import org.motechproject.messagecampaign.service.CampaignEnrollmentsQuery;
 import org.quartz.SchedulerException;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -160,7 +160,7 @@ public class DayOfWeekCampaignSchedulingBundleIT extends BaseSchedulingIT {
         assertEquals(1, campaignMessageRecords.size());
         CampaignMessageRecord campaignMessageRecord = campaignMessageRecords.get(0);
 
-        campaignMessageRecord.setRepeatOn(Arrays.asList(DayOfWeek.Thursday));
+        campaignMessageRecord.setRepeatOn(new ArrayList<>(asList(DayOfWeek.Thursday)));
 
         synchronized (lock) {
             getCampaignMessageRecordService().update(campaignMessageRecord);
@@ -179,7 +179,7 @@ public class DayOfWeekCampaignSchedulingBundleIT extends BaseSchedulingIT {
                 getFireTimes("org.motechproject.messagecampaign.campaign-completed-EndOfCampaignJob.DayOfWeekCampaign.entity_1-runonce");
         assertEquals(asList(newDateTime(2020, 7, 23, 10, 30, 0)), endOfCampaignFireTimes);
 
-        campaignMessageRecord.setRepeatOn(Arrays.asList(DayOfWeek.Monday, DayOfWeek.Friday));
+        campaignMessageRecord.setRepeatOn(new ArrayList<>(asList(DayOfWeek.Monday, DayOfWeek.Friday)));
         getCampaignMessageRecordService().update(campaignMessageRecord);
     }
 }

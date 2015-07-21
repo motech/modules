@@ -25,6 +25,7 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -176,9 +177,9 @@ public class CampaignRecordServiceBundleIT extends BasePaxIT {
         message.setMessageType(CampaignType.ABSOLUTE);
         message.setStartTime("20:44");
         message.setMessageKey("key");
-        message.setLanguages(asList("lang1", "lang2", "lang3"));
+        message.setLanguages(new ArrayList<>(asList("lang1", "lang2", "lang3")));
 
-        campaign.setMessages(asList(message));
+        campaign.setMessages(new ArrayList<>(asList(message)));
 
         return campaign;
     }
