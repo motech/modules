@@ -68,7 +68,7 @@ public class AbsoluteCampaignSchedulerService extends CampaignSchedulerService<A
     protected DateTime campaignEndDate(AbsoluteCampaign campaign, CampaignEnrollment enrollment) {
         DateTime endDate = null;
         for (AbsoluteCampaignMessage msg : campaign.getMessages()) {
-            DateTime fireTime = DateUtil.newDateTime(msg.getDate(), msg.getStartTime());
+            DateTime fireTime = DateUtil.newDateTime(msg.getDate(), deliverTimeFor(enrollment, msg));
             if (endDate == null || fireTime.isAfter(endDate)) {
                 endDate = fireTime;
             }

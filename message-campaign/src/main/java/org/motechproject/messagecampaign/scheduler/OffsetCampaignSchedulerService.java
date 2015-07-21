@@ -79,11 +79,11 @@ public class OffsetCampaignSchedulerService extends CampaignSchedulerService<Off
         DateTime lastFireTime = null;
 
         for (OffsetCampaignMessage msg : campaign.getMessages()) {
-            LocalDate fireDate = startDate.plus(msg.getTimeOffset());
-            DateTime fireDt = DateUtil.newDateTime(fireDate, msg.getStartTime());
+            Time deliverTime = deliverTimeFor(enrollment, msg);
+            DateTime fireDate = DateUtil.newDateTime(startDate, deliverTime).plus(msg.getTimeOffset());
 
-            if (lastFireTime == null || fireDt.isAfter(lastFireTime)) {
-                lastFireTime = fireDt;
+            if (lastFireTime == null || fireDate.isAfter(lastFireTime)) {
+                lastFireTime = fireDate;
             }
         }
 
