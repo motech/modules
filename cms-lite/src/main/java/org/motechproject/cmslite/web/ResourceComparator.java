@@ -18,7 +18,7 @@ public class ResourceComparator implements Comparator<ResourceDto>, Serializable
      * @param settings grid settings based on which this comparator will be created
      */
     public ResourceComparator(GridSettings settings) {
-        this.field = settings.getSortColumn();
+        this.field = settings.getSidx();
         this.descending = settings.isDescending();
     }
 

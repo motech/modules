@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * CMS Lite is a lightweight content management based on MDS storage. It supports storing and retrieving of stream / text along with
- * custom metadata for each language.
+ * CMS Lite is a lightweight content management system based on MDS storage. It supports storing and retrieving of
+ * stream / text content along with custom metadata for each language.
  */
 @Component
 public interface CMSLiteService {
     /**
-     * Get Stream content with the given name and language.
+     * Get stream content with the given name and language.
      *
      * @param language the language of the content
      * @param name the name of the content
@@ -25,7 +25,7 @@ public interface CMSLiteService {
     StreamContent getStreamContent(String language, String name) throws ContentNotFoundException;
 
     /**
-     * Get Text Content for given name and language.
+     * Get text content for given name and language.
      *
      * @param language the language of the content
      * @param name the name of the content
@@ -35,7 +35,7 @@ public interface CMSLiteService {
     StringContent getStringContent(String language, String name) throws ContentNotFoundException;
 
     /**
-     * Remove stream content for a given name and language.
+     * Remove stream content for given name and language.
      *
      * @param language the language of the content to remove
      * @param name the name of the content to remove
@@ -53,7 +53,7 @@ public interface CMSLiteService {
     void removeStringContent(String language, String name) throws ContentNotFoundException;
 
     /**
-     * Add content to CMS data-store.
+     * Add content to the CMS data-store.
      *
      * @param content the content to add
      * @see org.motechproject.cmslite.model.StreamContent

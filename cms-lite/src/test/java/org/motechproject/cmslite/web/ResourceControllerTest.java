@@ -419,8 +419,8 @@ public class ResourceControllerTest {
 
         settings.setPage(page);
         settings.setRows(rows);
-        settings.setSortColumn(sortColumn);
-        settings.setSortDirection(sortDirection);
+        settings.setSidx(sortColumn);
+        settings.setSord(sortDirection);
 
         return settings;
     }
