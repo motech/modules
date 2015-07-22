@@ -17,6 +17,8 @@ import org.motechproject.scheduletracking.domain.Schedule;
 import org.motechproject.scheduletracking.events.MilestoneEvent;
 import org.motechproject.scheduletracking.events.constants.EventSubjects;
 import org.motechproject.scheduletracking.service.MilestoneAlerts;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +30,7 @@ import static org.motechproject.commons.date.util.DateUtil.now;
 @Component
 public class EnrollmentAlertService {
 
-    public static final int MILLIS_IN_A_SEC = 1000;
+    private static final Logger LOGGER = LoggerFactory.getLogger(EnrollmentAlertService.class);
     private MotechSchedulerService schedulerService;
 
     private EventRelay eventRelay;
@@ -43,6 +45,7 @@ public class EnrollmentAlertService {
         Schedule schedule = enrollment.getSchedule();
         Milestone currentMilestone = schedule.getMilestone(enrollment.getCurrentMilestoneName());
         if (currentMilestone == null) {
+            LOGGER.info("Exiting without scheduling Milestone alert as Current Milestone found to be null. ");
             return;
         }
 
@@ -54,6 +57,7 @@ public class EnrollmentAlertService {
 
             MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(currentMilestone, currentMilestoneStartDate);
             for (Alert alert : milestoneWindow.getAlerts()) {
+                LOGGER.info("For MileStone Window {} scheduling a milestone alert with offset {} and interval {}.", milestoneWindow.getName(), alert.getOffset(), alert.getInterval());
                 scheduleAlertJob(alert, enrollment, currentMilestone, milestoneWindow, milestoneAlert);
             }
         }
@@ -68,7 +72,7 @@ public class EnrollmentAlertService {
         }
 
         for (MilestoneWindow milestoneWindow : currentMilestone.getMilestoneWindows()) {
-            List<DateTime> alertTimingsForWindow = new ArrayList<DateTime>();
+            List<DateTime> alertTimingsForWindow = new ArrayList<>();
             for (Alert alert : milestoneWindow.getAlerts()) {
                 AlertWindow alertWindow = createAlertWindowFor(alert, enrollment, currentMilestone, milestoneWindow);
                 alertTimingsForWindow.addAll(alertWindow.allPossibleAlerts());
@@ -91,11 +95,14 @@ public class EnrollmentAlertService {
             DateTime alertsStartTime = alertWindow.scheduledAlertStartDate();
 
             if (alertsStartTime.isBefore(now())) {
+                LOGGER.info("Sending event {} to trigger Alert  as Alert start time {} already elapsed. ", event, alertsStartTime);
                 eventRelay.sendEventMessage(event);
+                LOGGER.info("Event {} is sent to trigger Alert  as Alert start time {} already elapsed. ", event, alertsStartTime);
             } else {
                 RunOnceSchedulableJob job = new RunOnceSchedulableJob(event, alertsStartTime.toDate());
 
                 schedulerService.safeScheduleRunOnceJob(job);
+                LOGGER.info("Scheduled Job to trigger Milestone Alert {} with Start Time {}.", event, alertsStartTime);
             }
         } else if (numberOfAlertsToSchedule > 0) {
             // We take one away from the number to schedule since one is
@@ -107,9 +114,14 @@ public class EnrollmentAlertService {
             // the event for it and decrease the numberOfAlertsToFire since we've
             // already fired one
             if (alertsStartTime.isBefore(now())) {
+                LOGGER.info("Sending event {} to trigger repeating Alert  as Alert start time {} already elapsed. "
+                        , event
+                        , alertsStartTime);
                 alertsStartTime = alertsStartTime.plusSeconds(repeatIntervalInSeconds);
                 numberOfAlertsToFire = numberOfAlertsToFire - 1;
+                LOGGER.info("Total number of remaining Alerts to fire are {}.", numberOfAlertsToFire);
                 eventRelay.sendEventMessage(event);
+                LOGGER.info("Event {} is sent to trigger Alert  as Alert start time {} already elapsed. ", event, alertsStartTime);
             }
 
             // Schedule the repeating job with the scheduler.
@@ -120,8 +132,10 @@ public class EnrollmentAlertService {
                     .setRepeatCount(numberOfAlertsToFire)
                     .setRepeatIntervalInSeconds(repeatIntervalInSeconds)
                     .setIgnorePastFiresAtStart(false);
+            LOGGER.info("Scheduling repeatable Job to trigger Milestone Alert {} with Start Time {}.", event, alertsStartTime);
 
             schedulerService.safeScheduleRepeatingJob(job);
+            LOGGER.info("Scheduled repeatable Job to trigger Milestone Alert {} with Start Time {}.", event, alertsStartTime);
         }
     }
 
@@ -138,6 +152,8 @@ public class EnrollmentAlertService {
     }
 
     public void unscheduleAllAlerts(Enrollment enrollment) {
+        LOGGER.info("Un-scheduling all jobs for enrollment {}", enrollment.getId());
         schedulerService.safeUnscheduleAllJobs(String.format("%s-%s", EventSubjects.MILESTONE_ALERT, enrollment.getId()));
+        LOGGER.info("Un-scheduled all jobs for enrollment {}", enrollment.getId());
     }
 }

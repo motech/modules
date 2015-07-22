@@ -21,7 +21,7 @@ public class ScheduleCriterion implements Criterion {
 
     @Override
     public List<Enrollment> filter(List<Enrollment> enrollments) {
-        for(Iterator it = enrollments.iterator(); it.hasNext();) {
+        for (Iterator it = enrollments.iterator(); it.hasNext();) {
             Enrollment enrollment = (Enrollment) it.next();
             if (!scheduleNames.contains(enrollment.getScheduleName())) {
                 it.remove();
