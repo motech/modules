@@ -23,7 +23,7 @@ import java.util.Objects;
  * The call detail record is the object persisted for every call from and to MOTECH by the IVR module.
  * It represents the details of the call, and is stored in the database for auditing purposes.
  */
-@Entity
+@Entity(nonEditable = true)
 @CrudEvents(CrudEventType.NONE)
 @Access(value = SecurityMode.PERMISSIONS, members = {Constants.MANAGE_IVR})
 public class CallDetailRecord {

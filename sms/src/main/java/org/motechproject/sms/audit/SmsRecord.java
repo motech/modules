@@ -17,7 +17,7 @@ import static org.motechproject.sms.util.Constants.VIEW_SMS_LOGS_PERMISSION;
 /**
  * SMS audit record for the database.
  */
-@Entity
+@Entity(nonEditable = true)
 @Access(value = SecurityMode.PERMISSIONS, members = {VIEW_SMS_LOGS_PERMISSION})
 public class SmsRecord {
 
