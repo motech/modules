@@ -9,7 +9,7 @@ import org.motechproject.mds.event.CrudEventType;
 /**
  * AppointmentChangeRecord class to capture the changes in the status of the appointment
  */
-@Entity
+@Entity(nonEditable = true)
 @CrudEvents(CrudEventType.NONE)
 public class AppointmentChangeRecord {
 

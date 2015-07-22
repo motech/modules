@@ -13,7 +13,7 @@ import java.util.Map;
  * The <code>EventLog</code> class represents a single, logged event record,
  * that is persisted in the database.
  */
-@Entity
+@Entity(nonEditable = true)
 @CrudEvents(CrudEventType.NONE)
 public class EventLog {
 
