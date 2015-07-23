@@ -26,6 +26,8 @@ public interface AlertsDataService extends MotechDataService<Alert> {
     @Lookup
     List<Alert> findByStatus(@LookupField(name = "status") AlertStatus alertStatus);
 
+    long countFindByStatus(@LookupField(name = "status") AlertStatus alertStatus);
+
     @Lookup
     List<Alert> findByPriority(@LookupField(name = "priority") Long priority);
 
