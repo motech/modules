@@ -1,6 +1,12 @@
 <div ng-controller="MCCampaignsCtrl" class="row">
     <h4 class="frame-title">{{ msg('msgCampaign.messageCampaigns')}}</h4>
-    <table class="table table-bundles table-bordered table-striped table-lightblue table-condensed">
+    <div id="error-message" ng-if="error" class="inside">
+        <div class="alert alert-danger">
+            <span class="fa fw fa-warning"></span>
+            <span class="margin-left1">{{error}}</span>
+        </div>
+    </div>
+    <table ng-if="!error" class="table table-bundles table-bordered table-striped table-lightblue table-condensed">
         <thead>
         <tr>
             <th>{{msg('msgCampaign.campaign.Name')}}</th>

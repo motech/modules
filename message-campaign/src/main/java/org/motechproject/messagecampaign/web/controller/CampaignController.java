@@ -1,14 +1,14 @@
 package org.motechproject.messagecampaign.web.controller;
 
+import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
 import org.motechproject.messagecampaign.exception.CampaignNotFoundException;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
-import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
+import org.motechproject.messagecampaign.web.MessageCampaignController;
 import org.motechproject.messagecampaign.web.model.CampaignDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-public class CampaignController {
+public class CampaignController extends MessageCampaignController {
 
     public static final String HAS_ROLE_MANAGECAMPAIGNS = "hasRole('manageCampaigns')";
     @Autowired
@@ -79,12 +79,5 @@ public class CampaignController {
     @PreAuthorize(HAS_ROLE_MANAGECAMPAIGNS)
     public void deleteCampaign(@PathVariable String campaignName) {
         messageCampaignService.deleteCampaign(campaignName);
-    }
-
-    @ExceptionHandler(CampaignNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ResponseBody
-    public String handleException(Exception e) {
-        return e.getMessage();
     }
 }

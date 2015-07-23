@@ -1,5 +1,7 @@
 package org.motechproject.messagecampaign.web.api;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.commons.io.IOUtils;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -13,11 +15,15 @@ import org.motechproject.messagecampaign.contract.CampaignRequest;
 import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollmentStatus;
+import org.motechproject.messagecampaign.exception.CampaignAlreadyEndedException;
+import org.motechproject.messagecampaign.exception.EnrollmentAlreadyExists;
+import org.motechproject.messagecampaign.exception.EnrollmentNotFoundException;
+import org.motechproject.messagecampaign.exception.MessageCampaignException;
+import org.motechproject.messagecampaign.exception.SchedulingException;
 import org.motechproject.messagecampaign.search.Criterion;
 import org.motechproject.messagecampaign.service.CampaignEnrollmentsQuery;
 import org.motechproject.messagecampaign.service.EnrollmentService;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
-import org.motechproject.messagecampaign.exception.EnrollmentNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.server.MockMvc;
@@ -26,6 +32,7 @@ import org.springframework.test.web.server.setup.MockMvcBuilders;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Collections;
 
 import static java.util.Arrays.asList;
@@ -44,6 +51,8 @@ import static org.springframework.test.web.server.result.MockMvcResultMatchers.c
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.status;
 
 public class EnrollmentRestControllerTest {
+
+    private static final Gson GSON = new GsonBuilder().create();
 
     private static final String USER_ID = "47sf6a";
     private static final String CAMPAIGN_NAME = "PREGNANCY";
@@ -131,10 +140,11 @@ public class EnrollmentRestControllerTest {
 
     @Test
     public void shouldReturn400WhenCreatingADuplicate() throws Exception {
-        final String expectedResponse = String.format("%s is already enrolled in %s campaign, enrollmentId: %s",
-                USER_ID, CAMPAIGN_NAME, "Id2");
 
-        doThrow(new IllegalArgumentException(expectedResponse))
+        MessageCampaignException.MessageKey message = new MessageCampaignException.MessageKey("msgCampaign.error.enrollmentAlreadyExists",
+                Arrays.asList(USER_ID, CAMPAIGN_NAME));
+
+        doThrow(new EnrollmentAlreadyExists(USER_ID, CAMPAIGN_NAME))
                 .when(messageCampaignService).updateEnrollment(any(CampaignRequest.class), any(Long.class));
 
         controller.perform(
@@ -144,7 +154,7 @@ public class EnrollmentRestControllerTest {
         ).andExpect(
                 status().is(HttpStatus.BAD_REQUEST.value())
         ).andExpect(
-                content().string(expectedResponse)
+                content().string(jsonMatcher(GSON.toJson(message)))
         );
     }
 
@@ -431,6 +441,66 @@ public class EnrollmentRestControllerTest {
                 status().is(HttpStatus.NOT_FOUND.value())
         ).andExpect(
                 content().string(expectedResponse)
+        );
+    }
+
+    @Test
+    public void shouldReturn400WhenTryingToEnrollEnrolledEnrollee() throws Exception {
+
+        MessageCampaignException.MessageKey message = new MessageCampaignException.MessageKey("msgCampaign.error.enrollmentAlreadyExists",
+                Arrays.asList(USER_ID, CAMPAIGN_NAME));
+
+        doThrow(new EnrollmentAlreadyExists(USER_ID, CAMPAIGN_NAME))
+                .when(messageCampaignService).enroll(any(CampaignRequest.class));
+
+        controller.perform(
+                post("/web-api/enrollments/{campaignName}/users/{userId}", CAMPAIGN_NAME, USER_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(loadJson("enrollmentRequest.json").getBytes("UTF-8"))
+        ).andExpect(
+                status().is(HttpStatus.BAD_REQUEST.value())
+        ).andExpect(
+                content().string(jsonMatcher(GSON.toJson(message)))
+        );
+    }
+
+    @Test
+    public void shouldReturn400WhenTryingToEnrollEnrolleeToFinishedCampaign() throws Exception {
+
+        MessageCampaignException.MessageKey message = new MessageCampaignException.MessageKey("msgCampaign.error.campaignAlreadyEnded",
+                Arrays.asList(CAMPAIGN_NAME));
+
+        doThrow(new CampaignAlreadyEndedException(CAMPAIGN_NAME, null))
+                .when(messageCampaignService).enroll(any(CampaignRequest.class));
+
+        controller.perform(
+                post("/web-api/enrollments/{campaignName}/users/{userId}", CAMPAIGN_NAME, USER_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(loadJson("enrollmentRequest.json").getBytes("UTF-8"))
+        ).andExpect(
+                status().is(HttpStatus.BAD_REQUEST.value())
+        ).andExpect(
+                content().string(jsonMatcher(GSON.toJson(message)))
+        );
+    }
+
+    @Test
+    public void shouldReturn500WhenFailedToScheduleJobForEnrollment() throws Exception {
+
+        MessageCampaignException.MessageKey message = new MessageCampaignException.MessageKey("msgCampaign.error.schedulingError",
+                Arrays.asList(USER_ID));
+
+        doThrow(new SchedulingException(USER_ID, null))
+                .when(messageCampaignService).enroll(any(CampaignRequest.class));
+
+        controller.perform(
+                post("/web-api/enrollments/{campaignName}/users/{userId}", CAMPAIGN_NAME, USER_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(loadJson("enrollmentRequest.json").getBytes("UTF-8"))
+        ).andExpect(
+                status().is(HttpStatus.INTERNAL_SERVER_ERROR.value())
+        ).andExpect(
+                content().string(jsonMatcher(GSON.toJson(message)))
         );
     }
 

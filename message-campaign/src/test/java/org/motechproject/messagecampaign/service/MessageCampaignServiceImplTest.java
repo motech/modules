@@ -17,21 +17,21 @@ import org.motechproject.messagecampaign.contract.CampaignRequest;
 import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
 import org.motechproject.messagecampaign.dao.CampaignMessageRecordService;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
-import org.motechproject.messagecampaign.domain.campaign.CampaignMessage;
-import org.motechproject.messagecampaign.exception.CampaignNotFoundException;
 import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaign;
 import org.motechproject.messagecampaign.domain.campaign.Campaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollmentStatus;
+import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
 import org.motechproject.messagecampaign.domain.campaign.CampaignType;
 import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaign;
 import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaignMessage;
+import org.motechproject.messagecampaign.exception.CampaignNotFoundException;
+import org.motechproject.messagecampaign.exception.EnrollmentAlreadyExists;
+import org.motechproject.messagecampaign.exception.EnrollmentNotFoundException;
 import org.motechproject.messagecampaign.scheduler.CampaignSchedulerFactory;
 import org.motechproject.messagecampaign.scheduler.CampaignSchedulerService;
 import org.motechproject.messagecampaign.scheduler.JobIdFactory;
 import org.motechproject.messagecampaign.search.Criterion;
-import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
-import org.motechproject.messagecampaign.exception.EnrollmentNotFoundException;
 import org.motechproject.scheduler.contract.CronJobId;
 import org.motechproject.scheduler.contract.JobId;
 import org.motechproject.scheduler.service.MotechSchedulerService;
@@ -352,7 +352,7 @@ public class MessageCampaignServiceImplTest {
         messageCampaignService.updateEnrollment(new CampaignRequest(), 9001L);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = EnrollmentAlreadyExists.class)
     public void shouldThrowExceptionForDuplicateExtIdAndCampaignName() {
         CampaignEnrollment enrollment = new CampaignEnrollment("extId", "PREGNANCY");
         enrollment.setId(9001L);

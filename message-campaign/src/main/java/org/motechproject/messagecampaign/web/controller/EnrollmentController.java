@@ -2,6 +2,7 @@ package org.motechproject.messagecampaign.web.controller;
 
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollmentStatus;
+import org.motechproject.messagecampaign.web.MessageCampaignController;
 import org.motechproject.messagecampaign.web.api.EnrollmentRestController;
 import org.motechproject.messagecampaign.web.model.EnrollmentList;
 import org.motechproject.messagecampaign.web.model.EnrollmentRequest;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Controller
 @RequestMapping(value = "/enrollments")
-public class EnrollmentController {
+public class EnrollmentController extends MessageCampaignController {
 
     @Autowired
     private EnrollmentRestController enrollmentController;
