@@ -1,13 +1,13 @@
 package org.motechproject.messagecampaign.web.api;
 
 import org.motechproject.messagecampaign.contract.CampaignRequest;
-import org.motechproject.messagecampaign.exception.CampaignNotFoundException;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollmentStatus;
+import org.motechproject.messagecampaign.exception.EnrollmentNotFoundException;
 import org.motechproject.messagecampaign.service.CampaignEnrollmentsQuery;
 import org.motechproject.messagecampaign.service.EnrollmentService;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
-import org.motechproject.messagecampaign.exception.EnrollmentNotFoundException;
+import org.motechproject.messagecampaign.web.MessageCampaignController;
 import org.motechproject.messagecampaign.web.model.EnrollmentDto;
 import org.motechproject.messagecampaign.web.model.EnrollmentList;
 import org.motechproject.messagecampaign.web.model.EnrollmentRequest;
@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +32,7 @@ import java.util.Locale;
 
 @Controller
 @RequestMapping(value = "web-api/enrollments")
-public class EnrollmentRestController {
+public class EnrollmentRestController extends MessageCampaignController {
 
     private static final String HAS_MANAGE_ENROLLMENTS_ROLE = "hasRole('manageEnrollments')";
 
@@ -176,20 +175,6 @@ public class EnrollmentRestController {
         List<CampaignEnrollment> enrollments = enrollmentService.search(query);
 
         return new EnrollmentList(enrollments);
-    }
-
-    @ExceptionHandler({EnrollmentNotFoundException.class, CampaignNotFoundException.class })
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ResponseBody
-    public String handleException(Exception e) {
-        return e.getMessage();
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public String handleIllegalArgException(Exception e) {
-        return e.getMessage();
     }
 
     private EnrollmentNotFoundException enrollmentsNotFoundException(String userId) {

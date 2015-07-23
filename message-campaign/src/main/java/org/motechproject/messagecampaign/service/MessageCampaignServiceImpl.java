@@ -11,18 +11,22 @@ import org.motechproject.messagecampaign.contract.CampaignRequest;
 import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
 import org.motechproject.messagecampaign.dao.CampaignMessageRecordService;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
-import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollmentStatus;
-import org.motechproject.messagecampaign.domain.campaign.CampaignMessageRecord;
-import org.motechproject.messagecampaign.exception.CampaignNotFoundException;
 import org.motechproject.messagecampaign.domain.campaign.Campaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
+import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollmentStatus;
 import org.motechproject.messagecampaign.domain.campaign.CampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.CampaignMessageRecord;
+import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
+import org.motechproject.messagecampaign.exception.CampaignAlreadyEndedException;
+import org.motechproject.messagecampaign.exception.CampaignNotFoundException;
+import org.motechproject.messagecampaign.exception.EnrollmentAlreadyExists;
+import org.motechproject.messagecampaign.exception.EnrollmentNotFoundException;
+import org.motechproject.messagecampaign.exception.SchedulingException;
 import org.motechproject.messagecampaign.loader.CampaignJsonLoader;
 import org.motechproject.messagecampaign.scheduler.CampaignSchedulerFactory;
 import org.motechproject.messagecampaign.scheduler.CampaignSchedulerService;
-import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
-import org.motechproject.messagecampaign.exception.EnrollmentNotFoundException;
 import org.motechproject.scheduler.contract.JobId;
+import org.motechproject.scheduler.exception.MotechSchedulerException;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.server.config.SettingsFacade;
 import org.slf4j.Logger;
@@ -86,9 +90,20 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
         enrollment.setDeliverTime(request.deliverTime());
 
         CampaignSchedulerService campaignScheduler = campaignSchedulerFactory.getCampaignScheduler(request.campaignName());
-        campaignScheduler.start(enrollment);
 
-        enrollmentService.register(enrollment);
+        try {
+            campaignScheduler.start(enrollment);
+        } catch (MotechSchedulerException e) {
+            throw new SchedulingException(request.externalId(), e);
+        } catch (IllegalArgumentException e) {
+            throw new CampaignAlreadyEndedException(request.campaignName(), e);
+        }
+
+        try {
+            enrollmentService.register(enrollment);
+        } catch (IllegalArgumentException e) {
+            throw new EnrollmentAlreadyExists(request.externalId(), request.campaignName(), e);
+        }
 
         Map<String, Object> param = new HashMap<>();
         param.put(EventKeys.EXTERNAL_ID_KEY, enrollment.getExternalId());
@@ -145,8 +160,7 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
             CampaignEnrollment campaignEnrollment = campaignEnrollmentDataService.findByExternalIdAndCampaignName(
                     enrollRequest.externalId(), enrollRequest.campaignName());
             if (campaignEnrollment != null && !existingEnrollment.getExternalId().equals(campaignEnrollment.getExternalId())) {
-                throw new IllegalArgumentException(String.format("%s is already enrolled in %s campaign",
-                        enrollRequest.externalId(), enrollRequest.campaignName()));
+                throw new EnrollmentAlreadyExists(enrollRequest.externalId(), enrollRequest.campaignName());
             }
         }
 

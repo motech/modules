@@ -1,5 +1,11 @@
 <div ng-controller="MCEnrollmentsCtrl" class="row">
     <h4 class="frame-title">{{ msg('msgCampaign.title')}}&nbsp;-&nbsp;{{msg('msgCampaign.enrollments')}}</h4>
+    <div id="error-message" ng-if="error">
+        <div class="alert alert-danger">
+            <span class="fa fw fa-warning"></span>
+            <span class="margin-left1">{{error}}</span>
+        </div>
+    </div>
     <table id="enrollmentsTable"></table>
     <div id="pageEnrollmentsTable"></div>
 

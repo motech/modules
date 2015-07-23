@@ -3,10 +3,42 @@
 
     var controllers = angular.module('messageCampaign.controllers', []);
 
+    controllers.controller('MCMainCtrl', function ($scope, Campaigns) {
+
+        $scope.alert = function(response, title) {
+
+            var messageDto, unwrappedText, params,
+                message = response;
+
+            if (message.startsWith("<div")) {
+                unwrappedText = $(response).html();
+            }
+
+            if (unwrappedText) {
+                message = unwrappedText;
+            }
+
+            if (message.startsWith('{') && message.endsWith('}')) {
+                messageDto = JSON.parse(message);
+                message = messageDto.key;
+                params = messageDto.params;
+            }
+
+            motechAlert(message, title, params);
+        };
+    });
+
     controllers.controller('MCCampaignsCtrl', function ($scope, Campaigns) {
 
         $scope.$on('$viewContentLoaded', function () {
-            $scope.campaigns = Campaigns.query();
+            $scope.campaigns = Campaigns.query(
+                function success(response) {
+                    $scope.error = undefined;
+                },
+                function failure(response) {
+                    $scope.error = response.data;
+                }
+            );
         });
 
         $scope.deleteCampaign = function(campaignName) {
@@ -31,6 +63,9 @@
                 url: "../messagecampaign/campaign-record/" + campaignName,
                 success: function(response) {
                     window.location.replace('#/messageCampaign/campaigns/' + response.id);
+                },
+                failure: function failure(response) {
+                    motechAlert(response.data, "msgCampaign.error");
                 }
             });
         };
@@ -131,6 +166,10 @@
                 pager: '#pageEnrollmentsTable',
                 viewrecords: true,
                 loadonce: true,
+                loadError: function (request) {
+                    $scope.error = request.responseText;
+                    $scope.$apply();
+                },
                 width:getPanelWidth(),
                 height:"auto",
                 multiselect:true
@@ -195,9 +234,9 @@
             });
 
             $.extend($.jgrid, {
-                info_dialog:function (caption, content, c_b, modalopt) {
+                info_dialog:function (caption, content) {
                     setTimeout(function () {
-                        motechAlert(content.trim(), "msgCampaign.enrollment.invalidAction");
+                        $scope.alert(content, "msgCampaign.enrollment.invalidAction");
                     }, 0);
                 }
             });
@@ -212,12 +251,8 @@
                     motechAlert('msgCampaign.settings.success.saved', 'msgCampaign.saved');
                     unblockUI();
                 },
-                error: function(error) {
-                    if (error.status === 403) {
-                        motechAlert('msgCampaign.settings.error.permission', 'msgCampaign.error');
-                    } else {
-                        jAlert(error.responseText, $scope.msg('msgCampaign.error'));
-                    }
+                error: function(response) {
+                    $scope.alert(response.responseText, "msgCampaign.error");
                     unblockUI();
                 }
             });
