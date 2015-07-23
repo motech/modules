@@ -1,13 +1,5 @@
 package org.motechproject.batch.service.impl;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -32,6 +24,14 @@ import org.quartz.ObjectAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Class to schedule reschedule jobs or update job parameters
@@ -331,7 +331,7 @@ public class JobServiceImpl implements JobService {
             schedulerService.unscheduleJob(BatchConstants.EVENT_SUBJECT,
                     jobName);
 
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new BatchException(ApplicationErrors.UNSCHEDULE_JOB_FAILED,
                     e, e.getMessage());
         }

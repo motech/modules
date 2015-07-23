@@ -100,15 +100,10 @@ public class AppointmentServiceBundleIT extends BasePaxIT {
         }
     }
 
-    @Test
+    @Test(expected = AppointmentException.class)
     public void deleteAppointmentException() throws Exception {
         logger.info("deleteAppointmentException");
-
-        try {
-            appointmentService.removeAppointment("CantTouchThis");
-        } catch (Exception ae) {
-            assertEquals(AppointmentException.class, ae.getClass());
-        }
+        appointmentService.removeAppointment("CantTouchThis");
     }
 
     @Test
@@ -127,7 +122,7 @@ public class AppointmentServiceBundleIT extends BasePaxIT {
         assertEquals(AppointmentStatus.CONFIRMED, result.getStatus());
     }
 
-    @Test
+    @Test(expected = AppointmentException.class)
     public void updateAppointmentException() throws Exception {
         logger.info("updateAppointmentException");
 
@@ -141,12 +136,8 @@ public class AppointmentServiceBundleIT extends BasePaxIT {
         appointmentService.removeAppointment(current.getApptId());
 
         // update, should throw exception
-        try {
-            current.setStatus(AppointmentStatus.CONFIRMED);
-            appointmentService.updateAppointment(current);
-        } catch (Exception ae) {
-            assertEquals(AppointmentException.class, ae.getClass());
-        }
+        current.setStatus(AppointmentStatus.CONFIRMED);
+        appointmentService.updateAppointment(current);
     }
 
     @Test

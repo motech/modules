@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -182,9 +183,10 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
             String jsonText = IOUtils.toString(is);
             Gson gson = new Gson();
             configs = gson.fromJson(jsonText, Configs.class);
-        }
-        catch (Exception e) {
-            throw new JsonIOException("Malformed " + COMMCARE_CONFIGS_FILE_NAME + " file? " + e.toString(), e);
+        } catch (IOException e) {
+          throw new JsonIOException("Unable to read " + COMMCARE_CONFIGS_FILE_NAME, e);
+        } catch (RuntimeException e) {
+            throw new JsonIOException("Malformed " + COMMCARE_CONFIGS_FILE_NAME + " file", e);
         }
     }
 

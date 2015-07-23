@@ -1,12 +1,7 @@
 package org.motechproject.http.agent.listener;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Callable;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpException;
-import org.apache.log4j.Logger;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.http.agent.domain.EventDataKeys;
@@ -14,6 +9,8 @@ import org.motechproject.http.agent.domain.EventSubjects;
 import org.motechproject.http.agent.factory.HttpComponentsClientHttpRequestFactoryWithAuth;
 import org.motechproject.http.agent.service.Method;
 import org.motechproject.server.config.SettingsFacade;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
@@ -23,6 +20,10 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Callable;
+
 @Component
 public class HttpClientEventListener {
 
@@ -30,7 +31,7 @@ public class HttpClientEventListener {
     public static final String HTTP_READ_TIMEOUT = "http.read.timeout";
     public static final int HUNDRED = 100;
 
-    private static final Logger LOGGER = Logger.getLogger(HttpClientEventListener.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HttpClientEventListener.class);
 
     private RestTemplate basicRestTemplate;
     private SettingsFacade settings;
@@ -100,9 +101,8 @@ public class HttpClientEventListener {
         Callable<ResponseEntity<?>> task = new Callable<ResponseEntity<?>>() {
             public ResponseEntity<?> call() throws HttpException {
 
-                LOGGER.info(String.format(
-                        "Posting Http request -- Url: %s, Data: %s", url,
-                        String.valueOf(requestData)));
+                LOGGER.info("Posting Http request -- Url: {}, Data: {}",
+                        url, String.valueOf(requestData));
                 ResponseEntity<?> response = executeForReturnType(url,
                         requestData, method);
                 if (response.getStatusCode().value() / HUNDRED == 2) {
@@ -114,16 +114,14 @@ public class HttpClientEventListener {
         };
 
         // Creating new instance of RetriableTask to run the callable
-        RetriableTask<ResponseEntity<?>> r = new RetriableTask<ResponseEntity<?>>(
+        RetriableTask<ResponseEntity<?>> r = new RetriableTask<>(
                 retryCount, retryInterval, task);
         try {
             retValue = r.call();
         } catch (Exception e) { // Http request failed for all retries
-            LOGGER.info(String
-                    .format("Posting Http request -- Url: %s, Data: %s failed after %s retries at interval of %s ms.",
-                            url, String.valueOf(requestData),
-                            String.valueOf(retryCount),
-                            String.valueOf(retryInterval)));
+            LOGGER.error("Posting Http request -- Url: {}, Data: {} failed after {} retries at interval of {} ms.",
+                            url, String.valueOf(requestData), String.valueOf(retryCount), String.valueOf(retryInterval),
+                    e);
         }
         return retValue;
 

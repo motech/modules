@@ -78,7 +78,7 @@ public class SyncServiceImpl implements SyncService {
             LOGGER.debug("Time for sync: " + TimeUnit.SECONDS.convert(endTime - startTime,
                     TimeUnit.NANOSECONDS) + "seconds");
             return true;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             LOGGER.error("Problem with DHIS2 application Schema. Sync unsuccessful.", e);
             return false;
         }

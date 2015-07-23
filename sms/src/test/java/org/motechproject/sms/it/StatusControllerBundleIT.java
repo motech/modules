@@ -17,9 +17,9 @@ import org.motechproject.sms.configs.Config;
 import org.motechproject.sms.configs.Configs;
 import org.motechproject.sms.service.ConfigService;
 import org.motechproject.testing.osgi.BasePaxIT;
-import org.motechproject.testing.utils.TestContext;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.testing.osgi.http.SimpleHttpClient;
+import org.motechproject.testing.utils.TestContext;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
@@ -28,11 +28,11 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -60,9 +60,9 @@ public class StatusControllerBundleIT extends BasePaxIT {
     }
 
     @Before
-    public void waitForBeans() {
+    public void waitForBeans() throws InterruptedException {
         // To prevent the annoying "BeanFactory not initialized or already closed" errors
-        try { Thread.sleep(SmsIntegrationTests.BUNDLE_MS_WAIT_TIME); } catch (InterruptedException e) {  }
+        Thread.sleep(SmsIntegrationTests.BUNDLE_MS_WAIT_TIME);
     }
 
     @Before
@@ -82,7 +82,7 @@ public class StatusControllerBundleIT extends BasePaxIT {
         config.setTemplateName("Plivo");
 
         Configs configs = new Configs();
-        configs.setConfigs(Arrays.asList(config));
+        configs.setConfigs(singletonList(config));
         configs.setDefaultConfigName(CONFIG_NAME);
 
         configService.updateConfigs(configs);

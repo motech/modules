@@ -3,15 +3,12 @@ package org.motechproject.commcare.util;
 import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.beanutils.BeanUtils;
 import org.motechproject.commcare.domain.CaseXml;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CaseMapper<T> {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(CaseMapper.class);
 
     private Class<T> clazz;
 
@@ -21,36 +18,35 @@ public class CaseMapper<T> {
 
 
     public T mapToDomainObject(CaseXml ccCase) {
-        T instance = null;
         try {
-            instance = clazz.newInstance();
+            T instance = clazz.newInstance();
+
             BeanUtils.copyProperties(instance, ccCase);
             BeanUtils.populate(instance, ccCase.getFieldValues());
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+
+            return instance;
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new IllegalStateException("Unable to map case XML to a domain object", e);
         }
-
-        return instance;
-
     }
 
     public CaseXml mapFromDomainObject(T careCase) {
         CaseXml ccCase = new CaseXml();
+
         try {
             BeanUtils.copyProperties(ccCase, careCase);
-
-            BeanMap beanMap = new BeanMap(careCase);
-            removeStaticProperties(beanMap);
-
-            Map<String, String> valueMap = new HashMap<String, String>();
-            while (beanMap.keyIterator().hasNext()) {
-                valueMap.put((String) beanMap.keyIterator().next(), (String) beanMap.get((String) beanMap.keyIterator().next()));
-            }
-            ccCase.setFieldValues(valueMap);
-
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new IllegalStateException("Unable to map case XML from a domain object", e);
         }
+
+        BeanMap beanMap = new BeanMap(careCase);
+        removeStaticProperties(beanMap);
+
+        Map<String, String> valueMap = new HashMap<>();
+        while (beanMap.keyIterator().hasNext()) {
+            valueMap.put(beanMap.keyIterator().next(), (String) beanMap.get(beanMap.keyIterator().next()));
+        }
+        ccCase.setFieldValues(valueMap);
 
         return ccCase;
     }

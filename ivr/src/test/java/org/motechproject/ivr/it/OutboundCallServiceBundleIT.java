@@ -20,6 +20,7 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +55,7 @@ public class OutboundCallServiceBundleIT extends BasePaxIT {
     }
 
     @After
-    public void restoreConfigs() {
+    public void restoreConfigs() throws IOException {
         getLogger().info("restoreConfigs");
         configService.updateConfigs(backupConfigs);
     }
@@ -67,7 +68,7 @@ public class OutboundCallServiceBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void verifyServiceFunctional() {
+    public void verifyServiceFunctional() throws IOException {
         getLogger().info("verifyServiceFunctional()");
 
         String httpServerURI = SimpleHttpServer.getInstance().start("foo", HttpStatus.SC_OK, "OK");
@@ -86,7 +87,7 @@ public class OutboundCallServiceBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void shouldHandleInvalidServerResponse() {
+    public void shouldHandleInvalidServerResponse() throws IOException {
         getLogger().info("shouldHandleInvalidServerResponse()");
 
         String httpServerURI = SimpleHttpServer.getInstance().start("bar", HttpStatus.SC_BAD_REQUEST, "Eeek!");
@@ -115,7 +116,7 @@ public class OutboundCallServiceBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void shouldExecuteJsonRequest() {
+    public void shouldExecuteJsonRequest() throws IOException {
         getLogger().info("shouldExecuteJsonRequest()");
 
         String httpServerURI = SimpleHttpServer.getInstance().start("foo", HttpStatus.SC_OK, "OK");

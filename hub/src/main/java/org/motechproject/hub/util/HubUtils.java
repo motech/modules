@@ -1,21 +1,19 @@
 package org.motechproject.hub.util;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.util.Date;
-import java.util.Enumeration;
-
 import org.motechproject.commons.date.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.Date;
+import java.util.Enumeration;
+
 public final class HubUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HubUtils.class);
-
-    private HubUtils() {
-
-    }
 
     public static String getNetworkHostName() {
         String hostName = null;
@@ -40,8 +38,8 @@ public final class HubUtils {
                 }
             }
 
-        } catch (Exception e) {
-            LOGGER.info("Failed to fetch network host name");
+        } catch (SocketException | UnknownHostException e) {
+            LOGGER.warn("Failed to fetch network host name", e);
         }
 
         return hostName;
@@ -49,5 +47,8 @@ public final class HubUtils {
 
     public static Date getCurrentDateTime() {
         return DateUtil.now().toDate();
+    }
+
+    private HubUtils() {
     }
 }

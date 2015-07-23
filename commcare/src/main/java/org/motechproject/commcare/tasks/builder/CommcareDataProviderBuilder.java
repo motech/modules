@@ -64,12 +64,7 @@ public class CommcareDataProviderBuilder {
 
         StringWriter writer = new StringWriter();
 
-        try {
-            VelocityEngineUtils.mergeTemplate(velocityEngine, COMMCARE_TASK_DATA_PROVIDER, model, writer);
-        } catch (Exception e) {
-            LOGGER.error("An error occurred while trying to merge velocity template " +
-                    COMMCARE_TASK_DATA_PROVIDER + " with data.", e);
-        }
+        VelocityEngineUtils.mergeTemplate(velocityEngine, COMMCARE_TASK_DATA_PROVIDER, model, writer);
 
         String providerJson = writer.toString();
 

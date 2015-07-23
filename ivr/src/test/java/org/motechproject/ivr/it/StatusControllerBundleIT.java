@@ -9,13 +9,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ivr.domain.CallDetailRecord;
 import org.motechproject.ivr.domain.Config;
-import org.motechproject.ivr.domain.Template;
 import org.motechproject.ivr.repository.CallDetailRecordDataService;
 import org.motechproject.ivr.service.ConfigService;
 import org.motechproject.testing.osgi.BasePaxIT;
-import org.motechproject.testing.utils.TestContext;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.testing.osgi.http.SimpleHttpClient;
+import org.motechproject.testing.utils.TestContext;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
@@ -23,9 +22,15 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
 import java.net.URI;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Verify StatusController present & functional.
@@ -66,7 +71,7 @@ public class StatusControllerBundleIT extends BasePaxIT {
     public void shouldNotLogWhenPassedInvalidConfig() throws Exception {
 
         //Create a config
-        configService.updateConfigs(Arrays.asList(new Config("foo", false, null, null, null, null, null, null, false, null, false, null)));
+        configService.updateConfigs(singletonList(new Config("foo", false, null, null, null, null, null, null, false, null, false, null)));
 
         //Create & send a CDR status callback
         URIBuilder builder = new URIBuilder();
@@ -87,7 +92,7 @@ public class StatusControllerBundleIT extends BasePaxIT {
 
         //Create a config
         List<String> ignoredStatusFields = Arrays.asList("ignoreme", "ignoreme2");
-        configService.updateConfigs(Arrays.asList(new Config("foo", false, null, null, ignoredStatusFields, "FROM:from", null, null, false, null, false, null)));
+        configService.updateConfigs(singletonList(new Config("foo", false, null, null, ignoredStatusFields, "FROM:from", null, null, false, null, false, null)));
 
         //Create & send a CDR status callback
         String motechCallId = UUID.randomUUID().toString();
