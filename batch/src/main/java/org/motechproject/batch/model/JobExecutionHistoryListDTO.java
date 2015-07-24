@@ -1,19 +1,29 @@
 package org.motechproject.batch.model;
 
+import javax.batch.runtime.JobExecution;
 import java.util.List;
 
-import javax.batch.runtime.JobExecution;
-
+/**
+ * A representation of batch job executions that took place.
+ */
 public class JobExecutionHistoryListDTO {
 
+    /**
+     * Job executions.
+     */
     private List<JobExecution> jobExecutionHistoryList;
 
+    /**
+     * @return a list containing job execution history
+     */
     public List<JobExecution> getJobExecutionHistoryList() {
         return jobExecutionHistoryList;
     }
 
-    public void setJobExecutionHistoryList(
-            List<JobExecution> jobExecutionHistoryList) {
+    /**
+     * @param jobExecutionHistoryList a list containing job execution history
+     */
+    public void setJobExecutionHistoryList(List<JobExecution> jobExecutionHistoryList) {
         this.jobExecutionHistoryList = jobExecutionHistoryList;
     }
 

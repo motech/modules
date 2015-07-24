@@ -1,9 +1,5 @@
 package org.motechproject.batch.web;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang.time.StopWatch;
 import org.motechproject.batch.exception.ApplicationErrors;
 import org.motechproject.batch.exception.BatchError;
@@ -31,8 +27,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+
 /**
- * Controller class to perform all the batch job operations
+ * Controller class to perform all the batch job operations through REST.
  *
  * @author Naveen
  *
@@ -41,8 +40,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @RequestMapping("/")
 public class BatchController {
 
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(BatchController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BatchController.class);
 
     @Autowired
     private JobService jobService;
@@ -54,9 +52,9 @@ public class BatchController {
     private BatchValidator batchValidator;
 
     /**
-     * To get list of all the scheduled jobs
+     * Retrieves the list of all the scheduled jobs.
      *
-     * @return List of BatchJob.
+     * @return List of batch jobs
      */
     @ResponseStatus(value = HttpStatus.OK)
     @RequestMapping(value = "/jobs", method = RequestMethod.GET, produces = "application/json")
@@ -81,6 +79,11 @@ public class BatchController {
 
     }
 
+    /**
+     * Retrieves the execution history for a batch job.
+     * @param jobName the name of the job
+     * @return the execution history for the job
+     */
     @ResponseStatus(value = HttpStatus.OK)
     @RequestMapping(value = "/jobHistory", method = RequestMethod.GET, params = { BatchConstants.JOB_NAME_REQUEST_PARAM })
     @ResponseBody
@@ -114,6 +117,11 @@ public class BatchController {
 
     }
 
+    /**
+     * Triggers a job to execute immediately.
+     * @param jobName the name of the job
+     * @return the id of the execution
+     */
     @ResponseStatus(value = HttpStatus.OK)
     @RequestMapping(value = "/trigger", method = RequestMethod.POST, params = { BatchConstants.JOB_NAME_REQUEST_PARAM })
     @ResponseBody
@@ -145,12 +153,11 @@ public class BatchController {
 
     /**
      * Schedule a cron job given job name, cron expression and parameters for
-     * the job
+     * the job.
      *
      * @param params
-     *            - <code>CronJobScheduleParam</code> object containing jobName,
+     *            - {@link CronJobScheduleParam} object containing jobName,
      *            paramsMap and cronExpression
-     * @throws BatchException
      */
     @ResponseStatus(value = HttpStatus.OK)
     @RequestMapping(value = "/schedulecronjob", method = RequestMethod.POST)
@@ -161,7 +168,7 @@ public class BatchController {
         StopWatch sw = new StopWatch();
         sw.start();
         try {
-            List<String> errors = batchValidator.validateShedulerInputs(
+            List<String> errors = batchValidator.validateSchedulerInputs(
                     params.getJobName(), params.getCronExpression());
 
             if (!errors.isEmpty()) {
@@ -184,14 +191,10 @@ public class BatchController {
     }
 
     /**
-     * Reschedule a cron job given job name, cron expression
+     * Reschedules a cron job given job name and cron expression.
      *
-     * @param jobName
-     *            jobName for the job to be rescheduled
-     * @param cronExpression
-     *            cron expression for the job
-     *
-     * @throws BatchException
+     * @param jobName jobName for the job to be rescheduled
+     * @param cronExpression cron expression for the job
      */
     @ResponseStatus(value = HttpStatus.OK)
     @RequestMapping(value = "/reschedulecronjob", method = RequestMethod.POST, params = { BatchConstants.JOB_NAME_REQUEST_PARAM })
@@ -206,7 +209,7 @@ public class BatchController {
         StopWatch sw = new StopWatch();
         sw.start();
         try {
-            List<String> errors = batchValidator.validateShedulerInputs(
+            List<String> errors = batchValidator.validateSchedulerInputs(
                     jobName, cronExpression);
 
             if (!errors.isEmpty()) {
@@ -229,12 +232,9 @@ public class BatchController {
     }
 
     /**
-     * Unschedule a cron job given job name
+     * Unschedule a job given job name.
      *
-     * @param jobName
-     *            jobName for the job to be rescheduled
-     *
-     * @throws BatchException
+     * @param jobName job name for the job to be rescheduled
      */
     @ResponseStatus(value = HttpStatus.OK)
     @RequestMapping(value = "/unschedulecronjob", method = RequestMethod.POST, params = { BatchConstants.JOB_NAME_REQUEST_PARAM })
@@ -269,13 +269,11 @@ public class BatchController {
     }
 
     /**
-     * schedules a job to be run at one particular time in future
+     * Schedules a job to be run at one particular time in future.
      *
      * @param params
-     *            <code>OneTimeJobScheduleParams</code> object containing
+     *            {@link OneTimeJobScheduleParams} object containing
      *            jobName, paramsMap and date
-     *
-     * @throws BatchException
      */
     @ResponseStatus(value = HttpStatus.OK)
     @RequestMapping(value = "/scheduleonetimejob", method = RequestMethod.POST)
@@ -311,10 +309,9 @@ public class BatchController {
     }
 
     /**
-     * Update the parameter list for the job
+     * Update the parameter list for the job.
      *
-     * @param jobName  the name of the job for which parameters needs to be updated
-     * @param paramsMap   the <code>map</code> of parameters to be added or modified
+     * @param params parameters to update
      */
     @ResponseStatus(value = HttpStatus.OK)
     @RequestMapping(value = "/updatejobproperty", method = RequestMethod.POST)
@@ -349,26 +346,11 @@ public class BatchController {
     }
 
     /**
-     * It is custom exception to be thrown in case of validation failures or
-     * other internal failures
-     *
-     * @param ex
-     * @param response
+     * Restarts execution of a batch job.
+     * @param jobName the name of the job
+     * @param executionId the ID of the execution to restart
+     * @return the ID of the execution
      */
-    @ExceptionHandler(value = { RestException.class })
-    @ResponseBody
-    public BatchError restExceptionHandler(RestException ex, HttpServletResponse response) {
-        BatchError error = new BatchError();
-
-        response.setStatus(ex.getHttpStatus().value());
-        error.setErrorCode(String.valueOf(ex.getBatchException()
-                .getErrorCode()));
-        error.setErrorMessage(ex.getBatchException().getErrorMessage());
-        error.setApplication("batch");
-
-        return error;
-    }
-
     @ResponseStatus(value = HttpStatus.OK)
     @RequestMapping(value = "/restart", method = RequestMethod.POST, params = { BatchConstants.JOB_NAME_REQUEST_PARAM })
     @ResponseBody
@@ -395,11 +377,32 @@ public class BatchController {
 
     /**
      * Ping method to test if application is up
+     * @return a string describing how many jobs we have
      */
     @RequestMapping("/ping")
     @ResponseBody
     public String ping() {
-        return jobService.sayHello();
+        return "Total jobs: " + jobService.countJobs();
+    }
 
+    /**
+     * Handles exception raised by this controller, will return a json
+     * representation of the error.
+     *
+     * @param ex the exception to handle
+     * @param response the HTTP response object to use
+     */
+    @ExceptionHandler(value = { RestException.class })
+    @ResponseBody
+    public BatchError restExceptionHandler(RestException ex, HttpServletResponse response) {
+        BatchError error = new BatchError();
+
+        response.setStatus(ex.getHttpStatus().value());
+        error.setErrorCode(String.valueOf(ex.getBatchException()
+                .getErrorCode()));
+        error.setErrorMessage(ex.getBatchException().getErrorMessage());
+        error.setApplication("batch");
+
+        return error;
     }
 }

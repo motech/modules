@@ -1,19 +1,5 @@
 package org.motechproject.batch.service.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
-import javax.batch.operations.JobOperator;
-import javax.batch.operations.JobSecurityException;
-import javax.batch.operations.JobStartException;
-import javax.batch.operations.NoSuchJobException;
-import javax.batch.operations.NoSuchJobExecutionException;
-import javax.batch.runtime.JobExecution;
-import javax.batch.runtime.JobInstance;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.motechproject.batch.exception.ApplicationErrors;
@@ -30,6 +16,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.batch.operations.JobOperator;
+import javax.batch.operations.JobSecurityException;
+import javax.batch.operations.JobStartException;
+import javax.batch.operations.NoSuchJobException;
+import javax.batch.operations.NoSuchJobExecutionException;
+import javax.batch.runtime.JobExecution;
+import javax.batch.runtime.JobInstance;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
 /**
  * Class to perform the trigger operation for all types of jobs
  *
@@ -39,8 +38,7 @@ import org.springframework.stereotype.Service;
 @Service(value = "jobTriggerService")
 public class JobTriggerServiceImpl implements JobTriggerService {
 
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(JobTriggerServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JobTriggerServiceImpl.class);
 
     private JobOperator jsrJobOperator;
 
@@ -58,29 +56,9 @@ public class JobTriggerServiceImpl implements JobTriggerService {
 
     }
 
-    private Properties getJobParameters(String jobName) throws BatchException {
-        List<BatchJob> batchJobList = jobRepo.findByJobName(jobName);
-        if (batchJobList == null || batchJobList.size() == 0) {
-            throw new BatchException(ApplicationErrors.JOB_NOT_FOUND);
-        }
-        BatchJob batchJob = batchJobList.get(0);
-        long batchJobId = (long) jobRepo.getDetachedField(batchJob, "id");
-
-        List<BatchJobParameters> parametersList = jobParameterRepo
-                .findByJobId((int) batchJobId);
-
-        Properties jobParameters = new Properties();
-
-        for (BatchJobParameters batchJobParameter : parametersList) {
-            jobParameters.put(batchJobParameter.getParameterName(),
-                    batchJobParameter.getParameterValue());
-        }
-        return jobParameters;
-    }
-
     @Override
     public long triggerJob(String jobName) throws BatchException {
-        LOGGER.info("Starting executing JOB {}", jobName);
+        LOGGER.info("Starting execution of JOB {}", jobName);
 
         Properties jobParameters = getJobParameters(jobName);
 
@@ -94,12 +72,16 @@ public class JobTriggerServiceImpl implements JobTriggerService {
     }
 
     private void storeJobContent(String jobName) throws BatchException {
+        BatchJob batchJob = jobRepo.findByJobName(jobName);
+        if (batchJob == null) {
+            throw new BatchException(ApplicationErrors.JOB_NOT_FOUND);
+        }
+
         String batchConfigResourcePath = BatchConstants.BATCH_XML_CONFIG_PATH
                 + jobName + BatchConstants.XML_EXTENSION;
         try (InputStream is = Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream(batchConfigResourcePath)) {
             if (is != null) {
-                BatchJob batchJob = jobRepo.findByJobName(jobName).get(0);
                 batchJob.setJobContent(ArrayUtils.toObject(IOUtils.toByteArray(is)));
                 jobRepo.update(batchJob);
             } else {
@@ -117,12 +99,12 @@ public class JobTriggerServiceImpl implements JobTriggerService {
     public JobExecutionHistoryListDTO getJobExecutionHistory(String jobName)
             throws BatchException {
         List<JobExecution> jobExecutions = new ArrayList<>();
-        List<BatchJob> batchJobList = jobRepo.findByJobName(jobName);
-        if (batchJobList == null || batchJobList.size() == 0) {
+        BatchJob batchJob = jobRepo.findByJobName(jobName);
+        if (batchJob == null) {
             throw new BatchException(ApplicationErrors.JOB_NOT_FOUND);
         }
 
-        int count = 0;
+        int count;
 
         try {
             count = jsrJobOperator.getJobInstanceCount(jobName);
@@ -131,12 +113,14 @@ public class JobTriggerServiceImpl implements JobTriggerService {
         }
         List<JobInstance> jobInstances = jsrJobOperator.getJobInstances(
                 jobName, 0, count);
-        for (int icount = 0; icount < jobInstances.size(); icount++) {
-            jobExecutions.addAll(jsrJobOperator.getJobExecutions(jobInstances
-                    .get(icount)));
+
+        for (JobInstance jobInstance : jobInstances) {
+            jobExecutions.addAll(jsrJobOperator.getJobExecutions(jobInstance));
         }
+
         JobExecutionHistoryListDTO historyListDTO = new JobExecutionHistoryListDTO();
         historyListDTO.setJobExecutionHistoryList(jobExecutions);
+
         return historyListDTO;
 
     }
@@ -148,11 +132,29 @@ public class JobTriggerServiceImpl implements JobTriggerService {
         try {
             return jsrJobOperator.restart(executionId, restartParameters);
         } catch (NoSuchJobExecutionException e) {
-
             throw new BatchException(ApplicationErrors.BAD_REQUEST, e,
                     e.getMessage());
         }
 
     }
 
+    private Properties getJobParameters(String jobName) throws BatchException {
+        BatchJob batchJob = jobRepo.findByJobName(jobName);
+        if (batchJob == null) {
+            throw new BatchException(ApplicationErrors.JOB_NOT_FOUND);
+        }
+
+        long batchJobId = batchJob.getId();
+
+        List<BatchJobParameters> parametersList = jobParameterRepo
+                .findByJobId((int) batchJobId);
+
+        Properties jobParameters = new Properties();
+
+        for (BatchJobParameters batchJobParameter : parametersList) {
+            jobParameters.put(batchJobParameter.getParameterName(),
+                    batchJobParameter.getParameterValue());
+        }
+        return jobParameters;
+    }
 }

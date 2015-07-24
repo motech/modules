@@ -1,12 +1,10 @@
 package org.motechproject.batch.service.impl.it;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.batch.exception.BatchException;
 import org.motechproject.batch.mds.BatchJob;
 import org.motechproject.batch.mds.service.BatchJobMDSService;
-import org.motechproject.batch.model.BatchJobListDTO;
 import org.motechproject.batch.model.CronJobScheduleParam;
 import org.motechproject.batch.service.JobService;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -18,8 +16,11 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -40,17 +41,12 @@ public class JobServiceBundleIT extends BasePaxIT {
         batchJob.setBatchJobStatusId(1);
 
         batchJobMDSService.create(batchJob);
-        BatchJobListDTO batchJobs = jobService.getListOfJobs();
-        List<BatchJob> batchJobsMds = batchJobMDSService
-                .findByJobName("random-test-job");
+        BatchJob batchJobMds = batchJobMDSService.findByJobName("random-test-job");
 
-        Assert.assertNotNull(batchJobs);
-        Assert.assertEquals(1, batchJobsMds.size());
-        Assert.assertEquals("random-test-job", batchJobsMds.get(0).getJobName());
-        Assert.assertEquals("0 15 10 * * ? 2017", batchJobsMds.get(0)
-                .getCronExpression());
-        Assert.assertEquals((Integer) 1, batchJobsMds.get(0)
-                .getBatchJobStatusId());
+        assertNotNull(batchJobMds);
+        assertEquals("random-test-job", batchJobMds.getJobName());
+        assertEquals("0 15 10 * * ? 2017", batchJobMds.getCronExpression());
+        assertEquals((Integer) 1, batchJobMds.getBatchJobStatusId());
     }
 
     @Test
@@ -66,14 +62,14 @@ public class JobServiceBundleIT extends BasePaxIT {
 
         jobService.scheduleJob(params);
 
-        List<BatchJob> batchJobsMds = batchJobMDSService
-                .findByJobName("random-test-job");
-        Assert.assertEquals(1, batchJobsMds.size());
-        Assert.assertEquals("random-test-job", batchJobsMds.get(0).getJobName());
-        Assert.assertEquals("0 15 10 * * ? 2017", batchJobsMds.get(0)
-                .getCronExpression());
-        batchJobMDSService.delete(batchJobsMds.get(0));
-        batchJobsMds = batchJobMDSService.findByJobName("random-test-job");
-        Assert.assertEquals(0, batchJobsMds.size());
+        BatchJob batchJobMds = batchJobMDSService.findByJobName("random-test-job");
+        assertNotNull(batchJobMds);
+        assertEquals("random-test-job", batchJobMds.getJobName());
+        assertEquals("0 15 10 * * ? 2017", batchJobMds.getCronExpression());
+
+        batchJobMDSService.delete(batchJobMds);
+
+        batchJobMds = batchJobMDSService.findByJobName("random-test-job");
+        assertNull(batchJobMds);
     }
 }

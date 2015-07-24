@@ -1,15 +1,14 @@
 package org.motechproject.batch.validation;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.motechproject.batch.util.BatchConstants;
 import org.quartz.CronExpression;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Validates the input parameters of batch service API calls for HTTP requests
@@ -19,20 +18,43 @@ import org.springframework.stereotype.Service;
 @Service
 public class BatchValidator {
 
-    public List<String> validateShedulerInputs(String jobName,
-            String cronExpression) {
-        List<String> errors = new ArrayList<String>();
+    /**
+     * Validates inputs for a cron job - the job name and cron expression.
+     * @param jobName the job name to validate
+     * @param cronExpression the cron expression to validate
+     * @return list of errors from validation, empty list if there were no errors
+     */
+    public List<String> validateSchedulerInputs(String jobName, String cronExpression) {
+        List<String> errors = new ArrayList<>();
         checkJobName(jobName, errors);
 
         checkCronExpression(cronExpression, errors);
         return errors;
     }
 
+    /**
+     * Validates inputs for one time job - the job name and the date.
+     * @param jobName the job name
+     * @param date the date on which this job should run
+     * @return list of errors from validation, empty list if there were no errors
+     */
     public List<String> validateOneTimeInputs(String jobName, String date) {
 
-        List<String> errors = new ArrayList<String>();
+        List<String> errors = new ArrayList<>();
         checkJobName(jobName, errors);
         checkDate(date, errors);
+        return errors;
+    }
+
+    /**
+     * Validates inputs for an update of job parameters - the job name.
+     * @param jobName the job name
+     * @return list of errors from validation, empty list if there were no errors
+     */
+    public List<String> validateUpdateInputs(String jobName) {
+
+        List<String> errors = new ArrayList<>();
+        checkJobName(jobName, errors);
         return errors;
     }
 
@@ -48,27 +70,6 @@ public class BatchValidator {
                 errors.add("Date passed is invalid. Passed value: [" + date
                         + "]");
             }
-        }
-    }
-
-    public List<String> validateUpdateInputs(String jobName) {
-
-        List<String> errors = new ArrayList<String>();
-        checkJobName(jobName, errors);
-        return errors;
-    }
-
-    public List<String> validateUploadInputs(String jobName, String contentType) {
-
-        List<String> errors = new ArrayList<String>();
-        checkJobName(jobName, errors);
-        checkContentType(contentType, errors);
-        return errors;
-    }
-
-    private void checkContentType(String contentType, List<String> errors) {
-        if (!MediaType.TEXT_XML.equals(MediaType.valueOf(contentType))) {
-            errors.add("You must upload xml file for the job");
         }
     }
 

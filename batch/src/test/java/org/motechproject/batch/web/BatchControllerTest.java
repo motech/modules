@@ -1,14 +1,5 @@
 package org.motechproject.batch.web;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.batch.runtime.JobExecution;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +16,14 @@ import org.motechproject.batch.service.JobService;
 import org.motechproject.batch.service.JobTriggerService;
 import org.motechproject.batch.validation.BatchValidator;
 import org.springframework.http.HttpStatus;
-import org.springframework.mock.web.MockMultipartFile;
+
+import javax.batch.runtime.JobExecution;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BatchControllerTest {
@@ -36,40 +34,35 @@ public class BatchControllerTest {
     JobTriggerService jobTriggerService;
     @Mock
     BatchValidator batchValidator;
+    @Mock
+    JobExecution jobExecution;
 
     @InjectMocks
     BatchController controller = new BatchController();
 
-    private BatchJobListDTO batchJobListDTO;
-    private BatchJobDTO batchJobDTO;
-    private List<BatchJobDTO> listBatchJobDTO;
     private String jobName;
-    private JobExecution batchJobExecutionParams;
-    private JobExecutionHistoryListDTO jobExecutionHistoryList;
-    private List<JobExecution> paramsList;
     private List<String> errors;
-    MockMultipartFile mockMultipartFile;
 
     @Before
     public void setUp() throws BatchException {
 
         jobName = "testJob";
-        errors = new ArrayList<String>();
-        batchJobDTO = new BatchJobDTO();
-        batchJobListDTO = new BatchJobListDTO();
-        listBatchJobDTO = new ArrayList<BatchJobDTO>();
-        mockMultipartFile = new MockMultipartFile("fileName",
-                "myContent1".getBytes());
+        errors = new ArrayList<>();
+
+        BatchJobDTO batchJobDTO = new BatchJobDTO();
+        BatchJobListDTO batchJobListDTO = new BatchJobListDTO();
+        List<BatchJobDTO> listBatchJobDTO = new ArrayList<>();
         batchJobDTO.setCronExpression("0 15 10 * * ? 2014");
         batchJobDTO.setJobId(2);
         batchJobDTO.setJobName("testJob");
         listBatchJobDTO.add(batchJobDTO);
         batchJobListDTO.setBatchJobDtoList(listBatchJobDTO);
 
-        jobExecutionHistoryList = new JobExecutionHistoryListDTO();
-        paramsList = new ArrayList<JobExecution>();
-        paramsList.add(batchJobExecutionParams);
+        JobExecutionHistoryListDTO jobExecutionHistoryList = new JobExecutionHistoryListDTO();
+        List<JobExecution> paramsList = new ArrayList<>();
+        paramsList.add(jobExecution);
         jobExecutionHistoryList.setJobExecutionHistoryList(paramsList);
+
         when(jobService.getListOfJobs()).thenReturn(batchJobListDTO);
         when(jobTriggerService.getJobExecutionHistory(jobName)).thenReturn(
                 jobExecutionHistoryList);
@@ -89,20 +82,16 @@ public class BatchControllerTest {
     }
 
     @Test
-    public void getjobHistoryListReturnsValidResponse() throws Exception {
+    public void getJobHistoryListReturnsValidResponse() throws Exception {
 
-        JobExecutionHistoryListDTO jobExecutionHistoryList = controller
-                .getjobHistoryList(jobName);
+        JobExecutionHistoryListDTO jobExecutionHistoryList = controller.getjobHistoryList(jobName);
         assertNotNull(jobExecutionHistoryList);
-        assertEquals(1, jobExecutionHistoryList.getJobExecutionHistoryList()
-                .size());
+        assertEquals(1, jobExecutionHistoryList.getJobExecutionHistoryList().size());
 
     }
 
     /**
      * Invalid scenario: mandatory field <code>jobName</code> empty
-     *
-     * @throws Exception
      */
     @Test
     public void getJobHistoryListEmptyJobName() {
@@ -110,14 +99,12 @@ public class BatchControllerTest {
         errors.add("Job name must be provided");
         when(batchValidator.validateUpdateInputs(jobName)).thenReturn(errors);
         try {
-            JobExecutionHistoryListDTO jobExecutionHistoryList = controller
-                    .getjobHistoryList(jobName);
+            controller.getjobHistoryList(jobName);
         } catch (RestException e) {
             BatchErrors be = e.getBatchException().getError();
             assertEquals(1001, be.getCode());
             assertEquals(HttpStatus.BAD_REQUEST, be.getHttpStatus());
-            assertEquals("One or more input parameter(s) may be wrong",
-                    be.getMessage());
+            assertEquals("One or more input parameter(s) may be wrong", be.getMessage());
         }
     }
 
@@ -126,19 +113,16 @@ public class BatchControllerTest {
      */
     @Test
     public void getJobHistoryListNullJobName() {
-        jobName = null;
-        when(batchValidator.validateUpdateInputs(jobName)).thenReturn(errors);
+        when(batchValidator.validateUpdateInputs(null)).thenReturn(errors);
         errors.add("Job name must be provided");
 
         try {
-            JobExecutionHistoryListDTO jobExecutionHistoryList = controller
-                    .getjobHistoryList(jobName);
+            controller.getjobHistoryList(jobName);
         } catch (RestException e) {
             BatchErrors be = e.getBatchException().getError();
             assertEquals(1001, be.getCode());
             assertEquals(HttpStatus.BAD_REQUEST, be.getHttpStatus());
-            assertEquals("One or more input parameter(s) may be wrong",
-                    be.getMessage());
+            assertEquals("One or more input parameter(s) may be wrong", be.getMessage());
         }
     }
 

@@ -7,7 +7,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 import org.motechproject.batch.exception.ApplicationErrors;
 import org.motechproject.batch.exception.BatchException;
 import org.motechproject.batch.mds.BatchJob;
@@ -18,6 +20,7 @@ import org.motechproject.batch.model.BatchJobDTO;
 import org.motechproject.batch.model.BatchJobListDTO;
 import org.motechproject.batch.model.CronJobScheduleParam;
 import org.motechproject.batch.model.OneTimeJobScheduleParams;
+import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.springframework.http.HttpStatus;
 
@@ -25,11 +28,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class JobServiceImplTest {
@@ -53,7 +59,6 @@ public class JobServiceImplTest {
     String cronExpression;
     String date;
     long id = 4L;
-    BatchJobListDTO listDto = new BatchJobListDTO();
     String jobName = "Test Case";
 
     @Before
@@ -64,23 +69,28 @@ public class JobServiceImplTest {
         batchJob.setCronExpression(cronExpression);
         batchJob.setJobName("testJob");
         batchJob.setBatchJobStatusId(1);
-        List<BatchJob> batchJobs = new ArrayList<BatchJob>();
-        batchJobs.add(batchJob);
+        batchJob.setId(id);
+        batchJob.setCreationDate(DateUtil.now());
+        batchJob.setModificationDate(DateUtil.now());
 
         batchJobDTO = new BatchJobDTO();
         batchJobListDTO = new BatchJobListDTO();
         listBatchJobDTO = new ArrayList<>();
-        jobDtoList = new ArrayList<BatchJobDTO>();
+        jobDtoList = new ArrayList<>();
 
         listBatchJobDTO.add(batchJob);
         batchJobListDTO.setBatchJobDtoList(jobDtoList);
 
-        when(jobRepo.findByJobName(jobName)).thenReturn(batchJobs);
-        when(jobRepo.retrieveAll()).thenReturn(batchJobs);
-        when(
-                jobRepo.getDetachedField((BatchJob) anyObject(),
-                        (String) anyObject())).thenReturn(id);
-
+        when(jobRepo.findByJobName(jobName)).thenReturn(batchJob);
+        when(jobRepo.retrieveAll()).thenReturn(singletonList(batchJob));
+        when(jobRepo.create(any(BatchJob.class))).thenAnswer(new Answer<BatchJob>() {
+            @Override
+            public BatchJob answer(InvocationOnMock invocation) throws Throwable {
+                BatchJob job = (BatchJob) invocation.getArguments()[0];
+                job.setId(id);
+                return job;
+            }
+        });
     }
 
     /**
@@ -104,9 +114,8 @@ public class JobServiceImplTest {
 
     @Test
     public void scheduleJob_success() throws BatchException {
-        when(jobRepo.findByJobName(jobName)).thenReturn(
-                new ArrayList<BatchJob>());
-        HashMap<String, String> hm = new HashMap<String, String>();
+        when(jobRepo.findByJobName(jobName)).thenReturn(null);
+        HashMap<String, String> hm = new HashMap<>();
         hm.put("key_job", "value_job");
         CronJobScheduleParam params = new CronJobScheduleParam();
         params.setCronExpression(cronExpression);
@@ -122,7 +131,7 @@ public class JobServiceImplTest {
 
     @Test
     public void scheduleJob_duplicate_job() throws BatchException {
-        HashMap<String, String> hm = new HashMap<String, String>();
+        HashMap<String, String> hm = new HashMap<>();
         hm.put("key_job", "value_job");
         CronJobScheduleParam params = new CronJobScheduleParam();
         params.setCronExpression(cronExpression);
@@ -143,9 +152,8 @@ public class JobServiceImplTest {
 
     @Test
     public void scheduleOneTimeJob_success() throws BatchException {
-        when(jobRepo.findByJobName(jobName)).thenReturn(
-                new ArrayList<BatchJob>());
-        HashMap<String, String> hm = new HashMap<String, String>();
+        when(jobRepo.findByJobName(jobName)).thenReturn(null);
+        HashMap<String, String> hm = new HashMap<>();
         hm.put("job_key", "job_value");
         OneTimeJobScheduleParams params = new OneTimeJobScheduleParams();
         params.setJobName(jobName);
@@ -160,7 +168,7 @@ public class JobServiceImplTest {
 
     @Test
     public void scheduleOneTimeJob_duplicate_job() {
-        HashMap<String, String> hm = new HashMap<String, String>();
+        HashMap<String, String> hm = new HashMap<>();
         hm.put("job_key", "job_value");
         OneTimeJobScheduleParams params = new OneTimeJobScheduleParams();
         params.setJobName(jobName);
@@ -188,9 +196,9 @@ public class JobServiceImplTest {
      */
     @Test
     public void updateJobProperty_success_params_match() throws BatchException {
-        HashMap<String, String> hm = new HashMap<String, String>();
+        HashMap<String, String> hm = new HashMap<>();
         hm.put("batch_key", "batch_value");
-        List<BatchJobParameters> batchJobParametersList = new ArrayList<BatchJobParameters>();
+        List<BatchJobParameters> batchJobParametersList = new ArrayList<>();
         BatchJobParameters batchJobParam = new BatchJobParameters();
         batchJobParam.setBatchJobId(2);
         batchJobParam.setParameterName("batch_key");
@@ -216,9 +224,9 @@ public class JobServiceImplTest {
     @Test
     public void updateJobProperty_success_params_mismatch()
             throws BatchException {
-        HashMap<String, String> hm = new HashMap<String, String>();
+        HashMap<String, String> hm = new HashMap<>();
         hm.put("batch_key", "batch_value");
-        List<BatchJobParameters> batchJobParametersList = new ArrayList<BatchJobParameters>();
+        List<BatchJobParameters> batchJobParametersList = new ArrayList<>();
         BatchJobParameters batchJobParam = new BatchJobParameters();
         batchJobParam.setBatchJobId(2);
         batchJobParam.setParameterName("batch_key_db");
