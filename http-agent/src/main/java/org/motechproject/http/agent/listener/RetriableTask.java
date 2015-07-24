@@ -1,9 +1,9 @@
 package org.motechproject.http.agent.listener;
 
+import org.apache.http.HttpException;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
-
-import org.apache.http.HttpException;
 
 /**
  * This class implements callable to retry failed executions of external calls
@@ -18,7 +18,6 @@ public class RetriableTask<T> implements Callable<T> {
     public static final int DEFAULT_NUMBER_OF_RETRIES = 1;
     public static final long DEFAULT_WAIT_TIME = 0;
 
-    private int numberOfRetries; // total number of tries
     private int numberOfTriesLeft; // number left
     private long timeToWait; // wait interval
 
@@ -26,22 +25,19 @@ public class RetriableTask<T> implements Callable<T> {
         this(DEFAULT_NUMBER_OF_RETRIES, DEFAULT_WAIT_TIME, task);
     }
 
-    public RetriableTask(int numberOfRetries, long timeToWait, Callable<T> task) {
-        this.numberOfRetries = numberOfRetries;
-        numberOfTriesLeft = this.numberOfRetries;
+    public RetriableTask(int numberOfTriesLeft, long timeToWait, Callable<T> task) {
+        this.numberOfTriesLeft = numberOfTriesLeft;
         this.timeToWait = timeToWait;
         this.task = task;
     }
 
     @Override
     public T call() throws HttpException, InterruptedException {
-        T t = null;
+        T t;
         while (numberOfTriesLeft > 0) {
             try {
                 t = task.call();
-            } catch (InterruptedException e) {
-                throw e;
-            } catch (CancellationException e) {
+            } catch (InterruptedException | CancellationException e) {
                 throw e;
             } catch (Exception e) {
                 numberOfTriesLeft--;
@@ -49,11 +45,12 @@ public class RetriableTask<T> implements Callable<T> {
                     Thread.sleep(timeToWait);
                     continue;
                 } else {
-                    throw (HttpException) e;
+                    throw (e instanceof HttpException) ?
+                            (HttpException) e : new HttpException("HTTP error when executing task", e);
                 }
             }
             return t;
         }
-        return t;
+        return null;
     }
 }

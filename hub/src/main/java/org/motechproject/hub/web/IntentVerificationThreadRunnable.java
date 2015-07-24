@@ -1,8 +1,5 @@
 package org.motechproject.hub.web;
 
-import java.util.List;
-import java.util.UUID;
-
 import org.motechproject.http.agent.service.HttpAgent;
 import org.motechproject.http.agent.service.Method;
 import org.motechproject.hub.mds.HubSubscription;
@@ -18,6 +15,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.UUID;
+
 /**
  * This class implements <code>Runnable</code> which starts a new thread to
  * verify the intent of the subscriber requesting subscription or
@@ -28,8 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public class IntentVerificationThreadRunnable implements Runnable {
 
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(IntentVerificationThreadRunnable.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IntentVerificationThreadRunnable.class);
 
     private static final String INTENT_VERIFICATION_PARAMS = "?hub.mode={mode}&hub.topic={topic}&hub.challenge={challenge}";
 
@@ -99,10 +98,6 @@ public class IntentVerificationThreadRunnable implements Runnable {
         this.httpAgentImpl = httpAgentImpl;
     }
 
-    public HttpAgent getHttpAgentImpl() {
-        return httpAgentImpl;
-    }
-
     public void setHttpAgentImpl(HttpAgent httpAgentImpl) {
         this.httpAgentImpl = httpAgentImpl;
     }
@@ -125,12 +120,11 @@ public class IntentVerificationThreadRunnable implements Runnable {
     @Transactional
     public void run() {
 
-        SubscriptionStatusLookup statusLookup = null;
+        SubscriptionStatusLookup statusLookup;
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        HttpEntity<String> entity = new HttpEntity<String>("parameters",
-                headers);
+        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
         // randomly generated UUID
         String uuid = UUID.randomUUID().toString();
         String intentVerificationUrl = callbackUrl + INTENT_VERIFICATION_PARAMS;
@@ -148,7 +142,8 @@ public class IntentVerificationThreadRunnable implements Runnable {
             } else {
                 statusLookup = SubscriptionStatusLookup.INTENT_VERIFIED;
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
+            LOGGER.error("An error occurred during intent verification", e);
             statusLookup = SubscriptionStatusLookup.INTENT_FAILED;
         }
 

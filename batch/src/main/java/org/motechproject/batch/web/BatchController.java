@@ -357,20 +357,15 @@ public class BatchController {
      */
     @ExceptionHandler(value = { RestException.class })
     @ResponseBody
-    public BatchError restExceptionHandler(RestException ex,
-            HttpServletResponse response) {
+    public BatchError restExceptionHandler(RestException ex, HttpServletResponse response) {
         BatchError error = new BatchError();
 
-        try {
-            response.setStatus(ex.getHttpStatus().value());
-            error.setErrorCode(String.valueOf(ex.getBatchException()
-                    .getErrorCode()));
-            error.setErrorMessage(ex.getBatchException().getErrorMessage());
-            error.setApplication("batch");
+        response.setStatus(ex.getHttpStatus().value());
+        error.setErrorCode(String.valueOf(ex.getBatchException()
+                .getErrorCode()));
+        error.setErrorMessage(ex.getBatchException().getErrorMessage());
+        error.setApplication("batch");
 
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-        }
         return error;
     }
 

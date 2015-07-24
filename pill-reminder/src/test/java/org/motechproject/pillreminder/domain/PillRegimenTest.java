@@ -1,6 +1,5 @@
 package org.motechproject.pillreminder.domain;
 
-import junit.framework.Assert;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.motechproject.commons.date.model.Time;
@@ -40,11 +39,7 @@ public class PillRegimenTest {
 
         PillRegimen regimen = new PillRegimen("1", dosages, new DailyScheduleDetails(10, 5, 5));
 
-        try {
-            regimen.validate();
-        } catch (Exception e) {
-            Assert.fail();
-        }
+        regimen.validate();
     }
 
     @Test
