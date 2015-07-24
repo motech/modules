@@ -1,0 +1,17 @@
+[
+  {
+    "active": true,
+    "pattern": "/**/alerts/**",
+    "supportedSchemes": [
+      "NO_SECURITY"
+    ],
+    "protocol": "HTTP",
+    "priority": 2,
+    "rest": true,
+    "origin": "SYSTEM_MODULE_ALERTS",
+    "version": "1.0",
+    "methodsRequired": [
+      "ANY"
+    ]
+  }
+]

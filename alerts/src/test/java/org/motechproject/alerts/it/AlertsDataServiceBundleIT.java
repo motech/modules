@@ -68,10 +68,23 @@ public class AlertsDataServiceBundleIT extends AlertsBaseIT {
         createAlert("111", AlertType.HIGH, AlertStatus.NEW, 2, null, now.minusDays(2));
         Alert alert2 = createAlert("112", AlertType.HIGH, AlertStatus.NEW, 2, null, now.minusDays(1));
         Alert alert3 = createAlert("113", AlertType.HIGH, AlertStatus.NEW, 2, null, now);
-        Alert alert4 = createAlert("113", AlertType.HIGH, AlertStatus.NEW, 2, null, now.plusDays(1));
+        Alert alert4 = createAlert("114", AlertType.HIGH, AlertStatus.NEW, 2, null, now.plusDays(1));
+        createAlert("115", AlertType.HIGH, AlertStatus.NEW, 2, null, now.plusDays(2));
 
-        List<Alert> listAlerts = alertsDataService.findByDateTime(new Range<>(now.minusDays(1), now.plusDays(1)));
+        List<Alert> listAlerts = alertsDataService.findByDateTime(new Range<>(now.minusDays(1).minusHours(1),
+                now.plusDays(1).plusHours(1)));
         assertEquals(asList(alert2, alert3, alert4), listAlerts);
+    }
+
+    @Test
+    public void verifyCount() {
+        createAlert("111", AlertType.HIGH, AlertStatus.NEW, 2, null, null);
+        createAlert("112", AlertType.HIGH, AlertStatus.READ, 2, null, null);
+        createAlert("113", AlertType.HIGH, AlertStatus.READ, 2, null, null);
+
+        assertEquals(1, alertsDataService.countFindByStatus(AlertStatus.NEW));
+        assertEquals(2, alertsDataService.countFindByStatus(AlertStatus.READ));
+        assertEquals(0, alertsDataService.countFindByStatus(AlertStatus.CLOSED));
     }
 
     @Test

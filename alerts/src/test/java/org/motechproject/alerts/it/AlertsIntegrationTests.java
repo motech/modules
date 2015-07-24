@@ -6,7 +6,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         AlertFilterBundleIT.class, AlertsBundleIT.class, AlertServiceBundleIT.class,
-        AlertsDataServiceBundleIT.class
+        AlertsDataServiceBundleIT.class, AlertsControllerBundleIT.class
 })
 public class AlertsIntegrationTests {
 }
