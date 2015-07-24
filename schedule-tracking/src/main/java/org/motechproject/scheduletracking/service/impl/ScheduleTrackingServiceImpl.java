@@ -16,14 +16,16 @@ import org.motechproject.scheduletracking.repository.dataservices.ScheduleDataSe
 import org.motechproject.scheduletracking.service.EnrollmentRecord;
 import org.motechproject.scheduletracking.service.EnrollmentRequest;
 import org.motechproject.scheduletracking.service.EnrollmentService;
-import org.motechproject.scheduletracking.service.EnrollmentUpdater;
 import org.motechproject.scheduletracking.service.EnrollmentsQuery;
+import org.motechproject.scheduletracking.service.EnrollmentUpdater;
 import org.motechproject.scheduletracking.service.MilestoneAlerts;
 import org.motechproject.scheduletracking.service.ScheduleTrackingService;
 import org.motechproject.scheduletracking.service.contract.UpdateCriteria;
 import org.motechproject.scheduletracking.service.contract.UpdateCriterion;
 import org.motechproject.server.config.SettingsFacade;
 import org.motechproject.server.config.domain.MotechSettings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -39,6 +41,7 @@ import static org.motechproject.commons.date.util.DateUtil.newDateTime;
  * Implementation of {@link ScheduleTrackingService}
  */
 public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ScheduleTrackingServiceImpl.class);
     private EnrollmentDataService enrollmentDataService;
     private ScheduleDataService scheduleDataService;
     private EnrollmentService enrollmentService;
@@ -63,6 +66,7 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
 
     @Override
     public EnrollmentRecord getEnrollment(String externalId, String scheduleName) {
+        LOGGER.info("Fetching Active Enrollment based on externalId {} and {}", externalId, scheduleName);
         Enrollment activeEnrollment = enrollmentDataService.findByExternalIdScheduleNameAndStatus(externalId, scheduleName, EnrollmentStatus.ACTIVE);
         return enrollmentRecordMapper.map(activeEnrollment);
     }
@@ -76,9 +80,10 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
                             "External ID: {0} & Schedule name: {1}", externalId, scheduleName));
         } else {
             Map<UpdateCriterion, Object> criteria = updateCriteria.getAll();
-            for (Map.Entry<UpdateCriterion, Object> entry:criteria.entrySet()) {
+            for (Map.Entry<UpdateCriterion, Object> entry : criteria.entrySet()) {
                 EnrollmentUpdater.get(entry.getKey()).update(enrollment, entry.getValue());
             }
+            LOGGER.info("Updating Enrollment {}.", enrollment.getId());
             enrollmentDataService.update(enrollment);
         }
     }
@@ -120,14 +125,17 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
 
     @Override
     public void add(String scheduleJson) {
+        LOGGER.info("Creating a schedule record from schedule json {}", scheduleJson);
         ScheduleRecord scheduleRecord = schedulesJsonReader.getSchedule(scheduleJson);
         Schedule schedule = new ScheduleFactory().build(scheduleRecord, getLanguage());
 
         Schedule existing = scheduleDataService.findByName(schedule.getName());
 
         if (existing == null) {
+            LOGGER.info("Saving a schedule record with schedule name {}.", schedule.getName());
             scheduleDataService.create(schedule);
         } else {
+            LOGGER.info("Updating a schedule record with schedule name {}.", existing.getName());
             existing.merge(schedule);
             scheduleDataService.update(existing);
         }
@@ -135,6 +143,7 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
 
     @Override
     public void remove(String scheduleName) {
+        LOGGER.info("Deleting a schedule record with schedule name {}.", scheduleName);
         scheduleDataService.delete(scheduleDataService.findByName(scheduleName));
     }
 
@@ -151,7 +160,8 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
         } else {
             startingMilestoneName = schedule.getFirstMilestone().getName();
         }
-
+        LOGGER.info("Enrolling a enrollment record with externalID {} and starting milestone {}."
+                , enrollmentRequest.getExternalId(), enrollmentRequest.getStartingMilestoneName());
         return enrollmentService.enroll(enrollmentRequest.getExternalId(), enrollmentRequest.getScheduleName(), startingMilestoneName, enrollmentRequest.getReferenceDateTime(), enrollmentRequest.getEnrollmentDateTime(), enrollmentRequest.getPreferredAlertTime(), enrollmentRequest.getMetadata());
     }
 
@@ -162,8 +172,10 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
             throw new InvalidEnrollmentException(format("Can fulfill only active enrollments. This enrollment has: External ID: {0}, Schedule name: {1}", externalId, scheduleName));
         }
         if (isDuplicateFulfillment(activeEnrollment, fulfillmentDate, fulfillmentTime)) {
+            LOGGER.info("Returning as milestone is a duplicate milestone.");
             return;
         }
+        LOGGER.info("Fulfilling a milestone with enrollment id {}.", activeEnrollment.getId());
         enrollmentService.fulfillCurrentMilestone(activeEnrollment, newDateTime(fulfillmentDate, fulfillmentTime));
     }
 
@@ -178,6 +190,7 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
 
     @Override
     public void unenroll(String externalId, List<String> scheduleNames) {
+        LOGGER.info("Un-enrolling a enrollment with external Id {} and schedule names {} .", externalId, scheduleNames);
         for (String scheduleName : scheduleNames) {
             Enrollment activeEnrollment = enrollmentDataService.findByExternalIdScheduleNameAndStatus(externalId, scheduleName, EnrollmentStatus.ACTIVE);
             if (activeEnrollment != null) {
