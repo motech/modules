@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+/**
+ * Synchronous implementation of {@link org.motechproject.http.agent.components.CommunicationType}
+ */
 @Component
 public class SynchronousCall implements CommunicationType {
 

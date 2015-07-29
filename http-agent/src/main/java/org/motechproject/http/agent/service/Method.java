@@ -6,7 +6,14 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * Enum which represents http methods.
+ */
 public enum Method {
+
+    /**
+     * Represents http POST.
+     */
     POST {
         @Override
         public void execute(RestTemplate restTemplate, String url,
@@ -22,6 +29,9 @@ public enum Method {
         }
     },
 
+    /**
+     * Represents http PUT.
+     */
     PUT {
         @Override
         public void execute(RestTemplate restTemplate, String url,
@@ -37,6 +47,9 @@ public enum Method {
         }
     },
 
+    /**
+     * Represents http DELETE.
+     */
     DELETE {
         @Override
         public void execute(RestTemplate restTemplate, String url,
@@ -52,6 +65,9 @@ public enum Method {
         }
     },
 
+    /**
+     * Represents http GET.
+     */
     GET {
 
         @Override
@@ -71,9 +87,30 @@ public enum Method {
 
     };
 
-    public abstract void execute(RestTemplate restTemplate, String url,
-            Object request);
+    /**
+     * Sends a request to the specified URL through the given restTemplate.
+     * @param restTemplate the client which will be used to send the request
+     * @param url the url for the request
+     * @param request the request to send
+     */
+    public abstract void execute(RestTemplate restTemplate, String url, Object request);
 
+
+
+    /**
+     * Sends a request to the specified URL through the given restTemplate and returns the response for the request.
+     * @param restTemplate the client which will be used to send the request
+     * @param url the url for the request
+     * @param request the request to send
+     * @return response from the posted request
+     */
+    public abstract ResponseEntity<?> executeWithReturnType(RestTemplate restTemplate, String url, Object request);
+
+    /**
+     * Returns method type from the given string.
+     * @param str the method name
+     * @return method type
+     */
     public static Method fromString(String str) {
         for (Method method : values()) {
             if (StringUtils.equalsIgnoreCase(method.name(), str)) {
@@ -82,8 +119,5 @@ public enum Method {
         }
         return POST;
     }
-
-    public abstract ResponseEntity<?> executeWithReturnType(
-            RestTemplate restTemplate, String url, Object request);
 
 }

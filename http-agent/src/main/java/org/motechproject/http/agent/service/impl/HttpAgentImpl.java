@@ -15,6 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+/**
+ * Implementation of the {@link org.motechproject.http.agent.service.HttpAgent}.
+ * This service allows making HTTP requests.
+ */
 @Service
 public class HttpAgentImpl implements HttpAgent {
 

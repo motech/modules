@@ -1,5 +1,8 @@
 package org.motechproject.http.agent.domain;
 
+/**
+ * Event data keys.
+ */
 public final class EventDataKeys {
 
     private EventDataKeys() {

@@ -6,6 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+/**
+ * Asynchronous implementation of {@link org.motechproject.http.agent.components.CommunicationType}.
+ * Uses the event system to trigger an asynchronous request.
+ */
 @Component
 public class AsynchronousCall implements CommunicationType {
 
@@ -16,10 +20,15 @@ public class AsynchronousCall implements CommunicationType {
         this.eventRelay = eventRelay;
     }
 
+    @Override
     public void send(MotechEvent motechEvent) {
         eventRelay.sendEventMessage(motechEvent);
     }
 
+    /**
+     * @see org.motechproject.http.agent.components.CommunicationType
+     * @return null
+     */
     @Override
     public ResponseEntity<?> sendWithReturnType(MotechEvent motechEvent) {
         eventRelay.sendEventMessage(motechEvent);
