@@ -13,9 +13,12 @@ import org.motechproject.dhis2.service.Settings;
 import org.motechproject.dhis2.service.SettingsService;
 import org.motechproject.dhis2.service.TrackedEntityInstanceMappingService;
 import org.motechproject.event.MotechEvent;
+import org.motechproject.event.listener.EventListenerRegistryService;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.testing.osgi.http.SimpleHttpServer;
+import org.motechproject.testing.osgi.wait.Wait;
+import org.motechproject.testing.osgi.wait.WaitCondition;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
@@ -55,6 +58,9 @@ public class EventHandlerBundleIT extends BaseDhisIT {
     @Inject
     private OrgUnitDataService orgUnitDataService;
 
+    @Inject
+    private EventListenerRegistryService eventListenerRegistry;
+
     @Before
     public void setUp() {
         orgUnitDataService.create(new OrgUnit(ORGUNIT_NAME,ORGUNIT_ID));
@@ -92,7 +98,9 @@ public class EventHandlerBundleIT extends BaseDhisIT {
 
         MotechEvent event = new MotechEvent(EventSubjects.CREATE_ENTITY, params);
 
-        getLogger().debug("Sending MOTECH Event");
+        waitForListener();
+        getLogger().debug("Sending create_entity Event - listener registered: {}",
+                eventListenerRegistry.hasListener(EventSubjects.CREATE_ENTITY));
         eventRelay.sendEventMessage(event);
         wait2s();
 
@@ -108,5 +116,14 @@ public class EventHandlerBundleIT extends BaseDhisIT {
         synchronized (waitLock) {
             waitLock.wait(2000);
         }
+    }
+
+    private void waitForListener() throws InterruptedException {
+        new Wait(waitLock, new WaitCondition() {
+            @Override
+            public boolean needsToWait() {
+                return !eventListenerRegistry.hasListener(EventSubjects.CREATE_ENTITY);
+            }
+        }, 250, 5000).start();
     }
 }
