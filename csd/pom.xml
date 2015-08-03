@@ -131,12 +131,13 @@
                             *
                         </Import-Package>
                         <Export-Package>
-                            org.motechproject.csd.service;version=${project.version},
-                            org.motechproject.csd.mds;version=${project.version},
+                            org.motechproject.csd.constants;version=${project.version},
                             org.motechproject.csd.domain;version=${project.version},
-                            org.motechproject.csd.web;version=${project.version},
-                            org.motechproject.csd.util;version=${project.version}
-                            org.motechproject.csd.exception;version=${project.version}
+                            org.motechproject.csd.exception;version=${project.version},
+                            org.motechproject.csd.mds;version=${project.version},
+                            org.motechproject.csd.service;version=${project.version},
+                            org.motechproject.csd.util;version=${project.version},
+                            org.motechproject.csd.web;version=${project.version}
                         </Export-Package>
                     </instructions>
                 </configuration>

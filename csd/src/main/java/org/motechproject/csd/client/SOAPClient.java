@@ -27,8 +27,7 @@ public class SOAPClient extends WebServiceGatewaySupport {
             return null;
         }
 
-        GetModificationsResponse response = (GetModificationsResponse) getWebServiceTemplate()
+        return (GetModificationsResponse) getWebServiceTemplate()
                 .marshalSendAndReceive(url, getModificationsRequest);
-        return response;
     }
 }

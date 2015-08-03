@@ -9,7 +9,10 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.csd.constants.CSDConstants;
+import org.motechproject.csd.domain.CSD;
 import org.motechproject.csd.service.CSDService;
+import org.motechproject.csd.util.MarshallUtils;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.testing.utils.TestContext;
@@ -17,7 +20,9 @@ import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
+import org.xml.sax.SAXException;
 
+import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -74,4 +79,16 @@ public class CSDEndpointIT extends BasePaxIT {
         assertTrue(response.contains("env:Envelope"));
     }
 
+    @Test
+    public void verifyXmlEndpoint() throws IOException, InterruptedException, JAXBException, SAXException {
+        login();
+
+        String response = getHttpClient().get(String.format("http://localhost:%d/csd/csd-getXml",
+                        TestContext.getJettyPort()), new BasicResponseHandler());
+
+        assertNotNull(response);
+        CSD csd = (CSD) MarshallUtils.unmarshall(response, CSDConstants.CSD_SCHEMA, CSD.class);
+        assertNotNull(csd);
+        assertNotNull(csd.getServiceDirectory());
+    }
 }
