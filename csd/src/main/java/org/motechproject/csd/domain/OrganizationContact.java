@@ -43,11 +43,11 @@ import javax.xml.bind.annotation.XmlType;
 public class OrganizationContact extends AbstractID {
 
     @UIDisplayable(position = 1)
-    @Field
+    @Field(tooltip = "The globally unique identifier for this organization contact.")
     private String providerEntityID;
 
     @UIDisplayable(position = 0)
-    @Field
+    @Field(tooltip = "This person is a contact for this organization.")
     @Cascade(delete = true)
     private Person person;
 

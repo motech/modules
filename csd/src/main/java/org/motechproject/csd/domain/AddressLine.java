@@ -37,11 +37,11 @@ import javax.xml.bind.annotation.XmlValue;
 public class AddressLine extends AbstractID {
 
     @UIDisplayable(position = 0)
-    @Field
+    @Field(tooltip = "This is the value of that component attribute (i.e. 1234 Main St)")
     private String value = "";
 
     @UIDisplayable(position = 1)
-    @Field
+    @Field(tooltip = "This is the component attribute for this address line (i.e. Street Address, City, Provence, Country, Postal Code).")
     private String component;
 
 

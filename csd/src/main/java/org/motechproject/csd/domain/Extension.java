@@ -37,11 +37,11 @@ import javax.xml.bind.annotation.XmlType;
 public class Extension extends AbstractID {
 
     @UIDisplayable(position = 0)
-    @Field(required = true)
+    @Field(required = true, tooltip = "Locally defined type of extension.")
     private String type;
 
     @UIDisplayable(position = 1)
-    @Field(required = true)
+    @Field(required = true, tooltip = "Locally defined identifier of extension.")
     private String urn;
 
     public Extension() {

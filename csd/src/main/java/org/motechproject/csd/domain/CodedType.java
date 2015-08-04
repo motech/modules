@@ -41,17 +41,17 @@ public class CodedType extends AbstractID {
 
     /* The value of Coded Type eg <CodedType>MyValue</CodeType> */
     @UIDisplayable(position = 0)
-    @Field
+    @Field(tooltip = "The human readable value for that code (i.e. \"Community Health Worker\").")
     private String value = "";
 
     /* Attribute @code */
     @UIDisplayable(position = 1)
-    @Field(required = true)
+    @Field(required = true, tooltip = "The code provided by the coding organization (i.e. \"3253\").")
     private String code;
 
     /* Attribute @codingScheme*/
     @UIDisplayable(position = 2)
-    @Field(required = true)
+    @Field(required = true, tooltip = "The coding scheme used to identify this code (i.e. \"ISCO-08\").")
     private String codingScheme;
 
     public CodedType() {

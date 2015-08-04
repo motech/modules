@@ -50,12 +50,12 @@ import java.util.Set;
 public class Credential extends AbstractID {
 
     @UIDisplayable(position = 0)
-    @Field(required = true)
+    @Field(required = true, tooltip = "The code from a predefined credential list.")
     @Cascade(delete = true)
     private CodedType codedType;
 
     @UIDisplayable(position = 1)
-    @Field(required = true)
+    @Field(required = true, tooltip = "The number provided with this credential (i.e. a state or national license number).")
     private String number;
 
     @UIDisplayable(position = 2)
@@ -63,14 +63,14 @@ public class Credential extends AbstractID {
     private String issuingAuthority;
 
     @UIDisplayable(position = 3)
-    @Field(tooltip = "Only date and not time matters in this entity")
+    @Field(tooltip = "The date this credential was issued.")
     private DateTime credentialIssueDate;
 
     @UIDisplayable(position = 4)
-    @Field
+    @Field(tooltip = "The date this credential must be renewed if applicable.")
     private DateTime credentialRenewalDate;
 
-    @Field(name = "credential_extensions")
+    @Field(name = "credential_extensions", tooltip = "This is a locally defined extension for this entity.")
     @Cascade(delete = true)
     private Set<Extension> extensions = new HashSet<>();
 

@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 @XmlAccessorType(XmlAccessType.NONE)
 public abstract class AbstractUniqueID extends AbstractID {
 
-    @Field(required = true)
+    @Field(required = true, tooltip = "The globally unique identifier")
     private String entityID;
 
     public String getEntityID() {

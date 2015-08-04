@@ -43,20 +43,20 @@ import javax.xml.bind.annotation.XmlType;
 public class ContactPoint extends AbstractID {
 
     @UIDisplayable(position = 0)
-    @Field(required = true)
+    @Field(required = true, tooltip = "This is the type of communication endpoint.")
     @Cascade(delete = true)
     private CodedType codedType;
 
     @UIDisplayable(position = 1)
-    @Field
+    @Field(tooltip = "This describes any equipment needed to access this communication endpoint.")
     private String equipment;
 
     @UIDisplayable(position = 2)
-    @Field
+    @Field(tooltip = "This is the purpose when you would use this communication endpoint.")
     private String purpose;
 
     @UIDisplayable(position = 3)
-    @Field
+    @Field(tooltip = "This is an encryption certificate that you would use to access this communication endpoint.")
     private String certificate;
 
     public ContactPoint() {

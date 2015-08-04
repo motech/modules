@@ -111,43 +111,43 @@ import java.util.Set;
 @Access(value = SecurityMode.PERMISSIONS, members = {CSDConstants.MANAGE_CSD})
 public class Provider extends BaseMainEntity {
 
-    @Field(name = "provider_other_ids")
+    @Field(name = "provider_other_ids", tooltip = "Other identifiers for this provider.")
     @Cascade(delete = true)
     private Set<OtherID> otherIDs = new HashSet<>();
 
     @UIDisplayable(position = 0)
-    @Field(required = true)
+    @Field(required = true, tooltip = "Demographic information about the provider including name, gender and address.")
     @Cascade(delete = true)
     private Person demographic;
 
     @UIDisplayable(position = 1)
-    @Field(name = "provider_languages")
+    @Field(name = "provider_languages", tooltip = "The provider’s supported language(s), if known.")
     @Cascade(delete = true)
     private Set<CodedType> languages = new HashSet<>();
 
-    @Field
+    @Field(tooltip = "The organization(s) with which this provider has a relationship and contact points.")
     @Cascade(delete = true)
     private Set<ProviderOrganization> providerOrganizations = new HashSet<>();
 
-    @Field
+    @Field(tooltip = "The facility, or facilities, with which this provider has a relationship.")
     @Cascade(delete = true)
     private Set<ProviderFacility> providerFacilities = new HashSet<>();
 
-    @Field(name = "provider_credentials")
+    @Field(name = "provider_credentials", tooltip = "Specific certifications or accreditations that that provider has.")
     @Cascade(delete = true)
     private Set<Credential> credentials = new HashSet<>();
 
     @UIDisplayable(position = 2)
-    @Field(name = "provider_specialities")
+    @Field(name = "provider_specialities", tooltip = "The provider's \"area of practice.\"")
     @Cascade(delete = true)
     private Set<CodedType> specialties = new HashSet<>();
 
     @UIDisplayable(position = 3)
-    @Field(required = true, name = "provider_coded_types")
+    @Field(required = true, name = "provider_coded_types", tooltip = "Provider type as identified by national or regional organizations.")
     @Cascade(delete = true)
     private Set<CodedType> codedTypes = new HashSet<>();
 
-    @Field(name = "provider_extensions")
+    @Field(name = "provider_extensions", tooltip = "This is a locally defined extension for this entity.")
     @Cascade(delete = true)
     private Set<Extension> extensions = new HashSet<>();
 

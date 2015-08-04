@@ -58,17 +58,18 @@ import java.util.Set;
 public class ProviderFacility extends AbstractUniqueID {
 
     @UIDisplayable(position = 0)
-    @Field(name = "provider_facility_services")
+    @Field(name = "provider_facility_services", tooltip = "The services that this provider offers at this facility.")
     @Cascade(delete = true)
     private Set<ProviderFacilityService> services = new HashSet<>();
 
     @UIDisplayable(position = 1)
-    @Field(name = "provider_facility_operating_hours")
+    @Field(name = "provider_facility_operating_hours", tooltip = "The operating hours when this provider offers services " +
+            "at this facility.")
     @Cascade(delete = true)
     private Set<OperatingHours> operatingHours = new HashSet<>();
 
     @UIDisplayable(position = 2)
-    @Field(name = "provider_facility_extensions")
+    @Field(name = "provider_facility_extensions", tooltip = "This is a locally defined extension for this entity.")
     @Cascade(delete = true)
     private Set<Extension> extensions = new HashSet<>();
 

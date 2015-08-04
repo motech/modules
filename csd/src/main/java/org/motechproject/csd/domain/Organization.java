@@ -73,56 +73,61 @@ import java.util.Set;
 @Access(value = SecurityMode.PERMISSIONS, members = {CSDConstants.MANAGE_CSD})
 public class Organization extends BaseMainEntity {
 
-    @Field(name = "organization_other_ids")
+    @Field(name = "organization_other_ids", tooltip = "Other identifiers for this organization.")
     @Cascade(delete = true)
     private Set<OtherID> otherIDs = new HashSet<>();
 
     @UIDisplayable(position = 0)
-    @Field(required = true)
+    @Field(required = true, tooltip = "The organization’s preferred name.")
     private String primaryName;
 
-    @Field(name = "organization_other_names")
+    @Field(name = "organization_other_names", tooltip = "Other names for the organization.")
     @Cascade(delete = true)
     private Set<OtherName> otherNames = new HashSet<>();
 
     @UIDisplayable(position = 1)
-    @Field(name = "organization_addresses")
+    @Field(name = "organization_addresses", tooltip = "The address(es) of this organization, if known. More than one " +
+            "address may be specified, but the primary address must be indicated as such.")
     @Cascade(delete = true)
     private Set<Address> addresses = new HashSet<>();
 
-    @Field(name = "organization_contacts")
+    @Field(name = "organization_contacts", tooltip = "The point(s) of contact defined for this organization, if known.")
     @Cascade(delete = true)
     private Set<OrganizationContact> contacts = new HashSet<>();
 
-    @Field(name = "organization_credentials")
+    @Field(name = "organization_credentials", tooltip = "The list of credentials held by the organization. " +
+            "NOTE: degree is not a valid credential type for an Organization.")
     @Cascade(delete = true)
     private Set<Credential> credentials = new HashSet<>();
 
-    @Field(name = "organization_languages")
+    @Field(name = "organization_languages", tooltip = "The languages this organization is able to operate in, if known.")
     @Cascade(delete = true)
     private Set<CodedType> languages = new HashSet<>();
 
     @UIDisplayable(position = 2)
-    @Field(name = "organization_specialization")
+    @Field(name = "organization_specialization", tooltip = "Specialty services provided by this organization.")
     @Cascade(delete = true)
     private Set<CodedType> specializations = new HashSet<>();
 
-    @Field(name = "organization_contact_points")
+    @Field(name = "organization_contact_points", tooltip = "This organization’s contact points (i.e. Business Phone, Fax, " +
+            "Encryption Certificate, etc.).")
     @Cascade(delete = true)
     private Set<ContactPoint> contactPoints = new HashSet<>();
 
     @UIDisplayable(position = 3)
-    @Field(required = true, name = "organization_coded_types")
+    @Field(required = true, name = "organization_coded_types", tooltip = "Organization type as identified by national or regional organizations.")
     @Cascade(delete = true)
     private Set<CodedType> codedTypes = new HashSet<>();
 
-    @Field
+    @Field(tooltip = "If the organization is a suborganization, the unique IDs of the parents shall be indicated. " +
+            "If it is the top level organization, its own unique ID may be used instead. If not specified, it is assumed " +
+            "that the organization is top-level.")
     private String parentOrganization;
 
     @Ignore
     private UniqueID parent;
 
-    @Field(name = "organization_extensions")
+    @Field(name = "organization_extensions", tooltip = "This is a locally defined extension for this entity.")
     @Cascade(delete = true)
     private Set<Extension> extensions = new HashSet<>();
 

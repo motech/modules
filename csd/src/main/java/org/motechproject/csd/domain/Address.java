@@ -51,12 +51,12 @@ import java.util.Set;
 public class Address extends AbstractID {
 
     @UIDisplayable(position = 1)
-    @Field(required = true)
+    @Field(required = true, tooltip = "These are the lines associated with this type of address.")
     @Cascade(delete = true)
     private Set<AddressLine> addressLines = new HashSet<>();
 
     @UIDisplayable(position = 0)
-    @Field
+    @Field(tooltip = "This is the type of address being entered (i.e. Legal, Mailing, Billing).")
     private String type;
 
     public Address() {

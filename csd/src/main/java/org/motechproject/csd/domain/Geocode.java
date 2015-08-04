@@ -41,19 +41,20 @@ import javax.xml.bind.annotation.XmlType;
 public class Geocode extends AbstractID {
 
     @UIDisplayable(position = 0)
-    @Field(required = true)
+    @Field(required = true, tooltip = "The decimal point latitude of the coordinate.")
     private double latitude;
 
     @UIDisplayable(position = 1)
-    @Field(required = true)
+    @Field(required = true, tooltip = "The decimal point longitude of the coordinate.")
     private double longitude;
 
     @UIDisplayable(position = 2)
-    @Field
+    @Field(tooltip = "The decimal point altitude of the coordinate.")
     private double altitude;
 
     @UIDisplayable(position = 3)
-    @Field
+    @Field(tooltip = "This is the coordinate system used to collect this data point. The default value should " +
+            "be \"WGS 84\" as per the OpenHIE specification.")
     private String coordinateSystem;
 
     public Geocode() {

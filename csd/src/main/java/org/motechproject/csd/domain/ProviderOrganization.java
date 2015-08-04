@@ -43,17 +43,19 @@ import java.util.Set;
 public class ProviderOrganization extends AbstractUniqueID {
 
     @UIDisplayable(position = 2)
-    @Field(name = "provider_organization_extensions")
+    @Field(name = "provider_organization_extensions", tooltip = "This is a locally defined extension for this entity.")
     @Cascade(delete = true)
     private Set<Extension> extensions = new HashSet<>();
 
     @UIDisplayable(position = 0)
-    @Field(name = "provider_organization_addresses")
+    @Field(name = "provider_organization_addresses", tooltip = "The address(es) of this provider's organization, if known. " +
+            "More than one address may be specified, but the primary address must be indicated as such.")
     @Cascade(delete = true)
     private Set<Address> addresses = new HashSet<>();
 
     @UIDisplayable(position = 1)
-    @Field(name = "provider_organization_contact_points")
+    @Field(name = "provider_organization_contact_points", tooltip = "This provider organization’s contact points " +
+            "(i.e. Business Phone, Fax, Encryption Certificate, etc.).")
     @Cascade(delete = true)
     private Set<ContactPoint> contactPoints = new HashSet<>();
 

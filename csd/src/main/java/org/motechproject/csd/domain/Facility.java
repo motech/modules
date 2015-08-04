@@ -109,53 +109,56 @@ import java.util.Set;
 @Access(value = SecurityMode.PERMISSIONS, members = {CSDConstants.MANAGE_CSD})
 public class Facility extends BaseMainEntity {
 
-    @Field
+    @Field(tooltip = "This facility’s geocoded point position (GPS coordinates), if known.")
     @Cascade(delete = true)
     private Geocode geocode;
 
-    @Field
+    @Field(tooltip = "The “parent” organization of this facility. There may be more than one parent organization for a facility.")
     @Cascade(delete = true)
     private Set<FacilityOrganization> facilityOrganizations = new HashSet<>();
 
     @UIDisplayable(position = 2)
-    @Field(name = "facility_operating_hours")
+    @Field(name = "facility_operating_hours", tooltip = "The operating hours for this facility, if known. This indicates " +
+            "the open hours, days of the week, and any shutdown periods (e.g., civic or national holidays, etc.).")
     @Cascade(delete = true)
     private Set<OperatingHours> operatingHours = new HashSet<>();
 
-    @Field(name = "facility_other_ids")
+    @Field(name = "facility_other_ids", tooltip = "Other identifiers for this facility.")
     @Cascade(delete = true)
     private Set<OtherID> otherIDs = new HashSet<>();
 
     @UIDisplayable(position = 0)
-    @Field(required = true)
+    @Field(required = true, tooltip = "This facility’s name, for primary use.")
     private String primaryName;
 
-    @Field(name = "facility_other_names")
+    @Field(name = "facility_other_names", tooltip = "Other optional names for this facility.")
     @Cascade(delete = true)
     private Set<OtherName> otherNames = new HashSet<>();
 
     @UIDisplayable(position = 1)
-    @Field(name = "facility_addresses")
+    @Field(name = "facility_addresses", tooltip = "The address(es) of this facility, if known. More than one address " +
+            "may be specified, but the primary address must be indicated as such.")
     @Cascade(delete = true)
     private Set<Address> addresses = new HashSet<>();
 
-    @Field(name = "facility_contacts")
+    @Field(name = "facility_contacts", tooltip = "The point(s) of contact defined for this facility, if known.")
     @Cascade(delete = true)
     private Set<OrganizationContact> contacts = new HashSet<>();
 
-    @Field(name = "facility_languages")
+    @Field(name = "facility_languages", tooltip = "The languages this facility is able to operate in, if known.")
     @Cascade(delete = true)
     private Set<CodedType> languages = new HashSet<>();
 
-    @Field(name = "facility_contact_points")
+    @Field(name = "facility_contact_points", tooltip = "This facility’s contact points (i.e. Business Phone, Fax, " +
+            "Encryption Certificate, etc.).")
     @Cascade(delete = true)
     private Set<ContactPoint> contactPoints = new HashSet<>();
 
-    @Field(required = true, name = "facility_coded_types")
+    @Field(required = true, name = "facility_coded_types", tooltip = "Facility type as identified by national or regional organizations.")
     @Cascade(delete = true)
     private Set<CodedType> codedTypes = new HashSet<>();
 
-    @Field(name = "facility_extensions")
+    @Field(name = "facility_extensions", tooltip = "This is a locally defined extension for this entity.")
     @Cascade(delete = true)
     private Set<Extension> extensions = new HashSet<>();
 

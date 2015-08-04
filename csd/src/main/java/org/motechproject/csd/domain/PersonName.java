@@ -42,33 +42,33 @@ import java.util.Set;
 public class PersonName extends AbstractID {
 
     @UIDisplayable(position = 0)
-    @Field(required = true)
+    @Field(required = true, tooltip = "Common names associated with this individual (i.e. nickname).")
     @Cascade(delete = true)
     private List<String> commonNames = new ArrayList<>();
 
     @UIDisplayable(position = 1)
-    @Field
+    @Field(tooltip = "Honorific names given to this individual (i.e. Dr.)")
     private String honorific;
 
     @UIDisplayable(position = 2)
-    @Field
+    @Field(tooltip = "This individual's first (given) name.")
     private String forename;
 
     @UIDisplayable(position = 3)
-    @Field(name = "person_name_other_names")
+    @Field(name = "person_name_other_names", tooltip = "Other names associated with this individual (i.e. married name).")
     @Cascade(delete = true)
     private Set<CodedType> otherNames = new HashSet<>();
 
     @UIDisplayable(position = 4)
-    @Field
+    @Field(tooltip = "This individual's last name (surname).")
     private String surname;
 
     @UIDisplayable(position = 5)
-    @Field
+    @Field(tooltip = "Additional information about the individual (i.e. Jr, III, PhD, MD)")
     private String suffix;
 
     @UIDisplayable(position = 6)
-    @Field
+    @Field(tooltip = "The person’s supported language(s), if known.")
     private String lang;
 
     public PersonName() {

@@ -53,28 +53,28 @@ import java.util.List;
 public class OperatingHours extends AbstractID {
 
     @UIDisplayable(position = 3)
-    @Field(required = true)
+    @Field(required = true, tooltip = "Flag(binary value) which indicate the availability of the Facility. Default value 1.")
     private boolean openFlag;
 
     @UIDisplayable(position = 0)
-    @Field
+    @Field(tooltip = "The days of the week that the activity is available.")
     @Cascade(delete = true)
     private List<DayOfTheWeek> daysOfTheWeek = new ArrayList<>();
 
     @UIDisplayable(position = 1)
-    @Field(tooltip = "Only time and not date matters in this entity")
+    @Field(tooltip = "The time hour that the activity begins (hh:mm:ss)")
     private DateTime beginningHour;
 
     @UIDisplayable(position = 2)
-    @Field(tooltip = "Only time and not date matters in this entity")
+    @Field(tooltip = "The time hour that the activity ends (hh:mm:ss)")
     private DateTime endingHour;
 
     @UIDisplayable(position = 4)
-    @Field(required = true, tooltip = "Only date and not time matters in this entity")
+    @Field(required = true, tooltip = "The date that the activity becomes available.")
     private DateTime beginEffectiveDate;
 
     @UIDisplayable(position = 5)
-    @Field(tooltip = "Only date and not time matters in this entity")
+    @Field(tooltip = "The date that the activity is no longer available.")
     private DateTime endEffectiveDate;
 
     public OperatingHours() {

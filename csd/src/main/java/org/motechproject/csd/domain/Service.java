@@ -43,12 +43,12 @@ import java.util.Set;
 public class Service extends BaseMainEntity {
 
     @UIDisplayable(position = 0)
-    @Field(required = true)
+    @Field(required = true, tooltip = "This the type of service.")
     @Cascade(delete = true)
     private CodedType codedType;
 
     @UIDisplayable(position = 2)
-    @Field(name = "service_extensions")
+    @Field(name = "service_extensions", tooltip = "This is a locally defined extension for this entity.")
     @Cascade(delete = true)
     private Set<Extension> extensions = new HashSet<>();
 

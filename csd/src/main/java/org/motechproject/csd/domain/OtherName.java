@@ -38,12 +38,12 @@ public class OtherName extends AbstractID {
 
     /* Text value of this node */
     @UIDisplayable(position = 0)
-    @Field
+    @Field(tooltip = "Enter the name.")
     private String value = "";
 
     /* Attribute @xml:lang */
     @UIDisplayable(position = 1)
-    @Field
+    @Field(tooltip = "Enter the language of this name using the “BCP 47” language tag standard.")
     private String lang;
 
     public OtherName() {

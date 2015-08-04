@@ -15,16 +15,17 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlAccessorType(XmlAccessType.NONE)
 public abstract class BaseMainEntity extends AbstractID {
 
-    @Field(required = true)
+    @Field(required = true, tooltip = "The globally unique identifier")
     private String entityID;
 
     @Ignore
     private Record record;
 
-    @Field(required = true)
+    @Field(required = true, tooltip = "The status may be either Active/Inactive. Active means currently providing or willing " +
+            "to provide services.")
     private String status;
 
-    @Field
+    @Field(tooltip = "This is the source from where you got this entity information.")
     private String sourceDirectory;
 
     public String getEntityID() {

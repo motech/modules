@@ -37,11 +37,11 @@ import javax.xml.bind.annotation.XmlType;
 public class OtherID extends AbstractID {
 
     @UIDisplayable(position = 0)
-    @Field(required = true)
+    @Field(required = true, tooltip = "Enter the other ID.")
     private String code;
 
     @UIDisplayable(position = 1)
-    @Field(required = true)
+    @Field(required = true, tooltip = "Enter the name of the authority that assigned this ID.")
     private String assigningAuthorityName;
 
     public OtherID() {

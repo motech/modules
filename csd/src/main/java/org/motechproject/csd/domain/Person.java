@@ -57,26 +57,27 @@ import java.util.Set;
 public class Person extends AbstractID {
 
     @UIDisplayable(position = 0)
-    @Field(name = "person_names", required = true)
+    @Field(name = "person_names", required = true, tooltip = "The name of the person.")
     @Cascade(delete = true)
     private Set<PersonName> names = new HashSet<>();
 
     @UIDisplayable(position = 1)
-    @Field(name = "person_contact_points")
+    @Field(name = "person_contact_points", tooltip = "These are the communication endpoints (contact points) associated " +
+            "with this person.")
     @Cascade(delete = true)
     private Set<ContactPoint> contactPoints = new HashSet<>();
 
     @UIDisplayable(position = 2)
-    @Field(name = "person_addresses")
+    @Field(name = "person_addresses", tooltip = "The address(es) of the person")
     @Cascade(delete = true)
     private Set<Address> addresses = new HashSet<>();
 
     @UIDisplayable(position = 3)
-    @Field
+    @Field(tooltip = "This is the gender of the person, locally defined.")
     private String gender;
 
     @UIDisplayable(position = 4)
-    @Field(tooltip = "Only date and not time matters in this entity")
+    @Field(tooltip = "Enter the date of birth.")
     private DateTime dateOfBirth;
 
     public Person() {
