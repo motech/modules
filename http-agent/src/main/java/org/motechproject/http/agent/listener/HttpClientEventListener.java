@@ -24,6 +24,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+/**
+ * Component which listens for Motech events and sends http requests based on the data received.
+ *
+ * @see org.motechproject.http.agent.domain.EventSubjects
+ */
 @Component
 public class HttpClientEventListener {
 
@@ -50,6 +55,10 @@ public class HttpClientEventListener {
         this.settings = settings;
     }
 
+    /**
+     * Handles an event and sends an http request. Request sections such as headers, url or method are built from event parameters.
+     * @param motechEvent the event which contains data for request
+     */
     @MotechListener(subjects = EventSubjects.HTTP_REQUEST)
     public void handle(MotechEvent motechEvent) {
         Map<String, Object> parameters = motechEvent.getParameters();
@@ -77,6 +86,14 @@ public class HttpClientEventListener {
         executeFor(url, entity, method, username, password);
     }
 
+    /**
+     * Handles an event and sends an http request. Request sections such as headers, url or method are built from event
+     * parameters. Returns the response from the performed request. Retry count(default value is 1) and retry
+     * interval(default value is 0, expressed in milliseconds) can be specified by event parameters(keys:
+     * org.motechproject.http.agent.domain.EventDataKeys.RETRY_COUNT and org.motechproject.http.agent.domain.EventDataKeys.RETRY_INTERVAL).
+     * @param motechEvent the event which contains data for request
+     * @return response from the posted request
+     */
     @MotechListener(subjects = EventSubjects.SYNC_HTTP_REQUEST_RET_TYPE)
     public ResponseEntity<?> handleWithReturnType(MotechEvent motechEvent) {
         Map<String, Object> parameters = motechEvent.getParameters();

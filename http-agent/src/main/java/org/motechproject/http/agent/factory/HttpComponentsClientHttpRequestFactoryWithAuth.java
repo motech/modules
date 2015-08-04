@@ -26,6 +26,9 @@ public class HttpComponentsClientHttpRequestFactoryWithAuth extends HttpComponen
         this.password = password;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected HttpContext createHttpContext(HttpMethod httpMethod, URI uri) {
         return createHttpContext();

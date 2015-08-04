@@ -1,5 +1,8 @@
 package org.motechproject.http.agent.domain;
 
+/**
+ * Event subjects.
+ */
 public final class EventSubjects {
 
     private EventSubjects() {
