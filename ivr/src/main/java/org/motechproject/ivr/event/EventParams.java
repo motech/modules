@@ -59,6 +59,16 @@ public final class EventParams {
     public static final String PROVIDER_JSON_RESPONSE = "provider_json_response";
 
     /**
+     * Call parameters.
+     */
+    public static final String PARAMETERS = "params";
+
+    /**
+     * Date at which call should be initiated.
+     */
+    public static final String CALL_DATE = "call_date";
+
+    /**
      * Create a MOTECH event parameters map payload from a given {@link org.motechproject.ivr.domain.CallDetailRecord}.
      *
      * @param callDetailRecord the call detail record used for constructing the event payload

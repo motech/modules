@@ -57,4 +57,6 @@
 
     <osgi:reference id="mdsLookupService" interface="org.motechproject.mds.service.MDSLookupService" />
 
+    <osgi:reference id="schedulerService" interface="org.motechproject.scheduler.service.MotechSchedulerService"/>
+
 </beans>

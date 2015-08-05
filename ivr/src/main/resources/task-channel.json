@@ -140,6 +140,12 @@
                     "displayName" : "ivr.task.config"
                 },
                 {
+                    "key" : "call_date",
+                    "displayName" : "ivr.task.callDate",
+                    "type" : "DATE",
+                    "required" : false
+                },
+                {
                     "key" : "params",
                     "type" : "MAP",
                     "displayName" : "ivr.task.params",
