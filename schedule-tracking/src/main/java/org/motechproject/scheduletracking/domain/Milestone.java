@@ -5,9 +5,13 @@ import org.joda.time.MutablePeriod;
 import org.joda.time.Period;
 import org.motechproject.mds.annotations.CrudEvents;
 import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.Cascade;
+import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.mds.event.CrudEventType;
 
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Unique;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,10 +21,16 @@ import static org.motechproject.commons.date.util.DateUtil.now;
 
 @Entity
 @CrudEvents(CrudEventType.NONE)
+@Unique(name ="UNIQUE_NAME_SCHEDULE_COMPOSITE_IDX", members = {"name", "schedule"})
 public class Milestone {
+
     private String name;
     private Map<String, String> data = new HashMap<>();
+    @Field
+    @Cascade(delete = true)
+    @Persistent(mappedBy = "milestone")
     private List<MilestoneWindow> milestoneWindows = new ArrayList<>();
+    private Schedule schedule;
 
     public Milestone() {
         this(null, null, null, null, null);
@@ -110,5 +120,13 @@ public class Milestone {
     public boolean windowElapsed(WindowName windowName, DateTime milestoneStartDateTime) {
         Period endOffset = getWindowEnd(windowName);
         return !now().isBefore(milestoneStartDateTime.plus(endOffset));
+    }
+
+    public Schedule getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(Schedule schedule) {
+        this.schedule = schedule;
     }
 }

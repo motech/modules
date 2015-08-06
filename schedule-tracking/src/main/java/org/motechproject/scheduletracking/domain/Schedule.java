@@ -3,10 +3,12 @@ package org.motechproject.scheduletracking.domain;
 import org.joda.time.DateTime;
 import org.joda.time.MutablePeriod;
 import org.joda.time.Period;
+import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
 
+import javax.jdo.annotations.Persistent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +19,9 @@ import static org.motechproject.commons.date.util.DateUtil.now;
 public class Schedule {
 
     private String name;
+    @Field
+    @Cascade(delete = true)
+    @Persistent(mappedBy = "schedule")
     private List<Milestone> milestones = new ArrayList<>();
     @Field
     private boolean basedOnAbsoluteWindows;
