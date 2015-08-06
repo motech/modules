@@ -56,5 +56,4 @@ public class CommcareBundleIT extends BasePaxIT {
         assertNotNull(response);
         assertTrue(new JsonParser().parse(response).isJsonObject());
     }
-
 }

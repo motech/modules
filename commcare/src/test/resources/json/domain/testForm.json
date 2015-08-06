@@ -1,0 +1,17 @@
+{
+  "form": {
+    "value": "1",
+    "subelement1": {
+      "restricted": {
+        "value": "2"
+      },
+      "anotherRestricted": {
+        "value": "3"
+      },
+      "value": "4",
+      "validElement": {
+        "value": "5"
+      }
+    }
+  }
+}

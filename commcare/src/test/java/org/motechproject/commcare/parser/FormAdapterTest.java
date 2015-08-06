@@ -1,30 +1,131 @@
 package org.motechproject.commcare.parser;
 
 import org.junit.Test;
-
-import java.io.FileNotFoundException;
-import junit.framework.Assert;
-import junit.framework.TestCase;
-import org.junit.Test;
-import org.mockito.Matchers;
-import org.motechproject.commcare.domain.CaseXml;
+import org.motechproject.commcare.CommcareFormTestLoader;
 import org.motechproject.commcare.domain.CommcareForm;
+import org.motechproject.commcare.domain.CommcareFormList;
+import org.motechproject.commcare.domain.CommcareMetadataJson;
 import org.motechproject.commcare.domain.FormValueElement;
-import org.motechproject.commcare.parser.FormAdapter;
 
-import static org.mockito.Mockito.when;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 
 public class FormAdapterTest {
 
     @Test
-    public void testShouldParseJsonFormHeader()
-            throws FileNotFoundException {
-        CommcareForm commcareForm = FormAdapter.readJson(jsonSampleForm());
-        Assert.assertEquals("2012-09-29T17:24:52", commcareForm.getReceivedOn());
+    public void shouldParseJsonFormHeader() {
+        CommcareForm commcareForm = FormAdapter.readJson(CommcareFormTestLoader.sampleFormJson());
+        assertEquals("2012-09-29T17:24:52", commcareForm.getReceivedOn());
     }
 
-    private String jsonSampleForm() {
-        return "{\"archived\": false,\"form\": {\"#type\": \"data\", \"@name\": \"Case Update\",\"@uiVersion\": \"1\",\"@version\": \"186\",\"@xmlns\": \"http://openrosa.org/formdesigner/4B1B717C-0CF7-472E-8CC1-1CC0C45AA5E0\",\"case\": {\"@case_id\": \"8f8fd909-684f-402d-a892-f50e607fffef\",\"@date_modified\": \"2012-09-29T19:10:00\",\"@user_id\": \"f4c63df2ef7f9da2f93cab12dc9ef53c\",\"@xmlns\": \"http://commcarehq.org/case/transaction/v2\",\"update\": {\"data_node\": \"55\",\"dateval\": \"2012-09-26\",\"geodata\": \"5.0 5.0 5.0 5.0\",\"intval\": \"5\",\"multiselect\": \"b\",\"singleselect\": \"b\",\"text\": \"TEST\"}},\"data_node\": \"55\",\"geodata\": \"5.0 5.0 5.0 5.0\",\"meta\": {\"@xmlns\": \"http://openrosa.org/jr/xforms\",\"appVersion\": {\"#text\": \"v2.1.0dev (1d8fba-0884f9-unvers-2.1.0-Nokia/S40-generic) build 186 App #186 b:2012-Sep-27 r:2012-Sep-28\",\"@xmlns\": \"http://commcarehq.org/xforms\"},\"deviceID\": \"0LRGVM4SFN2VHCOVWOVC07KQX\",\"instanceID\": \"00460026-a33b-4c6b-a4b6-c47117048557\",\"timeEnd\": \"2012-09-29T19:10:00\",\"timeStart\": \"2012-09-29T19:08:46\",\"userID\": \"f4c63df2ef7f9da2f93cab12dc9ef53c\",\"username\": \"afrisis\"},\"old_data_node\": \"\",\"question1\": \"OK\",\"question11\": \"5\",\"question12\": \"2012-09-26\",\"question14\": \"OK\",\"question3\": \"b\",\"question7\": \"b\",\"text\": \"TEST\"},\"id\": \"00460026-a33b-4c6b-a4b6-c47117048557\",\"md5\": \"OBSOLETED\",\"metadata\": {\"@xmlns\": \"http://openrosa.org/jr/xforms\",\"appVersion\": \"@xmlns:http://commcarehq.org/xforms, #text:v2.1.0dev (1d8fba-0884f9-unvers-2.1.0-Nokia/S40-generic) build 186 App #186 b:2012-Sep-27 r:2012-Sep-28\",\"deprecatedID\": null,\"deviceID\": \"0LRGVM4SFN2VHCOVWOVC07KQX\",\"instanceID\": \"00460026-a33b-4c6b-a4b6-c47117048557\",\"timeEnd\": \"2012-09-29T19:10:00\",\"timeStart\": \"2012-09-29T19:08:46\",\"userID\": \"f4c63df2ef7f9da2f93cab12dc9ef53c\",\"username\": \"afrisis\"},\"received_on\": \"2012-09-29T17:24:52\",\"resource_uri\": \"\",\"type\": \"data\",\"uiversion\": \"1\",\"version\": \"186\"}";
+    @Test
+    public void shouldParseFormList() throws IOException {
+        CommcareFormList formList = FormAdapter.readListJson(CommcareFormTestLoader.formListJson());
+        assertNotNull(formList);
+
+        CommcareMetadataJson meta = formList.getMeta();
+        assertNotNull(meta);
+
+        assertEquals(2, meta.getLimit());
+        assertEquals(6, meta.getTotalCount());
+        assertEquals(0, meta.getOffset());
+        assertNull(meta.getPreviousPageQueryString());
+        assertNull(meta.getNextPageQueryString());
+
+        List<CommcareForm> forms = formList.getObjects();
+        assertNotNull(forms);
+        assertEquals(2, forms.size());
+
+        CommcareForm form1 = forms.get(0);
+        CommcareForm form2 = forms.get(1);
+
+        verifyFirstForm(form1);
+        verifySecondForm(form2);
     }
 
+    private void verifyFirstForm(CommcareForm form) {
+        verifyCommonFormFields(form);
+
+        assertEquals("7f29b60e-15af-4f26-ba57-dff706392768", form.getId());
+        assertEquals("2013-08-06T12:43:05", form.getReceivedOn());
+        assertEquals("17", form.getVersion());
+
+        assertNotNull(form.getMetadata());
+        assertEquals(10, form.getMetadata().size());
+        // strange version, but that's what we have on our CHQ instance so might as well test it
+        assertEquals("?? (??-??-??-??-??) b:?? r:--", form.getMetadata().get("appVersion").firstValue());
+        assertEquals("7J8QFA5H0G0F4YX4S1N7MR426", form.getMetadata().get("deviceID").firstValue());
+        assertEquals("7f29b60e-15af-4f26-ba57-dff706392768", form.getMetadata().get("instanceID").firstValue());
+        assertEquals("2013-08-06T14:42:35", form.getMetadata().get("timeStart").firstValue());
+        assertEquals("2013-08-06T14:42:59", form.getMetadata().get("timeEnd").firstValue());
+        assertEquals("demo_user", form.getMetadata().get("userID").firstValue());
+        assertEquals("demo_user", form.getMetadata().get("username").firstValue());
+        assertEquals("Metadata", form.getMetadata().get("doc_type").firstValue());
+        assertEquals(Arrays.asList("0.0", "0.0", "0.0", "0.5"), form.getMetadata().get("location").getValues());
+        assertNull(form.getMetadata().get("deprecatedID"));
+
+        assertNotNull(form.getForm());
+        assertEquals("data", form.getForm().getValue());
+        assertEquals("form", form.getForm().getElementName());
+        assertNotNull(form.getForm().getSubElements());
+        assertEquals(4, form.getForm().getSubElements().size());
+        verifyFormSubElement(form, "age", "49");
+        verifyFormSubElement(form, "ispregnant", "no");
+        verifyFormSubElement(form, "name", "TERESA");
+    }
+
+    private void verifySecondForm(CommcareForm form) {
+        verifyCommonFormFields(form);
+
+        assertEquals("fe959aef-56e8-45c0-8c64-d7299bc18f77", form.getId());
+        assertEquals("2013-08-01T11:33:08", form.getReceivedOn());
+        assertEquals("7", form.getVersion());
+
+        assertNotNull(form.getMetadata());
+        assertEquals(10, form.getMetadata().size());
+        // strange version, but that's what we have on our CHQ instance so might as well test it
+        assertEquals("2.0", form.getMetadata().get("appVersion").firstValue());
+        assertEquals("cloudcare", form.getMetadata().get("deviceID").firstValue());
+        assertEquals("fe959aef-56e8-45c0-8c64-d7299bc18f77", form.getMetadata().get("instanceID").firstValue());
+        assertEquals("2013-08-01T11:33:02", form.getMetadata().get("timeStart").firstValue());
+        assertEquals("2013-08-01T11:33:07", form.getMetadata().get("timeEnd").firstValue());
+        assertEquals("2a34e758b7ed8a686e7fe8de29c3078c", form.getMetadata().get("userID").firstValue());
+        assertEquals("someone@soldevelo.com", form.getMetadata().get("username").firstValue());
+        assertEquals("Metadata", form.getMetadata().get("doc_type").firstValue());
+        assertNull(form.getMetadata().get("location"));
+        assertNull(form.getMetadata().get("deprecatedID"));
+
+        assertNotNull(form.getForm());
+        assertEquals("data", form.getForm().getValue());
+        assertEquals("form", form.getForm().getElementName());
+        assertNotNull(form.getForm().getSubElements());
+        assertEquals(2, form.getForm().getSubElements().size());
+        verifyFormSubElement(form, "question11", "f");
+    }
+
+    private void verifyFormSubElement(CommcareForm form, String elementName, String value) {
+        Collection<FormValueElement> valueElements = form.getForm().getSubElements().get(elementName);
+        assertNotNull(valueElements);
+        assertEquals(1, valueElements.size());
+
+        FormValueElement element = valueElements.iterator().next();
+        assertNotNull(element);
+        assertEquals(elementName, element.getElementName());
+        assertEquals(value, element.getValue());
+    }
+
+    private void verifyCommonFormFields(CommcareForm form) {
+        assertEquals("OBSOLETED", form.getMd5());
+        assertEquals("1", form.getUiversion());
+        assertEquals("", form.getResourceUri());
+        assertEquals("data", form.getType());
+        assertFalse(form.isArchived());
+    }
 }

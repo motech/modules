@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.commcare.domain.CommcareForm;
 import org.motechproject.commcare.domain.FormValueElement;
+import org.motechproject.commcare.domain.MetadataValue;
 import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.event.MotechEvent;
 
@@ -79,8 +80,8 @@ public class CommcareFormBuilderTest {
         assertEquals(1, rootElement.getSubElements().size());
         assertNotNull(rootElement.getElement("meta1").getSubElements());
         assertEquals(3, actualForm.getMetadata().size());
-        assertEquals(metaValue1, actualForm.getMetadata().get(meta1));
-        assertEquals(metaValue2, actualForm.getMetadata().get(meta2));
+        assertEquals(metaValue1, actualForm.getMetadata().get(meta1).firstValue());
+        assertEquals(metaValue2, actualForm.getMetadata().get(meta2).firstValue());
         assertEquals("myUiVersion", actualForm.getUiversion());
         assertEquals("myVersion", actualForm.getVersion());
         assertEquals("myInstanceId", actualForm.getId());
@@ -101,7 +102,7 @@ public class CommcareFormBuilderTest {
         Multimap<String, FormValueElement> subElements = commcareForm.getForm().getSubElements();
         assertEquals(0, subElements.size());
 
-        Map<String, String> metadata = commcareForm.getMetadata();
+        Map<String, MetadataValue> metadata = commcareForm.getMetadata();
         assertEquals(0, metadata.size());
 
         Map<String, String> attributes = commcareForm.getForm().getAttributes();
@@ -120,7 +121,7 @@ public class CommcareFormBuilderTest {
         Multimap<String, FormValueElement> subElements = commcareForm.getForm().getSubElements();
         assertEquals(0, subElements.size());
 
-        Map<String, String> metadata = commcareForm.getMetadata();
+        Map<String, MetadataValue> metadata = commcareForm.getMetadata();
         assertEquals(0, metadata.size());
 
         Map<String, String> attributes = commcareForm.getForm().getAttributes();

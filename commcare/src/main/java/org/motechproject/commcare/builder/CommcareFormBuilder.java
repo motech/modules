@@ -4,6 +4,7 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import org.motechproject.commcare.domain.CommcareForm;
 import org.motechproject.commcare.domain.FormValueElement;
+import org.motechproject.commcare.domain.MetadataValue;
 import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.event.MotechEvent;
 
@@ -39,12 +40,14 @@ public class CommcareFormBuilder {
     }
 
     private void populateFormFields(FormValueElement rootElement, CommcareForm form, String receivedOn) {
-        Map<String, String> meta = getFormMeta(rootElement);
+        Map<String, MetadataValue> meta = getFormMeta(rootElement);
         form.setMetadata(meta);
         form.setUiversion(rootElement.getAttributes().get(UIVERSION_ATTRIBUTE_NAME));
         form.setVersion(rootElement.getAttributes().get(VERSION_ATTRIBUTE_NAME));
-        form.setId(meta.get(INSTANCE_ID_ATTRIBUTE_NAME));
         form.setReceivedOn(receivedOn);
+
+        MetadataValue idMeta = meta.get(INSTANCE_ID_ATTRIBUTE_NAME);
+        form.setId(idMeta == null ? null : idMeta.firstValue());
     }
 
     private void fixRootElementName(FormValueElement rootElement) {
@@ -82,17 +85,16 @@ public class CommcareFormBuilder {
         return formValueElement;
     }
 
-    private Map<String, String> getFormMeta(FormValueElement rootElement) {
-        Map<String, String> formMeta = new HashMap<>();
+    private Map<String, MetadataValue> getFormMeta(FormValueElement rootElement) {
+        Map<String, MetadataValue> formMeta = new HashMap<>();
         FormValueElement metaElement = rootElement.getChildElement("meta");
 
-        if (metaElement == null) {
-            return new HashMap<>();
+        if (metaElement != null) {
+            for (Map.Entry<String, FormValueElement> metaEntry : metaElement.getSubElements().entries()) {
+                formMeta.put(metaEntry.getKey(), new MetadataValue(metaEntry.getValue().getValue()));
+            }
         }
 
-        for (Map.Entry<String, FormValueElement> metaEntry : metaElement.getSubElements().entries()) {
-            formMeta.put(metaEntry.getKey(), metaEntry.getValue().getValue());
-        }
         return formMeta;
     }
 }

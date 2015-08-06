@@ -2,6 +2,7 @@ package org.motechproject.commcare.domain;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class CommcareForm {
@@ -9,7 +10,7 @@ public class CommcareForm {
     private FormValueElement form;
     private String id;
     private String md5;
-    private Map<String, String> metadata;
+    private Map<String, MetadataValue> metadata = new HashMap<>();
     @SerializedName("received_on")
     private String receivedOn;
     @SerializedName("resource_uri")
@@ -38,10 +39,10 @@ public class CommcareForm {
     public void setMd5(String md5) {
         this.md5 = md5;
     }
-    public Map<String, String> getMetadata() {
+    public Map<String, MetadataValue> getMetadata() {
         return metadata;
     }
-    public void setMetadata(Map<String, String> metadata) {
+    public void setMetadata(Map<String, MetadataValue> metadata) {
         this.metadata = metadata;
     }
     public String getReceivedOn() {

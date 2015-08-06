@@ -1,0 +1,81 @@
+{
+  "form": {
+    "#type": "data",
+    "@name": "Test form",
+    "@uiVersion": "1",
+    "@version": "100",
+    "@xmlns": "http://openrosa.org/formdesigner/1",
+    "case": {
+      "@case_id": "case1",
+      "@date_modified": "2013-01-29T13:08:23",
+      "@user_id": "ABC",
+      "@xmlns": "http://commcarehq.org/case/transaction/v2",
+      "update": {
+        "date_of_visit": "2013-01-29",
+        "total_children": "",
+        "visit_type": "registration"
+      }
+    },
+    "top_level_value_1": "2013-01-29",
+    "top_level_value_2": "123",
+    "meta": {
+      "@xmlns": "http://openrosa.org/jr/xforms",
+      "appVersion": {
+        "#text": "v2.3.0 (6dcc56-6c6a74-unvers-2.1.0-Nokia/S40-generic) build 881 App #881 b:2012-Dec-17 r:2013-Jan-25",
+        "@xmlns": "http://commcarehq.org/xforms"
+      },
+      "deviceID": "ABCDEF",
+      "instanceID": "eee444fffgg",
+      "timeEnd": "2013-01-29T13:08:23",
+      "timeStart": "2013-01-29T13:06:33",
+      "userID": "ABC",
+      "username": "Motech"
+    },
+    "value3": "no",
+    "registration": {
+      "value3": "yes"
+    },
+    "subcase_0": {
+      "case": {
+        "@case_id": "case2",
+        "@date_modified": "2013-01-29T13:08:23",
+        "@user_id": "ABC",
+        "@xmlns": "http://commcarehq.org/case/transaction/v2",
+        "create": {
+          "total_children": "5",
+          "value3": "innervalue"
+        },
+        "index": {
+          "parent": {
+            "#text": "case1",
+            "@case_type": "mother"
+          }
+        },
+        "update": {
+          "updateField": "updateValue",
+          "top_level_value_1": "5"
+        }
+      }
+    },
+    "value_4": "",
+    "top_level_value_1": ""
+  },
+  "id": "2645",
+  "md5": "24634634",
+  "metadata": {
+    "@xmlns": "http://openrosa.org/jr/xforms",
+    "appVersion": "@xmlns:http://commcarehq.org/xforms, #text:v2.3.0 (6dcc56-6c6a74-unvers-2.1.0-Nokia/S40-generic) build 881 App #881 b:2012-Dec-17 r:2013-Jan-25",
+    "deprecatedID": null,
+    "deviceID": "BCDEF",
+    "instanceID": "werwer",
+    "timeEnd": "2013-01-29T13:08:23",
+    "timeStart": "2013-01-29T13:06:33",
+    "userID": "ABC",
+    "username": "marie"
+  },
+  "received_on": "2013-01-29T13:08:30",
+  "resource_uri": "",
+  "type": "data",
+  "uiversion": "1",
+  "version": "111"
+}

@@ -12,12 +12,15 @@ import org.apache.commons.httpclient.methods.PutMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.client.utils.URIBuilder;
 import org.motechproject.commcare.config.AccountConfig;
 import org.motechproject.commcare.exception.CaseParserException;
 import org.motechproject.commcare.exception.CommcareAuthenticationException;
 import org.motechproject.commcare.parser.OpenRosaResponseParser;
+import org.motechproject.commcare.request.FormListRequest;
 import org.motechproject.commcare.request.json.CaseRequest;
 import org.motechproject.commcare.response.OpenRosaResponse;
+import org.motechproject.commcare.util.CommcareParamHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 
 @Component
 public class CommCareAPIHttpClient {
@@ -66,6 +70,16 @@ public class CommCareAPIHttpClient {
 
     public String formRequest(AccountConfig accountConfig, String formId) {
         return this.getRequest(accountConfig, commcareFormUrl(accountConfig, formId), null);
+    }
+
+    /**
+     * Executes a HTTP get request to the form list API endpoint.
+     * @param accountConfig the account configuration to use
+     * @param formListRequest the request that will be used for creating the HTTP request
+     * @return the response as a String (JSON expected)
+     */
+    public String formListRequest(AccountConfig accountConfig, FormListRequest formListRequest) {
+        return this.getRequest(accountConfig, commcareFormListUrl(accountConfig, formListRequest), null);
     }
 
     public String casesRequest(AccountConfig accountConfig, CaseRequest caseRequest) {
@@ -307,6 +321,21 @@ public class CommCareAPIHttpClient {
                 accountConfig.getDomain(), getCommcareApiVersion(), formId);
     }
 
+    String commcareFormListUrl(AccountConfig accountConfig, FormListRequest formListRequest) {
+        try {
+            URIBuilder uriBuilder = new URIBuilder(String.format("%s/%s/api/v%s/form", getCommcareBaseUrl(accountConfig.getBaseUrl()),
+                    accountConfig.getDomain(), getCommcareApiVersion()));
+
+            if (formListRequest != null) {
+                formListRequest.addQueryParams(uriBuilder);
+            }
+
+            return uriBuilder.build().toString();
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Unable to build form list url", e);
+        }
+    }
+
     String commcareFixturesUrl(AccountConfig accountConfig) {
         return String.format("%s/%s/api/v%s/fixture/", getCommcareBaseUrl(accountConfig.getBaseUrl()),
                 accountConfig.getDomain(), getCommcareApiVersion());
@@ -360,18 +389,23 @@ public class CommCareAPIHttpClient {
     }
 
     private String buildPaginationParams(Integer pageSize, Integer pageNumber) {
+        return buildPaginationParams(pageSize, pageNumber, false);
+    }
+
+    private String buildPaginationParams(Integer pageSize, Integer pageNumber, boolean startWithQuestionMark) {
         StringBuilder sb = new StringBuilder();
 
         if (pageSize != null && pageSize > 0) {
-            sb.append("&limit=" + pageSize.toString());
+            sb.append(startWithQuestionMark && sb.length() == 0 ? '?' : '&');
+            sb.append("limit=").append(pageSize.toString());
         }
         if (pageNumber != null && pageNumber > 0) {
-            sb.append("&offset=" + ((pageNumber - 1) * (pageSize != null && pageSize >= 0 ? pageSize : 0)));
+            sb.append(startWithQuestionMark && sb.length() == 0 ? '?' : '&');
+            sb.append("offset=").append(CommcareParamHelper.toOffset(pageSize, pageNumber));
         }
 
         return sb.toString();
     }
-
 
     private String getCommcareApiVersion() {
         return "0.4";
