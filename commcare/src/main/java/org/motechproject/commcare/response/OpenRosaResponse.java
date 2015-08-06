@@ -1,8 +1,7 @@
 package org.motechproject.commcare.response;
 
 /**
- * An object representing the Open Rosa response from CommCareHQ when posting
- * case XML.
+ * An object representing the Open Rosa response from CommCareHQ when posting case XML.
  */
 public class OpenRosaResponse {
 
