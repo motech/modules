@@ -7,11 +7,15 @@ import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollmentStatus;
 import org.quartz.SchedulerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class EndOfCampaignListener {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EndOfCampaignListener.class);
 
     private CampaignEnrollmentDataService campaignEnrollmentDataService;
 
@@ -30,7 +34,12 @@ public class EndOfCampaignListener {
 
     private void markEnrollmentAsComplete(String externalId, String campaignName) {
         CampaignEnrollment enrollment = campaignEnrollmentDataService.findByExternalIdAndCampaignName(externalId, campaignName);
-        enrollment.setStatus(CampaignEnrollmentStatus.COMPLETED);
-        campaignEnrollmentDataService.update(enrollment);
+        if (enrollment != null) {
+            enrollment.setStatus(CampaignEnrollmentStatus.COMPLETED);
+            campaignEnrollmentDataService.update(enrollment);
+        } else {
+            LOGGER.warn("Cannot complete campaign: {}, because enrollment with id: {} doesn't exist",
+                    campaignName, externalId);
+        }
     }
 }
