@@ -45,7 +45,7 @@
                     <input class="form-control input-xlarge-fluid" ng-change="draftChanged()" ng-model="selectedConfig.name" type="text" id="name" placeholder="{{msg('commcare.settings.label.configName')}}" />
                     <div class="form-hints">
                         <span ng-hide="selectedConfig.name" class="form-hint-error">{{msg('commcare.settings.error.commcareConfigName')}}</span>
-                        <span ng-if="selectedConfig.name && !validateConfigName()" class="form-hint-error">Configuration name in use or/and it contains white spaces</span>
+                        <span ng-if="selectedConfig.name && !validateConfigName()" class="form-hint-error">{{msg('commcare.settings.error.commcareWrongConfigName')}}</span>
                     </div>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                     <input class="form-control input-xlarge-fluid" ng-change="draftChanged()" ng-model="selectedConfig.accountConfig.baseUrl" type="text" id="commcareBaseUrl" placeholder="{{msg('commcare.settings.label.commcareBaseUrl')}}" />
                     <div class="form-hints">
                         <span ng-hide="hasAccountValue('baseUrl')" class="form-hint-error">{{msg('commcare.settings.error.commcareBaseUrl')}}</span>
-                        <span ng-if="!validateUrlAndDomain()" class="form-hint-error">Base URL and domain combination must be unique</span>
+                        <span ng-if="!validateUrlAndDomain()" class="form-hint-error">{{msg('commcare.settings.error.commcareBaseUrlNotUnique')}}</span>
                     </div>
                 </div>
             </div>
@@ -119,8 +119,7 @@
             </h4>
 
             <div ng-if="!baseUrl" class="alert alert-info">
-                <span class="fa fw fa-info"></span>
-                <span class="margin-left1">To be able to set forwarding rules you must set server.url property in the Admin settings</span>
+                <p>{{msg('commcare.alert.info.urlProperty')}}</p>
             </div>
 
             <div class="form-group" ng-if="baseUrl">

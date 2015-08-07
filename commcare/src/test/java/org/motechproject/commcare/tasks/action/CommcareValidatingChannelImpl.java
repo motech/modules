@@ -1,16 +1,12 @@
 package org.motechproject.commcare.tasks.action;
 
 import org.motechproject.commcare.util.ResponseXML;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 
 @Service("commcareValidatingChannelImpl")
 public class CommcareValidatingChannelImpl implements CommcareValidatingChannel {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(CommcareValidatingChannelImpl.class);
 
     private boolean executed;
     private String pregnant;
