@@ -17,8 +17,10 @@ public class CommcareParamHelperTest {
     public void shouldCalculateOffsetsFromPagingParams() {
         assertEquals(0, CommcareParamHelper.toOffset(null, null));
         assertEquals(0, CommcareParamHelper.toOffset(1000, null));
-        assertEquals(100, CommcareParamHelper.toOffset(100, 2));
+        assertEquals(0, CommcareParamHelper.toOffset(25, 0));
+        assertEquals(0, CommcareParamHelper.toOffset(25, 1));
         assertEquals(0, CommcareParamHelper.toOffset(100, 1));
+        assertEquals(100, CommcareParamHelper.toOffset(100, 2));
         assertEquals(75, CommcareParamHelper.toOffset(25, 4));
     }
 }
