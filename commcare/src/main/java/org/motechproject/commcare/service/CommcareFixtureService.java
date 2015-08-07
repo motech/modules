@@ -5,7 +5,7 @@ import org.motechproject.commcare.domain.CommcareFixture;
 import java.util.List;
 
 /**
- * A service to perform queries against CommCareHQ's fixture APIs.
+ * A service to perform queries against CommCareHQ fixture APIs.
  */
 public interface CommcareFixtureService {
 
