@@ -95,22 +95,6 @@ public class CommcareCaseServiceImplTest {
     }
 
     @Test
-    public void testCaseByCaseIdAndUserId() {
-        String caseId = "testCase";
-        String userId = "testId";
-
-        CaseRequest request = new CaseRequest();
-        request.setUserId(userId);
-        request.setCaseId(caseId);
-
-        when(commcareHttpClient.casesRequest(config.getAccountConfig(), request)).thenReturn(casesResponse());
-
-        CaseInfo caseInstance = caseService.getCaseByCaseIdAndUserId(caseId, userId);
-
-        assertNotNull(caseInstance);
-    }
-
-    @Test
     public void testAllCaseServerDateModified()
     {
         when(commcareHttpClient.casesRequest(any(AccountConfig.class), any(CaseRequest.class))).thenReturn(casesResponse());

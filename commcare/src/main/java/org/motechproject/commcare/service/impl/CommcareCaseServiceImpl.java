@@ -47,19 +47,6 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
     }
 
     @Override
-    public CaseInfo getCaseByCaseIdAndUserId(String caseId, String userId, String configName) {
-        CaseRequest request = new CaseRequest();
-        request.setCaseId(caseId);
-        request.setUserId(userId);
-        List<CaseJson> caseResponses = getCaseResponse(request, getConfiguration(configName)).getCases();
-        List<CaseInfo> cases = generateCasesFromCaseResponse(caseResponses, configName);
-        if (cases.size() == 0) {
-            return null;
-        }
-        return cases.get(0);
-    }
-
-    @Override
     public CaseInfo getCaseByCaseId(String caseId, String configName) {
         String response = commcareHttpClient.singleCaseRequest(getConfiguration(configName).getAccountConfig(), caseId);
 
@@ -182,11 +169,6 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
         }
 
         return response;
-    }
-
-    @Override
-    public CaseInfo getCaseByCaseIdAndUserId(String caseId, String userId) {
-        return getCaseByCaseIdAndUserId(caseId, userId, null);
     }
 
     @Override

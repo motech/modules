@@ -19,7 +19,7 @@ public class CommCareAPIHttpClientTest {
 
     final String baseUrl = "https://www.commcarehq.org/a";
     final String domain = "somedomain";
-    final String apiVersion = "0.4";
+    final String apiVersion = "0.5";
     private AccountConfig accountConfig;
     private CommCareAPIHttpClient commCareAPIHttpClient;
 

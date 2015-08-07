@@ -14,22 +14,6 @@ import java.util.List;
 public interface CommcareCaseService {
 
     /**
-     * Query CommCareHQ for a case by its case id and user id.
-     *
-     * @param caseId  the id of the case on CommCareHQ
-     * @param userId  the user id from CommCareHQ
-     * @param configName  the name of the configuration used for connecting to CommcareHQ, null means default configuration
-     * @return  the CaseInfo object representing the state of the case or null if that case does not exist.
-     */
-    CaseInfo getCaseByCaseIdAndUserId(String caseId, String userId, String configName);
-
-    /**
-     * Same as {@link #getCaseByCaseIdAndUserId(String, String, String) getCaseByCaseIdAndUserId} but uses default
-     * Commcare configuration.
-     */
-    CaseInfo getCaseByCaseIdAndUserId(String caseId, String userId);
-
-    /**
      * Query CommCareHQ for a case by its case id.
      *
      * @param caseId  the id of the case on CommCareHQ
