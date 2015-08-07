@@ -10,6 +10,10 @@ import org.motechproject.event.MotechEvent;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Can be used for creating instances of the {@link CommcareForm} class based on the parameters stored in the passed
+ * event.
+ */
 public class CommcareFormBuilder {
 
     private static final String DEFAULT_ROOT_ELEMENT = "form";
@@ -18,6 +22,12 @@ public class CommcareFormBuilder {
     private static final String VERSION_ATTRIBUTE_NAME = "version";
     private static final String INSTANCE_ID_ATTRIBUTE_NAME = "instanceID";
 
+    /**
+     * Creates an instance of the {@link CommcareForm} class based on the parameters stored in the passed event.
+     *
+     * @param motechEvent  the event storing form information
+     * @return the instance of the {@link CommcareForm} built based on the parameters stored in the passed event
+     */
     public CommcareForm buildFrom(MotechEvent motechEvent) {
         FormValueElement rootElement = toFormValueElement(motechEvent.getParameters());
         fixRootElementName(rootElement);
