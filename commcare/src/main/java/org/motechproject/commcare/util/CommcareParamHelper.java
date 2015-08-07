@@ -28,7 +28,7 @@ public final class CommcareParamHelper {
      * @return the offset that should be sent to Commcare
      */
     public static int toOffset(Integer pageSize, Integer pageNumber) {
-        if (pageNumber == null) {
+        if (pageNumber == null || pageNumber == 0) {
             return  0;
         } else {
             return (pageNumber - 1) * (pageSize != null && pageSize >= 0 ? pageSize : 0);
