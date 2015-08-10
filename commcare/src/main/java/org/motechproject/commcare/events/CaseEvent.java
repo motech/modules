@@ -11,10 +11,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Wrapper class for convenience when a MotechEvent representing a CaseEvent is
- * received.
+ * Wrapper class for convenience when a MotechEvent representing a CaseEvent is received.
  */
 public class CaseEvent {
+
     private String serverModifiedOn;
     private String caseId;
     private String userId;
@@ -28,10 +28,21 @@ public class CaseEvent {
     private String caseDataXmlns;
     private String configName;
 
+    /**
+     * Creates an instance of the {@link CaseEvent} class with the given {@code caseId}.
+     *
+     * @param caseId  the ID of the case to create
+     */
     public CaseEvent(String caseId) {
         this.caseId = caseId;
     }
 
+    /**
+     * Creates an instance of the {@link CaseEvent} class based on the data passed as the given {@code event}
+     * parameters.
+     *
+     * @param event  the event that stores data used for creating {@link CaseEvent}
+     */
     public CaseEvent(MotechEvent event) {
         this.serverModifiedOn = ((String) event.getParameters().get(EventDataKeys.SERVER_MODIFIED_ON));
         this.caseId = ((String) event.getParameters().get(EventDataKeys.CASE_ID));
@@ -46,6 +57,70 @@ public class CaseEvent {
         this.ownerId = ((String) event.getParameters().get(EventDataKeys.OWNER_ID));
         this.caseDataXmlns = ((String) event.getParameters().get(EventDataKeys.CASE_DATA_XMLNS));
         this.configName = ((String) event.getParameters().get(EventDataKeys.CONFIG_NAME));
+    }
+
+    /**
+     * Creates an instance of the {@link MotechEvent} class based on this {@link CaseEvent}. No data but case ID, custom
+     * parser event key and configuration name will be included in the event as parameters.
+     *
+     * @return an instance of the {@link MotechEvent}
+     */
+    public MotechEvent toMotechEventWithoutData() {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(EventDataKeys.CASE_ID, this.caseId);
+        parameters.put(TasksEventParser.CUSTOM_PARSER_EVENT_KEY, CommcareCaseEventParser.PARSER_NAME);
+        parameters.put(EventDataKeys.CONFIG_NAME, this.configName);
+        return new MotechEvent(EventSubjects.CASE_EVENT, parameters);
+    }
+
+    /**
+     * Creates an instance of the {@link MotechEvent} class based on this {@link CaseEvent}. All data stored by this
+     * {@link CaseEvent} will be included in the event as parameters.
+     *
+     * @return an instance of the {@link MotechEvent}
+     */
+    public MotechEvent toMotechEventWithData() {
+
+        MotechEvent event = toMotechEventWithoutData();
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(EventDataKeys.SERVER_MODIFIED_ON, this.serverModifiedOn);
+        parameters.put(EventDataKeys.USER_ID, this.userId);
+        parameters.put(EventDataKeys.CASE_ACTION, this.action);
+        parameters.put(EventDataKeys.API_KEY, this.apiKey);
+        parameters.put(EventDataKeys.CASE_NAME, this.caseName);
+        parameters.put(EventDataKeys.CASE_TYPE, this.caseType);
+        parameters.put(EventDataKeys.DATE_MODIFIED, this.dateModified);
+        parameters.put(EventDataKeys.OWNER_ID, this.ownerId);
+        parameters.put(EventDataKeys.CASE_DATA_XMLNS, this.caseDataXmlns);
+        event.getParameters().putAll(parameters);
+
+        return event;
+    }
+
+    /**
+     * Creates an instance of the {@link CaseEvent} class based on the given {@code caseInstance} and
+     * {@code configName}.
+     *
+     * @param caseInstance  the case instance
+     * @param configName  the configuration name
+     * @return an instance of the {@link CaseEvent}
+     */
+    public static CaseEvent fromCaseXml(CaseXml caseInstance, String configName) {
+        CaseEvent event = new CaseEvent(caseInstance.getCaseId());
+        event.setServerModifiedOn(caseInstance.getServerModifiedOn());
+        event.setCaseId(caseInstance.getCaseId());
+        event.setUserId(caseInstance.getUserId());
+        event.setAction(caseInstance.getAction());
+        event.setApiKey(caseInstance.getApiKey());
+        event.setCaseName(caseInstance.getCaseName());
+        event.setCaseType(caseInstance.getCaseType());
+        event.setDateModified(caseInstance.getDateModified());
+        event.setFieldValues(caseInstance.getFieldValues());
+        event.setOwnerId(caseInstance.getOwnerId());
+        event.setCaseDataXmlns(caseInstance.getCaseDataXmlns());
+        event.setConfigName(configName);
+        return event;
     }
 
     public String getServerModifiedOn() {
@@ -134,50 +209,6 @@ public class CaseEvent {
 
     public void setCaseDataXmlns(String caseDataXmlns) {
         this.caseDataXmlns = caseDataXmlns;
-    }
-
-    public MotechEvent toMotechEventWithoutData() {
-        HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put(EventDataKeys.CASE_ID, this.caseId);
-        parameters.put(TasksEventParser.CUSTOM_PARSER_EVENT_KEY, CommcareCaseEventParser.PARSER_NAME);
-        parameters.put(EventDataKeys.CONFIG_NAME, this.configName);
-        return new MotechEvent(EventSubjects.CASE_EVENT, parameters);
-    }
-
-    public MotechEvent toMotechEventWithData() {
-
-        MotechEvent event = toMotechEventWithoutData();
-
-        HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put(EventDataKeys.SERVER_MODIFIED_ON, this.serverModifiedOn);
-        parameters.put(EventDataKeys.USER_ID, this.userId);
-        parameters.put(EventDataKeys.CASE_ACTION, this.action);
-        parameters.put(EventDataKeys.API_KEY, this.apiKey);
-        parameters.put(EventDataKeys.CASE_NAME, this.caseName);
-        parameters.put(EventDataKeys.CASE_TYPE, this.caseType);
-        parameters.put(EventDataKeys.DATE_MODIFIED, this.dateModified);
-        parameters.put(EventDataKeys.OWNER_ID, this.ownerId);
-        parameters.put(EventDataKeys.CASE_DATA_XMLNS, this.caseDataXmlns);
-        event.getParameters().putAll(parameters);
-
-        return event;
-    }
-
-    public static CaseEvent fromCaseXml(CaseXml caseInstance, String configName) {
-        CaseEvent event = new CaseEvent(caseInstance.getCaseId());
-        event.setServerModifiedOn(caseInstance.getServerModifiedOn());
-        event.setCaseId(caseInstance.getCaseId());
-        event.setUserId(caseInstance.getUserId());
-        event.setAction(caseInstance.getAction());
-        event.setApiKey(caseInstance.getApiKey());
-        event.setCaseName(caseInstance.getCaseName());
-        event.setCaseType(caseInstance.getCaseType());
-        event.setDateModified(caseInstance.getDateModified());
-        event.setFieldValues(caseInstance.getFieldValues());
-        event.setOwnerId(caseInstance.getOwnerId());
-        event.setCaseDataXmlns(caseInstance.getCaseDataXmlns());
-        event.setConfigName(configName);
-        return event;
     }
 
     public String getConfigName() {

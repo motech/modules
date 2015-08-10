@@ -1,5 +1,8 @@
 package org.motechproject.commcare.events.constants;
 
+/**
+ * Utility class for storing data keys for events.
+ */
 public final class EventDataKeys {
 
     //CaseEvent
@@ -53,6 +56,9 @@ public final class EventDataKeys {
     //FullFormsExceptionEvent
     public static final String FAILED_FORM_MESSAGE = "failedMessage";
 
+    /**
+     * Utility class, should not be initiated.
+     */
     private EventDataKeys() {
     }
 }
