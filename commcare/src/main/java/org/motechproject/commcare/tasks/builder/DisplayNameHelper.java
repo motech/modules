@@ -33,6 +33,9 @@ public final class DisplayNameHelper {
         return buildDisplayName(subject, null, configName);
     }
 
+    /**
+     * Utility class, should not be initiated.
+     */
     private DisplayNameHelper() {
     }
 }

@@ -26,14 +26,22 @@ public class TasksChannelServiceInstance {
         this.channelRequestBuilder = builder;
     }
 
+    /**
+     * Registers or updates the task channel if it contains any task triggers, if it doesn't the channel
+     * will be unregistered.
+     */
     public void updateTaskChannel() {
+
         ChannelRequest channelRequest = channelRequestBuilder.buildChannelRequest();
-        if (channelService != null && !channelRequest.getTriggerTaskEvents().isEmpty()) {
-            LOGGER.trace("Registering channel with the following request: {}", channelRequest);
-            channelService.registerChannel(channelRequest);
-        } else if (channelService != null && channelRequest.getTriggerTaskEvents().isEmpty()) {
-            LOGGER.trace("Unregistering channel with the following request: {}", channelRequest);
-            channelService.unregisterChannel(channelRequest.getModuleName());
+
+        if (channelService != null) {
+            if (!channelRequest.getTriggerTaskEvents().isEmpty()) {
+                LOGGER.trace("Registering channel with the following request: {}", channelRequest);
+                channelService.registerChannel(channelRequest);
+            } else {
+                LOGGER.trace("Unregistering channel with the following request: {}", channelRequest);
+                channelService.unregisterChannel(channelRequest.getModuleName());
+            }
         }
     }
 }

@@ -22,13 +22,19 @@ import static org.motechproject.commcare.events.constants.EventSubjects.FORMS_FA
 import static org.motechproject.commcare.events.constants.EventSubjects.FORM_STUB_EVENT;
 
 /**
- * The <code>CommonTriggerBuilder</code> class builds Commcare related task
- * triggers, that do not depend on the current schema or database state.
+ * The <code>CommonTriggerBuilder</code> class builds Commcare related task triggers, that do not depend on the current
+ * schema or database state.
  */
 public class CommonTriggerBuilder implements TriggerBuilder {
 
     private CommcareConfigService configService;
 
+    /**
+     * Creates an instance of the {@link CommonTriggerBuilder} class, that is used for creating common triggers. It will
+     * use the given {@code configService} for building common triggers.
+     *
+     * @param configService  the configuration service
+     */
     public CommonTriggerBuilder(CommcareConfigService configService) {
         this.configService = configService;
     }
