@@ -11,8 +11,10 @@ import java.util.Map;
  */
 public final class FormValueParser {
 
+    /**
+     * Utility class, should not be initiated.
+     */
     private FormValueParser() {
-
     }
 
     /**
