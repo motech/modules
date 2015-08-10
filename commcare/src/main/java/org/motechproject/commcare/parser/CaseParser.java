@@ -14,17 +14,36 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.StringReader;
 
+/**
+ * Class for converting the XML passed in the constructor to the instance of the {@link CaseXml} class or domain class,
+ * which is defined bu the class parameter.
+ *
+ * @param <T>  the domain class
+ */
 public class CaseParser<T> {
 
     private CaseMapper<T> domainMapper;
     private String xmlDoc;
     private String caseAction;
 
+    /**
+     * Creates an instance of the {@link CaseMapper} class. The created object will provide methods for parsing the
+     * given {@code xmlDocument} into objects of the given {@code clazz} or the {@link CaseXml} class.
+     *
+     * @param clazz  the domain class
+     * @param xmlDocument  the case as a XML string
+     */
     public CaseParser(Class<T> clazz, String xmlDocument) {
         domainMapper = new CaseMapper<T>(clazz);
         this.xmlDoc = xmlDocument;
     }
 
+    /**
+     * Parses the XML into an instance of the domain class defined in the class parameter.
+     *
+     * @return the created instance
+     * @throws CaseParserException if there were problems while parsing case XML
+     */
     public T parseCase() throws CaseParserException {
         DOMParser parser = new DOMParser();
 
@@ -42,6 +61,12 @@ public class CaseParser<T> {
         return domainMapper.mapToDomainObject(ccCase);
     }
 
+    /**
+     * Parses the given XML document into an instance of the {@link CaseXml} class.
+     *
+     * @param document  the XML document
+     * @return the created instance
+     */
     public CaseXml parseCase(Document document) {
         Element item = (Element) document.getElementsByTagName("case").item(0);
         CaseXml ccCase = createCase(item);
