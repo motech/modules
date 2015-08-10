@@ -35,7 +35,13 @@ public class CaseTriggerBuilder implements TriggerBuilder {
     private static final String RECEIVED_CASE = "Received Case";
     private static final String RECEIVED_CASE_ID = "Received Case ID";
 
-
+    /**
+     * Creates an instance of the {@link CaseTriggerBuilder} class. It will use the given {@code schemaService} and
+     * {@code configService} for creating case triggers.
+     *
+     * @param schemaService  the schema service
+     * @param configService  the configuration service
+     */
     public CaseTriggerBuilder(CommcareSchemaService schemaService, CommcareConfigService configService) {
         this.schemaService = schemaService;
         this.configService = configService;

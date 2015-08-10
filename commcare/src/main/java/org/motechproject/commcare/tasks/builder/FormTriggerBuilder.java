@@ -36,6 +36,13 @@ public class FormTriggerBuilder implements TriggerBuilder {
 
     private static final String RECEIVED_FORM = "Received Form";
 
+    /**
+     * Creates an instance of the {@link FormTriggerBuilder} class that can be used for building form triggers. It will
+     * use the given {@code schemaService}, {@code configService} fir building them.
+     *
+     * @param schemaService  the schema service
+     * @param configService  the configuration service
+     */
     public FormTriggerBuilder(CommcareSchemaService schemaService, CommcareConfigService configService) {
         this.schemaService = schemaService;
         this.configService = configService;
