@@ -31,6 +31,9 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 
+/**
+ * A Commcare REST API client. Responsible for sending requests to the Commcare server and fetching data from it.
+ */
 @Component
 public class CommCareAPIHttpClient {
 
@@ -43,37 +46,98 @@ public class CommCareAPIHttpClient {
         this.commonsHttpClient = commonsHttpClient;
     }
 
+    /**
+     * Sends a POST request to the CommCare server. It will result in creating new case on the CommCare server based on
+     * the information given in the {@code caseXml}, which should be a valid case represented by an XML string.
+     *
+     * @param accountConfig  the CommCare account information
+     * @param caseXml  the case represented as an XML string
+     * @return the CommCare server response as an instance of the {@link OpenRosaResponse} class
+     * @throws CaseParserException if there were problems while parsing server response
+     */
     public OpenRosaResponse caseUploadRequest(AccountConfig accountConfig, String caseXml)
             throws CaseParserException {
         return this.postRequest(accountConfig, commcareCaseUploadUrl(accountConfig), caseXml);
     }
 
+    /**
+     * Retrieves user with the given {@code userId} from the CommCare server. The retrieved user is returned as a JSON
+     * string.
+     *
+     * @param accountConfig  the Commcare account information
+     * @param userId  the ID of the user
+     * @return the JSON string representation of the user, null if the user with the given ID does not exist
+     */
     public String userRequest(AccountConfig accountConfig, String userId) {
         return this.getRequest(accountConfig, commcareUserUrl(accountConfig, userId), null);
     }
 
+    /**
+     * Retrieves a list of users from the CommCare server. The data is fetched in accordance to the passed paging
+     * parameters. The retrieved list is returned as a JSON string.
+     *
+     * @param accountConfig  the Commcare account information
+     * @param pageSize  the size of the page
+     * @param pageNumber  the number of the page
+     * @return the JSON string representation of the users
+     */
     public String usersRequest(AccountConfig accountConfig, Integer pageSize, Integer pageNumber) {
         return this.getRequest(accountConfig, commcareUsersUrl(accountConfig, pageSize, pageNumber), null);
     }
 
-    public String locationRequest(AccountConfig accountConfig, String userId) {
-        return this.getRequest(accountConfig, commcareLocationUrl(accountConfig, userId), null);
+    /**
+     * Retrieves a location with the given {@code locationId} from the Commcare server. The retrieved location is
+     * returned as a JSON string.
+     *
+     * @param accountConfig  the Commcare account information
+     * @param locationId  the id of the location
+     * @return the JSON string representation of the location, null if the location with the given ID does not exist
+     */
+    public String locationRequest(AccountConfig accountConfig, String locationId) {
+        return this.getRequest(accountConfig, commcareLocationUrl(accountConfig, locationId), null);
     }
 
+    /**
+     * Retrieves a list of locations. The data is fetched in accordance to the passed paging parameters. The retrieved
+     * list is returned as a JSON string.
+     *
+     * @param accountConfig  the Commcare account information
+     * @param pageSize  the size of the page
+     * @param pageNumber  the number of the page
+     * @return the JSON string representation of the locations
+     */
     public String locationsRequest(AccountConfig accountConfig, Integer pageSize, Integer pageNumber) {
         return this.getRequest(accountConfig, commcareLocationsUrl(accountConfig, pageSize, pageNumber), null);
     }
 
+    /**
+     * Retrieves a list of the applications from the CommCare server. The data is fetched in accordance to the passed
+     * paging parameters. The retrieved list is returned as a JSON string.
+     *
+     * @param accountConfig  the Commcare account information
+     * @param pageSize  the size of the page
+     * @param pageNumber  the number of the page
+     * @return the JSON string representation of the applications
+     */
     public String appStructureRequest(AccountConfig accountConfig, Integer pageSize, Integer pageNumber) {
         return this.getRequest(accountConfig, commcareAppStructureUrl(accountConfig, pageSize, pageNumber), null);
     }
 
+    /**
+     * Retrieves the form with the given {@code formId} from the CommCare server. The retrieved form is returned as a
+     * JSON string.
+     *
+     * @param accountConfig  the CommCare account information
+     * @param formId  the ID of the form
+     * @return the JSON string representation of the form, null if the form with the given ID does not exist
+     */
     public String formRequest(AccountConfig accountConfig, String formId) {
         return this.getRequest(accountConfig, commcareFormUrl(accountConfig, formId), null);
     }
 
     /**
      * Executes a HTTP get request to the form list API endpoint.
+     *
      * @param accountConfig the account configuration to use
      * @param formListRequest the request that will be used for creating the HTTP request
      * @return the response as a String (JSON expected)
@@ -82,35 +146,103 @@ public class CommCareAPIHttpClient {
         return this.getRequest(accountConfig, commcareFormListUrl(accountConfig, formListRequest), null);
     }
 
+    /**
+     * Retrieves a list of the cases from the CommCare server. The given {@code caseRequest} will be used for fetching
+     * data from the server.
+     *
+     * @param accountConfig  the CommCare account information
+     * @param caseRequest  the request parameters
+     * @return the JSON string representation of the cases
+     */
     public String casesRequest(AccountConfig accountConfig, CaseRequest caseRequest) {
         return this.getRequest(accountConfig, commcareCasesUrl(accountConfig), caseRequest);
     }
 
+    /**
+     * Retrieves case with the given {@code caseId} from the CommCare server. The retrieved case is returned as a JSON
+     * string.
+     *
+     * @param accountConfig  the CommCare account information
+     * @param caseId  the ID of the case
+     * @return the JSON string representation of the case, null if the case with the given ID does not exist
+     */
     public String singleCaseRequest(AccountConfig accountConfig, String caseId) {
         return this.getRequest(accountConfig, commcareCaseUrl(accountConfig, caseId), null);
     }
 
+    /**
+     * Retrieves a list of fixtures from the CommCare server. The data is fetched in accordance to the passed paging
+     * parameters. The retrieved list is returned as a JSON string.
+     *
+     * @param accountConfig  the Commcare account information
+     * @param pageSize  the size of the page
+     * @param pageNumber  the number of the page
+     * @return the JSON string representation of the fixtures
+     */
     public String fixturesRequest(AccountConfig accountConfig, Integer pageSize, Integer pageNumber) {
         return this.getRequest(accountConfig, commcareFixturesUrl(accountConfig, pageSize, pageNumber), null);
     }
 
+    /**
+     * Retrieves fixture with the given {@code fixtureId} from the CommCare server. The retrieved fixture is returned as
+     * a JSON string.
+     *
+     * @param accountConfig  the CommCare account information
+     * @param fixtureId  the ID of the fixture
+     * @return the JSON string representation of the fixture, null if the fixture with the given ID does not exist
+     */
     public String fixtureRequest(AccountConfig accountConfig, String fixtureId) {
         return this.getRequest(accountConfig, commcareFixtureUrl(accountConfig, fixtureId), null);
     }
 
+    /**
+     * Sends a POST request to the CommCare server. It will result in creating a new forwarding endpoint based on the
+     * information given in the {@code dataForwardingEndpointJson}, which should be a valid forwarding endpoint
+     * represented by a JSON string.
+     *
+     * @param accountConfig  the CommCare account information
+     * @param dataForwardingEndpointJson  the JSON string representation of the endpoint
+     * @return the server response status
+     */
     public int dataForwardingEndpointUploadRequest(AccountConfig accountConfig, String dataForwardingEndpointJson) {
         return this.dataForwardingEndpointPostRequest(accountConfig, commcareDataForwardingEndpointUrl(accountConfig), dataForwardingEndpointJson);
     }
 
+    /**
+     * Sends a PUT request to the CommCare server. It will result in updating the forwarding endpoint pointed by the
+     * {@code resourceUri}. The forwarding endpoint will be updated with the data passed in the
+     * {@code dataForwardingEndpointJson}, which should be a valid forwarding endpoint represented by a JSON string.
+     *
+     * @param accountConfig  the CommCare account information
+     * @param resourceUri  the URI pointing to the forwarding endpoint
+     * @param dataForwardingEndpointJson  the updated forwarding endpoint represented by a JSON string
+     * @return the server response status
+     */
     public int dataForwardingEndpointUpdateRequest(AccountConfig accountConfig, String resourceUri, String dataForwardingEndpointJson) {
         String combinedUri = commcareDataForwardingEndpointUrl(accountConfig) + resourceUri + '/';
         return this.dataForwardingEndpointPutRequest(accountConfig, combinedUri, dataForwardingEndpointJson);
     }
 
+    /**
+     * Retrieves a list of the forwarding endpoints from the CommCare server. The data is fetched in accordance to the
+     * passed paging parameters. The retrieved list is returned as a JSON string.
+     *
+     * @param accountConfig  the CommCare account information
+     * @param pageSize  the size of the page
+     * @param pageNumber  the number of the page
+     * @return the JSON string representation of the forwarding endpoints
+     */
     public String dataForwardingEndpointsRequest(AccountConfig accountConfig, Integer pageSize, Integer pageNumber) {
         return this.getRequest(accountConfig, commcareDataForwardingEndpointsUrl(accountConfig, pageSize, pageNumber), null);
     }
 
+    /**
+     * Verifies whether the connection with the CommCare server is possible using the given credentials. If this method
+     * returns false, it might indicate that the given credentials are incorrect or a server error occurred.
+     *
+     * @param accountConfig  the CommCare account information
+     * @return true if connection was possible, false otherwise
+     */
     public boolean verifyConnection(AccountConfig accountConfig) {
         HttpMethod getMethod = new GetMethod(commcareCasesUrl(accountConfig.getBaseUrl(), accountConfig.getDomain()));
 
