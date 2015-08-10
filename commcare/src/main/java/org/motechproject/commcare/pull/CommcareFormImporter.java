@@ -1,22 +1,26 @@
 package org.motechproject.commcare.pull;
 
 import com.google.common.collect.Lists;
-import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.motechproject.commcare.domain.CommcareForm;
 import org.motechproject.commcare.domain.CommcareFormList;
 import org.motechproject.commcare.events.FullFormEvent;
+import org.motechproject.commcare.events.FullFormFailureEvent;
 import org.motechproject.commcare.request.FormListRequest;
 import org.motechproject.commcare.service.CommcareFormService;
 import org.motechproject.commons.api.Range;
 import org.motechproject.event.listener.EventRelay;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
 @Scope("session")
-public class CommareFormImporter {
+public class CommcareFormImporter {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommcareFormImporter.class);
 
     private static final int PAGE_SIZE_FOR_FETCH = 100;
 
@@ -26,6 +30,7 @@ public class CommareFormImporter {
     @Autowired
     private EventRelay eventRelay;
 
+    private Thread importThread;
     private boolean importInProgress = false;
     private int importCount;
     private int totalCount;
@@ -41,37 +46,56 @@ public class CommareFormImporter {
         return formList.getMeta().getTotalCount();
     }
 
-    public void startFormPull(Range<DateTime> dateRange, String configName) {
+    public void startFormPull(final Range<DateTime> dateRange, final String configName) {
         validateNoExportInProgress();
         validateDateRange(dateRange);
 
         initForImport(dateRange, configName);
 
         // we start from the last page, since Commcare orders by received_on descending, we want ascending
-        FormListRequest request = buildFormListRequest(dateRange, PAGE_SIZE_FOR_FETCH, pageCount);
+        final FormListRequest request = buildFormListRequest(dateRange, PAGE_SIZE_FOR_FETCH, pageCount);
 
-        // perform the data pull
-        boolean hasMore;
-        do {
-            // fetch the data
-            CommcareFormList formList = formService.retrieveFormList(request, configName);
+        importThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean hasMore;
+                do {
+                    // fetch the data
+                    try {
+                        CommcareFormList formList = formService.retrieveFormList(request, configName);
 
-            // send events for forms
-            importFormList(formList);
+                        // send events for forms
+                        importFormList(formList);
 
-            // if query string present for previous, then there are more forms to import
-            hasMore = StringUtils.isNotBlank(formList.getMeta().getPreviousPageQueryString());
+                        // the first page is the last one
+                        hasMore = request.getPageNumber() > 1;
 
-            // we decrement the page
-            request.previousPage();
-        } while (importInProgress && hasMore);
+                        // we decrement the page
+                        if (hasMore) {
+                            request.previousPage();
+                        }
+                    } catch (RuntimeException e) {
+                        handleImportError(e, configName);
+                        throw e;
+                    }
+                } while (importInProgress && hasMore);
 
-        importInProgress = false;
+                importInProgress = false;
+            }
+        });
+
+        importThread.start();
     }
 
     public void stopImport() {
         // will break the loop
         importInProgress = false;
+        // wait for the thread
+        try {
+            importThread.join();
+        } catch (InterruptedException e) {
+            throw new IllegalStateException("Interrupted while stopping form import", e);
+        }
     }
 
 
@@ -132,5 +156,10 @@ public class CommareFormImporter {
         request.setPageNumber(pageNumber);
 
         return request;
+    }
+
+    private void handleImportError(RuntimeException e, String configName) {
+        FullFormFailureEvent failureEvent = new FullFormFailureEvent(e.getMessage(), configName);
+        eventRelay.sendEventMessage(failureEvent.toMotechEvent());
     }
 }
