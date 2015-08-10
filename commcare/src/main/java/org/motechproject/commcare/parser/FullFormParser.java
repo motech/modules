@@ -15,8 +15,11 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.StringReader;
 
+/**
+ * Class for converting the XML passed in as a constructor parameter to an instance of the {@link FormValueElement}
+ * class.
+ */
 public class FullFormParser {
-    private String xmlDoc;
 
     public static final String FORM_DATA_ELEMENT = "data";
     public static final String DEVICE_REPORT_ELEMENT = "device_report";
@@ -24,18 +27,25 @@ public class FullFormParser {
     public static final String FORM = "form";
     public static final String DEVICE_LOG = "deviceLog";
 
+    private String xmlDoc;
+
+    /**
+     * Creates an instance of the {@link FullFormParser} which will provide a method for parsing the given
+     * {@code xmlDoc}.
+     *
+     * @param xmlDoc  the XML document
+     */
     public FullFormParser(String xmlDoc) {
         this.xmlDoc = xmlDoc;
     }
 
     /**
-     * Method to parse incoming "full" XML forms from CommCareHQ.
-     * Parser assumes the form has an element with the tag "data".
-     * If the form does not, and instead has a device report, a null
-     * form is returned. Otherwise an exception is thrown indicating
-     * an unknown or faulty form XML.
-     * @return The parsed form, null if a device report
-     * @throws FullFormParserException Thrown if the form does not parse correctly and is not a device report form
+     * Method to parse incoming "full" XML forms from CommCareHQ. Parser assumes the form has an element with the tag
+     * "data". If the form does not, and instead has a device report, a null form is returned. Otherwise an exception is
+     * thrown indicating an unknown or faulty form XML.
+     *
+     * @return the parsed form, null if a device report
+     * @throws FullFormParserException if the form does not parse correctly and is not a device report form
      */
     public FormValueElement parse() throws FullFormParserException {
         DOMParser parser = new DOMParser();
