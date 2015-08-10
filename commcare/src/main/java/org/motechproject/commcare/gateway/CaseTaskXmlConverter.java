@@ -27,6 +27,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Provides methods for serializing instances of the {@link CaseTask} class into XML strings.
+ */
 @Component
 public class CaseTaskXmlConverter {
 
@@ -37,6 +40,12 @@ public class CaseTaskXmlConverter {
         this.eventRelay = eventRelay;
     }
 
+    /**
+     * Serializes the given {@code task} into an XML string.
+     *
+     * @param task  the task to serialize
+     * @return the XML string
+     */
     public String convertToCaseXml(CaseTask task) {
         CaseRequest caseRequest = mapToCase(task);
         CommcareRequestData request = createRequestWithEnvelope(caseRequest);
@@ -44,6 +53,12 @@ public class CaseTaskXmlConverter {
         return convertToXml(request);
     }
 
+    /**
+     * Serializes the given {@code task} into an XML string. The XML will contain a "</close>" element.
+     *
+     * @param task  the task to serialize
+     * @return the XML string
+     */
     public String convertToCloseCaseXml(CaseTask task) {
         CaseRequest caseRequest = mapToCloseCase(task);
         CommcareRequestData request = createRequestWithEnvelope(caseRequest);
