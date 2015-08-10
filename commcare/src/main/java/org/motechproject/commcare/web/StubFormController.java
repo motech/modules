@@ -5,7 +5,6 @@ import org.motechproject.commcare.config.Config;
 import org.motechproject.commcare.domain.FormStubJson;
 import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.commcare.events.constants.EventSubjects;
-import org.motechproject.commcare.exception.ConfigurationNotFoundException;
 import org.motechproject.commcare.exception.EndpointNotSupported;
 import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.service.impl.CommcareStubFormsEventParser;
@@ -18,22 +17,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Controller that handles the incoming stub form feed from CommCareHQ. Maps to
- * /commcare/stubforms.
+ * Controller that handles the incoming stub form feed from CommCareHQ. Maps to /commcare/stubforms. It is capable of
+ * handling multiple configurations by parameterizing the endpoint URL.
  */
 @Controller
 @RequestMapping("/stub")
-public class StubFormController {
+public class StubFormController extends CommcareController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StubFormController.class);
 
@@ -59,22 +56,6 @@ public class StubFormController {
     @RequestMapping({ "/{configName}" })
     public ModelAndView receiveFormEvent(HttpServletRequest request, @RequestBody String body) throws EndpointNotSupported {
         return doReceiveFormEvent(body, configService.getByName(getConfigName(request)));
-    }
-
-    @ExceptionHandler(ConfigurationNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ResponseBody
-    public String handleNotFound(Exception e) {
-        LOGGER.error(e.getMessage());
-        return e.getMessage();
-    }
-
-    @ExceptionHandler(EndpointNotSupported.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public String handleBadRequest(Exception e) {
-        LOGGER.error(e.getMessage());
-        return e.getMessage();
     }
 
     private String getConfigName(HttpServletRequest request) {
