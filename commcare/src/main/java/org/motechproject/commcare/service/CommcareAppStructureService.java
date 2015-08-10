@@ -4,6 +4,9 @@ import org.motechproject.commcare.domain.CommcareApplicationJson;
 
 import java.util.List;
 
+/**
+ * A service to perform queries against CommCareHQ application structure APIs.
+ */
 public interface CommcareAppStructureService {
 
     /**

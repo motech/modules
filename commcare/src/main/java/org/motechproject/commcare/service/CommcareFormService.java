@@ -4,6 +4,9 @@ import org.motechproject.commcare.domain.CommcareForm;
 import org.motechproject.commcare.domain.CommcareFormList;
 import org.motechproject.commcare.request.FormListRequest;
 
+/**
+ * A service to perform queries against CommCareHQ form APIs.
+ */
 public interface CommcareFormService {
 
     /**

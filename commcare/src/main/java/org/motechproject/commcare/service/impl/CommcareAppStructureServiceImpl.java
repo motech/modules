@@ -36,25 +36,25 @@ public class CommcareAppStructureServiceImpl implements CommcareAppStructureServ
 
     @Override
     public List<CommcareApplicationJson> getAllApplications(String configName) {
-        AppStructureResponseJson appStructureResponseJson = null;
+        AppStructureResponseJson appStructureResponseJson;
         Integer pageNumber = 1;
-        List<CommcareApplicationJson> commmcareApps = new ArrayList<>();
+        List<CommcareApplicationJson> commcareApps = new ArrayList<>();
         Config config = configService.getByName(configName);
 
         do {
             String response = commcareHttpClient.appStructureRequest(config.getAccountConfig(), DEFAULT_PAGE_SIZE, pageNumber);
             appStructureResponseJson = parseApplicationsFromResponse(response, config.getName());
-            commmcareApps.addAll(appStructureResponseJson.getApplications());
+            commcareApps.addAll(appStructureResponseJson.getApplications());
             pageNumber++;
         } while (appStructureResponseJson != null
                 && StringUtils.isNotBlank(appStructureResponseJson.getMetadata().getNextPageQueryString()));
 
         // Make sure the modules get serialized
-        for (CommcareApplicationJson applicationJson : commmcareApps) {
+        for (CommcareApplicationJson applicationJson : commcareApps) {
             applicationJson.serializeModules();
         }
 
-        return commmcareApps;
+        return commcareApps;
     }
 
     public List<CommcareApplicationJson> getApplications(Integer pageSize, Integer pageNumber, String configName) {
