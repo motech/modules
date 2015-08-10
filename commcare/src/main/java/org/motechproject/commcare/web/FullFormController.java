@@ -48,13 +48,13 @@ public class FullFormController {
     @RequestMapping
     @ResponseStatus(HttpStatus.OK)
     public void receiveFormForDefaultConfig(@RequestBody String body, HttpServletRequest request) throws EndpointNotSupported {
-        doReceiveForm(body, request, configService.getDefault());
+        doReceiveFullForm(body, request, configService.getDefault());
     }
 
     @RequestMapping(value = "/{configName}")
     @ResponseStatus(HttpStatus.OK)
     public void receiveForm(@RequestBody String body, HttpServletRequest request) throws EndpointNotSupported {
-        doReceiveForm(body, request, configService.getByName(getConfigName(request)));
+        doReceiveFullForm(body, request, configService.getByName(getConfigName(request)));
     }
 
     @ExceptionHandler(ConfigurationNotFoundException.class)
@@ -73,12 +73,7 @@ public class FullFormController {
         return e.getMessage();
     }
 
-    private String getConfigName(HttpServletRequest request) {
-        String pathInfo = request.getPathInfo();
-        return pathInfo.substring(pathInfo.lastIndexOf('/') + 1);
-    }
-
-    private void doReceiveForm(String body, HttpServletRequest request, Config config) throws EndpointNotSupported {
+    private void doReceiveFullForm(String body, HttpServletRequest request, Config config) throws EndpointNotSupported {
 
         LOGGER.trace("Received request for mapping /forms: {}", body);
 
@@ -109,5 +104,10 @@ public class FullFormController {
         params.put("moduleName", "commcare");
 
         eventRelay.sendEventMessage(new MotechEvent("org.motechproject.message", params));
+    }
+
+    private String getConfigName(HttpServletRequest request) {
+        String pathInfo = request.getPathInfo();
+        return pathInfo.substring(pathInfo.lastIndexOf('/') + 1);
     }
 }

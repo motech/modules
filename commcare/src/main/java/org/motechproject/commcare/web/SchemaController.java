@@ -132,6 +132,7 @@ public class SchemaController {
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     @ResponseBody
     public String handleCommcareAuthenticationException(CommcareAuthenticationException exception) {
+        LOGGER.error("Unable to authenticate with Commcare", exception);
         return exception.getMessage();
     }
 
