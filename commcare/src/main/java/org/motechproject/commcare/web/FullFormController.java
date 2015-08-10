@@ -4,7 +4,6 @@ import org.motechproject.commcare.config.Config;
 import org.motechproject.commcare.domain.FormValueElement;
 import org.motechproject.commcare.events.FullFormEvent;
 import org.motechproject.commcare.events.FullFormFailureEvent;
-import org.motechproject.commcare.exception.ConfigurationNotFoundException;
 import org.motechproject.commcare.exception.EndpointNotSupported;
 import org.motechproject.commcare.exception.FullFormParserException;
 import org.motechproject.commcare.parser.FullFormParser;
@@ -16,10 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,12 +24,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Controller that handles the incoming full form feed from CommCareHQ. The path to this endpoint
- * has to be configured on the CommCareHQ side.
+ * Controller that handles the incoming full form feed from CommCareHQ. The path to this endpoint has to be configured
+ * on the CommCareHQ side. It is capable of handling multiple configurations by parameterizing the endpoint URL.
  */
 @Controller
 @RequestMapping("/forms")
-public class FullFormController {
+public class FullFormController extends CommcareController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FullFormController.class);
 
@@ -55,22 +52,6 @@ public class FullFormController {
     @ResponseStatus(HttpStatus.OK)
     public void receiveForm(@RequestBody String body, HttpServletRequest request) throws EndpointNotSupported {
         doReceiveFullForm(body, request, configService.getByName(getConfigName(request)));
-    }
-
-    @ExceptionHandler(ConfigurationNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ResponseBody
-    public String handleNotFound(Exception e) {
-        LOGGER.error(e.getMessage());
-        return e.getMessage();
-    }
-
-    @ExceptionHandler(EndpointNotSupported.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public String handleBadRequest(Exception e) {
-        LOGGER.error(e.getMessage());
-        return e.getMessage();
     }
 
     private void doReceiveFullForm(String body, HttpServletRequest request, Config config) throws EndpointNotSupported {

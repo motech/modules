@@ -3,24 +3,18 @@ package org.motechproject.commcare.web;
 import org.motechproject.commcare.domain.CaseInfo;
 import org.motechproject.commcare.domain.CasesInfo;
 import org.motechproject.commcare.domain.CommcareApplicationJson;
-import org.motechproject.commcare.exception.CommcareAuthenticationException;
 import org.motechproject.commcare.exception.ConfigurationNotFoundException;
 import org.motechproject.commcare.service.CommcareApplicationDataService;
 import org.motechproject.commcare.service.CommcareCaseService;
 import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.web.domain.CasesRecords;
 import org.motechproject.commcare.web.domain.GridSettings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -29,15 +23,13 @@ import java.util.List;
 import static org.motechproject.commcare.util.Constants.HAS_MANAGE_COMMCARE_PERMISSION;
 
 /**
- * The <code>SchemaController</code> is a spring controller class, providing
- * a way to access data shown in the module UI. It returns Commcare Application schema,
- * containing forms and Cases.
+ * The <code>SchemaController</code> is a spring controller class, providing a way to access data shown in the module
+ * UI. It returns Commcare Application schema, containing forms and Cases. It is capable of handling multiple
+ * configurations by parameterizing the endpoint URL.
  */
 @Controller
 @PreAuthorize(HAS_MANAGE_COMMCARE_PERMISSION)
-public class SchemaController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(SchemaController.class);
+public class SchemaController extends CommcareController {
 
     private static final int PAGE = 1;
     private static final int PAGE_SIZE = 10;
@@ -87,7 +79,7 @@ public class SchemaController {
             dateModifiedEnd = settings.getDateModifiedEnd();
         }
 
-        settings.isFilter();
+        settings.determineFilter();
 
         switch (settings.getFilter()) {
             case "filerByName":
@@ -118,22 +110,6 @@ public class SchemaController {
         rowCount = (int) Math.ceil(recordCount / (double) settings.getRows());
 
         return new CasesRecords(settings.getPage(), rowCount, recordCount, caseRecordsList);
-    }
-
-    @ExceptionHandler(ConfigurationNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ResponseBody
-    public String handleNotFound(Exception e) {
-        LOGGER.error(e.getMessage());
-        return e.getMessage();
-    }
-
-    @ExceptionHandler(CommcareAuthenticationException.class)
-    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    @ResponseBody
-    public String handleCommcareAuthenticationException(CommcareAuthenticationException exception) {
-        LOGGER.error("Unable to authenticate with Commcare", exception);
-        return exception.getMessage();
     }
 
     private void validateConfig(String configName) {

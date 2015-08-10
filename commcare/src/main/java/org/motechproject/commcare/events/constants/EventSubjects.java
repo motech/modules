@@ -1,6 +1,10 @@
 package org.motechproject.commcare.events.constants;
 
+/**
+ * Utility class for storing event subjects.
+ */
 public final class EventSubjects {
+
     private static final String BASE_SUBJECT = "org.motechproject.commcare.api.";
 
     public static final String CASE_EVENT = BASE_SUBJECT + "case";
@@ -25,6 +29,9 @@ public final class EventSubjects {
 
     public static final String CONFIG_UPDATED = BASE_SUBJECT + "configupdated";
 
+    /**
+     * Utility class, should not be initiated.
+     */
     private EventSubjects() {
     }
 }

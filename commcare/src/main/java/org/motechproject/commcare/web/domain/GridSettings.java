@@ -1,9 +1,10 @@
 package org.motechproject.commcare.web.domain;
 
 /**
- * Settings used by jqGrid to properly show cases list
+ * Settings used by jqGrid to properly show cases list.
  */
 public class GridSettings {
+
     private Integer rows;
     private Integer page;
     private String sortColumn;
@@ -13,10 +14,16 @@ public class GridSettings {
     private String dateModifiedStart;
     private String dateModifiedEnd;
 
+    /**
+     * Creates an instance of the {@link GridSettings} class.
+     */
     public GridSettings() {
     }
 
-    public void isFilter() {
+    /**
+     * Determines which filter should be set based on the information stored in this object.
+     */
+    public void determineFilter() {
         if (!getCaseName().isEmpty()) {
             setFilter("filterByAll");
         } else if (!getDateModifiedStart().isEmpty() || !getDateModifiedEnd().isEmpty()) {

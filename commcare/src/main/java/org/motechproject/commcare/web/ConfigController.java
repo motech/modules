@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,10 +21,14 @@ import java.io.IOException;
 
 import static org.motechproject.commcare.util.Constants.HAS_MANAGE_COMMCARE_PERMISSION;
 
+/**
+ * Controller responsible for managing configurations. It provides methods for retrieving, creating, updating and
+ * verifying configurations. It also provides method for making a configuration default.
+ */
 @Controller
 @RequestMapping(value = "/configs")
 @PreAuthorize(HAS_MANAGE_COMMCARE_PERMISSION)
-public class ConfigController {
+public class ConfigController extends CommcareController {
 
     private CommcareConfigService configService;
 
@@ -73,27 +76,6 @@ public class ConfigController {
     @ResponseBody
     public String getBaseEndpoints() throws IOException {
         return new ObjectMapper().writeValueAsString(new StringMessage(configService.getBaseUrl()));
-    }
-
-    @ExceptionHandler(CommcareConnectionFailureException.class)
-    @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    @ResponseBody
-    public String handleCommcareConnectionFailureException(CommcareConnectionFailureException exception) {
-        return exception.getMessage();
-    }
-
-    @ExceptionHandler(CommcareAuthenticationException.class)
-    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    @ResponseBody
-    public String handleCommcareAuthenticationException(CommcareAuthenticationException exception) {
-        return exception.getMessage();
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(value = HttpStatus.CONFLICT)
-    @ResponseBody
-    public String handleIllegalArgumentException(IllegalArgumentException exception) {
-        return exception.getMessage();
     }
 
     @Autowired

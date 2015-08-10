@@ -8,15 +8,32 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Responsible for mapping the {@link CaseXml} class objects to the domain class objects and the other way round. The
+ * domain class is passed as the class parameter.
+ *
+ * @param <T>  the domain class
+ */
 public class CaseMapper<T> {
 
     private Class<T> clazz;
 
+    /**
+     * Creates an instance of the {@link CaseMapper} that is capable of mapping the {@link CaseXml} class objects into
+     * objects of the class passed as the {@code clazz} parameter.
+     *
+     * @param clazz  the domain class
+     */
     public CaseMapper(Class<T> clazz) {
         this.clazz = clazz;
     }
 
-
+    /**
+     * Maps the given instance of the {@link CaseXml} to an instance of the domain class.
+     *
+     * @param ccCase  the instance of the {@link CaseXml} class
+     * @return the created instance of the domain class
+     */
     public T mapToDomainObject(CaseXml ccCase) {
         try {
             T instance = clazz.newInstance();
@@ -30,6 +47,12 @@ public class CaseMapper<T> {
         }
     }
 
+    /**
+     * Maps the given instance of the domain class to an instance of the {@code CaseXml} class.
+     *
+     * @param careCase  the instance of the domain class
+     * @return the created instance of the {@link CaseXml} class
+     */
     public CaseXml mapFromDomainObject(T careCase) {
         CaseXml ccCase = new CaseXml();
 

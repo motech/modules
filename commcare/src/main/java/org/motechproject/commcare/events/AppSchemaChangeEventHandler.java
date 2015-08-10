@@ -39,6 +39,14 @@ public class AppSchemaChangeEventHandler {
     @Autowired
     private CommcareConfigService configService;
 
+    /**
+     * Responsible for handling {@code SCHEMA_CHANGE_EVENT}. This event is fired when the CommCare server sends a
+     * notification about schema change to the MOTECH forwarding endpoint. All stored applications that originate from
+     * the configuration passed in the event will be deleted and new applications will be downloaded from the CommCare
+     * server.
+     *
+     * @param event  the schema change event to be handled
+     */
     @MotechListener(subjects = SCHEMA_CHANGE_EVENT)
     public synchronized void schemaChange(MotechEvent event) {
 

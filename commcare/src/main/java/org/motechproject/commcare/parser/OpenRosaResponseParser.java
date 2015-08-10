@@ -11,8 +11,18 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.StringReader;
 
+/**
+ * Class responsible for parsing CommCareHQ server responses into instances of the {@link OpenRosaResponse} class.
+ */
 public class OpenRosaResponseParser {
 
+    /**
+     * Parses the given CommCareHQ server response into an instance of the {@link OpenRosaResponse} class.
+     *
+     * @param response  the response to be parsed
+     * @return the parsed response
+     * @throws CaseParserException if there where problems while parsing the response
+     */
     public OpenRosaResponse parseResponse(String response)
             throws CaseParserException {
         DOMParser parser = new DOMParser();
