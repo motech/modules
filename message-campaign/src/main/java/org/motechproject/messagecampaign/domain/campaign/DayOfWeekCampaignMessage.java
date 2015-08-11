@@ -5,8 +5,15 @@ import org.motechproject.messagecampaign.exception.CampaignMessageValidationExce
 
 import java.util.List;
 
+/**
+ * A type of a {@link CampaignMessage} sent for {@link DayOfWeekCampaign}s.
+ * The message is sent at the specified days of a week.
+ */
 public class DayOfWeekCampaignMessage extends CampaignMessage {
 
+    /**
+     * The list containing days of a week, during which the message wil be delivered.
+     */
     private List<DayOfWeek> daysOfWeek;
 
     public DayOfWeekCampaignMessage(CampaignMessageRecord messageRecord) {
@@ -31,6 +38,10 @@ public class DayOfWeekCampaignMessage extends CampaignMessage {
         this.daysOfWeek = daysOfWeek;
     }
 
+    /**
+     * Ensures that both {@link #daysOfWeek} and {@link #startTime} are not null.
+     * @throws CampaignMessageValidationException in case daysOfWeek or startTime has not been set
+     */
     @Override
     public void validate() {
         if (daysOfWeek == null) {

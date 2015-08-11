@@ -14,32 +14,56 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Domain representation of a message campaign.
+ */
 @Entity
 @Access(value = SecurityMode.PERMISSIONS, members = {"manageCampaigns"})
 public class CampaignRecord {
 
+    /**
+     * The database ID of this record.
+     */
     @Field
     private Long id;
 
+    /**
+     * A name that uniquely identifies this message campaign.
+     */
     @UIDisplayable(position = 0)
     @Unique
     @Field(required = true, tooltip = "Name of the campaign", placeholder = "campaing name")
     private String name;
 
+    /**
+     * A list of campaign messages, that are delivered as a part of this campaign.
+     */
     @UIDisplayable(position = 3)
     @Field
     @Persistent(mappedBy = "campaign")
     @Cascade(delete = true)
     private List<CampaignMessageRecord> messages = new ArrayList<>();
 
+    /**
+     * The type of this campaign.
+     */
     @UIDisplayable(position = 1)
     @Field(required = true, tooltip = "The CampaignType determines the type of message that will apply to the campaign")
     private CampaignType campaignType;
 
+    /**
+     * Specifies the maximum duration of this message campaign.
+     */
     @UIDisplayable(position = 2)
     @Field(tooltip = "Specifies the maximum duration of the campaign", placeholder = "1 week")
     private String maxDuration;
 
+    /**
+     * Converts this domain representation to the specialized representation of a {@link Campaign},
+     * based on the {@link #campaignType} field.
+     *
+     * @return representation of this campaign
+     */
     public Campaign toCampaign() {
         Campaign campaign = campaignType.instance();
 
@@ -90,6 +114,12 @@ public class CampaignRecord {
         this.id = id;
     }
 
+    /**
+     * Updates this campaign record with the values taken from the other campaign record.
+     * All of the fields of this class will be replaced, except of {@link #id}.
+     *
+     * @param other a campaign record to update the values from
+     */
     @Ignore
     public void updateFrom(CampaignRecord other) {
         name = other.name;

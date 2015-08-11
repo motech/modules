@@ -7,8 +7,15 @@ import org.motechproject.messagecampaign.exception.CampaignMessageValidationExce
 
 import java.util.List;
 
+/**
+ * A type of a {@link CampaignMessage} sent for {@link OffsetCampaign}s.
+ * The message is sent once, after a predefined delay.
+ */
 public class OffsetCampaignMessage extends CampaignMessage {
 
+    /**
+     * The time period that must pass, before the message gets sent.
+     */
     private Period timeOffset;
 
     public OffsetCampaignMessage(CampaignMessageRecord messageRecord) {
@@ -41,6 +48,10 @@ public class OffsetCampaignMessage extends CampaignMessage {
         this.timeOffset = new JodaFormatter().parsePeriod(timeOffset);
     }
 
+    /**
+     * Ensures that the {@link #startTime} has been provided.
+     * @throws CampaignMessageValidationException in case {@link #startTime} has not been set
+     */
     @Override
     public void validate() {
         if (getStartTime() == null) {
