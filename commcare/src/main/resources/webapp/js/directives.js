@@ -16,6 +16,92 @@
         };
     });
 
+    directives.directive('importDateTimePickerFrom', function() {
+        return {
+            restrict: 'A',
+            link: function(scope, element, attrs) {
+                var elem = angular.element(element),
+                    endDateTextBox = angular.element('#commcareDateTimeTo');
+
+                elem.datetimepicker({
+                    dateFormat: "yy-mm-dd",
+                    changeMonth: true,
+                    changeYear: true,
+                    timeFormat: "HH:mm:ss",
+                    separator: 'T',
+                    onSelect: function (selectedDateTime) {
+                        endDateTextBox.datetimepicker('option', 'minDate', elem.datetimepicker('getDate'));
+                        $(this).change();
+                    },
+                    onChangeMonthYear: function (year, month, inst) {
+                        var curDate = $(this).datetimepicker("getDate");
+                        if (curDate === null) {
+                            return;
+                        }
+                        if (curDate.getYear() !== year || curDate.getMonth() !== month - 1) {
+                            curDate.setYear(year);
+                            curDate.setMonth(month - 1);
+                            $(this).datetimepicker("setDate", curDate);
+                            $(this).change();
+                        }
+                    }
+                });
+            }
+        };
+    });
+
+    directives.directive('importDateTimePickerTo', function() {
+        return {
+            restrict: 'A',
+            link: function(scope, element, attrs) {
+                var elem = angular.element(element),
+                    startDateTextBox = angular.element('#commcareDateTimeFrom');
+
+                elem.datetimepicker({
+                    dateFormat: "yy-mm-dd",
+                    changeMonth: true,
+                    changeYear: true,
+                    timeFormat: "HH:mm:ss",
+                    separator: 'T',
+                    onSelect: function (selectedDateTime) {
+                        startDateTextBox.datetimepicker('option', 'maxDate', elem.datetimepicker('getDate'));
+                        $(this).change();
+                    },
+                    onChangeMonthYear: function (year, month, inst) {
+                        var curDate = $(this).datetimepicker("getDate");
+                        if (curDate === null) {
+                            return;
+                        }
+                        if (curDate.getYear() !== year || curDate.getMonth() !== month - 1) {
+                            curDate.setYear(year);
+                            curDate.setMonth(month - 1);
+                            $(this).datetimepicker("setDate", curDate);
+                            $(this).change();
+                        }
+                    }
+                });
+            }
+        };
+    });
+
+    directives.directive('progressBarr', function() {
+        return {
+            restrict: 'A',
+            link: function(scope, element, attrs) {
+                var counter = 0,
+                increaseCounter = function () {
+                    counter = counter + 1;
+                    $(element).text(counter);
+                };
+                /*while (counter <= 100) {
+                    setInterval(function () {
+                        increaseCounter();
+                    }, 100);
+                }*/
+            }
+        };
+    });
+
     directives.directive('switch', function() {
 
         return {

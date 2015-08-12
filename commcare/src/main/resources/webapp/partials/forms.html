@@ -1,7 +1,7 @@
 <div ng-if="!selectedConfig" class="row inside">
     <div class="alert alert-info">
-        <span class="fa fw fa-info"></span>
-        <span class="margin-left1">No configurations defined. Please create a configuration in the settings tab.</span>
+        <h4>{{msg('commcare.alert.info')}}</h4>
+        <p>{{msg('commcare.alert.info.noConfigurationsDefined')}}</p>
     </div>
 </div>
 <div ng-if="selectedConfig" class="row">
@@ -14,7 +14,7 @@
     </div>
 
     <div ng-if="formError" class="connection-status connection-error alert alert-danger">
-        <span class="fa fw fa-warning"></span>
+        <h4>{{msg('commcare.alert.warning')}}</h4>
         <span class="margin-left1">{{msg('commcare.error.schema')}}</span>
     </div>
 
@@ -45,7 +45,7 @@
                                             <h4 class="modal-title">{{msg('commcare.module')}}: <em>{{msg('commcare.module')}} {{$index+1}}</em>&nbsp;&nbsp;Form: <em>{{ form.formNames["en"] }}</em></h4>
                                         </div>
 
-                                        <div class="modal-body">
+                                        <div class="modal-body clear">
                                             <p>{{msg('commcare.form.questions')}}:</p>
                                             <table class="table table-striped">
                                                 <tbody>
@@ -84,15 +84,14 @@
 
                                         <div class="modal-footer">
                                             <button class="btn btn-default" data-dismiss="modal">
-                                                {{msg('commcare.btn.close')}}
+                                                {{msg('commcare.close')}}
                                             </button>
                                         </div>
 
                                     </div>
-
-
                                 </div>
                             </div>
+
                             <button class="btn btn-default" data-toggle="modal" href="#form-schema-{{$parent.$parent.$index}}-{{$parent.$index}}-{{$index}}-json">{{msg('commcare.json')}}</button>
 
                             <div id="form-schema-{{$parent.$parent.$index}}-{{$parent.$index}}-{{$index}}-json" class="modal fade commcare schema" tabindex="-1" role="dialog">
@@ -103,13 +102,13 @@
                                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                             <h4 class="modal-title">{{msg('commcare.module')}}: <em>{{msg('commcare.module')}} {{$index+1}}</em>&nbsp;&nbsp;Form: <em>{{ form.formNames["en"] }}</em></h4>
                                         </div>
-                                        <div class="modal-body">
+                                        <div class="modal-body clear">
                                             <pre>{{formatJson(form)}}</pre>
                                         </div>
 
                                         <div class="modal-footer">
                                             <button class="btn btn-default" data-dismiss="modal">
-                                                {{msg('commcare.btn.close')}}
+                                                {{msg('commcare.close')}}
                                             </button>
                                         </div>
                                     </div>
@@ -120,7 +119,7 @@
 
                     </div>
 
-                </fieldset>
+                </div>
 
             </div>
         </div>

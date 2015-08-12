@@ -1,7 +1,7 @@
 <div ng-if="!$parent.selectedConfig" class="row inside">
     <div class="alert alert-info">
-        <span class="fa fw fa-info"></span>
-        <span class="margin-left1">No configurations defined. Please create a configuration in the settings tab.</span>
+        <h4>{{msg('commcare.alert.info')}}</h4>
+        <p>{{msg('commcare.alert.info.noConfigurationsDefined')}}</p>
     </div>
 </div>
 
@@ -18,7 +18,7 @@
     </div>
 
     <div ng-if="loadingError" class="connection-status connection-error alert alert-danger">
-        <span class="fa fw fa-warning"></span>
+        <h4>{{msg('commcare.alert.warning')}}</h4>
         <span class="margin-left1">{{loadingError}}</span>
     </div>
 
@@ -35,11 +35,11 @@
                     <h4 class="modal-title">{{msg('commcare.caseName')}}:</h4>
                 </div>
 
-                <div id="modal-body-case" class="modal-body"></div>
+                <div id="modal-body-case" class="modal-body clear"></div>
 
                 <div class="modal-footer">
                     <button class="btn btn-default" data-dismiss="modal">
-                        {{msg('commcare.btn.close')}}
+                        {{msg('commcare.close')}}
                     </button>
                 </div>
             </div>

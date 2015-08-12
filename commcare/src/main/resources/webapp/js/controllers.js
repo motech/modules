@@ -35,6 +35,109 @@
         $scope.getConfigurations();
     });
 
+    controllers.controller('CommcareImportFormsCtrl', function ($scope, Configurations, $http) {
+
+        $scope.importFormsProgressShow = false;
+        $scope.importFormsComplete = false;
+        $scope.totalForms = 0;
+        $scope.formsImported = 0;
+        $scope.statusError = false;
+        $scope.errorMsg = 'Unknown error';
+        $scope.importInProgress = false;
+        $scope.receivedOnStart = '2012-09-29T17:24:52';
+        $scope.receivedOnEnd = '2014-10-29T08:24:52';
+
+        $scope.byDateRange = false;
+        $scope.importOptions = ['all', 'byDateRange'];
+        $scope.selectedImportOption = $scope.importOptions[0];
+        $scope.setImportOption = function (index) {
+            $scope.selectedImportOption = $scope.importOptions[index];
+            if ('byDateRange' === $scope.importOptions[index]) {
+                $scope.byDateRange = true;
+            } else {
+                $scope.byDateRange = false;
+            }
+        };
+
+        $scope.importFormsStart = function () {
+            $('#importCommcareForms').modal('show');
+            $scope.initImport();
+        };
+
+        $scope.importFormsContinue = function () {
+            $scope.updateProgress();
+            $scope.startImport();
+            $scope.importFormsProgressShow = true;
+        };
+
+        $scope.closeImportForms = function () {
+            $('#importCommcareForms').modal('hide');
+            $scope.importFormsProgressShow = false;
+        };
+
+        $scope.updateProgress = function () {
+            var percentage = ($scope.formsImported / $scope.totalForms) * 100;
+            $('#commcareImportPercentage').text(percentage + '%').css({width: percentage + '%'}).attr('aria-valuenow', percentage);
+        };
+
+        $scope.importRequest = {"config": $scope.selectedConfig.name, "receivedOnStart": $scope.receivedOnStart,
+                                  "receivedOnEnd": $scope.receivedOnEnd };
+
+        $scope.checkStatus = function () {
+            var interval,
+            getStatus = function () {
+                $http.get('../commcare/form-import/status').success( function(data, status) {
+                    if (status === 200) {
+                        $scope.statusError = data.error;
+                        $scope.formsImported = data.formsImported;
+                        $scope.updateProgress();
+                        if (data.formsImported === data.totalForms) {
+                            $scope.importFormsProgressShow = false;
+                            $('#importCommcareForms').modal('hide');
+                            $scope.importFormsComplete = true;
+                            clearInterval(interval);
+                            setTimeout(function () {
+                                $('#importCompleteAlert').fadeOut("slow");
+                            }, 8000);
+                        }
+                        if (!data.error) {
+                            $scope.importInProgress = data.importInProgress
+                        } else {
+                            $scope.errorMsg = data.errorMsg;
+                            $scope.importFormsProgressShow = false;
+                        }
+
+                    }
+                });
+            };
+            interval = setInterval(function () {
+                getStatus();
+            }, 500);
+        };
+
+        $scope.initImport = function () {
+            $http.post('../commcare/form-import/init', $scope.importRequest).success( function(data, status) {
+                 if (status === 200) {
+                     $scope.totalForms = data;
+                 }
+            });
+        };
+
+        $scope.startImport = function () {
+            $http.post('../commcare/form-import/start', $scope.importRequest).success( function(data, status) {
+                 if (status === 200) {
+                     $scope.checkStatus();
+                 }
+            });
+        };
+
+        innerLayout({
+            spacing_closed: 30,
+            east__minSize: 200,
+            east__maxSize: 350
+        });
+    });
+
     controllers.controller('CommcareSettingsCtrl', function ($scope, Configurations) {
 
         $scope.eventStrategyOptions = [ 'minimal', 'partial', 'full' ];
@@ -100,7 +203,7 @@
                 } else {
                     $scope.rollback = false;
                 }
-            } else if (newValue.name === "") {
+            } else if (newValue !== undefined && newValue.name === "") {
                 $scope.newConfig = true;
                 $scope.clearMessages();
             } else {

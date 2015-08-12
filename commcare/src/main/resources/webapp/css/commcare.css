@@ -118,15 +118,11 @@
     margin: 15px;
 }
 
-.commcare .modal-body {
-    padding: 0;
-}
-
 td.questionData .table {
     margin-bottom: 0;
 }
 
-.commcare.modal .modal-body {
+.commcare.modal .modal-body.clear {
     padding: 0;
 }
 

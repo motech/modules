@@ -1,0 +1,104 @@
+<div ng-if="!selectedConfig" class="row inside">
+    <div class="alert alert-info">
+        <h4>{{msg('commcare.alert.info')}}</h4>
+        <p>{{msg('commcare.alert.info.noConfigurationsDefined')}}</p>
+    </div>
+</div>
+
+<div ng-if="selectedConfig" class="">
+    <div class="form-horizontal">
+        <div class="form-group toolbox">
+            <label class="col-lg-2 col-md-3 col-sm-4 control-label">{{msg('commcare.selectConfig')}}: </label>
+            <div class="col-lg-10 col-md-9 col-sm-8">
+                <select class="form-control input-auto" ng-model="$parent.selectedConfig" ng-options="config.name for config in $parent.configurations.configs">
+                    <option ng-if="!$parent.selectedConfig" value="">{{msg('commcare.select')}}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div ng-if="formError" class="connection-status connection-error alert alert-danger">
+        <h4>{{msg('commcare.alert.warning')}}</h4>
+        <span class="margin-left1">{{msg('commcare.error.schema')}}</span>
+    </div>
+
+    <div class="">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-lg-2 col-md-3 col-sm-4 control-label">{{msg('commcare.formsToImport')}}: </label>
+                <div class="col-lg-10 col-md-9 col-sm-8">
+                    <div class="btn-group">
+                        <a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            {{msg('commcare.' + selectedImportOption)}}
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li ng-model="selectedImportOption" ng-repeat="option in importOptions">
+                                <a ng-click="setImportOption($index)">
+                                    {{msg('commcare.' + option)}}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="byDateRange" class="form-group">
+                <label class="col-lg-2 col-md-3 col-sm-4 control-label">{{msg('commcare.startDateTime')}}: </label>
+                <div class="col-lg-10 col-md-9 col-sm-8">
+                    <input id="commcareDateTimeFrom" ng-model="receivedOnStart" import-date-time-picker-from type="datetime" placeholder="{{msg('commcare.from')}}" class="form-control input-large-fluid">
+                </div>
+            </div>
+            <div ng-show="byDateRange" class="form-group">
+                <label class="col-lg-2 col-md-3 col-sm-4 control-label">{{msg('commcare.endDateTime')}}: </label>
+                <div class="col-lg-10 col-md-9 col-sm-8">
+                    <input id="commcareDateTimeTo" ng-model="receivedOnEnd" import-date-time-picker-to type="datetime" placeholder="{{msg('commcare.to')}}" class="form-control input-large-fluid">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-offset-2 col-md-offset-3 col-sm-offset-4 col-lg-10 col-md-9 col-sm-8">
+                    <button ng-click="importFormsStart()" class="btn btn-success">{{msg('commcare.importForms')}}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div id="importCompleteAlert" ng-show="importFormsComplete" class="form-group">
+        <div class="alert alert-success">
+            <h4>{{msg('commcare.alert.info')}}</h4>
+            <p>Import complete!</p>
+        </div>
+    </div>
+
+    <div id="importCommcareForms" class="commcare modal fade" tabindex="-1" role="dialog" aria-labelledby="importCommcareForms" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" ng-click="closeImportForms()">&times;</button>
+                    <h4 class="modal-title" id="importInstanceModalLabel">{{msg('commcare.importForms')}}</h4>
+                </div>
+                <div class="modal-body">
+                    <div ng-show="!importFormsProgressShow" class="form-group">
+                        <div><strong>{{totalForms}}</strong>&nbsp{{msg('commcare.formsWillImported')}}</div>
+                    </div>
+                    <div ng-show="importFormsProgressShow || importInProgress" class="form-group">
+                        <div class="margin-after">{{msg('commcare.loading')}}&nbsp;{{formsImported}}&nbsp;of&nbsp;{{totalForms}}</div>
+                        <div class="progress">
+                            <div id="commcareImportPercentage" class="progress-bar progress-bar-striped active" style="min-width: 1em; width: 0%;" aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" role="progressbar"></div>
+                        </div>
+                    </div>
+                    <div ng-show="statusError" class="form-group">
+                        <div class="alert alert-danger">
+                            <h4>Error</h4>
+                            <p>{{errorMsg}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" ng-click="importFormsContinue()">{{msg('commcare.startImport')}}</button>
+                    <button class="btn btn-default" ng-click="closeImportForms()">{{msg('commcare.cancel')}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
