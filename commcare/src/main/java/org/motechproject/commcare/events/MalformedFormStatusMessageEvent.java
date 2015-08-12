@@ -39,7 +39,7 @@ public class MalformedFormStatusMessageEvent {
     public MotechEvent toMotechEvent() {
         Map<String, Object> params = new HashMap<>();
 
-        params.put("message", "Received malformed form: " + message);
+        params.put("message", message);
         params.put("level", "CRITICAL");
         params.put("moduleName", "commcare");
 

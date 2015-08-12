@@ -44,31 +44,4 @@ public class FormListRequestTest {
 
         assertEquals(BASE_URL, uri.toString());
     }
-
-    @Test
-    public void shouldIncrementAndDecrementPage() {
-        FormListRequest request = new FormListRequest();
-
-        request.nextPage();
-        assertEquals(Integer.valueOf(1), request.getPageNumber());
-
-        request.nextPage();
-        assertEquals(Integer.valueOf(2), request.getPageNumber());
-
-        request.previousPage();
-        assertEquals(Integer.valueOf(1), request.getPageNumber());
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void shouldThrowIllegalStateExceptionWhenDecreasingNullPage() {
-        new FormListRequest().previousPage();
-    }
-
-
-    @Test(expected = IllegalStateException.class)
-    public void shouldThrowIllegalStateExceptionWhenDecreasingPageBelow1() {
-        FormListRequest request = new FormListRequest();
-        request.setPageNumber(1);
-        request.previousPage();
-    }
 }

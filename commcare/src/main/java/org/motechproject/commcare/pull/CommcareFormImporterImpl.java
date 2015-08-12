@@ -2,6 +2,7 @@ package org.motechproject.commcare.pull;
 
 import com.google.common.collect.Lists;
 import org.joda.time.DateTime;
+import org.motechproject.commcare.builder.FormListRequestBuilder;
 import org.motechproject.commcare.domain.CommcareForm;
 import org.motechproject.commcare.domain.CommcareFormList;
 import org.motechproject.commcare.events.FullFormEvent;
@@ -31,6 +32,8 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
     @Autowired
     private EventRelay eventRelay;
 
+    private int fetchSize = PAGE_SIZE_FOR_FETCH;
+
     private Thread importThread;
     private boolean importInProgress = false;
 
@@ -42,13 +45,13 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
     private String errorMessage;
 
     @Override
-    public int countForFormImport(Range<DateTime> dateRange, String configName) {
+    public int countForImport(Range<DateTime> dateRange, String configName) {
+        validateDateRange(dateRange);
+
         LOGGER.debug("Counting forms for import for dateRange: {}-{} [config: {}]", dateRange.getMin(),
                 dateRange.getMax(), configName);
 
-        validateDateRange(dateRange);
-
-        FormListRequest request = buildFormListRequest(dateRange, 1, 1);
+        FormListRequest request = formListRequestBuilder(dateRange, 1, 1).build();
         CommcareFormList formList = formService.retrieveFormList(request, configName);
 
         int count = formList.getMeta().getTotalCount();
@@ -58,7 +61,7 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
     }
 
     @Override
-    public void startFormImport(final Range<DateTime> dateRange, final String configName) {
+    public void startImport(final Range<DateTime> dateRange, final String configName) {
         validateNoExportInProgress();
         validateDateRange(dateRange);
 
@@ -67,19 +70,23 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
 
         initForImport(dateRange, configName);
 
-        // we start from the last page, since Commcare orders by received_on descending, we want ascending
-        final FormListRequest request = buildFormListRequest(dateRange, PAGE_SIZE_FOR_FETCH, pageCount);
-
         importThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                boolean hasMore;
+                boolean hasMore = false;
 
                 LOGGER.debug("Import thread started");
+
+                // we start from the last page, since Commcare orders by received_on descending, we want ascending
+                // we reuse the builder
+                final FormListRequestBuilder requestBuilder = formListRequestBuilder(dateRange, fetchSize, pageCount);
 
                 do {
                     // fetch the data
                     try {
+                        // rebuild the request
+                        FormListRequest request = requestBuilder.build();
+
                         LOGGER.debug("Retrieving forms from page {}, with page size {}",
                                 request.getPageNumber(), request.getPageSize());
 
@@ -98,11 +105,11 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
                         // we decrement the page
                         if (hasMore) {
                             LOGGER.debug("Proceeding to the next batch of forms");
-                            request.previousPage();
+                            requestBuilder.withPreviousPage();
                         }
                     } catch (RuntimeException e) {
+                        LOGGER.error("Error while importing forms", e);
                         handleImportError(e, configName);
-                        throw e;
                     }
                 } while (importInProgress && hasMore);
 
@@ -150,6 +157,7 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
         status.setTotalForms(totalCount);
         status.setFormsImported(importCount);
         status.setLastImportDate(lastImportedDate);
+        status.setImportInProgress(importInProgress);
 
         if (inError) {
             status.setErrorMsg(errorMessage);
@@ -159,15 +167,20 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
         return status;
     }
 
+    @Override
+    public void setFetchSize(int fetchSize) {
+        this.fetchSize = fetchSize;
+    }
+
     private void initForImport(Range<DateTime> dateRange, String configName) {
         importInProgress = true;
         importCount = 0;
         lastImportedDate = null;
-        totalCount =  countForFormImport(dateRange, configName);
+        totalCount =  countForImport(dateRange, configName);
         inError = false;
         errorMessage = null;
         // calculate the page number, since we are going backwards
-        pageCount = (int) Math.ceil(totalCount / PAGE_SIZE_FOR_FETCH);
+        pageCount = (int) Math.ceil((double) totalCount / fetchSize);
 
         LOGGER.debug("Initialized for import");
     }
@@ -209,15 +222,10 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
         }
     }
 
-    private FormListRequest buildFormListRequest(Range<DateTime> dateRange, int pageSize, int pageNumber) {
-        FormListRequest request = new FormListRequest();
-
-        request.setReceivedOnStart(dateRange.getMin());
-        request.setReceivedOnEnd(dateRange.getMax());
-        request.setPageSize(pageSize);
-        request.setPageNumber(pageNumber);
-
-        return request;
+    private FormListRequestBuilder formListRequestBuilder(Range<DateTime> dateRange, int pageSize, int pageNumber) {
+        return new FormListRequestBuilder()
+                .withReceivedOnStart(dateRange.getMin()).withReceivedOnEnd(dateRange.getMax())
+                .withPageSize(pageSize).withPageNumber(pageNumber);
     }
 
     private void handleImportError(RuntimeException e, String configName) {
@@ -227,7 +235,7 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
         // stop import
         importInProgress = false;
 
-        FullFormFailureEvent failureEvent = new FullFormFailureEvent(errorMessage, configName);
+        FullFormFailureEvent failureEvent = new FullFormFailureEvent(configName, errorMessage);
         eventRelay.sendEventMessage(failureEvent.toMotechEvent());
 
         // Trigger a status message in the Admin UI

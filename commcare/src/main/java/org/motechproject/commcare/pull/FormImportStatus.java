@@ -31,6 +31,11 @@ public class FormImportStatus {
     private String errorMsg;
 
     /**
+     * Is import in progress currently.
+     */
+    private boolean importInProgress;
+
+    /**
      * @return the number of forms successfully imported
      */
     public int getFormsImported() {
@@ -98,5 +103,19 @@ public class FormImportStatus {
      */
     public void setErrorMsg(String errorMsg) {
         this.errorMsg = errorMsg;
+    }
+
+    /**
+     * @return true if import is in progress, false otherwise
+     */
+    public boolean isImportInProgress() {
+        return importInProgress;
+    }
+
+    /**
+     * @param importInProgress true if import is in progress, false otherwise
+     */
+    public void setImportInProgress(boolean importInProgress) {
+        this.importInProgress = importInProgress;
     }
 }

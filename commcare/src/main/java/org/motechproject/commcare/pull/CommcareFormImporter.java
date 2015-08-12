@@ -8,13 +8,15 @@ import org.motechproject.commons.api.Range;
  */
 public interface CommcareFormImporter {
 
-    int countForFormImport(Range<DateTime> dateRange, String configName);
+    int countForImport(Range<DateTime> dateRange, String configName);
 
-    void startFormImport(final Range<DateTime> dateRange, final String configName);
+    void startImport(final Range<DateTime> dateRange, final String configName);
 
     void stopImport();
 
     boolean isImportInProgress();
 
     FormImportStatus importStatus();
+
+    void setFetchSize(int fetchSize);
 }
