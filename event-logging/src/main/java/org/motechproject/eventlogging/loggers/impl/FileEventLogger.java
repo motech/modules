@@ -27,10 +27,24 @@ public class FileEventLogger extends EventLogger {
 
     private DefaultFileToLogConverter eventConverter;
 
+    /**
+     * Creates an instance of FileEventLogger which provides logic for
+     * injecting logs to file.
+     *
+     * @param eventConverter {@link DefaultFileToLogConverter} responsible for converting incoming events to file injecting state
+     */
     public FileEventLogger(DefaultFileToLogConverter eventConverter) {
         this.eventConverter = eventConverter;
     }
 
+    /**
+     * Creates an instance of FileEventLogger which provides logic for
+     * injecting logs to file.
+     *
+     * @param loggableEvents list of events to log
+     * @param loggingFiles list of files to which events should be logged
+     * @param eventConverter {@link DefaultFileToLogConverter} responsible for converting incoming events to the format in which they should be written to the file
+     */
     public FileEventLogger(List<LoggableEvent> loggableEvents, List<File> loggingFiles,
                            DefaultFileToLogConverter eventConverter) {
         addLoggableEvents(loggableEvents);
@@ -56,6 +70,11 @@ public class FileEventLogger extends EventLogger {
         }
     }
 
+    /**
+     * Logs information about the event to every file included in {@code loggingFiles}.
+     *
+     * @param informationToLog information to be logged
+     */
     protected void log(String informationToLog) {
         for (File fileToLogTo : loggingFiles) {
             try {
