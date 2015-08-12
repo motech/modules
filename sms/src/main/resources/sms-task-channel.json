@@ -1,4 +1,5 @@
 {
+    /*This file won't be automatically picked up by Application context tracker*/
     "displayName": "sms.task.name",
     "moduleName": "${project.artifactId}",
     "moduleVersion": "${parsedVersion.osgiVersion}",
@@ -274,7 +275,10 @@
                                 {
                                   "key" : "config",
                                   "displayName" : "sms.task.action.send.config",
+                                  "type" : "SELECT",
                                   "required": false
+                                  /* options would be added at runtime */
+
                                 },
                                 {
                                   "key" : "custom_params",
