@@ -5,6 +5,11 @@ import org.motechproject.event.MotechEvent;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Class containing event data. The field eventSubjects contains names of subjects for
+ * events that should be logged by {@link org.motechproject.eventlogging.loggers.EventLogger} and
+ * flags are used to filter those events.
+ */
 public class LoggableEvent {
 
     private List<String> eventSubjects;
@@ -26,6 +31,12 @@ public class LoggableEvent {
         this.eventSubjects = eventSubjects;
     }
 
+    /**
+     * Create an instance of LoggableEvent using passed parameters
+     *
+     * @param eventSubjects list of event subjects to log
+     * @param flags event flags used for filter events by parameters
+     */
     public LoggableEvent(List<String> eventSubjects, List<? extends EventFlag> flags) {
         if (eventSubjects == null) {
             this.eventSubjects = Collections.<String> emptyList();
@@ -39,6 +50,12 @@ public class LoggableEvent {
         }
     }
 
+    /**
+     * Checks if the event should be logged by {@link org.motechproject.eventlogging.loggers.EventLogger}.
+     *
+     * @param eventToLog incoming motech event to check if should be logged
+     * @return true if event should be logged or false if it should not
+     */
     public boolean isLoggableEvent(MotechEvent eventToLog) {
         for (String eventSubject : eventSubjects) {
             if (eventToLog.getSubject().equals(eventSubject)) {
