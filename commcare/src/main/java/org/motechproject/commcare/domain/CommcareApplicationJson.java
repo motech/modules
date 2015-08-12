@@ -25,10 +25,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Represents a single CommCare application. CommCare application is a complete CommCare executable that gets downloaded
+ * and installed on a phone. This is a schema representation of such an application. It's part of the MOTECH model.
+ */
 @Entity(name = "Commcare Application")
 @CrudEvents(CrudEventType.NONE)
 @Access(value = SecurityMode.PERMISSIONS, members = {"manageCommcare"})
 public class CommcareApplicationJson {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommcareApplicationJson.class);
 
     @Expose
     @Field(displayName = "Commcare Application Id")
@@ -57,8 +63,6 @@ public class CommcareApplicationJson {
 
     @Field(displayName = "Source configuration")
     private String configName;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(CommcareApplicationJson.class);
 
     public CommcareApplicationJson() {
         this(null, null, null, null);

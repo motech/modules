@@ -5,6 +5,10 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+/**
+ * Wrapper class for storing list of instances of the {@link CommcareApplicationJson} class and their metadata. It's a
+ * class representing data as sent from the CommCareHQ server.
+ */
 public class AppStructureResponseJson {
 
     @Expose

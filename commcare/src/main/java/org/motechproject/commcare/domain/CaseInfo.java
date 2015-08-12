@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Domain class that represents the information and properties of a case on
- * CommCareHQ.
+ * Represents a single CommCareHQ case. A case can be literally anything that one would want to track and monitor over
+ * time. It's a part of the MOTECH model.
  */
 public class CaseInfo {
 

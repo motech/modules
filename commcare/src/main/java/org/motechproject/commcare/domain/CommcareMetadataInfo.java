@@ -1,7 +1,7 @@
 package org.motechproject.commcare.domain;
 
 /**
- * Domain class representing case metadata, retrieved from CommCareHQ
+ * Domain class representing case metadata, retrieved from CommCareHQ server.
  */
 public class CommcareMetadataInfo {
 

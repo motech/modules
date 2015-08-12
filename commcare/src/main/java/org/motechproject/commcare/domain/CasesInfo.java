@@ -3,9 +3,11 @@ package org.motechproject.commcare.domain;
 import java.util.List;
 
 /**
- * Wrapper for the List of CaseInfo that additionaly holds metadata of the cases
+ * Wrapper class for storing list of instances of the {@link CaseInfo} class and their metadata. It's a part of the
+ * MOTECH model.
  */
 public class CasesInfo {
+
     private List<CaseInfo> caseInfoList;
     private CommcareMetadataInfo metadataInfo;
 

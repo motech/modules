@@ -4,6 +4,10 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+/**
+ * Represents a single form stub. It only contains the date at which it was received, the form ID and the related cases
+ * IDs.
+ */
 public class FormStubJson {
 
     @SerializedName("received_on")
