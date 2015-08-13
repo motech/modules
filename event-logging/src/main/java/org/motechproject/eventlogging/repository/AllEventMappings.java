@@ -12,6 +12,9 @@ import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.List;
 
+/**
+ * Class used for retrieving event mappings from the json configuration file.
+ */
 @Component
 public class AllEventMappings {
 
@@ -21,12 +24,24 @@ public class AllEventMappings {
 
     private SettingsFacade settings;
 
+    /**
+     * Creates an instance of AllEventMappings using autowired settings facade
+     * and new MotechJsonReader instance.
+     *
+     * @param settings autowired SettingsFacade settings
+     */
     @Autowired
     public AllEventMappings(@Qualifier("eventLoggingSettings") SettingsFacade settings) {
         this.settings = settings;
         this.motechJsonReader = new MotechJsonReader();
     }
 
+    /**
+     * Returns all event mappings stored in configuration file specified in MAPPING_FILE_NAME filed
+     * in form of {@link org.motechproject.eventlogging.matchers.MappingsJson} list.
+     *
+     * @return list of MappingJson objects containing event mapping configurations
+     */
     public List<MappingsJson> getAllMappings() {
         Type type = new TypeToken<List<MappingsJson>>() {
         } .getType();

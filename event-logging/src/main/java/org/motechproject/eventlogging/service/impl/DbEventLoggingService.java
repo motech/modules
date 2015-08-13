@@ -23,6 +23,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * The implementation of {@link org.motechproject.eventlogging.service.EventLoggingService}.
+ * It is used to persist logs in the database.
+ */
 @Service
 public class DbEventLoggingService implements EventLoggingService {
 
@@ -39,10 +43,19 @@ public class DbEventLoggingService implements EventLoggingService {
     @Autowired
     private DefaultDbToLogConverter defaultDbToLogConverter;
 
+    /**
+     * Creates an instance of DbEventLoggingService without any loggers.
+     */
     public DbEventLoggingService() {
         this.dbEventLoggers = Collections.<DbEventLogger> emptyList();
     }
 
+    /**
+     * Creates an instance of DbEventLoggingService using {@link org.motechproject.eventlogging.repository.AllEventMappings}
+     * configuration, empty loggers list and a default event logger.
+     *
+     * @param allEventMappings AllEventMappings object representing all event mappings read from json configuration file
+     */
     public DbEventLoggingService(AllEventMappings allEventMappings) {
         this.allEventMappings = allEventMappings;
         this.dbEventLoggers = Collections.<DbEventLogger> emptyList();
@@ -98,6 +111,12 @@ public class DbEventLoggingService implements EventLoggingService {
         return defaultDbEventLogger;
     }
 
+    /**
+     * Creates an instance of DbEventLoggingService and adds to it all loggers
+     * passed as a parameter.
+     *
+     * @param dbEventLoggers list of loggers to add to this service
+     */
     public DbEventLoggingService(List<DbEventLogger> dbEventLoggers) {
         this.dbEventLoggers = new ArrayList<>();
         this.dbEventLoggers.addAll(dbEventLoggers);
