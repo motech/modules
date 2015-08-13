@@ -84,7 +84,7 @@ public class StubFormControllerTest {
         assertEquals(event.getSubject(), EventSubjects.FORM_STUB_EVENT);
 
         Map<String, Object> eventParameters = event.getParameters();
-        assertEquals(new HashSet<String>(asList(EventDataKeys.CONFIG_NAME, EventDataKeys.FORM_ID, EventDataKeys.CASE_IDS,
+        assertEquals(new HashSet<>(asList(EventDataKeys.CONFIG_NAME, EventDataKeys.FORM_ID, EventDataKeys.CASE_IDS,
                         EventDataKeys.RECEIVED_ON, TasksEventParser.CUSTOM_PARSER_EVENT_KEY)),
                 eventParameters.keySet());
         assertEquals(eventParameters.get(EventDataKeys.FORM_ID), "id123");

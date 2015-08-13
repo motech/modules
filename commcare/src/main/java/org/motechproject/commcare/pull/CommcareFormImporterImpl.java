@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
+@Scope("session")
 public class CommcareFormImporterImpl implements CommcareFormImporter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommcareFormImporterImpl.class);
@@ -199,9 +200,8 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
     }
 
     private void validateDateRange(Range<DateTime> dateRange) {
-        if (dateRange == null || (dateRange.getMin() == null && dateRange.getMax() == null)) {
-            throw new IllegalArgumentException(
-                    "No date range provided - a date range with at least one boundary is mandatory");
+        if (dateRange == null) {
+            throw new IllegalArgumentException("Date range cannot be null, provide an empty one for all results");
         }
 
         DateTime start = dateRange.getMin();

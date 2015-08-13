@@ -169,16 +169,6 @@ public class CommcareFormImporterTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void shouldRejectEmptyDateRangeWhenStartingImport() {
-        importer.startImport(new Range<DateTime>(null, null), CONFIG_NAME);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldRejectEmptyDateRangeWhenCountingForImport() {
-        importer.countForImport(new Range<DateTime>(null, null), CONFIG_NAME);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
     public void shouldRejectInvalidDateRangeWhenStartingImport() {
         importer.startImport(new Range<>(END, START), CONFIG_NAME);
     }
