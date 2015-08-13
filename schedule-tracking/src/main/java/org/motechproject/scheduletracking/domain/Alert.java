@@ -11,6 +11,7 @@ public class Alert {
     private int count;
     private int index;
     private boolean floating;
+    private MilestoneWindow milestoneWindow;
 
     public Alert() {
     }
@@ -62,4 +63,8 @@ public class Alert {
     public void setInterval(Period interval) {
         this.interval = interval;
     }
+
+    public MilestoneWindow getMilestoneWindow() { return milestoneWindow; }
+
+    public void setMilestoneWindow(MilestoneWindow milestoneWindow) { this.milestoneWindow = milestoneWindow; }
 }

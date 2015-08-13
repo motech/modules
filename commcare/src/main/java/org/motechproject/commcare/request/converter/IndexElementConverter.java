@@ -9,7 +9,12 @@ import org.motechproject.commcare.domain.IndexTask;
 import org.motechproject.commcare.exception.MalformedCaseXmlException;
 import org.motechproject.commcare.request.IndexSubElement;
 
+/**
+ * Converter responsible for (un)marshaling index elements in an XML document.
+ */
 public class IndexElementConverter implements Converter {
+
+    @Override
     public void marshal(Object o, HierarchicalStreamWriter writer,
             MarshallingContext marshallingContext) {
         IndexTask element = (IndexTask) o;
@@ -27,11 +32,13 @@ public class IndexElementConverter implements Converter {
         }
     }
 
+    @Override
     public Object unmarshal(HierarchicalStreamReader hierarchicalStreamReader,
             UnmarshallingContext unmarshallingContext) {
         return null;
     }
 
+    @Override
     public boolean canConvert(Class aClass) {
         return aClass.equals(IndexTask.class);
     }

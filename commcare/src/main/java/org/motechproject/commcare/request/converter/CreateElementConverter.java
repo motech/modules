@@ -8,11 +8,17 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.motechproject.commcare.exception.MalformedCaseXmlException;
 import org.motechproject.commcare.request.CreateElement;
 
+/**
+ * Converter responsible for (un)marshaling create elements in an XML document.
+ */
 public class CreateElementConverter implements Converter {
+
+    @Override
     public boolean canConvert(Class clazz) {
         return clazz.equals(CreateElement.class);
     }
 
+    @Override
     public void marshal(Object o, HierarchicalStreamWriter writer,
             MarshallingContext marshallingContext) {
         CreateElement element = (CreateElement) o;
@@ -36,6 +42,7 @@ public class CreateElementConverter implements Converter {
         writer.endNode();
     }
 
+    @Override
     public Object unmarshal(HierarchicalStreamReader hierarchicalStreamReader,
             UnmarshallingContext unmarshallingContext) {
         return null;

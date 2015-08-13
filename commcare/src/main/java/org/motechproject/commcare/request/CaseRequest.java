@@ -3,9 +3,12 @@ package org.motechproject.commcare.request;
 import org.motechproject.commcare.domain.IndexTask;
 import org.motechproject.commcare.domain.UpdateTask;
 
+/**
+ * Represents a case XML request that can be sent to the CommCareHQ server.
+ */
 public class CaseRequest {
-    private CreateElement createElement;
 
+    private CreateElement createElement;
     private UpdateTask updateElement;
     private CloseElement closeElement;
     private IndexTask indexElement;
@@ -15,6 +18,15 @@ public class CaseRequest {
     private String dateModified;
     private String caseId;
 
+    /**
+     * Creates a case request with the caseId attribute set to {@code caseId}, the userId attribute to {@code userId},
+     * the dateModified attribute set to {@code dateModified} and the dataXmlns attribute set to {@code dataXmlns}.
+     *
+     * @param caseId  the value of the caseId attribute, which should be the ID of the case
+     * @param userId  the value of the userId attribute, which should be the ID of the user
+     * @param dateModified  the value of the dateModified attribute, which should be the last modification date
+     * @param dataXmlns  the value of the dataXmlns attribute, which should be the namespace of the XML element
+     */
     public CaseRequest(String caseId, String userId, String dateModified,
             String dataXmlns) {
         this.caseId = caseId;

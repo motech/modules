@@ -9,11 +9,17 @@ import org.motechproject.commcare.domain.UpdateTask;
 
 import java.util.Map;
 
+/**
+ * Converter responsible for (un)marshaling update elements in an XML document.
+ */
 public class UpdateElementConverter implements Converter {
+
+    @Override
     public boolean canConvert(Class clazz) {
         return clazz.equals(UpdateTask.class);
     }
 
+    @Override
     public void marshal(Object o, HierarchicalStreamWriter writer,
             MarshallingContext marshallingContext) {
         UpdateTask element = (UpdateTask) o;
@@ -53,6 +59,7 @@ public class UpdateElementConverter implements Converter {
         }
     }
 
+    @Override
     public Object unmarshal(HierarchicalStreamReader hierarchicalStreamReader,
             UnmarshallingContext unmarshallingContext) {
         return null;

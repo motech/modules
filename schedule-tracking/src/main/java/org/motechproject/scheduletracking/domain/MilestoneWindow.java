@@ -3,9 +3,12 @@ package org.motechproject.scheduletracking.domain;
 import org.joda.time.Period;
 import org.motechproject.mds.annotations.CrudEvents;
 import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.Cascade;
+import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.mds.event.CrudEventType;
 
+import javax.jdo.annotations.Persistent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +19,11 @@ public class MilestoneWindow {
 
     private WindowName name;
     private Period period;
+    @Field
+    @Cascade(delete = true)
+    @Persistent(mappedBy = "milestoneWindow")
     private List<Alert> alerts = new ArrayList<Alert>();
+    private Milestone milestone;
 
     public MilestoneWindow() {
     }
@@ -54,4 +61,8 @@ public class MilestoneWindow {
     public void setName(WindowName name) {
         this.name = name;
     }
+
+    public Milestone getMilestone() { return milestone; }
+
+    public void setMilestone(Milestone milestone) { this.milestone = milestone; }
 }
