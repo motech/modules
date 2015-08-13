@@ -8,7 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Represents a single CommCare form schema.
+ */
 public class FormSchemaJson implements Serializable {
+
     private static final long serialVersionUID = 3033023909405645226L;
 
     @Expose

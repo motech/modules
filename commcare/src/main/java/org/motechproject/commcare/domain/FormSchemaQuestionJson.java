@@ -6,6 +6,9 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Represents a single question from a CommCare form.
+ */
 public class FormSchemaQuestionJson implements Serializable {
     private static final long serialVersionUID = -2133822667622624721L;
 

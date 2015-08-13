@@ -5,15 +5,22 @@ import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonMethod;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+/**
+ * Stores information about a single CommCareHQ account. This information can then be used for connecting to CommCareHQ
+ * server and fetching/sending data from/to it.
+ */
 @JsonAutoDetect(JsonMethod.NONE)
 public class CommcareAccountSettings {
 
     @JsonProperty
     private String commcareBaseUrl;
+
     @JsonProperty
     private String commcareDomain;
+
     @JsonProperty
     private String username;
+
     @JsonProperty
     private String password;
 

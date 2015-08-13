@@ -28,7 +28,6 @@ public class CommcareMetadataJson {
     @SerializedName("total_count")
     private int totalCount;
 
-
     public int getLimit() {
         return limit;
     }

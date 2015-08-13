@@ -6,26 +6,39 @@ import org.motechproject.commons.api.model.MotechProperties;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Represents a single CommCareHQ case. A case can be literally anything that one would want to track and monitor over
+ * time. It's a part of the CommCareHQ model.
+ */
 public class CaseJson {
 
     @SerializedName("dated_closed")
     private String dateClosed;
+
     @SerializedName("domain")
     private String domain;
+
     @SerializedName("xform_ids")
     private List<String> xformIds;
+
     @SerializedName("version")
     private String version;
+
     @SerializedName("server_date_opened")
     private String serverDateOpened;
+
     @SerializedName("properties")
     private MotechProperties caseProperties;
+
     @SerializedName("server_date_modified")
     private String serverDateModified;
+
     @SerializedName("user_id")
     private String userId;
+
     @SerializedName("date_modified")
     private String dateModified;
+
     @SerializedName("case_id")
     private String caseId;
 

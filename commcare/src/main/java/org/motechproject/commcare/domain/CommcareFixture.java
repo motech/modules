@@ -5,10 +5,10 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Map;
 
 /**
- * A domain class that represents the information and properties of a fixture from
- * CommCareHQ.
+ * A domain class that represents the information and properties of a fixture from CommCareHQ.
  */
 public class CommcareFixture {
+
     private String id;
 
     @SerializedName("fixture_type")
