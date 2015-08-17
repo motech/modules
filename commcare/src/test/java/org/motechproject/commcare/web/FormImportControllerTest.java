@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.commcare.pull.CommcareFormImporter;
+import org.motechproject.commcare.pull.CommcareFormImporterFactory;
 import org.motechproject.commcare.pull.FormImportStatus;
 import org.motechproject.commcare.util.CommcareParamHelper;
 import org.motechproject.commons.api.Range;
@@ -21,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.server.MockMvc;
 import org.springframework.test.web.server.setup.MockMvcBuilders;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -43,6 +45,9 @@ public class FormImportControllerTest {
     private FormImportController formImportController = new FormImportController();
 
     @Mock
+    private CommcareFormImporterFactory importerFactory;
+
+    @Mock
     private CommcareFormImporter formImporter;
 
     private MockMvc controller;
@@ -51,6 +56,7 @@ public class FormImportControllerTest {
 
     @Before
     public void setUp() {
+        when(importerFactory.getImporter(any(HttpSession.class))).thenReturn(formImporter);
         controller = MockMvcBuilders.standaloneSetup(formImportController).build();
     }
 

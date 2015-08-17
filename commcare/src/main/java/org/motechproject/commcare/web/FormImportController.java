@@ -1,6 +1,7 @@
 package org.motechproject.commcare.web;
 
 import org.motechproject.commcare.pull.CommcareFormImporter;
+import org.motechproject.commcare.pull.CommcareFormImporterFactory;
 import org.motechproject.commcare.pull.FormImportStatus;
 import org.motechproject.commcare.web.domain.FormImportRequest;
 import org.slf4j.Logger;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * The controller responsible for tbe form import tab in the UI.
  * Allows starting the form form import and checking the status of an ongoing import.
@@ -25,7 +28,7 @@ public class FormImportController extends CommcareController {
     private static final Logger LOGGER = LoggerFactory.getLogger(FormImportController.class);
 
     @Autowired
-    private CommcareFormImporter commcareFormImporter;
+    private CommcareFormImporterFactory importerFactory;
 
     /**
      * Checks the status of the ongoing form import. If there is no import in progress currently,
@@ -34,9 +37,10 @@ public class FormImportController extends CommcareController {
      */
     @RequestMapping(value = "/status", method = RequestMethod.GET)
     @ResponseBody
-    public FormImportStatus checkImportStatus() {
+    public FormImportStatus checkImportStatus(HttpSession session) {
         LOGGER.debug("Received import STATUS request");
-        return commcareFormImporter.importStatus();
+        CommcareFormImporter importer = importerFactory.getImporter(session);
+        return importer.importStatus();
     }
 
     /**
@@ -47,10 +51,10 @@ public class FormImportController extends CommcareController {
      */
     @RequestMapping(value = "/init", method = RequestMethod.POST)
     @ResponseBody
-    public int initImport(@RequestBody FormImportRequest importRequest) {
+    public int initImport(@RequestBody FormImportRequest importRequest, HttpSession session) {
         LOGGER.debug("Received import INIT request: {}", importRequest);
-        return commcareFormImporter.countForImport(importRequest.getDateRange(),
-                importRequest.getConfig());
+        CommcareFormImporter importer = importerFactory.getImporter(session);
+        return importer.countForImport(importRequest.getDateRange(), importRequest.getConfig());
     }
 
     /**
@@ -59,8 +63,9 @@ public class FormImportController extends CommcareController {
      */
     @RequestMapping(value = "/start", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public void startImport(@RequestBody FormImportRequest importRequest) {
+    public void startImport(@RequestBody FormImportRequest importRequest, HttpSession session) {
         LOGGER.debug("Received import START request: {}", importRequest);
-        commcareFormImporter.startImport(importRequest.getDateRange(), importRequest.getConfig());
+        CommcareFormImporter importer = importerFactory.getImporter(session);
+        importer.startImport(importRequest.getDateRange(), importRequest.getConfig());
     }
 }

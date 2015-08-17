@@ -14,24 +14,18 @@ import org.motechproject.commons.api.Range;
 import org.motechproject.event.listener.EventRelay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * The implementation of {@link CommcareFormImporter}. Uses the {@link CommcareFormService} for
  * retrieval of forms.
  */
-@Component
 public class CommcareFormImporterImpl implements CommcareFormImporter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommcareFormImporterImpl.class);
 
     private static final int PAGE_SIZE_FOR_FETCH = 100;
 
-    @Autowired
     private CommcareFormService formService;
-
-    @Autowired
     private EventRelay eventRelay;
 
     private int fetchSize = PAGE_SIZE_FOR_FETCH;
@@ -46,26 +40,30 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
     private boolean inError;
     private String errorMessage;
 
+    public CommcareFormImporterImpl(EventRelay eventRelay, CommcareFormService formService) {
+        this.eventRelay = eventRelay;
+        this.formService = formService;
+    }
+
     @Override
     public int countForImport(Range<DateTime> dateRange, String configName) {
-        validateNoExportInProgress();
         validateDateRange(dateRange);
 
-        LOGGER.debug("Counting forms for import for dateRange: {}-{} [config: {}]", dateRange.getMin(),
+        LOGGER.info("Counting forms for import for dateRange: {}-{} [config: {}]", dateRange.getMin(),
                 dateRange.getMax(), configName);
 
         FormListRequest request = formListRequestBuilder(dateRange, 1, 1).build();
         CommcareFormList formList = formService.retrieveFormList(request, configName);
 
         int count = formList.getMeta().getTotalCount();
-        LOGGER.debug("Form count: {}", count);
+        LOGGER.info("Form count: {}", count);
 
         return count;
     }
 
     @Override
     public void startImport(final Range<DateTime> dateRange, final String configName) {
-        validateNoExportInProgress();
+        validateNoImportInProgress();
         validateDateRange(dateRange);
 
         LOGGER.info("Initiating form import for historical forms from {} to {} [config: {}]",
@@ -217,7 +215,7 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
         }
     }
 
-    private void validateNoExportInProgress() {
+    private void validateNoImportInProgress() {
         if (importInProgress) {
             throw new IllegalStateException("An import is already in progress for this session, it has to be stopped " +
                     "before starting a next one");

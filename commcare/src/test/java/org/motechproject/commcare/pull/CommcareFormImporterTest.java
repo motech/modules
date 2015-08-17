@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.commcare.domain.CommcareForm;
@@ -64,8 +63,7 @@ public class CommcareFormImporterTest {
             new DateTime(2013, 10, 5, 2, 19, 33)
     );
 
-    @InjectMocks
-    private CommcareFormImporter importer = new CommcareFormImporterImpl();
+    private CommcareFormImporter importer;
 
     @Mock
     private EventRelay eventRelay;
@@ -76,6 +74,7 @@ public class CommcareFormImporterTest {
     @Before
     public void setUp() {
         setUpSuccessfulImport();
+        importer = new CommcareFormImporterImpl(eventRelay, formService);
         importer.setFetchSize(2);
     }
 
