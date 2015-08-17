@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+/**
+ * The controller responsible for tbe form import tab in the UI.
+ * Allows starting the form form import and checking the status of an ongoing import.
+ */
 @Controller
 @RequestMapping("/form-import")
 public class FormImportController extends CommcareController {
@@ -23,6 +27,11 @@ public class FormImportController extends CommcareController {
     @Autowired
     private CommcareFormImporter commcareFormImporter;
 
+    /**
+     * Checks the status of the ongoing form import. If there is no import in progress currently,
+     * that will be reflected in the returned object.
+     * @return the status representation for form import
+     */
     @RequestMapping(value = "/status", method = RequestMethod.GET)
     @ResponseBody
     public FormImportStatus checkImportStatus() {
@@ -30,14 +39,24 @@ public class FormImportController extends CommcareController {
         return commcareFormImporter.importStatus();
     }
 
+    /**
+     * Initializes form import, on the UI this will trigger a modal with the number of forms.
+     * Under the covers this just does a form count for the provided request.
+     * @param importRequest the request for
+     * @return the number of forms that match this request
+     */
     @RequestMapping(value = "/init", method = RequestMethod.POST)
     @ResponseBody
-    public long initImport(@RequestBody FormImportRequest importRequest) {
+    public int initImport(@RequestBody FormImportRequest importRequest) {
         LOGGER.debug("Received import INIT request: {}", importRequest);
         return commcareFormImporter.countForImport(importRequest.getDateRange(),
                 importRequest.getConfig());
     }
 
+    /**
+     * Starts a form import using the provided request.
+     * @param importRequest the request for the form import
+     */
     @RequestMapping(value = "/start", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public void startImport(@RequestBody FormImportRequest importRequest) {
