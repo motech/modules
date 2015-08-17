@@ -14,6 +14,12 @@ import javax.servlet.http.HttpSessionListener;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This is the factory responsible for providing instances {@link CommcareFormImporter} to
+ * the web layer. Importer instances are stored on a per http session basis. The instances are discarded
+ * once a session becomes invalidated. This class implements the {@link HttpSessionListener} to keep track
+ * of sessions being discarded (the session created event does not concern it).
+ */
 @Service("commcareFormImporterFactory")
 public class CommcareFormImporterFactory implements HttpSessionListener {
 
@@ -27,6 +33,12 @@ public class CommcareFormImporterFactory implements HttpSessionListener {
 
     private final Map<String, CommcareFormImporter> importerMap = new HashMap<>();
 
+    /**
+     * Retrieves an importer instance for the given session. A new instance will be created if it doesn't yet exist.
+     * @param session the http session for which the importer should be retrieved.
+     * @return the importer instance for the session
+     * @throws IllegalArgumentException if the session is null
+     */
     public CommcareFormImporter getImporter(HttpSession session) {
         if (session == null) {
             throw new IllegalArgumentException("No session provided, importers must be tied with an HTTP session");
