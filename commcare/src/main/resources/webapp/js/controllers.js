@@ -101,7 +101,7 @@
                             }, 8000);
                         }
                         if (!data.error) {
-                            $scope.importInProgress = data.importInProgress
+                            $scope.importInProgress = data.importInProgress;
                         } else {
                             $scope.errorMsg = data.errorMsg;
                             $scope.importFormsProgressShow = false;

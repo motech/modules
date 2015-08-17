@@ -77,4 +77,13 @@ public class FormImportRequest implements Serializable {
         return new Range<>(DateUtil.setTimeZoneUTC(receivedOnStart),
                 DateUtil.setTimeZoneUTC(receivedOnEnd));
     }
+
+    @Override
+    public String toString() {
+        return "FormImportRequest{" +
+                "receivedOnStart=" + receivedOnStart +
+                ", receivedOnEnd=" + receivedOnEnd +
+                ", config='" + config + '\'' +
+                '}';
+    }
 }
