@@ -17,8 +17,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * The implementation of {@link CommcareFormImporter}. Uses the {@link CommcareFormService} for
+ * retrieval of forms.
+ */
 @Component
-
 public class CommcareFormImporterImpl implements CommcareFormImporter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommcareFormImporterImpl.class);
@@ -45,6 +48,7 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
 
     @Override
     public int countForImport(Range<DateTime> dateRange, String configName) {
+        validateNoExportInProgress();
         validateDateRange(dateRange);
 
         LOGGER.debug("Counting forms for import for dateRange: {}-{} [config: {}]", dateRange.getMin(),

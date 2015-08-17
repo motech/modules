@@ -22,6 +22,7 @@ public interface CommcareFormImporter {
      *                   will be used
      * @return the total number of forms matching the provided criteria
      * @throws IllegalArgumentException if the date range is null or invalid (start date after end date)
+     * @throws IllegalStateException if there is an already ongoing import in progress
      */
     int countForImport(Range<DateTime> dateRange, String configName);
 
@@ -59,8 +60,10 @@ public interface CommcareFormImporter {
     FormImportStatus importStatus();
 
     /**
-     * Sets the fetch size for the queries to the Commcare form API. The default is 100.
-     * @param fetchSize
+     * Sets the fetch size for the queries to the Commcare form list API. In other words, sets how many forms
+     * will be retrieved per request to the API. The default is 100. Setting a too large number might cause memory
+     * issues, setting a too low number might result in a large number of HTTP requests.
+     * @param fetchSize the fetch size for requests
      */
     void setFetchSize(int fetchSize);
 }
