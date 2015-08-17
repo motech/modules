@@ -117,6 +117,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
     @Test
     public void testCommcareTasksIntegration() throws InterruptedException, IOException {
+
         config = ConfigsUtils.prepareConfigOne();
         createConfiguration(config);
 
@@ -260,11 +261,14 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     }
 
     private void waitForTaskExecution() throws InterruptedException {
+        getLogger().info("testCommcareTasksIntegration starts waiting for task to execute");
         int retries = 0;
         while (retries < MAX_RETRIES_BEFORE_FAIL && !validatingChannel.hasExecuted()) {
             retries++;
             Thread.sleep(WAIT_TIME);
         }
+        getLogger().info("Task executed after " + retries + " retries, what took about "
+                + (retries*WAIT_TIME)/1000 + " seconds");
     }
 
     private void clearDB() {
