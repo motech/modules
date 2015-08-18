@@ -138,7 +138,7 @@
                 "config": $scope.selectedConfig.name = $scope.selectedConfig !== undefined? $scope.selectedConfig.name : '',
                 "receivedOnStart": null,
                 "receivedOnEnd": null
-            }
+            };
         };
 
         $scope.checkStatus = function () {

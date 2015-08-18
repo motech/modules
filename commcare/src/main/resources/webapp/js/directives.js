@@ -54,6 +54,7 @@
                         }
                     }
                 });
+
                 $("#selectImportOption").children("ul").on("click", function () {
                     scope.receivedOnStart = null;
                     elem.datetimepicker('setTime', null);
@@ -70,9 +71,8 @@
             require: 'ngModel',
             link: function(scope, element, attrs, ngModel) {
                 var elem = angular.element(element),
-                    startDateTextBox = angular.element('#commcareDateTimeFrom'),
-                    property = elem.attr('ng-model');
-                    var dates = $("input[id$='dpFrom'], input[id$='dpTo']");
+                    startDateTextBox = angular.element('#commcareDateTimeFrom');
+
                 elem.datetimepicker({
                     dateFormat: "yy-mm-dd",
                     changeMonth: true,
@@ -103,6 +103,7 @@
                         }
                     }
                 });
+
                 $("#selectImportOption").children("ul").on("click", function () {
                     scope.receivedOnEnd = null;
                     elem.datetimepicker('setDate', null);
