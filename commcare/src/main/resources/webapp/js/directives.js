@@ -19,7 +19,8 @@
     directives.directive('importDateTimePickerFrom', function() {
         return {
             restrict: 'A',
-            link: function(scope, element, attrs) {
+            require: 'ngModel',
+            link: function(scope, element, attrs, ngModel) {
                 var elem = angular.element(element),
                     endDateTextBox = angular.element('#commcareDateTimeTo');
 
@@ -28,10 +29,17 @@
                     changeMonth: true,
                     changeYear: true,
                     timeFormat: "HH:mm:ss",
-                    separator: 'T',
+                    separator: ' T ',
                     onSelect: function (selectedDateTime) {
-                        endDateTextBox.datetimepicker('option', 'minDate', elem.datetimepicker('getDate'));
+                        endDateTextBox.datetimepicker('option', 'minDateTime', elem.datetimepicker('getDate'));
                         $(this).change();
+                    },
+                    onClose: function (year, month, inst) {
+                        var viewValue = $(this).val();
+                        scope.safeApply(function () {
+                            ngModel.$setViewValue(viewValue);
+                            });
+                        scope.updateImportRequest('receivedOnStart', viewValue);
                     },
                     onChangeMonthYear: function (year, month, inst) {
                         var curDate = $(this).datetimepicker("getDate");
@@ -45,6 +53,12 @@
                             $(this).change();
                         }
                     }
+                });
+                $("#selectImportOption").children("ul").on("click", function () {
+                    scope.receivedOnStart = null;
+                    elem.datetimepicker('setTime', null);
+                    elem.datetimepicker('setDate', null);
+                    elem.datetimepicker('option', 'maxDateTime', null);
                 });
             }
         };
@@ -53,19 +67,28 @@
     directives.directive('importDateTimePickerTo', function() {
         return {
             restrict: 'A',
-            link: function(scope, element, attrs) {
+            require: 'ngModel',
+            link: function(scope, element, attrs, ngModel) {
                 var elem = angular.element(element),
-                    startDateTextBox = angular.element('#commcareDateTimeFrom');
-
+                    startDateTextBox = angular.element('#commcareDateTimeFrom'),
+                    property = elem.attr('ng-model');
+                    var dates = $("input[id$='dpFrom'], input[id$='dpTo']");
                 elem.datetimepicker({
                     dateFormat: "yy-mm-dd",
                     changeMonth: true,
                     changeYear: true,
                     timeFormat: "HH:mm:ss",
-                    separator: 'T',
+                    separator: ' T ',
                     onSelect: function (selectedDateTime) {
-                        startDateTextBox.datetimepicker('option', 'maxDate', elem.datetimepicker('getDate'));
+                        startDateTextBox.datetimepicker('option', 'maxDateTime', elem.datetimepicker('getDate'));
                         $(this).change();
+                    },
+                    onClose: function (year, month, inst) {
+                        var viewValue = $(this).val();
+                        scope.safeApply(function () {
+                            ngModel.$setViewValue(viewValue);
+                        });
+                        scope.updateImportRequest('receivedOnEnd', viewValue);
                     },
                     onChangeMonthYear: function (year, month, inst) {
                         var curDate = $(this).datetimepicker("getDate");
@@ -80,24 +103,11 @@
                         }
                     }
                 });
-            }
-        };
-    });
-
-    directives.directive('progressBarr', function() {
-        return {
-            restrict: 'A',
-            link: function(scope, element, attrs) {
-                var counter = 0,
-                increaseCounter = function () {
-                    counter = counter + 1;
-                    $(element).text(counter);
-                };
-                /*while (counter <= 100) {
-                    setInterval(function () {
-                        increaseCounter();
-                    }, 100);
-                }*/
+                $("#selectImportOption").children("ul").on("click", function () {
+                    scope.receivedOnEnd = null;
+                    elem.datetimepicker('setDate', null);
+                    elem.datetimepicker('option', 'minDateTime', null);
+                });
             }
         };
     });
@@ -282,10 +292,12 @@
                 scope.$watch('$parent.selectedConfig', function() {
                     scope.downloadingCases = true;
                     scope.loadingError = undefined;
-                    elem.jqGrid('setGridParam', {
-                        url: '../commcare/caseList/' + scope.$parent.selectedConfig.name + '?caseName=&dateModifiedStart=&dateModifiedEnd=',
-                        viewrecords: false
-                    }).trigger('reloadGrid');
+                    if (scope.$parent.selectedConfig !== undefined && scope.$parent.selectedConfig.name !== undefined) {
+                        elem.jqGrid('setGridParam', {
+                            url: '../commcare/caseList/' + scope.$parent.selectedConfig.name + '?caseName=&dateModifiedStart=&dateModifiedEnd=',
+                            viewrecords: false
+                        }).trigger('reloadGrid');
+                    }
                 });
 
                 params = {

@@ -44,13 +44,15 @@
         $scope.statusError = false;
         $scope.errorMsg = 'Unknown error';
         $scope.importInProgress = false;
-        $scope.receivedOnStart = '2012-09-29T17:24:52';
-        $scope.receivedOnEnd = '2014-10-29T08:24:52';
+        $scope.receivedOnStart = null;
+        $scope.receivedOnEnd = null;
 
         $scope.byDateRange = false;
         $scope.importOptions = ['all', 'byDateRange'];
         $scope.selectedImportOption = $scope.importOptions[0];
         $scope.setImportOption = function (index) {
+            $scope.resetImportRequest();
+            $scope.resetImportValues();
             $scope.selectedImportOption = $scope.importOptions[index];
             if ('byDateRange' === $scope.importOptions[index]) {
                 $scope.byDateRange = true;
@@ -59,14 +61,23 @@
             }
         };
 
+        $scope.$watch('selectedConfig', function() {
+            if (!$scope.$parent.selectedConfig) {
+                return;
+            }
+        });
+
         $scope.importFormsStart = function () {
+            $scope.updateImportRequest();
             $('#importCommcareForms').modal('show');
             $scope.initImport();
         };
 
         $scope.importFormsContinue = function () {
             $scope.updateProgress();
-            $scope.startImport();
+            if (!$scope.importFormsProgressShow) {
+                $scope.startImport();
+            }
             $scope.importFormsProgressShow = true;
         };
 
@@ -76,12 +87,59 @@
         };
 
         $scope.updateProgress = function () {
-            var percentage = ($scope.formsImported / $scope.totalForms) * 100;
+            var percentage = Math.round(($scope.formsImported / $scope.totalForms) * 100);
             $('#commcareImportPercentage').text(percentage + '%').css({width: percentage + '%'}).attr('aria-valuenow', percentage);
         };
 
-        $scope.importRequest = {"config": $scope.selectedConfig.name, "receivedOnStart": $scope.receivedOnStart,
-                                  "receivedOnEnd": $scope.receivedOnEnd };
+        $scope.resetImportValues = function () {
+            $scope.initImportComplete = false;
+            $scope.importFormsProgressShow = false;
+            $scope.importFormsComplete = false;
+            $scope.totalForms = 0;
+            $scope.formsImported = 0;
+            $scope.statusError = false;
+            $scope.importInProgress = false;
+        };
+
+        $scope.importRequest = {
+            "config": $scope.selectedConfig !== undefined? $scope.selectedConfig : '',
+            "receivedOnStart": $scope.receivedOnStart,
+            "receivedOnEnd": $scope.receivedOnEnd
+        };
+
+        $scope.updateImportRequest = function (nameParameter, valueParameter) {
+            $scope.resetImportValues();
+            var dValue,
+            normalizeDate = function (dateValue) {
+                var indexTValue = dateValue.indexOf('T');
+                dValue = dateValue.replace(' ', '');
+                dValue = dValue.replace(' ', '');
+                return  dValue;
+            };
+
+            switch (nameParameter) {
+            case 'receivedOnStart':
+                $scope.importRequest.receivedOnStart = normalizeDate(valueParameter);
+                break;
+            case 'receivedOnEnd':
+                $scope.importRequest.receivedOnEnd = normalizeDate(valueParameter);
+                break;
+            case 'config':
+                $scope.importRequest.config = valueParameter;
+                break;
+                default:
+                break;
+            }
+
+        };
+
+        $scope.resetImportRequest = function () {
+            $scope.importRequest = {
+                "config": $scope.selectedConfig.name = $scope.selectedConfig !== undefined? $scope.selectedConfig.name : '',
+                "receivedOnStart": null,
+                "receivedOnEnd": null
+            }
+        };
 
         $scope.checkStatus = function () {
             var interval,
@@ -89,7 +147,9 @@
                 $http.get('../commcare/form-import/status').success( function(data, status) {
                     if (status === 200) {
                         $scope.statusError = data.error;
-                        $scope.formsImported = data.formsImported;
+                        if (data.formsImported > 0) {
+                            $scope.formsImported = data.formsImported;
+                        }
                         $scope.updateProgress();
                         if (data.formsImported === data.totalForms) {
                             $scope.importFormsProgressShow = false;
@@ -119,16 +179,20 @@
             $http.post('../commcare/form-import/init', $scope.importRequest).success( function(data, status) {
                  if (status === 200) {
                      $scope.totalForms = data;
+                     $scope.initImportComplete = true;
                  }
             });
         };
 
         $scope.startImport = function () {
-            $http.post('../commcare/form-import/start', $scope.importRequest).success( function(data, status) {
-                 if (status === 200) {
-                     $scope.checkStatus();
-                 }
-            });
+            if (!$scope.importInProgress) {
+                $http.post('../commcare/form-import/start', $scope.importRequest).success( function(data, status) {
+                    if (status === 200) {
+                        $scope.importInProgress = true;
+                        $scope.checkStatus();
+                    }
+                });
+            }
         };
 
         innerLayout({
@@ -151,6 +215,9 @@
         $scope.configOutdated = false;
 
         $scope.copyConfig = function(config) {
+            if (!config) {
+                return;
+            }
             var copy = {};
 
             copy.name = config.name;
@@ -463,6 +530,12 @@
         $scope.formatJson=function(jsonResponse) {
             return JSON.stringify(jsonResponse, null, 4);
         };
+
+        $scope.$watch('selectedConfig', function() {
+            if (!$scope.$parent.selectedConfig) {
+                return;
+            }
+        });
 
         $scope.formatModalContent = function (rowObject) {
             var contentView = '';
