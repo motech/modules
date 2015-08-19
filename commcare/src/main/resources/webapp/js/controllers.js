@@ -48,6 +48,7 @@
         $scope.receivedOnEnd = null;
         $scope.lastFormId = null;
         $scope.lastReceivedOn = null;
+        $('#importCompleteAlert').fadeOut("slow");
 
         $scope.byDateRange = false;
         $scope.importOptions = ['all', 'byDateRange'];
@@ -102,6 +103,7 @@
             $scope.formsImported = 0;
             $scope.statusError = false;
             $scope.importInProgress = false;
+            $('#importCompleteAlert').fadeOut("slow");
         };
 
         $scope.importRequest = {
@@ -164,9 +166,6 @@
                         $('#importCommcareForms').modal('hide');
                         $scope.importFormsComplete = true;
                         clearInterval($scope.importStatusInterval);
-                        setTimeout(function () {
-                            $('#importCompleteAlert').fadeOut("slow");
-                        }, 8000);
                     }
 
                     if (!data.error) {
