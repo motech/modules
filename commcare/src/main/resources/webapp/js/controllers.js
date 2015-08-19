@@ -46,6 +46,8 @@
         $scope.importInProgress = false;
         $scope.receivedOnStart = null;
         $scope.receivedOnEnd = null;
+        $scope.lastFormId = null;
+        $scope.lastReceivedOn = null;
 
         $scope.byDateRange = false;
         $scope.importOptions = ['all', 'byDateRange'];
@@ -142,38 +144,46 @@
             };
         };
 
+        $scope.importStatusInterval = {};
+
         $scope.checkStatus = function () {
-            var interval,
-            getStatus = function () {
-                $http.get('../commcare/form-import/status').success( function(data, status) {
+            var getStatus = function () {
+                $http.get('../commcare/form-import/status').success(function(data, status) {
                     if (status === 200) {
                         $scope.statusError = data.error;
                         if (data.formsImported > 0) {
                             $scope.formsImported = data.formsImported;
                         }
+
+                        $scope.lastFormId = data.lastImportFormId;
+                        $scope.lastReceivedOn = data.lastImportDate;
+
                         $scope.updateProgress();
+
                         if (data.formsImported === data.totalForms) {
                             $scope.importFormsProgressShow = false;
                             $('#importCommcareForms').modal('hide');
                             $scope.importFormsComplete = true;
-                            clearInterval(interval);
+                            clearInterval($scope.importStatusInterval);
                             setTimeout(function () {
                                 $('#importCompleteAlert').fadeOut("slow");
                             }, 8000);
                         }
+
                         if (!data.error) {
                             $scope.importInProgress = data.importInProgress;
                         } else {
-                            $scope.errorMsg = data.errorMsg;
-                            $scope.importFormsProgressShow = false;
+                            $scope.importError(data.errorMsg);
                         }
 
                     }
+                }).error(function(data) {
+                    $scope.importError(data);
                 });
             };
-            interval = setInterval(function () {
+            $scope.importStatusInterval = setInterval(function () {
                 getStatus();
-            }, 500);
+            }, 2000);
         };
 
         $scope.initImport = function () {
@@ -190,10 +200,18 @@
                 $http.post('../commcare/form-import/start', $scope.importRequest).success( function(data, status) {
                     if (status === 200) {
                         $scope.importInProgress = true;
+                        $scope.lastFormId = null;
+                        $scope.lastReceivedOn = null;
                         $scope.checkStatus();
                     }
                 });
             }
+        };
+
+        $scope.importError = function (msg) {
+            $scope.importFormsProgressShow = false;
+            $scope.errorMsg = msg;
+            clearInterval($scope.importStatusInterval);
         };
 
         innerLayout({

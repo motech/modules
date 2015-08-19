@@ -75,19 +75,22 @@
                     <h4 class="modal-title" id="importInstanceModalLabel">{{msg('commcare.importForms')}}</h4>
                 </div>
                 <div class="modal-body">
-                    <div ng-show="!importFormsProgressShow" class="form-group">
+                    <div ng-show="!importInProgress" class="form-group">
                         <div><img ng-hide="totalForms &gt; 0 || initImportComplete" alt="loading" src="./../../static/img/load.gif">&nbsp;<strong>{{totalForms}}</strong>&nbsp{{msg('commcare.formsWillImported')}}</div>
                     </div>
-                    <div ng-show="totalForms &gt; 0 && (importFormsProgressShow || importInProgress)" class="form-group">
-                        <div class="margin-after">{{msg('commcare.loading')}}&nbsp;{{formsImported}}&nbsp;{{msg('commcare.of')}}&nbsp;{{totalForms}}</div>
-                        <div class="progress">
+                    <div ng-show="totalForms &gt; 0 && importInProgress" class="form-group">
+                        <div class="margin-after">{{msg('commcare.formImport.imported', formsImported, totalForms)}}</div>
+                        <div class="progress" ng-if="importFormsProgressShow">
                             <div id="commcareImportPercentage" class="progress-bar progress-bar-striped active" style="min-width: 2em; width: 0%;" aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" role="progressbar"></div>
                         </div>
                     </div>
                     <div ng-show="statusError" class="form-group">
                         <div class="alert alert-danger">
                             <h4>{{commcare.error}}</h4>
-                            <p>{{errorMsg}}</p>
+                            <p>{{msg('commcare.import.error', errorMsg)}}</p>
+                            <p ng-show="lastFormId">{{msg('commcare.import.formId', lastFormId)}}</p>
+                            <p ng-show="lastReceivedOn">{{msg('commcare.import.receivedOn', lastReceivedOn)}}</p>
+                            <p ng-show="lastReceivedOn">{{msg('commcare.import.retry', lastReceivedOn)}}</p>
                         </div>
                     </div>
                 </div>
