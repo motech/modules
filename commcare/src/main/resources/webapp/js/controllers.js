@@ -148,34 +148,31 @@
 
         $scope.checkStatus = function () {
             var getStatus = function () {
-                $http.get('../commcare/form-import/status').success(function(data, status) {
-                    if (status === 200) {
-                        $scope.statusError = data.error;
-                        if (data.formsImported > 0) {
-                            $scope.formsImported = data.formsImported;
-                        }
+                $http.get('../commcare/form-import/status').success(function(data) {
+                    $scope.statusError = data.error;
+                    if (data.formsImported > 0) {
+                        $scope.formsImported = data.formsImported;
+                    }
 
-                        $scope.lastFormId = data.lastImportFormId;
-                        $scope.lastReceivedOn = data.lastImportDate;
+                    $scope.lastFormId = data.lastImportFormId;
+                    $scope.lastReceivedOn = data.lastImportDate;
 
-                        $scope.updateProgress();
+                    $scope.updateProgress();
 
-                        if (data.formsImported === data.totalForms) {
-                            $scope.importFormsProgressShow = false;
-                            $('#importCommcareForms').modal('hide');
-                            $scope.importFormsComplete = true;
-                            clearInterval($scope.importStatusInterval);
-                            setTimeout(function () {
-                                $('#importCompleteAlert').fadeOut("slow");
-                            }, 8000);
-                        }
+                    if (data.formsImported === data.totalForms) {
+                        $scope.importFormsProgressShow = false;
+                        $('#importCommcareForms').modal('hide');
+                        $scope.importFormsComplete = true;
+                        clearInterval($scope.importStatusInterval);
+                        setTimeout(function () {
+                            $('#importCompleteAlert').fadeOut("slow");
+                        }, 8000);
+                    }
 
-                        if (!data.error) {
-                            $scope.importInProgress = data.importInProgress;
-                        } else {
-                            $scope.importError(data.errorMsg);
-                        }
-
+                    if (!data.error) {
+                        $scope.importInProgress = data.importInProgress;
+                    } else {
+                        $scope.importError(data.errorMsg);
                     }
                 }).error(function(data) {
                     $scope.importError(data);
@@ -187,23 +184,19 @@
         };
 
         $scope.initImport = function () {
-            $http.post('../commcare/form-import/init', $scope.importRequest).success( function(data, status) {
-                 if (status === 200) {
-                     $scope.totalForms = data;
-                     $scope.initImportComplete = true;
-                 }
+            $http.post('../commcare/form-import/init', $scope.importRequest).success( function(data) {
+                 $scope.totalForms = data;
+                 $scope.initImportComplete = true;
             });
         };
 
         $scope.startImport = function () {
             if (!$scope.importInProgress) {
-                $http.post('../commcare/form-import/start', $scope.importRequest).success( function(data, status) {
-                    if (status === 200) {
-                        $scope.importInProgress = true;
-                        $scope.lastFormId = null;
-                        $scope.lastReceivedOn = null;
-                        $scope.checkStatus();
-                    }
+                $http.post('../commcare/form-import/start', $scope.importRequest).success( function(data) {
+                    $scope.importInProgress = true;
+                    $scope.lastFormId = null;
+                    $scope.lastReceivedOn = null;
+                    $scope.checkStatus();
                 });
             }
         };
