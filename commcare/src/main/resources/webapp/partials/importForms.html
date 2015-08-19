@@ -75,13 +75,13 @@
                     <h4 class="modal-title" id="importInstanceModalLabel">{{msg('commcare.importForms')}}</h4>
                 </div>
                 <div class="modal-body">
-                    <div ng-show="!importFormsProgressShow && !initImportComplete" class="form-group">
+                    <div ng-show="!statusError && !importFormsProgressShow && !initImportComplete" class="form-group">
                         <div><img ng-hide="totalForms &gt; 0" alt="loading" src="./../../static/img/load.gif">&nbsp;<strong></strong>&nbsp{{msg('commcare.retrievingForms')}}</div>
                     </div>
-                    <div ng-show="totalForms &gt; 0 && initImportComplete && !(importFormsProgressShow || importInProgress)" class="form-group">
+                    <div ng-show="!statusError && totalForms &gt; 0 && initImportComplete && !(importFormsProgressShow || importInProgress)" class="form-group">
                         <div><strong>{{totalForms}}</strong>&nbsp{{msg('commcare.formsWillImported')}}</div>
                     </div>
-                    <div ng-show="totalForms &lt; 1 && initImportComplete && !(importFormsProgressShow || importInProgress)" class="form-group">
+                    <div ng-show="!statusError && totalForms &lt; 1 && initImportComplete && !(importFormsProgressShow || importInProgress)" class="form-group">
                         <div>{{msg('commcare.noFormsToImport')}}</div>
                     </div>
                     <div ng-show="totalForms &gt; 0 && importInProgress" class="form-group">

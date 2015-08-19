@@ -186,6 +186,8 @@
             $http.post('../commcare/form-import/init', $scope.importRequest).success( function(data) {
                  $scope.totalForms = data;
                  $scope.initImportComplete = true;
+            }).error(function(data) {
+                 $scope.importError(data);
             });
         };
 
@@ -196,6 +198,8 @@
                     $scope.lastFormId = null;
                     $scope.lastReceivedOn = null;
                     $scope.checkStatus();
+                }).error(function(data) {
+                    $scope.importError(data);
                 });
             }
         };
@@ -204,6 +208,7 @@
             $scope.importFormsProgressShow = false;
             $scope.errorMsg = msg;
             clearInterval($scope.importStatusInterval);
+            $scope.statusError = true;
         };
 
         innerLayout({
