@@ -94,9 +94,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div ng-show="!statusError" class="modal-footer">
                     <button class="btn btn-primary" ng-click="importFormsContinue()" ng-disabled="totalForms &lt; 1">{{msg('commcare.startImport')}}</button>
                     <button class="btn btn-default" ng-click="closeImportForms()">{{msg('commcare.cancel')}}</button>
+                </div>
+                <div ng-show="statusError" class="modal-footer">
+                    <button class="btn btn-primary" ng-click="closeImportForms()">{{msg('commcare.ok')}}</button>
                 </div>
             </div>
         </div>

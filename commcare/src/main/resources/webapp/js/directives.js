@@ -36,11 +36,11 @@
                     },
                     onClose: function (dateText, inst) {
                         var viewValue = elem.val(), testStartDate, testEndDate;
-                        if (endDateTextBox.val() != '') {
+                        if (endDateTextBox.val() !== '') {
                             testStartDate = elem.datetimepicker('getDate');
                             testEndDate = endDateTextBox.datetimepicker('getDate');
                             if (testStartDate > testEndDate) {
-                                endDateTextBox.datetimepicker('setDate', testStartDate); console.log('testStartDate ' + testStartDate);
+                                endDateTextBox.datetimepicker('setDate', testStartDate);
                             }
                             scope.safeApply(function () {
                                 ngModel.$setViewValue(viewValue);
@@ -96,7 +96,7 @@
                     },
                     onClose: function (dateText, inst) {
                         var viewValue = elem.val(), testStartDate, testEndDate;
-                        if (startDateTextBox.val() != '') {
+                        if (startDateTextBox.val() !== '') {
                             testStartDate = startDateTextBox.datetimepicker('getDate');
                             testEndDate = elem.datetimepicker('getDate');
                             if (testStartDate > testEndDate) {
