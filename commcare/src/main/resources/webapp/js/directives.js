@@ -36,10 +36,12 @@
                     },
                     onClose: function (dateText, inst) {
                         var viewValue = elem.val(), testStartDate, testEndDate;
-                        testStartDate = elem.datetimepicker('getDate');
-                        testEndDate = endDateTextBox.datetimepicker('getDate');
-                        if (testStartDate > testEndDate) {
-                            endDateTextBox.datetimepicker('setDate', testStartDate);
+                        if (endDateTextBox.val() !== '') {
+                            testStartDate = elem.datetimepicker('getDate');
+                            testEndDate = endDateTextBox.datetimepicker('getDate');
+                            if (testStartDate > testEndDate) {
+                                endDateTextBox.datetimepicker('setDate', testStartDate);
+                            }
                         }
                         scope.safeApply(function () {
                             ngModel.$setViewValue(viewValue);
@@ -92,10 +94,12 @@
                     },
                     onClose: function (dateText, inst) {
                         var viewValue = elem.val(), testStartDate, testEndDate;
-                        testStartDate = startDateTextBox.datetimepicker('getDate');
-                        testEndDate = elem.datetimepicker('getDate');
-                        if (testStartDate > testEndDate) {
-                            startDateTextBox.datetimepicker('setDate', testEndDate);
+                        if (startDateTextBox.val() !== '') {
+                            testStartDate = startDateTextBox.datetimepicker('getDate');
+                            testEndDate = elem.datetimepicker('getDate');
+                            if (testStartDate > testEndDate) {
+                                startDateTextBox.datetimepicker('setDate', testEndDate);
+                            }
                         }
                         scope.safeApply(function () {
                             ngModel.$setViewValue(viewValue);
