@@ -16,6 +16,131 @@
         };
     });
 
+    directives.directive('importDateTimePickerFrom', function() {
+        return {
+            restrict: 'A',
+            require: 'ngModel',
+            link: function(scope, element, attrs, ngModel) {
+                var elem = angular.element(element),
+                    endDateTextBox = angular.element('#commcareDateTimeTo');
+
+                elem.datetimepicker({
+                    dateFormat: "yy-mm-dd",
+                    changeMonth: true,
+                    changeYear: true,
+                    timeFormat: "HH:mm:ss",
+                    separator: ' T ',
+                    onSelect: function (selectedDateTime) {
+                        endDateTextBox.datetimepicker('option', 'minDate', elem.datetimepicker('getDate'));
+                        endDateTextBox.datetimepicker('option', 'minDateTime', elem.datetimepicker('getDate'));
+                        $(this).change();
+                    },
+                    onClose: function (dateText, inst) {
+                        var viewValue = elem.val(), testStartDate, testEndDate;
+                        if (endDateTextBox.val() !== '') {
+                            testStartDate = elem.datetimepicker('getDate');
+                            testEndDate = endDateTextBox.datetimepicker('getDate');
+                            if (testStartDate > testEndDate && testEndDate !== null) {
+                                endDateTextBox.datetimepicker('setDate', testStartDate);
+                                endDateTextBox.datetimepicker('option', 'minDateTime', elem.datetimepicker('getDate'));
+                            }
+                        }
+                        if (viewValue === '') {
+                            endDateTextBox.datetimepicker('option', 'minDate', null);
+                        }
+                        scope.safeApply(function () {
+                            ngModel.$setViewValue(viewValue);
+                        });
+                        scope.updateImportRequest('receivedOnStart', viewValue);
+                    },
+                    onChangeMonthYear: function (year, month, inst) {
+                        var curDate = elem.datetimepicker("getDate");
+                        if (curDate === null) {
+                            return;
+                        }
+                        if (curDate.getYear() !== year || curDate.getMonth() !== month - 1) {
+                            curDate.setYear(year);
+                            curDate.setMonth(month - 1);
+                            endDateTextBox.datetimepicker('option', 'minDate', curDate);
+                            $(this).datetimepicker("setDate", curDate);
+                            $(this).change();
+                        }
+                    }
+                });
+
+                $("#selectImportOption").children("ul").on("click", function () {
+                    scope.receivedOnStart = null;
+                    elem.datetimepicker('setTime', null);
+                    elem.datetimepicker('setDate', null);
+                    elem.datetimepicker('option', 'maxDate', null);
+                    elem.datetimepicker('option', 'maxDateTime', null);
+                });
+            }
+        };
+    });
+
+    directives.directive('importDateTimePickerTo', function() {
+        return {
+            restrict: 'A',
+            require: 'ngModel',
+            link: function(scope, element, attrs, ngModel) {
+                var elem = angular.element(element),
+                    startDateTextBox = angular.element('#commcareDateTimeFrom');
+
+                elem.datetimepicker({
+                    dateFormat: "yy-mm-dd",
+                    changeMonth: true,
+                    changeYear: true,
+                    timeFormat: "HH:mm:ss",
+                    separator: ' T ',
+                    onSelect: function (selectedDateTime) {
+                        startDateTextBox.datetimepicker('option', 'maxDate', elem.datetimepicker('getDate'));
+                        startDateTextBox.datetimepicker('option', 'maxDateTime', elem.datetimepicker('getDate'));
+                        $(this).change();
+                    },
+                    onClose: function (dateText, inst) {
+                        var viewValue = elem.val(), testStartDate, testEndDate;
+                        if (startDateTextBox.val() !== '') {
+                            testStartDate = startDateTextBox.datetimepicker('getDate');
+                            testEndDate = elem.datetimepicker('getDate');
+                            if (testStartDate > testEndDate && testEndDate !== null) {
+                                startDateTextBox.datetimepicker('setDate', testEndDate);
+                            }
+                        }
+                        if (viewValue === '') {
+                            startDateTextBox.datetimepicker('option', 'maxDate', null);
+                        }
+                        scope.safeApply(function () {
+                            ngModel.$setViewValue(viewValue);
+                        });
+                        scope.updateImportRequest('receivedOnEnd', viewValue);
+                    },
+                    onChangeMonthYear: function (year, month, inst) {
+                        var curDate = $(this).datetimepicker("getDate");
+                        if (curDate === null) {
+                            return;
+                        }
+                        if (curDate.getYear() !== year || curDate.getMonth() !== month - 1) {
+                            curDate.setYear(year);
+                            curDate.setMonth(month - 1);
+                            startDateTextBox.datetimepicker('option', 'maxDate', curDate);
+                            $(this).datetimepicker("setDate", curDate);
+                            $(this).change();
+                        }
+                    }
+                });
+
+                $("#selectImportOption").children("ul").on("click", function () {
+                    scope.receivedOnEnd = null;
+                    elem.datetimepicker('setTime', null);
+                    elem.datetimepicker('setDate', null);
+                    elem.datetimepicker('option', 'minDate', null);
+                    elem.datetimepicker('option', 'minDateTime', null);
+                });
+            }
+        };
+    });
+
     directives.directive('switch', function() {
 
         return {
@@ -196,10 +321,12 @@
                 scope.$watch('$parent.selectedConfig', function() {
                     scope.downloadingCases = true;
                     scope.loadingError = undefined;
-                    elem.jqGrid('setGridParam', {
-                        url: '../commcare/caseList/' + scope.$parent.selectedConfig.name + '?caseName=&dateModifiedStart=&dateModifiedEnd=',
-                        viewrecords: false
-                    }).trigger('reloadGrid');
+                    if (scope.$parent.selectedConfig !== undefined && scope.$parent.selectedConfig.name !== undefined) {
+                        elem.jqGrid('setGridParam', {
+                            url: '../commcare/caseList/' + scope.$parent.selectedConfig.name + '?caseName=&dateModifiedStart=&dateModifiedEnd=',
+                            viewrecords: false
+                        }).trigger('reloadGrid');
+                    }
                 });
 
                 params = {

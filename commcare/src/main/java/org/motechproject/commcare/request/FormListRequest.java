@@ -183,32 +183,4 @@ public class FormListRequest implements Serializable {
             uriBuilder.addParameter("includeArchived", String.valueOf(includeArchived));
         }
     }
-
-    /**
-     * Increments the current page number. Will set the current page to 1 if it was null.
-     * @return the new page number
-     */
-    public int nextPage() {
-        if (pageNumber == null) {
-            pageNumber = 0;
-        }
-
-        pageNumber++;
-
-        return pageNumber;
-    }
-
-    /**
-     * Decrements the current page number.
-     * @return the new page number
-     */
-    public int previousPage() {
-        if (pageNumber == null || pageNumber == 1) {
-            throw new IllegalStateException("The page cannot go down below 1");
-        }
-
-        pageNumber--;
-
-        return pageNumber;
-    }
 }

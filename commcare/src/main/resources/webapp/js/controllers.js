@@ -35,6 +35,189 @@
         $scope.getConfigurations();
     });
 
+    controllers.controller('CommcareImportFormsCtrl', function ($scope, Configurations, $http) {
+
+        $scope.importFormsProgressShow = false;
+        $scope.importFormsComplete = false;
+        $scope.totalForms = 0;
+        $scope.formsImported = 0;
+        $scope.statusError = false;
+        $scope.errorMsg = 'Unknown error';
+        $scope.importInProgress = false;
+        $scope.receivedOnStart = null;
+        $scope.receivedOnEnd = null;
+        $scope.lastFormId = null;
+        $scope.lastReceivedOn = null;
+        $('#importCompleteAlert').fadeOut("slow");
+
+        $scope.byDateRange = false;
+        $scope.importOptions = ['all', 'byDateRange'];
+        $scope.selectedImportOption = $scope.importOptions[0];
+        $scope.setImportOption = function (index) {
+            $scope.resetImportRequest();
+            $scope.resetImportValues();
+            $scope.selectedImportOption = $scope.importOptions[index];
+            if ('byDateRange' === $scope.importOptions[index]) {
+                $scope.byDateRange = true;
+            } else {
+                $scope.byDateRange = false;
+            }
+        };
+
+        $scope.$watch('selectedConfig', function() {
+            if (!$scope.$parent.selectedConfig) {
+                return;
+            }
+        });
+
+        $scope.importFormsStart = function () {
+            $scope.updateImportRequest();
+            $('#importCommcareForms').modal('show');
+            $scope.initImport();
+        };
+
+        $scope.importFormsContinue = function () {
+            $scope.updateProgress();
+            if (!$scope.importFormsProgressShow) {
+                $scope.startImport();
+            }
+            $scope.importFormsProgressShow = true;
+        };
+
+        $scope.closeImportForms = function () {
+            $('#importCommcareForms').modal('hide');
+            $scope.importFormsProgressShow = false;
+        };
+
+        $scope.updateProgress = function () {
+            var percentage = Math.round(($scope.formsImported / $scope.totalForms) * 100);
+            percentage = !isNaN(percentage) && percentage !== Infinity && percentage >= 0 ? percentage : 0;
+            $('#commcareImportPercentage').text(percentage + '%').css({width: percentage + '%'}).attr('aria-valuenow', percentage);
+        };
+
+        $scope.resetImportValues = function () {
+            $scope.initImportComplete = false;
+            $scope.importFormsProgressShow = false;
+            $scope.importFormsComplete = false;
+            $scope.totalForms = 0;
+            $scope.formsImported = 0;
+            $scope.statusError = false;
+            $scope.importInProgress = false;
+            $('#importCompleteAlert').fadeOut("slow");
+        };
+
+        $scope.importRequest = {
+            "config": $scope.selectedConfig !== undefined? $scope.selectedConfig.name : '',
+            "receivedOnStart": $scope.receivedOnStart,
+            "receivedOnEnd": $scope.receivedOnEnd
+        };
+
+        $scope.updateImportRequest = function (nameParameter, valueParameter) {
+            $scope.resetImportValues();
+            var dValue,
+            normalizeDate = function (dateValue) {
+                var indexTValue = dateValue.indexOf('T');
+                dValue = dateValue.replace(' ', '');
+                dValue = dValue.replace(' ', '');
+                return  dValue;
+            };
+
+            switch (nameParameter) {
+            case 'receivedOnStart':
+                $scope.importRequest.receivedOnStart = normalizeDate(valueParameter);
+                break;
+            case 'receivedOnEnd':
+                $scope.importRequest.receivedOnEnd = normalizeDate(valueParameter);
+                break;
+            case 'config':
+                $scope.importRequest.config = valueParameter;
+                break;
+                default:
+                break;
+            }
+
+        };
+
+        $scope.resetImportRequest = function () {
+            $scope.importRequest = {
+                "config": $scope.selectedConfig.name = $scope.selectedConfig !== undefined? $scope.selectedConfig.name : '',
+                "receivedOnStart": null,
+                "receivedOnEnd": null
+            };
+        };
+
+        $scope.importStatusInterval = {};
+
+        $scope.checkStatus = function () {
+            var getStatus = function () {
+                $http.get('../commcare/form-import/status').success(function(data) {
+                    $scope.statusError = data.error;
+                    if (data.formsImported > 0) {
+                        $scope.formsImported = data.formsImported;
+                    }
+
+                    $scope.lastFormId = data.lastImportFormId;
+                    $scope.lastReceivedOn = data.lastImportDate;
+
+                    $scope.updateProgress();
+
+                    if (data.formsImported === data.totalForms) {
+                        $scope.importFormsProgressShow = false;
+                        $('#importCommcareForms').modal('hide');
+                        $scope.importFormsComplete = true;
+                        clearInterval($scope.importStatusInterval);
+                    }
+
+                    if (!data.error) {
+                        $scope.importInProgress = data.importInProgress;
+                    } else {
+                        $scope.importError(data.errorMsg);
+                    }
+                }).error(function(data) {
+                    $scope.importError(data);
+                });
+            };
+            $scope.importStatusInterval = setInterval(function () {
+                getStatus();
+            }, 2000);
+        };
+
+        $scope.initImport = function () {
+            $http.post('../commcare/form-import/init', $scope.importRequest).success( function(data) {
+                 $scope.totalForms = data;
+                 $scope.initImportComplete = true;
+            }).error(function(data) {
+                 $scope.importError(data);
+            });
+        };
+
+        $scope.startImport = function () {
+            if (!$scope.importInProgress) {
+                $http.post('../commcare/form-import/start', $scope.importRequest).success( function(data) {
+                    $scope.importInProgress = true;
+                    $scope.lastFormId = null;
+                    $scope.lastReceivedOn = null;
+                    $scope.checkStatus();
+                }).error(function(data) {
+                    $scope.importError(data);
+                });
+            }
+        };
+
+        $scope.importError = function (msg) {
+            $scope.importFormsProgressShow = false;
+            $scope.errorMsg = msg;
+            clearInterval($scope.importStatusInterval);
+            $scope.statusError = true;
+        };
+
+        innerLayout({
+            spacing_closed: 30,
+            east__minSize: 200,
+            east__maxSize: 350
+        });
+    });
+
     controllers.controller('CommcareSettingsCtrl', function ($scope, Configurations) {
 
         $scope.eventStrategyOptions = [ 'minimal', 'partial', 'full' ];
@@ -48,6 +231,9 @@
         $scope.configOutdated = false;
 
         $scope.copyConfig = function(config) {
+            if (!config) {
+                return;
+            }
             var copy = {};
 
             copy.name = config.name;
@@ -100,7 +286,7 @@
                 } else {
                     $scope.rollback = false;
                 }
-            } else if (newValue.name === "") {
+            } else if (newValue !== undefined && newValue.name === "") {
                 $scope.newConfig = true;
                 $scope.clearMessages();
             } else {
@@ -360,6 +546,12 @@
         $scope.formatJson=function(jsonResponse) {
             return JSON.stringify(jsonResponse, null, 4);
         };
+
+        $scope.$watch('selectedConfig', function() {
+            if (!$scope.$parent.selectedConfig) {
+                return;
+            }
+        });
 
         $scope.formatModalContent = function (rowObject) {
             var contentView = '';

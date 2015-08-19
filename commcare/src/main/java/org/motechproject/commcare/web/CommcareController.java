@@ -47,6 +47,13 @@ public abstract class CommcareController {
         return handleException(e);
     }
 
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public String handleMiscException(Exception e) {
+        return handleException(e);
+    }
+
     private String handleException(Exception e) {
         logger.error(e.getMessage(), e);
         return e.getMessage();

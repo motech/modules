@@ -66,6 +66,9 @@
     <osgi:service id="stubFormsEventParser" ref="commcareStubFormsEventParser"
                   interface="org.motechproject.commons.api.TasksEventParser" />
 
+    <osgi:service id="commcareFormImporterFactoryOsgi" ref="commcareFormImporterFactory"
+                  interface="javax.servlet.http.HttpSessionListener" />
+
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>
 
     <osgi:reference id="eventListenerRegistry"
