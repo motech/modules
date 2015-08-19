@@ -88,7 +88,7 @@
 
         $scope.updateProgress = function () {
             var percentage = Math.round(($scope.formsImported / $scope.totalForms) * 100);
-            percentage = !isNaN(percentage) && !Infinity && percentage >= 0 ? percentage : 0;
+            percentage = !isNaN(percentage) && percentage !== Infinity && percentage >= 0 ? percentage : 0;
             $('#commcareImportPercentage').text(percentage + '%').css({width: percentage + '%'}).attr('aria-valuenow', percentage);
         };
 
