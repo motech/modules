@@ -37,6 +37,7 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
     private int totalCount;
     private int pageCount;
     private String lastImportedDate;
+    private String lastImportedFormId;
     private boolean inError;
     private String errorMessage;
 
@@ -158,6 +159,7 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
         status.setTotalForms(totalCount);
         status.setFormsImported(importCount);
         status.setLastImportDate(lastImportedDate);
+        status.setLastImportFormId(lastImportedFormId);
         status.setImportInProgress(importInProgress);
 
         if (inError) {
@@ -177,6 +179,7 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
         importInProgress = true;
         importCount = 0;
         lastImportedDate = null;
+        lastImportedFormId = null;
         totalCount =  countForImport(dateRange, configName);
         inError = false;
         errorMessage = null;
@@ -194,6 +197,7 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
             eventRelay.sendEventMessage(formEvent.toMotechEvent());
 
             lastImportedDate = form.getReceivedOn();
+            lastImportedFormId = form.getId();
             importCount++;
 
             LOGGER.info("Imported form with ID: {}, received on: {}", form.getId(), form.getReceivedOn());

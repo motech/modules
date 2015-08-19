@@ -21,6 +21,11 @@ public class FormImportStatus {
     private String lastImportDate;
 
     /**
+     * The ID of the last successfully imported form.
+     */
+    private String lastImportFormId;
+
+    /**
      * Whether the import ended in error.
      */
     private boolean error;
@@ -117,5 +122,19 @@ public class FormImportStatus {
      */
     public void setImportInProgress(boolean importInProgress) {
         this.importInProgress = importInProgress;
+    }
+
+    /**
+     * @return the ID of the last successfully imported form
+     */
+    public String getLastImportFormId() {
+        return lastImportFormId;
+    }
+
+    /**
+     * @param lastImportFormId the ID of the last successfully imported form
+     */
+    public void setLastImportFormId(String lastImportFormId) {
+        this.lastImportFormId = lastImportFormId;
     }
 }

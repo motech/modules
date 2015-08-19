@@ -107,6 +107,7 @@ public class CommcareFormImporterTest {
         assertEquals(5, status.getFormsImported());
         assertEquals(5, status.getTotalForms());
         assertEquals(CommcareParamHelper.printDateTime(REC_DATES.get(4)), status.getLastImportDate());
+        assertEquals("id4", status.getLastImportFormId());
         assertFalse(status.isImportInProgress());
     }
 
@@ -130,6 +131,7 @@ public class CommcareFormImporterTest {
         assertEquals(0, status.getFormsImported());
         assertEquals(0, status.getTotalForms());
         assertNull(status.getLastImportDate());
+        assertNull(status.getLastImportFormId());
         assertFalse(status.isImportInProgress());
     }
 
