@@ -31,24 +31,34 @@
                     timeFormat: "HH:mm:ss",
                     separator: ' T ',
                     onSelect: function (selectedDateTime) {
-                        endDateTextBox.datetimepicker('option', 'minDateTime', elem.datetimepicker('getDate'));
+                        endDateTextBox.datetimepicker('option', 'minDate', elem.datetimepicker('getDate'));
                         $(this).change();
                     },
-                    onClose: function (year, month, inst) {
-                        var viewValue = $(this).val();
-                        scope.safeApply(function () {
-                            ngModel.$setViewValue(viewValue);
+                    onClose: function (dateText, inst) {
+                        var viewValue = elem.val(), testStartDate, testEndDate;
+                        if (endDateTextBox.val() != '') {
+                            testStartDate = elem.datetimepicker('getDate');
+                            testEndDate = endDateTextBox.datetimepicker('getDate');
+                            if (testStartDate > testEndDate) {
+                                endDateTextBox.datetimepicker('setDate', testStartDate); console.log('testStartDate ' + testStartDate);
+                            }
+                            scope.safeApply(function () {
+                                ngModel.$setViewValue(viewValue);
                             });
+                        } else {
+                            endDateTextBox.val(dateText);
+                        }
                         scope.updateImportRequest('receivedOnStart', viewValue);
                     },
                     onChangeMonthYear: function (year, month, inst) {
-                        var curDate = $(this).datetimepicker("getDate");
+                        var curDate = elem.datetimepicker("getDate");
                         if (curDate === null) {
                             return;
                         }
                         if (curDate.getYear() !== year || curDate.getMonth() !== month - 1) {
                             curDate.setYear(year);
                             curDate.setMonth(month - 1);
+                            endDateTextBox.datetimepicker('option', 'minDate', curDate);
                             $(this).datetimepicker("setDate", curDate);
                             $(this).change();
                         }
@@ -59,6 +69,7 @@
                     scope.receivedOnStart = null;
                     elem.datetimepicker('setTime', null);
                     elem.datetimepicker('setDate', null);
+                    elem.datetimepicker('option', 'maxDate', null);
                     elem.datetimepicker('option', 'maxDateTime', null);
                 });
             }
@@ -80,14 +91,23 @@
                     timeFormat: "HH:mm:ss",
                     separator: ' T ',
                     onSelect: function (selectedDateTime) {
-                        startDateTextBox.datetimepicker('option', 'maxDateTime', elem.datetimepicker('getDate'));
+                        startDateTextBox.datetimepicker('option', 'maxDate', elem.datetimepicker('getDate'));
                         $(this).change();
                     },
-                    onClose: function (year, month, inst) {
-                        var viewValue = $(this).val();
+                    onClose: function (dateText, inst) {
+                        var viewValue = elem.val(), testStartDate, testEndDate;
+                        if (startDateTextBox.val() != '') {
+                            testStartDate = startDateTextBox.datetimepicker('getDate');
+                            testEndDate = elem.datetimepicker('getDate');
+                            if (testStartDate > testEndDate) {
+                                startDateTextBox.datetimepicker('setDate', testEndDate);
+                            }
                         scope.safeApply(function () {
                             ngModel.$setViewValue(viewValue);
                         });
+                        } else {
+                            startDateTextBox.val(dateText);
+                        }
                         scope.updateImportRequest('receivedOnEnd', viewValue);
                     },
                     onChangeMonthYear: function (year, month, inst) {
@@ -98,6 +118,7 @@
                         if (curDate.getYear() !== year || curDate.getMonth() !== month - 1) {
                             curDate.setYear(year);
                             curDate.setMonth(month - 1);
+                            startDateTextBox.datetimepicker('option', 'maxDate', curDate);
                             $(this).datetimepicker("setDate", curDate);
                             $(this).change();
                         }
@@ -106,7 +127,9 @@
 
                 $("#selectImportOption").children("ul").on("click", function () {
                     scope.receivedOnEnd = null;
+                    elem.datetimepicker('setTime', null);
                     elem.datetimepicker('setDate', null);
+                    elem.datetimepicker('option', 'minDate', null);
                     elem.datetimepicker('option', 'minDateTime', null);
                 });
             }
