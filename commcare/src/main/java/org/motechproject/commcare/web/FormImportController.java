@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,12 +18,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpSession;
 
+import static org.motechproject.commcare.util.Constants.HAS_MANAGE_COMMCARE_PERMISSION;
+
 /**
  * The controller responsible for tbe form import tab in the UI.
  * Allows starting the form form import and checking the status of an ongoing import.
  */
 @Controller
 @RequestMapping("/form-import")
+@PreAuthorize(HAS_MANAGE_COMMCARE_PERMISSION)
 public class FormImportController extends CommcareController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FormImportController.class);
