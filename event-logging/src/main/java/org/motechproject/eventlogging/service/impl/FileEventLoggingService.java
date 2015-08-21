@@ -11,14 +11,27 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Implementation of {@link org.motechproject.eventlogging.service.EventLoggingService}
+ * It is used to log events to files.
+ */
 public class FileEventLoggingService implements EventLoggingService {
 
     private List<FileEventLogger> fileEventLoggers = new ArrayList<>();
 
+    /**
+     * Creates an instance of FileEventLoggingService without any loggers.
+     */
     public FileEventLoggingService() {
 
     }
 
+    /**
+     * Creates an instance of FileEventLoggingService and adds to it all loggers
+     * passed as a parameter.
+     *
+     * @param fileEventLoggers list of loggers to add to this service
+     */
     public FileEventLoggingService(List<FileEventLogger> fileEventLoggers) {
         if (fileEventLoggers != null) {
             this.fileEventLoggers = fileEventLoggers;
