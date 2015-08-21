@@ -46,6 +46,12 @@
             <artifactId>motech-platform-dataservices</artifactId>
             <version>${motech.version}</version>
         </dependency>
+         <dependency>
+            <groupId>${motech.groupId}</groupId>
+            <artifactId>motech-tasks</artifactId>
+            <version>${motech.version}</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
     <build>
         <resources>
@@ -116,6 +122,8 @@
                             org.springframework.aop.framework,
                             org.motechproject.admin.domain,
                             org.motechproject.admin.messages,
+                            org.motechproject.event.listener,
+                            org.motechproject.event.listener.annotations,
                             *
                         </Import-Package>
                         <Export-Package>
@@ -123,6 +131,9 @@
                             org.motechproject.sms.audit;version=${project.version},
                             org.motechproject.sms.configs;version=${project.version},
                             org.motechproject.sms.util;version=${project.version}
+                            org.motechproject.sms.tasks;version=${project.version},
+                            org.motechproject.sms.event;version=${project.version},
+                            org.motechproject.sms.event.constants;version=${project.version}
                         </Export-Package>
                         <Bundle-DocURL>
                             http://modules.motechproject.org/en/latest/sms.html
