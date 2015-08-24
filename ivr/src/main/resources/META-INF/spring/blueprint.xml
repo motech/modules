@@ -44,7 +44,12 @@
         </constructor-arg>
         <property name="settingsURL" value="/ivr/settings" />
         <property name="defaultURL" value="/ivr/templates"/>
-        <property name="roleForAccess" value="manageIVR" />
+        <property name="roleForAccess">
+            <list>
+                <value>manageIVR</value>
+                <value>viewIVRLogs</value>
+            </list>
+        </property>
     </bean>
 
     <osgi:service ref="outboundCallService" interface="org.motechproject.ivr.service.OutboundCallService" />

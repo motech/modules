@@ -1,6 +1,10 @@
 [
     {
         "roleName": "IVR Admin",
-        "permissionNames": ["manageIVR"]
+        "permissionNames": ["manageIVR", "viewIVRLogs"]
+    },
+    {
+        "roleName": "IVR Log Viewer",
+        "permissionNames": ["viewIVRLogs"]
     }
 ]
