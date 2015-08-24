@@ -25,7 +25,7 @@ import java.util.Objects;
  */
 @Entity(nonEditable = true)
 @CrudEvents(CrudEventType.NONE)
-@Access(value = SecurityMode.PERMISSIONS, members = {Constants.MANAGE_IVR})
+@Access(value = SecurityMode.PERMISSIONS, members = {Constants.VIEW_IVR_LOGS_PERMISSION})
 public class CallDetailRecord {
 
     private static final int COL1 = 0;
