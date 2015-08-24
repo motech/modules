@@ -9,9 +9,11 @@
     </div>
     <div class="header-footer">
         <ul id="content-tabs" class="nav nav-tabs">
-            <li ng-class="active('#/ivr/templates')"><a href="#/ivr/templates">{{msg('ivr.web.templates.title')}}</a></li>
-            <li ng-class="active('#/ivr/settings')"><a href="#/ivr/settings">{{msg('ivr.web.settings.title')}}</a></li>
-            <li ng-class="active('#ivr/logs')"><a href="#/ivr/logs">{{msg('ivr.web.log.title')}}</a></li>
+            <li ng-class="active('#/ivr/' + tab)" ng-repeat="tab in IVR_AVAILABLE_TABS">
+                <a href="#/ivr/{{tab}}">
+                    {{msg('ivr.web.' + tab + '.title')}}
+                </a>
+            </li>
         </ul>
     </div>
     <div class="ui-layout-content">
