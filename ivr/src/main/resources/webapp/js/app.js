@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    var ivrmodule = angular.module('ivr', ['motech-dashboard', 'ivr.controllers', 'ngCookies', 'ui.bootstrap']), id;
+    var ivrmodule = angular.module('ivr', ['motech-dashboard', 'ivr.controllers', 'ngCookies', 'ui.bootstrap', 'mds']), id;
 
     $.ajax({
         url: '../mds/entities/getEntity/IVR Module/CallDetailRecord',
