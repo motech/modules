@@ -10,5 +10,5 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({SmsAuditServiceBundleIT.class, IncomingControllerBundleIT.class, SendControllerBundleIT.class,
         StatusControllerBundleIT.class})
 public class SmsIntegrationTests {
-    public static final int BUNDLE_MS_WAIT_TIME = 1000;
+    public static final int BUNDLE_MS_WAIT_TIME = 3000;
 }
