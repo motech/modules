@@ -86,9 +86,21 @@ public class Config {
      */
     private String servicesMapString;
 
+    /**
+     * This field is used to pass the call status mapping back & forth to the UI
+     */
+    private String callStatusMappingString;
+
+    /**
+     * This field is used to map status codes from providers to the specified values
+     */
+    @JsonIgnore
+    private Map<String, String> callStatusMapping;
+
     public Config(String name, boolean authRequired, String username, String password, //NO CHECKSTYLE ArgumentCount
-                  List<String> ignoredStatusFields, String statusFieldMapString, String servicesMapString, HttpMethod outgoingCallMethod,
-                  boolean jsonRequest, String outgoingCallUriTemplate, boolean jsonResponse, List<String> jsonExtraParamsList) {
+                  List<String> ignoredStatusFields, String statusFieldMapString, String servicesMapString, String callStatusMappingString,
+                  HttpMethod outgoingCallMethod, boolean jsonRequest, String outgoingCallUriTemplate, boolean jsonResponse,
+                  List<String> jsonExtraParamsList) {
         this.name = name;
         this.authRequired = authRequired;
         this.username = username;
@@ -103,6 +115,8 @@ public class Config {
         this.servicesMap = parseStringToMap(servicesMapString);
         this.jsonResponse = jsonResponse;
         this.jsonExtraParamsList = jsonExtraParamsList;
+        this.callStatusMappingString = callStatusMappingString;
+        this.callStatusMapping = parseStringToMap(callStatusMappingString);
     }
 
     private Map<String, String> parseStringToMap(String string) {
@@ -115,7 +129,7 @@ public class Config {
         for (String s : strings) {
             String[] kv = s.split("\\s*:\\s*");
             if (kv.length == 2) {
-                map.put(kv[0], kv[1]);
+                map.put(kv[0].trim(), kv[1] != null ? kv[1].trim() : kv[1]);
             } else {
                 throw new IllegalArgumentException(String.format("%s is an invalid map", string));
             }
@@ -237,6 +251,22 @@ public class Config {
         return servicesMap;
     }
 
+    public String getCallStatusMappingString() {
+        return callStatusMappingString;
+    }
+
+    public void setCallStatusMappingString(String callStatusMappingString) {
+        this.callStatusMappingString = callStatusMappingString;
+        this.callStatusMapping = parseStringToMap(callStatusMappingString);
+    }
+
+    public Map<String, String> getCallStatusMapping() {
+        if (null == callStatusMapping && StringUtils.isNotBlank(callStatusMappingString)) {
+            callStatusMapping = parseStringToMap(callStatusMappingString);
+        }
+        return callStatusMapping;
+    }
+
     /**
      * When pinging Motech back to provide call status, IVR providers sometimes send fields with different names than
      * those that are used by the system. For example the originating number is sometimes provided as 'callerid' whereas
@@ -250,7 +280,7 @@ public class Config {
         // When a Config is deserialized from json, the statusFieldMapString may be set, but no constructor or setter is
         // called, so it's possible that the statusFieldMap is null when statusFieldMapString isn't blank, if that's the
         // case then just parse statusFieldMapString when it's needed the first time.
-        if (null == statusFieldMap && !StringUtils.isBlank(statusFieldMapString)) {
+        if (null == statusFieldMap && StringUtils.isNotBlank(statusFieldMapString)) {
             statusFieldMap = parseStringToMap(statusFieldMapString);
         }
         if (null != statusFieldMap && statusFieldMap.containsKey(fieldName)) {
@@ -272,22 +302,24 @@ public class Config {
             { return false; }
         if (jsonExtraParamsList != null ? !jsonExtraParamsList.equals(config.jsonExtraParamsList) : config.jsonExtraParamsList != null)
             { return false; }
-        if (!name.equals(config.name)) { return false; }
         if (outgoingCallMethod != config.outgoingCallMethod) { return false; }
-        if (!outgoingCallUriTemplate.equals(config.outgoingCallUriTemplate)) { return false; }
-        if (password != null ? !password.equals(config.password) : config.password != null) { return false; }
         if (statusFieldMap != null ? !statusFieldMap.equals(config.statusFieldMap) : config.statusFieldMap != null)
             { return false; }
-        if (statusFieldMapString != null ? !statusFieldMapString.equals(config.statusFieldMapString) : config.statusFieldMapString != null)
-            { return false; }
-        if (username != null ? !username.equals(config.username) : config.username != null) { return false; }
         if (servicesMap != null ? !servicesMap.equals(config.servicesMap) : config.servicesMap != null) {
             return false;
         }
-        if (servicesMapString != null ? !servicesMapString.equals(config.servicesMapString) : config.servicesMapString != null) {
+        if (callStatusMapping != null ? !callStatusMapping.equals(config.callStatusMapping) : config.callStatusMapping != null) {
             return false;
         }
-
+        if (!StringUtils.equals(name, config.name) ||
+                !StringUtils.equals(username, config.username) ||
+                !StringUtils.equals(password, config.password) ||
+                !StringUtils.equals(callStatusMappingString, config.callStatusMappingString) ||
+                !StringUtils.equals(statusFieldMapString, config.statusFieldMapString) ||
+                !StringUtils.equals(outgoingCallUriTemplate, config.outgoingCallUriTemplate) ||
+                !StringUtils.equals(servicesMapString, config.servicesMapString)) {
+            return false;
+        }
         return true;
     }
 
@@ -306,6 +338,8 @@ public class Config {
         result = 31 * result + (statusFieldMapString != null ? statusFieldMapString.hashCode() : 0);
         result = 31 * result + (servicesMap != null ? servicesMap.hashCode() : 0);
         result = 31 * result + (servicesMapString != null ? servicesMapString.hashCode() : 0);
+        result = 31 * result + (callStatusMapping != null ? callStatusMapping.hashCode() : 0);
+        result = 31 * result + (callStatusMappingString != null ? callStatusMappingString.hashCode() : 0);
         return result;
     }
 
@@ -325,6 +359,8 @@ public class Config {
                 ", statusFieldMapString='" + statusFieldMapString + '\'' +
                 ", servicesMap=" + servicesMap +
                 ", servicesMapString='" + servicesMapString + '\'' +
+                ", callStatusMapping='" + callStatusMapping + '\'' +
+                ", callStatusMappingString='" + callStatusMappingString + '\'' +
                 '}';
     }
 }

@@ -1,5 +1,6 @@
 package org.motechproject.ivr.domain;
 
+import org.apache.commons.collections.MapUtils;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.motechproject.commons.date.util.DateUtil;
@@ -290,8 +291,9 @@ public class CallDetailRecord {
      *
      * @param key the name of the field to set
      * @param val the value to set
+     * @param callStatusMapping the map which contains mapping for call status. It is used to change status value in the cdr log.
      */
-    public void setField(String key, String val) {
+    public void setField(String key, String val, Map<String, String> callStatusMapping) {
         String value;
 
         if (val.length() > MAX_ENTITY_STRING_LENGTH) {
@@ -307,7 +309,7 @@ public class CallDetailRecord {
             Object object;
             try {
                 switch (key) {
-                    case  "callDirection":
+                    case "callDirection":
                         try {
                             object = CallDirection.valueOf(value);
                         } catch (IllegalArgumentException e) {
@@ -316,6 +318,13 @@ public class CallDetailRecord {
                             providerExtraData.put(key, value);
                             object = CallDirection.UNKNOWN;
                         }
+                        break;
+                    case "callStatus":
+                        Object statusValue = value;
+                        if (MapUtils.isNotEmpty(callStatusMapping)) {
+                            statusValue = callStatusMapping.get(value.toString()) == null ? value : callStatusMapping.get(value.toString());
+                        }
+                        object = statusValue;
                         break;
                     default:
                         object = value;
