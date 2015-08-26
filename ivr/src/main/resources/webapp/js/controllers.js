@@ -230,6 +230,7 @@
                 'outgoingCallMethod':'GET',
                 'ignoredStatusFields':[],
                 'statusFieldMapString':'',
+                'callStatusMappingString':'',
                 'servicesMapString':''
             };
             newLength = $scope.configs.push(newConfig);

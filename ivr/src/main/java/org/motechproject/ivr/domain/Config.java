@@ -86,9 +86,21 @@ public class Config {
      */
     private String servicesMapString;
 
+    /**
+     * This field is used to pass the call status mapping back & forth to the UI
+     */
+    private String callStatusMappingString;
+
+    /**
+     * This field is used to map status codes from providers to the specified values
+     */
+    @JsonIgnore
+    private Map<String, String> callStatusMapping;
+
     public Config(String name, boolean authRequired, String username, String password, //NO CHECKSTYLE ArgumentCount
-                  List<String> ignoredStatusFields, String statusFieldMapString, String servicesMapString, HttpMethod outgoingCallMethod,
-                  boolean jsonRequest, String outgoingCallUriTemplate, boolean jsonResponse, List<String> jsonExtraParamsList) {
+                  List<String> ignoredStatusFields, String statusFieldMapString, String servicesMapString, String callStatusMappingString,
+                  HttpMethod outgoingCallMethod, boolean jsonRequest, String outgoingCallUriTemplate, boolean jsonResponse,
+                  List<String> jsonExtraParamsList) {
         this.name = name;
         this.authRequired = authRequired;
         this.username = username;
@@ -103,6 +115,8 @@ public class Config {
         this.servicesMap = parseStringToMap(servicesMapString);
         this.jsonResponse = jsonResponse;
         this.jsonExtraParamsList = jsonExtraParamsList;
+        this.callStatusMappingString = callStatusMappingString;
+        this.callStatusMapping = parseStringToMap(callStatusMappingString);
     }
 
     private Map<String, String> parseStringToMap(String string) {
@@ -115,7 +129,7 @@ public class Config {
         for (String s : strings) {
             String[] kv = s.split("\\s*:\\s*");
             if (kv.length == 2) {
-                map.put(kv[0], kv[1]);
+                map.put(kv[0].trim(), kv[1] != null ? kv[1].trim() : kv[1]);
             } else {
                 throw new IllegalArgumentException(String.format("%s is an invalid map", string));
             }
@@ -237,6 +251,22 @@ public class Config {
         return servicesMap;
     }
 
+    public String getCallStatusMappingString() {
+        return callStatusMappingString;
+    }
+
+    public void setCallStatusMappingString(String callStatusMappingString) {
+        this.callStatusMappingString = callStatusMappingString;
+        this.callStatusMapping = parseStringToMap(callStatusMappingString);
+    }
+
+    public Map<String, String> getCallStatusMapping() {
+        if (null == callStatusMapping && !StringUtils.isBlank(callStatusMappingString)) {
+            callStatusMapping = parseStringToMap(callStatusMappingString);
+        }
+        return callStatusMapping;
+    }
+
     /**
      * When pinging Motech back to provide call status, IVR providers sometimes send fields with different names than
      * those that are used by the system. For example the originating number is sometimes provided as 'callerid' whereas
@@ -287,6 +317,12 @@ public class Config {
         if (servicesMapString != null ? !servicesMapString.equals(config.servicesMapString) : config.servicesMapString != null) {
             return false;
         }
+        if (callStatusMapping != null ? !callStatusMapping.equals(config.callStatusMapping) : config.callStatusMapping != null) {
+            return false;
+        }
+        if (callStatusMappingString != null ? !callStatusMappingString.equals(config.servicesMapString) : config.callStatusMappingString != null) {
+            return false;
+        }
 
         return true;
     }
@@ -306,6 +342,8 @@ public class Config {
         result = 31 * result + (statusFieldMapString != null ? statusFieldMapString.hashCode() : 0);
         result = 31 * result + (servicesMap != null ? servicesMap.hashCode() : 0);
         result = 31 * result + (servicesMapString != null ? servicesMapString.hashCode() : 0);
+        result = 31 * result + (callStatusMapping != null ? callStatusMapping.hashCode() : 0);
+        result = 31 * result + (callStatusMappingString != null ? callStatusMappingString.hashCode() : 0);
         return result;
     }
 
@@ -325,6 +363,8 @@ public class Config {
                 ", statusFieldMapString='" + statusFieldMapString + '\'' +
                 ", servicesMap=" + servicesMap +
                 ", servicesMapString='" + servicesMapString + '\'' +
+                ", callStatusMapping='" + callStatusMapping + '\'' +
+                ", callStatusMappingString='" + callStatusMappingString + '\'' +
                 '}';
     }
 }

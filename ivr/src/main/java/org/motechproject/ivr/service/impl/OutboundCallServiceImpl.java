@@ -92,7 +92,8 @@ public class OutboundCallServiceImpl implements OutboundCallService {
             if (config.shouldIgnoreField(entry.getKey())) {
                 LOGGER.debug("Ignoring provider field '{}' with value '{}'", entry.getKey(), entry.getValue());
             } else {
-                callDetailRecord.setField(config.mapStatusField(entry.getKey()), entry.getValue());
+                //Default status like CALL_INITIATED will be overwritten by value provided in params
+                callDetailRecord.setField(config.mapStatusField(entry.getKey()), entry.getValue(), config.getCallStatusMapping());
             }
         }
 
