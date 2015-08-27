@@ -261,7 +261,7 @@ public class Config {
     }
 
     public Map<String, String> getCallStatusMapping() {
-        if (null == callStatusMapping && !StringUtils.isBlank(callStatusMappingString)) {
+        if (null == callStatusMapping && StringUtils.isNotBlank(callStatusMappingString)) {
             callStatusMapping = parseStringToMap(callStatusMappingString);
         }
         return callStatusMapping;
@@ -280,7 +280,7 @@ public class Config {
         // When a Config is deserialized from json, the statusFieldMapString may be set, but no constructor or setter is
         // called, so it's possible that the statusFieldMap is null when statusFieldMapString isn't blank, if that's the
         // case then just parse statusFieldMapString when it's needed the first time.
-        if (null == statusFieldMap && !StringUtils.isBlank(statusFieldMapString)) {
+        if (null == statusFieldMap && StringUtils.isNotBlank(statusFieldMapString)) {
             statusFieldMap = parseStringToMap(statusFieldMapString);
         }
         if (null != statusFieldMap && statusFieldMap.containsKey(fieldName)) {
@@ -302,25 +302,22 @@ public class Config {
             { return false; }
         if (jsonExtraParamsList != null ? !jsonExtraParamsList.equals(config.jsonExtraParamsList) : config.jsonExtraParamsList != null)
             { return false; }
-        if (!name.equals(config.name)) { return false; }
         if (outgoingCallMethod != config.outgoingCallMethod) { return false; }
-        if (!outgoingCallUriTemplate.equals(config.outgoingCallUriTemplate)) { return false; }
-        if (password != null ? !password.equals(config.password) : config.password != null) { return false; }
         if (statusFieldMap != null ? !statusFieldMap.equals(config.statusFieldMap) : config.statusFieldMap != null)
             { return false; }
-        if (statusFieldMapString != null ? !statusFieldMapString.equals(config.statusFieldMapString) : config.statusFieldMapString != null)
-            { return false; }
-        if (username != null ? !username.equals(config.username) : config.username != null) { return false; }
         if (servicesMap != null ? !servicesMap.equals(config.servicesMap) : config.servicesMap != null) {
-            return false;
-        }
-        if (servicesMapString != null ? !servicesMapString.equals(config.servicesMapString) : config.servicesMapString != null) {
             return false;
         }
         if (callStatusMapping != null ? !callStatusMapping.equals(config.callStatusMapping) : config.callStatusMapping != null) {
             return false;
         }
-        if (callStatusMappingString != null ? !callStatusMappingString.equals(config.servicesMapString) : config.callStatusMappingString != null) {
+        if (!StringUtils.equals(name, config.name) ||
+                !StringUtils.equals(username, config.username) ||
+                !StringUtils.equals(password, config.password) ||
+                !StringUtils.equals(callStatusMappingString, config.callStatusMappingString) ||
+                !StringUtils.equals(statusFieldMapString, config.statusFieldMapString) ||
+                !StringUtils.equals(outgoingCallUriTemplate, config.outgoingCallUriTemplate) ||
+                !StringUtils.equals(servicesMapString, config.servicesMapString)) {
             return false;
         }
 
