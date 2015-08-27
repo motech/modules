@@ -71,7 +71,7 @@ public class StatusControllerBundleIT extends BasePaxIT {
     public void shouldNotLogWhenPassedInvalidConfig() throws Exception {
 
         //Create a config
-        configService.updateConfigs(singletonList(new Config("foo", false, null, null, null, null, null, null, false, null, false, null)));
+        configService.updateConfigs(Arrays.asList(new Config("foo", false, null, null, null, null, null, null, null, false, null, false, null)));
 
         //Create & send a CDR status callback
         URIBuilder builder = new URIBuilder();
@@ -92,7 +92,7 @@ public class StatusControllerBundleIT extends BasePaxIT {
 
         //Create a config
         List<String> ignoredStatusFields = Arrays.asList("ignoreme", "ignoreme2");
-        configService.updateConfigs(singletonList(new Config("foo", false, null, null, ignoredStatusFields, "FROM:from", null, null, false, null, false, null)));
+        configService.updateConfigs(Arrays.asList(new Config("foo", false, null, null, ignoredStatusFields, "FROM:from", null, "ANSWERED: NEW STATUS", null, false, null, false, null)));
 
         //Create & send a CDR status callback
         String motechCallId = UUID.randomUUID().toString();
@@ -117,7 +117,7 @@ public class StatusControllerBundleIT extends BasePaxIT {
         assertEquals("+12066661212", callDetailRecord.getTo());
         assertFalse(callDetailRecord.getProviderExtraData().containsKey("ignoreme"));
         assertFalse(callDetailRecord.getProviderExtraData().containsKey("ignoreme2"));
-        assertEquals("ANSWERED", callDetailRecord.getCallStatus());
+        assertEquals("NEW STATUS", callDetailRecord.getCallStatus());
         assertEquals(1, callDetailRecord.getProviderExtraData().keySet().size());
         assertEquals(callDetailRecord.getProviderExtraData().get("foo"), "bar");
         assertNull(callDetailRecord.getTemplateName());
