@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "limit": 20,
+    "next": "?case_id=c1&limit=20&section_id=s1&offset=20",
+    "offset": 0,
+    "previous": null,
+    "total_count": null
+  },
+  "objects": [
+    {
+      "product_id": "p1",
+      "product_name": null,
+      "quantity": "0.00000",
+      "section_id": "s1",
+      "stock_on_hand": "13.00000",
+      "transaction_date": "2015-08-10T14:59:55.029219",
+      "type": "soh"
+    },
+      "product_id": "p3",
+      "product_name": null,
+      "quantity": "0.00000",
+      "section_id": "s1",
+      "stock_on_hand": "17.00000",
+      "transaction_date": "2015-08-10T14:59:55.029219",
+      "type": "soh"
+    },
+    {
+      "product_id": "p2",
+      "product_name": null,
+      "quantity": "0.00000",
+      "section_id": "s1",
+      "stock_on_hand": "15.00000",
+      "transaction_date": "2015-08-10T14:59:55.029219",
+      "type": "soh"
+    },
+    {
+      "product_id": "p1",
+      "product_name": null,
+      "quantity": "0.00000",
+      "section_id": "s1",
+      "stock_on_hand": "33.00000",
+      "transaction_date": "2015-08-10T14:59:55.029219",
+      "type": "soh"
+    }
+    {
+      "product_id": "p3",
+      "product_name": null,
+      "quantity": "0.00000",
+      "section_id": "s1",
+      "stock_on_hand": "37.00000",
+      "transaction_date": "2015-08-10T14:59:55.029219",
+      "type": "soh"
+    },
+    {
+      "product_id": "p2",
+      "product_name": null,
+      "quantity": "0.00000",
+      "section_id": "s1",
+      "stock_on_hand": "35.00000",
+      "transaction_date": "2015-08-10T14:59:55.029219",
+      "type": "soh"
+    },
+    {
+      "product_id": "p1",
+      "product_name": null,
+      "quantity": "0.00000",
+      "section_id": "s1",
+      "stock_on_hand": "53.00000",
+      "transaction_date": "2015-08-10T14:59:55.029219",
+      "type":
+    },
+    {
+      "product_id": "p3",
+      "product_name": null,
+      "quantity": "0.00000",
+      "section_id": "s1",
+      "stock_on_hand": "57.00000",
+      "transaction_date": "2015-08-10T14:59:55.029219",
+      "type": "soh"
+    },
+    {
+      "product_id": "p2",
+      "product_name": null,
+      "quantity": "0.00000",
+      "section_id": "s1",
+      "stock_on_hand": "55.00000",
+      "transaction_date": "2015-08-10T14:59:55.029219",
+      "type": "soh"
+    }
+  ]
+}

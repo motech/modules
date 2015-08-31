@@ -15,6 +15,9 @@ import org.junit.runner.RunWith;
 import org.motechproject.commcare.config.Config;
 import org.motechproject.commcare.domain.CommcareApplicationJson;
 import org.motechproject.commcare.domain.CommcareModuleJson;
+import org.motechproject.commcare.events.constants.DisplayNames;
+import org.motechproject.commcare.events.constants.EventDataKeys;
+import org.motechproject.commcare.events.constants.EventSubjects;
 import org.motechproject.commcare.service.CommcareApplicationDataService;
 import org.motechproject.commcare.tasks.CommcareTasksNotifier;
 import org.motechproject.commcare.tasks.action.CommcareValidatingChannel;
@@ -27,8 +30,11 @@ import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.ActionParameterRequestBuilder;
 import org.motechproject.tasks.domain.ActionEvent;
 import org.motechproject.tasks.domain.ActionEventBuilder;
+import org.motechproject.tasks.domain.ActionParameter;
+import org.motechproject.tasks.domain.ActionParameterBuilder;
 import org.motechproject.tasks.domain.Channel;
 import org.motechproject.tasks.domain.EventParameter;
+import org.motechproject.tasks.domain.ParameterType;
 import org.motechproject.tasks.domain.Task;
 import org.motechproject.tasks.domain.TaskActionInformation;
 import org.motechproject.tasks.domain.TaskTriggerInformation;
@@ -185,8 +191,8 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         List<TriggerEvent> triggerEvents = channel.getTriggerTaskEvents();
         List<ActionEvent> actionEvents = channel.getActionTaskEvents();
 
-        assertTrue(actionEvents.isEmpty());
-        assertEquals(7, triggerEvents.size());
+        assertEquals(1, actionEvents.size());
+        assertEquals(8, triggerEvents.size());
 
         TaskTriggerInformation expectedForm1 = new TaskTriggerInformation();
         TaskTriggerInformation expectedForm2 = new TaskTriggerInformation();
@@ -215,6 +221,15 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         assertEquals("org.motechproject.commcare.api.case", caseTrigger.getTriggerListenerSubject());
         assertTriggerParameters(caseTrigger.getEventParameters(),
                 Arrays.asList("motherName", "childName", "dob", "caseName"));
+
+        ActionEvent expectedActionEvent = prepareAction();
+        TaskActionInformation expectedAction = new TaskActionInformation();
+        expectedAction.setSubject(expectedActionEvent.getSubject());
+
+        assertTrue(channel.containsAction(expectedAction));
+
+        ActionEvent actionEvent = channel.getAction(expectedAction);
+        assertEquals(expectedActionEvent, actionEvent);
     }
 
     private void assertTriggerParameters(List<EventParameter> eventParameters, List<String> expected) {
@@ -268,7 +283,53 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
             Thread.sleep(WAIT_TIME);
         }
         getLogger().info("Task executed after " + retries + " retries, what took about "
-                + (retries*WAIT_TIME)/1000 + " seconds");
+                + (retries * WAIT_TIME) / 1000 + " seconds");
+    }
+
+    private ActionEvent prepareAction() {
+        SortedSet<ActionParameter> parameters = new TreeSet<>();
+        ActionParameterBuilder builder;
+        int order = 0;
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName(DisplayNames.CASE_ID)
+                .setKey(EventDataKeys.CASE_ID)
+                .setType(ParameterType.UNICODE)
+                .setRequired(true)
+                .setOrder(order++);
+        parameters.add(builder.createActionParameter());
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName(DisplayNames.SECTION_ID)
+                .setKey(EventDataKeys.SECTION_ID)
+                .setType(ParameterType.UNICODE)
+                .setRequired(true)
+                .setOrder(order++);
+        parameters.add(builder.createActionParameter());
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName(DisplayNames.START_DATE)
+                .setKey(EventDataKeys.START_DATE)
+                .setType(ParameterType.DATE)
+                .setRequired(false)
+                .setOrder(order++);
+        parameters.add(builder.createActionParameter());
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName(DisplayNames.END_DATE)
+                .setKey(EventDataKeys.END_DATE)
+                .setType(ParameterType.DATE)
+                .setRequired(false)
+                .setOrder(order);
+        parameters.add(builder.createActionParameter());
+
+        String displayName = String.format("Query Stock Ledger [%s]", config.getName());
+
+        ActionEventBuilder actionBuilder = new ActionEventBuilder()
+                .setDisplayName(displayName)
+                .setSubject(EventSubjects.QUERY_STOCK_LEDGER + "." + config.getName())
+                .setActionParameters(parameters);
+        return actionBuilder.createActionEvent();
     }
 
     private void clearDB() {

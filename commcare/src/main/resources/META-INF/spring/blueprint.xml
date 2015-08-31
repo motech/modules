@@ -57,6 +57,9 @@
     <osgi:service id="commcareDataForwardingEndpointServiceOsgi" ref="commcareDataForwardingEndpointServiceImpl"
                   interface="org.motechproject.commcare.service.CommcareDataForwardingEndpointService"/>
 
+    <osgi:service id="commcareStockTransactionServiceOsgi" ref="commcareStockTransactionServiceImpl"
+                  interface="org.motechproject.commcare.service.CommcareStockTransactionService"/>
+
     <osgi:service id="formsEventParser" ref="commcareFormsEventParser"
                   interface="org.motechproject.commons.api.TasksEventParser" />
 

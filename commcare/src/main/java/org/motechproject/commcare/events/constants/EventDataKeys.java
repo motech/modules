@@ -52,6 +52,18 @@ public final class EventDataKeys {
     public static final String CONFIG_DOMAIN = "configDomain";
     public static final String CONFIG_BASE_URL = "configBaseUrl";
 
+    //QueryStockLedgerEvent
+    public static final String SECTION_ID = "section_id";
+    public static final String START_DATE = "start_date";
+    public static final String END_DATE = "end_date";
+
+    //ReceivedStockTransactionEvent
+    public static final String PRODUCT_ID = "product_id";
+    public static final String PRODUCT_NAME = "product_name";
+    public static final String QUANTITY = "quantity";
+    public static final String STOCK_ON_HAND = "stock_on_hand";
+    public static final String TRANSACTION_DATE = "transaction_date";
+    public static final String TYPE = "type";
 
     //FullFormsExceptionEvent
     public static final String FAILED_FORM_MESSAGE = "failedMessage";

@@ -32,19 +32,39 @@ public class CommcareMetadataJson {
         return limit;
     }
 
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
     public String getNextPageQueryString() {
         return nextPageQueryString;
+    }
+
+    public void setNextPageQueryString(String nextPageQueryString) {
+        this.nextPageQueryString = nextPageQueryString;
     }
 
     public int getOffset() {
         return offset;
     }
 
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+
     public String getPreviousPageQueryString() {
         return previousPageQueryString;
     }
 
+    public void setPreviousPageQueryString(String previousPageQueryString) {
+        this.previousPageQueryString = previousPageQueryString;
+    }
+
     public int getTotalCount() {
         return totalCount;
+    }
+
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
     }
 }
