@@ -55,7 +55,7 @@ public class Timer {
             return String.format("%dm %ss", minutes, FMT_SEC.format(seconds));
         }
 
-        if (seconds > 0) {
+        if (millis > MILLIS_PER_SEC) {
             return String.format("%ss", FMT_SEC.format(seconds));
         }
 
