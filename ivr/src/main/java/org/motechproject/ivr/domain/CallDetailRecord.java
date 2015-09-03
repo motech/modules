@@ -38,7 +38,7 @@ public class CallDetailRecord {
     @UIDisplayable(position = COL1)
     private long id;
 
-    @Field
+    @Field(required = true)
     @UIDisplayable(position = COL11)
     private String motechTimestamp;
 
@@ -46,7 +46,7 @@ public class CallDetailRecord {
     @UIDisplayable(position = COL12)
     private String providerTimestamp;
 
-    @Field
+    @Field(required = true)
     @UIDisplayable(position = COL2)
     private String configName;
 

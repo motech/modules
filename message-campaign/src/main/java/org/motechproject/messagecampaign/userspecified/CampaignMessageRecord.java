@@ -17,12 +17,14 @@ import org.motechproject.messagecampaign.domain.message.RepeatIntervalCampaignMe
 import org.motechproject.messagecampaign.web.util.LocalDateSerializer;
 
 import java.util.ArrayList;
+import javax.jdo.annotations.Unique;
 import java.util.List;
 import java.util.Objects;
 
 import static org.motechproject.commons.date.model.Time.parseTime;
 
 @Entity
+@Unique(name = "NAME_CAMPAIGN", members = { "name", "campaign"})
 public class CampaignMessageRecord {
     private static final long serialVersionUID = -1781293196314540037L;
     @JsonProperty
