@@ -9,7 +9,7 @@ import org.motechproject.commons.date.model.Time;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.scheduler.contract.CronSchedulableJob;
-import org.motechproject.pillreminder.EventKeys;
+import org.motechproject.pillreminder.event.EventKeys;
 import org.motechproject.pillreminder.domain.DailyScheduleDetails;
 import org.motechproject.pillreminder.domain.Dosage;
 import org.motechproject.pillreminder.domain.Medicine;

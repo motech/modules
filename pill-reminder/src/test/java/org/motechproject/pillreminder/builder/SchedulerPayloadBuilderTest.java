@@ -1,7 +1,7 @@
 package org.motechproject.pillreminder.builder;
 
 import org.junit.Test;
-import org.motechproject.pillreminder.EventKeys;
+import org.motechproject.pillreminder.event.EventKeys;
 
 import java.util.Map;
 

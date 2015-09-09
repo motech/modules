@@ -11,11 +11,15 @@ import java.util.List;
 import java.util.Set;
 
 import static org.motechproject.mds.util.Constants.Operators.MATCHES;
+import static org.motechproject.mds.util.Constants.Operators.MATCHES_CASE_INSENSITIVE;
 
 /**
  * Used to query the audit records in the database
  */
 public interface SmsRecordsDataService extends MotechDataService<SmsRecord> {
+
+    String PROVIDER_ID = "providerId";
+    String MOTECH_ID = "motechId";
 
     @Lookup
     List<SmsRecord> findByCriteria(@LookupField(name = "config", customOperator = MATCHES) String config, //NO CHECKSTYLE ParameterNumber
@@ -25,8 +29,8 @@ public interface SmsRecordsDataService extends MotechDataService<SmsRecord> {
                                    @LookupField(name = "timestamp") Range<DateTime> timestamp,
                                    @LookupField(name = "deliveryStatus") Set<DeliveryStatus> deliveryStatuses,
                                    @LookupField(name = "providerStatus", customOperator = MATCHES) String providerStatus,
-                                   @LookupField(name = "motechId", customOperator = MATCHES) String motechId,
-                                   @LookupField(name = "providerId", customOperator = MATCHES) String providerId,
+                                   @LookupField(name = MOTECH_ID, customOperator = MATCHES) String motechId,
+                                   @LookupField(name = PROVIDER_ID, customOperator = MATCHES) String providerId,
                                    @LookupField(name = "errorMessage", customOperator = MATCHES) String errorMessage,
                                    QueryParams queryParams);
 
@@ -37,8 +41,34 @@ public interface SmsRecordsDataService extends MotechDataService<SmsRecord> {
                              @LookupField(name = "timestamp") Range<DateTime> timestamp,
                              @LookupField(name = "deliveryStatus") Set<DeliveryStatus> deliveryStatuses,
                              @LookupField(name = "providerStatus", customOperator = "matches()") String providerStatus,
-                             @LookupField(name = "motechId", customOperator = MATCHES) String motechId,
-                             @LookupField(name = "providerId", customOperator = MATCHES) String providerId,
+                             @LookupField(name = MOTECH_ID, customOperator = MATCHES) String motechId,
+                             @LookupField(name = PROVIDER_ID, customOperator = MATCHES) String providerId,
                              @LookupField(name = "errorMessage", customOperator = MATCHES) String errorMessage);
 
+    /**
+     * Retrieves records by the provider ID.
+     * @param providerId the provider ID
+     * @return the list of matching records
+     */
+    @Lookup
+    List<SmsRecord> findByProviderId(@LookupField(name = PROVIDER_ID, customOperator = MATCHES_CASE_INSENSITIVE)
+                                     String providerId);
+    /**
+     * Retrieves records by the MOTECH ID.
+     * @param motechId the MOTECH ID
+     * @return the list of matching records
+     */
+    @Lookup
+    List<SmsRecord> findByMotechId(@LookupField(name = MOTECH_ID, customOperator = MATCHES_CASE_INSENSITIVE)
+                                     String motechId);
+    /**
+     * Retrieves records by both provider and MOTECH IDs.
+     * @param providerId the provider ID
+     * @param motechId the MOTECH ID
+     * @return the list of matching records
+     */
+    @Lookup
+    List<SmsRecord> findByProviderAndMotechId(
+            @LookupField(name = PROVIDER_ID, customOperator = MATCHES_CASE_INSENSITIVE) String providerId,
+            @LookupField(name = MOTECH_ID, customOperator = MATCHES_CASE_INSENSITIVE) String motechId);
 }

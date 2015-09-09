@@ -18,6 +18,8 @@ import org.motechproject.pillreminder.dao.PillRegimenDataService;
 import org.motechproject.pillreminder.domain.DailyScheduleDetails;
 import org.motechproject.pillreminder.domain.Dosage;
 import org.motechproject.pillreminder.domain.PillRegimen;
+import org.motechproject.pillreminder.event.EventKeys;
+import org.motechproject.pillreminder.handler.ReminderEventHandler;
 import org.motechproject.scheduler.contract.RepeatingSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.testing.utils.BaseUnitTest;

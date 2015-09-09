@@ -122,6 +122,7 @@
                             org.motechproject.pillreminder.contract;version=${project.version},
                             org.motechproject.pillreminder.dao;version=${project.version},
                             org.motechproject.pillreminder.domain;version=${project.version},
+                            org.motechproject.pillreminder.event;version=${project.version},
                             org.motechproject.pillreminder.service;version=${project.version}
                         </Export-Package>
                         <Import-Package>

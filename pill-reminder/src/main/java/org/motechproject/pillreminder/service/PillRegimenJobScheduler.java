@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.pillreminder.EventKeys;
+import org.motechproject.pillreminder.event.EventKeys;
 import org.motechproject.pillreminder.builder.SchedulerPayloadBuilder;
 import org.motechproject.pillreminder.domain.Dosage;
 import org.motechproject.pillreminder.domain.PillRegimen;

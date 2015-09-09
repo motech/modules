@@ -1,8 +1,9 @@
-package org.motechproject.pillreminder;
+package org.motechproject.pillreminder.handler;
 
 import org.joda.time.LocalDate;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
+import org.motechproject.pillreminder.event.EventKeys;
 import org.motechproject.pillreminder.service.PillReminderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

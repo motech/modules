@@ -1,4 +1,4 @@
-package org.motechproject.pillreminder;
+package org.motechproject.pillreminder.handler;
 
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
@@ -8,6 +8,7 @@ import org.motechproject.pillreminder.dao.PillRegimenDataService;
 import org.motechproject.pillreminder.domain.DailyScheduleDetails;
 import org.motechproject.pillreminder.domain.Dosage;
 import org.motechproject.pillreminder.domain.PillRegimen;
+import org.motechproject.pillreminder.event.EventKeys;
 import org.motechproject.scheduler.contract.RepeatingSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package org.motechproject.pillreminder;
+package org.motechproject.pillreminder.event;
 
 public final class EventKeys {
 
