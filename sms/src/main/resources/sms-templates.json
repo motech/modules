@@ -310,12 +310,12 @@
                 "urlPath":"https://go.votomobile.org/motech/api/v1/outgoing_call",
                 "jsonContentType":"true",
                 "bodyParameters":{
-                    "channel":"sms",
                     "message_id":"[message_id]",
                     "survey_id":"[survey_id]",
                     "status_callback_url":"[callback]",
                     "subscribers":"[subscribers]",
-                    "api_key":"[api_key]"
+                    "api_key":"[api_key]",
+                    "send_sms_if_voice_fails": "[send_sms_if_voice_fails]"
                 }
             },
             "response":{
