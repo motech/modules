@@ -10,6 +10,7 @@ import org.motechproject.appointments.reminder.AppointmentReminderService;
 import org.motechproject.appointments.service.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,21 +38,27 @@ public class AppointmentServiceImpl implements AppointmentService {
      * @return Copy of the appointment object from the data store
      */
     @Override
+    @Transactional
     public Appointment addAppointment(Appointment appointment) {
-
         if (appointment.getExternalId() == null) {
             throw new IllegalArgumentException("External id field cannot be null");
         }
 
-        // Add appoint first, look it up and then add reminders
-        Appointment created = appointmentDataService.create(appointment);
+        Appointment existing = appointmentDataService.findAppointmentById(appointment.getApptId());
 
-        if (created.getSendReminders()) {
-            this.appointmentReminderService.addReminders(created);
+        // Add appoint first, look it up and then add reminders
+        Appointment createdOrUpdated;
+        if (existing == null) {
+            createdOrUpdated = appointmentDataService.create(appointment);
+        } else {
+            createdOrUpdated = appointmentDataService.update(existing);
         }
 
-        return created;
+        if (createdOrUpdated.getSendReminders()) {
+            this.appointmentReminderService.addReminders(createdOrUpdated);
+        }
 
+        return createdOrUpdated;
     }
 
     /**
@@ -59,6 +66,7 @@ public class AppointmentServiceImpl implements AppointmentService {
      * @param appointments List of new appointments to add/track
      */
     @Override
+    @Transactional
     public List<Appointment> addAppointments(List<Appointment> appointments) {
 
         List<Appointment> result = new ArrayList<>(appointments.size());
@@ -75,13 +83,14 @@ public class AppointmentServiceImpl implements AppointmentService {
      * @exception org.motechproject.appointments.domain.AppointmentException if no appointment found to remove with appointmentId
      */
     @Override
+    @Transactional
     public void removeAppointment(String appointmentId) throws AppointmentException {
         Appointment lookup = appointmentDataService.findAppointmentById(appointmentId);
         if (lookup == null) {
             throw new AppointmentException("No appointment found with appointmentId " + appointmentId);
         }
-        appointmentDataService.delete(lookup);
         this.appointmentReminderService.removeReminders(lookup);
+        appointmentDataService.delete(lookup);
     }
 
     /**
@@ -90,6 +99,7 @@ public class AppointmentServiceImpl implements AppointmentService {
      * @exception org.motechproject.appointments.domain.AppointmentException if no appointment found to remove with appointmentId
      */
     @Override
+    @Transactional
     public void removeAppointments(List<String> appointments) throws AppointmentException {
         for (String currentAppointment : appointments) {
             removeAppointment(currentAppointment);
@@ -103,6 +113,7 @@ public class AppointmentServiceImpl implements AppointmentService {
      * @exception org.motechproject.appointments.domain.AppointmentException if the appointment is not found in MDS
      */
     @Override
+    @Transactional
     public Appointment updateAppointment(Appointment toUpdate) throws AppointmentException {
         Appointment old = appointmentDataService.findAppointmentById(toUpdate.getApptId());
         if (old == null) {
@@ -135,6 +146,7 @@ public class AppointmentServiceImpl implements AppointmentService {
      * @exception org.motechproject.appointments.domain.AppointmentException if the appointment in list in not found in MDS
      */
     @Override
+    @Transactional
     public List<Appointment> updateAppointments(List<Appointment> appointments) throws AppointmentException {
         List<Appointment> result = new ArrayList<>(appointments.size());
 
@@ -151,6 +163,7 @@ public class AppointmentServiceImpl implements AppointmentService {
      * @return List of appointments that belong to the external id
      */
     @Override
+    @Transactional
     public List<Appointment> findAppointmentsByExternalId(String externalId) {
         return appointmentDataService.findAppointmentsByExternalId(externalId);
     }
@@ -161,6 +174,7 @@ public class AppointmentServiceImpl implements AppointmentService {
      * @return Appointment object with id
      */
     @Override
+    @Transactional
     public Appointment getAppointment(String appointmentId) {
         return appointmentDataService.findAppointmentById(appointmentId);
     }
@@ -172,6 +186,7 @@ public class AppointmentServiceImpl implements AppointmentService {
      * @return List of appointments that belong to the external id, filtered by status
      */
     @Override
+    @Transactional
     public List<Appointment> findAppointmentsByExternalId(String externalId, AppointmentStatus status) {
         return appointmentDataService.findAppointmentByExternalIdAndStatus(externalId, status);
     }
@@ -184,6 +199,7 @@ public class AppointmentServiceImpl implements AppointmentService {
      * @exception org.motechproject.appointments.domain.AppointmentException if the appointment is not found in MDS
      */
     @Override
+    @Transactional
     public void toggleReminders(String externalId, boolean sendReminders) throws AppointmentException {
         List<Appointment> result = appointmentDataService.findAppointmentsByExternalId(externalId);
 

@@ -21,6 +21,8 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.TriggerKey;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -87,13 +89,23 @@ public class MessageCampaignServiceBundleIT extends BasePaxIT {
                 getFireTimes("org.motechproject.messagecampaign.campaign-completed-EndOfCampaignJob.DayOfWeekCampaign.entity_1-runonce");
         assertEquals(asList(newDateTime(2020, 7, 20, 10, 30, 0)), endOfCampaignFireTimes);
 
-        CampaignRecord campaignRecord = campaignRecordService.findByName("DayOfWeekCampaign");
-        campaignRecord.setMaxDuration("3 Weeks");
-        synchronized (lock) {
-            campaignRecordService.update(campaignRecord);
-            lock.wait(4000);
-        }
-        messageCampaignService.updateEnrollments(campaignRecord.getId());
+        campaignRecordService.doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                CampaignRecord campaignRecord = campaignRecordService.findByName("DayOfWeekCampaign");
+                campaignRecord.setMaxDuration("3 Weeks");
+                synchronized (lock) {
+                    campaignRecordService.update(campaignRecord);
+                    try {
+                        lock.wait(4000);
+                    } catch (InterruptedException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+            }
+        });
+
+        messageCampaignService.updateEnrollments(campaignRecordService.findByName("DayOfWeekCampaign").getId());
 
         fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.DayOfWeekCampaign.entity_1.message_key_1");
         assertEquals(asList(
@@ -109,8 +121,14 @@ public class MessageCampaignServiceBundleIT extends BasePaxIT {
                 getFireTimes("org.motechproject.messagecampaign.campaign-completed-EndOfCampaignJob.DayOfWeekCampaign.entity_1-runonce");
         assertEquals(asList(newDateTime(2020, 7, 27, 10, 30, 0)), endOfCampaignFireTimes);
 
-        campaignRecord.setMaxDuration("2 weeks");
-        campaignRecordService.update(campaignRecord);
+        campaignRecordService.doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                CampaignRecord campaignRecordToUpdate = campaignRecordService.findByName("DayOfWeekCampaign");
+                campaignRecordToUpdate.setMaxDuration("2 weeks");
+                campaignRecordService.update(campaignRecordToUpdate);
+            }
+        });
     }
 
     @Test

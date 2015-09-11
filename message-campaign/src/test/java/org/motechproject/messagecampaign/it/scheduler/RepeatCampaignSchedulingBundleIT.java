@@ -13,6 +13,8 @@ import org.motechproject.messagecampaign.domain.campaign.CampaignMessageRecord;
 import org.motechproject.messagecampaign.domain.campaign.CampaignType;
 import org.motechproject.messagecampaign.service.CampaignEnrollmentsQuery;
 import org.quartz.SchedulerException;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import java.util.List;
 
@@ -185,16 +187,27 @@ public class RepeatCampaignSchedulingBundleIT extends BaseSchedulingIT {
 
         List<CampaignMessageRecord> campaignMessageRecords = getCampaignMessageRecordService().findByNameAndType(CampaignType.REPEAT_INTERVAL, "message2");
         assertEquals(1, campaignMessageRecords.size());
-        CampaignMessageRecord campaignMessageRecord = campaignMessageRecords.get(0);
 
-        campaignMessageRecord.setRepeatEvery("6 days");
+        final long campaignMessageRecordId = campaignMessageRecords.get(0).getId();
 
-        synchronized (lock) {
-            getCampaignMessageRecordService().update(campaignMessageRecord);
-            lock.wait(4000);
-        }
+        getCampaignMessageRecordService().doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                CampaignMessageRecord campaignMessageRecord = getCampaignMessageRecordService().findById(campaignMessageRecordId);
+                campaignMessageRecord.setRepeatEvery("6 days");
 
-        getMessageCampaignService().rescheduleMessageJob(campaignMessageRecord.getId());
+                synchronized (lock) {
+                    getCampaignMessageRecordService().update(campaignMessageRecord);
+                    try {
+                        lock.wait(4000);
+                    } catch (InterruptedException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+            }
+        });
+
+        getMessageCampaignService().rescheduleMessageJob(campaignMessageRecordId);
 
         fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.WeeklyCampaign.entity_1.message_key_1-repeat");
         assertEquals(asList(
@@ -214,7 +227,13 @@ public class RepeatCampaignSchedulingBundleIT extends BaseSchedulingIT {
         endOfCampaignFireTimes = getFireTimes("org.motechproject.messagecampaign.campaign-completed-EndOfCampaignJob.WeeklyCampaign.entity_1-runonce");
         assertEquals(asList(newDateTime(2020, 7, 28, 8, 30, 0)), endOfCampaignFireTimes);
 
-        campaignMessageRecord.setRepeatEvery("10 days");
-        getCampaignMessageRecordService().update(campaignMessageRecord);
+        getCampaignMessageRecordService().doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                CampaignMessageRecord campaignMessageRecordToUpdate = getCampaignMessageRecordService().findById(campaignMessageRecordId);
+                campaignMessageRecordToUpdate.setRepeatEvery("10 days");
+                getCampaignMessageRecordService().update(campaignMessageRecordToUpdate);
+            }
+        });
     }
 }

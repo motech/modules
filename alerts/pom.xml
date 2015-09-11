@@ -53,6 +53,7 @@
                             org.aopalliance.aop,
                             org.springframework.aop,
                             org.springframework.aop.framework,
+                            org.springframework.transaction,
                             org.motechproject.config.service,
                             org.motechproject.event.listener,
                             org.motechproject.event.listener.annotations,

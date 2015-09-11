@@ -1,6 +1,7 @@
 package org.motechproject.mtraining.service;
 
 import org.motechproject.mtraining.domain.Bookmark;
+import org.motechproject.mtraining.repository.BookmarkDataService;
 
 import java.util.List;
 
@@ -56,4 +57,7 @@ public interface BookmarkService {
      * @param externalId external tracking id for the user
      */
     void deleteAllBookmarksForUser(String externalId);
+
+    BookmarkDataService getBookmarkDataService();
+
 }

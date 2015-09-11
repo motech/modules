@@ -26,9 +26,11 @@ import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import org.slf4j.Logger;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
@@ -258,68 +260,77 @@ public class TasksBundleIT extends BaseDhisIT {
 
 
     private void populateDatabase () {
-
         /*Data Elements*/
         DataElement dataElement = new DataElement(DATA_ELEMENT_NAME,DATA_ELEMENT_ID);
         dataElementDataService.create(dataElement);
-        List<DataElement> dataElements = new ArrayList<>();
-        dataElements.add(dataElement);
 
         /*Tracked Entity Attributes*/
         TrackedEntityAttribute attribute = new TrackedEntityAttribute(ATTRIBUTE_NAME,ATTRIBUTE_ID);
         trackedEntityAttributeDataService.create(attribute);
-        List<TrackedEntityAttribute> attributeList = new ArrayList<>();
-        attributeList.add(attribute);
 
         /*Tracked Entity*/
-        TrackedEntity trackedEntity = new TrackedEntity(TRACKED_ENTITY_NAME,TRACKED_ENTITY_ID);
+        final TrackedEntity trackedEntity = new TrackedEntity(TRACKED_ENTITY_NAME,TRACKED_ENTITY_ID);
         trackedEntityDataService.create(trackedEntity);
 
         /*Stages*/
-        List<Stage> stages = new ArrayList<>();
-        Stage stage = new Stage();
-        stage.setRegistration(true);
-        stage.setUuid(STAGE_ID);
-        stage.setName(STAGE_NAME);
-        stage.setProgram(PROGRAM_REGISTRATION_ID);
-        stage.setDataElements(dataElements);
+        stageDataService.doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                Stage stage = new Stage();
+                stage.setRegistration(true);
+                stage.setUuid(STAGE_ID);
+                stage.setName(STAGE_NAME);
+                stage.setProgram(PROGRAM_REGISTRATION_ID);
+                stage.setDataElements(dataElementDataService.retrieveAll());
 
-        stages.add(stage);
-        stageDataService.create(stage);
+                stageDataService.create(stage);
+            }
+        });
 
-        Stage stageNoReg = new Stage();
-        stageNoReg.setRegistration(false);
-        stageNoReg.setUuid(STAGE_ID_NO_REG);
-        stageNoReg.setName(STAGE_NAME_NO_REG);
-        stageNoReg.setProgram(PROGRAM_NO_REGISTRATION_ID);
-        stageNoReg.setDataElements(dataElements);
+        stageDataService.doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                Stage stageNoReg = new Stage();
+                stageNoReg.setRegistration(false);
+                stageNoReg.setUuid(STAGE_ID_NO_REG);
+                stageNoReg.setName(STAGE_NAME_NO_REG);
+                stageNoReg.setProgram(PROGRAM_NO_REGISTRATION_ID);
+                stageNoReg.setDataElements(dataElementDataService.retrieveAll());
 
-        List<Stage> stagesNoReg = new ArrayList<>();
-        stagesNoReg.add(stageNoReg);
-        stageDataService.create(stageNoReg);
-
+                stageDataService.create(stageNoReg);
+            }
+        });
 
         /*Programs*/
-        Program program = new Program();
-        program.setName(PROGRAM_REGISTRATION);
-        program.setUuid(PROGRAM_REGISTRATION_ID);
-        program.setAttributes(attributeList);
-        program.setTrackedEntity(trackedEntity);
-        program.setRegistration(true);
-        program.setSingleEvent(false);
-        program.setStages(stages);
+        programDataService.doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                Program program = new Program();
+                program.setName(PROGRAM_REGISTRATION);
+                program.setUuid(PROGRAM_REGISTRATION_ID);
+                program.setAttributes(trackedEntityAttributeDataService.retrieveAll());
+                program.setTrackedEntity(trackedEntityDataService.findByUuid(trackedEntity.getUuid()));
+                program.setRegistration(true);
+                program.setSingleEvent(false);
+                //program.setStages(stages);
 
-        programDataService.create(program);
+                programDataService.create(program);
+            }
+        });
 
-        Program programNoRegistration = new Program();
-        programNoRegistration.setName(PROGRAM_NO_REGISTRATION);
-        programNoRegistration.setUuid(PROGRAM_NO_REGISTRATION_ID);
-        programNoRegistration.setAttributes(attributeList);
-        programNoRegistration.setRegistration(false);
-        programNoRegistration.setSingleEvent(true);
-        programNoRegistration.setStages(stagesNoReg);
+        programDataService.doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                Program programNoRegistration = new Program();
+                programNoRegistration.setName(PROGRAM_NO_REGISTRATION);
+                programNoRegistration.setUuid(PROGRAM_NO_REGISTRATION_ID);
+                programNoRegistration.setAttributes(trackedEntityAttributeDataService.retrieveAll());
+                programNoRegistration.setRegistration(false);
+                programNoRegistration.setSingleEvent(true);
+                programNoRegistration.setStages(Arrays.asList(stageDataService.findByUuid(STAGE_ID_NO_REG)));
 
-        programDataService.create(programNoRegistration);
-
+                programDataService.create(programNoRegistration);
+            }
+        });
     }
 }

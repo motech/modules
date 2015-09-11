@@ -6,6 +6,7 @@ import org.motechproject.mtraining.repository.ActivityDataService;
 import org.motechproject.mtraining.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class ActivityServiceImpl implements ActivityService {
      * @return activity record from the operation
      */
     @Override
+    @Transactional
     public ActivityRecord createActivity(ActivityRecord activityRecord) {
         return activityDataService.create(activityRecord);
     }
@@ -39,6 +41,7 @@ public class ActivityServiceImpl implements ActivityService {
      * @return updated activity record
      */
     @Override
+    @Transactional
     public ActivityRecord updateActivity(ActivityRecord activityRecord) {
         return activityDataService.update(activityRecord);
     }
@@ -48,6 +51,8 @@ public class ActivityServiceImpl implements ActivityService {
      * @param activityId Id of the user
      * @return activity record with id
      */
+    @Override
+    @Transactional
     public ActivityRecord getActivityById(long activityId) {
         return activityDataService.findRecordById(activityId);
     }
@@ -58,6 +63,7 @@ public class ActivityServiceImpl implements ActivityService {
      * @return list of activity records
      */
     @Override
+    @Transactional
     public List<ActivityRecord> getAllActivityForUser(String externalId) {
         return activityDataService.findRecordsForUser(externalId);
     }
@@ -69,6 +75,7 @@ public class ActivityServiceImpl implements ActivityService {
      * @return list of activity records
      */
     @Override
+    @Transactional
     public List<ActivityRecord> getCompletedActivityForUser(String externalId) {
         return activityDataService.findRecordsForUserByState(externalId, ActivityState.COMPLETED);
     }
@@ -78,8 +85,8 @@ public class ActivityServiceImpl implements ActivityService {
      * @param activityRecordId activity record id to delete
      */
     @Override
+    @Transactional
     public void deleteActivity(long activityRecordId) {
-
         activityDataService.delete("id", activityRecordId);
     }
 
@@ -88,10 +95,15 @@ public class ActivityServiceImpl implements ActivityService {
      * @param externalId Id of the user
      */
     @Override
+    @Transactional
     public void deleteAllActivityForUser(String externalId) {
-
         for (ActivityRecord current : getAllActivityForUser(externalId)) {
             activityDataService.delete(current);
         }
+    }
+
+    @Override
+    public ActivityDataService getActivityDataService() {
+        return activityDataService;
     }
 }

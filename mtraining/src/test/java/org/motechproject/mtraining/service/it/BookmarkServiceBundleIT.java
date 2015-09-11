@@ -10,6 +10,8 @@ import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -75,10 +77,17 @@ public class BookmarkServiceBundleIT extends BasePaxIT {
 
     @Test
     public void testUpdateBookmarks() throws Exception {
-        Bookmark original = bookmarkService.createBookmark(new Bookmark("11111", "MyCourse", "MyChapter", "MyLesson", null));
+        final Bookmark original = bookmarkService.createBookmark(new Bookmark("11111", "MyCourse", "MyChapter", "MyLesson", null));
         assertEquals(original.getLessonIdentifier(), "MyLesson");
-        original.setLessonIdentifier("MyUpdatedLesson");
-        bookmarkService.updateBookmark(original);
+
+        bookmarkService.getBookmarkDataService().doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                Bookmark bookmarkToUpdate = bookmarkService.getBookmarkById(original.getId());
+                bookmarkToUpdate.setLessonIdentifier("MyUpdatedLesson");
+                bookmarkService.updateBookmark(bookmarkToUpdate);
+            }
+        });
 
         Bookmark updated = bookmarkService.getBookmarkById(original.getId());
         assertEquals(updated.getLessonIdentifier(), "MyUpdatedLesson");

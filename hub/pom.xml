@@ -44,6 +44,13 @@
                             org.motechproject.hub.service.impl;version=${project.version}
                         </Export-Package>
                         <Import-Package>
+                            net.sf.cglib.core,
+                            net.sf.cglib.proxy,
+                            net.sf.cglib.reflect,
+                            org.aopalliance.aop,
+                            org.springframework.aop,
+                            org.springframework.aop.framework,
+                            org.springframework.transaction,
                             org.springframework.web.servlet.config,
                             org.apache.commons.dbcp,
                             org.apache.commons.lang,

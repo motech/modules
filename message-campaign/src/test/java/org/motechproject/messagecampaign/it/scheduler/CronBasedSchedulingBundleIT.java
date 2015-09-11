@@ -9,6 +9,8 @@ import org.motechproject.messagecampaign.domain.campaign.CampaignMessageRecord;
 import org.motechproject.messagecampaign.domain.campaign.CampaignType;
 import org.motechproject.messagecampaign.service.CampaignEnrollmentsQuery;
 import org.quartz.SchedulerException;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import java.util.List;
 
@@ -97,16 +99,27 @@ public class CronBasedSchedulingBundleIT extends BaseSchedulingIT {
 
         List<CampaignMessageRecord> campaignMessageRecords = getCampaignMessageRecordService().findByNameAndType(CampaignType.CRON, "First");
         assertEquals(1, campaignMessageRecords.size());
-        CampaignMessageRecord campaignMessageRecord = campaignMessageRecords.get(0);
 
-        campaignMessageRecord.setCron("0 12 11 11 11 ?");
+        final long campaignMessageRecordId = campaignMessageRecords.get(0).getId();
 
-        synchronized (lock) {
-            getCampaignMessageRecordService().update(campaignMessageRecord);
-            lock.wait(4000);
-        }
+        getCampaignMessageRecordService().doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                CampaignMessageRecord campaignMessageRecord = getCampaignMessageRecordService().findById(campaignMessageRecordId);
+                campaignMessageRecord.setCron("0 12 11 11 11 ?");
 
-        getMessageCampaignService().rescheduleMessageJob(campaignMessageRecord.getId());
+                synchronized (lock) {
+                    getCampaignMessageRecordService().update(campaignMessageRecord);
+                    try {
+                        lock.wait(4000);
+                    } catch (InterruptedException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+            }
+        });
+
+        getMessageCampaignService().rescheduleMessageJob(campaignMessageRecordId);
 
         fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.Cron based Message Program.entity_1.cron-message");
         assertEquals(asList(
@@ -120,7 +133,13 @@ public class CronBasedSchedulingBundleIT extends BaseSchedulingIT {
         endOfCampaignFireTimes = getFireTimes("org.motechproject.messagecampaign.campaign-completed-EndOfCampaignJob.Cron based Message Program.entity_1-runonce");
         assertEquals(asList(newDateTime(2024, 11, 11, 11, 12, 0)), endOfCampaignFireTimes);
 
-        campaignMessageRecord.setCron("0 11 11 11 11 ?");
-        getCampaignMessageRecordService().update(campaignMessageRecord);
+        getCampaignMessageRecordService().doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                CampaignMessageRecord campaignMessageRecordToUpdate = getCampaignMessageRecordService().findById(campaignMessageRecordId);
+                campaignMessageRecordToUpdate.setCron("0 11 11 11 11 ?");
+                getCampaignMessageRecordService().update(campaignMessageRecordToUpdate);
+            }
+        });
     }
 }

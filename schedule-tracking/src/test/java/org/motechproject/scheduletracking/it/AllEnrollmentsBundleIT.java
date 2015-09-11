@@ -17,8 +17,8 @@ import org.motechproject.scheduletracking.repository.AllEnrollments;
 import org.motechproject.scheduletracking.repository.dataservices.EnrollmentDataService;
 import org.motechproject.scheduletracking.repository.dataservices.ScheduleDataService;
 import org.motechproject.scheduletracking.service.EnrollmentRequest;
+import org.motechproject.scheduletracking.service.EnrollmentService;
 import org.motechproject.scheduletracking.service.ScheduleTrackingService;
-import org.motechproject.scheduletracking.service.impl.EnrollmentServiceImpl;
 import org.motechproject.scheduletracking.utility.TestScheduleUtil;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -28,10 +28,14 @@ import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import org.osgi.framework.BundleContext;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Map;
 
 import static ch.lambdaj.Lambda.on;
 import static java.util.Arrays.asList;
@@ -48,8 +52,9 @@ import static org.motechproject.commons.date.util.DateUtil.today;
 public class AllEnrollmentsBundleIT extends BasePaxIT {
 
     private AllEnrollments allEnrollments;
-    private EnrollmentServiceImpl enrollmentService;
 
+    @Inject
+    private EnrollmentService enrollmentService;
     @Inject
     private ScheduleTrackingService scheduleTrackingService;
     @Inject
@@ -70,7 +75,6 @@ public class AllEnrollmentsBundleIT extends BasePaxIT {
         //Set up beans
         WebApplicationContext webAppContext = ServiceRetriever.getWebAppContext(bundleContext, "org.motechproject.schedule-tracking");
         allEnrollments = (AllEnrollments) webAppContext.getBean("allEnrollments");
-        enrollmentService = (EnrollmentServiceImpl) webAppContext.getBean("enrollmentServiceImpl");
     }
 
     @After
@@ -81,21 +85,18 @@ public class AllEnrollmentsBundleIT extends BasePaxIT {
 
     @Test
     public void shouldCreateEnrollment() {
-        Schedule schedule = scheduleDataService.findByName("IPTI Schedule");
-        Enrollment enrollment = new EnrollmentBuilder().withExternalId("externalId").withSchedule(schedule).withCurrentMilestoneName("IPTI 1").withStartOfSchedule(now()).withEnrolledOn(now()).withPreferredAlertTime(new Time(now().toLocalTime())).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
-        enrollmentDataService.create(enrollment);
+        createEnrollment("externalId", "IPTI Schedule", "IPTI 1", now(), now(), new Time(now().toLocalTime()), EnrollmentStatus.ACTIVE, null);
 
-        Enrollment enrollmentFromDb = enrollmentDataService.findById(enrollment.getId());
+        Enrollment enrollmentFromDb = enrollmentDataService.retrieveAll().get(0);
 
         assertNotNull(enrollmentFromDb);
-        assertEquals(enrollmentFromDb.getSchedule(), schedule);
+        assertEquals(enrollmentFromDb.getSchedule(), scheduleDataService.findByName("IPTI Schedule"));
         assertEquals(EnrollmentStatus.ACTIVE, enrollmentFromDb.getStatus());
     }
 
     @Test
     public void shouldGetEnrollmentDataServiceWithSchedulePopulatedInThem() {
-        Schedule schedule = scheduleDataService.findByName("IPTI Schedule");
-        enrollmentDataService.create(new EnrollmentBuilder().withExternalId("externalId").withSchedule(schedule).withCurrentMilestoneName("IPTI 1").withStartOfSchedule(now()).withEnrolledOn(now()).withPreferredAlertTime(new Time(now().toLocalTime())).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment());
+        createEnrollment("externalId", "IPTI Schedule", "IPTI 1", now(), now(), new Time(now().toLocalTime()), EnrollmentStatus.ACTIVE, null);
 
         List<Enrollment> enrollments = enrollmentDataService.retrieveAll();
 
@@ -106,62 +107,62 @@ public class AllEnrollmentsBundleIT extends BasePaxIT {
 
     @Test
     public void shouldFindActiveEnrollmentByExternalIdAndScheduleNameWithSchedulePopulatedInThem() {
-        String scheduleName = "IPTI Schedule";
-        Schedule schedule = scheduleDataService.findByName(scheduleName);
-        Enrollment enrollment = new EnrollmentBuilder().withExternalId("entity_1").withSchedule(schedule).withCurrentMilestoneName("IPTI 1").withStartOfSchedule(now()).withEnrolledOn(now()).withPreferredAlertTime(new Time(DateUtil.now().toLocalTime())).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
-        enrollment.setStatus(EnrollmentStatus.UNENROLLED);
-        enrollmentDataService.create(enrollment);
+        createEnrollment("entity_1", "IPTI Schedule", "IPTI 1", now(), now(), new Time(now().toLocalTime()), EnrollmentStatus.UNENROLLED, null);
+        createEnrollment("entity_1", "IPTI Schedule", "IPTI 1", now(), now(), new Time(now().toLocalTime()), EnrollmentStatus.ACTIVE, null);
 
-        enrollment = new EnrollmentBuilder().withExternalId("entity_1").withSchedule(schedule).withCurrentMilestoneName("IPTI 1").withStartOfSchedule(now()).withEnrolledOn(now()).withPreferredAlertTime(new Time(DateUtil.now().toLocalTime())).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
-        enrollmentDataService.create(enrollment);
-
-        Enrollment activeEnrollment = enrollmentDataService.findByExternalIdScheduleNameAndStatus("entity_1", scheduleName, EnrollmentStatus.ACTIVE);
+        Enrollment activeEnrollment = enrollmentDataService.findByExternalIdScheduleNameAndStatus("entity_1", "IPTI Schedule", EnrollmentStatus.ACTIVE);
         assertNotNull(activeEnrollment);
-        assertEquals(schedule, activeEnrollment.getSchedule());
+        assertEquals(scheduleDataService.findByName("IPTI Schedule"), activeEnrollment.getSchedule());
     }
 
     @Test
     public void shouldFindActiveEnrollmentByExternalIdAndScheduleName() {
-        String scheduleName = "IPTI Schedule";
-        Enrollment enrollment = new EnrollmentBuilder().withExternalId("entity_1").withSchedule(scheduleDataService.findByName(scheduleName)).withCurrentMilestoneName("IPTI 1").withStartOfSchedule(now()).withEnrolledOn(now()).withPreferredAlertTime(new Time(DateUtil.now().toLocalTime())).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
-        enrollment.setStatus(EnrollmentStatus.UNENROLLED);
-        enrollmentDataService.create(enrollment);
+        createEnrollment("entity_1", "IPTI Schedule", "IPTI 1", now(), now(), new Time(now().toLocalTime()), EnrollmentStatus.UNENROLLED, null);
 
-        assertNull(enrollmentDataService.findByExternalIdScheduleNameAndStatus("entity_1", scheduleName, EnrollmentStatus.ACTIVE));
+        assertNull(enrollmentDataService.findByExternalIdScheduleNameAndStatus("entity_1", "IPTI Schedule", EnrollmentStatus.ACTIVE));
     }
 
     @Test
     public void shouldConvertTheFulfillmentDateTimeIntoCorrectTimeZoneWhenRetrievingAnEnrollmentWithFulfilledMilestoneFromDatabase() {
-        String scheduleName = "IPTI Schedule";
-        Enrollment enrollment = new EnrollmentBuilder().withExternalId("entity_1").withSchedule(scheduleDataService.findByName(scheduleName)).withCurrentMilestoneName("IPTI 1").withStartOfSchedule(now()).withEnrolledOn(now()).withPreferredAlertTime(new Time(DateUtil.now().toLocalTime())).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
-        enrollmentDataService.create(enrollment);
-        DateTime fulfillmentDateTime = DateTime.now();
-        enrollment.fulfillCurrentMilestone(fulfillmentDateTime);
-        enrollmentDataService.update(enrollment);
+        final Enrollment enrollment  = createEnrollment("entity_1", "IPTI Schedule", "IPTI 1", now(), now(), new Time(now().toLocalTime()), EnrollmentStatus.ACTIVE, null);
+        final DateTime fulfillmentDateTime = DateTime.now();
 
-        Enrollment enrollmentFromDatabase = enrollmentDataService.findByExternalIdScheduleNameAndStatus("entity_1", scheduleName, EnrollmentStatus.ACTIVE);
+        enrollmentDataService.doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                Enrollment enrollmentToUpdate = enrollmentDataService.findById(enrollment.getId());
+                enrollmentToUpdate.fulfillCurrentMilestone(fulfillmentDateTime);
+                enrollmentDataService.update(enrollmentToUpdate);
+            }
+        });
+
+        Enrollment enrollmentFromDatabase = enrollmentDataService.findByExternalIdScheduleNameAndStatus("entity_1", "IPTI Schedule", EnrollmentStatus.ACTIVE);
         assertEquals(fulfillmentDateTime, enrollmentFromDatabase.getLastFulfilledDate());
     }
 
     @Test
     public void shouldReturnTheMilestoneStartDateTimeInCorrectTimeZoneForFirstMilestone() {
         DateTime now = DateTime.now();
-        String scheduleName = "IPTI Schedule";
-        Enrollment enrollment = new EnrollmentBuilder().withExternalId("entity_1").withSchedule(scheduleDataService.findByName(scheduleName)).withCurrentMilestoneName("IPTI 1").withStartOfSchedule(now.minusDays(2)).withEnrolledOn(now).withPreferredAlertTime(new Time(now.toLocalTime())).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
-        enrollmentDataService.create(enrollment);
 
-        Enrollment enrollmentFromDatabase = enrollmentDataService.findByExternalIdScheduleNameAndStatus("entity_1", scheduleName, EnrollmentStatus.ACTIVE);
+        createEnrollment("entity_1", "IPTI Schedule", "IPTI 1", now.minusDays(2), now(), new Time(now().toLocalTime()), EnrollmentStatus.ACTIVE, null);
+
+        Enrollment enrollmentFromDatabase = enrollmentDataService.findByExternalIdScheduleNameAndStatus("entity_1", "IPTI Schedule", EnrollmentStatus.ACTIVE);
         assertEquals(now.minusDays(2), enrollmentFromDatabase.getCurrentMilestoneStartDate());
     }
 
     @Test
     public void shouldReturnTheMilestoneStartDateTimeInCorrectTimeZoneForSecondMilestone() {
-        Schedule schedule = scheduleDataService.findByName("IPTI Schedule");
-        DateTime now = DateTime.now();
-        Enrollment enrollment = new EnrollmentBuilder().withExternalId("entity_1").withSchedule(schedule).withCurrentMilestoneName("IPTI 1").withStartOfSchedule(now.minusDays(2)).withEnrolledOn(now).withPreferredAlertTime(new Time(now.toLocalTime())).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
-        enrollmentDataService.create(enrollment);
-        enrollmentService.fulfillCurrentMilestone(enrollment, now);
-        enrollmentDataService.update(enrollment);
+        final DateTime now = DateTime.now();
+        final Enrollment enrollment = createEnrollment("entity_1", "IPTI Schedule", "IPTI 1", now.minusDays(2), now(), new Time(now().toLocalTime()), EnrollmentStatus.ACTIVE, null);
+
+        enrollmentDataService.doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                Enrollment enrollmentToUpdate = enrollmentDataService.findById(enrollment.getId());
+                enrollmentService.fulfillCurrentMilestone(enrollmentToUpdate, now);
+                enrollmentDataService.update(enrollmentToUpdate);
+            }
+        });
 
         Enrollment enrollmentFromDatabase = enrollmentDataService.findByExternalIdScheduleNameAndStatus("entity_1", "IPTI Schedule", EnrollmentStatus.ACTIVE);
         assertEquals(now, enrollmentFromDatabase.getCurrentMilestoneStartDate());
@@ -169,10 +170,9 @@ public class AllEnrollmentsBundleIT extends BasePaxIT {
 
     @Test
     public void shouldReturnTheMilestoneStartDateTimeInCorrectTimeZoneWhenEnrollingIntoSecondMilestone() {
-        Schedule schedule = scheduleDataService.findByName("IPTI Schedule");
         DateTime now = DateTime.now();
-        Enrollment enrollment = new EnrollmentBuilder().withExternalId("entity_1").withSchedule(schedule).withCurrentMilestoneName("IPTI 2").withStartOfSchedule(now.minusDays(2)).withEnrolledOn(now).withPreferredAlertTime(new Time(now.toLocalTime())).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment();
-        enrollmentDataService.create(enrollment);
+
+        createEnrollment("entity_1", "IPTI Schedule", "IPTI 2", now.minusDays(2), now(), new Time(now().toLocalTime()), EnrollmentStatus.ACTIVE, null);
 
         Enrollment enrollmentFromDatabase = enrollmentDataService.findByExternalIdScheduleNameAndStatus("entity_1", "IPTI Schedule", EnrollmentStatus.ACTIVE);
         assertEquals(now, enrollmentFromDatabase.getCurrentMilestoneStartDate());
@@ -181,12 +181,11 @@ public class AllEnrollmentsBundleIT extends BasePaxIT {
     @Test
     public void shouldReturnEnrollmentsThatMatchAGivenExternalId() {
         DateTime now = now();
-        Schedule iptiSchedule = scheduleDataService.findByName("IPTI Schedule");
-        Schedule deliverySchedule = scheduleDataService.findByName("Delivery");
-        enrollmentDataService.create(new EnrollmentBuilder().withExternalId("entity_1").withSchedule(iptiSchedule).withCurrentMilestoneName("IPTI 1").withStartOfSchedule(now).withEnrolledOn(now).withPreferredAlertTime(new Time(8, 10)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment());
-        enrollmentDataService.create(new EnrollmentBuilder().withExternalId("entity_1").withSchedule(deliverySchedule).withCurrentMilestoneName("Default").withStartOfSchedule(now).withEnrolledOn(now).withPreferredAlertTime(new Time(8, 10)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment());
-        enrollmentDataService.create(new EnrollmentBuilder().withExternalId("entity_2").withSchedule(iptiSchedule).withCurrentMilestoneName("IPTI 1").withStartOfSchedule(now).withEnrolledOn(now).withPreferredAlertTime(new Time(8, 10)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment());
-        enrollmentDataService.create(new EnrollmentBuilder().withExternalId("entity_3").withSchedule(iptiSchedule).withCurrentMilestoneName("IPTI 1").withStartOfSchedule(now).withEnrolledOn(now).withPreferredAlertTime(new Time(8, 10)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment());
+
+        createEnrollment("entity_1", "IPTI Schedule", "IPTI 1", now, now(), new Time(8, 10), EnrollmentStatus.ACTIVE, null);
+        createEnrollment("entity_1", "Delivery", "Default", now, now(), new Time(8, 10), EnrollmentStatus.ACTIVE, null);
+        createEnrollment("entity_2", "IPTI Schedule", "IPTI 1", now, now(), new Time(8, 10), EnrollmentStatus.ACTIVE, null);
+        createEnrollment("entity_3", "IPTI Schedule", "IPTI 1", now, now(), new Time(8, 10), EnrollmentStatus.ACTIVE, null);
 
         List<Enrollment> filteredEnrollments = enrollmentDataService.findByExternalId("entity_1");
         assertNotNull(filteredEnrollments.get(0).getSchedule());
@@ -195,31 +194,26 @@ public class AllEnrollmentsBundleIT extends BasePaxIT {
 
     @Test
     public void shouldFindenrollmentDataServiceThatMatchesGivenScheduleNames() {
-        Schedule iptiSchedule = scheduleDataService.findByName("IPTI Schedule");
-        Schedule absoluteSchedule = scheduleDataService.findByName("Absolute Schedule");
-        Schedule relativeSchedule = scheduleDataService.findByName("Relative Schedule");
-
-        enrollmentDataService.create(new EnrollmentBuilder().withExternalId("entity_1").withSchedule(iptiSchedule).withCurrentMilestoneName("IPTI 1").withStartOfSchedule(now()).withEnrolledOn(now()).withPreferredAlertTime(new Time(DateUtil.now().toLocalTime())).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment());
-        enrollmentDataService.create(new EnrollmentBuilder().withExternalId("entity_2").withSchedule(absoluteSchedule).withCurrentMilestoneName("milestone1").withStartOfSchedule(now()).withEnrolledOn(now()).withPreferredAlertTime(new Time(DateUtil.now().toLocalTime())).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment());
-        enrollmentDataService.create(new EnrollmentBuilder().withExternalId("entity_3").withSchedule(relativeSchedule).withCurrentMilestoneName("milestone1").withStartOfSchedule(now()).withEnrolledOn(now()).withPreferredAlertTime(new Time(DateUtil.now().toLocalTime())).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment());
-        enrollmentDataService.create(new EnrollmentBuilder().withExternalId("entity_4").withSchedule(relativeSchedule).withCurrentMilestoneName("milestone1").withStartOfSchedule(now()).withEnrolledOn(now()).withPreferredAlertTime(new Time(DateUtil.now().toLocalTime())).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment());
+        createEnrollment("entity_1", "IPTI Schedule", "IPTI 1", now(), now(), new Time(DateUtil.now().toLocalTime()), EnrollmentStatus.ACTIVE, null);
+        createEnrollment("entity_2", "Absolute Schedule", "milestone1", now(), now(), new Time(DateUtil.now().toLocalTime()), EnrollmentStatus.ACTIVE, null);
+        createEnrollment("entity_3", "Relative Schedule", "milestone1", now(), now(), new Time(DateUtil.now().toLocalTime()), EnrollmentStatus.ACTIVE, null);
+        createEnrollment("entity_4", "Relative Schedule", "milestone1", now(), now(), new Time(DateUtil.now().toLocalTime()), EnrollmentStatus.ACTIVE, null);
 
         List<Enrollment> filteredEnrollments = allEnrollments.findBySchedule(asList(new String[]{"IPTI Schedule", "Relative Schedule"}));
 
         assertEquals(3, filteredEnrollments.size());
-        assertEquals(asList(new String[] { "entity_1", "entity_3", "entity_4" }), Lambda.extract(filteredEnrollments, on(Enrollment.class).getExternalId()));
+        assertEquals(asList(new String[]{"entity_1", "entity_3", "entity_4"}), Lambda.extract(filteredEnrollments, on(Enrollment.class).getExternalId()));
         assertEquals(asList(new String[] {"IPTI Schedule", "Relative Schedule", "Relative Schedule"}), Lambda.extract(filteredEnrollments, on(Enrollment.class).getScheduleName()));
     }
 
     @Test
     public void shouldReturnEnrollmentsThatMatchGivenStatus() {
         DateTime now = now();
-        Schedule iptiSchedule = scheduleDataService.findByName("IPTI Schedule");
-        Schedule deliverySchedule = scheduleDataService.findByName("Delivery");
-        enrollmentDataService.create(new EnrollmentBuilder().withExternalId("entity_1").withSchedule(iptiSchedule).withCurrentMilestoneName("IPTI 1").withStartOfSchedule(now).withEnrolledOn(now).withPreferredAlertTime(new Time(8, 10)).withStatus(EnrollmentStatus.COMPLETED).withMetadata(null).toEnrollment());
-        enrollmentDataService.create(new EnrollmentBuilder().withExternalId("entity_2").withSchedule(deliverySchedule).withCurrentMilestoneName("Default").withStartOfSchedule(now).withEnrolledOn(now).withPreferredAlertTime(new Time(8, 10)).withStatus(EnrollmentStatus.DEFAULTED).withMetadata(null).toEnrollment());
-        enrollmentDataService.create(new EnrollmentBuilder().withExternalId("entity_3").withSchedule(iptiSchedule).withCurrentMilestoneName("IPTI 1").withStartOfSchedule(now).withEnrolledOn(now).withPreferredAlertTime(new Time(8, 10)).withStatus(EnrollmentStatus.UNENROLLED).withMetadata(null).toEnrollment());
-        enrollmentDataService.create(new EnrollmentBuilder().withExternalId("entity_4").withSchedule(iptiSchedule).withCurrentMilestoneName("IPTI 1").withStartOfSchedule(now).withEnrolledOn(now).withPreferredAlertTime(new Time(8, 10)).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment());
+
+        createEnrollment("entity_1", "IPTI Schedule", "IPTI 1", now, now(), new Time(8, 10), EnrollmentStatus.COMPLETED, null);
+        createEnrollment("entity_2", "Delivery", "Default", now, now(), new Time(8, 10), EnrollmentStatus.DEFAULTED, null);
+        createEnrollment("entity_3", "IPTI Schedule", "IPTI 1", now, now(), new Time(8, 10), EnrollmentStatus.UNENROLLED, null);
+        createEnrollment("entity_4", "IPTI Schedule", "IPTI 1", now, now(), new Time(8, 10), EnrollmentStatus.ACTIVE, null);
 
         List<Enrollment> filteredEnrollments = enrollmentDataService.findByStatus(EnrollmentStatus.ACTIVE);
         assertEquals(asList(new String[] { "entity_4"}), Lambda.extract(filteredEnrollments, on(Enrollment.class).getExternalId()));
@@ -252,5 +246,15 @@ public class AllEnrollmentsBundleIT extends BasePaxIT {
         List<Enrollment> filteredEnrollments = allEnrollments.completedDuring(start, end);
         assertNotNull(filteredEnrollments.get(0).getSchedule());
         assertEquals(asList(new String[] { "entity_2", "entity_3" }), Lambda.extract(filteredEnrollments, on(Enrollment.class).getExternalId()));
+    }
+
+    private Enrollment createEnrollment(final String externalId, final String scheduleName, final String currentMilestoneName, final DateTime referenceDateTime, final DateTime enrollmentDateTime, final Time preferredAlertTime, final EnrollmentStatus enrollmentStatus, final Map<String,String> metadata) {
+        return enrollmentDataService.doInTransaction(new TransactionCallback<Enrollment>() {
+            @Override
+            public Enrollment doInTransaction(TransactionStatus transactionStatus) {
+                Enrollment enrollment = new EnrollmentBuilder().withExternalId(externalId).withSchedule(scheduleDataService.findByName(scheduleName)).withCurrentMilestoneName(currentMilestoneName).withStartOfSchedule(referenceDateTime).withEnrolledOn(enrollmentDateTime).withPreferredAlertTime(preferredAlertTime).withStatus(enrollmentStatus).withMetadata(metadata).toEnrollment();
+                return enrollmentDataService.create(enrollment);
+            }
+        });
     }
 }

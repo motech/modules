@@ -8,6 +8,8 @@ import org.motechproject.mtraining.domain.CourseUnitState;
 import org.motechproject.mtraining.domain.Lesson;
 import org.motechproject.mtraining.domain.Question;
 import org.motechproject.mtraining.domain.Quiz;
+import org.motechproject.mtraining.repository.ChapterDataService;
+import org.motechproject.mtraining.repository.CourseDataService;
 import org.motechproject.mtraining.service.MTrainingService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -15,6 +17,9 @@ import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -37,6 +42,12 @@ public class MTrainingServiceBundleIT extends BasePaxIT {
 
     @Inject
     private MTrainingService mTrainingService;
+
+    @Inject
+    private ChapterDataService chapterDataService;
+
+    @Inject
+    private CourseDataService courseDataService;
 
     @Test
     public void testMTrainingServiceInstance() throws Exception {
@@ -154,49 +165,78 @@ public class MTrainingServiceBundleIT extends BasePaxIT {
     @Test
     public void testSharedChapterCreation() throws Exception {
         Course firstCourse = mTrainingService.createCourse(generateFullCourse("testSharedChapter"));
+        final long firstCourseId = firstCourse.getId();
 
-        Chapter sharedChapter = firstCourse.getChapters().get(0);
-        Course secondCourse = mTrainingService.createCourse(
-                new Course("secondCourse", CourseUnitState.Active, "RandomCourseIntro", new ArrayList<>(Arrays.asList(sharedChapter))));
+        Course secondCourse = courseDataService.doInTransaction(new TransactionCallback<Course>() {
+            @Override
+            public Course doInTransaction(TransactionStatus transactionStatus) {
+                Chapter sharedChapter = mTrainingService.getCourseById(firstCourseId).getChapters().get(0);
+                return mTrainingService.createCourse(
+                        new Course("secondCourse", CourseUnitState.Active, "RandomCourseIntro", Arrays.asList(sharedChapter)));
+            }
+        });
+
         assertNotNull(secondCourse);
 
-        firstCourse = mTrainingService.getCourseById(firstCourse.getId());
+        firstCourse = mTrainingService.getCourseById(firstCourseId);
         assertEquals(firstCourse.getChapters().size(), secondCourse.getChapters().size());
     }
 
     @Test
     public void testCourseChapterUpdate() throws Exception {
-        Course firstCourse = mTrainingService.createCourse(generateFullCourse("testSharedChapter"));
+        final Course firstCourse = mTrainingService.createCourse(generateFullCourse("testSharedChapter"));
+        final Chapter chapter = mTrainingService.getChapterById(firstCourse.getChapters().get(0).getId());
 
-        Chapter chapterToUpdate = firstCourse.getChapters().get(0);
-        chapterToUpdate.setState(CourseUnitState.Inactive);
-        Chapter updatedChapter = mTrainingService.updateChapter(chapterToUpdate);
-        firstCourse = mTrainingService.getCourseById(firstCourse.getId());
+        chapterDataService.doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                Chapter chapterToUpdate = mTrainingService.getChapterById(chapter.getId());
+                chapterToUpdate.setState(CourseUnitState.Inactive);
+                mTrainingService.updateChapter(chapterToUpdate);
+            }
+        });
 
-        assertEquals(firstCourse.getChapters().get(0).getId(), updatedChapter.getId());
-        assertEquals(firstCourse.getChapters().get(0).getState(), updatedChapter.getState());
+        Course updatedCourse = mTrainingService.getCourseById(firstCourse.getId());
+        Chapter updatedChapter = mTrainingService.getChapterById(chapter.getId());
+
+        assertEquals(updatedCourse.getChapters().get(0).getId(), updatedChapter.getId());
+        assertEquals(updatedCourse.getChapters().get(0).getState(), updatedChapter.getState());
     }
 
     @Test
     public void testCourseUpdateStatus() throws Exception {
-        Course firstCourse = mTrainingService.createCourse(generateFullCourse("testCourseUpdateStatus"));
+        final Course firstCourse = mTrainingService.createCourse(generateFullCourse("testCourseUpdateStatus"));
         assertEquals(firstCourse.getState(), CourseUnitState.Active);
 
-        firstCourse.setState(CourseUnitState.Inactive);
-        Course updated = mTrainingService.updateCourse(firstCourse);
-        assertEquals(CourseUnitState.Inactive, updated.getState());
+        courseDataService.doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                Course courseToUpdate = mTrainingService.getCourseById(firstCourse.getId());
+                courseToUpdate.setState(CourseUnitState.Inactive);
+                mTrainingService.updateCourse(courseToUpdate);
+            }
+        });
+
+        assertEquals(CourseUnitState.Inactive, mTrainingService.getCourseById(firstCourse.getId()).getState());
     }
 
     @Test
     public void testCourseUpdateAddChapter() throws Exception {
-        Course firstCourse = mTrainingService.createCourse(generateFullCourse("testCourseUpdateAddChapter"));
+        final Course firstCourse = mTrainingService.createCourse(generateFullCourse("testCourseUpdateAddChapter"));
         assertEquals(2, firstCourse.getChapters().size());
 
-        Chapter newChapter = new Chapter("newChapter", CourseUnitState.Active, "newChapterContent", null, null);
-        firstCourse.getChapters().add(newChapter);
+        courseDataService.doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                Chapter newChapter = new Chapter("newChapter", CourseUnitState.Active, "newChapterContent", null, null);
+                Course courseToUpdate = mTrainingService.getCourseById(firstCourse.getId());
+                courseToUpdate.getChapters().add(newChapter);
 
-        Course updated = mTrainingService.updateCourse(firstCourse);
-        assertEquals(3, updated.getChapters().size());
+                mTrainingService.updateCourse(courseToUpdate);
+            }
+        });
+
+        assertEquals(3, mTrainingService.getCourseById(firstCourse.getId()).getChapters().size());
     }
 
     @Test
@@ -215,12 +255,21 @@ public class MTrainingServiceBundleIT extends BasePaxIT {
         Chapter newChapter = generateFullCourse("testChapterUpdate").getChapters().get(0);
         newChapter.setName("testChapterUpdate-Chapter");
         newChapter = mTrainingService.createChapter(newChapter);
+        final long newChapterId = newChapter.getId();
 
         assertNotNull(newChapter);
         assertEquals("testChapterUpdate-Chapter", newChapter.getName());
-        newChapter.setName("testChapterUpdate-Chapter-Update");
-        Chapter updated = mTrainingService.updateChapter(newChapter);
-        assertEquals("testChapterUpdate-Chapter-Update", updated.getName());
+
+        chapterDataService.doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                Chapter chapterToUpdate = mTrainingService.getChapterById(newChapterId);
+                chapterToUpdate.setName("testChapterUpdate-Chapter-Update");
+                mTrainingService.updateChapter(chapterToUpdate);
+            }
+        });
+
+        assertEquals("testChapterUpdate-Chapter-Update", mTrainingService.getChapterById(newChapterId).getName());
     }
 
     @Test

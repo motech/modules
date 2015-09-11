@@ -15,6 +15,8 @@ import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import org.slf4j.Logger;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -57,7 +59,7 @@ public class AppointmentServiceBundleIT extends BasePaxIT {
         assertEquals(result.getExternalId(), current.getExternalId());
     }
 
-    @Test
+    @Test //TODO We cannot add the same two appointmens, because apptId is Unique. Now this test is just updating previous object. Something should change here
     public void addAppointmentDuplicate() throws Exception {
         logger.info("addAppointmentDuplicate");
         Appointment current = new Appointment();
@@ -115,9 +117,22 @@ public class AppointmentServiceBundleIT extends BasePaxIT {
         appointmentService.addAppointment(current);
         assertEquals(AppointmentStatus.NONE, current.getStatus());
 
-        current.setStatus(AppointmentStatus.CONFIRMED);
-        appointmentService.updateAppointment(current);
-        Appointment result = appointmentService.getAppointment(current.getApptId());
+        final String apptId = current.getApptId();
+
+        appointmentChangeRecordDataService.doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                try {
+                    Appointment current = appointmentService.getAppointment(apptId);
+                    current.setStatus(AppointmentStatus.CONFIRMED);
+                    appointmentService.updateAppointment(current);
+                } catch (AppointmentException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+
+        Appointment result = appointmentService.getAppointment(apptId);
         assertNotNull(result);
         assertEquals(AppointmentStatus.CONFIRMED, result.getStatus());
     }

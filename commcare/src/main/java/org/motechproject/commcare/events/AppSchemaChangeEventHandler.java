@@ -13,6 +13,7 @@ import org.motechproject.mds.filter.Filter;
 import org.motechproject.mds.filter.Filters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -48,6 +49,7 @@ public class AppSchemaChangeEventHandler {
      * @param event  the schema change event to be handled
      */
     @MotechListener(subjects = SCHEMA_CHANGE_EVENT)
+    @Transactional
     public synchronized void schemaChange(MotechEvent event) {
 
         Config config = configService.getByName((String) event.getParameters().get(EventDataKeys.CONFIG_NAME));

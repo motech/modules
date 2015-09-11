@@ -7,6 +7,7 @@ import org.motechproject.mtraining.repository.BookmarkDataService;
 import org.motechproject.mtraining.service.BookmarkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,8 +31,8 @@ public class BookmarkServiceImpl implements BookmarkService {
      * @return bookmark object created in the store
      */
     @Override
+    @Transactional
     public Bookmark createBookmark(Bookmark bookmark) {
-
         return bookmarkDataService.create(bookmark);
     }
 
@@ -41,8 +42,8 @@ public class BookmarkServiceImpl implements BookmarkService {
      * @return bookmark object with the id
      */
     @Override
+    @Transactional
     public Bookmark getBookmarkById(long bookmarkId) {
-
         return bookmarkDataService.findBookmarkById(bookmarkId);
     }
 
@@ -52,8 +53,8 @@ public class BookmarkServiceImpl implements BookmarkService {
      * @return bookmark object for the user or null if no bookmarks exist for user
      */
     @Override
+    @Transactional
     public Bookmark getLatestBookmarkByUserId(String externalId) {
-
         List<Bookmark> bookmarks = bookmarkDataService.findBookmarksForUserParams(
                 externalId, new QueryParams(new Order("modificationDate", Order.Direction.DESC)));
         return bookmarks.size() > 0 ? bookmarks.get(0) : null;
@@ -65,6 +66,7 @@ public class BookmarkServiceImpl implements BookmarkService {
      * @return list of bookmarks for user
      */
     @Override
+    @Transactional
     public List<Bookmark> getAllBookmarksForUser(String externalId) {
         return bookmarkDataService.findBookmarksForUser(externalId);
     }
@@ -75,8 +77,8 @@ public class BookmarkServiceImpl implements BookmarkService {
      * @return updated bookmark object
      */
     @Override
+    @Transactional
     public Bookmark updateBookmark(Bookmark bookmark) {
-
         return bookmarkDataService.update(bookmark);
     }
 
@@ -85,8 +87,8 @@ public class BookmarkServiceImpl implements BookmarkService {
      * @param bookmarkId id of the bookmark
      */
     @Override
+    @Transactional
     public void deleteBookmark(long bookmarkId) {
-
         bookmarkDataService.delete("id", bookmarkId);
     }
 
@@ -95,9 +97,15 @@ public class BookmarkServiceImpl implements BookmarkService {
      * @param externalId external tracking id for the user
      */
     @Override
+    @Transactional
     public void deleteAllBookmarksForUser(String externalId) {
         for (Bookmark current : getAllBookmarksForUser(externalId)) {
             bookmarkDataService.delete(current);
         }
+    }
+
+    @Override
+    public BookmarkDataService getBookmarkDataService() {
+        return bookmarkDataService;
     }
 }

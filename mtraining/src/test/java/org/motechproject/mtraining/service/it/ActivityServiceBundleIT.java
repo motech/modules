@@ -12,6 +12,8 @@ import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import javax.inject.Inject;
 
@@ -87,14 +89,21 @@ public class ActivityServiceBundleIT extends BasePaxIT {
 
     @Test
     public void testUpdateActivity() throws Exception {
-        ActivityRecord original = activityService.createActivity(new ActivityRecord("5555", null, null, null, DateTime.now(), null, ActivityState.STARTED));
+        final ActivityRecord original = activityService.createActivity(new ActivityRecord("5555", null, null, null, DateTime.now(), null, ActivityState.STARTED));
         assertEquals(ActivityState.STARTED, original.getState());
         assertNull(original.getCompletionTime());
 
-        original.setState(ActivityState.COMPLETED);
-        original.setCompletionTime(original.getStartTime().plusDays(1));
-        ActivityRecord updated = activityService.updateActivity(original);
+        activityService.getActivityDataService().doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                ActivityRecord activityRecordToUpdate = activityService.getActivityById(original.getId());
+                activityRecordToUpdate.setState(ActivityState.COMPLETED);
+                activityRecordToUpdate.setCompletionTime(original.getStartTime().plusDays(1));
+                activityService.updateActivity(activityRecordToUpdate);
+            }
+        });
 
+        ActivityRecord updated = activityService.getActivityById(original.getId());
         assertEquals(ActivityState.COMPLETED, updated.getState());
         assertEquals(original.getStartTime().plusDays(1), updated.getCompletionTime());
     }

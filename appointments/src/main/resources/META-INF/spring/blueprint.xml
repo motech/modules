@@ -13,5 +13,6 @@
     <osgi:reference id="appointmentDataService" interface="org.motechproject.appointments.repository.AppointmentDataService" />
     <osgi:reference id="appointmentRecordDataService" interface="org.motechproject.appointments.repository.AppointmentChangeRecordDataService" />
     <osgi:reference id="schedulerService" interface="org.motechproject.scheduler.service.MotechSchedulerService" />
+    <osgi:reference id="transactionManager" interface="org.springframework.transaction.PlatformTransactionManager" context-class-loader="unmanaged"/>
 
 </beans>

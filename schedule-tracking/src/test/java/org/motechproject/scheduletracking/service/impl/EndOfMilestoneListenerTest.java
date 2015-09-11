@@ -25,7 +25,8 @@ public class EndOfMilestoneListenerTest {
     @Before
     public void setup() {
         initMocks(this);
-        endOfMilestoneListener = new EndOfMilestoneListener(enrollmentDataService);
+        endOfMilestoneListener = new EndOfMilestoneListener();
+        endOfMilestoneListener.setEnrollmentDataService(enrollmentDataService);
     }
 
     @Test

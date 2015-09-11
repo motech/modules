@@ -9,6 +9,8 @@ import org.motechproject.messagecampaign.domain.campaign.CampaignMessageRecord;
 import org.motechproject.messagecampaign.domain.campaign.CampaignType;
 import org.motechproject.messagecampaign.service.CampaignEnrollmentsQuery;
 import org.quartz.SchedulerException;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import java.util.List;
 
@@ -99,16 +101,27 @@ public class OffsetSchedulingBundleIT extends BaseSchedulingIT {
 
         List<CampaignMessageRecord> campaignMessageRecords = getCampaignMessageRecordService().findByNameAndType(CampaignType.OFFSET, "Week 1");
         assertEquals(1, campaignMessageRecords.size());
-        CampaignMessageRecord campaignMessageRecord = campaignMessageRecords.get(0);
 
-        campaignMessageRecord.setTimeOffset("2 Weeks");
+        final long campaignMessageRecordId = campaignMessageRecords.get(0).getId();
 
-        synchronized (lock) {
-            getCampaignMessageRecordService().update(campaignMessageRecord);
-            lock.wait(4000);
-        }
+        getCampaignMessageRecordService().doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                CampaignMessageRecord campaignMessageRecord = getCampaignMessageRecordService().findById(campaignMessageRecordId);
+                campaignMessageRecord.setTimeOffset("2 Weeks");
 
-        getMessageCampaignService().rescheduleMessageJob(campaignMessageRecord.getId());
+                synchronized (lock) {
+                    getCampaignMessageRecordService().update(campaignMessageRecord);
+                    try {
+                        lock.wait(4000);
+                    } catch (InterruptedException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+            }
+        });
+
+        getMessageCampaignService().rescheduleMessageJob(campaignMessageRecordId);
 
         fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.Relative Dates Message Program.entity_1.child-info-week-1-runonce");
         assertEquals(asList(newDateTime(2020, 7, 24, 10, 30, 0)), fireTimes);
@@ -122,7 +135,13 @@ public class OffsetSchedulingBundleIT extends BaseSchedulingIT {
         endOfCampaignFireTimes = getFireTimes("org.motechproject.messagecampaign.campaign-completed-EndOfCampaignJob.Relative Dates Message Program.entity_1-runonce");
         assertEquals(asList(newDateTime(2020, 7, 24, 10, 30, 0)), endOfCampaignFireTimes);
 
-        campaignMessageRecord.setTimeOffset("1 Week");
-        getCampaignMessageRecordService().update(campaignMessageRecord);
+        getCampaignMessageRecordService().doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                CampaignMessageRecord campaignMessageRecordToUpdate = getCampaignMessageRecordService().findById(campaignMessageRecordId);
+                campaignMessageRecordToUpdate.setTimeOffset("1 Week");
+                getCampaignMessageRecordService().update(campaignMessageRecordToUpdate);
+            }
+        });
     }
 }

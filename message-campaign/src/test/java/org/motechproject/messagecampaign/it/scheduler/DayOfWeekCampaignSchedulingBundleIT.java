@@ -14,8 +14,9 @@ import org.motechproject.messagecampaign.domain.campaign.CampaignType;
 import org.motechproject.messagecampaign.domain.campaign.DayOfWeek;
 import org.motechproject.messagecampaign.service.CampaignEnrollmentsQuery;
 import org.quartz.SchedulerException;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -158,16 +159,27 @@ public class DayOfWeekCampaignSchedulingBundleIT extends BaseSchedulingIT {
 
         List<CampaignMessageRecord> campaignMessageRecords = getCampaignMessageRecordService().findByNameAndType(CampaignType.DAY_OF_WEEK, "message1");
         assertEquals(1, campaignMessageRecords.size());
-        CampaignMessageRecord campaignMessageRecord = campaignMessageRecords.get(0);
 
-        campaignMessageRecord.setRepeatOn(new ArrayList<>(asList(DayOfWeek.Thursday)));
+        final long campaignMessageRecordId = campaignMessageRecords.get(0).getId();
 
-        synchronized (lock) {
-            getCampaignMessageRecordService().update(campaignMessageRecord);
-            lock.wait(4000);
-        }
+        getCampaignMessageRecordService().doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                CampaignMessageRecord campaignMessageRecord = getCampaignMessageRecordService().findById(campaignMessageRecordId);
+                campaignMessageRecord.setRepeatOn(asList(DayOfWeek.Thursday));
 
-        getMessageCampaignService().rescheduleMessageJob(campaignMessageRecord.getId());
+                synchronized (lock) {
+                    getCampaignMessageRecordService().update(campaignMessageRecord);
+                    try {
+                        lock.wait(4000);
+                    } catch (InterruptedException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+            }
+        });
+
+        getMessageCampaignService().rescheduleMessageJob(campaignMessageRecordId);
 
         fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.DayOfWeekCampaign.entity_1.message_key_1");
         assertEquals(asList(
@@ -179,7 +191,13 @@ public class DayOfWeekCampaignSchedulingBundleIT extends BaseSchedulingIT {
                 getFireTimes("org.motechproject.messagecampaign.campaign-completed-EndOfCampaignJob.DayOfWeekCampaign.entity_1-runonce");
         assertEquals(asList(newDateTime(2020, 7, 23, 10, 30, 0)), endOfCampaignFireTimes);
 
-        campaignMessageRecord.setRepeatOn(new ArrayList<>(asList(DayOfWeek.Monday, DayOfWeek.Friday)));
-        getCampaignMessageRecordService().update(campaignMessageRecord);
+        getCampaignMessageRecordService().doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                CampaignMessageRecord campaignMessageRecordToUpdate = getCampaignMessageRecordService().findById(campaignMessageRecordId);
+                campaignMessageRecordToUpdate.setRepeatOn(asList(DayOfWeek.Monday, DayOfWeek.Friday));
+                getCampaignMessageRecordService().update(campaignMessageRecordToUpdate);
+            }
+        });
     }
 }

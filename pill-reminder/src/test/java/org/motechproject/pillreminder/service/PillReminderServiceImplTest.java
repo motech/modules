@@ -41,7 +41,9 @@ public class PillReminderServiceImplTest {
     @Before
     public void setUp() {
         initMocks(this);
-        service = new PillReminderServiceImpl(pillRegimenDataService, pillRegimenJobScheduler);
+        service = new PillReminderServiceImpl();
+        service.setPillRegimenDataService(pillRegimenDataService);
+        service.setPillRegimenJobScheduler(pillRegimenJobScheduler);
     }
 
     @Test
