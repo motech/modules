@@ -5,6 +5,12 @@ import org.motechproject.messagecampaign.exception.CampaignValidationException;
 
 import java.util.List;
 
+/**
+ * A type of a {@link Campaign}, in which all messages are delivered only
+ * on the specified days of a week.
+ *
+ * @see DayOfWeekCampaignMessage
+ */
 public class DayOfWeekCampaign extends Campaign<DayOfWeekCampaignMessage> {
 
     public DayOfWeekCampaign() {

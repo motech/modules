@@ -7,12 +7,47 @@ import java.util.List;
 
 import static org.motechproject.commons.date.model.Time.parseTime;
 
+/**
+ * A base representation of a message, sent during a campaign. It contains the fields and methods
+ * common to all types of a campaign message. Actual campaign message representations are created
+ * extending this base class.
+ *
+ * @see {@link AbsoluteCampaignMessage}
+ * @see {@link CronBasedCampaignMessage}
+ * @see {@link DayOfWeekCampaignMessage}
+ * @see {@link OffsetCampaignMessage}
+ * @see {@link RepeatIntervalCampaignMessage}
+ */
 public abstract class CampaignMessage {
+
+    /**
+     * The name of the campaign message.
+     */
     private String name;
+
+    /**
+     * Holds information about the formats of a message (eg. SMS, IVR).
+     */
     private List<String> formats;
+
+    /**
+     * Holds information about the languages of the message.
+     */
     private List<String> languages;
+
+    /**
+     * A key uniquely identifying this message.
+     */
     private String messageKey;
+
+    /**
+     * Holds the {@link Time} at which the message will be sent.
+     */
     private Time startTime;
+
+    /**
+     * Holds the domain representation of a campaign this message is assigned to.
+     */
     private CampaignRecord campaign;
 
     public CampaignMessage(CampaignMessageRecord messageRecord) {
@@ -69,6 +104,11 @@ public abstract class CampaignMessage {
         this.startTime = startTime;
     }
 
+    /**
+     * Sets the fire time for this campaign message. The time must be formatted as hh:mm
+     * and must be in the 24-hour format.
+     * @param startTime string representation of the time
+     */
     public void setStartTime(String startTime) {
       if (StringUtils.isNotBlank(startTime)) {
           this.startTime = parseTime(startTime, ":");
@@ -83,6 +123,14 @@ public abstract class CampaignMessage {
         this.campaign = campaign;
     }
 
+    /**
+     * Base validation method for the campaign message. Each concrete subclass must
+     * provide the implementation, that validates the presence of the required fields
+     * for this type of a campaign message.
+     *
+     * @throws org.motechproject.messagecampaign.exception.CampaignMessageValidationException
+     *         if the validation of the message failed
+     */
     public abstract void validate();
 
 }

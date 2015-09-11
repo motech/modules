@@ -8,8 +8,15 @@ import org.motechproject.messagecampaign.exception.CampaignMessageValidationExce
 
 import java.util.List;
 
+/**
+ * A type of a {@link CampaignMessage} sent for {@link RepeatIntervalCampaign}s.
+ * The message is sent periodically, with provided delays between each message.
+ */
 public class RepeatIntervalCampaignMessage extends CampaignMessage {
 
+    /**
+     * The time interval between messages.
+     */
     private Period repeatInterval;
 
     public RepeatIntervalCampaignMessage(CampaignMessageRecord messageRecord) {
@@ -46,6 +53,10 @@ public class RepeatIntervalCampaignMessage extends CampaignMessage {
         this.repeatInterval = new JodaFormatter().parsePeriod(repeatInterval);
     }
 
+    /**
+     * Ensures that both {@link #repeatInterval} and {@link #startTime} are not null.
+     * @throws CampaignMessageValidationException in case repeatInterval or startTime has not been set
+     */
     @Override
     public void validate() {
         if (repeatInterval == null) {

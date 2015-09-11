@@ -6,8 +6,15 @@ import org.motechproject.messagecampaign.exception.CampaignMessageValidationExce
 
 import java.util.List;
 
+/**
+ * A type of a {@link CampaignMessage} sent for {@link AbsoluteCampaign}s.
+ * The message is sent once, at a predefined date.
+ */
 public class AbsoluteCampaignMessage extends CampaignMessage {
 
+    /**
+     * The date to send the message on.
+     */
     private LocalDate date;
 
     public AbsoluteCampaignMessage(CampaignMessageRecord messageRecord) {
@@ -32,6 +39,10 @@ public class AbsoluteCampaignMessage extends CampaignMessage {
         this.date = date;
     }
 
+    /**
+     * Ensures that both {@link #date} and {@link #startTime} are not null.
+     * @throws CampaignMessageValidationException in case date or startTime are not set
+     */
     @Override
     public void validate() {
         if (date == null) {

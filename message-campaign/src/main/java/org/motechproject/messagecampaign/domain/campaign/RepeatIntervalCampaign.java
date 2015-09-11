@@ -4,6 +4,12 @@ import org.joda.time.Period;
 
 import java.util.List;
 
+/**
+ * A type of a {@link Campaign}, in which all messages are repeated
+ * periodically every specified amount of time.
+ *
+ * @see RepeatIntervalCampaignMessage
+ */
 public class RepeatIntervalCampaign extends Campaign<RepeatIntervalCampaignMessage> {
 
     public RepeatIntervalCampaign() {

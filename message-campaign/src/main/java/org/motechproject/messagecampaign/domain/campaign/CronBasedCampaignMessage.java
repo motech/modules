@@ -5,8 +5,15 @@ import org.motechproject.messagecampaign.exception.CampaignMessageValidationExce
 
 import java.util.List;
 
+/**
+ * A type of a {@link CampaignMessage} sent for {@link CronBasedCampaign}s.
+ * The message is sent periodically, based on the provided cron expression.
+ */
 public class CronBasedCampaignMessage extends CampaignMessage {
 
+    /**
+     * Cron expression used to determine the delivery dates.
+     */
     private String cron;
 
     public CronBasedCampaignMessage(CampaignMessageRecord messageRecord) {
@@ -31,6 +38,10 @@ public class CronBasedCampaignMessage extends CampaignMessage {
         this.cron = cron;
     }
 
+    /**
+     * Ensures the {@link #cron} expression has been provided.
+     * @throws CampaignMessageValidationException if cron expression has not been provided
+     */
     @Override
     public void validate() {
         if (StringUtils.isBlank(cron)) {
