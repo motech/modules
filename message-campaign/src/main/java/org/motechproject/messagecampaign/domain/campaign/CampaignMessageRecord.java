@@ -12,11 +12,13 @@ import org.motechproject.mds.annotations.UIDisplayable;
 import org.motechproject.mds.util.SecurityMode;
 import org.motechproject.messagecampaign.web.util.LocalDateSerializer;
 
+import javax.jdo.annotations.Unique;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Access(value = SecurityMode.PERMISSIONS, members = {"manageCampaigns"})
+@Unique(name = "NAME_CAMPAIGN", members = { "name", "campaign"})
 public class CampaignMessageRecord {
 
     @Field

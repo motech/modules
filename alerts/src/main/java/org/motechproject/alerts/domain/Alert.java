@@ -21,6 +21,7 @@ import java.util.Map;
 @Entity
 public class Alert implements Comparable<Alert> {
 
+    @Field
     private Long id;
 
     @Field(required = true)
