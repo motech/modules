@@ -39,6 +39,11 @@ public class Timer {
     }
 
 
+    private String milliString(long duration) {
+        return String.format("%sms", FMT_INT.format(duration));
+    }
+
+
     private String durationString(long duration) {
         long millis = duration;
         long hours = millis / MILLIS_PER_HOUR;
@@ -59,12 +64,17 @@ public class Timer {
             return String.format("%ss", FMT_SEC.format(seconds));
         }
 
-        return String.format("%sms", FMT_INT.format(millis));
+        return milliString(millis);
     }
 
 
     public String time() {
         return durationString(System.currentTimeMillis() - start);
+    }
+
+
+    public String millis() {
+        return milliString(System.currentTimeMillis() - start);
     }
 
 
