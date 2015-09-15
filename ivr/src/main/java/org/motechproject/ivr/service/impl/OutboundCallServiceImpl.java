@@ -102,6 +102,12 @@ public class OutboundCallServiceImpl implements OutboundCallService {
     }
 
     @Override
+    public void initiateCall(Map<String, String> params) {
+        String defaultConfig = configService.getDefaultConfig();
+        initiateCall(defaultConfig, params);
+    }
+
+    @Override
     public void initiateCall(String configName, Map<String, String> parameters) {
         LOGGER.debug("initiateCall(configName = {}, params = {})", configName, parameters);
 

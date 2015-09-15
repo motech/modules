@@ -209,6 +209,9 @@ Initiating an outbound call via an API call
 
     Module writers can use the :java:ref:`org.motechproject.ivr.service.OutboundCallService` ``initiateCall`` method.
 
+    ``initiateCall`` method can be called without the ``configName`` parameter. In this case call will be initiated with
+    the default configuration.
+
 
 Initiating an outbound call via a REST call
 -------------------------------------------
@@ -277,6 +280,9 @@ Settings
             Select if the provider returns JSON data after placing an outbound call.
 
         .. [#] Note: no square brackets
+
+        A configuration can be set as the default configuration from the UI.
+
 
 Call Detail Records
 ===================

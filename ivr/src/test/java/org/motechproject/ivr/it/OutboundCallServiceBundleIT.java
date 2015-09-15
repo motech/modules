@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ivr.domain.CallDetailRecord;
 import org.motechproject.ivr.domain.Config;
+import org.motechproject.ivr.domain.Configs;
 import org.motechproject.ivr.domain.HttpMethod;
 import org.motechproject.ivr.repository.CallDetailRecordDataService;
 import org.motechproject.ivr.service.ConfigService;
@@ -46,7 +47,7 @@ public class OutboundCallServiceBundleIT extends BasePaxIT {
     @Inject
     private ConfigService configService;
 
-    private List<Config> backupConfigs;
+    private Configs backupConfigs;
 
     @Before
     public void backupConfigs() {
@@ -76,7 +77,10 @@ public class OutboundCallServiceBundleIT extends BasePaxIT {
 
         //Create a config
         Config config = new Config("conf123", false, null, null, null, null, null, null, HttpMethod.GET, false, httpServerURI, false, null);
-        configService.updateConfigs(Arrays.asList(config));
+        Configs configs = new Configs();
+        configs.setConfigList(Arrays.asList(config));
+        configs.setDefaultConfig("conf123");
+        configService.updateConfigs(configs);
 
         Map<String, String> params = new HashMap<>();
         outboundCallService.initiateCall(config.getName(), params);
@@ -95,8 +99,11 @@ public class OutboundCallServiceBundleIT extends BasePaxIT {
 
         //Create a config
         Config config = new Config("conf456", false, null, null, null, null, null, null, HttpMethod.GET, false, httpServerURI,false, null);
+        Configs configs = new Configs();
+        configs.setConfigList(Arrays.asList(config));
+        configs.setDefaultConfig("conf456");
         getLogger().debug("shouldHandleInvalidServerResponse - We create a config  {}", config.toString());
-        configService.updateConfigs(Arrays.asList(config));
+        configService.updateConfigs(configs);
 
         boolean exceptionThrown = false;
         Map<String, String> params = new HashMap<>();
@@ -124,7 +131,10 @@ public class OutboundCallServiceBundleIT extends BasePaxIT {
 
         //Create a config
         Config config = new Config("conf789", false, null, null, null, null, null, null, HttpMethod.POST, true, httpServerURI, false, null);
-        configService.updateConfigs(Arrays.asList(config));
+        Configs configs = new Configs();
+        configs.setConfigList(Arrays.asList(config));
+        configs.setDefaultConfig("conf789");
+        configService.updateConfigs(configs);
 
         Map<String, String> params = new HashMap<>();
         params.put("api_key", "qwerty123");

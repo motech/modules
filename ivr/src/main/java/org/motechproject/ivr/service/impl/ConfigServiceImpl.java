@@ -1,8 +1,9 @@
 package org.motechproject.ivr.service.impl;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonIOException;
-import com.google.gson.reflect.TypeToken;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.config.core.constants.ConfigurationConstants;
@@ -10,6 +11,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.ivr.domain.Config;
 import org.motechproject.ivr.exception.ConfigNotFoundException;
+import org.motechproject.ivr.domain.Configs;
 import org.motechproject.ivr.service.ConfigService;
 import org.motechproject.server.config.SettingsFacade;
 import org.slf4j.Logger;
@@ -19,11 +21,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
 
 /**
  * See {@link org.motechproject.ivr.service.ConfigService}.
@@ -36,15 +35,16 @@ public class ConfigServiceImpl implements ConfigService {
     private static final String CONFIG_FILE_PATH = "/org.motechproject.ivr/raw/" + CONFIG_FILE_NAME;
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigServiceImpl.class);
     private SettingsFacade settingsFacade;
-    private Map<String, Config> configs = new HashMap<>();
+    private Configs configs;
+    private Map<String, Config> configMap = new HashMap<>();
+    private String defaultConfig;
 
     private synchronized void loadConfigs() {
-        List<Config> configList;
         try (InputStream is = settingsFacade.getRawConfig(CONFIG_FILE_NAME)) {
             String jsonText = IOUtils.toString(is);
             LOGGER.debug("Loading {}", CONFIG_FILE_NAME);
             Gson gson = new Gson();
-            configList = gson.fromJson(jsonText, new TypeToken<List<Config>>() { } .getType());
+            configs = gson.fromJson(jsonText, Configs.class);
         } catch (Exception e) {
             String message = String.format("There seems to be a problem with the json text in %s: %s", CONFIG_FILE_NAME,
                     e.getMessage());
@@ -52,10 +52,11 @@ public class ConfigServiceImpl implements ConfigService {
             throw new JsonIOException(message, e);
         }
 
-        configs = new HashMap<>();
-        for (Config config : configList) {
-            configs.put(config.getName(), config);
+        for (Config config : configs.getConfigList()) {
+            configMap.put(config.getName(), config);
         }
+        defaultConfig = configs.getDefaultConfig();
+
     }
 
     @Autowired
@@ -75,28 +76,34 @@ public class ConfigServiceImpl implements ConfigService {
 
     @Override
     public Config getConfig(String name) {
-        if (configs.containsKey(name)) {
-            return configs.get(name);
+        if (configMap.containsKey(name)) {
+            return configMap.get(name);
         }
         throw new ConfigNotFoundException(String.format("Unknown config: '%s'.", name));
     }
 
     @Override
-    public List<Config> allConfigs() {
-        return new ArrayList<Config>(configs.values());
+    public Configs allConfigs() {
+        return configs;
     }
 
     @Override
     public boolean hasConfig(String name) {
-        return configs.containsKey(name);
+        return configMap.containsKey(name);
     }
 
     @Override
-    public void updateConfigs(List<Config> configs) {
+    public void updateConfigs(Configs configs) {
         Gson gson = new Gson();
-        String jsonText = gson.toJson(configs);
+        String jsonText = gson.toJson(configs, Configs.class);
         ByteArrayResource resource = new ByteArrayResource(jsonText.getBytes());
         settingsFacade.saveRawConfig(CONFIG_FILE_NAME, resource);
         loadConfigs();
     }
+
+    @Override
+    public String getDefaultConfig() {
+        return defaultConfig;
+    }
+
 }

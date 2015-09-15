@@ -150,7 +150,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 
