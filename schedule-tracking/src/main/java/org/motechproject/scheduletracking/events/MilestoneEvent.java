@@ -12,24 +12,35 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This is the event which will be raised as per the alert configuration
+ * <code>MilestoneEvent</code> is used to hold details about alert and to create Motech event which will
+ * represents the alert.
+ * @see org.motechproject.scheduletracking.service.impl.EnrollmentAlertService
  */
 public class MilestoneEvent {
+
     private String windowName;
+
     private MilestoneAlert milestoneAlert;
+
     private String scheduleName;
+
     private String externalId;
+
     private DateTime referenceDateTime;
+
     private Map<String, String> milestoneData;
 
     /**
-     * Creates a MilestoneEvent
-     * @param externalId
-     * @param scheduleName
-     * @param milestoneAlert
-     * @param windowName
-     * @param referenceDateTime
-     * @param milestoneData
+     * Creates a MilestoneEvent with the enrollmentId attribute set to {@code enrollmentId}, the scheduleName attribute to {@code scheduleName},
+     * the milestoneAlert attribute to {@code milestoneAlert}, the windowName attribute to {@code windowName},
+     * the referenceDateTime attribute to {@code referenceDateTime}, the milestoneData attribute to {@code milestoneData}.
+     *
+     * @param externalId the user external id
+     * @param scheduleName the name of the schedule
+     * @param milestoneAlert the milestone alert
+     * @param windowName the name of the milestone window
+     * @param referenceDateTime the reference date and time
+     * @param milestoneData the milestone additional data
      */
     public MilestoneEvent(String externalId, String scheduleName, MilestoneAlert milestoneAlert, String windowName, DateTime referenceDateTime, Map<String, String> milestoneData) {
         this.scheduleName = scheduleName;
@@ -41,8 +52,9 @@ public class MilestoneEvent {
     }
 
     /**
-     * Creates a MilestoneEvent from an Enrollment by passing in an MotechEvent
-     * @param motechEvent
+     * Creates a MilestoneEvent from an enrollment by passing in an Motech event.
+     *
+     * @param motechEvent the Motech event with details
      */
     public MilestoneEvent(MotechEvent motechEvent) {
         this.scheduleName = (String) motechEvent.getParameters().get(EventDataKeys.SCHEDULE_NAME);
@@ -58,10 +70,11 @@ public class MilestoneEvent {
     }
 
     /**
-     * Creates a MilestoneEvent from an Enrollment
-     * @param enrollment
-     * @param milestoneAlert
-     * @param milestoneWindow
+     * Creates a MilestoneEvent from an enrollment, alert and milestone window.
+     *
+     * @param enrollment the enrollment
+     * @param milestoneAlert the alert which will be triggered
+     * @param milestoneWindow the milestone window
      */
     public MilestoneEvent(Enrollment enrollment, MilestoneAlert milestoneAlert, MilestoneWindow milestoneWindow) {
         this.externalId = enrollment.getExternalId();
@@ -73,8 +86,9 @@ public class MilestoneEvent {
     }
 
     /**
-     * Creates an MotechEvent from a MilestoneEvent
-     * @return MotechEvent
+     * Creates Motech event with alert details.
+     *
+     * @return the Motech event with alert details
      */
     public MotechEvent toMotechEvent() {
         HashMap<String, Object> parameters = new HashMap<>();
@@ -92,48 +106,54 @@ public class MilestoneEvent {
     }
 
     /**
-     * Returns the Window name of the MilestoneEvent
-     * @return String
+     * Returns the window name of the MilestoneEvent.
+     *
+     * @return the milestone window name
      */
     public String getWindowName() {
         return windowName;
     }
 
     /**
-     * Returns the MilestoneAlert of the MilestoneEvent
-     * @return MilestoneAlert
+     * Returns the milestone alert of the MilestoneEvent.
+     *
+     * @return the milestone alert
      */
     public MilestoneAlert getMilestoneAlert() {
         return milestoneAlert;
     }
 
     /**
-     * Returns the Schedule Name of the MilestoneEvent
-     * @return String
+     * Returns the schedule name of the MilestoneEvent.
+     *
+     * @return the name of the schedule
      */
     public String getScheduleName() {
         return scheduleName;
     }
 
     /**
-     * Returns the External Id of the MilestoneEvent
-     * @return String
+     * Returns the external id of the MilestoneEvent.
+     *
+     * @return the external id
      */
     public String getExternalId() {
         return externalId;
     }
 
     /**
-     * Returns the ReferenceDateTime of the MilestoneEvent
-     * @return DateTime
+     * Returns the reference date and time of the MilestoneEvent.
+     *
+     * @return the reference date and time
      */
     public DateTime getReferenceDateTime() {
         return referenceDateTime;
     }
 
     /**
-     * Returns the Milestone Data of the MilestoneEvent
-     * @return Map
+     * Returns the milestone data of the MilestoneEvent.
+     *
+     * @return the milestone data
      */
     public Map<String, String> getMilestoneData() {
         return milestoneData;
