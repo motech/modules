@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Component used for searching enrollments.
+ */
 @Component
 public class EnrollmentsQueryService {
 
@@ -20,6 +23,13 @@ public class EnrollmentsQueryService {
         this.allEnrollments = allEnrollments;
     }
 
+    /**
+     * Returns enrollments which meet the given criterions. Enrollments are retrieved from database using primary criteria
+     * and then result list is filtered using secondary criteria.
+     *
+     * @param query the enrollment query with search criteria
+     * @return the list of the enrollments
+     */
     public List<Enrollment> search(EnrollmentsQuery query) {
         List<Enrollment> enrollments = new ArrayList<Enrollment>();
         Criterion primaryCriterion = query.getPrimaryCriterion();

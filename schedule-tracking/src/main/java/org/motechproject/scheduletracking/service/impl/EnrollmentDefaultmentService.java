@@ -16,16 +16,27 @@ import org.springframework.stereotype.Component;
 import static org.motechproject.commons.date.util.DateUtil.now;
 import static org.motechproject.scheduletracking.events.constants.EventSubjects.MILESTONE_DEFAULTED;
 
+/**
+ * Component to manage defaulted enrollments.
+ */
 @Component
 public class EnrollmentDefaultmentService {
-    private MotechSchedulerService schedulerService;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(EnrollmentDefaultmentService.class);
+
+    private MotechSchedulerService schedulerService;
 
     @Autowired
     public EnrollmentDefaultmentService(MotechSchedulerService schedulerService) {
         this.schedulerService = schedulerService;
     }
 
+    /**
+     * Schedules job to trigger defaultment alert for the given enrollment. Job is created when the current milestone
+     * is not expired.
+     *
+     * @param enrollment the enrollment to mark as defaultment
+     */
     public void scheduleJobToCaptureDefaultment(Enrollment enrollment) {
         Schedule schedule = enrollment.getSchedule();
         Milestone currentMilestone = schedule.getMilestone(enrollment.getCurrentMilestoneName());
@@ -47,6 +58,11 @@ public class EnrollmentDefaultmentService {
         schedulerService.safeScheduleRunOnceJob(new RunOnceSchedulableJob(event, milestoneEndDateTime.toDate()));
     }
 
+    /**
+     * Unschedules all the defaultment alert jobs for the given enrollment.
+     *
+     * @param enrollment the enrollment for which all defaultment jobs will be unscheduled.
+     */
     public void unscheduleMilestoneDefaultedJob(Enrollment enrollment) {
         LOGGER.info("Un-scheduling all jobs for enrollment {}", enrollment.getId());
         schedulerService.safeUnscheduleAllJobs(String.format("%s-%s", MILESTONE_DEFAULTED, enrollment.getId()));
