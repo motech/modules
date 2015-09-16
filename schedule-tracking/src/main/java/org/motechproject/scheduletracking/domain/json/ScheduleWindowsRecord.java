@@ -5,14 +5,21 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <code>ScheduleWindowsRecord</code> is used to deserialize milestone window from json format.
+ * @see org.motechproject.scheduletracking.domain.MilestoneWindow
+ */
 public class ScheduleWindowsRecord {
 
     @JsonProperty
     private List<String> earliest = new ArrayList<String>();
+
     @JsonProperty
     private List<String> due = new ArrayList<String>();
+
     @JsonProperty
     private List<String> late = new ArrayList<String>();
+
     @JsonProperty
     private List<String> max = new ArrayList<String>();
 

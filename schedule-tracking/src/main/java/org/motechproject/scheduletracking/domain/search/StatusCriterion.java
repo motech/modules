@@ -11,9 +11,18 @@ import static ch.lambdaj.Lambda.having;
 import static ch.lambdaj.Lambda.on;
 import static org.hamcrest.CoreMatchers.equalTo;
 
+/**
+ * Criterion used to filter enrollments by the status.
+ */
 public class StatusCriterion implements Criterion {
+
     private EnrollmentStatus status;
 
+    /**
+     * Creates a EndOfWindowCriterion with the status attribute set to {@code status}.
+     *
+     * @param status the status of the enrollment
+     */
     public StatusCriterion(EnrollmentStatus status) {
         this.status = status;
     }

@@ -10,9 +10,18 @@ import static ch.lambdaj.Lambda.having;
 import static ch.lambdaj.Lambda.on;
 import static org.hamcrest.Matchers.equalTo;
 
+/**
+ * Criterion used to filter enrollments by the current milestone name.
+ */
 public class MilestoneCriterion implements Criterion {
+
     private String milestoneName;
 
+    /**
+     * Creates a MilestoneCriterion with the milestoneName attribute set to {@code milestoneName}.
+     *
+     * @param milestoneName the current milestone name
+     */
     public MilestoneCriterion(String milestoneName) {
         this.milestoneName = milestoneName;
     }

@@ -6,10 +6,22 @@ import org.motechproject.scheduletracking.repository.AllEnrollments;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Criterion used to filter enrollments by metadata. If the enrollment have got a given key-value entry
+ * in their metadata then this criterion is met.
+ */
 public class MetadataCriterion implements Criterion {
+
     private String key;
+
     private String value;
 
+    /**
+     * Creates a MetadataCriterion with the key attribute set to {@code key}, the end attribute to {@code value}.
+     *
+     * @param key the metadata key
+     * @param value the metadata value
+     */
     public MetadataCriterion(String key, String value) {
         this.key = key;
         this.value = value;

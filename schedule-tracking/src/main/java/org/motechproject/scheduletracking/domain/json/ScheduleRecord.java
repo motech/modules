@@ -6,12 +6,18 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <code>ScheduleRecord</code> is used to deserialize schedule from json format.
+ * @see org.motechproject.scheduletracking.domain.Schedule
+ */
 public class ScheduleRecord {
 
     @JsonProperty
     private String name;
+
     @JsonProperty
     private boolean absolute;
+
     @JsonProperty
     private List<MilestoneRecord> milestones = new ArrayList<MilestoneRecord>();
 
