@@ -11,9 +11,9 @@ import java.util.List;
 public interface TrackedSchedulesJsonReader {
 
     /**
-     * Builds schedule record from the given json data.
+     * Builds a schedule record from the given json data.
      *
-     * @param schduleJson the json data with schedule definition
+     * @param schduleJson the json data with the schedule definition
      * @return the schedule record
      */
     ScheduleRecord getSchedule(String schduleJson);

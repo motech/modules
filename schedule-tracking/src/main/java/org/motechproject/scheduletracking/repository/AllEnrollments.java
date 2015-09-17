@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- * Implementation of DAO interface that utilizes a MDS back-end for retrieving instances.
+ * The DAO that utilizes a MDS back-end for retrieving instances.
  */
 @Repository
 public class AllEnrollments {
@@ -20,7 +20,7 @@ public class AllEnrollments {
     private EnrollmentDataService enrollmentDataService;
 
     /**
-     * Returns all enrollments stored int he database.
+     * Returns all enrollments stored in the database.
      *
      * @return the list of the enrollments
      */
