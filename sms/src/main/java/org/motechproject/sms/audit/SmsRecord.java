@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.UIFilterable;
 import org.motechproject.mds.util.SecurityMode;
 
 import static org.motechproject.sms.util.Constants.VIEW_SMS_LOGS_PERMISSION;
@@ -20,12 +21,19 @@ import static org.motechproject.sms.util.Constants.VIEW_SMS_LOGS_PERMISSION;
 @Entity(nonEditable = true)
 @Access(value = SecurityMode.PERMISSIONS, members = {VIEW_SMS_LOGS_PERMISSION})
 public class SmsRecord {
-    private String config;
+
+    @UIFilterable
+    private DateTime timestamp;
+
+    @UIFilterable
     private SmsDirection smsDirection;
+
+    @UIFilterable
+    private DeliveryStatus deliveryStatus;
+
+    private String config;
     private String phoneNumber;
     private String messageContent;
-    private DateTime timestamp;
-    private DeliveryStatus deliveryStatus;
     private String providerStatus;
     private String motechId;
     private String providerId;
