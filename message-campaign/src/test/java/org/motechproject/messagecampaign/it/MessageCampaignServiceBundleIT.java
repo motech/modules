@@ -94,16 +94,13 @@ public class MessageCampaignServiceBundleIT extends BasePaxIT {
             protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
                 CampaignRecord campaignRecord = campaignRecordService.findByName("DayOfWeekCampaign");
                 campaignRecord.setMaxDuration("3 Weeks");
-                synchronized (lock) {
-                    campaignRecordService.update(campaignRecord);
-                    try {
-                        lock.wait(4000);
-                    } catch (InterruptedException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                }
+                campaignRecordService.update(campaignRecord);
             }
         });
+
+        synchronized (lock) {
+            lock.wait(4000);
+        }
 
         messageCampaignService.updateEnrollments(campaignRecordService.findByName("DayOfWeekCampaign").getId());
 

@@ -167,17 +167,13 @@ public class DayOfWeekCampaignSchedulingBundleIT extends BaseSchedulingIT {
             protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
                 CampaignMessageRecord campaignMessageRecord = getCampaignMessageRecordService().findById(campaignMessageRecordId);
                 campaignMessageRecord.setRepeatOn(asList(DayOfWeek.Thursday));
-
-                synchronized (lock) {
-                    getCampaignMessageRecordService().update(campaignMessageRecord);
-                    try {
-                        lock.wait(4000);
-                    } catch (InterruptedException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                }
+                getCampaignMessageRecordService().update(campaignMessageRecord);
             }
         });
+
+        synchronized (lock) {
+            lock.wait(4000);
+        }
 
         getMessageCampaignService().rescheduleMessageJob(campaignMessageRecordId);
 

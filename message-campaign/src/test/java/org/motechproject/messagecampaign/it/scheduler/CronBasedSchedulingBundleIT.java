@@ -107,17 +107,13 @@ public class CronBasedSchedulingBundleIT extends BaseSchedulingIT {
             protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
                 CampaignMessageRecord campaignMessageRecord = getCampaignMessageRecordService().findById(campaignMessageRecordId);
                 campaignMessageRecord.setCron("0 12 11 11 11 ?");
-
-                synchronized (lock) {
-                    getCampaignMessageRecordService().update(campaignMessageRecord);
-                    try {
-                        lock.wait(4000);
-                    } catch (InterruptedException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                }
+                getCampaignMessageRecordService().update(campaignMessageRecord);
             }
         });
+
+        synchronized (lock) {
+            lock.wait(4000);
+        }
 
         getMessageCampaignService().rescheduleMessageJob(campaignMessageRecordId);
 

@@ -109,17 +109,13 @@ public class OffsetSchedulingBundleIT extends BaseSchedulingIT {
             protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
                 CampaignMessageRecord campaignMessageRecord = getCampaignMessageRecordService().findById(campaignMessageRecordId);
                 campaignMessageRecord.setTimeOffset("2 Weeks");
-
-                synchronized (lock) {
-                    getCampaignMessageRecordService().update(campaignMessageRecord);
-                    try {
-                        lock.wait(4000);
-                    } catch (InterruptedException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                }
+                getCampaignMessageRecordService().update(campaignMessageRecord);
             }
         });
+
+        synchronized (lock) {
+            lock.wait(4000);
+        }
 
         getMessageCampaignService().rescheduleMessageJob(campaignMessageRecordId);
 
