@@ -44,6 +44,14 @@ public class EventHandler {
     @Autowired
     private DataElementService dataElementService;
 
+    public EventHandler (DhisWebService webService,
+                         TrackedEntityInstanceMappingService trackedEntityInstanceMappingService,
+                         DataElementService dataElementService) {
+        this.dhisWebService = webService;
+        this.trackedEntityInstanceMappingService = trackedEntityInstanceMappingService;
+        this.dataElementService = dataElementService;
+    }
+
     public EventHandler (DhisWebService webService, TrackedEntityInstanceMappingService trackedEntityInstanceMappingService) {
         this.dhisWebService = webService;
         this.trackedEntityInstanceMappingService = trackedEntityInstanceMappingService;
@@ -103,7 +111,7 @@ public class EventHandler {
     }
 
     /**
-     * Parses the event and creates a{@link org.motechproject.dhis2.rest.domain.TrackedEntityInstanceDto}
+     * Parses the event and creates a {@link org.motechproject.dhis2.rest.domain.TrackedEntityInstanceDto}
      * and a {@link org.motechproject.dhis2.rest.domain.EnrollmentDto} which is then sent to the DHIS2 server
      * via {@link org.motechproject.dhis2.rest.service.DhisWebService}
      *
@@ -221,9 +229,9 @@ public class EventHandler {
         DataElement dataElement = dataElementService.findByName((String) params.get(EventParams.DATA_ELEMENT));
 
         if (dataElement == null) {
-            throw new DataElementNotFoundException("The data element that was sent did not " +
-                    "match any values imported from DHIS2. Please make sure that the data element field matches " +
-                    "a data element name in the DHIS2 module");
+            throw new DataElementNotFoundException("The data element " + params.get(EventParams.DATA_ELEMENT) +
+                    " that was sent did not match any values imported from DHIS2. Please make sure that the " +
+                    "data element field matches a data element name in the DHIS2 module");
         }
 
         String orgUnitId = (String) params.get(EventParams.LOCATION);
