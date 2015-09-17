@@ -47,7 +47,7 @@ public class EnrollmentBuilder {
     /**
      * Adds the external id for the built enrollment.
      *
-     * @param externalId the user external id
+     * @param externalId the client external id
      * @return this instance with the external id set up
      */
     public EnrollmentBuilder withExternalId(String externalId) {

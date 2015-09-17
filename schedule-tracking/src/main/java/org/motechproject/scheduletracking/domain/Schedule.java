@@ -16,7 +16,7 @@ import java.util.List;
 import static org.motechproject.commons.date.util.DateUtil.now;
 
 /**
- * Represents schedule of the milestones. Users are enrolled to the schedules, after this alerts will be raised.
+ * Represents schedule of the milestones. Clients are enrolled to the schedules, after this alerts will be raised.
  * If the schedule is absolute: The alert reference time is the start of the schedule. All offsets for alerts are
  * calculated from the start of schedule. If the schedule is not absolute(default): If there are no fulfilled milestones,
  * the enrollment date is used as the alert reference time. If there are fulfilled milestones, the last milestone’s

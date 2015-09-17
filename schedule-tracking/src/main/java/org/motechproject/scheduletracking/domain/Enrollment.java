@@ -20,7 +20,7 @@ import static org.motechproject.scheduletracking.domain.EnrollmentStatus.ACTIVE;
 import static org.motechproject.scheduletracking.domain.EnrollmentStatus.COMPLETED;
 
 /**
- * Represents details about user enrollment.
+ * Represents details about the client enrollment.
  */
 @Entity
 @CrudEvents(CrudEventType.NONE)
@@ -33,7 +33,7 @@ public class Enrollment {
     private Long id;
 
     /**
-     * The user external id.
+     * The client external id.
      */
     @Field
     private String externalId;
@@ -63,7 +63,7 @@ public class Enrollment {
     private DateTime enrolledOn;
 
     /**
-     * The user preferred alert time.
+     * The time of day to send alerts to client.
      */
     @Field
     private Time preferredAlertTime;
@@ -233,7 +233,6 @@ public class Enrollment {
      * @param windowName the window name
      * @return the start date and time of the window
      */
-    @Ignore
     public DateTime getStartOfWindowForCurrentMilestone(WindowName windowName) {
         DateTime currentMilestoneStartDate = getCurrentMilestoneStartDate();
         Milestone currentMilestone = schedule.getMilestone(currentMilestoneName);
@@ -287,7 +286,6 @@ public class Enrollment {
      * @param asOf the date and time which is the time range of the window
      * @return the window name
      */
-    @Ignore
     public WindowName getCurrentWindowAsOf(DateTime asOf) {
         DateTime milestoneStart = this.getCurrentMilestoneStartDate();
         Milestone milestone = schedule.getMilestone(this.getCurrentMilestoneName());
@@ -309,7 +307,6 @@ public class Enrollment {
      * @param windowName the window name
      * @return the end date and time of the window
      */
-    @Ignore
     public DateTime getEndOfWindowForCurrentMilestone(WindowName windowName) {
         DateTime currentMilestoneStartDate = this.getCurrentMilestoneStartDate();
         Milestone currentMilestone = schedule.getMilestone(this.getCurrentMilestoneName());
