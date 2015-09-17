@@ -12,8 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * <code>MilestoneEvent</code> is used to hold details about alert and to create Motech event which will
- * represents the alert.
+ * The <code>MilestoneEvent</code> is used to create a Motech event. The event payload contains details about milestone.
  * @see org.motechproject.scheduletracking.service.impl.EnrollmentAlertService
  */
 public class MilestoneEvent {
@@ -86,7 +85,7 @@ public class MilestoneEvent {
     }
 
     /**
-     * Creates Motech event with alert details.
+     * Creates a Motech event with alert details.
      *
      * @return the Motech event with alert details
      */

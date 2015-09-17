@@ -11,8 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * <code>EnrolledUserEvent</code> is used to hold details about user enrollment and to create Motech event with
- * this details.
+ * The <code>EnrolledUserEvent</code> is used to create a Motech event. The event payload contains details about user enrollment.
  * @see org.motechproject.scheduletracking.service.EnrollmentService
  */
 public class EnrolledUserEvent {
@@ -41,9 +40,9 @@ public class EnrolledUserEvent {
      *
      * @param externalId the user external id
      * @param scheduleName the name of the schedule
-     * @param preferredAlertTime the preferred alert time
-     * @param referenceDateTime the reference date and time
-     * @param enrollmentDateTime the enrollment date and time
+     * @param preferredAlertTime the time of day to send alerts to client
+     * @param referenceDateTime the reference date and time on which the schedule will start
+     * @param enrollmentDateTime the enrollment date and time on which the client is enrolled into the schedule
      * @param startingMilestoneName the starting milestone name
      */
     public EnrolledUserEvent(String externalId, String scheduleName, Time preferredAlertTime, DateTime referenceDateTime,
@@ -102,7 +101,7 @@ public class EnrolledUserEvent {
     }
 
     /**
-     * Creates Motech event with details about user enrollment.
+     * Creates a Motech event with details about user enrollment.
      *
      * @return the Motech event with details about user enrollment
      */

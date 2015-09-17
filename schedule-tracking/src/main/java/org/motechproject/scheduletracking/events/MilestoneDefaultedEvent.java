@@ -8,8 +8,8 @@ import org.motechproject.scheduletracking.events.constants.EventSubjects;
 import java.util.HashMap;
 
 /**
- * <code>EnrolledUserEvent</code> is used to hold details about milestone defaulted and to create Motech event with
- * this details.
+ * The <code>EnrolledUserEvent</code> is used to create a Motech event. The event payload contains details about milestone
+ * defaulted.
  * @see org.motechproject.scheduletracking.service.impl.EndOfMilestoneListener
  * @see org.motechproject.scheduletracking.service.impl.EnrollmentDefaultmentService
  */
@@ -47,7 +47,7 @@ public class MilestoneDefaultedEvent {
     }
 
     /**
-     * Creates Motech event.
+     * Creates a Motech event.
      *
      * @return the Motech event with details about milestone defaulted
      */

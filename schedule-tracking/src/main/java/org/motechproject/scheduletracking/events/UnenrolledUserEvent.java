@@ -8,8 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * <code>UnenrolledUserEvent</code> is used to hold details about user unenrollment and to create Motech event with
- * this details.
+ * The <code>UnenrolledUserEvent</code> is used to create a Motech event. The event payload contains details about user unenrollment.
  * @see org.motechproject.scheduletracking.service.EnrollmentService
  */
 public class UnenrolledUserEvent {
@@ -49,7 +48,7 @@ public class UnenrolledUserEvent {
     }
 
     /**
-     * Creates Motech event with details about user unenrollment.
+     * Creates a Motech event with details about user unenrollment.
      *
      * @return the Motech event with details about user unenrollment
      */
