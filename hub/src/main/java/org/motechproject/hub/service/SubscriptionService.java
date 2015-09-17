@@ -5,7 +5,7 @@ import org.motechproject.hub.model.Modes;
 
 /**
  * This is an interface which provides business logic for a
- * subscription/unsubscription request
+ * subscription/unsubscription request.
  *
  * @author Anuranjan
  *
@@ -35,6 +35,8 @@ public interface SubscriptionService {
      *            be used to compute an HMAC digest for authorized content
      *            distribution. Currently this is not being consumed by the API
      * @throws HubException
+     *            - if tries unsubscribing from not subscribed or non existing topic or
+     *            topic was not found from any other reason
      */
     void subscribe(String callbackUrl, Modes hubMode, String topic,
             String leaseSeconds, String secret) throws HubException;

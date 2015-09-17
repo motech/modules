@@ -1,8 +1,5 @@
 package org.motechproject.hub.service.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.motechproject.http.agent.service.HttpAgent;
 import org.motechproject.http.agent.service.Method;
 import org.motechproject.hub.service.DistributionServiceDelegate;
@@ -17,12 +14,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * This class implements the methods in the interface
- * <code>DistributionServiceDelegate</code>
- *
- * @author Anuranjan
- *
+ * Default implementation of {@link org.motechproject.hub.service.DistributionServiceDelegate}
  */
 @Service(value = "distributionServiceDelegate")
 public class DistributionServiceDelegateImpl implements
@@ -33,6 +29,11 @@ public class DistributionServiceDelegateImpl implements
     @Value("${retry.count}")
     private String retryCount;
 
+    /**
+     * Sets the number of allowed request retries in case of request error.
+     *
+     * @param retryCount the retry count to be set
+     */
     public void setRetryCount(String retryCount) {
         this.retryCount = retryCount;
     }
@@ -40,20 +41,44 @@ public class DistributionServiceDelegateImpl implements
     @Value("${retry.interval}")
     private String retryInterval;
 
+    /**
+     * Sets the interval between request retries in case of request error.
+     *
+     * @param retryInterval the retry interval to be set
+     */
     public void setRetryInterval(String retryInterval) {
         this.retryInterval = retryInterval;
     }
 
     private SettingsFacade settingsFacade;
 
+    /**
+     * Gets the <code>HttpAgent</code> which is an OSGI service
+     * used for sending http requests.
+     *
+     * @return the http agent
+     */
     public HttpAgent getHttpAgentImpl() {
         return httpAgentImpl;
     }
 
+    /**
+     * Sets the <code>HttpAgent</code> which is an OSGI service
+     * used for sending http requests.
+     *
+     * @param httpAgentImpl the http agent to be set
+     */
     public void setHttpAgentImpl(HttpAgent httpAgentImpl) {
         this.httpAgentImpl = httpAgentImpl;
     }
 
+    /**
+     * Creates a new instance of <code>DistributionServiceDelegateImpl</code>, with
+     * all fields set to the autowired parameters values.
+     *
+     * @param httpAgentImpl autowired {@link org.motechproject.http.agent.service.HttpAgent}
+     * @param settingsFacade autowired {@link org.motechproject.server.config.SettingsFacade}
+     */
     @Autowired
     public DistributionServiceDelegateImpl(HttpAgent httpAgentImpl,
             @Qualifier("hubSettings") final SettingsFacade settingsFacade) {
