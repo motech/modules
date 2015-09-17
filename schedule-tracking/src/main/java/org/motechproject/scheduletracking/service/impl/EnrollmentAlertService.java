@@ -28,7 +28,7 @@ import java.util.List;
 import static org.motechproject.commons.date.util.DateUtil.now;
 
 /**
- * Component used for manage alerts.
+ * Service used for managing alerts.
  */
 @Component
 public class EnrollmentAlertService {

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Component used for searching enrollments.
+ * Service used for searching enrollments.
  */
 @Component
 public class EnrollmentsQueryService {

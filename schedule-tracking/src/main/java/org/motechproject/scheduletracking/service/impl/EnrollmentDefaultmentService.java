@@ -17,7 +17,7 @@ import static org.motechproject.commons.date.util.DateUtil.now;
 import static org.motechproject.scheduletracking.events.constants.EventSubjects.MILESTONE_DEFAULTED;
 
 /**
- * Component to manage defaulted enrollments.
+ * Service to managing defaulted enrollments.
  */
 @Component
 public class EnrollmentDefaultmentService {

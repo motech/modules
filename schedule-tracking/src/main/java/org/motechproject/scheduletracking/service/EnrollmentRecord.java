@@ -40,8 +40,9 @@ public class EnrollmentRecord {
     }
 
     /**
-     * Returns the external id of an enrollment.
-     * @return the external id of an enrollment
+     * Returns the client external id.
+     *
+     * @return the client external id
      */
     public String getExternalId() {
         return externalId;
@@ -50,6 +51,7 @@ public class EnrollmentRecord {
     
     /**
      * Returns the schedule name of an enrollment.
+     *
      * @return the schedule name
      */
     public String getScheduleName() {
@@ -58,6 +60,7 @@ public class EnrollmentRecord {
 
     /**
      * Returns the preferred alert time of an enrollment.
+     *
      * @return the preferred alert time
      */
     public Time getPreferredAlertTime() {
@@ -66,6 +69,7 @@ public class EnrollmentRecord {
 
     /**
      * Returns the reference date and time of an enrollment.
+     *
      * @return the reference date and time
      */
     public DateTime getReferenceDateTime() {
@@ -74,6 +78,7 @@ public class EnrollmentRecord {
 
     /**
      * Returns the date and time of an enrollment.
+     *
      * @return the enrollment date and time
      */
     public DateTime getEnrollmentDateTime() {
@@ -82,6 +87,7 @@ public class EnrollmentRecord {
 
     /**
      * Returns the earliest window start date and time of current milestone of an enrollment.
+     *
      * @return the earliest window start date and time
      */
     public DateTime getStartOfEarliestWindow() {
@@ -90,6 +96,7 @@ public class EnrollmentRecord {
 
     /**
      * Returns the due window start date and time of current milestone of an enrollment.
+     *
      * @return the due window start date and time
      */
     public DateTime getStartOfDueWindow() {
@@ -106,6 +113,7 @@ public class EnrollmentRecord {
 
     /**
      * Returns the max window start date and time of current milestone of an enrollment.
+     *
      * @return the max window start date and time
      */
     public DateTime getStartOfMaxWindow() {
@@ -114,6 +122,7 @@ public class EnrollmentRecord {
 
     /**
      * Returns the current milestone name of an enrollment.
+     *
      * @return the current milestone name
      */
     public String getCurrentMilestoneName() {
@@ -122,6 +131,7 @@ public class EnrollmentRecord {
 
     /**
      * Returns the status of the enrollment.
+     *
      * @return the enrollment status
      */
     public String getStatus() {
@@ -130,6 +140,7 @@ public class EnrollmentRecord {
 
     /**
      * Returns the metadata associated with the enrollment.
+     *
      * @return the metadata
      */
     public Map<String, String> getMetadata() {

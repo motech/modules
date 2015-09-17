@@ -11,7 +11,7 @@ import static org.motechproject.commons.date.util.DateUtil.newDateTime;
 import static org.motechproject.commons.date.util.DateUtil.today;
 
 /**
- * <code>EnrollmentRequest</code> represents the request document to create an enrollment.
+ * <code>EnrollmentRequest</code> represents the request to create an enrollment.
  * @see org.motechproject.scheduletracking.service.ScheduleTrackingService
  */
 public class EnrollmentRequest {
@@ -43,8 +43,9 @@ public class EnrollmentRequest {
     }
 
     /**
-     * Returns the external id of the enrollment.
-     * @return the enrollment external id
+     * Returns the client external id.
+     *
+     * @return the client external id
      */
     public String getExternalId() {
         return externalId;
@@ -52,6 +53,7 @@ public class EnrollmentRequest {
 
     /**
      * Returns the schedule name of the enrollment.
+     *
      * @return the schedule name
      */
     public String getScheduleName() {
@@ -60,6 +62,7 @@ public class EnrollmentRequest {
 
     /**
      * Returns the starting milestone name of the enrollment.
+     *
      * @return the starting milestone name
      */
     public String getStartingMilestoneName() {
@@ -68,6 +71,7 @@ public class EnrollmentRequest {
 
     /**
      * Returns the preferred alert time of the enrollment.
+     *
      * @return the preferred alert time
      */
     public Time getPreferredAlertTime() {
@@ -76,6 +80,7 @@ public class EnrollmentRequest {
 
     /**
      * Returns the reference date of the enrollment.
+     *
      * @return the reference date
      */
     public LocalDate getReferenceDate() {
@@ -84,6 +89,7 @@ public class EnrollmentRequest {
 
     /**
      * Returns the reference time of the enrollment.
+     *
      * @return the reference time
      */
     public Time getReferenceTime() {
@@ -92,6 +98,7 @@ public class EnrollmentRequest {
 
     /**
      * Returns whether the starting milestone has been specified for the enrollment.
+     *
      * @return true if the starting milestone has been specified
      */
     public boolean isStartingMilestoneSpecified() {
@@ -100,6 +107,7 @@ public class EnrollmentRequest {
 
     /**
      * Returns the enrollment date and time of the enrollment.
+     *
      * @return the enrollment date and time
      */
     public DateTime getEnrollmentDateTime() {
@@ -108,6 +116,7 @@ public class EnrollmentRequest {
 
     /**
      * Returns the reference date and time of the enrollment.
+     *
      * @return the reference date and time
      */
     public DateTime getReferenceDateTime() {
@@ -116,6 +125,7 @@ public class EnrollmentRequest {
 
     /**
      * Returns the metadata key value map of the enrollment.
+     *
      * @return the metadata
      */
     public Map<String, String> getMetadata() {
@@ -132,7 +142,7 @@ public class EnrollmentRequest {
     }
 
     /**
-     * Sets the external id of the enrollment.
+     * Sets the client external id.
      */
     public EnrollmentRequest setExternalId(String externalId) {
         this.externalId = externalId;

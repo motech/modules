@@ -30,7 +30,7 @@ public class EnrollmentsQuery {
     private List<Criterion> criteria = new ArrayList<Criterion>();
 
     /**
-     * This adds the criteria using which enrollments are filtered based on external id.
+     * This adds the criteria using which enrollments are filtered based on the client external id.
      *
      * @param externalId the client external id
      * @return returns the instance with external id criteria added to the criteria list
