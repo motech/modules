@@ -11,10 +11,18 @@ import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.Enumeration;
 
+/**
+ * Utility class for hub module. Contains various methods to use with hub module.
+ */
 public final class HubUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HubUtils.class);
 
+    /**
+     * Gets the network host name.
+     *
+     * @return the network host name
+     */
     public static String getNetworkHostName() {
         String hostName = null;
 
@@ -45,10 +53,18 @@ public final class HubUtils {
         return hostName;
     }
 
+    /**
+     * Gets current date.
+     *
+     * @return current date
+     */
     public static Date getCurrentDateTime() {
         return DateUtil.now().toDate();
     }
 
+    /**
+     * Creates a new instance of <code>HubUtils</code>.
+     */
     private HubUtils() {
     }
 }
