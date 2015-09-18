@@ -18,7 +18,7 @@ public class UnenrolledUserEvent {
     private String scheduleName;
 
     /**
-     * Creates a UnenrolledUserEvent with the externalId attribute set to {@code scheduleName},
+     * Creates a UnenrolledUserEvent with the externalId attribute set to {@code externalId},
      * the scheduleName attribute to {@code scheduleName}.
      *
      * @param externalId the user external id
@@ -30,7 +30,7 @@ public class UnenrolledUserEvent {
     }
 
     /**
-     * Creates a UnenrolledUserEvent from map with parameters.
+     * Creates a UnenrolledUserEvent from map with the given parameters.
      *
      * @param parameters the parameters map, it should contains the external id and the schedule name
      */

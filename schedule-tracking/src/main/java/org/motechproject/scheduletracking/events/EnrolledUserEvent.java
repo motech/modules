@@ -33,7 +33,7 @@ public class EnrolledUserEvent {
     private String startingMilestoneName;
 
     /**
-     * Creates a EnrolledUserEvent with the externalId attribute set to {@code scheduleName}, the scheduleName attribute to {@code scheduleName},
+     * Creates a EnrolledUserEvent with the externalId attribute set to {@code externalId}, the scheduleName attribute to {@code scheduleName},
      * the preferredAlertTime attribute to {@code preferredAlertTime}, the referenceDateTime attribute is used to fill
      * {@code referenceDate} and {@code referenceTime}, the enrollmentDateTime attribute is used to fill {@code enrollmentDate}
      * and {@code enrollmentTime}, the startingMilestoneName attribute to {@code startingMilestoneName}.
