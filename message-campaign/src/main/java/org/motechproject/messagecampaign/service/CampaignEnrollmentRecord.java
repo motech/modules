@@ -14,7 +14,7 @@ public class CampaignEnrollmentRecord {
     private CampaignEnrollmentStatus status;
 
     /**
-     * This is the constructor which is used to create an CampaignEnrollmentRecord
+     * This is the constructor which is used to create an CampaignEnrollmentRecord.
      *
      * @param externalId external ID of the created campaign enrollment
      * @param campaignName campaign name of the created campaign enrollment
@@ -29,7 +29,7 @@ public class CampaignEnrollmentRecord {
     }
 
     /**
-     * This returns the External ID of a CampaignEnrollmentRecord
+     * This returns the External ID of a CampaignEnrollmentRecord.
      *
      * @return external ID of the enrollment
      */
@@ -38,7 +38,7 @@ public class CampaignEnrollmentRecord {
     }
 
     /**
-     * This returns the Campaign Name of a CampaignEnrollmentRecord
+     * This returns the Campaign Name of a CampaignEnrollmentRecord.
      *
      * @return name of the campaign the enrollment is assigned to
      */
@@ -47,7 +47,7 @@ public class CampaignEnrollmentRecord {
     }
 
     /**
-     * This returns the Start Date of a CampaignEnrollmentRecord
+     * This returns the Start Date of a CampaignEnrollmentRecord.
      *
      * @return the reference date of this enrollment
      */
@@ -56,7 +56,7 @@ public class CampaignEnrollmentRecord {
     }
 
     /**
-     * This returns the Status of a CampaignEnrollmentRecord
+     * This returns the Status of a CampaignEnrollmentRecord.
      *
      * @return the status of this enrollment
      */

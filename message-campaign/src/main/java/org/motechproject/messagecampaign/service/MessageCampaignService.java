@@ -94,7 +94,7 @@ public interface MessageCampaignService {
     void deleteCampaign(String campaignName);
 
     /**
-     * Return last message we attempted to send for the given campaign enrollment.
+     * Returns last message we attempted to send for the given campaign enrollment.
      *
      * @param campaignName the name of the campaign
      * @param externalId the external ID of the enrollment
@@ -103,7 +103,7 @@ public interface MessageCampaignService {
     String getLatestCampaignMessage(String campaignName, String externalId);
 
     /**
-     * Return next message that will be sent for the given campaign enrollment.
+     * Returns next message that will be sent for the given campaign enrollment.
      *
      * @param campaignName the name of the campaign
      * @param externalId the external ID of the enrollment
@@ -141,7 +141,7 @@ public interface MessageCampaignService {
     void loadCampaigns() throws IOException;
 
     /**
-     * Updates all active enrollments of the message campaign with the given ID.
+     * Reschedules jobs for all active enrollments, assigned to the message campaign of the provided ID.
      *
      * @param campaignId the ID of the message campaign
      * @throws IllegalArgumentException in case the message campaign of the given ID does not exist
