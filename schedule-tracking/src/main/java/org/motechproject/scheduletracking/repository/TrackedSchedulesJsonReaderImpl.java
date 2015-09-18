@@ -16,9 +16,14 @@ import java.util.List;
 import static ch.lambdaj.Lambda.extract;
 import static ch.lambdaj.Lambda.on;
 
+/**
+ * Implementation of {@link org.motechproject.scheduletracking.repository.TrackedSchedulesJsonReader}.
+ */
 public class TrackedSchedulesJsonReaderImpl implements TrackedSchedulesJsonReader {
+
+    private static final String JSON_EXTENSION = ".json";
+
     private MotechJsonReader motechJsonReader;
-    private String jsonExtension = ".json";
 
     public TrackedSchedulesJsonReaderImpl() {
         this.motechJsonReader = new MotechJsonReader();
@@ -30,7 +35,8 @@ public class TrackedSchedulesJsonReaderImpl implements TrackedSchedulesJsonReade
         Type type = new TypeToken<ScheduleRecord>() { } .getType();
 
         for (String filename : getAllFileNames(definitionsDirectoryName)) {
-            scheduleRecords.add((ScheduleRecord) motechJsonReader.readFromFile(definitionsDirectoryName + "/" + filename, type));
+            scheduleRecords.add((ScheduleRecord) motechJsonReader.readFromFile(definitionsDirectoryName + "/" + filename,
+                    type));
         }
         return scheduleRecords;
     }
@@ -54,7 +60,7 @@ public class TrackedSchedulesJsonReaderImpl implements TrackedSchedulesJsonReade
         File[] files = new File(schedulesDirectoryPath).listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File file, String filename) {
-                return filename.endsWith(jsonExtension);
+                return filename.endsWith(JSON_EXTENSION);
             }
         });
 
