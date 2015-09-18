@@ -13,16 +13,26 @@ import org.springframework.stereotype.Component;
 import static org.motechproject.scheduletracking.domain.EnrollmentStatus.DEFAULTED;
 import static org.motechproject.scheduletracking.events.constants.EventSubjects.MILESTONE_DEFAULTED;
 
+/**
+ * Component which listens for the milestone defaulted event.
+ */
 @Component
 public class EndOfMilestoneListener {
-    private EnrollmentDataService enrollmentDataService;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(EndOfMilestoneListener.class);
+
+    private EnrollmentDataService enrollmentDataService;
 
     @Autowired
     public EndOfMilestoneListener(EnrollmentDataService enrollmentDataService) {
         this.enrollmentDataService = enrollmentDataService;
     }
 
+    /**
+     * Handles the milestone defaulted event and updates enrollments status in database.
+     *
+     * @param motechEvent the milestone defaulted event
+     */
     @MotechListener(subjects = MILESTONE_DEFAULTED)
     public void handle(MotechEvent motechEvent) {
         LOGGER.info("Handling {} Event : {}.", MILESTONE_DEFAULTED, motechEvent);
