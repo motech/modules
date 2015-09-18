@@ -18,13 +18,29 @@ import java.util.Map;
 public class ScheduleFactory {
     public static final Period EMPTY_PERIOD = Period.ZERO;
 
+    /**
+     * Creates a ScheduleFactory.
+     */
     public ScheduleFactory() {
     }
 
+    /**
+     * Builds a schedule form the given schedule record details, default locale will be used.
+     *
+     * @param scheduleRecord the schedule record with details about the schedule, milestones and alerts
+     * @return the schedule
+     */
     public Schedule build(ScheduleRecord scheduleRecord) {
         return build(scheduleRecord, Locale.getDefault());
     }
 
+    /**
+     * Builds a schedule form the given schedule record details
+     *
+     * @param scheduleRecord the schedule record with details about the schedule, milestones and alerts
+     * @param locale the locale to use for parsing
+     * @return the schedule
+     */
     public Schedule build(ScheduleRecord scheduleRecord, Locale locale) {
         Schedule schedule = new Schedule(scheduleRecord.name());
         schedule.setBasedOnAbsoluteWindows(scheduleRecord.isAbsoluteSchedule());
@@ -50,7 +66,8 @@ public class ScheduleFactory {
                 previousWindowEnd = EMPTY_PERIOD;
             }
 
-            Milestone milestone = new Milestone(milestoneRecord.name(), windowDurations.get(WindowName.earliest), windowDurations.get(WindowName.due), windowDurations.get(WindowName.late), windowDurations.get(WindowName.max));
+            Milestone milestone = new Milestone(milestoneRecord.name(), windowDurations.get(WindowName.earliest),
+                    windowDurations.get(WindowName.due), windowDurations.get(WindowName.late), windowDurations.get(WindowName.max));
             milestone.setData(milestoneRecord.data());
             addAlertsToMilestone(milestone, milestoneRecord.alerts(), windowStarts, scheduleRecord.isAbsoluteSchedule(), alertIndex, locale);
             schedule.addMilestones(milestone);
@@ -60,17 +77,19 @@ public class ScheduleFactory {
         return schedule;
     }
 
-    private void addAlertsToMilestone(Milestone milestone, List<AlertRecord> alerts, Map<WindowName, Period> windowStarts, boolean isAbsoluteAlert, int alertIndex, Locale locale) {
+    private void addAlertsToMilestone(Milestone milestone, List<AlertRecord> alerts, Map<WindowName, Period> windowStarts,
+                                      boolean isAbsoluteAlert, int alertIndex, Locale locale) {
         int localAlertIndex = alertIndex;
         for (AlertRecord alertRecord : alerts) {
             Period offset = getPeriodFromValue(alertRecord.offset(), locale);
             if (isAbsoluteAlert) {
                 offset = offset.minus(windowStarts.get(WindowName.valueOf(alertRecord.window())));
                 if (alertRecord.isFloating()) {
-                    throw new InvalidScheduleDefinitionException("Cannot define floating alerts for absoulte schedules.");
+                    throw new InvalidScheduleDefinitionException("Cannot define floating alerts for absolute schedules.");
                 }
             }
-            milestone.addAlert(WindowName.valueOf(alertRecord.window()), new Alert(offset, getPeriodFromValue(alertRecord.interval(), locale), Integer.parseInt(alertRecord.count()), localAlertIndex++, alertRecord.isFloating()));
+            milestone.addAlert(WindowName.valueOf(alertRecord.window()), new Alert(offset, getPeriodFromValue(alertRecord.interval(), locale),
+                    Integer.parseInt(alertRecord.count()), localAlertIndex++, alertRecord.isFloating()));
         }
     }
 

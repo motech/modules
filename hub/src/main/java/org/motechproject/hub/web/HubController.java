@@ -1,11 +1,5 @@
 package org.motechproject.hub.web;
 
-import static org.apache.commons.lang.StringUtils.isNotBlank;
-
-import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang.time.StopWatch;
 import org.motechproject.hub.exception.ApplicationErrors;
 import org.motechproject.hub.exception.HubError;
@@ -33,6 +27,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+
+import static org.apache.commons.lang.StringUtils.isNotBlank;
+
+/**
+ * The controller responsible for subscribing/distributing content and
+ * hub settings management.
+ */
 @Controller
 @RequestMapping("/")
 public class HubController {
@@ -53,37 +56,84 @@ public class HubController {
 
     private SettingsFacade settingsFacade;
 
+    /**
+     * Creates an instance of HubController using autowired SettingsFacade instance.
+     *
+     * @param settingsFacade autowired SettingsFacade settings
+     */
     @Autowired
     public HubController(
             @Qualifier("hubSettings") final SettingsFacade settingsFacade) {
         this.settingsFacade = settingsFacade;
     }
 
+    /**
+     * Gets the {@link org.motechproject.hub.validation.HubValidator} responsible
+     * for request input parameters validation.
+     *
+     * @return the hub validator
+     */
     public HubValidator getHubValidator() {
         return hubValidator;
     }
 
+    /**
+     * Sets the {@link org.motechproject.hub.validation.HubValidator} responsible
+     * for request input parameters validation.
+     *
+     * @param hubValidator <code>HubValidator</code> to be set
+     */
     public void setHubValidator(HubValidator hubValidator) {
         this.hubValidator = hubValidator;
     }
 
+    /**
+     * Gets the <code>SubscriptionService</code> responsible for performing
+     * subscribe and unsubscribe actions.
+     *
+     * @return the subscription service
+     */
     public SubscriptionService getSubscriptionService() {
         return subscriptionService;
     }
 
+    /**
+     * Sets the subscription service responsible for performing
+     * subscribe and unsubscribe actions.
+     *
+     * @param subscriptionService the <code>SubscriptionService</code> to be set
+     */
     public void setSubscriptionService(SubscriptionService subscriptionService) {
         this.subscriptionService = subscriptionService;
     }
 
+    /**
+     * Gets the <code>ContentDistributionService</code> responsible for distributing
+     * content to subscribers.
+     *
+     * @return the content distribution service
+     */
     public ContentDistributionService getContentDistributionService() {
         return contentDistributionService;
     }
 
+    /**
+     * Sets the content distribution service responsible for distributing
+     * content to subscribers.
+     *
+     * @param contentDistributionService the <code>ContentDistributionService</code> to be set
+     */
     public void setContentDistributionService(
             ContentDistributionService contentDistributionService) {
         this.contentDistributionService = contentDistributionService;
     }
 
+    /**
+     * Gets hub settings. The settings are returned in form
+     * of {@link org.motechproject.hub.model.SettingsDTO}
+     *
+     * @return hub settings as a <code>SettingsDTO</code>
+     */
     @RequestMapping(value = "/settings", method = RequestMethod.GET)
     @ResponseBody
     public SettingsDTO getSettings() {
@@ -92,6 +142,14 @@ public class HubController {
         return dto;
     }
 
+    /**
+     * Saves hub settings passed as a parameter. The settings must be passed as a
+     * {@link org.motechproject.hub.model.SettingsDTO}, from which hub base URL is
+     * taken and set.
+     *
+     * @param settings {@link org.motechproject.hub.model.SettingsDTO} containing hub base URL
+     * @throws BundleException if setting hub base url encounters a bundle lifecycle error
+     */
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/settings", method = RequestMethod.POST)
     public void saveSettings(@RequestBody SettingsDTO settings)
@@ -100,6 +158,29 @@ public class HubController {
         settingsFacade.setProperty(HUB_BASE_URL, settings.getHubBaseUrl());
     }
 
+    /**
+     * Subscribes to topic using passed parameters.
+     *
+     * @param callbackUrl
+     *            - a <code>String</code> representing the subscriber's callback
+     *            URL where notifications should be delivered
+     * @param mode
+     *            - represents the literal <code>String</code> "subscribe" or
+     *            "unsubscribe", depending on the goal of the request
+     * @param topic
+     *            - a <code>String</code> representing the topic URL that the
+     *            subscriber wishes to subscribe to or unsubscribe from
+     * @param leaseSeconds
+     *            - a <code>String</code> representing the number of seconds for
+     *            which the subscriber would like to have the subscription
+     *            active. This is an optional parameter
+     * @param secret
+     *            - a <code>String</code> representing the secret value which
+     *            will be used by hub to compute an HMAC digest for authorized
+     *            content distribution. Secret parameter must be less than 200
+     *            bytes in length.
+     * @throws HubException if one or more parameters is not valid
+     */
     @ResponseStatus(value = HttpStatus.ACCEPTED)
     @RequestMapping(method = RequestMethod.POST, headers = "Content-Type=application/x-www-form-urlencoded", params = {
             HubConstants.HUB_CALLBACK_PARAM, HubConstants.HUB_MODE_PARAM,
@@ -139,6 +220,16 @@ public class HubController {
         }
     }
 
+    /**
+     * Distibutes content fetched from URL passed as a parameter.
+     *
+     * @param mode
+     *            - represents the literal <code>String</code> "publish"
+     * @param url
+     *            - a <code>String</code> representing the url of the topic that
+     *            was updated
+     * @throws HubException if one or more parameters is not valid
+     */
     @ResponseStatus(value = HttpStatus.OK)
     @RequestMapping(method = RequestMethod.POST, headers = "Content-Type=application/x-www-form-urlencoded", params = {
             HubConstants.HUB_MODE_PARAM, HubConstants.HUB_URL_PARAM })
@@ -169,6 +260,16 @@ public class HubController {
         }
     }
 
+    /**
+     * Handles incoming {@link org.motechproject.hub.exception.RestException} when
+     * it occurs.
+     *
+     * @param ex the exception to be handled
+     * @param response http servlet response
+     * @return
+     *         - {@link org.motechproject.hub.exception.HubError} object containing
+     *         detailed information about the problem that occured
+     */
     @ExceptionHandler(value = { RestException.class })
     @ResponseBody
     public HubError restExceptionHandler(RestException ex,

@@ -7,9 +7,19 @@ import org.motechproject.scheduletracking.repository.AllEnrollments;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Criterion used to filter enrollments by window names. If the current milestone is in one of the given windows
+ * then this criterion is met.
+ */
 public class InWindowCriterion implements Criterion {
+
     private List<WindowName> windowNames;
 
+    /**
+     * Creates a InWindowCriterion with the windowNames attribute set to {@code windowNames}.
+     *
+     * @param windowNames the window names of the current milestone
+     */
     public InWindowCriterion(List<WindowName> windowNames) {
         this.windowNames = windowNames;
     }
