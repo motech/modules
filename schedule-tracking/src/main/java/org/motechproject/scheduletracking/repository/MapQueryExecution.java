@@ -11,7 +11,7 @@ import java.util.List;
  * The <code>MapQueryExecution</code> class prepares a custom MDS query. The query should return
  * only these enrollments, that have got a given key-value entry in their metadata.
  *
- * @see Enrollment
+ * @see org.motechproject.scheduletracking.domain.Enrollment
  */
 public class MapQueryExecution implements QueryExecution<List<Enrollment>> {
 
