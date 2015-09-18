@@ -23,7 +23,7 @@ public class EnrollmentBuilder {
     }
 
     /**
-     * Adds the metadata for the built enrollment.
+     * Adds the metadata to the enrollment in construction.
      *
      * @param metadata the metadata to add
      * @return this instance with the metadata set up
@@ -34,7 +34,7 @@ public class EnrollmentBuilder {
     }
 
     /**
-     * Adds the schedule name for the built enrollment.
+     * Adds the schedule name to the enrollment in construction.
      *
      * @param scheduleName the name of the schedule
      * @return this instance with the schedule name set up
@@ -45,7 +45,7 @@ public class EnrollmentBuilder {
     }
 
     /**
-     * Adds the external id for the built enrollment.
+     * Adds the external id to the enrollment in construction.
      *
      * @param externalId the client external id
      * @return this instance with the external id set up
@@ -56,7 +56,7 @@ public class EnrollmentBuilder {
     }
 
     /**
-     * Adds the start reference date and time for the built enrollment.
+     * Adds the start reference date and time to the enrollment in construction.
      *
      * @param startOfSchedule the start reference date and time
      * @return this instance with the start reference date and time set up
@@ -67,7 +67,7 @@ public class EnrollmentBuilder {
     }
 
     /**
-     * Adds the enrollment date and time for the built enrollment.
+     * Adds the enrollment date and time to the enrollment in construction.
      *
      * @param enrolledOn the enrollment date and time
      * @return this instance with the enrollment date and time set up
@@ -78,7 +78,7 @@ public class EnrollmentBuilder {
     }
 
     /**
-     * Adds the preferred alert time name for the built enrollment.
+     * Adds the preferred alert time to the enrollment in construction.
      *
      * @param preferredAlertTime the preferred alert time
      * @return this instance with the preferred alert time name set up
@@ -89,7 +89,7 @@ public class EnrollmentBuilder {
     }
 
     /**
-     * Adds the milestone fulfillments for the built enrollment.
+     * Adds the milestone fulfillments to the enrollment in construction.
      *
      * @param fulfillments the milestone fulfillments
      * @return this instance with the milestone fulfillments  set up
@@ -100,7 +100,7 @@ public class EnrollmentBuilder {
     }
 
     /**
-     * Adds the schedule for the built enrollment.
+     * Adds the schedule to the enrollment in construction.
      *
      * @param schedule the schedule to which the enrollment belongs
      * @return this instance with the schedule set up
@@ -112,7 +112,7 @@ public class EnrollmentBuilder {
     }
 
     /**
-     * Adds the current milestone name for the built enrollment.
+     * Adds the current milestone name to the enrollment in construction.
      *
      * @param currentMilestoneName the current milestone name
      * @return this instance with the current milestone name set up
@@ -123,7 +123,7 @@ public class EnrollmentBuilder {
     }
 
     /**
-     * Adds the status for the built enrollment.
+     * Adds the status to the enrollment in construction.
      *
      * @param status the status of the enrollment
      * @return this instance with the status set up
@@ -134,7 +134,7 @@ public class EnrollmentBuilder {
     }
 
     /**
-     * Adds the id for the built enrollment.
+     * Adds the id to the enrollment in construction.
      *
      * @param id the id of the enrollment
      * @return this instance with the id set up

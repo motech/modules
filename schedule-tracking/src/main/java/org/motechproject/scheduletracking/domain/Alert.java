@@ -23,7 +23,7 @@ public class Alert {
     private Period interval;
 
     /**
-     * The count of the alert in the milestone window.
+     * The count is the total number of alerts that should be raised.
      */
     @Field
     private int count;
@@ -35,7 +35,7 @@ public class Alert {
     private int index;
 
     /**
-     * The floating flag. Then this flag is set to true then the enrollment date is used as the alert reference time.
+     * The floating flag. When this flag is set to true then the enrollment date is used as the alert reference time.
      */
     @Field
     private boolean floating;

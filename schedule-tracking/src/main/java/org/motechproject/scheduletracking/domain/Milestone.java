@@ -156,7 +156,7 @@ public class Milestone {
     /**
      * Returns the period required to end the milestone window with the given name.
      *
-     * @param windowName
+     * @param windowName the name of the milestone window
      * @return the period required to end the milestone window
      */
     public Period getWindowEnd(WindowName windowName) {

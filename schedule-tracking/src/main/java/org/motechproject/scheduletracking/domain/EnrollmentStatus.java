@@ -13,7 +13,7 @@ public enum EnrollmentStatus {
 
     /**
      * Enrollment is defaulted, all of the configured alerts will not be raised. If the milestone has not been fulfilled
-     * by the last day of the milestone, then that enrollment is marked as defaulted. It also cannot be move to an
+     * by the last day of the milestone, then that enrollment is marked as defaulted. It also cannot be moved to the
      * active state.
      */
     DEFAULTED,

@@ -132,7 +132,7 @@ public class Schedule {
     }
 
     /**
-     * Checks whether the milstone with the given name has been expired.
+     * Checks whether the milstone with the given name has expired.
      *
      * @param referenceDateTime the expiration reference date and time
      * @param currentMilestoneStr the name of the milestone
