@@ -83,6 +83,21 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
         this.schedulerService = schedulerService;
     }
 
+    @PostConstruct
+    public void loadCampaignsJson() {
+        try (InputStream inputStream = settingsFacade.getRawConfig(MESSAGE_CAMPAIGNS_JSON_FILENAME)) {
+            List<CampaignRecord> records = new CampaignJsonLoader().loadCampaigns(inputStream);
+            for (CampaignRecord record : records) {
+                record.toCampaign().validate();
+                if(campaignRecordService.findByName(record.getName()) == null) {
+                    campaignRecordService.create(record);
+                }
+            }
+        } catch (IOException e) {
+            LOGGER.error("Error while reading Message Campaign JSON file", e);
+        }
+    }
+
     @Override
     public void enroll(CampaignRequest request) {
         CampaignEnrollment enrollment = new CampaignEnrollment(request.externalId(), request.campaignName());
@@ -373,30 +388,6 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
         campaignSchedulerFactory.getCampaignScheduler(enrollment.getCampaignName()).stop(enrollment);
     }
 
-    @PostConstruct
-    public void loadCampaignsJson() {
-        try (InputStream inputStream = settingsFacade.getRawConfig(MESSAGE_CAMPAIGNS_JSON_FILENAME)) {
-            List<CampaignRecord> records = new CampaignJsonLoader().loadCampaigns(inputStream);
-            for (CampaignRecord record : records) {
-                record.toCampaign().validate();
-                if(campaignRecordService.findByName(record.getName()) == null) {
-                    campaignRecordService.create(record);
-                }
-            }
-        } catch (IOException e) {
-            LOGGER.error("Error while reading Message Campaign JSON file", e);
-        }
-    }
-
-    @MotechListener(subjects = ConfigurationConstants.FILE_CHANGED_EVENT_SUBJECT)
-    public void changeMaxUploadSize(MotechEvent event) {
-        String uploadSize = settingsFacade.getPlatformSettings().getUploadSize();
-
-        if (StringUtils.isNotBlank(uploadSize)) {
-            commonsMultipartResolver.setMaxUploadSize(Long.valueOf(uploadSize));
-        }
-    }
-
     @Override
     public void stopAll(CampaignEnrollmentsQuery query, boolean deleteEnrollments) {
         List<CampaignEnrollment> enrollments = enrollmentService.search(query);
@@ -408,6 +399,15 @@ public class MessageCampaignServiceImpl implements MessageCampaignService {
             } else {
                 enrollmentService.unregister(enrollment.getExternalId(), enrollment.getCampaignName());
             }
+        }
+    }
+
+    @MotechListener(subjects = ConfigurationConstants.FILE_CHANGED_EVENT_SUBJECT)
+    public void changeMaxUploadSize(MotechEvent event) {
+        String uploadSize = settingsFacade.getPlatformSettings().getUploadSize();
+
+        if (StringUtils.isNotBlank(uploadSize)) {
+            commonsMultipartResolver.setMaxUploadSize(Long.valueOf(uploadSize));
         }
     }
 }
