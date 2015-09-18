@@ -129,8 +129,8 @@ public class HubController {
     }
 
     /**
-     * Gets hub settings, which at the moment contains only hub base URL.
-     * The settings are returned in form of {@link org.motechproject.hub.model.SettingsDTO}
+     * Gets hub settings. The settings are returned in form
+     * of {@link org.motechproject.hub.model.SettingsDTO}
      *
      * @return hub settings as a <code>SettingsDTO</code>
      */

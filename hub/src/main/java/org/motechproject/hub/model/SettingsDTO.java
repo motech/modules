@@ -5,7 +5,7 @@ import org.codehaus.jackson.annotate.JsonMethod;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
- * Represent a single hub settings. Used by {@link org.motechproject.hub.web.HubController}.
+ * Represents single hub settings. Used by {@link org.motechproject.hub.web.HubController}.
  */
 @JsonAutoDetect(JsonMethod.NONE)
 public class SettingsDTO {
@@ -14,7 +14,7 @@ public class SettingsDTO {
     private HubSettings settings;
 
     /**
-     * Creates a new instance of <code>SettingsDTO</code> with new
+     * Creates a new instance of the <code>SettingsDTO</code> with new
      * {@link org.motechproject.hub.model.HubSettings} and the hub base url
      * set to null.
      */

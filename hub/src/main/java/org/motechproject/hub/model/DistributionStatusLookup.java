@@ -1,7 +1,7 @@
 package org.motechproject.hub.model;
 
 /**
- * The enum class defining the valid codes for content distribution status.
+ * The enum class defining valid codes for content distribution status.
  */
 public enum DistributionStatusLookup {
 
