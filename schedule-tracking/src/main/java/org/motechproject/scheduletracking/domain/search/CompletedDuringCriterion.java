@@ -21,8 +21,8 @@ public class CompletedDuringCriterion implements Criterion {
     /**
      * Creates a CompletedDuringCriterion with the start attribute set to {@code start}, the end attribute to {@code end}.
      *
-     * @param start the begin of the time range
-     * @param end the end of the time range
+     * @param start the beginning of the time range
+     * @param end the ending of the time range
      */
     public CompletedDuringCriterion(DateTime start, DateTime end) {
         this.start = start;

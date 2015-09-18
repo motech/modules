@@ -5,6 +5,8 @@ package org.motechproject.scheduletracking.domain.exception;
  */
 public class InvalidScheduleDefinitionException extends RuntimeException {
 
+    private static final long serialVersionUID = -8635795766665154050L;
+
     public InvalidScheduleDefinitionException(String s, String... args) {
         super(String.format(s, args));
     }

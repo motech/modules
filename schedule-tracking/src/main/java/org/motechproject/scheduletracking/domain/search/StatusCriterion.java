@@ -19,7 +19,7 @@ public class StatusCriterion implements Criterion {
     private EnrollmentStatus status;
 
     /**
-     * Creates a EndOfWindowCriterion with the status attribute set to {@code status}.
+     * Creates a StatusCriterion with the status attribute set to {@code status}.
      *
      * @param status the status of the enrollment
      */

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <code>ScheduleRecord</code> is used to deserialize schedule from json format.
+ * <code>ScheduleRecord</code> is used to keep the deserialized form of a schedule from json format.
  * @see org.motechproject.scheduletracking.domain.Schedule
  */
 public class ScheduleRecord {

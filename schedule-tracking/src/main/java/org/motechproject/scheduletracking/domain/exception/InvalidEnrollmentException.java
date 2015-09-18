@@ -5,6 +5,8 @@ package org.motechproject.scheduletracking.domain.exception;
  */
 public class InvalidEnrollmentException extends RuntimeException {
 
+    private static final long serialVersionUID = -4937023030220818008L;
+
     public InvalidEnrollmentException(String message) {
         super(message);
     }

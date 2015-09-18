@@ -18,7 +18,7 @@ public class ExternalIdCriterion implements Criterion {
     private String externalId;
 
     /**
-     * Creates a EndOfWindowCriterion with the externalId attribute set to {@code externalId}.
+     * Creates a ExternalIdCriterion with the externalId attribute set to {@code externalId}.
      *
      * @param externalId the user external id
      */

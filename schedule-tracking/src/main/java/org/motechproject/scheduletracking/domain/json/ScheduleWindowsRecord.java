@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <code>ScheduleWindowsRecord</code> is used to deserialize milestone window from json format.
+ * <code>ScheduleWindowsRecord</code> is used keep the deserialized form of a schedule window from json format.
  * @see org.motechproject.scheduletracking.domain.MilestoneWindow
  */
 public class ScheduleWindowsRecord {

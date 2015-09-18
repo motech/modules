@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <code>AlertRecord</code> is used to deserialize alert from json format.
+ * <code>AlertRecord</code> is used to keep the deserialized form of an alert from json format.
  * @see org.motechproject.scheduletracking.domain.Alert
  */
 public class AlertRecord {

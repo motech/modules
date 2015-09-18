@@ -17,7 +17,7 @@ public class MetadataCriterion implements Criterion {
     private String value;
 
     /**
-     * Creates a MetadataCriterion with the key attribute set to {@code key}, the end attribute to {@code value}.
+     * Creates a MetadataCriterion with the key attribute set to {@code key}, the value attribute to {@code value}.
      *
      * @param key the metadata key
      * @param value the metadata value

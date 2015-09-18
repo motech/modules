@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <code>MilestoneRecord</code> is used to deserialize milestone from json format.
+ * <code>MilestoneRecord</code> is used keep the deserialized form of a milestone from json format.
  * @see org.motechproject.scheduletracking.domain.Milestone
  */
 public class MilestoneRecord {

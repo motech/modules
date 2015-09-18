@@ -16,7 +16,7 @@ public class ScheduleCriterion implements Criterion {
     private List<String> scheduleNames;
 
     /**
-     * Creates a InWindowCriterion with the scheduleNames attribute set to {@code scheduleNames}.
+     * Creates a ScheduleCriterion with the scheduleNames attribute set to {@code scheduleNames}.
      *
      * @param scheduleNames the schedule names
      */
