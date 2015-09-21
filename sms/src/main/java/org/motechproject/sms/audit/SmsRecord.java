@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.UIFilterable;
 import org.motechproject.mds.util.SecurityMode;
 
 import static org.motechproject.sms.util.Constants.VIEW_SMS_LOGS_PERMISSION;
@@ -29,6 +30,7 @@ public class SmsRecord {
     /**
      * The direction of the SMS - either inbound or outbound.
      */
+    @UIFilterable
     private SmsDirection smsDirection;
 
     /**
@@ -44,11 +46,13 @@ public class SmsRecord {
     /**
      * The timestamp for this SMS.
      */
+    @UIFilterable
     private DateTime timestamp;
 
     /**
      * The delivery status for this SMS.
      */
+    @UIFilterable
     private DeliveryStatus deliveryStatus;
 
     private String providerStatus;
