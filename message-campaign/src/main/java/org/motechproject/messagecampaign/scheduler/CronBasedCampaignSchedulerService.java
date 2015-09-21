@@ -7,8 +7,8 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.messagecampaign.EventKeys;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
-import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaign;
 import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaignMessage;
 import org.motechproject.scheduler.contract.CronJobId;
 import org.motechproject.scheduler.contract.CronSchedulableJob;
@@ -21,6 +21,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Scheduler service, responsible for scheduling/unscheduling jobs for the {@link CronBasedCampaign}s.
+ *
+ * @see CronBasedCampaign
+ * @see CronBasedCampaignMessage
+ */
 @Component
 public class CronBasedCampaignSchedulerService extends CampaignSchedulerService<CronBasedCampaignMessage, CronBasedCampaign> {
 

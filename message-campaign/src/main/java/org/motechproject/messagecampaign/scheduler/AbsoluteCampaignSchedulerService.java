@@ -22,6 +22,12 @@ import java.util.Map;
 
 import static org.motechproject.commons.date.util.DateUtil.newDateTime;
 
+/**
+ * Scheduler service, responsible for scheduling/unscheduling jobs for the {@link AbsoluteCampaign}s.
+ *
+ * @see AbsoluteCampaign
+ * @see AbsoluteCampaignMessage
+ */
 @Component
 public class AbsoluteCampaignSchedulerService extends CampaignSchedulerService<AbsoluteCampaignMessage, AbsoluteCampaign> {
 
