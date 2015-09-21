@@ -3,6 +3,7 @@ package org.motechproject.dhis2.event;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -61,7 +62,8 @@ public class EventHandlerTest {
     @Mock
     private DhisWebService dhisWebservice;
     private DhisStatusResponse response;
-    private EventHandler handler;
+    @InjectMocks
+    private EventHandler handler = new EventHandler();
 
     @Before
     public void setup() throws Exception{
@@ -76,7 +78,6 @@ public class EventHandlerTest {
         response.setReference(INSTANCE_DHIS_ID);
         response.setStatus(DhisStatus.SUCCESS);
         response.setImportCount(importCount);
-        handler = new EventHandler(dhisWebservice, trackedEntityInstanceMappingService, dataElementService);
     }
 
     @Test

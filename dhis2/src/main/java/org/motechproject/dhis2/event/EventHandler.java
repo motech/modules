@@ -44,21 +44,8 @@ public class EventHandler {
     @Autowired
     private DataElementService dataElementService;
 
-    public EventHandler (DhisWebService webService,
-                         TrackedEntityInstanceMappingService trackedEntityInstanceMappingService,
-                         DataElementService dataElementService) {
-        this.dhisWebService = webService;
-        this.trackedEntityInstanceMappingService = trackedEntityInstanceMappingService;
-        this.dataElementService = dataElementService;
-    }
+    public EventHandler() {
 
-    public EventHandler (DhisWebService webService, TrackedEntityInstanceMappingService trackedEntityInstanceMappingService) {
-        this.dhisWebService = webService;
-        this.trackedEntityInstanceMappingService = trackedEntityInstanceMappingService;
-    }
-
-    public EventHandler () {
-        this(null, null);
     }
 
     /**
