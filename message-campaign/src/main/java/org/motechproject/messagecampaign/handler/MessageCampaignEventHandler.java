@@ -27,6 +27,13 @@ public class MessageCampaignEventHandler {
     @Autowired
     private MessageCampaignService messageCampaignService;
 
+    /**
+     * Handles {@link org.motechproject.messagecampaign.EventKeys#ENROLL_USER_SUBJECT} and
+     * {@link org.motechproject.messagecampaign.EventKeys#UNENROLL_USER_SUBJECT} events and
+     * performs necessary action.
+     *
+     * @param event received event
+     */
     @MotechListener(subjects = {ENROLL_USER_SUBJECT, UNENROLL_USER_SUBJECT })
     public void enrollOrUnenroll(MotechEvent event) {
         CampaignRequest request = new CampaignRequest(

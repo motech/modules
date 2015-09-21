@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+/**
+ * This is a base class for all controller classes in the Message Campaign module.
+ * It provides the mapping of the exceptions to the HTTP status codes.
+ */
 public abstract class MessageCampaignController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

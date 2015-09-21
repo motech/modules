@@ -14,6 +14,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is responsible for loading the message campaigns from resource files.
+ */
 public class CampaignJsonLoader {
 
     private String messageCampaignsJsonFile = "message-campaigns.json";
@@ -32,6 +35,12 @@ public class CampaignJsonLoader {
         this.motechJsonReader = motechJsonReader;
     }
 
+    /**
+     * Loads message campaigns from the file of the given name.
+     *
+     * @param filename the name of the file to load the campaigns from
+     * @return a list of loaded campaigns
+     */
     public List<CampaignRecord> loadCampaigns(String filename) {
         try (InputStream in = this.getClass().getClassLoader().getResourceAsStream(filename)) {
             return loadCampaigns(in);
@@ -40,6 +49,12 @@ public class CampaignJsonLoader {
         }
     }
 
+    /**
+     * Loads message campaigns from the given input stream.
+     *
+     * @param in the input stream to load the campaigns from
+     * @return a list of loaded campaigns
+     */
     public List<CampaignRecord> loadCampaigns(InputStream in) {
         List<CampaignDto> dtoList = (List<CampaignDto>) motechJsonReader.readFromStream(
                 in, new TypeToken<List<CampaignDto>>() {
@@ -54,6 +69,12 @@ public class CampaignJsonLoader {
         return records;
     }
 
+    /**
+     * Loads single message campaign definition from the given input stream.
+     *
+     * @param in the input stream to load the campaign from
+     * @return a loaded campaign
+     */
     public CampaignRecord loadSingleCampaign(InputStream in) {
         CampaignDto campaignDto = (CampaignDto) motechJsonReader.readFromStream(
                 in, new TypeToken<CampaignDto>() {
@@ -62,6 +83,12 @@ public class CampaignJsonLoader {
         return campaignDto.toCampaignRecord();
     }
 
+    /**
+     * Loads single message campaign definition from the file of the given name.
+     *
+     * @param filename the name of the file to load the campaigns from
+     * @return a loaded campaign
+     */
     public CampaignRecord loadSingleCampaign(String filename) {
         try (InputStream in = this.getClass().getClassLoader().getResourceAsStream(filename)) {
             return loadSingleCampaign(in);
@@ -70,6 +97,10 @@ public class CampaignJsonLoader {
         }
     }
 
+    /**
+     * Loads and saves the message campaigns from the default location, provided the campaign
+     * if the given name does not exist yet.
+     */
     public void loadAfterInit() {
         List<CampaignRecord> records = loadCampaigns(settings.getRawConfig(messageCampaignsJsonFile));
         for (CampaignRecord record : records) {
