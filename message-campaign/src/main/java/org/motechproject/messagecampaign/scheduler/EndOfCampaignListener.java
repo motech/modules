@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * MOTECH listener, that handles the campaign completed events.
+ * MOTECH listener that handles the campaign completed events.
  */
 @Component
 public class EndOfCampaignListener {
