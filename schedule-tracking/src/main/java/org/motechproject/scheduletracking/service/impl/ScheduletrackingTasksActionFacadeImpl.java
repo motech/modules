@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 
-
+/**
+ * Implementation of the {@link org.motechproject.scheduletracking.service.ScheduletrackingTasksActionFacade}.
+ */
 public class ScheduletrackingTasksActionFacadeImpl implements ScheduletrackingTasksActionFacade {
 
     @Autowired
@@ -19,6 +21,7 @@ public class ScheduletrackingTasksActionFacadeImpl implements ScheduletrackingTa
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduletrackingTasksActionFacadeImpl.class);
 
+    @Override
     public void enroll(String externalId, String scheduleName, // NO CHECKSTYLE ParameterNumber
                        String preferredAlertTime, DateTime referenceDate, String referenceTime,
                        DateTime enrolmentDate, String enrollmentTime, String startingMilestoneName) {
@@ -37,6 +40,7 @@ public class ScheduletrackingTasksActionFacadeImpl implements ScheduletrackingTa
 
     }
 
+    @Override
     public void unenroll(String externalId, String scheduleName) {
         LOGGER.info("Un-enrolling client with case id {} for schedule {}.", externalId, scheduleName);
         scheduleTrackingService.unenroll(externalId, Arrays.asList(scheduleName));

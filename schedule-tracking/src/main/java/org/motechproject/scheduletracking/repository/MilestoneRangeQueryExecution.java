@@ -13,7 +13,7 @@ import java.util.List;
  * The <code>MilestoneRangeQueryExecution</code> class prepares a custom MDS query. The query
  * should return all enrollments that have been completed during given time range.
  *
- * @see Enrollment
+ * @see org.motechproject.scheduletracking.domain.Enrollment
  */
 public class MilestoneRangeQueryExecution implements QueryExecution<List<Enrollment>> {
 

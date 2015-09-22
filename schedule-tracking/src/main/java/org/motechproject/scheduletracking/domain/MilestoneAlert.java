@@ -6,14 +6,30 @@ import org.joda.time.DateTime;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * Represents the milestone data used to create events.
+ */
 public final class MilestoneAlert implements Serializable {
+
     private static final long serialVersionUID = 2228943790691449648L;
+
     private String milestoneName;
+
     private DateTime earliestDateTime;
+
     private DateTime dueDateTime;
+
     private DateTime lateDateTime;
+
     private DateTime defaultmentDateTime;
 
+    /**
+     * Creates a MilestoneAlert from the given milestone.
+     *
+     * @param milestone the milestone
+     * @param startOfMilestone the start date and time of the milestone
+     * @return the milestone alert
+     */
     public static MilestoneAlert fromMilestone(Milestone milestone, DateTime startOfMilestone) {
         return new MilestoneAlert(milestone.getName(),
                 getWindowStartDate(milestone, startOfMilestone, WindowName.earliest),
@@ -26,10 +42,25 @@ public final class MilestoneAlert implements Serializable {
         return startOfMilestone.plus(milestone.getWindowStart(windowName));
     }
 
+    /**
+     * Creates a MilestoneAlert.
+     */
     private MilestoneAlert() {
     }
 
-    public MilestoneAlert(String milestoneName, DateTime earliestDateTime, DateTime dueDateTime, DateTime lateDateTime, DateTime defaultmentDateTime) {
+    /**
+     * Creates a MilestoneAlert from with the milestoneName attribute set to {@code milestoneName}, the earliestDateTime attribute
+     * set to {@code earliestDateTime}, the dueDateTime attribute set to {@code dueDateTime}, the lateDateTime attribute set to {@code lateDateTime}
+     * and the defaultmentDateTime attribute set to {@code defaultmentDateTime}.
+     *
+     * @param milestoneName the name of the milestone
+     * @param earliestDateTime the start date and time of the earliest window
+     * @param dueDateTime the start date and time of the due window
+     * @param lateDateTime the start date and time of the late window
+     * @param defaultmentDateTime the defaultment date and time of the milestone
+     */
+    public MilestoneAlert(String milestoneName, DateTime earliestDateTime, DateTime dueDateTime, DateTime lateDateTime,
+                          DateTime defaultmentDateTime) {
         this.milestoneName = milestoneName;
         this.earliestDateTime = earliestDateTime;
         this.dueDateTime = dueDateTime;

@@ -6,12 +6,14 @@ import org.motechproject.messagecampaign.EventKeys;
 import org.motechproject.messagecampaign.dao.CampaignEnrollmentDataService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollmentStatus;
-import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * MOTECH listener that handles the campaign completed events.
+ */
 @Component
 public class EndOfCampaignListener {
 
@@ -24,8 +26,14 @@ public class EndOfCampaignListener {
         this.campaignEnrollmentDataService = campaignEnrollmentDataService;
     }
 
+    /**
+     * Listens to the {@link EventKeys#CAMPAIGN_COMPLETED} events and updates the affected enrollment
+     * status to {@link CampaignEnrollmentStatus#COMPLETED}.
+     *
+     * @param event the event to handle
+     */
     @MotechListener(subjects = EventKeys.CAMPAIGN_COMPLETED)
-    public void handle(MotechEvent event) throws SchedulerException {
+    public void handle(MotechEvent event) {
         String campaignName = (String) event.getParameters().get(EventKeys.CAMPAIGN_NAME_KEY);
         String externalId = (String) event.getParameters().get(EventKeys.EXTERNAL_ID_KEY);
 

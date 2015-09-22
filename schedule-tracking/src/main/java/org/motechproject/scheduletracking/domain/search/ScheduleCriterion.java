@@ -7,9 +7,19 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Criterion used to filter enrollments by the schedule name. If the schedule name of the enrollment is on the given
+ * list then criterion is met.
+ */
 public class ScheduleCriterion implements Criterion {
+
     private List<String> scheduleNames;
 
+    /**
+     * Creates a ScheduleCriterion with the scheduleNames attribute set to {@code scheduleNames}.
+     *
+     * @param scheduleNames the schedule names
+     */
     public ScheduleCriterion(String... scheduleNames) {
         this.scheduleNames = Arrays.asList(scheduleNames);
     }
