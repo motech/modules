@@ -7,9 +7,9 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.messagecampaign.EventKeys;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
-import org.motechproject.messagecampaign.domain.campaign.DayOfWeekCampaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignMessage;
 import org.motechproject.messagecampaign.domain.campaign.DayOfWeek;
+import org.motechproject.messagecampaign.domain.campaign.DayOfWeekCampaign;
 import org.motechproject.messagecampaign.domain.campaign.DayOfWeekCampaignMessage;
 import org.motechproject.scheduler.contract.CronJobId;
 import org.motechproject.scheduler.contract.DayOfWeekSchedulableJob;
@@ -22,6 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Scheduler service, responsible for scheduling/unscheduling jobs for the {@link DayOfWeekCampaign}s.
+ *
+ * @see DayOfWeekCampaign
+ * @see DayOfWeekCampaignMessage
+ */
 @Component
 public class DayOfWeekCampaignSchedulerService extends CampaignSchedulerService<DayOfWeekCampaignMessage, DayOfWeekCampaign> {
 
@@ -39,19 +45,6 @@ public class DayOfWeekCampaignSchedulerService extends CampaignSchedulerService<
         List<DayOfWeek> daysOfWeek = message.getDaysOfWeek();
         getSchedulerService().scheduleDayOfWeekJob(new DayOfWeekSchedulableJob(motechEvent, start, end,
                 castDaysOfWeekList(daysOfWeek), deliverTimeFor(enrollment, message), true));
-    }
-
-    private List<org.motechproject.commons.date.model.DayOfWeek> castDaysOfWeekList(List<DayOfWeek> daysOfWeek) {
-        if (daysOfWeek == null) {
-            return null;
-        }
-
-        List<org.motechproject.commons.date.model.DayOfWeek> result = new ArrayList<>();
-
-        for (DayOfWeek dayOfWeekCampaignMessageDayOfWeek : daysOfWeek) {
-            result.add(org.motechproject.commons.date.model.DayOfWeek.getDayOfWeek(dayOfWeekCampaignMessageDayOfWeek.getValue()));
-        }
-        return result;
     }
 
     @Override
@@ -82,5 +75,18 @@ public class DayOfWeekCampaignSchedulerService extends CampaignSchedulerService<
         Map<String, List<DateTime>> timings = getCampaignTimings(startDt, endDt, enrollment, campaign);
 
         return findLastDateTime(timings);
+    }
+
+    private List<org.motechproject.commons.date.model.DayOfWeek> castDaysOfWeekList(List<DayOfWeek> daysOfWeek) {
+        if (daysOfWeek == null) {
+            return null;
+        }
+
+        List<org.motechproject.commons.date.model.DayOfWeek> result = new ArrayList<>();
+
+        for (DayOfWeek dayOfWeekCampaignMessageDayOfWeek : daysOfWeek) {
+            result.add(org.motechproject.commons.date.model.DayOfWeek.getDayOfWeek(dayOfWeekCampaignMessageDayOfWeek.getValue()));
+        }
+        return result;
     }
 }

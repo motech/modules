@@ -7,8 +7,8 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.messagecampaign.EventKeys;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
-import org.motechproject.messagecampaign.domain.campaign.RepeatIntervalCampaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.RepeatIntervalCampaign;
 import org.motechproject.messagecampaign.domain.campaign.RepeatIntervalCampaignMessage;
 import org.motechproject.scheduler.contract.JobId;
 import org.motechproject.scheduler.contract.RepeatingJobId;
@@ -23,9 +23,11 @@ import java.util.Map;
 import static org.motechproject.commons.date.util.DateUtil.newDateTime;
 
 /**
- * SchedulerService responsible for (un)scheduling repeat interval campaign enrollment
+ * Scheduler service, responsible for scheduling/unscheduling jobs for the {@link RepeatIntervalCampaign}s.
+ *
+ * @see RepeatIntervalCampaign
+ * @see RepeatIntervalCampaignMessage
  */
-
 @Component
 public class RepeatIntervalCampaignSchedulerService extends CampaignSchedulerService<RepeatIntervalCampaignMessage, RepeatIntervalCampaign> {
 

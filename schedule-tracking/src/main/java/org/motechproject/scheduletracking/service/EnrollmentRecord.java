@@ -6,32 +6,43 @@ import org.motechproject.commons.date.model.Time;
 import java.util.Map;
 
 /**
- * \ingroup sts
- *
- * This is the record which will be returned when schedule tracking service is queried for enrollments
- * It holds the details of an enrollment
- *
+ * <code>EnrollmentRecord</code>represents enrollment which will be returned when schedule tracking service is queried
+ * for enrollments. It holds the details of an enrollment.
+ * @see org.motechproject.scheduletracking.service.ScheduleTrackingService
  */
 public class EnrollmentRecord {
+
     private String externalId;
+
     private String scheduleName;
+
     private String currentMilestoneName;
+
     private DateTime referenceDateTime;
+
     private DateTime enrollmentDateTime;
+
     private Time preferredAlertTime;
+
     private DateTime earliestStart;
+
     private DateTime dueStart;
+
     private DateTime lateStart;
+
     private DateTime maxStart;
+
     private String status;
+
     private Map<String, String> metadata;
 
     public EnrollmentRecord() {
     }
 
     /**
-     * This returns the External Id of an EnrollmentRecord
-     * @return String
+     * Returns the client external id.
+     *
+     * @return the client external id
      */
     public String getExternalId() {
         return externalId;
@@ -39,88 +50,98 @@ public class EnrollmentRecord {
 
     
     /**
-     * This returns the Schedule Name of an EnrollmentRecord
-     * @return String
+     * Returns the schedule name of an enrollment.
+     *
+     * @return the schedule name
      */
     public String getScheduleName() {
         return scheduleName;
     }
 
     /**
-     * This returns the preferred alert time of an EnrollmentRecord
-     * @return Time
+     * Returns the preferred alert time of an enrollment.
+     *
+     * @return the preferred alert time
      */
     public Time getPreferredAlertTime() {
         return preferredAlertTime;
     }
 
     /**
-     * This returns the reference datetime of an EnrollmentRecord
-     * @return DateTime
+     * Returns the reference date and time of an enrollment.
+     *
+     * @return the reference date and time
      */
     public DateTime getReferenceDateTime() {
         return referenceDateTime;
     }
 
     /**
-     * This returns the enrollment datetime of an EnrollmentRecord
-     * @return DateTime
+     * Returns the date and time of an enrollment.
+     *
+     * @return the enrollment date and time
      */
     public DateTime getEnrollmentDateTime() {
         return enrollmentDateTime;
     }
 
     /**
-     * This returns the earliest window start datetime of current milestone of an EnrollmentRecord
-     * @return DateTime
+     * Returns the earliest window start date and time of current milestone of an enrollment.
+     *
+     * @return the earliest window start date and time
      */
     public DateTime getStartOfEarliestWindow() {
         return earliestStart;
     }
 
     /**
-     * This returns the due window start datetime of current milestone of an EnrollmentRecord
-     * @return DateTime
+     * Returns the due window start date and time of current milestone of an enrollment.
+     *
+     * @return the due window start date and time
      */
     public DateTime getStartOfDueWindow() {
         return dueStart;
     }
 
     /**
-     * This returns the late window start datetime of current milestone of an EnrollmentRecord
-     * @return DateTime
+     * Returns the late window start date and time of current milestone of an enrollment.
+     * @return the late window start date and time
      */
     public DateTime getStartOfLateWindow() {
         return lateStart;
     }
 
     /**
-     * This returns the max window start datetime of current milestone of an EnrollmentRecord
-     * @return DateTime
+     * Returns the max window start date and time of current milestone of an enrollment.
+     *
+     * @return the max window start date and time
      */
     public DateTime getStartOfMaxWindow() {
         return maxStart;
     }
 
     /**
-     * This returns the current milestone name of an EnrollmentRecord
-     * @return String
+     * Returns the current milestone name of an enrollment.
+     *
+     * @return the current milestone name
      */
     public String getCurrentMilestoneName() {
         return currentMilestoneName;
     }
 
     /**
-     * This returns the status of the enrollment
-     * @return String
+     * Returns the status of the enrollment.
+     *
+     * @return the enrollment status
      */
     public String getStatus() {
         return status;
     }
 
     /**
-     * This returns the metadata associated with the enrollment
-     * @return String
+     * Returns the metadata associated with the enrollment.
+     *
+     * @return the metadata
      */
     public Map<String, String> getMetadata() {
         return metadata;

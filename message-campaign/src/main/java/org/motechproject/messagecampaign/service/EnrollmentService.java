@@ -13,6 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * The <code>EnrollmentService</code> is used by the Message Campaign module to manage
+ * campaign enrollments.
+ */
 @Service
 public class EnrollmentService {
 
@@ -21,6 +25,14 @@ public class EnrollmentService {
     @Autowired
     private CampaignEnrollmentDataService campaignEnrollmentDataService;
 
+    /**
+     * Creates or updates {@link CampaignEnrollment}. A new enrollment will be created as long, as there's no enrollment
+     * with the given external ID and campaign name. The update of an enrollment is only possible if the current enrollment
+     * status is set to inactive.
+     *
+     * @param enrollment enrollment to create or update
+     * @throws IllegalArgumentException in case of an attempt to register duplicate campaign with different reference date or deliver time
+     */
     public void register(CampaignEnrollment enrollment) {
         CampaignEnrollment existingEnrollment = campaignEnrollmentDataService.findByExternalIdAndCampaignName(enrollment.getExternalId(), enrollment.getCampaignName());
         if (existingEnrollment == null) {
@@ -40,6 +52,12 @@ public class EnrollmentService {
         }
     }
 
+    /**
+     * Sets the enrollment status to inactive.
+     *
+     * @param externalId external ID of the campaign enrollment
+     * @param campaignName campaign name of the enrollment
+     */
     public void unregister(String externalId, String campaignName) {
         CampaignEnrollment enrollment = campaignEnrollmentDataService.findByExternalIdAndCampaignName(externalId, campaignName);
         if (enrollment != null) {
@@ -48,16 +66,33 @@ public class EnrollmentService {
         }
     }
 
+    /**
+     * Sets the enrollment status to inactive.
+     *
+     * @param enrollment enrollment to change the status for
+     */
     public void unregister(CampaignEnrollment enrollment) {
         enrollment.setStatus(CampaignEnrollmentStatus.INACTIVE);
         campaignEnrollmentDataService.update(enrollment);
     }
 
+    /**
+     * Removes the given enrollment from the database.
+     *
+     * @param enrollment enrollment to remove
+     */
     public void delete(CampaignEnrollment enrollment) {
         campaignEnrollmentDataService.delete(enrollment);
     }
 
-
+    /**
+     * Fetches {@link CampaignEnrollment}s, based on the provided {@link CampaignEnrollmentsQuery}.
+     * The primary criterion is used while fetching the records from the database. Secondary criterion
+     * are used to filter the records in memory.
+     *
+     * @param query the query to use while looking for records
+     * @return campaign enrollments matching provided query
+     */
     public List<CampaignEnrollment> search(CampaignEnrollmentsQuery query) {
         List<CampaignEnrollment> enrollments = new ArrayList<>();
         Criterion primaryCriterion = query.getPrimaryCriterion();

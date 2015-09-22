@@ -27,10 +27,14 @@ import java.util.List;
 
 import static org.motechproject.commons.date.util.DateUtil.now;
 
+/**
+ * Service used for managing alerts.
+ */
 @Component
 public class EnrollmentAlertService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EnrollmentAlertService.class);
+
     private MotechSchedulerService schedulerService;
 
     private EventRelay eventRelay;
@@ -41,6 +45,11 @@ public class EnrollmentAlertService {
         this.eventRelay = eventRelay;
     }
 
+    /**
+     * Schedules jobs for the alerts of the current milestone from the given enrollment.
+     *
+     * @param enrollment the enrollment for which jobs will be scheduled
+     */
     public void scheduleAlertsForCurrentMilestone(Enrollment enrollment) {
         Schedule schedule = enrollment.getSchedule();
         Milestone currentMilestone = schedule.getMilestone(enrollment.getCurrentMilestoneName());
@@ -63,6 +72,12 @@ public class EnrollmentAlertService {
         }
     }
 
+    /**
+     * Returns the alerts timings for the current milestone of the given enrollment.
+     *
+     * @param enrollment the enrollment for which timings will be retrieved
+     * @return the current milestone timings.
+     */
     public MilestoneAlerts getAlertTimings(Enrollment enrollment) {
         Schedule schedule = enrollment.getSchedule();
         Milestone currentMilestone = schedule.getMilestone(enrollment.getCurrentMilestoneName());
@@ -80,6 +95,17 @@ public class EnrollmentAlertService {
             milestoneAlerts.getAlertTimings().put(milestoneWindow.getName().toString(), alertTimingsForWindow);
         }
         return milestoneAlerts;
+    }
+
+    /**
+     *  Unschedules the alerts jobs from for the given enrollment.
+     *
+     * @param enrollment the enrollment for which alerts jobs will be unscheduled
+     */
+    public void unscheduleAllAlerts(Enrollment enrollment) {
+        LOGGER.info("Un-scheduling all jobs for enrollment {}", enrollment.getId());
+        schedulerService.safeUnscheduleAllJobs(String.format("%s-%s", EventSubjects.MILESTONE_ALERT, enrollment.getId()));
+        LOGGER.info("Un-scheduled all jobs for enrollment {}", enrollment.getId());
     }
 
     private void scheduleAlertJob(Alert alert, Enrollment enrollment, Milestone currentMilestone, MilestoneWindow milestoneWindow, MilestoneAlert milestoneAlert) {
@@ -149,11 +175,5 @@ public class EnrollmentAlertService {
         DateTime windowEndDateTime = currentMilestoneStartDate.plus(windowEnd);
 
         return new AlertWindow(windowStartDateTime, windowEndDateTime, enrollment.getEnrolledOn(), enrollment.getPreferredAlertTime(), alert);
-    }
-
-    public void unscheduleAllAlerts(Enrollment enrollment) {
-        LOGGER.info("Un-scheduling all jobs for enrollment {}", enrollment.getId());
-        schedulerService.safeUnscheduleAllJobs(String.format("%s-%s", EventSubjects.MILESTONE_ALERT, enrollment.getId()));
-        LOGGER.info("Un-scheduled all jobs for enrollment {}", enrollment.getId());
     }
 }
