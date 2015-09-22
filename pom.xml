@@ -21,7 +21,7 @@
         <external.dependency.release.tag>r030</external.dependency.release.tag>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <modules.root.dir>${basedir}</modules.root.dir>
-        <jdk.version>1.7</jdk.version>
+        <jdk.version>1.8</jdk.version>
 
         <spring.version>3.1.0.RELEASE</spring.version>
         <spring.security.version>${spring.version}</spring.security.version>
@@ -883,7 +883,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
-                <version>2.7.1</version>
+                <version>3.5</version>
                 <configuration>
                     <rulesets>
                         <ruleset>${modules.root.dir}/pmd.xml</ruleset>
@@ -896,7 +896,7 @@
                     <dependency>
                         <groupId>org.motechproject</groupId>
                         <artifactId>pmd-rules</artifactId>
-                        <version>0.2</version>
+                        <version>0.3</version>
                     </dependency>
                 </dependencies>
                 <executions>
@@ -1192,7 +1192,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
-                <version>2.5</version>
+                <version>3.5</version>
                 <configuration>
                     <xrefLocation>${project.reporting.outputDirectory}/../xref</xrefLocation>
                 </configuration>
