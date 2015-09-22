@@ -26,6 +26,9 @@ import java.util.Map;
 import static org.motechproject.scheduletracking.domain.EnrollmentStatus.COMPLETED;
 import static org.motechproject.scheduletracking.domain.EnrollmentStatus.UNENROLLED;
 
+/**
+ * Implementation of the {@link org.motechproject.scheduletracking.service.EnrollmentService}.
+ */
 @Component
 public class EnrollmentServiceImpl implements EnrollmentService {
 
@@ -126,8 +129,11 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     }
 
     @Override
-    public MilestoneAlerts getAlertTimings(String externalId, String scheduleName, String milestoneName, DateTime referenceDateTime, DateTime enrollmentDateTime, Time preferredAlertTime) {
+    public MilestoneAlerts getAlertTimings(String externalId, String scheduleName, String milestoneName, DateTime referenceDateTime,
+                                           DateTime enrollmentDateTime, Time preferredAlertTime) {
         Schedule schedule = scheduleDataService.findByName(scheduleName);
-        return enrollmentAlertService.getAlertTimings(new EnrollmentBuilder().withExternalId(externalId).withSchedule(schedule).withCurrentMilestoneName(milestoneName).withStartOfSchedule(referenceDateTime).withEnrolledOn(enrollmentDateTime).withPreferredAlertTime(preferredAlertTime).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment());
+        return enrollmentAlertService.getAlertTimings(new EnrollmentBuilder().withExternalId(externalId).withSchedule(schedule).
+                withCurrentMilestoneName(milestoneName).withStartOfSchedule(referenceDateTime).withEnrolledOn(enrollmentDateTime).
+                withPreferredAlertTime(preferredAlertTime).withStatus(EnrollmentStatus.ACTIVE).withMetadata(null).toEnrollment());
     }
 }

@@ -1,6 +1,7 @@
 package org.motechproject.dhis2.event;
 
 import org.motechproject.dhis2.domain.DataElement;
+import org.motechproject.dhis2.exception.DataElementNotFoundException;
 import org.motechproject.dhis2.rest.domain.AttributeDto;
 import org.motechproject.dhis2.rest.domain.DataValueDto;
 import org.motechproject.dhis2.rest.domain.DataValueSetDto;
@@ -43,13 +44,8 @@ public class EventHandler {
     @Autowired
     private DataElementService dataElementService;
 
-    public EventHandler (DhisWebService webService, TrackedEntityInstanceMappingService trackedEntityInstanceMappingService) {
-        this.dhisWebService = webService;
-        this.trackedEntityInstanceMappingService = trackedEntityInstanceMappingService;
-    }
+    public EventHandler() {
 
-    public EventHandler () {
-        this(null, null);
     }
 
     /**
@@ -102,7 +98,7 @@ public class EventHandler {
     }
 
     /**
-     * Parses the event and creates a{@link org.motechproject.dhis2.rest.domain.TrackedEntityInstanceDto}
+     * Parses the event and creates a {@link org.motechproject.dhis2.rest.domain.TrackedEntityInstanceDto}
      * and a {@link org.motechproject.dhis2.rest.domain.EnrollmentDto} which is then sent to the DHIS2 server
      * via {@link org.motechproject.dhis2.rest.service.DhisWebService}
      *
@@ -207,7 +203,7 @@ public class EventHandler {
     }
 
     /**
-     * Parses the event and creates a{@link org.motechproject.dhis2.rest.domain.DataValueDto}which
+     * Parses the event and creates a {@link org.motechproject.dhis2.rest.domain.DataValueDto} which
      * is then sent to the DHIS2 server via {@link org.motechproject.dhis2.rest.service.DhisWebService}
      *
      * @param event
@@ -218,6 +214,13 @@ public class EventHandler {
         Map<String, Object> params = event.getParameters();
 
         DataElement dataElement = dataElementService.findByName((String) params.get(EventParams.DATA_ELEMENT));
+
+        if (dataElement == null) {
+            throw new DataElementNotFoundException("The data element " + params.get(EventParams.DATA_ELEMENT) +
+                    " that was sent did not match any values imported from DHIS2. Please make sure that the " +
+                    "data element field matches a data element name in the DHIS2 module");
+        }
+
         String orgUnitId = (String) params.get(EventParams.LOCATION);
         String period = (String) params.get(EventParams.PERIOD);
         String value = (String) params.get(EventParams.VALUE);

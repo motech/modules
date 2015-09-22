@@ -10,9 +10,18 @@ import static ch.lambdaj.Lambda.having;
 import static ch.lambdaj.Lambda.on;
 import static org.hamcrest.Matchers.equalTo;
 
+/**
+ * Criterion used to filter enrollments by the user external id.
+ */
 public class ExternalIdCriterion implements Criterion {
+
     private String externalId;
 
+    /**
+     * Creates a ExternalIdCriterion with the externalId attribute set to {@code externalId}.
+     *
+     * @param externalId the user external id
+     */
     public ExternalIdCriterion(String externalId) {
         this.externalId = externalId;
     }
