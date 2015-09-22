@@ -82,7 +82,7 @@ public class HubSubscription implements java.io.Serializable {
 
     /**
      * Gets lease seconds - number of seconds for which the subscriber
-     * have his subscription active.
+     * will have his subscription active.
      *
      * @return the amount of lease seconds
      */
@@ -92,7 +92,7 @@ public class HubSubscription implements java.io.Serializable {
 
     /**
      * Sets lease seconds - number of seconds for which the subscriber
-     * have his subscription active.
+     * will have his subscription active.
      *
      * @param leaseSeconds amount of lease seconds to be set
      */
