@@ -80,25 +80,6 @@
 
     /*
      *
-     * Log
-     *
-     */
-
-    controllers.controller('SmsLogCtrl', function ($scope, $http) {
-        $scope.log = [];
-
-        innerLayout({
-            spacing_closed: 30,
-            east__minSize: 200,
-            east__maxSize: 350
-        }, {
-            show: true,
-            button: '#sms-logging-filters'
-        });
-    });
-
-    /*
-     *
      * Settings
      *
      */

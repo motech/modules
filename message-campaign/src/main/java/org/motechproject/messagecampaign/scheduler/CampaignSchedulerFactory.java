@@ -17,9 +17,17 @@ import java.util.Map;
 
 import static java.lang.String.format;
 
+/**
+ * Holds campaign schedulers and allows retrieval of the necessary scheduler, based
+ * on the campaign type.
+ */
 @Component
 public class CampaignSchedulerFactory {
     private static final int CAMPAIGN_SCHEDULER_SERVICE_COUNT = 5;
+
+    /**
+     * A map holding scheduler services, indexed by campaign classes they serve.
+     */
     private Map<Class, CampaignSchedulerService> campaignSchedulerServices = new HashMap<>(CAMPAIGN_SCHEDULER_SERVICE_COUNT);
 
     @Autowired
@@ -40,6 +48,10 @@ public class CampaignSchedulerFactory {
     @Autowired
     private CampaignRecordService campaignRecordService;
 
+    /**
+     * Initializes a map of available scheduler services.
+     * Invoked by Spring, after initialization of this bean finishes.
+     */
     @PostConstruct
     public void init() {
         campaignSchedulerServices.put(AbsoluteCampaign.class, absoluteCampaignSchedulerService);
@@ -49,7 +61,14 @@ public class CampaignSchedulerFactory {
         campaignSchedulerServices.put(DayOfWeekCampaign.class, dayOfWeekCampaignSchedulerService);
     }
 
-
+    /**
+     * Retrieves campaign scheduler for the given campaign name, based on this campaign type.
+     *
+     * @param campaignName the campaign name to retrieve the scheduler for
+     * @return scheduler service for the corresponding campaign type
+     * @throws CampaignNotFoundException if campaign of such name des not exist or scheduler service for
+     *                                   that campaign type cannot be found
+     */
     public CampaignSchedulerService getCampaignScheduler(final String campaignName) {
         CampaignRecord campaign = campaignRecordService.findByName(campaignName);
 
@@ -60,7 +79,7 @@ public class CampaignSchedulerFactory {
         CampaignSchedulerService schedulerService = campaignSchedulerServices.get(campaign.toCampaign().getClass());
 
         if (schedulerService == null) {
-            throw new CampaignNotFoundException(format("Campaign (%s) not found.", campaignName));
+            throw new CampaignNotFoundException(format("Scheduler service for campaign class %s cannot be found.", campaign.toCampaign().getClass().getName()));
         }
 
         return schedulerService;

@@ -3,11 +3,15 @@ package org.motechproject.dhis2.event;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.motechproject.dhis2.domain.OrgUnit;
+import org.motechproject.dhis2.domain.DataElement;
+import org.motechproject.dhis2.exception.DataElementNotFoundException;
 import org.motechproject.dhis2.rest.domain.AttributeDto;
 import org.motechproject.dhis2.rest.domain.DataValueDto;
+import org.motechproject.dhis2.rest.domain.DataValueSetDto;
 import org.motechproject.dhis2.rest.domain.DhisEventDto;
 import org.motechproject.dhis2.rest.domain.DhisStatus;
 import org.motechproject.dhis2.rest.domain.DhisStatusResponse;
@@ -15,7 +19,7 @@ import org.motechproject.dhis2.rest.domain.EnrollmentDto;
 import org.motechproject.dhis2.rest.domain.ImportCountDto;
 import org.motechproject.dhis2.rest.domain.TrackedEntityInstanceDto;
 import org.motechproject.dhis2.rest.service.DhisWebService;
-import org.motechproject.dhis2.service.OrgUnitService;
+import org.motechproject.dhis2.service.DataElementService;
 import org.motechproject.dhis2.service.SettingsService;
 import org.motechproject.dhis2.service.TrackedEntityInstanceMappingService;
 import org.motechproject.event.MotechEvent;
@@ -31,7 +35,6 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class EventHandlerTest {
 
-    private static final String ORGUNIT_NAME = "orgUnitName";
     private static final String ORGUNIT_ID = "orgUnitID";
     private static final String ENTITY_TYPE_PERSON = "person";
     private static final String ENTITY_INSTANCE_ID = "externalID";
@@ -44,6 +47,10 @@ public class EventHandlerTest {
     private static final String STAGE_ID = "stageId";
     private static final String DATA_ELEMENT_ID = "dataElementID";
     private static final String DATA_ELEMENT_VALUE = "value";
+    private static final String PERIOD = "period";
+    private static final String CATEGORY_COMBO = "categoryOption";
+    private static final String COMMENT = "comment";
+
 
 
     @Mock
@@ -51,9 +58,12 @@ public class EventHandlerTest {
     @Mock
     private TrackedEntityInstanceMappingService trackedEntityInstanceMappingService;
     @Mock
+    private DataElementService dataElementService;
+    @Mock
     private DhisWebService dhisWebservice;
     private DhisStatusResponse response;
-    private EventHandler handler;
+    @InjectMocks
+    private EventHandler handler = new EventHandler();
 
     @Before
     public void setup() throws Exception{
@@ -68,7 +78,6 @@ public class EventHandlerTest {
         response.setReference(INSTANCE_DHIS_ID);
         response.setStatus(DhisStatus.SUCCESS);
         response.setImportCount(importCount);
-        handler = new EventHandler(dhisWebservice, trackedEntityInstanceMappingService);
     }
 
     @Test
@@ -216,5 +225,55 @@ public class EventHandlerTest {
 
     }
 
+    @Test
+    public void testHandleDataValue() {
+
+        DataValueDto dataValueDto = new DataValueDto();
+        dataValueDto.setDataElement(DATA_ELEMENT_ID);
+        dataValueDto.setValue(DATA_ELEMENT_VALUE);
+        dataValueDto.setOrgUnit(ORGUNIT_ID);
+        dataValueDto.setPeriod(PERIOD);
+        dataValueDto.setCategoryOptionCombo(CATEGORY_COMBO);
+        dataValueDto.setComment(COMMENT);
+
+        DataValueSetDto dataValueSetDto = new DataValueSetDto();
+        List<DataValueDto> dataValueDtos = new ArrayList<>();
+        dataValueDtos.add(dataValueDto);
+        dataValueSetDto.setDataValues(dataValueDtos);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put(EventParams.DATA_ELEMENT, DATA_ELEMENT_ID);
+        params.put(EventParams.LOCATION, ORGUNIT_ID);
+        params.put(EventParams.PERIOD, PERIOD);
+        params.put(EventParams.VALUE, DATA_ELEMENT_VALUE);
+        params.put(EventParams.CATEGORY_OPTION_COMBO, CATEGORY_COMBO);
+        params.put(EventParams.COMMENT, COMMENT);
+
+        DataElement dataElement = new DataElement(DATA_ELEMENT_VALUE, DATA_ELEMENT_ID);
+
+        when(dataElementService.findByName(DATA_ELEMENT_ID)).thenReturn(dataElement);
+
+        MotechEvent event = new MotechEvent(EventSubjects.SEND_DATA_VALUE, params);
+
+        handler.handleDataValue(event);
+
+        verify(dhisWebservice).sendDataValueSet(Matchers.refEq(dataValueSetDto));
+    }
+
+    @Test(expected = DataElementNotFoundException.class)
+    public void shouldThrowExceptionForNonExistingDataValue() {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put(EventParams.DATA_ELEMENT, DATA_ELEMENT_ID);
+        params.put(EventParams.LOCATION, ORGUNIT_ID);
+        params.put(EventParams.PERIOD, PERIOD);
+        params.put(EventParams.VALUE, DATA_ELEMENT_VALUE);
+        params.put(EventParams.CATEGORY_OPTION_COMBO, CATEGORY_COMBO);
+        params.put(EventParams.COMMENT, COMMENT);
+
+        when(dataElementService.findByName(DATA_ELEMENT_ID)).thenReturn(null);
+        MotechEvent event = new MotechEvent(EventSubjects.SEND_DATA_VALUE, params);
+        handler.handleDataValue(event);
+    }
 
 }

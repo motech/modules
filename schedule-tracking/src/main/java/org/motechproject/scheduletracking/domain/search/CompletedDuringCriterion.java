@@ -9,10 +9,21 @@ import java.util.List;
 
 import static org.motechproject.commons.date.util.DateUtil.inRange;
 
+/**
+ * This criterion is used to filter all enrollments that have been completed during given time range.
+ */
 public class CompletedDuringCriterion implements Criterion {
+
     private DateTime start;
+
     private DateTime end;
 
+    /**
+     * Creates a CompletedDuringCriterion with the start attribute set to {@code start}, the end attribute to {@code end}.
+     *
+     * @param start the beginning of the time range
+     * @param end the ending of the time range
+     */
     public CompletedDuringCriterion(DateTime start, DateTime end) {
         this.start = start;
         this.end = end;
