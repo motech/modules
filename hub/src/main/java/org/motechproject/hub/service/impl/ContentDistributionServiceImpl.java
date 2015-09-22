@@ -84,7 +84,7 @@ public class ContentDistributionServiceImpl implements
     }
 
     /**
-     * Sets <code>DistributionServiceDelegate</code> to the value passed in a parameter. Its
+     * Sets <code>DistributionServiceDelegate</code> to the value passed in a parameter. It's
      * used for fetching and distributing fetched content to all interested subscribers.
      *
      * @param distributionServiceDelegate <code>DistributionServiceDelegate</code> to be set

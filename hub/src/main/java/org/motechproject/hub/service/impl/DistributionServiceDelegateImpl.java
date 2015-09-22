@@ -74,7 +74,7 @@ public class DistributionServiceDelegateImpl implements
 
     /**
      * Creates a new instance of <code>DistributionServiceDelegateImpl</code>, with
-     * all fields set to the autowired parameters values.
+     * all fields set to the autowired parameter values.
      *
      * @param httpAgentImpl autowired {@link org.motechproject.http.agent.service.HttpAgent}
      * @param settingsFacade autowired {@link org.motechproject.server.config.SettingsFacade}

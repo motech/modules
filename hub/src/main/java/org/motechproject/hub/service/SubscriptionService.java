@@ -35,8 +35,8 @@ public interface SubscriptionService {
      *            be used to compute an HMAC digest for authorized content
      *            distribution. Currently this is not being consumed by the API
      * @throws HubException
-     *            - if tries unsubscribing from not subscribed or non existing topic or
-     *            topic was not found from any other reason
+     *            - when unsubscribing from a topic that was not subscribed to,
+     *            when the topic does not exist or when the topic was not found
      */
     void subscribe(String callbackUrl, Modes hubMode, String topic,
             String leaseSeconds, String secret) throws HubException;

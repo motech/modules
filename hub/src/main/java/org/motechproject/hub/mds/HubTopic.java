@@ -4,7 +4,7 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 /**
- * Stores the topic URLs. Topic URL is the URL with the content that can be subscribed.
+ * Stores the topic URLs. Topic URL is is an URL with content that can be subscribed to.
  */
 @Entity
 public class HubTopic implements java.io.Serializable {
@@ -32,7 +32,7 @@ public class HubTopic implements java.io.Serializable {
     }
 
     /**
-     * Gets the URL of topic.
+     * Gets the URL of this topic.
      *
      * @return the topic URL
      */
@@ -41,7 +41,7 @@ public class HubTopic implements java.io.Serializable {
     }
 
     /**
-     * Sets the URL of topic.
+     * Sets the URL of this topic.
      *
      * @param topicUrl the topic URL to be set
      */

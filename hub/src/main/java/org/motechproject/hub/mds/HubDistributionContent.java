@@ -48,7 +48,7 @@ public class HubDistributionContent implements java.io.Serializable {
     }
 
     /**
-     * Sets the type of stored content to value passed as a parameter.
+     * Sets the type of stored content to the value passed as a parameter.
      *
      * @param contentType the type to be set
      */

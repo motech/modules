@@ -59,7 +59,7 @@ public class HubPublisherTransaction implements java.io.Serializable {
     }
 
     /**
-     * Gets date and time of notification about update.
+     * Gets date and time of the notification about update.
      *
      * @return date/time of topic update
      */
@@ -68,7 +68,7 @@ public class HubPublisherTransaction implements java.io.Serializable {
     }
 
     /**
-     * Sets date and time of notification about update.
+     * Sets date and time of the notification about update.
      *
      * @param notificationTime date/time to be set
      */

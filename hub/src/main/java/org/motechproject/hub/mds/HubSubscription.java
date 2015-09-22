@@ -82,7 +82,7 @@ public class HubSubscription implements java.io.Serializable {
 
     /**
      * Gets lease seconds - number of seconds for which the subscriber
-     * will have subscription active.
+     * have his subscription active.
      *
      * @return the amount of lease seconds
      */
@@ -92,7 +92,7 @@ public class HubSubscription implements java.io.Serializable {
 
     /**
      * Sets lease seconds - number of seconds for which the subscriber
-     * will have subscription active.
+     * have his subscription active.
      *
      * @param leaseSeconds amount of lease seconds to be set
      */
@@ -101,7 +101,7 @@ public class HubSubscription implements java.io.Serializable {
     }
 
     /**
-     * Gets the secret value. Secret is a value used for compute an HMAC digest for
+     * Gets the secret value. Secret is a value used for computing an HMAC digest for
      * authorized content distribution.
      *
      * @return the secret value
@@ -111,7 +111,7 @@ public class HubSubscription implements java.io.Serializable {
     }
 
     /**
-     * Sets the secret value. Secret is a value used for compute an HMAN digest for
+     * Sets the secret value. Secret is a value used for computing an HMAN digest for
      * authorized content distribution. It must be less than 200 bytes in length.
      *
      * @param secret the secret value to be set
@@ -149,7 +149,7 @@ public class HubSubscription implements java.io.Serializable {
      * @param hubTopicId the id of a topic
      * @param hubSubscriptionStatusId the id of a subscription status
      * @param callbackUrl the callback url
-     * @param leaseSeconds the time in seconds for which subscription will be active
+     * @param leaseSeconds the time in seconds for which the subscription will be active
      * @param secret the secret value for HMAC digest computing
      */
     public HubSubscription(Integer hubTopicId, Integer hubSubscriptionStatusId,

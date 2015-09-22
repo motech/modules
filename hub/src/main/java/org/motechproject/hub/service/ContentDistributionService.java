@@ -7,8 +7,7 @@ package org.motechproject.hub.service;
 public interface ContentDistributionService {
 
     /**
-     * Distributes the fetched content to all the subscribers subscribed to the
-     * particular topic.
+     * Distributes the fetched content to all the subscribers of the particular topic.
      *
      * @param url a <code>String</code> representing the updated topic URL
      */
