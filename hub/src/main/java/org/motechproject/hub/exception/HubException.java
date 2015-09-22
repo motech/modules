@@ -120,7 +120,7 @@ public class HubException extends Exception {
     }
 
     /**
-     * Gets a <code>String</code> describing cause of this error.
+     * Gets a <code>String</code> describing the cause of this error.
      *
      * @return the reason of this error
      */
@@ -129,7 +129,7 @@ public class HubException extends Exception {
     }
 
     /**
-     * Sets a <code>String</code> describing cause of this error.
+     * Sets a <code>String</code> describing the cause of this error.
      *
      * @param reason the reason of this error
      */

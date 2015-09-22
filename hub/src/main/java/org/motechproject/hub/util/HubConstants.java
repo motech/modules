@@ -1,7 +1,7 @@
 package org.motechproject.hub.util;
 
 /**
- * Constants used in the hub module.
+ * Constants used in the Hub module.
  */
 public final class HubConstants {
 

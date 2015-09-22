@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.Enumeration;
 
 /**
- * Utility class for hub module. Contains various methods to use with hub module.
+ * Utility class for the Hub module. Contains various methods to use with the Hub module.
  */
 public final class HubUtils {
 
@@ -54,7 +54,7 @@ public final class HubUtils {
     }
 
     /**
-     * Gets current date.
+     * Gets the current date.
      *
      * @return current date
      */
@@ -62,9 +62,6 @@ public final class HubUtils {
         return DateUtil.now().toDate();
     }
 
-    /**
-     * Creates a new instance of <code>HubUtils</code>.
-     */
     private HubUtils() {
     }
 }
