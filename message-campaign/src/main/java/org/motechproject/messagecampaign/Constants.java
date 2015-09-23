@@ -1,6 +1,8 @@
 package org.motechproject.messagecampaign;
 
-
+/**
+ * Util class holding Message Campaign constants.
+ */
 public final class Constants {
 
     public static final int REPEATING_DEFAULT_START_OFFSET = 1;

@@ -7,6 +7,8 @@ import java.util.Arrays;
  */
 public class EnrollmentAlreadyExists extends MessageCampaignException {
 
+    private static final long serialVersionUID = -5315927822391760933L;
+
     private static final String MESSAGE = "Person with external ID \"%s\" is already enrolled to the \"%s\" campaign.";
 
     public EnrollmentAlreadyExists(String externalId, String campaignName) {

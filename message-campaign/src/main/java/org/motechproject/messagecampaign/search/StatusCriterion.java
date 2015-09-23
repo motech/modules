@@ -7,7 +7,12 @@ import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollmentStatu
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementation of the {@link Criterion}, that fetches and filters records based on the
+ * enrollment status.
+ */
 public class StatusCriterion implements Criterion {
+
     private CampaignEnrollmentStatus campaignEnrollmentStatus;
 
     public StatusCriterion(CampaignEnrollmentStatus campaignEnrollmentStatus) {

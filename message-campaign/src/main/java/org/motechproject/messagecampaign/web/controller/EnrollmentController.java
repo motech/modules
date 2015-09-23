@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+/**
+ * Controller responsible for handling message campaign enrollment requests.
+ */
 @Controller
 @RequestMapping(value = "/enrollments")
 public class EnrollmentController extends MessageCampaignController {
@@ -24,6 +27,13 @@ public class EnrollmentController extends MessageCampaignController {
     @Autowired
     private EnrollmentRestController enrollmentController;
 
+    /**
+     * Enrolls client into the given message campaign or updates an existing enrollment.
+     *
+     * @param campaignName the name of the campaign
+     * @param externalId external ID of the client
+     * @param enrollmentId enrollment ID
+     */
     @RequestMapping(value = "/{campaignName}/users", method = RequestMethod.POST)
     @PreAuthorize("permitAll")
     @ResponseStatus(HttpStatus.OK)
@@ -36,7 +46,12 @@ public class EnrollmentController extends MessageCampaignController {
         enrollmentController.enrollOrUpdateUser(campaignName, externalId, enrollmentRequest);
     }
 
-
+    /**
+     * Removes the existing enrollment.
+     *
+     * @param campaignName the name of the campaign
+     * @param externalId external ID of the client
+     */
     @RequestMapping(value = "/{campaignName}/users/{externalId}", method = RequestMethod.DELETE)
     @PreAuthorize("permitAll")
     @ResponseStatus(HttpStatus.OK)
@@ -44,7 +59,13 @@ public class EnrollmentController extends MessageCampaignController {
         enrollmentController.removeEnrollment(campaignName, externalId);
     }
 
-
+    /**
+     * Retrieves all active enrollments, optionally filtered by a campaign name or external client ID.
+     *
+     * @param externalId external ID of the client
+     * @param campaignName the name of the campaign
+     * @return a list of matching enrollments
+     */
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     @PreAuthorize("permitAll")
     @ResponseBody
