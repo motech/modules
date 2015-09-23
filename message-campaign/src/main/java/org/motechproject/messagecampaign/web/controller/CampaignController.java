@@ -96,7 +96,7 @@ public class CampaignController extends MessageCampaignController {
     /**
      * Deletes a message campaign of the given name.
      *
-     * @param campaignName a name of the campaign to remove
+     * @param campaignName the name of the campaign to remove
      */
     @RequestMapping(value = "/campaigns/{campaignName}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
