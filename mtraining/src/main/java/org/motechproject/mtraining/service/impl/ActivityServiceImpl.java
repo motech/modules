@@ -101,9 +101,4 @@ public class ActivityServiceImpl implements ActivityService {
             activityDataService.delete(current);
         }
     }
-
-    @Override
-    public ActivityDataService getActivityDataService() {
-        return activityDataService;
-    }
 }

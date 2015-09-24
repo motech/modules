@@ -3,6 +3,7 @@ package org.motechproject.mtraining.service.it;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.mtraining.domain.Bookmark;
+import org.motechproject.mtraining.repository.BookmarkDataService;
 import org.motechproject.mtraining.service.BookmarkService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -32,6 +33,9 @@ public class BookmarkServiceBundleIT extends BasePaxIT {
 
     @Inject
     private BookmarkService bookmarkService;
+
+    @Inject
+    private BookmarkDataService bookmarkDataService;
 
     @Test
     public void testBookmarkServiceInstance() throws Exception {
@@ -80,7 +84,7 @@ public class BookmarkServiceBundleIT extends BasePaxIT {
         final Bookmark original = bookmarkService.createBookmark(new Bookmark("11111", "MyCourse", "MyChapter", "MyLesson", null));
         assertEquals(original.getLessonIdentifier(), "MyLesson");
 
-        bookmarkService.getBookmarkDataService().doInTransaction(new TransactionCallbackWithoutResult() {
+        bookmarkDataService.doInTransaction(new TransactionCallbackWithoutResult() {
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
                 Bookmark bookmarkToUpdate = bookmarkService.getBookmarkById(original.getId());

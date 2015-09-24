@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.mtraining.domain.ActivityRecord;
 import org.motechproject.mtraining.domain.ActivityState;
+import org.motechproject.mtraining.repository.ActivityDataService;
 import org.motechproject.mtraining.service.ActivityService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -32,6 +33,9 @@ public class ActivityServiceBundleIT extends BasePaxIT {
 
     @Inject
     private ActivityService activityService;
+
+    @Inject
+    private ActivityDataService activityDataService;
 
     @Test
     public void testActivityServiceInstance() throws Exception {
@@ -93,7 +97,7 @@ public class ActivityServiceBundleIT extends BasePaxIT {
         assertEquals(ActivityState.STARTED, original.getState());
         assertNull(original.getCompletionTime());
 
-        activityService.getActivityDataService().doInTransaction(new TransactionCallbackWithoutResult() {
+        activityDataService.doInTransaction(new TransactionCallbackWithoutResult() {
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
                 ActivityRecord activityRecordToUpdate = activityService.getActivityById(original.getId());

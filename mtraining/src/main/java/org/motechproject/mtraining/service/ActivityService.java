@@ -1,7 +1,6 @@
 package org.motechproject.mtraining.service;
 
 import org.motechproject.mtraining.domain.ActivityRecord;
-import org.motechproject.mtraining.repository.ActivityDataService;
 
 import java.util.List;
 
@@ -59,6 +58,4 @@ public interface ActivityService {
      * @param externalId Id of the user
      */
     void deleteAllActivityForUser(String externalId);
-
-    ActivityDataService getActivityDataService();
 }

@@ -103,9 +103,4 @@ public class BookmarkServiceImpl implements BookmarkService {
             bookmarkDataService.delete(current);
         }
     }
-
-    @Override
-    public BookmarkDataService getBookmarkDataService() {
-        return bookmarkDataService;
-    }
 }
