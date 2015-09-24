@@ -11,10 +11,10 @@ Hub Module
 Introduction
 ############
 
-The Hub module is an implementation of PubSubHubbub Hub specification (PubSubHubbub is a simple publication - subscription
+The Hub module is an implementation of the PubSubHubbub Hub specification (PubSubHubbub is a simple publication - subscription
 protocol). MOTECH Hub implementation exposes API for publishers and subscribers, allowing publishing and distributing
-content to all interested subscribers when subscribed resources are updated. With help of MOTECH Hub any external module
-can subscribe to a specific resource and be notified when it change as well as can act as publisher to make content
+content to all interested subscribers when subscribed resources are updated. MOTECH Hub allows any external module
+can subscribe to a specific resource and be notified when it changes. Any module can also act as publisher to make content
 available for other modules.
 
 #####
@@ -26,7 +26,7 @@ Setup fields
 
 In order to use MOTECH Hub module hub base url have to be set before performing any subscribe/unsubscribe/publish requests.
 It can be done by REST call or by Hub module UI configuration panel. UI configuration panel also offers possibility to
-set retry count and retry interval parameters. For explanation of these parameters please look at table below.
+set retry count and retry interval parameters. For explanation of these parameters please look at the table below.
 
 +---------------+-----------------------------------------------------------------------------------------------------+
 |Parameter      |Description                                                                                          |
@@ -39,12 +39,17 @@ set retry count and retry interval parameters. For explanation of these paramete
 |retry.interval |The time between request retries in case of failed hub request.                                      |
 +---------------+-----------------------------------------------------------------------------------------------------+
 
-Configure by UI
----------------
+Configure via UI
+----------------
 
 To configure Hub module by UI run MOTECH with Hub module installed and in Admin panel go to Manage Modules. Click
-Settings in Action column for Hub module. Now you can set values for fields described above. After configuration is done
+Settings in the Action column for Hub module. Now you can set values for fields described above. After configuration is done
 choose "Submit" or "Submit and restart".
+
+.. note::
+
+    Choosing "Sumbit" or "Submit and restart" is enough to change ``hubBaseUrl``, but the publishers should be informed about
+    change in the Hub base URL, so they still can inform it when they topics are updated.
 
 Configure by REST CALL
 ----------------------
@@ -60,8 +65,8 @@ with content type set to ``application/json`` and request body JSON structured a
 .. code-block:: json
 
     {
-        settings: {
-            hubBaseUrl: "your_url"
+        "settings": {
+            "hubBaseUrl": "your_url"
         }
     }
 
@@ -77,20 +82,20 @@ Subscribing/Unsubscribing
 Subscribing/Unsubscribing process
 ---------------------------------
 
-To make a subscription the subscriber first have to send subscription request to the hub. Input parameters are validated
+To make a subscription the subscriber first has to send subscription request to the hub. Input parameters are validated
 by ``HubValidator`` and if validation passes without error then the Hub responds to the subscriber with an HTTP status
-``202 Accepted``. This is only for acknowledge subscriber that his subscription request reached the Hub. After that the
+``202 Accepted``. This is done to acknowledge subscriber that his subscription request has reached the Hub. After that the
 Hub starts intent verification in order to prevent an attacker from creating unwanted subscriptions or unsubscribing from
 desired ones.
 
-The subscriber must confirm that he want to make pending subscription. The hub sends to the subscriber HTTP ``GET``
-request with ``hub.challenge`` parameter in it. The subscriber must respond with an HTTP success (2xx) code with a response
-body equal to the ``hub.challenge`` parameter. The subscriptions is made if described process will pass without any failures.
+The subscriber must confirm that he want to make pending subscription. The hub sends HTTP ``GET`` request with ``hub.challenge``
+parameter in it to the subscriber. The subscriber must respond with an HTTP success (2xx) code with a response
+body equal to the ``hub.challenge`` parameter. The subscription is made if described process will pass without any failures.
 
 Validation and intent verification also apply for unsubscribing.
 
-From moment at which the subscription is made the subscriber will be notified about changes in subscribed resource on
-his ``hub.callback`` URL, defined when subscription request was send. Notifications will be turned off after successful
+After the subscription is made the subscriber will be notified about changes to the resource on
+his ``hub.callback`` URL, defined when subscription request was sent. Notifications will be turned off after successful
 unsubscribe request or when hub.lease_seconds pass.
 
 Please look at the end of this section to find description of all fields used in subscribing/unsubscribing requests.
@@ -121,7 +126,7 @@ To confirm (un)subscription the subscriber must respond with an HTTP success cod
 OSGi Services
 -------------
 
-The Hub module expose OSGi ``SubscriptionService`` interface for subscribing:
+The Hub module exposes OSGi ``SubscriptionService`` for subscribing:
 
 .. code-block:: java
 
@@ -148,7 +153,7 @@ Find description of the parameters used in (ub)subscribing in the table below:
 |               |                |be delivered to this URL.                                                           |
 +---------------+----------------+------------------------------------------------------------------------------------+
 |hubMode        |Modes           |In REST call this parameter have to be either literal "subscribe" or "unsubscribe"  |
-|               |                |string. In OSGi service enum ``Modes`` class is used, so it can take value either   |
+|               |                |string. In OSGi service enum ``Modes`` class is used, so it can take  a value of    |
 |               |                |``Modes.SUBSCRIBE`` or ``Modes.UNSUBSCRIBE``. The mode represents the goal of the   |
 |               |                |request.                                                                            |
 +---------------+----------------+------------------------------------------------------------------------------------+
@@ -156,7 +161,7 @@ Find description of the parameters used in (ub)subscribing in the table below:
 |               |                |is an URL to any resource that notifies the Hub about updates.                      |
 +---------------+----------------+------------------------------------------------------------------------------------+
 |leaseSeconds   |String          |Number of seconds for which the subscriber would like to have the subscription      |
-|               |                |active. After this time pass subscription need to be renewed.                       |
+|               |                |active. After this time pass subscription needs to be renewed.                      |
 +---------------+----------------+------------------------------------------------------------------------------------+
 |secret         |String          |A subscriber-provided secret string that will be used to compute an HMAC digest for |
 |               |                |authorized content distribution.                                                    |
@@ -188,7 +193,7 @@ with content type set to ``application/x-www-form-urlencoded``, ``{hubMode}`` to
 OSGI Service
 ------------
 
-The Hub module expose OSGi ``ContentDistributionService`` interface for publishing:
+The Hub module exposes OSGi ``ContentDistributionService`` for publishing:
 
 .. code-block:: java
 
@@ -204,10 +209,12 @@ To publish with this service update your topic, then just call distribute method
 Error handling
 ##############
 
-Errors that occurs when using Hub module are wrapped in a custom ``HubException`` exception class. This class contains
-``reason`` field that contain description of what caused failure and ``HubErrors`` object which contains more detailed
-information about error, which at least are ``message``, ``code`` and ``httpStatus``. Please refer to table shown below
-for detailed description of these fields.
+Errors that occur when using Hub module are wrapped in a custom ``HubException`` exception class. This class contains
+``reason`` field that contains description of what caused failure and ``hubErrors`` field, which contains ``HubError``
+object.
+
+``HubError`` object contains more detailed information about error, which at least are ``message``, ``code`` and ``httpStatus``.
+Please refer to table shown below for detailed description of these fields.
 
 +------------------+-----------+--------------------------------------------------------------------------------------+
 |Name              |Type       | Description                                                                          |
