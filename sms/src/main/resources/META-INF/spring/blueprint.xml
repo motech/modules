@@ -23,6 +23,7 @@
                 <value>classpath:sms-configs.json</value>
                 <value>classpath:sms-templates.json</value>
                 <value>classpath:sms-templates-custom.json</value>
+                <value>classpath:custom-ui.js</value>
             </list>
         </property>
         <property name="configFiles">
