@@ -44,21 +44,14 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new IllegalArgumentException("External id field cannot be null");
         }
 
-        Appointment existing = appointmentDataService.findAppointmentById(appointment.getApptId());
-
         // Add appoint first, look it up and then add reminders
-        Appointment createdOrUpdated;
-        if (existing == null) {
-            createdOrUpdated = appointmentDataService.create(appointment);
-        } else {
-            createdOrUpdated = appointmentDataService.update(existing);
+        Appointment created = appointmentDataService.create(appointment);
+
+        if (created.getSendReminders()) {
+            this.appointmentReminderService.addReminders(created);
         }
 
-        if (createdOrUpdated.getSendReminders()) {
-            this.appointmentReminderService.addReminders(createdOrUpdated);
-        }
-
-        return createdOrUpdated;
+        return created;
     }
 
     /**

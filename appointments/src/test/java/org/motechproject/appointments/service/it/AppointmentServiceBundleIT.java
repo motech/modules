@@ -59,7 +59,7 @@ public class AppointmentServiceBundleIT extends BasePaxIT {
         assertEquals(result.getExternalId(), current.getExternalId());
     }
 
-    @Test //TODO We cannot add the same two appointmens, because apptId is Unique. Now this test is just updating previous object. Something should change here
+    @Test
     public void addAppointmentDuplicate() throws Exception {
         logger.info("addAppointmentDuplicate");
         Appointment current = new Appointment();
