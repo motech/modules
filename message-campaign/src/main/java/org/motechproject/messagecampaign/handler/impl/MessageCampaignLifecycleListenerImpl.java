@@ -14,12 +14,22 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+/**
+ * Implementation of the {@link MessageCampaignLifecycleListener}, responsible for taking
+ * necessary actions after the update and deletion of campaigns and messages.
+ */
 @Service("messageCampaignLifecycleListener")
 public class MessageCampaignLifecycleListenerImpl implements MessageCampaignLifecycleListener {
 
     @Autowired
     private MessageCampaignService messageCampaignService;
 
+    /**
+     * Listens to the {@link EventKeys#CAMPAIGN_RECORD_UPDATED} events and updates
+     * the enrollments assigned to the updated campaign.
+     *
+     * @param event received event
+     */
     @MotechListener(subjects = { EventKeys.CAMPAIGN_RECORD_UPDATED })
     public void updateCampaignEnrollments(MotechEvent event) {
         Map<String, Object> parameters = event.getParameters();
@@ -33,6 +43,12 @@ public class MessageCampaignLifecycleListenerImpl implements MessageCampaignLife
         messageCampaignService.stopAll(query, true);
     }
 
+    /**
+     * Listens to the {@link EventKeys#CAMPAIGN_MESSAGE_RECORD_UPDATED} events and reschedules
+     * necessary jobs.
+     *
+     * @param event received event
+     */
     @MotechListener(subjects = { EventKeys.CAMPAIGN_MESSAGE_RECORD_UPDATED })
     public void updateCampaignMessage(MotechEvent event) {
         Map<String, Object> parameters = event.getParameters();

@@ -1,6 +1,5 @@
 package org.motechproject.messagecampaign.web.model;
 
-
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
@@ -8,16 +7,29 @@ import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DTO representation of all the enrollments assigned to a client. It is
+ * used by the view layer to display the records.
+ */
 public class EnrollmentList {
 
+    /**
+     * The name of the campaign the enrollments belong to.
+     */
     @JsonProperty
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     private String campaignName;
 
+    /**
+     * The external ID of the client.
+     */
     @JsonProperty
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     private String externalId;
 
+    /**
+     * A list of enrollments.
+     */
     @JsonProperty
     private List<EnrollmentDto> enrollments = new ArrayList<>();
 

@@ -8,7 +8,6 @@ import org.motechproject.messagecampaign.exception.CampaignValidationException;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
 import org.motechproject.messagecampaign.web.MessageCampaignController;
 import org.motechproject.server.config.SettingsFacade;
-import org.osgi.framework.BundleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.InputStreamResource;
@@ -26,6 +25,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+/**
+ * A controller responsible for handling settings requests in the Message Campaign module.
+ */
 @Controller
 public class SettingsController extends MessageCampaignController {
 
@@ -36,10 +38,17 @@ public class SettingsController extends MessageCampaignController {
     @Qualifier("messageCampaignSettings")
     private SettingsFacade settingsFacade;
 
+    /**
+     * Updates Message Campaign by adding new campaign definitions from the
+     * settings resource.
+     *
+     * @param messageCampaigns representation of the message campaign
+     * @throws IOException in case of input/output problems with operations on the JSON file
+     */
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/settings", method = RequestMethod.POST)
     @PreAuthorize("hasRole('manageCampaigns')")
-    public void saveSettings(@ModelAttribute("messageCampaigns") MultipartFile messageCampaigns) throws BundleException, IOException {
+    public void saveSettings(@ModelAttribute("messageCampaigns") MultipartFile messageCampaigns) throws IOException {
         if (messageCampaigns == null || messageCampaigns.isEmpty()) {
             throw new CampaignJsonException(null);
         }
@@ -63,6 +72,12 @@ public class SettingsController extends MessageCampaignController {
         }
     }
 
+    /**
+     * Retrieves configuration for the MDS Data Browser custom UI view.
+     *
+     * @return raw module configuration
+     * @throws IOException in case of input/output problems with operations on the JSON file
+     */
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/mds-databrowser-config", method = RequestMethod.GET)
     @ResponseBody

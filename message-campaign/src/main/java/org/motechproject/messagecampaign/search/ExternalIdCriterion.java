@@ -6,7 +6,12 @@ import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementation of the {@link Criterion}, that fetches and filters records based on the
+ * client external ID.
+ */
 public class ExternalIdCriterion implements Criterion {
+
     private String externalId;
 
     public ExternalIdCriterion(String externalId) {

@@ -5,6 +5,8 @@ package org.motechproject.messagecampaign.exception;
  */
 public class CampaignJsonException extends MessageCampaignException {
 
+    private static final long serialVersionUID = 5031627483069348998L;
+
     private static final String MESSAGE = "The JSON sent to the server was not a valid campaign.";
 
     public CampaignJsonException(Throwable e) {

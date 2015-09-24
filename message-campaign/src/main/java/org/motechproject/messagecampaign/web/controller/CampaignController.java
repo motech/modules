@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controller responsible for handling campaign requests.
+ */
 @Controller
 public class CampaignController extends MessageCampaignController {
 
@@ -26,19 +29,25 @@ public class CampaignController extends MessageCampaignController {
     @Autowired
     private MessageCampaignService messageCampaignService;
 
+    /**
+     * Retrieves campaign of the given name.
+     *
+     * @param campaignName the name of the campaign
+     * @return campaign record of the given name
+     */
     @RequestMapping(value = "/campaigns/{campaignName}", method = RequestMethod.GET)
     @PreAuthorize(HAS_ROLE_MANAGECAMPAIGNS)
     @ResponseBody
     public CampaignDto getCampaign(@PathVariable String campaignName) {
-        CampaignRecord campaignRecord = messageCampaignService.getCampaignRecord(campaignName);
-
-        if (campaignRecord == null) {
-            throw new CampaignNotFoundException("Campaign not found: " + campaignName);
-        }
-
-        return new CampaignDto(campaignRecord);
+        return new CampaignDto(getCampaignRecord(campaignName));
     }
 
+    /**
+     * Retrieves campaign of the given name.
+     *
+     * @param campaignName the name of the campaign
+     * @return campaign record of the given name
+     */
     @RequestMapping(value = "/campaign-record/{campaignName}", method = RequestMethod.GET)
     @PreAuthorize(HAS_ROLE_MANAGECAMPAIGNS)
     @ResponseBody
@@ -52,6 +61,11 @@ public class CampaignController extends MessageCampaignController {
         return campaignRecord;
     }
 
+    /**
+     * Creates a new message campaign.
+     *
+     * @param campaign the campaign to create
+     */
     @RequestMapping(value = "/campaigns", method = RequestMethod.POST)
     @PreAuthorize(HAS_ROLE_MANAGECAMPAIGNS)
     @ResponseStatus(HttpStatus.OK)
@@ -60,6 +74,11 @@ public class CampaignController extends MessageCampaignController {
         messageCampaignService.saveCampaign(campaignRecord);
     }
 
+    /**
+     * Retrieves all message campaigns.
+     *
+     * @return all message campaigns.
+     */
     @RequestMapping(value = "/campaigns", method = RequestMethod.GET)
     @PreAuthorize(HAS_ROLE_MANAGECAMPAIGNS)
     @ResponseBody
@@ -74,6 +93,11 @@ public class CampaignController extends MessageCampaignController {
         return campaignDtos;
     }
 
+    /**
+     * Deletes a message campaign of the given name.
+     *
+     * @param campaignName the name of the campaign to remove
+     */
     @RequestMapping(value = "/campaigns/{campaignName}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize(HAS_ROLE_MANAGECAMPAIGNS)

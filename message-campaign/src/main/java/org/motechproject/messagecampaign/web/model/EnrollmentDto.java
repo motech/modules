@@ -10,26 +10,56 @@ import org.motechproject.messagecampaign.web.util.TimeSerializer;
 
 import java.util.Objects;
 
+/**
+ * DTO representation of an enrollment. It is used to pass the representation between
+ * view and controller layers.
+ */
 public class EnrollmentDto {
 
+    /**
+     * ID of the enrollment.
+     */
     @JsonProperty
     private Long enrollmentId;
 
+    /**
+     * External ID of the client.
+     */
     @JsonProperty
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     private String externalId;
 
+    /**
+     * The name of the campaign this enrollment is assigned to.
+     */
     @JsonProperty
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     private String campaignName;
 
+    /**
+     * The preferred time to send the messages.
+     */
     @JsonProperty
     @JsonSerialize(using = TimeSerializer.class)
     private Time startTime;
 
+    /**
+     * The reference date, used as a start point to send messages.
+     */
     @JsonProperty
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate referenceDate;
+
+    public EnrollmentDto() {
+    }
+
+    public EnrollmentDto(CampaignEnrollment enrollment) {
+        enrollmentId = enrollment.getId();
+        externalId = enrollment.getExternalId();
+        campaignName = enrollment.getCampaignName();
+        referenceDate = enrollment.getReferenceDate();
+        startTime = enrollment.getDeliverTime();
+    }
 
     public String getExternalId() {
         return externalId;
@@ -61,17 +91,6 @@ public class EnrollmentDto {
 
     public void setReferenceDate(LocalDate referenceDate) {
         this.referenceDate = referenceDate;
-    }
-
-    public EnrollmentDto() {
-    }
-
-    public EnrollmentDto(CampaignEnrollment enrollment) {
-        enrollmentId = enrollment.getId();
-        externalId = enrollment.getExternalId();
-        campaignName = enrollment.getCampaignName();
-        referenceDate = enrollment.getReferenceDate();
-        startTime = enrollment.getDeliverTime();
     }
 
     @Override
