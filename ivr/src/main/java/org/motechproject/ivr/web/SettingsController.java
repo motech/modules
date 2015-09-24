@@ -16,14 +16,18 @@ import java.io.IOException;
 @Controller
 public class SettingsController {
 
-    @Autowired
-    SettingsFacade settingsFacade;
+    private SettingsFacade settingsFacade;
 
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/mds-databrowser-config", method = RequestMethod.GET)
     @ResponseBody
     public String getCustomUISettings() throws IOException {
         return IOUtils.toString(settingsFacade.getRawConfig(Constants.UI_CONFIG));
+    }
+
+    @Autowired
+    public void setSettingsFacade(SettingsFacade settingsFacade) {
+        this.settingsFacade = settingsFacade;
     }
 
 }
