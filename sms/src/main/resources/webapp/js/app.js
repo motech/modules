@@ -28,7 +28,7 @@
     smsModule.config(function ($routeProvider, AVAILABLE_TABS) {
         angular.forEach(AVAILABLE_TABS, function (tab) {
             if (tab === "log") {
-                $routeProvider.when('/sms/{0}'.format(tab), {redirectTo: 'mds/dataBrowser/'+id});
+                $routeProvider.when('/sms/{0}'.format(tab), {redirectTo: 'mds/dataBrowser/'+id+'/sms'});
             } else {
                 $routeProvider.when(
                     '/sms/{0}'.format(tab),
