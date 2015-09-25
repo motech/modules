@@ -49,7 +49,7 @@ choose "Submit" or "Submit and restart".
 .. note::
 
     Choosing "Sumbit" or "Submit and restart" is enough to change ``hubBaseUrl``, but the publishers should be informed about
-    change in the Hub base URL, so they still can inform it when they topics are updated.
+    the change in the Hub base URL, so they still can inform it when their topics are updated.
 
 Configure by REST CALL
 ----------------------
