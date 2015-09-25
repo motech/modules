@@ -223,6 +223,7 @@
                             org.springframework.aop,
                             org.springframework.aop.framework,
                             org.springframework.context.config,
+                            org.springframework.transaction,
                             org.springframework.web.servlet.config,
                             org.eclipse.gemini.blueprint.config,
                             org.w3c.dom;version="0",

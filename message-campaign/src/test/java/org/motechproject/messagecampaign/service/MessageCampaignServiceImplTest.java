@@ -82,8 +82,15 @@ public class MessageCampaignServiceImplTest {
     @Before
     public void setUp() {
         initMocks(this);
-        messageCampaignService = new MessageCampaignServiceImpl(enrollmentService, campaignEnrollmentDataService, campaignEnrollmentRecordMapper,
-                campaignSchedulerFactory, campaignRecordService, campaignMessageRecordService, eventRelay, schedulerService);
+        messageCampaignService = new MessageCampaignServiceImpl();
+        messageCampaignService.setCampaignEnrollmentDataService(campaignEnrollmentDataService);
+        messageCampaignService.setCampaignEnrollmentRecordMapper(campaignEnrollmentRecordMapper);
+        messageCampaignService.setCampaignMessageRecordService(campaignMessageRecordService);
+        messageCampaignService.setCampaignRecordService(campaignRecordService);
+        messageCampaignService.setRelay(eventRelay);
+        messageCampaignService.setSchedulerService(schedulerService);
+        messageCampaignService.setCampaignSchedulerFactory(campaignSchedulerFactory);
+        messageCampaignService.setEnrollmentService(enrollmentService);
     }
 
     @Test

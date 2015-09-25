@@ -6,6 +6,7 @@ import org.motechproject.scheduletracking.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.repository.dataservices.EnrollmentDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +25,7 @@ public class AllEnrollments {
      *
      * @return the list of the enrollments
      */
+    @Transactional
     public List<Enrollment> retrieveAll() {
         return enrollmentDataService.retrieveAll();
     }
@@ -34,6 +36,7 @@ public class AllEnrollments {
      * @param externalId the external id
      * @return the list of the enrollments which satisfy the search conditions
      */
+    @Transactional
     public List<Enrollment> findByExternalId(String externalId) {
         return enrollmentDataService.findByExternalId(externalId);
     }
@@ -44,6 +47,7 @@ public class AllEnrollments {
      * @param currentMilestone the current milestone name
      * @return the list of the enrollments which satisfy the search conditions
      */
+    @Transactional
     public List<Enrollment> findByCurrentMilestone(String currentMilestone) {
         return enrollmentDataService.findByMilestoneName(currentMilestone);
     }
@@ -54,6 +58,7 @@ public class AllEnrollments {
      * @param status the enrollment status
      * @return the list of the enrollments which satisfy the search conditions
      */
+    @Transactional
     public List<Enrollment> findByStatus(EnrollmentStatus status) {
         return enrollmentDataService.findByStatus(status);
     }
@@ -65,6 +70,7 @@ public class AllEnrollments {
      * @param value the metadata value
      * @return the list of the enrollments which satisfy the search conditions
      */
+    @Transactional
     public List<Enrollment> findByMetadataProperty(String property, String value) {
         return enrollmentDataService.executeQuery(new MapQueryExecution(property, value));
     }
@@ -75,6 +81,7 @@ public class AllEnrollments {
      * @param scheduleNames the names of the schedule
      * @return the list of the enrollments which satisfy the search conditions
      */
+    @Transactional
     public List<Enrollment> findBySchedule(List<String> scheduleNames) {
         return enrollmentDataService.findByScheduleName(new HashSet<>(scheduleNames));
     }
@@ -86,6 +93,7 @@ public class AllEnrollments {
      * @param end the end date end time
      * @return the list of the enrollments which satisfy the search conditions
      */
+    @Transactional
     public List<Enrollment> completedDuring(DateTime start, DateTime end) {
         return enrollmentDataService.executeQuery(new MilestoneRangeQueryExecution(start, end));
     }

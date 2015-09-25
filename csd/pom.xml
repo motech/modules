@@ -111,6 +111,7 @@
                         <Import-Package>
                             org.motechproject.mds.service,
                             org.springframework.oxm,
+                            org.springframework.transaction,
                             org.springframework.ws.transport,
                             org.springframework.ws.transport.http,
                             org.springframework.ws.soap,

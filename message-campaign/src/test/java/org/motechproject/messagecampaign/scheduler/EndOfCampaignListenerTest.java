@@ -31,7 +31,8 @@ public class EndOfCampaignListenerTest {
     @Before
     public void setup() {
         initMocks(this);
-        endOfCampaignListener = new EndOfCampaignListener(campaignEnrollmentDataService);
+        endOfCampaignListener = new EndOfCampaignListener();
+        endOfCampaignListener.setCampaignEnrollmentDataService(campaignEnrollmentDataService);
     }
 
     @Test

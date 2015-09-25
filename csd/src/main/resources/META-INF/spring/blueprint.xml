@@ -77,5 +77,6 @@
 
     <osgi:reference id="schedulerService" interface="org.motechproject.scheduler.service.MotechSchedulerService" />
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>
+    <osgi:reference id="transactionManager" interface="org.springframework.transaction.PlatformTransactionManager" context-class-loader="unmanaged"/>
 
 </beans>

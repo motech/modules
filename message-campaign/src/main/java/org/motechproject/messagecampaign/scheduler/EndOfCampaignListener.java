@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * MOTECH listener that handles the campaign completed events.
@@ -21,11 +22,6 @@ public class EndOfCampaignListener {
 
     private CampaignEnrollmentDataService campaignEnrollmentDataService;
 
-    @Autowired
-    public EndOfCampaignListener(CampaignEnrollmentDataService campaignEnrollmentDataService) {
-        this.campaignEnrollmentDataService = campaignEnrollmentDataService;
-    }
-
     /**
      * Listens to the {@link EventKeys#CAMPAIGN_COMPLETED} events and updates the affected enrollment
      * status to {@link CampaignEnrollmentStatus#COMPLETED}.
@@ -33,6 +29,7 @@ public class EndOfCampaignListener {
      * @param event the event to handle
      */
     @MotechListener(subjects = EventKeys.CAMPAIGN_COMPLETED)
+    @Transactional
     public void handle(MotechEvent event) {
         String campaignName = (String) event.getParameters().get(EventKeys.CAMPAIGN_NAME_KEY);
         String externalId = (String) event.getParameters().get(EventKeys.EXTERNAL_ID_KEY);
@@ -49,5 +46,10 @@ public class EndOfCampaignListener {
             LOGGER.warn("Cannot complete campaign: {}, because enrollment with id: {} doesn't exist",
                     campaignName, externalId);
         }
+    }
+
+    @Autowired
+    public void setCampaignEnrollmentDataService(CampaignEnrollmentDataService campaignEnrollmentDataService) {
+        this.campaignEnrollmentDataService = campaignEnrollmentDataService;
     }
 }

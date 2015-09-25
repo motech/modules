@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ public class EnrollmentService {
      * @param enrollment enrollment to create or update
      * @throws IllegalArgumentException in case of an attempt to register duplicate campaign with different reference date or deliver time
      */
+    @Transactional
     public void register(CampaignEnrollment enrollment) {
         CampaignEnrollment existingEnrollment = campaignEnrollmentDataService.findByExternalIdAndCampaignName(enrollment.getExternalId(), enrollment.getCampaignName());
         if (existingEnrollment == null) {
@@ -58,6 +60,7 @@ public class EnrollmentService {
      * @param externalId external ID of the campaign enrollment
      * @param campaignName campaign name of the enrollment
      */
+    @Transactional
     public void unregister(String externalId, String campaignName) {
         CampaignEnrollment enrollment = campaignEnrollmentDataService.findByExternalIdAndCampaignName(externalId, campaignName);
         if (enrollment != null) {
@@ -71,6 +74,7 @@ public class EnrollmentService {
      *
      * @param enrollment enrollment to change the status for
      */
+    @Transactional
     public void unregister(CampaignEnrollment enrollment) {
         enrollment.setStatus(CampaignEnrollmentStatus.INACTIVE);
         campaignEnrollmentDataService.update(enrollment);
@@ -81,6 +85,7 @@ public class EnrollmentService {
      *
      * @param enrollment enrollment to remove
      */
+    @Transactional
     public void delete(CampaignEnrollment enrollment) {
         campaignEnrollmentDataService.delete(enrollment);
     }
@@ -93,6 +98,7 @@ public class EnrollmentService {
      * @param query the query to use while looking for records
      * @return campaign enrollments matching provided query
      */
+    @Transactional
     public List<CampaignEnrollment> search(CampaignEnrollmentsQuery query) {
         List<CampaignEnrollment> enrollments = new ArrayList<>();
         Criterion primaryCriterion = query.getPrimaryCriterion();
