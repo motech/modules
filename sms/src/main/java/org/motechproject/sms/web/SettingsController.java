@@ -1,11 +1,13 @@
 package org.motechproject.sms.web;
 
 import org.apache.commons.io.IOUtils;
+import org.motechproject.server.config.SettingsFacade;
 import org.motechproject.sms.configs.Configs;
 import org.motechproject.sms.json.TemplateJsonParser;
 import org.motechproject.sms.service.ConfigService;
 import org.motechproject.sms.service.TemplateService;
 import org.motechproject.sms.templates.TemplateForWeb;
+import org.motechproject.sms.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -38,6 +40,7 @@ public class SettingsController {
     private TemplateService templateService;
     private ConfigService configService;
     private TemplateJsonParser templateJsonParser;
+    private SettingsFacade settingsFacade;
 
     @RequestMapping(value = "/templates", method = RequestMethod.GET)
     @ResponseBody
@@ -76,6 +79,13 @@ public class SettingsController {
         return e.getMessage();
     }
 
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value = "/mds-databrowser-config", method = RequestMethod.GET)
+    @ResponseBody
+    public String getCustomUISettings() throws IOException {
+        return IOUtils.toString(settingsFacade.getRawConfig(Constants.UI_CONFIG));
+    }
+
     @Autowired
     @Qualifier("templateService")
     public void setTemplateService(TemplateService templateService) {
@@ -91,5 +101,10 @@ public class SettingsController {
     @Autowired
     public void setTemplateJsonParser(TemplateJsonParser templateJsonParser) {
         this.templateJsonParser = templateJsonParser;
+    }
+
+    @Autowired
+    public void setSettingsFacade(SettingsFacade settingsFacade) {
+        this.settingsFacade = settingsFacade;
     }
 }

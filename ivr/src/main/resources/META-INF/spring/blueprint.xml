@@ -25,6 +25,7 @@
             <list>
                 <value>classpath:ivr-configs.json</value>
                 <value>classpath:ivr-templates.json</value>
+                <value>classpath:custom-ui.js</value>
             </list>
         </property>
     </bean>

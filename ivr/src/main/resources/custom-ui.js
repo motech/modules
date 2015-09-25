@@ -1,0 +1,1 @@
+$scope.showBackToEntityListButton = false;
