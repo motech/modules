@@ -111,6 +111,7 @@
                             org.springframework.integration.jms.config,
                             org.springframework.aop,
                             org.springframework.aop.framework,
+                            org.springframework.transaction,
                             org.springframework.web.context,
                             org.springframework.web.multipart.commons,
                             *

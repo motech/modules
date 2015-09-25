@@ -7,6 +7,8 @@ import org.motechproject.alerts.domain.AlertStatus;
 import org.motechproject.alerts.domain.AlertType;
 import org.motechproject.commons.api.Range;
 import org.motechproject.commons.date.util.DateUtil;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import java.util.List;
 import java.util.Map;
@@ -89,14 +91,20 @@ public class AlertsDataServiceBundleIT extends AlertsBaseIT {
 
     @Test
     public void shouldNotChangeDateTimeWhenChangingTheStatus() {
-        Alert alert1 = createAlert("111", AlertType.HIGH, AlertStatus.NEW, 2, null, DateUtil.now());
+        final Alert alert1 = createAlert("111", AlertType.HIGH, AlertStatus.NEW, 2, null, DateUtil.now());
 
         DateTime alert1DateTime = alert1.getDateTime();
-        final Alert alert = alertsDataService.retrieve("id", alert1.getId());
-        alert.setStatus(AlertStatus.CLOSED);
-        alertsDataService.update(alert);
 
-        assertEquals(alert1DateTime, alert.getDateTime());
+        alertsDataService.doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                final Alert alert = alertsDataService.retrieve("id", alert1.getId());
+                alert.setStatus(AlertStatus.CLOSED);
+                alertsDataService.update(alert);
+            }
+        });
+
+        assertEquals(alert1DateTime, alertsDataService.findById(alert1.getId()).getDateTime());
     }
 
     @Test

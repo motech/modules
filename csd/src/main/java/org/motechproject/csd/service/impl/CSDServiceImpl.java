@@ -21,6 +21,7 @@ import org.motechproject.csd.service.ServiceService;
 import org.motechproject.csd.util.MarshallUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
@@ -51,6 +52,7 @@ public class CSDServiceImpl implements CSDService {
     private SOAPClient soapClient;
 
     @Override
+    @Transactional
     public CSD getCSD() {
         FacilityDirectory facilityDirectory = new FacilityDirectory(new HashSet<>(facilityService.allFacilities()));
         OrganizationDirectory organizationDirectory = new OrganizationDirectory(new HashSet<>(organizationService.allOrganizations()));
@@ -60,6 +62,7 @@ public class CSDServiceImpl implements CSDService {
     }
 
     @Override
+    @Transactional
     public CSD getByLastModification(DateTime lastModified) {
         FacilityDirectory facilityDirectory = new FacilityDirectory(facilityService.getModifiedAfter(lastModified));
         ProviderDirectory providerDirectory = new ProviderDirectory(providerService.getModifiedAfter(lastModified));
@@ -70,6 +73,7 @@ public class CSDServiceImpl implements CSDService {
     }
 
     @Override
+    @Transactional
     public void update(CSD csd) {
         if (csd != null) {
             if (csd.getFacilityDirectory() != null && csd.getFacilityDirectory().getFacilities() != null) {
@@ -88,6 +92,7 @@ public class CSDServiceImpl implements CSDService {
     }
 
     @Override
+    @Transactional
     public void delete() {
         facilityService.deleteAll();
         organizationService.deleteAll();
@@ -112,6 +117,7 @@ public class CSDServiceImpl implements CSDService {
     }
 
     @Override
+    @Transactional
     public void fetchAndUpdate(String xmlUrl) {
         Config config = configService.getConfig(xmlUrl);
         CommunicationProtocol communicationProtocol = config.getCommunicationProtocol();

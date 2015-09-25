@@ -60,6 +60,13 @@
                         <Import-Package>
                             org.slf4j,
                             org.slf4j.impl,
+                            net.sf.cglib.core,
+                            net.sf.cglib.proxy,
+                            net.sf.cglib.reflect,
+                            org.aopalliance.aop,
+                            org.springframework.aop,
+                            org.springframework.aop.framework,
+                            org.springframework.transaction,
                             *
                         </Import-Package>
                         <Bundle-DocURL>

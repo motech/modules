@@ -5,26 +5,27 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
-import org.motechproject.sms.util.SmsEventParams;
-import org.motechproject.sms.util.SmsEventSubjects;
 import org.motechproject.sms.audit.DeliveryStatus;
 import org.motechproject.sms.audit.SmsRecord;
 import org.motechproject.sms.audit.SmsRecordsDataService;
 import org.motechproject.sms.configs.Config;
 import org.motechproject.sms.templates.Template;
+import org.motechproject.sms.util.SmsEventParams;
+import org.motechproject.sms.util.SmsEventSubjects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static org.motechproject.commons.date.util.DateUtil.now;
-import static org.motechproject.sms.util.SmsEvents.outboundEvent;
 import static org.motechproject.sms.audit.SmsDirection.OUTBOUND;
+import static org.motechproject.sms.util.SmsEvents.outboundEvent;
 
 //todo: final pass over how we use motechId system-wide
 
@@ -110,10 +111,11 @@ public class SmsServiceImpl implements SmsService {
         return UUID.randomUUID().toString().replace("-", "");
     }
 
-    @Override
     /**
      * Sends an SMS
      */
+    @Override
+    @Transactional
     public void send(OutgoingSms sms) {
 
         if (!configService.hasConfigs()) {

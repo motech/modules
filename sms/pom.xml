@@ -120,6 +120,7 @@
                             org.aopalliance.aop,
                             org.springframework.aop,
                             org.springframework.aop.framework,
+                            org.springframework.transaction,
                             org.motechproject.admin.domain,
                             org.motechproject.admin.messages,
                             org.motechproject.event.listener,

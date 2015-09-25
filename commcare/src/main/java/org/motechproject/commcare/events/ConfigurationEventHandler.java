@@ -9,6 +9,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -40,6 +41,7 @@ public class ConfigurationEventHandler {
      * @param event  the event to be handled
      */
     @MotechListener(subjects = CONFIG_CREATED)
+    @Transactional
     public synchronized void configCreated(MotechEvent event) {
 
         String configName = (String) event.getParameters().get(EventDataKeys.CONFIG_NAME);
@@ -62,6 +64,7 @@ public class ConfigurationEventHandler {
      * @param event  the event to be handled
      */
     @MotechListener(subjects = CONFIG_UPDATED)
+    @Transactional
     public synchronized void configUpdated(MotechEvent event) {
 
         String configName = (String) event.getParameters().get(EventDataKeys.CONFIG_NAME);
@@ -86,6 +89,7 @@ public class ConfigurationEventHandler {
      * @param event  the event to be handled
      */
     @MotechListener(subjects = CONFIG_DELETED)
+    @Transactional
     public synchronized void configDeleted(MotechEvent event) {
 
         String configName = (String) event.getParameters().get(EventDataKeys.CONFIG_NAME);

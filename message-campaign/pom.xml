@@ -216,6 +216,7 @@
                             org.springframework.aop.framework,
                             org.springframework.context.config,
                             org.springframework.security.config,
+                            org.springframework.transaction,
                             org.springframework.web.multipart.commons,
                             org.motechproject.event,
                             org.motechproject.event.listener.annotations,

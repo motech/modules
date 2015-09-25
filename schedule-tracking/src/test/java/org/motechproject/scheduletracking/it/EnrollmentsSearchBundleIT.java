@@ -26,6 +26,8 @@ import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import org.osgi.framework.BundleContext;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.inject.Inject;
@@ -174,9 +176,13 @@ public class EnrollmentsSearchBundleIT extends BasePaxIT {
         assertEquals(asList(new String[] { "entity4" }), extract(allEnrollments.findByMetadataProperty("fuu", "boz"), on(Enrollment.class).getExternalId()));
     }
 
-    private Enrollment createEnrollment(String externalId, String scheduleName, String currentMilestoneName, DateTime referenceDateTime, DateTime enrollmentDateTime, Time preferredAlertTime, EnrollmentStatus enrollmentStatus, Map<String,String> metadata) {
-        Enrollment enrollment = new EnrollmentBuilder().withExternalId(externalId).withSchedule(scheduleDataService.findByName(scheduleName)).withCurrentMilestoneName(currentMilestoneName).withStartOfSchedule(referenceDateTime).withEnrolledOn(enrollmentDateTime).withPreferredAlertTime(preferredAlertTime).withStatus(enrollmentStatus).withMetadata(metadata).toEnrollment();
-        enrollmentDataService.create(enrollment);
-        return enrollment;
+    private Enrollment createEnrollment(final String externalId, final String scheduleName, final String currentMilestoneName, final DateTime referenceDateTime, final DateTime enrollmentDateTime, final Time preferredAlertTime, final EnrollmentStatus enrollmentStatus, final Map<String,String> metadata) {
+        return enrollmentDataService.doInTransaction(new TransactionCallback<Enrollment>() {
+            @Override
+            public Enrollment doInTransaction(TransactionStatus transactionStatus) {
+                Enrollment enrollment = new EnrollmentBuilder().withExternalId(externalId).withSchedule(scheduleDataService.findByName(scheduleName)).withCurrentMilestoneName(currentMilestoneName).withStartOfSchedule(referenceDateTime).withEnrolledOn(enrollmentDateTime).withPreferredAlertTime(preferredAlertTime).withStatus(enrollmentStatus).withMetadata(metadata).toEnrollment();
+                return enrollmentDataService.create(enrollment);
+            }
+        });
     }
 }

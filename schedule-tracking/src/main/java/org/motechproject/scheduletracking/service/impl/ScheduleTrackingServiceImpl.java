@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +66,7 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
     }
 
     @Override
+    @Transactional
     public EnrollmentRecord getEnrollment(String externalId, String scheduleName) {
         LOGGER.info("Fetching Active Enrollment based on externalId {} and {}", externalId, scheduleName);
         Enrollment activeEnrollment = enrollmentDataService.findByExternalIdScheduleNameAndStatus(externalId, scheduleName,
@@ -73,6 +75,7 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
     }
 
     @Override
+    @Transactional
     public void updateEnrollment(String externalId, String scheduleName, UpdateCriteria updateCriteria) {
         Enrollment enrollment = enrollmentDataService.findByExternalIdScheduleNameAndStatus(externalId, scheduleName,
                 EnrollmentStatus.ACTIVE);
@@ -91,6 +94,7 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
     }
 
     @Override
+    @Transactional
     public List<EnrollmentRecord> search(EnrollmentsQuery query) {
         List<EnrollmentRecord> enrollmentRecords = new ArrayList<EnrollmentRecord>();
         for (Enrollment enrollment : enrollmentsQueryService.search(query)) {
@@ -100,6 +104,7 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
     }
 
     @Override
+    @Transactional
     public List<EnrollmentRecord> searchWithWindowDates(EnrollmentsQuery query) {
         List<EnrollmentRecord> enrollmentRecords = new ArrayList<EnrollmentRecord>();
         for (Enrollment enrollment : enrollmentsQueryService.search(query)) {
@@ -109,6 +114,7 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
     }
 
     @Override
+    @Transactional
     public MilestoneAlerts getAlertTimings(EnrollmentRequest enrollmentRequest) {
         Schedule schedule = scheduleDataService.findByName(enrollmentRequest.getScheduleName());
         if (schedule == null) {
@@ -128,6 +134,7 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
     }
 
     @Override
+    @Transactional
     public void add(String scheduleJson) {
         LOGGER.info("Creating a schedule record from schedule json {}", scheduleJson);
         ScheduleRecord scheduleRecord = schedulesJsonReader.getSchedule(scheduleJson);
@@ -146,12 +153,14 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
     }
 
     @Override
+    @Transactional
     public void remove(String scheduleName) {
         LOGGER.info("Deleting a schedule record with schedule name {}.", scheduleName);
         scheduleDataService.delete(scheduleDataService.findByName(scheduleName));
     }
 
     @Override
+    @Transactional
     public Long enroll(EnrollmentRequest enrollmentRequest) {
         Schedule schedule = scheduleDataService.findByName(enrollmentRequest.getScheduleName());
         if (schedule == null) {
@@ -172,6 +181,7 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
     }
 
     @Override
+    @Transactional
     public void fulfillCurrentMilestone(String externalId, String scheduleName, LocalDate fulfillmentDate, Time fulfillmentTime) {
         Enrollment activeEnrollment = enrollmentDataService.findByExternalIdScheduleNameAndStatus(externalId, scheduleName,
                 EnrollmentStatus.ACTIVE);
@@ -197,6 +207,7 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
     }
 
     @Override
+    @Transactional
     public void unenroll(String externalId, List<String> scheduleNames) {
         LOGGER.info("Un-enrolling a enrollment with external Id {} and schedule names {} .", externalId, scheduleNames);
         for (String scheduleName : scheduleNames) {
@@ -209,11 +220,13 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
     }
 
     @Override
+    @Transactional
     public Schedule getScheduleByName(String scheduleName) {
         return scheduleDataService.findByName(scheduleName);
     }
 
     @Override
+    @Transactional
     public List<Schedule> getAllSchedules() {
         return scheduleDataService.retrieveAll();
     }

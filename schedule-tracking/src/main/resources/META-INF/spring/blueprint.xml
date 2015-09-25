@@ -26,6 +26,9 @@
     <osgi:service id="scheduletrackingTasksActionFacadeOsgi" ref="scheduletrackingTasksActionFacade"
                   interface="org.motechproject.scheduletracking.service.ScheduletrackingTasksActionFacade"/>
 
+    <osgi:service id="enrollmentServiceOsgi" auto-export="interfaces" ref="enrollmentService"
+                  interface="org.motechproject.scheduletracking.service.EnrollmentService"/>
+
     <osgi:reference id="schedulerServiceOsgi"
                     interface="org.motechproject.scheduler.service.MotechSchedulerService"/>
 
@@ -36,4 +39,6 @@
     <osgi:reference id="EnrollmentServiceOSGi" interface="org.motechproject.scheduletracking.repository.dataservices.EnrollmentDataService" />
 
     <osgi:reference id="ScheduleServiceOSGi" interface="org.motechproject.scheduletracking.repository.dataservices.ScheduleDataService" />
+
+    <osgi:reference id="transactionManager" interface="org.springframework.transaction.PlatformTransactionManager" context-class-loader="unmanaged"/>
 </beans>
