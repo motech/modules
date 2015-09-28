@@ -48,6 +48,9 @@
         $scope.configOutdated = false;
 
         $scope.copyConfig = function(config) {
+            if (!config) {
+                return;
+            }
             var copy = {};
 
             copy.name = config.name;
