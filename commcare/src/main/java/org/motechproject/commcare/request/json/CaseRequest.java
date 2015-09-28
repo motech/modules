@@ -1,16 +1,12 @@
 package org.motechproject.commcare.request.json;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Stores all possible query parameters that might be used while fetching cases from the CommCareHQ server.
  */
-public class CaseRequest {
-
-    private static final int DEFAULT_LIMIT = 20;
+public class CaseRequest extends Request {
 
     private String userId;
     private String caseId;
@@ -18,17 +14,12 @@ public class CaseRequest {
     private String caseName;
     private String dateModifiedStart;
     private String dateModifiedEnd;
-    private int limit;
-    private int offset;
 
-    /**
-     * Builds a query parameters string based on the information stored in this instance of the class. The string can
-     * then be attached to the request URL in order to retrieve filtered data from the CommCareHQ server.
-     *
-     * @return the string representation of the stored parameters
-     */
+    @Override
     public String toQueryString() {
+
         List<String> queryParams = new ArrayList<>();
+
         if (userId != null) {
             queryParams.add(concat("user_id", userId));
         }
@@ -47,10 +38,8 @@ public class CaseRequest {
         if (dateModifiedEnd != null) {
             queryParams.add(concat("date_modified_end", dateModifiedEnd));
         }
-        queryParams.add(concat("limit", limit < 1 ? DEFAULT_LIMIT : limit));
-        queryParams.add(concat("offset", offset < 0 ? 0 : offset));
 
-        return StringUtils.join(queryParams, "&");
+        return toQueryString(queryParams);
     }
 
     /**
@@ -105,64 +94,5 @@ public class CaseRequest {
      */
     public void setDateModifiedEnd(String dateModifiedEnd) {
         this.dateModifiedEnd = dateModifiedEnd;
-    }
-
-    /**
-     * Sets the maximum number of records to return. Default value is 20, maximum is 100.
-     *
-     * @param limit  the maximum number of records to returns
-     */
-    public void setLimit(int limit) {
-        this.limit = limit;
-    }
-
-    /**
-     * Returns the maximum number of records to return.
-     *
-     * @return the maximum number of records to return
-     */
-    public int getLimit() {
-        return limit;
-    }
-
-    /**
-     * Sets the number of records to offset in the results. Default value is 0.
-     *
-     * @param offset  the number of records to offset in the results
-     */
-    public void setOffset(int offset) {
-        this.offset = offset;
-    }
-
-    /**
-     * Returns the number of records to offset in the results.
-     *
-     * @return the number of records to offset in the results
-     */
-    public int getOffset() {
-        return offset;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        CaseRequest that = (CaseRequest) o;
-
-        return toQueryString().equals(that.toQueryString());
-    }
-
-    @Override
-    public int hashCode() {
-        return toQueryString().hashCode();
-    }
-
-    private String concat(String key, Object value) {
-        return String.format("%s=%s", key, value.toString());
     }
 }

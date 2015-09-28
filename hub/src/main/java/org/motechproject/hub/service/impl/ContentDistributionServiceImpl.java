@@ -1,7 +1,5 @@
 package org.motechproject.hub.service.impl;
 
-import java.util.List;
-
 import org.joda.time.DateTime;
 import org.motechproject.hub.mds.HubDistributionContent;
 import org.motechproject.hub.mds.HubPublisherTransaction;
@@ -25,7 +23,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+import java.util.List;
+
+/**
+ * Default implementation of {@link org.motechproject.hub.service.ContentDistributionService}
+ */
 @Service(value = "contentDistributionService")
 public class ContentDistributionServiceImpl implements
         ContentDistributionService {
@@ -43,6 +49,16 @@ public class ContentDistributionServiceImpl implements
 
     private HubDistributionContentMDSService hubDistributionContentMDSService;
 
+    /**
+     * Creates a new instance of <code>ContentDistributionServiceImpl</code>, with
+     * all fields set to the autowired parameters values.
+     *
+     * @param hubTopicService autowired {@link org.motechproject.hub.mds.service.HubTopicMDSService}
+     * @param hubSubscriptionMDSService autowired {@link org.motechproject.hub.mds.service.HubSubscriberTransactionMDSService}
+     * @param hubPublisherTransactionMDSService autowired {@link org.motechproject.hub.mds.service.HubPublisherTransactionMDSService}
+     * @param hubSubscriberTransactionMDSService autowired {@link org.motechproject.hub.mds.service.HubSubscriberTransactionMDSService}
+     * @param hubDistributionContentMDSService autowired {@link org.motechproject.hub.mds.service.HubDistributionContentMDSService}
+     */
     @Autowired
     public ContentDistributionServiceImpl(
             HubTopicMDSService hubTopicService,
@@ -60,20 +76,37 @@ public class ContentDistributionServiceImpl implements
     @Autowired
     private DistributionServiceDelegate distributionServiceDelegate;
 
+    /**
+     * Gets <code>DistributionServiceDelegate</code> used for this class to fetching
+     * and distributing fetched content to all interested subscribers.
+     *
+     * @return the <code>DistributionServiceDelegate</code> object
+     */
     public DistributionServiceDelegate getDistributionServiceDelegate() {
         return distributionServiceDelegate;
     }
 
+    /**
+     * Sets <code>DistributionServiceDelegate</code> to the value passed in a parameter. It's
+     * used for fetching and distributing fetched content to all interested subscribers.
+     *
+     * @param distributionServiceDelegate <code>DistributionServiceDelegate</code> to be set
+     */
     public void setDistributionServiceDelegate(
             DistributionServiceDelegate distributionServiceDelegate) {
         this.distributionServiceDelegate = distributionServiceDelegate;
     }
 
+    /**
+     * Creates a new instance of <code>ContentDistributionServiceImpl</code>, with
+     * all fields set to null.
+     */
     public ContentDistributionServiceImpl() {
 
     }
 
     @Override
+    @Transactional
     public void distribute(String url) {
         List<HubTopic> hubTopics = hubTopicMDSService.findByTopicUrl(url);
         long topicId = -1;

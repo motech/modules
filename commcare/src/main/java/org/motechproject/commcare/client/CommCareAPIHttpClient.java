@@ -19,6 +19,8 @@ import org.motechproject.commcare.exception.CommcareAuthenticationException;
 import org.motechproject.commcare.parser.OpenRosaResponseParser;
 import org.motechproject.commcare.request.FormListRequest;
 import org.motechproject.commcare.request.json.CaseRequest;
+import org.motechproject.commcare.request.json.Request;
+import org.motechproject.commcare.request.StockTransactionRequest;
 import org.motechproject.commcare.response.OpenRosaResponse;
 import org.motechproject.commcare.util.CommcareParamHelper;
 import org.slf4j.Logger;
@@ -239,6 +241,31 @@ public class CommCareAPIHttpClient {
     }
 
     /**
+     * Retrieves a list of the stock transactions from the CommCareHQ server. The data is fetched in accordance to the
+     * passed paging parameters. The retrieved list is returned as a JSON string.
+     *
+     * @param accountConfig  the CommCare account information
+     * @param pageSize  the size of the page
+     * @param pageNumber  the number of the page
+     * @return the JSON string representation of the stock transactions
+     */
+    public String stockTransactionsRequest(AccountConfig accountConfig, Integer pageSize, Integer pageNumber) {
+        return this.getRequest(accountConfig, commcareStockTransactionsUrl(accountConfig, pageSize, pageNumber), null);
+    }
+
+    /**
+     * Retrieves a list of the stock transactions from the CommCare server. The given {@code request} will be used for
+     * fetching data from the server. The retrieved list is returned as a JSON string.
+     *
+     * @param accountConfig  the CommCare account information
+     * @param request  the request parameters
+     * @return the JSON string representation of the stock transactions
+     */
+    public String stockTransactionsRequest(AccountConfig accountConfig, StockTransactionRequest request) {
+        return this.getRequest(accountConfig, commcareStockTransactionsUrl(accountConfig), request);
+    }
+
+    /**
      * Verifies whether the connection with the CommCare server is possible using the given credentials. If this method
      * returns false, it might indicate that the given credentials are incorrect or a server error occurred.
      *
@@ -317,20 +344,20 @@ public class CommCareAPIHttpClient {
         return executeMethod(putMethod);
     }
 
-    private HttpMethod buildRequest(AccountConfig accountConfig, String url, CaseRequest caseRequest) {
+    private HttpMethod buildRequest(AccountConfig accountConfig, String url, Request request) {
         HttpMethod requestMethod = new GetMethod(url);
 
         authenticate(accountConfig);
-        if (caseRequest != null) {
-            requestMethod.setQueryString(caseRequest.toQueryString());
+        if (request != null) {
+            requestMethod.setQueryString(request.toQueryString());
         }
 
         return requestMethod;
     }
 
-    private String getRequest(AccountConfig accountConfig, String requestUrl, CaseRequest caseRequest) {
+    private String getRequest(AccountConfig accountConfig, String requestUrl, Request request) {
 
-        HttpMethod getMethod = buildRequest(accountConfig, requestUrl, caseRequest);
+        HttpMethod getMethod = buildRequest(accountConfig, requestUrl, request);
 
         try {
             LOGGER.debug("Sending GET request {}", requestUrl);
@@ -496,6 +523,17 @@ public class CommCareAPIHttpClient {
     String commcareCaseUrl(AccountConfig accountConfig, String caseId) {
         return String.format("%s/%s/api/v%s/case/%s/", getCommcareBaseUrl(accountConfig.getBaseUrl()),
                 accountConfig.getDomain(), API_VERSION, caseId);
+    }
+
+    String commcareStockTransactionsUrl(AccountConfig accountConfig) {
+        return String.format("%s/%s/api/v%s/stock_transaction/?format=json",
+                getCommcareBaseUrl(accountConfig.getBaseUrl()), accountConfig.getDomain(), API_VERSION);
+    }
+
+    String commcareStockTransactionsUrl(AccountConfig accountConfig, Integer pageSize, Integer pageNumber) {
+        return String.format("%s/%s/api/v%s/stock_transaction/?format=json%s",
+                getCommcareBaseUrl(accountConfig.getBaseUrl()), accountConfig.getDomain(), API_VERSION,
+                buildPaginationParams(pageSize, pageNumber));
     }
 
     private String commcareDataForwardingEndpointUrl(AccountConfig accountConfig) {

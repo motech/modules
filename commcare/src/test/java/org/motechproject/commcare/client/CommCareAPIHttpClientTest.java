@@ -87,6 +87,21 @@ public class CommCareAPIHttpClientTest {
     }
 
     @Test
+    public void shouldConstructCommcareStockTransactionUrl() {
+        assertThat(commCareAPIHttpClient.commcareStockTransactionsUrl(accountConfig),
+                equalTo(format("%s/%s/api/v%s/stock_transaction/?format=json", baseUrl, domain, apiVersion)));
+    }
+
+    @Test
+    public void shouldConstructCommcareStockTransactionUrlWithPaginationParams() {
+        Integer pageSize = 5;
+        Integer pageNumber = 5;
+        String expectedUrl = "%s/%s/api/v%s/stock_transaction/?format=json&limit=5&offset=20";
+        assertThat(commCareAPIHttpClient.commcareStockTransactionsUrl(accountConfig, pageSize, pageNumber),
+                equalTo(format(expectedUrl, baseUrl, domain, apiVersion)));
+    }
+
+    @Test
     public void shouldConstructFormListUrlsWithDates() {
         final DateTime start = new DateTime(1988, 6, 3, 10, 45, 22);
         final DateTime end = new DateTime(2005, 10, 11, 9, 30, 11);

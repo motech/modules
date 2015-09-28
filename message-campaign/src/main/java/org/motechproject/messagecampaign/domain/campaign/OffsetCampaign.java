@@ -4,6 +4,12 @@ import org.joda.time.Period;
 
 import java.util.List;
 
+/**
+ * A type of a {@link Campaign}, in which all messages have got a defined
+ * delay.
+ *
+ * @see OffsetCampaignMessage
+ */
 public class OffsetCampaign extends Campaign<OffsetCampaignMessage> {
 
     public OffsetCampaign() {

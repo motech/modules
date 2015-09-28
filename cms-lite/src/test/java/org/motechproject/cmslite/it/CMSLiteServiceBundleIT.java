@@ -18,6 +18,8 @@ import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -54,19 +56,40 @@ public class CMSLiteServiceBundleIT extends BasePaxIT {
     @Test
     public void shouldPerformCrudOperationsOnStreamContent() throws IOException, CMSLiteException, InterruptedException, ContentNotFoundException {
         String pathToFile = "/10.wav";
-        byte[] content = IOUtils.toByteArray(this.getClass().getResourceAsStream(pathToFile));
+        final byte[] content = IOUtils.toByteArray(this.getClass().getResourceAsStream(pathToFile));
         cmsLiteService.addContent(new StreamContent(LANGUAGE, NAME, ArrayUtils.toObject(content), "checksum", "audio/x-wav"));
         assertEquals(1, streamContentService.retrieveAll().size());
 
         assertTrue(cmsLiteService.isStreamContentAvailable(LANGUAGE, NAME));
+
+        streamContentService.doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                try {
+                    StreamContent streamContent = cmsLiteService.getStreamContent(LANGUAGE, NAME);
+                    assertEquals("audio/x-wav", streamContent.getContentType());
+
+                    assertEquals(ArrayUtils.toString(content), ArrayUtils.toString(cmsLiteService.retrieveStreamContentData(streamContent)));
+                } catch (ContentNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+
+        streamContentService.doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                try {
+                    StreamContent streamContent = cmsLiteService.getStreamContent(LANGUAGE, NAME);
+                    streamContent.setContentType("plain/text");
+                    cmsLiteService.addContent(streamContent);
+                } catch (ContentNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+
         StreamContent streamContent = cmsLiteService.getStreamContent(LANGUAGE, NAME);
-        assertEquals("audio/x-wav", streamContent.getContentType());
-
-        assertEquals(ArrayUtils.toString(content), ArrayUtils.toString(cmsLiteService.retrieveStreamContentData(streamContent)));
-
-        streamContent.setContentType("plain/text");
-        cmsLiteService.addContent(streamContent);
-        streamContent = cmsLiteService.getStreamContent(LANGUAGE, NAME);
         assertEquals("plain/text", streamContent.getContentType());
         assertEquals(1, streamContentService.retrieveAll().size());
 
@@ -81,14 +104,24 @@ public class CMSLiteServiceBundleIT extends BasePaxIT {
         assertEquals(1, stringContentService.retrieveAll().size());
 
         assertTrue(cmsLiteService.isStringContentAvailable(LANGUAGE, NAME));
-        StringContent stringContent = cmsLiteService.getStringContent(LANGUAGE, NAME);
-        assertEquals("Test content", stringContent.getValue());
 
-        stringContent.setValue("New content");
-        cmsLiteService.addContent(stringContent);
+        stringContentService.doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                try {
+                    StringContent stringContent = cmsLiteService.getStringContent(LANGUAGE, NAME);
+                    assertEquals("Test content", stringContent.getValue());
+
+                    stringContent.setValue("New content");
+                    cmsLiteService.addContent(stringContent);
+                } catch (ContentNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
 
         assertEquals(1, stringContentService.retrieveAll().size());
-        stringContent = cmsLiteService.getStringContent(LANGUAGE, NAME);
+        StringContent stringContent = cmsLiteService.getStringContent(LANGUAGE, NAME);
         assertEquals("New content", stringContent.getValue());
 
         cmsLiteService.removeStringContent(LANGUAGE, NAME);

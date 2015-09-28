@@ -7,6 +7,8 @@ import java.util.Arrays;
  */
 public class SchedulingException extends MessageCampaignException {
 
+    private static final long serialVersionUID = -3270835551950852463L;
+
     private static final String MESSAGE = "Couldn't schedule job(s) for enrollee with external ID \"%s\".";
 
     public SchedulingException(String externalId, Throwable e) {

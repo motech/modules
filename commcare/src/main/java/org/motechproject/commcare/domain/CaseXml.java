@@ -3,7 +3,11 @@ package org.motechproject.commcare.domain;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represents a single case that it sent to the MOTECH endpoint by the CommCareHQ server.
+ */
 public class CaseXml {
+
     private String serverModifiedOn;
     private String caseId;
     private String userId;

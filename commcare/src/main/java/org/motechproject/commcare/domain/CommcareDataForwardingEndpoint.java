@@ -4,10 +4,11 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * A domain class that represents the information and properties of a data
- * forwarding endpoint in CommCareHQ.
+ * A domain class that represents the information and properties of a data forwarding endpoint in CommCareHQ. It's part
+ * of the CommCareHQ model.
  */
 public class CommcareDataForwardingEndpoint {
+
     @Expose
     private String domain;
 

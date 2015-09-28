@@ -3,10 +3,10 @@ package org.motechproject.commcare.domain;
 import java.util.Map;
 
 /**
- * A domain class to include in a case task in order to generate an upload case
- * block in case xml.
+ * A domain class to include in a case task in order to generate an upload case block in case xml.
  */
 public class UpdateTask {
+
     private String caseType;
     private String caseName;
     private String dateOpened;

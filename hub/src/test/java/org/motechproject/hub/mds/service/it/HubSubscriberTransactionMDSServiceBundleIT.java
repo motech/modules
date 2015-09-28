@@ -15,6 +15,8 @@ import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -45,8 +47,13 @@ public class HubSubscriberTransactionMDSServiceBundleIT extends BasePaxIT {
         Assert.assertNotNull(hubTopics);
         Assert.assertEquals(1, hubTopics.size());
 
-        int topicId = (int) (long) hubTopicMDSService.getDetachedField(
-                hubTopic, "id");
+        int topicId = hubTopicMDSService.doInTransaction(new TransactionCallback<Integer>() {
+            @Override
+            public Integer doInTransaction(TransactionStatus transactionStatus) {
+                return (int) (long) hubTopicMDSService.getDetachedField(
+                        hubTopicMDSService.retrieveAll().get(0), "id");
+            }
+        });
 
         HubSubscription hubSubscription = new HubSubscription();
         hubSubscription.setCallbackUrl(CALLBACK_URL);
@@ -54,8 +61,13 @@ public class HubSubscriberTransactionMDSServiceBundleIT extends BasePaxIT {
         hubSubscription.setHubTopicId(topicId);
         hubSubscriptionMDSService.create(hubSubscription);
 
-        int hubSubscriptionId = (int) (long) hubSubscriptionMDSService
-                .getDetachedField(hubSubscription, "id");
+        int hubSubscriptionId = hubSubscriptionMDSService.doInTransaction(new TransactionCallback<Integer>() {
+            @Override
+            public Integer doInTransaction(TransactionStatus transactionStatus) {
+                return (int) (long) hubSubscriptionMDSService
+                        .getDetachedField(hubSubscriptionMDSService.retrieveAll().get(0), "id");
+            }
+        });
 
         List<HubSubscription> hubSubscriptions = hubSubscriptionMDSService
                 .findSubByCallbackUrlAndTopicId(CALLBACK_URL, topicId);

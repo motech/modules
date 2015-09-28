@@ -7,6 +7,8 @@ import java.util.Arrays;
  */
 public class CampaignAlreadyEndedException extends MessageCampaignException {
 
+    private static final long serialVersionUID = 6685367232884724905L;
+
     private static final String MESSAGE = "Campaign \"%s\" has already ended.";
 
     public CampaignAlreadyEndedException(String campaignName, Throwable e) {

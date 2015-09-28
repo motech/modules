@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -55,24 +56,12 @@ public class SmsHttpService {
     private StatusMessageService statusMessageService;
     private SmsRecordsDataService smsRecordsDataService;
 
-    @Autowired
-    public SmsHttpService(@Qualifier("templateService") TemplateService templateService,
-                          @Qualifier("configService") ConfigService configService,
-                          EventRelay eventRelay, HttpClient httpClient, SmsRecordsDataService smsRecordsDataService,
-                          StatusMessageService statusMessageService) {
-        this.templateService = templateService;
-        this.configService = configService;
-        this.eventRelay = eventRelay;
-        this.commonsHttpClient = httpClient;
-        this.statusMessageService = statusMessageService;
-        this.smsRecordsDataService = smsRecordsDataService;
-    }
-
     /**
      * This method allows sending outgoing sms messages through HTTP. The configuration specified in the {@link OutgoingSms}
      * object will be used for dealing with the provider.
      * @param sms the representation of the sms to send
      */
+    @Transactional
     public synchronized void send(OutgoingSms sms) {
 
         Config config = configService.getConfigOrDefault(sms.getConfig());
@@ -291,5 +280,37 @@ public class SmsHttpService {
             authenticate(props, config);
         }
         return method;
+    }
+
+    @Autowired
+    @Qualifier("templateService")
+    public void setTemplateService(TemplateService templateService) {
+        this.templateService = templateService;
+    }
+
+    @Autowired
+    public void setEventRelay(EventRelay eventRelay) {
+        this.eventRelay = eventRelay;
+    }
+
+    @Autowired
+    @Qualifier("configService")
+    public void setConfigService(ConfigService configService) {
+        this.configService = configService;
+    }
+
+    @Autowired
+    public void setCommonsHttpClient(HttpClient commonsHttpClient) {
+        this.commonsHttpClient = commonsHttpClient;
+    }
+
+    @Autowired
+    public void setStatusMessageService(StatusMessageService statusMessageService) {
+        this.statusMessageService = statusMessageService;
+    }
+
+    @Autowired
+    public void setSmsRecordsDataService(SmsRecordsDataService smsRecordsDataService) {
+        this.smsRecordsDataService = smsRecordsDataService;
     }
 }

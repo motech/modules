@@ -14,6 +14,8 @@ import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -61,7 +63,13 @@ public class CampaignEnrollmentDataServiceBundleIT extends BasePaxIT {
 
         assertEquals(campaignEnrollmentDataService.retrieveAll().size(), 1);
 
-        campaignEnrollmentDataService.update(enrollment);
+        campaignEnrollmentDataService.doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                CampaignEnrollment enrollmentToUpdate = campaignEnrollmentDataService.findByExternalIdAndCampaignName(externalId, campaignName);
+                campaignEnrollmentDataService.update(enrollmentToUpdate);
+            }
+        });
 
         assertEquals(asList(campaignName), extract(campaignEnrollmentDataService.retrieveAll(), on(CampaignEnrollment.class).getCampaignName()));
         assertEquals(asList(externalId), extract(campaignEnrollmentDataService.retrieveAll(), on(CampaignEnrollment.class).getExternalId()));
@@ -119,8 +127,14 @@ public class CampaignEnrollmentDataServiceBundleIT extends BasePaxIT {
 
         enrollment = campaignEnrollmentDataService.create(enrollment);
 
-        enrollment.setExternalId("otherId");
-        campaignEnrollmentDataService.update(enrollment);
+        campaignEnrollmentDataService.doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                CampaignEnrollment enrollmentToUpdate = campaignEnrollmentDataService.findByExternalIdAndCampaignName(externalId, campaignName);
+                enrollmentToUpdate.setExternalId("otherId");
+                campaignEnrollmentDataService.update(enrollmentToUpdate);
+            }
+        });
 
         CampaignEnrollment found = campaignEnrollmentDataService.findByExternalId("otherId").get(0);
 

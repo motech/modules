@@ -3,8 +3,8 @@ package org.motechproject.commcare.domain;
 import java.util.List;
 
 /**
- * Representation of a JSON response, retrieved from CommCareHQ for Locations API. Contains
- * {@link CommcareMetadataJson} and a list of {@link CommcareLocation}.
+ * Representation of a JSON response, retrieved from CommCareHQ for Locations API. Contains {@link CommcareMetadataJson}
+ * and a list of {@link CommcareLocation}.
  */
 public class CommcareLocationsJson {
 

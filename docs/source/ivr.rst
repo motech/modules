@@ -41,10 +41,7 @@ REST call
         :``callDirection``:
             should be either ``INCOMING`` or ``OUTGOING``. Any other string will be added to the ``providerExtraData``
             map and ``callDirection`` will be ``UNKNOWN``.
-        :``callStatus``:
-            should be either one of ``INITIATED``, ``IN_PROGRESS``, ``ANSWERED``, ``BUSY``, ``FAILED``,
-            ``NO_ANSWER``. Any other string will be added to the ``providerExtraData`` map and ``callStatus`` will be
-            ``UNKNOWN``.
+        :``callStatus``: is the status of the call.
         :``motechCallId``:
             if available (ie: included as a parameter in the outgoing call HTTP call),
             the Motech originated GUID uniquely identifying this call.
@@ -57,7 +54,9 @@ REST call
         .. note::
             Any parameters not recognized in the list above will be added to the ``providerExtraData`` map.
             Parameters listed in the config's ``ignoreStatusFields`` list are ignored. Should the IVR provider not be
-            able to name some of the REST call parameters, the config's ``statusFieldMap`` can be used.
+            able to name some of the REST call parameters, the config's ``statusFieldMap`` can be used. Call status from
+            the IVR provider can be mapped to other value. To map the values sent by the IVR provider to the custom values,
+            the config's ``callStatusMapping`` can be used.
 
     Each successful REST call results in one new ``CallDetailRecord`` database record.
 
@@ -258,6 +257,10 @@ Settings
         * ``statusFieldMap``:
             A map where each key corresponds to a field name coming from the IVR provider and each value corresponds to
             the matching IVR ``CallDetailRecord`` field.
+        * ``callStatusMapping``:
+            A map where each key corresponds to a status from the IVR provider and each value corresponds to the status which will
+            be used in CDR log. For example to map status "13" from the IVR provider to "Subscriber not reachable" this field must
+            contain a pair 13: Subscriber not reachable.
         * ``outgoingCallUriTemplate``:
             A URI template where any ``[xxx]`` string will be replaced by the value identified by the ``xxx`` [#]_ key in
             the provided ``params`` map. Additionally, the entire ``params`` map is added as request parameters to the
@@ -293,8 +296,7 @@ Call Detail Records
         * ``from``: Phone number which originated the call.
         * ``to``: Phone number which received the call.
         * ``callDirection``: ``INBOUND`` or ``OUTBOUND``, relatively to the IVR module. Or ``UNKNOWN``.
-        * ``callStatus``: ``MOTECH_INITIATED``, ``INITIATED``, ``IN_PROGRESS``, ``ANSWERED``, ``BUSY``, ``FAILED``,
-          ``NO_ANSWER``, or ``UNKNOWN``.
+        * ``callStatus``: The status of the call. It depends on the IVR provider and on the used settings.
         * ``templateName``: The name of the requested template. Only for ``/template`` requests.
         * ``motechCallId``: A Motech (ie IVR Module) generated GUID uniquely identifying a call.
         * ``providerCallId``: An IVR provider generated identifier, useful to query the provider (who generally has some

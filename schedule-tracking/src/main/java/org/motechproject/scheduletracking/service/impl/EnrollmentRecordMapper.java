@@ -6,8 +6,19 @@ import org.motechproject.scheduletracking.domain.WindowName;
 import org.motechproject.scheduletracking.service.EnrollmentRecord;
 import org.springframework.stereotype.Component;
 
+/**
+ * Component used to map enrollments to the {@link org.motechproject.scheduletracking.service.EnrollmentRecord}.
+ */
 @Component
 public class EnrollmentRecordMapper {
+
+    /**
+     * Builds enrollment record from the given enrollment. This method dosen't fill milestone windows date for current
+     * milestone.
+     *
+     * @param enrollment the enrollment to map
+     * @return the enrollment record
+     */
     public EnrollmentRecord map(Enrollment enrollment) {
         if (enrollment == null) {
             return null;
@@ -27,6 +38,12 @@ public class EnrollmentRecordMapper {
             .setMaxStart(null);
     }
 
+    /**
+     * Builds enrollment record from the given enrollment. This method fill milestone windows date for current milestone.
+     *
+     * @param enrollment the enrollment to map
+     * @return the enrollment record
+     */
     public EnrollmentRecord mapWithDates(Enrollment enrollment) {
         if (enrollment == null) {
             return null;

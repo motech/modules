@@ -6,7 +6,12 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Represents a single CommCare module. A CommCare module is a set of forms related to one topic area. A single CommCare
+ * application can contain multiple modules. It's part of the MOTECH model.
+ */
 public class CommcareModuleJson implements Serializable {
+
     private static final long serialVersionUID = 4408034863223848508L;
 
     @Expose

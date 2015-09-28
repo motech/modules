@@ -16,70 +16,114 @@ import javax.jdo.annotations.Unique;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Domain representation of a campaign message.
+ */
 @Entity
 @Access(value = SecurityMode.PERMISSIONS, members = {"manageCampaigns"})
 @Unique(name = "NAME_CAMPAIGN", members = { "name", "campaign"})
 public class CampaignMessageRecord {
 
+    /**
+     * The database ID of this record.
+     */
     @Field
     private Long id;
 
+    /**
+     * A name of this campaign message, that must be unique across its own campaign.
+     */
     @UIDisplayable(position = 1)
     @Field(placeholder = "Name of the campaign message")
     @JsonProperty
     private String name;
 
+    /**
+     * Holds information about the formats of a message (eg. SMS, IVR).
+     */
     @UIDisplayable(position = 9)
     @Field
     @JsonProperty
     private List<String> formats;
 
+    /**
+     * Holds information about the languages of the message.
+     */
     @UIDisplayable(position = 10)
     @Field
     @JsonProperty
     private List<String> languages;
 
+    /**
+     * A key uniquely identifying this message.
+     */
     @UIDisplayable(position = 2)
     @Field(required = true, tooltip = "A key uniquely identifying this message", placeholder = "MESSAGEKEY")
     @JsonProperty
     private String messageKey;
 
+    /**
+     * Holds the time at which the message will be sent.
+     */
     @UIDisplayable(position = 3)
     @Field(tooltip = "Time to start the campaign", placeholder = "hh:mm")
     @JsonProperty
     private String startTime;
 
+    /**
+     * Holds the date of the delivery for this message. Used for the {@link AbsoluteCampaign}s.
+     */
     @UIDisplayable(position = 4)
     @Field(tooltip = "Date to start the campaign", placeholder = "yyyy-mm-dd")
     @JsonSerialize(using = LocalDateSerializer.class, include = JsonSerialize.Inclusion.NON_NULL)
     @JsonProperty
     private LocalDate date;
 
+    /**
+     * Holds the time offset, from the reference time for this message. Used for the {@link OffsetCampaign}s.
+     */
     @UIDisplayable(position = 5)
     @Field(tooltip = "Defines the amount of time from the reference date or current date that will elapse before the message is sent", placeholder = "1 week")
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     private String timeOffset;
 
+    /**
+     * Holds the interval expression, defining every which time the message should be delivered. Used for
+     * the {@link RepeatIntervalCampaign}s.
+     */
     @UIDisplayable(position = 6)
     @Field(tooltip = "Period to repeat the campaign : 1 week, 1 day, etc..", placeholder = "\"1 Week\", \"9 Days\", \"12 Days\"")
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     private String repeatEvery;
 
+    /**
+     * Holds the CRON expression, defining when the messages should be delivered. Used for the {@link CronBasedCampaign}s.
+     */
     @UIDisplayable(position = 8)
     @Field(tooltip = "The cron expression determines the periodic schedule the messages will follow", placeholder = "0 0 12 * *")
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     private String cron;
 
+    /**
+     * Holds the list of {@link DayOfWeek}s, defining at which days of a week the message should be delivered. Used for
+     * the {@link DayOfWeekCampaign}s.
+     */
     @UIDisplayable(position = 7)
     @Field(tooltip = "Specifies which days of the week the message will be sent on")
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     private List<DayOfWeek> repeatOn;
 
+    /**
+     * Holds the type of the campaign this message is assigned to.
+     */
     @UIDisplayable(position = 0)
     @Field(required = true)
     @JsonIgnore
     private CampaignType messageType;
 
+    /**
+     * The campaign this message is assigned to.
+     */
     @UIDisplayable(position = 11)
     @Field
     @NonEditable

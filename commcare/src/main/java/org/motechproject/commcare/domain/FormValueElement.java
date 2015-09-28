@@ -22,52 +22,90 @@ public class FormValueElement implements FormNode {
     private Map<String, String> attributes = new HashMap<>();
     private String value;
 
-    @Override
-    public String getValue() {
-        return value;
+    /**
+     * Returns first node (elements and attributes) found at the given path, in the order in which they are encountered in a preorder traversal of this element tree.
+     * Lookup starts with this element and hence this element will be part of the returned list if it matches the given path.
+     *
+     * <p>
+     *      For usage and other information see {@link #search(String)}.
+     * </p>
+     *
+     * <p>
+     *      <b>Note:</b> This method will return null if no matching node is found.
+     * </p>
+     *
+     * @param path Lookup path.
+     * @return First node found at lookup path.
+     */
+    public FormNode searchFirst(String path) {
+        List<FormNode> results = new ArrayList<>();
+        search(splitPath(path), true, results);
+        return results.size() > 0 ? results.get(0) : null;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    /**
+     * Returns a list of all descendant nodes (elements and attributes) found at the given path, in the order in which they are encountered in a preorder traversal of this element tree.
+     * Lookup starts with this element and hence this element will be part of the returned list if it matches the given path.
+     *
+     * <p>
+     *      Path should start with "//".
+     * </p>
+     *
+     * <p><b>Example:</b>
+     * <br>For FormValueElement similar to following XML:
+     * <pre><code>
+     *      &lt;this thisAttribute="thisAttribute"&gt;
+     *          &lt;foo&gt;
+     *              &lt;bar barAttribute="barAttribute1"&gt;
+     *                  &lt;child&gt;child1&lt;/child&gt;
+     *                  &lt;child&gt;child2&lt;/child&gt;
+     *              &lt;/bar&gt;
+     *              &lt;child&gt;child3&lt;/child&gt;
+     *          &lt;/foo&gt;
+     *          &lt;foo&gt;
+     *              &lt;bar barAttribute="barAttribute2" otherBarAttribute="otherBarAttribute"&gt;
+     *                  &lt;child&gt;child4&lt;/child&gt;
+     *                  &lt;child&gt;child5&lt;/child&gt;
+     *                  &lt;otherChild&gt;otherChild&lt;/otherChild&gt;
+     *              &lt;/bar&gt;
+     *          &lt;/foo&gt;
+     *      &lt;/this&gt;
+     *     </code></pre>
+     * </p>
+     * Search for <b>//foo</b> will return both foo elements
+     * <br>
+     * Search for <b>//foo/bar/child</b> will return elements having values <b>child1</b>, <b>child2</b>, <b>child4</b>, <b>child5</b>.
+     * <br>
+     * Search for <b>//foo/child</b> will return one element having value as <b>child3</b>.
+     * <br>
+     * Search for <b>//foo/bar/@barAttribute</b> will return two attribute nodes having values as <b>barAttribute1</b> and <b>barAttribute2</b>.
+     * <br>
+     * Search for <b>//foo/bar/@otherBarAttribute</b> will return one attribute element having value as <b>otherBarAttribute</b>.
+     * <br>
+     * Search for <b>//</b> will return <b>this</b> element.
+     * <br>
+     * Search for <b>//@thisAttribute</b> will return <b>"thisAttribute</b> node on <b>this</b> element.
+     * <br>
+     * Paths //foo/bar/#anyValue will return same result as //foo/bar or //foo/bar/#anyOtherValue.
+     *
+     * <p>
+     * <b>Note:</b> This method will return an empty list if no matching node is found.
+     * </p>
+     *
+     * @param path Lookup path.
+     * @return A list containing matching nodes.
+     */
+    public List<FormNode> search(String path) {
+        List<FormNode> results = new ArrayList<>();
+        search(splitPath(path), false, results);
+        return results;
     }
 
-    public void addFormValueElement(String key, FormValueElement element) {
-        subElements.put(key, element);
-    }
-
-    public boolean containsAttribute(String key) {
-        return attributes.containsKey(key);
-    }
-
-    public void addAttribute(String key, String value) {
-        attributes.put(key, value);
-    }
-
-    public String getElementName() {
-        return elementName;
-    }
-
-    public void setElementName(String elementName) {
-        this.elementName = elementName;
-    }
-
-    public Multimap<String, FormValueElement> getSubElements() {
-        return subElements;
-    }
-
-    public void setSubElements(Multimap<String, FormValueElement> subElements) {
-        this.subElements = subElements;
-    }
-
-    public Map<String, String> getAttributes() {
-
-        return attributes;
-    }
-
-    public void setAttributes(Map<String, String> attributes) {
-        this.attributes = attributes;
-    }
-
+    /**
+     * Returns a map of form elements names and related elements.
+     *
+     * @return map of elements and their names
+     */
     public Map<String, FormValueElement> getElements() {
         Map<String, FormValueElement> map = new HashMap<>(subElements.size() + 1);
         map.put(elementName, this);
@@ -176,10 +214,22 @@ public class FormValueElement implements FormNode {
         return elements;
     }
 
+    /**
+     * Returns child element with the given {@code elementName} and wraps it into a list.
+     *
+     * @param elementName  the name of the child element
+     * @return the matching child element wrapped into a list
+     */
     public List<FormValueElement> getChildElements(String elementName) {
         return new ArrayList<>(subElements.get(elementName));
     }
 
+    /**
+     * Returns child element with the given {@code elementName}.
+     *
+     * @param elementName  the name of the child element
+     * @return the matching child element, null if element with the given name does not exist
+     */
     public FormValueElement getChildElement(String elementName) {
         for (Entry<String, FormValueElement> entry : subElements.entries()) {
             if (entry.getKey().equals(elementName)) {
@@ -189,23 +239,66 @@ public class FormValueElement implements FormNode {
         return null;
     }
 
+    /**
+     * Returns element with the {@code attribute} attribute set to {@code value}.
+     *
+     * @param attribute  the name of the attribute
+     * @param value  the value of the attribute
+     * @return the matching element, null if no matching element is found
+     */
     public FormValueElement getElementByAttribute(String attribute, String value) {
         return getElementByAttribute(attribute, value, null);
     }
 
+    /**
+     * Returns element with the {@code attribute} attribute set to {@code value} and is not one of the
+     * {@code restrictedElements}.
+     *
+     * @param attribute  the name of the attribute
+     * @param value  the value of the attribute
+     * @param restrictedElements  the restricted elements
+     * @return the matching element, null if no matching element is found
+     */
     public FormValueElement getElementByAttribute(String attribute, String value, List<String> restrictedElements) {
         List<FormValueElement> elementsByAttribute = getElementsByAttribute(attribute, value, restrictedElements, true);
         return elementsByAttribute.size() > 0 ? elementsByAttribute.get(0) : null;
     }
 
+    /**
+     * Returns a list of elements with the {@code attribute} attribute set to {@code value}.
+     *
+     * @param attribute  the name of the attribute
+     * @param value  the value of the attribute
+     * @return the list of matching elements
+     */
     public List<FormValueElement> getElementsByAttribute(String attribute, String value) {
         return getElementsByAttribute(attribute, value, null);
     }
 
+    /**
+     * Returns a list of elements with the {@code attribute} attribute set to {@code value} that aren't any of the
+     * {@code restrictedElements}.
+     *
+     * @param attribute  the name of the attribute
+     * @param value  the value of the attribute
+     * @param restrictedElements  the restricted elements
+     * @return the list of matching elements
+     */
     public List<FormValueElement> getElementsByAttribute(String attribute, String value, List<String> restrictedElements) {
         return getElementsByAttribute(attribute, value, restrictedElements, false);
     }
 
+    /**
+     * Returns a list of elements with the {@code attribute} attribute set to {@code value} that aren't any of the
+     * {@code restrictedElements}. If the {@code breakOnFirst} is set to true, the list will contain only a single
+     * element.
+     *
+     * @param attribute  the name of the attribute
+     * @param value  the value of the attribute
+     * @param restrictedElements  the restricted elements
+     * @param breakOnFirst  defines whether method should return a single value list or not
+     * @return the list of matching elements
+     */
     public List<FormValueElement> getElementsByAttribute(String attribute, String value, List<String> restrictedElements, boolean breakOnFirst) {
         List<FormValueElement> elements = new ArrayList<>();
 
@@ -230,83 +323,49 @@ public class FormValueElement implements FormNode {
         return elements;
     }
 
-    /**
-     * Returns first node (elements and attributes) found at the given path, in the order in which they are encountered in a preorder traversal of this element tree.
-     * Lookup starts with this element and hence this element will be part of the returned list if it matches the given path.
-     *
-     * <p>
-     *      For usage and other information see {@link #search(String)}.
-     * </p>
-     *
-     * <p>
-     *      <b>Note:</b> This method will return null if no matching node is found.
-     * </p>
-     *
-     * @param path Lookup path.
-     * @return First node found at lookup path.
-     */
-    public FormNode searchFirst(String path) {
-        List<FormNode> results = new ArrayList<>();
-        search(splitPath(path), true, results);
-        return results.size() > 0 ? results.get(0) : null;
+    @Override
+    public String getValue() {
+        return value;
     }
 
-    /**
-     * Returns a list of all descendant nodes (elements and attributes) found at the given path, in the order in which they are encountered in a preorder traversal of this element tree.
-     * Lookup starts with this element and hence this element will be part of the returned list if it matches the given path.
-     *
-     * <p>
-     *      Path should start with "//".
-     * </p>
-     *
-     * <p><b>Example:</b>
-     * <br>For FormValueElement similar to following XML:
-     * <pre><code>
-     *      &lt;this thisAttribute="thisAttribute"&gt;
-     *          &lt;foo&gt;
-     *              &lt;bar barAttribute="barAttribute1"&gt;
-     *                  &lt;child&gt;child1&lt;/child&gt;
-     *                  &lt;child&gt;child2&lt;/child&gt;
-     *              &lt;/bar&gt;
-     *              &lt;child&gt;child3&lt;/child&gt;
-     *          &lt;/foo&gt;
-     *          &lt;foo&gt;
-     *              &lt;bar barAttribute="barAttribute2" otherBarAttribute="otherBarAttribute"&gt;
-     *                  &lt;child&gt;child4&lt;/child&gt;
-     *                  &lt;child&gt;child5&lt;/child&gt;
-     *                  &lt;otherChild&gt;otherChild&lt;/otherChild&gt;
-     *              &lt;/bar&gt;
-     *          &lt;/foo&gt;
-     *      &lt;/this&gt;
-     *     </code></pre>
-     * </p>
-     * Search for <b>//foo</b> will return both foo elements
-     * <br>
-     * Search for <b>//foo/bar/child</b> will return elements having values <b>child1</b>, <b>child2</b>, <b>child4</b>, <b>child5</b>.
-     * <br>
-     * Search for <b>//foo/child</b> will return one element having value as <b>child3</b>.
-     * <br>
-     * Search for <b>//foo/bar/@barAttribute</b> will return two attribute nodes having values as <b>barAttribute1</b> and <b>barAttribute2</b>.
-     * <br>
-     * Search for <b>//foo/bar/@otherBarAttribute</b> will return one attribute element having value as <b>otherBarAttribute</b>.
-     * <br>
-     * Search for <b>//</b> will return <b>this</b> element.
-     * <br>
-     * Search for <b>//@thisAttribute</b> will return <b>"thisAttribute</b> node on <b>this</b> element.
-     * <br>
-     * Paths //foo/bar/#anyValue will return same result as //foo/bar or //foo/bar/#anyOtherValue.
-     *
-     * <p>
-     * <b>Note:</b> This method will return an empty list if no matching node is found.
-     * </p>
-     *
-     * @param path Lookup path.
-     * @return A list containing matching nodes.
-     */
-    public List<FormNode> search(String path) {
-        List<FormNode> results = new ArrayList<>();
-        search(splitPath(path), false, results);
-        return results;
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public void addFormValueElement(String key, FormValueElement element) {
+        subElements.put(key, element);
+    }
+
+    public boolean containsAttribute(String key) {
+        return attributes.containsKey(key);
+    }
+
+    public void addAttribute(String key, String value) {
+        attributes.put(key, value);
+    }
+
+    public String getElementName() {
+        return elementName;
+    }
+
+    public void setElementName(String elementName) {
+        this.elementName = elementName;
+    }
+
+    public Multimap<String, FormValueElement> getSubElements() {
+        return subElements;
+    }
+
+    public void setSubElements(Multimap<String, FormValueElement> subElements) {
+        this.subElements = subElements;
+    }
+
+    public Map<String, String> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(Map<String, String> attributes) {
+        this.attributes = attributes;
     }
 
     private List<String> splitPath(String path) {

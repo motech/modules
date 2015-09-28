@@ -7,6 +7,7 @@ import org.motechproject.commcare.service.CommcareApplicationDataService;
 import org.motechproject.commcare.service.CommcareSchemaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ public class CommcareSchemaServiceImpl implements CommcareSchemaService {
     private CommcareApplicationDataService commcareApplicationDataService;
 
     @Override
+    @Transactional
     public List<FormSchemaJson> getAllFormSchemas(String configName) {
         List<FormSchemaJson> allFormSchemas = new ArrayList<>();
 
@@ -38,6 +40,7 @@ public class CommcareSchemaServiceImpl implements CommcareSchemaService {
     }
 
     @Override
+    @Transactional
     public Map<String, Set<String>> getAllCaseTypes(String configName) {
         Map<String, Set<String>> allCaseTypes = new HashMap<>();
 
@@ -54,11 +57,13 @@ public class CommcareSchemaServiceImpl implements CommcareSchemaService {
     }
 
     @Override
+    @Transactional
     public List<FormSchemaJson> getAllFormSchemas() {
         return getAllFormSchemas(null);
     }
 
     @Override
+    @Transactional
     public Map<String, Set<String>> getAllCaseTypes() {
         return getAllCaseTypes(null);
     }

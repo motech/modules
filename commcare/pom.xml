@@ -7,12 +7,12 @@
     <parent>
         <artifactId>modules</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.27-SNAPSHOT</version>
+        <version>1.0-SNAPSHOT</version>
         <relativePath>../</relativePath>
     </parent>
 
     <artifactId>commcare</artifactId>
-    <version>0.27-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
     <name>CommCare Module</name>
@@ -223,6 +223,7 @@
                             org.springframework.aop,
                             org.springframework.aop.framework,
                             org.springframework.context.config,
+                            org.springframework.transaction,
                             org.springframework.web.servlet.config,
                             org.eclipse.gemini.blueprint.config,
                             org.w3c.dom;version="0",

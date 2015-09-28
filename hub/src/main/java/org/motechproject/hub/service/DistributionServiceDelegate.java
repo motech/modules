@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 
 /**
  * This is an interface providing methods to get the Content of an updated topic
- * and distribute it to all the subscribers for that topic
+ * and distribute it to all the subscribers for that topic.
  *
  * @author Anuranjan
  *
@@ -14,18 +14,19 @@ public interface DistributionServiceDelegate {
 
     /**
      * Fetches the content from a publisher corresponding to the
-     * <code>topicUrl</code>
+     * <code>topicUrl</code>.
      *
      * @param topicUrl
      *            - a <code>String</code> representing the topic URL which is
      *            updated
-     * @return
+     *
+     * @return <code>ResponseEntity</code> containing fetched content
      */
     ResponseEntity<String> getContent(String topicUrl);
 
     /**
-     * Distributes the fetched content to all the subsribers subscribed to the
-     * particular topic
+     * Distributes the fetched content to all the subscribers subscribed to the
+     * particular topic.
      *
      * @param callbackUrl
      *            - a <code>String</code> representing the subscriber's callback

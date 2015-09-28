@@ -4,12 +4,12 @@
     <parent>
         <artifactId>modules</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.27-SNAPSHOT</version>
+        <version>1.0-SNAPSHOT</version>
         <relativePath>../</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <version>0.27-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
     <description>SMS Module</description>
 
     <artifactId>sms</artifactId>
@@ -45,6 +45,12 @@
             <groupId>org.motechproject</groupId>
             <artifactId>motech-platform-dataservices</artifactId>
             <version>${motech.version}</version>
+        </dependency>
+         <dependency>
+            <groupId>${motech.groupId}</groupId>
+            <artifactId>motech-tasks</artifactId>
+            <version>${motech.version}</version>
+            <optional>true</optional>
         </dependency>
     </dependencies>
     <build>
@@ -114,8 +120,11 @@
                             org.aopalliance.aop,
                             org.springframework.aop,
                             org.springframework.aop.framework,
+                            org.springframework.transaction,
                             org.motechproject.admin.domain,
                             org.motechproject.admin.messages,
+                            org.motechproject.event.listener,
+                            org.motechproject.event.listener.annotations,
                             *
                         </Import-Package>
                         <Export-Package>
@@ -123,6 +132,9 @@
                             org.motechproject.sms.audit;version=${project.version},
                             org.motechproject.sms.configs;version=${project.version},
                             org.motechproject.sms.util;version=${project.version}
+                            org.motechproject.sms.tasks;version=${project.version},
+                            org.motechproject.sms.event;version=${project.version},
+                            org.motechproject.sms.event.constants;version=${project.version}
                         </Export-Package>
                         <Bundle-DocURL>
                             http://modules.motechproject.org/en/latest/sms.html

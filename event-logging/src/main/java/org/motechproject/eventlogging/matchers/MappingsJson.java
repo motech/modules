@@ -3,6 +3,9 @@ package org.motechproject.eventlogging.matchers;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class representing json configuration file of the logs structure for database logging.
+ */
 public class MappingsJson {
 
     private List<String> subjects;

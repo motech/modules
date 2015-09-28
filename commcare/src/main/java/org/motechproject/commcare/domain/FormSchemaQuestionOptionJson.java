@@ -5,7 +5,11 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
+/**
+ * Represents a single answer for a specific question from a CommCare form.
+ */
 public class FormSchemaQuestionOptionJson implements Serializable {
+
     private static final long serialVersionUID = -1212672275414260040L;
 
     @Expose

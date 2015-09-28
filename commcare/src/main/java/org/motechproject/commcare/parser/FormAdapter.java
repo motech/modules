@@ -5,7 +5,6 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.reflect.TypeToken;
 import org.motechproject.commcare.domain.CommcareForm;
@@ -15,9 +14,7 @@ import org.motechproject.commcare.domain.MetadataValue;
 import org.motechproject.commons.api.json.MotechJsonReader;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -64,29 +61,6 @@ public final class FormAdapter {
         @Override
         public FormValueElement deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
             return recursivelyParse("form", json);
-        }
-    }
-
-    /**
-     * Deserializes {@link MetadataValue} coming from JSON. This metadata values can be both
-     * arrays or single strings, hence the parsing here.
-     */
-    private static class MetadataValueAdapter implements JsonDeserializer<MetadataValue> {
-
-        @Override
-        public MetadataValue deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
-            if (json.isJsonPrimitive()) {
-                return new MetadataValue(json.getAsString());
-            } else if (json.isJsonArray()) {
-                List<String> values = new ArrayList<>();
-                for (JsonElement element : json.getAsJsonArray()) {
-                    values.add(element.getAsString());
-                }
-                return new MetadataValue(values);
-            } else {
-                throw new JsonParseException("Metadata must be either a string or an array of string, instead got " +
-                    json);
-            }
         }
     }
 

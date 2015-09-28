@@ -17,6 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Implementation of {@link org.motechproject.eventlogging.service.EventLoggingServiceManager}.
+ * Allows registering logging services.
+ */
 @Component
 public class EventLoggingServiceManagerImpl implements EventLoggingServiceManager {
 
@@ -30,6 +34,9 @@ public class EventLoggingServiceManagerImpl implements EventLoggingServiceManage
     @Autowired
     private DbEventLoggingService dbEventLoggingService;
 
+    /**
+     * Registers default service for event logging, which is DbEventLoggingService
+     */
     @PostConstruct
     public void registerDefaultService() {
         registerEventLoggingService(dbEventLoggingService);

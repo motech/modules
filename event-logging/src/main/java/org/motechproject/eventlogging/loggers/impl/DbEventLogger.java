@@ -18,6 +18,13 @@ public class DbEventLogger extends EventLogger {
     private EventLogService eventLogService;
     private DefaultDbToLogConverter eventConverter;
 
+    /**
+     * Creates an instance of DbEventLogger which provides logic for
+     * persisting logs in the database.
+     *
+     * @param eventLogService Motech Data Service for EventLogs, generated and injected by MDS module
+     * @param eventConverter {@link DefaultDbToLogConverter} responsible for converting incoming events to database persisting state
+     */
     public DbEventLogger(EventLogService eventLogService, DefaultDbToLogConverter eventConverter) {
         this.eventLogService = eventLogService;
         this.eventConverter = eventConverter;

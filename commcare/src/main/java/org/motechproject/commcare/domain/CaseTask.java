@@ -1,10 +1,10 @@
 package org.motechproject.commcare.domain;
 
 /**
- * Domain class that represents a series of case informations to be converted
- * into case XML for upload to CommCareHQ.
+ * Domain class that represents a series of case information to be converted into case XML for upload to CommCareHQ.
  */
 public class CaseTask {
+
     private CreateTask createTask;
     private UpdateTask updateTask;
     private IndexTask indexTask;

@@ -6,6 +6,7 @@ import org.motechproject.commons.api.Range;
 import org.motechproject.mds.query.QueryParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -19,23 +20,21 @@ import static org.motechproject.commons.api.MotechEnumUtils.toEnumSet;
 public class SmsAuditServiceImpl implements SmsAuditService {
     private SmsRecordsDataService smsRecordsDataService;
 
-    @Autowired
-    public SmsAuditServiceImpl(SmsRecordsDataService smsRecordsDataService) {
-        this.smsRecordsDataService = smsRecordsDataService;
-    }
-
     @Override
+    @Transactional
     public List<SmsRecord> findAllSmsRecords() {
         return smsRecordsDataService.retrieveAll();
     }
 
     @Override
+    @Transactional
     public SmsRecords findAllSmsRecords(SmsRecordSearchCriteria criteria) {
         List<SmsRecord> recordList = (List<SmsRecord>) executeQuery(criteria, false);
         return new SmsRecords(recordList.size(), recordList);
     }
 
     @Override
+    @Transactional
     public long countAllSmsRecords(SmsRecordSearchCriteria criteria) {
         return (long) executeQuery(criteria, true);
     }
@@ -71,5 +70,10 @@ public class SmsAuditServiceImpl implements SmsAuditService {
 
     private String asQuery(String value) {
         return StringUtils.isNotBlank(value) ? String.format(".*%s.*", value) : value;
+    }
+
+    @Autowired
+    public void setSmsRecordsDataService(SmsRecordsDataService smsRecordsDataService) {
+        this.smsRecordsDataService = smsRecordsDataService;
     }
 }

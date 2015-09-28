@@ -4,6 +4,10 @@ import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonMethod;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+/**
+ * Represents a single CommCare module configuration. It includes forwarding rules, event strategy and information about
+ * related CommCareHQ account.
+ */
 @JsonAutoDetect(JsonMethod.NONE)
 public class SettingsDto {
 
@@ -15,10 +19,13 @@ public class SettingsDto {
 
     @JsonProperty
     private boolean forwardForms;
+
     @JsonProperty
     private boolean forwardCases;
+
     @JsonProperty
     private boolean forwardFormStubs;
+
     @JsonProperty
     private boolean forwardAppStructure;
 

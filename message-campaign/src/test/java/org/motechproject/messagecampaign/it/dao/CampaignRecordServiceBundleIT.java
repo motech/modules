@@ -23,6 +23,8 @@ import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -90,21 +92,27 @@ public class CampaignRecordServiceBundleIT extends BasePaxIT {
     @Test
     public void shouldUpdateRecord() {
 
-        CampaignRecord campaign = createCampaignRecord();
-        CampaignRecord campaign2 = createCampaignRecord();
+        final CampaignRecord campaign = createCampaignRecord();
+        final CampaignRecord campaign2 = createCampaignRecord();
 
         // add
         campaignRecordService.create(campaign);
 
         assertEquals(campaign, campaignRecordService.findByName(campaign.getName()));
 
-        // update
-        campaign2.setMaxDuration("20 week");
-        campaign.updateFrom(campaign2);
+        campaignRecordService.doInTransaction(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                // update
+                CampaignRecord campaignToUpdate = campaignRecordService.findByName(campaign.getName());
+                campaign2.setMaxDuration("20 week");
+                campaignToUpdate.updateFrom(campaign2);
 
-        campaign = campaignRecordService.update(campaign);
+                campaignRecordService.update(campaignToUpdate);
+            }
+        });
 
-        assertEquals(campaign.getMaxDuration(), campaignRecordService.findByName(campaign.getName()).getMaxDuration());
+        assertEquals("20 week", campaignRecordService.findByName(campaign.getName()).getMaxDuration());
 
         campaignRecordService.delete(campaign);
     }

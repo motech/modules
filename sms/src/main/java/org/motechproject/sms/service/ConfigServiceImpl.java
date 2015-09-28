@@ -1,24 +1,27 @@
 package org.motechproject.sms.service;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonIOException;
+import java.io.InputStream;
+import java.util.List;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.motechproject.config.core.constants.ConfigurationConstants;
 import org.motechproject.event.MotechEvent;
+import org.motechproject.event.listener.EventRelay;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.server.config.SettingsFacade;
 import org.motechproject.sms.configs.Config;
 import org.motechproject.sms.configs.Configs;
+import org.motechproject.sms.event.constants.EventSubjects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
-import org.motechproject.config.core.constants.ConfigurationConstants;
 
-import java.io.InputStream;
-import java.util.List;
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
 
 /**
  * See {@link org.motechproject.sms.service.ConfigService}
@@ -32,6 +35,7 @@ public class ConfigServiceImpl implements ConfigService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigServiceImpl.class);
     private SettingsFacade settingsFacade;
     private Configs configs;
+    private EventRelay eventRelay;
 
     private synchronized void loadConfigs() {
         try (InputStream is = settingsFacade.getRawConfig(SMS_CONFIGS_FILE_NAME)) {
@@ -45,8 +49,9 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Autowired
-    public ConfigServiceImpl(@Qualifier("smsSettings") SettingsFacade settingsFacade) {
+    public ConfigServiceImpl(@Qualifier("smsSettings") SettingsFacade settingsFacade, EventRelay eventRelay) {
         this.settingsFacade = settingsFacade;
+        this.eventRelay = eventRelay;
         loadConfigs();
     }
 
@@ -56,6 +61,7 @@ public class ConfigServiceImpl implements ConfigService {
         if (!StringUtils.isBlank(filePath) && filePath.endsWith(SMS_CONFIGS_FILE_PATH)) {
             LOGGER.info("{} has changed, reloading configs.", SMS_CONFIGS_FILE_NAME);
             loadConfigs();
+            eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIGS_CHANGED));
         }
     }
 
@@ -90,6 +96,7 @@ public class ConfigServiceImpl implements ConfigService {
         ByteArrayResource resource = new ByteArrayResource(jsonText.getBytes());
         settingsFacade.saveRawConfig(SMS_CONFIGS_FILE_NAME, resource);
         loadConfigs();
+        eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIGS_CHANGED));
     }
 
     public boolean hasConfigs() {
