@@ -21,6 +21,23 @@
                             scope.$apply(function() {
                                 ngModel.$setViewValue(selectedDateTime);
                             });
+                        },
+                        onChangeMonthYear: function (year, month, inst) {
+                            var curDate = $(this).datepicker("getDate");
+                            if (curDate === null) {
+                                return;
+                            }
+                            if (curDate.curDate.getFullYear() !== year || curDate.getMonth() !== month - 1) {
+                                curDate.setYear(year);
+                                curDate.setMonth(month - 1);
+                                $(this).datepicker("setDate", curDate);
+                            }
+                        },
+                        onClose: function () {
+                            var viewValue = elem.val();
+                            scope.safeApply(function () {
+                                ngModel.$setViewValue(viewValue);
+                            });
                         }
                     });
                 });
@@ -47,6 +64,23 @@
                             onSelect: function (selectedDateTime){
                                 scope.$apply(function() {
                                     ngModel.$setViewValue(selectedDateTime);
+                                });
+                            },
+                            onChangeMonthYear: function (year, month, inst) {
+                                var curDate = $(this).datepicker("getDate");
+                                if (curDate === null) {
+                                    return;
+                                }
+                                if (curDate.getFullYear() !== year || curDate.getMonth() !== month - 1) {
+                                    curDate.setYear(year);
+                                    curDate.setMonth(month - 1);
+                                    $(this).datepicker("setDate", curDate);
+                                }
+                            },
+                            onClose: function () {
+                                var viewValue = elem.val();
+                                scope.safeApply(function () {
+                                    ngModel.$setViewValue(viewValue);
                                 });
                             }
                         });
