@@ -32,7 +32,7 @@
             tab = IVR_AVAILABLE_TABS[i];
 
             if (tab === "log") {
-                $routeProvider.when('/ivr/{0}'.format(tab), {redirectTo: 'mds/dataBrowser/'+id});
+                $routeProvider.when('/ivr/{0}'.format(tab), {redirectTo: 'mds/dataBrowser/'+id+'/ivr'});
             } else {
                 $routeProvider.when('/ivr/{0}'.format(tab),
                     {
