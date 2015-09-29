@@ -204,11 +204,19 @@
                         if (curDate === null) {
                             return;
                         }
-                        if (curDate.getYear() !== year || curDate.getMonth() !== month - 1) {
+                        if (curDate.getFullYear() !== year || curDate.getMonth() !== month - 1) {
                             curDate.setYear(year);
                             curDate.setMonth(month - 1);
                             $(this).datepicker("setDate", curDate);
                             $(this).change();
+                        }
+                    },
+                    onClose: function () {
+                        var viewValue = $(this).val();
+                        if (viewValue === '') {
+                            endDateTextBox.datetimepicker('option', 'minDate', null);
+                        } else {
+                            endDateTextBox.datepicker('option', 'minDate', elem.datepicker('getDate'));
                         }
                     }
                 });
@@ -237,11 +245,19 @@
                         if (curDate === null) {
                             return;
                         }
-                        if (curDate.getYear() !== year || curDate.getMonth() !== month - 1) {
+                        if (curDate.getFullYear() !== year || curDate.getMonth() !== month - 1) {
                             curDate.setYear(year);
                             curDate.setMonth(month - 1);
                             $(this).datepicker("setDate", curDate);
                             $(this).change();
+                        }
+                    },
+                    onClose: function () {
+                        var viewValue = $(this).val();
+                        if (viewValue === '') {
+                            startDateTextBox.datetimepicker('option', 'maxDate', null);
+                        } else {
+                            startDateTextBox.datepicker('option', 'maxDate', elem.datepicker('getDate'));
                         }
                     }
                 });
