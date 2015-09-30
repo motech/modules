@@ -52,6 +52,14 @@ public final class EventParams {
      * Provider extra data
      */
     public static final String PROVIDER_EXTRA_DATA = "provider_extra_data";
+    /**
+     * Call duration
+     */
+    public static final String CALL_DURATION = "call_duration";
+    /**
+     * Message percent listened
+     */
+    public static final String MESSAGE_PERCENT_LISTENED = "message_percent_listened";
 
     /**
      * Provider JSON response
@@ -76,6 +84,8 @@ public final class EventParams {
         eventParams.put(EventParams.MOTECH_CALL_ID, callDetailRecord.getMotechCallId());
         eventParams.put(EventParams.PROVIDER_CALL_ID, callDetailRecord.getProviderCallId());
         eventParams.put(EventParams.PROVIDER_EXTRA_DATA, callDetailRecord.getProviderExtraData());
+        eventParams.put(EventParams.CALL_DURATION, callDetailRecord.getCallDuration());
+        eventParams.put(EventParams.MESSAGE_PERCENT_LISTENED, callDetailRecord.getMessagePercentListened());
         return eventParams;
     }
 }
