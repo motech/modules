@@ -86,7 +86,8 @@ public class OutboundCallServiceImpl implements OutboundCallService {
         LOGGER.debug(String.format("addCallDetailRecord(callStatus = %s, config = %s, params = %s, motechCallId = %s)",
                 callStatus, config.getName(), params.toString(), motechCallId));
 
-        CallDetailRecord callDetailRecord = new CallDetailRecord(config.getName(), null, null, null, CallDirection.OUTBOUND, callStatus, null, motechCallId, null, null);
+        CallDetailRecord callDetailRecord = new CallDetailRecord(config.getName(), null, null, null, CallDirection.OUTBOUND,
+                callStatus, null, motechCallId, null, null, null, null);
 
         for (Map.Entry<String, String> entry : params.entrySet()) {
             if (config.shouldIgnoreField(entry.getKey())) {

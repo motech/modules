@@ -101,7 +101,7 @@ public class TemplateControllerBundleIT extends BasePaxIT {
         // Create a CDR we can use as a datasource in the template. A more elegant way to do that would be to create
         // an EUDE, but this works just as well.
         callDetailRecordDataService.create(new CallDetailRecord("world", null, null, null, null, null, null, "123abc",
-                "123abc", null));
+                "123abc", null, null, null));
 
         //Create a template
         templateService.updateTemplates(Arrays.asList(new Template("tmpl",
