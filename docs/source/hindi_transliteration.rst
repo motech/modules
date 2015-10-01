@@ -12,7 +12,7 @@ Description
 ############
 
 The Hindi Transliteration module allows you to transliterate English words to Hindi using ITRANS encoding.
-`ITRANS <https://en.wikipedia.org/wiki/ITRANS>` is a case-sensitive encoding, implying that transliterated names may not be capitalized.
+`ITRANS <https://en.wikipedia.org/wiki/ITRANS>`_ is a case-sensitive encoding, implying that transliterated names may not be capitalized.
 Because of that, the best results would be achieved by passing data in all lower case.
 
 #################
