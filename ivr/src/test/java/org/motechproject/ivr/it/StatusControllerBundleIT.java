@@ -1,5 +1,6 @@
 package org.motechproject.ivr.it;
 
+import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
@@ -13,7 +14,6 @@ import org.motechproject.ivr.repository.CallDetailRecordDataService;
 import org.motechproject.ivr.service.ConfigService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
-import org.motechproject.testing.osgi.http.SimpleHttpClient;
 import org.motechproject.testing.utils.TestContext;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -26,11 +26,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Verify StatusController present & functional.
@@ -79,7 +77,10 @@ public class StatusControllerBundleIT extends BasePaxIT {
                 .setPath("/ivr/status/bar");
         URI uri = builder.build();
         HttpGet httpGet = new HttpGet(uri);
-        assertTrue(SimpleHttpClient.execHttpRequest(httpGet, HttpStatus.SC_INTERNAL_SERVER_ERROR));
+
+        HttpResponse response = getHttpClient().execute(httpGet, HttpStatus.SC_INTERNAL_SERVER_ERROR);
+
+        assertEquals(HttpStatus.SC_INTERNAL_SERVER_ERROR, response.getStatusLine().getStatusCode());
 
         //Verify we did not log this CDR because service contains an invalid config
         List<CallDetailRecord> callDetailRecords = callDetailRecordDataService.retrieveAll();
@@ -106,8 +107,9 @@ public class StatusControllerBundleIT extends BasePaxIT {
                 .addParameter("ignoreme2", "xxx")
                 .addParameter("foo", "bar");
         URI uri = builder.build();
-        HttpGet httpGet = new HttpGet(uri);
-        assertTrue(SimpleHttpClient.execHttpRequest(httpGet, HttpStatus.SC_OK));
+
+        HttpResponse response = getHttpClient().get(uri.toString());
+        assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
 
         //Verify we logged this CDR - by querying on its motechId - which is a GUID
         List<CallDetailRecord> callDetailRecords = callDetailRecordDataService.findByMotechCallId(motechCallId);
