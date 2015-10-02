@@ -1,16 +1,14 @@
 package org.motechproject.sms.it;
 
+import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
-import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.commons.api.Range;
 import org.motechproject.sms.audit.DeliveryStatus;
-import org.motechproject.sms.audit.SmsDirection;
 import org.motechproject.sms.audit.SmsRecord;
 import org.motechproject.sms.audit.SmsRecordsDataService;
 import org.motechproject.sms.configs.Config;
@@ -18,7 +16,6 @@ import org.motechproject.sms.configs.Configs;
 import org.motechproject.sms.service.ConfigService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
-import org.motechproject.testing.osgi.http.SimpleHttpClient;
 import org.motechproject.testing.utils.TestContext;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -34,7 +31,6 @@ import java.util.UUID;
 
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Verify StatusController present & functional.
@@ -107,12 +103,13 @@ public class StatusControllerBundleIT extends BasePaxIT {
                 .addParameter("To", "+12065551313")
                 .addParameter("MessageUUID", messageId);
         URI uri = builder.build();
-        HttpGet httpGet = new HttpGet(uri);
-        assertTrue(SimpleHttpClient.execHttpRequest(httpGet, HttpStatus.SC_OK));
+
+        HttpResponse response = getHttpClient().get(uri.toString());
+        assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
 
         //Verify we logged this
-        List<SmsRecord> smsRecords = smsRecordsDataService.findByCriteria(null, new HashSet<SmsDirection>(), null, null,
-                new Range<DateTime>(null, null), new HashSet<DeliveryStatus>(), null,
+        List<SmsRecord> smsRecords = smsRecordsDataService.findByCriteria(null, new HashSet<>(), null, null,
+                new Range<>(null, null), new HashSet<>(), null,
                 null, messageId, null, null);
         assertEquals(1, smsRecords.size());
         assertEquals(smsRecords.get(0).getDeliveryStatus(), DeliveryStatus.DELIVERY_CONFIRMED);
