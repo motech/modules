@@ -13,6 +13,7 @@ import org.motechproject.commcare.util.RequestTestUtils;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,39 +39,25 @@ public class QueryStockLedgerEventHandlerTest {
     @Mock
     private EventRelay eventRelay;
 
-    private MotechEvent event;
-
     private StockTransactionRequest request;
 
     private QueryStockLedgerEventHandler eventHandler;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         initMocks(this);
         eventHandler = new QueryStockLedgerEventHandler(stockTransactionService, eventRelay);
-        event = prepareEvent();
         request = prepareRequest();
     }
 
     @Test
-    public void shouldHandleEventProperly() throws Exception {
+    public void shouldHandleEventWithoutExtraDataProperly() {
+        testEventHandling(false);
+    }
 
-        ArgumentCaptor<MotechEvent> eventCaptor = ArgumentCaptor.forClass(MotechEvent.class);
-        MotechEvent expectedEventOne = prepareExpectedEventOne();
-        MotechEvent expectedEventTwo = prepareExpectedEventTwo();
-
-        when(stockTransactionService.getStockTransactions(eq(request), eq(CONFIG_NAME)))
-                .thenReturn(prepareStockTransactionsList());
-
-        eventHandler.handleEvent(event);
-
-        verify(eventRelay, times(2)).sendEventMessage(eventCaptor.capture());
-
-        List<MotechEvent> capturedEvents = eventCaptor.getAllValues();
-
-        assertEquals(expectedEventOne, capturedEvents.get(0));
-        assertEquals(expectedEventTwo, capturedEvents.get(1));
-
+    @Test
+    public void shouldHandleEventWithExtraDataProperly() {
+        testEventHandling(true);
     }
 
     @Test(expected = JsonParseException.class)
@@ -80,13 +67,33 @@ public class QueryStockLedgerEventHandlerTest {
                 .thenThrow(new JsonParseException("Failure"));
 
         try {
+            MotechEvent event = prepareEvent(false);
             eventHandler.handleEvent(event);
         } finally {
             verify(eventRelay, never()).sendEventMessage(any(MotechEvent.class));
         }
     }
 
-    private MotechEvent prepareEvent() {
+    private void testEventHandling(boolean withExtraData) {
+        ArgumentCaptor<MotechEvent> eventCaptor = ArgumentCaptor.forClass(MotechEvent.class);
+        MotechEvent expectedEventOne = prepareExpectedEventOne(withExtraData);
+        MotechEvent expectedEventTwo = prepareExpectedEventTwo(withExtraData);
+
+        when(stockTransactionService.getStockTransactions(eq(request), eq(CONFIG_NAME)))
+                .thenReturn(prepareStockTransactionsList());
+
+        MotechEvent event = prepareEvent(withExtraData);
+        eventHandler.handleEvent(event);
+
+        verify(eventRelay, times(2)).sendEventMessage(eventCaptor.capture());
+
+        List<MotechEvent> capturedEvents = eventCaptor.getAllValues();
+
+        assertEquals(expectedEventOne, capturedEvents.get(0));
+        assertEquals(expectedEventTwo, capturedEvents.get(1));
+    }
+
+    private MotechEvent prepareEvent(boolean withExtraData) {
 
         String subject = EventSubjects.QUERY_STOCK_LEDGER + "." + CONFIG_NAME;
 
@@ -96,10 +103,19 @@ public class QueryStockLedgerEventHandlerTest {
         params.put(EventDataKeys.START_DATE, RequestTestUtils.START_DATE);
         params.put(EventDataKeys.END_DATE, RequestTestUtils.END_DATE);
 
+        if (withExtraData) {
+            Map<String, String> extraData = new HashMap<>();
+
+            extraData.put("key1", "val1");
+            extraData.put("key2", "val2");
+
+            params.put(EventDataKeys.EXTRA_DATA, extraData);
+        }
+
         return new MotechEvent(subject, params);
     }
 
-    private MotechEvent prepareExpectedEventOne() {
+    private MotechEvent prepareExpectedEventOne(boolean withExtraData) {
 
         Map<String, Object> params = new LinkedHashMap<>();
 
@@ -111,10 +127,15 @@ public class QueryStockLedgerEventHandlerTest {
         params.put(EventDataKeys.TRANSACTION_DATE, "2015-08-10T14:59:55.029219");
         params.put(EventDataKeys.TYPE, "soh");
 
+        if (withExtraData) {
+            params.put("key1", "val1");
+            params.put("key2", "val2");
+        }
+
         return new MotechEvent(EventSubjects.RECEIVED_STOCK_TRANSACTION + "." + CONFIG_NAME, params);
     }
 
-    private MotechEvent prepareExpectedEventTwo() {
+    private MotechEvent prepareExpectedEventTwo(boolean withExtraData) {
 
         Map<String, Object> params = new LinkedHashMap<>();
 
@@ -125,6 +146,11 @@ public class QueryStockLedgerEventHandlerTest {
         params.put(EventDataKeys.STOCK_ON_HAND, 17.0);
         params.put(EventDataKeys.TRANSACTION_DATE, "2015-08-10T14:59:55.029219");
         params.put(EventDataKeys.TYPE, "soh");
+
+        if (withExtraData) {
+            params.put("key1", "val1");
+            params.put("key2", "val2");
+        }
 
         return new MotechEvent(EventSubjects.RECEIVED_STOCK_TRANSACTION + "." + CONFIG_NAME, params);
     }
