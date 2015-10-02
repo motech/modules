@@ -22,6 +22,24 @@ public final class CommcareParamHelper {
     }
 
     /**
+     * Prints the passed object as a datetime. Supports {@link String} and {@link DateTime} objects.
+     * @param object the object to print
+     * @return the object printed as a datetime, or null if the object was null
+     * @throws IllegalArgumentException if the object is not a supported class
+     */
+    public static String printObjectAsDateTime(Object object) {
+        if (object instanceof DateTime) {
+            return printDateTime((DateTime) object);
+        } else if (object instanceof String) {
+            return (String) object;
+        } else if (object == null) {
+            return null;
+        } else {
+            throw new IllegalArgumentException("Cannot print a datetime from " + object.getClass().getName());
+        }
+    }
+
+    /**
      * Calculates the offset parameter based on the page size and page number.
      * @param pageSize the page size
      * @param pageNumber the page number
