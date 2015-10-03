@@ -1,0 +1,30 @@
+<div id="inner-center" class="inner-center ui-layout-center ui-layout-pane ui-layout-pane-center">
+    <div class="header-footer-breadcrumb">
+        <ul class="breadcrumb" role="navigation">
+            <li><a role="menu" href=".">{{msg('server.home')}}</a></li>
+            <li><a role="menu" href="#/mtraining/treeView">{{msg('mtraining')}}</a></li>
+            <li ng-show="active('#/mtraining/treeView')" ng-class="active('#/mtraining/treeView')">{{msg('mtraining.treeView')}}</li>
+            <li ng-show="active('#/mtraining/courses')" ng-class="active('#/mtraining/courses')">{{msg('mtraining.courses')}}</li>
+            <li ng-show="active('#/mtraining/chapters')" ng-class="active('#/mtraining/chapters')">{{msg('mtraining.courses')}}</li>
+            <li ng-show="active('#/mtraining/quizzes')" ng-class="active('#/mtraining/quizzes')">{{msg('mtraining.quizzes')}}</li>
+            <li ng-show="active('#/mtraining/lessons')" ng-class="active('#/mtraining/lessons')">{{msg('mtraining.lessons')}}</li>
+            <li ng-show="active('#/mtraining/activityRecords')" ng-class="active('#/mtraining/activityRecords')">{{msg('mtraining.activityRecords')}}</li>
+            <li ng-show="active('#/mtraining/bookmarks')" ng-class="active('#/mtraining/bookmarks')">{{msg('mtraining.bookmarks')}}</li>
+        </ul>
+    </div>
+    <div class="header-footer">
+        <ul id="content-tabs" class="nav nav-tabs">
+            <li ng-class="active('#/mtraining/treeView')"><a href="#/mtraining/treeView" >{{msg('mtraining.treeView')}}</a></li>
+            <li ng-class="active('#/mtraining/courses')"><a href="#/mtraining/courses" >{{msg('mtraining.courses')}}</a></li>
+            <li ng-class="active('#/mtraining/chapters')"><a href="#/mtraining/chapters" >{{msg('mtraining.chapters')}}</a></li>
+            <li ng-class="active('#/mtraining/quizzes')"><a href="#/mtraining/quizzes" >{{msg('mtraining.quizzes')}}</a></li>
+            <li ng-class="active('#/mtraining/lessons')"><a href="#/mtraining/lessons" >{{msg('mtraining.lessons')}}</a></li>
+            <li ng-class="active('#/mtraining/activityRecords')"><a  ng-href="#/mtraining/activityRecords">{{msg('mtraining.activityRecords')}}</a></li>
+            <li ng-class="active('#/mtraining/bookmarks')"><a  ng-href="#/mtraining/bookmarks">{{msg('mtraining.bookmarks')}}</a></li>
+        </ul>
+    </div>
+
+    <div tab-layout-with-mds-grid></div>
+</div>
+
+<div embedded-mds-filters></div>

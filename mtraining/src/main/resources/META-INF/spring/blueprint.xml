@@ -5,6 +5,14 @@
 
     <import resource="classpath*:META-INF/motech/*.xml" />
 
+    <bean id="mTrainingSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
+        <property name="rawConfigFiles">
+            <list>
+                <value>classpath:custom-ui.js</value>
+            </list>
+        </property>
+    </bean>
+
     <osgi:service id="mTrainingServiceOsgi" ref="mTrainingService"
                   interface="org.motechproject.mtraining.service.MTrainingService" />
 

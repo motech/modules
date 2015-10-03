@@ -10,7 +10,7 @@ import java.util.Map;
  * Bookmark object to store the progress for the user. This stores the identifier for the individual course units (like
  * chapters, lessons)
  */
-@Entity
+@Entity(nonEditable = true)
 public class Bookmark extends MdsEntity {
 
     /**
