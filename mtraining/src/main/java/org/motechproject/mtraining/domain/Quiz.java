@@ -3,7 +3,9 @@ package org.motechproject.mtraining.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.jdo.annotations.Persistent;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Quiz object to store questions and answer for a chapter
@@ -12,25 +14,39 @@ import java.util.List;
 public class Quiz extends CourseUnitMetadata {
 
     /**
-     * List of questions for the quiz
+     * List of questions for the Quiz.
      */
     @Field
     private List<Question> questions;
 
     /**
-     * Pass percentage for the quiz
+     * Pass percentage for the Quiz.
      */
     @Field
     private double passPercentage;
 
-    public Quiz(String name, CourseUnitState state, String content) {
-        super(name, state, content);
+    /**
+     * The additional properties which can be used with the Lesson.
+     */
+    @Field
+    @Persistent(defaultFetchGroup = "true")
+    private Map<String, String> properties;
+
+    public Quiz() {
+        this(null, CourseUnitState.Inactive, null, null, null);
     }
 
-    public Quiz(String name, CourseUnitState state, String content, List<Question> questions, double passPercentage) {
-        super(name, state, content);
+    public Quiz(String name, CourseUnitState state, String content, String description, Map<String, String> properties) {
+        super(name, state, content, description);
+        this.properties = properties;
+    }
+
+    public Quiz(String name, CourseUnitState state, String content, String description, Map<String, String> properties,
+                List<Question> questions, double passPercentage) {
+        super(name, state, content, description);
         this.questions = questions;
         this.passPercentage = passPercentage;
+        this.properties = properties;
     }
 
     public List<Question> getQuestions() {

@@ -1,5 +1,9 @@
 package org.motechproject.mtraining.service.impl;
 
+import org.apache.commons.lang.StringUtils;
+import org.motechproject.mds.query.QueryExecution;
+import org.motechproject.mds.query.QueryExecutor;
+import org.motechproject.mds.util.InstanceSecurityRestriction;
 import org.motechproject.mtraining.domain.Chapter;
 import org.motechproject.mtraining.domain.Course;
 import org.motechproject.mtraining.domain.Lesson;
@@ -13,12 +17,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.jdo.Query;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Service implementation for mTraining. This lets the implementer perform crud operations for
  * course, chapter, lesson and quiz objects. This is the primary service interface implementation that the admins
- * would use to author the structure of the course
+ * would use to author the structure of the course.
  */
 @Service("mTrainingService")
 public class MTrainingServiceImpl implements MTrainingService {
@@ -39,64 +47,51 @@ public class MTrainingServiceImpl implements MTrainingService {
         this.lessonDataService = lessonDataService;
         this.quizDataService = quizDataService;
     }
-    /**
-     * Create a course with the given structure
-     * @param course course object to store
-     * @return Course object created in the store
-     */
+
     @Override
     @Transactional
     public Course createCourse(Course course) {
         return courseDataService.create(course);
     }
 
-    /**
-     * Retrieve a course with the given course id
-     * @param courseId id of the course to retrieve
-     * @return course with id
-     */
     @Override
     @Transactional
     public Course getCourseById(long courseId) {
         return courseDataService.findCourseById(courseId);
     }
 
-    /**
-     * Get courses that match the name
-     * @param courseName name of the course
-     * @return list of courses that match the course name
-     */
     @Override
     @Transactional
-    public List<Course> getCourseByName(String courseName) {
-        return courseDataService.findCourseByName(courseName);
+    public List<Course> getCoursesByName(String courseName) {
+        return courseDataService.findCoursesByName(courseName);
     }
 
-    /**
-     * Get all courses
-     * @return list of courses
-     */
+    @Override
+    @Transactional
+    public List<Course> getCoursesByProperties(final Map<String, String> properties) {
+        List courses = courseDataService.executeQuery(new QueryExecution<List<Course>>() {
+            @Override
+            public List<Course> execute(Query query, InstanceSecurityRestriction restriction) {
+                query.setFilter(buildParametersFilter(properties));
+                return (List) QueryExecutor.execute(query, restriction);
+            }
+        });
+
+        return new ArrayList<>(courses);
+    }
+
     @Override
     @Transactional
     public List<Course> getAllCourses() {
         return courseDataService.retrieveAll();
     }
 
-    /**
-     * Update a course with the given structure
-     * @param course Course structure to update
-     * @return updated version of the course
-     */
     @Override
     @Transactional
     public Course updateCourse(Course course) {
         return courseDataService.update(course);
     }
 
-    /**
-     * Delete the course with the given id
-     * @param courseId id of the course
-     */
     @Override
     @Transactional
     public void deleteCourse(long courseId) {
@@ -104,11 +99,6 @@ public class MTrainingServiceImpl implements MTrainingService {
         courseDataService.delete(toDelete);
     }
 
-    /**
-     * get the quiz for a given chapter
-     * @param chapterId chapter id to retrieve quiz for
-     * @return Quiz object for the chapter
-     */
     @Override
     @Transactional
     public Quiz getQuizForChapter(long chapterId) {
@@ -120,11 +110,6 @@ public class MTrainingServiceImpl implements MTrainingService {
      * Chapter CRUD
      */
 
-    /**
-     * Create a chapter with the given information
-     * @param chapter chapter to create
-     * @return chapter object created in the store
-     */
     @Override
     @Transactional
     public Chapter createChapter(Chapter chapter) {
@@ -133,8 +118,21 @@ public class MTrainingServiceImpl implements MTrainingService {
 
     @Override
     @Transactional
-    public List<Chapter> getChapterByName(String chapterName) {
-        return chapterDataService.findChapterByName(chapterName);
+    public List<Chapter> getChaptersByName(String chapterName) {
+        return chapterDataService.findChaptersByName(chapterName);
+    }
+
+    @Override
+    public List<Chapter> getChaptersByProperties(Map<String, String> properties) {
+        List chapters = chapterDataService.executeQuery(new QueryExecution<List<Chapter>>() {
+            @Override
+            public List<Chapter> execute(Query query, InstanceSecurityRestriction restriction) {
+                query.setFilter(buildParametersFilter(properties));
+                return (List) QueryExecutor.execute(query, restriction);
+            }
+        });
+
+        return new ArrayList<>(chapters);
     }
 
     @Override
@@ -174,8 +172,21 @@ public class MTrainingServiceImpl implements MTrainingService {
 
     @Override
     @Transactional
-    public List<Lesson> getLessonByName(String lessonName) {
-        return lessonDataService.findLessonByName(lessonName);
+    public List<Lesson> getLessonsByName(String lessonName) {
+        return lessonDataService.findLessonsByName(lessonName);
+    }
+
+    @Override
+    public List<Lesson> getLessonsByProperties(Map<String, String> properties) {
+        List lessons = lessonDataService.executeQuery(new QueryExecution<List<Lesson>>() {
+            @Override
+            public List<Lesson> execute(Query query, InstanceSecurityRestriction restriction) {
+                query.setFilter(buildParametersFilter(properties));
+                return (List) QueryExecutor.execute(query, restriction);
+            }
+        });
+
+        return new ArrayList<>(lessons);
     }
 
     @Override
@@ -214,8 +225,21 @@ public class MTrainingServiceImpl implements MTrainingService {
 
     @Override
     @Transactional
-    public List<Quiz> getQuizByName(String quizName) {
-        return quizDataService.findQuizByName(quizName);
+    public List<Quiz> getQuizzesByName(String quizName) {
+        return quizDataService.findQuizzesByName(quizName);
+    }
+
+    @Override
+    public List<Quiz> getQuizzesByProperties(Map<String, String> properties) {
+        List quizzes = quizDataService.executeQuery(new QueryExecution<List<Quiz>>() {
+            @Override
+            public List<Quiz> execute(Query query, InstanceSecurityRestriction restriction) {
+                query.setFilter(buildParametersFilter(properties));
+                return (List) QueryExecutor.execute(query, restriction);
+            }
+        });
+
+        return new ArrayList<>(quizzes);
     }
 
     @Override
@@ -241,5 +265,17 @@ public class MTrainingServiceImpl implements MTrainingService {
     public void deleteQuiz(long quizId) {
         Quiz toDelete = quizDataService.findQuizById(quizId);
         quizDataService.delete(toDelete);
+    }
+
+    private String buildParametersFilter(Map<String, String> properties) {
+        if (properties == null) {
+            return "";
+        }
+        Collection<String> strings = new ArrayList<>();
+        for(String key: properties.keySet()) {
+            strings.add(String.format("properties.containsKey('%s') && properties.get('%s') == '%s'", key, key, properties.get(key)));
+        }
+
+        return String.format("%s", StringUtils.join(strings, " && "));
     }
 }
