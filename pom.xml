@@ -4,7 +4,7 @@
 
     <artifactId>modules</artifactId>
     <groupId>org.motechproject</groupId>
-    <version>0.26.2-SNAPSHOT</version>
+    <version>0.26.2</version>
     <packaging>pom</packaging>
     <name>MOTECH Modules</name>
 
@@ -943,7 +943,7 @@
                         </goals>
                         <configuration>
                             <rules>
-                                <DependencyConvergence/>
+                                <DependencyConvergence />
                             </rules>
                         </configuration>
                     </execution>
@@ -955,7 +955,7 @@
                         <phase>verify</phase>
                         <configuration>
                             <rules>
-                                <NoPackageCyclesRule implementation="de.andrena.tools.nopackagecycles.NoPackageCyclesRule"/>
+                                <NoPackageCyclesRule implementation="de.andrena.tools.nopackagecycles.NoPackageCyclesRule" />
                             </rules>
                             <skip>${enforcer.skip}</skip>
                         </configuration>
@@ -1249,6 +1249,6 @@
         <connection>${scm.connection}</connection>
         <developerConnection>${scm.developerConnection}</developerConnection>
         <url>${scm.url}</url>
-        <tag>HEAD</tag>
+        <tag>modules-0.26.2</tag>
     </scm>
 </project>
