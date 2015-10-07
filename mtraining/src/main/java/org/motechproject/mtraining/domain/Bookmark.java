@@ -1,8 +1,11 @@
 package org.motechproject.mtraining.domain;
 
+import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
+import org.motechproject.mds.util.SecurityMode;
+import org.motechproject.mtraining.util.Constants;
 
 import java.util.Map;
 
@@ -11,6 +14,7 @@ import java.util.Map;
  * chapters, lessons)
  */
 @Entity(nonEditable = true)
+@Access(value = SecurityMode.PERMISSIONS, members = {Constants.VIEW_MTRAINING_LOGS})
 public class Bookmark extends MdsEntity {
 
     /**

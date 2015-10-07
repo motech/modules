@@ -29,7 +29,11 @@
         </constructor-arg>
         <property name="defaultURL" value="/mtraining/treeView"/>
 
-        <!-- TODO: add roles for mtraining -->
-        <property name="roleForAccess" value="viewUI"/>
+        <property name="roleForAccess">
+            <list>
+                <value>manageMTraining</value>
+                <value>viewMTrainingLogs</value>
+            </list>
+        </property>
     </bean>
 </beans>

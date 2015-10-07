@@ -1,7 +1,10 @@
 package org.motechproject.mtraining.domain;
 
+import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.util.SecurityMode;
+import org.motechproject.mtraining.util.Constants;
 
 import java.util.List;
 
@@ -9,6 +12,7 @@ import java.util.List;
  * Quiz object to store questions and answer for a chapter
  */
 @Entity
+@Access(value = SecurityMode.PERMISSIONS, members = {Constants.MANAGE_MTRAINING})
 public class Quiz extends CourseUnitMetadata {
 
     /**

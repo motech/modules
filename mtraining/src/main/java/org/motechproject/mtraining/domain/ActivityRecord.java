@@ -1,9 +1,12 @@
 package org.motechproject.mtraining.domain;
 
 import org.joda.time.DateTime;
+import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
+import org.motechproject.mds.util.SecurityMode;
+import org.motechproject.mtraining.util.Constants;
 
 
 /**
@@ -11,6 +14,7 @@ import org.motechproject.mds.domain.MdsEntity;
  * This could be used either as a bookmarking system or enrollment system to track progress
  */
 @Entity(nonEditable = true)
+@Access(value = SecurityMode.PERMISSIONS, members = {Constants.VIEW_MTRAINING_LOGS})
 public class ActivityRecord extends MdsEntity {
 
     /**
