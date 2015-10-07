@@ -43,10 +43,10 @@ public interface MTrainingService {
     List<Course> getCoursesByName(String courseName);
 
     /**
-     * Gets courses that contains the given parameters.
+     * Gets courses that contains the given properties.
      *
-     * @param properties the parameters
-     * @return list of courses that contains the given parameters
+     * @param properties the properties
+     * @return list of courses that contains the given properties
      */
     List<Course> getCoursesByProperties(Map<String, String> properties);
 
@@ -99,10 +99,10 @@ public interface MTrainingService {
     List<Chapter> getChaptersByName(String chapterName);
 
     /**
-     * Gets chapters that contains the given parameters.
+     * Gets chapters that contains the given properties.
      *
-     * @param properties the parameters
-     * @return list of chapters that contains the given parameters
+     * @param properties the properties
+     * @return list of chapters that contains the given properties
      */
     List<Chapter> getChaptersByProperties(Map<String, String> properties);
 
@@ -149,10 +149,10 @@ public interface MTrainingService {
     List<Lesson> getLessonsByName(String lessonName);
 
     /**
-     * Gets lessons that contains the given parameters.
+     * Gets lessons that contains the given properties.
      *
-     * @param properties the parameters
-     * @return list of lessons that contains the given parameters
+     * @param properties the properties
+     * @return list of lessons that contains the given properties
      */
     List<Lesson> getLessonsByProperties(Map<String, String> properties);
 
@@ -207,10 +207,10 @@ public interface MTrainingService {
     List<Quiz> getQuizzesByName(String quizName);
 
     /**
-     * Gets quizzes that contains the given parameters.
+     * Gets quizzes that contains the given properties.
      *
      * @param properties the properties
-     * @return list of quizzes that contains the given parameters
+     * @return list of quizzes that contains the given properties
      */
     List<Quiz> getQuizzesByProperties(Map<String, String> properties);
 

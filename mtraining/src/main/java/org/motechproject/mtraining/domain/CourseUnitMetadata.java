@@ -4,26 +4,22 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
-import javax.jdo.annotations.Persistent;
-
 /**
  * Common metadata shared by all course sub classes.
  */
 @Entity
-public class CourseUnitMetadata extends MdsEntity {
+public abstract class CourseUnitMetadata extends MdsEntity {
 
     /**
      * Name of the course unit
      */
     @Field
-    @Persistent(defaultFetchGroup = "true")
     private String name;
 
     /**
      * Status of the course unit
      */
     @Field
-    @Persistent(defaultFetchGroup = "true")
     private CourseUnitState state;
 
     /**
@@ -32,14 +28,12 @@ public class CourseUnitMetadata extends MdsEntity {
      * resource pointer for an audio file in an IVR system.
      */
     @Field
-    @Persistent(defaultFetchGroup = "true")
     private String content;
 
     /**
      * Description of the unit.
      */
     @Field
-    @Persistent(defaultFetchGroup = "true")
     private String description;
 
     /**
