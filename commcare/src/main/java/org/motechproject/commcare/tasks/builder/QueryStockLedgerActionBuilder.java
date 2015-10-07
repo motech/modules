@@ -15,14 +15,15 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import static org.motechproject.tasks.domain.ParameterType.DATE;
+import static org.motechproject.tasks.domain.ParameterType.MAP;
+import static org.motechproject.tasks.domain.ParameterType.UNICODE;
+
 /**
  * Responsible for building actions for querying stock ledger for all configurations. There action can then be used in
  * the task module.
  */
 public class QueryStockLedgerActionBuilder {
-
-    private static final String UNICODE = "UNICODE";
-    private static final String DATE = "DATE";
 
     private CommcareConfigService configService;
 
@@ -47,7 +48,7 @@ public class QueryStockLedgerActionBuilder {
             builder = new ActionParameterRequestBuilder()
                     .setDisplayName(DisplayNames.CASE_ID)
                     .setKey(EventDataKeys.CASE_ID)
-                    .setType(UNICODE)
+                    .setType(UNICODE.getValue())
                     .setRequired(true)
                     .setOrder(order++);
             parameters.add(builder.createActionParameterRequest());
@@ -55,7 +56,7 @@ public class QueryStockLedgerActionBuilder {
             builder = new ActionParameterRequestBuilder()
                     .setDisplayName(DisplayNames.SECTION_ID)
                     .setKey(EventDataKeys.SECTION_ID)
-                    .setType(UNICODE)
+                    .setType(UNICODE.getValue())
                     .setRequired(true)
                     .setOrder(order++);
             parameters.add(builder.createActionParameterRequest());
@@ -63,7 +64,7 @@ public class QueryStockLedgerActionBuilder {
             builder = new ActionParameterRequestBuilder()
                     .setDisplayName(DisplayNames.START_DATE)
                     .setKey(EventDataKeys.START_DATE)
-                    .setType(DATE)
+                    .setType(DATE.getValue())
                     .setRequired(false)
                     .setOrder(order++);
             parameters.add(builder.createActionParameterRequest());
@@ -71,7 +72,15 @@ public class QueryStockLedgerActionBuilder {
             builder = new ActionParameterRequestBuilder()
                     .setDisplayName(DisplayNames.END_DATE)
                     .setKey(EventDataKeys.END_DATE)
-                    .setType(DATE)
+                    .setType(DATE.getValue())
+                    .setRequired(false)
+                    .setOrder(order++);
+            parameters.add(builder.createActionParameterRequest());
+
+            builder = new ActionParameterRequestBuilder()
+                    .setDisplayName(DisplayNames.EXTRA_DATA)
+                    .setKey(EventDataKeys.EXTRA_DATA)
+                    .setType(MAP.getValue())
                     .setRequired(false)
                     .setOrder(order);
             parameters.add(builder.createActionParameterRequest());

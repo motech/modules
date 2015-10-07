@@ -5,6 +5,7 @@ import org.motechproject.commcare.domain.CommcareStockTransactionList;
 import org.motechproject.commcare.events.constants.EventSubjects;
 import org.motechproject.commcare.request.StockTransactionRequest;
 import org.motechproject.commcare.service.CommcareStockTransactionService;
+import org.motechproject.commcare.util.CommcareParamHelper;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.event.listener.annotations.MotechListener;
@@ -16,6 +17,7 @@ import java.util.Map;
 
 import static org.motechproject.commcare.events.constants.EventDataKeys.CASE_ID;
 import static org.motechproject.commcare.events.constants.EventDataKeys.END_DATE;
+import static org.motechproject.commcare.events.constants.EventDataKeys.EXTRA_DATA;
 import static org.motechproject.commcare.events.constants.EventDataKeys.PRODUCT_ID;
 import static org.motechproject.commcare.events.constants.EventDataKeys.PRODUCT_NAME;
 import static org.motechproject.commcare.events.constants.EventDataKeys.QUANTITY;
@@ -47,19 +49,25 @@ public class QueryStockLedgerEventHandler {
     public void handleEvent(MotechEvent event) {
 
         String configName = getConfigName(event.getSubject());
+        Map<String, String> extraData = (Map<String, String>) event.getParameters().get(EXTRA_DATA);
 
         StockTransactionRequest request = parseEventToRequest(event);
 
         CommcareStockTransactionList transactions = stockTransactionService.getStockTransactions(request, configName);
 
         for (CommcareStockTransaction transaction : transactions.getObjects()) {
-            sendStockTransactionAsEvent(transaction, configName);
+            sendStockTransactionAsEvent(transaction, configName, extraData);
         }
     }
 
-    private void sendStockTransactionAsEvent(CommcareStockTransaction transaction, String configName) {
+    private void sendStockTransactionAsEvent(CommcareStockTransaction transaction, String configName,
+                                             Map<String, String> extraData) {
 
         Map<String, Object> eventParams = new LinkedHashMap<>();
+
+        if (extraData != null) {
+            eventParams.putAll(extraData);
+        }
 
         eventParams.put(PRODUCT_ID, transaction.getProductId());
         eventParams.put(PRODUCT_NAME, transaction.getProductName());
@@ -77,8 +85,8 @@ public class QueryStockLedgerEventHandler {
         StockTransactionRequest request = new StockTransactionRequest();
         request.setCaseId((String) event.getParameters().get(CASE_ID));
         request.setSectionId((String) event.getParameters().get(SECTION_ID));
-        request.setStartDate((String) event.getParameters().get(START_DATE));
-        request.setEndDate((String) event.getParameters().get(END_DATE));
+        request.setStartDate(CommcareParamHelper.printObjectAsDateTime(event.getParameters().get(START_DATE)));
+        request.setEndDate(CommcareParamHelper.printObjectAsDateTime(event.getParameters().get(END_DATE)));
         return request;
     }
 
