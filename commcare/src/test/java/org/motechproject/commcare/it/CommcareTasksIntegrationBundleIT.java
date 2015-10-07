@@ -197,6 +197,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         TaskTriggerInformation expectedForm1 = new TaskTriggerInformation();
         TaskTriggerInformation expectedForm2 = new TaskTriggerInformation();
         TaskTriggerInformation expectedCaseBirth = new TaskTriggerInformation();
+        TaskTriggerInformation expectedStockTx = new TaskTriggerInformation();
 
         expectedForm1.setSubject("org.motechproject.commcare.api.forms." + config.getName() + ".form1");
         assertTrue(channel.containsTrigger(expectedForm1));
@@ -206,6 +207,9 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         expectedCaseBirth.setSubject("org.motechproject.commcare.api.case." + config.getName() + ".birth");
         assertTrue(channel.containsTrigger(expectedCaseBirth));
+
+        expectedStockTx.setSubject(EventSubjects.RECEIVED_STOCK_TRANSACTION + '.' + config.getName());
+        assertTrue(channel.containsTrigger(expectedStockTx));
 
         TriggerEvent form1Trigger = channel.getTrigger(expectedForm1);
         assertEquals("org.motechproject.commcare.api.forms", form1Trigger.getTriggerListenerSubject());
@@ -319,6 +323,14 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setDisplayName(DisplayNames.END_DATE)
                 .setKey(EventDataKeys.END_DATE)
                 .setType(ParameterType.DATE)
+                .setRequired(false)
+                .setOrder(order++);
+        parameters.add(builder.createActionParameter());
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName(DisplayNames.EXTRA_DATA)
+                .setKey(EventDataKeys.EXTRA_DATA)
+                .setType(ParameterType.MAP)
                 .setRequired(false)
                 .setOrder(order);
         parameters.add(builder.createActionParameter());

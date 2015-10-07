@@ -19,6 +19,7 @@ public final class DisplayNames {
     public static final String STOCK_ON_HAND = "commcare.stockOnHand";
     public static final String TRANSACTION_DATE = "commcare.transactionDate";
     public static final String TYPE = "commcare.type";
+    public static final String EXTRA_DATA = "commcare.extraData";
 
     /**
      * Utility class, should not be initiated.

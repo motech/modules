@@ -56,6 +56,7 @@ public final class EventDataKeys {
     public static final String SECTION_ID = "section_id";
     public static final String START_DATE = "start_date";
     public static final String END_DATE = "end_date";
+    public static final String EXTRA_DATA = "extra_data";
 
     //ReceivedStockTransactionEvent
     public static final String PRODUCT_ID = "product_id";
