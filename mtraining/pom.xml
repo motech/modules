@@ -39,6 +39,20 @@
             <artifactId>motech-platform-dataservices</artifactId>
             <version>${motech.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-osgi-web-util</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-server-config</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -52,12 +66,15 @@
                     <instructions>
                         <Blueprint-Enabled>true</Blueprint-Enabled>
                         <Resource-Path>mtraining/resources</Resource-Path>
+                        <Context-Path>mtraining</Context-Path>
                         <Export-Package>
                             org.motechproject.mtraining.service;version=${project.version},
                             org.motechproject.mtraining.repository;version=${project.version},
                             org.motechproject.mtraining.domain;version=${project.version}
                         </Export-Package>
                         <Import-Package>
+                            org.motechproject.config.service,
+                            org.motechproject.osgi.web,
                             org.slf4j,
                             org.slf4j.impl,
                             net.sf.cglib.core,
@@ -96,6 +113,26 @@
                                     </includes>
                                 </resource>
                             </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jslint-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>jslint</goal>
+                        </goals>
+                        <configuration>
+                            <sourceJsFolder>${basedir}/src/main/resources/webapp/js</sourceJsFolder>
+                            <disallowIncrAndDecr>true</disallowIncrAndDecr>
+                            <requireUseStrict>true</requireUseStrict>
+                            <predefinedVars>
+                                $, angular, motechAlert, handleWithStackTrace, jQuery, parseUri, innerLayout
+                            </predefinedVars>
+                            <failOnIssues>${jslint.enable}</failOnIssues>
                         </configuration>
                     </execution>
                 </executions>
