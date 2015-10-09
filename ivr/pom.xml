@@ -4,12 +4,12 @@
     <parent>
         <artifactId>modules</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.25.4-SNAPSHOT</version>
+        <version>0.25.4</version>
         <relativePath>../</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <version>0.25.4-SNAPSHOT</version>
+    <version>0.25.4</version>
     <description>IVR Module</description>
     <artifactId>ivr</artifactId>
     <name>IVR Module</name>
