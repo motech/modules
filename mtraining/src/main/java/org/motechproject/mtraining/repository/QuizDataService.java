@@ -16,7 +16,7 @@ import java.util.List;
 public interface QuizDataService extends MotechDataService<Quiz> {
 
     @Lookup
-    List<Quiz> findQuizByName(@LookupField(name = "name") String quizName);
+    List<Quiz> findQuizzesByName(@LookupField(name = "name") String quizName);
 
     @Lookup
     Quiz findQuizById(@LookupField(name = "id") Long id);

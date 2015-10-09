@@ -8,6 +8,7 @@ import org.motechproject.mtraining.util.Constants;
 
 import javax.jdo.annotations.Persistent;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Course metadata containing chapter information
@@ -16,36 +17,53 @@ import java.util.List;
  * Chapter is a collection of lessons
  * Every Chapter has a quiz associated with it
  * Quiz is a collection of questions
- * Question contains pointer to question resource and answer resource
+ * Question contains pointer to question resource and answer resource.
  */
 @Entity
 @Access(value = SecurityMode.PERMISSIONS, members = {Constants.MANAGE_MTRAINING})
 public class Course extends CourseUnitMetadata {
 
     /**
-     * List of chapters in the course
+     * List of chapters in the Course.
      */
     @Field
     @Persistent(defaultFetchGroup = "true")
     private List<Chapter> chapters;
 
-    public Course(String name, CourseUnitState state, String content) {
+    /**
+     * The additional properties which can be used with the Course.
+     */
+    @Field
+    @Persistent(defaultFetchGroup = "true")
+    private Map<String, String> properties;
 
-        this(name, state, content, null);
+    public Course() {
+        this(null, CourseUnitState.Inactive, null, null, null);
     }
 
-    public Course(String name, CourseUnitState state, String content, List<Chapter> chapters) {
-        super(name, state, content);
+    public Course(String name, CourseUnitState state, String content, String description, Map<String, String> properties) {
+        this(name, state, content, description, properties, null);
+    }
+
+    public Course(String name, CourseUnitState state, String content, String description, Map<String, String> properties, List<Chapter> chapters) {
+        super(name, state, content, description);
         this.chapters = chapters;
+        this.properties = properties;
     }
 
     public List<Chapter> getChapters() {
-
         return chapters;
     }
 
     public void setChapters(List<Chapter> chapters) {
-
         this.chapters = chapters;
+    }
+
+    public Map<String, String> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Map<String, String> properties) {
+        this.properties = properties;
     }
 }

@@ -6,10 +6,11 @@ import org.motechproject.mtraining.domain.Lesson;
 import org.motechproject.mtraining.domain.Quiz;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Service interface for mTraining. Contains APIs to perform CRUD operations on Course and related objects like
- * chapters, lessons, quiz, etc
+ * chapters, lessons, quiz, etc.
  */
 public interface MTrainingService {
 
@@ -18,41 +19,53 @@ public interface MTrainingService {
      */
 
     /**
-     * Create a course with the given structure
+     * Creates a course with the given structure.
+     *
      * @param course course object to store
      * @return Course object created in the store
      */
     Course createCourse(Course course);
 
     /**
-     * Retrieve a course with the given course id
+     * Retrieves a course with the given course id.
+     *
      * @param courseId id of the course to retrieve
      * @return the course with the given id, or null if it does not exist
      */
     Course getCourseById(long courseId);
 
     /**
-     * Get courses that match the name
+     * Gets courses that match the name.
+     *
      * @param courseName name of the course
      * @return list of courses that match the course name
      */
-    List<Course> getCourseByName(String courseName);
+    List<Course> getCoursesByName(String courseName);
 
     /**
-     * Get all courses
+     * Gets courses that contains the given properties.
+     *
+     * @param properties the properties
+     * @return list of courses that contains the given properties
+     */
+    List<Course> getCoursesByProperties(Map<String, String> properties);
+
+    /**
+     * Gets all courses.
+     *
      * @return list of courses
      */
     List<Course> getAllCourses();
 
     /**
-     * Update a course with the given structure
+     * Updates a course with the given structure
      * @param course Course structure to update
      * @return the newly updated course
      */
     Course updateCourse(Course course);
 
     /**
-     * Delete the course with the given id
+     * Deletes the course with the given id
      * @param courseId ID of the course to delete
      */
     void deleteCourse(long courseId);
@@ -62,41 +75,55 @@ public interface MTrainingService {
      */
 
     /**
-     * Create a chapter
+     * Creates a chapter.
+     *
      * @param chapter chapter to create
      * @return chapter created in the store
      */
     Chapter createChapter(Chapter chapter);
 
     /**
-     * Get chapter from store by ID
+     * Gets chapters from store by ID.
+     *
      * @param chapterId the chapter ID
      * @return Chapter with id
      */
     Chapter getChapterById(long chapterId);
 
     /**
-     *  Get chapter by name
+     * Gets chapters that match the name.
+     *
      * @param chapterName name of the chapter
      * @return list of chapters with matching name
      */
-    List<Chapter> getChapterByName(String chapterName);
+    List<Chapter> getChaptersByName(String chapterName);
 
     /**
-     * Get all chapters
+     * Gets chapters that contains the given properties.
+     *
+     * @param properties the properties
+     * @return list of chapters that contains the given properties
+     */
+    List<Chapter> getChaptersByProperties(Map<String, String> properties);
+
+    /**
+     * Get all chapters.
+     *
      * @return list of chapters
      */
     List<Chapter> getAllChapters();
 
     /**
-     * Update a given chapter
+     * Updates a given chapter.
+     *
      * @param chapter chapter to update
      * @return updated chapter from the store
      */
     Chapter updateChapter(Chapter chapter);
 
     /**
-     * Delete a chapter by id
+     * Deletes a chapter by id.
+     *
      * @param chapterId id of the chapter to delete
      */
     void deleteChapter(long chapterId);
@@ -106,41 +133,55 @@ public interface MTrainingService {
      */
 
     /**
-     * Create a lesson
+     * Creates a lesson.
+     *
      * @param lesson lesson to create in store
      * @return stored lesson from store
      */
     Lesson createLesson(Lesson lesson);
 
     /**
-     * get lesson by name
+     * Gets lessons that match the name.
+     *
      * @param lessonName name of the lesson
      * @return list of lessons with matching name
      */
-    List<Lesson> getLessonByName(String lessonName);
+    List<Lesson> getLessonsByName(String lessonName);
 
     /**
-     * get lesson by id
+     * Gets lessons that contains the given properties.
+     *
+     * @param properties the properties
+     * @return list of lessons that contains the given properties
+     */
+    List<Lesson> getLessonsByProperties(Map<String, String> properties);
+
+    /**
+     * Gets lesson by id.
+     *
      * @param id id of the lesson
      * @return lesson with id
      */
     Lesson getLessonById(long id);
 
     /**
-     * Get all lessons
+     * Gets all lessons.
+     *
      * @return list of lessons
      */
     List<Lesson> getAllLessons();
 
     /**
-     * update a lesson in the store
+     * Updates a lesson in the store.
+     *
      * @param lesson lesson to update
      * @return updated lesson from store
      */
     Lesson updateLesson(Lesson lesson);
 
     /**
-     * delete a lesson with a given id
+     * Deletes a lesson with a given id.
+     *
      * @param lessonId id of the lesson to delete
      */
     void deleteLesson(long lessonId);
@@ -150,47 +191,62 @@ public interface MTrainingService {
      */
 
     /**
-     * Create a quiz
+     * Creates a quiz.
+     *
      * @param quiz New quiz object to store
      * @return quiz object from store
      */
     Quiz createQuiz(Quiz quiz);
 
     /**
-     * Get a quiz by a name
+     * Gets a quizzes that match the name.
+     *
      * @param quizName name of the quiz
      * @return list of quiz objects with the given name
      */
-    List<Quiz> getQuizByName(String quizName);
+    List<Quiz> getQuizzesByName(String quizName);
 
     /**
-     * Get a quiz by id
+     * Gets quizzes that contains the given properties.
+     *
+     * @param properties the properties
+     * @return list of quizzes that contains the given properties
+     */
+    List<Quiz> getQuizzesByProperties(Map<String, String> properties);
+
+    /**
+     * Gets a quiz by id.
+     *
      * @param id Id of the quiz
      * @return quiz object with id
      */
     Quiz getQuizById(long id);
 
     /**
-     * Get all quizzes
+     * Gets all quizzes.
+     *
      * @return list of quizzes
      */
     List<Quiz> getAllQuizzes();
 
     /**
-     * update a quiz object in store
+     * Updates a quiz object in store.
+     *
      * @param quiz quiz object to update
      * @return updated quiz object from store
      */
     Quiz updateQuiz(Quiz quiz);
 
     /**
-     * delete a quiz with id
+     * Deletes a quiz with id.
+     *
      * @param quizId id of the quiz to delete
      */
     void deleteQuiz(long quizId);
 
     /**
-     * get the quiz for a given chapter
+     * Gets the quiz for a given chapter.
+     *
      * @param chapterId chapter id to retrieve quiz for
      * @return Quiz object for the chapter
      */

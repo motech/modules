@@ -24,76 +24,42 @@ public class ActivityServiceImpl implements ActivityService {
         this.activityDataService = activityDataService;
     }
 
-    /**
-     * Add activity for a user (identified by externalId field in the record)
-     * @param activityRecord activity to record
-     * @return activity record from the operation
-     */
     @Override
     @Transactional
     public ActivityRecord createActivity(ActivityRecord activityRecord) {
         return activityDataService.create(activityRecord);
     }
 
-    /**
-     * Update the activity for a user (set completion time, etc)
-     * @param activityRecord activity record to update
-     * @return updated activity record
-     */
     @Override
     @Transactional
     public ActivityRecord updateActivity(ActivityRecord activityRecord) {
         return activityDataService.update(activityRecord);
     }
 
-    /**
-     * Get an activity by Id
-     * @param activityId Id of the user
-     * @return activity record with id
-     */
     @Override
     @Transactional
     public ActivityRecord getActivityById(long activityId) {
         return activityDataService.findRecordById(activityId);
     }
 
-    /**
-     * Get a list of all activity for a user
-     * @param externalId Id of the user
-     * @return list of activity records
-     */
     @Override
     @Transactional
     public List<ActivityRecord> getAllActivityForUser(String externalId) {
         return activityDataService.findRecordsForUser(externalId);
     }
 
-    /**
-     * Get all completed activity for user identified by external id (decided by
-     * whether completion time has been set on the record)
-     * @param externalId external id of the user
-     * @return list of activity records
-     */
     @Override
     @Transactional
     public List<ActivityRecord> getCompletedActivityForUser(String externalId) {
         return activityDataService.findRecordsForUserByState(externalId, ActivityState.COMPLETED);
     }
 
-    /**
-     * Delete the activity by record id
-     * @param activityRecordId activity record id to delete
-     */
     @Override
     @Transactional
     public void deleteActivity(long activityRecordId) {
         activityDataService.delete("id", activityRecordId);
     }
 
-    /**
-     * Delete all activity for a user (intended for data cleanups)
-     * @param externalId Id of the user
-     */
     @Override
     @Transactional
     public void deleteAllActivityForUser(String externalId) {
