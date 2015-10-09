@@ -3,13 +3,13 @@
     <parent>
         <artifactId>modules</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.25.4</version>
+        <version>0.25.5-SNAPSHOT</version>
         <relativePath>../</relativePath>
     </parent>
 
     <artifactId>pill-reminder</artifactId>
     <name>Pill Reminder Module</name>
-    <version>0.25.4</version>
+    <version>0.25.5-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
     <properties>
