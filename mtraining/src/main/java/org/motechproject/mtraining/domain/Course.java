@@ -1,7 +1,10 @@
 package org.motechproject.mtraining.domain;
 
+import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.util.SecurityMode;
+import org.motechproject.mtraining.util.Constants;
 
 import javax.jdo.annotations.Persistent;
 import java.util.List;
@@ -17,6 +20,7 @@ import java.util.Map;
  * Question contains pointer to question resource and answer resource.
  */
 @Entity
+@Access(value = SecurityMode.PERMISSIONS, members = {Constants.MANAGE_MTRAINING})
 public class Course extends CourseUnitMetadata {
 
     /**

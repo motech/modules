@@ -1,7 +1,10 @@
 package org.motechproject.mtraining.domain;
 
+import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.util.SecurityMode;
+import org.motechproject.mtraining.util.Constants;
 
 import javax.jdo.annotations.Persistent;
 import java.util.List;
@@ -11,6 +14,7 @@ import java.util.Map;
  * Chapter object to store quiz and lesson metadata. A chapter contains a list of possible lessons.
  */
 @Entity
+@Access(value = SecurityMode.PERMISSIONS, members = {Constants.MANAGE_MTRAINING})
 public class Chapter extends CourseUnitMetadata {
 
     /**

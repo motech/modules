@@ -1,6 +1,7 @@
 package org.motechproject.ivr.domain;
 
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.motechproject.commons.date.util.DateUtil;
@@ -16,7 +17,10 @@ import org.motechproject.mds.util.SecurityMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -299,14 +303,14 @@ public class CallDetailRecord {
      * @return the duration of this call
      */
     public String getCallDuration() {
-        return callDuration;
+        return parseDecimalString(callDuration);
     }
 
     /**
      * @return the percent listened of the message
      */
     public String getMessagePercentListened() {
-        return messagePercentListened;
+        return parseDecimalString(messagePercentListened);
     }
 
     /**
@@ -322,7 +326,7 @@ public class CallDetailRecord {
     public void setField(String key, String val, Map<String, String> callStatusMapping) {
         String value;
 
-        if (val.length() > MAX_ENTITY_STRING_LENGTH) {
+        if (val != null && val.length() > MAX_ENTITY_STRING_LENGTH) {
             LOGGER.warn("The value for {} exceeds {} characters and will be truncated.", key, MAX_ENTITY_STRING_LENGTH);
             LOGGER.warn("The complete value for {} is {}", key, val);
             value = val.substring(0, MAX_ENTITY_STRING_LENGTH);
@@ -463,5 +467,26 @@ public class CallDetailRecord {
                 ", callDuration=" + callDuration +
                 ", messagePercentListened=" + messagePercentListened +
                 '}';
+    }
+
+    private String parseDecimalString(String value) {
+        if (StringUtils.isBlank(value)) {
+            // leave blanks untouched
+            return value;
+        } else {
+            try {
+                // round to two decimal digits
+                double doubleVal = Double.parseDouble(value);
+
+                // always want to use English Locale here
+                DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.ENGLISH);
+                DecimalFormat df = new DecimalFormat("#.##", symbols);
+
+                return df.format(doubleVal);
+            } catch (NumberFormatException e) {
+                // if this is not a number, return what we have
+                return value;
+            }
+        }
     }
 }

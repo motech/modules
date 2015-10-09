@@ -1,12 +1,16 @@
 package org.motechproject.mtraining.domain;
 
+import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.util.SecurityMode;
+import org.motechproject.mtraining.util.Constants;
 
 /**
  * Question object with resource identifiers for question and answer
  */
 @Entity
+@Access(value = SecurityMode.PERMISSIONS, members = {Constants.MANAGE_MTRAINING})
 public class Question {
 
     /**
