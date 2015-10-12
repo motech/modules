@@ -1,14 +1,12 @@
-package org.motechproject.alerts.domain;
+package org.motechproject.alerts.contract;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.motechproject.alerts.domain.Alert;
 import org.motechproject.commons.api.Range;
-import org.motechproject.alerts.contract.AlertCriteria;
-import org.motechproject.alerts.contract.AlertsDataService;
-import org.motechproject.alerts.contract.Criterion;
 
 import java.util.ArrayList;
 import java.util.List;

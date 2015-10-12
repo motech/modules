@@ -1,9 +1,21 @@
-package org.motechproject.messagecampaign.domain.campaign;
+package org.motechproject.messagecampaign.domain;
 
 import org.junit.Test;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.commons.date.util.JodaFormatter;
+import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaign;
+import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.Campaign;
+import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaign;
+import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.DayOfWeek;
+import org.motechproject.messagecampaign.domain.campaign.DayOfWeekCampaign;
+import org.motechproject.messagecampaign.domain.campaign.DayOfWeekCampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
+import org.motechproject.messagecampaign.domain.campaign.OffsetCampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.RepeatIntervalCampaign;
+import org.motechproject.messagecampaign.domain.campaign.RepeatIntervalCampaignMessage;
 import org.motechproject.messagecampaign.exception.CampaignMessageValidationException;
 import org.motechproject.messagecampaign.exception.CampaignValidationException;
 

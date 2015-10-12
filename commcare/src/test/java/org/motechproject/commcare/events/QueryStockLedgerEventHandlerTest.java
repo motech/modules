@@ -9,7 +9,7 @@ import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.commcare.events.constants.EventSubjects;
 import org.motechproject.commcare.request.StockTransactionRequest;
 import org.motechproject.commcare.service.CommcareStockTransactionService;
-import org.motechproject.commcare.util.RequestTestUtils;
+import org.motechproject.commcare.testutil.RequestTestUtils;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.motechproject.commcare.util.CommcareStockTransactionTestUtils.prepareStockTransactionsList;
-import static org.motechproject.commcare.util.RequestTestUtils.prepareRequest;
+import static org.motechproject.commcare.testutil.RequestTestUtils.prepareRequest;
 
 public class QueryStockLedgerEventHandlerTest {
 

@@ -19,7 +19,7 @@ import org.motechproject.scheduletracking.repository.dataservices.ScheduleDataSe
 import org.motechproject.scheduletracking.service.EnrollmentRequest;
 import org.motechproject.scheduletracking.service.EnrollmentService;
 import org.motechproject.scheduletracking.service.ScheduleTrackingService;
-import org.motechproject.scheduletracking.utility.TestScheduleUtil;
+import org.motechproject.scheduletracking.utility.schedule.TestScheduleUtil;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.testing.osgi.helper.ServiceRetriever;

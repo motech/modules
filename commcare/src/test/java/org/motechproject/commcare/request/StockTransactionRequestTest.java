@@ -1,7 +1,6 @@
-package org.motechproject.commcare.request.json;
+package org.motechproject.commcare.request;
 
 import org.junit.Test;
-import org.motechproject.commcare.request.StockTransactionRequest;
 
 import static org.junit.Assert.assertEquals;
 

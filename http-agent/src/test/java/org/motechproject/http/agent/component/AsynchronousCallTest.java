@@ -1,4 +1,4 @@
-package org.motechproject.http.agent.service;
+package org.motechproject.http.agent.component;
 
 import org.junit.Test;
 import org.mockito.Mock;

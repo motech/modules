@@ -1,4 +1,4 @@
-package org.motechproject.csd.scheduler;
+package org.motechproject.csd.listener;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.motechproject.csd.constants.CSDEventKeys;
 import org.motechproject.csd.client.CSDHttpClient;
 import org.motechproject.csd.listener.CSDEventListener;
+import org.motechproject.csd.scheduler.CSDScheduler;
 import org.motechproject.csd.service.CSDService;
 import org.motechproject.event.MotechEvent;
 

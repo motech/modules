@@ -1,4 +1,4 @@
-package org.motechproject.commcare.service.impl;
+package org.motechproject.commcare.service.impl.parser;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -8,6 +8,8 @@ import org.motechproject.commcare.config.Config;
 import org.motechproject.commcare.events.constants.EventSubjects;
 import org.motechproject.commcare.exception.EndpointNotSupported;
 import org.motechproject.commcare.service.CommcareConfigService;
+import org.motechproject.commcare.service.impl.CommcareCaseEventParser;
+import org.motechproject.commcare.service.impl.CommcareFormsEventParser;
 import org.motechproject.commcare.util.ConfigsUtils;
 import org.motechproject.commcare.util.ResponseXML;
 import org.motechproject.commcare.web.CasesController;
