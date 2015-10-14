@@ -1,7 +1,7 @@
 package org.motechproject.commcare.parser;
 
 import org.junit.Test;
-import org.motechproject.commcare.CommcareFormTestLoader;
+import org.motechproject.commcare.testutil.CommcareFormTestLoader;
 import org.motechproject.commcare.domain.CommcareForm;
 import org.motechproject.commcare.domain.CommcareFormList;
 import org.motechproject.commcare.domain.CommcareMetadataJson;

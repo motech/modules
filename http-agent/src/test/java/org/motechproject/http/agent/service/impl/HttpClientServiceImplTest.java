@@ -1,4 +1,4 @@
-package org.motechproject.http.agent.service;
+package org.motechproject.http.agent.service.impl;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -10,7 +10,8 @@ import org.motechproject.http.agent.components.AsynchronousCall;
 import org.motechproject.http.agent.components.SynchronousCall;
 import org.motechproject.http.agent.domain.Credentials;
 import org.motechproject.http.agent.domain.EventDataKeys;
-import org.motechproject.http.agent.service.impl.HttpAgentImpl;
+import org.motechproject.http.agent.service.HttpAgent;
+import org.motechproject.http.agent.service.Method;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.HashMap;

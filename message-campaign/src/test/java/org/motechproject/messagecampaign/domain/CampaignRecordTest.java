@@ -1,9 +1,18 @@
-package org.motechproject.messagecampaign.domain.campaign;
+package org.motechproject.messagecampaign.domain;
 
 import org.junit.Test;
 import org.motechproject.commons.date.util.JodaFormatter;
 import org.motechproject.messagecampaign.builder.CampaignMessageRecordTestBuilder;
 import org.motechproject.messagecampaign.builder.CampaignRecordBuilder;
+import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaign;
+import org.motechproject.messagecampaign.domain.campaign.AbsoluteCampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.Campaign;
+import org.motechproject.messagecampaign.domain.campaign.CampaignMessageRecord;
+import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
+import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaign;
+import org.motechproject.messagecampaign.domain.campaign.CronBasedCampaignMessage;
+import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
+import org.motechproject.messagecampaign.domain.campaign.OffsetCampaignMessage;
 
 import java.util.List;
 

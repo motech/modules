@@ -1,4 +1,4 @@
-package org.motechproject.commcare;
+package org.motechproject.commcare.testutil;
 
 import org.apache.commons.io.IOUtils;
 

@@ -1,7 +1,11 @@
-package org.motechproject.scheduletracking.domain;
+package org.motechproject.scheduletracking.domain.factory;
 
 import org.joda.time.Period;
 import org.junit.Test;
+import org.motechproject.scheduletracking.domain.Milestone;
+import org.motechproject.scheduletracking.domain.Schedule;
+import org.motechproject.scheduletracking.domain.ScheduleFactory;
+import org.motechproject.scheduletracking.domain.WindowName;
 import org.motechproject.scheduletracking.domain.exception.InvalidScheduleDefinitionException;
 import org.motechproject.scheduletracking.domain.json.ScheduleRecord;
 import org.motechproject.scheduletracking.repository.TrackedSchedulesJsonReader;

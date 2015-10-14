@@ -1,4 +1,4 @@
-package org.motechproject.commcare.util;
+package org.motechproject.commcare.testutil;
 
 import org.motechproject.commcare.request.StockTransactionRequest;
 

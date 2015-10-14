@@ -1,4 +1,4 @@
-package org.motechproject.scheduletracking.utility;
+package org.motechproject.scheduletracking.utility.schedule;
 
 
 import org.apache.commons.io.IOUtils;

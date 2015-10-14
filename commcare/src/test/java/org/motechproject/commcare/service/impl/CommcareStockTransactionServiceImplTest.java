@@ -23,7 +23,7 @@ import static org.motechproject.commcare.util.CommcareStockTransactionTestUtils.
 import static org.motechproject.commcare.util.ConfigTestUtils.prepareConfig;
 import static org.motechproject.commcare.util.JsonTestUtils.MALFORMED_STOCK_LEDGER;
 import static org.motechproject.commcare.util.JsonTestUtils.VALID_STOCK_LEDGER;
-import static org.motechproject.commcare.util.RequestTestUtils.prepareRequest;
+import static org.motechproject.commcare.testutil.RequestTestUtils.prepareRequest;
 
 public class CommcareStockTransactionServiceImplTest {
 
