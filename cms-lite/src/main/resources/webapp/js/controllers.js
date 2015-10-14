@@ -40,6 +40,7 @@
             $scope.resourceType = 'string';
             $scope.mode = 'read';
             $scope.select = {};
+            $scope.select.value = '';
             $('#newResourceForm').resetForm();
             $('#newResourceModal').modal('show');
         };
