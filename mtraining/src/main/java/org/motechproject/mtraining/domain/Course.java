@@ -3,10 +3,13 @@ package org.motechproject.mtraining.domain;
 import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.mds.util.SecurityMode;
+import org.motechproject.mtraining.dto.CourseUnitDto;
 import org.motechproject.mtraining.util.Constants;
 
 import javax.jdo.annotations.Persistent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +22,7 @@ import java.util.Map;
  * Quiz is a collection of questions
  * Question contains pointer to question resource and answer resource.
  */
-@Entity
+@Entity(maxFetchDepth = 4)
 @Access(value = SecurityMode.PERMISSIONS, members = {Constants.MANAGE_MTRAINING})
 public class Course extends CourseUnitMetadata {
 
@@ -65,5 +68,18 @@ public class Course extends CourseUnitMetadata {
 
     public void setProperties(Map<String, String> properties) {
         this.properties = properties;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Ignore
+    @Override
+    public CourseUnitDto toUnitDto() {
+        List<CourseUnitDto> units = new ArrayList<>();
+        for (Chapter chapter : chapters) {
+            units.add(chapter.toUnitDto());
+        }
+        return new CourseUnitDto(getId(), getName(), getState().toString(), units, Constants.COURSE);
     }
 }

@@ -3,10 +3,14 @@ package org.motechproject.mtraining.domain;
 import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.mds.util.SecurityMode;
+import org.motechproject.mtraining.dto.ChapterUnitDto;
+import org.motechproject.mtraining.dto.CourseUnitDto;
 import org.motechproject.mtraining.util.Constants;
 
 import javax.jdo.annotations.Persistent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -80,5 +84,18 @@ public class Chapter extends CourseUnitMetadata {
 
     public void setProperties(Map<String, String> properties) {
         this.properties = properties;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Ignore
+    @Override
+    public CourseUnitDto toUnitDto() {
+        List<CourseUnitDto> units = new ArrayList<>();
+        for (Lesson lesson : lessons) {
+            units.add(lesson.toUnitDto());
+        }
+        return new ChapterUnitDto(getId(), getName(), getState().toString(), units, quiz == null ? null : quiz.toUnitDto());
     }
 }

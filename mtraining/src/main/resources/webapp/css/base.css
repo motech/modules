@@ -1,0 +1,47 @@
+@import url("style.min.css");
+
+div.buttons > button {
+    width:170px;
+    margin-top: 10px;
+    margin-left: 10px;
+
+}
+
+.table-lightblue-nohover {
+    border-color: #D4E1F9;
+    background: #E4F1F9;
+}
+
+.table-lightblue-nohover  tbody tr:nth-child(2n+1) td {
+    background: #F3FBFE;
+}
+
+.draggable > * {
+    margin-left: 10px;
+}
+
+.draggable i {
+    margin-right: 5px;
+}
+
+.ui-jqgrid-labels {
+    height: 50px;
+}
+
+li[state="Inactive"] > a {
+    color: #C0C0C0 !important;
+}
+
+.members-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.members-list li[state="Inactive"] {
+    color: #C0C0C0 !important;
+}
+
+.ui-jqgrid .ui-jqgrid-htable {
+    table-layout: auto;
+}

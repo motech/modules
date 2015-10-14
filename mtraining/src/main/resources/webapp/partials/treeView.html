@@ -1,6 +1,75 @@
 <div class="row">
     <h4 class="frame-title">{{msg('mtraining.treeView')}}</h4>
-    <div class="inside">
-        {{msg('mtraining.treeView')}}
+
+    <div class="ui-jqgrid-hbox" style="padding-right: 0px; width: 100%;">
+        <table class="ui-jqgrid-htable table-lightblue-nohover" style="width: 100%; height: 500px" role="grid" aria-labelledby="gbox_treeTable" cellspacing="0" cellpadding="0" border="0">
+            <thead>
+                <tr class="ui-jqgrid-labels" role="rowheader">
+                    <th id="treeTable_treeModel" role="columnheader" class="ui-state-default ui-th-column ui-th-ltr" style="width: 22%;" aria-selected="true">
+                        {{msg('mtraining.structure')}}
+                    </th>
+                    <th id="treeTable_Members" role="columnheader" class="ui-state-default ui-th-column ui-th-ltr" style="width:13%;">
+                        {{msg('mtraining.members')}}
+                    </th>
+                    <th id="treeTable_Units" role="columnheader" class="ui-state-default ui-th-column ui-th-ltr" style="width: 13%;"><span class="ui-jqgrid-resize ui-jqgrid-resize-ltr" style="cursor: col-resize;">&nbsp;</span>
+                        {{msg('mtraining.nodes')}}
+                    </th>
+                </tr>
+            </thead>
+
+            <tr role="row" id="1" tabindex="0" class="ui-widget-content jqgrow ui-row-ltr ui-state-highlight" aria-selected="true">
+                <td role="gridcell" class="ui-state-default jqgrid-rownum" style="width: 25px;" title="1" aria-describedby="treeTable_treeModel">
+                    <div id="jstree">
+                    </div>
+                </td>
+                <td role="gridcell" id="members" class="ui-state-default jqgrid-rownum draggable droppable" aria-describedby="treeTable_Members">
+                    <div ng-if="children">
+                        <ul class="members-list" id="{{index}}" ng-repeat="item in children track by $index">
+                            <li state="{{item.li_attr.state}}" class="form-inline"><i class="{{item.icon}}" />{{item.text}}</li>
+                        </ul>
+                    </div>
+                </td>
+                <td role="gridcell" id="units" class="ui-state-default jqgrid-rownum draggable" aria-describedby="treeTable_Units">
+                    <ul class="members-list" ng-repeat="item in nodes track by $index">
+                        <li state="{{item.state}}" class="form-inline" idx="{{$index}}"><i class="{{childIcon}}" />{{item.name}}</li>
+                    </ul>
+                    <ul class="members-list" ng-repeat="item in quizNodes track by $index">
+                        <li state="{{item.state}}" class="form-inline quiz" idx="{{$index}}" qid="{{item.id}}"><i class="{{jstree.settings.types.quiz.icon}}" />{{item.name}}</li>
+                    </ul>
+                </td>
+
+            </tr>
+        </table>
+    </div>
+
+    <div class="buttons">
+        <button class="btn btn-success ng-binding" ng-click="saveCourses()" ng-disabled="!unsaved">
+            <i class="fa fa-lg fa-floppy-o"></i> {{msg('mtraining.save')}}
+        </button>
+        <button class="btn btn-danger ng-binding" ng-disabled="isRemoveButtonDisabled()" ng-click="removeMember()">
+            <i class="fa fa-lg fa-trash-o"></i> {{msg('mtraining.removeMember')}}
+        </button>
+        <button class="btn btn-danger ng-binding" ng-disabled="!unsaved" ng-click="cancel()">
+            <i class="fa fa-lg fa-times"></i> {{msg('mtraining.cancel')}}
+        </button>
+    </div>
+    <div class="buttons">
+        <button class="btn btn-warning ng-binding" ng-disabled="isButtonDisabled()" ng-click="changeState()">
+            <i class="fa fa-flag-o"></i>
+            <span ng-switch on="isActive()">
+                <span ng-switch-when="false"> {{msg('mtraining.activate')}}</span>
+                <span ng-switch-default> {{msg('mtraining.deactivate')}}</span>
+            </span>
+        </button>
+        </button>
+        <button class="btn btn-warning ng-binding" ng-disabled="isButtonDisabled()" ng-click="activatePath()">
+            <i class="fa fa-flag-o"></i>
+            <span> {{msg('mtraining.activateAll')}}</span>
+        </button>
+        </button>
+        <button class="btn btn-warning ng-binding" ng-disabled="isButtonDisabled()" ng-click="deactivatePath()">
+            <i class="fa fa-flag-o"></i>
+            <span> {{msg('mtraining.deactivateAll')}}</span>
+        </button>
     </div>
 </div>

@@ -128,9 +128,13 @@
                             <disallowIncrAndDecr>true</disallowIncrAndDecr>
                             <requireUseStrict>true</requireUseStrict>
                             <predefinedVars>
-                                $, angular, motechAlert, handleWithStackTrace, jQuery, parseUri, innerLayout
+                                $, angular, motechAlert, motechConfirm, handleWithStackTrace, jQuery, parseUri, innerLayout,
+                                blockUI, unblockUI
                             </predefinedVars>
                             <failOnIssues>${jslint.enable}</failOnIssues>
+                            <excludes>
+                                <exclude>**/jstree.min.js</exclude>
+                            </excludes>
                         </configuration>
                     </execution>
                 </executions>

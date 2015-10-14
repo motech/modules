@@ -3,7 +3,9 @@ package org.motechproject.mtraining.domain;
 import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.mds.util.SecurityMode;
+import org.motechproject.mtraining.dto.CourseUnitDto;
 import org.motechproject.mtraining.util.Constants;
 
 import javax.jdo.annotations.Persistent;
@@ -39,5 +41,14 @@ public class Lesson extends CourseUnitMetadata {
 
     public void setProperties(Map<String, String> properties) {
         this.properties = properties;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Ignore
+    @Override
+    public CourseUnitDto toUnitDto() {
+        return new CourseUnitDto(getId(), getName(), getState().toString(), null, Constants.LESSON);
     }
 }

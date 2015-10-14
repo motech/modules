@@ -2,7 +2,9 @@ package org.motechproject.mtraining.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.mds.domain.MdsEntity;
+import org.motechproject.mtraining.dto.CourseUnitDto;
 
 /**
  * Common metadata shared by all course sub classes.
@@ -81,5 +83,15 @@ public abstract class CourseUnitMetadata extends MdsEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     * Builds the dto representation of the unit used by the tree view.
+     *
+     * @return the dto representation of the unit
+     */
+    @Ignore
+    public CourseUnitDto toUnitDto() {
+        return new CourseUnitDto(getId(), getName(), getState().toString(), null, null);
     }
 }
