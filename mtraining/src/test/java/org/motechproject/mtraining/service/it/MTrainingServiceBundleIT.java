@@ -26,11 +26,11 @@ import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -64,9 +64,9 @@ public class MTrainingServiceBundleIT extends BasePaxIT {
     @Before
     public void setup() {
         getLogger().info("setup");
+        lessonDataService.deleteAll();
         chapterDataService.deleteAll();
         courseDataService.deleteAll();
-        lessonDataService.deleteAll();
         quizDataService.deleteAll();
     }
 
@@ -195,7 +195,7 @@ public class MTrainingServiceBundleIT extends BasePaxIT {
             public Course doInTransaction(TransactionStatus transactionStatus) {
                 Chapter sharedChapter = mTrainingService.getCourseById(firstCourseId).getChapters().get(0);
                 return mTrainingService.createCourse(
-                        new Course("secondCourse", CourseUnitState.Active, "RandomCourseIntro", null, null, Arrays.asList(sharedChapter)));
+                        new Course("secondCourse", CourseUnitState.Active, "RandomCourseIntro", null, null, asList(sharedChapter)));
             }
         });
 
@@ -456,6 +456,98 @@ public class MTrainingServiceBundleIT extends BasePaxIT {
         assertEquals(2, list.size());
     }
 
+
+    @Test
+    public void testGetUnusedChapters() {
+        Course course = courseDataService.create(new Course("unused_chapters_course_1", CourseUnitState.Active, "content_1", "Description_1", getProperties3()));
+        chapterDataService.create(new Chapter("unused_chapters_chapter_1", CourseUnitState.Active, "content_1", "Description_1", getProperties2()));
+        chapterDataService.create(new Chapter("unused_chapters_chapter_2", CourseUnitState.Active, "content_2", "Description_2", getProperties2()));
+
+        List<Chapter> unusedChapters = mTrainingService.getUnusedChapters();
+        assertNotNull(unusedChapters);
+        assertEquals(2, unusedChapters.size());
+
+        List<Chapter> chapters = new ArrayList<>();
+        chapters.add(unusedChapters.get(0));
+        course.setChapters(chapters);
+        courseDataService.update(course);
+
+        unusedChapters = mTrainingService.getUnusedChapters();
+        assertNotNull(unusedChapters);
+        assertEquals(1, unusedChapters.size());
+
+        course = mTrainingService.getCourseById(course.getId());
+        course.setChapters(new ArrayList<>());
+        courseDataService.update(course);
+
+        unusedChapters = mTrainingService.getUnusedChapters();
+        assertNotNull(unusedChapters);
+        assertEquals(2, unusedChapters.size());
+    }
+
+    @Test
+    public void testGetUnusedLessons() {
+        courseDataService.create(generateFullCourse("unused_lessons_"));
+        lessonDataService.create(new Lesson("test_lesson_1", CourseUnitState.Active, "content_1", "Description_1", getProperties1()));
+        lessonDataService.create(new Lesson("test_lesson_2", CourseUnitState.Active, "content_2", "Description_2", getProperties1()));
+        lessonDataService.create(new Lesson("test_lesson_3", CourseUnitState.Active, "content_3", "Description_3", getProperties1()));
+        lessonDataService.create(new Lesson("test_lesson_4", CourseUnitState.Active, "content_4", "Description_4", getProperties1()));
+        lessonDataService.create(new Lesson("test_lesson_5", CourseUnitState.Active, "content_5", "Description_5", getProperties1()));
+
+        List<Lesson> unusedLessons = mTrainingService.getUnusedLessons();
+        assertNotNull(unusedLessons);
+        assertEquals(5, unusedLessons.size());
+        assertEquals("test_lesson_3", unusedLessons.get(2).getName());
+
+        List<Chapter> chapters = mTrainingService.getChaptersByName("unused_lessons_chapter1");
+        assertEquals(1, chapters.size());
+        chapters.get(0).getLessons().add(unusedLessons.get(0));
+        chapterDataService.update(chapters.get(0));
+
+        unusedLessons = mTrainingService.getUnusedLessons();
+        assertNotNull(unusedLessons);
+        assertEquals(4, unusedLessons.size());
+
+        chapters = mTrainingService.getChaptersByName("unused_lessons_chapter1");
+        chapters.get(0).getLessons().remove(0);
+        chapterDataService.update(chapters.get(0));
+
+        unusedLessons = mTrainingService.getUnusedLessons();
+        assertNotNull(unusedLessons);
+        assertEquals(5, unusedLessons.size());
+    }
+
+    @Test
+    public void testGetUnusedQuizzes() {
+        chapterDataService.create(new Chapter("unused_quizzes_chapter_1", CourseUnitState.Active, "content_1", "Description_1", getProperties2()));
+        chapterDataService.create(new Chapter("unused_quizzes_chapter_2", CourseUnitState.Active, "content_2", "Description_2", getProperties2()));
+        quizDataService.create(new Quiz("test_quiz_1", CourseUnitState.Active, "content_1", "Description_1", getProperties2()));
+        quizDataService.create(new Quiz("test_quiz_2", CourseUnitState.Active, "content_2", "Description_2", getProperties2()));
+        quizDataService.create(new Quiz("test_quiz_3", CourseUnitState.Active, "content_3", "Description_3", getProperties2()));
+
+        List<Quiz> unusedQuizzes = mTrainingService.getUnusedQuizzes();
+        assertNotNull(unusedQuizzes);
+        assertEquals(3, unusedQuizzes.size());
+
+        List<Chapter> chapters = mTrainingService.getChaptersByName("unused_quizzes_chapter_1");
+        assertEquals(1, chapters.size());
+        chapters.get(0).setQuiz(unusedQuizzes.get(0));
+        chapterDataService.update(chapters.get(0));
+
+        unusedQuizzes = mTrainingService.getUnusedQuizzes();
+        assertNotNull(unusedQuizzes);
+        assertEquals(2, unusedQuizzes.size());
+
+        chapters = mTrainingService.getChaptersByName("unused_quizzes_chapter_1");
+        assertEquals(1, chapters.size());
+        chapters.get(0).setQuiz(null);
+        chapterDataService.update(chapters.get(0));
+
+        unusedQuizzes = mTrainingService.getUnusedQuizzes();
+        assertNotNull(unusedQuizzes);
+        assertEquals(3, unusedQuizzes.size());
+    }
+
     private Course generateFullCourse(String namePrefix) {
         Course myCourse = new Course(namePrefix, CourseUnitState.Active, "motech.com/courseIntro", "School course", getProperties1());
         Chapter chapter1 = new Chapter(namePrefix + "chapter1", CourseUnitState.Active, "motech.com/chapter1Intro", "Chapter 1 description", getProperties2());
@@ -471,12 +563,12 @@ public class MTrainingServiceBundleIT extends BasePaxIT {
         Question q4 = new Question("motech.com/question4.mp4", "a");
 
         Quiz quiz1 = new Quiz(namePrefix + "quiz1", CourseUnitState.Active, "RandomResourceLink", "Great Quiz", getProperties1(),
-                new ArrayList<>(Arrays.asList(q1, q2, q3, q4)), 90.9);
+                new ArrayList<>(asList(q1, q2, q3, q4)), 90.9);
 
-        chapter1.setLessons(new ArrayList<Lesson>(Arrays.asList(lesson1, lesson2)));
+        chapter1.setLessons(new ArrayList<Lesson>(asList(lesson1, lesson2)));
         chapter1.setQuiz(quiz1);
-        chapter2.setLessons(new ArrayList<Lesson>(Arrays.asList(lesson3)));
-        myCourse.setChapters(new ArrayList<Chapter>(Arrays.asList(chapter1, chapter2)));
+        chapter2.setLessons(new ArrayList<Lesson>(asList(lesson3)));
+        myCourse.setChapters(new ArrayList<Chapter>(asList(chapter1, chapter2)));
 
         return myCourse;
     }

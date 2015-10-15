@@ -1,5 +1,7 @@
 package org.motechproject.mtraining.domain;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
@@ -25,6 +27,8 @@ public class Chapter extends CourseUnitMetadata {
      * List of lessons in the Chapter.
      */
     @Field
+    @Persistent(defaultFetchGroup = "true",  mappedBy = "chapter")
+    @JsonManagedReference
     private List<Lesson> lessons;
 
     /**
@@ -32,6 +36,7 @@ public class Chapter extends CourseUnitMetadata {
      */
     @Field
     @Persistent(defaultFetchGroup = "true")
+    @JsonManagedReference
     private Quiz quiz;
 
     /**
@@ -40,6 +45,14 @@ public class Chapter extends CourseUnitMetadata {
     @Field
     @Persistent(defaultFetchGroup = "true")
     private Map<String, String> properties;
+
+    /**
+     * Course that owns this Chapter.
+     */
+    @Field
+    @JsonBackReference
+    @Persistent(defaultFetchGroup = "true")
+    private Course course;
 
     public Chapter() {
         this(null, CourseUnitState.Inactive, null, null, null);
@@ -86,6 +99,14 @@ public class Chapter extends CourseUnitMetadata {
         this.properties = properties;
     }
 
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -93,8 +114,10 @@ public class Chapter extends CourseUnitMetadata {
     @Override
     public CourseUnitDto toUnitDto() {
         List<CourseUnitDto> units = new ArrayList<>();
-        for (Lesson lesson : lessons) {
-            units.add(lesson.toUnitDto());
+        if (lessons != null) {
+            for (Lesson lesson : lessons) {
+                units.add(lesson.toUnitDto());
+            }
         }
         return new ChapterUnitDto(getId(), getName(), getState().toString(), units, quiz == null ? null : quiz.toUnitDto());
     }

@@ -1,4 +1,4 @@
-package org.motechproject.mtraining.repository;
+package org.motechproject.mtraining.repository.query;
 
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.mds.query.QueryExecution;

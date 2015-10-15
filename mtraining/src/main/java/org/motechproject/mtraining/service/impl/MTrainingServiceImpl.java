@@ -7,9 +7,11 @@ import org.motechproject.mtraining.domain.Quiz;
 import org.motechproject.mtraining.repository.ChapterDataService;
 import org.motechproject.mtraining.repository.CourseDataService;
 import org.motechproject.mtraining.repository.LessonDataService;
-import org.motechproject.mtraining.repository.PropertiesMapQueryExecution;
 import org.motechproject.mtraining.repository.QuizDataService;
+import org.motechproject.mtraining.repository.query.PropertiesMapQueryExecution;
+import org.motechproject.mtraining.repository.query.UnusedUnitQueryExecution;
 import org.motechproject.mtraining.service.MTrainingService;
+import org.motechproject.mtraining.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -114,6 +116,11 @@ public class MTrainingServiceImpl implements MTrainingService {
     }
 
     @Override
+    public List<Chapter> getUnusedChapters() {
+        return chapterDataService.executeQuery(new UnusedUnitQueryExecution<Chapter>(Constants.COURSE));
+    }
+
+    @Override
     @Transactional
     public Chapter getChapterById(long chapterId) {
         return chapterDataService.findChapterById(chapterId);
@@ -160,6 +167,11 @@ public class MTrainingServiceImpl implements MTrainingService {
     }
 
     @Override
+    public List<Lesson> getUnusedLessons() {
+        return lessonDataService.executeQuery(new UnusedUnitQueryExecution<Lesson>(Constants.CHAPTER));
+    }
+
+    @Override
     @Transactional
     public Lesson getLessonById(long lessonId) {
         return lessonDataService.findLessonById(lessonId);
@@ -202,6 +214,11 @@ public class MTrainingServiceImpl implements MTrainingService {
     @Override
     public List<Quiz> getQuizzesByProperties(Map<String, String> properties) {
         return quizDataService.executeQuery(new PropertiesMapQueryExecution<>(properties));
+    }
+
+    @Override
+    public List<Quiz> getUnusedQuizzes() {
+        return quizDataService.executeQuery(new UnusedUnitQueryExecution<Quiz>(Constants.CHAPTER));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.motechproject.mtraining.domain;
 
+import org.codehaus.jackson.annotate.JsonManagedReference;
 import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
@@ -22,7 +23,7 @@ import java.util.Map;
  * Quiz is a collection of questions
  * Question contains pointer to question resource and answer resource.
  */
-@Entity(maxFetchDepth = 4)
+@Entity(maxFetchDepth = 3)
 @Access(value = SecurityMode.PERMISSIONS, members = {Constants.MANAGE_MTRAINING})
 public class Course extends CourseUnitMetadata {
 
@@ -30,7 +31,8 @@ public class Course extends CourseUnitMetadata {
      * List of chapters in the Course.
      */
     @Field
-    @Persistent(defaultFetchGroup = "true")
+    @Persistent(defaultFetchGroup = "true",  mappedBy = "course")
+    @JsonManagedReference
     private List<Chapter> chapters;
 
     /**
@@ -77,8 +79,10 @@ public class Course extends CourseUnitMetadata {
     @Override
     public CourseUnitDto toUnitDto() {
         List<CourseUnitDto> units = new ArrayList<>();
-        for (Chapter chapter : chapters) {
-            units.add(chapter.toUnitDto());
+        if (chapters != null) {
+            for (Chapter chapter : chapters) {
+                units.add(chapter.toUnitDto());
+            }
         }
         return new CourseUnitDto(getId(), getName(), getState().toString(), units, Constants.COURSE);
     }

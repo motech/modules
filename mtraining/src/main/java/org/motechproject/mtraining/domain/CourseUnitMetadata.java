@@ -21,7 +21,7 @@ public abstract class CourseUnitMetadata extends MdsEntity {
     /**
      * Status of the course unit
      */
-    @Field
+    @Field(required = true)
     private CourseUnitState state;
 
     /**

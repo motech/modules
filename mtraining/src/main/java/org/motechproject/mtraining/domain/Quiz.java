@@ -1,5 +1,6 @@
 package org.motechproject.mtraining.domain;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
 import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
@@ -38,6 +39,14 @@ public class Quiz extends CourseUnitMetadata {
     @Field
     @Persistent(defaultFetchGroup = "true")
     private Map<String, String> properties;
+
+    /**
+     * Chapter that owns this Quiz.
+     */
+    @Field
+    @JsonBackReference
+    @Persistent(defaultFetchGroup = "true", mappedBy = "quiz")
+    private Chapter chapter;
 
     public Quiz() {
         this(null, CourseUnitState.Inactive, null, null, null);
@@ -82,6 +91,14 @@ public class Quiz extends CourseUnitMetadata {
 
     public void setProperties(Map<String, String> properties) {
         this.properties = properties;
+    }
+
+    public Chapter getChapter() {
+        return chapter;
+    }
+
+    public void setChapter(Chapter chapter) {
+        this.chapter = chapter;
     }
 
     /**

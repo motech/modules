@@ -7,6 +7,7 @@ import org.motechproject.mtraining.domain.Quiz;
 import org.motechproject.mtraining.dto.ChapterUnitDto;
 import org.motechproject.mtraining.dto.CourseUnitDto;
 import org.motechproject.mtraining.dto.CourseUnitListWrapper;
+import org.motechproject.mtraining.service.CourseStructureService;
 import org.motechproject.mtraining.service.MTrainingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +30,9 @@ public class TreeViewController {
 
     @Autowired
     private MTrainingService mTrainingService;
+
+    @Autowired
+    private CourseStructureService courseStructureService;
 
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/courses", method = RequestMethod.GET)
@@ -44,7 +49,7 @@ public class TreeViewController {
     @ResponseBody
     public List<ChapterUnitDto> getUnusedChapters() {
         List<ChapterUnitDto> chapters = new ArrayList<>();
-        for (Chapter chapter : mTrainingService.getAllChapters()) {
+        for (Chapter chapter : mTrainingService.getUnusedChapters()) {
             chapters.add((ChapterUnitDto) chapter.toUnitDto());
         }
         return chapters;
@@ -54,7 +59,7 @@ public class TreeViewController {
     @ResponseBody
     public List<CourseUnitDto> getUnusedLessons() {
         List<CourseUnitDto> lessons = new ArrayList<>();
-        for (Lesson lesson: mTrainingService.getAllLessons()) {
+        for (Lesson lesson: mTrainingService.getUnusedLessons()) {
             lessons.add(lesson.toUnitDto());
         }
         return lessons;
@@ -64,7 +69,7 @@ public class TreeViewController {
     @ResponseBody
     public List<CourseUnitDto> getUnusedQuizzes() {
         List<CourseUnitDto> quizzes = new ArrayList<>();
-        for (Quiz quiz: mTrainingService.getAllQuizzes()) {
+        for (Quiz quiz: mTrainingService.getUnusedQuizzes()) {
             quizzes.add(quiz.toUnitDto());
         }
         return quizzes;
@@ -72,7 +77,7 @@ public class TreeViewController {
 
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/updateCourses", method = RequestMethod.POST)
-    public void updateRelations(@RequestBody CourseUnitListWrapper courses) throws Exception {
-        //TODO saving
+    public void updateRelations(@RequestBody CourseUnitListWrapper courses) throws IOException {
+        courseStructureService.updateCourseStructure(courses.getCourses());
     }
 }
