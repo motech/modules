@@ -13,8 +13,6 @@ import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import javax.inject.Inject;
 
@@ -43,21 +41,15 @@ public class BatchJobMDSServiceBundleIT extends BasePaxIT {
         batchJob.setJobContent(jobContent);
         batchJobMDSService.create(batchJob);
 
-        batchJobMDSService.doInTransaction(new TransactionCallbackWithoutResult() {
-            @Override
-            protected void doInTransactionWithoutResult(TransactionStatus status) {
-                BatchJob batchJobFromDatabase = batchJobMDSService.findByJobName(jobName);
-                assertNotNull(batchJobFromDatabase);
+        batchJob = batchJobMDSService.findByJobName(jobName);
+        assertNotNull(batchJob);
 
-                String cron = batchJobFromDatabase.getCronExpression();
-                Assert.assertEquals("0 15 10 * * ? 2020", cron);
-
-                Byte[] jobContentFromDatabase = (Byte[]) batchJobMDSService.getDetachedField(batchJobFromDatabase,
-                        "jobContent");
-                Assert.assertEquals("job content",
-                        new String(ArrayUtils.toPrimitive(jobContentFromDatabase)));
-            }
-        });
+        String cron = batchJob.getCronExpression();
+        Assert.assertEquals("0 15 10 * * ? 2020", cron);
+        jobContent = (Byte[]) batchJobMDSService.getDetachedField(batchJob,
+                "jobContent");
+        Assert.assertEquals("job content",
+                new String(ArrayUtils.toPrimitive(jobContent)));
 
         batchJobMDSService.delete(batchJob);
 
