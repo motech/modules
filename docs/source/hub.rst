@@ -138,8 +138,8 @@ The Hub module exposes OSGi ``SubscriptionService`` for subscribing:
     }
 
 To subscribe with this service just call subscribe method passing all the parameters. This method returns id of the thread
-which will verify the intent of the subscriber requesting subscription. In case of hubMode is ``unsubscribe`` thread isn't
-created and method returns null. Detailed description of the parameters is shown in table below.
+which will verify the intent of the subscriber requesting subscription. If hubMode is ``unsubscribe`` the thread
+won't be created and the method will return null. Detailed description of the parameters is shown in table below.
 
 Parameters description
 ----------------------
