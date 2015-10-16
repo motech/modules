@@ -27,9 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
-import java.util.List;
-import java.util.UUID;
-
 /**
  * Default implementation of {@link org.motechproject.hub.service.SubscriptionService}
  */
@@ -111,7 +108,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     @Transactional
-    public void subscribe(final String callbackUrl, final Modes mode,
+    public Long subscribe(final String callbackUrl, final Modes mode,
             final String topic, String leaseSeconds, String secret)
             throws HubException {
 
@@ -157,7 +154,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
             Thread intentVerifiationThread = new Thread(runnable);
             intentVerifiationThread.start();
-
+            return intentVerifiationThread.getId();
         } else if (mode.equals(Modes.UNSUBSCRIBE)) { // unsubscription request
             if (hubTopic != null) {
                 unsubscribe(hubTopicId, topic, callbackUrl, mode);
@@ -172,7 +169,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 hubTopicService.delete(hubTopic);
             }
         }
-
+        return null;
     }
 
     private void createHubSubscription(String callbackUrl, long topicId,

@@ -1,18 +1,5 @@
 package org.motechproject.hub.service.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.motechproject.http.agent.service.HttpAgent;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+import org.motechproject.http.agent.service.HttpAgent;
 import org.motechproject.hub.exception.HubErrors;
 import org.motechproject.hub.exception.HubException;
 import org.motechproject.hub.mds.HubSubscription;
@@ -30,6 +18,18 @@ import org.motechproject.hub.mds.service.HubSubscriptionMDSService;
 import org.motechproject.hub.mds.service.HubTopicMDSService;
 import org.motechproject.hub.model.Modes;
 import org.springframework.http.HttpStatus;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * This class tests the method inside <code>SubscriptionServiceImpl</code> class
@@ -96,13 +96,28 @@ public class SubscriptionServiceImplTest {
         subscriptionServiceImpl.setRetryInterval(retryInterval);
     }
 
+    @Test
+    public void shouldReturnThreadId() throws HubException {
+        when(hubTopicService.findByTopicUrl(topic)).thenReturn(hubTopics);
+        when(hubTopicService.getDetachedField(hubTopic, "id")).thenReturn(
+                (long) 1);
+        when(hubSubscriptionMDSService.findSubByCallbackUrlAndTopicId(
+                callbackUrl, 1)).thenReturn(subscriptionList);
+
+        Long threadId = subscriptionServiceImpl.subscribe(callbackUrl, mode, topic,
+                leaseSeconds, secret);
+
+        assertNotNull(threadId);
+    }
+
+
     /**
      * Tests the service to subscribe to a topic already subscribed
      *
      * @throws HubException
      */
     @Test
-    public void subscribeTestTopicExists() throws HubException {
+    public void subscribeTestTopicExists() throws HubException, InterruptedException {
 
         when(hubTopicService.findByTopicUrl(topic)).thenReturn(hubTopics);
         when(hubTopicService.getDetachedField(hubTopic, "id")).thenReturn(
@@ -111,10 +126,20 @@ public class SubscriptionServiceImplTest {
                 hubSubscriptionMDSService.findSubByCallbackUrlAndTopicId(
                         callbackUrl, 1)).thenReturn(subscriptionList);
 
-        subscriptionServiceImpl.subscribe(callbackUrl, mode, topic,
+        Long threadId = subscriptionServiceImpl.subscribe(callbackUrl, mode, topic,
                 leaseSeconds, secret);
 
-        verify(hubSubscriptionMDSService).findSubByCallbackUrlAndTopicId(
+        assertNotNull(threadId);
+        Thread intentVerifiationThread = null;
+        for (Thread t : Thread.getAllStackTraces().keySet()) {
+            if (threadId.equals(t.getId())) {
+                intentVerifiationThread = t;
+                break;
+            }
+        }
+        intentVerifiationThread.join();
+
+        verify(hubSubscriptionMDSService, times(2)).findSubByCallbackUrlAndTopicId(
                 callbackUrl, 1);
         verify(hubTopicService, times(2)).getDetachedField(hubTopic, "id");
         verify(hubTopicService).findByTopicUrl(topic);
