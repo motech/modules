@@ -144,7 +144,8 @@ public class AllEnrollmentsBundleIT extends BasePaxIT {
     public void shouldReturnTheMilestoneStartDateTimeInCorrectTimeZoneForFirstMilestone() {
         DateTime now = DateTime.now();
 
-        createEnrollment("entity_1", "IPTI Schedule", "IPTI 1", now.minusDays(2), now(), new Time(now().toLocalTime()), EnrollmentStatus.ACTIVE, null);
+        createEnrollment("entity_1", "IPTI Schedule", "IPTI 1", now.minusDays(2), now,
+                new Time(now.toLocalTime()), EnrollmentStatus.ACTIVE, null);
 
         Enrollment enrollmentFromDatabase = enrollmentDataService.findByExternalIdScheduleNameAndStatus("entity_1", "IPTI Schedule", EnrollmentStatus.ACTIVE);
         assertEquals(now.minusDays(2), enrollmentFromDatabase.getCurrentMilestoneStartDate());
@@ -153,7 +154,8 @@ public class AllEnrollmentsBundleIT extends BasePaxIT {
     @Test
     public void shouldReturnTheMilestoneStartDateTimeInCorrectTimeZoneForSecondMilestone() {
         final DateTime now = DateTime.now();
-        final Enrollment enrollment = createEnrollment("entity_1", "IPTI Schedule", "IPTI 1", now.minusDays(2), now(), new Time(now().toLocalTime()), EnrollmentStatus.ACTIVE, null);
+        final Enrollment enrollment = createEnrollment("entity_1", "IPTI Schedule", "IPTI 1", now.minusDays(2), now,
+                new Time(now.toLocalTime()), EnrollmentStatus.ACTIVE, null);
 
         enrollmentDataService.doInTransaction(new TransactionCallbackWithoutResult() {
             @Override
@@ -170,9 +172,10 @@ public class AllEnrollmentsBundleIT extends BasePaxIT {
 
     @Test
     public void shouldReturnTheMilestoneStartDateTimeInCorrectTimeZoneWhenEnrollingIntoSecondMilestone() {
-        DateTime now = DateTime.now();
+        DateTime now = now();
 
-        createEnrollment("entity_1", "IPTI Schedule", "IPTI 2", now.minusDays(2), now(), new Time(now().toLocalTime()), EnrollmentStatus.ACTIVE, null);
+        createEnrollment("entity_1", "IPTI Schedule", "IPTI 2", now.minusDays(2), now, new Time(now.toLocalTime()),
+                EnrollmentStatus.ACTIVE, null);
 
         Enrollment enrollmentFromDatabase = enrollmentDataService.findByExternalIdScheduleNameAndStatus("entity_1", "IPTI Schedule", EnrollmentStatus.ACTIVE);
         assertEquals(now, enrollmentFromDatabase.getCurrentMilestoneStartDate());
