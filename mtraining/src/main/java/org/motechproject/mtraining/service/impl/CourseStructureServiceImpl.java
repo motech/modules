@@ -13,6 +13,7 @@ import org.motechproject.mtraining.repository.CourseDataService;
 import org.motechproject.mtraining.repository.LessonDataService;
 import org.motechproject.mtraining.repository.QuizDataService;
 import org.motechproject.mtraining.service.CourseStructureService;
+import org.motechproject.mtraining.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static ch.lambdaj.Lambda.extract;
+import static ch.lambdaj.Lambda.on;
 
 /**
  * Implementation of the {@link org.motechproject.mtraining.service.CourseStructureService}.
@@ -156,28 +160,64 @@ public class CourseStructureServiceImpl implements CourseStructureService {
         if (unusedLessons.size() > 0) {
             lessonsToUpdate = lessonDataService.findLessonsByIds(unusedLessons);
             if (lessonsToUpdate.size() != unusedLessons.size()) {
-                throw new CourseUnitNotFoundException("Cannot find lesson with id");
+                checkMissing(unusedLessons, extract(lessonsToUpdate, on(Lesson.class).getId()), Constants.LESSON);
             }
         }
 
         List<Quiz> quizzesToUpdate = new ArrayList<>();
-        if (unusedLessons.size() > 0) {
+        if (unusedQuizzes.size() > 0) {
             quizzesToUpdate = quizDataService.findQuizzesByIds(unusedQuizzes);
             if (quizzesToUpdate.size() != unusedQuizzes.size()) {
-                throw new CourseUnitNotFoundException("Cannot find quiz with id");
+                checkMissing(unusedQuizzes, extract(quizzesToUpdate, on(Quiz.class).getId()), Constants.QUIZ);
             }
         }
 
+        // we must update two relation sides
         for (Lesson unusuedLesson : lessonsToUpdate) {
+            removeLessonRelation(unusuedLesson);
             unusuedLesson.setChapter(null);
             lessonDataService.update(unusuedLesson);
             LOGGER.debug("Lesson with id: {} marked as unused", unusuedLesson.getId());
         }
 
+        // we must update two relation sides
         for (Quiz unusedQuiz : quizzesToUpdate) {
+            removeQuizRelation(unusedQuiz);
             unusedQuiz.setChapter(null);
             quizDataService.update(unusedQuiz);
             LOGGER.debug("Quiz with id: {} marked as unused", unusedQuiz.getId());
+        }
+    }
+
+    private void removeLessonRelation(Lesson lesson) {
+        if (lesson.getChapter() != null) {
+            lesson.getChapter().getLessons().remove(lesson);
+        } else {
+            Chapter owner = chapterDataService.findChapterByLessonId(lesson.getId());
+            if (owner != null) {
+                owner.getLessons().remove(lesson);
+            }
+        }
+    }
+
+    private void removeQuizRelation(Quiz quiz) {
+        if (quiz.getChapter() != null) {
+            quiz.getChapter().setQuiz(null);
+        } else {
+            Chapter owner = chapterDataService.findChapterByQuizId(quiz.getId());
+            if (owner != null) {
+                owner.setQuiz(null);
+            }
+        }
+    }
+
+    private void checkMissing(Set<Long> expected, List<Long> actual, String type) {
+        for (Long id : expected) {
+            for (Long unitId : actual) {
+                if (id.equals(unitId)) {
+                    throw new CourseUnitNotFoundException(String.format("Cannot find %s with id %s", type, id));
+                }
+            }
         }
     }
 }

@@ -20,4 +20,10 @@ public interface ChapterDataService extends MotechDataService<Chapter> {
 
     @Lookup
     Chapter findChapterById(@LookupField(name = "id") Long id);
+
+    @Lookup
+    Chapter findChapterByQuizId(@LookupField(name = "quiz.id") Long quizId);
+
+    @Lookup
+    Chapter findChapterByLessonId(@LookupField(name = "lessons.id") Long lessonId);
 }

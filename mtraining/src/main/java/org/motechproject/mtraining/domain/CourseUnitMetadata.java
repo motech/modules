@@ -6,6 +6,8 @@ import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.mds.domain.MdsEntity;
 import org.motechproject.mtraining.dto.CourseUnitDto;
 
+import java.util.Objects;
+
 /**
  * Common metadata shared by all course sub classes.
  */
@@ -93,5 +95,28 @@ public abstract class CourseUnitMetadata extends MdsEntity {
     @Ignore
     public CourseUnitDto toUnitDto() {
         return new CourseUnitDto(getId(), getName(), getState().toString(), null, null);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        final CourseUnitMetadata other = (CourseUnitMetadata) obj;
+
+        return Objects.equals(this.getId(), other.getId())
+                && Objects.equals(this.getName(), other.getName())
+                && Objects.equals(this.getContent(), other.getContent())
+                && Objects.equals(this.getDescription(), other.getDescription());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }

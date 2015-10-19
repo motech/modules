@@ -12,6 +12,7 @@ import org.motechproject.mtraining.util.Constants;
 import javax.jdo.annotations.Persistent;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Quiz object to store questions and answer for a chapter
@@ -108,5 +109,29 @@ public class Quiz extends CourseUnitMetadata {
     @Override
     public CourseUnitDto toUnitDto() {
         return new CourseUnitDto(getId(), getName(), getState().toString(), null, Constants.QUIZ);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        final Quiz other = (Quiz) obj;
+
+        return Objects.equals(this.getId(), other.getId())
+                && Objects.equals(this.getName(), other.getName())
+                && Objects.equals(this.getPassPercentage(), other.getPassPercentage())
+                && Objects.equals(this.getContent(), other.getContent())
+                && Objects.equals(this.getDescription(), other.getDescription());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }
