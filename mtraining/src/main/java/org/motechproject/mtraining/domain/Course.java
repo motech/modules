@@ -31,7 +31,7 @@ public class Course extends CourseUnitMetadata {
      * List of chapters in the Course.
      */
     @Field
-    @Persistent(defaultFetchGroup = "true",  mappedBy = "course")
+    @Persistent(defaultFetchGroup = Constants.TRUE,  mappedBy = "course")
     @JsonManagedReference
     private List<Chapter> chapters;
 
@@ -39,7 +39,7 @@ public class Course extends CourseUnitMetadata {
      * The additional properties which can be used with the Course.
      */
     @Field
-    @Persistent(defaultFetchGroup = "true")
+    @Persistent(defaultFetchGroup = Constants.TRUE)
     private Map<String, String> properties;
 
     public Course() {
@@ -57,6 +57,9 @@ public class Course extends CourseUnitMetadata {
     }
 
     public List<Chapter> getChapters() {
+        if (chapters == null) {
+            return new ArrayList<>();
+        }
         return chapters;
     }
 

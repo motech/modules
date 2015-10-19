@@ -12,6 +12,8 @@ public final class Constants {
     public static final String LESSON = "lesson";
     public static final String QUIZ = "quiz";
 
+    public static final String TRUE = "true";
+
     private Constants() {
     }
 }

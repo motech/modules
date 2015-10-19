@@ -24,7 +24,7 @@ public class Quiz extends CourseUnitMetadata {
      * List of questions for the Quiz.
      */
     @Field
-    @Persistent(defaultFetchGroup = "true")
+    @Persistent(defaultFetchGroup = Constants.TRUE)
     private List<Question> questions;
 
     /**
@@ -37,7 +37,7 @@ public class Quiz extends CourseUnitMetadata {
      * The additional properties which can be used with the Lesson.
      */
     @Field
-    @Persistent(defaultFetchGroup = "true")
+    @Persistent(defaultFetchGroup = Constants.TRUE)
     private Map<String, String> properties;
 
     /**
@@ -45,7 +45,7 @@ public class Quiz extends CourseUnitMetadata {
      */
     @Field
     @JsonBackReference
-    @Persistent(defaultFetchGroup = "true", mappedBy = "quiz")
+    @Persistent(defaultFetchGroup = Constants.TRUE, mappedBy = "quiz")
     private Chapter chapter;
 
     public Quiz() {

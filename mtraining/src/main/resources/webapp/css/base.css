@@ -2,9 +2,23 @@
 
 div.buttons > button {
     width:170px;
+    margin-left: 10px;
+    display: inline; !important
+}
+
+div.buttons > select {
+    width:170px;
     margin-top: 10px;
     margin-left: 10px;
+    display: inline; !important
+}
 
+.tree-button {
+    margin-top: 10px; !important
+}
+
+.select-button {
+    margin-top: 0px; !important
 }
 
 .table-lightblue-nohover {
@@ -32,10 +46,18 @@ li[state="Inactive"] > a {
     color: #C0C0C0 !important;
 }
 
+li[state="Pending"] > a {
+    color: #F0AD4E !important;
+}
+
 .members-list {
     list-style-type: none;
     margin: 0;
     padding: 0;
+}
+
+.members-list li[state="Pending"] {
+    color: #F0AD4E !important;
 }
 
 .members-list li[state="Inactive"] {

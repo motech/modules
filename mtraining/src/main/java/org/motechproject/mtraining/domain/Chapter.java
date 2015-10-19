@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * Chapter object to store quiz and lesson metadata. A chapter contains a list of possible lessons.
  */
-@Entity
+@Entity(maxFetchDepth = 3)
 @Access(value = SecurityMode.PERMISSIONS, members = {Constants.MANAGE_MTRAINING})
 public class Chapter extends CourseUnitMetadata {
 
@@ -27,7 +27,7 @@ public class Chapter extends CourseUnitMetadata {
      * List of lessons in the Chapter.
      */
     @Field
-    @Persistent(defaultFetchGroup = "true",  mappedBy = "chapter")
+    @Persistent(defaultFetchGroup = Constants.TRUE,  mappedBy = "chapter")
     @JsonManagedReference
     private List<Lesson> lessons;
 
@@ -35,7 +35,7 @@ public class Chapter extends CourseUnitMetadata {
      * Quiz for the Chapter.
      */
     @Field
-    @Persistent(defaultFetchGroup = "true")
+    @Persistent(defaultFetchGroup = Constants.TRUE)
     @JsonManagedReference
     private Quiz quiz;
 
@@ -43,7 +43,7 @@ public class Chapter extends CourseUnitMetadata {
      * The additional properties which can be used with the Chapter.
      */
     @Field
-    @Persistent(defaultFetchGroup = "true")
+    @Persistent(defaultFetchGroup = Constants.TRUE)
     private Map<String, String> properties;
 
     /**
@@ -51,7 +51,7 @@ public class Chapter extends CourseUnitMetadata {
      */
     @Field
     @JsonBackReference
-    @Persistent(defaultFetchGroup = "true")
+    @Persistent(defaultFetchGroup = Constants.TRUE)
     private Course course;
 
     public Chapter() {
@@ -76,6 +76,9 @@ public class Chapter extends CourseUnitMetadata {
     }
 
     public List<Lesson> getLessons() {
+        if (lessons == null) {
+            return new ArrayList<>();
+        }
         return lessons;
     }
 

@@ -16,7 +16,7 @@ import java.util.Map;
  * Lesson domain object forms the leaf node in the course structure hierarchy. A lesson is typically the
  * leaf node in the Course structure hierarchy.
  */
-@Entity
+@Entity(maxFetchDepth = 4)
 @Access(value = SecurityMode.PERMISSIONS, members = {Constants.MANAGE_MTRAINING})
 public class Lesson extends CourseUnitMetadata {
 
@@ -24,7 +24,7 @@ public class Lesson extends CourseUnitMetadata {
      * The additional properties which can be used with the Lesson.
      */
     @Field
-    @Persistent(defaultFetchGroup = "true")
+    @Persistent(defaultFetchGroup = Constants.TRUE)
     private Map<String, String> properties;
 
     /**
@@ -32,7 +32,7 @@ public class Lesson extends CourseUnitMetadata {
      */
     @Field
     @JsonBackReference
-    @Persistent(defaultFetchGroup = "true")
+    @Persistent(defaultFetchGroup = Constants.TRUE)
     private Chapter chapter;
 
     public Lesson() {

@@ -13,6 +13,7 @@
         });
 
         $scope.clearState = function () {
+            $scope.selectedState='Active';
             $scope.children = [];
             $scope.unsaved = false;
             $scope.unsavedCourses = [];
@@ -303,25 +304,29 @@
 
         $scope.removeMember = function() {
             var i, node = $scope.jstree.get_node($scope.jstree.get_selected());
-            $scope.onNodeChanged(node);
-            if (node.type === 'chapter' && node.children !== undefined) {
-                for(i = 0; i < node.children.length; i+=1) {
-                    //we must move children as unused to display them into units part
-                    if ($scope.nodeProperties[node.children[i]].type === 'quiz') {
-                        $scope.moveElement($scope.nodeProperties[node.children[i]]);
-                    } else {
-                        $scope.moveElement($scope.nodeProperties[node.children[i]]);
+            motechConfirm('mtraining.confirm.removeMember', 'mtraining.confirm', function (val) {
+                if (val) {
+                    $scope.onNodeChanged(node);
+                    if (node.type === 'chapter' && node.children !== undefined) {
+                        for(i = 0; i < node.children.length; i+=1) {
+                            //we must move children as unused to display them into units part
+                            if ($scope.nodeProperties[node.children[i]].type === 'quiz') {
+                                $scope.moveElement($scope.nodeProperties[node.children[i]]);
+                            } else {
+                                $scope.moveElement($scope.nodeProperties[node.children[i]]);
+                            }
+                            $scope.nodeProperties[node.children[i]] = [];
+                            $scope.treeData[node.children[i]] = [];
+                        }
+                        $scope.jstree.delete_node(node.children);
                     }
-                    $scope.nodeProperties[node.children[i]] = [];
-                    $scope.treeData[node.children[i]] = [];
+                    $scope.moveElement($scope.nodeProperties[node.id]);
+                    $scope.nodeProperties[node.id] = [];
+                    $scope.treeData[node.id] = [];
+                    $scope.jstree.delete_node(node.id);
+                    $scope.safeApply();
                 }
-                $scope.jstree.delete_node(node.children);
-            }
-            $scope.moveElement($scope.nodeProperties[node.id]);
-            $scope.nodeProperties[node.id] = [];
-            $scope.treeData[node.id] = [];
-            $scope.jstree.delete_node(node.id);
-            $scope.safeApply();
+            });
         };
 
         $scope.moveElement = function (element) {
@@ -334,25 +339,21 @@
             }
         };
 
-        $scope.isActive = function () {
+        $scope.isStateButtonDisabled = function (state) {
             var node;
-            if ($scope.jstree === null || $scope.jstree === undefined) {
+            if ($scope.isButtonDisabled()) {
+                return true;
+            }
+            node = $scope.jstree.get_node($scope.jstree.get_selected());
+            if (node.li_attr.state !== state) {
                 return false;
             }
-            node = $scope.jstree.get_selected();
-            if (node === undefined || node.length === 0) {
-                return false;
-            }
-            return $scope.jstree.get_node(node).li_attr.state === 'Active';
+            return true;
         };
 
-        $scope.changeState = function () {
-            var state, node = $scope.jstree.get_node($scope.jstree.get_selected());
-            if (node.li_attr.state === 'Active') {
-                state = 'Inactive';
-            } else {
-                state = 'Active';
-            }
+        $scope.changeState = function (state) {
+            var node = $scope.jstree.get_node($scope.jstree.get_selected());
+            $scope.onNodeChanged(node);
             $scope.setState(node, $scope.jstree.get_node($scope.jstree.get_selected(), true), state);
         };
 
@@ -363,9 +364,10 @@
             element.attr("state", state);
         };
 
-        $scope.activatePath = function () {
+        $scope.changePathState = function () {
             var node = $scope.jstree.get_node($scope.jstree.get_selected());
-            $scope.changeChildrenState(node, 'Active');
+            $scope.onNodeChanged(node);
+            $scope.changeChildrenState(node, $scope.selectedState);
         };
 
         $scope.changeChildrenState = function (node, state) {
@@ -376,11 +378,6 @@
                 }
             }
             $scope.setState(node, $scope.jstree.get_node(node.id, true), state);
-        };
-
-        $scope.deactivatePath = function () {
-            var node = $scope.jstree.get_node($scope.jstree.get_selected());
-            $scope.changeChildrenState(node, 'Inactive');
         };
 
         $scope.isRemoveButtonDisabled = function () {

@@ -72,7 +72,8 @@
                         <Export-Package>
                             org.motechproject.mtraining.service;version=${project.version},
                             org.motechproject.mtraining.repository;version=${project.version},
-                            org.motechproject.mtraining.domain;version=${project.version}
+                            org.motechproject.mtraining.domain;version=${project.version},
+                            org.motechproject.mtraining.dto;version=${project.version}
                         </Export-Package>
                         <Import-Package>
                             org.motechproject.config.service,

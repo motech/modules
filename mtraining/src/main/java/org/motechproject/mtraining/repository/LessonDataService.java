@@ -6,6 +6,7 @@ import org.motechproject.mds.service.MotechDataService;
 import org.motechproject.mtraining.domain.Lesson;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Interface for repository that persists simple records and allows CRUD.
@@ -20,4 +21,7 @@ public interface LessonDataService extends MotechDataService<Lesson> {
 
     @Lookup
     Lesson findLessonById(@LookupField(name = "id") Long id);
+
+    @Lookup
+    List<Lesson> findLessonsByIds(@LookupField(name = "id") Set<Long> ids);
 }
