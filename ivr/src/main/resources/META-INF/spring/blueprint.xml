@@ -44,12 +44,35 @@
             </map>
         </constructor-arg>
         <property name="settingsURL" value="/ivr/settings" />
-        <property name="defaultURL" value="/ivr/templates"/>
+
         <property name="roleForAccess">
             <list>
                 <value>manageIVR</value>
                 <value>viewIVRLogs</value>
             </list>
+        </property>
+
+        <property name="tabAccessMap">
+            <map>
+                <entry>
+                    <key>
+                        <value>manageIVR</value>
+                    </key>
+                    <list>
+                        <value>/ivr/templates</value>
+                        <value>/ivr/settings</value>
+                        <value>/ivr/log</value>
+                    </list>
+                </entry>
+                <entry>
+                    <key>
+                        <value>viewIVRLogs</value>
+                    </key>
+                    <list>
+                        <value>/ivr/log</value>
+                    </list>
+                </entry>
+            </map>
         </property>
     </bean>
 

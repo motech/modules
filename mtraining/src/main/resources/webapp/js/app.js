@@ -15,12 +15,8 @@
         async: false
     });
 
-    $.ajax({
-        url: '../mtraining/available/mTrainingTabs',
-        success:  function(data) {
-            mtrainingModule.constant('MTRAINING_AVAILABLE_TABS', data);
-        },
-        async: false
+    getAvailableTabs('mTraining', function(data) {
+         mtrainingModule.constant('MTRAINING_AVAILABLE_TABS', data);
     });
 
     mtrainingModule.run(function ($rootScope, MTRAINING_AVAILABLE_TABS) {

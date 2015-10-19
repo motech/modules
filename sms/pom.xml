@@ -155,7 +155,7 @@
                             <requireUseStrict>true</requireUseStrict>
                             <predefinedVars>
                                 $, angular, motechAlert, handleWithStackTrace, jQuery, parseUri,
-                                innerLayout, blockUI, unblockUI, handleResponse
+                                innerLayout, blockUI, unblockUI, handleResponse, getAvailableTabs
                             </predefinedVars>
                             <failOnIssues>${jslint.enable}</failOnIssues>
                         </configuration>

@@ -27,7 +27,6 @@
                 <entry key="messages" value="../mtraining/resources/messages/"/>
             </map>
         </constructor-arg>
-        <property name="defaultURL" value="/mtraining/treeView"/>
 
         <property name="roleForAccess">
             <list>
@@ -35,5 +34,34 @@
                 <value>viewMTrainingLogs</value>
             </list>
         </property>
+
+        <property name="tabAccessMap">
+            <map>
+                <entry>
+                    <key>
+                        <value>manageMTraining</value>
+                    </key>
+                    <list>
+                        <value>/mtraining/treeView</value>
+                        <value>/mtraining/courses</value>
+                        <value>/mtraining/chapters</value>
+                        <value>/mtraining/quizzes</value>
+                        <value>/mtraining/lessons</value>
+                        <value>/mtraining/activityRecords</value>
+                        <value>/mtraining/bookmarks</value>
+                    </list>
+                </entry>
+                <entry>
+                    <key>
+                        <value>viewMTrainingLogs</value>
+                    </key>
+                    <list>
+                        <value>/mtraining/activityRecords</value>
+                        <value>/mtraining/bookmarks</value>
+                    </list>
+                </entry>
+            </map>
+        </property>
+
     </bean>
 </beans>
