@@ -150,6 +150,13 @@ public class EventHandler {
         dataValueDto.setPeriod(period);
         dataValueDto.setCategoryOptionCombo(categoryOptionCombo);
         dataValueDto.setComment(comment);
+
+        DataValueSetDto dataValueSetDto = new DataValueSetDto();
+        List<DataValueDto> dataValueDtos = new ArrayList<>();
+        dataValueDtos.add(dataValueDto);
+        dataValueSetDto.setDataValues(dataValueDtos);
+
+        dhisWebService.sendDataValueSet(dataValueSetDto);
     }
 
     /**
