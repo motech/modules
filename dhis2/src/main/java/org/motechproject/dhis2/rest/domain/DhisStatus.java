@@ -1,6 +1,7 @@
 package org.motechproject.dhis2.rest.domain;
 
-public enum  DhisStatus {
+public enum DhisStatus {
+    OK,
     SUCCESS,
     ERROR
 }
