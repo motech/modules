@@ -48,10 +48,11 @@
                     </div>
                     <div class="form-group" ui-if="resourceType == 'string'">
                         <div class="col-sm-offset-3 col-sm-9 form-inline">
-                            <textarea rows="4" id="value" name="value"
+                            <textarea rows="4" id="value" name="value" ng-model="select.value"
                                       class="form-control input-xlarge-fluid"></textarea>
                             <span class="form-hint"
                                   style="display: none;">{{msg('cmslite.error.required.string')}}</span>
+                            <p class="count-characters">{{msg('cmslite.info.characters')}}: {{select.value.length}}</p>
                         </div>
                     </div>
                     <div class="form-group form-inline fileupload fileupload-new" ui-if="resourceType == 'stream'"

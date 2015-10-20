@@ -15,7 +15,9 @@ public interface SubscriptionService {
     /**
      * This method executes the business logic for subscribing/unsubscribing to
      * a topic. The subscriber provides the callback URL where the update
-     * notification should be sent.
+     * notification should be sent. Returns the id of the IntentVerificationThreadRunnable
+     * thread which verifies the intent of the subscriber requesting subscription. If hubMode
+     * is "unsubscribe" the thread won't be created and the method will return null.
      *
      * @param callbackUrl
      *            - a <code>String</code> representing the subscriber's callback
@@ -34,11 +36,12 @@ public interface SubscriptionService {
      *            - a <code>String</code> provided by the subscriber which will
      *            be used to compute an HMAC digest for authorized content
      *            distribution. Currently this is not being consumed by the API
+     * @return the id of IntentVerificationThreadRunnable which is created, if the thread wasn't created then returns null
      * @throws HubException
      *            - when unsubscribing from a topic that was not subscribed to,
      *            when the topic does not exist or when the topic was not found
      */
-    void subscribe(String callbackUrl, Modes hubMode, String topic,
+    Long subscribe(String callbackUrl, Modes hubMode, String topic,
             String leaseSeconds, String secret) throws HubException;
 
 }

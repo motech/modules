@@ -132,13 +132,14 @@ The Hub module exposes OSGi ``SubscriptionService`` for subscribing:
 
     public interface SubscriptionService {
 
-        void subscribe(String callbackUrl, Modes hubMode, String topic,
+        Long subscribe(String callbackUrl, Modes hubMode, String topic,
                 String leaseSeconds, String secret) throws HubException;
 
     }
 
-To subscribe with this service just call subscribe method passing all the parameters. Detailed description of the parameters
-is shown in table below.
+To subscribe with this service just call subscribe method passing all the parameters. This method returns id of the thread
+which will verify the intent of the subscriber requesting subscription. If hubMode is ``unsubscribe`` the thread
+won't be created and the method will return null. Detailed description of the parameters is shown in table below.
 
 Parameters description
 ----------------------

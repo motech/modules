@@ -82,8 +82,7 @@ public class Template {
                 try {
                     requestEntity = new StringRequestEntity(json, MediaType.APPLICATION_JSON_VALUE, "UTF-8");
                 } catch  (UnsupportedEncodingException e) {
-                    throw new IllegalStateException(String.format("Template error: %s: invalid json: %s", name,
-                            e.toString()));
+                    throw new IllegalStateException(String.format("Template error: %s: invalid json", name), e);
                 }
                 ((PostMethod) httpMethod).setRequestEntity(requestEntity);
             } else {
