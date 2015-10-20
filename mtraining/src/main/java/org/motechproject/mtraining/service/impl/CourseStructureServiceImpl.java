@@ -75,7 +75,8 @@ public class CourseStructureServiceImpl implements CourseStructureService {
                     setUpLessons(chapterUnitDto, chapter, unusedLessons);
                     setUpQuiz((ChapterUnitDto) chapterUnitDto, chapter, unusedQuizzes);
                     chapter.setState(CourseUnitState.valueOf(chapterUnitDto.getState()));
-                    chapters.add(chapterDataService.update(chapter));
+                    chapterDataService.update(chapter);
+                    chapters.add(chapter);
                 }
             }
 
@@ -126,7 +127,7 @@ public class CourseStructureServiceImpl implements CourseStructureService {
         List<Course> coursesFromDb = new ArrayList<>();
 
         for (CourseUnitDto courseDto : courses) {
-            Course course = courseDataService.findById(courseDto.getId());
+            Course course = courseDataService.findCourseById(courseDto.getId());
             if (course == null) {
                 throw new CourseUnitNotFoundException("Cannot find course with id: " + courseDto.getId());
             }
