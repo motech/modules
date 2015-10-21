@@ -11,9 +11,9 @@ mTraining Module
 Description
 ###########
 
-Provides data containers and APIs for defining training courses. The module gives possibility to and track user enrollments
-and course progress. Courses structure can be very diverse thanks to flexibility of the mTraining entities. Structure of the
-training may be created through the API or by using the user interface.
+The module provides data containers and APIs for defining training courses. The module gives possibility track user enrollments
+and course progress. Courses structure can be very diverse thanks to the flexibility of the mTraining entities. Structure of the
+Course may be created through the API or using the user interface.
 
 ################
 Course Structure
@@ -23,14 +23,14 @@ Introduction
 ############
 
 Course structure consists of units that will meet the objectives specified by the implementations. Every element of the
-structure besides of ``Questions`` contains following fields.
+structure besides ``Questions`` contains following fields.
 
 +------------+---------------------------------------------------------------------------------+--------------------+
 |Field       |Description                                                                      |Type                |
 +============+=================================================================================+====================+
 |name        |Name of the course unit.                                                         |String              |
 +------------+---------------------------------------------------------------------------------+--------------------+
-|state       |Status of the course unit. Assume the following values: ``Active``,              |CourseUnitState     |
+|state       |Status of the course unit. It can take one of the values ``Active``,             |CourseUnitState     |
 |            |``Inactive`` or ``Pending``.                                                     |                    |
 +------------+---------------------------------------------------------------------------------+--------------------+
 |content     |The content for the course unit. For example this could be an url to the audio   |String              |
@@ -45,19 +45,18 @@ structure besides of ``Questions`` contains following fields.
 Course
 ######
 
-``Course`` is a top level container which contains list of the ``Chapters``.
+``Course`` is a top level container which contains list of ``Chapters``.
 
 Chapter
 #######
 
-``Chapters`` are the second level of the structure. Each ``Chapter`` can contains one ``Quiz`` and list of the ``Lessons``.
-``Chapters`` represents phase of the ``Course``.
+``Chapters`` are the second level of the structure. Each ``Chapter`` can contain one ``Quiz`` and list of ``Lessons``.
+``Chapters`` represent phase of the ``Course``.
 
 Lesson
 ######
 
-``Lesson`` object forms the leaf node of the ``Chapter``. For example ``Lesson`` can contain information which can help
-pass the ``Quiz``.
+``Lesson`` object forms the leaf node of the ``Chapter``. For example it can contain information that help passing the ``Quiz``.
 
 Quiz
 ####
@@ -68,7 +67,7 @@ Quiz
 Question
 ########
 
-``Question`` contains two fields which indicates the content in the external system.
+``Question`` contains two fields which link with the content in external system.
 
 +----------+------------------------------------------------------------------------------------+--------------------+
 |Field     |Description                                                                         |Type                |
@@ -76,7 +75,7 @@ Question
 |question  |The question resource identifier in the external system, for example audio file.    |String              |
 +----------+------------------------------------------------------------------------------------+--------------------+
 |answer    |The answer resource identifier in the external system, for example audio file.      |String              |
-|          |The value of this field could be also the correct answer.                           |                    |
+|          |This field can also store the correct answer.                                       |                    |
 +----------+------------------------------------------------------------------------------------+--------------------+
 
 Bookmark
@@ -102,7 +101,7 @@ Bookmark
 Activity Record
 ###############
 
-``Activity Record`` could be used either as the ``Bookmark``. It gives possibility to store user activity in the individual
+``Activity Record`` can be used either as the ``Bookmark``. It gives possibility to store user activity in the individual
 course units, for example passing ``Quiz``.
 
 +---------------+---------------------------------------------------------------------------------+--------------------+
@@ -124,7 +123,7 @@ course units, for example passing ``Quiz``.
 +---------------+---------------------------------------------------------------------------------+--------------------+
 |completionTime |The end time of the user activity.                                               |DateTime            |
 +---------------+---------------------------------------------------------------------------------+--------------------+
-|state          |State of the user activity. Assume the following values:``NONE``, ``STARTED``,   |ActivityState       |
+|state          |State of the user activity. It can take one of the values:``NONE``, ``STARTED``, |ActivityState       |
 |               |``INPROGRESS`` or ``COMPLETED``.                                                 |                    |
 +---------------+---------------------------------------------------------------------------------+--------------------+
 
@@ -135,7 +134,7 @@ OSGI Services
 mTraining Service
 #################
 
-Contains APIs to perform CRUD operations on ``Courses``, ``Chapters``, ``Lessons`` and ``Quizzes``.
+The mTraining service contains APIs to perform CRUD operations on ``Courses``, ``Chapters``, ``Lessons`` and ``Quizzes``.
 
 - ``Course createCourse(Course course)``, ``Chapter createChapter(Chapter chapter)``, ``Lesson createLesson(Lesson lesson)``, ``Quiz createQuiz(Quiz quiz)`` - creates a course unit.
 - ``Course updateCourse(Course course)``, ``Chapter updateChapter(Chapter chapter)``, ``Lesson updateLesson(Lesson lesson)``, ``Quiz updateQuiz(Quiz quiz)`` - updates the given course unit.
@@ -178,14 +177,15 @@ mTraining UI
 ############
 
 The mTraining module has ``Courses``, ``Chapters``, ``Lessons`` and ``Quizzes`` tabs which allows to perform CRUD operations
-on the course units. ``Bookmarks`` and ``Activity Record`` tabs allows to view logs. All those tab are using the MDS embedded UI.
+on the course units. ``Bookmarks`` and ``Activity Record`` tabs allow to view logs. All those tab are using the MDS embedded UI.
 
 Default tab is the ``Tree View`` tab. ``TreeView`` tab allows to manage relationships between course units. Colors of the units
-represents state(``blue`` - ``Active``, ``grey`` - ``Inactive``, ``orange`` - ``Pending``). You can easily change state of
-the entire branch or a single unit, to do this use buttons below the tree. When you will use ``Remove member`` button then
-all children of the element will be disconnected(for example when you remove chapter then all ``Lessons`` will be disconnected form
-``Chapter`` (each ``Lesson`` will be unused)). To add unit to the tree you must select node and then drag unit from ``Nodes``
-section and drop it to the ``Members`` section.
+represent the state(``blue`` - ``Active``, ``grey`` - ``Inactive``, ``orange`` - ``Pending``). You can easily change state of
+the entire branch or a single unit, to do so use buttons below the tree. When you use ``Remove member`` button then
+all children of the element will be disconnected(for example when you remove chapter then all ``Lessons`` will be disconnected from
+``Chapter`` (each ``Lesson`` will be unused)). To add node to the tree you must select tree node to which the new node will be added
+and then drag unit from ``Nodes`` section and drop it to the ``Members`` section. The ``Nodes`` column displays items that are
+available to add.
 
             .. image:: img/mTrainingTreeView.png
                     :scale: 70 %
