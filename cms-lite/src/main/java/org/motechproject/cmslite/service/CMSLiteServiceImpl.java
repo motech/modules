@@ -84,9 +84,9 @@ public class CMSLiteServiceImpl implements CMSLiteService {
         }
 
         if (content instanceof StreamContent) {
-            streamContentService.create((StreamContent) content);
+            streamContentService.createOrUpdate((StreamContent) content);
         } else if (content instanceof StringContent) {
-            stringContentService.create((StringContent) content);
+            stringContentService.createOrUpdate((StringContent) content);
         }
     }
 
