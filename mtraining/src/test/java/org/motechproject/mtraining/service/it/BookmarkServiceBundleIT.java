@@ -3,7 +3,6 @@ package org.motechproject.mtraining.service.it;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.mtraining.domain.Bookmark;
-import org.motechproject.mtraining.repository.BookmarkDataService;
 import org.motechproject.mtraining.service.BookmarkService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -11,8 +10,6 @@ import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -33,9 +30,6 @@ public class BookmarkServiceBundleIT extends BasePaxIT {
 
     @Inject
     private BookmarkService bookmarkService;
-
-    @Inject
-    private BookmarkDataService bookmarkDataService;
 
     @Test
     public void testBookmarkServiceInstance() throws Exception {
@@ -81,17 +75,10 @@ public class BookmarkServiceBundleIT extends BasePaxIT {
 
     @Test
     public void testUpdateBookmarks() throws Exception {
-        final Bookmark original = bookmarkService.createBookmark(new Bookmark("11111", "MyCourse", "MyChapter", "MyLesson", null));
+        Bookmark original = bookmarkService.createBookmark(new Bookmark("11111", "MyCourse", "MyChapter", "MyLesson", null));
         assertEquals(original.getLessonIdentifier(), "MyLesson");
-
-        bookmarkDataService.doInTransaction(new TransactionCallbackWithoutResult() {
-            @Override
-            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
-                Bookmark bookmarkToUpdate = bookmarkService.getBookmarkById(original.getId());
-                bookmarkToUpdate.setLessonIdentifier("MyUpdatedLesson");
-                bookmarkService.updateBookmark(bookmarkToUpdate);
-            }
-        });
+        original.setLessonIdentifier("MyUpdatedLesson");
+        bookmarkService.updateBookmark(original);
 
         Bookmark updated = bookmarkService.getBookmarkById(original.getId());
         assertEquals(updated.getLessonIdentifier(), "MyUpdatedLesson");

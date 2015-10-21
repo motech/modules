@@ -4,9 +4,9 @@ import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.scheduler.contract.RepeatingSchedulableJob;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
+import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.scheduletracking.domain.Alert;
 import org.motechproject.scheduletracking.domain.AlertWindow;
 import org.motechproject.scheduletracking.domain.Enrollment;
@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,17 +40,12 @@ public class EnrollmentAlertService {
 
     private EventRelay eventRelay;
 
-    @Autowired
-    public EnrollmentAlertService(MotechSchedulerService schedulerService, EventRelay eventRelay) {
-        this.schedulerService = schedulerService;
-        this.eventRelay = eventRelay;
-    }
-
     /**
      * Schedules jobs for the alerts of the current milestone from the given enrollment.
      *
      * @param enrollment the enrollment for which jobs will be scheduled
      */
+    @Transactional
     public void scheduleAlertsForCurrentMilestone(Enrollment enrollment) {
         Schedule schedule = enrollment.getSchedule();
         Milestone currentMilestone = schedule.getMilestone(enrollment.getCurrentMilestoneName());
@@ -78,6 +74,7 @@ public class EnrollmentAlertService {
      * @param enrollment the enrollment for which timings will be retrieved
      * @return the current milestone timings.
      */
+    @Transactional
     public MilestoneAlerts getAlertTimings(Enrollment enrollment) {
         Schedule schedule = enrollment.getSchedule();
         Milestone currentMilestone = schedule.getMilestone(enrollment.getCurrentMilestoneName());
@@ -102,6 +99,7 @@ public class EnrollmentAlertService {
      *
      * @param enrollment the enrollment for which alerts jobs will be unscheduled
      */
+    @Transactional
     public void unscheduleAllAlerts(Enrollment enrollment) {
         LOGGER.info("Un-scheduling all jobs for enrollment {}", enrollment.getId());
         schedulerService.safeUnscheduleAllJobs(String.format("%s-%s", EventSubjects.MILESTONE_ALERT, enrollment.getId()));
@@ -175,5 +173,15 @@ public class EnrollmentAlertService {
         DateTime windowEndDateTime = currentMilestoneStartDate.plus(windowEnd);
 
         return new AlertWindow(windowStartDateTime, windowEndDateTime, enrollment.getEnrolledOn(), enrollment.getPreferredAlertTime(), alert);
+    }
+
+    @Autowired
+    public void setSchedulerService(MotechSchedulerService schedulerService) {
+        this.schedulerService = schedulerService;
+    }
+
+    @Autowired
+    public void setEventRelay(EventRelay eventRelay) {
+        this.eventRelay = eventRelay;
     }
 }
