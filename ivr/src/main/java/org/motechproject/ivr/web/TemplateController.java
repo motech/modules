@@ -11,7 +11,7 @@ import org.motechproject.ivr.repository.CallDetailRecordDataService;
 import org.motechproject.ivr.service.ConfigService;
 import org.motechproject.ivr.service.TemplateService;
 import org.motechproject.mds.service.MDSLookupService;
-import org.motechproject.mds.util.ServiceUtil;
+import org.motechproject.mds.service.ServiceUtil;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
