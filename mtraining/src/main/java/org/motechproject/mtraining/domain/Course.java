@@ -89,7 +89,7 @@ public class Course extends CourseUnitMetadata {
         return new CourseUnitDto(getId(), getName(), getState().toString(), units, Constants.COURSE);
     }
 
-    @Override // NO CPD
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;

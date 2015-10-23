@@ -124,7 +124,7 @@ public class Chapter extends CourseUnitMetadata {
         return new ChapterUnitDto(getId(), getName(), getState().toString(), units, quiz == null ? null : quiz.toUnitDto());
     }
 
-    @Override // NO CPD
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
