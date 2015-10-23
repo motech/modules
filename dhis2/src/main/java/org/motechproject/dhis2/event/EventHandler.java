@@ -15,6 +15,7 @@ import org.motechproject.dhis2.service.DataElementService;
 import org.motechproject.dhis2.service.TrackedEntityInstanceMappingService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
+import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -295,6 +296,7 @@ public class EventHandler {
         dhisAttributes.remove(MotechEvent.PARAM_INVALID_MOTECH_EVENT);
         dhisAttributes.remove(MotechEvent.PARAM_REDELIVERY_COUNT);
         dhisAttributes.remove(EventParams.MESSAGE_DESTINATION);
+        dhisAttributes.remove(MotechSchedulerService.JOB_ID_KEY);
 
         return dhisAttributes;
     }
