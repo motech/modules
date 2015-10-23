@@ -1,5 +1,6 @@
 package org.motechproject.mtraining.service.ut.service;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -13,6 +14,7 @@ import org.motechproject.mtraining.domain.Lesson;
 import org.motechproject.mtraining.domain.Quiz;
 import org.motechproject.mtraining.dto.ChapterUnitDto;
 import org.motechproject.mtraining.dto.CourseUnitDto;
+import org.motechproject.mtraining.dto.CourseUnitListWrapper;
 import org.motechproject.mtraining.exception.CourseUnitNotFoundException;
 import org.motechproject.mtraining.repository.ChapterDataService;
 import org.motechproject.mtraining.repository.CourseDataService;
@@ -23,15 +25,12 @@ import org.motechproject.mtraining.service.impl.CourseStructureServiceImpl;
 import org.motechproject.mtraining.util.Constants;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -54,16 +53,13 @@ public class CourseStructureServiceTest {
     private ArgumentCaptor<Course> courseArgumentCaptor;
 
     @Captor
+    private ArgumentCaptor<Chapter> chapterArgumentCaptor;
+
+    @Captor
     private ArgumentCaptor<Lesson> lessonArgumentCaptor;
 
     @Captor
     private ArgumentCaptor<Quiz> quizArgumentCaptor;
-
-    @Captor
-    private ArgumentCaptor<Set<Long>> quizIdsArgumentCaptor;
-
-    @Captor
-    private ArgumentCaptor<Set<Long>> lessonIdsArgumentCaptor;
 
     @InjectMocks
     private CourseStructureService courseStructureService = new CourseStructureServiceImpl();
@@ -74,48 +70,8 @@ public class CourseStructureServiceTest {
     }
 
     @Test
-    public void shouldFillUnusedUnits() {
-        List<CourseUnitDto> coursesToUpdate = new ArrayList<>();
-        coursesToUpdate.add(new CourseUnitDto(1l, Constants.COURSE, CourseUnitState.Active.toString(), null, Constants.COURSE));
-
-        Quiz quiz = new Quiz(Constants.QUIZ, CourseUnitState.Active, Constants.QUIZ, Constants.QUIZ, null);
-        quiz.setId(15l);
-        Lesson lesson1 = new Lesson(Constants.LESSON, CourseUnitState.Active, Constants.LESSON, Constants.LESSON, null);
-        Lesson lesson2 = new Lesson(Constants.LESSON, CourseUnitState.Active, Constants.LESSON, Constants.LESSON, null);
-        Lesson lesson3 = new Lesson(Constants.LESSON, CourseUnitState.Active, Constants.LESSON, Constants.LESSON, null);
-        lesson1.setId(13l);
-        lesson2.setId(16l);
-        lesson3.setId(17l);
-        List lessons = new ArrayList<>();
-        lessons.add(lesson1);
-        lessons.add(lesson2);
-        lessons.add(lesson3);
-        Chapter chapter = new Chapter(Constants.CHAPTER , CourseUnitState.Active, Constants.CHAPTER, Constants.CHAPTER, null, lessons, quiz);
-        chapter.setId(11l);
-        Course course = new Course(Constants.COURSE, CourseUnitState.Active, Constants.COURSE, Constants.COURSE, null, asList(chapter));
-        course.setId(1l);
-
-        when(courseDataService.findCourseById(1l)).thenReturn(course);
-
-        courseStructureService.updateCourseStructure(coursesToUpdate);
-
-        verify(lessonDataService).findLessonsByIds(lessonIdsArgumentCaptor.capture());
-        verify(quizDataService).findQuizzesByIds(quizIdsArgumentCaptor.capture());
-
-        List<Long> unusedLessons = new ArrayList(lessonIdsArgumentCaptor.getValue());
-        List<Long> unusedQuizzes =  new ArrayList(quizIdsArgumentCaptor.getValue());
-
-        assertEquals(3, unusedLessons.size());
-        Collections.sort(unusedLessons);
-        assertEquals(asList(13l, 16l, 17l), unusedLessons);
-
-        assertEquals(1, unusedQuizzes.size());
-        assertEquals(asList(15l), unusedQuizzes);
-    }
-
-    @Test
-    public void shouldRemoveRelationFromSecondSide() {
-        List<CourseUnitDto> coursesToUpdate = new ArrayList<>();
+    public void shouldRemoveRelations() {
+        CourseUnitListWrapper coursesToUpdate = new CourseUnitListWrapper();
         coursesToUpdate.add(new CourseUnitDto(1l, Constants.COURSE, CourseUnitState.Active.toString(), null, Constants.COURSE));
 
         Quiz quiz = new Quiz(Constants.QUIZ, CourseUnitState.Active, Constants.QUIZ, Constants.QUIZ, null);
@@ -130,11 +86,6 @@ public class CourseStructureServiceTest {
         course.setId(1l);
 
         when(courseDataService.findCourseById(1l)).thenReturn(course);
-        when(chapterDataService.findChapterById(11l)).thenReturn(chapter);
-        when(lessonDataService.findLessonsByIds(new HashSet(asList(13l)))).thenReturn(asList(lesson));
-        when(quizDataService.findQuizzesByIds(new HashSet(asList(15l)))).thenReturn(asList(quiz));
-        when(chapterDataService.findChapterByQuizId(15l)).thenReturn(chapter);
-        when(chapterDataService.findChapterByLessonId(13l)).thenReturn(chapter);
 
         courseStructureService.updateCourseStructure(coursesToUpdate);
 
@@ -145,22 +96,24 @@ public class CourseStructureServiceTest {
         assertEquals(new Long(1l), captureCourse.getId());
         assertEquals(0, captureCourse.getChapters().size());
 
-        verify(chapterDataService).findChapterByLessonId(13l);
-        verify(chapterDataService).findChapterByQuizId(15l);
-
+        verify(chapterDataService).update(chapterArgumentCaptor.capture());
         verify(lessonDataService).update(lessonArgumentCaptor.capture());
         verify(quizDataService).update(quizArgumentCaptor.capture());
 
+        Chapter capturedChapter = chapterArgumentCaptor.getValue();
         Lesson capturedLesson = lessonArgumentCaptor.getValue();
         Quiz capturedQuiz = quizArgumentCaptor.getValue();
 
+        assertNull(capturedChapter.getQuiz());
+        assertNull(capturedChapter.getCourse());
+        Assert.assertEquals(0, capturedChapter.getLessons().size());
         assertNull(capturedLesson.getChapter());
         assertNull(capturedQuiz.getChapter());
     }
 
     @Test
     public void shouldCreateCorrectStructure() {
-        List<CourseUnitDto> coursesToUpdate = new ArrayList<>();
+        CourseUnitListWrapper coursesToUpdate = new CourseUnitListWrapper();
         coursesToUpdate.add(new CourseUnitDto(1l, Constants.COURSE, CourseUnitState.Active.toString(),
                 asList(
                         new ChapterUnitDto(11l, Constants.CHAPTER, CourseUnitState.Active.toString(),
@@ -201,7 +154,7 @@ public class CourseStructureServiceTest {
 
     @Test(expected = CourseUnitNotFoundException.class)
     public void shouldCheckIfUnitExist() {
-        List<CourseUnitDto> coursesToUpdate = new ArrayList<>();
+        CourseUnitListWrapper coursesToUpdate = new CourseUnitListWrapper();
 
         coursesToUpdate.add(new CourseUnitDto(1l, "sample_1", CourseUnitState.Active.toString(), null, Constants.COURSE));
         coursesToUpdate.add(new CourseUnitDto(2l, "sample_2", CourseUnitState.Active.toString(), null, Constants.COURSE));

@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,7 +76,7 @@ public class TreeViewController {
 
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/updateCourses", method = RequestMethod.POST)
-    public void updateRelations(@RequestBody CourseUnitListWrapper courses) throws IOException {
-        courseStructureService.updateCourseStructure(courses.getCourses());
+    public void updateRelations(@RequestBody CourseUnitListWrapper courses) {
+        courseStructureService.updateCourseStructure(courses);
     }
 }

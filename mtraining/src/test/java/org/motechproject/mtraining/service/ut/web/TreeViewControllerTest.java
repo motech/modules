@@ -134,8 +134,7 @@ public class TreeViewControllerTest {
 
     @Test
     public void shouldDeserializeCoursesStructureAndUpdateStructure() throws Exception {
-        CourseUnitListWrapper coursesToUpdate = new CourseUnitListWrapper();
-        coursesToUpdate.setCourses(generateCourses("update_"));
+        CourseUnitListWrapper coursesToUpdate = generateCourses("update_");
 
         controller.perform(post("/updateCourses")
                 .body(new ObjectMapper().writeValueAsBytes(coursesToUpdate))
@@ -172,8 +171,8 @@ public class TreeViewControllerTest {
         assertEquals(1, chapters.size());
     }
 
-    private List<CourseUnitDto> generateCourses(String prefix) {
-        List<CourseUnitDto> courses = new ArrayList<>();
+    private CourseUnitListWrapper generateCourses(String prefix) {
+        CourseUnitListWrapper courses = new CourseUnitListWrapper();
         CourseUnitDto course1 = new CourseUnitDto(1l, prefix + "course_1", CourseUnitState.Active.toString(), generateChapters(prefix, true), Constants.COURSE);
         CourseUnitDto course2 = new CourseUnitDto(2l, prefix + "course_2", CourseUnitState.Active.toString(), generateChapters(prefix, false), Constants.COURSE);
         courses.add(course1);

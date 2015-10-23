@@ -1,7 +1,7 @@
 package org.motechproject.mtraining.exception;
 
 /**
- * The <code>CourseUnitNotFoundException</code> exception signals a situation in which an course unit does not
+ * The <code>CourseUnitNotFoundException</code> exception signals a situation in which a course unit does not
  * exist in database.
  */
 public class CourseUnitNotFoundException extends RuntimeException {

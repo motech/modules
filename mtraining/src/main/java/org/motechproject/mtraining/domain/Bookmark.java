@@ -8,6 +8,7 @@ import org.motechproject.mds.util.SecurityMode;
 import org.motechproject.mtraining.util.Constants;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Bookmark object to store the progress for the user. This stores the identifier for the individual course units (like
@@ -97,5 +98,29 @@ public class Bookmark extends MdsEntity {
 
     public void setProgress(Map<String, Object> progress) {
         this.progress = progress;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        final Bookmark other = (Bookmark) obj;
+
+        return Objects.equals(this.getExternalId(), other.getExternalId())
+                && Objects.equals(this.getChapterIdentifier(), other.getChapterIdentifier())
+                && Objects.equals(this.getCourseIdentifier(), other.getCourseIdentifier())
+                && Objects.equals(this.getLessonIdentifier(), other.getLessonIdentifier())
+                && Objects.equals(this.getProgress(), other.getProgress());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getExternalId(), getChapterIdentifier(), getCourseIdentifier(), getLessonIdentifier(), getProgress());
     }
 }

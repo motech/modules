@@ -132,7 +132,7 @@
                         if (operation === "move_node") {
                             if (node_parent.original && node.original.level === node_parent.original.level + 1) {
                                 var children = node_parent.children;
-                                if (node.type === 'quiz' && $scope.containsQuiz(node_parent)) {
+                                if (node.type === 'quiz' && $scope.getQuiz(node_parent) !== null) {
                                     return false;
                                 }
                                 return true;
@@ -286,7 +286,7 @@
                 $http({
                     method: 'POST',
                     url: '../mtraining/updateCourses',
-                    data: { courses: coursesToUpdate }
+                    data: coursesToUpdate
                 }).success(function (response) {
                     $scope.loadTree();
                     unblockUI();
@@ -303,30 +303,31 @@
         };
 
         $scope.removeMember = function() {
-            var i, node = $scope.jstree.get_node($scope.jstree.get_selected());
+            var node = $scope.jstree.get_node($scope.jstree.get_selected());
             motechConfirm('mtraining.confirm.removeMember', 'mtraining.confirm', function (val) {
                 if (val) {
-                    $scope.onNodeChanged(node);
-                    if (node.type === 'chapter' && node.children !== undefined) {
-                        for(i = 0; i < node.children.length; i+=1) {
-                            //we must move children as unused to display them into units part
-                            if ($scope.nodeProperties[node.children[i]].type === 'quiz') {
-                                $scope.moveElement($scope.nodeProperties[node.children[i]]);
-                            } else {
-                                $scope.moveElement($scope.nodeProperties[node.children[i]]);
-                            }
-                            $scope.nodeProperties[node.children[i]] = [];
-                            $scope.treeData[node.children[i]] = [];
-                        }
-                        $scope.jstree.delete_node(node.children);
-                    }
-                    $scope.moveElement($scope.nodeProperties[node.id]);
-                    $scope.nodeProperties[node.id] = [];
-                    $scope.treeData[node.id] = [];
-                    $scope.jstree.delete_node(node.id);
-                    $scope.safeApply();
+                    $scope.deleteMember(node);
                 }
             });
+        };
+
+        $scope.deleteMember = function (node) {
+            var i;
+            $scope.onNodeChanged(node);
+            if (node.type === 'chapter' && node.children !== undefined) {
+                for(i = 0; i < node.children.length; i+=1) {
+                    //we must move children as unused to display them into units part
+                    $scope.moveElement($scope.nodeProperties[node.children[i]]);
+                    $scope.nodeProperties[node.children[i]] = [];
+                    $scope.treeData[node.children[i]] = [];
+                }
+                $scope.jstree.delete_node(node.children);
+            }
+            $scope.moveElement($scope.nodeProperties[node.id]);
+            $scope.nodeProperties[node.id] = [];
+            $scope.treeData[node.id] = [];
+            $scope.jstree.delete_node(node.id);
+            $scope.safeApply();
         };
 
         $scope.moveElement = function (element) {
@@ -408,14 +409,31 @@
             return false;
         };
 
-        $scope.containsQuiz = function (node) {
+        $scope.getQuiz = function (node) {
             var i, children = node.children;
             for(i = 0; i < children.length; i+=1) {
                 if ($scope.treeData[children[i]].type === 'quiz') {
-                    return true;
+                    return $scope.jstree.get_node($scope.treeData[children[i]].id);
                 }
             }
-            return false;
+            return null;
+        };
+
+        $scope.getMembersColumnHeader = function () {
+            var idx, node;
+            if ($scope.jstree === null || $scope.jstree === undefined) {
+                return $scope.msg('mtraining.members');
+            }
+            idx = $scope.jstree.get_selected();
+            if (idx === null || idx === undefined || idx.length === 0) {
+                return $scope.msg('mtraining.members');
+            }
+            node = $scope.jstree.get_node($scope.jstree.get_selected());
+            if (node.type === 'root') {
+                return $scope.msg('mtraining.members');
+            }
+
+            return $scope.msg('mtraining.membersOf', node.text);
         };
 
         $scope.safeApply = function () {
@@ -426,18 +444,18 @@
 
         //Drag and Drop
         function receiveEventHandler(event, ui) {
-            var newId, parent, idx, item, cancelled = false;
+            var newId, parent, idx, item, cancelled, quiz = false;
 
             parent = $scope.jstree.get_node($scope.jstree.get_selected());
             idx = ui.item.attr('idx');
             $scope.onNodeChanged(parent);
             if (ui.item.attr('class').indexOf("quiz") >= 0) {
-                if ($scope.containsQuiz(parent)) {
-                    ui.sender.sortable('cancel');
-                    return false;
-                }
                 item = $scope.quizNodes[idx];
                 $scope.quizNodes.splice(idx, 1);
+                quiz = $scope.getQuiz(parent);
+                if (quiz !== null) {
+                    $scope.deleteMember(quiz);
+                }
             } else {
                 item = $scope.nodes[idx];
                 $scope.nodes.splice(idx, 1);

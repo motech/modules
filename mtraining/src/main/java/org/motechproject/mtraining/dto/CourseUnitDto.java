@@ -27,7 +27,7 @@ public class CourseUnitDto {
     private String state;
 
     /**
-     *
+     * Lower level units.
      */
     private List<CourseUnitDto> units;
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * The <code>UnusedUnitQueryExecution</code> class prepares a custom MDS query. The query should return
- * only these units, that are not used by higher-level units, for example Lessons which doesn't have relation with
+ * only these units, that are not used by higher-level units, for example lessons that don't have relation with
  * Chapter.
  *
  * @see org.motechproject.mtraining.domain.Course

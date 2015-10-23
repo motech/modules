@@ -4,7 +4,6 @@ import org.codehaus.jackson.annotate.JsonBackReference;
 import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
-import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.mds.util.SecurityMode;
 import org.motechproject.mtraining.dto.CourseUnitDto;
 import org.motechproject.mtraining.util.Constants;
@@ -17,7 +16,7 @@ import java.util.Objects;
 /**
  * Quiz object to store questions and answer for a chapter
  */
-@Entity
+@Entity(maxFetchDepth = 4)
 @Access(value = SecurityMode.PERMISSIONS, members = {Constants.MANAGE_MTRAINING})
 public class Quiz extends CourseUnitMetadata {
 
@@ -105,7 +104,6 @@ public class Quiz extends CourseUnitMetadata {
     /**
      * {@inheritDoc}
      */
-    @Ignore
     @Override
     public CourseUnitDto toUnitDto() {
         return new CourseUnitDto(getId(), getName(), getState().toString(), null, Constants.QUIZ);
@@ -127,11 +125,13 @@ public class Quiz extends CourseUnitMetadata {
                 && Objects.equals(this.getName(), other.getName())
                 && Objects.equals(this.getPassPercentage(), other.getPassPercentage())
                 && Objects.equals(this.getContent(), other.getContent())
-                && Objects.equals(this.getDescription(), other.getDescription());
+                && Objects.equals(this.getDescription(), other.getDescription())
+                && Objects.equals(this.getProperties(), other.getProperties())
+                && Objects.equals(this.getState(), other.getState());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId());
+        return Objects.hash(getName(), getPassPercentage(), getContent(), getDescription(), getProperties(), getState());
     }
 }

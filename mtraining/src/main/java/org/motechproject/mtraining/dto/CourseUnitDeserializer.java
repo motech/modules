@@ -27,22 +27,20 @@ public class CourseUnitDeserializer extends JsonDeserializer<List<CourseUnitDto>
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CourseUnitDeserializer.class);
 
-    private ObjectMapper mapper;
-    private List<CourseUnitDto> units;
-    private JsonNode jsonNode;
-
     @Override
     public List<CourseUnitDto> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
-        jsonNode = jsonParser.readValueAsTree();
-        units = new ArrayList<>();
+        JsonNode jsonNode = jsonParser.readValueAsTree();
+        List<CourseUnitDto> units = new ArrayList<>();
 
         ObjectCodec codec = jsonParser.getCodec();
+        ObjectMapper mapper;
 
         if (codec instanceof ObjectMapper) {
             mapper = (ObjectMapper) codec;
         } else {
             mapper = new ObjectMapper();
         }
+
         TypeFactory typeFactory = mapper.getTypeFactory();
         JavaType stringType = typeFactory.constructType(String.class);
         JavaType longType = typeFactory.constructType(Long.class);
@@ -60,26 +58,26 @@ public class CourseUnitDeserializer extends JsonDeserializer<List<CourseUnitDto>
                 unitDto = new CourseUnitDto();
             }
 
-            setProperty("id", longType, unitDto, unit);
-            setProperty("name", stringType, unitDto, unit);
-            setProperty("state", stringType, unitDto, unit);
-            setProperty("type", stringType, unitDto, unit);
+            setProperty("id", longType, unitDto, unit, mapper);
+            setProperty("name", stringType, unitDto, unit, mapper);
+            setProperty("state", stringType, unitDto, unit, mapper);
+            setProperty("type", stringType, unitDto, unit, mapper);
 
 
             if (Constants.COURSE.equals(type)) {
-                setProperty("units", chaptersType, unitDto, unit);
+                setProperty("units", chaptersType, unitDto, unit, mapper);
             } else if (Constants.CHAPTER.equals(type)) {
-                setProperty("quiz", courseType, unitDto, unit);
-                setProperty("units", coursesType, unitDto, unit);
+                setProperty("quiz", courseType, unitDto, unit, mapper);
+                setProperty("units", coursesType, unitDto, unit, mapper);
             } else {
-                setProperty("units", coursesType, unitDto, unit);
+                setProperty("units", coursesType, unitDto, unit, mapper);
             }
             units.add(unitDto);
         }
         return units;
     }
 
-    private void setProperty(String propertyName, JavaType javaType, CourseUnitDto unitDto, JsonNode node) {
+    private void setProperty(String propertyName, JavaType javaType, CourseUnitDto unitDto, JsonNode node, ObjectMapper mapper) {
         if (node.has(propertyName)) {
             try {
                 Object value = mapper.readValue(node.get(propertyName), javaType);

@@ -5,7 +5,6 @@ import org.codehaus.jackson.annotate.JsonManagedReference;
 import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
-import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.mds.util.SecurityMode;
 import org.motechproject.mtraining.dto.ChapterUnitDto;
 import org.motechproject.mtraining.dto.CourseUnitDto;
@@ -15,6 +14,7 @@ import javax.jdo.annotations.Persistent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Chapter object to store quiz and lesson metadata. A chapter contains a list of possible lessons.
@@ -113,7 +113,6 @@ public class Chapter extends CourseUnitMetadata {
     /**
      * {@inheritDoc}
      */
-    @Ignore
     @Override
     public CourseUnitDto toUnitDto() {
         List<CourseUnitDto> units = new ArrayList<>();
@@ -123,5 +122,30 @@ public class Chapter extends CourseUnitMetadata {
             }
         }
         return new ChapterUnitDto(getId(), getName(), getState().toString(), units, quiz == null ? null : quiz.toUnitDto());
+    }
+
+    @Override // NO CPD
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        final Chapter other = (Chapter) obj;
+
+        return Objects.equals(this.getId(), other.getId())
+                && Objects.equals(this.getName(), other.getName())
+                && Objects.equals(this.getProperties(), other.getProperties())
+                && Objects.equals(this.getContent(), other.getContent())
+                && Objects.equals(this.getDescription(), other.getDescription())
+                && Objects.equals(this.getState(), other.getState());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName(), getProperties(), getContent(), getDescription(), getState());
     }
 }

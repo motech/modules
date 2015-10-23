@@ -1,24 +1,40 @@
 @import url("style.min.css");
 
+.buttons {
+    padding-bottom: 10px;
+    max-width: 560px;
+    width: auto;
+}
+
 div.buttons > button {
     width:170px;
     margin-left: 10px;
+    margin-top: 10px;
     display: inline; !important
 }
 
-div.buttons > select {
+.select-buttons {
+   padding-bottom: 10px;
+   max-width: 380px;
+   width: auto;
+}
+
+div.select-buttons > select {
     width:170px;
     margin-top: 10px;
     margin-left: 10px;
     display: inline; !important
 }
 
-.tree-button {
-    margin-top: 10px; !important
+div.select-buttons > button {
+    width:170px;
+    margin-top: 0px; !important
+    margin-left: 10px; !important
+    display: inline; !important
 }
 
-.select-button {
-    margin-top: 0px; !important
+.costam {
+    margin-left: 10px; !important
 }
 
 .table-lightblue-nohover {

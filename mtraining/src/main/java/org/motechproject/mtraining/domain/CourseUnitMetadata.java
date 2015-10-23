@@ -2,7 +2,6 @@ package org.motechproject.mtraining.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
-import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.mds.domain.MdsEntity;
 import org.motechproject.mtraining.dto.CourseUnitDto;
 
@@ -92,7 +91,6 @@ public abstract class CourseUnitMetadata extends MdsEntity {
      *
      * @return the dto representation of the unit
      */
-    @Ignore
     public CourseUnitDto toUnitDto() {
         return new CourseUnitDto(getId(), getName(), getState().toString(), null, null);
     }
@@ -112,11 +110,12 @@ public abstract class CourseUnitMetadata extends MdsEntity {
         return Objects.equals(this.getId(), other.getId())
                 && Objects.equals(this.getName(), other.getName())
                 && Objects.equals(this.getContent(), other.getContent())
-                && Objects.equals(this.getDescription(), other.getDescription());
+                && Objects.equals(this.getDescription(), other.getDescription())
+                && Objects.equals(this.getState(), other.getState());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId());
+        return Objects.hash(getName(), getContent(), getDescription(), getState());
     }
 }

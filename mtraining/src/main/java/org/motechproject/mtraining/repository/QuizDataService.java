@@ -6,7 +6,6 @@ import org.motechproject.mds.service.MotechDataService;
 import org.motechproject.mtraining.domain.Quiz;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Interface for repository that persists simple records and allows CRUD.
@@ -21,7 +20,4 @@ public interface QuizDataService extends MotechDataService<Quiz> {
 
     @Lookup
     Quiz findQuizById(@LookupField(name = "id") Long id);
-
-    @Lookup
-    List<Quiz> findQuizzesByIds(@LookupField(name = "id") Set<Long> ids);
 }

@@ -201,7 +201,7 @@ public class CourseStructureServiceBundleIT extends BasePaxIT {
     }
 
 
-    // Original structure test 3:
+    // Structure after test 2:
     // course_1
     //     - chapter_1
     //     - chapter_2
@@ -391,7 +391,7 @@ public class CourseStructureServiceBundleIT extends BasePaxIT {
         verifyUnused(asList(QUIZ_5, QUIZ_6), asList(LESSON_6, LESSON_7, LESSON_9), asList(CHAPTER_6));
     }
 
-    // Original structure test 4:
+    // Structure after test 4:
     // course_1
     // course_2
     // course_3 (Pending)
@@ -515,7 +515,7 @@ public class CourseStructureServiceBundleIT extends BasePaxIT {
         verifyUnused(asList(QUIZ_4), asList(), asList(CHAPTER_4));
     }
 
-    // Original structure test 5:
+    // Structure after test 5:
     // course_1
     // course_2
     // course_3
@@ -564,6 +564,109 @@ public class CourseStructureServiceBundleIT extends BasePaxIT {
         verifyUnused(asList(QUIZ_1, QUIZ_2, QUIZ_3, QUIZ_4, QUIZ_5, QUIZ_6), asList(LESSON_1, LESSON_2, LESSON_3, LESSON_4,
                 LESSON_5, LESSON_6, LESSON_7, LESSON_8, LESSON_9), asList(CHAPTER_1, CHAPTER_2, CHAPTER_3, CHAPTER_4, CHAPTER_5, CHAPTER_6));
     }
+
+    // Structure after test 6:
+    // course_1
+    //     - chapter_1
+    //          - lesson_1
+    //          - lesson_2
+    //          - quiz_2
+    //     - chapter_2
+    //          - lesson_3
+    //          - quiz_1
+    // course_2
+    //     - chapter_3
+    //          - lesson_4
+    //          - lesson_5
+    //          - quiz_5
+    // course_3
+    //     - new_chapter (it contains lesson_10, and quiz_7 which should be disconnected)
+    //          - lesson_6
+    // course_4
+    //
+    // Unused units:
+    // chapter_4, chapter_5, chapter_6, lesson_7, lesson_8, lesson_10
+    // lesson_9, quiz_3, quiz_4, quiz_6, quiz_7
+    @Test
+    public void updateCourseStructureTest6() throws Exception {
+        getLogger().info("Creating basic structure");
+        setUpData();
+
+
+        Quiz quiz7 = new Quiz("quiz_7", CourseUnitState.Active, "content_7", "Description_7", null);
+        quizDataService.create(quiz7);
+
+        Lesson lesson10 = new Lesson("lesson_10", CourseUnitState.Active, "content_10", "Description_10", null);
+        lessonDataService.create(lesson10);
+
+        List<Lesson> lessons = new ArrayList<>();
+        lessons.add(lesson10);
+        Chapter newChapter = new Chapter("new_chapter", CourseUnitState.Active, "content_1", "Description_1", null, lessons, quiz7);
+        chapterDataService.create(newChapter);
+        // preparing dto data
+        List<CourseUnitDto> coursesToUpdate = new ArrayList<>();
+
+        coursesToUpdate.add(new CourseUnitDto(idMap.get(COURSE_1), COURSE_1, ACTIVE,
+                asList(
+                        new ChapterUnitDto(idMap.get(CHAPTER_1), CHAPTER_1, ACTIVE,
+                                asList(
+                                        new CourseUnitDto(idMap.get(LESSON_1), LESSON_1, ACTIVE, null, Constants.LESSON),
+                                        new CourseUnitDto(idMap.get(LESSON_2), LESSON_2, ACTIVE, null, Constants.LESSON)
+                                ),
+                                new CourseUnitDto(idMap.get(QUIZ_2), QUIZ_2, ACTIVE, null, Constants.QUIZ)),
+                        new ChapterUnitDto(idMap.get(CHAPTER_2), CHAPTER_2, ACTIVE,
+                                asList(
+                                        new CourseUnitDto(idMap.get(LESSON_3), LESSON_3, ACTIVE, null, Constants.LESSON)
+                                ),
+                                new CourseUnitDto(idMap.get(QUIZ_1), QUIZ_1, ACTIVE, null, Constants.QUIZ))
+                ), Constants.COURSE));
+        coursesToUpdate.add(new CourseUnitDto(idMap.get(COURSE_2), COURSE_2, ACTIVE,
+                asList(
+                        new ChapterUnitDto(idMap.get(CHAPTER_3), CHAPTER_3, ACTIVE,
+                                asList(
+                                        new CourseUnitDto(idMap.get(LESSON_4), LESSON_4, ACTIVE, null, Constants.LESSON),
+                                        new CourseUnitDto(idMap.get(LESSON_5), LESSON_5, ACTIVE, null, Constants.LESSON)
+                                ),
+                                new CourseUnitDto(idMap.get(QUIZ_5), QUIZ_5, ACTIVE, null, Constants.QUIZ))
+                ), Constants.COURSE));
+        coursesToUpdate.add(new CourseUnitDto(idMap.get(COURSE_3), COURSE_3, ACTIVE,
+                asList(
+                        new ChapterUnitDto(newChapter.getId(), "new_chapter", ACTIVE,
+                                asList(
+                                        new CourseUnitDto(idMap.get(LESSON_6), LESSON_6, ACTIVE, null, Constants.LESSON)
+                                ), null)
+                ), Constants.COURSE));
+
+        getLogger().info("Updating course structure");
+        courseStructureService.updateCourseStructure(coursesToUpdate);
+
+        Course course = courseDataService.findById(idMap.get(COURSE_1));
+        assertNotNull(course);
+        assertEquals(2, course.getChapters().size());
+        assertEquals(asList(CHAPTER_1, CHAPTER_2), extract(course.getChapters(), on(Chapter.class).getName()));
+        verifyLessons(course.getChapters().get(0), 2, asList(LESSON_1, LESSON_2), asList(CourseUnitState.Active, CourseUnitState.Active));
+        verifyQuiz(course.getChapters().get(0), QUIZ_2, CourseUnitState.Active);
+        verifyLessons(course.getChapters().get(1), 1, asList(LESSON_3), asList(CourseUnitState.Active));
+        verifyQuiz(course.getChapters().get(1), QUIZ_1, CourseUnitState.Active);
+
+        course = courseDataService.findById(idMap.get(COURSE_2));
+        assertNotNull(course);
+        assertEquals(1, course.getChapters().size());
+        verifyLessons(course.getChapters().get(0), 2, asList(LESSON_4, LESSON_5), asList(CourseUnitState.Active, CourseUnitState.Active));
+        verifyQuiz(course.getChapters().get(0), QUIZ_5, CourseUnitState.Active);
+
+
+        course = courseDataService.findById(idMap.get(COURSE_3));
+        assertNotNull(course);
+        assertEquals(1, course.getChapters().size());
+        assertEquals("new_chapter", course.getChapters().get(0).getName());
+        verifyLessons(course.getChapters().get(0), 1, asList(LESSON_6), asList(CourseUnitState.Active));
+        assertNull(course.getChapters().get(0).getQuiz());
+
+        // verify unused units
+        verifyUnused(asList(QUIZ_3, QUIZ_4, QUIZ_6, "quiz_7"), asList("lesson_10", LESSON_7, LESSON_8, LESSON_9), asList(CHAPTER_4, CHAPTER_5, CHAPTER_6));
+    }
+
 
     private void verifyUnused(List<String> quizzes, List<String> lessons, List<String> chapters) {
         // verify unused units
