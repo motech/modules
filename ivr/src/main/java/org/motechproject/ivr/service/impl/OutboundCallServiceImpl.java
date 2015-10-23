@@ -34,6 +34,7 @@ import org.motechproject.ivr.domain.Config;
 import org.motechproject.ivr.domain.HttpMethod;
 import org.motechproject.ivr.event.EventParams;
 import org.motechproject.ivr.event.EventSubjects;
+import org.motechproject.ivr.exception.ConfigNotFoundException;
 import org.motechproject.ivr.repository.CallDetailRecordDataService;
 import org.motechproject.ivr.service.CallInitiationException;
 import org.motechproject.ivr.service.ConfigService;
@@ -104,6 +105,9 @@ public class OutboundCallServiceImpl implements OutboundCallService {
     @Override
     public void initiateCall(Map<String, String> params) {
         String defaultConfig = configService.getDefaultConfig();
+        if(defaultConfig == null || defaultConfig.isEmpty() ) {
+            throw new ConfigNotFoundException("No default configuration found.");
+        }
         initiateCall(defaultConfig, params);
     }
 

@@ -51,7 +51,7 @@ public class ConfigServiceImpl implements ConfigService {
             LOGGER.debug(message);
             throw new JsonIOException(message, e);
         }
-
+        configMap = new HashMap<>();
         for (Config config : configs.getConfigList()) {
             configMap.put(config.getName(), config);
         }

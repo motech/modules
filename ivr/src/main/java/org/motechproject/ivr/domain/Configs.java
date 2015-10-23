@@ -15,6 +15,11 @@ public class Configs {
 
     }
 
+    public Configs(List<Config> configList, String defaultConfig) {
+        this.configList = configList;
+        this.defaultConfig = defaultConfig;
+    }
+
     public Configs(String defaultConfig) {
         this.defaultConfig = defaultConfig;
     }

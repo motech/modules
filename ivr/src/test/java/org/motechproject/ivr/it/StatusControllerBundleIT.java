@@ -73,9 +73,7 @@ public class StatusControllerBundleIT extends BasePaxIT {
 
         //Create a config
         List<Config> configList = Arrays.asList(new Config("foo", false, null, null, null, null, null, null, null, false, null, false, null));
-        Configs configs = new Configs();
-        configs.setConfigList(configList);
-        configs.setDefaultConfig("foo");
+        Configs configs = new Configs(configList, "foo");
         configService.updateConfigs(configs);
 
         //Create & send a CDR status callback
@@ -101,9 +99,7 @@ public class StatusControllerBundleIT extends BasePaxIT {
         //Create a config
         List<String> ignoredStatusFields = Arrays.asList("ignoreme", "ignoreme2");
         List<Config> configList = Arrays.asList(new Config("foo", false, null, null, ignoredStatusFields, "FROM:from", null, "ANSWERED: NEW STATUS", null, false, null, false, null));
-        Configs configs = new Configs();
-        configs.setConfigList(configList);
-        configs.setDefaultConfig("foo");
+        Configs configs = new Configs(configList, "foo");
         configService.updateConfigs(configs);
 
         //Create & send a CDR status callback

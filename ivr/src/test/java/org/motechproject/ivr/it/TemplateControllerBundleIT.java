@@ -78,9 +78,7 @@ public class TemplateControllerBundleIT extends BasePaxIT {
 
         //Create a config
         List<Config> configList = Arrays.asList(new Config("foo", false, null, null, null, null, null, null, null, false, null, false, null));
-        Configs configs = new Configs();
-        configs.setConfigList(configList);
-        configs.setDefaultConfig("foo");
+        Configs configs = new Configs(configList, "foo");
         configService.updateConfigs(configs);
 
         //Create & send a CDR status callback
@@ -103,9 +101,7 @@ public class TemplateControllerBundleIT extends BasePaxIT {
         //Create a config
         List<String> ignoredStatusFields = Arrays.asList("ignoreme", "ignoreme2");
         List<Config> config = Arrays.asList(new Config("conf", false, null, null, ignoredStatusFields, "FROM:from", null, "ANS: NEW STATUS", null, false, null, false, null));
-        Configs configs = new Configs();
-        configs.setConfigList(config);
-        configs.setDefaultConfig("conf");
+        Configs configs = new Configs(config, "conf");
         configService.updateConfigs(configs);
 
         // Create a CDR we can use as a datasource in the template. A more elegant way to do that would be to create

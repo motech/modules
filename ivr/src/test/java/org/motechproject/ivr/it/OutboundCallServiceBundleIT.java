@@ -9,6 +9,7 @@ import org.motechproject.ivr.domain.CallDetailRecord;
 import org.motechproject.ivr.domain.Config;
 import org.motechproject.ivr.domain.Configs;
 import org.motechproject.ivr.domain.HttpMethod;
+import org.motechproject.ivr.exception.ConfigNotFoundException;
 import org.motechproject.ivr.repository.CallDetailRecordDataService;
 import org.motechproject.ivr.service.ConfigService;
 import org.motechproject.ivr.service.OutboundCallService;
@@ -77,9 +78,7 @@ public class OutboundCallServiceBundleIT extends BasePaxIT {
 
         //Create a config
         Config config = new Config("conf123", false, null, null, null, null, null, null, HttpMethod.GET, false, httpServerURI, false, null);
-        Configs configs = new Configs();
-        configs.setConfigList(Arrays.asList(config));
-        configs.setDefaultConfig("conf123");
+        Configs configs = new Configs(Arrays.asList(config), "conf123");
         configService.updateConfigs(configs);
 
         Map<String, String> params = new HashMap<>();
@@ -99,9 +98,7 @@ public class OutboundCallServiceBundleIT extends BasePaxIT {
 
         //Create a config
         Config config = new Config("conf456", false, null, null, null, null, null, null, HttpMethod.GET, false, httpServerURI,false, null);
-        Configs configs = new Configs();
-        configs.setConfigList(Arrays.asList(config));
-        configs.setDefaultConfig("conf456");
+        Configs configs = new Configs(Arrays.asList(config), "conf456");
         getLogger().debug("shouldHandleInvalidServerResponse - We create a config  {}", config.toString());
         configService.updateConfigs(configs);
 
@@ -131,9 +128,7 @@ public class OutboundCallServiceBundleIT extends BasePaxIT {
 
         //Create a config
         Config config = new Config("conf789", false, null, null, null, null, null, null, HttpMethod.POST, true, httpServerURI, false, null);
-        Configs configs = new Configs();
-        configs.setConfigList(Arrays.asList(config));
-        configs.setDefaultConfig("conf789");
+        Configs configs = new Configs(Arrays.asList(config), "conf789");
         configService.updateConfigs(configs);
 
         Map<String, String> params = new HashMap<>();
@@ -148,5 +143,14 @@ public class OutboundCallServiceBundleIT extends BasePaxIT {
         List<CallDetailRecord> callDetailRecords = callDetailRecordDataService.retrieveAll();
         assertEquals(1, callDetailRecords.size());
         assertEquals("conf789", callDetailRecords.get(0).getConfigName());
+    }
+
+    @Test(expected = ConfigNotFoundException.class)
+    public void shouldThrowConfigNotFoundException() {
+        getLogger().info("shouldThrowConfigNotFoundException");
+        Configs configs = new Configs();
+        configService.updateConfigs(configs);
+        Map<String, String> params = new HashMap<>();
+        outboundCallService.initiateCall(params);
     }
 }
