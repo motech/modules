@@ -176,10 +176,10 @@ Service for managing activity records.
 mTraining UI
 ############
 
-The mTraining module has ``Courses``, ``Chapters``, ``Lessons`` and ``Quizzes`` tabs which allows to perform CRUD operations
+The mTraining module has ``Courses``, ``Chapters``, ``Lessons`` and ``Quizzes`` tabs which allow to perform CRUD operations
 on the course units. ``Bookmarks`` and ``Activity Record`` tabs allow to view logs. All those tab are using the MDS embedded UI.
 
-Default tab is the ``Tree View`` tab. ``TreeView`` tab allows to manage relationships between course units. Colors of the units
+Default tab is the ``Tree View`` tab. ``TreeView`` tab allow to manage relationships between course units. Colors of the units
 represent the state(``blue`` - ``Active``, ``grey`` - ``Inactive``, ``orange`` - ``Pending``). You can easily change state of
 the entire branch or a single unit, to do so use buttons below the tree. When you use ``Remove member`` button then
 all children of the element will be disconnected(for example when you remove chapter then all ``Lessons`` will be disconnected from
