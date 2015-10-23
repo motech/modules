@@ -14,4 +14,11 @@ public interface OutboundCallService {
      * @param params the parameters that will be used for building the url, the ones that don't match the placeholders will be sent as params of the request
      */
     void initiateCall(String configName, Map<String, String> params);
+
+    /**
+     * Gets the defaultConfig and calls the initiateCall method.
+     * Throws ConfigNotFoundException when there is no default configuration.
+     * @param params the parameters that will be used for building the url, the ones that don't match the placeholders will be sent as params of the request
+     */
+    void initiateCall(Map<String, String> params);
 }

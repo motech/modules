@@ -150,8 +150,23 @@
         function autoExpandSingleAccordion() {
             if ($scope.accordions.length === 1) {
                 $scope.accordions[0] = true;
+                $scope.configs.defaultConfig = $scope.configs.configList[0].name;
+                $scope.defaultConfigIndex = 0;
             }
         }
+
+        $scope.setNewDefaultConfig = function() {
+            var i;
+            for (i = 0 ; i < $scope.configs.configList.length ; i = i + 1) {
+                if ($scope.configs.configList[i].name === $scope.configs.defaultConfig) {
+                    return;
+                }
+            }
+            if ($scope.configs.configList.length > 0) {
+                $scope.configs.defaultConfig = $scope.configs.configList[0].name;
+                $scope.defaultConfigIndex = 0;
+            }
+        };
 
         function setAccordions(configs) {
             var i;
@@ -166,8 +181,8 @@
 
         $scope.checkForDuplicateNames = function(index) {
             var i;
-            for (i = 0 ; i < $scope.configs.length ; i = i + 1) {
-                if (i!==index && $scope.configs[i].name === $scope.configs[index].name) {
+            for (i = 0 ; i < $scope.configs.configList.length ; i = i + 1) {
+                if (i!==index && $scope.configs.configList[i].name === $scope.configs.configList[index].name) {
                     $scope.dupeNames[index] = true;
                     return;
                 }
@@ -187,9 +202,16 @@
 
         $http.get('../ivr/ivr-configs')
             .success(function(response){
+                var i;
                 $scope.configs = response;
                 $scope.originalConfigs = angular.copy($scope.configs);
-                setAccordions($scope.configs);
+                setAccordions($scope.configs.configList);
+                for (i = 0 ; i < response.configList.length ; i = i + 1) {
+                   if (response.defaultConfig === response.configList[i].name) {
+                      $scope.defaultConfigIndex = i;
+                         break;
+                   }
+                }
             })
             .error(function(response) {
                 $scope.errors.push($scope.msg('ivr.web.settings.noConfig', response));
@@ -203,10 +225,20 @@
             autoExpandSingleAccordion();
         };
 
+        $scope.setDefaultConfig = function(name, index) {
+            $scope.configs.defaultConfig = name;
+            $scope.defaultConfigIndex = index;
+        };
+
+        $scope.keepDefaultConfig = function() {
+            $scope.configs.defaultConfig = $scope.configs.configList[$scope.defaultConfigIndex].name;
+        };
+
         $scope.deleteConfig = function(index) {
-            $scope.configs.splice(index, 1);
+            $scope.configs.configList.splice(index, 1);
             $scope.accordions.splice(index, 1);
             $scope.dupeNames.splice(index, 1);
+            $scope.setNewDefaultConfig();
             autoExpandSingleAccordion();
         };
 
@@ -220,7 +252,7 @@
 
         $scope.reset = function () {
             $scope.configs = angular.copy($scope.originalConfigs);
-            setAccordions($scope.configs);
+            setAccordions($scope.configs.configList);
         };
 
         $scope.addConfig = function () {
@@ -233,7 +265,7 @@
                 'callStatusMappingString':'',
                 'servicesMapString':''
             };
-            newLength = $scope.configs.push(newConfig);
+            newLength = $scope.configs.configList.push(newConfig);
             $scope.accordions.push(true);
             autoExpandSingleAccordion();
             $scope.dupeNames.push(false);
@@ -250,7 +282,7 @@
                 .success(function (response) {
                     $scope.configs = response;
                     $scope.originalConfigs = angular.copy($scope.configs);
-                    setAccordions($scope.configs);
+                    setAccordions($scope.configs.configList);
                     var index = $scope.messages.push($scope.msg('ivr.web.settings.saved'));
                     hideMsgLater(index-1);
                     $('.ui-layout-content').animate({

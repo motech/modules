@@ -25,10 +25,11 @@
     <div class="clearfix">
         <form name="form" class="form-horizontal" novalidate>
             <div class="panel-group">
-                <div class="panel panel-default ivr-config" ng-repeat="conf in configs">
+                <div class="panel panel-default ivr-config" ng-repeat="conf in configs.configList">
                     <div class="panel-heading" ng-click="accordions[$index] = !accordions[$index]">
                         <i ng-class="{'fa-caret-down': accordions[$index], 'fa-caret-right': !accordions[$index]}" class="fa fa-fw fa-lg pointer"></i>
                         {{conf.name}}
+                            <i ng-show="$index == defaultConfigIndex" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('ivr.settings.defaultConfig.tooltip')}}" class="fa fa-star"></i>
                     </div>
                     <div id="panel{{$index}}" class="panel-collapse collapse" ng-class="{true:'in', false:''}[accordions[$index]]">
                         <div class="panel-body">
@@ -142,7 +143,8 @@
 
                             <div class="form-group">
                                 <div class="col-md-offset-3 col-md-9">
-                                    <button class="btn btn-sm btn-danger" ng-click="deleteConfig($index)"> <i class="fa fa-fw fa-trash-o"></i> {{msg('ivr.web.settings.delete')}} </button>
+                                    <button class="btn btn-sm btn-primary" ng-show="configs.configList.length > 1" ng-disabled="configs.defaultConfig == conf.name" ng-click="setDefaultConfig(conf.name, $index)"> <i class="icon-star"></i> {{msg('ivr.web.settings.set_default')}} </button>
+                                    <button class="btn btn-sm btn-danger" ng-click="deleteConfig($index)"> <i class="icon-trash"></i> {{msg('ivr.web.settings.delete')}} </button>
                                 </div>
                             </div>
                         </div>
