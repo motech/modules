@@ -202,6 +202,7 @@ public class ScheduleTrackingServiceImpl implements ScheduleTrackingService {
     }
 
     @Override
+    @Transactional
     public void fulfillCurrentMilestone(String externalId, String scheduleName, LocalDate fulfillmentDate) {
         fulfillCurrentMilestone(externalId, scheduleName, fulfillmentDate, new Time(0, 0));
     }

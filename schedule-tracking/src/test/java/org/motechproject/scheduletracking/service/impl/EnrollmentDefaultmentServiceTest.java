@@ -37,7 +37,8 @@ public class EnrollmentDefaultmentServiceTest {
     @Before
     public void setup() {
         initMocks(this);
-        enrollmentDefaultmentService = new EnrollmentDefaultmentService(schedulerService);
+        enrollmentDefaultmentService = new EnrollmentDefaultmentService();
+        enrollmentDefaultmentService.setSchedulerService(schedulerService);
     }
 
     @Test
