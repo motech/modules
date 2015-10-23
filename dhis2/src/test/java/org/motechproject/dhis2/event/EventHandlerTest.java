@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.motechproject.dhis2.domain.OrgUnit;
 import org.motechproject.dhis2.rest.domain.AttributeDto;
 import org.motechproject.dhis2.rest.domain.DataValueDto;
 import org.motechproject.dhis2.rest.domain.DhisEventDto;
@@ -15,7 +14,6 @@ import org.motechproject.dhis2.rest.domain.EnrollmentDto;
 import org.motechproject.dhis2.rest.domain.ImportCountDto;
 import org.motechproject.dhis2.rest.domain.TrackedEntityInstanceDto;
 import org.motechproject.dhis2.rest.service.DhisWebService;
-import org.motechproject.dhis2.service.OrgUnitService;
 import org.motechproject.dhis2.service.SettingsService;
 import org.motechproject.dhis2.service.TrackedEntityInstanceMappingService;
 import org.motechproject.event.MotechEvent;
@@ -57,7 +55,6 @@ public class EventHandlerTest {
 
     @Before
     public void setup() throws Exception{
-
         ImportCountDto importCount = new ImportCountDto();
         importCount.setImported(1);
         importCount.setUpdated(0);
@@ -72,8 +69,7 @@ public class EventHandlerTest {
     }
 
     @Test
-    public void testCreate () throws Exception {
-
+    public void testCreate() throws Exception {
         List<AttributeDto> attributeDtos = new ArrayList<>();
         AttributeDto dto = new AttributeDto();
         dto.setAttribute(ATTRIBUTE_ID);
@@ -85,27 +81,27 @@ public class EventHandlerTest {
         instance.setAttributes(attributeDtos);
         instance.setOrgUnit(ORGUNIT_ID);
 
-
         when(dhisWebservice.createTrackedEntityInstance(instance)).thenReturn(response);
 
         Map<String,Object> params = new HashMap<>();
         params.put(EventParams.EXTERNAL_ID,ENTITY_INSTANCE_ID);
         params.put(EventParams.ENTITY_TYPE, ENTITY_TYPE_PERSON );
-        params.put(EventParams.LOCATION,ORGUNIT_ID);
+        params.put(EventParams.LOCATION, ORGUNIT_ID);
         params.put(ATTRIBUTE_ID, ATTRIBUTE_VALUE);
 
-        MotechEvent event = new MotechEvent(EventSubjects.CREATE_ENTITY,params);
+        // This is always added by the MOTECH Event module and should not get added to tracked entity attributes
+        params.put(EventParams.MESSAGE_DESTINATION, "org.motechproject.dhis2.event.EventHandler:eventHandler");
+
+        MotechEvent event = new MotechEvent(EventSubjects.CREATE_ENTITY, params);
 
         handler.handleCreate(event);
-        verify(trackedEntityInstanceMappingService).create(ENTITY_INSTANCE_ID,INSTANCE_DHIS_ID);
+        verify(trackedEntityInstanceMappingService).create(ENTITY_INSTANCE_ID, INSTANCE_DHIS_ID);
         verify(dhisWebservice).createTrackedEntityInstance(instance);
-
     }
 
 
     @Test
     public void testEnrollment() throws Exception {
-
         List<AttributeDto> attributeDtos = new ArrayList<>();
         AttributeDto dto = new AttributeDto();
         dto.setAttribute(ATTRIBUTE_ID);
@@ -129,6 +125,9 @@ public class EventHandlerTest {
         params.put(EventParams.DATE, DATE);
         params.put(ATTRIBUTE_ID, ATTRIBUTE_VALUE);
 
+        // This is always added by the MOTECH Event module and should not get added to tracked entity attributes
+        params.put(EventParams.MESSAGE_DESTINATION, "org.motechproject.dhis2.event.EventHandler:eventHandler");
+
         MotechEvent event = new MotechEvent(EventSubjects.ENROLL_IN_PROGRAM,params);
 
         handler.handleEnrollment(event);
@@ -139,7 +138,6 @@ public class EventHandlerTest {
 
     @Test
     public void testEventWithRegistration() throws Exception {
-
         List<DataValueDto> dataValues = new ArrayList<>();
         DataValueDto datavalue = new DataValueDto();
         datavalue.setDataElement(DATA_ELEMENT_ID);
@@ -167,6 +165,9 @@ public class EventHandlerTest {
         params.put(EventParams.STAGE,STAGE_ID);
         params.put(DATA_ELEMENT_ID, DATA_ELEMENT_VALUE);
 
+        // This is always added by the MOTECH Event module and should not get added to tracked entity attributes
+        params.put(EventParams.MESSAGE_DESTINATION, "org.motechproject.dhis2.event.EventHandler:eventHandler");
+
         MotechEvent event = new MotechEvent(EventSubjects.UPDATE_PROGRAM_STAGE, params);
         handler.handleStageUpdate(event);
 
@@ -175,8 +176,7 @@ public class EventHandlerTest {
     }
 
     @Test
-    public void testCreateAndEnroll () throws Exception {
-
+    public void testCreateAndEnroll() throws Exception {
         List<AttributeDto> attributeDtos = new ArrayList<>();
         AttributeDto dto = new AttributeDto();
         dto.setAttribute(ATTRIBUTE_ID);
@@ -206,6 +206,9 @@ public class EventHandlerTest {
         params.put(EventParams.PROGRAM,PROGRAM_ID );
         params.put(EventParams.DATE, DATE);
         params.put(ATTRIBUTE_ID, ATTRIBUTE_VALUE);
+
+        // This is always added by the MOTECH Event module and should not get added to tracked entity attributes
+        params.put(EventParams.MESSAGE_DESTINATION, "org.motechproject.dhis2.event.EventHandler:eventHandler");
 
         MotechEvent event = new MotechEvent(EventSubjects.CREATE_AND_ENROLL, params);
 
