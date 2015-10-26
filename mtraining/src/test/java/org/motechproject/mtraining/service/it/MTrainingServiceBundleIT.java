@@ -22,7 +22,6 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -207,59 +206,37 @@ public class MTrainingServiceBundleIT extends BasePaxIT {
 
     @Test
     public void testCourseChapterUpdate() throws Exception {
-        final Course firstCourse = mTrainingService.createCourse(generateFullCourse("testSharedChapter"));
-        final Chapter chapter = mTrainingService.getChapterById(firstCourse.getChapters().get(0).getId());
+        Course firstCourse = mTrainingService.createCourse(generateFullCourse("testSharedChapter"));
 
-        chapterDataService.doInTransaction(new TransactionCallbackWithoutResult() {
-            @Override
-            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
-                Chapter chapterToUpdate = mTrainingService.getChapterById(chapter.getId());
-                chapterToUpdate.setState(CourseUnitState.Inactive);
-                mTrainingService.updateChapter(chapterToUpdate);
-            }
-        });
+        Chapter chapterToUpdate = firstCourse.getChapters().get(0);
+        chapterToUpdate.setState(CourseUnitState.Inactive);
+        Chapter updatedChapter = mTrainingService.updateChapter(chapterToUpdate);
+        firstCourse = mTrainingService.getCourseById(firstCourse.getId());
 
-        Course updatedCourse = mTrainingService.getCourseById(firstCourse.getId());
-        Chapter updatedChapter = mTrainingService.getChapterById(chapter.getId());
-
-        assertEquals(updatedCourse.getChapters().get(0).getId(), updatedChapter.getId());
-        assertEquals(updatedCourse.getChapters().get(0).getState(), updatedChapter.getState());
+        assertEquals(firstCourse.getChapters().get(0).getId(), updatedChapter.getId());
+        assertEquals(firstCourse.getChapters().get(0).getState(), updatedChapter.getState());
     }
 
     @Test
     public void testCourseUpdateStatus() throws Exception {
-        final Course firstCourse = mTrainingService.createCourse(generateFullCourse("testCourseUpdateStatus"));
+        Course firstCourse = mTrainingService.createCourse(generateFullCourse("testCourseUpdateStatus"));
         assertEquals(firstCourse.getState(), CourseUnitState.Active);
 
-        courseDataService.doInTransaction(new TransactionCallbackWithoutResult() {
-            @Override
-            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
-                Course courseToUpdate = mTrainingService.getCourseById(firstCourse.getId());
-                courseToUpdate.setState(CourseUnitState.Inactive);
-                mTrainingService.updateCourse(courseToUpdate);
-            }
-        });
-
-        assertEquals(CourseUnitState.Inactive, mTrainingService.getCourseById(firstCourse.getId()).getState());
+        firstCourse.setState(CourseUnitState.Inactive);
+        Course updated = mTrainingService.updateCourse(firstCourse);
+        assertEquals(CourseUnitState.Inactive, updated.getState());
     }
 
     @Test
     public void testCourseUpdateAddChapter() throws Exception {
-        final Course firstCourse = mTrainingService.createCourse(generateFullCourse("testCourseUpdateAddChapter"));
+        Course firstCourse = mTrainingService.createCourse(generateFullCourse("testCourseUpdateAddChapter"));
         assertEquals(2, firstCourse.getChapters().size());
 
-        courseDataService.doInTransaction(new TransactionCallbackWithoutResult() {
-            @Override
-            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
-                Chapter newChapter = new Chapter("newChapter", CourseUnitState.Active, "newChapterContent", null, null);
-                Course courseToUpdate = mTrainingService.getCourseById(firstCourse.getId());
-                courseToUpdate.getChapters().add(newChapter);
+        Chapter newChapter = new Chapter("newChapter", CourseUnitState.Active, "newChapterContent", null, null);
+        firstCourse.getChapters().add(newChapter);
 
-                mTrainingService.updateCourse(courseToUpdate);
-            }
-        });
-
-        assertEquals(3, mTrainingService.getCourseById(firstCourse.getId()).getChapters().size());
+        Course updated = mTrainingService.updateCourse(firstCourse);
+        assertEquals(3, updated.getChapters().size());
     }
 
     @Test
@@ -278,21 +255,12 @@ public class MTrainingServiceBundleIT extends BasePaxIT {
         Chapter newChapter = generateFullCourse("testChapterUpdate").getChapters().get(0);
         newChapter.setName("testChapterUpdate-Chapter");
         newChapter = mTrainingService.createChapter(newChapter);
-        final long newChapterId = newChapter.getId();
 
         assertNotNull(newChapter);
         assertEquals("testChapterUpdate-Chapter", newChapter.getName());
-
-        chapterDataService.doInTransaction(new TransactionCallbackWithoutResult() {
-            @Override
-            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
-                Chapter chapterToUpdate = mTrainingService.getChapterById(newChapterId);
-                chapterToUpdate.setName("testChapterUpdate-Chapter-Update");
-                mTrainingService.updateChapter(chapterToUpdate);
-            }
-        });
-
-        assertEquals("testChapterUpdate-Chapter-Update", mTrainingService.getChapterById(newChapterId).getName());
+        newChapter.setName("testChapterUpdate-Chapter-Update");
+        Chapter updated = mTrainingService.updateChapter(newChapter);
+        assertEquals("testChapterUpdate-Chapter-Update", updated.getName());
     }
 
     @Test

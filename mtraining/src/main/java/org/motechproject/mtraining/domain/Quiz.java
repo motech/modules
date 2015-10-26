@@ -72,4 +72,12 @@ public class Quiz extends CourseUnitMetadata {
 
         this.passPercentage = passPercentage;
     }
+
+    public Map<String, String> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Map<String, String> properties) {
+        this.properties = properties;
+    }
 }

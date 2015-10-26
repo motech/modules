@@ -30,7 +30,6 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import org.osgi.framework.BundleContext;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.inject.Inject;
@@ -125,16 +124,10 @@ public class AllEnrollmentsBundleIT extends BasePaxIT {
     @Test
     public void shouldConvertTheFulfillmentDateTimeIntoCorrectTimeZoneWhenRetrievingAnEnrollmentWithFulfilledMilestoneFromDatabase() {
         final Enrollment enrollment  = createEnrollment("entity_1", "IPTI Schedule", "IPTI 1", now(), now(), new Time(now().toLocalTime()), EnrollmentStatus.ACTIVE, null);
-        final DateTime fulfillmentDateTime = DateTime.now();
 
-        enrollmentDataService.doInTransaction(new TransactionCallbackWithoutResult() {
-            @Override
-            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
-                Enrollment enrollmentToUpdate = enrollmentDataService.findById(enrollment.getId());
-                enrollmentToUpdate.fulfillCurrentMilestone(fulfillmentDateTime);
-                enrollmentDataService.update(enrollmentToUpdate);
-            }
-        });
+        DateTime fulfillmentDateTime = DateTime.now();
+        enrollment.fulfillCurrentMilestone(fulfillmentDateTime);
+        enrollmentDataService.update(enrollment);
 
         Enrollment enrollmentFromDatabase = enrollmentDataService.findByExternalIdScheduleNameAndStatus("entity_1", "IPTI Schedule", EnrollmentStatus.ACTIVE);
         assertEquals(fulfillmentDateTime, enrollmentFromDatabase.getLastFulfilledDate());
@@ -157,14 +150,8 @@ public class AllEnrollmentsBundleIT extends BasePaxIT {
         final Enrollment enrollment = createEnrollment("entity_1", "IPTI Schedule", "IPTI 1", now.minusDays(2), now,
                 new Time(now.toLocalTime()), EnrollmentStatus.ACTIVE, null);
 
-        enrollmentDataService.doInTransaction(new TransactionCallbackWithoutResult() {
-            @Override
-            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
-                Enrollment enrollmentToUpdate = enrollmentDataService.findById(enrollment.getId());
-                enrollmentService.fulfillCurrentMilestone(enrollmentToUpdate, now);
-                enrollmentDataService.update(enrollmentToUpdate);
-            }
-        });
+        enrollmentService.fulfillCurrentMilestone(enrollment, now);
+        enrollmentDataService.update(enrollment);
 
         Enrollment enrollmentFromDatabase = enrollmentDataService.findByExternalIdScheduleNameAndStatus("entity_1", "IPTI Schedule", EnrollmentStatus.ACTIVE);
         assertEquals(now, enrollmentFromDatabase.getCurrentMilestoneStartDate());

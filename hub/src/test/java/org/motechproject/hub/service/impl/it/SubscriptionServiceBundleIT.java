@@ -16,8 +16,6 @@ import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallback;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -64,13 +62,8 @@ public class SubscriptionServiceBundleIT extends BasePaxIT {
         HubTopic hubTopic = hubTopics.get(0);
         Assert.assertEquals(TOPIC_URL, hubTopic.getTopicUrl());
 
-        int topicId = hubTopicMDSService.doInTransaction(new TransactionCallback<Integer>() {
-            @Override
-            public Integer doInTransaction(TransactionStatus transactionStatus) {
-                return (int) (long) hubTopicMDSService.getDetachedField(
-                        hubTopicMDSService.retrieveAll().get(0), "id");
-            }
-        });
+        int topicId = (int) (long) hubTopicMDSService.getDetachedField(
+                hubTopic, "id");
 
         hubSubscriptions = hubSubscriptionMDSService
                 .findSubByCallbackUrlAndTopicId(CALLBACK_URL, topicId);
