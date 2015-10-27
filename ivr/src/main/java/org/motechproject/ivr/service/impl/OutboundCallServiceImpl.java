@@ -142,6 +142,8 @@ public class OutboundCallServiceImpl implements OutboundCallService {
                     break;
                 }
             }
+        } catch (CallInitiationException e) {
+            throw e;
         } catch (Exception e) {
             String message = String.format("Could not initiate call, unexpected exception: %s", e.toString());
             statusMessageService.warn(message, MODULE_NAME);
