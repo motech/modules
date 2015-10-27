@@ -15,7 +15,7 @@
         async: false
     });
 
-    getAvailableTabs('mTraining', function(data) {
+    getAvailableTabs('mtraining', function(data) {
          mtrainingModule.constant('MTRAINING_AVAILABLE_TABS', data);
     });
 

@@ -65,9 +65,9 @@
                         <value>manageSMS</value>
                     </key>
                     <list>
-                        <value>/sms/send</value>
-                        <value>/sms/setting</value>
-                        <value>/sms/log</value>
+                        <value>send</value>
+                        <value>setting</value>
+                        <value>log</value>
                     </list>
                 </entry>
                 <entry>
@@ -75,7 +75,7 @@
                         <value>viewSMSLogs</value>
                     </key>
                     <list>
-                        <value>/sms/log</value>
+                        <value>log</value>
                     </list>
                 </entry>
             </map>

@@ -59,9 +59,9 @@
                         <value>manageIVR</value>
                     </key>
                     <list>
-                        <value>/ivr/templates</value>
-                        <value>/ivr/settings</value>
-                        <value>/ivr/log</value>
+                        <value>templates</value>
+                        <value>settings</value>
+                        <value>log</value>
                     </list>
                 </entry>
                 <entry>
@@ -69,7 +69,7 @@
                         <value>viewIVRLogs</value>
                     </key>
                     <list>
-                        <value>/ivr/log</value>
+                        <value>log</value>
                     </list>
                 </entry>
             </map>

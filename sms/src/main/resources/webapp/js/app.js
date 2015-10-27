@@ -13,7 +13,7 @@
         async: false
     });
 
-    getAvailableTabs('sms', function(data) {
+    getAvailableTabs('motech-sms', function(data) {
          smsModule.constant('AVAILABLE_TABS', data);
     });
 

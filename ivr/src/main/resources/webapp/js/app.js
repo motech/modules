@@ -11,7 +11,7 @@
         async: false
     });
 
-    getAvailableTabs('ivr', function(data) {
+    getAvailableTabs('motech-ivr', function(data) {
          ivrmodule.constant('IVR_AVAILABLE_TABS', data);
     });
 

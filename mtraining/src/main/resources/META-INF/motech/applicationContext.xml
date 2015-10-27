@@ -42,13 +42,13 @@
                         <value>manageMTraining</value>
                     </key>
                     <list>
-                        <value>/mtraining/treeView</value>
-                        <value>/mtraining/courses</value>
-                        <value>/mtraining/chapters</value>
-                        <value>/mtraining/quizzes</value>
-                        <value>/mtraining/lessons</value>
-                        <value>/mtraining/activityRecords</value>
-                        <value>/mtraining/bookmarks</value>
+                        <value>treeView</value>
+                        <value>courses</value>
+                        <value>chapters</value>
+                        <value>quizzes</value>
+                        <value>lessons</value>
+                        <value>activityRecords</value>
+                        <value>bookmarks</value>
                     </list>
                 </entry>
                 <entry>
@@ -56,8 +56,8 @@
                         <value>viewMTrainingLogs</value>
                     </key>
                     <list>
-                        <value>/mtraining/activityRecords</value>
-                        <value>/mtraining/bookmarks</value>
+                        <value>activityRecords</value>
+                        <value>bookmarks</value>
                     </list>
                 </entry>
             </map>
