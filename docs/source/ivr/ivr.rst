@@ -316,3 +316,8 @@ Custom exception
         }
 
     This will allow you to return an error code that your IVR provider can understand.
+
+Using IVR module with IVR providers
+===================================
+
+- :std:ref:`Using IVR with Verboice <using-ivr-with-verboice>`
