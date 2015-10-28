@@ -320,4 +320,7 @@ Custom exception
 Using IVR module with IVR providers
 ===================================
 
+IVR module supports multiple IVR providers. For more information on how to integrate them with the module, please visit
+the links below.
+
 - :std:ref:`Using IVR with Verboice <using-ivr-with-verboice>`

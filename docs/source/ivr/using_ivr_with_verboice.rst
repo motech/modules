@@ -1,8 +1,12 @@
-.. _using-ivr-with-verboice:
-
 =======================
 Using IVR with Verboice
 =======================
+
+.. contents::
+    :depth: 3
+
+Introduction
+============
 
 Integrating the IVR module with Verboice is fairly easy. In order to achieve this you are going to need a Verboice account
 and a Verboice channel. For the sake of this tutorial we are going to use a Skype SIP profile, which we are going to use
@@ -19,14 +23,13 @@ first tutorial named "Verboice - Create an account".
 Creating Skype channel
 ======================
 
-The next thing that you have to do is to setup a channel for your Verboice account. Please visit the
-`Using Verboice with Skype`_ page for more information on how to create a Skype SIP profile and integrate it with the
-created Verboice account.
+The next thing is setting up a channel for your Verboice account. Please visit the `Using Verboice with Skype`_ page for
+more information on how to create a Skype SIP profile and integrate it with the created Verboice account.
 
 Configuring IVR module to use Verboice
 ======================================
 
-Now that you have the Verboice account with Skype SIP profile integrated you can create a configuration for that account
+Now that you have the Verboice account integrated with Skype SIP profile you can create a configuration for that account
 in the IVR module. To achieve this please go to the :code:`Settings` tab in the IVR module section.
 
 .. image:: img/settings.png
@@ -57,9 +60,9 @@ Here, just click the :code:`Add Configuration` button and the following screen w
     **Outgoing call HTTP method** is the method used when sending request to the Verboice server. Verboice accepts both
     :code:`GET` and :code:`POST` methods.
 
-    **Ignored status fields** are status fields sent back from the Verboice which should be ignored by the MOTECH.
+    **Ignored status fields** are status fields sent back from the Verboice which should be ignored by MOTECH.
 
-    **Status field map** is a map (in the "key1: value1, key2: value2" notation) of fields sent from the Verboice which
+    **Status field map** is a map (in the "key1: value1, key2: value2" notation) of fields sent from Verboice which
     should be mapped to CallDetailRecord fields, for example to map a (key) field named ''call_id'' coming from the
     Verboice to the ''providerCallId'' (value) field, use "call_id: providerCallId". In order to use this example you
     also need the :code:`Expect JSON response?` checkbox checked and :code:`call_id` added as an element of the
@@ -77,17 +80,17 @@ Here, just click the :code:`Add Configuration` button and the following screen w
     **Expect JSON response?** defines whether the IVR provider returns a JSON as a response. Verboice does that so we
     can check this checkbox for some extra data.
 
-    **JSON extra params list** is a list of parameters returned by the Verboice. Verboice returns the following
-    parameters as a response: :code:`call_id` and :code:`state`.
+    **JSON extra params list** is a list of parameters returned by Verboice. Verboice returns the following parameters
+    as a response: :code:`call_id` and :code:`state`.
 
 Using IVR template as a call flow
 =================================
 
-In order to use an IVR template as a call flow for the Verboice you are going to need to define a new call flow on the
-Verboice side which will retrieve the call flow from the provided link. To achieve this please login into the Verboice
-through `Verboice Sign in`_ page. Then proceed to the :code:`Projects` tab, select the project you want to add a call
-flow for and enter the :code:`Call Flows` tab. Once there, click the :code:`Add Call flow` button and the following form
-will show up.
+In order to use an IVR template as a call flow for Verboice you need to define a new call flow on the Verboice side
+which will retrieve the call flow from the provided link. To achieve this please login into Verboice through
+`Verboice Sign in`_ page. Then proceed to the :code:`Projects` tab, select the project you want to add a call flow for
+and enter the :code:`Call Flows` tab. Once there, click the :code:`Add Call flow` button and the following form will
+show up.
 
         .. image:: img/new_call_flow.png
             :scale: 100 %
@@ -135,24 +138,24 @@ Verboice requires the following query parameters:
 
     **schedule**/**schedule_id** is the name/ID of the schedule to use
 
-Verboice all accepts the following optional parameters:
+Verboice also accepts the following optional parameters:
 
     **not_before** specifies that the call must not be issued before a date (for example: '2012-01-02 10:11:12')
 
     **not_after** specifies that the call must not be issued after a date (for example: '2012-01-02 10:11:12')
 
-    **time_zone** to specifies a time zone for the previous parameter (for example: 'Buenos Aires')
+    **time_zone** specifies a time zone for the previous parameter (for example: 'Buenos Aires')
 
 For more information about the Verboice API, please visit the `Verboice API Wiki`_ page.
 
 Now that we know the supported query parameters, we can build our URI template. The most generic way of creating it is
 to provide only the base URI. If you choose this approach you will have to provide all the required query parameters
-every time you will be using the "Initiate Call" action in the Task module or :code:`initiateCall` method from the
+every time you use the "Initiate Call" action in the Task module or :code:`initiateCall` method from the
 :code:`OutboundCallService`. However, you can choose to create a separate configuration for every channel, address, etc.
 just by parameterizing the URI.
 
 Let's take a look at the following example. We have a channel named :code:`testChannel`, the call flow named
-:code:`testCallFlow` and the schedule named :code:`testSchedule`. The only parameter we are going to parametrized is the
+:code:`testCallFlow` and the schedule named :code:`testSchedule`. The only parameter we are going to parametrize is the
 phone number. The URI will look like this:
 
 :code:`http://verboice.instedd.org/api/call?channel=testChannel&call_flow=testCallFlow&schedule=testSchedule`
