@@ -52,24 +52,32 @@
             </list>
         </property>
 
+        <property name="defaultURL" value="/ivr/templates" />
         <property name="tabAccessMap">
             <map>
                 <entry>
                     <key>
-                        <value>manageIVR</value>
+                        <value>templates</value>
                     </key>
                     <list>
-                        <value>templates</value>
-                        <value>settings</value>
-                        <value>log</value>
+                        <value>manageIVR</value>
                     </list>
                 </entry>
                 <entry>
                     <key>
-                        <value>viewIVRLogs</value>
+                        <value>settings</value>
                     </key>
                     <list>
+                        <value>manageIVR</value>
+                    </list>
+                </entry>
+                <entry>
+                    <key>
                         <value>log</value>
+                    </key>
+                    <list>
+                        <value>manageIVR</value>
+                        <value>viewIVRLogs</value>
                     </list>
                 </entry>
             </map>

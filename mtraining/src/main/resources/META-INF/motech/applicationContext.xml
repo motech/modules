@@ -35,29 +35,65 @@
             </list>
         </property>
 
+        <property name="defaultURL" value="/mtraining/treeView" />
         <property name="tabAccessMap">
             <map>
                 <entry>
                     <key>
-                        <value>manageMTraining</value>
+                        <value>treeView</value>
                     </key>
                     <list>
-                        <value>treeView</value>
-                        <value>courses</value>
-                        <value>chapters</value>
-                        <value>quizzes</value>
-                        <value>lessons</value>
-                        <value>activityRecords</value>
-                        <value>bookmarks</value>
+                        <value>manageMTraining</value>
                     </list>
                 </entry>
                 <entry>
                     <key>
-                        <value>viewMTrainingLogs</value>
+                        <value>courses</value>
                     </key>
                     <list>
+                        <value>manageMTraining</value>
+                    </list>
+                </entry>
+                <entry>
+                    <key>
+                        <value>chapters</value>
+                    </key>
+                    <list>
+                        <value>manageMTraining</value>
+                    </list>
+                </entry>
+                <entry>
+                    <key>
+                        <value>quizzes</value>
+                    </key>
+                    <list>
+                        <value>manageMTraining</value>
+                    </list>
+                </entry>
+                <entry>
+                    <key>
+                        <value>lessons</value>
+                    </key>
+                    <list>
+                        <value>manageMTraining</value>
+                    </list>
+                </entry>
+                <entry>
+                    <key>
                         <value>activityRecords</value>
+                    </key>
+                    <list>
+                        <value>manageMTraining</value>
+                        <value>viewMTrainingLogs</value>
+                    </list>
+                </entry>
+                <entry>
+                    <key>
                         <value>bookmarks</value>
+                    </key>
+                    <list>
+                        <value>manageMTraining</value>
+                        <value>viewMTrainingLogs</value>
                     </list>
                 </entry>
             </map>

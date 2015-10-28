@@ -58,24 +58,32 @@
             </list>
         </property>
 
+        <property name="defaultURL" value="/sms/send" />
         <property name="tabAccessMap">
             <map>
                 <entry>
                     <key>
-                        <value>manageSMS</value>
+                        <value>send</value>
                     </key>
                     <list>
-                        <value>send</value>
-                        <value>setting</value>
-                        <value>log</value>
+                        <value>manageSMS</value>
                     </list>
                 </entry>
                 <entry>
                     <key>
-                        <value>viewSMSLogs</value>
+                        <value>setting</value>
                     </key>
                     <list>
+                        <value>manageSMS</value>
+                    </list>
+                </entry>
+                <entry>
+                    <key>
                         <value>log</value>
+                    </key>
+                    <list>
+                        <value>manageSMS</value>
+                        <value>viewSMSLogs</value>
                     </list>
                 </entry>
             </map>
