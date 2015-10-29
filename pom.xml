@@ -4,7 +4,7 @@
 
     <artifactId>modules</artifactId>
     <groupId>org.motechproject</groupId>
-    <version>0.26.3</version>
+    <version>0.26.4-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>MOTECH Modules</name>
 
@@ -1249,6 +1249,6 @@
         <connection>${scm.connection}</connection>
         <developerConnection>${scm.developerConnection}</developerConnection>
         <url>${scm.url}</url>
-        <tag>modules-0.26.3</tag>
+        <tag>HEAD</tag>
     </scm>
 </project>
