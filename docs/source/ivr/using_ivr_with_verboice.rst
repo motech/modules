@@ -155,7 +155,7 @@ every time you use the "Initiate Call" action in the Task module or :code:`initi
 just by parameterizing the URI.
 
 Let's take a look at the following example. We have a channel named :code:`testChannel`, the call flow named
-:code:`testCallFlow` and the schedule named :code:`testSchedule`. The only parameter we are going to parametrize is the
+:code:`testCallFlow` and the schedule named :code:`testSchedule`. The only parameter we are going to parameterize is the
 phone number. The URI will look like this:
 
 :code:`http://verboice.instedd.org/api/call?channel=testChannel&call_flow=testCallFlow&schedule=testSchedule`
