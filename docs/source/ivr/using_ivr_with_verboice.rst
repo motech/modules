@@ -32,10 +32,10 @@ Configuring IVR module to use Verboice
 Now that you have the Verboice account integrated with Skype SIP profile you can create a configuration for that account
 in the IVR module. To achieve this please go to the :code:`Settings` tab in the IVR module section.
 
-.. image:: img/settings.png
-    :scale: 100 %
-    :alt: IVR settings
-    :align: center
+        .. image:: img/settings.png
+            :scale: 100 %
+            :alt: IVR settings
+            :align: center
 
 
 Here, just click the :code:`Add Configuration` button and the following screen will appear.
