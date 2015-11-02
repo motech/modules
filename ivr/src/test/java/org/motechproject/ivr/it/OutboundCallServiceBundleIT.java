@@ -145,36 +145,6 @@ public class OutboundCallServiceBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void shouldCreateFileAndWriteParams() throws IOException {
-        Path path = Files.createTempFile("temp", ".tmp");
-        path.toFile().deleteOnExit();
-
-        String uri = path.toUri().toString();
-
-        Config config = new Config("conf159", false, null, null, null, null, null, null, HttpMethod.GET, false, uri, false, null);
-
-        configService.updateConfigs(Arrays.asList(config));
-
-        Map<String, String> params = new HashMap<>();
-        params.put("api_key", "qwerty123");
-        params.put("message_id", "123123");
-        params.put("channel", "ivr");
-        params.put("status_callback_url", "http://someUrl.com");
-        params.put("subscribers", "[{\"phone\":\"48700123123\",\"language\":null}]");
-
-        List<String> resultList = new ArrayList<>();
-        for(Map.Entry<String, String> entry: params.entrySet()){
-            resultList.add(String.format("%s: %s", entry.getKey(), entry.getValue()));
-        }
-
-        outboundCallService.initiateCall(config.getName(), params);
-
-        List<String> fileOutput = Files.readAllLines(path);
-
-        assertTrue(fileOutput.containsAll(resultList));
-    }
-
-    @Test
     public void shouldCreateFileWithParamName() throws IOException, URISyntaxException {
         Path path = Files.createTempFile("temp", ".tmp");
         path.toFile().deleteOnExit();
@@ -201,10 +171,13 @@ public class OutboundCallServiceBundleIT extends BasePaxIT {
 
         params.put("fileName", fileName);
 
+        String fileNameParam = String.format("%s: %s", "fileName", fileName);
+
         outboundCallService.initiateCall(config.getName(), params);
 
         List<String> fileOutput = Files.readAllLines(path);
 
         assertTrue(fileOutput.containsAll(result));
+        assertTrue(!fileOutput.contains(fileNameParam));
     }
 }
