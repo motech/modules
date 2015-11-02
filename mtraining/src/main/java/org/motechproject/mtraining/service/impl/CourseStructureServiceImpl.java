@@ -82,14 +82,10 @@ public class CourseStructureServiceImpl implements CourseStructureService {
             course.setState(CourseUnitState.valueOf(courseUnitDto.getState()));
             course.setChapters(chapters);
             courseMap.remove(courseUnitDto.getId());
-            // we must evict cache to avoid relations inconsistent
-            courseDataService.evictAllCache();
             courseDataService.update(course);
         }
         // we must evict cache to avoid relations inconsistent
-        chapterDataService.evictAllCache();
-        lessonDataService.evictAllCache();
-        quizDataService.evictAllCache();
+        courseDataService.evictEntityCache(true);
         updateUnusedRecords(courseMap, chapterMap, lessonMap, quizMap);
     }
 
