@@ -53,6 +53,10 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test-mvc</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -68,7 +72,8 @@
                         <Export-Package>
                             org.motechproject.mtraining.service;version=${project.version},
                             org.motechproject.mtraining.repository;version=${project.version},
-                            org.motechproject.mtraining.domain;version=${project.version}
+                            org.motechproject.mtraining.domain;version=${project.version},
+                            org.motechproject.mtraining.dto;version=${project.version}
                         </Export-Package>
                         <Import-Package>
                             org.motechproject.config.service,
@@ -128,9 +133,13 @@
                             <disallowIncrAndDecr>true</disallowIncrAndDecr>
                             <requireUseStrict>true</requireUseStrict>
                             <predefinedVars>
-                                $, angular, motechAlert, handleWithStackTrace, jQuery, parseUri, innerLayout
+                                $, angular, motechAlert, motechConfirm, handleWithStackTrace, jQuery, parseUri, innerLayout,
+                                blockUI, unblockUI
                             </predefinedVars>
                             <failOnIssues>${jslint.enable}</failOnIssues>
+                            <excludes>
+                                <exclude>**/jstree.min.js</exclude>
+                            </excludes>
                         </configuration>
                     </execution>
                 </executions>

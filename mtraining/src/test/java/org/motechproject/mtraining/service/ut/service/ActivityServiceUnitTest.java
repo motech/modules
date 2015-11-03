@@ -1,4 +1,4 @@
-package org.motechproject.mtraining.service.ut;
+package org.motechproject.mtraining.service.ut.service;
 
 import org.junit.Before;
 import org.junit.Test;

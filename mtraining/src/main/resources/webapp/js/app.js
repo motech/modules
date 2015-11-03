@@ -1,8 +1,8 @@
 (function () {
     'use strict';
 
-    var mtrainingModule =  angular.module('mtraining', ['motech-dashboard', 'mtraining.controllers', 'ngCookies', 'ui.bootstrap',
-        'mds']), idMapping = {};
+    var mtrainingModule =  angular.module('mtraining', ['motech-dashboard', 'mtraining.controllers', 'mtraining.treeviewlib',
+        'ngCookies', 'ngResource', 'ui.bootstrap', 'mds']), idMapping = {};
 
     $.ajax({
         url: '../mds/entities/getEntitiesByBundle?symbolicName=org.motechproject.mtraining',
