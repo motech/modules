@@ -7,6 +7,7 @@ import org.motechproject.mds.query.QueryParams;
 import org.motechproject.mds.service.MotechDataService;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.motechproject.mds.util.Constants.Operators.MATCHES_CASE_INSENSITIVE;
 
@@ -48,4 +49,10 @@ public interface CallDetailRecordDataService extends MotechDataService<CallDetai
     @Lookup
     List<CallDetailRecord> findByMotechTimestampAndCallStatus(@LookupField(name = "motechTimestamp", customOperator = MATCHES_CASE_INSENSITIVE) String motechTimestamp,
                                                               @LookupField(name = CALL_STATUS) String callStatus);
+
+    @Lookup
+    List<CallDetailRecord> findByMotechCallIds(@LookupField(name = "motechCallId") Set<String> motechCallId);
+
+    @Lookup
+    List<CallDetailRecord> findByPhoneNumber(@LookupField(name = "to", customOperator = MATCHES_CASE_INSENSITIVE) String to);
 }
