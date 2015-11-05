@@ -22,6 +22,9 @@
     <osgi:service id="activityServiceOsgi" ref="activityService"
                   interface="org.motechproject.mtraining.service.ActivityService" />
 
+    <osgi:service id="courseStructureServiceOsgi" ref="courseStructureService"
+                    interface="org.motechproject.mtraining.service.CourseStructureService" />
+
     <osgi:reference id="courseDataService"
                     interface="org.motechproject.mtraining.repository.CourseDataService" />
 

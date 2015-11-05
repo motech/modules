@@ -226,7 +226,7 @@ Initiating an outbound call via the :ref:`tasks`
     Create a task where the action is IVR - Initiate Call. Use the UI to specify the ``config`` and ``params``
     parameters:
 
-    .. image:: img/ivr_initiate_call_task.png
+    .. image:: ../img/ivr_initiate_call_task.png
         :scale: 100 %
         :alt: IVR Module - Initiate outbound call via the Tasks Module - UI
         :align: center
@@ -238,7 +238,7 @@ Settings
 
     IVR provider Configs are created in the Settings tab. Click on **Modules** / **IVR** / **Settings**:
 
-        .. image:: img/ivr_settings.png
+        .. image:: ../img/ivr_settings.png
             :scale: 100 %
             :alt: IVR Module - Settings
             :align: center
@@ -283,7 +283,7 @@ Call Detail Records
 
     Like configs, CallDetailRecord fields are viewed using the :ref:`data_services` Data Browser:
 
-        .. image:: img/ivr_cdr.png
+        .. image:: ../img/ivr_cdr.png
             :scale: 100 %
             :alt: IVR Module - Editing an existing config
             :align: center
@@ -316,3 +316,11 @@ Custom exception
         }
 
     This will allow you to return an error code that your IVR provider can understand.
+
+Using IVR module with IVR providers
+===================================
+
+IVR module supports multiple IVR providers. For more information on how to integrate them with the module, please visit
+the links below.
+
+- :doc:`Using IVR with Verboice <using_ivr_with_verboice>`

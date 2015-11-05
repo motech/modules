@@ -107,6 +107,13 @@ public interface MTrainingService {
     List<Chapter> getChaptersByProperties(Map<String, String> properties);
 
     /**
+     * Gets chapters that are not used by any Course.
+     *
+     * @return list of chapters that are not used
+     */
+    List<Chapter> getUnusedChapters();
+
+    /**
      * Get all chapters.
      *
      * @return list of chapters
@@ -155,6 +162,13 @@ public interface MTrainingService {
      * @return list of lessons that contains the given properties
      */
     List<Lesson> getLessonsByProperties(Map<String, String> properties);
+
+    /**
+     * Gets lessons that are not used by any Chapter.
+     *
+     * @return list of lessons that are not used
+     */
+    List<Lesson> getUnusedLessons();
 
     /**
      * Gets lesson by id.
@@ -213,6 +227,13 @@ public interface MTrainingService {
      * @return list of quizzes that contains the given properties
      */
     List<Quiz> getQuizzesByProperties(Map<String, String> properties);
+
+    /**
+     * Gets quizzes that are not used by any Chapter.
+     *
+     * @return list of quizzes that are not used
+     */
+    List<Quiz> getUnusedQuizzes();
 
     /**
      * Gets a quiz by id.
