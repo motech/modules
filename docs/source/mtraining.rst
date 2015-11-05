@@ -11,7 +11,7 @@ mTraining Module
 Description
 ###########
 
-The module provides data containers and APIs for defining training courses. The module gives possibility track user enrollments
+The module provides data containers and APIs for defining training courses. The module gives possibility to track user enrollments
 and course progress. Courses structure can be very diverse thanks to the flexibility of the mTraining entities. Structure of the
 Course may be created through the API or using the user interface.
 
@@ -101,7 +101,7 @@ Bookmark
 Activity Record
 ###############
 
-``Activity Record`` can be used either as the ``Bookmark``. It gives possibility to store user activity in the individual
+``Activity Record`` can be also used as ``Bookmark``. It gives possibility to store user activity in the individual
 course units, for example passing ``Quiz``.
 
 +---------------+---------------------------------------------------------------------------------+--------------------+
@@ -177,15 +177,14 @@ mTraining UI
 ############
 
 The mTraining module has ``Courses``, ``Chapters``, ``Lessons`` and ``Quizzes`` tabs which allow to perform CRUD operations
-on the course units. ``Bookmarks`` and ``Activity Record`` tabs allow to view logs. All those tab are using the MDS embedded UI.
+on the course units. ``Bookmarks`` and ``Activity Record`` tabs allow to view logs. All those tabs are using the MDS embedded UI.
 
-Default tab is the ``Tree View`` tab. ``TreeView`` tab allow to manage relationships between course units. Colors of the units
-represent the state(``blue`` - ``Active``, ``grey`` - ``Inactive``, ``orange`` - ``Pending``). You can easily change state of
+Default tab is the ``Tree View`` tab. ``TreeView`` tab allows to manage relationships between course units. Colors of the units
+represent the state (``blue`` - ``Active``, ``grey`` - ``Inactive``, ``orange`` - ``Pending``). You can easily change state of
 the entire branch or a single unit, to do so use buttons below the tree. When you use ``Remove member`` button then
-all children of the element will be disconnected(for example when you remove chapter then all ``Lessons`` will be disconnected from
-``Chapter`` (each ``Lesson`` will be unused)). To add node to the tree you must select tree node to which the new node will be added
-and then drag unit from ``Nodes`` section and drop it to the ``Members`` section. The ``Nodes`` column displays items that are
-available to add.
+all children of the element will be disconnected (for example when you remove chapter then all ``Lessons`` will be disconnected from
+``Chapter``). To add node to the tree you must select tree node to which the new node will be added and then drag unit from
+``Nodes`` section and drop it to the ``Members`` section. The ``Nodes`` column displays items that are available to add.
 
             .. image:: img/mTrainingTreeView.png
                     :scale: 70 %
