@@ -6,71 +6,71 @@
 
     controllers.controller('Dhis2SettingsCtrl', function ($scope, $http) {
 
-        $scope.retrievalError = false;
-        $scope.updateError = false;
-        $scope.configOutdated = true;
-        $http.get('../dhis2/dhis2-settings')
-            .success(function (response) {
-                $scope.settings = response;
-                $scope.originalSettings = angular.copy($scope.settings);
-            })
-            .error(function (response) {
-                $scope.retrievalError = true;
-            });
-
-        $scope.sync = function () {
-            $scope.blocked = true;
-            $scope.success = null;
-            $http.get('../dhis2/sync')
-
-                .success(function (response) {
-                    $scope.blocked = false;
-                    $scope.success = response;
-                })
-
-                .error(function (response) {
-                    $scope.blocked = false;
-                    $scope.success = false;
-                })
-        };
-
-        $scope.submit = function () {
-            $http.post('../dhis2/dhis2-settings', $scope.settings)
-                .success(function (response) {
-                    $scope.verifySuccessMessage = $scope.msg('dhis2.web.settings.save.success');
-                    $scope.verifyErrorMessage = '';
-                    $scope.settings = response;
-                    $scope.originalSettings = angular.copy($scope.configs);
-                    $scope.configOutdated = false;
-                    $scope.updateError = false;
-                })
-                .error(function (response) {
-                    $scope.verifySuccessMessage = '';
-                    $scope.verifyErrorMessage =  $scope.msg('dhis2.web.settings.save.fail') + ' ' + response.data;
-                    $scope.configOutdated = false;
-                    $scope.updateError = true;
-                });
-        };
-
-        $scope.isVerifyError = function() {
-            return $scope.updateError && !$scope.configOutdated;
-        };
-
-        $scope.isVerifySuccess = function() {
-            return !$scope.updateError && !$scope.configOutdated;
-        };
-
-        $scope.draftChanged = function() {
-            $scope.configOutdated = true;
-            $scope.clearMessages();
-        };
-
-        $scope.clearMessages = function() {
+            $scope.retrievalError = false;
             $scope.updateError = false;
-            $scope.verifySuccessMessage = '';
-            $scope.verifyErrorMessage = '';
-        };
-    });
+            $scope.configOutdated = true;
+            $http.get('../dhis2/dhis2-settings')
+                .success(function (response) {
+                    $scope.settings = response;
+                    $scope.originalSettings = angular.copy($scope.settings);
+                })
+                .error(function (response) {
+                    $scope.retrievalError = true;
+                });
+
+            $scope.sync = function () {
+                $scope.blocked = true;
+                $scope.success = null;
+                $http.get('../dhis2/sync')
+
+                    .success(function (response) {
+                        $scope.blocked = false;
+                        $scope.success = response;
+                    })
+
+                    .error(function (response) {
+                        $scope.blocked = false;
+                        $scope.success = false;
+                    })
+            };
+
+            $scope.submit = function () {
+                $http.post('../dhis2/dhis2-settings', $scope.settings)
+                    .success(function (response) {
+                        $scope.verifySuccessMessage = $scope.msg('dhis2.web.settings.save.success');
+                        $scope.verifyErrorMessage = '';
+                        $scope.settings = response;
+                        $scope.originalSettings = angular.copy($scope.configs);
+                        $scope.configOutdated = false;
+                        $scope.updateError = false;
+                    })
+                    .error(function (response) {
+                        $scope.verifySuccessMessage = '';
+                        $scope.verifyErrorMessage =  $scope.msg('dhis2.web.settings.save.fail') + ' ' + response.data;
+                        $scope.configOutdated = false;
+                        $scope.updateError = true;
+                    });
+            };
+
+            $scope.isVerifyError = function() {
+                return $scope.updateError && !$scope.configOutdated;
+            };
+
+            $scope.isVerifySuccess = function() {
+                return !$scope.updateError && !$scope.configOutdated;
+            };
+
+            $scope.draftChanged = function() {
+                $scope.configOutdated = true;
+                $scope.clearMessages();
+            };
+
+            $scope.clearMessages = function() {
+                $scope.updateError = false;
+                $scope.verifySuccessMessage = '';
+                $scope.verifyErrorMessage = '';
+            };
+        });
 
     controllers.controller('Dhis2ProgramsCtrl', function ($scope, Programs) {
         $scope.formError = false;
