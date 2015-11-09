@@ -1,19 +1,25 @@
 package org.motechproject.mtraining.domain;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.util.SecurityMode;
+import org.motechproject.mtraining.dto.ChapterUnitDto;
+import org.motechproject.mtraining.dto.CourseUnitDto;
 import org.motechproject.mtraining.util.Constants;
 
 import javax.jdo.annotations.Persistent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Chapter object to store quiz and lesson metadata. A chapter contains a list of possible lessons.
  */
-@Entity
+@Entity(maxFetchDepth = 3)
 @Access(value = SecurityMode.PERMISSIONS, members = {Constants.MANAGE_MTRAINING})
 public class Chapter extends CourseUnitMetadata {
 
@@ -21,21 +27,32 @@ public class Chapter extends CourseUnitMetadata {
      * List of lessons in the Chapter.
      */
     @Field
+    @Persistent(defaultFetchGroup = Constants.TRUE,  mappedBy = "chapter")
+    @JsonManagedReference
     private List<Lesson> lessons;
 
     /**
      * Quiz for the Chapter.
      */
     @Field
-    @Persistent(defaultFetchGroup = "true")
+    @Persistent(defaultFetchGroup = Constants.TRUE)
+    @JsonManagedReference
     private Quiz quiz;
 
     /**
      * The additional properties which can be used with the Chapter.
      */
     @Field
-    @Persistent(defaultFetchGroup = "true")
+    @Persistent(defaultFetchGroup = Constants.TRUE)
     private Map<String, String> properties;
+
+    /**
+     * Course that owns this Chapter.
+     */
+    @Field
+    @JsonBackReference
+    @Persistent(defaultFetchGroup = Constants.TRUE)
+    private Course course;
 
     public Chapter() {
         this(null, CourseUnitState.Inactive, null, null, null);
@@ -59,6 +76,9 @@ public class Chapter extends CourseUnitMetadata {
     }
 
     public List<Lesson> getLessons() {
+        if (lessons == null) {
+            return new ArrayList<>();
+        }
         return lessons;
     }
 
@@ -80,5 +100,52 @@ public class Chapter extends CourseUnitMetadata {
 
     public void setProperties(Map<String, String> properties) {
         this.properties = properties;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public CourseUnitDto toUnitDto() {
+        List<CourseUnitDto> units = new ArrayList<>();
+        if (lessons != null) {
+            for (Lesson lesson : lessons) {
+                units.add(lesson.toUnitDto());
+            }
+        }
+        return new ChapterUnitDto(getId(), getName(), getState().toString(), units, quiz == null ? null : quiz.toUnitDto());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        final Chapter other = (Chapter) obj;
+
+        return Objects.equals(this.getId(), other.getId())
+                && Objects.equals(this.getName(), other.getName())
+                && Objects.equals(this.getProperties(), other.getProperties())
+                && Objects.equals(this.getContent(), other.getContent())
+                && Objects.equals(this.getDescription(), other.getDescription())
+                && Objects.equals(this.getState(), other.getState());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName(), getProperties(), getContent(), getDescription(), getState());
     }
 }

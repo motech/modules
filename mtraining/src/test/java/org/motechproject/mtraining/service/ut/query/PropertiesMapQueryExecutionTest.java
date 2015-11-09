@@ -1,10 +1,10 @@
-package org.motechproject.mtraining.service.ut;
+package org.motechproject.mtraining.service.ut.query;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
-import org.motechproject.mtraining.repository.PropertiesMapQueryExecution;
+import org.motechproject.mtraining.repository.query.PropertiesMapQueryExecution;
 
 import javax.jdo.Query;
 import java.util.HashMap;
