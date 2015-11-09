@@ -3,25 +3,24 @@
         <ul class="breadcrumb" role="navigation">
             <li><a role="menu" href=".">{{msg('server.home')}}</a></li>
             <li><a role="menu" href="#/settings">{{msg('dhis2.settings')}}</a></li>
-            <li ng-show="active('#/dhis2/settings')" ng-class="active('#/dhis2/settings')">{{msg('dhis2.settings')}}</li>
-            <li ng-show="active('#/dhis2/programs')" ng-class="active('#/dhis2/programs')">{{msg('dhis2.programs')}}</li>
-            <li ng-show="active('#/dhis2/trackedEntities')" ng-class="active('#/dhis2/trackedEntities')">{{msg('dhis2.trackedEntities')}}</li>
-            <li ng-show="active('#/dhis2/trackedEntityAttributes')"
-                ng-class="active('#/dhis2/trackedEntityAttributes')">{{msg('dhis2.trackedEntityAttributes')}}</li>
-            <li ng-show="active('#/dhis2/orgUnits')" ng-class="active('#/dhis2/orgUnits')">{{msg('dhis2.orgUnits')}}</li>
-            <li ng-show="active('#/dhis2/dataElements')" ng-class="active('#/dhis2/dataElements')">{{msg('dhis2.dataElements')}}</li>
+            <li ng-show="selectedTabState.selectedTab === 'settings'" ng-class="{'active': selectedTabState.selectedTab === 'settings'}">{{msg('dhis2.settings')}}</li>
+            <li ng-show="selectedTabState.selectedTab === 'programs'" ng-class="{'active': selectedTabState.selectedTab === 'programs'}">{{msg('dhis2.programs')}}</li>
+            <li ng-show="selectedTabState.selectedTab === 'trackedEntities'" ng-class="{'active': selectedTabState.selectedTab === 'trackedEntities'}">{{msg('dhis2.trackedEntities')}}</li>
+            <li ng-show="selectedTabState.selectedTab === 'trackedEntityAttributes'" ng-class="{'active': selectedTabState.selectedTab === 'trackedEntityAttributes'}">{{msg('dhis2.trackedEntityAttributes')}}</li>
+            <li ng-show="selectedTabState.selectedTab === 'orgUnits'" ng-class="{'active': selectedTabState.selectedTab === 'orgUnits'}">{{msg('dhis2.orgUnits')}}</li>
+            <li ng-show="selectedTabState.selectedTab === 'dataElements'" ng-class="{'active': selectedTabState.selectedTab === 'dataElements'}">{{msg('dhis2.dataElements')}}</li>
         </ul>
     </div>
     <div class="header-footer">
         <ul id="content-tabs" class="nav nav-tabs">
-            <li ng-class="active('#/dhis2/settings')"><a href="#/dhis2/settings">{{msg('dhis2.settings')}}</a></li>
-            <li ng-class="active('#/dhis2/programs')"><a href="#/dhis2/programs">{{msg('dhis2.programs')}}</a></li>
-            <li ng-class="active('#/dhis2/trackedEntities')"><a href="#/dhis2/trackedEntities">{{msg('dhis2.trackedEntities')}}</a></li>
-            <li ng-class="active('#/dhis2/trackedEntityAttributes')">
+            <li ng-class="{'active': selectedTabState.selectedTab === 'settings'}" ng-click="selectedTabState.selectedTab = 'settings'"><a href="#/dhis2/settings">{{msg('dhis2.settings')}}</a></li>
+            <li ng-class="{'active': selectedTabState.selectedTab === 'programs'}" ng-click="selectedTabState.selectedTab = 'programs'"><a href="#/dhis2/programs">{{msg('dhis2.programs')}}</a></li>
+            <li ng-class="{'active': selectedTabState.selectedTab === 'trackedEntities'}" ng-click="selectedTabState.selectedTab = 'trackedEntities'"><a href="#/dhis2/trackedEntities">{{msg('dhis2.trackedEntities')}}</a></li>
+            <li ng-class="{'active': selectedTabState.selectedTab === 'trackedEntityAttributes'}" ng-click="selectedTabState.selectedTab = 'trackedEntityAttributes'">
                 <a href="#/dhis2/trackedEntityAttributes">{{msg('dhis2.trackedEntityAttributes')}}</a>
             </li>
-            <li ng-class="active('#/dhis2/orgUnits')"><a href="#/dhis2/orgUnits">{{msg('dhis2.orgUnits')}}</a></li>
-            <li ng-class="active('#/dhis2/dataElements')"><a href="#/dhis2/dataElements">{{msg('dhis2.dataElements')}}</a></li>
+            <li ng-class="{'active': selectedTabState.selectedTab === 'orgUnits'}" ng-click="selectedTabState.selectedTab = 'orgUnits'"><a href="#/dhis2/orgUnits">{{msg('dhis2.orgUnits')}}</a></li>
+            <li ng-class="{'active': selectedTabState.selectedTab === 'dataElements'}" ng-click="selectedTabState.selectedTab = 'dataElements'"><a href="#/dhis2/dataElements">{{msg('dhis2.dataElements')}}</a></li>
         </ul>
     </div>
     <div class="ui-layout-content">
