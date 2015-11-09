@@ -13,12 +13,8 @@
         async: false
     });
 
-    $.ajax({
-        url: '../sms/available/smsTabs',
-        success:  function(data) {
-            smsModule.constant('AVAILABLE_TABS', data);
-        },
-        async:    false
+    getAvailableTabs('motech-sms', function(data) {
+         smsModule.constant('AVAILABLE_TABS', data);
     });
 
     smsModule.run(function ($rootScope, AVAILABLE_TABS) {

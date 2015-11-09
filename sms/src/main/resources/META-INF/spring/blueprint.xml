@@ -50,12 +50,43 @@
             </map>
         </constructor-arg>
         <property name="settingsURL" value="/sms/settings" />
-        <property name="defaultURL" value="/sms/send" />
+
         <property name="roleForAccess">
             <list>
                 <value>manageSMS</value>
                 <value>viewSMSLogs</value>
             </list>
+        </property>
+
+        <property name="defaultURL" value="/sms/send" />
+        <property name="tabAccessMap">
+            <map>
+                <entry>
+                    <key>
+                        <value>send</value>
+                    </key>
+                    <list>
+                        <value>manageSMS</value>
+                    </list>
+                </entry>
+                <entry>
+                    <key>
+                        <value>settings</value>
+                    </key>
+                    <list>
+                        <value>manageSMS</value>
+                    </list>
+                </entry>
+                <entry>
+                    <key>
+                        <value>log</value>
+                    </key>
+                    <list>
+                        <value>manageSMS</value>
+                        <value>viewSMSLogs</value>
+                    </list>
+                </entry>
+            </map>
         </property>
     </bean>
 
