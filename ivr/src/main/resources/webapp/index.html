@@ -3,13 +3,16 @@
         <ul class="breadcrumb" role="navigation">
             <li><a role="menu" href=".">{{msg('server.home')}}</a></li>
             <li><a role="menu" href="#/settings">{{msg('motech-ivr')}}</a></li>
-            <li ng-show="active('#/ivr/templates')" ng-class="active('#/ivr/templates')">{{msg('ivr.web.templates.title')}}</li>
-            <li id="log" ng-show="active('#/ivr/log')" ng-class="active('#/ivr/log')">{{msg('ivr.web.log.title')}}</li>
+            <li ng-show="selectedTabState.selectedTab === 'templates'" ng-class="{'active': selectedTabState.selectedTab === 'templates'}">{{msg('ivr.web.templates.title')}}</li>
+            <li ng-show="selectedTabState.selectedTab === 'settings'" ng-class="{'active': selectedTabState.selectedTab === 'settings'}">{{msg('ivr.web.templates.title')}}</li>
+            <li id="log" ng-show="selectedTabState.selectedTab === 'log'" ng-class="{'active': selectedTabState.selectedTab === 'log'}">{{msg('ivr.web.log.title')}}</li>
         </ul>
     </div>
     <div class="header-footer">
         <ul id="content-tabs" class="nav nav-tabs">
-            <li ng-class="active('#/ivr/' + tab)" ng-repeat="tab in IVR_AVAILABLE_TABS">
+            <li ng-class="{'active': selectedTabState.selectedTab === tab}"
+                ng-click="selectedTabState.selectedTab = tab"
+                ng-repeat="tab in IVR_AVAILABLE_TABS">
                 <a href="#/ivr/{{tab}}">
                     {{msg('ivr.web.' + tab + '.title')}}
                 </a>
