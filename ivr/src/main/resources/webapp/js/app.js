@@ -11,12 +11,8 @@
         async: false
     });
 
-    $.ajax({
-        url: '../ivr/available/ivrTabs',
-        success:  function(data) {
-            ivrmodule.constant('IVR_AVAILABLE_TABS', data);
-        },
-        async: false
+    getAvailableTabs('motech-ivr', function(data) {
+         ivrmodule.constant('IVR_AVAILABLE_TABS', data);
     });
 
     ivrmodule.run(function ($rootScope, IVR_AVAILABLE_TABS) {
