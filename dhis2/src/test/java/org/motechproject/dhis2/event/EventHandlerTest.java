@@ -100,9 +100,6 @@ public class EventHandlerTest {
         params.put(EventParams.LOCATION, ORGUNIT_ID);
         params.put(ATTRIBUTE_ID, ATTRIBUTE_VALUE);
 
-        // This is always added by the MOTECH Event module and should not get added to tracked entity attributes
-        params.put(EventParams.MESSAGE_DESTINATION, "org.motechproject.dhis2.event.EventHandler:eventHandler");
-
         MotechEvent event = new MotechEvent(EventSubjects.CREATE_ENTITY, params);
 
         handler.handleCreate(event);
@@ -135,9 +132,6 @@ public class EventHandlerTest {
         params.put(EventParams.EXTERNAL_ID, ENTITY_INSTANCE_ID);
         params.put(EventParams.DATE, DATE);
         params.put(ATTRIBUTE_ID, ATTRIBUTE_VALUE);
-
-        // This is always added by the MOTECH Event module and should not get added to tracked entity attributes
-        params.put(EventParams.MESSAGE_DESTINATION, "org.motechproject.dhis2.event.EventHandler:eventHandler");
 
         MotechEvent event = new MotechEvent(EventSubjects.ENROLL_IN_PROGRAM,params);
 
@@ -175,9 +169,6 @@ public class EventHandlerTest {
         params.put(EventParams.DATE, DATE);
         params.put(EventParams.STAGE,STAGE_ID);
         params.put(DATA_ELEMENT_ID, DATA_ELEMENT_VALUE);
-
-        // This is always added by the MOTECH Event module and should not get added to tracked entity attributes
-        params.put(EventParams.MESSAGE_DESTINATION, "org.motechproject.dhis2.event.EventHandler:eventHandler");
 
         MotechEvent event = new MotechEvent(EventSubjects.UPDATE_PROGRAM_STAGE, params);
         handler.handleStageUpdate(event);
@@ -217,9 +208,6 @@ public class EventHandlerTest {
         params.put(EventParams.PROGRAM,PROGRAM_ID );
         params.put(EventParams.DATE, DATE);
         params.put(ATTRIBUTE_ID, ATTRIBUTE_VALUE);
-
-        // This is always added by the MOTECH Event module and should not get added to tracked entity attributes
-        params.put(EventParams.MESSAGE_DESTINATION, "org.motechproject.dhis2.event.EventHandler:eventHandler");
 
         MotechEvent event = new MotechEvent(EventSubjects.CREATE_AND_ENROLL, params);
 

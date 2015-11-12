@@ -293,9 +293,6 @@ public class EventHandler {
     private Map<String, Object> prepareDhisAttributesMap(Map<String, Object> eventParams) {
         Map<String, Object> dhisAttributes = new HashMap<>(eventParams);
 
-        dhisAttributes.remove(MotechEvent.PARAM_INVALID_MOTECH_EVENT);
-        dhisAttributes.remove(MotechEvent.PARAM_REDELIVERY_COUNT);
-        dhisAttributes.remove(EventParams.MESSAGE_DESTINATION);
         dhisAttributes.remove(MotechSchedulerService.JOB_ID_KEY);
 
         return dhisAttributes;

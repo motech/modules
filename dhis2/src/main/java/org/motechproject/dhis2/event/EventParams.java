@@ -22,6 +22,4 @@ public final class EventParams {
     public static final String ATTRIBUTE_OPTION_COMBO = "attribute_option_combo";
     public static final String CATEGORY_OPTION_COMBO = "category_option_combo";
     public static final String COMMENT = "comment";
-
-    public static final String MESSAGE_DESTINATION = "message-destination";
 }
