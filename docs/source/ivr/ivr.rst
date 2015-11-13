@@ -188,7 +188,7 @@ Motech Task Trigger
 Initiating Outbound Calls
 =========================
 
-    To initiate an outbound call from an IVR provider, the IVR makes a REST call to the IVR provider. The following two
+    To initiate an outbound call from an IVR provider, the IVR makes a call to the IVR provider. The following two
     parameters are required:
 
         :``configName``:
@@ -198,9 +198,18 @@ Initiating Outbound Calls
             the parameters needed by the IVR provider to make the call, eg: destination number, resource id,
             status callback URI, security credentials, etc...
 
-        The REST call to the IVR provider is constructed by using the config's ``outgoingCallUriTemplate`` field as the
-        base URI, substituting any [xxx] placeholders with the values in ``params``. If ``jsonRequest`` is selected ``params``
-        are converted into JSON Object otherwise ``params`` are added to the HTTP request parameters.
+    The call to the IVR provider is constructed by using the config's ``outgoingCallUriTemplate`` field as the
+    base URI, substituting any [xxx] placeholders with the values in ``params``. For HTTP requests, if ``jsonRequest``
+    is selected ``params`` are converted into JSON Object otherwise ``params`` are added to the HTTP request parameters.
+
+    The IVR module currently supports two URI protocols in ``outgoingCallUriTemplate``:
+
+        :``http``:
+            in this case the IVR module will initiate calls by making REST calls to the IVR provider, under the specified
+            address and include the parameters as GET parameters or POST body
+        :``file``:
+            in this case the IVR module will initiate calls by generating call files with properties, in the specified
+            location. The IVR provider is supposed to pick up those files and initiate call based on the passed properties
 
     There are three ways to have the IVR module initiate a call.
 
@@ -263,8 +272,8 @@ Settings
             contain a pair 13: Subscriber not reachable.
         * ``outgoingCallUriTemplate``:
             A URI template where any ``[xxx]`` string will be replaced by the value identified by the ``xxx`` [#]_ key in
-            the provided ``params`` map. Additionally, the entire ``params`` map is added as request parameters to the
-            HTTP call.
+            the provided ``params`` map. Additionally, the entire ``params`` map is added to the parameters of the call.
+            Supported URI protocols are ``http://`` (generates REST call) and ``file://`` (generates file)
         * ``ignoredStatusFields``:
             A list of fields to be ignored when receiving IVR Call Status from the provider. All other fields received
             during IVR Call Status and not mapped to CDR fields are added to the ``providerExtraData``
