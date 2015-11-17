@@ -3,12 +3,14 @@
         <ul class="breadcrumb" role="navigation">
             <li><a role="menu" href=".">{{msg('server.home')}}</a></li>
             <li><a role="menu" href="#/mtraining/treeView">{{msg('mtraining')}}</a></li>
-            <li ng-show="active('#/mtraining/treeView')" ng-class="active('#/mtraining/treeView')">{{msg('mtraining.treeView')}}</li>
+            <li ng-show="selectedTabState.selectedTab === 'treeView'" ng-class="{'active': selectedTabState.selectedTab === 'treeView'}">{{msg('mtraining.treeView')}}</li>
         </ul>
     </div>
     <div class="header-footer">
         <ul id="content-tabs" class="nav nav-tabs">
-            <li ng-class="active('#/mtraining/' + tab)" ng-repeat="tab in MTRAINING_AVAILABLE_TABS">
+            <li ng-class="{'active': selectedTabState.selectedTab === tab}"
+                ng-click="selectedTabState.selectedTab = tab"
+                ng-repeat="tab in MTRAINING_AVAILABLE_TABS">
                 <a href="#/mtraining/{{tab}}">
                     {{msg('mtraining.' + tab)}}
                 </a>
