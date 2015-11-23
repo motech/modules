@@ -11,9 +11,9 @@ Batch Module
 Introduction
 ############
 
-The Batch Module is an implementation of the Spring batch, which is a framework for dealing with
-batch processing - reading and processing a large amounts of data. Batch Module essential functions are scheduling,
-triggering and processing the jobs, it allows to schedule and automate basic batch operations so they can be executed
+The Batch Module is an implementation of the `Spring Batch <http://projects.spring.io/spring-batch/>`_, which is a framework for dealing with
+batch processing - reading and processing large amounts of data. Batch Module essential functions are scheduling,
+triggering and processing the jobs. It allows to schedule and automate basic batch operations so they can be executed
 without any user interaction.
 
 #####
@@ -34,7 +34,7 @@ Defining job
 
 To define a job you will have to create job xml config file and a class implementing ``Batchlet`` interface to handle that
 job. Your job xml file must be placed in ``META-INF/batch-jobs`` folder on classpath of module which will define Batchlet.
-Name of config file have to match name of your job. For example to define simple ``logAnalysis`` job, create ``logAnalisys.xml``
+The name of the config file has to match the name of your job. For example, to define simple ``logAnalysis`` job, create ``logAnalisys.xml``
 file in ``META-INF/batch-jobs`` of your module. Content of ``logAnalisys.xml`` could look like this:
 
 .. code-block:: xml
@@ -47,9 +47,9 @@ file in ``META-INF/batch-jobs`` of your module. Content of ``logAnalisys.xml`` c
     </job>
 
 ``job id`` is just a name of your job, which must be the same as xml filename. ``step id`` is a name of the step - each
-job contains one ore more steps which are executed within the job. In each step corresponding batchlet will execute its
+job contains one ore more steps which are executed within the job. In each step, the corresponding batchlet will execute its
 process method. ``batchlet ref`` points to batchlet which should be used in this step. Batchlet class should look like in
-example below:
+the example below:
 
 .. code-block:: java
 
@@ -66,16 +66,16 @@ example below:
         }
     }
 
-``Batchlet`` interface define two methods to override - ``process()`` and ``stop()``. The ``process()`` is called everytime
+``Batchlet`` interface defines two methods to override - ``process()`` and ``stop()``. The ``process()`` is called everytime
 the job step is executed. The ``stop()`` is invoked by the Batch runtime as part of JobOperator.stop() method processing.
-This simple example will print "Processing Batchlet" string on standard output each time the logAnalysis will run.
+This simple example will print "Processing Batchlet" string on standard output each time the logAnalysis runs.
 
 ########
 Jobs API
 ########
 
-After job is defined you can interact with it in one of two ways - by HTTP REST calls or with OSGi services exposed
-by Batch module. The exposed services are:
+After a job is defined, you can interact with it in two ways - by HTTP REST calls or with OSGi services, exposed
+by the Batch module. The exposed services are:
 
 ``JobService``:
 
@@ -112,7 +112,7 @@ by Batch module. The exposed services are:
 
     }
 
-Find description of REST endpoints and services API below.
+You can find the description of REST endpoints and services API below.
 
 Getting jobs list
 -----------------
@@ -124,9 +124,9 @@ or
 
     * using ``jobService.getListOfJobs()``.
 
-In case of REST call JSON containing list of scheduled jobs will be returned. ``JobService`` returns ``BatchJobListDTO``,
-which contains field ``batchJobDtoList`` being a list of ``BatchJobDTO``. Both JSON and ``BatchJobDTO`` contains fields
-described below:
+In case of REST call, JSON-formatted text, containing list of scheduled jobs will be returned. ``JobService`` returns ``BatchJobListDTO``,
+which contains field ``batchJobDtoList`` being a list of ``BatchJobDTO``. Both JSON representation and ``BatchJobDTO``
+contain fields described below:
 
 +---------------+--------------------+--------------------------------------------------------------------------------+
 |Parameter      |Type in BatchJobDTO |Description                                                                     |
@@ -135,7 +135,7 @@ described below:
 +---------------+--------------------+--------------------------------------------------------------------------------+
 |jobName        |String              |Name of the job.                                                                |
 +---------------+--------------------+--------------------------------------------------------------------------------+
-|cronExpression |String              |Cron expression used for schedule this job.                                     |
+|cronExpression |String              |Cron expression used for scheduling this job.                                   |
 +---------------+--------------------+--------------------------------------------------------------------------------+
 |status         |String              |Status of the job. The job can have ACTIVE or INACTIVE status.                  |
 +---------------+--------------------+--------------------------------------------------------------------------------+
@@ -147,12 +147,12 @@ described below:
 +---------------+--------------------+--------------------------------------------------------------------------------+
 |createdBy      |String              |Author of the job.                                                              |
 +---------------+--------------------+--------------------------------------------------------------------------------+
-|lastUpdatedBy  |String              |Author of the lats job update.                                                  |
+|lastUpdatedBy  |String              |Author of the last job update.                                                  |
 +---------------+--------------------+--------------------------------------------------------------------------------+
 
 .. note::
 
-    Only scheduled jobs will be returned. If job was defined but not scheduled, it wont be on the list.
+    Only scheduled jobs will be returned. If job was defined but not scheduled, it won't be on the list.
 
 Getting job history
 -------------------
@@ -166,9 +166,9 @@ or
 
 where ``jobName`` is the name of the job for which history should be retrieved.
 
-In case of REST call JSON containing list of job execution will be returned. ``JobTriggerService`` returns ``JobExecutionHistoryListDTO``,
-which contains field ``jobExecutionHistoryList`` being a list of ``JobExecution``. Both JSON and ``JobExecution`` contains
-fields described below:
+In case of REST call, JSON-formatted text, containing list of job executions will be returned. ``JobTriggerService`` returns
+``JobExecutionHistoryListDTO``, which contains field ``jobExecutionHistoryList`` being a list of ``JobExecution``. Both
+JSON representation and ``JobExecution`` contain fields described below:
 
 +----------------+--------------------+--------------------------------------------------------------------------------+
 |Parameter       |Type in JobExecution| Description                                                                    |
@@ -185,7 +185,7 @@ fields described below:
 +----------------+--------------------+--------------------------------------------------------------------------------+
 |jobName         |String              |Name of the job.                                                                |
 +----------------+--------------------+--------------------------------------------------------------------------------+
-|batchStatus     |BatchStatus         |Batch status of this execution. Its one of the possible statuses: ABANDONED,    |
+|batchStatus     |BatchStatus         |Batch status of this execution. It's one of the possible statuses: ABANDONED,   |
 |                |                    |COMPLETED, FAILED, STARTED, STARTING, STOPPED, STOPPING.                        |
 +----------------+--------------------+--------------------------------------------------------------------------------+
 |executionId     |long                |Id of this execution.                                                           |
@@ -243,7 +243,7 @@ CronJobScheduleParam contains fields with names corresponding to the JSON fields
 
 Rescheduling job
 ----------------
-Already scheduled job can be rescheduled with new cron expression. This can be done:
+Already scheduled job can be rescheduled with a new cron expression. This can be done:
 
     * By HTTP REST call: ``POST http://{motech-server}/{motech-war-file}/module/batch/reschedulecronjob?jobName={jobName}&cronExpression={cronExpression}``
 
@@ -326,7 +326,7 @@ or
 
 where ``jobName`` is the name of the job which should be updated and ``paramsMap`` is a map of new parameters for this job.
 The parameters map sent in request is compared with existing parameters for the job. If for any parameter the key exist
-then its value is updated else new parameter is added for that job.
+then its value is updated, else new parameter is added for that job.
 
 Restarting job execution
 ------------------------
@@ -344,7 +344,7 @@ where ``jobName`` is the name of the job and ``executionId`` is the ID of the ex
 Database structure
 ##################
 
-The Batch Module creates tables in Motech Data Services database. The structure of those tables is as shown on schema below:
+The Batch Module creates tables in Motech Data Services database. The structure of those tables is shown on schema below:
 
 .. image:: img/batch_tables_schema.png
                     :scale: 100 %
@@ -386,7 +386,7 @@ Batch module defines custom error codes, you can find description of them in the
 +------+-------------------------------------+------------------------------------------------------------------------+
 |3001  |500 Internal server error            |Error in starting job.                                                  |
 +------+-------------------------------------+------------------------------------------------------------------------+
-|3002  |500 Internal server error            |Error while reading from or writing to file.                            |
+|3002  |500 Internal server error            |Error while reading from or writing to the file.                        |
 +------+-------------------------------------+------------------------------------------------------------------------+
 |3003  |500 Internal server error            |Error in querying database.                                             |
 +------+-------------------------------------+------------------------------------------------------------------------+
