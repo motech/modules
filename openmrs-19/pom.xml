@@ -178,9 +178,59 @@
             </build>
         </profile>
         <profile>
+            <!-- To run this profile you must add openmrs.host, for example "mvn clean install -Dopenmrs.host=172.17.0.12:8080 -POPENMRSIT" -->
             <id>OPENMRSIT</id>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-test-config-files</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${user.home}/.motech/config</outputDirectory>
+                                    <overwrite>true</overwrite>
+                                    <resources>
+                                        <resource>
+                                            <directory>${modules.root.dir}/testdata</directory>
+                                            <include>motech-settings.properties</include>
+                                        </resource>
+                                        <resource>
+                                            <directory>${modules.root.dir}/testdata/${motech.sql.dbtype}</directory>
+                                            <include>bootstrap.properties</include>
+                                        </resource>
+                                        <resource>
+                                            <directory>${modules.root.dir}/testdata/${motech.sql.dbtype}</directory>
+                                            <include>bootstrap.properties</include>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>copy-test-openmrs-config-file</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${user.home}/.motech/config/org.motechproject.openmrs-19/</outputDirectory>
+                                    <overwrite>true</overwrite>
+                                    <resources>
+                                        <resource>
+                                            <directory>src/test/resources/</directory>
+                                            <filtering>true</filtering>
+                                            <include>openmrs.properties</include>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
@@ -208,6 +258,35 @@
                                     <summaryFiles>
                                         <summaryFile>target/failsafe-reports/failsafe-summary-it.xml</summaryFile>
                                     </summaryFiles>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <version>2.5</version>
+                        <inherited>false</inherited>
+                        <executions>
+                            <execution>
+                                <id>clean-test-config-files</id>
+                                <goals>
+                                    <goal>clean</goal>
+                                </goals>
+                                <phase>post-integration-test</phase>
+                                <configuration>
+                                    <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                                    <filesets>
+                                        <fileset>
+                                            <followSymlinks>false</followSymlinks>
+                                            <directory>${user.home}/.motech/config</directory>
+                                            <includes>
+                                                <include>org.motechproject.openmrs-19/openmrs.properties</include>
+                                                <include>bootstrap.properties</include>
+                                                <include>motech-settings.properties</include>
+                                                <include>datanucleus.properties</include>
+                                            </includes>
+                                        </fileset>
+                                    </filesets>
                                 </configuration>
                             </execution>
                         </executions>
