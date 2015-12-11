@@ -110,48 +110,6 @@
         };
     });
 
-    directives.directive('smsGridDatePickerFrom', function() {
-        return {
-            restrict: 'A',
-            link: function(scope, element, attrs) {
-                var elem = angular.element(element),
-                    endDateTextBox = angular.element('#dateTimeTo');
-
-                elem.datetimepicker({
-                    dateFormat: "yy-mm-dd",
-                    changeMonth: true,
-                    changeYear: true,
-                    maxDate: +0,
-                    timeFormat: "HH:mm:ss",
-                    onSelect: function (selectedDateTime){
-                        endDateTextBox.datetimepicker('option', 'minDate', elem.datetimepicker('getDate') );
-                    }
-                });
-            }
-        };
-    });
-
-    directives.directive('smsGridDatePickerTo', function() {
-        return {
-            restrict: 'A',
-            link: function(scope, element, attrs) {
-                var elem = angular.element(element),
-                    startDateTextBox = angular.element('#dateTimeFrom');
-
-                elem.datetimepicker({
-                    dateFormat: "yy-mm-dd",
-                    changeMonth: true,
-                    changeYear: true,
-                    maxDate: +0,
-                    timeFormat: "HH:mm:ss",
-                    onSelect: function (selectedDateTime){
-                        startDateTextBox.datetimepicker('option', 'maxDate', elem.datetimepicker('getDate') );
-                    }
-                });
-            }
-        };
-    });
-
     directives.directive('smsLoggingGrid', function($compile, $http, $templateCache) {
         return {
             restrict: 'A',
