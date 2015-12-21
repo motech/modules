@@ -1,6 +1,7 @@
 package org.motechproject.ivr.domain;
 
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.motechproject.commons.date.util.DateUtil;
@@ -16,7 +17,10 @@ import org.motechproject.mds.util.SecurityMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -41,6 +45,8 @@ public class CallDetailRecord {
     private static final int COL10 = 9;
     private static final int COL11 = 10;
     private static final int COL12 = 11;
+    private static final int COL13 = 12;
+    private static final int COL14 = 13;
     private static final int MAX_ENTITY_STRING_LENGTH = 255;
     private static final DateTimeFormatter DT_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSSS");
     private static final Logger LOGGER = LoggerFactory.getLogger(CallDetailRecord.class);
@@ -96,6 +102,14 @@ public class CallDetailRecord {
     @UIDisplayable(position = COL8)
     private Map<String, String> providerExtraData;
 
+    @Field
+    @UIDisplayable(position = COL13)
+    private String callDuration;
+
+    @Field
+    @UIDisplayable(position = COL14)
+    private String messagePercentListened;
+
     /**
      * Creates a new CallDetailRecord and sets the motechTimestamp value to the current datetime.
      */
@@ -120,7 +134,7 @@ public class CallDetailRecord {
     public CallDetailRecord(String configName,  //NO CHECKSTYLE ParameterNumber
                             String providerTimestamp, String from, String to, CallDirection callDirection,
                             String callStatus, String templateName, String motechCallId, String providerCallId,
-                            Map<String, String> providerExtraData) {
+                            Map<String, String> providerExtraData, String callDuration, String messagePercentListened) {
         this();
         this.configName = configName;
         this.providerTimestamp = providerTimestamp;
@@ -134,6 +148,8 @@ public class CallDetailRecord {
         if (providerExtraData != null) {
             this.providerExtraData = providerExtraData;
         }
+        this.callDuration = callDuration;
+        this.messagePercentListened = messagePercentListened;
     }
 
     /**
@@ -284,6 +300,20 @@ public class CallDetailRecord {
     }
 
     /**
+     * @return the duration of this call
+     */
+    public String getCallDuration() {
+        return parseDecimalString(callDuration);
+    }
+
+    /**
+     * @return the percent listened of the message
+     */
+    public String getMessagePercentListened() {
+        return parseDecimalString(messagePercentListened);
+    }
+
+    /**
      * When receiving call detail information from an IVR provider the specific call details must be mapped from
      * what the provider sends back to MOTECH and a CallDetailRecord object. This method will find which field on the
      * given callDetailRecord matches the given key and set service to the given value. If there is no matching
@@ -296,7 +326,7 @@ public class CallDetailRecord {
     public void setField(String key, String val, Map<String, String> callStatusMapping) {
         String value;
 
-        if (val.length() > MAX_ENTITY_STRING_LENGTH) {
+        if (val != null && val.length() > MAX_ENTITY_STRING_LENGTH) {
             LOGGER.warn("The value for {} exceeds {} characters and will be truncated.", key, MAX_ENTITY_STRING_LENGTH);
             LOGGER.warn("The complete value for {} is {}", key, val);
             value = val.substring(0, MAX_ENTITY_STRING_LENGTH);
@@ -392,6 +422,12 @@ public class CallDetailRecord {
         if (to != null ? !to.equals(that.to) : that.to != null) {
             return false;
         }
+        if (callDuration != null ? !callDuration.equals(that.callDuration) : that.callDuration != null) {
+            return false;
+        }
+        if (messagePercentListened != null ? !messagePercentListened.equals(that.messagePercentListened) : that.messagePercentListened != null) {
+            return false;
+        }
 
         return true;
     }
@@ -409,6 +445,8 @@ public class CallDetailRecord {
         result = 31 * result + (motechCallId != null ? motechCallId.hashCode() : 0);
         result = 31 * result + (providerCallId != null ? providerCallId.hashCode() : 0);
         result = 31 * result + (providerExtraData != null ? providerExtraData.hashCode() : 0);
+        result = 31 * result + (callDuration != null ? callDuration.hashCode() : 0);
+        result = 31 * result + (messagePercentListened != null ? messagePercentListened.hashCode() : 0);
         return result;
     }
 
@@ -426,6 +464,29 @@ public class CallDetailRecord {
                 ", motechCallId='" + motechCallId + '\'' +
                 ", providerCallId='" + providerCallId + '\'' +
                 ", providerExtraData=" + providerExtraData +
+                ", callDuration=" + callDuration +
+                ", messagePercentListened=" + messagePercentListened +
                 '}';
+    }
+
+    private String parseDecimalString(String value) {
+        if (StringUtils.isBlank(value)) {
+            // leave blanks untouched
+            return value;
+        } else {
+            try {
+                // round to two decimal digits
+                double doubleVal = Double.parseDouble(value);
+
+                // always want to use English Locale here
+                DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.ENGLISH);
+                DecimalFormat df = new DecimalFormat("#.##", symbols);
+
+                return df.format(doubleVal);
+            } catch (NumberFormatException e) {
+                // if this is not a number, return what we have
+                return value;
+            }
+        }
     }
 }

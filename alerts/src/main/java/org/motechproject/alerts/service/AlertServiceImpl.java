@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,7 @@ public class AlertServiceImpl implements AlertService {
      * @param data        Extra information of the alert stored as property => value pairs
      */
     @Override
+    @Transactional
     public void create(String entityId, String name, String description, AlertType type,
                        AlertStatus status, int priority, Map<String, String> data) {
         alertsDataService.create(
@@ -57,11 +59,13 @@ public class AlertServiceImpl implements AlertService {
      * the alert criteria, it returns all the alerts.
      */
     @Override
+    @Transactional
     public List<Alert> search(AlertCriteria alertCriteria) {
         return alertFilter.search(alertCriteria);
     }
 
     @Override
+    @Transactional
     public Alert get(String id) {
         Long idAsLong = StringUtils.isNumeric(id) ? Long.parseLong(id) : null;
         return null == idAsLong ? null : get(idAsLong);
@@ -74,6 +78,7 @@ public class AlertServiceImpl implements AlertService {
      * @return Alert object with the given id if found
      */
     @Override
+    @Transactional
     public Alert get(Long id) {
         Alert alert = alertsDataService.retrieve("id", id);
 
@@ -85,6 +90,7 @@ public class AlertServiceImpl implements AlertService {
     }
 
     @Override
+    @Transactional
     public void update(String alertId, UpdateCriteria updateCriteria) {
         Long idAsLong = StringUtils.isNumeric(alertId) ? Long.parseLong(alertId) : null;
 
@@ -101,6 +107,7 @@ public class AlertServiceImpl implements AlertService {
      *                       values (Cannot be null)
      */
     @Override
+    @Transactional
     public void update(Long alertId, UpdateCriteria updateCriteria) {
         Alert alert = get(alertId);
         Map<UpdateCriterion, Object> all = updateCriteria.getAll();

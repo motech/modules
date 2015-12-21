@@ -1,16 +1,22 @@
 package org.motechproject.mtraining.domain;
 
 import org.joda.time.DateTime;
+import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
+import org.motechproject.mds.util.SecurityMode;
+import org.motechproject.mtraining.util.Constants;
+
+import java.util.Objects;
 
 
 /**
  * Log for an instance of course activity for a user identified by externalId
  * This could be used either as a bookmarking system or enrollment system to track progress
  */
-@Entity
+@Entity(nonEditable = true)
+@Access(value = SecurityMode.PERMISSIONS, members = {Constants.VIEW_MTRAINING_LOGS})
 public class ActivityRecord extends MdsEntity {
 
     /**
@@ -172,5 +178,34 @@ public class ActivityRecord extends MdsEntity {
     public void setState(ActivityState state) {
 
         this.state = state;
+    }
+
+    @Override //NO CHECKSTYLE CyclomaticComplexity
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        final ActivityRecord other = (ActivityRecord) obj;
+
+        return Objects.equals(this.getExternalId(), other.getExternalId())
+                && Objects.equals(this.getCourseName(), other.getCourseName())
+                && Objects.equals(this.getChapterName(), other.getChapterName())
+                && Objects.equals(this.getLessonName(), other.getLessonName())
+                && Objects.equals(this.getQuizName(), other.getQuizName())
+                && Objects.equals(this.getQuizScore(), other.getQuizScore())
+                && Objects.equals(this.getStartTime(), other.getStartTime())
+                && Objects.equals(this.getCompletionTime(), other.getCompletionTime())
+                && Objects.equals(this.getState(), other.getState());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getExternalId(), getCourseName(), getChapterName(), getLessonName(), getQuizName(),
+                getQuizScore(), getStartTime(), getCompletionTime(), getState());
     }
 }

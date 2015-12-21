@@ -107,7 +107,6 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <extensions>true</extensions>
                 <configuration>
                     <instructions>
                         <Blueprint-Enabled>true</Blueprint-Enabled>
@@ -120,6 +119,7 @@
                             org.aopalliance.aop,
                             org.springframework.aop,
                             org.springframework.aop.framework,
+                            org.springframework.transaction,
                             org.motechproject.admin.domain,
                             org.motechproject.admin.messages,
                             org.motechproject.event.listener,
@@ -155,7 +155,7 @@
                             <requireUseStrict>true</requireUseStrict>
                             <predefinedVars>
                                 $, angular, motechAlert, handleWithStackTrace, jQuery, parseUri,
-                                innerLayout, blockUI, unblockUI, handleResponse
+                                innerLayout, blockUI, unblockUI, handleResponse, getAvailableTabs
                             </predefinedVars>
                             <failOnIssues>${jslint.enable}</failOnIssues>
                         </configuration>

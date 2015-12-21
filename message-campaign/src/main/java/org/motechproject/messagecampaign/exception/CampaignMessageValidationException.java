@@ -1,5 +1,8 @@
 package org.motechproject.messagecampaign.exception;
 
+/**
+ * Thrown when the validation of the campaign message fails.
+ */
 public class CampaignMessageValidationException extends CampaignValidationException {
 
     private static final long serialVersionUID = 244387554165254275L;

@@ -44,10 +44,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -67,6 +75,8 @@ public class OutboundCallServiceImpl implements OutboundCallService {
     private CallDetailRecordDataService callDetailRecordDataService;
     private EventRelay eventRelay;
     private StatusMessageService statusMessageService;
+    private static final String FILE_PROTOCOL = "file";
+    private static final String HTTP_PROTOCOL = "http";
     private static final String MODULE_NAME = "ivr";
     public static final List<Integer> ACCEPTABLE_IVR_RESPONSE_STATUSES = Arrays.asList(HttpStatus.SC_OK,
             HttpStatus.SC_ACCEPTED, HttpStatus.SC_CREATED);
@@ -86,7 +96,8 @@ public class OutboundCallServiceImpl implements OutboundCallService {
         LOGGER.debug(String.format("addCallDetailRecord(callStatus = %s, config = %s, params = %s, motechCallId = %s)",
                 callStatus, config.getName(), params.toString(), motechCallId));
 
-        CallDetailRecord callDetailRecord = new CallDetailRecord(config.getName(), null, null, null, CallDirection.OUTBOUND, callStatus, null, motechCallId, null, null);
+        CallDetailRecord callDetailRecord = new CallDetailRecord(config.getName(), null, null, null, CallDirection.OUTBOUND,
+                callStatus, null, motechCallId, null, null, null, null);
 
         for (Map.Entry<String, String> entry : params.entrySet()) {
             if (config.shouldIgnoreField(entry.getKey())) {
@@ -118,17 +129,69 @@ public class OutboundCallServiceImpl implements OutboundCallService {
         Map<String, String> completeParams = new HashMap<>(params);
         completeParams.put("motechCallId", motechCallId);
 
-        HttpUriRequest request = generateHttpRequest(config, completeParams);
-        HttpResponse response;
+        String protocol;
         try {
-            response = new DefaultHttpClient().execute(request);
-        } catch (Exception e) {
+            protocol = new URL(config.getOutgoingCallUriTemplate()).getProtocol();
+        } catch (MalformedURLException e) {
+            String msg = String.format("Invalid URI template: '%s'", config.getOutgoingCallUriTemplate());
+            statusMessageService.warn(msg, MODULE_NAME);
+            throw new CallInitiationException(msg, e);
+        }
+
+        switch (protocol) {
+            case FILE_PROTOCOL: {
+                generateCallFile(config, params, completeParams, motechCallId);
+                break;
+            }
+
+            case HTTP_PROTOCOL: {
+                executeHttpCall(config, params, completeParams, motechCallId);
+                break;
+            }
+        }
+    }
+
+    private void generateCallFile(Config config, Map<String, String> params, Map<String, String> completeParams, String motechCallId) {
+        String myUri = mergeUriAndRemoveParams(config.getOutgoingCallUriTemplate(), completeParams);
+
+        try {
+            Path path = Paths.get(new URI(myUri));
+            Path tempDirectory = Files.createTempDirectory(path.getParent(), "motech-ivr");
+            Path tempPath = Files.createTempFile(tempDirectory, "callfile", ".txt");
+
+            try (BufferedWriter bufferedWriter = Files.newBufferedWriter(tempPath)) {
+                for (Map.Entry<String, String> entry : completeParams.entrySet()) {
+                    bufferedWriter.write(String.format("%s: %s", entry.getKey(), entry.getValue()));
+                    bufferedWriter.newLine();
+                }
+            }
+
+            Files.move(tempPath, path, StandardCopyOption.ATOMIC_MOVE);
+            tempDirectory.toFile().delete();
+        } catch (URISyntaxException | IOException e) {
             String message = String.format("Could not initiate call, unexpected exception: %s", e.toString());
             statusMessageService.warn(message, MODULE_NAME);
             params.put("ErrorMessage", message);
             addCallDetailRecord(CallDetailRecord.CALL_FAILED, config, params, motechCallId);
             throw new CallInitiationException(message, e);
         }
+
+        addCallDetailRecord(CallDetailRecord.CALL_INITIATED, config, params, motechCallId);
+    }
+
+    private void executeHttpCall(Config config, Map<String, String> params, Map<String, String > completeParams, String motechCallId) {
+        HttpUriRequest request = generateHttpRequest(config, completeParams);
+        HttpResponse response;
+        try {
+            response = new DefaultHttpClient().execute(request);
+        } catch (Exception e) {
+            String message = String.format("Could not initiate call, could not create or write to file: %s", e.toString());
+            statusMessageService.warn(message, MODULE_NAME);
+            params.put("ErrorMessage", message);
+            addCallDetailRecord(CallDetailRecord.CALL_FAILED, config, params, motechCallId);
+            throw new CallInitiationException(message, e);
+        }
+
         StatusLine statusLine = response.getStatusLine();
 
         //todo: it's possible that some IVR providers return an HTTP 200 and an error code in the response body.

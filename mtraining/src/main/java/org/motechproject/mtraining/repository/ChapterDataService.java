@@ -16,7 +16,7 @@ import java.util.List;
 public interface ChapterDataService extends MotechDataService<Chapter> {
 
     @Lookup
-    List<Chapter> findChapterByName(@LookupField(name = "name") String chapterName);
+    List<Chapter> findChaptersByName(@LookupField(name = "name") String chapterName);
 
     @Lookup
     Chapter findChapterById(@LookupField(name = "id") Long id);

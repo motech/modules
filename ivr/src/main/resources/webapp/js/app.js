@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    var ivrmodule = angular.module('ivr', ['motech-dashboard', 'ivr.controllers', 'ngCookies', 'ui.bootstrap', 'mds']), id;
+    var ivrmodule = angular.module('ivr', ['motech-dashboard', 'ivr.controllers', 'ngCookies', 'ui.bootstrap', 'data-services']), id;
 
     $.ajax({
         url: '../mds/entities/getEntity/IVR Module/CallDetailRecord',
@@ -11,12 +11,8 @@
         async: false
     });
 
-    $.ajax({
-        url: '../ivr/available/ivrTabs',
-        success:  function(data) {
-            ivrmodule.constant('IVR_AVAILABLE_TABS', data);
-        },
-        async: false
+    getAvailableTabs('motech-ivr', function(data) {
+         ivrmodule.constant('IVR_AVAILABLE_TABS', data);
     });
 
     ivrmodule.run(function ($rootScope, IVR_AVAILABLE_TABS) {
@@ -32,7 +28,7 @@
             tab = IVR_AVAILABLE_TABS[i];
 
             if (tab === "log") {
-                $routeProvider.when('/ivr/{0}'.format(tab), {redirectTo: 'mds/dataBrowser/'+id});
+                $routeProvider.when('/ivr/{0}'.format(tab), {redirectTo: 'mds/dataBrowser/'+id+'/ivr'});
             } else {
                 $routeProvider.when('/ivr/{0}'.format(tab),
                     {

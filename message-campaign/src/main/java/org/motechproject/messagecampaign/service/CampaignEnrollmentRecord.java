@@ -4,14 +4,8 @@ import org.joda.time.LocalDate;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollmentStatus;
 
 /**
- * \defgroup MessageCampaign Message Campaign
- */
-
-/**
- * \ingroup MessageCampaign
- * <p/>
- * This is the record which will be returned when message campaign service is queried for enrollments
- * It holds the details of an enrollment
+ * This is the record which will be returned when message campaign service is queried for enrollments.
+ * It holds the details of an enrollment.
  */
 public class CampaignEnrollmentRecord {
     private String externalId;
@@ -20,12 +14,12 @@ public class CampaignEnrollmentRecord {
     private CampaignEnrollmentStatus status;
 
     /**
-     * This is the constructor which is used to create an CampaignEnrollmentRecord
+     * This is the constructor which is used to create an CampaignEnrollmentRecord.
      *
-     * @param externalId
-     * @param campaignName
-     * @param referenceDate
-     * @param status
+     * @param externalId external ID of the created campaign enrollment
+     * @param campaignName campaign name of the created campaign enrollment
+     * @param referenceDate reference date of the created campaign enrollment
+     * @param status status of the campaign enrollment
      */
     public CampaignEnrollmentRecord(String externalId, String campaignName, LocalDate referenceDate, CampaignEnrollmentStatus status) {
         this.externalId = externalId;
@@ -35,36 +29,36 @@ public class CampaignEnrollmentRecord {
     }
 
     /**
-     * This returns the External Id of a CampaignEnrollmentRecord
+     * This returns the External ID of a CampaignEnrollmentRecord.
      *
-     * @return String
+     * @return external ID of the enrollment
      */
     public String getExternalId() {
         return externalId;
     }
 
     /**
-     * This returns the Campaign Name of a CampaignEnrollmentRecord
+     * This returns the Campaign Name of a CampaignEnrollmentRecord.
      *
-     * @return String
+     * @return name of the campaign the enrollment is assigned to
      */
     public String getCampaignName() {
         return campaignName;
     }
 
     /**
-     * This returns the Start Date of a CampaignEnrollmentRecord
+     * This returns the Start Date of a CampaignEnrollmentRecord.
      *
-     * @return LocalDate
+     * @return the reference date of this enrollment
      */
     public LocalDate getReferenceDate() {
         return referenceDate;
     }
 
     /**
-     * This returns the Status of a CampaignEnrollmentRecord
+     * This returns the Status of a CampaignEnrollmentRecord.
      *
-     * @return CampaignEnrollmentStatus
+     * @return the status of this enrollment
      */
     public CampaignEnrollmentStatus getStatus() {
         return status;

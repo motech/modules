@@ -3,27 +3,23 @@
         <ul class="breadcrumb" role="navigation">
             <li><a role="menu" href=".">{{msg('server.home')}}</a></li>
             <li><a role="menu" href="#/send">{{msg('motech-sms')}}</a></li>
-            <li ng-show="active('#/sms/send')" ng-class="active('#/sms/send')">{{msg('sms.web.send.title')}}</li>
-            <li ng-show="active('#/sms/log')" ng-class="active('#/sms/log')">{{msg('sms.web.log.title')}}</li>
-            <li ng-show="active('#/sms/settings')" ng-class="active('#/sms/settings')">{{msg('sms.web.settings.title')}}</li>
+            <li ng-show="selectedTabState.selectedTab === 'send'" ng-class="{'active': selectedTabState.selectedTab === 'send'}">{{msg('sms.web.send.title')}}</li>
+            <li ng-show="selectedTabState.selectedTab === 'log'" ng-class="{'active': selectedTabState.selectedTab === 'log'}">{{msg('sms.web.log.title')}}</li>
+            <li ng-show="selectedTabState.selectedTab === 'settings'" ng-class="{'active': selectedTabState.selectedTab === 'settings'}">{{msg('sms.web.settings.title')}}</li>
         </ul>
     </div>
     <div class="header-footer">
         <ul id="content-tabs" class="nav nav-tabs">
-            <li ng-class="active('#/sms/' + tab)" ng-repeat="tab in AVAILABLE_TABS">
+            <li ng-class="{'active': selectedTabState.selectedTab === tab}"
+                ng-click="selectedTabState.selectedTab = tab"
+                ng-repeat="tab in AVAILABLE_TABS">
                 <a href="#/sms/{{tab}}">
                     {{msg('sms.web.' + tab + '.title')}}
                 </a>
             </li>
         </ul>
     </div>
-    <div class="ui-layout-content">
-        <div class="tab-content" id="tab-content">
-            <div id="main-content" class="active">
-                <div ng-view></div>
-            </div>
-        </div>
-    </div>
+    <div tab-layout-with-mds-grid></div>
 </div>
 
 <div id="inner-east" class="sms inner-east ui-layout-pane ui-layout-pane-east">

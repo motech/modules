@@ -1,8 +1,5 @@
 package org.motechproject.hub.service.impl;
 
-import java.util.List;
-import java.util.UUID;
-
 import org.motechproject.http.agent.service.HttpAgent;
 import org.motechproject.http.agent.service.Method;
 import org.motechproject.hub.exception.ApplicationErrors;
@@ -25,13 +22,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
- * This is the implementation class of the interface
- * <code>SubscriptionService</code>
- *
- * @author Anuranjan
- *
+ * Default implementation of {@link org.motechproject.hub.service.SubscriptionService}
  */
 @Service(value = "subscriptionService")
 public class SubscriptionServiceImpl implements SubscriptionService {
@@ -48,6 +45,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Value("${retry.count}")
     private String retryCount;
 
+    /**
+     * Sets the number of allowed request retries in case of request error.
+     *
+     * @param retryCount the retry count to be set
+     */
     public void setRetryCount(String retryCount) {
         this.retryCount = retryCount;
     }
@@ -55,20 +57,45 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Value("${retry.interval}")
     private String retryInterval;
 
+    /**
+     * Sets the interval between request retries in case of request error.
+     *
+     * @param retryInterval the retry interval to be set
+     */
     public void setRetryInterval(String retryInterval) {
         this.retryInterval = retryInterval;
     }
 
     private HttpAgent httpAgentImpl;
 
+    /**
+     * Gets the <code>HttpAgent</code> which is an OSGI service
+     * used for sending http requests.
+     *
+     * @return the http agent
+     */
     public HttpAgent getHttpAgentImpl() {
         return httpAgentImpl;
     }
 
+    /**
+     * Sets the <code>HttpAgent</code> which is an OSGI service
+     * used for sending http requests.
+     *
+     * @param httpAgentImpl the http agent to be set
+     */
     public void setHttpAgentImpl(HttpAgent httpAgentImpl) {
         this.httpAgentImpl = httpAgentImpl;
     }
 
+    /**
+     * Creates a new instance of <code>SubscriptionServiceImpl</code>, with
+     * all fields set to the autowired parameters values.
+     *
+     * @param hubTopicService autowired {@link org.motechproject.hub.mds.service.HubTopicMDSService}
+     * @param hubSubscriptionMDSService autowired {@link org.motechproject.hub.mds.service.HubSubscriptionMDSService}
+     * @param httpAgentImpl autowired {@link org.motechproject.http.agent.service.HttpAgent}
+     */
     @Autowired
     public SubscriptionServiceImpl(HubTopicMDSService hubTopicService,
             HubSubscriptionMDSService hubSubscriptionMDSService,
@@ -80,7 +107,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public void subscribe(final String callbackUrl, final Modes mode,
+    @Transactional
+    public Long subscribe(final String callbackUrl, final Modes mode,
             final String topic, String leaseSeconds, String secret)
             throws HubException {
 
@@ -126,7 +154,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
             Thread intentVerifiationThread = new Thread(runnable);
             intentVerifiationThread.start();
-
+            return intentVerifiationThread.getId();
         } else if (mode.equals(Modes.UNSUBSCRIBE)) { // unsubscription request
             if (hubTopic != null) {
                 unsubscribe(hubTopicId, topic, callbackUrl, mode);
@@ -141,7 +169,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 hubTopicService.delete(hubTopic);
             }
         }
-
+        return null;
     }
 
     private void createHubSubscription(String callbackUrl, long topicId,

@@ -12,20 +12,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.motechproject.commons.date.util.DateUtil.now;
 import static org.motechproject.scheduletracking.events.constants.EventSubjects.MILESTONE_DEFAULTED;
 
+/**
+ * Service to managing defaulted enrollments.
+ */
 @Component
 public class EnrollmentDefaultmentService {
-    private MotechSchedulerService schedulerService;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(EnrollmentDefaultmentService.class);
 
-    @Autowired
-    public EnrollmentDefaultmentService(MotechSchedulerService schedulerService) {
-        this.schedulerService = schedulerService;
-    }
+    private MotechSchedulerService schedulerService;
 
+    /**
+     * Schedules job to trigger defaultment alert for the given enrollment. Job is created when the current milestone
+     * is not expired.
+     *
+     * @param enrollment the enrollment to mark as defaultment
+     */
+    @Transactional
     public void scheduleJobToCaptureDefaultment(Enrollment enrollment) {
         Schedule schedule = enrollment.getSchedule();
         Milestone currentMilestone = schedule.getMilestone(enrollment.getCurrentMilestoneName());
@@ -47,9 +55,20 @@ public class EnrollmentDefaultmentService {
         schedulerService.safeScheduleRunOnceJob(new RunOnceSchedulableJob(event, milestoneEndDateTime.toDate()));
     }
 
+    /**
+     * Unschedules all the defaultment alert jobs for the given enrollment.
+     *
+     * @param enrollment the enrollment for which all defaultment jobs will be unscheduled.
+     */
+    @Transactional
     public void unscheduleMilestoneDefaultedJob(Enrollment enrollment) {
         LOGGER.info("Un-scheduling all jobs for enrollment {}", enrollment.getId());
         schedulerService.safeUnscheduleAllJobs(String.format("%s-%s", MILESTONE_DEFAULTED, enrollment.getId()));
         LOGGER.info("Un-scheduled all jobs for enrollment {}", enrollment.getId());
+    }
+
+    @Autowired
+    public void setSchedulerService(MotechSchedulerService schedulerService) {
+        this.schedulerService = schedulerService;
     }
 }

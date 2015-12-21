@@ -6,7 +6,12 @@ import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementation of the {@link Criterion}, that fetches and filters records based on the
+ * campaign name.
+ */
 public class CampaignNameCriterion implements Criterion {
+
     private String campaignName;
 
     public CampaignNameCriterion(String campaignName) {

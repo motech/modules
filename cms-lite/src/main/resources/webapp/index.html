@@ -3,14 +3,15 @@
         <ul class="breadcrumb" role="navigation">
             <li><a role="menu" href=".">{{msg('server.home')}}</a></li>
             <li><a role="menu" href="#/cmslite/resources">{{msg('cmslite')}}</a></li>
-            <li ng-show="active('#/cmslite/resources')" ng-class="active('#/cmslite/resources')">
+            <li ng-show="selectedTabState.selectedTab === 'resources'" ng-class="{'active': selectedTabState.selectedTab === 'resources'}">
                 {{msg('cmslite.header.resourceCMS')}}
             </li>
         </ul>
     </div>
     <div class="header-footer">
         <ul id="content-tabs" class="nav nav-tabs">
-            <li ng-class="active('#/cmslite/resources')"><a href="#/cmslite/resources">{{msg('cmslite.header.resourceCMS')}}</a>
+            <li ng-class="{'active': selectedTabState.selectedTab === 'resources'}" ng-click="selectedTabState.selectedTab = 'resources'">
+                <a href="#/cmslite/resources">{{msg('cmslite.header.resourceCMS')}}</a>
             </li>
         </ul>
     </div>

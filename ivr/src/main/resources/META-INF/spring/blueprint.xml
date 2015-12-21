@@ -25,6 +25,7 @@
             <list>
                 <value>classpath:ivr-configs.json</value>
                 <value>classpath:ivr-templates.json</value>
+                <value>classpath:custom-ui.js</value>
             </list>
         </property>
     </bean>
@@ -43,12 +44,43 @@
             </map>
         </constructor-arg>
         <property name="settingsURL" value="/ivr/settings" />
-        <property name="defaultURL" value="/ivr/templates"/>
+
         <property name="roleForAccess">
             <list>
                 <value>manageIVR</value>
                 <value>viewIVRLogs</value>
             </list>
+        </property>
+
+        <property name="defaultURL" value="/ivr/templates" />
+        <property name="tabAccessMap">
+            <map>
+                <entry>
+                    <key>
+                        <value>templates</value>
+                    </key>
+                    <list>
+                        <value>manageIVR</value>
+                    </list>
+                </entry>
+                <entry>
+                    <key>
+                        <value>settings</value>
+                    </key>
+                    <list>
+                        <value>manageIVR</value>
+                    </list>
+                </entry>
+                <entry>
+                    <key>
+                        <value>log</value>
+                    </key>
+                    <list>
+                        <value>manageIVR</value>
+                        <value>viewIVRLogs</value>
+                    </list>
+                </entry>
+            </map>
         </property>
     </bean>
 

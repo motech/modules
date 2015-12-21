@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * REST API controller for handling message campaign requests.
+ */
 @Controller
 @RequestMapping(value = "web-api")
 public class CampaignRestController extends MessageCampaignController {
@@ -28,6 +31,12 @@ public class CampaignRestController extends MessageCampaignController {
     @Autowired
     private MessageCampaignService messageCampaignService;
 
+    /**
+     * Retrieves campaign of the given name.
+     *
+     * @param campaignName the name of the campaign
+     * @return campaign record of the given name
+     */
     @RequestMapping(value = "/campaigns/{campaignName}", method = RequestMethod.GET)
     @PreAuthorize(HAS_MANAGE_CAMPAIGNS_ROLE)
     @ResponseBody
@@ -41,6 +50,11 @@ public class CampaignRestController extends MessageCampaignController {
         return new CampaignDto(campaignRecord);
     }
 
+    /**
+     * Creates a new message campaign.
+     *
+     * @param campaign the campaign to create
+     */
     @RequestMapping(value = "/campaigns", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize(HAS_MANAGE_CAMPAIGNS_ROLE)
@@ -49,6 +63,11 @@ public class CampaignRestController extends MessageCampaignController {
         messageCampaignService.saveCampaign(campaignRecord);
     }
 
+    /**
+     * Retrieves all message campaigns.
+     *
+     * @return all message campaigns.
+     */
     @RequestMapping(value = "/campaigns", method = RequestMethod.GET)
     @PreAuthorize(HAS_MANAGE_CAMPAIGNS_ROLE)
     @ResponseBody
@@ -63,6 +82,11 @@ public class CampaignRestController extends MessageCampaignController {
         return campaignDtos;
     }
 
+    /**
+     * Deletes a message campaign of the given name.
+     *
+     * @param campaignName a name of the campaign to remove
+     */
     @RequestMapping(value = "/campaigns/{campaignName}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize(HAS_MANAGE_CAMPAIGNS_ROLE)

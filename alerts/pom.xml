@@ -37,7 +37,6 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <extensions>true</extensions>
                 <configuration>
                     <instructions>
                         <Blueprint-Enabled>true</Blueprint-Enabled>
@@ -53,6 +52,7 @@
                             org.aopalliance.aop,
                             org.springframework.aop,
                             org.springframework.aop.framework,
+                            org.springframework.transaction,
                             org.motechproject.config.service,
                             org.motechproject.event.listener,
                             org.motechproject.event.listener.annotations,

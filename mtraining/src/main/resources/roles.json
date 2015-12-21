@@ -1,0 +1,10 @@
+[
+    {
+        "roleName": "mTraining Admin",
+        "permissionNames": ["manageMTraining", "viewMTrainingLogs"]
+    },
+    {
+        "roleName": "mTraining Log Viewer",
+        "permissionNames": ["viewMTrainingLogs"]
+    }
+]

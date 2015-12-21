@@ -21,9 +21,13 @@ public class EnrollmentsQueryServiceTest {
     @Mock
     private AllEnrollments allEnrollments;
 
+    private EnrollmentsQueryService enrollmentsQueryService;
+
     @Before
     public void setup() {
         initMocks(this);
+        enrollmentsQueryService = new EnrollmentsQueryService();
+        enrollmentsQueryService.setAllEnrollments(allEnrollments);
     }
 
     @Test
@@ -45,7 +49,7 @@ public class EnrollmentsQueryServiceTest {
         when(enrollmentQuery.getPrimaryCriterion()).thenReturn(primaryCriterion);
         when(enrollmentQuery.getSecondaryCriteria()).thenReturn(asList(secondaryCriterion1, secondaryCriterion2));
 
-        assertEquals(expectedFilteredEnrollments, new EnrollmentsQueryService(allEnrollments).search(enrollmentQuery));
+        assertEquals(expectedFilteredEnrollments, enrollmentsQueryService.search(enrollmentQuery));
 
     }
 }

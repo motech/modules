@@ -39,6 +39,24 @@
             <artifactId>motech-platform-dataservices</artifactId>
             <version>${motech.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-osgi-web-util</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-server-config</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test-mvc</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -46,20 +64,29 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>2.3.5</version>
-                <extensions>true</extensions>
                 <configuration>
                     <instructions>
                         <Blueprint-Enabled>true</Blueprint-Enabled>
                         <Resource-Path>mtraining/resources</Resource-Path>
+                        <Context-Path>mtraining</Context-Path>
                         <Export-Package>
                             org.motechproject.mtraining.service;version=${project.version},
                             org.motechproject.mtraining.repository;version=${project.version},
-                            org.motechproject.mtraining.domain;version=${project.version}
+                            org.motechproject.mtraining.domain;version=${project.version},
+                            org.motechproject.mtraining.dto;version=${project.version}
                         </Export-Package>
                         <Import-Package>
+                            org.motechproject.config.service,
+                            org.motechproject.osgi.web,
                             org.slf4j,
                             org.slf4j.impl,
+                            net.sf.cglib.core,
+                            net.sf.cglib.proxy,
+                            net.sf.cglib.reflect,
+                            org.aopalliance.aop,
+                            org.springframework.aop,
+                            org.springframework.aop.framework,
+                            org.springframework.transaction,
                             *
                         </Import-Package>
                         <Bundle-DocURL>
@@ -89,6 +116,30 @@
                                     </includes>
                                 </resource>
                             </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jslint-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>jslint</goal>
+                        </goals>
+                        <configuration>
+                            <sourceJsFolder>${basedir}/src/main/resources/webapp/js</sourceJsFolder>
+                            <disallowIncrAndDecr>true</disallowIncrAndDecr>
+                            <requireUseStrict>true</requireUseStrict>
+                            <predefinedVars>
+                                $, angular, motechAlert, motechConfirm, handleWithStackTrace, jQuery, parseUri, innerLayout,
+                                blockUI, unblockUI, getAvailableTabs
+                            </predefinedVars>
+                            <failOnIssues>${jslint.enable}</failOnIssues>
+                            <excludes>
+                                <exclude>**/jstree.min.js</exclude>
+                            </excludes>
                         </configuration>
                     </execution>
                 </executions>

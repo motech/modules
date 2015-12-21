@@ -4,6 +4,7 @@ package org.motechproject.scheduletracking.events.constants;
  * Event subjects published by the schedule tracking module
  */
 public final class EventSubjects {
+
     private static final String BASE_SUBJECT = "org.motechproject.scheduletracking.";
 
     public static final String MILESTONE_ALERT = BASE_SUBJECT + "milestone.alert";

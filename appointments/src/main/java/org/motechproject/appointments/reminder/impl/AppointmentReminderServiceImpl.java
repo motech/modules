@@ -7,6 +7,7 @@ import org.motechproject.scheduler.contract.RepeatingPeriodSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation for the appointment reminder connector service
@@ -24,6 +25,7 @@ public class AppointmentReminderServiceImpl implements AppointmentReminderServic
      * @param appointment Appointment object with the necessary fields populated
      */
     @Override
+    @Transactional
     public void addReminders(Appointment appointment) {
         if (appointment.getReminderInterval() != null) {
             RepeatingPeriodSchedulableJob reminder = buildJob(appointment);
@@ -36,6 +38,7 @@ public class AppointmentReminderServiceImpl implements AppointmentReminderServic
      * @param appointment Appointment object with the necessary fields populated
      */
     @Override
+    @Transactional
     public void removeReminders(Appointment appointment) {
         this.schedulerService.safeUnscheduleAllJobs(String.format(SUBJECT, appointment.getExternalId(), appointment.getApptId()));
     }

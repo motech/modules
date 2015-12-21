@@ -1,12 +1,12 @@
 package org.motechproject.hub.validation;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.hub.model.Modes;
 import org.motechproject.hub.util.HubConstants;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class validates the input parameters for subscription and publish APIs
@@ -33,6 +33,11 @@ public class HubValidator {
      *            - a <code>String</code> representing the number of seconds for
      *            which the subscriber would like to have the subscription
      *            active. This is an optional parameter
+     * @param secret
+     *            - a <code>String</code> representing the secret value which
+     *            will be used by hub to compute an HMAC digest for authorized
+     *            content distribution. Secret parameter must be less than 200
+     *            bytes in length.
      * @return an <code>ArrayList</code> of error <code>String</code>s
      *         explaining the reasons for invalid inputs, if any
      */
@@ -76,6 +81,8 @@ public class HubValidator {
     }
 
     /**
+     * Validates the input parameters for a distribution request
+     *
      * @param mode
      *            - represents the literal <code>String</code> "publish"
      * @param url

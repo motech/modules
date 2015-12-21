@@ -68,7 +68,8 @@ public class EnrollmentAlertServiceTest {
         DateTime now = new DateTime(2012, 3, 16, 8, 15, 0, 0);
         DateTimeUtils.setCurrentMillisFixed(now.getMillis());
 
-        enrollmentAlertService = new EnrollmentAlertService(schedulerService, null);
+        enrollmentAlertService = new EnrollmentAlertService();
+        enrollmentAlertService.setSchedulerService(schedulerService);
     }
 
     @After

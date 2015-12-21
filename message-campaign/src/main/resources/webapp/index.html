@@ -3,19 +3,19 @@
         <ul class="breadcrumb" role="navigation">
             <li><a role="menu" href=".">{{msg('server.home')}}</a></li>
             <li><a role="menu" href="#/messageCampaign/campaigns">{{msg('messageCampaign')}}</a></li>
-            <li ng-show="active('#/messageCampaign/campaigns')" ng-class="active('#/messageCampaign/campaigns')">{{msg('msgCampaign.campaigns')}} list</li>
-            <li ng-show="active('#/messageCampaign/admin')" ng-class="active('#/messageCampaign/admin')">{{msg('msgCampaign.admin')}}</li>
-            <li ng-show="active('#/messageCampaign/settings')" ng-class="active('#/messageCampaign/settings')">{{msg('msgCampaign.settings')}}</li>
+            <li ng-show="selectedTabState.selectedTab === 'campaigns'" ng-class="{'active': selectedTabState.selectedTab === 'campaigns'}">{{msg('msgCampaign.campaigns')}} list</li>
+            <li ng-show="selectedTabState.selectedTab === 'admin'" ng-class="{'active': selectedTabState.selectedTab === 'admin'}">{{msg('msgCampaign.admin')}}</li>
+            <li ng-show="selectedTabState.selectedTab === 'settings'" ng-class="{'active': selectedTabState.selectedTab === 'settings'}">{{msg('msgCampaign.settings')}}</li>
         </ul>
     </div>
     <div class="header-footer">
         <ul id="content-tabs" class="nav nav-tabs">
-            <li ng-class="active('#/messageCampaign/campaigns')"><a href="#/messageCampaign/campaigns">{{msg('msgCampaign.campaigns')}}</a></li>
-            <li ng-class="active('#/messageCampaign/admin')"><a href="#/messageCampaign/admin">{{msg('msgCampaign.admin')}}</a></li>
-            <li ng-class="active('#/messageCampaign/settings')"><a href="#/messageCampaign/settings">{{msg('msgCampaign.settings')}}</a></li>
+            <li ng-class="{'active': selectedTabState.selectedTab === 'campaigns'}" ng-click="selectedTabState.selectedTab = 'campaigns'"><a href="#/messageCampaign/campaigns">{{msg('msgCampaign.campaigns')}}</a></li>
+            <li ng-class="{'active': selectedTabState.selectedTab === 'admin'}" ng-click="selectedTabState.selectedTab = 'admin'"><a href="#/messageCampaign/admin">{{msg('msgCampaign.admin')}}</a></li>
+            <li ng-class="{'active': selectedTabState.selectedTab === 'settings'}" ng-click="selectedTabState.selectedTab = 'settings'"><a href="#/messageCampaign/settings">{{msg('msgCampaign.settings')}}</a></li>
         </ul>
     </div>
-    <div class="ui-layout-content">
+    <div ng-controller="MdsEmbeddableCtrl" class="ui-layout-content">
         <div class="tab-content" id="tab-content">
             <div id="main-content" class="active">
                 <div ng-view></div>
@@ -25,8 +25,18 @@
 </div>
 
 <div id="inner-east" class="message-campaign inner-east ui-layout-pane ui-layout-pane-east">
-    <div class="filter-header"></div>
-    <div class="ui-layout-content">
-        <div class="inside"></div>
+    <div class="header-toolbar header-footer"></div>
+    <!------------------------  Filters  ------------------------>
+    <div class="filter-header">{{msg('mds.filters')}}</div>
+    <div class="ui-layout-content" ng-controller="MdsFilterCtrl">
+        <div class="inside">
+            <fieldset class="inside" ng-repeat="filter in filters">
+                <legend>{{filter.displayName}}</legend>
+                <div class="form-group btn-group-vertical">
+                    <button clickfilter singleSelect='{{(filter.type === "java.util.Date" || filter.type === "org.joda.time.DateTime" || filter.type === "org.joda.time.LocalDate")}}' ng-repeat="filterType in filter.types"  class="btn btn-info btn-sm"
+                            type="button" ng-click="selectFilter(filter.field, filterType, filter.type)"><i class="fa fa-fw fa-square-o"></i> {{msgForFilter(filterType)}}</button>
+                </div>
+            </fieldset>
+        </div>
     </div>
 </div>

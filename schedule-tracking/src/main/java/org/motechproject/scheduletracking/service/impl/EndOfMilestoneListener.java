@@ -9,21 +9,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.motechproject.scheduletracking.domain.EnrollmentStatus.DEFAULTED;
 import static org.motechproject.scheduletracking.events.constants.EventSubjects.MILESTONE_DEFAULTED;
 
+/**
+ * Component which listens for the milestone defaulted event.
+ */
 @Component
 public class EndOfMilestoneListener {
-    private EnrollmentDataService enrollmentDataService;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(EndOfMilestoneListener.class);
 
-    @Autowired
-    public EndOfMilestoneListener(EnrollmentDataService enrollmentDataService) {
-        this.enrollmentDataService = enrollmentDataService;
-    }
+    private EnrollmentDataService enrollmentDataService;
 
+    /**
+     * Handles the milestone defaulted event and updates enrollments status in database.
+     *
+     * @param motechEvent the milestone defaulted event
+     */
     @MotechListener(subjects = MILESTONE_DEFAULTED)
+    @Transactional
     public void handle(MotechEvent motechEvent) {
         LOGGER.info("Handling {} Event : {}.", MILESTONE_DEFAULTED, motechEvent);
         MilestoneDefaultedEvent event = new MilestoneDefaultedEvent(motechEvent);
@@ -32,5 +39,10 @@ public class EndOfMilestoneListener {
         LOGGER.info("Defaulting enrollment with id {}.", enrollment.getId());
         enrollmentDataService.update(enrollment);
         LOGGER.info("Enrollment with id {} is defaulted.", enrollment.getId());
+    }
+
+    @Autowired
+    public void setEnrollmentDataService(EnrollmentDataService enrollmentDataService) {
+        this.enrollmentDataService = enrollmentDataService;
     }
 }

@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.motechproject.commcare.CommcareFormTestLoader;
+import org.motechproject.commcare.testutil.CommcareFormTestLoader;
 import org.motechproject.commcare.client.CommCareAPIHttpClient;
 import org.motechproject.commcare.config.AccountConfig;
 import org.motechproject.commcare.config.Config;

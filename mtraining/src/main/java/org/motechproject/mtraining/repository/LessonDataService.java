@@ -16,7 +16,7 @@ import java.util.List;
 public interface LessonDataService extends MotechDataService<Lesson> {
 
     @Lookup
-    List<Lesson> findLessonByName(@LookupField(name = "name") String lessonName);
+    List<Lesson> findLessonsByName(@LookupField(name = "name") String lessonName);
 
     @Lookup
     Lesson findLessonById(@LookupField(name = "id") Long id);

@@ -5,6 +5,14 @@
 
     <import resource="classpath*:META-INF/motech/*.xml" />
 
+    <bean id="mTrainingSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
+        <property name="rawConfigFiles">
+            <list>
+                <value>classpath:custom-ui.js</value>
+            </list>
+        </property>
+    </bean>
+
     <osgi:service id="mTrainingServiceOsgi" ref="mTrainingService"
                   interface="org.motechproject.mtraining.service.MTrainingService" />
 
@@ -13,6 +21,9 @@
 
     <osgi:service id="activityServiceOsgi" ref="activityService"
                   interface="org.motechproject.mtraining.service.ActivityService" />
+
+    <osgi:service id="courseStructureServiceOsgi" ref="courseStructureService"
+                    interface="org.motechproject.mtraining.service.CourseStructureService" />
 
     <osgi:reference id="courseDataService"
                     interface="org.motechproject.mtraining.repository.CourseDataService" />
@@ -31,5 +42,7 @@
 
     <osgi:reference id="activityDataService"
                     interface="org.motechproject.mtraining.repository.ActivityDataService" />
+
+    <osgi:reference id="transactionManager" interface="org.springframework.transaction.PlatformTransactionManager" context-class-loader="unmanaged"/>
 
 </beans>

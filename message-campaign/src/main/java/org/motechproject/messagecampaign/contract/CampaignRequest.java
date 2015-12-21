@@ -4,8 +4,6 @@ import org.joda.time.LocalDate;
 import org.motechproject.commons.date.model.Time;
 
 /**
- * \ingroup MessageCampaign
- * <p/>
  * This is the document to enroll an entity into a campaign
  */
 public class CampaignRequest {
@@ -20,10 +18,10 @@ public class CampaignRequest {
     /**
      * Creates a request for enrollment into a campaign. Holds all fields required for the enrollment.
      *
-     * @param externalId    - a client defined id to identify the enrollment
-     * @param campaignName  - the campaign into which the entity should be enrolled
-     * @param referenceDate - the date the campaign has started for this enrollment. it can be in the past resulting in a delayed enrollment.
-     * @param startTime     - time of the day at which the alert must be raised. This overrides the campaign's deliverTime.
+     * @param externalId a client defined id to identify the enrollment
+     * @param campaignName the campaign into which the entity should be enrolled
+     * @param referenceDate the date the campaign has started for this enrollment. It can be a past date resulting in a delayed enrollment.
+     * @param startTime time of the day at which the alert must be raised. This overrides the campaign's deliverTime.
      */
     public CampaignRequest(String externalId, String campaignName, LocalDate referenceDate, Time startTime) {
         this.externalId = externalId;

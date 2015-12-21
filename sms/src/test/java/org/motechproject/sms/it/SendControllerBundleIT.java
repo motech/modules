@@ -1,6 +1,9 @@
 package org.motechproject.sms.it;
 
+import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
@@ -11,9 +14,8 @@ import org.junit.runner.RunWith;
 import org.motechproject.sms.audit.SmsRecordsDataService;
 import org.motechproject.sms.service.OutgoingSms;
 import org.motechproject.testing.osgi.BasePaxIT;
-import org.motechproject.testing.utils.TestContext;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
-import org.motechproject.testing.osgi.http.SimpleHttpClient;
+import org.motechproject.testing.utils.TestContext;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
@@ -21,9 +23,10 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.Arrays;
 
-import static org.junit.Assert.assertTrue;
+import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Verify SendController present & functional.
@@ -53,7 +56,7 @@ public class SendControllerBundleIT extends BasePaxIT {
 
     @Test
     public void verifyFunctional() throws Exception {
-        OutgoingSms outgoingSms = new OutgoingSms("foo", Arrays.asList("12065551212"), "hello, world");
+        OutgoingSms outgoingSms = new OutgoingSms("foo", singletonList("12065551212"), "hello, world");
         ObjectMapper mapper = new ObjectMapper();
         String outgoingSmsJson = mapper.writeValueAsString(outgoingSms);
 
@@ -66,8 +69,12 @@ public class SendControllerBundleIT extends BasePaxIT {
         httpPost.setEntity(new StringEntity(outgoingSmsJson));
 
         // We're specifying a nonexistent config so the controller should respond with a 404
-        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_NOT_FOUND, MOTECH_ADMIN_USERNAME,
-                MOTECH_ADMIN_PASSWORD));
+        getHttpClient().getCredentialsProvider().setCredentials(AuthScope.ANY,
+                new UsernamePasswordCredentials(MOTECH_ADMIN_USERNAME, MOTECH_ADMIN_PASSWORD));
+        HttpResponse response = getHttpClient().execute(httpPost, HttpStatus.SC_NOT_FOUND);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
 
         //TODO: figure out how to create configs an then use them to "pretend send" using an SimpleHttpServer that
         //TODO: responds the way an SMS provider would.

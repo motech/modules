@@ -189,8 +189,6 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>2.3.5</version>
-                <extensions>true</extensions>
                 <configuration>
                     <instructions>
                         <Context-Path>messagecampaign</Context-Path>
@@ -216,6 +214,7 @@
                             org.springframework.aop.framework,
                             org.springframework.context.config,
                             org.springframework.security.config,
+                            org.springframework.transaction,
                             org.springframework.web.multipart.commons,
                             org.motechproject.event,
                             org.motechproject.event.listener.annotations,
