@@ -5,12 +5,12 @@
     <parent>
         <artifactId>modules</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.26.5-SNAPSHOT</version>
+        <version>0.26.5</version>
         <relativePath>../</relativePath>
     </parent>
 
     <artifactId>mtraining</artifactId>
-    <version>0.26.5-SNAPSHOT</version>
+    <version>0.26.5</version>
     <packaging>bundle</packaging>
     <name>mTraining Module</name>
 
