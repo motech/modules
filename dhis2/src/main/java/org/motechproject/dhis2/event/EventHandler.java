@@ -1,5 +1,6 @@
 package org.motechproject.dhis2.event;
 
+import org.motechproject.commons.api.TasksEventParser;
 import org.motechproject.dhis2.domain.DataElement;
 import org.motechproject.dhis2.exception.DataElementNotFoundException;
 import org.motechproject.dhis2.rest.domain.AttributeDto;
@@ -294,6 +295,7 @@ public class EventHandler {
         Map<String, Object> dhisAttributes = new HashMap<>(eventParams);
 
         dhisAttributes.remove(MotechSchedulerService.JOB_ID_KEY);
+        dhisAttributes.remove(TasksEventParser.CUSTOM_PARSER_EVENT_KEY);
 
         return dhisAttributes;
     }
