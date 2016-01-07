@@ -2,9 +2,9 @@
     <h4 class="frame-title">{{msg('mtraining.treeView')}}</h4>
 
     <div class="ui-jqgrid-hbox" style="padding-right: 0px; width: 100%;">
-        <table class="ui-jqgrid-htable table-lightblue-nohover" style="width: 100%; height: 500px" role="grid" aria-labelledby="gbox_treeTable" cellspacing="0" cellpadding="0" border="0">
+        <table class="ui-jqgrid-htable table-lightblue-nohover mtraining-table" style="width: 100%; height: 500px" role="grid" aria-labelledby="gbox_treeTable" cellspacing="0" cellpadding="0" border="0">
             <thead>
-                <tr class="ui-jqgrid-labels" role="rowheader">
+                <tr class="ui-jqgrid-labels mtraining-labels" role="rowheader">
                     <th id="treeTable_treeModel" role="columnheader" class="ui-state-default ui-th-column ui-th-ltr" style="width: 22%;" aria-selected="true">
                         {{msg('mtraining.structure')}}
                     </th>
@@ -73,7 +73,7 @@
             <option value="Inactive">{{msg('mtraining.inactive')}}</option>
             <option value="Pending">{{msg('mtraining.pending')}}</option>
         </select>
-        <button class="btn btn-warning ng-binding costam" ng-disabled="isButtonDisabled()" ng-click="changePathState()">
+        <button class="btn btn-warning ng-binding pathButton" ng-disabled="isButtonDisabled()" ng-click="changePathState()">
             <i class="fa fa-flag-o"></i>
             <span> {{msg('mtraining.pathState')}}</span>
         </button>
