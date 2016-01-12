@@ -4,6 +4,7 @@ import org.motechproject.dhis2.rest.domain.DataElementDto;
 import org.motechproject.dhis2.rest.domain.DataValueSetDto;
 import org.motechproject.dhis2.rest.domain.DhisDataValueStatusResponse;
 import org.motechproject.dhis2.rest.domain.DhisEventDto;
+import org.motechproject.dhis2.rest.domain.DhisServerInfo;
 import org.motechproject.dhis2.rest.domain.DhisStatusResponse;
 import org.motechproject.dhis2.rest.domain.EnrollmentDto;
 import org.motechproject.dhis2.rest.domain.OrganisationUnitDto;
@@ -126,6 +127,13 @@ public interface DhisWebService {
      * @return
      */
     DhisDataValueStatusResponse sendDataValueSet(DataValueSetDto dataValueSetDto);
+
+    /**
+     * Retrieves DHIS2 server specific information, such as its version via HTTP GET request.
+     *
+     * @return DHIS2 server specific information
+     */
+    DhisServerInfo getDhisServerInfo();
 }
 
 

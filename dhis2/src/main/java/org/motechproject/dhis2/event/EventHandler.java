@@ -211,7 +211,7 @@ public class EventHandler {
         String trackedEntity = (String) params.remove(EventParams.ENTITY_TYPE);
         String orgUnitId = (String) params.remove(EventParams.LOCATION);
 
-        List<AttributeDto> attributes = new ArrayList<AttributeDto>();
+        List<AttributeDto> attributes = new ArrayList<>();
         for (Entry<String, Object> entry : params.entrySet()) {
             if (entry.getValue() != null) {
                 AttributeDto attribute = new AttributeDto();

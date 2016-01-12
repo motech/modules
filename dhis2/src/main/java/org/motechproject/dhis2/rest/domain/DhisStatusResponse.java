@@ -13,6 +13,7 @@ public class DhisStatusResponse {
     private DhisStatus status;
     private ImportCountDto importCount;
     private String reference;
+    private DhisResponseDetails response;
 
     public DhisStatus getStatus() {
         return status;
@@ -23,7 +24,11 @@ public class DhisStatusResponse {
     }
 
     public ImportCountDto getImportCount() {
-        return importCount;
+        if (importCount == null && response == null) {
+            return null;
+        } else {
+            return importCount != null ? importCount : response.getImportCount();
+        }
     }
 
     public void setImportCount(ImportCountDto importCount) {
@@ -31,16 +36,28 @@ public class DhisStatusResponse {
     }
 
     public String getReference() {
-        return reference;
+        if (reference == null && response == null) {
+            return null;
+        } else {
+            return reference != null ? reference : response.getReference();
+        }
     }
 
     public void setReference(String reference) {
         this.reference = reference;
     }
 
+    public DhisResponseDetails getResponse() {
+        return response;
+    }
+
+    public void setResponse(DhisResponseDetails response) {
+        this.response = response;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(status, importCount, reference);
+        return Objects.hash(status, importCount, reference, response);
     }
 
     @Override
@@ -54,7 +71,8 @@ public class DhisStatusResponse {
         final DhisStatusResponse other = (DhisStatusResponse) obj;
         return Objects.equals(this.status, other.status)
                 && Objects.equals(this.importCount, other.importCount)
-                && Objects.equals(this.reference, other.reference);
+                && Objects.equals(this.reference, other.reference)
+                && Objects.equals(this.response, other.response);
     }
 
 
