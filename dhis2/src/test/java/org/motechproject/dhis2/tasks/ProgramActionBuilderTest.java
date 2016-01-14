@@ -7,6 +7,7 @@ import org.motechproject.dhis2.domain.TrackedEntity;
 import org.motechproject.dhis2.domain.TrackedEntityAttribute;
 import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.event.EventSubjects;
+import org.motechproject.dhis2.rest.domain.ServerVersion;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.ActionParameterRequest;
 
@@ -58,7 +59,7 @@ public class ProgramActionBuilderTest {
         programs.add(program1);
         programs.add(program2);
 
-        List<ActionEventRequest> actionEventRequests = builder.build(programs);
+        List<ActionEventRequest> actionEventRequests = builder.build(programs, new ServerVersion(ServerVersion.V2_18));
 
         assertNotNull(actionEventRequests);
 
@@ -128,7 +129,7 @@ public class ProgramActionBuilderTest {
         programs.add(program1);
         programs.add(program2);
 
-        List<ActionEventRequest> actionEventRequests = builder.build(programs);
+        List<ActionEventRequest> actionEventRequests = builder.build(programs, new ServerVersion(ServerVersion.V2_18));
 
         assertNotNull(actionEventRequests);
 
@@ -154,6 +155,11 @@ public class ProgramActionBuilderTest {
         assertEquals(parameterRequest.getDisplayName(),DisplayNames.PROGRAM_NAME);
         assertEquals(parameterRequest.getKey(),EventParams.PROGRAM);
         assertEquals(parameterRequest.getValue(),"program1UUID");
+
+        parameterRequest = itr.next();
+        assertEquals(parameterRequest.getDisplayName(), DisplayNames.ORG_UNIT);
+        assertEquals(parameterRequest.getKey(), EventParams.LOCATION);
+        assertNull(parameterRequest.getValue());
 
         parameterRequest = itr.next();
         assertEquals(parameterRequest.getDisplayName(),attribute1.getName());

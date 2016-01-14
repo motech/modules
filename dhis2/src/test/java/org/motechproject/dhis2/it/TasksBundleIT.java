@@ -15,6 +15,8 @@ import org.motechproject.dhis2.repository.ProgramDataService;
 import org.motechproject.dhis2.repository.StageDataService;
 import org.motechproject.dhis2.repository.TrackedEntityAttributeDataService;
 import org.motechproject.dhis2.repository.TrackedEntityDataService;
+import org.motechproject.dhis2.rest.service.DhisWebService;
+import org.motechproject.dhis2.rest.service.impl.DhisWebServiceImpl;
 import org.motechproject.dhis2.service.TasksService;
 import org.motechproject.tasks.domain.ActionEvent;
 import org.motechproject.tasks.domain.ActionParameter;
@@ -59,7 +61,6 @@ public class TasksBundleIT extends BaseDhisIT {
     private static final String STAGE_ID_NO_REG = "StageIdNoReg";
     private static final String MODULE_NAME = "org.motechproject.dhis2";
 
-
     @Inject
     private DataElementDataService dataElementDataService;
     @Inject
@@ -100,7 +101,6 @@ public class TasksBundleIT extends BaseDhisIT {
             logger.debug(e.toString() + "\n");
         }
         Iterator<ActionEvent> itr = actionEvents.iterator();
-
 
 
         /*Program enrollments*/
@@ -153,15 +153,15 @@ public class TasksBundleIT extends BaseDhisIT {
 
         logger.debug("Action Parameter:" + parameter.getKey());
         parameter = actionParameterIterator.next();
+        assertEquals(parameter.getKey(),EventParams.LOCATION);
+
+        logger.debug("Action Parameter:" + parameter.getKey());
+        parameter = actionParameterIterator.next();
         assertEquals(parameter.getKey(),ATTRIBUTE_ID);
 
         logger.debug("Action Parameter:" + parameter.getKey());
         parameter = actionParameterIterator.next();
         assertEquals(parameter.getKey(),EventParams.ENTITY_TYPE);
-
-        logger.debug("Action Parameter:" + parameter.getKey());
-        parameter = actionParameterIterator.next();
-        assertEquals(parameter.getKey(),EventParams.LOCATION);
 
 
 

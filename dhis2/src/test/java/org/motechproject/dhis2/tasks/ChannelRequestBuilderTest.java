@@ -11,6 +11,7 @@ import org.motechproject.dhis2.domain.Stage;
 import org.motechproject.dhis2.domain.TrackedEntity;
 import org.motechproject.dhis2.domain.TrackedEntityAttribute;
 import org.motechproject.dhis2.event.EventSubjects;
+import org.motechproject.dhis2.rest.domain.ServerVersion;
 import org.motechproject.dhis2.service.ProgramService;
 import org.motechproject.dhis2.service.StageService;
 import org.motechproject.dhis2.service.TrackedEntityAttributeService;
@@ -85,7 +86,7 @@ public class ChannelRequestBuilderTest {
         when(version.toString()).thenReturn("bundleVersion");
 
         ChannelRequestBuilder builder = new ChannelRequestBuilder(bundleContext, programService, stageService,
-                trackedEntityAttributeService, trackedEntityService);
+                trackedEntityAttributeService, trackedEntityService, new ServerVersion(ServerVersion.V2_18));
         request = builder.build();
 
     }

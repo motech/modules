@@ -6,6 +6,7 @@ import org.motechproject.dhis2.domain.TrackedEntity;
 import org.motechproject.dhis2.domain.TrackedEntityAttribute;
 import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.event.EventSubjects;
+import org.motechproject.dhis2.rest.domain.ServerVersion;
 import org.motechproject.dhis2.service.ProgramService;
 import org.motechproject.dhis2.service.StageService;
 import org.motechproject.dhis2.service.TrackedEntityAttributeService;
@@ -15,7 +16,6 @@ import org.motechproject.tasks.contract.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.ActionParameterRequestBuilder;
 import org.motechproject.tasks.contract.ChannelRequest;
-import org.motechproject.tasks.contract.TriggerEventRequest;
 import org.osgi.framework.BundleContext;
 
 import java.util.ArrayList;
@@ -27,7 +27,6 @@ import java.util.TreeSet;
  * Builds a channel request from the records in MDS pertaining to the DHIS2 instance schema.
  *
  */
-
 public class ChannelRequestBuilder  {
 
     private BundleContext bundleContext;
@@ -35,17 +34,20 @@ public class ChannelRequestBuilder  {
     private StageService stageService;
     private TrackedEntityAttributeService trackedEntityAttributeService;
     private TrackedEntityService trackedEntityService;
+    private ServerVersion serverVersion;
 
     public ChannelRequestBuilder(BundleContext bundleContext,
                                  ProgramService programService,
                                  StageService stageService,
                                  TrackedEntityAttributeService trackedEntityAttributeService,
-                                 TrackedEntityService trackedEntityService) {
+                                 TrackedEntityService trackedEntityService,
+                                 ServerVersion serverVersion) {
         this.bundleContext = bundleContext;
         this.programService = programService;
         this.stageService = stageService;
         this.trackedEntityAttributeService = trackedEntityAttributeService;
         this.trackedEntityService = trackedEntityService;
+        this.serverVersion = serverVersion;
     }
 
     /**
@@ -62,7 +64,7 @@ public class ChannelRequestBuilder  {
         List<ActionEventRequest> actions = new ArrayList<>();
 
         List<Program> programs = programService.findByRegistration(true);
-        actions.addAll(programActionBuilder.build(programs));
+        actions.addAll(programActionBuilder.build(programs, serverVersion));
 
         List<Stage> stages = stageService.findAll();
         actions.addAll(stageActionBuilder.build(stages));
@@ -75,7 +77,7 @@ public class ChannelRequestBuilder  {
         actions.add(addSendDataValue());
 
         return new ChannelRequest(DisplayNames.DHIS2_DISPLAY_NAME, bundleContext.getBundle().getSymbolicName(),
-                bundleContext.getBundle().getVersion().toString(), null, new ArrayList<TriggerEventRequest>(), actions);
+                bundleContext.getBundle().getVersion().toString(), null, new ArrayList<>(), actions);
 
     }
 

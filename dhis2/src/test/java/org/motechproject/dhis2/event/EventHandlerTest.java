@@ -186,9 +186,10 @@ public class EventHandlerTest {
         attributeDtos.add(dto);
 
         EnrollmentDto enrollment = new EnrollmentDto();
-        enrollment.setAttributes(new ArrayList<AttributeDto>());
+        enrollment.setAttributes(new ArrayList<>());
         enrollment.setDateOfEnrollment(DATE);
         enrollment.setProgram(PROGRAM_ID);
+        enrollment.setOrgUnit(ORGUNIT_ID);
         enrollment.setTrackedEntityInstance(INSTANCE_DHIS_ID);
 
         TrackedEntityInstanceDto instance = new TrackedEntityInstanceDto();
