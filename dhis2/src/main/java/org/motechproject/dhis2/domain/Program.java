@@ -12,7 +12,6 @@ import java.util.List;
 /**
  * Represents a DHIS2 Program
  */
-
 @Entity
 @Access(value = SecurityMode.PERMISSIONS, members = {"configureDhis"})
 public class Program {
@@ -38,6 +37,9 @@ public class Program {
 
     @Field
     private boolean registration;
+
+    @Field
+    private String programType;
 
 
     public boolean isSingleEvent() {
@@ -96,4 +98,11 @@ public class Program {
         this.name = name;
     }
 
+    public String getProgramType() {
+        return programType;
+    }
+
+    public void setProgramType(String programType) {
+        this.programType = programType;
+    }
 }

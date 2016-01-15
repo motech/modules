@@ -1,5 +1,6 @@
 package org.motechproject.dhis2.service.impl;
 
+import org.motechproject.dhis2.rest.service.DhisWebService;
 import org.motechproject.dhis2.service.ProgramService;
 import org.motechproject.dhis2.service.StageService;
 import org.motechproject.dhis2.service.TasksService;
@@ -27,6 +28,7 @@ public class TasksServiceImpl implements TasksService {
     private TrackedEntityService trackedEntityService;
     private TrackedEntityAttributeService trackedEntityAttributeService;
     private ChannelService channelService;
+    private DhisWebService dhisWebService;
 
     @Autowired
     public TasksServiceImpl(BundleContext bundleContext,
@@ -34,19 +36,22 @@ public class TasksServiceImpl implements TasksService {
                             StageService stageService,
                             TrackedEntityService trackedEntityService,
                             TrackedEntityAttributeService trackedEntityAttributeService,
-                            ChannelService channelService) {
+                            ChannelService channelService,
+                            DhisWebService dhisWebService) {
         this.bundleContext = bundleContext;
         this.programService = programService;
         this.stageService = stageService;
         this.trackedEntityService = trackedEntityService;
         this.trackedEntityAttributeService = trackedEntityAttributeService;
         this.channelService = channelService;
+        this.dhisWebService = dhisWebService;
     }
 
     @Override
     public void updateChannel() {
         LOGGER.debug("Updating DHIS2 task channel...");
-        ChannelRequestBuilder channelRequestBuilder = new ChannelRequestBuilder(bundleContext, programService, stageService, trackedEntityAttributeService, trackedEntityService);
+        ChannelRequestBuilder channelRequestBuilder = new ChannelRequestBuilder(
+                bundleContext, programService, stageService, trackedEntityAttributeService, trackedEntityService, dhisWebService.getServerVersion());
         channelService.registerChannel(channelRequestBuilder.build());
     }
 }

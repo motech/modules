@@ -15,6 +15,7 @@ public class EnrollmentDto {
     private String program;
     private String dateOfEnrollment;
     private String dateOfIncident;
+    private String orgUnit;
     private List<AttributeDto> attributes;
     private boolean followup;
 
@@ -66,9 +67,35 @@ public class EnrollmentDto {
         this.followup = followup;
     }
 
+    public String getOrgUnit() {
+        return orgUnit;
+    }
+
+    public void setOrgUnit(String orgUnit) {
+        this.orgUnit = orgUnit;
+    }
+
+    public org.motechproject.dhis2.rest.domain.v2_18.EnrollmentDto convertTo218() {
+        return new org.motechproject.dhis2.rest.domain.v2_18.EnrollmentDto(
+                trackedEntityInstance, attributes, program, dateOfEnrollment, dateOfIncident, followup
+        );
+    }
+
+    public org.motechproject.dhis2.rest.domain.v2_19.EnrollmentDto convertTo219() {
+        return new org.motechproject.dhis2.rest.domain.v2_19.EnrollmentDto(
+                trackedEntityInstance, program, dateOfEnrollment, dateOfIncident, orgUnit, attributes, followup
+        );
+    }
+
+    public org.motechproject.dhis2.rest.domain.v2_21.EnrollmentDto convertTo221() {
+        return new org.motechproject.dhis2.rest.domain.v2_21.EnrollmentDto(
+                trackedEntityInstance, program, dateOfEnrollment, dateOfIncident, orgUnit, attributes, followup
+        );
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(trackedEntityInstance, program, dateOfEnrollment, dateOfIncident, attributes, followup);
+        return Objects.hash(trackedEntityInstance, program, dateOfEnrollment, dateOfIncident, orgUnit, attributes, followup);
     }
 
     @Override
@@ -84,6 +111,7 @@ public class EnrollmentDto {
                 && Objects.equals(this.program, other.program)
                 && Objects.equals(this.dateOfEnrollment, other.dateOfEnrollment)
                 && Objects.equals(this.dateOfIncident, other.dateOfIncident)
+                && Objects.equals(this.orgUnit, other.orgUnit)
                 && Objects.equals(this.attributes, other.attributes)
                 && Objects.equals(this.followup, other.followup);
     }

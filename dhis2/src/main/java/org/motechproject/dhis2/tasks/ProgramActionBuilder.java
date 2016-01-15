@@ -4,6 +4,7 @@ import org.motechproject.dhis2.domain.Program;
 import org.motechproject.dhis2.domain.TrackedEntityAttribute;
 import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.event.EventSubjects;
+import org.motechproject.dhis2.rest.domain.ServerVersion;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
@@ -31,7 +32,7 @@ public class ProgramActionBuilder {
      * @param programs
      * @return A list of action event rests pertaining to program enrollment.
      */
-    public List<ActionEventRequest> build(List<Program> programs) {
+    public List<ActionEventRequest> build(List<Program> programs, ServerVersion version) {
 
         List<ActionEventRequest> actionEventRequests = new ArrayList<>();
 
@@ -74,6 +75,19 @@ public class ProgramActionBuilder {
             actionParameters.add(actionParameterBuilder.createActionParameterRequest());
             actionParamsForCreateAndEnroll.add(actionParameterBuilder.createActionParameterRequest());
 
+            actionParameterBuilder = new ActionParameterRequestBuilder()
+                    .setDisplayName(DisplayNames.ORG_UNIT)
+                    .setType(UNICODE)
+                    .setKey(EventParams.LOCATION)
+                    .setOrder(counter++)
+                    .setRequired(true);
+
+            actionParamsForCreateAndEnroll.add(actionParameterBuilder.createActionParameterRequest());
+            if (version.isSameOrAfter(ServerVersion.V2_19)) {
+                // orgUnit became necessary since DHIS 2.19, so we add it to the enroll action if the criteria is met
+                actionParameters.add(actionParameterBuilder.createActionParameterRequest());
+            }
+
             /*Adds all tracked entity attributes for program*/
             actionParameters.addAll(buildRequestForProgram(program));
             actionParamsForCreateAndEnroll.addAll(buildRequestForProgram(program));
@@ -97,16 +111,6 @@ public class ProgramActionBuilder {
                     .setOrder(counter++);
 
             actionParamsForCreateAndEnroll.add(actionParameterBuilder.createActionParameterRequest());
-
-            actionParameterBuilder = new ActionParameterRequestBuilder()
-                    .setDisplayName(DisplayNames.ORG_UNIT)
-                    .setType(UNICODE)
-                    .setKey(EventParams.LOCATION)
-                    .setOrder(counter++)
-                    .setRequired(true);
-
-            actionParamsForCreateAndEnroll.add(actionParameterBuilder.createActionParameterRequest());
-
 
             builder.setActionParameters(actionParamsForCreateAndEnroll)
                     .setDisplayName(DisplayNames.CREATE_TRACKED_ENTITY_INSTANCE + " [" +

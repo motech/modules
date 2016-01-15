@@ -4,11 +4,13 @@ import org.motechproject.dhis2.rest.domain.DataElementDto;
 import org.motechproject.dhis2.rest.domain.DataValueSetDto;
 import org.motechproject.dhis2.rest.domain.DhisDataValueStatusResponse;
 import org.motechproject.dhis2.rest.domain.DhisEventDto;
+import org.motechproject.dhis2.rest.domain.DhisServerInfo;
 import org.motechproject.dhis2.rest.domain.DhisStatusResponse;
 import org.motechproject.dhis2.rest.domain.EnrollmentDto;
 import org.motechproject.dhis2.rest.domain.OrganisationUnitDto;
 import org.motechproject.dhis2.rest.domain.ProgramDto;
 import org.motechproject.dhis2.rest.domain.ProgramStageDto;
+import org.motechproject.dhis2.rest.domain.ServerVersion;
 import org.motechproject.dhis2.rest.domain.TrackedEntityAttributeDto;
 import org.motechproject.dhis2.rest.domain.TrackedEntityDto;
 import org.motechproject.dhis2.rest.domain.TrackedEntityInstanceDto;
@@ -126,6 +128,21 @@ public interface DhisWebService {
      * @return
      */
     DhisDataValueStatusResponse sendDataValueSet(DataValueSetDto dataValueSetDto);
+
+    /**
+     * Retrieves DHIS2 server specific information, such as its version via HTTP GET request.
+     *
+     * @return DHIS2 server specific information
+     */
+    DhisServerInfo getDhisServerInfo();
+
+    /**
+     * Returns DHIS server version, as returned by the DHIS instance. The version is cached and refreshed when the
+     * DHIS settings are changed.
+     *
+     * @return DHIS server version
+     */
+    ServerVersion getServerVersion();
 }
 
 

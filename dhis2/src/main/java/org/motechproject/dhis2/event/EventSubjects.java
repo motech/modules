@@ -12,5 +12,7 @@ public final class EventSubjects {
     public static final String SEND_DATA_VALUE = "send_data_value";
     public static final String SEND_DATA_VALUE_SET = "send_data_value_set";
 
+    public static final String DHIS_SETTINGS_UPDATED = "dhis_settings_updated";
+
 
 }

@@ -2,6 +2,7 @@ package org.motechproject.dhis2.rest.service.impl;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -17,17 +18,20 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.osgi.services.HttpClientBuilderFactory;
 import org.motechproject.admin.service.StatusMessageService;
+import org.motechproject.dhis2.event.EventSubjects;
 import org.motechproject.dhis2.rest.domain.BaseDto;
 import org.motechproject.dhis2.rest.domain.DataElementDto;
 import org.motechproject.dhis2.rest.domain.DataValueSetDto;
 import org.motechproject.dhis2.rest.domain.DhisDataValueStatusResponse;
 import org.motechproject.dhis2.rest.domain.DhisEventDto;
+import org.motechproject.dhis2.rest.domain.DhisServerInfo;
 import org.motechproject.dhis2.rest.domain.DhisStatusResponse;
 import org.motechproject.dhis2.rest.domain.EnrollmentDto;
 import org.motechproject.dhis2.rest.domain.OrganisationUnitDto;
 import org.motechproject.dhis2.rest.domain.PagedResourceDto;
 import org.motechproject.dhis2.rest.domain.ProgramDto;
 import org.motechproject.dhis2.rest.domain.ProgramStageDto;
+import org.motechproject.dhis2.rest.domain.ServerVersion;
 import org.motechproject.dhis2.rest.domain.TrackedEntityAttributeDto;
 import org.motechproject.dhis2.rest.domain.TrackedEntityDto;
 import org.motechproject.dhis2.rest.domain.TrackedEntityInstanceDto;
@@ -35,6 +39,8 @@ import org.motechproject.dhis2.rest.service.DhisWebException;
 import org.motechproject.dhis2.rest.service.DhisWebService;
 import org.motechproject.dhis2.service.Settings;
 import org.motechproject.dhis2.service.SettingsService;
+import org.motechproject.event.MotechEvent;
+import org.motechproject.event.listener.annotations.MotechListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +48,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,6 +68,7 @@ public class DhisWebServiceImpl implements DhisWebService {
     private static final String EVENTS_PATH = "/events";
     private static final String TRACKED_ENTITY_INSTANCES_PATH = "/trackedEntityInstances";
     private static final String DATA_VALUE_SETS_PATH = "/dataValueSets";
+    private static final String SYSTEM_INFO_PATH = "/system/info.json";
 
     private static final String DATA_ELEMENTS = "dataElements";
     private static final String ORG_UNITS = "organisationUnits";
@@ -72,6 +81,8 @@ public class DhisWebServiceImpl implements DhisWebService {
     private StatusMessageService statusMessageService;
     private HttpClient client;
 
+    private ServerVersion serverVersion = new ServerVersion(ServerVersion.UNKNOWN);
+
     public static final List<Integer> ACCEPTABLE_DHIS_RESPONSE_STATUSES = Arrays.asList(HttpStatus.SC_OK,
             HttpStatus.SC_ACCEPTED, HttpStatus.SC_CREATED);
 
@@ -82,6 +93,26 @@ public class DhisWebServiceImpl implements DhisWebService {
         this.settingsService = settingsService;
         this.statusMessageService = statusMessageService;
         this.client = httpClientBuilderFactory.newBuilder().build();
+    }
+
+    @PostConstruct
+    public void discoverServerVersion() {
+        Settings settings = settingsService.getSettings();
+
+        if (StringUtils.isNotBlank(settings.getServerURI()) && StringUtils.isNotBlank(settings.getUsername()) && StringUtils.isNotBlank(settings.getPassword())) {
+            try {
+                DhisServerInfo info = getDhisServerInfo();
+                serverVersion = new ServerVersion(info.getVersion());
+            } catch (DhisWebException e) {
+                // No problem, the connection to the server has not been set or is incorrect
+                LOGGER.info("The connection to the DHIS2 server could not be established. Skipping discovery of the server version.");
+            }
+        }
+    }
+
+    @MotechListener(subjects = EventSubjects.DHIS_SETTINGS_UPDATED)
+    public void handleSettingsUpdate(MotechEvent event) {
+        discoverServerVersion();
     }
 
     @Override
@@ -146,7 +177,14 @@ public class DhisWebServiceImpl implements DhisWebService {
 
     @Override
     public DhisStatusResponse createEnrollment(EnrollmentDto enrollment) {
-        String json = parseToJson(enrollment);
+        String json;
+        if (serverVersion.isSameOrBefore(ServerVersion.V2_18)) {
+            json = parseToJson(enrollment.convertTo218());
+        } else if (serverVersion.isSameOrAfter(ServerVersion.V2_19) && serverVersion.isBefore(ServerVersion.V2_21)) {
+            json = parseToJson(enrollment.convertTo219());
+        } else {
+            json = parseToJson(enrollment.convertTo221());
+        }
         Settings settings = settingsService.getSettings();
 
         return createEntity(settings, settings.getServerURI() + API_ENDPOINT + ENROLLMENTS_PATH, json);
@@ -176,6 +214,28 @@ public class DhisWebServiceImpl implements DhisWebService {
         return importDataValues(settings, settings.getServerURI() + API_ENDPOINT + DATA_VALUE_SETS_PATH, json);
     }
 
+    @Override
+    public DhisServerInfo getDhisServerInfo() {
+        Settings settings = settingsService.getSettings();
+
+        String url = settings.getServerURI() + API_ENDPOINT + SYSTEM_INFO_PATH;
+        HttpUriRequest request = generateHttpRequest(settings, url);
+        HttpResponse response = getResponseForRequest(request);
+
+        try (InputStream content = getContentForResponse(response)) {
+            return new ObjectMapper().readValue(content, DhisServerInfo.class);
+        } catch (IOException e) {
+            String msg = String.format("Error parsing resource at uri: %s, exception: %s", url, e.toString());
+            statusMessageService.warn(msg, MODULE_NAME);
+            throw new DhisWebException(msg, e);
+        }
+    }
+
+    @Override
+    public ServerVersion getServerVersion() {
+        return serverVersion;
+    }
+
     /*Gets the resource in the form of a dto*/
     private <T extends BaseDto> T getResource(String uri, Class<T>  clazz) {
         Settings settings = settingsService.getSettings();
@@ -189,7 +249,7 @@ public class DhisWebServiceImpl implements DhisWebService {
 
         try (InputStream content = getContentForResponse(response)) {
             return new ObjectMapper().readValue(content, clazz);
-        } catch (Exception e) {
+        } catch (IOException e) {
             String msg = String.format("Error parsing resource at uri: %s, exception: %s", uri, e.toString());
             statusMessageService.warn(msg, MODULE_NAME);
             throw new DhisWebException(msg, e);
@@ -226,7 +286,7 @@ public class DhisWebServiceImpl implements DhisWebService {
                     resources.addAll(pagedResource.getResources());
                 }
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             String msg = String.format("Error parsing %s resources, exception: %s", resourceName, e.toString());
             statusMessageService.warn(msg, MODULE_NAME);
             throw new DhisWebException(msg, e);
@@ -249,7 +309,7 @@ public class DhisWebServiceImpl implements DhisWebService {
 
         try (InputStream content = getContentForResponse(response)) {
             status = new ObjectMapper().readValue(content, DhisStatusResponse.class);
-        } catch (Exception e) {
+        } catch (IOException e) {
             String msg = String.format("Error parsing response from uri: %s, exception: %s", uri, e.toString());
             statusMessageService.warn(msg, MODULE_NAME);
             throw new DhisWebException(msg, e);
@@ -262,7 +322,7 @@ public class DhisWebServiceImpl implements DhisWebService {
     private String parseToJson(Object object) {
         try {
             return new ObjectMapper().writeValueAsString(object);
-        } catch (Exception e) {
+        } catch (IOException e) {
             String msg = String.format("Error parsing object: %s to json, exception: %s", object.toString(), e.toString());
             statusMessageService.warn(msg, MODULE_NAME);
             throw new DhisWebException(msg, e);
@@ -298,7 +358,7 @@ public class DhisWebServiceImpl implements DhisWebService {
 
         try {
             response = client.execute(request);
-        } catch (Exception e) {
+        } catch (IOException e) {
             String msg = String.format("Error receiving response for request: %s", request.toString());
             statusMessageService.warn(msg, MODULE_NAME);
             throw new DhisWebException(msg, e);
@@ -319,7 +379,7 @@ public class DhisWebServiceImpl implements DhisWebService {
     private InputStream getContentForResponse(HttpResponse response) {
         try {
             return response.getEntity().getContent();
-        } catch (Exception e) {
+        } catch (IOException e) {
             String msg = String.format("Error accessing content for response: %s", response.toString());
             statusMessageService.warn(msg, MODULE_NAME);
             throw new DhisWebException(msg, e);
@@ -355,7 +415,7 @@ public class DhisWebServiceImpl implements DhisWebService {
 
         try (InputStream content = getContentForResponse(response)) {
             return new ObjectMapper().readValue(content, DhisDataValueStatusResponse.class);
-        } catch (Exception e) {
+        } catch (IOException e) {
             String msg = String.format("Error parsing response from uri: %s, exception: %s", uri, e.toString());
             statusMessageService.warn(msg, MODULE_NAME);
             throw new DhisWebException(msg, e);
