@@ -3,6 +3,9 @@ package org.motechproject.dhis2.rest.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+/**
+ * Representation of the DHIS server information, retrieved directly from the DHIS server.
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DhisServerInfo {

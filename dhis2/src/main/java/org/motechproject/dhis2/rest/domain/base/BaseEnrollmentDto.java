@@ -6,6 +6,16 @@ import org.motechproject.dhis2.rest.domain.AttributeDto;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Base class, used for representing the Enrollment in DHIS. Since Enrollment representation changes
+ * across supported DHIS versions, concrete classes are supposed to add necessary fields to model
+ * Enrollments for certain versions. This abstract class stores fields that are the same for all supported
+ * versions.
+ *
+ * @see org.motechproject.dhis2.rest.domain.v2_18.EnrollmentDto
+ * @see org.motechproject.dhis2.rest.domain.v2_19.EnrollmentDto
+ * @see org.motechproject.dhis2.rest.domain.v2_21.EnrollmentDto
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class BaseEnrollmentDto {
 
