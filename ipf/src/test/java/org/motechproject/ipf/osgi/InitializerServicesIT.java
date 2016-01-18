@@ -1,5 +1,6 @@
 package org.motechproject.ipf.osgi;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ipf.service.IPFInitializer;
@@ -22,6 +23,7 @@ public class InitializerServicesIT {
     private IPFInitializer ipfInitializer;
 
     @Test
+    @Ignore
     public void testIfJavaServiceIsPresent() {
         assertNotNull(ipfInitializer);
     }
