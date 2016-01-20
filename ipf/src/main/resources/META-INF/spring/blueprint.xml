@@ -5,4 +5,6 @@
 
     <import resource="classpath*:META-INF/motech/*.xml" />
 
+    <osgi:service ref="ipfInitializer" interface="org.motechproject.ipf.service.IPFInitializer" />
+
 </beans>

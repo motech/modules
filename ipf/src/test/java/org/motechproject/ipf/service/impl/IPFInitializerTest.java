@@ -10,6 +10,6 @@ public class IPFInitializerTest {
 
     @Test
     public void someTest() {
-        ipfInitializer.init();
+        assertEquals("Groovy compiled", ipfInitializer.init());
     }
 }

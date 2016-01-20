@@ -9,7 +9,8 @@ public class IPFGroovyInitializerImpl implements IPFGroovyInitializer {
     private static final Logger LOGGER = LoggerFactory.getLogger(IPFGroovyInitializerImpl.class);
 
     @Override
-    void init() {
+    String init() {
         LOGGER.info("IPF Module started - Groovy compiled.")
+        return "Groovy compiled";
     }
 }
