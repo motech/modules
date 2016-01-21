@@ -737,6 +737,11 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-all</artifactId>
+                <version>2.4.5</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -760,6 +765,7 @@
         <module>dhis2</module>
         <module>csd</module>
         <module>metrics</module>
+        <module>ipf</module>
     </modules>
 
     <build>
