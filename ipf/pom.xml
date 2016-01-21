@@ -139,7 +139,7 @@
                     <invokeDynamic>true</invokeDynamic>
                     <sources>
                         <source>
-                            <directory>src/main/java</directory>
+                            <directory>${basedir}/src/main/java/org/motechproject/ipf/groovy</directory>
                             <includes>
                                 <include>**/*.groovy</include>
                             </includes>
@@ -147,7 +147,7 @@
                     </sources>
                     <testSources>
                         <testSource>
-                            <directory>src/test/java</directory>
+                            <directory>${basedir}/src/test/java/org/motechproject/ipf/groovy</directory>
                             <includes>
                                 <include>**/*.groovy</include>
                             </includes>
