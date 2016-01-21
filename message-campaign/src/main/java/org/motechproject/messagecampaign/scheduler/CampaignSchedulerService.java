@@ -14,8 +14,6 @@ import org.motechproject.scheduler.contract.JobId;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -134,7 +132,7 @@ public abstract class CampaignSchedulerService<M extends CampaignMessage, C exte
         Map<String, List<DateTime>> messageTimingsMap = new HashMap<>();
         for (M message : campaign.getMessages()) {
             String externalJobIdPrefix = messageJobIdFor(message.getMessageKey(), enrollment.getExternalId(), enrollment.getCampaignName());
-            List<DateTime> dates = convertToDateTimeList(schedulerService.getScheduledJobTimingsWithPrefix(EventKeys.SEND_MESSAGE, externalJobIdPrefix, startDate.toDate(), endDate.toDate()));
+            List<DateTime> dates = schedulerService.getScheduledJobTimingsWithPrefix(EventKeys.SEND_MESSAGE, externalJobIdPrefix, startDate, endDate);
 
             messageTimingsMap.put(message.getName(), dates);
         }
@@ -247,7 +245,7 @@ public abstract class CampaignSchedulerService<M extends CampaignMessage, C exte
 
             MotechEvent endOfCampaignEvent = new MotechEvent(EventKeys.CAMPAIGN_COMPLETED, params);
 
-            schedulerService.scheduleRunOnceJob(new RunOnceSchedulableJob(endOfCampaignEvent, endDate.toDate()));
+            schedulerService.scheduleRunOnceJob(new RunOnceSchedulableJob(endOfCampaignEvent, endDate));
         } else if (endDate != null && endDate.isBeforeNow()) {
             throw new IllegalArgumentException(
                     String.format("No messages scheduled for enrollment with ID %s for campaign %s, last message was scheduled in the past(%s)",
@@ -259,16 +257,6 @@ public abstract class CampaignSchedulerService<M extends CampaignMessage, C exte
         schedulerService.safeUnscheduleRunOnceJob(EventKeys.CAMPAIGN_COMPLETED,
                 jobIdFactory.campaignCompletedJobIdFor(enrollment.getCampaignName(), enrollment.getExternalId()));
         scheduleEndOfCampaignEvent(campaign, enrollment);
-    }
-
-    private List<DateTime> convertToDateTimeList(final List<Date> dates) {
-        List<DateTime> list = new ArrayList<>(dates.size());
-
-        for (Date date : dates) {
-            list.add(new DateTime(date));
-        }
-
-        return list;
     }
 
     public MotechSchedulerService getSchedulerService() {

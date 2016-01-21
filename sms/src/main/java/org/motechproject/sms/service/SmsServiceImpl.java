@@ -159,7 +159,7 @@ public class SmsServiceImpl implements SmsService {
                     //MOTECH scheduler needs unique job ids, so adding motechId as job_id_key will do that
                     event.getParameters().put(MotechSchedulerService.JOB_ID_KEY, motechId);
                     event.getParameters().put(SmsEventParams.DELIVERY_TIME, dt);
-                    schedulerService.safeScheduleRunOnceJob(new RunOnceSchedulableJob(event, dt.toDate()));
+                    schedulerService.safeScheduleRunOnceJob(new RunOnceSchedulableJob(event, dt));
                     LOGGER.info(String.format("Scheduling message [%s] to [%s] at %s.",
                             part.replace("\n", "\\n"), recipients, sms.getDeliveryTime()));
                     //add one millisecond to the next sms part so they will be delivered in order
