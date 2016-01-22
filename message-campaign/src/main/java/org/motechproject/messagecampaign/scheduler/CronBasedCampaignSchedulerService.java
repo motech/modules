@@ -17,7 +17,6 @@ import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -41,9 +40,11 @@ public class CronBasedCampaignSchedulerService extends CampaignSchedulerService<
 
         LocalDate startDate = enrollment.getReferenceDate();
         Period maxDuration = campaign.getMaxDuration();
-        Date endDate = (maxDuration == null) ? null : startDate.plus(maxDuration).toDate();
+        DateTime endDate = (maxDuration == null) ? null : startDate.plus(maxDuration).toDateTimeAtStartOfDay();
 
-        CronSchedulableJob schedulableJob = new CronSchedulableJob(motechEvent, message.getCron(), startDate.toDate(), endDate);
+        CronSchedulableJob schedulableJob = new CronSchedulableJob(motechEvent, message.getCron(),
+                startDate.toDateTimeAtStartOfDay(), endDate);
+
         getSchedulerService().scheduleJob(schedulableJob);
     }
 

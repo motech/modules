@@ -45,7 +45,7 @@ public class CSDSchedulerTest {
         csdScheduler.scheduleXmlConsumerRepeatingJob(eventParameters, startDate, null, period, "123");
 
         MotechEvent event = new MotechEvent(CSDEventKeys.CONSUME_XML_EVENT_BASE + "123", eventParameters);
-        RepeatingPeriodSchedulableJob job = new RepeatingPeriodSchedulableJob(event, startDate.toDate(), null, period, true);
+        RepeatingPeriodSchedulableJob job = new RepeatingPeriodSchedulableJob(event, startDate, null, period, true);
 
         verify(motechSchedulerService).safeScheduleRepeatingPeriodJob(job);
     }

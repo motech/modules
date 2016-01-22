@@ -52,6 +52,7 @@ public class AppointmentReminderServiceImpl implements AppointmentReminderServic
         String eventTitle = String.format(SUBJECT, appointment.getExternalId(), appointment.getApptId());
         MotechEvent event = new MotechEvent(eventTitle);
 
-        return new RepeatingPeriodSchedulableJob(event, appointment.getReminderStartTime().toDate(), appointment.getAppointmentDate().toDate(), appointment.getReminderInterval(), true);
+        return new RepeatingPeriodSchedulableJob(event, appointment.getReminderStartTime(), appointment.getAppointmentDate(),
+                appointment.getReminderInterval(), true);
     }
 }

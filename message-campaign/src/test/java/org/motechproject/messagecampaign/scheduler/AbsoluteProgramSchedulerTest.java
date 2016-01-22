@@ -1,5 +1,6 @@
 package org.motechproject.messagecampaign.scheduler;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -16,7 +17,6 @@ import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -61,12 +61,12 @@ public class AbsoluteProgramSchedulerTest {
 
         List<RunOnceSchedulableJob> allJobs = capture.getAllValues();
 
-        Date startDate1 = DateUtil.newDateTime(campaign.getMessages().get(0).getDate(), request.deliverTime().getHour(), request.deliverTime().getMinute(), 0).toDate();
-        assertEquals(startDate1.toString(), allJobs.get(0).getStartDate().toString());
+        DateTime startDate1 = DateUtil.newDateTime(campaign.getMessages().get(0).getDate(), request.deliverTime().getHour(), request.deliverTime().getMinute(), 0);
+        assertEquals(startDate1, allJobs.get(0).getStartDate());
         assertEquals("org.motechproject.messagecampaign.fired-campaign-message", allJobs.get(0).getMotechEvent().getSubject());
         assertMotechEvent(allJobs.get(0), "MessageJob.testCampaign.12345.random-1", "random-1");
 
-        Date startDate2 = DateUtil.newDateTime(campaign.getMessages().get(1).getDate(), request.deliverTime().getHour(), request.deliverTime().getMinute(), 0).toDate();
+        DateTime startDate2 = DateUtil.newDateTime(campaign.getMessages().get(1).getDate(), request.deliverTime().getHour(), request.deliverTime().getMinute(), 0);
         assertEquals(startDate2.toString(), allJobs.get(1).getStartDate().toString());
         assertEquals("org.motechproject.messagecampaign.fired-campaign-message", allJobs.get(1).getMotechEvent().getSubject());
         assertMotechEvent(allJobs.get(1), "MessageJob.testCampaign.12345.random-2", "random-2");

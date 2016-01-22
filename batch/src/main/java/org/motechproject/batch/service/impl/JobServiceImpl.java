@@ -198,8 +198,8 @@ public class JobServiceImpl implements JobService {
         RunOnceSchedulableJob schedulableJob;
         try {
             schedulableJob = new RunOnceSchedulableJob(motechEvent,
-                    new SimpleDateFormat(BatchConstants.DATE_FORMAT,
-                            Locale.ENGLISH).parse(params.getDate()));
+                    new DateTime(new SimpleDateFormat(BatchConstants.DATE_FORMAT,
+                            Locale.ENGLISH).parse(params.getDate())));
         } catch (ParseException e) {
             throw new BatchException(
                     ApplicationErrors.BAD_REQUEST,

@@ -62,7 +62,7 @@ public class EnrollmentDefaultmentServiceTest {
         RunOnceSchedulableJob job = runOnceJobArgumentCaptor.getValue();
         MilestoneDefaultedEvent event = new MilestoneDefaultedEvent(job.getMotechEvent());
         assertEquals("1", event.getJobId());
-        assertEquals(now.plusWeeks(4).toDate(), job.getStartDate());
+        assertEquals(now.plusWeeks(4), job.getStartDate());
         assertEquals(externalId, event.getExternalId());
     }
 
