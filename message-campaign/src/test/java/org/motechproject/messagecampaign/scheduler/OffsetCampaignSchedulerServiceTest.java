@@ -1,5 +1,6 @@
 package org.motechproject.messagecampaign.scheduler;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 import org.junit.Assert;
@@ -16,17 +17,16 @@ import org.motechproject.messagecampaign.builder.EnrollRequestBuilder;
 import org.motechproject.messagecampaign.contract.CampaignRequest;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
+import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
 import org.motechproject.messagecampaign.domain.campaign.OffsetCampaign;
 import org.motechproject.messagecampaign.domain.campaign.OffsetCampaignMessage;
 import org.motechproject.messagecampaign.exception.CampaignEnrollmentException;
-import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 
-import java.util.Date;
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static junit.framework.Assert.assertEquals;
 import static org.joda.time.Period.days;
 import static org.joda.time.Period.minutes;
@@ -68,7 +68,7 @@ public class OffsetCampaignSchedulerServiceTest {
             OffsetCampaignMessage offsetCampaignMessage = new OffsetCampaignMessage(new Time(5,30), days(5));
             offsetCampaignMessage.setMessageKey("foo");
 
-            OffsetCampaign campaign = new OffsetCampaign("camp", asList(offsetCampaignMessage));
+            OffsetCampaign campaign = new OffsetCampaign("camp", singletonList(offsetCampaignMessage));
 
             when(campaignRecordService.findByName("camp")).thenReturn(campaignRecord);
             when(campaignRecord.toCampaign()).thenReturn(campaign);
@@ -82,7 +82,7 @@ public class OffsetCampaignSchedulerServiceTest {
             verify(schedulerService).scheduleRunOnceJob(jobCaptor.capture());
             RunOnceSchedulableJob job = jobCaptor.getValue();
 
-            assertEquals(newDateTime(2010, 10, 8, 5, 30, 0).toDate(), job.getStartDate());
+            assertEquals(newDateTime(2010, 10, 8, 5, 30, 0), job.getStartDate());
         } finally {
             stopFakingTime();
         }
@@ -96,7 +96,7 @@ public class OffsetCampaignSchedulerServiceTest {
             OffsetCampaignMessage offsetCampaignMessage = new OffsetCampaignMessage(new Time(5,30), minutes(5));
             offsetCampaignMessage.setMessageKey("foo");
 
-            OffsetCampaign campaign = new OffsetCampaign("camp", asList(offsetCampaignMessage));
+            OffsetCampaign campaign = new OffsetCampaign("camp", singletonList(offsetCampaignMessage));
 
             when(campaignRecordService.findByName("camp")).thenReturn(campaignRecord);
             when(campaignRecord.toCampaign()).thenReturn(campaign);
@@ -111,7 +111,7 @@ public class OffsetCampaignSchedulerServiceTest {
             verify(schedulerService).scheduleRunOnceJob(jobCaptor.capture());
             RunOnceSchedulableJob job = jobCaptor.getValue();
 
-            assertEquals(newDateTime(2010, 10, 3, 8, 25, 0).toDate(), job.getStartDate());
+            assertEquals(newDateTime(2010, 10, 3, 8, 25, 0), job.getStartDate());
         } finally {
             stopFakingTime();
         }
@@ -125,7 +125,7 @@ public class OffsetCampaignSchedulerServiceTest {
             OffsetCampaignMessage offsetCampaignMessage = new OffsetCampaignMessage(new Time(5,30), days(3));
             offsetCampaignMessage.setMessageKey("foo");
 
-            OffsetCampaign campaign = new OffsetCampaign("camp", asList(offsetCampaignMessage));
+            OffsetCampaign campaign = new OffsetCampaign("camp", singletonList(offsetCampaignMessage));
 
             when(campaignRecordService.findByName("camp")).thenReturn(campaignRecord);
             when(campaignRecord.toCampaign()).thenReturn(campaign);
@@ -140,7 +140,7 @@ public class OffsetCampaignSchedulerServiceTest {
             verify(schedulerService).scheduleRunOnceJob(jobCaptor.capture());
             RunOnceSchedulableJob job = jobCaptor.getValue();
 
-            assertEquals(newDateTime(2010, 10, 6, 8, 20, 0).toDate(), job.getStartDate());
+            assertEquals(newDateTime(2010, 10, 6, 8, 20, 0), job.getStartDate());
         } finally {
             stopFakingTime();
         }
@@ -166,26 +166,26 @@ public class OffsetCampaignSchedulerServiceTest {
 
         List<RunOnceSchedulableJob> allJobs = capture.getAllValues();
 
-        Date startDate1 = DateUtil.newDateTime(DateUtil.today().plusDays(7), request.deliverTime().getHour(), request.deliverTime().getMinute(), 0).toDate();
-        Assert.assertEquals(startDate1, allJobs.get(0).getStartDate());
-        Assert.assertEquals("org.motechproject.messagecampaign.fired-campaign-message", allJobs.get(0).getMotechEvent().getSubject());
+        DateTime startDate1 = DateUtil.newDateTime(DateUtil.today().plusDays(7), request.deliverTime().getHour(), request.deliverTime().getMinute(), 0);
+        assertEquals(startDate1, allJobs.get(0).getStartDate());
+        assertEquals("org.motechproject.messagecampaign.fired-campaign-message", allJobs.get(0).getMotechEvent().getSubject());
         assertMotechEvent(allJobs.get(0), "MessageJob.testCampaign.12345.child-info-week-1", "child-info-week-1");
 
-        Date startDate2 = DateUtil.newDateTime(DateUtil.today().plusDays(14), request.deliverTime().getHour(), request.deliverTime().getMinute(), 0).toDate();
-        Assert.assertEquals(startDate2, allJobs.get(1).getStartDate());
-        Assert.assertEquals("org.motechproject.messagecampaign.fired-campaign-message", allJobs.get(1).getMotechEvent().getSubject());
+        DateTime startDate2 = DateUtil.newDateTime(DateUtil.today().plusDays(14), request.deliverTime().getHour(), request.deliverTime().getMinute(), 0);
+        assertEquals(startDate2, allJobs.get(1).getStartDate());
+        assertEquals("org.motechproject.messagecampaign.fired-campaign-message", allJobs.get(1).getMotechEvent().getSubject());
         assertMotechEvent(allJobs.get(1), "MessageJob.testCampaign.12345.child-info-week-1a", "child-info-week-1a");
 
-        Date startDate3 = DateUtil.newDateTime(DateUtil.today().plusMonths(1), request.deliverTime().getHour(), request.deliverTime().getMinute(), 0).toDate();
-        Assert.assertEquals(startDate3, allJobs.get(2).getStartDate());
-        Assert.assertEquals("org.motechproject.messagecampaign.fired-campaign-message", allJobs.get(2).getMotechEvent().getSubject());
+        DateTime startDate3 = DateUtil.newDateTime(DateUtil.today().plusMonths(1), request.deliverTime().getHour(), request.deliverTime().getMinute(), 0);
+        assertEquals(startDate3, allJobs.get(2).getStartDate());
+        assertEquals("org.motechproject.messagecampaign.fired-campaign-message", allJobs.get(2).getMotechEvent().getSubject());
         assertMotechEvent(allJobs.get(2), "MessageJob.testCampaign.12345.child-info-month-1", "child-info-month-1");
 
         RunOnceSchedulableJob endOfCampaignJob = allJobs.get(3);
-        Assert.assertEquals(startDate3, endOfCampaignJob.getStartDate());
-        Assert.assertEquals("org.motechproject.messagecampaign.campaign-completed", endOfCampaignJob.getMotechEvent().getSubject());
-        Assert.assertEquals("testCampaign", endOfCampaignJob.getMotechEvent().getParameters().get("CampaignName"));
-        Assert.assertEquals("12345", endOfCampaignJob.getMotechEvent().getParameters().get("ExternalID"));
+        assertEquals(startDate3, endOfCampaignJob.getStartDate());
+        assertEquals("org.motechproject.messagecampaign.campaign-completed", endOfCampaignJob.getMotechEvent().getSubject());
+        assertEquals("testCampaign", endOfCampaignJob.getMotechEvent().getParameters().get("CampaignName"));
+        assertEquals("12345", endOfCampaignJob.getMotechEvent().getParameters().get("ExternalID"));
     }
 
     @Test
