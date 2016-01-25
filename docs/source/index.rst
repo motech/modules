@@ -32,6 +32,11 @@ Integrates the MOTECH platform with CommCareHQ, an open-source platform to help 
 
 Integrates data from external data sources and provides sharable data schemas
 
+:std:ref:`DHIS2 <dhis2-module>`
+-------------------------------
+
+Integrates MOTECH with the DHIS2 web API
+
 :std:ref:`Email <email-module>`
 -------------------------------
 

@@ -13,8 +13,8 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.scheduletracking.events.constants.EventSubjects;
 import org.motechproject.scheduletracking.repository.dataservices.EnrollmentDataService;
-import org.motechproject.scheduletracking.service.EnrollmentRequest;
 import org.motechproject.scheduletracking.repository.dataservices.ScheduleDataService;
+import org.motechproject.scheduletracking.service.EnrollmentRequest;
 import org.motechproject.scheduletracking.service.ScheduleTrackingService;
 import org.motechproject.scheduletracking.utility.schedule.TestScheduleUtil;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -37,6 +37,7 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static junit.framework.Assert.assertEquals;
 import static org.motechproject.commons.date.util.DateUtil.newDate;
 import static org.motechproject.commons.date.util.DateUtil.newDateTime;
@@ -153,8 +154,8 @@ public class SchedulingFloatingAlertsWithoutPreferredTimeBundleIT extends BasePa
             assertEquals(newDateTime(2050, 5, 22, 10, 0, 0), alertListener.getTriggerTime());
 
             List<DateTime> fireTimes = getFireTimes(format("org.motechproject.scheduletracking.milestone.alert-%s.0-repeat", enrollmentId)) ;
-            assertEquals(asList(
-                    newDateTime(2050, 5, 23, 9, 0, 0)),
+            assertEquals(singletonList(
+                            newDateTime(2050, 5, 23, 9, 0, 0)),
                     fireTimes);
         } finally {
             TestScheduleUtil.stopFakingTime();
@@ -190,7 +191,6 @@ public class SchedulingFloatingAlertsWithoutPreferredTimeBundleIT extends BasePa
     class AlertListener implements EventListener {
 
         private DateTime eventRaisedAt;
-        private MotechEvent event;
 
         @Override
         public String getIdentifier() {
@@ -199,7 +199,6 @@ public class SchedulingFloatingAlertsWithoutPreferredTimeBundleIT extends BasePa
 
         @MotechListener(subjects = EventSubjects.MILESTONE_ALERT)
         public void handle(MotechEvent motechEvent) {
-            event = motechEvent;
             eventRaisedAt = now();
         }
 

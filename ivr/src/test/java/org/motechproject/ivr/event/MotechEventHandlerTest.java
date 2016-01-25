@@ -89,7 +89,7 @@ public class MotechEventHandlerTest {
     }
 
     private RunOnceSchedulableJob prepareJob(Map<String, Object> params) {
-        return new RunOnceSchedulableJob(prepareExpectedEvent(params), ((DateTime) params.get(CALL_DATE)).toDate());
+        return new RunOnceSchedulableJob(prepareExpectedEvent(params), ((DateTime) params.get(CALL_DATE)));
     }
 
     private MotechEvent prepareExpectedEvent(Map<String, Object> params) {

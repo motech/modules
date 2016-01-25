@@ -52,7 +52,7 @@ public class EnrollmentDefaultmentService {
 
         MotechEvent event = new MilestoneDefaultedEvent(enrollment.getId(), enrollment.getId().toString(), enrollment.getExternalId()).toMotechEvent();
         LOGGER.info("Scheduling job to trigger defaultment alert for enrollment with id {} ", enrollment.getId());
-        schedulerService.safeScheduleRunOnceJob(new RunOnceSchedulableJob(event, milestoneEndDateTime.toDate()));
+        schedulerService.safeScheduleRunOnceJob(new RunOnceSchedulableJob(event, milestoneEndDateTime));
     }
 
     /**

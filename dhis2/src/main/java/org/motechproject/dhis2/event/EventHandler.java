@@ -1,5 +1,6 @@
 package org.motechproject.dhis2.event;
 
+import org.motechproject.commons.api.TasksEventParser;
 import org.motechproject.dhis2.domain.DataElement;
 import org.motechproject.dhis2.exception.DataElementNotFoundException;
 import org.motechproject.dhis2.rest.domain.AttributeDto;
@@ -114,6 +115,7 @@ public class EventHandler {
         enrollmentParams.put(EventParams.DATE, params.remove(EventParams.DATE));
 
         enrollmentParams.put(EventParams.EXTERNAL_ID, params.get(EventParams.EXTERNAL_ID));
+        enrollmentParams.put(EventParams.LOCATION, params.get(EventParams.LOCATION));
 
         handleCreate(new MotechEvent(EventSubjects.CREATE_ENTITY, params));
         handleEnrollment(new MotechEvent(EventSubjects.ENROLL_IN_PROGRAM, enrollmentParams));
@@ -210,7 +212,7 @@ public class EventHandler {
         String trackedEntity = (String) params.remove(EventParams.ENTITY_TYPE);
         String orgUnitId = (String) params.remove(EventParams.LOCATION);
 
-        List<AttributeDto> attributes = new ArrayList<AttributeDto>();
+        List<AttributeDto> attributes = new ArrayList<>();
         for (Entry<String, Object> entry : params.entrySet()) {
             if (entry.getValue() != null) {
                 AttributeDto attribute = new AttributeDto();
@@ -233,6 +235,7 @@ public class EventHandler {
 
         String externalId = (String) params.remove(EventParams.EXTERNAL_ID);
         String trackedEntityInstanceId = trackedEntityInstanceMappingService.mapFromExternalId(externalId);
+        String orgUnit = (String) params.remove(EventParams.LOCATION);
 
         String date = (String) params.remove(EventParams.DATE);
 
@@ -248,6 +251,7 @@ public class EventHandler {
 
         EnrollmentDto enrollment = new EnrollmentDto();
         enrollment.setProgram(program);
+        enrollment.setOrgUnit(orgUnit);
         enrollment.setTrackedEntityInstance(trackedEntityInstanceId);
         enrollment.setDateOfEnrollment(date);
         enrollment.setAttributes(attributes);
@@ -294,6 +298,7 @@ public class EventHandler {
         Map<String, Object> dhisAttributes = new HashMap<>(eventParams);
 
         dhisAttributes.remove(MotechSchedulerService.JOB_ID_KEY);
+        dhisAttributes.remove(TasksEventParser.CUSTOM_PARSER_EVENT_KEY);
 
         return dhisAttributes;
     }

@@ -737,6 +737,11 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-all</artifactId>
+                <version>2.4.5</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -760,6 +765,7 @@
         <module>dhis2</module>
         <module>csd</module>
         <module>metrics</module>
+        <module>ipf</module>
     </modules>
 
     <build>
@@ -1029,7 +1035,10 @@
                                             <includes>
                                                 <include>bootstrap.properties</include>
                                                 <include>motech-settings.properties</include>
-                                                <include>datanucleus.properties</include>
+                                                <include>datanucleus_data.properties</include>
+                                                <include>datanucleus_schema.properties</include>
+                                                <include>flyway_data.properties</include>
+                                                <include>flyway_schema.properties</include>
                                             </includes>
                                         </fileset>
                                     </filesets>

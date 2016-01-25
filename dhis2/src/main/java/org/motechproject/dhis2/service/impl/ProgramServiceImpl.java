@@ -40,6 +40,7 @@ public class ProgramServiceImpl implements ProgramService {
         program.setName(details.getName());
         program.setRegistration(details.getRegistration());
         program.setSingleEvent(details.getSingleEvent());
+        program.setProgramType(details.getProgramType());
         return programDataService.create(program);
     }
 
