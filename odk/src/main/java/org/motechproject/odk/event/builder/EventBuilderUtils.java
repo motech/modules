@@ -56,6 +56,9 @@ public final class EventBuilderUtils {
     }
 
     public static String formatAsJson(Object value) {
+        if (value == null) {
+            return null;
+        }
         try {
             return new ObjectMapper().writeValueAsString(value);
         } catch (Exception e) {

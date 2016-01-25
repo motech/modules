@@ -35,7 +35,7 @@ import static org.junit.Assert.fail;
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class FormControllerIT extends OdkBaseIT {
 
-    private static final int WAIT_COUNT = 5;
+    private static final int WAIT_COUNT = 30;
     private static final int EXPECTED_EVENTS_SUCCESS = 7;
     private static final int EXPECTED_EVENTS_FAIL = 1;
 

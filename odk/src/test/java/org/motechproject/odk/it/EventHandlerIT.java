@@ -2,13 +2,17 @@ package org.motechproject.odk.it;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.odk.constant.EventParameters;
+import org.motechproject.odk.constant.FieldTypeConstants;
 import org.motechproject.odk.constant.OnaConstants;
 import org.motechproject.odk.domain.FormDefinition;
+import org.motechproject.odk.domain.FormElement;
 import org.motechproject.odk.domain.FormInstance;
 import org.motechproject.odk.event.EventHandler;
 import org.motechproject.odk.event.builder.impl.EventBuilderOna;
@@ -44,6 +48,7 @@ public class EventHandlerIT extends OdkBaseIT {
         assertNotNull(formDefinition);
 
         events = new EventBuilderOna().createEvents(getJson(),formDefinition,getConfiguration());
+        convertEventValues(events);
     }
 
 
@@ -71,10 +76,32 @@ public class EventHandlerIT extends OdkBaseIT {
 
         Map<String,Object> outerGroup2 = data.get(1);
         assertNotNull(outerGroup2);
-        assertEquals(outerGroup1.get("outer_group/outer_group_field"),"outer group 1 field");
+        assertEquals(outerGroup2.get("outer_group/outer_group_field"),"outer group 2 field");
         List<Map<String,Object>> outerGroup2InnerGroup = (List<Map<String,Object>>)outerGroup2.get("outer_group/inner_group");
         assertEquals(outerGroup2InnerGroup.get(0).get("outer_group/inner_group/inner_group_field"),"outer group 2 inner group field 1");
         assertEquals(outerGroup2InnerGroup.get(1).get("outer_group/inner_group/inner_group_field"), "outer group 2 inner group field 2");
+
+    }
+
+    private void convertEventValues (List<MotechEvent> events) {
+        for (FormElement e : formDefinition.getFormElements()) {
+            if (e.getType().equals(FieldTypeConstants.DATE_TIME)) {
+                for (MotechEvent event : events) {
+                    Map<String, Object> params = event.getParameters();
+                    String val = (String) params.get(e.getName());
+
+                    if (val != null) {
+                        DateTime date = DateTime.parse(val, DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
+                        params.put(e.getName(),date);
+                    }
+                }
+            }
+        }
+
+        for (MotechEvent e : events) {
+            /*removes problematic field*/
+            e.getParameters().remove("_geolocation");
+        }
 
     }
 

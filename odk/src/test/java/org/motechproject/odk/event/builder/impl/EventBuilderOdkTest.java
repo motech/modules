@@ -103,7 +103,7 @@ public class EventBuilderOdkTest {
 
         event = itr.next();
         assertEquals(event.getSubject(),"org.motechproject.odk.recieved_form.configName.ona_nested_repeats");
-        assertEquals(event.getParameters().size(),7);
+        assertEquals(event.getParameters().size(),6);
         assertEquals(event.getParameters().get("root_scope_field"),"root scope");
         assertEquals(event.getParameters().get("meta/instanceID"),"uuid:d9e30fd7-5f0c-4185-a331-db0f740b3547");
         assertEquals(event.getParameters().get("formhub/uuid"),"517b7383ae62455482b6f8505e5646e2");
