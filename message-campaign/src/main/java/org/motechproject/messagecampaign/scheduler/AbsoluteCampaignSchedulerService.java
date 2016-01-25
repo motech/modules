@@ -43,7 +43,7 @@ public class AbsoluteCampaignSchedulerService extends CampaignSchedulerService<A
         Map<String, Object> params = jobParams(campaignMessage.getMessageKey(), enrollment);
         MotechEvent motechEvent = new MotechEvent(EventKeys.SEND_MESSAGE, params);
         LocalDate startDate = campaignMessage.getDate();
-        RunOnceSchedulableJob runOnceSchedulableJob = new RunOnceSchedulableJob(motechEvent, newDateTime(startDate, deliverTimeFor(enrollment, campaignMessage)).toDate());
+        RunOnceSchedulableJob runOnceSchedulableJob = new RunOnceSchedulableJob(motechEvent, newDateTime(startDate, deliverTimeFor(enrollment, campaignMessage)));
 
         try {
             getSchedulerService().scheduleRunOnceJob(runOnceSchedulableJob);

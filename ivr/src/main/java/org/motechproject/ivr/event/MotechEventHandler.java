@@ -49,7 +49,7 @@ public class MotechEventHandler {
             parameters.put(PARAMETERS, event.getParameters().get(PARAMETERS));
 
             MotechEvent runOnceJobEvent = new MotechEvent(event.getSubject(), parameters);
-            schedulerService.scheduleRunOnceJob(new RunOnceSchedulableJob(runOnceJobEvent, ((DateTime) date).toDate()));
+            schedulerService.scheduleRunOnceJob(new RunOnceSchedulableJob(runOnceJobEvent, ((DateTime) date)));
         }
     }
 
