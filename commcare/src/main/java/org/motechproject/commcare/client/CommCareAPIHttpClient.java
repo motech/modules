@@ -51,17 +51,17 @@ public class CommCareAPIHttpClient {
     }
 
     /**
-     * Sends a POST request to the CommCare server. It will result in creating new case on the CommCare server based on
-     * the information given in the {@code caseXml}, which should be a valid case represented by an XML string.
+     * Sends a POST request to the CommCare server. It will result in creating new case/form on the CommCare server based on
+     * the information given in the {@code xml}, which should be a valid case/form represented by an XML string.
      *
      * @param accountConfig  the CommCare account information
-     * @param caseXml  the case represented as an XML string
+     * @param xml  the case/form represented as an XML string
      * @return the CommCare server response as an instance of the {@link OpenRosaResponse} class
      * @throws CaseParserException if there were problems while parsing server response
      */
-    public OpenRosaResponse caseUploadRequest(AccountConfig accountConfig, String caseXml)
+    public OpenRosaResponse uploadRequest(AccountConfig accountConfig, String xml)
             throws CaseParserException {
-        return this.postRequest(accountConfig, commcareCaseUploadUrl(accountConfig), caseXml);
+        return this.postRequest(accountConfig, commcareCaseUploadUrl(accountConfig), xml);
     }
 
     /**

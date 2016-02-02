@@ -163,7 +163,7 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
         OpenRosaResponse response;
 
         try {
-            response = commcareHttpClient.caseUploadRequest(getConfiguration(configName).getAccountConfig(), fullXml);
+            response = commcareHttpClient.uploadRequest(getConfiguration(configName).getAccountConfig(), fullXml);
         } catch (CaseParserException e) {
             return null;
         }
