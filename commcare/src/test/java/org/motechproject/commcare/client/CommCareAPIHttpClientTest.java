@@ -77,7 +77,7 @@ public class CommCareAPIHttpClientTest {
     }
 
     @Test
-    public void shouldConstructCommcareCaseUploadUrl() {
+    public void shouldConstructCommcareUploadUrl() {
         assertThat(commCareAPIHttpClient.commcareCaseUploadUrl(accountConfig), equalTo(format("%s/%s/receiver/", baseUrl, domain)));
     }
 
