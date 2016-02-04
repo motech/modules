@@ -14,7 +14,7 @@
 
     <properties>
         <motech.groupId>org.motechproject</motech.groupId>
-        <motech.version>0.26.6</motech.version>
+        <motech.version>0.26.7-SNAPSHOT</motech.version>
 
         <jasmine.server.port>8234</jasmine.server.port>
 
@@ -943,7 +943,7 @@
                         </goals>
                         <configuration>
                             <rules>
-                                <DependencyConvergence />
+                                <DependencyConvergence/>
                             </rules>
                         </configuration>
                     </execution>
@@ -955,7 +955,7 @@
                         <phase>verify</phase>
                         <configuration>
                             <rules>
-                                <NoPackageCyclesRule implementation="de.andrena.tools.nopackagecycles.NoPackageCyclesRule" />
+                                <NoPackageCyclesRule implementation="de.andrena.tools.nopackagecycles.NoPackageCyclesRule"/>
                             </rules>
                             <skip>${enforcer.skip}</skip>
                         </configuration>
