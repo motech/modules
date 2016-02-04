@@ -12,7 +12,6 @@ import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,24 +33,19 @@ public class CSDScheduler {
     public void scheduleXmlConsumerRepeatingJob(Map<String, Object> eventParameters, DateTime startDateTime, DateTime endDateTime, Period period, String key) {
         MotechEvent event = new MotechEvent(CSDEventKeys.CONSUME_XML_EVENT_BASE + key, eventParameters);
 
-        Date startDate;
+        DateTime startDate;
 
         if (startDateTime != null) {
-            startDate = startDateTime.toDate();
+            startDate = startDateTime;
         } else {
-            startDate = DateTime.now().plusSeconds(1).toDate();
-        }
-
-        Date endDate = null;
-        if (endDateTime != null) {
-            endDate = endDateTime.toDate();
+            startDate = DateTime.now().plusSeconds(1);
         }
 
         if (period == null) {
             throw new IllegalArgumentException("Period cannot be null");
         }
 
-        RepeatingPeriodSchedulableJob job = new RepeatingPeriodSchedulableJob(event, startDate, endDate, period, true);
+        RepeatingPeriodSchedulableJob job = new RepeatingPeriodSchedulableJob(event, startDate, endDateTime, period, true);
         motechSchedulerService.safeScheduleRepeatingPeriodJob(job);
     }
 
