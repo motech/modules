@@ -426,6 +426,14 @@
             return true;
         };
 
+        $scope.validateUrlProtocol = function () {
+            if ($scope.selectedConfig.accountConfig.baseUrl.substring(0, 8) !== "https://") {
+                return false;
+            } else {
+                return true;
+            }
+        };
+
         $scope.isVerifyError = function() {
             return $scope.validateConfig() === true && $scope.connectionVerified === false;
         };
