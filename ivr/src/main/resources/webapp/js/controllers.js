@@ -165,6 +165,8 @@
             if ($scope.configs.configList.length > 0) {
                 $scope.configs.defaultConfig = $scope.configs.configList[0].name;
                 $scope.defaultConfigIndex = 0;
+            } else {
+                $scope.configs.defaultConfig = undefined;
             }
         };
 

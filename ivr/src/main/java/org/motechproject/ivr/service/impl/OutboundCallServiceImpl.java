@@ -8,6 +8,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -115,7 +116,7 @@ public class OutboundCallServiceImpl implements OutboundCallService {
     @Override
     public void initiateCall(Map<String, String> params) {
         String defaultConfig = configService.getDefaultConfig();
-        if(defaultConfig == null || defaultConfig.isEmpty() ) {
+        if(StringUtils.isEmpty(defaultConfig)) {
             throw new ConfigNotFoundException("No default configuration found.");
         }
         initiateCall(defaultConfig, params);

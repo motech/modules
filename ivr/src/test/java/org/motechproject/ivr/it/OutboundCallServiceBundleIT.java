@@ -157,10 +157,11 @@ public class OutboundCallServiceBundleIT extends BasePaxIT {
         String fileName = path.getFileName().toString();
 
         String uri = path.toUri().toString().replace(fileName, "[fileName]");
-
         Config config = new Config("conf159", false, null, null, null, null, null, null, HttpMethod.GET, false, uri, false, null);
+        List<Config> configList = Arrays.asList(config);
+        Configs configs = new Configs(configList, "conf159");
 
-        configService.updateConfigs(Arrays.asList(config));
+        configService.updateConfigs(configs);
 
         Map<String, String> params = new HashMap<>();
         params.put("api_key", "qwerty123");

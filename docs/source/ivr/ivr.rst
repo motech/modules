@@ -290,8 +290,8 @@ Settings
 
         .. [#] Note: no square brackets
 
-        A configuration can be set as the default configuration from the UI.
-
+        A configuration can be set as the default from the UI and in the ivr-config.conf file.
+        The default configuration is marked with "star". After creating first configuration it will be marked as default. It can be changed by clicking "Set Default" button in current selected configuration.
 
 Call Detail Records
 ===================
