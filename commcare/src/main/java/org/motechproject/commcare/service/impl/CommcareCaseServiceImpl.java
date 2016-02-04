@@ -17,6 +17,8 @@ import org.motechproject.commcare.response.OpenRosaResponse;
 import org.motechproject.commcare.service.CommcareCaseService;
 import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commons.api.json.MotechJsonReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,8 @@ import java.util.Map;
 
 @Service
 public class CommcareCaseServiceImpl implements CommcareCaseService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommcareCaseServiceImpl.class);
 
     private CaseTaskXmlConverter converter;
 
@@ -160,12 +164,13 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
         String caseXml = converter.convertToCaseXml(caseTask);
         String fullXml = "<?xml version='1.0'?>\n" + caseXml;
 
-        OpenRosaResponse response;
-
+        LOGGER.debug("Sending the following Case XML to the Commcare server: {}", fullXml);
+        OpenRosaResponse response = null;
         try {
             response = commcareHttpClient.caseUploadRequest(getConfiguration(configName).getAccountConfig(), fullXml);
+            LOGGER.debug("Received the following response from the Commcare server. Status: {}, Message: {}", response.getStatus(), response.getMessageText());
         } catch (CaseParserException e) {
-            return null;
+            LOGGER.error("Failed to parse response from the CommCare server.", e);
         }
 
         return response;

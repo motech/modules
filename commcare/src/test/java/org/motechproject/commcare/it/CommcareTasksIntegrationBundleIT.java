@@ -133,7 +133,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         waitForChannel(COMMCARE_CHANNEL_NAME);
         Channel channel = findChannel(COMMCARE_CHANNEL_NAME);
 
-        verifyCommcareChannelHasCorrectTriggers(channel);
+        verifyCommcareChannelHasCorrectActionsAndTriggers(channel);
         createDummyActionChannel(channel);
         createTestTask();
 
@@ -187,11 +187,11 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         getTriggerHandler().registerHandlerFor(task.getTrigger().getEffectiveListenerSubject());
     }
 
-    private void verifyCommcareChannelHasCorrectTriggers(Channel channel) {
+    private void verifyCommcareChannelHasCorrectActionsAndTriggers(Channel channel) {
         List<TriggerEvent> triggerEvents = channel.getTriggerTaskEvents();
         List<ActionEvent> actionEvents = channel.getActionTaskEvents();
 
-        assertEquals(1, actionEvents.size());
+        assertEquals(3, actionEvents.size());
         assertEquals(8, triggerEvents.size());
 
         TaskTriggerInformation expectedForm1 = new TaskTriggerInformation();
@@ -226,14 +226,17 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         assertTriggerParameters(caseTrigger.getEventParameters(),
                 Arrays.asList("motherName", "childName", "dob", "caseName"));
 
-        ActionEvent expectedActionEvent = prepareAction();
+        verifyTaskAction(channel, prepareStockLedgerAction());
+        verifyTaskAction(channel, prepareCreateCaseAction());
+        verifyTaskAction(channel, prepareUpdateCaseAction());
+    }
+
+    private void verifyTaskAction(Channel channel, ActionEvent expected) {
         TaskActionInformation expectedAction = new TaskActionInformation();
-        expectedAction.setSubject(expectedActionEvent.getSubject());
-
+        expectedAction.setSubject(expected.getSubject());
         assertTrue(channel.containsAction(expectedAction));
-
-        ActionEvent actionEvent = channel.getAction(expectedAction);
-        assertEquals(expectedActionEvent, actionEvent);
+        ActionEvent actual = channel.getAction(expectedAction);
+        assertEquals(expected, actual);
     }
 
     private void assertTriggerParameters(List<EventParameter> eventParameters, List<String> expected) {
@@ -290,7 +293,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 + (retries * WAIT_TIME) / 1000 + " seconds");
     }
 
-    private ActionEvent prepareAction() {
+    private ActionEvent prepareStockLedgerAction() {
         SortedSet<ActionParameter> parameters = new TreeSet<>();
         ActionParameterBuilder builder;
         int order = 0;
@@ -340,6 +343,98 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         ActionEventBuilder actionBuilder = new ActionEventBuilder()
                 .setDisplayName(displayName)
                 .setSubject(EventSubjects.QUERY_STOCK_LEDGER + "." + config.getName())
+                .setActionParameters(parameters);
+        return actionBuilder.createActionEvent();
+    }
+
+    private ActionEvent prepareCreateCaseAction() {
+        SortedSet<ActionParameter> parameters = new TreeSet<>();
+        ActionParameterBuilder builder;
+        int order = 0;
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName(DisplayNames.CASE_TYPE)
+                .setKey(EventDataKeys.CASE_TYPE)
+                .setType(ParameterType.UNICODE)
+                .setRequired(true)
+                .setOrder(order++);
+        parameters.add(builder.createActionParameter());
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName(DisplayNames.OWNER_ID)
+                .setKey(EventDataKeys.OWNER_ID)
+                .setType(ParameterType.UNICODE)
+                .setRequired(false)
+                .setOrder(order++);
+        parameters.add(builder.createActionParameter());
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName(DisplayNames.CASE_NAME)
+                .setKey(EventDataKeys.CASE_NAME)
+                .setType(ParameterType.UNICODE)
+                .setRequired(true)
+                .setOrder(order++);
+        parameters.add(builder.createActionParameter());
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName(DisplayNames.CASE_PROPERTIES)
+                .setKey(EventDataKeys.FIELD_VALUES)
+                .setType(ParameterType.MAP)
+                .setRequired(false)
+                .setOrder(order++);
+        parameters.add(builder.createActionParameter());
+
+        String displayName = String.format("Create Case [%s]", config.getName());
+
+        ActionEventBuilder actionBuilder = new ActionEventBuilder()
+                .setDisplayName(displayName)
+                .setSubject(EventSubjects.CREATE_CASE + "." + config.getName())
+                .setActionParameters(parameters);
+        return actionBuilder.createActionEvent();
+    }
+
+    private ActionEvent prepareUpdateCaseAction() {
+        SortedSet<ActionParameter> parameters = new TreeSet<>();
+        ActionParameterBuilder builder;
+        int order = 0;
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName(DisplayNames.CASE_ID)
+                .setKey(EventDataKeys.CASE_ID)
+                .setType(ParameterType.UNICODE)
+                .setRequired(true)
+                .setOrder(order++);
+        parameters.add(builder.createActionParameter());
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName(DisplayNames.OWNER_ID)
+                .setKey(EventDataKeys.OWNER_ID)
+                .setType(ParameterType.UNICODE)
+                .setRequired(true)
+                .setOrder(order++);
+        parameters.add(builder.createActionParameter());
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName(DisplayNames.CLOSE_CASE)
+                .setKey(EventDataKeys.CLOSE_CASE)
+                .setType(ParameterType.BOOLEAN)
+                .setRequired(false)
+                .setOrder(order++);
+        parameters.add(builder.createActionParameter());
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName(DisplayNames.CASE_PROPERTIES)
+                .setKey(EventDataKeys.FIELD_VALUES)
+                .setType(ParameterType.MAP)
+                .setRequired(false)
+                .setOrder(order++);
+        parameters.add(builder.createActionParameter());
+
+        String displayName = String.format("Update Case [%s]", config.getName());
+
+        ActionEventBuilder actionBuilder = new ActionEventBuilder()
+                .setDisplayName(displayName)
+                .setSubject(EventSubjects.UPDATE_CASE + "." + config.getName())
                 .setActionParameters(parameters);
         return actionBuilder.createActionEvent();
     }
