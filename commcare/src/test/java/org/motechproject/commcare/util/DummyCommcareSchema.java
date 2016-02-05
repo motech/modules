@@ -25,6 +25,9 @@ public final class DummyCommcareSchema {
     public static final String CASE_FIELD4 = "visitDate";
     public static final String CASE_FIELD5 = "isPregnant";
 
+    public static final String XMLNS1 = "http://openrosa.org/formdesigner/84FA38A2-93C1-4B9E-AA2A-0E082995FF9E";
+    public static final String XMLNS2 = "http://openrosa.org/formdesigner/12KE58A2-54C5-1Z4B-AR2S-Z0345995RF9E";
+
     public static List<FormSchemaJson> getForms() {
         List<FormSchemaJson> forms = new ArrayList<>();
 
@@ -56,10 +59,12 @@ public final class DummyCommcareSchema {
         FormSchemaJson formSchemaJson1 = new FormSchemaJson();
         formSchemaJson1.setFormNames(formNames1);
         formSchemaJson1.setQuestions(Arrays.asList(questionJson1, questionJson2));
+        formSchemaJson1.setXmlns(XMLNS1);
 
         FormSchemaJson formSchemaJson2 = new FormSchemaJson();
         formSchemaJson2.setFormNames(formNames2);
         formSchemaJson2.setQuestions(Arrays.asList(questionJson3, questionJson4, questionJson5));
+        formSchemaJson2.setXmlns(XMLNS2);
 
         forms.add(formSchemaJson1);
         forms.add(formSchemaJson2);

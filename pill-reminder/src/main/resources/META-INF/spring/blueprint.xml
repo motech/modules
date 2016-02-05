@@ -7,13 +7,6 @@
 
     <import resource="classpath*:META-INF/motech/*.xml"/>
 
-    <bean id="bundleWrapper" class="org.motechproject.osgi.web.BundleContextWrapper"/>
-
-    <bean id="pillReminderUIServiceTracker" class="org.motechproject.osgi.web.UIServiceTracker">
-        <constructor-arg name="wrapper" ref="bundleWrapper"/>
-        <constructor-arg name="moduleRegistrationData" ref="pillReminderRegistrationData"/>
-    </bean>
-
     <bean id="pillReminderRegistrationData" class="org.motechproject.osgi.web.ModuleRegistrationData">
         <constructor-arg name="moduleName" value="pill-reminder"/>
         <constructor-arg name="i18n">

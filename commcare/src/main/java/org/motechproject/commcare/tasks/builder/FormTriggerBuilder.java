@@ -65,7 +65,7 @@ public class FormTriggerBuilder implements TriggerBuilder {
 
                 String displayName = DisplayNameHelper.buildDisplayName(RECEIVED_FORM, formName, config.getName());
 
-                triggers.add(new TriggerEventRequest(displayName, FORMS_EVENT + "." + config.getName() + "." + formName,
+                triggers.add(new TriggerEventRequest(displayName, FORMS_EVENT + "." + config.getName() + "." + form.getXmlns(),
                         null, parameters, FORMS_EVENT));
             }
         }
