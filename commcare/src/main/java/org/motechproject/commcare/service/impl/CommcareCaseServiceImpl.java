@@ -276,7 +276,7 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
 
         CaseInfo caseInfo = new CaseInfo();
 
-        Map<String, String> properties = caseResponse.getProperties();
+        Map<String, String> properties = caseResponse.getCaseProperties();
 
         String caseType = properties.get("case_type");
         String dateOpened = properties.get("date_opened");
