@@ -8,7 +8,7 @@ public final class DisplayNames {
     private DisplayNames() { }
 
     public static final String CHANNEL_DISPLAY_NAME = "ODK Module";
-    public static final String FORM_TRIGGER_DISPLAY_NAME = "Recieved Form";
+    public static final String FORM_TRIGGER_DISPLAY_NAME = "Received Form";
     public static final String CONFIGURATION_NAME = "Configuration Name";
     public static final String EXCEPTION = "Exception";
     public static final String FORM_TITLE = "Form Title";

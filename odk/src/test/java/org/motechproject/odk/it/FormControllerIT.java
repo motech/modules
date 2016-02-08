@@ -26,9 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -38,6 +36,7 @@ public class FormControllerIT extends OdkBaseIT {
     private static final int WAIT_COUNT = 30;
     private static final int EXPECTED_EVENTS_SUCCESS = 7;
     private static final int EXPECTED_EVENTS_FAIL = 1;
+    private static final String TIMEOUT = "Timeout";
 
     private static final String MOCK_ID_1 = "id1";
     private static final String MOCK_ID_2 = "id2";
@@ -58,10 +57,10 @@ public class FormControllerIT extends OdkBaseIT {
     }
 
     @Test
-    public void testNestedRepeats() throws Exception{
+    public void testNestedRepeats() throws Exception {
         List<String> subjects = createSuccessSubjects();
         MockEventListener mockEventListener = new MockEventListener(MOCK_ID_1);
-        registry.registerListener(mockEventListener,subjects);
+        registry.registerListener(mockEventListener, subjects);
 
         HttpPost request = new HttpPost(String.format("http://localhost:%d/odk/forms/%s/%s", TestContext.getJettyPort(), CONFIG_NAME, TITLE));
         StringEntity entity = new StringEntity(getJson());
@@ -70,13 +69,12 @@ public class FormControllerIT extends OdkBaseIT {
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK);
 
         int count = 0;
-        while(mockEventListener.getEvents().size() < EXPECTED_EVENTS_SUCCESS && count < WAIT_COUNT) {
+        while (mockEventListener.getEvents().size() < EXPECTED_EVENTS_SUCCESS && count < WAIT_COUNT) {
             count++;
             getLogger().debug("Number of events: " + mockEventListener.getEvents().size());
 
             if (count == WAIT_COUNT) {
-                getLogger().error("Timeout");
-                fail();
+                fail(TIMEOUT);
             }
             Thread.sleep(2000);
         }
@@ -87,9 +85,9 @@ public class FormControllerIT extends OdkBaseIT {
     }
 
     @Test
-    public void testFormReceiptFailure() throws Exception{
+    public void testFormReceiptFailure() throws Exception {
         MockEventListener mockEventListener = new MockEventListener(MOCK_ID_2);
-        registry.registerListener(mockEventListener,EventSubjects.FORM_FAIL);
+        registry.registerListener(mockEventListener, EventSubjects.FORM_FAIL);
         String badConfigName = "bad_config_name";
 
         HttpPost request = new HttpPost(String.format("http://localhost:%d/odk/forms/%s/%s", TestContext.getJettyPort(), badConfigName, TITLE));
@@ -104,8 +102,7 @@ public class FormControllerIT extends OdkBaseIT {
             getLogger().debug("Number of events: " + mockEventListener.getEvents().size());
 
             if (count == WAIT_COUNT) {
-                getLogger().error("Timeout");
-                fail();
+                fail(TIMEOUT);
             }
             Thread.sleep(2000);
         }
@@ -126,7 +123,6 @@ public class FormControllerIT extends OdkBaseIT {
         subjects.add(EventSubjects.FORM_FAIL);
         return subjects;
     }
-
 
     private String createEventSubject(String base, String suffix) {
         return base + "." + CONFIG_NAME + "." + TITLE + "." + suffix;

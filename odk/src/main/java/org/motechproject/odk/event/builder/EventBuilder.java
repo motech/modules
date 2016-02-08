@@ -3,7 +3,7 @@ package org.motechproject.odk.event.builder;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.odk.domain.Configuration;
 import org.motechproject.odk.domain.FormDefinition;
-import org.motechproject.odk.event.EventBuilderException;
+import org.motechproject.odk.exception.EventBuilderException;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public interface EventBuilder {
      * @param formDefinition The internal representation of the XML form.
      * @param configuration {@link Configuration}
      * @return A list of {@link MotechEvent}
-     * @throws Exception If JSON is malformed.
+     * @throws EventBuilderException If an error is encountered while building the list of events.
      */
     List<MotechEvent> createEvents(String json, FormDefinition formDefinition, Configuration configuration) throws EventBuilderException;
 

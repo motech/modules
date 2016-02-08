@@ -7,7 +7,10 @@ import org.motechproject.odk.service.FormInstanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
+/**
+ * Implementation of {@link FormInstanceService}.
+ */
+@Service("odkFormInstanceService")
 public class FormInstanceServiceImpl implements FormInstanceService {
 
     @Autowired

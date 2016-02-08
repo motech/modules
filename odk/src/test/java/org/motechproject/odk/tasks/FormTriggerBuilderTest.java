@@ -1,7 +1,6 @@
 package org.motechproject.odk.tasks;
 
 import org.apache.commons.io.FileUtils;
-
 import org.junit.Test;
 import org.motechproject.odk.domain.Configuration;
 import org.motechproject.odk.domain.FormDefinition;
@@ -17,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 public class FormTriggerBuilderTest {
 
     @Test
-    public void testNestedRepeats() throws Exception{
+    public void testNestedRepeats() throws Exception {
         Configuration configuration = new Configuration();
         configuration.setName("configName");
 
@@ -33,12 +32,12 @@ public class FormTriggerBuilderTest {
         assertEquals(triggerEventRequests.size(), 2);
         TriggerEventRequest request = triggerEventRequests.get(0);
 
-        assertEquals(request.getSubject(),"org.motechproject.odk.recieved_form.configName.nested_repeat");
-        assertEquals(request.getEventParameters().size(),6);
+        assertEquals(request.getSubject(), "org.motechproject.odk.recieved_form.configName.nested_repeat");
+        assertEquals(request.getEventParameters().size(), 6);
 
         request = triggerEventRequests.get(1);
-        assertEquals(request.getSubject(),"org.motechproject.odk.form_failure");
-        assertEquals(request.getEventParameters().size(),5);
+        assertEquals(request.getSubject(), "org.motechproject.odk.form_failure");
+        assertEquals(request.getEventParameters().size(), 5);
 
     }
 }

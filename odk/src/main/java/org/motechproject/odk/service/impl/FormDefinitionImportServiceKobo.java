@@ -14,12 +14,14 @@ import org.motechproject.odk.domain.FormDefinition;
 import org.motechproject.odk.domain.FormElement;
 import org.motechproject.odk.domain.KoboFormInfo;
 import org.motechproject.odk.domain.builder.FormElementBuilder;
+import org.motechproject.odk.exception.MalformedUriException;
 import org.motechproject.odk.service.AbstractFormDefinitionImportService;
-import org.motechproject.odk.service.FormDefinitionImportException;
+import org.motechproject.odk.exception.FormDefinitionImportException;
 import org.motechproject.odk.service.FormDefinitionImportService;
 import org.motechproject.odk.service.FormDefinitionService;
-import org.motechproject.odk.service.ParseUrlException;
+import org.motechproject.odk.exception.ParseUrlException;
 import org.motechproject.odk.service.TasksService;
+import org.motechproject.odk.util.FormUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +29,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+/**
+ * Implementation of {@link FormDefinitionImportService} for Kobotoolbox connections.
+ */
+@Service("odkFormDefinitionImportServiceKobo")
 public class FormDefinitionImportServiceKobo extends AbstractFormDefinitionImportService implements FormDefinitionImportService {
 
     private static final String API_PATH = "/api/v1";
@@ -74,7 +79,7 @@ public class FormDefinitionImportServiceKobo extends AbstractFormDefinitionImpor
     }
 
     @Override
-    protected void modifyFormDefinitionForImplementation(List<FormDefinition> formDefinitions) {
+    protected void modifyFormDefinitionForImplementation(List<FormDefinition> formDefinitions) throws MalformedUriException {
         for (FormDefinition formDefinition : formDefinitions) {
             List<FormElement> formElements = formDefinition.getFormElements();
 
@@ -97,9 +102,9 @@ public class FormDefinitionImportServiceKobo extends AbstractFormDefinitionImpor
         }
     }
 
-    private void alterFormElementName(FormElement formElement) {
+    private void alterFormElementName(FormElement formElement)throws MalformedUriException {
         String formFieldName = formElement.getName();
-        String name = formFieldName.substring(formFieldName.indexOf('/', 1) + 1, formFieldName.length());
+        String name = FormUtils.removeTitleFromUri(formFieldName);
         formElement.setName(name);
 
         if (formElement.hasChildren()) {
@@ -122,13 +127,14 @@ public class FormDefinitionImportServiceKobo extends AbstractFormDefinitionImpor
         } catch (IOException e) {
             throw new ParseUrlException(e);
         }
-
     }
 
     private String buildFormsQuery(Configuration configuration) {
         return configuration.getUrl() + API_PATH + FORMS_PATH + OWNER_QUERY + configuration.getUsername();
     }
 
+    /*This method corrects malformed XML form definitions by stripping the <root> and <?xml> elements and
+    * replaces &lt and &gt with < and > respectively.*/
     private String normalizeFormDef(String formDef) {
         if (formDef.startsWith("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
                 "<root>&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;")) {
@@ -140,9 +146,5 @@ public class FormDefinitionImportServiceKobo extends AbstractFormDefinitionImpor
         } else {
             return formDef;
         }
-
-
     }
-
-
 }

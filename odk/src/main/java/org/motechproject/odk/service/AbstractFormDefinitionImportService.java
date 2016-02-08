@@ -14,6 +14,11 @@ import org.apache.http.util.EntityUtils;
 import org.motechproject.odk.domain.Configuration;
 import org.motechproject.odk.domain.FormDefinition;
 import org.motechproject.odk.domain.ImportStatus;
+import org.motechproject.odk.exception.BasicAuthException;
+import org.motechproject.odk.exception.ConfigurationTypeException;
+import org.motechproject.odk.exception.FormDefinitionImportException;
+import org.motechproject.odk.exception.MalformedUriException;
+import org.motechproject.odk.exception.ParseUrlException;
 import org.motechproject.odk.parser.XformParser;
 import org.motechproject.odk.parser.factory.XformParserFactory;
 import org.slf4j.Logger;
@@ -26,6 +31,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Parent class for all {@link FormDefinitionImportService} implementations. Contains the template and
+ * hook methods for importing form definitions.
+ */
 @Component
 public abstract class AbstractFormDefinitionImportService implements FormDefinitionImportService {
 
@@ -45,6 +54,8 @@ public abstract class AbstractFormDefinitionImportService implements FormDefinit
 
     /**
      * Template method for importing form definitions.
+     * @param config {@link Configuration}
+     * @return {@link ImportStatus}
      */
     @Override
     public ImportStatus importForms(Configuration config) {
@@ -59,7 +70,7 @@ public abstract class AbstractFormDefinitionImportService implements FormDefinit
             return new ImportStatus(true);
 
         } catch (Exception e) {
-            LOGGER.error(e.toString());
+            LOGGER.error("Unable to import forms.", e.toString());
             return new ImportStatus(false);
         }
     }
@@ -81,8 +92,8 @@ public abstract class AbstractFormDefinitionImportService implements FormDefinit
                 formDefinitions.add(parser.parse(def, configuration.getName()));
             }
             return formDefinitions;
-        } catch (XPathExpressionException e) {
-            throw new FormDefinitionImportException(e);
+        } catch (XPathExpressionException|ConfigurationTypeException e) {
+            throw new FormDefinitionImportException("Error while parsing form definition.", e);
         }
     }
 
@@ -136,7 +147,7 @@ public abstract class AbstractFormDefinitionImportService implements FormDefinit
                     request,
                     HttpClientContext.create());
         } catch (Exception e) {
-            return null;
+            throw new BasicAuthException(e);
         }
         return basicAuthHeader;
     }
@@ -155,7 +166,7 @@ public abstract class AbstractFormDefinitionImportService implements FormDefinit
      * specific details
      * @param formDefinitions A list of form definitions associated with a configuration.
      */
-    protected abstract void modifyFormDefinitionForImplementation(List<FormDefinition> formDefinitions);
+    protected abstract void modifyFormDefinitionForImplementation(List<FormDefinition> formDefinitions) throws MalformedUriException;
 
     /**
      * Hook method that must be overridden by an implementing subclass. Parses the response from the application

@@ -6,16 +6,28 @@ import org.motechproject.odk.constant.EventSubjects;
 import org.motechproject.odk.domain.Configuration;
 import org.motechproject.odk.domain.FormDefinition;
 import org.motechproject.odk.domain.FormElement;
-import org.motechproject.odk.event.EventBuilderException;
+import org.motechproject.odk.exception.EventBuilderException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * Parent class for all {@link org.motechproject.odk.event.builder.EventBuilder} implementations.
+ */
 public abstract class AbstractEventBuilder implements EventBuilder {
 
+    /**
+     * Builds a list of {@link MotechEvent} from the JSON payload. It will create
+     * one persist form instance event and one event for each repeat group, including nested repeat
+     * groups.
+     * @param json JSON representation of the form instance data
+     * @param formDefinition The internal representation of the XML form.
+     * @param configuration {@link Configuration}
+     * @return A List of {@link MotechEvent}
+     * @throws EventBuilderException If an error is encountered while building the event list.
+     */
     @Override
     public List<MotechEvent> createEvents(String json, FormDefinition formDefinition, Configuration configuration) throws EventBuilderException {
         Map<String, Object> data = getData(json);
@@ -29,9 +41,9 @@ public abstract class AbstractEventBuilder implements EventBuilder {
         for (FormElement formElement : formDefinition.getFormElements()) {
             Object value = data.get(formElement.getName());
             Object formattedValue = formatValue(formElement.getType(), value);
-                if (formattedValue != null) {
-                    params.put(formElement.getName(), formattedValue);
-                }
+            if (formattedValue != null) {
+                params.put(formElement.getName(), formattedValue);
+            }
         }
 
         params.put(EventParameters.FORM_TITLE, formDefinition.getTitle());

@@ -14,7 +14,9 @@ import org.motechproject.odk.domain.FormValueGroup;
 import org.motechproject.odk.domain.FormValueInteger;
 import org.motechproject.odk.domain.FormValueString;
 import org.motechproject.odk.domain.FormValueStringList;
+import org.motechproject.odk.exception.FormInstanceBuilderException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +30,12 @@ public class FormInstanceBuilder {
     private Map<String, Object> params;
     private String instanceId;
 
-
+    /**
+     * Constructor for FormInstanceBuilder.
+     * @param formDefinition The definition for the form to be instantiated
+     * @param params The event payload from the incoming {@link org.motechproject.event.MotechEvent}
+     * @param instanceId The unique ID for the form instance.
+     */
     public FormInstanceBuilder(FormDefinition formDefinition, Map<String, Object> params, String instanceId) {
         this.formDefinition = formDefinition;
         this.params = params;
@@ -40,15 +47,14 @@ public class FormInstanceBuilder {
      *
      * @return {@link FormInstance}
      */
-    public FormInstance build() {
+    public FormInstance build() throws FormInstanceBuilderException {
         List<FormValue> formValues = new ArrayList<>();
         List<FormElement> formElements = formDefinition.getFormElements();
 
         for (FormElement formElement : formElements) {
             Object value = params.get(formElement.getName());
 
-            if (value != null && !(formElement.getType().equals(FieldTypeConstants.SELECT)
-                    && ((List<String>) value).size() == 0)) {
+            if (value != null && !(formElement.getType().equals(FieldTypeConstants.SELECT) && ((List<String>) value).size() == 0)) {
                 formValues.add(buildFormElementValueByType(formElement, value));
             }
         }
@@ -58,7 +64,7 @@ public class FormInstanceBuilder {
         return formInstance;
     }
 
-    private FormValue buildFormElementValueByType(FormElement formElement, Object value) {
+    private FormValue buildFormElementValueByType(FormElement formElement, Object value) throws FormInstanceBuilderException {
 
         switch (formElement.getType()) {
 
@@ -91,7 +97,7 @@ public class FormInstanceBuilder {
         }
     }
 
-    private FormValueGroup buildGroup(FormElement formElement, Object value) {
+    private FormValueGroup buildGroup(FormElement formElement, Object value) throws FormInstanceBuilderException {
         List<Map<String, Object>> data;
 
         if (value instanceof String) {
@@ -115,14 +121,14 @@ public class FormInstanceBuilder {
         return new FormValueGroup(formElement.getName(), formElement.getLabel(), formElement.getType(), children);
     }
 
-    private List<Map<String, Object>> jsonToMap(String json) {
+    private List<Map<String, Object>> jsonToMap(String json) throws FormInstanceBuilderException {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue((String) json, new TypeReference<List<Map<String, Object>>>() {
+            return mapper.readValue(json, new TypeReference<List<Map<String, Object>>>() {
             });
 
-        } catch (Exception e) {
-            return null;
+        } catch (IOException e) {
+            throw new FormInstanceBuilderException("Unable to parse JSON", e);
         }
     }
 
@@ -155,6 +161,4 @@ public class FormInstanceBuilder {
         }
         return null;
     }
-
-
 }

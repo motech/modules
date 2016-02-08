@@ -40,7 +40,7 @@ public class ActionBuilder {
                     .setDisplayName(DisplayNames.SAVE_FORM_INSTANCE + " [Configuration : " + formDefinition.getConfigurationName() + "]" + "[Title: " + formDefinition.getTitle() + "]")
                     .setActionParameters(actionParameterRequests)
                     .setSubject(EventSubjects.PERSIST_FORM_INSTANCE)
-                    .setName(formDefinition.getConfigurationName() + "_" + formDefinition.getTitle() + "_" + EventSubjects.PERSIST_FORM_INSTANCE);
+                    .setName(EventSubjects.PERSIST_FORM_INSTANCE + "." + formDefinition.getConfigurationName() + "." + formDefinition.getTitle());
             actionEventRequests.add(builder.createActionEventRequest());
         }
         actionEventRequests.add(createFormFailureAction());

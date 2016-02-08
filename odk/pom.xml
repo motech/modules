@@ -44,8 +44,6 @@
             <optional>true</optional>
         </dependency>
 
-
-
         <dependency>
             <groupId>${motech.groupId}</groupId>
             <artifactId>motech-admin</artifactId>
@@ -56,7 +54,6 @@
             <artifactId>spring-test-mvc</artifactId>
             <scope>test</scope>
         </dependency>
-
 
     </dependencies>
 
@@ -83,17 +80,16 @@
                             *
                         </Import-Package>
                         <Export-Package>
-                            org.motechproject.odk.service;version=${project.version},
-                            org.motechproject.odk.service.impl;version=${project.version},
-                            org.motechproject.odk.event.builder.impl;version=${project.version},
-                            org.motechproject.odk.web;version=${project.version},
-                            org.motechproject.odk.repository;version=${project.version},
                             org.motechproject.odk.domain;version=${project.version},
                             org.motechproject.odk.domain.builder;version=${project.version},
+                            org.motechproject.odk.event;version=${project.version},
+                            org.motechproject.odk.event.builder.impl;version=${project.version},
+                            org.motechproject.odk.exception;version=${project.version},
                             org.motechproject.odk.parser;version=${project.version},
                             org.motechproject.odk.parser.impl;version=${project.version},
-                            org.motechproject.odk.event;version=${project.version},
-
+                            org.motechproject.odk.repository;version=${project.version},
+                            org.motechproject.odk.service;version=${project.version},
+                            org.motechproject.odk.util;version=${project.version}
                         </Export-Package>
                     </instructions>
                 </configuration>

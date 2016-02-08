@@ -15,7 +15,6 @@ import static org.junit.Assert.assertNotNull;
 
 public class XformParserODKTest {
 
-
     @Test
     public void testWidgets() throws Exception {
         Configuration configuration = new Configuration();
@@ -27,7 +26,6 @@ public class XformParserODKTest {
         assertEquals(formDefinition.getTitle(),"Widgets");
         assertEquals(formDefinition.getFormElements().size(),57);
     }
-
 
     @Test
     public void testNestedRepeatGroups() throws Exception {

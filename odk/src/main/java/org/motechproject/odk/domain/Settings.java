@@ -11,9 +11,7 @@ public class Settings {
     private List<Configuration> configurations;
 
     public Settings() {
-        if (this.configurations == null) {
-            this.configurations = new ArrayList<>();
-        }
+        this.configurations = new ArrayList<>();
     }
 
     public Settings(List<Configuration> configurations) {
@@ -27,6 +25,5 @@ public class Settings {
     public void setConfigurations(List<Configuration> configurations) {
         this.configurations = configurations;
     }
-
 
 }

@@ -9,7 +9,6 @@ import org.motechproject.odk.domain.Configuration;
 import org.motechproject.odk.domain.FormDefinition;
 import org.motechproject.odk.domain.FormElement;
 import org.motechproject.odk.event.builder.EventBuilder;
-import org.motechproject.odk.event.builder.impl.EventBuilderOna;
 import org.motechproject.odk.parser.impl.XformParserODK;
 
 import java.io.File;
@@ -26,7 +25,7 @@ public class EventBuilderOdkTest {
     private FormDefinition formDefinition;
 
     @Before
-    public void setup() throws Exception{
+    public void setup() throws Exception {
         configuration = new Configuration();
         configuration.setName("configName");
 
@@ -41,75 +40,75 @@ public class EventBuilderOdkTest {
     }
 
     @Test
-    public void testOnaNestedRepeats() throws Exception{
+    public void testOnaNestedRepeats() throws Exception {
 
         EventBuilder builder = new EventBuilderOna();
-        List<MotechEvent> eventList = builder.createEvents(json,formDefinition,configuration);
+        List<MotechEvent> eventList = builder.createEvents(json, formDefinition, configuration);
         System.out.println();
         assertEquals(eventList.size(), 7);
         Iterator<MotechEvent> itr = eventList.iterator();
 
         MotechEvent event = itr.next();
-        assertEquals(event.getSubject(),"org.motechproject.odk.repeat_group.configName.ona_nested_repeats.outer_group");
-        assertEquals(event.getParameters().size(),4);
-        assertEquals(event.getParameters().get("root_scope_field"),"root scope");
-        assertEquals(event.getParameters().get("outer_group/outer_group_field"),"outer group 1 field");
-        assertEquals(event.getParameters().get("formhub/uuid"),"517b7383ae62455482b6f8505e5646e2");
-        assertEquals(event.getParameters().get("meta/instanceID"),"uuid:d9e30fd7-5f0c-4185-a331-db0f740b3547");
+        assertEquals(event.getSubject(), "org.motechproject.odk.repeat_group.configName.ona_nested_repeats.outer_group");
+        assertEquals(event.getParameters().size(), 4);
+        assertEquals(event.getParameters().get("root_scope_field"), "root scope");
+        assertEquals(event.getParameters().get("outer_group/outer_group_field"), "outer group 1 field");
+        assertEquals(event.getParameters().get("formhub/uuid"), "517b7383ae62455482b6f8505e5646e2");
+        assertEquals(event.getParameters().get("meta/instanceID"), "uuid:d9e30fd7-5f0c-4185-a331-db0f740b3547");
 
         event = itr.next();
-        assertEquals(event.getSubject(),"org.motechproject.odk.repeat_group.configName.ona_nested_repeats.outer_group/inner_group");
-        assertEquals(event.getParameters().size(),5);
-        assertEquals(event.getParameters().get("root_scope_field"),"root scope");
-        assertEquals(event.getParameters().get("outer_group/outer_group_field"),"outer group 1 field");
-        assertEquals(event.getParameters().get("formhub/uuid"),"517b7383ae62455482b6f8505e5646e2");
-        assertEquals(event.getParameters().get("meta/instanceID"),"uuid:d9e30fd7-5f0c-4185-a331-db0f740b3547");
-        assertEquals(event.getParameters().get("outer_group/inner_group/inner_group_field"),"outer group 1 inner group field 1");
+        assertEquals(event.getSubject(), "org.motechproject.odk.repeat_group.configName.ona_nested_repeats.outer_group/inner_group");
+        assertEquals(event.getParameters().size(), 5);
+        assertEquals(event.getParameters().get("root_scope_field"), "root scope");
+        assertEquals(event.getParameters().get("outer_group/outer_group_field"), "outer group 1 field");
+        assertEquals(event.getParameters().get("formhub/uuid"), "517b7383ae62455482b6f8505e5646e2");
+        assertEquals(event.getParameters().get("meta/instanceID"), "uuid:d9e30fd7-5f0c-4185-a331-db0f740b3547");
+        assertEquals(event.getParameters().get("outer_group/inner_group/inner_group_field"), "outer group 1 inner group field 1");
 
         event = itr.next();
-        assertEquals(event.getSubject(),"org.motechproject.odk.repeat_group.configName.ona_nested_repeats.outer_group/inner_group");
-        assertEquals(event.getParameters().size(),5);
-        assertEquals(event.getParameters().get("root_scope_field"),"root scope");
-        assertEquals(event.getParameters().get("outer_group/outer_group_field"),"outer group 1 field");
-        assertEquals(event.getParameters().get("formhub/uuid"),"517b7383ae62455482b6f8505e5646e2");
-        assertEquals(event.getParameters().get("meta/instanceID"),"uuid:d9e30fd7-5f0c-4185-a331-db0f740b3547");
-        assertEquals(event.getParameters().get("outer_group/inner_group/inner_group_field"),"outer group 1 inner group field 2");
+        assertEquals(event.getSubject(), "org.motechproject.odk.repeat_group.configName.ona_nested_repeats.outer_group/inner_group");
+        assertEquals(event.getParameters().size(), 5);
+        assertEquals(event.getParameters().get("root_scope_field"), "root scope");
+        assertEquals(event.getParameters().get("outer_group/outer_group_field"), "outer group 1 field");
+        assertEquals(event.getParameters().get("formhub/uuid"), "517b7383ae62455482b6f8505e5646e2");
+        assertEquals(event.getParameters().get("meta/instanceID"), "uuid:d9e30fd7-5f0c-4185-a331-db0f740b3547");
+        assertEquals(event.getParameters().get("outer_group/inner_group/inner_group_field"), "outer group 1 inner group field 2");
 
         event = itr.next();
-        assertEquals(event.getSubject(),"org.motechproject.odk.repeat_group.configName.ona_nested_repeats.outer_group");
-        assertEquals(event.getParameters().size(),4);
-        assertEquals(event.getParameters().get("root_scope_field"),"root scope");
-        assertEquals(event.getParameters().get("outer_group/outer_group_field"),"outer group 2 field");
-        assertEquals(event.getParameters().get("formhub/uuid"),"517b7383ae62455482b6f8505e5646e2");
-        assertEquals(event.getParameters().get("meta/instanceID"),"uuid:d9e30fd7-5f0c-4185-a331-db0f740b3547");
+        assertEquals(event.getSubject(), "org.motechproject.odk.repeat_group.configName.ona_nested_repeats.outer_group");
+        assertEquals(event.getParameters().size(), 4);
+        assertEquals(event.getParameters().get("root_scope_field"), "root scope");
+        assertEquals(event.getParameters().get("outer_group/outer_group_field"), "outer group 2 field");
+        assertEquals(event.getParameters().get("formhub/uuid"), "517b7383ae62455482b6f8505e5646e2");
+        assertEquals(event.getParameters().get("meta/instanceID"), "uuid:d9e30fd7-5f0c-4185-a331-db0f740b3547");
 
         event = itr.next();
-        assertEquals(event.getSubject(),"org.motechproject.odk.repeat_group.configName.ona_nested_repeats.outer_group/inner_group");
-        assertEquals(event.getParameters().size(),5);
-        assertEquals(event.getParameters().get("root_scope_field"),"root scope");
-        assertEquals(event.getParameters().get("outer_group/outer_group_field"),"outer group 2 field");
-        assertEquals(event.getParameters().get("formhub/uuid"),"517b7383ae62455482b6f8505e5646e2");
-        assertEquals(event.getParameters().get("meta/instanceID"),"uuid:d9e30fd7-5f0c-4185-a331-db0f740b3547");
-        assertEquals(event.getParameters().get("outer_group/inner_group/inner_group_field"),"outer group 2 inner group field 1");
+        assertEquals(event.getSubject(), "org.motechproject.odk.repeat_group.configName.ona_nested_repeats.outer_group/inner_group");
+        assertEquals(event.getParameters().size(), 5);
+        assertEquals(event.getParameters().get("root_scope_field"), "root scope");
+        assertEquals(event.getParameters().get("outer_group/outer_group_field"), "outer group 2 field");
+        assertEquals(event.getParameters().get("formhub/uuid"), "517b7383ae62455482b6f8505e5646e2");
+        assertEquals(event.getParameters().get("meta/instanceID"), "uuid:d9e30fd7-5f0c-4185-a331-db0f740b3547");
+        assertEquals(event.getParameters().get("outer_group/inner_group/inner_group_field"), "outer group 2 inner group field 1");
 
         event = itr.next();
-        assertEquals(event.getSubject(),"org.motechproject.odk.repeat_group.configName.ona_nested_repeats.outer_group/inner_group");
-        assertEquals(event.getParameters().size(),5);
-        assertEquals(event.getParameters().get("root_scope_field"),"root scope");
-        assertEquals(event.getParameters().get("outer_group/outer_group_field"),"outer group 2 field");
-        assertEquals(event.getParameters().get("formhub/uuid"),"517b7383ae62455482b6f8505e5646e2");
-        assertEquals(event.getParameters().get("meta/instanceID"),"uuid:d9e30fd7-5f0c-4185-a331-db0f740b3547");
-        assertEquals(event.getParameters().get("outer_group/inner_group/inner_group_field"),"outer group 2 inner group field 2");
+        assertEquals(event.getSubject(), "org.motechproject.odk.repeat_group.configName.ona_nested_repeats.outer_group/inner_group");
+        assertEquals(event.getParameters().size(), 5);
+        assertEquals(event.getParameters().get("root_scope_field"), "root scope");
+        assertEquals(event.getParameters().get("outer_group/outer_group_field"), "outer group 2 field");
+        assertEquals(event.getParameters().get("formhub/uuid"), "517b7383ae62455482b6f8505e5646e2");
+        assertEquals(event.getParameters().get("meta/instanceID"), "uuid:d9e30fd7-5f0c-4185-a331-db0f740b3547");
+        assertEquals(event.getParameters().get("outer_group/inner_group/inner_group_field"), "outer group 2 inner group field 2");
 
         event = itr.next();
-        assertEquals(event.getSubject(),"org.motechproject.odk.recieved_form.configName.ona_nested_repeats");
-        assertEquals(event.getParameters().size(),6);
-        assertEquals(event.getParameters().get("root_scope_field"),"root scope");
-        assertEquals(event.getParameters().get("meta/instanceID"),"uuid:d9e30fd7-5f0c-4185-a331-db0f740b3547");
-        assertEquals(event.getParameters().get("formhub/uuid"),"517b7383ae62455482b6f8505e5646e2");
-        assertEquals(event.getParameters().get("root_scope_field"),"root scope");
-        assertEquals(event.getParameters().get(EventParameters.CONFIGURATION_NAME),configuration.getName());
-        assertEquals(event.getParameters().get(EventParameters.FORM_TITLE),formDefinition.getTitle());
+        assertEquals(event.getSubject(), "org.motechproject.odk.recieved_form.configName.ona_nested_repeats");
+        assertEquals(event.getParameters().size(), 6);
+        assertEquals(event.getParameters().get("root_scope_field"), "root scope");
+        assertEquals(event.getParameters().get("meta/instanceID"), "uuid:d9e30fd7-5f0c-4185-a331-db0f740b3547");
+        assertEquals(event.getParameters().get("formhub/uuid"), "517b7383ae62455482b6f8505e5646e2");
+        assertEquals(event.getParameters().get("root_scope_field"), "root scope");
+        assertEquals(event.getParameters().get(EventParameters.CONFIGURATION_NAME), configuration.getName());
+        assertEquals(event.getParameters().get(EventParameters.FORM_TITLE), formDefinition.getTitle());
         assertNotNull(event.getParameters().get("outer_group"));
 
     }

@@ -8,7 +8,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+/**
+ * Implementation of {@link FormDefinitionService}.
+ */
+@Service("odkFormDefinitionService")
 public class FormDefinitionServiceImpl implements FormDefinitionService {
 
     @Autowired

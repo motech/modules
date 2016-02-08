@@ -1,6 +1,7 @@
 package org.motechproject.odk.service.factory;
 
 import org.motechproject.odk.domain.ConfigurationType;
+import org.motechproject.odk.exception.ConfigurationTypeException;
 import org.motechproject.odk.service.FormDefinitionImportService;
 import org.motechproject.odk.service.impl.FormDefinitionImportServiceKobo;
 import org.motechproject.odk.service.impl.FormDefinitionImportServiceODK;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class FormDefinitionImportServiceFactory {
+
+    private static final String NO_SERVICE = "No form definition import service for configuration type: ";
 
     @Autowired
     private FormDefinitionImportServiceODK formDefinitionImportServiceODK;
@@ -30,7 +33,7 @@ public class FormDefinitionImportServiceFactory {
      * @param type The {@link ConfigurationType} associated with the form definition.
      * @return {@link FormDefinitionImportService}
      */
-    public FormDefinitionImportService getService(ConfigurationType type) {
+    public FormDefinitionImportService getService(ConfigurationType type) throws ConfigurationTypeException {
 
         switch (type) {
             case ODK:
@@ -43,8 +46,7 @@ public class FormDefinitionImportServiceFactory {
                 return formDefinitionImportServiceKobo;
 
             default:
-                return null;
-
+                throw new ConfigurationTypeException(NO_SERVICE + type);
         }
     }
 }

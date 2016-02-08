@@ -6,9 +6,15 @@ package org.motechproject.odk.domain;
 public class Verification {
 
     private boolean verified;
+    private String message;
 
     public Verification(boolean verified) {
         this.verified = verified;
+    }
+
+    public Verification(boolean verified, String message) {
+        this.verified = verified;
+        this.message = message;
     }
 
     public boolean isVerified() {
@@ -17,5 +23,13 @@ public class Verification {
 
     public void setVerified(boolean verified) {
         this.verified = verified;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

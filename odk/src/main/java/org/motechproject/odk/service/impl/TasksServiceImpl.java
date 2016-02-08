@@ -11,7 +11,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+/**
+ * Implementation of {@link TasksService}.
+ */
+@Service("odkTasksService")
 public class TasksServiceImpl implements TasksService {
 
     private ChannelService channelService;

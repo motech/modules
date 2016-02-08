@@ -2,6 +2,7 @@ package org.motechproject.odk.parser.impl;
 
 import org.motechproject.odk.domain.FormDefinition;
 import org.motechproject.odk.domain.FormElement;
+import org.motechproject.odk.util.FormUtils;
 import org.motechproject.odk.parser.XformParser;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -14,6 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Kobotoolbox implementation of {@link XformParser}
+ */
 public class XformParserKobo extends XformParserODK implements XformParser {
 
     private static final String GROUPS_PATH = "/h:html/h:body/xForms:group";
@@ -35,7 +39,6 @@ public class XformParserKobo extends XformParserODK implements XformParser {
         return formDefinition;
 
     }
-
 
     private void findGroupLabels(FormDefinition formDefinition, Node root) throws XPathExpressionException {
         Map<String, FormElement> formElementMap = listToMap(formDefinition.getFormElements());
@@ -72,10 +75,8 @@ public class XformParserKobo extends XformParserODK implements XformParser {
                     recursivelyFindGroupRefs(element.getChildNodes(), formElementMap, uri);
                 }
             }
-
         }
     }
-
 
     private Map<String, FormElement> listToMap(List<FormElement> formElements) {
         Map<String, FormElement> formElementMap = new HashMap<>();
@@ -100,14 +101,10 @@ public class XformParserKobo extends XformParserODK implements XformParser {
 
     private void setLabelForFormElementChildren(FormElement formElement) {
         if (formElement.getChildren() != null) {
-
             for (FormElement child : formElement.getChildren()) {
-                String childName = child.getName();
-                String label = formElement.getLabel() + "/" + childName.substring(childName.lastIndexOf('/') + 1);
-                child.setLabel(label);
+                String childLabel = FormUtils.createChildLabelFromParentLabel(formElement.getLabel(), child.getName());
+                child.setLabel(childLabel);
             }
         }
     }
-
-
 }

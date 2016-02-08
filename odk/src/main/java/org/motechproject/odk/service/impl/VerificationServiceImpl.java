@@ -12,16 +12,20 @@ import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.osgi.services.HttpClientBuilderFactory;
 import org.motechproject.odk.domain.Configuration;
 import org.motechproject.odk.domain.Verification;
+import org.motechproject.odk.exception.BasicAuthException;
 import org.motechproject.odk.service.VerificationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service("odkVerificationService")
 public class VerificationServiceImpl implements VerificationService {
 
     private static final String FORM_LIST = "/formList";
     private static final int STATUS_OK = 200;
-    private static final int TIMEOUT = 2000;
+    private static final int TIMEOUT = 5000;
+    private static final Logger LOGGER = LoggerFactory.getLogger(VerificationServiceImpl.class);
 
     private HttpClient client;
     private RequestConfig config;
@@ -34,14 +38,13 @@ public class VerificationServiceImpl implements VerificationService {
                 .setSocketTimeout(TIMEOUT)
                 .build();
         this.client = httpClientBuilderFactory.newBuilder().build();
-
     }
 
     @Override
     public Verification verifyKobo(Configuration configuration) {
         HttpGet request = new HttpGet(configuration.getUrl() + "/" + configuration.getUsername() + FORM_LIST);
         request.addHeader(generateBasicAuthHeader(request, configuration));
-        return new Verification(executeRequest(request));
+        return executeRequest(request);
     }
 
     @Override
@@ -52,16 +55,22 @@ public class VerificationServiceImpl implements VerificationService {
     @Override
     public Verification verifyOdk(Configuration configuration) {
         HttpGet request = new HttpGet(configuration.getUrl() + FORM_LIST);
-        return new Verification(executeRequest(request));
+        return executeRequest(request);
     }
 
-    private boolean executeRequest(HttpGet request) {
+    private Verification executeRequest(HttpGet request) {
         request.setConfig(config);
         try {
             HttpResponse response = client.execute(request);
-            return response.getStatusLine().getStatusCode() == STATUS_OK;
+            int status = response.getStatusLine().getStatusCode();
+            if (status == STATUS_OK) {
+                return new Verification(true);
+            } else {
+                return new Verification(false, Integer.toString(status));
+            }
         } catch (Exception e) {
-            return false;
+            LOGGER.error("Error verifying connection", e);
+            return new Verification(false, e.toString());
         }
     }
 
@@ -74,7 +83,7 @@ public class VerificationServiceImpl implements VerificationService {
                     request,
                     HttpClientContext.create());
         } catch (Exception e) {
-            return null;
+            throw new BasicAuthException(e);
         }
         return basicAuthHeader;
     }

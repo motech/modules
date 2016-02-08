@@ -43,18 +43,18 @@ public class FormInstanceBuilderTest {
         assertEquals(instance.getTitle(), TITLE);
         assertEquals(instance.getInstanceId(), INSTANCE_ID);
         assertEquals(instance.getFormValues().size(), 2);
-        assertEquals(instance.getFormValues().get(0).getName(),FORM_ELEMENT_STRING);
-        assertEquals(instance.getFormValues().get(1).getName(),FORM_ELEMENT_OUTER_GROUP);
+        assertEquals(instance.getFormValues().get(0).getName(), FORM_ELEMENT_STRING);
+        assertEquals(instance.getFormValues().get(1).getName(), FORM_ELEMENT_OUTER_GROUP);
         FormValueGroup group = (FormValueGroup) instance.getFormValues().get(1);
 
-        assertEquals(group.getChildren().size(),2);
-        assertEquals(group.getChildren().get(0).getName(),INNER_GROUP);
+        assertEquals(group.getChildren().size(), 2);
+        assertEquals(group.getChildren().get(0).getName(), INNER_GROUP);
         assertEquals(instance.getFormValues().get(1).getName(), FORM_ELEMENT_OUTER_GROUP);
 
         FormValueGroup innerGroup = (FormValueGroup) group.getChildren().get(0);
-        assertEquals(innerGroup.getChildren().size(),2);
-        assertEquals(innerGroup.getChildren().get(0).getName(),CHILD_2);
-        assertEquals(innerGroup.getChildren().get(1).getName(),CHILD_1);
+        assertEquals(innerGroup.getChildren().size(), 2);
+        assertEquals(innerGroup.getChildren().get(0).getName(), CHILD_2);
+        assertEquals(innerGroup.getChildren().get(1).getName(), CHILD_1);
     }
 
     private FormDefinition buildFormDefWithGroups() {
@@ -123,13 +123,13 @@ public class FormInstanceBuilderTest {
         Map<String, Object> innerGroup = new HashMap<>();
         innerGroup.put(CHILD_1, "child 1");
         innerGroup.put(CHILD_2, "child 2");
-        List<Map<String,Object>> innerGroupList = new ArrayList<>();
+        List<Map<String, Object>> innerGroupList = new ArrayList<>();
         innerGroupList.add(innerGroup);
 
         Map<String, Object> formElementOuterGroup = new HashMap<>();
         formElementOuterGroup.put(INNER_GROUP, innerGroupList);
         formElementOuterGroup.put(CHILD_OUTER_GROUP, "child outer group");
-        List<Map<String,Object>> outerGroupList = new ArrayList<>();
+        List<Map<String, Object>> outerGroupList = new ArrayList<>();
         outerGroupList.add(formElementOuterGroup);
 
         Map<String, Object> params = new HashMap<>();

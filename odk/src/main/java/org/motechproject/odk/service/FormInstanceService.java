@@ -12,5 +12,11 @@ public interface FormInstanceService {
      * @param formInstance {@link FormInstance}
      */
     void create(FormInstance formInstance);
+
+    /**
+     * Queries for a {@link FormInstance} by its instance ID.
+     * @param instanceId The unique ID for the form instance.
+     * @return {@link FormInstance} if it exists.
+     */
     FormInstance getByInstanceId(String instanceId);
 }

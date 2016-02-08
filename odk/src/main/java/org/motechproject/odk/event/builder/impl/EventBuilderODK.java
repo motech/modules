@@ -3,10 +3,10 @@ package org.motechproject.odk.event.builder.impl;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.motechproject.odk.constant.FieldTypeConstants;
 import org.motechproject.odk.domain.OdkJsonFormPublication;
-import org.motechproject.odk.event.EventBuilderException;
+import org.motechproject.odk.exception.EventBuilderException;
 import org.motechproject.odk.event.builder.AbstractEventBuilder;
 import org.motechproject.odk.event.builder.EventBuilder;
-import org.motechproject.odk.event.builder.EventBuilderUtils;
+import org.motechproject.odk.util.EventBuilderUtils;
 
 import java.io.IOException;
 import java.util.Map;
@@ -17,7 +17,7 @@ public class EventBuilderODK extends AbstractEventBuilder implements EventBuilde
     private static final int TIME_STRING_SIZE = 5;
 
 
-    protected Object formatValue(String type, Object value) {
+    protected Object formatValue(String type, Object value) throws EventBuilderException {
 
         switch (type) {
 

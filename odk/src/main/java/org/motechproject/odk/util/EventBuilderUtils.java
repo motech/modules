@@ -1,7 +1,10 @@
-package org.motechproject.odk.event.builder;
+package org.motechproject.odk.util;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.motechproject.odk.exception.EventBuilderException;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,44 +28,28 @@ public final class EventBuilderUtils {
         return Arrays.asList(strings);
     }
 
-
-
     public static String formatStringArray(List<String> value) {
         if (value.size() == 0 || value.get(0) == null) {
             return null;
         }
-
-        StringBuilder builder = new StringBuilder();
-        builder.append(value.get(0));
-        for (int i = 1; i < value.size(); i++) {
-            builder.append("\n");
-            builder.append(value.get(i));
-        }
-        return builder.toString();
+        return StringUtils.join(value, "\n");
     }
 
     public static String formatDoubleArray(List<Double> value) {
         if (value.size() == 0 || value.get(0) == null) {
             return null;
         }
-
-        StringBuilder builder = new StringBuilder();
-        builder.append(value.get(0).toString());
-        for (int i = 1; i < value.size(); i++) {
-            builder.append("\n");
-            builder.append(value.get(i));
-        }
-        return builder.toString();
+        return StringUtils.join(value, "\n");
     }
 
-    public static String formatAsJson(Object value) {
+    public static String formatAsJson(Object value) throws EventBuilderException {
         if (value == null) {
             return null;
         }
         try {
             return new ObjectMapper().writeValueAsString(value);
-        } catch (Exception e) {
-            return null;
+        } catch (IOException e) {
+            throw new EventBuilderException("Unable to format value as JSON", e);
         }
     }
 
@@ -82,7 +69,4 @@ public final class EventBuilderUtils {
     private static String addGMToffset(String value) {
         return value + GMT_OFFSET;
     }
-
-
-
 }

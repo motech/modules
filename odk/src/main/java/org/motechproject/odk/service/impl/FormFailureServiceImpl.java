@@ -6,7 +6,10 @@ import org.motechproject.odk.service.FormFailureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
+/**
+ * Implementation of {@link FormFailureService}.
+ */
+@Service("odkFormFailureService")
 public class FormFailureServiceImpl implements FormFailureService {
 
     @Autowired

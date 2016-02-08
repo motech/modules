@@ -1,6 +1,7 @@
 package org.motechproject.odk.parser.factory;
 
 import org.motechproject.odk.domain.ConfigurationType;
+import org.motechproject.odk.exception.ConfigurationTypeException;
 import org.motechproject.odk.parser.XformParser;
 import org.motechproject.odk.parser.impl.XformParserKobo;
 import org.motechproject.odk.parser.impl.XformParserODK;
@@ -15,7 +16,7 @@ public class XformParserFactory {
      * @param type
      * @return
      */
-    public XformParser getParser(ConfigurationType type) {
+    public XformParser getParser(ConfigurationType type) throws ConfigurationTypeException {
 
         switch (type) {
             case ONA:
@@ -25,7 +26,7 @@ public class XformParserFactory {
             case KOBO:
                 return new XformParserKobo();
             default:
-                return null;
+                throw new ConfigurationTypeException("No parser for configuration type: " + type);
         }
     }
 }

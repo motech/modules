@@ -17,6 +17,9 @@
     </div>
     <div ng-if="importing" class="alert alert-info" role="alert" id="importing">{{msg('odk.forms.import.importing')}}
     </div>
+    <div ng-if="formDefFail" class="alert alert-danger" role="alert" id="formDefFail">{{msg('odk.forms.import.formDefFail')}}</div>
+    <div ng-if="configsFail" class="alert alert-danger" role="alert" id="configsFail">{{msg('odk.forms.import.configsFail')}}</div>
+
 
     <br><br>
 

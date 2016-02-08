@@ -6,12 +6,14 @@ import org.motechproject.odk.constant.ODKConstants;
 import org.motechproject.odk.domain.FormDefinition;
 import org.motechproject.odk.domain.FormElement;
 import org.motechproject.odk.domain.builder.FormElementBuilder;
+import org.motechproject.odk.exception.MalformedUriException;
 import org.motechproject.odk.service.AbstractFormDefinitionImportService;
 import org.motechproject.odk.service.FormDefinitionImportService;
 import org.motechproject.odk.service.FormDefinitionService;
-import org.motechproject.odk.service.ParseUrlException;
+import org.motechproject.odk.exception.ParseUrlException;
 import org.motechproject.odk.service.TasksService;
 
+import org.motechproject.odk.util.FormUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.NamedNodeMap;
@@ -26,8 +28,10 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-
-@Service
+/**
+ * Implementation of {@link FormDefinitionImportService} for ODK connections.
+ */
+@Service("odkFormDefinitionImportServiceODK")
 public class FormDefinitionImportServiceODK extends AbstractFormDefinitionImportService implements FormDefinitionImportService {
 
     private static final String LATITUDE = ":Latitude";
@@ -61,7 +65,7 @@ public class FormDefinitionImportServiceODK extends AbstractFormDefinitionImport
     }
 
     @Override
-    protected void modifyFormDefinitionForImplementation(List<FormDefinition> formDefinitions) {
+    protected void modifyFormDefinitionForImplementation(List<FormDefinition> formDefinitions) throws MalformedUriException {
 
         for (FormDefinition formDefinition : formDefinitions) {
             List<FormElement> formElements = formDefinition.getFormElements();
@@ -81,11 +85,11 @@ public class FormDefinitionImportServiceODK extends AbstractFormDefinitionImport
         }
     }
 
-    private void modifyFormElements(List<FormElement> formElements) {
+    private void modifyFormElements(List<FormElement> formElements) throws MalformedUriException {
         List<FormElement> additionalFields = new ArrayList<>();
         for (FormElement formElement : formElements) {
-            String[] array = formElement.getName().split("/");
-            formElement.setName(array[array.length - 1]);
+            String name  = FormUtils.getFieldNameFromURI(formElement.getName());
+            formElement.setName(name);
 
             if (formElement.getType().equalsIgnoreCase(FieldTypeConstants.GEOPOINT)) {
                 additionalFields.addAll(addGeopointFields(formElement));

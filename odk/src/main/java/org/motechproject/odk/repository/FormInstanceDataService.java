@@ -15,7 +15,4 @@ public interface FormInstanceDataService extends MotechDataService<FormInstance>
 
     @Lookup
     FormInstance byConfigNameAndTitle(@LookupField(name = "configName") String configName, @LookupField(name = "title") String title);
-
-
-
 }

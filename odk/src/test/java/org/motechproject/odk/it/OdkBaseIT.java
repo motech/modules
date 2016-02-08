@@ -10,11 +10,13 @@ import org.motechproject.odk.domain.ConfigurationType;
 import org.motechproject.odk.domain.FormDefinition;
 import org.motechproject.odk.domain.FormElement;
 import org.motechproject.odk.domain.builder.FormElementBuilder;
+import org.motechproject.odk.exception.MalformedUriException;
 import org.motechproject.odk.parser.XformParser;
 import org.motechproject.odk.parser.impl.XformParserODK;
 import org.motechproject.odk.repository.FormDefinitionDataService;
 import org.motechproject.odk.repository.FormInstanceDataService;
 import org.motechproject.odk.service.ConfigurationService;
+import org.motechproject.odk.util.FormUtils;
 import org.motechproject.testing.osgi.BasePaxIT;
 
 import javax.inject.Inject;
@@ -36,12 +38,10 @@ public abstract class OdkBaseIT extends BasePaxIT {
     protected static final String CONFIG_NAME = "ona";
     protected static final String TITLE = "ona_nested_repeats";
 
-
-
     @Before
     public void baseSetup() throws Exception {
         clearDb();
-        configuration = new Configuration("url","motech","motech",CONFIG_NAME,ConfigurationType.ONA,true);
+        configuration = new Configuration("url", "motech", "motech", CONFIG_NAME, ConfigurationType.ONA, true);
         configurationService.addOrUpdateConfiguration(configuration);
         String xml;
 
@@ -70,7 +70,7 @@ public abstract class OdkBaseIT extends BasePaxIT {
         formInstanceDataService.deleteAll();
     }
 
-    private void alterFormDef(FormDefinition formDefinition) {
+    private void alterFormDef(FormDefinition formDefinition) throws MalformedUriException {
         List<FormElement> formElements = formDefinition.getFormElements();
 
         for (FormElement formElement : formElements) {
@@ -91,9 +91,9 @@ public abstract class OdkBaseIT extends BasePaxIT {
         formElements.add(new FormElementBuilder().setName(OnaConstants.SUBMITTED_BY).setLabel(OnaConstants.SUBMITTED_BY).setType(FieldTypeConstants.STRING).createFormElement());
     }
 
-    private void alterFormElementName(FormElement formElement) {
+    private void alterFormElementName(FormElement formElement) throws MalformedUriException {
         String formFieldName = formElement.getName();
-        String name = formFieldName.substring(formFieldName.indexOf("/", 1) + 1, formFieldName.length()); // removes form title from URI
+        String name = FormUtils.removeTitleFromUri(formFieldName);
         formElement.setName(name);
 
         if (formElement.hasChildren()) {
@@ -107,11 +107,9 @@ public abstract class OdkBaseIT extends BasePaxIT {
         return formDefinitionDataService;
     }
 
-
     public FormInstanceDataService getFormInstanceDataService() {
         return formInstanceDataService;
     }
-
 
     public Configuration getConfiguration() {
         return configuration;

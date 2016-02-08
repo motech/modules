@@ -13,7 +13,7 @@ public interface XformParser {
      * Parses the string xForm
      * @param xForm
      * @param configurationName
-     * @return
+     * @return A {@link FormDefinition}
      * @throws XPathExpressionException
      */
     FormDefinition parse(String xForm, String configurationName) throws XPathExpressionException;

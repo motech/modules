@@ -15,7 +15,10 @@ import org.springframework.stereotype.Service;
 import java.io.InputStream;
 import java.util.List;
 
-
+/**
+ * Implementation of {@link ConfigurationService}. Provides CRUD operations
+ * on user configurations.
+ */
 @Service("odkConfigurationService")
 public class ConfigurationServiceImpl implements ConfigurationService {
 
@@ -86,5 +89,4 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         settingsFacade.saveRawConfig(CONFIG_FILE_NAME, resource);
         loadSettings();
     }
-
 }

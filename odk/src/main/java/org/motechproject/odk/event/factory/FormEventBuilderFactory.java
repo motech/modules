@@ -4,6 +4,7 @@ import org.motechproject.odk.domain.ConfigurationType;
 import org.motechproject.odk.event.builder.EventBuilder;
 import org.motechproject.odk.event.builder.impl.EventBuilderODK;
 import org.motechproject.odk.event.builder.impl.EventBuilderOna;
+import org.motechproject.odk.exception.ConfigurationTypeException;
 
 /**
  * Factory class for {@link org.motechproject.odk.event.builder.EventBuilder}
@@ -15,7 +16,7 @@ public class FormEventBuilderFactory {
      * @param type
      * @return {@link EventBuilder}
      */
-    public EventBuilder getBuilder(ConfigurationType type) {
+    public EventBuilder getBuilder(ConfigurationType type) throws ConfigurationTypeException {
         switch (type) {
             case ODK:
                 return new EventBuilderODK();
@@ -24,7 +25,7 @@ public class FormEventBuilderFactory {
             case KOBO:
                 return new EventBuilderOna();
             default:
-                return null;
+                throw new ConfigurationTypeException("Event builder does not exist for configuration type: " + type);
         }
     }
 }

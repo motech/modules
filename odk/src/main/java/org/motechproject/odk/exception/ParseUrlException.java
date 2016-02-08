@@ -1,4 +1,4 @@
-package org.motechproject.odk.service;
+package org.motechproject.odk.exception;
 
 public class ParseUrlException extends Exception {
 

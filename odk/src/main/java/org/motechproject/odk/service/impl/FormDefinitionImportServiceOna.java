@@ -10,12 +10,14 @@ import org.motechproject.odk.domain.Configuration;
 import org.motechproject.odk.domain.FormDefinition;
 import org.motechproject.odk.domain.FormElement;
 import org.motechproject.odk.domain.builder.FormElementBuilder;
+import org.motechproject.odk.exception.MalformedUriException;
 import org.motechproject.odk.service.AbstractFormDefinitionImportService;
-import org.motechproject.odk.service.FormDefinitionImportException;
+import org.motechproject.odk.exception.FormDefinitionImportException;
 import org.motechproject.odk.service.FormDefinitionImportService;
 import org.motechproject.odk.service.FormDefinitionService;
-import org.motechproject.odk.service.ParseUrlException;
+import org.motechproject.odk.exception.ParseUrlException;
 import org.motechproject.odk.service.TasksService;
+import org.motechproject.odk.util.FormUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.xml.SimpleNamespaceContext;
@@ -34,7 +36,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service
+/**
+ * Implementation of {@link FormDefinitionImportService} for Ona.io connections.
+ */
+@Service("odkFormDefinitionImportServiceOna")
 public class FormDefinitionImportServiceOna extends AbstractFormDefinitionImportService implements FormDefinitionImportService {
 
 
@@ -57,7 +62,7 @@ public class FormDefinitionImportServiceOna extends AbstractFormDefinitionImport
     }
 
     @Override
-    protected void modifyFormDefinitionForImplementation(List<FormDefinition> formDefinitions) {
+    protected void modifyFormDefinitionForImplementation(List<FormDefinition> formDefinitions) throws MalformedUriException {
         for (FormDefinition formDefinition : formDefinitions) {
             List<FormElement> formElements = formDefinition.getFormElements();
 
@@ -79,9 +84,9 @@ public class FormDefinitionImportServiceOna extends AbstractFormDefinitionImport
         }
     }
 
-    private void alterFormElementName(FormElement formElement) {
+    private void alterFormElementName(FormElement formElement) throws MalformedUriException {
         String formFieldName = formElement.getName();
-        String name = formFieldName.substring(formFieldName.indexOf('/', 1) + 1, formFieldName.length()); // removes form title from URI
+        String name = FormUtils.removeTitleFromUri(formFieldName);
         formElement.setName(name);
 
         if (formElement.hasChildren()) {
@@ -96,7 +101,7 @@ public class FormDefinitionImportServiceOna extends AbstractFormDefinitionImport
             XPathFactory xPathFactory = XPathFactory.newInstance();
             XPath xPath = xPathFactory.newXPath();
             SimpleNamespaceContext namespaces = new SimpleNamespaceContext();
-            Map<String, String> namespaceMap = new HashMap<String, String>();
+            Map<String, String> namespaceMap = new HashMap<>();
             namespaceMap.put("x", "http://openrosa.org/xforms/xformsList");
             namespaces.setBindings(namespaceMap);
             xPath.setNamespaceContext(namespaces);

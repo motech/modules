@@ -19,6 +19,12 @@
                 <entry key="messages" value="../odk/resources/messages/"/>
             </map>
         </constructor-arg>
+        <property name="roleForAccess">
+            <list>
+                <value>configureODK</value>
+                <value>importFormsODK</value>
+            </list>
+        </property>
         <property name="settingsURL" value="/odk/settings"/>
         <property name="defaultURL" value="/odk/settings"/>
     </bean>
@@ -34,7 +40,13 @@
 
     <osgi:service ref="eventHandler" interface="org.motechproject.odk.event.EventHandler"  />
     <osgi:service ref="odkConfigurationService" interface="org.motechproject.odk.service.ConfigurationService"/>
-
-
+    <osgi:service ref="odkFormDefinitionImportServiceODK" interface="org.motechproject.odk.service.FormDefinitionImportService"/>
+    <osgi:service ref="odkFormDefinitionImportServiceOna" interface="org.motechproject.odk.service.FormDefinitionImportService"/>
+    <osgi:service ref="odkFormDefinitionImportServiceKobo" interface="org.motechproject.odk.service.FormDefinitionImportService"/>
+    <osgi:service ref="odkFormDefinitionService" interface="org.motechproject.odk.service.FormDefinitionService" />
+    <osgi:service ref="odkFormFailureService" interface="org.motechproject.odk.service.FormFailureService" />
+    <osgi:service ref="odkFormInstanceService" interface="org.motechproject.odk.service.FormInstanceService" />
+    <osgi:service ref="odkTasksService" interface="org.motechproject.odk.service.TasksService"/>
+    <osgi:service ref="odkVerificationService" interface="org.motechproject.odk.service.VerificationService" />
 
 </beans>

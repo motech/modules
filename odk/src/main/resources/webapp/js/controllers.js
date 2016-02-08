@@ -140,6 +140,8 @@
         $scope.importFail = false;
         $scope.importing = false;
         $scope.formDefinitions = [];
+        $scope.formDefFail = false;
+        $scope.configsFail = false;
         $scope.href = window.location.href.split("/server")[0] + "/odk/forms/";
 
 
@@ -153,6 +155,7 @@
         Config.query(function (configs) {
             $scope.configs = configs;
         }, function (err) {
+            $scope.configsFail = true;
             console.log(err);
         });
 
@@ -183,6 +186,7 @@
                 $scope.formDefinitions = data;
                 flattenFormDefs();
             }, function (err) {
+                $scope.formDefFail = true;
                 console.log(err)
             });
         };

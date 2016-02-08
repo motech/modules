@@ -1,5 +1,9 @@
-package org.motechproject.odk.event;
+package org.motechproject.odk.exception;
 
+/**
+ * This exception is thrown by a {@link org.motechproject.odk.event.builder.EventBuilder} when an error
+ * is encountered while building a {@link org.motechproject.event.MotechEvent}.
+ */
 public class EventBuilderException extends Exception {
 
     public EventBuilderException(String message, Throwable cause) {

@@ -4,12 +4,12 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.motechproject.odk.constant.DisplayNames;
 import org.motechproject.odk.constant.EventParameters;
+import org.motechproject.odk.constant.EventSubjects;
 import org.motechproject.odk.domain.Configuration;
 import org.motechproject.odk.domain.FormDefinition;
 import org.motechproject.odk.parser.impl.XformParserODK;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.ActionParameterRequest;
-import org.motechproject.tasks.domain.ActionParameter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class ActionBuilderTest {
 
 
     @Test
-    public void testNestedRepeats() throws Exception{
+    public void testNestedRepeats() throws Exception {
         Configuration configuration = new Configuration();
         configuration.setName("configName");
 
@@ -39,9 +39,9 @@ public class ActionBuilderTest {
         assertEquals(requests.size(), 2);
 
         ActionEventRequest request = requests.get(0);
-        assertEquals(request.getName(),"configName_nested_repeat_persist_form_instance");
-        assertEquals(request.getSubject(),"persist_form_instance");
-        assertEquals(request.getActionParameters().size(),7);
+        assertEquals(request.getName(), "org.motechproject.odk.persist_form_instance.configName.nested_repeat");
+        assertEquals(request.getSubject(), EventSubjects.PERSIST_FORM_INSTANCE);
+        assertEquals(request.getActionParameters().size(), 7);
         Iterator<ActionParameterRequest> itr = request.getActionParameters().iterator();
 
         ActionParameterRequest parameter = itr.next();
@@ -49,11 +49,11 @@ public class ActionBuilderTest {
         assertEquals(parameter.getDisplayName(), DisplayNames.FORM_TITLE);
 
         parameter = itr.next();
-        assertEquals(parameter.getKey(),EventParameters.CONFIGURATION_NAME);
-        assertEquals(parameter.getDisplayName(),DisplayNames.CONFIG_NAME);
+        assertEquals(parameter.getKey(), EventParameters.CONFIGURATION_NAME);
+        assertEquals(parameter.getDisplayName(), DisplayNames.CONFIG_NAME);
 
         parameter = itr.next();
-        assertEquals(parameter.getKey(),EventParameters.INSTANCE_ID);
-        assertEquals(parameter.getDisplayName(),DisplayNames.INSTANCE_ID);
+        assertEquals(parameter.getKey(), EventParameters.INSTANCE_ID);
+        assertEquals(parameter.getDisplayName(), DisplayNames.INSTANCE_ID);
     }
 }

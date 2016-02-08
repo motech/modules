@@ -9,6 +9,7 @@ import org.motechproject.odk.domain.FormDefinition;
 import org.motechproject.odk.domain.FormFailure;
 import org.motechproject.odk.domain.FormInstance;
 import org.motechproject.odk.domain.builder.FormInstanceBuilder;
+import org.motechproject.odk.exception.FormInstanceBuilderException;
 import org.motechproject.odk.service.FormDefinitionService;
 import org.motechproject.odk.service.FormFailureService;
 import org.motechproject.odk.service.FormInstanceService;
@@ -55,16 +56,17 @@ public class EventHandler {
             if (formInstanceService.getByInstanceId(instanceId) != null) {
                 LOGGER.error("Form Instance with ID: " + instanceId + " already exists. Discarding form instance data");
             } else {
-                LOGGER.debug("Saving form instance.Title: " + title + " ConfigName: " + configName + " Instance ID: " + instanceId);
                 FormDefinition formDefinition = formDefinitionService.findByConfigurationNameAndTitle(configName, title);
 
                 if (formDefinition != null) {
-                    FormInstanceBuilder builder = new FormInstanceBuilder(formDefinition, params, instanceId);
-                    FormInstance instance = builder.build();
-                    formInstanceService.create(instance);
+                   persistFormInstance(formDefinition, params, instanceId);
+                } else {
+                    LOGGER.error("Unable to save form. Form definition does not exist. Configuration name: " + configName + " Title: " + title);
                 }
             }
-
+        } else {
+            LOGGER.error("Unable to save form. Event is missing required parameters");
+            LOGGER.error(event.toString());
         }
     }
 
@@ -88,4 +90,16 @@ public class EventHandler {
     }
 
 
+    private void persistFormInstance(FormDefinition formDefinition, Map<String, Object> params, String instanceId) {
+        try {
+            FormInstanceBuilder builder = new FormInstanceBuilder(formDefinition, params, instanceId);
+            FormInstance instance = builder.build();
+            LOGGER.debug("Saving form instance.Title: " + formDefinition.getTitle() + " ConfigName: " +
+                    formDefinition.getConfigurationName() + " Instance ID: " + instanceId);
+            formInstanceService.create(instance);
+        } catch (FormInstanceBuilderException e) {
+            LOGGER.error("Unable to save form. Configuration name: " + formDefinition.getConfigurationName() + " Title: " + formDefinition.getTitle());
+            LOGGER.error(e.toString());
+        }
+    }
 }

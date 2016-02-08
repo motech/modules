@@ -28,7 +28,6 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -43,17 +42,17 @@ public class EventHandlerIT extends OdkBaseIT {
     @Before
     public void setup() throws Exception {
 
-        formDefinition = getFormDefinitionDataService().byConfigurationNameAndTitle(CONFIG_NAME,TITLE);
-        assertEquals(getFormDefinitionDataService().retrieveAll().size(),1);
+        formDefinition = getFormDefinitionDataService().byConfigurationNameAndTitle(CONFIG_NAME, TITLE);
+        assertEquals(getFormDefinitionDataService().retrieveAll().size(), 1);
         assertNotNull(formDefinition);
 
-        events = new EventBuilderOna().createEvents(getJson(),formDefinition,getConfiguration());
+        events = new EventBuilderOna().createEvents(getJson(), formDefinition, getConfiguration());
         convertEventValues(events);
     }
 
 
     @Test
-    public void testPersistFormNestedRepeats() throws Exception{
+    public void testPersistFormNestedRepeats() throws Exception {
         MotechEvent persistEvent = events.get(events.size() - 1);
         eventHandler.handlePersistForm(persistEvent);
         FormInstance instance = getFormInstanceDataService().byConfigNameAndTitle(formDefinition.getConfigurationName(), formDefinition.getTitle());
@@ -62,28 +61,30 @@ public class EventHandlerIT extends OdkBaseIT {
         assertEquals(persistEvent.getParameters().get(EventParameters.CONFIGURATION_NAME), instance.getConfigName());
         assertEquals(persistEvent.getParameters().get(EventParameters.FORM_TITLE), instance.getTitle());
         assertEquals(persistEvent.getParameters().get(OnaConstants.XFORM_ID_STRING), formDefinition.getTitle());
-        assertEquals(persistEvent.getParameters().get(OnaConstants.STATUS), "submitted_via_web");;
+        assertEquals(persistEvent.getParameters().get(OnaConstants.STATUS), "submitted_via_web");
+        ;
 
-        List<Map<String,Object>> data = new ObjectMapper().readValue((String) persistEvent.getParameters().get("outer_group"),
-                new TypeReference<List<Map<String, Object>>>() {});
+        List<Map<String, Object>> data = new ObjectMapper().readValue((String) persistEvent.getParameters().get("outer_group"),
+                new TypeReference<List<Map<String, Object>>>() {
+                });
 
         Map<String, Object> outerGroup1 = data.get(0);
         assertNotNull(outerGroup1);
         assertEquals(outerGroup1.get("outer_group/outer_group_field"), "outer group 1 field");
-        List<Map<String,Object>> outerGroup1InnerGroup = (List<Map<String,Object>>)outerGroup1.get("outer_group/inner_group");
+        List<Map<String, Object>> outerGroup1InnerGroup = (List<Map<String, Object>>) outerGroup1.get("outer_group/inner_group");
         assertEquals(outerGroup1InnerGroup.get(0).get("outer_group/inner_group/inner_group_field"), "outer group 1 inner group field 1");
-        assertEquals(outerGroup1InnerGroup.get(1).get("outer_group/inner_group/inner_group_field"),"outer group 1 inner group field 2");
+        assertEquals(outerGroup1InnerGroup.get(1).get("outer_group/inner_group/inner_group_field"), "outer group 1 inner group field 2");
 
-        Map<String,Object> outerGroup2 = data.get(1);
+        Map<String, Object> outerGroup2 = data.get(1);
         assertNotNull(outerGroup2);
-        assertEquals(outerGroup2.get("outer_group/outer_group_field"),"outer group 2 field");
-        List<Map<String,Object>> outerGroup2InnerGroup = (List<Map<String,Object>>)outerGroup2.get("outer_group/inner_group");
-        assertEquals(outerGroup2InnerGroup.get(0).get("outer_group/inner_group/inner_group_field"),"outer group 2 inner group field 1");
+        assertEquals(outerGroup2.get("outer_group/outer_group_field"), "outer group 2 field");
+        List<Map<String, Object>> outerGroup2InnerGroup = (List<Map<String, Object>>) outerGroup2.get("outer_group/inner_group");
+        assertEquals(outerGroup2InnerGroup.get(0).get("outer_group/inner_group/inner_group_field"), "outer group 2 inner group field 1");
         assertEquals(outerGroup2InnerGroup.get(1).get("outer_group/inner_group/inner_group_field"), "outer group 2 inner group field 2");
 
     }
 
-    private void convertEventValues (List<MotechEvent> events) {
+    private void convertEventValues(List<MotechEvent> events) {
         for (FormElement e : formDefinition.getFormElements()) {
             if (e.getType().equals(FieldTypeConstants.DATE_TIME)) {
                 for (MotechEvent event : events) {
@@ -92,7 +93,7 @@ public class EventHandlerIT extends OdkBaseIT {
 
                     if (val != null) {
                         DateTime date = DateTime.parse(val, DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));
-                        params.put(e.getName(),date);
+                        params.put(e.getName(), date);
                     }
                 }
             }
