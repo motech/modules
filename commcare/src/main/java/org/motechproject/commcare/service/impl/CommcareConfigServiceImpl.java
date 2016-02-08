@@ -165,7 +165,15 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
 
     @Override
     public String getBaseUrl() {
-        return settingsFacade.getPlatformSettings().getServerUrl() + "/module/commcare/";
+        String serverUrl = settingsFacade.getPlatformSettings().getServerUrl();
+        if (StringUtils.isBlank(serverUrl)) {
+            return "";
+        } else {
+            if (!serverUrl.endsWith("/")) {
+                serverUrl += '/';
+            }
+            return serverUrl + "module/commcare/";
+        }
     }
 
     @Override
