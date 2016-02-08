@@ -53,6 +53,7 @@ public final class ConverterUtils {
     public static OpenMRSPerson toOpenMRSPerson(Person person) {
         OpenMRSPerson converted = new OpenMRSPerson();
         converted.setId(person.getUuid());
+        converted.setDisplay(person.getDisplay());
         PreferredName personName = person.getPreferredName();
         if (personName != null) {
             converted.setFirstName(personName.getGivenName());
