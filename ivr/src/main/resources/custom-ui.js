@@ -1,1 +1,1 @@
-$scope.showBackToEntityListButton = false;
+$scope.showToolbox = false;
