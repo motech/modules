@@ -209,10 +209,10 @@
                 $scope.originalConfigs = angular.copy($scope.configs);
                 setAccordions($scope.configs.configList);
                 for (i = 0 ; i < response.configList.length ; i = i + 1) {
-                   if (response.defaultConfig === response.configList[i].name) {
-                      $scope.defaultConfigIndex = i;
-                         break;
-                   }
+                    if (response.defaultConfig === response.configList[i].name) {
+                        $scope.defaultConfigIndex = i;
+                        break;
+                    }
                 }
             })
             .error(function(response) {

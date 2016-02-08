@@ -1,5 +1,7 @@
 package org.motechproject.ivr.service;
 
+import org.motechproject.ivr.exception.ConfigNotFoundException;
+
 import java.util.Map;
 
 /**
@@ -17,8 +19,8 @@ public interface OutboundCallService {
 
     /**
      * Gets the defaultConfig and calls the initiateCall method.
-     * Throws ConfigNotFoundException when there is no default configuration.
      * @param params the parameters that will be used for building the url, the ones that don't match the placeholders will be sent as params of the request
+     * @throws ConfigNotFoundException when there is no default configuration.
      */
     void initiateCall(Map<String, String> params);
 }

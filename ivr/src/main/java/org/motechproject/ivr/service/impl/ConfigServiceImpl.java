@@ -37,7 +37,6 @@ public class ConfigServiceImpl implements ConfigService {
     private SettingsFacade settingsFacade;
     private Configs configs;
     private Map<String, Config> configMap = new HashMap<>();
-    private String defaultConfig;
 
     private synchronized void loadConfigs() {
         try (InputStream is = settingsFacade.getRawConfig(CONFIG_FILE_NAME)) {
@@ -55,8 +54,6 @@ public class ConfigServiceImpl implements ConfigService {
         for (Config config : configs.getConfigList()) {
             configMap.put(config.getName(), config);
         }
-        defaultConfig = configs.getDefaultConfig();
-
     }
 
     @Autowired
@@ -103,7 +100,7 @@ public class ConfigServiceImpl implements ConfigService {
 
     @Override
     public String getDefaultConfig() {
-        return defaultConfig;
+        return configs.getDefaultConfig();
     }
 
 }
