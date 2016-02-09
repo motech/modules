@@ -60,6 +60,12 @@
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
         </dependency>
+
+        <dependency>
+            <artifactId>hapi</artifactId>
+            <groupId>org.motechproject.hapi</groupId>
+            <version>2.2</version>
+        </dependency>
     </dependencies>
 
     <build>
