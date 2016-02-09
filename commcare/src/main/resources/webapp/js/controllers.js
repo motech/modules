@@ -304,9 +304,7 @@
 
 
         Configurations.getBaseEndpointUrl(function(data) {
-            if (data.message !== "null/module/commcare/" && data.message !=="/module/commcare/") {
-                $scope.baseUrl = data.message;
-            }
+            $scope.baseUrl = data.message;
         });
 
         $scope.isDefaultConfig = function() {
