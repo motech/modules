@@ -5,6 +5,9 @@
 
     <import resource="classpath*:META-INF/motech/*.xml" />
 
-    <osgi:service ref="ipfInitializer" interface="org.motechproject.ipf.service.IPFInitializer" />
+    <osgi:reference id="channelService" interface= "org.motechproject.tasks.service.ChannelService" />
 
+    <osgi:service id="ipfInitializerOsgi" ref="ipfInitializer" interface="org.motechproject.ipf.service.IPFInitializer" />
+
+    <osgi:service id="taskServiceOsgi" ref="taskServiceImpl" interface="org.motechproject.ipf.service.TaskService"/>
 </beans>
