@@ -12,7 +12,7 @@ public class IPFActionEventHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IPFActionEventHandler.class);
 
-    @MotechListener(subjects =  {EventSubjects.SAMPLE_SUBJECT})
+    @MotechListener(subjects =  {EventSubjects.TEMPLATE_ACTION})
     public void handleIpfTaskAction(MotechEvent event) {
         LOGGER.info("Event handled");
     }

@@ -10,9 +10,9 @@
     <context:component-scan base-package="org.motechproject.ipf.service,org.motechproject.ipf.handler" />
 
     <bean id="ipfSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
-        <property name="configFiles">
+        <property name="rawConfigFiles">
             <list>
-                <value>classpath:ipf.properties</value>
+                <value>classpath:ipf-recipients.json</value>
             </list>
         </property>
     </bean>
