@@ -366,7 +366,6 @@
                     $scope.verifyErrorMessage = response.data;
                     $scope.verifySuccessMessage = '';
                     $scope.connectionVerified = false;
-                    $('.commcare .switch-small').bootstrapSwitch('setActive', false);
                     unblockUI();
                 });
         };
