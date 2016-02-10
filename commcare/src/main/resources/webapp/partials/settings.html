@@ -17,10 +17,10 @@
              <a ng-if="selectedConfig" ng-click="deleteConfig()" type="button" class="btn btn-danger input-small">
                  <i class="fa fa-fw fa-trash-o"></i> {{msg('commcare.delete')}}
              </a>
-             <a ng-if="selectedConfig" ng-disabled="isDefaultConfig() || newConfig" ng-click="makeDefault()" type="button" class="btn btn-warning">
+             <a ng-if="selectedConfig" ng-disabled="isDefaultConfig() || newConfig" ng-click="!(isDefaultConfig() || newConfig) && makeDefault()" type="button" class="btn btn-warning">
                  <i class="fa fw" ng-class="{'fa-square-o': !isDefaultConfig() || newConfig, 'fa-check-square-o': isDefaultConfig() && !newConfig}"></i> {{msg('commcare.makeDefault')}}
              </a>
-             <a ng-if="selectedConfig" ng-disabled="!validateConfig()" ng-click="verify()" type="button" class="btn btn-info">
+             <a ng-if="selectedConfig" ng-disabled="!validateConfig()" ng-click="validateConfig() && verify()" type="button" class="btn btn-info">
                  <i class="fa fw fa-check-circle-o"></i> {{msg('commcare.verify')}}
              </a>
          </div>
