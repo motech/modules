@@ -424,6 +424,10 @@
             return true;
         };
 
+        $scope.validateUrlProtocol = function () {
+            return $scope.selectedConfig.accountConfig.baseUrl.startsWith('https://');
+        };
+
         $scope.isVerifyError = function() {
             return $scope.validateConfig() === true && $scope.connectionVerified === false;
         };
