@@ -57,6 +57,7 @@
                     <div class="form-hints">
                         <span ng-hide="hasAccountValue('baseUrl')" class="form-hint-error">{{msg('commcare.settings.error.commcareBaseUrl')}}</span>
                         <span ng-if="!validateUrlAndDomain()" class="form-hint-error">{{msg('commcare.settings.error.commcareBaseUrlNotUnique')}}</span>
+                        <span ng-if="!validateUrlProtocol()" class="form-hint-warning">{{msg('commcare.setting.warning.commcareBaseUrl')}}</span>
                     </div>
                 </div>
             </div>

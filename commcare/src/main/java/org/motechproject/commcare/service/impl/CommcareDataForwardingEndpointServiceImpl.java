@@ -11,6 +11,8 @@ import org.motechproject.commcare.domain.CommcareDataForwardingEndpoint;
 import org.motechproject.commcare.domain.CommcareDataForwardingEndpointsJson;
 import org.motechproject.commcare.service.CommcareDataForwardingEndpointService;
 import org.motechproject.commons.api.json.MotechJsonReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +23,9 @@ import java.util.List;
 @Service
 public class CommcareDataForwardingEndpointServiceImpl implements CommcareDataForwardingEndpointService {
 
-    static final int DEFAULT_PAGE_SIZE = 20;
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommcareDataForwardingEndpointServiceImpl.class);
+
+    private static final int DEFAULT_PAGE_SIZE = 20;
 
     private MotechJsonReader motechJsonReader;
 
@@ -35,7 +39,7 @@ public class CommcareDataForwardingEndpointServiceImpl implements CommcareDataFo
 
     @Override
     public List<CommcareDataForwardingEndpoint> getAllDataForwardingEndpoints(Config config) {
-        CommcareDataForwardingEndpointsJson dataForwardingEndpoints = null;
+        CommcareDataForwardingEndpointsJson dataForwardingEndpoints;
         Type commcareDataForwardingEndpointType = new TypeToken<CommcareDataForwardingEndpointsJson>() {
                 } .getType();
         List<CommcareDataForwardingEndpoint> allDataForwardingEndpoints = new ArrayList<>();
@@ -45,10 +49,14 @@ public class CommcareDataForwardingEndpointServiceImpl implements CommcareDataFo
             String response = commcareHttpClient.dataForwardingEndpointsRequest(config.getAccountConfig(), DEFAULT_PAGE_SIZE, pageNumber);
             dataForwardingEndpoints = (CommcareDataForwardingEndpointsJson) motechJsonReader
                             .readFromString(response, commcareDataForwardingEndpointType);
-            allDataForwardingEndpoints.addAll(dataForwardingEndpoints.getObjects());
-            pageNumber++;
-        } while (allDataForwardingEndpoints != null
-                && StringUtils.isNotBlank(dataForwardingEndpoints.getMeta().getNextPageQueryString()));
+            if (dataForwardingEndpoints == null) {
+                LOGGER.warn("Unable to retrieve data forwarding endpoints from Commcare");
+            } else {
+                allDataForwardingEndpoints.addAll(dataForwardingEndpoints.getObjects());
+                pageNumber++;
+            }
+        } while (dataForwardingEndpoints != null &&
+                StringUtils.isNotBlank(dataForwardingEndpoints.getMeta().getNextPageQueryString()));
 
         return allDataForwardingEndpoints;
     }
