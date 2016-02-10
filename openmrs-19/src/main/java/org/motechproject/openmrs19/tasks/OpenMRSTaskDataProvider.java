@@ -27,7 +27,7 @@ import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.UUID;
 @Service("openMRSTaskDataProvider")
 public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSTaskDataProvider.class);
-    private static final List<Class<?>> SUPPORTED_CLASS = Arrays.asList(OpenMRSProvider.class);
+    private static final List<Class<?>> SUPPORTED_CLASSES = Arrays.asList(OpenMRSProvider.class);
 
     private OpenMRSProviderService providerService;
 
@@ -43,7 +43,7 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
 
     @Override
     public List<Class<?>> getSupportClasses() {
-        return SUPPORTED_CLASS;
+        return SUPPORTED_CLASSES;
     }
 
     @Override
