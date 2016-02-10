@@ -20,6 +20,7 @@ import static org.hamcrest.Matchers.equalTo;
 public class OpenMRSPerson {
 
     private String id;
+    private String display;
     private String firstName;
     private String middleName;
     private String lastName;
@@ -80,6 +81,14 @@ public class OpenMRSPerson {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getDisplay() {
+        return display;
+    }
+
+    public void setDisplay(String display) {
+        this.display = display;
     }
 
     public void setFirstName(String firstName) {
@@ -168,7 +177,7 @@ public class OpenMRSPerson {
         this.age = age;
     }
 
-    @Override
+    @Override //NO CHECKSTYLE Cyclomatic Complexity
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -183,7 +192,7 @@ public class OpenMRSPerson {
         return equalNameData(other) && equalAgeAndBirthDates(other) && Objects.equals(id, other.id)
                 && Objects.equals(address, other.address) && Objects.equals(gender, other.gender)
                 && Objects.equals(attributes, other.attributes) && Objects.equals(deathDate, other.deathDate)
-                && isDead == other.isDead;
+                && isDead == other.isDead && Objects.equals(display, other.display);
     }
 
     public boolean equalNameData(OpenMRSPerson other) {
@@ -200,6 +209,7 @@ public class OpenMRSPerson {
     public int hashCode() {
         int hash = 1;
         hash = hash * 31 + ObjectUtils.hashCode(id);
+        hash = hash * 31 + ObjectUtils.hashCode(display);
         hash = hash * 31 + ObjectUtils.hashCode(firstName);
         hash = hash * 31 + ObjectUtils.hashCode(middleName);
         hash = hash * 31 + ObjectUtils.hashCode(lastName);
