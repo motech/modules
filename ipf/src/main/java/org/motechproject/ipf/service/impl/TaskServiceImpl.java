@@ -2,8 +2,10 @@ package org.motechproject.ipf.service.impl;
 
 import org.motechproject.ipf.domain.IPFRecipient;
 import org.motechproject.ipf.service.IPFRecipientsService;
+import org.motechproject.ipf.service.IPFTemplateService;
 import org.motechproject.ipf.service.TaskService;
 import org.motechproject.ipf.task.IpfChannelRequestBuilder;
+import org.motechproject.tasks.contract.ChannelRequest;
 import org.motechproject.tasks.service.ChannelService;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
@@ -13,8 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.Collection;
-
-import static java.util.Arrays.asList;
+import java.util.List;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -30,6 +31,9 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     private IPFRecipientsService ipfRecipientsService;
 
+    @Autowired
+    private IPFTemplateService ipfTemplateService;
+
     @PostConstruct
     public void init() {
         updateChannel();
@@ -37,12 +41,17 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void updateChannel() {
-        LOGGER.debug("Loading IPF templates...");
-        // TODO: load templates
-        LOGGER.debug("Loading IPF recipients");
         Collection<IPFRecipient> ipfRecipients = ipfRecipientsService.getAllRecipients();
-        IpfChannelRequestBuilder ipfChannelRequestBuilder = new IpfChannelRequestBuilder(bundleContext, asList("IPF_1", "IPF_2", "IPF_3"), ipfRecipients);
+        List<String> templateNames = ipfTemplateService.getAllTemplateNames();
+
+        IpfChannelRequestBuilder ipfChannelRequestBuilder = new IpfChannelRequestBuilder(bundleContext, templateNames, ipfRecipients);
+
         LOGGER.debug("Updating IPF task channel...");
-        channelService.registerChannel(ipfChannelRequestBuilder.build());
+        ChannelRequest channelRequest = ipfChannelRequestBuilder.build();
+        if (channelRequest.getActionTaskEvents().size() > 0) {
+            channelService.registerChannel(channelRequest);
+        } else {
+            LOGGER.debug("No IPF Task Action, cannot register IPF Task Channel");
+        }
     }
 }

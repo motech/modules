@@ -2,7 +2,7 @@ package org.motechproject.ipf.util;
 
 public final class Constants {
 
-    public static final String CHANNEL_DISPLAY_NAME = "IPF";
+    public static final String CHANNEL_DISPLAY_NAME = "ipf.name";
 
     // TODO - to remove
     public static final String SAMPLE_KEY_1 = "ipf.key1";
@@ -14,6 +14,11 @@ public final class Constants {
     public static final String RECIPIENT_DISPLAY_NAME = "Recipient Name";
 
     public static final String IPF_RECIPIENTS_FILE = "ipf-recipients.json";
+    public static final String IPF_PROPERTIES_FILE = "ipf.properties";
+
+    public static final String IPF_TEMPLATE_KEY = "ipf.templates";
+
+    public static final String IPF_TEMPLATE_FILE_NAME_PATTERN = "^IPF_.+\\.xml";
 
     private Constants() {}
 }
