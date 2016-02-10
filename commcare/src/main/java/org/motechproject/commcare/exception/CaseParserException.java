@@ -6,6 +6,8 @@ package org.motechproject.commcare.exception;
  */
 public class CaseParserException extends Exception {
 
+    private static final long serialVersionUID = 8007314406269145206L;
+
     public CaseParserException(String message) {
         super(message);
     }

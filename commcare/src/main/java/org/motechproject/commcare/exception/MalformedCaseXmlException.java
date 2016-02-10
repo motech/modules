@@ -5,6 +5,8 @@ package org.motechproject.commcare.exception;
  */
 public class MalformedCaseXmlException extends RuntimeException {
 
+    private static final long serialVersionUID = -397389909438204204L;
+
     public MalformedCaseXmlException(String message) {
         super(message);
     }
