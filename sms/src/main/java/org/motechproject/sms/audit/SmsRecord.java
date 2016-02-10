@@ -53,7 +53,7 @@ public class SmsRecord {
      * The delivery status for this SMS.
      */
     @UIFilterable
-    private DeliveryStatus deliveryStatus;
+    private String deliveryStatus;
 
     private String providerStatus;
 
@@ -93,7 +93,7 @@ public class SmsRecord {
      * @param errorMessage the error message for this SMS, if applicable
      */
     public SmsRecord(String config, SmsDirection smsDirection, String number,  //NO CHECKSTYLE ParameterNumber
-                     String message, DateTime timestamp, DeliveryStatus deliveryStatus, String providerStatus,
+                     String message, DateTime timestamp, String deliveryStatus, String providerStatus,
                      String motechId, String providerId, String errorMessage) {
         this.config = config;
         this.smsDirection = smsDirection;
@@ -180,14 +180,14 @@ public class SmsRecord {
     /**
      * @return the delivery status for this SMS
      */
-    public DeliveryStatus getDeliveryStatus() {
+    public String getDeliveryStatus() {
         return deliveryStatus;
     }
 
     /**
      * @param deliveryStatus the delivery status for this SMS
      */
-    public void setDeliveryStatus(DeliveryStatus deliveryStatus) {
+    public void setDeliveryStatus(String deliveryStatus) {
         this.deliveryStatus = deliveryStatus;
     }
 

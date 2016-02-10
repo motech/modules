@@ -1,8 +1,5 @@
 package org.motechproject.sms.configs;
 
-import org.motechproject.sms.util.SmsEventSubjects;
-import org.motechproject.sms.audit.DeliveryStatus;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +9,9 @@ import java.util.List;
  * connections to multiple providers. But realistically, most implementations will have one config.
  */
 public class Config {
+
+    public static final String RETRYING = "RETRYING";
+    public static final String ABORTED = "ABORTED";
 
     /**
      * The unique name identifying the configuration.
@@ -152,17 +152,17 @@ public class Config {
     }
 
     /**
-     * Returns an appropriate {@link DeliveryStatus} for the given failure count. If the failure count is higher than
-     * the maximum number of retries for this configuration, then {@link DeliveryStatus#ABORTED} is returned. Otherwise
-     * {@link DeliveryStatus#RETRYING} is returned, indicating the retries are ongoing.
+     * Returns an appropriate Delivery Status for the given failure count. If the failure count is higher than
+     * the maximum number of retries for this configuration, then ABORTED Status is returned. Otherwise
+     * RETRYING Status is returned, indicating the retries are ongoing.
      * @param failureCount the failure count to check
      * @return the delivery status matching the failure count
      */
-    public DeliveryStatus retryOrAbortStatus(Integer failureCount) {
+    public String retryOrAbortStatus(Integer failureCount) {
         if (failureCount < maxRetries) {
-            return DeliveryStatus.RETRYING;
+            return RETRYING;
         }
-        return DeliveryStatus.ABORTED;
+        return ABORTED;
     }
 
     /**
@@ -173,8 +173,8 @@ public class Config {
      */
     public String retryOrAbortSubject(Integer failureCount) {
         if (failureCount < maxRetries) {
-            return SmsEventSubjects.RETRYING;
+            return RETRYING;
         }
-        return SmsEventSubjects.ABORTED;
+        return ABORTED;
     }
 }

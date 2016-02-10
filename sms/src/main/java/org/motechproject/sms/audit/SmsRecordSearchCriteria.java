@@ -45,7 +45,7 @@ public class SmsRecordSearchCriteria {
     /**
      * The set of delivery status for the messages.
      */
-    private Set<DeliveryStatus> deliveryStatuses = new HashSet<>();
+    private Set<String> deliveryStatuses = new HashSet<>();
 
     /**
      * The id by which MOTECH identifies the message.
@@ -167,7 +167,7 @@ public class SmsRecordSearchCriteria {
      * @param deliveryStatuses the set of delivery status that will be taken into consideration when executing the query
      * @return this instance of the search criteria
      */
-    public SmsRecordSearchCriteria withDeliverystatuses(Set<DeliveryStatus> deliveryStatuses) {
+    public SmsRecordSearchCriteria withDeliverystatuses(Set<String> deliveryStatuses) {
         this.deliveryStatuses.addAll(deliveryStatuses);
         return this;
     }
@@ -224,7 +224,7 @@ public class SmsRecordSearchCriteria {
      * @return the set of expected delivery statuses for SMS messages
      */
     public Set<String> getDeliveryStatuses() {
-        return toStringSet(deliveryStatuses);
+        return deliveryStatuses;
     }
 
     /**

@@ -3,7 +3,6 @@ package org.motechproject.sms.web;
 import org.joda.time.DateTime;
 import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.sms.audit.DeliveryStatus;
 import org.motechproject.sms.audit.SmsRecord;
 import org.motechproject.sms.audit.SmsRecordsDataService;
 import org.motechproject.sms.configs.Config;
@@ -36,6 +35,7 @@ import static org.motechproject.sms.audit.SmsDirection.INBOUND;
 public class IncomingController {
 
     private static final String SMS_MODULE = "motech-sms";
+    private static final String RECEIVED = "RECEIVED";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IncomingController.class);
     private TemplateService templateService;
@@ -124,7 +124,7 @@ public class IncomingController {
 
         eventRelay.sendEventMessage(inboundEvent(config.getName(), sender, recipient, message, providerMessageId,
                 timestamp));
-        smsRecordsDataService.create(new SmsRecord(config.getName(), INBOUND, sender, message, now(), DeliveryStatus.RECEIVED,
+        smsRecordsDataService.create(new SmsRecord(config.getName(), INBOUND, sender, message, now(), RECEIVED,
                 null, null, providerMessageId, null));
     }
 }
