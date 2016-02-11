@@ -239,7 +239,8 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
 
     private OpenMRSEncounter convertToMrsEncounter(Encounter encounter, OpenMRSProvider mrsPerson, OpenMRSPatient patient) {
 
-        return new OpenMRSEncounter.OpenMRSEncounterBuilder().withId(encounter.getUuid()).withProvider(mrsPerson)
+        return new OpenMRSEncounter.OpenMRSEncounterBuilder().withId(encounter.getUuid())
+                .withDisplay(encounter.getDisplay()).withProvider(mrsPerson)
                 .withFacility(ConverterUtils.toOpenMRSFacility(encounter.getLocation()))
                 .withDate(encounter.getEncounterDatetime()).withPatient(patient)
                 .withObservations(convertToMrsObservation(encounter.getObs()))
