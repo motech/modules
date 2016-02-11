@@ -5,6 +5,8 @@ package org.motechproject.commcare.exception;
  */
 public class CommcareConnectionFailureException extends Exception {
 
+    private static final long serialVersionUID = -6819822778837941939L;
+
     public CommcareConnectionFailureException(String message) {
         super(message);
     }

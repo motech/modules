@@ -1,0 +1,35 @@
+{
+  "name": "openMRS",
+  "objects": [
+    {
+      "displayName": "openMRS.provider",
+      "type": "OpenMRSProvider",
+      "lookupFields": [
+        {
+          "displayName": "openMRS.lookup.uuid",
+          "fields": [
+            "openMRS.uuid"
+          ]
+        }
+      ],
+      "fields": [
+        {
+          "displayName": "openMRS.provider.providerId",
+          "fieldKey": "providerId"
+        },
+        {
+          "displayName": "openMRS.provider.identifier",
+          "fieldKey": "identifier"
+        },
+        {
+          "displayName": "openMRS.person.id",
+          "fieldKey": "person.id"
+        },
+        {
+          "displayName": "openMRS.person.display",
+          "fieldKey": "person.display"
+        }
+      ]
+    }
+  ]
+}
