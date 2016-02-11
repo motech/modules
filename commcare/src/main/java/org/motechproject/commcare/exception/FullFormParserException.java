@@ -5,6 +5,8 @@ package org.motechproject.commcare.exception;
  */
 public class FullFormParserException extends Exception {
 
+    private static final long serialVersionUID = 2532247749044974760L;
+
     public FullFormParserException(String message) {
         super(message);
     }

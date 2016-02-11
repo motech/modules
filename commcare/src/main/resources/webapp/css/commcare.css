@@ -85,6 +85,16 @@
     position: relative;
 }
 
+.form-hint-warning {
+    background: #edaa4a;
+    border-radius: 3px;
+    color: #ffffff;
+    padding: 4px 6px;
+    z-index: 999;
+    font-size: 11px;
+    position: relative;
+}
+
 .form-hint-success {
     background: #21c145;
     border-radius: 3px;

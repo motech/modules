@@ -304,9 +304,7 @@
 
 
         Configurations.getBaseEndpointUrl(function(data) {
-            if (data.message !== "null/module/commcare/" && data.message !=="/module/commcare/") {
-                $scope.baseUrl = data.message;
-            }
+            $scope.baseUrl = data.message;
         });
 
         $scope.isDefaultConfig = function() {
@@ -368,7 +366,6 @@
                     $scope.verifyErrorMessage = response.data;
                     $scope.verifySuccessMessage = '';
                     $scope.connectionVerified = false;
-                    $('.commcare .switch-small').bootstrapSwitch('setActive', false);
                     unblockUI();
                 });
         };
@@ -424,6 +421,10 @@
             }
 
             return true;
+        };
+
+        $scope.validateUrlProtocol = function () {
+            return $scope.selectedConfig.accountConfig.baseUrl.startsWith('https://');
         };
 
         $scope.isVerifyError = function() {

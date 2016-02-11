@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ivr.domain.CallDetailRecord;
 import org.motechproject.ivr.domain.Config;
+import org.motechproject.ivr.domain.Configs;
 import org.motechproject.ivr.domain.Template;
 import org.motechproject.ivr.repository.CallDetailRecordDataService;
 import org.motechproject.ivr.service.ConfigService;
@@ -23,6 +24,7 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,7 +54,7 @@ public class TemplateControllerBundleIT extends BasePaxIT {
     private ConfigService configService;
 
     private List<Template> backupTemplates;
-    private List<Config> backupConfigs;
+    private Configs backupConfigs;
 
     @Before
     public void setup() {
@@ -75,7 +77,9 @@ public class TemplateControllerBundleIT extends BasePaxIT {
     public void shouldNotLogWhenPassedInvalidConfig() throws Exception {
 
         //Create a config
-        configService.updateConfigs(Arrays.asList(new Config("foo", false, null, null, null, null, null, null, null, false, null, false, null)));
+        List<Config> configList = Arrays.asList(new Config("foo", false, null, null, null, null, null, null, null, false, null, false, null));
+        Configs configs = new Configs(configList, "foo");
+        configService.updateConfigs(configs);
 
         //Create & send a CDR status callback
         URIBuilder builder = new URIBuilder();
@@ -96,7 +100,9 @@ public class TemplateControllerBundleIT extends BasePaxIT {
 
         //Create a config
         List<String> ignoredStatusFields = Arrays.asList("ignoreme", "ignoreme2");
-        configService.updateConfigs(Arrays.asList(new Config("conf", false, null, null, ignoredStatusFields, "FROM:from", null, "ANS: NEW STATUS", null, false, null, false, null)));
+        List<Config> config = Arrays.asList(new Config("conf", false, null, null, ignoredStatusFields, "FROM:from", null, "ANS: NEW STATUS", null, false, null, false, null));
+        Configs configs = new Configs(config, "conf");
+        configService.updateConfigs(configs);
 
         // Create a CDR we can use as a datasource in the template. A more elegant way to do that would be to create
         // an EUDE, but this works just as well.

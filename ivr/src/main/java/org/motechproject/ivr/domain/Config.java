@@ -97,6 +97,10 @@ public class Config {
     @JsonIgnore
     private Map<String, String> callStatusMapping;
 
+    public Config() {
+
+    }
+
     public Config(String name, boolean authRequired, String username, String password, //NO CHECKSTYLE ArgumentCount
                   List<String> ignoredStatusFields, String statusFieldMapString, String servicesMapString, String callStatusMappingString,
                   HttpMethod outgoingCallMethod, boolean jsonRequest, String outgoingCallUriTemplate, boolean jsonResponse,

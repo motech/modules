@@ -6,6 +6,8 @@ package org.motechproject.commcare.exception;
  */
 public class ConfigurationNotFoundException extends RuntimeException {
 
+    private static final long serialVersionUID = 5997289153709926961L;
+
     public ConfigurationNotFoundException(String message) {
         super(message);
     }
