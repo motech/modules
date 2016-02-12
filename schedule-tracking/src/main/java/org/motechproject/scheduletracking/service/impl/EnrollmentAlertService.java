@@ -149,13 +149,13 @@ public class EnrollmentAlertService {
             }
 
             // Schedule the repeating job with the scheduler.
-            RepeatingSchedulableJob job = new RepeatingSchedulableJob()
-                    .setMotechEvent(event)
-                    .setStartTime(alertsStartTime)
-                    .setEndTime(null)
-                    .setRepeatCount(numberOfAlertsToFire)
-                    .setRepeatIntervalInSeconds(repeatIntervalInSeconds)
-                    .setIgnorePastFiresAtStart(false);
+            RepeatingSchedulableJob job = new RepeatingSchedulableJob();
+            job.setMotechEvent(event);
+            job.setStartDate(alertsStartTime);
+            job.setEndDate(null);
+            job.setRepeatCount(numberOfAlertsToFire);
+            job.setRepeatIntervalInSeconds(repeatIntervalInSeconds);
+            job.setIgnorePastFiresAtStart(false);
             LOGGER.info("Scheduling repeatable Job to trigger Milestone Alert {} with Start Time {}.", event, alertsStartTime);
 
             schedulerService.safeScheduleRepeatingJob(job);
