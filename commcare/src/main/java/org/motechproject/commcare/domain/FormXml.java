@@ -1,6 +1,8 @@
 package org.motechproject.commcare.domain;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -9,19 +11,23 @@ import java.util.Map;
  */
 public class FormXml {
 
-    private FormValueElement form;
+    private List<FormValueElement> formFields = new ArrayList<>();
     private Map<String, MetadataValue> metadata = new HashMap<>();
     private String name;
     private String version;
     private String uiversion;
     private String xmlns;
 
-    public FormValueElement getForm() {
-        return form;
+    public void addFormField(FormValueElement field) {
+        formFields.add(field);
     }
 
-    public void setForm(FormValueElement form) {
-        this.form = form;
+    public List<FormValueElement> getFormFields() {
+        return formFields;
+    }
+
+    public void setFormFields(List<FormValueElement> formFields) {
+        this.formFields = formFields;
     }
 
     public Map<String, MetadataValue> getMetadata() {
