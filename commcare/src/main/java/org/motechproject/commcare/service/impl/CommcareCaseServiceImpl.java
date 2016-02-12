@@ -280,7 +280,7 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
 
         String caseType = properties.get("case_type");
         String dateOpened = properties.get("date_opened");
-        String ownerId = properties.get("owner_id)");
+        String ownerId = properties.get("owner_id");
         String caseName = properties.get("case_name");
 
         caseInfo.setCaseType(caseType);
