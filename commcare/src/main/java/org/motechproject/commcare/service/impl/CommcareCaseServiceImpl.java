@@ -10,7 +10,7 @@ import org.motechproject.commcare.domain.CaseTask;
 import org.motechproject.commcare.domain.CasesInfo;
 import org.motechproject.commcare.domain.CommcareMetadataInfo;
 import org.motechproject.commcare.domain.CommcareMetadataJson;
-import org.motechproject.commcare.exception.CaseParserException;
+import org.motechproject.commcare.exception.OpenRosaParserException;
 import org.motechproject.commcare.gateway.CaseTaskXmlConverter;
 import org.motechproject.commcare.request.json.CaseRequest;
 import org.motechproject.commcare.response.OpenRosaResponse;
@@ -52,7 +52,7 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
 
     @Override
     public CaseInfo getCaseByCaseId(String caseId, String configName) {
-        String response = commcareHttpClient.singleCaseRequest(getConfiguration(configName).getAccountConfig(), caseId);
+        String response = commcareHttpClient.singleCaseRequest(configService.getByName(configName).getAccountConfig(), caseId);
 
         CaseJson caseResponses = parseSingleCaseFromResponse(response);
 
@@ -65,7 +65,7 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
         request.setType(type);
         request.setLimit(pageSize);
         request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
-        List<CaseJson> caseResponses = getCaseResponse(request, getConfiguration(configName)).getCases();
+        List<CaseJson> caseResponses = getCaseResponse(request, configService.getByName(configName)).getCases();
         return generateCasesFromCaseResponse(caseResponses, configName);
     }
 
@@ -75,7 +75,7 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
         request.setUserId(userId);
         request.setLimit(pageSize);
         request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
-        List<CaseJson> caseResponses = getCaseResponse(request, getConfiguration(configName)).getCases();
+        List<CaseJson> caseResponses = getCaseResponse(request, configService.getByName(configName)).getCases();
         return generateCasesFromCaseResponse(caseResponses, configName);
     }
 
@@ -86,7 +86,7 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
         request.setLimit(pageSize);
         request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
 
-        Config config = getConfiguration(configName);
+        Config config = configService.getByName(configName);
 
         CaseResponseJson caseResponseJson = getCaseResponse(request, config);
 
@@ -103,7 +103,7 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
         request.setLimit(pageSize);
         request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
 
-        Config config = getConfiguration(configName);
+        Config config = configService.getByName(configName);
 
         CaseResponseJson caseResponseJson = getCaseResponse(request, config);
 
@@ -122,7 +122,7 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
         request.setLimit(pageSize);
         request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
 
-        Config config = getConfiguration(configName);
+        Config config = configService.getByName(configName);
 
         CaseResponseJson caseResponseJson = getCaseResponse(request, config);
 
@@ -138,20 +138,20 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
         request.setType(type);
         request.setLimit(pageSize);
         request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
-        List<CaseJson> caseResponses = getCaseResponse(request, getConfiguration(configName)).getCases();
+        List<CaseJson> caseResponses = getCaseResponse(request, configService.getByName(configName)).getCases();
         return generateCasesFromCaseResponse(caseResponses, configName);
     }
 
     @Override
     public List<CaseInfo> getCases(Integer pageSize, Integer pageNumber, String configName) {
         CaseRequest request = prepareCaseRequest(pageSize, pageNumber);
-        return generateCasesFromCaseResponse(getCaseResponse(request, getConfiguration(configName)).getCases(), configName);
+        return generateCasesFromCaseResponse(getCaseResponse(request, configService.getByName(configName)).getCases(), configName);
     }
 
     @Override
     public CasesInfo getCasesWithMetadata(Integer pageSize, Integer pageNumber, String configName) {
         CaseRequest request = prepareCaseRequest(pageSize, pageNumber);
-        Config config = getConfiguration(configName);
+        Config config = configService.getByName(configName);
         CaseResponseJson caseResponseJson = getCaseResponse(request, config);
 
         return new CasesInfo(generateCasesFromCaseResponse(getCaseResponse(request, config).getCases(), configName),
@@ -167,9 +167,9 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
         LOGGER.debug("Sending the following Case XML to the Commcare server: {}", fullXml);
         OpenRosaResponse response = null;
         try {
-            response = commcareHttpClient.caseUploadRequest(getConfiguration(configName).getAccountConfig(), fullXml);
+            response = commcareHttpClient.submissionRequest(configService.getByName(configName).getAccountConfig(), fullXml);
             LOGGER.debug("Received the following response from the Commcare server. Status: {}, Message: {}", response.getStatus(), response.getMessageText());
-        } catch (CaseParserException e) {
+        } catch (OpenRosaParserException e) {
             LOGGER.error("Failed to parse response from the CommCare server.", e);
         }
 
@@ -319,18 +319,5 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
         metadataInfo.setTotalCount(metadataJson.getTotalCount());
 
         return metadataInfo;
-    }
-
-    private Config getConfiguration(String name) {
-
-        Config configuration;
-
-        if (name == null) {
-            configuration = configService.getDefault();
-        } else {
-            configuration = configService.getByName(name);
-        }
-
-        return configuration;
     }
 }
