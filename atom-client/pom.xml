@@ -121,7 +121,34 @@
                             org.motechproject.server.config,
                             org.motechproject.server.config.service,
                             org.motechproject.mds.service,
+
+                            org.jdom2,
+                            org.jdom2.filter,
+                            org.jdom2.input,
+                            org.jdom2.input.sax,
+                            org.jdom2.output,
+                            org.slf4j,
+                            org.w3c.dom,
+                            org.xml.sax
+
                             com.rometools.fetcher,
+                            com.rometools.fetcher.impl
+
+                            com.rometools.rome.io,
+                            com.rometools.utils,
+                            org.apache.commons.httpclient;resolution:=optional,
+                            org.apache.commons.httpclient.auth;resolution:=optional,
+                            org.apache.commons.httpclient.methods;resolution:=optional,
+                            org.apache.commons.httpclient.params;resolution:=optional,
+
+                            com.rometools.rome.feed,
+                            com.rometools.rome.feed.atom,
+                            com.rometools.rome.feed.impl,
+                            com.rometools.rome.feed.module,
+                            com.rometools.rome.feed.rss,
+                            com.rometools.rome.feed.synd,
+                            com.rometools.rome.io,
+
                             *
                         </Import-Package>
                         <Bundle-DocURL>

@@ -35,7 +35,7 @@ public class AtomClientServiceImpl implements AtomClientService {
         try {
             FeedFetcherCache feedInfoCache = HashMapFeedInfoCache.getInstance();
             FeedFetcher feedFetcher = new HttpURLFeedFetcher(feedInfoCache);
-            SyndFeed feed = feedFetcher.retrieveFeed(new URL("http://blogs.sun.com/roller/rss/pat"));
+            SyndFeed feed = feedFetcher.retrieveFeed(new URL("http://www.intertwingly.net/blog/index.atom"));
             LOGGER.debug("feed={}", feed.toString());
         } catch (FeedException | IOException | FetcherException e) {
             LOGGER.error(e.getMessage());
