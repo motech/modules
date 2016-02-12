@@ -31,9 +31,15 @@
         <dependency>
             <groupId>com.rometools</groupId>
             <artifactId>rome-fetcher</artifactId>
-            <version>1.5.1</version>
+            <version>1.6.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.servicemix.bundles</groupId>
+            <artifactId>org.apache.servicemix.bundles.jdom</artifactId>
+            <version>2.0.6_1</version>
         </dependency>
     </dependencies>
+
     <build>
         <resources>
             <resource>
@@ -129,10 +135,10 @@
                             org.jdom2.output,
                             org.slf4j,
                             org.w3c.dom,
-                            org.xml.sax
+                            org.xml.sax,
 
                             com.rometools.fetcher,
-                            com.rometools.fetcher.impl
+                            com.rometools.fetcher.impl,
 
                             com.rometools.rome.io,
                             com.rometools.utils,
@@ -147,7 +153,6 @@
                             com.rometools.rome.feed.module,
                             com.rometools.rome.feed.rss,
                             com.rometools.rome.feed.synd,
-                            com.rometools.rome.io,
 
                             *
                         </Import-Package>
