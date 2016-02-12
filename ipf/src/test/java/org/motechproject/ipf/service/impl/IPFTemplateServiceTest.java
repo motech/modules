@@ -1,42 +1,40 @@
 package org.motechproject.ipf.service.impl;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.motechproject.ipf.domain.IPFTemplate;
+import org.motechproject.ipf.service.IPFTemplateDataService;
 import org.motechproject.ipf.util.Constants;
 import org.motechproject.server.config.SettingsFacade;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.File;
-import java.io.FileFilter;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({FileUtils.class, IOUtils.class})
 public class IPFTemplateServiceTest {
 
-    private static final String TEMPLATES_DIR = "/home/motech/templates";
+    private static final String TEMPLATES_DIR = System.getProperty("user.home") + File.separator + ".motech" + File.separator + "templates";
 
     @Mock
-    File file;
+    File tempDirectory;
 
     @Mock
     Properties properties;
@@ -44,48 +42,89 @@ public class IPFTemplateServiceTest {
     @Mock
     SettingsFacade settingsFacade;
 
+    @Mock
+    IPFTemplateDataService ipfTemplateDataService;
+
     @InjectMocks
     private IPFTemplateServiceImpl ipfTemplateService = new IPFTemplateServiceImpl();
 
     @Before
     public void setUp() {
         initMocks(this);
+        when(settingsFacade.getProperties(Constants.IPF_PROPERTIES_FILE)).thenReturn(properties);
+        when(properties.getProperty(Constants.IPF_TEMPLATE_PATH_KEY)).thenReturn(TEMPLATES_DIR);
+
     }
 
     @Test
     public void shouldLoadTemplates() throws IOException {
-        when(settingsFacade.getProperties(Constants.IPF_PROPERTIES_FILE)).thenReturn(properties);
-        when(properties.getProperty(Constants.IPF_TEMPLATE_KEY)).thenReturn(TEMPLATES_DIR);
-
-        PowerMockito.mockStatic(FileUtils.class);
-        when(FileUtils.getFile(TEMPLATES_DIR)).thenReturn(file);
-
-        when(file.exists()).thenReturn(true);
-        when(file.isDirectory()).thenReturn(true);
-        File tempFile1 = File.createTempFile("ipf_motech_", "_template_1");
-        File tempFile2 = File.createTempFile("ipf_motech_", "_template_2");
-
-        File[] files = { tempFile1, tempFile2 };
-        when(file.listFiles(any(FileFilter.class))).thenReturn(files);
-
-        PowerMockito.mockStatic(IOUtils.class);
-        when(IOUtils.toString(any(InputStream.class))).thenReturn("tamplate_data");
+        File[] files = generateFiles();
 
         ipfTemplateService.init();
+        deleteFiles(files);
 
-        //remove temp files
-        tempFile1.delete();
-        tempFile2.delete();
+        Mockito.verify(ipfTemplateDataService, times(2)).createOrUpdate(any(IPFTemplate.class));
+        Mockito.verify(ipfTemplateDataService, times(2)).findByName(anyString());
+        Mockito.verify(ipfTemplateDataService).findByName("IPF_motech_template_1");
+        Mockito.verify(ipfTemplateDataService).findByName("IPF_motech_template_2");
+    }
 
-        List<String> templates = ipfTemplateService.getAllTemplateNames();
+    @Test
+    public void shouldLoadTemplateData() throws IOException {
+        File tempFile = new File(TEMPLATES_DIR + File.separator + "IPF_motech_template_1.xml");
+        File propsFile = new File(TEMPLATES_DIR + File.separator + "IPF_motech_template_1.properties");
+        tempFile.getParentFile().mkdirs();
+        tempFile.createNewFile();
+        propsFile.createNewFile();
 
-        assertNotNull(templates);
-        assertEquals(2, templates.size());
-        assertEquals(tempFile1.getName(), templates.get(0));
-        assertEquals(tempFile2.getName(), templates.get(1));
+        byte[] templateData = IOUtils.toByteArray(getClass().getResourceAsStream("/IPF_test_template.xml"));
+        IOUtils.write(templateData, new FileOutputStream(tempFile));
+        byte[] propertiesData = IOUtils.toByteArray(getClass().getResourceAsStream("/IPF_test_template.properties"));
+        IOUtils.write(propertiesData, new FileOutputStream(propsFile));
 
-        Mockito.verify(settingsFacade, times(2)).saveRawConfig(anyString(), anyString());
-        Mockito.verify(settingsFacade).saveRawConfig(tempFile1.getName(), "tamplate_data");
-        Mockito.verify(settingsFacade).saveRawConfig(tempFile2.getName(), "tamplate_data");
+        ipfTemplateService.init();
+        deleteFiles(new File[] { tempFile, propsFile });
+
+        ArgumentCaptor<IPFTemplate> ipfTemplateArgumentCaptor = ArgumentCaptor.forClass(IPFTemplate.class);
+        Mockito.verify(ipfTemplateDataService).createOrUpdate(ipfTemplateArgumentCaptor.capture());
+
+        IPFTemplate ipfTemplate = ipfTemplateArgumentCaptor.getValue();
+
+        assertNotNull(ipfTemplate);
+        assertEquals("IPF_motech_template_1", ipfTemplate.getTemplateName());
+        assertTrue(Arrays.equals(templateData, ArrayUtils.toPrimitive(ipfTemplate.getTemplateData())));
+
+        Map<String, String> propertiesMap = ipfTemplate.getProperties();
+        assertEquals(2, propertiesMap.size());
+        assertEquals("Name", propertiesMap.get("name"));
+        assertEquals("Postal Code", propertiesMap.get("code"));
+    }
+
+    private File[] generateFiles() throws IOException {
+        File tempFile1 = new File(TEMPLATES_DIR + File.separator + "IPF_motech_template_1.xml");
+        File tempFile2 = new File(TEMPLATES_DIR + File.separator + "IPF_motech_template_2.xml");
+        File tempFile3 = new File(TEMPLATES_DIR + File.separator + "IPF_motech_template_3.xml");
+        File propsFile1 = new File(TEMPLATES_DIR + File.separator + "IPF_motech_template_1.properties");
+        File propsFile2 = new File(TEMPLATES_DIR + File.separator + "IPF_motech_template_2.properties");
+
+        File[] files = new File[] { tempFile1, tempFile2, tempFile3, propsFile1, propsFile2 };
+        deleteFiles(files);
+
+        tempFile1.getParentFile().mkdirs();
+        tempFile1.createNewFile();
+        tempFile2.createNewFile();
+        tempFile3.createNewFile();
+        propsFile1.createNewFile();
+        propsFile2.createNewFile();
+
+        return files;
+    }
+
+    private void deleteFiles(File[] files) {
+        for (File file : files) {
+            if (file.exists()) {
+                file.delete();
+            }
+        }
     }
 }

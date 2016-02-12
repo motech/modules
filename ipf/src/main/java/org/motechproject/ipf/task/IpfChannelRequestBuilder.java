@@ -1,6 +1,8 @@
 package org.motechproject.ipf.task;
 
+import org.apache.commons.lang.StringUtils;
 import org.motechproject.ipf.domain.IPFRecipient;
+import org.motechproject.ipf.domain.IPFTemplate;
 import org.motechproject.ipf.event.EventSubjects;
 import org.motechproject.ipf.util.Constants;
 import org.motechproject.tasks.contract.ActionEventRequest;
@@ -22,10 +24,10 @@ public class IpfChannelRequestBuilder {
 
     private int counter;
     private BundleContext bundleContext;
-    private List<String> templates;
+    private List<IPFTemplate> templates;
     private Collection<IPFRecipient> recipients;
 
-    public IpfChannelRequestBuilder(BundleContext bundleContext, List<String> templates, Collection<IPFRecipient> recipients) {
+    public IpfChannelRequestBuilder(BundleContext bundleContext, List<IPFTemplate> templates, Collection<IPFRecipient> recipients) {
         this.bundleContext = bundleContext;
         this.templates = templates;
         this.recipients = recipients;
@@ -39,52 +41,45 @@ public class IpfChannelRequestBuilder {
     private List<ActionEventRequest> buildActions() {
         List<ActionEventRequest> actionEventRequests = new ArrayList<>();
 
-        for (String template : templates) {
+        for (IPFTemplate template : templates) {
             for (IPFRecipient recipient : recipients) {
                 counter = 0;
 
                 SortedSet<ActionParameterRequest> actionParameters = new TreeSet<>();
                 ActionEventRequestBuilder builder = new ActionEventRequestBuilder();
 
-                // TODO - remove
-                ActionParameterRequestBuilder actionParameterBuilder = new ActionParameterRequestBuilder()
-                        .setDisplayName(Constants.SAMPLE_DISPLAY_NAME_1)
-                        .setKey(Constants.SAMPLE_KEY_1)
-                        .setType(UNICODE)
-                        .setRequired(true)
-                        .setOrder(counter++);
-                actionParameters.add(actionParameterBuilder.createActionParameterRequest());
+                for (String parameter : template.getProperties().keySet()) {
+                    actionParameters.add(getParamBuilder(null, template.getProperties().get(parameter), parameter, true, false).createActionParameterRequest());
+                }
 
-                // TODO - remove
-                actionParameterBuilder = new ActionParameterRequestBuilder()
-                        .setDisplayName(Constants.SAMPLE_DISPLAY_NAME_2)
-                        .setKey(Constants.SAMPLE_KEY_2)
-                        .setType(UNICODE)
-                        .setRequired(true)
-                        .setOrder(counter++)
-                        .setValue(recipient.getRecipientName());
-                actionParameters.add(actionParameterBuilder.createActionParameterRequest());
-
-                // hidden field with value - recipient name
-                actionParameterBuilder = new ActionParameterRequestBuilder()
-                        .setDisplayName(Constants.RECIPIENT_DISPLAY_NAME)
-                        .setKey(Constants.RECIPIENT_NAME_PARAM)
-                        .setType(UNICODE)
-                        .setRequired(true)
-                        .setHidden(true)
-                        .setOrder(counter++)
-                        .setValue(recipient.getRecipientName());
-                actionParameters.add(actionParameterBuilder.createActionParameterRequest());
+                // hidden fields with value - recipient name and template name
+                actionParameters.add(getParamBuilder(recipient.getRecipientName(), Constants.RECIPIENT_DISPLAY_NAME, Constants.RECIPIENT_NAME_PARAM, true, true).createActionParameterRequest());
+                actionParameters.add(getParamBuilder(template.getTemplateName(), Constants.TEMPLATE_DISPLAY_NAME, Constants.TEMPLATE_NAME_PARAM, true, true).createActionParameterRequest());
 
                 builder.setActionParameters(actionParameters)
-                        .setDisplayName(template + " " + recipient.getRecipientName())
-                        .setName(template + "." + recipient.getRecipientName())
-                        .setSubject(EventSubjects.TEMPLATE_ACTION + "." + template + "." + recipient.getRecipientName());
+                        .setDisplayName(template.getTemplateName() + " " + recipient.getRecipientName())
+                        .setName(template.getTemplateName() + "." + recipient.getRecipientName())
+                        .setSubject(EventSubjects.TEMPLATE_ACTION + "." + template.getTemplateName() + "." + recipient.getRecipientName());
 
                 actionEventRequests.add(builder.createActionEventRequest());
             }
         }
 
         return actionEventRequests;
+    }
+
+    private ActionParameterRequestBuilder getParamBuilder(String value, String param, String displayName, boolean required, boolean hidden) {
+        ActionParameterRequestBuilder actionParameterRequestBuilder = new ActionParameterRequestBuilder()
+                                                                        .setDisplayName(displayName)
+                                                                        .setKey(param)
+                                                                        .setType(UNICODE)
+                                                                        .setRequired(required)
+                                                                        .setHidden(hidden)
+                                                                        .setOrder(counter++);
+        if (StringUtils.isNotEmpty(value)) {
+            actionParameterRequestBuilder.setValue(value);
+        }
+
+        return actionParameterRequestBuilder;
     }
 }

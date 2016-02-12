@@ -41,6 +41,11 @@
             <artifactId>motech-tasks</artifactId>
             <version>${motech.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-dataservices</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
 
         <!-- OSGi IT -->
         <dependency>
@@ -85,7 +90,8 @@
                         <Context-Path>ipf</Context-Path>
                         <Resource-Path>ipf/resources</Resource-Path>
                         <Export-Package>
-                            org.motechproject.ipf.service;version=${project.version}
+                            org.motechproject.ipf.service;version=${project.version},
+                            org.motechproject.ipf.domain;version=${project.version}
                         </Export-Package>
                         <Import-Package>
                             net.sf.cglib.core,

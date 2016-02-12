@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="CDASchemas\cda\Schemas\CCD.xsl"?>
+<ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:voc="urn:hl7-org:v3/voc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:hl7-org:v3 CDA.xsd">
+	<data>
+		<name>${name}</name>
+		<code>${code?upper_case}</code>
+	</data>
+</ClinicalDocument>

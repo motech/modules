@@ -1,6 +1,7 @@
 package org.motechproject.ipf.service.impl;
 
 import org.motechproject.ipf.domain.IPFRecipient;
+import org.motechproject.ipf.domain.IPFTemplate;
 import org.motechproject.ipf.service.IPFRecipientsService;
 import org.motechproject.ipf.service.IPFTemplateService;
 import org.motechproject.ipf.service.TaskService;
@@ -42,9 +43,9 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void updateChannel() {
         Collection<IPFRecipient> ipfRecipients = ipfRecipientsService.getAllRecipients();
-        List<String> templateNames = ipfTemplateService.getAllTemplateNames();
+        List<IPFTemplate> ipfTemplates = ipfTemplateService.getAllTemplates();
 
-        IpfChannelRequestBuilder ipfChannelRequestBuilder = new IpfChannelRequestBuilder(bundleContext, templateNames, ipfRecipients);
+        IpfChannelRequestBuilder ipfChannelRequestBuilder = new IpfChannelRequestBuilder(bundleContext, ipfTemplates, ipfRecipients);
 
         LOGGER.debug("Updating IPF task channel...");
         ChannelRequest channelRequest = ipfChannelRequestBuilder.build();

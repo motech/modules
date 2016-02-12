@@ -30,6 +30,7 @@ public class IPFRecipientsServiceImpl implements IPFRecipientsService {
     @Qualifier("ipfSettings")
     private SettingsFacade settingsFacade;
 
+    // TODO: save this to the database ?
     private Map<String, IPFRecipient> recipients;
 
     @PostConstruct
@@ -62,6 +63,4 @@ public class IPFRecipientsServiceImpl implements IPFRecipientsService {
     public IPFRecipient getRecipientbyName(String name) {
         return recipients.get(name);
     }
-
-
 }

@@ -7,6 +7,8 @@
 
     <osgi:reference id="channelService" interface= "org.motechproject.tasks.service.ChannelService" />
 
+    <osgi:reference id="ipfTemplateDataServiceOsgi" interface="org.motechproject.ipf.service.IPFTemplateDataService"/>
+
     <osgi:service id="ipfInitializerOsgi" ref="ipfInitializer" interface="org.motechproject.ipf.service.IPFInitializer" />
 
     <osgi:service id="taskServiceOsgi" ref="taskServiceImpl" interface="org.motechproject.ipf.service.TaskService"/>
