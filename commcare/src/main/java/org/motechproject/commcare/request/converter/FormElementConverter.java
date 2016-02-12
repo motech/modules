@@ -33,6 +33,10 @@ public class FormElementConverter implements Converter {
     private static final String METADATA_XMLNS_VALUE = "http://openrosa.org/jr/xforms";
     private static final String METADATA_PREFIX = "n0:";
 
+    private static final String METADATA_APP_VERSION = "n1:appVersion";
+    private static final String METADATA_XMLNS = "xmlns:n1";
+    private static final String METADATA_XFORMS = "http://commcarehq.org/xforms";
+
 
     @Override
     public void marshal(Object o, HierarchicalStreamWriter writer, MarshallingContext marshallingContext) {
@@ -44,8 +48,10 @@ public class FormElementConverter implements Converter {
         addAttrIfNotEmpty(writer, XMLNS, formXml.getXmlns());
         addAttrIfNotEmpty(writer, XMLNS_JRM_KEY, XMLNS_JRM_VALUE);
 
-        if (formXml.getForm() != null) {
-            marshalFormValues(formXml.getForm(), writer);
+        if (formXml.getFormFields() != null && !formXml.getFormFields().isEmpty()) {
+            for (FormValueElement formField : formXml.getFormFields()) {
+                marshalFormValues(formField, writer);
+            }
         }
 
         if (!formXml.getMetadata().isEmpty()) {
@@ -74,6 +80,11 @@ public class FormElementConverter implements Converter {
                 writer.endNode();
             }
         }
+
+        writer.startNode(METADATA_APP_VERSION);
+        writer.addAttribute(METADATA_XMLNS, METADATA_XFORMS);
+        writer.setValue("2.0");
+        writer.endNode();
 
         writer.endNode();
     }
