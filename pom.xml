@@ -766,6 +766,7 @@
         <module>csd</module>
         <module>metrics</module>
         <module>ipf</module>
+        <module>atom-client</module>
     </modules>
 
     <build>
