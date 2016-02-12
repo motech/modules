@@ -8,6 +8,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -34,6 +35,7 @@ import org.motechproject.ivr.domain.Config;
 import org.motechproject.ivr.domain.HttpMethod;
 import org.motechproject.ivr.event.EventParams;
 import org.motechproject.ivr.event.EventSubjects;
+import org.motechproject.ivr.exception.ConfigNotFoundException;
 import org.motechproject.ivr.repository.CallDetailRecordDataService;
 import org.motechproject.ivr.service.CallInitiationException;
 import org.motechproject.ivr.service.ConfigService;
@@ -109,6 +111,15 @@ public class OutboundCallServiceImpl implements OutboundCallService {
         }
 
         callDetailRecordDataService.create(callDetailRecord);
+    }
+
+    @Override
+    public void initiateCall(Map<String, String> params) {
+        String defaultConfig = configService.getDefaultConfig();
+        if(StringUtils.isEmpty(defaultConfig)) {
+            throw new ConfigNotFoundException("No default configuration found.");
+        }
+        initiateCall(defaultConfig, params);
     }
 
     @Override
