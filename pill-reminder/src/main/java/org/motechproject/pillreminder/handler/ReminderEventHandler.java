@@ -85,11 +85,12 @@ public class ReminderEventHandler {
 
         repeatingReminderEvent.getParameters().put(MotechSchedulerService.JOB_ID_KEY, String.valueOf(dosage.getId()));
         final int secondsInMinute = 60;
-        RepeatingSchedulableJob retryRemindersJob = new RepeatingSchedulableJob()
-            .setMotechEvent(repeatingReminderEvent)
-            .setStartTime(startTime).setEndTime(endTime)
-            .setRepeatIntervalInSeconds(scheduleDetails.getRepeatIntervalInMinutes() * secondsInMinute)
-            .setIgnorePastFiresAtStart(false);
+        RepeatingSchedulableJob retryRemindersJob = new RepeatingSchedulableJob();
+        retryRemindersJob.setMotechEvent(repeatingReminderEvent);
+        retryRemindersJob.setStartDate(startTime);
+        retryRemindersJob.setEndDate(endTime);
+        retryRemindersJob.setRepeatIntervalInSeconds(scheduleDetails.getRepeatIntervalInMinutes() * secondsInMinute);
+        retryRemindersJob.setIgnorePastFiresAtStart(false);
         schedulerService.safeScheduleRepeatingJob(retryRemindersJob);
     }
 
