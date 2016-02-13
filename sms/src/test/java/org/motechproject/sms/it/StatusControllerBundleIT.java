@@ -108,7 +108,7 @@ public class StatusControllerBundleIT extends BasePaxIT {
 
         //Verify we logged this
         List<SmsRecord> smsRecords = smsRecordsDataService.findByCriteria(null, new HashSet<>(), null, null,
-                new Range<>(null, null), null, null,
+                new Range<>(null, null), new HashSet<>(), null,
                 null, messageId, null, null);
         assertEquals(1, smsRecords.size());
         assertEquals(smsRecords.get(0).getDeliveryStatus(), "DELIVERY_CONFIRMED");
