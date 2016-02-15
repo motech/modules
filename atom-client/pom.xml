@@ -125,6 +125,7 @@
                             org.aopalliance.aop,
                             org.springframework.aop,
                             org.springframework.aop.framework,
+                            org.springframework.transaction,
                             org.motechproject.config.service,
                             org.motechproject.server.config,
                             org.motechproject.server.config.service,

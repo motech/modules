@@ -28,7 +28,7 @@ public class AtomClientServiceBundleIT extends BasePaxIT {
 
 
     @Before
-    public void cleanup() {
+    public void setup() {
         feedRecordDataService.deleteAll();
     }
 
