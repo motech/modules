@@ -11,4 +11,6 @@
 
     <osgi:service ref="atomClientService" interface="org.motechproject.atomclient.service.AtomClientService"/>
 
+    <osgi:reference id="feedRecordDataService" interface="org.motechproject.atomclient.repository.FeedRecordDataService" />
+
 </beans>

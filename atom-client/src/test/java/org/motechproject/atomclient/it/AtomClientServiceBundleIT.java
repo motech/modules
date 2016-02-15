@@ -1,7 +1,9 @@
 package org.motechproject.atomclient.it;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.atomclient.repository.FeedRecordDataService;
 import org.motechproject.atomclient.service.AtomClientService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -21,12 +23,20 @@ public class AtomClientServiceBundleIT extends BasePaxIT {
 
     @Inject
     private AtomClientService atomClientService;
+    @Inject
+    private FeedRecordDataService feedRecordDataService;
+
+
+    @Before
+    public void cleanup() {
+        feedRecordDataService.deleteAll();
+    }
 
 
     @Test
     public void verifyService() {
-
         assertNotNull(atomClientService);
+        atomClientService.foo();
         atomClientService.foo();
     }
 }
