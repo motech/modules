@@ -29,7 +29,9 @@ import org.motechproject.openmrs19.resource.model.Provider;
 import org.motechproject.openmrs19.resource.model.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Utility class for converting entities between the MOTECH and the OpenMRS models. The classes from the  MOTECH model
@@ -75,7 +77,9 @@ public final class ConverterUtils {
             converted.setDeathDate(new DateTime(person.getDeathDate()));
         }
 
-        converted.setIsDead(person.isDead());
+        converted.setDead(person.isDead());
+        converted.setAge(person.getAge());
+        converted.setBirthDateEstimated(person.isBirthdateEstimated());
 
         if (person.getAttributes() != null) {
             for (Attribute attr : person.getAttributes()) {
@@ -110,7 +114,7 @@ public final class ConverterUtils {
             converted.setDeathDate(person.getDeathDate().toDate());
         }
         converted.setBirthdateEstimated((Boolean) ObjectUtils.defaultIfNull(person.getBirthDateEstimated(), false));
-        converted.setDead(person.isDead());
+        converted.setDead(person.getDead());
         converted.setGender(person.getGender());
 
         if (includeNames) {
@@ -140,8 +144,8 @@ public final class ConverterUtils {
      * @return the location converted to the MOTECH model of the facility used by this module
      */
     public static OpenMRSFacility toOpenMRSFacility(Location location) {
-        return new OpenMRSFacility(location.getUuid(), location.getDisplay(), location.getName(),
-                location.getCountry(), location.getAddress6(), location.getCountyDistrict(), location.getStateProvince());
+        return new OpenMRSFacility(location.getUuid(), location.getDisplay(), location.getName(), location.getCountry(), location.getAddress6(),
+                location.getCountyDistrict(), location.getStateProvince());
     }
 
     /**
@@ -248,8 +252,8 @@ public final class ConverterUtils {
         person.setAge(personMrs.getAge());
         person.setBirthDateEstimated(personMrs.getBirthDateEstimated());
         person.setDateOfBirth(personMrs.getDateOfBirth());
-        if (personMrs.isDead() != null) {
-            person.setIsDead(personMrs.isDead());
+        if (personMrs.getDead() != null) {
+            person.setDead(personMrs.getDead());
         }
         person.setDeathDate(personMrs.getDeathDate());
         person.setGender(personMrs.getGender());
@@ -360,7 +364,7 @@ public final class ConverterUtils {
     }
 
     public static OpenMRSPatient toOpenMRSPatient(Patient patient) {
-        return toOpenMRSPatient(patient, null, null);
+        return toOpenMRSPatient(patient, null, null, null);
     }
 
     /**
@@ -371,13 +375,21 @@ public final class ConverterUtils {
      * @param motechId  the MOTECH ID of the patient
      * @return
      */
-    public static OpenMRSPatient toOpenMRSPatient(Patient patient, OpenMRSFacility facility, String motechId) {
-
+    public static OpenMRSPatient toOpenMRSPatient(Patient patient, OpenMRSFacility facility, String motechId,
+                                                  List<Identifier> supportedIdentifierList) {
         OpenMRSPatient openMRSPatient = new OpenMRSPatient(patient.getUuid());
+
+        Map<String, String> identifierTypesByValue = new HashMap<>();
+
+        for (Identifier identifier :  supportedIdentifierList) {
+            String identifierName = identifier.getIdentifierType().getName();
+            identifierTypesByValue.put(identifierName, identifier.getIdentifier());
+        }
 
         openMRSPatient.setPerson(toOpenMRSPerson(patient.getPerson()));
         openMRSPatient.setFacility(facility);
         openMRSPatient.setMotechId(motechId);
+        openMRSPatient.setIdentifierTypesByValue(identifierTypesByValue);
 
         return openMRSPatient;
     }

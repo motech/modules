@@ -39,10 +39,19 @@ public interface PatientResource {
     /**
      * Returns the UUID of the MOTECH patient identifier.
      *
-     * @return  the UUD of the MOTECH patient identifier
+     * @return  the UUID of the MOTECH patient identifier
      * @throws HttpException  when there were problems while fetching MOTECH patient identifier
      */
     String getMotechPatientIdentifierUuid() throws HttpException;
+
+    /**
+     * Returns the patient identifier name for the given uuid.
+     *
+     * @param uuid the UUID of the patient identifier
+     * @return the name of the patient identifier
+     * @throws HttpException when there were problems while fetching patient identifier
+     */
+    String getPatientIdentifierName(String uuid) throws HttpException;
 
     /**
      * Deletes the patient with the given UUID.

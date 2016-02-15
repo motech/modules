@@ -14,6 +14,7 @@ import org.motechproject.openmrs19.exception.PatientNotFoundException;
 import org.motechproject.openmrs19.helper.EventHelper;
 import org.motechproject.openmrs19.resource.PatientResource;
 import org.motechproject.openmrs19.resource.model.Identifier;
+import org.motechproject.openmrs19.resource.model.IdentifierType;
 import org.motechproject.openmrs19.resource.model.Patient;
 import org.motechproject.openmrs19.resource.model.PatientListResult;
 import org.motechproject.openmrs19.service.EventKeys;
@@ -93,20 +94,44 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
 
         String motechId = null;
         OpenMRSFacility facility = null;
-        Identifier identifier = patient.getIdentifierByIdentifierType(motechIdentifierUuid);
+        Identifier motechIdentifier = patient.getIdentifierByIdentifierType(motechIdentifierUuid);
 
-        if (identifier == null) {
+        if (motechIdentifier == null) {
             LOGGER.warn("No MoTeCH Id found on Patient with id: " + patient.getUuid());
         } else {
 
-            if (identifier.getLocation() != null) {
-                facility = facilityAdapter.getFacilityByUuid(identifier.getLocation().getUuid());
+            if (motechIdentifier.getLocation() != null) {
+                facility = facilityAdapter.getFacilityByUuid(motechIdentifier.getLocation().getUuid());
             }
 
-            motechId = identifier.getIdentifier();
+            motechId = motechIdentifier.getIdentifier();
         }
 
-        return ConverterUtils.toOpenMRSPatient(patient, facility, motechId);
+        List<Identifier> supportedIdentifierList = new ArrayList<>();
+
+        for (Identifier identifier : patient.getIdentifiers()) {
+            IdentifierType identifierType =  identifier.getIdentifierType();
+
+            // we omit motechIdentifier, because we handle this identifier earlier
+            if (identifierType.getUuid().equals(motechIdentifierUuid)) {
+                continue;
+            } else {
+                try {
+                    String identifierName = patientResource.getPatientIdentifierName(identifierType.getUuid());
+                    if (identifierName == null) {
+                        LOGGER.warn("The identifier with UUID {} is not supported", identifierType.getUuid());
+                    } else {
+                        identifier.getIdentifierType().setName(identifierName);
+                        supportedIdentifierList.add(identifier);
+                    }
+                } catch (HttpException e) {
+                    LOGGER.error("There was an exception retrieving the identifier with UUID {}", identifierType.getUuid());
+                    return null;
+                }
+            }
+        }
+
+        return ConverterUtils.toOpenMRSPatient(patient, facility, motechId, supportedIdentifierList);
     }
 
     @Override
@@ -142,7 +167,6 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         Validate.notNull(patient, "Patient cannot be null");
         Validate.isTrue(StringUtils.isNotEmpty(patient.getMotechId()), "You must provide a motech id to save a patient");
         Validate.notNull(patient.getPerson(), "Person cannot be null when saving a patient");
-        Validate.notNull(patient.getFacility(), "Facility cannot be null when saving a patient");
     }
 
     @Override
@@ -208,7 +232,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
             throw new OpenMRSException("Failed to update OpenMRS patient with id: " + patient.getPatientId(), e);
         }
 
-        OpenMRSPatient updatedPatient = new OpenMRSPatient(openMRSPatient.getPatientId(), patient.getMotechId(), person, openMRSPatient.getFacility());
+        OpenMRSPatient updatedPatient = new OpenMRSPatient(openMRSPatient.getPatientId(), patient.getMotechId(), person, openMRSPatient.getFacility(), null);
         eventRelay.sendEventMessage(new MotechEvent(EventKeys.UPDATED_PATIENT_SUBJECT, EventHelper.patientParameters(updatedPatient)));
         return updatedPatient;
     }

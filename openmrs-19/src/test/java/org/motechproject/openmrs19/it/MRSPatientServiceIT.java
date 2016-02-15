@@ -155,7 +155,7 @@ public class MRSPatientServiceIT extends BasePaxIT {
 
         patientAdapter.deceasePatient(patient.getMotechId(), causeOfDeath, new Date(), null);
         OpenMRSPatient deceased = patientAdapter.getPatientByMotechId(patient.getMotechId());
-        assertTrue(deceased.getPerson().isDead());
+        assertTrue(deceased.getPerson().getDead());
     }
 
     @Test

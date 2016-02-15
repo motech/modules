@@ -22,6 +22,9 @@ import org.motechproject.openmrs19.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Component
 public class PatientResourceImpl implements PatientResource {
 
@@ -29,6 +32,7 @@ public class PatientResourceImpl implements PatientResource {
     private OpenMrsInstance openmrsInstance;
 
     private String motechIdTypeUuid;
+    private Map<String, String> identifierUuidByName = new HashMap<>();
 
     @Autowired
     public PatientResourceImpl(RestClient restClient, OpenMrsInstance instance) {
@@ -80,6 +84,27 @@ public class PatientResourceImpl implements PatientResource {
         }
 
         return motechIdTypeUuid;
+    }
+
+    @Override
+    public String getPatientIdentifierName(String uuid) throws HttpException {
+        String identifierName = identifierUuidByName.get(uuid);
+
+        if (identifierName == null) {
+            PatientIdentifierListResult result = getAllPatientIdentifierTypes();
+            for (IdentifierType type : result.getResults()) {
+                if (StringUtils.equals(uuid, type.getUuid())) {
+                    if (openmrsInstance.getPatientIdentifierTypesNames().contains(type.getName())) {
+                        identifierName = type.getName();
+                        identifierUuidByName.put(uuid, identifierName);
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        return identifierName;
     }
 
     @Override
