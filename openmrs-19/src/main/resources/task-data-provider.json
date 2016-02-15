@@ -14,7 +14,7 @@
       ],
       "fields": [
         {
-          "displayName": "openMRS.provider.providerId",
+          "displayName": "openMRS.provider.id",
           "fieldKey": "providerId"
         },
         {
@@ -28,6 +28,61 @@
         {
           "displayName": "openMRS.person.display",
           "fieldKey": "person.display"
+        }
+      ]
+    },
+    {
+      "displayName": "openMRS.encounter",
+      "type": "OpenMRSEncounter",
+      "lookupFields": [
+        {
+          "displayName": "openMRS.lookup.uuid",
+          "fields": [
+            "openMRS.uuid"
+          ]
+        }
+      ],
+      "fields": [
+        {
+          "displayName": "openMRS.encounter.id",
+          "fieldKey": "id"
+        },
+        {
+          "displayName": "openMRS.encounter.display",
+          "fieldKey": "display"
+        },
+        {
+          "displayName": "openMRS.encounter.date",
+          "fieldKey": "date",
+          "type": "DATE"
+        },
+        {
+          "displayName": "openMRS.encounter.type",
+          "fieldKey": "encounterType"
+        },
+        {
+          "displayName": "openMRS.provider.id",
+          "fieldKey": "provider.providerId"
+        },
+        {
+          "displayName": "openMRS.provider.display",
+          "fieldKey": "provider.person.display"
+        },
+        {
+          "displayName": "openMRS.location.id",
+          "fieldKey": "facility.id"
+        },
+        {
+          "displayName": "openMRS.location.display",
+          "fieldKey": "facility.display"
+        },
+        {
+          "displayName": "openMRS.patient.id",
+          "fieldKey": "patient.id"
+        },
+        {
+          "displayName": "openMRS.patient.display",
+          "fieldKey": "patient.person.display"
         }
       ]
     }

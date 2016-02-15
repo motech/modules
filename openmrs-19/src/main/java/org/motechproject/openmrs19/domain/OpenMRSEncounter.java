@@ -13,6 +13,7 @@ import java.util.Set;
 public class OpenMRSEncounter {
 
     private String id;
+    private String display;
     private OpenMRSProvider provider;
     private OpenMRSUser creator;
     private OpenMRSFacility facility;
@@ -50,6 +51,10 @@ public class OpenMRSEncounter {
         this.patient = patient;
         this.observations = observations;
         this.encounterType = encounterType;
+    }
+
+    public String getDisplay() {
+        return display;
     }
 
     public OpenMRSUser getCreator() {
@@ -98,6 +103,7 @@ public class OpenMRSEncounter {
     }
 
     public static class OpenMRSEncounterBuilder {
+        private String display;
         private OpenMRSProvider provider;
         private OpenMRSUser creator;
         private OpenMRSFacility facility;
@@ -106,6 +112,11 @@ public class OpenMRSEncounter {
         private Set<? extends OpenMRSObservation> observations;
         private String encounterType;
         private String id;
+
+        public OpenMRSEncounterBuilder withDisplay(String display) {
+            this.display = display;
+            return this;
+        }
 
         public OpenMRSEncounterBuilder withProvider(OpenMRSProvider provider) {
             this.provider = provider;
@@ -170,6 +181,7 @@ public class OpenMRSEncounter {
 
         public OpenMRSEncounter build() {
             OpenMRSEncounter mrsEncounter = new OpenMRSEncounter(provider, creator, facility, date, patient, observations, encounterType);
+            mrsEncounter.display = this.display;
             mrsEncounter.id = this.id;
             return mrsEncounter;
         }
@@ -181,6 +193,10 @@ public class OpenMRSEncounter {
 
     public void setEncounterId(String encounterId) {
         this.id = encounterId;
+    }
+
+    public void setDisplay(String display) {
+        this.display = display;
     }
 
     public void setProvider(OpenMRSProvider provider) {
