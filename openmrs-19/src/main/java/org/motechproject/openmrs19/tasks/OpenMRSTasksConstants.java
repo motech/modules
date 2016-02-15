@@ -11,6 +11,7 @@ public final class OpenMRSTasksConstants {
     public static final String BY_UUID = "openMRS.lookup.uuid";
 
     // Lookup objects
+    public static final String ENCOUNTER = "OpenMRSEncounter";
     public static final String PROVIDER = "OpenMRSProvider";
 
     // Field names

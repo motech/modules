@@ -17,6 +17,7 @@ import java.util.List;
 public class Encounter {
 
     private String uuid;
+    private String display;
     private Location location;
     private EncounterType encounterType;
     private Date encounterDatetime;
@@ -30,6 +31,14 @@ public class Encounter {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public String getDisplay() {
+        return display;
+    }
+
+    public void setDisplay(String display) {
+        this.display = display;
     }
 
     public Location getLocation() {

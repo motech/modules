@@ -140,8 +140,8 @@ public final class ConverterUtils {
      * @return the location converted to the MOTECH model of the facility used by this module
      */
     public static OpenMRSFacility toOpenMRSFacility(Location location) {
-        return new OpenMRSFacility(location.getUuid(), location.getName(), location.getCountry(), location.getAddress6(),
-                location.getCountyDistrict(), location.getStateProvince());
+        return new OpenMRSFacility(location.getUuid(), location.getDisplay(), location.getName(),
+                location.getCountry(), location.getAddress6(), location.getCountyDistrict(), location.getStateProvince());
     }
 
     /**
