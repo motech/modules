@@ -15,11 +15,11 @@ public final class DisplayNameHelper {
      * @param configName the name of the configuration
      * @return the display name
      */
-    public static String buildDisplayName(String subject, String name, String configName) {
+    public static String buildDisplayName(String subject, String name, String applicationName, String configName) {
         if (StringUtils.isBlank(name)) {
             return String.format("%s [%s]", subject, configName);
         } else {
-            return String.format("%s: %s [%s]", subject, name, configName);
+            return String.format("%s: %s [%s : %s]", subject, name, applicationName, configName);
         }
     }
 
@@ -30,7 +30,7 @@ public final class DisplayNameHelper {
      * @return the display name
      */
     public static String buildDisplayName(String subject, String configName) {
-        return buildDisplayName(subject, null, configName);
+        return buildDisplayName(subject, null, null, configName);
     }
 
     /**

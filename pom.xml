@@ -746,26 +746,7 @@
     </dependencyManagement>
 
     <modules>
-        <module>alerts</module>
-        <module>appointments</module>
-        <module>cms-lite</module>
         <module>commcare</module>
-        <module>event-logging</module>
-        <module>hindi-transliteration</module>
-        <module>http-agent</module>
-        <module>mtraining</module>
-        <module>sms</module>
-        <module>message-campaign</module>
-        <module>openmrs-19</module>
-        <module>pill-reminder</module>
-        <module>schedule-tracking</module>
-        <module>batch</module>
-        <module>hub</module>
-        <module>ivr</module>
-        <module>dhis2</module>
-        <module>csd</module>
-        <module>metrics</module>
-        <module>ipf</module>
     </modules>
 
     <build>

@@ -1,5 +1,6 @@
 package org.motechproject.commcare.tasks.builder;
 
+import org.motechproject.commcare.service.CommcareApplicationService;
 import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.service.CommcareSchemaService;
 import org.motechproject.tasks.contract.ActionEventRequest;
@@ -23,6 +24,7 @@ public class ChannelRequestBuilder {
     private BundleContext bundleContext;
     private CommcareConfigService configService;
     private CommcareSchemaService schemaService;
+    private CommcareApplicationService applicationService;
 
     /**
      * Creates an instance of the {@link ChannelRequestBuilder} class, which is used for building {@link ChannelRequest}
@@ -33,9 +35,10 @@ public class ChannelRequestBuilder {
      * @param schemaService  the schema service
      * @param bundleContext  the bundle context
      */
-    public ChannelRequestBuilder(CommcareConfigService configService, CommcareSchemaService schemaService,
+    public ChannelRequestBuilder(CommcareConfigService configService, CommcareApplicationService applicationService,CommcareSchemaService schemaService,
                                  BundleContext bundleContext) {
         this.schemaService = schemaService;
+        this.applicationService = applicationService;
         this.configService = configService;
         this.bundleContext = bundleContext;
     }
@@ -46,7 +49,7 @@ public class ChannelRequestBuilder {
      * @return the created instance
      */
     public ChannelRequest buildChannelRequest() {
-        FormTriggerBuilder formTriggerBuilder = new FormTriggerBuilder(schemaService, configService);
+        FormTriggerBuilder formTriggerBuilder = new FormTriggerBuilder(schemaService, applicationService, configService);
         CaseTriggerBuilder caseTriggerBuilder = new CaseTriggerBuilder(schemaService, configService);
         CommonTriggerBuilder commonTriggerBuilder = new CommonTriggerBuilder(configService);
         QueryStockLedgerActionBuilder queryStockLedgerActionBuilder = new QueryStockLedgerActionBuilder(configService);

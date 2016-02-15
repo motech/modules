@@ -35,6 +35,8 @@ public class CaseTriggerBuilder implements TriggerBuilder {
     private static final String RECEIVED_CASE = "Received Case";
     private static final String RECEIVED_CASE_ID = "Received Case ID";
 
+    String applicationName = "application_name";
+
     /**
      * Creates an instance of the {@link CaseTriggerBuilder} class. It will use the given {@code schemaService} and
      * {@code configService} for creating case triggers.
@@ -61,7 +63,7 @@ public class CaseTriggerBuilder implements TriggerBuilder {
                     parameterRequests.add(new EventParameterRequest(caseProperty, caseProperty));
                 }
 
-                String displayName = DisplayNameHelper.buildDisplayName(RECEIVED_CASE, entry.getKey(), config.getName());
+                String displayName = DisplayNameHelper.buildDisplayName(RECEIVED_CASE, entry.getKey(), applicationName, config.getName());
 
                 triggers.add(new TriggerEventRequest(displayName, CASE_EVENT + "." + config.getName() + "." + entry.getKey(),
                         null, parameterRequests, CASE_EVENT));
