@@ -80,6 +80,16 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
     }
 
     @Override
+    public List<CaseInfo> getCasesByOwnerId(String ownerId, Integer pageSize, Integer pageNumber, String configName) { //ONLY TEST
+        CaseRequest request = new CaseRequest();
+        request.setOwnerId(ownerId);
+        request.setLimit(pageSize);
+        request.setOffset(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0);
+        List<CaseJson> caseResponses = getCaseResponse(request, getConfiguration(configName)).getCases();
+        return generateCasesFromCaseResponse(caseResponses, configName);
+    }
+
+    @Override
     public CasesInfo getCasesByCasesNameWithMetadata(String caseName, Integer pageSize, Integer pageNumber, String configName) {
         CaseRequest request = new CaseRequest();
         request.setCaseName(caseName);
@@ -189,6 +199,11 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
     @Override
     public List<CaseInfo> getCasesByUserId(String userId, Integer pageSize, Integer pageNumber) {
         return getCasesByUserId(userId, pageSize, pageNumber, null);
+    }
+
+    @Override
+    public List<CaseInfo> getCasesByOwnerId(String ownerId, Integer pageSize, Integer pageNumber) {
+        return getCasesByOwnerId(ownerId, pageSize, pageNumber, null);
     }
 
     @Override

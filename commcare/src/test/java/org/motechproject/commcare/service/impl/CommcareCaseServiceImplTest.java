@@ -95,6 +95,22 @@ public class CommcareCaseServiceImplTest {
     }
 
     @Test
+    public void testCasesByOwnerId() {
+        String ownerId = "testId";
+
+        CaseRequest request = new CaseRequest();
+        request.setOwnerId(ownerId);
+        request.setLimit(20);
+        request.setOffset(0);
+        when(commcareHttpClient.casesRequest(config.getAccountConfig(), request)).thenReturn(casesResponse());
+
+        List<CaseInfo> cases = caseService.getCasesByOwnerId(ownerId, 20, 1);
+
+        assertEquals(asList("3ECE7ROKGQ7U1XX1DOL0PNRJW", "63ZB8WGEQY3TJ23PHB2EGD39J", "EP60PTXTZW6HD42KPSY9U018V",
+                "EPKT93XZQ8COVAIQZ7DMQXO7S"), extract(cases, on(CaseInfo.class).getCaseId()));
+    }
+
+    @Test
     public void testAllCaseServerDateModified()
     {
         when(commcareHttpClient.casesRequest(any(AccountConfig.class), any(CaseRequest.class))).thenReturn(casesResponse());
