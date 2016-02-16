@@ -2,5 +2,6 @@ package org.motechproject.atomclient.service;
 
 public interface AtomClientService {
 
-    void foo();
+    void setupFetchJob(String urlString, String cronExpression);
+    void fetch();
 }

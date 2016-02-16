@@ -1,6 +1,5 @@
 package org.motechproject.atomclient.domain;
 
-import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
@@ -12,30 +11,30 @@ public class FeedRecord {
     @Field(required = true)
     @Column(length = 2083)
     @Index
-    private String url; //NOPMD UnusedPrivateField
+    private String url;
 
-
-    @Field
+    @Field(required = true)
     private String feedId;
 
-    @Field
+    @Field(required = true)
+    @Column(length = 2083)
     private String feedUrl;
 
-    @Field
-    private DateTime feedLastMofified;
+    @Field(required = true)
+    private Long feedLastModified;
 
     @Field
     private String feedETag;
 
     @Field(required = true)
-    private byte[] feedData; //NOPMD UnusedPrivateField
+    private byte[] feedData;
 
-    public FeedRecord(String url, String feedId, String feelUrl, DateTime feedLastModified, String feedETag,
+    public FeedRecord(String url, String feedId, String feelUrl, Long feedLastModified, String feedETag,
                       byte[] feedData) { //NOPMD ArrayIsStoredDirectly
         this.url = url;
         this.feedId = feedId;
         this.feedUrl = feelUrl;
-        this.feedLastMofified = feedLastModified;
+        this.feedLastModified = feedLastModified;
         this.feedETag = feedETag;
         this.feedData = feedData;
     }
@@ -52,8 +51,8 @@ public class FeedRecord {
         return feedUrl;
     }
 
-    public DateTime getFeedLastMofified() {
-        return feedLastMofified;
+    public Long getFeedLastModified() {
+        return feedLastModified;
     }
 
     public String getFeedETag() {

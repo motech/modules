@@ -28,15 +28,23 @@ public class AtomClientServiceBundleIT extends BasePaxIT {
 
 
     @Before
-    public void setup() {
+    public void setupDatabase() {
         feedRecordDataService.deleteAll();
+    }
+
+
+    @Before
+    public void setupProperties() {
+        //atomClientService.setupFetchJob("http://intertwingly.net/blog/index.atom", "0/10 * * * * ?");
+        atomClientService.setupFetchJob("http://localhost:8080/openmrs/ws/atomfeed/patient/recent", "0/10 * * * * ?");
     }
 
 
     @Test
     public void verifyService() {
         assertNotNull(atomClientService);
-        atomClientService.foo();
-        atomClientService.foo();
+        atomClientService.fetch();
+        atomClientService.fetch();
+        atomClientService.fetch();
     }
 }
