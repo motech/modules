@@ -9,6 +9,7 @@ import java.util.List;
 public class CaseRequest extends Request {
 
     private String userId;
+    private String ownerId;
     private String caseId;
     private String type;
     private String caseName;
@@ -22,6 +23,9 @@ public class CaseRequest extends Request {
 
         if (userId != null) {
             queryParams.add(concat("user_id", userId));
+        }
+        if (ownerId != null) {
+            queryParams.add(concat("owner_id", ownerId));
         }
         if (caseId != null) {
             queryParams.add(concat("case_id", caseId));
@@ -50,6 +54,16 @@ public class CaseRequest extends Request {
     public void setUserId(String userId) {
         this.userId = userId;
     }
+
+    /**
+     * Sets the ID of the user to {@code userId}.
+     *
+     * @param ownerId  the ID of the user
+     */
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
+    }
+
 
     /**
      * Sets the ID of the case to {@code caseId}.
