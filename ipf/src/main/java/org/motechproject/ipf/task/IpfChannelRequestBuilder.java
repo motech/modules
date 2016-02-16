@@ -18,6 +18,10 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+/**
+ * Builds a channel request from uploaded templates and recipients. It generates task action for each pair of
+ * template recipient.
+ */
 public class IpfChannelRequestBuilder {
 
     private static final String UNICODE = "UNICODE";
@@ -33,6 +37,13 @@ public class IpfChannelRequestBuilder {
         this.recipients = recipients;
     }
 
+
+    /**
+     * Creates channel requests requests for each pair template recipient. Template name and recipient name fields are
+     * automatically added(as hidden fields) to the task action request.
+     *
+     * @return the new channel request
+     */
     public ChannelRequest build() {
         return new ChannelRequest(Constants.CHANNEL_DISPLAY_NAME, bundleContext.getBundle().getSymbolicName(),
                 bundleContext.getBundle().getVersion().toString(), null, null, buildActions());
@@ -49,12 +60,12 @@ public class IpfChannelRequestBuilder {
                 ActionEventRequestBuilder builder = new ActionEventRequestBuilder();
 
                 for (String parameter : template.getProperties().keySet()) {
-                    actionParameters.add(getParamBuilder(null, template.getProperties().get(parameter), parameter, true, false).createActionParameterRequest());
+                    actionParameters.add(getParamBuilder(null, parameter, template.getProperties().get(parameter), true, false).createActionParameterRequest());
                 }
 
                 // hidden fields with value - recipient name and template name
-                actionParameters.add(getParamBuilder(recipient.getRecipientName(), Constants.RECIPIENT_DISPLAY_NAME, Constants.RECIPIENT_NAME_PARAM, true, true).createActionParameterRequest());
-                actionParameters.add(getParamBuilder(template.getTemplateName(), Constants.TEMPLATE_DISPLAY_NAME, Constants.TEMPLATE_NAME_PARAM, true, true).createActionParameterRequest());
+                actionParameters.add(getParamBuilder(recipient.getRecipientName(), Constants.RECIPIENT_NAME_PARAM, Constants.RECIPIENT_DISPLAY_NAME, true, true).createActionParameterRequest());
+                actionParameters.add(getParamBuilder(template.getTemplateName(), Constants.TEMPLATE_NAME_PARAM, Constants.TEMPLATE_DISPLAY_NAME, true, true).createActionParameterRequest());
 
                 builder.setActionParameters(actionParameters)
                         .setDisplayName(template.getTemplateName() + " " + recipient.getRecipientName())

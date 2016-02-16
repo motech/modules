@@ -11,9 +11,7 @@
 
     <osgi:service id="ipfInitializerOsgi" ref="ipfInitializer" interface="org.motechproject.ipf.service.IPFInitializer" />
 
-    <osgi:service id="taskServiceOsgi" ref="taskServiceImpl" interface="org.motechproject.ipf.service.TaskService"/>
+    <osgi:service id="ipfTaskServiceOsgi" ref="ipfTaskService" interface="org.motechproject.ipf.service.IPFTaskService"/>
 
     <osgi:service id="ipfRecipientsServiceOsgi" ref="ipfRecipientsService" interface="org.motechproject.ipf.service.IPFRecipientsService"/>
-
-    <osgi:service id="ipfTemplateServiceOsgi" ref="ipfTemplateService" interface="org.motechproject.ipf.service.IPFTemplateService"/>
 </beans>

@@ -19,7 +19,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class IPFRecipientsServiceTest {
 
     @Mock
-    SettingsFacade settingsFacade;
+    private SettingsFacade settingsFacade;
 
     @InjectMocks
     private IPFRecipientsServiceImpl ipfRecipientsService = new IPFRecipientsServiceImpl();
@@ -31,7 +31,7 @@ public class IPFRecipientsServiceTest {
 
     @Test
     public void shouldLoadRecipients() {
-        when(settingsFacade.getRawConfig(Constants.IPF_RECIPIENTS_FILE)).thenReturn(getClass().getResourceAsStream("/ipf-recipient-test.json"));
+        when(settingsFacade.getRawConfig(Constants.IPF_RECIPIENTS_FILE)).thenReturn(getClass().getResourceAsStream("/ipf-recipients.json"));
 
         ipfRecipientsService.init();
 
@@ -40,17 +40,17 @@ public class IPFRecipientsServiceTest {
         assertNotNull(recipients);
         assertEquals(2, recipients.size());
 
-        IPFRecipient rec1 = ipfRecipientsService.getRecipientbyName("recipient_1");
-        IPFRecipient rec2 = ipfRecipientsService.getRecipientbyName("recipient_2");
-        IPFRecipient rec3 = ipfRecipientsService.getRecipientbyName("recipient_3");
+        IPFRecipient rec1 = ipfRecipientsService.getRecipientbyName("test_recipient_1");
+        IPFRecipient rec2 = ipfRecipientsService.getRecipientbyName("test_recipient_2");
+        IPFRecipient rec3 = ipfRecipientsService.getRecipientbyName("test_recipient_3");
 
         assertNotNull(rec1);
-        assertEquals("recipient_1", rec1.getRecipientName());
-        assertEquals("url_1", rec1.getRecipientUrl());
+        assertEquals("test_recipient_1", rec1.getRecipientName());
+        assertEquals("test_url_1", rec1.getRecipientUrl());
 
         assertNotNull(rec2);
-        assertEquals("recipient_2", rec2.getRecipientName());
-        assertEquals("url_2", rec2.getRecipientUrl());
+        assertEquals("test_recipient_2", rec2.getRecipientName());
+        assertEquals("test_url_2", rec2.getRecipientUrl());
 
         assertNull(rec3);
     }

@@ -6,16 +6,19 @@ import org.motechproject.mds.annotations.Field;
 
 import java.util.Map;
 
+/**
+ * Represents CDA template data.
+ */
 @Entity
 public class IPFTemplate {
 
-    @Field(required = true)
+    @Field
     private String templateName;
 
-    @Field(required = true)
+    @Field
     private Byte[] templateData;
 
-    @Field(required = true)
+    @Field
     private Map<String, String> properties;
 
     public IPFTemplate() {

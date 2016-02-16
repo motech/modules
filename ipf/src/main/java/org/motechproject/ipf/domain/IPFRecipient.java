@@ -1,5 +1,8 @@
 package org.motechproject.ipf.domain;
 
+/**
+ * Represents HL7 recipient.
+ */
 public class IPFRecipient {
 
     private String recipientName;

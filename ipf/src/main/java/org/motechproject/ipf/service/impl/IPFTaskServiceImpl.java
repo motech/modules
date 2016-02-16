@@ -3,8 +3,8 @@ package org.motechproject.ipf.service.impl;
 import org.motechproject.ipf.domain.IPFRecipient;
 import org.motechproject.ipf.domain.IPFTemplate;
 import org.motechproject.ipf.service.IPFRecipientsService;
-import org.motechproject.ipf.service.IPFTemplateService;
-import org.motechproject.ipf.service.TaskService;
+import org.motechproject.ipf.service.IPFTemplateDataService;
+import org.motechproject.ipf.service.IPFTaskService;
 import org.motechproject.ipf.task.IpfChannelRequestBuilder;
 import org.motechproject.tasks.contract.ChannelRequest;
 import org.motechproject.tasks.service.ChannelService;
@@ -18,10 +18,13 @@ import javax.annotation.PostConstruct;
 import java.util.Collection;
 import java.util.List;
 
-@Service
-public class TaskServiceImpl implements TaskService {
+/**
+ * Implementation of {@link org.motechproject.ipf.service.IPFTaskService}.
+ */
+@Service("ipfTaskService")
+public class IPFTaskServiceImpl implements IPFTaskService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TaskServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IPFTaskServiceImpl.class);
 
     @Autowired
     private ChannelService channelService;
@@ -33,7 +36,7 @@ public class TaskServiceImpl implements TaskService {
     private IPFRecipientsService ipfRecipientsService;
 
     @Autowired
-    private IPFTemplateService ipfTemplateService;
+    private IPFTemplateDataService ipfTemplateService;
 
     @PostConstruct
     public void init() {
@@ -41,9 +44,24 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void updateChannel() {
+    public void templateChanged(IPFTemplate ipfTemplate) {
+        LOGGER.debug("Template with {} name was created/updated", ipfTemplate.getTemplateName());
+        updateChannel();
+    }
+
+    @Override
+    public void templateRemoved(IPFTemplate ipfTemplate) {
+        updateChannel();
+    }
+
+    @Override
+    public void preTemplateRemoved(IPFTemplate ipfTemplate) {
+        LOGGER.debug("Template with {} name was removed", ipfTemplate.getTemplateName());
+    }
+
+    private void updateChannel() {
         Collection<IPFRecipient> ipfRecipients = ipfRecipientsService.getAllRecipients();
-        List<IPFTemplate> ipfTemplates = ipfTemplateService.getAllTemplates();
+        List<IPFTemplate> ipfTemplates = ipfTemplateService.retrieveAll();
 
         IpfChannelRequestBuilder ipfChannelRequestBuilder = new IpfChannelRequestBuilder(bundleContext, ipfTemplates, ipfRecipients);
 
@@ -53,6 +71,8 @@ public class TaskServiceImpl implements TaskService {
             channelService.registerChannel(channelRequest);
         } else {
             LOGGER.debug("No IPF Task Action, cannot register IPF Task Channel");
+            // We must unregister channel if it exist
+            channelService.unregisterChannel(bundleContext.getBundle().getSymbolicName());
         }
     }
 }

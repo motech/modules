@@ -21,6 +21,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Implementation of {@link org.motechproject.ipf.service.IPFRecipientsService}. Recipients data is loaded from the
+ * ipf-recipients.json configuration file.
+ */
 @Service("ipfRecipientsService")
 public class IPFRecipientsServiceImpl implements IPFRecipientsService {
 
