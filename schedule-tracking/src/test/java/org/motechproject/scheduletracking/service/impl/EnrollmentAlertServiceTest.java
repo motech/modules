@@ -205,7 +205,7 @@ public class EnrollmentAlertServiceTest {
         enrollmentAlertService.scheduleAlertsForCurrentMilestone(enrollment);
 
         RepeatingSchedulableJob job = expectAndCaptureRepeatingJob();
-        assertEquals(newDateTime(daysAfter(3).toLocalDate(), new Time(8, 10)), job.getStartTime());
+        assertEquals(newDateTime(daysAfter(3).toLocalDate(), new Time(8, 10)), job.getStartDate());
 
         assertEquals(1, job.getRepeatCount().intValue());
     }
@@ -221,7 +221,7 @@ public class EnrollmentAlertServiceTest {
         enrollmentAlertService.scheduleAlertsForCurrentMilestone(enrollment);
 
         RepeatingSchedulableJob job = expectAndCaptureRepeatingJob();
-        assertEquals(newDateTime(daysAfter(0).toLocalDate(), new Time(8, 20)), job.getStartTime());
+        assertEquals(newDateTime(daysAfter(0).toLocalDate(), new Time(8, 20)), job.getStartDate());
         assertEquals(2, job.getRepeatCount().intValue());
     }
 
@@ -249,7 +249,7 @@ public class EnrollmentAlertServiceTest {
         enrollmentAlertService.scheduleAlertsForCurrentMilestone(enrollment);
 
         RepeatingSchedulableJob job = expectAndCaptureRepeatingJob();
-        assertEquals(newDateTime(daysAfter(10).toLocalDate(), new Time(8, 20)), job.getStartTime());
+        assertEquals(newDateTime(daysAfter(10).toLocalDate(), new Time(8, 20)), job.getStartDate());
     }
 
     @Test
@@ -284,7 +284,7 @@ public class EnrollmentAlertServiceTest {
         ArgumentCaptor<RepeatingSchedulableJob> repeatJobCaptor = ArgumentCaptor.forClass(RepeatingSchedulableJob.class);
         verify(schedulerService, times(1)).safeScheduleRepeatingJob(repeatJobCaptor.capture());
 
-        assertEquals(DateUtil.now(), repeatJobCaptor.getValue().getStartTime());
+        assertEquals(DateUtil.now(), repeatJobCaptor.getValue().getStartDate());
         assertEquals(1, repeatJobCaptor.getValue().getRepeatCount().intValue());
     }
 
@@ -321,7 +321,7 @@ public class EnrollmentAlertServiceTest {
         ArgumentCaptor<RepeatingSchedulableJob> repeatJobCaptor = ArgumentCaptor.forClass(RepeatingSchedulableJob.class);
         verify(schedulerService, times(1)).safeScheduleRepeatingJob(repeatJobCaptor.capture());
 
-        assertEquals(DateUtil.now(), repeatJobCaptor.getValue().getStartTime());
+        assertEquals(DateUtil.now(), repeatJobCaptor.getValue().getStartDate());
         assertEquals(6, repeatJobCaptor.getValue().getRepeatCount().intValue());
     }
 
@@ -498,7 +498,7 @@ public class EnrollmentAlertServiceTest {
 
         RepeatingSchedulableJob job = expectAndCaptureRepeatingJob();
         assertEquals(String.format("%s.1", enrollment.getId()), job.getMotechEvent().getParameters().get(MotechSchedulerService.JOB_ID_KEY));
-        assertEquals(newDateTime(weeksAgo(0).toLocalDate(), new Time(8, 20)), job.getStartTime());
+        assertEquals(newDateTime(weeksAgo(0).toLocalDate(), new Time(8, 20)), job.getStartDate());
         assertRepeatIntervalValue(SECONDS_PER_DAY, job.getRepeatIntervalInSeconds());
         assertEquals(1, job.getRepeatCount().intValue());
     }
@@ -520,7 +520,7 @@ public class EnrollmentAlertServiceTest {
 
     private void assertJobDetails(RepeatingSchedulableJob job, String jobIdKey, DateTime startTime, int repeatCount, int repeatInterval) {
         assertEquals(jobIdKey, job.getMotechEvent().getParameters().get(MotechSchedulerService.JOB_ID_KEY));
-        assertEquals(startTime, job.getStartTime());
+        assertEquals(startTime, job.getStartDate());
         assertEquals(repeatCount, job.getRepeatCount().intValue());
         assertRepeatIntervalValue(repeatInterval, job.getRepeatIntervalInSeconds());
     }

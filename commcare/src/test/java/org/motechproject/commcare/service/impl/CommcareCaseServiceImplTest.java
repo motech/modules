@@ -52,7 +52,7 @@ public class CommcareCaseServiceImplTest {
 
         config = ConfigsUtils.prepareConfigOne();
 
-        when(configService.getDefault()).thenReturn(config);
+        when(configService.getByName(null)).thenReturn(config);
 
         caseService = new CommcareCaseServiceImpl(converter, commcareHttpClient, configService);
     }
