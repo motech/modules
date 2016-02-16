@@ -46,7 +46,7 @@ public interface PatientResource {
 
     /**
      * Returns the patient identifier type name for the given uuid only if the identifier type is supported
-     * by MOTECH.
+     * by MOTECH. This method is using cache while retrieving data from an OpenMRS server.
      *
      * @param identifierTypeUuid the UUID of the patient identifier type
      * @return the name of the patient identifier type

@@ -88,6 +88,7 @@ public class PatientResourceImpl implements PatientResource {
 
     @Override
     public String getPatientIdentifierTypeNameByUuid(String identifierTypeUuid) throws HttpException {
+        // Firstly, we try to retrieve a name from the cache
         String identifierTypeName = identifierTypeUuidByName.get(identifierTypeUuid);
 
         if (identifierTypeName == null) {
@@ -96,6 +97,7 @@ public class PatientResourceImpl implements PatientResource {
                 if (StringUtils.equals(identifierTypeUuid, type.getUuid())) {
                     if (isIdentifierTypeSupportedInMotech(type.getName())) {
                         identifierTypeName = type.getName();
+                        // After retrieving an identifierType from an OpenMRS server, the uuid and name are stored in cache
                         identifierTypeUuidByName.put(identifierTypeUuid, identifierTypeName);
                     }
 
