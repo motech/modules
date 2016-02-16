@@ -1,0 +1,37 @@
+{
+  "displayName": "openMRS",
+  "actionTaskEvents": [
+    {
+      "displayName": "openMRS.createEncounter",
+      "serviceInterface": "org.motechproject.openmrs19.tasks.OpenMRSActionProxyService",
+      "serviceMethod": "createEncounter",
+      "actionParameters": [
+        {
+          "key": "encounterDate",
+          "displayName": "openMRS.encounter.date",
+          "type": "DATE",
+          "required" : true
+        },
+        {
+          "key": "encounterType",
+          "displayName": "openMRS.encounter.type",
+          "required" : true
+        },
+        {
+          "key": "locationName",
+          "displayName": "openMRS.location.name"
+        },
+        {
+          "key": "patientUuid",
+          "displayName": "openMRS.patient.id",
+          "required" : true
+        },
+        {
+          "key": "providerUuid",
+          "displayName": "openMRS.provider.id",
+          "required" : true
+        }
+      ]
+    }
+  ]
+}
