@@ -57,7 +57,7 @@ public class FormXmlConverterTest {
         Map<String, MetadataValue> metadata = new HashMap<>();
         metadata.put("start_date", new MetadataValue(Arrays.asList("2016-01-01")));
 
-        form.setForm(motherElement);
+        form.setFormFields(Arrays.asList(motherElement));
         form.setMetadata(metadata);
 
         String formXml = formXmlConverter.convertToFormXml(form);
@@ -77,7 +77,7 @@ public class FormXmlConverterTest {
         motherElement.setElementName("");
         motherElement.addAttribute("name", "Jane");
 
-        form.setForm(motherElement);
+        form.setFormFields(Arrays.asList(motherElement));
 
         formXmlConverter.convertToFormXml(form);
     }

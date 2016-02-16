@@ -2,7 +2,9 @@ package org.motechproject.commcare.service;
 
 import org.motechproject.commcare.domain.CommcareForm;
 import org.motechproject.commcare.domain.CommcareFormList;
+import org.motechproject.commcare.domain.FormXml;
 import org.motechproject.commcare.request.FormListRequest;
+import org.motechproject.commcare.response.OpenRosaResponse;
 
 /**
  * A service to perform queries against CommCareHQ form APIs.
@@ -54,4 +56,19 @@ public interface CommcareFormService {
      * Same as {@link #retrieveForm(String, String) retrieveFormJson} but uses default Commcare configuration.
      */
     String retrieveFormJson(String id);
+
+    /**
+     * Upload form xml wrapped in a minimal xform instance to CommCareHQ.
+     *
+     * @param formXml  An object representing the form information to be submitted as form xml
+     * @param configName  the name of the configuration used for connecting to CommcareHQ, null means default configuration
+     * @return  an informational object representing the status, nature and message of the response from CommCareHQ when
+     *          attempting to upload this instance of form xml.
+     */
+    OpenRosaResponse uploadForm(FormXml formXml, String configName);
+
+    /**
+     * Same as {@link #uploadForm(FormXml, String) uploadCase} but uses default Commcare configuration.
+     */
+    OpenRosaResponse uploadForm(FormXml formXml);
 }

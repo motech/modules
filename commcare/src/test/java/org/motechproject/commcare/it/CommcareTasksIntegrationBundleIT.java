@@ -61,6 +61,7 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import static org.apache.commons.lang.StringUtils.equalsIgnoreCase;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -200,28 +201,28 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         TaskTriggerInformation expectedStockTx = new TaskTriggerInformation();
 
         expectedForm1.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareSchema.XMLNS1);
-        assertTrue(channel.containsTrigger(expectedForm1));
+        assertTrue(containsTrigger(channel, expectedForm1));
 
         expectedForm2.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareSchema.XMLNS2);
-        assertTrue(channel.containsTrigger(expectedForm2));
+        assertTrue(containsTrigger(channel, expectedForm2));
 
         expectedCaseBirth.setSubject("org.motechproject.commcare.api.case." + config.getName() + ".birth");
-        assertTrue(channel.containsTrigger(expectedCaseBirth));
+        assertTrue(containsTrigger(channel, expectedCaseBirth));
 
         expectedStockTx.setSubject(EventSubjects.RECEIVED_STOCK_TRANSACTION + '.' + config.getName());
-        assertTrue(channel.containsTrigger(expectedStockTx));
+        assertTrue(containsTrigger(channel, expectedStockTx));
 
-        TriggerEvent form1Trigger = channel.getTrigger(expectedForm1);
+        TriggerEvent form1Trigger = getTrigger(channel, expectedForm1);
         assertEquals("org.motechproject.commcare.api.forms", form1Trigger.getTriggerListenerSubject());
         assertTriggerParameters(form1Trigger.getEventParameters(),
                 Arrays.asList("/data/pregnant", "/data/dob", "/data/meta/username", "caseId"));
 
-        TriggerEvent form2Trigger = channel.getTrigger(expectedForm2);
+        TriggerEvent form2Trigger = getTrigger(channel, expectedForm2);
         assertEquals("org.motechproject.commcare.api.forms", form2Trigger.getTriggerListenerSubject());
         assertTriggerParameters(form2Trigger.getEventParameters(),
                 Arrays.asList("/data/patient_name", "/data/last_visit", "/data/medications", "/data/meta/username", "/data/case/create/case_type"));
 
-        TriggerEvent caseTrigger = channel.getTrigger(expectedCaseBirth);
+        TriggerEvent caseTrigger = getTrigger(channel, expectedCaseBirth);
         assertEquals("org.motechproject.commcare.api.case", caseTrigger.getTriggerListenerSubject());
         assertTriggerParameters(caseTrigger.getEventParameters(),
                 Arrays.asList("motherName", "childName", "dob", "caseName"));
@@ -437,6 +438,19 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setSubject(EventSubjects.UPDATE_CASE + "." + config.getName())
                 .setActionParameters(parameters);
         return actionBuilder.createActionEvent();
+    }
+
+    private boolean containsTrigger(Channel channel, TaskTriggerInformation info) {
+        return getTrigger(channel, info) != null ;
+    }
+
+    private TriggerEvent getTrigger(Channel channel, TaskTriggerInformation info) {
+        for (TriggerEvent trigger : channel.getTriggerTaskEvents()) {
+            if (equalsIgnoreCase(trigger.getSubject(), info.getSubject())) {
+                return trigger;
+            }
+        }
+        return null;
     }
 
     private void clearDB() {
