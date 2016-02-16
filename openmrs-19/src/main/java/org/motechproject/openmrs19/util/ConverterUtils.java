@@ -368,28 +368,30 @@ public final class ConverterUtils {
     }
 
     /**
-     * Creates an object of the MOTECH model patient based on the given OpenMRS model patient, facility and motechID.
+     * Creates an object of the MOTECH model patient based on the given OpenMRS model patient, facility, motechID and
+     * supportedIdentifierTypeList.
      *
      * @param patient  the patient(represented as OpenMRS model)
      * @param facility  the facility(represented as
      * @param motechId  the MOTECH ID of the patient
-     * @return
+     * @param supportedIdentifierTypeList  the supported patient identifier type list in MOTECH
+     * @return a Patient object converted to the MOTECH model representation of Patient
      */
     public static OpenMRSPatient toOpenMRSPatient(Patient patient, OpenMRSFacility facility, String motechId,
-                                                  List<Identifier> supportedIdentifierList) {
+                                                  List<Identifier> supportedIdentifierTypeList) {
         OpenMRSPatient openMRSPatient = new OpenMRSPatient(patient.getUuid());
 
-        Map<String, String> identifierTypesByValue = new HashMap<>();
+        Map<String, String> identifiers = new HashMap<>();
 
-        for (Identifier identifier :  supportedIdentifierList) {
+        for (Identifier identifier :  supportedIdentifierTypeList) {
             String identifierName = identifier.getIdentifierType().getName();
-            identifierTypesByValue.put(identifierName, identifier.getIdentifier());
+            identifiers.put(identifierName, identifier.getIdentifier());
         }
 
         openMRSPatient.setPerson(toOpenMRSPerson(patient.getPerson()));
         openMRSPatient.setFacility(facility);
         openMRSPatient.setMotechId(motechId);
-        openMRSPatient.setIdentifierTypesByValue(identifierTypesByValue);
+        openMRSPatient.setIdentifiers(identifiers);
 
         return openMRSPatient;
     }

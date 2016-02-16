@@ -14,7 +14,6 @@ import org.motechproject.openmrs19.exception.PatientNotFoundException;
 import org.motechproject.openmrs19.helper.EventHelper;
 import org.motechproject.openmrs19.resource.PatientResource;
 import org.motechproject.openmrs19.resource.model.Identifier;
-import org.motechproject.openmrs19.resource.model.IdentifierType;
 import org.motechproject.openmrs19.resource.model.Patient;
 import org.motechproject.openmrs19.resource.model.PatientListResult;
 import org.motechproject.openmrs19.service.EventKeys;
@@ -107,31 +106,9 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
             motechId = motechIdentifier.getIdentifier();
         }
 
-        List<Identifier> supportedIdentifierList = new ArrayList<>();
+        List<Identifier> supportedIdentifierTypeList = getSupportedIdentifierTypeList(patient.getIdentifiers(), motechIdentifierUuid);
 
-        for (Identifier identifier : patient.getIdentifiers()) {
-            IdentifierType identifierType =  identifier.getIdentifierType();
-
-            // we omit motechIdentifier, because we handle this identifier earlier
-            if (identifierType.getUuid().equals(motechIdentifierUuid)) {
-                continue;
-            } else {
-                try {
-                    String identifierName = patientResource.getPatientIdentifierName(identifierType.getUuid());
-                    if (identifierName == null) {
-                        LOGGER.warn("The identifier with UUID {} is not supported", identifierType.getUuid());
-                    } else {
-                        identifier.getIdentifierType().setName(identifierName);
-                        supportedIdentifierList.add(identifier);
-                    }
-                } catch (HttpException e) {
-                    LOGGER.error("There was an exception retrieving the identifier with UUID {}", identifierType.getUuid());
-                    return null;
-                }
-            }
-        }
-
-        return ConverterUtils.toOpenMRSPatient(patient, facility, motechId, supportedIdentifierList);
+        return ConverterUtils.toOpenMRSPatient(patient, facility, motechId, supportedIdentifierTypeList);
     }
 
     @Override
@@ -294,5 +271,31 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
                 return 0;
             }
         });
+    }
+
+    private List<Identifier> getSupportedIdentifierTypeList(List<Identifier> patientIdentifierList, String motechIdentifierUuid) {
+        List<Identifier> supportedIdentifierTypeList = new ArrayList<>();
+
+        for (Identifier identifier : patientIdentifierList) {
+            String identifierTypeUuid =  identifier.getIdentifierType().getUuid();
+
+            // we omit motechIdentifier, because this identifier is stored differently
+            if (!StringUtils.equals(identifierTypeUuid, motechIdentifierUuid)) {
+                try {
+                    String identifierTypeName = patientResource.getPatientIdentifierTypeNameByUuid(identifierTypeUuid);
+                    if (identifierTypeName == null) {
+                        LOGGER.warn("The identifier with UUID {} is not supported", identifierTypeUuid);
+                    } else {
+                        identifier.getIdentifierType().setName(identifierTypeName);
+                        supportedIdentifierTypeList.add(identifier);
+                    }
+                } catch (HttpException e) {
+                    LOGGER.error("There was an exception retrieving the identifier with UUID {}", identifierTypeUuid);
+                    return null;
+                }
+            }
+        }
+
+        return supportedIdentifierTypeList;
     }
 }

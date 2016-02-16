@@ -32,7 +32,7 @@ public class PatientResourceImpl implements PatientResource {
     private OpenMrsInstance openmrsInstance;
 
     private String motechIdTypeUuid;
-    private Map<String, String> identifierUuidByName = new HashMap<>();
+    private Map<String, String> identifierTypeUuidByName = new HashMap<>();
 
     @Autowired
     public PatientResourceImpl(RestClient restClient, OpenMrsInstance instance) {
@@ -87,16 +87,16 @@ public class PatientResourceImpl implements PatientResource {
     }
 
     @Override
-    public String getPatientIdentifierName(String uuid) throws HttpException {
-        String identifierName = identifierUuidByName.get(uuid);
+    public String getPatientIdentifierTypeNameByUuid(String identifierTypeUuid) throws HttpException {
+        String identifierTypeName = identifierTypeUuidByName.get(identifierTypeUuid);
 
-        if (identifierName == null) {
+        if (identifierTypeName == null) {
             PatientIdentifierListResult result = getAllPatientIdentifierTypes();
             for (IdentifierType type : result.getResults()) {
-                if (StringUtils.equals(uuid, type.getUuid())) {
-                    if (openmrsInstance.getPatientIdentifierTypesNames().contains(type.getName())) {
-                        identifierName = type.getName();
-                        identifierUuidByName.put(uuid, identifierName);
+                if (StringUtils.equals(identifierTypeUuid, type.getUuid())) {
+                    if (isIdentifierTypeSupportedInMotech(type.getName())) {
+                        identifierTypeName = type.getName();
+                        identifierTypeUuidByName.put(identifierTypeUuid, identifierTypeName);
                     }
 
                     break;
@@ -104,17 +104,12 @@ public class PatientResourceImpl implements PatientResource {
             }
         }
 
-        return identifierName;
+        return identifierTypeName;
     }
 
     @Override
     public void deletePatient(String uuid) throws HttpException {
         restfulClient.delete(openmrsInstance.toInstancePathWithParams("/patient/{uuid}?purge", uuid));
-    }
-
-    private PatientIdentifierListResult getAllPatientIdentifierTypes() throws HttpException {
-        String responseJson = restfulClient.getJson(openmrsInstance.toInstancePath("/patientidentifiertype?v=full"));
-        return (PatientIdentifierListResult) JsonUtils.readJson(responseJson, PatientIdentifierListResult.class);
     }
 
     @Override
@@ -135,11 +130,20 @@ public class PatientResourceImpl implements PatientResource {
                 patientUuid, identifierUuid), requestJson);
     }
 
+    private PatientIdentifierListResult getAllPatientIdentifierTypes() throws HttpException {
+        String responseJson = restfulClient.getJson(openmrsInstance.toInstancePath("/patientidentifiertype?v=full"));
+        return (PatientIdentifierListResult) JsonUtils.readJson(responseJson, PatientIdentifierListResult.class);
+    }
+
     private Identifier getPatientIdentifier(String patientUuid) throws HttpException {
         String responseJson =
                 restfulClient.getJson(openmrsInstance.toInstancePathWithParams("/patient/{patientUuid}/identifier", patientUuid));
         IdentifierListResult identifierListResult =
                 (IdentifierListResult) JsonUtils.readJson(responseJson, IdentifierListResult.class);
         return identifierListResult.getResults().get(0);
+    }
+
+    private boolean isIdentifierTypeSupportedInMotech(String identifierTypeName) {
+        return openmrsInstance.getPatientIdentifierTypeNames().contains(identifierTypeName);
     }
 }

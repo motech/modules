@@ -28,7 +28,7 @@ public class OpenMrsInstance {
 
     private String openmrsUrl;
     private String motechPatientIdentifierTypeName;
-    private List<String> patientIdentifierTypesNames;
+    private List<String> patientIdentifierTypeNames;
 
     private SettingsFacade settingsFacade;
 
@@ -41,7 +41,7 @@ public class OpenMrsInstance {
     public void readSettings() {
         this.openmrsUrl = settingsFacade.getProperty(OPENMRS_URL_PROPERTY) + OPENMRS_WEB_SERVICE_PATH;
         this.motechPatientIdentifierTypeName = settingsFacade.getProperty(OPENMRS_MOTECH_ID_NAME_PROPERTY);
-        this.patientIdentifierTypesNames = parseIdentifierTypesProperty();
+        this.patientIdentifierTypeNames = parseIdentifierTypesProperty();
     }
 
     /**
@@ -78,8 +78,8 @@ public class OpenMrsInstance {
         return motechPatientIdentifierTypeName;
     }
 
-    public List<String> getPatientIdentifierTypesNames() {
-        return patientIdentifierTypesNames;
+    public List<String> getPatientIdentifierTypeNames() {
+        return patientIdentifierTypeNames;
     }
 
     private List<String> parseIdentifierTypesProperty() {

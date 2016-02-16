@@ -45,13 +45,14 @@ public interface PatientResource {
     String getMotechPatientIdentifierUuid() throws HttpException;
 
     /**
-     * Returns the patient identifier name for the given uuid.
+     * Returns the patient identifier type name for the given uuid only if the identifier type is supported
+     * by MOTECH.
      *
-     * @param uuid the UUID of the patient identifier
-     * @return the name of the patient identifier
+     * @param identifierTypeUuid the UUID of the patient identifier type
+     * @return the name of the patient identifier type
      * @throws HttpException when there were problems while fetching patient identifier
      */
-    String getPatientIdentifierName(String uuid) throws HttpException;
+    String getPatientIdentifierTypeNameByUuid(String identifierTypeUuid) throws HttpException;
 
     /**
      * Deletes the patient with the given UUID.

@@ -161,7 +161,7 @@ public class OpenMRSPerson {
         return birthDateEstimated;
     }
 
-    // with getter isDead() task data source doesn't properly read this value
+    // TODO: MOTECH-2187: Task data source doesn't support boolean getters 'is..()'
     public Boolean getDead() {
         return dead;
     }
