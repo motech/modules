@@ -55,6 +55,11 @@ public class CaseRequest extends Request {
         this.userId = userId;
     }
 
+    /**
+     * Sets the ID of the owner to {@code ownerId}.
+     *
+     * @param ownerId  the ID of the owner
+     */
     public void setOwnerId(String ownerId) {
         this.ownerId = ownerId;
     }

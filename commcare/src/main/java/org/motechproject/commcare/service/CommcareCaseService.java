@@ -58,31 +58,10 @@ public interface CommcareCaseService {
     List<CaseInfo> getCasesByUserId(String userId, Integer pageSize, Integer pageNumber, String configName);
 
     /**
-     * Query CommCareHQ for all cases under a given user id.
-     *
-     * @param ownerId  the user id from CommCareHQ
-     * @param pageSize  the size of the page
-     * @param pageNumber  the number of the page
-     * @param configName  the name of the configuration used for connecting to CommcareHQ, null means default configuration
-     * @return  the list of CaseInfo objects representing cases under the given user id and page found on the given
-     *          CommcareHQ configuration
-     */
-
-
-    List<CaseInfo> getCasesByOwnerId(String ownerId, Integer pageSize, Integer pageNumber, String configName);
-
-    /**
      * Same as {@link #getCasesByUserId(String, Integer, Integer, String) getCasesByUserId} but uses default Commcare
      * configuration.
      */
     List<CaseInfo> getCasesByUserId(String userId, Integer pageSize, Integer pageNumber);
-
-    /**
-     * Same as {@link #getCasesByOwnerId(String, Integer, Integer, String) getCasesByUserId} but uses default Commcare
-     * configuration.
-     */
-
-    List<CaseInfo> getCasesByOwnerId(String ownerId, Integer pageSize, Integer pageNumber);
 
     /**
      * Query CommCareHQ for all cases of a given case type, user id and page.
