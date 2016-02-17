@@ -12,6 +12,5 @@
   </mother>
   <n0:meta xmlns:n0="http://openrosa.org/jr/xforms">
     <n0:start_date>2016-01-01</n0:start_date>
-    <n1:appVersion xmlns:n1="http://commcarehq.org/xforms">2.0</n1:appVersion>
   </n0:meta>
 </data>

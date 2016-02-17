@@ -5,7 +5,7 @@ import org.motechproject.tasks.contract.TriggerEventRequest;
 import java.util.List;
 
 /**
- * Provides method for building triggers.
+ * Provides method for building task triggers.
  */
 public interface TriggerBuilder {
 
