@@ -65,6 +65,9 @@ public class CommcareCaseServiceImplTest {
 
         assertEquals(asList("3ECE7ROKGQ7U1XX1DOL0PNRJW", "63ZB8WGEQY3TJ23PHB2EGD39J", "EP60PTXTZW6HD42KPSY9U018V",
                 "EPKT93XZQ8COVAIQZ7DMQXO7S"), extract(cases, on(CaseInfo.class).getCaseId()));
+
+        assertEquals(asList("54321", "1234567", "2222", "6537"),
+                extract(cases, on(CaseInfo.class).getOwnerId()));
     }
 
     @Test
