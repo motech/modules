@@ -31,6 +31,21 @@
             <artifactId>motech-platform-server-config</artifactId>
             <version>${motech.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-event</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-tasks</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-dataservices</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
 
         <!-- OSGi IT -->
         <dependency>
@@ -55,8 +70,12 @@
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
         </dependency>
-    </dependencies>
 
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>org.motechproject.com.google.code.gson</artifactId>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -71,6 +90,7 @@
                         <Context-Path>ipf</Context-Path>
                         <Resource-Path>ipf/resources</Resource-Path>
                         <Export-Package>
+                            org.motechproject.ipf.domain;version=${project.version},
                             org.motechproject.ipf.service;version=${project.version}
                         </Export-Package>
                         <Import-Package>
@@ -79,6 +99,7 @@
                             net.sf.cglib.reflect,
                             org.aopalliance.aop,
                             org.motechproject.osgi.web,
+                            org.motechproject.server.config,
                             org.slf4j,
                             org.slf4j.impl,
                             org.springframework.aop,
@@ -88,11 +109,16 @@
                     </instructions>
                 </configuration>
             </plugin>
-
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>2.6</version>
                 <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>resources</goal>
+                        </goals>
+                    </execution>
                     <execution>
                         <id>copy-bundles</id>
                         <phase>package</phase>
@@ -157,5 +183,51 @@
             </plugin>
         </plugins>
     </build>
-
+    <profiles>
+        <profile>
+            <id>IT</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-test-ipf-config-files</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${user.home}/.motech/config/org.motechproject.ipf/raw</outputDirectory>
+                                    <overwrite>true</overwrite>
+                                    <resources>
+                                        <resource>
+                                            <directory>${basedir}/src/test/resources</directory>
+                                            <include>ipf-recipients.json</include>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <version>2.6.1</version>
+                        <configuration>
+                            <filesets>
+                                <fileset>
+                                    <directory>${user.home}/.motech/config/org.motechproject.ipf/raw</directory>
+                                    <includes>
+                                        <include>*.json</include>
+                                    </includes>
+                                    <followSymlinks>false</followSymlinks>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
