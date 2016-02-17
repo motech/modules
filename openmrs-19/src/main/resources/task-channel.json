@@ -19,7 +19,8 @@
         },
         {
           "key": "locationName",
-          "displayName": "openMRS.location.name"
+          "displayName": "openMRS.location.name",
+          "required" : false
         },
         {
           "key": "patientUuid",
