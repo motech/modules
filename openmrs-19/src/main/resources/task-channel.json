@@ -1,0 +1,71 @@
+{
+  "displayName": "openMRS",
+  "actionTaskEvents": [
+    {
+      "displayName": "openMRS.createPatient",
+      "serviceInterface": "org.motechproject.openmrs19.tasks.OpenMRSActionProxyService",
+      "serviceMethod": "createPatient",
+      "actionParameters": [
+        {
+          "key": "firstName",
+          "displayName": "openMRS.person.firstName",
+          "required" : true
+        },
+        {
+          "key": "middleName",
+          "displayName": "openMRS.person.middleName",
+          "required" : false
+        },
+        {
+          "key": "lastName",
+          "displayName": "openMRS.person.lastName",
+          "required" : true
+        },
+        {
+          "key": "address",
+          "displayName": "openMRS.person.address",
+          "required" : false
+        },
+        {
+          "key": "dateOfBirth",
+          "displayName": "openMRS.person.dateOfBirth",
+          "type" : "DATE",
+          "required" : false
+        },
+        {
+          "key": "birthDateEstimated",
+          "displayName": "openMRS.person.birthDateEstimated",
+          "type" : "BOOLEAN",
+          "required" : false
+        },
+        {
+          "key": "gender",
+          "displayName": "openMRS.person.gender",
+          "required" : true
+        },
+        {
+          "key": "dead",
+          "displayName": "openMRS.person.dead",
+          "type" : "BOOLEAN",
+          "required" : false
+        },
+        {
+          "key": "motechId",
+          "displayName": "openMRS.motechId",
+          "required" : true
+        },
+        {
+          "key": "locationName",
+          "displayName": "openMRS.location.name",
+          "required" : false
+        },
+        {
+          "key": "identifiers",
+          "displayName": "openMRS.patient.identifiers",
+          "type" : "MAP",
+          "required" : false
+        }
+      ]
+    }
+  ]
+}

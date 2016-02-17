@@ -144,6 +144,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         Validate.notNull(patient, "Patient cannot be null");
         Validate.isTrue(StringUtils.isNotEmpty(patient.getMotechId()), "You must provide a motech id to save a patient");
         Validate.notNull(patient.getPerson(), "Person cannot be null when saving a patient");
+        Validate.notNull(patient.getFacility(), "Facility cannot be null when saving a patient");
     }
 
     @Override

@@ -114,7 +114,7 @@ public final class ConverterUtils {
             converted.setDeathDate(person.getDeathDate().toDate());
         }
         converted.setBirthdateEstimated((Boolean) ObjectUtils.defaultIfNull(person.getBirthDateEstimated(), false));
-        converted.setDead(person.getDead());
+        converted.setDead((Boolean) ObjectUtils.defaultIfNull(person.getDead(), false));
         converted.setGender(person.getGender());
 
         if (includeNames) {
@@ -383,9 +383,11 @@ public final class ConverterUtils {
 
         Map<String, String> identifiers = new HashMap<>();
 
-        for (Identifier identifier :  supportedIdentifierTypeList) {
-            String identifierName = identifier.getIdentifierType().getName();
-            identifiers.put(identifierName, identifier.getIdentifier());
+        if (supportedIdentifierTypeList != null) {
+            for (Identifier identifier : supportedIdentifierTypeList) {
+                String identifierName = identifier.getIdentifierType().getName();
+                identifiers.put(identifierName, identifier.getIdentifier());
+            }
         }
 
         openMRSPatient.setPerson(toOpenMRSPerson(patient.getPerson()));
