@@ -89,7 +89,11 @@ public class OpenMRSPatient {
     }
 
     public Map<String, String> getIdentifiers() {
-        return identifiers == null ? new HashMap<>() : identifiers;
+        if (identifiers == null) {
+            identifiers = new HashMap<>();
+        }
+
+        return identifiers;
     }
 
     @Override
