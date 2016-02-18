@@ -10,6 +10,7 @@ import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSFacilityService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
+import org.motechproject.openmrs19.domain.OpenMRSPerson;
 import org.motechproject.openmrs19.tasks.OpenMRSActionProxyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
+/**
+ * Implementation of the {@link org.motechproject.openmrs19.tasks.OpenMRSActionProxyService} interface.
+ */
 @Service("openMRSActionProxyService")
 public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService {
 
@@ -43,6 +48,30 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
                 .build();
 
         encounterService.createEncounter(encounter);
+    }
+
+    @Override
+    public void createPatient(String firstName, String middleName, String lastName, String address, DateTime dateOfBirth,
+                              Boolean birthDateEstimated, String gender, Boolean dead, String motechId, String locationName,
+                              Map<String, String> identifiers) {
+        OpenMRSPerson person = new OpenMRSPerson();
+        person.setFirstName(firstName);
+        person.setMiddleName(middleName);
+        person.setLastName(lastName);
+        person.setGender(gender);
+        person.setAddress(address);
+        person.setDateOfBirth(dateOfBirth);
+        person.setBirthDateEstimated(birthDateEstimated);
+        person.setDead(dead);
+
+        OpenMRSFacility facility = StringUtils.isNotEmpty(locationName) ? getFacilityByName(locationName) : getDefaultFacility();
+
+        OpenMRSPatient patient = new OpenMRSPatient(motechId, person, facility, identifiers);
+        patientService.createPatient(patient);
+    }
+
+    private OpenMRSFacility getDefaultFacility() {
+        return getFacilityByName(DEFAULT_LOCATION_NAME);
     }
 
     private OpenMRSFacility getFacilityByName(String locationName) {

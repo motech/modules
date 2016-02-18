@@ -16,6 +16,10 @@ public class OpenMRSFacility {
     private String countyDistrict;
     private String stateProvince;
 
+    public OpenMRSFacility() {
+        this(null);
+    }
+
     /**
      * Creates a facility with the given {@code id}.
      *
