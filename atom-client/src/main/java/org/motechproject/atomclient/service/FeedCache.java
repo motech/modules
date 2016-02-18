@@ -38,15 +38,15 @@ public class FeedCache implements FeedFetcherCache {
     }
 
 
-    public static String feedToJson(SyndFeed feed) throws FeedException, UnsupportedEncodingException {
+    public static String feedToString(SyndFeed feed) throws FeedException, UnsupportedEncodingException {
         SyndFeedOutput syndFeedOutput = new SyndFeedOutput();
         return syndFeedOutput.outputString(feed);
     }
 
 
-    public static SyndFeed feedFromJson(String json) throws IOException, ClassNotFoundException, FeedException {
+    public static SyndFeed feedFromString(String xml) throws IOException, ClassNotFoundException, FeedException {
         SyndFeedInput syndFeedInput = new SyndFeedInput();
-        return syndFeedInput.build(new StringReader(json));
+        return syndFeedInput.build(new StringReader(xml));
     }
 
 
@@ -64,7 +64,7 @@ public class FeedCache implements FeedFetcherCache {
         SyndFeedInfo info = new SyndFeedInfo();
         info.setUrl(urlFromString(record.getUrl()));
         info.setLastModified(record.getLastModified());
-        info.setSyndFeed(feedFromJson(record.getData()));
+        info.setSyndFeed(feedFromString(record.getData()));
         return info;
     }
 
@@ -183,7 +183,7 @@ public class FeedCache implements FeedFetcherCache {
 
 
     private FeedRecord recordFromFeed(String url, SyndFeedInfo info) throws IOException, FeedException {
-        return new FeedRecord(url, (Long) info.getLastModified(), feedToJson(info.getSyndFeed()));
+        return new FeedRecord(url, (Long) info.getLastModified(), feedToString(info.getSyndFeed()));
     }
 
 
