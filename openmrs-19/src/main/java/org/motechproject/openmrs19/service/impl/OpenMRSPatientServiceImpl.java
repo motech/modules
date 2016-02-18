@@ -29,7 +29,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service("patientService")
 public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
@@ -126,7 +128,9 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
             person = patient.getPerson();
         }
 
-        Patient converted = ConverterUtils.toPatient(openMRSPatient, person, getMotechPatientIdentifierTypeUuid());
+        Map<String, String> parsedPatientIdentifiers = parsePatientIdentifiers(openMRSPatient.getIdentifiers());
+
+        Patient converted = ConverterUtils.toPatient(openMRSPatient, person, getMotechPatientIdentifierTypeUuid(), parsedPatientIdentifiers);
 
         try {
             OpenMRSPatient savedPatient = ConverterUtils.toOpenMRSPatient(patientResource.createPatient(converted));
@@ -285,18 +289,45 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
                 try {
                     String identifierTypeName = patientResource.getPatientIdentifierTypeNameByUuid(identifierTypeUuid);
                     if (identifierTypeName == null) {
-                        LOGGER.warn("The identifier with UUID {} is not supported", identifierTypeUuid);
+                        LOGGER.warn("The identifier type with UUID {} is not supported", identifierTypeUuid);
                     } else {
                         identifier.getIdentifierType().setName(identifierTypeName);
                         supportedIdentifierTypeList.add(identifier);
                     }
                 } catch (HttpException e) {
-                    LOGGER.error("There was an exception retrieving the identifier with UUID {}", identifierTypeUuid);
+                    LOGGER.error("There was an exception retrieving the identifier type with UUID {}", identifierTypeUuid);
                     return null;
                 }
             }
         }
 
         return supportedIdentifierTypeList;
+    }
+
+    /**
+     * Parses patient identifiers. This method checks if the given identifier type name is supported by MOTECH
+     * and swaps identifier type name for identifier type uuid.
+     *
+     * @param identifiers the identifiers of patient, key - identifier type name, value - identifier number
+     * @return parsed patient identifiers, key - identifier type uuid, value - identifier number
+     */
+    private Map<String, String> parsePatientIdentifiers(Map<String, String> identifiers) {
+        Map<String, String> parsedIdentifiers = new HashMap<>();
+
+        for (String identifierTypeName : identifiers.keySet()) {
+            try {
+                String identifierTypeUuid = patientResource.getPatientIdentifierTypeUuidByName(identifierTypeName);
+                if (identifierTypeUuid == null) {
+                    LOGGER.warn("The identifier type with name {} is not supported", identifierTypeName);
+                } else {
+                    parsedIdentifiers.put(identifierTypeUuid, identifiers.get(identifierTypeName));
+                }
+            } catch (HttpException e) {
+                LOGGER.error("There was an exception retrieving the identifier type with name {}", identifierTypeName);
+                return null;
+            }
+        }
+
+        return parsedIdentifiers;
     }
 }

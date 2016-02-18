@@ -55,6 +55,16 @@ public interface PatientResource {
     String getPatientIdentifierTypeNameByUuid(String identifierTypeUuid) throws HttpException;
 
     /**
+     * Returns the UUID of the patient identifier type for the given name only if the identifier type is supported
+     * by MOTECH. This method is using cache while retrieving data from an OpenMRS server.
+     *
+     * @param identifierTypeName the name of the patient identifier type
+     * @return the UUID of the patient identifier type
+     * @throws HttpException when there were problems while fetching patient identifier
+     */
+    String getPatientIdentifierTypeUuidByName(String identifierTypeName) throws HttpException;
+
+    /**
      * Deletes the patient with the given UUID.
      *
      * @param uuid  the UUID of the patient

@@ -231,6 +231,7 @@ public final class ConverterUtils {
         openMRSPatient.setFacility(openMRSFacility);
         openMRSPatient.setPerson(openMRSPerson);
         openMRSPatient.setMotechId(patient.getMotechId());
+        openMRSPatient.setIdentifiers(patient.getIdentifiers());
 
         return openMRSPatient;
     }
@@ -372,7 +373,7 @@ public final class ConverterUtils {
      * supportedIdentifierTypeList.
      *
      * @param patient  the patient(represented as OpenMRS model)
-     * @param facility  the facility(represented as
+     * @param facility  the facility(represented as MOTECH model)
      * @param motechId  the MOTECH ID of the patient
      * @param supportedIdentifierTypeList  the supported patient identifier type list in MOTECH
      * @return a Patient object converted to the MOTECH model representation of Patient
@@ -398,7 +399,18 @@ public final class ConverterUtils {
         return openMRSPatient;
     }
 
-    public static Patient toPatient(OpenMRSPatient patient, OpenMRSPerson savedPerson, String motechPatientIdentifierTypeUuid) {
+
+    /**
+     * Converts the given patient, represented as the MOTECH model, to the model used by the OpenMRS server.
+     *
+     * @param patient  the MOTECH model of patient
+     * @param savedPerson  the savedPerson connected with the given patient
+     * @param motechPatientIdentifierTypeUuid  the MOTECH identifier type uuid
+     * @param patientIdentifiers the patient identifiers to be stored, key - identifier type uuid, value - identifier number
+     * @return an OpenMRS representation of patient object
+     */
+    public static Patient toPatient(OpenMRSPatient patient, OpenMRSPerson savedPerson, String motechPatientIdentifierTypeUuid,
+                                    Map<String, String> patientIdentifiers) {
 
         Patient converted = new Patient();
         Person person = new Person();
@@ -411,16 +423,21 @@ public final class ConverterUtils {
             location.setUuid(patient.getFacility().getFacilityId());
         }
 
-        IdentifierType type = new IdentifierType();
-        type.setUuid(motechPatientIdentifierTypeUuid);
-
-        Identifier identifier = new Identifier();
-        identifier.setIdentifier(patient.getMotechId());
-        identifier.setLocation(location);
-        identifier.setIdentifierType(type);
-
         List<Identifier> identifiers = new ArrayList<>();
-        identifiers.add(identifier);
+        identifiers.add(createMotechPatientIdentifier(patient.getMotechId(), motechPatientIdentifierTypeUuid, location));
+
+        for (String identifierTypeUuid : patientIdentifiers.keySet()) {
+            IdentifierType type = new IdentifierType();
+            type.setUuid(identifierTypeUuid);
+
+            Identifier identifier = new Identifier();
+            identifier.setIdentifier(patientIdentifiers.get(identifierTypeUuid));
+            identifier.setLocation(location);
+            identifier.setIdentifierType(type);
+
+            identifiers.add(identifier);
+        }
+
         converted.setIdentifiers(identifiers);
 
         return converted;
@@ -487,5 +504,17 @@ public final class ConverterUtils {
         conceptName.setConceptNameType(openMRSConceptName.getConceptNameType());
 
         return conceptName;
+    }
+
+    private static Identifier createMotechPatientIdentifier(String motechId, String motechPatientIdentifierTypeUuid, Location location) {
+        IdentifierType type = new IdentifierType();
+        type.setUuid(motechPatientIdentifierTypeUuid);
+
+        Identifier identifier = new Identifier();
+        identifier.setIdentifier(motechId);
+        identifier.setLocation(location);
+        identifier.setIdentifierType(type);
+
+        return identifier;
     }
 }

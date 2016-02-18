@@ -1,5 +1,7 @@
 package org.motechproject.openmrs19.resource.impl;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.lang.StringUtils;
@@ -22,9 +24,6 @@ import org.motechproject.openmrs19.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Component
 public class PatientResourceImpl implements PatientResource {
 
@@ -32,7 +31,7 @@ public class PatientResourceImpl implements PatientResource {
     private OpenMrsInstance openmrsInstance;
 
     private String motechIdTypeUuid;
-    private Map<String, String> identifierTypeUuidByName = new HashMap<>();
+    private BiMap<String, String> identifierTypeUuidByName = HashBiMap.create();
 
     @Autowired
     public PatientResourceImpl(RestClient restClient, OpenMrsInstance instance) {
@@ -107,6 +106,29 @@ public class PatientResourceImpl implements PatientResource {
         }
 
         return identifierTypeName;
+    }
+
+    @Override
+    public String getPatientIdentifierTypeUuidByName(String identifierTypeName) throws HttpException {
+        // Firstly, we try to retrieve a uuid from the cache
+        String identifierTypeUuid = identifierTypeUuidByName.inverse().get(identifierTypeName);
+
+        if (identifierTypeUuid == null) {
+            PatientIdentifierListResult result = getAllPatientIdentifierTypes();
+            for (IdentifierType type : result.getResults()) {
+                if (StringUtils.equals(identifierTypeName, type.getName())) {
+                    if (isIdentifierTypeSupportedInMotech(type.getName())) {
+                        identifierTypeUuid = type.getUuid();
+                        // After retrieving an identifierType from an OpenMRS server, the uuid and name are stored in cache
+                        identifierTypeUuidByName.put(identifierTypeUuid, identifierTypeName);
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        return identifierTypeUuid;
     }
 
     @Override
