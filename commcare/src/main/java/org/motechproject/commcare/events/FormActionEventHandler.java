@@ -26,7 +26,7 @@ import java.util.UUID;
  * pass them to the {@link CommcareFormService} that handles all the operations on Commcare forms.
  */
 @Component
-public class FormEventHandler {
+public class FormActionEventHandler {
 
     private static final String INSTANCE_ID_KEY = "instanceID";
     private static final String USERNAME_KEY = "username";
@@ -40,10 +40,16 @@ public class FormEventHandler {
     @Autowired
     private CommcareFormService commcareFormService;
 
+    /**
+     * Handles events, connected with sending Commcare forms. The event subject should have the following syntax:
+     * {@code EventSubjects.SEND_FORM.[form XMLNS].[config name]}
+     *
+     * @param event the event, containing parameters necessary to send the Commcare form
+     */
     @MotechListener(subjects = EventSubjects.SEND_FORM + ".*")
     public void sendForm(MotechEvent event) {
         String configName = EventSubjects.getConfigName(event.getSubject());
-        String xmlns = StringUtils.removeEnd(event.getSubject().replaceFirst(EventSubjects.SEND_FORM + ".", StringUtils.EMPTY), "." + configName);
+        String xmlns = extractXmlnsFromEventSubject(event.getSubject(), configName);
         Map<String, Object> parameters = event.getParameters();
 
         FormXml formXml = parseEventParametersToFormXml(parameters);
@@ -58,6 +64,10 @@ public class FormEventHandler {
         formXml.setMetadata(formMetadata);
 
         commcareFormService.uploadForm(formXml, configName);
+    }
+
+    private String extractXmlnsFromEventSubject(String subject, String configName) {
+        return StringUtils.removeEnd(subject.replaceFirst(EventSubjects.SEND_FORM + ".", StringUtils.EMPTY), "." + configName);
     }
 
     private FormXml parseEventParametersToFormXml(Map<String, Object> parameters) {

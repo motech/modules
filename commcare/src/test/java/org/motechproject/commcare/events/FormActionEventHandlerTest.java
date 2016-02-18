@@ -20,7 +20,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.mockito.Mockito.verify;
 
 
-public class FormEventHandlerTest {
+public class FormActionEventHandlerTest {
 
     private static final String XMLNS = "http://openrosa.org/formdesigner/E6511C2B-DFC8-4DEA-8200-CC2F2CED00DA";
     private static final String CONFIG = "config1";
@@ -31,7 +31,7 @@ public class FormEventHandlerTest {
     private MotechEvent event;
 
     @InjectMocks
-    private FormEventHandler formEventHandler = new FormEventHandler();
+    private FormActionEventHandler formActionEventHandler = new FormActionEventHandler();
 
     @Before
     public void setUp() {
@@ -47,7 +47,7 @@ public class FormEventHandlerTest {
 
     @Test
     public void shouldConvertEventParametersAndSendForm() {
-        formEventHandler.sendForm(event);
+        formActionEventHandler.sendForm(event);
 
         ArgumentCaptor<FormXml> captor = ArgumentCaptor.forClass(FormXml.class);
         verify(commcareFormService).uploadForm(captor.capture(), eq(CONFIG));
