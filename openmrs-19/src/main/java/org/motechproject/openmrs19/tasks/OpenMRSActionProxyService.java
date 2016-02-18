@@ -10,6 +10,11 @@ import java.util.Map;
 public interface OpenMRSActionProxyService {
 
     /**
+     * The default location name. This name is used when a location name is not provided by user.
+     */
+    String DEFAULT_LOCATION_NAME = "Unknown Location";
+
+    /**
      * Creates a patient with the given params. The required fields are : {@code firstName}, {@code lastName},
      * {@code gender}, {@code motechId}. If the locationName is not provided, the default location will be used.
      *

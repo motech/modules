@@ -1,4 +1,4 @@
-package org.motechproject.openmrs19.tasks;
+package org.motechproject.openmrs19.tasks.impl;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -13,7 +13,7 @@ import org.motechproject.openmrs19.domain.OpenMRSPatient;
 import org.motechproject.openmrs19.domain.OpenMRSPerson;
 import org.motechproject.openmrs19.service.OpenMRSFacilityService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
-import org.motechproject.openmrs19.tasks.impl.OpenMRSActionProxyServiceImpl;
+import org.motechproject.openmrs19.tasks.OpenMRSActionProxyService;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -36,7 +36,7 @@ public class OpenMRSActionProxyServiceTest {
     private ArgumentCaptor<OpenMRSPatient> patientCaptor;
 
     @InjectMocks
-    private OpenMRSActionProxyServiceImpl openMRSActionProxyService = new OpenMRSActionProxyServiceImpl();
+    private OpenMRSActionProxyService openMRSActionProxyService = new OpenMRSActionProxyServiceImpl();
 
     @Test
     public void shouldCreatePatientWithGivenParameters() {
@@ -66,14 +66,14 @@ public class OpenMRSActionProxyServiceTest {
         OpenMRSPerson person = createTestPerson();
 
         OpenMRSFacility facility = new OpenMRSFacility();
-        facility.setName(OpenMRSActionProxyServiceImpl.DEFAULT_LOCATION_NAME);
+        facility.setName(OpenMRSActionProxyService.DEFAULT_LOCATION_NAME);
 
         Map<String, String> identifiers = new HashMap<>();
         identifiers.put("CommCare CaseID", "1000");
 
         OpenMRSPatient patient = new OpenMRSPatient("500", person, facility, identifiers);
 
-        doReturn(Collections.singletonList(facility)).when(facilityService).getFacilities(OpenMRSActionProxyServiceImpl.DEFAULT_LOCATION_NAME);
+        doReturn(Collections.singletonList(facility)).when(facilityService).getFacilities(OpenMRSActionProxyService.DEFAULT_LOCATION_NAME);
 
         openMRSActionProxyService.createPatient(person.getFirstName(), person.getMiddleName(), person.getLastName(),
                 person.getAddress(), person.getDateOfBirth(), person.getBirthDateEstimated(), person.getGender(),

@@ -24,8 +24,6 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSActionProxyServiceImpl.class);
 
-    public static final String DEFAULT_LOCATION_NAME = "Unknown Location";
-
     private OpenMRSFacilityService facilityService;
     private OpenMRSPatientService patientService;
 
