@@ -1,5 +1,6 @@
 package org.motechproject.openmrs19.domain;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -46,7 +47,7 @@ public class OpenMRSPatient {
      * @param motechId  the MOTECH ID of the patient
      * @param person  the personal details about the patient
      * @param facility  the facility by which the patient is treated
-     * @param identifiers the supported identifiers of patient, key - name, value - identifier number
+     * @param identifiers the supported identifiers of patient, key - identifier type name, value - identifier number
      */
     public OpenMRSPatient(String motechId, OpenMRSPerson person, OpenMRSFacility facility, Map<String, String> identifiers) {
         this(null, motechId, person, facility, identifiers);
@@ -60,7 +61,7 @@ public class OpenMRSPatient {
      * @param motechId  the MOTECH ID of the patient
      * @param person  the personal details about the patient
      * @param facility  the facility by which the patient is treated
-     * @param identifiers the supported identifiers of patient, key - name, value - identifier number
+     * @param identifiers the supported identifiers of patient, key - identifier type name, value - identifier number
      */
     public OpenMRSPatient(String patientId, String motechId, OpenMRSPerson person, OpenMRSFacility facility,
                           Map<String, String> identifiers) {
@@ -88,6 +89,10 @@ public class OpenMRSPatient {
     }
 
     public Map<String, String> getIdentifiers() {
+        if (identifiers == null) {
+            identifiers = new HashMap<>();
+        }
+
         return identifiers;
     }
 
