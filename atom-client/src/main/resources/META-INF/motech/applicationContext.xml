@@ -10,7 +10,12 @@
     <bean id="atomClientSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
         <property name="configFiles">
             <list>
-                <value>classpath:atomclient.properties</value>
+                <value>classpath:atom-client-defaults.properties</value>
+            </list>
+        </property>
+        <property name="rawConfigFiles">
+            <list>
+                <value>classpath:atom-client-feeds.json</value>
             </list>
         </property>
     </bean>

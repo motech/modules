@@ -5,7 +5,7 @@ import com.rometools.rome.feed.synd.SyndFeedImpl;
 import com.rometools.rome.io.FeedException;
 import org.hamcrest.core.IsEqual;
 import org.junit.Test;
-import org.motechproject.atomclient.service.impl.FeedCache;
+import org.motechproject.atomclient.service.FeedCache;
 
 import java.io.IOException;
 
