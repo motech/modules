@@ -118,7 +118,7 @@ public class FeedCache implements FeedFetcherCache {
             LOGGER.warn("NULL content for entry {}", entry.getUri());
             parameters.put("content", null);
         }
-        MotechEvent event = new MotechEvent(Constants.ATOMCLIENT_FEED_CHANGE_MESSAGE, parameters);
+        MotechEvent event = new MotechEvent(Constants.FEED_CHANGE_MESSAGE, parameters);
         LOGGER.debug("sending message {}", event);
         eventRelay.sendEventMessage(event);
     }
@@ -136,6 +136,28 @@ public class FeedCache implements FeedFetcherCache {
     }
 
 
+    private static boolean areEntriesDifferent(SyndEntry e1, SyndEntry e2) {
+        if (!e1.getUpdatedDate().equals(e2.getUpdatedDate())) {
+            LOGGER.trace("different updated date");
+            return true;
+        }
+        if (!e1.getPublishedDate().equals(e2.getPublishedDate())) {
+            LOGGER.trace("different published date");
+            return true;
+        }
+        if (!e1.getUri().equals(e2.getUri())) {
+            LOGGER.trace("different uri");
+            return true;
+        }
+        if (!e1.getContents().equals(e2.getContents())) {
+            LOGGER.trace("different contents");
+            return true;
+        }
+
+        return false;
+    }
+
+
     /**
      * Sends a MOTECH event for each changed feed entry and returns true if changes were detected
      *
@@ -148,7 +170,7 @@ public class FeedCache implements FeedFetcherCache {
         for (SyndEntry fetchedEntry : fetchedFeed.getEntries()) {
             for (SyndEntry cachedEntry : cachedFeed.getEntries()) {
                 if (fetchedEntry.getUri().equals(cachedEntry.getUri())) {
-                    if (!fetchedEntry.equals(cachedEntry)) {
+                    if (areEntriesDifferent(fetchedEntry, cachedEntry)) {
                         LOGGER.debug("Fetched entry different from cached version\n\nfetched\n{}\n\ncached\n{}\n", fetchedEntry, cachedEntry);
                         sendMessageForFeedEntry(fetchedEntry);
                         anyChanges = true;

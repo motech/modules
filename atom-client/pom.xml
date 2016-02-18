@@ -122,6 +122,7 @@
                             org.motechproject.atomclient.domain;version=${project.version},
                             org.motechproject.atomclient.repository;version=${project.version},
                             org.motechproject.atomclient.service;version=${project.version},
+                            org.motechproject.atomclient.exception;version=${project.version},
                         </Export-Package>
                         <Import-Package>
                             net.sf.cglib.core,
@@ -136,6 +137,8 @@
                             org.motechproject.server.config.service,
                             org.motechproject.mds.service,
                             com.rometools.fetcher,
+                            org.motechproject.event.listener,
+                            org.motechproject.event.listener.annotations,
                             *
                         </Import-Package>
                         <Bundle-DocURL>

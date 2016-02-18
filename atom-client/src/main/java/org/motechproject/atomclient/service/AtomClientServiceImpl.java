@@ -7,7 +7,6 @@ import com.rometools.rome.io.FeedException;
 import org.motechproject.atomclient.repository.FeedRecordDataService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.scheduler.contract.CronJobId;
 import org.motechproject.scheduler.contract.CronSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
@@ -15,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -31,7 +29,6 @@ public class AtomClientServiceImpl implements AtomClientService {
     private AtomClientConfigService configService;
     private MotechSchedulerService motechSchedulerService;
     private FeedFetcher feedFetcher;
-    private CronSchedulableJob job;
 
 
     @Autowired
@@ -45,53 +42,37 @@ public class AtomClientServiceImpl implements AtomClientService {
 
     @PostConstruct
     public void initFetchJob() {
-        scheduleFetchJob();
+        rescheduleFetchJob(configService.getFetchCron());
     }
 
 
-    @MotechListener(subjects = { Constants.ATOMCLIENT_SCHEDULE_FETCH_JOB })
-    public void handleScheduleFetchJob(MotechEvent event) {
-        scheduleFetchJob();
-    }
-
-
-    @MotechListener(subjects = { Constants.ATOMCLIENT_FETCH_MESSAGE })
-    public void handleFeedFetch(MotechEvent event) {
-        fetch();
-    }
-
-
-    public void scheduleFetchJob() {
-        String cronExpression = configService.getFetchCron();
+    @Override
+    public void rescheduleFetchJob(String cronExpression) {
 
         if (cronExpression.isEmpty()) {
-            if (job != null) {
-                LOGGER.info("Unscheduling existing fetch job.");
-                motechSchedulerService.unscheduleJob(new CronJobId(new MotechEvent(Constants.ATOMCLIENT_FETCH_MESSAGE)));
-                job = null;
-            }
-            LOGGER.info("No cron expression, fetch job will not be scheduled.");
+            LOGGER.info("Unscheduling existing fetch job.");
+            motechSchedulerService.unscheduleJob(new CronJobId(new MotechEvent(Constants.FETCH_MESSAGE)));
             return;
         }
 
-        job = new CronSchedulableJob(new MotechEvent(Constants.ATOMCLIENT_FETCH_MESSAGE), cronExpression);
+        CronSchedulableJob job = new CronSchedulableJob(new MotechEvent(Constants.FETCH_MESSAGE), cronExpression);
         motechSchedulerService.safeScheduleJob(job);
         LOGGER.info("The fetch job cron is {}", cronExpression);
     }
 
 
     @Override
-    @Transactional
     public void fetch() {
         if (configService.getFeedConfigs().getFeeds().size() == 0) {
             LOGGER.warn("No feeds to fetch.");
         }
         for (FeedConfig feedConfig : configService.getFeedConfigs().getFeeds()) {
-            URL url = null;
+            URL url;
             try {
                 url = new URL(feedConfig.getUrl());
             } catch (MalformedURLException e) {
                 LOGGER.error("Invalid Atom feed URL {}", feedConfig.getUrl());
+                continue;
             }
             LOGGER.trace("Fetching {}", url);
             try {
