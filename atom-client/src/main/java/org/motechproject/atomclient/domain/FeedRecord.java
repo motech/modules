@@ -14,7 +14,7 @@ public class FeedRecord {
     @Field(required = true)
     private Long lastModified;
 
-    @Field(type="TEXT")
+    @Field(type = "TEXT")
     private String data;
 
 

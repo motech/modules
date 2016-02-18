@@ -8,6 +8,7 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.SyndFeedOutput;
+import org.apache.commons.lang.StringUtils;
 import org.motechproject.atomclient.domain.FeedRecord;
 import org.motechproject.atomclient.repository.FeedRecordDataService;
 import org.motechproject.event.MotechEvent;
@@ -21,20 +22,25 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FeedCache implements FeedFetcherCache {
 
 
     public static final String FEED_DATA = "feedData";
     private FeedRecordDataService feedRecordDataService;
+    private AtomClientConfigService atomClientConfigService;
     private EventRelay eventRelay;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FeedCache.class);
 
 
-    public FeedCache(FeedRecordDataService feedRecordDataService, EventRelay eventRelay) {
+    public FeedCache(FeedRecordDataService feedRecordDataService, EventRelay eventRelay,
+                     AtomClientConfigService atomClientConfigService) {
         this.feedRecordDataService = feedRecordDataService;
         this.eventRelay = eventRelay;
+        this.atomClientConfigService = atomClientConfigService;
     }
 
 
@@ -90,22 +96,48 @@ public class FeedCache implements FeedFetcherCache {
     }
 
 
+    private Map<String, Object> extractContent(String content, String regex, String key) {
+        Map<String, Object> map = new HashMap<>();
+
+        if (StringUtils.isBlank(regex)) {
+            return map;
+        }
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(content);
+        if (matcher.find()) {
+            if (matcher.groupCount() > 1) {
+                for (int i = 1; i <= matcher.groupCount(); i++) {
+                    map.put(String.format("%s_%d", key, i), matcher.group(i));
+                }
+            } else if (matcher.groupCount() > 0) {
+                map.put(key, matcher.group(1));
+            }
+        }
+
+        return map;
+    }
+
+
     /**
      * Sends a MOTECH event for a feed entry
      *
      * @param entry
      */
-    private void sendMessageForFeedEntry(SyndEntry entry) {
+    private void sendMessageForFeedEntry(SyndEntry entry, String regex) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("uri", entry.getUri());
         if (entry.getContents() != null) {
             if (entry.getContents().size() == 1) {
                 SyndContent content = entry.getContents().get(0);
-                parameters.put("content", content.getValue());
+                parameters.put("rawcontent", content.getValue());
+                parameters.putAll(extractContent(content.getValue(), regex, "extractedContent"));
             } else {
                 int index = 1;
                 for (SyndContent content : entry.getContents()) {
-                    parameters.put(String.format("content%d", index), content.getValue());
+                    parameters.put(String.format("rawcontent%d", index), content.getValue());
+                    String key = String.format("extractedcontent%d", index);
+                    parameters.putAll(extractContent(content.getValue(), regex, key));
                     index++;
                 }
             }
@@ -124,9 +156,9 @@ public class FeedCache implements FeedFetcherCache {
      *
      * @param feed
      */
-    private void sendMessagesForNewFeedData(SyndFeed feed) {
+    private void sendMessagesForNewFeedData(SyndFeed feed, String regex) {
         for (SyndEntry entry : feed.getEntries()) {
-            sendMessageForFeedEntry(entry);
+            sendMessageForFeedEntry(entry, regex);
         }
     }
 
@@ -160,7 +192,7 @@ public class FeedCache implements FeedFetcherCache {
      * @param fetchedFeed
      * @return true if any changes were detected between the cached entry and the fetched entry
      */
-    private boolean sendMessagesForChangedEntries(SyndFeed cachedFeed, SyndFeed fetchedFeed) {
+    private boolean sendMessagesForChangedEntries(SyndFeed cachedFeed, SyndFeed fetchedFeed, String regex) {
         boolean anyChanges = false;
         for (SyndEntry fetchedEntry : fetchedFeed.getEntries()) {
             boolean foundInCache = false;
@@ -168,13 +200,13 @@ public class FeedCache implements FeedFetcherCache {
                 if (fetchedEntry.getUri().equals(cachedEntry.getUri())) {
                     foundInCache = true;
                     if (areEntriesDifferent(fetchedEntry, cachedEntry)) {
-                        sendMessageForFeedEntry(fetchedEntry);
+                        sendMessageForFeedEntry(fetchedEntry, regex);
                         anyChanges = true;
                     }
                 }
             }
             if (!foundInCache) {
-                sendMessageForFeedEntry(fetchedEntry);
+                sendMessageForFeedEntry(fetchedEntry, regex);
                 anyChanges = true;
             }
         }
@@ -197,15 +229,16 @@ public class FeedCache implements FeedFetcherCache {
     public void setFeedInfo(URL feedUrl, SyndFeedInfo feedInfo) {
         try {
             String url = urlToString(feedUrl);
+            String regex = atomClientConfigService.getRegexForFeedUrl(url);
             FeedRecord record = feedRecordDataService.findByURL(url);
             if (record != null) {
                 SyndFeedInfo cachedFeedInfo = feedRecordToFeedInfo(record);
-                if (sendMessagesForChangedEntries(cachedFeedInfo.getSyndFeed(), feedInfo.getSyndFeed())) {
+                if (sendMessagesForChangedEntries(cachedFeedInfo.getSyndFeed(), feedInfo.getSyndFeed(), regex)) {
                     feedRecordDataService.delete(record);
                     feedRecordDataService.create(recordFromFeed(url, feedInfo));
                 }
             } else {
-                sendMessagesForNewFeedData(feedInfo.getSyndFeed());
+                sendMessagesForNewFeedData(feedInfo.getSyndFeed(), regex);
                 feedRecordDataService.create(recordFromFeed(url, feedInfo));
             }
         } catch (IOException | FeedException | ClassNotFoundException ex) {

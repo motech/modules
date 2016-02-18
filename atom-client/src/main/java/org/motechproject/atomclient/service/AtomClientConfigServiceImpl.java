@@ -119,4 +119,15 @@ public class AtomClientConfigServiceImpl implements AtomClientConfigService {
 
         eventRelay.sendEventMessage(new MotechEvent(Constants.RESCHEDULE_FETCH_JOB));
     }
+
+
+    @Override
+    public String getRegexForFeedUrl(String url) {
+        for (FeedConfig config : feedConfigs.getFeeds()) {
+            if (StringUtils.equals(config.getUrl(), url)) {
+                return config.getRegex();
+            }
+        }
+        return "";
+    }
 }

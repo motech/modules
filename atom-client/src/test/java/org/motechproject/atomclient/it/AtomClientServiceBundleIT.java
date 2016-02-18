@@ -66,8 +66,10 @@ public class AtomClientServiceBundleIT extends BasePaxIT {
         configService.setFeedConfigs(new FeedConfigs(
                 new HashSet<>(Arrays.asList(
                         // http://intertwingly.net/blog/index.atom
-                        new FeedConfig("http://192.168.33.10:8080/openmrs/ws/atomfeed/patient/recent", ""),
-                        new FeedConfig("http://192.168.33.10:8080/openmrs/ws/atomfeed/Encounter/recent", "")
+                        // <![CDATA[/openmrs/ws/rest/v1/bahmnicore/bahmniencounter/cc5e4eff-b140-46fe-835a-1f8e4fc293ca?includeAll=true]]>
+
+                        new FeedConfig("http://192.168.33.10:8080/openmrs/ws/atomfeed/patient/recent", "<!\\[CDATA\\[(.*/([0-9a-f-]*)\\?.*)\\]\\]>"),
+                        new FeedConfig("http://192.168.33.10:8080/openmrs/ws/atomfeed/Encounter/recent", "<!\\[CDATA\\[(.*)\\]\\]>")
                 ))));
         atomClientService.rescheduleFetchJob("");
     }

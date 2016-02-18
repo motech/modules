@@ -9,4 +9,5 @@ public interface AtomClientConfigService {
     String getFetchCron();
     void setFeedConfigs(FeedConfigs feedConfigs);
     void setFetchCron(String fetchCron);
+    String getRegexForFeedUrl(String url);
 }

@@ -35,7 +35,7 @@ public class AtomClientServiceImpl implements AtomClientService {
     @Autowired
     public AtomClientServiceImpl(FeedRecordDataService feedRecordDataService, EventRelay eventRelay,
                                  AtomClientConfigService configService, MotechSchedulerService motechSchedulerService) {
-        feedFetcher = new HttpURLFeedFetcher(new FeedCache(feedRecordDataService, eventRelay));
+        feedFetcher = new HttpURLFeedFetcher(new FeedCache(feedRecordDataService, eventRelay, configService));
         this.configService = configService;
         this.motechSchedulerService = motechSchedulerService;
     }
