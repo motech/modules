@@ -3,6 +3,7 @@ package org.motechproject.openmrs19.domain;
 import org.joda.time.DateTime;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -225,5 +226,33 @@ public class OpenMRSEncounter {
 
     public void setObservations(Set<? extends OpenMRSObservation> observations) {
         this.observations = observations;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, display, provider, creator, facility, date, observations, patient, encounterType);
+    }
+
+    @Override //NO CHECKSTYLE Cyclomatic Complexity
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        OpenMRSEncounter other = (OpenMRSEncounter) obj;
+
+        return Objects.equals(this.id, other.id) &&
+                Objects.equals(this.display, other.display) &&
+                Objects.equals(this.provider, other.provider) &&
+                Objects.equals(this.creator, other.creator) &&
+                Objects.equals(this.facility, other.facility) &&
+                Objects.equals(this.date, other.date) &&
+                Objects.equals(this.observations, other.observations) &&
+                Objects.equals(this.patient, other.patient) &&
+                Objects.equals(this.encounterType, other.encounterType);
     }
 }

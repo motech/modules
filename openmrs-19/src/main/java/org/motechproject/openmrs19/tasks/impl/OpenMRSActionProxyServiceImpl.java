@@ -2,11 +2,15 @@ package org.motechproject.openmrs19.tasks.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.motechproject.openmrs19.domain.OpenMRSEncounter;
 import org.motechproject.openmrs19.domain.OpenMRSFacility;
 import org.motechproject.openmrs19.domain.OpenMRSPatient;
-import org.motechproject.openmrs19.domain.OpenMRSPerson;
+import org.motechproject.openmrs19.domain.OpenMRSProvider;
+import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSFacilityService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
+import org.motechproject.openmrs19.service.OpenMRSProviderService;
+import org.motechproject.openmrs19.domain.OpenMRSPerson;
 import org.motechproject.openmrs19.tasks.OpenMRSActionProxyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,8 +28,27 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSActionProxyServiceImpl.class);
 
+    private OpenMRSEncounterService encounterService;
     private OpenMRSFacilityService facilityService;
     private OpenMRSPatientService patientService;
+    private OpenMRSProviderService providerService;
+
+    @Override
+    public void createEncounter(DateTime encounterDate, String encounterType, String locationName, String patientUuid, String providerUuid) {
+        OpenMRSFacility facility = getFacilityByName(locationName);
+        OpenMRSPatient patient = patientService.getPatientByUuid(patientUuid);
+        OpenMRSProvider provider = providerService.getProviderByUuid(providerUuid);
+
+        OpenMRSEncounter encounter = new OpenMRSEncounter.OpenMRSEncounterBuilder()
+                .withDate(encounterDate.toDate())
+                .withEncounterType(encounterType)
+                .withFacility(facility)
+                .withPatient(patient)
+                .withProvider(provider)
+                .build();
+
+        encounterService.createEncounter(encounter);
+    }
 
     @Override
     public void createPatient(String firstName, String middleName, String lastName, String address, DateTime dateOfBirth,
@@ -70,6 +93,11 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     }
 
     @Autowired
+    public void setEncounterService(OpenMRSEncounterService encounterService) {
+        this.encounterService = encounterService;
+    }
+
+    @Autowired
     public void setFacilityService(OpenMRSFacilityService facilityService) {
         this.facilityService = facilityService;
     }
@@ -77,5 +105,10 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     @Autowired
     public void setPatientService(OpenMRSPatientService patientService) {
         this.patientService = patientService;
+    }
+
+    @Autowired
+    public void setProviderService(OpenMRSProviderService providerService) {
+        this.providerService = providerService;
     }
 }

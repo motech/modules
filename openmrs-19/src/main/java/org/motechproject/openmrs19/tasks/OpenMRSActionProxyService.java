@@ -15,6 +15,18 @@ public interface OpenMRSActionProxyService {
     String DEFAULT_LOCATION_NAME = "Unknown Location";
 
     /**
+     * Creates an encounter with the given {@code encounterDate}, {@code encounterType}, {@code locationName},
+     * {@code patientUuid} and {@code providerUuid}. The locationName is the only not required field.
+     *
+     * @param encounterDate the date of encounter
+     * @param encounterType the type of encounter
+     * @param locationName the name of location
+     * @param patientUuid the patient uuid
+     * @param providerUuid the provider uuid
+     */
+    void createEncounter(DateTime encounterDate, String encounterType, String locationName, String patientUuid, String providerUuid);
+
+    /**
      * Creates a patient with the given params. The required fields are : {@code firstName}, {@code lastName},
      * {@code gender}, {@code motechId}. If the locationName is not provided, the default location will be used.
      *
