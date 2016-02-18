@@ -5,13 +5,14 @@ import org.motechproject.commcare.domain.CommcareApplicationJson;
 import java.util.List;
 
 /**
- * Created by user on 12.02.16.
+ * A service to CommcareApplicationService is responsible for retriving applications by configuration name
  */
 public interface CommcareApplicationService {
 
     /**
-     * Retrieves all application names
-     * @return List of all applications
+     * Retrieves applications by configuration name
+     *
+     * @return the list of matching applications
      */
     List<CommcareApplicationJson> getByConfigName(String applicationName);
 }

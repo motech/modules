@@ -49,8 +49,8 @@ public class ChannelRequestBuilder {
      * @return the created instance
      */
     public ChannelRequest buildChannelRequest() {
-        FormTriggerBuilder formTriggerBuilder = new FormTriggerBuilder(schemaService, applicationService, configService);
-        CaseTriggerBuilder caseTriggerBuilder = new CaseTriggerBuilder(schemaService, configService);
+        FormTriggerBuilder formTriggerBuilder = new FormTriggerBuilder(applicationService, configService);
+        CaseTriggerBuilder caseTriggerBuilder = new CaseTriggerBuilder(applicationService, configService);
         CommonTriggerBuilder commonTriggerBuilder = new CommonTriggerBuilder(configService);
         QueryStockLedgerActionBuilder queryStockLedgerActionBuilder = new QueryStockLedgerActionBuilder(configService);
         CaseActionBuilder caseActionBuilder = new CaseActionBuilder(configService);

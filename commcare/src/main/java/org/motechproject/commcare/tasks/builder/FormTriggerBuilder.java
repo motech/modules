@@ -7,7 +7,6 @@ import org.motechproject.commcare.domain.FormSchemaJson;
 import org.motechproject.commcare.domain.FormSchemaQuestionJson;
 import org.motechproject.commcare.service.CommcareApplicationService;
 import org.motechproject.commcare.service.CommcareConfigService;
-import org.motechproject.commcare.service.CommcareSchemaService;
 import org.motechproject.tasks.contract.EventParameterRequest;
 import org.motechproject.tasks.contract.TriggerEventRequest;
 
@@ -34,8 +33,7 @@ import static org.motechproject.commcare.events.constants.EventSubjects.FORMS_EV
  */
 public class FormTriggerBuilder implements TriggerBuilder {
 
-    private CommcareSchemaService schemaService;
-    private CommcareApplicationService applicationService; //to dodane
+    private CommcareApplicationService applicationService;
     private CommcareConfigService configService;
 
     private static final String RECEIVED_FORM = "Received Form";
@@ -44,12 +42,11 @@ public class FormTriggerBuilder implements TriggerBuilder {
      * Creates an instance of the {@link FormTriggerBuilder} class that can be used for building form triggers. It will
      * use the given {@code schemaService}, {@code configService} fir building them.
      *
-     * @param schemaService  the schema service
+     * @param applicationService the application service
      * @param configService  the configuration service
      */
-    public FormTriggerBuilder(CommcareSchemaService schemaService, CommcareApplicationService applicationService, CommcareConfigService configService) { // tu dodane
-        this.schemaService = schemaService;
-        this.applicationService = applicationService;  //to dodane
+    public FormTriggerBuilder(CommcareApplicationService applicationService, CommcareConfigService configService) {
+        this.applicationService = applicationService;
         this.configService = configService;
     }
 
@@ -62,8 +59,8 @@ public class FormTriggerBuilder implements TriggerBuilder {
                 for (CommcareModuleJson module : application.getModules()) {
                     for (FormSchemaJson form : module.getFormSchemas()) {
                         List<EventParameterRequest> parameters = new ArrayList<>();
-                        String formName = form.getFormName();
                         String applicationName = application.getApplicationName();
+                        String formName = form.getFormName();
                         addMetadataFields(parameters);
                         addCaseFields(parameters);
 

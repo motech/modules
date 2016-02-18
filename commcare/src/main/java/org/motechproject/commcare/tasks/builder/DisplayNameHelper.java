@@ -12,12 +12,15 @@ public final class DisplayNameHelper {
      * If the name is blank, this will be formatted as "name [config-name]".
      * @param subject the subject with which the display name should start
      * @param name the name of the element (form, case, etc.), if blank will be omitted
+     * @param applicationName the name of the application
      * @param configName the name of the configuration
      * @return the display name
      */
     public static String buildDisplayName(String subject, String name, String applicationName, String configName) {
-        if (StringUtils.isBlank(name)) {
+        if (StringUtils.isBlank(name) && StringUtils.isBlank(applicationName)) {
             return String.format("%s [%s]", subject, configName);
+        } else if (StringUtils.isBlank(applicationName)) {
+            return String.format("%s: %s [%s]", subject, name, configName);
         } else {
             return String.format("%s: %s [%s : %s]", subject, name, applicationName, configName);
         }
