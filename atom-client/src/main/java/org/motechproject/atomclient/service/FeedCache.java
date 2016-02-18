@@ -106,12 +106,12 @@ public class FeedCache implements FeedFetcherCache {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(content);
         if (matcher.find()) {
-            if (matcher.groupCount() > 1) {
-                for (int i = 1; i <= matcher.groupCount(); i++) {
-                    map.put(String.format("%s_%d", key, i), matcher.group(i));
-                }
-            } else if (matcher.groupCount() > 0) {
+            if (matcher.groupCount() > 0) {
                 map.put(key, matcher.group(1));
+                if (matcher.groupCount() > 1) {
+                    LOGGER.warn("Ignoring {} extra regex extract{} for regex {}", matcher.groupCount() - 1,
+                            matcher.groupCount() > 2 ? "s" : "", regex);
+                }
             }
         }
 
@@ -124,27 +124,25 @@ public class FeedCache implements FeedFetcherCache {
      *
      * @param entry
      */
-    private void sendMessageForFeedEntry(SyndEntry entry, String regex) {
+    private void sendMessageForFeedEntry(String url, SyndEntry entry, String regex) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("uri", entry.getUri());
+        Map<String, Object> rawContent = new HashMap<>();
+        Map<String, Object> extractedContent = new HashMap<>();
+        parameters.put("url", url);
+        parameters.put("published_date", entry.getPublishedDate());
+        parameters.put("updated_date", entry.getUpdatedDate());
         if (entry.getContents() != null) {
-            if (entry.getContents().size() == 1) {
-                SyndContent content = entry.getContents().get(0);
-                parameters.put("rawcontent", content.getValue());
-                parameters.putAll(extractContent(content.getValue(), regex, "extractedContent"));
-            } else {
-                int index = 1;
-                for (SyndContent content : entry.getContents()) {
-                    parameters.put(String.format("rawcontent%d", index), content.getValue());
-                    String key = String.format("extractedcontent%d", index);
-                    parameters.putAll(extractContent(content.getValue(), regex, key));
-                    index++;
-                }
+            Integer index = 1;
+            for (SyndContent content : entry.getContents()) {
+                rawContent.put(index.toString(), content.getValue());
+                extractedContent.putAll(extractContent(content.getValue(), regex, index.toString()));
+                index++;
             }
         } else {
             LOGGER.warn("NULL content for entry {}", entry.getUri());
-            parameters.put("content", null);
         }
+        parameters.put("raw_content", rawContent);
+        parameters.put("extracted_content", extractedContent);
         MotechEvent event = new MotechEvent(Constants.FEED_CHANGE_MESSAGE, parameters);
         LOGGER.debug("sending message {}", event);
         eventRelay.sendEventMessage(event);
@@ -156,9 +154,9 @@ public class FeedCache implements FeedFetcherCache {
      *
      * @param feed
      */
-    private void sendMessagesForNewFeedData(SyndFeed feed, String regex) {
+    private void sendMessagesForNewFeedData(String url, SyndFeed feed, String regex) {
         for (SyndEntry entry : feed.getEntries()) {
-            sendMessageForFeedEntry(entry, regex);
+            sendMessageForFeedEntry(url, entry, regex);
         }
     }
 
@@ -192,7 +190,7 @@ public class FeedCache implements FeedFetcherCache {
      * @param fetchedFeed
      * @return true if any changes were detected between the cached entry and the fetched entry
      */
-    private boolean sendMessagesForChangedEntries(SyndFeed cachedFeed, SyndFeed fetchedFeed, String regex) {
+    private boolean sendMessagesForChangedEntries(String url, SyndFeed cachedFeed, SyndFeed fetchedFeed, String regex) {
         boolean anyChanges = false;
         for (SyndEntry fetchedEntry : fetchedFeed.getEntries()) {
             boolean foundInCache = false;
@@ -200,13 +198,13 @@ public class FeedCache implements FeedFetcherCache {
                 if (fetchedEntry.getUri().equals(cachedEntry.getUri())) {
                     foundInCache = true;
                     if (areEntriesDifferent(fetchedEntry, cachedEntry)) {
-                        sendMessageForFeedEntry(fetchedEntry, regex);
+                        sendMessageForFeedEntry(url, fetchedEntry, regex);
                         anyChanges = true;
                     }
                 }
             }
             if (!foundInCache) {
-                sendMessageForFeedEntry(fetchedEntry, regex);
+                sendMessageForFeedEntry(url, fetchedEntry, regex);
                 anyChanges = true;
             }
         }
@@ -233,12 +231,12 @@ public class FeedCache implements FeedFetcherCache {
             FeedRecord record = feedRecordDataService.findByURL(url);
             if (record != null) {
                 SyndFeedInfo cachedFeedInfo = feedRecordToFeedInfo(record);
-                if (sendMessagesForChangedEntries(cachedFeedInfo.getSyndFeed(), feedInfo.getSyndFeed(), regex)) {
+                if (sendMessagesForChangedEntries(url, cachedFeedInfo.getSyndFeed(), feedInfo.getSyndFeed(), regex)) {
                     feedRecordDataService.delete(record);
                     feedRecordDataService.create(recordFromFeed(url, feedInfo));
                 }
             } else {
-                sendMessagesForNewFeedData(feedInfo.getSyndFeed(), regex);
+                sendMessagesForNewFeedData(url, feedInfo.getSyndFeed(), regex);
                 feedRecordDataService.create(recordFromFeed(url, feedInfo));
             }
         } catch (IOException | FeedException | ClassNotFoundException ex) {
