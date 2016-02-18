@@ -17,12 +17,10 @@ public final class DisplayNameHelper {
      * @return the display name
      */
     public static String buildDisplayName(String subject, String name, String applicationName, String configName) {
-        if (StringUtils.isBlank(name) && StringUtils.isBlank(applicationName)) {
+        if (StringUtils.isBlank(name)) {
             return String.format("%s [%s]", subject, configName);
-        } else if (StringUtils.isBlank(applicationName)) {
-            return String.format("%s: %s [%s]", subject, name, configName);
         } else {
-            return String.format("%s: %s [%s : %s]", subject, name, applicationName, configName);
+            return String.format("%s: %s [%s: %s]", subject, name, applicationName, configName);
         }
     }
 

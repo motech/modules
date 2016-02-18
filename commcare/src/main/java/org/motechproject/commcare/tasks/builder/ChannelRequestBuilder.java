@@ -23,7 +23,6 @@ public class ChannelRequestBuilder {
 
     private BundleContext bundleContext;
     private CommcareConfigService configService;
-    private CommcareSchemaService schemaService;
     private CommcareApplicationService applicationService;
 
     /**
@@ -32,12 +31,10 @@ public class ChannelRequestBuilder {
      * building new instances.
      *
      * @param configService  the configuration service
-     * @param schemaService  the schema service
      * @param bundleContext  the bundle context
      */
-    public ChannelRequestBuilder(CommcareConfigService configService, CommcareApplicationService applicationService,CommcareSchemaService schemaService,
+    public ChannelRequestBuilder(CommcareConfigService configService, CommcareApplicationService applicationService,
                                  BundleContext bundleContext) {
-        this.schemaService = schemaService;
         this.applicationService = applicationService;
         this.configService = configService;
         this.bundleContext = bundleContext;

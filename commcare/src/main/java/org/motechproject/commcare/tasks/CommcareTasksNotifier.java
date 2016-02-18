@@ -27,20 +27,17 @@ public class CommcareTasksNotifier {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommcareTasksNotifier.class);
 
     private BundleContext bundleContext;
-    private CommcareSchemaService schemaService;
     private CommcareApplicationService applicationService;
     private CommcareDataProvider dataProvider;
     private CommcareConfigService configService;
 
     @Autowired
     public CommcareTasksNotifier(BundleContext bundleContext, CommcareDataProvider dataProvider,
-                                 CommcareConfigService configService, CommcareApplicationService applicationService,
-                                 CommcareSchemaService schemaService) {
+                                 CommcareConfigService configService, CommcareApplicationService applicationService) {
         this.bundleContext = bundleContext;
         this.dataProvider = dataProvider;
         this.configService = configService;
         this.applicationService = applicationService;
-        this.schemaService = schemaService;
     }
 
     @PostConstruct
@@ -68,7 +65,7 @@ public class CommcareTasksNotifier {
                 LOGGER.info("Registering Commcare tasks channel with the channel service");
 
                 ChannelRequestBuilder channelRequestBuilder = new ChannelRequestBuilder(configService, applicationService,
-                        schemaService, bundleContext);
+                        bundleContext);
                 TasksChannelServiceInstance instance = new TasksChannelServiceInstance(service, channelRequestBuilder);
                 instance.updateTaskChannel();
             } else {
