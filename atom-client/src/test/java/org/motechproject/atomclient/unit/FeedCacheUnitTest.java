@@ -17,9 +17,9 @@ public class FeedCacheUnitTest {
     public void verifyInfoToBytes() throws IOException, ClassNotFoundException, CloneNotSupportedException, FeedException {
         SyndFeed feed = new SyndFeedImpl();
         feed.setFeedType("atom_1.0");
-        feed.setTitle("foobar");
-        byte[] bytes = FeedCache.feedToBytes(feed);
-        SyndFeed feed2 = FeedCache.feedFromBytes(bytes);
-        assertThat(feed2.getTitle(), IsEqual.equalTo(feed.getTitle()));
+        feed.setUri("foobar");
+        String json = FeedCache.feedToJson(feed);
+        SyndFeed feed2 = FeedCache.feedFromJson(json);
+        assertThat(feed2.getUri(), IsEqual.equalTo(feed.getUri()));
     }
 }

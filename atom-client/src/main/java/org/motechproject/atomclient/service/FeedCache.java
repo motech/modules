@@ -38,17 +38,15 @@ public class FeedCache implements FeedFetcherCache {
     }
 
 
-    public static byte[] feedToBytes(SyndFeed feed) throws FeedException, UnsupportedEncodingException {
+    public static String feedToJson(SyndFeed feed) throws FeedException, UnsupportedEncodingException {
         SyndFeedOutput syndFeedOutput = new SyndFeedOutput();
-        String s = syndFeedOutput.outputString(feed);
-        return s.getBytes("UTF-8");
+        return syndFeedOutput.outputString(feed);
     }
 
 
-    public static SyndFeed feedFromBytes(byte[] bytes) throws IOException, ClassNotFoundException, FeedException {
-        String s = new String(bytes, "UTF-8");
+    public static SyndFeed feedFromJson(String json) throws IOException, ClassNotFoundException, FeedException {
         SyndFeedInput syndFeedInput = new SyndFeedInput();
-        return syndFeedInput.build(new StringReader(s));
+        return syndFeedInput.build(new StringReader(json));
     }
 
 
@@ -65,11 +63,8 @@ public class FeedCache implements FeedFetcherCache {
     public SyndFeedInfo feedRecordToFeedInfo(FeedRecord record) throws IOException, ClassNotFoundException, FeedException {
         SyndFeedInfo info = new SyndFeedInfo();
         info.setUrl(urlFromString(record.getUrl()));
-        info.setETag(record.getFeedETag());
-        info.setId(record.getFeedId());
-        info.setLastModified(record.getFeedLastModified());
-        byte[] bytes = (byte[]) feedRecordDataService.getDetachedField(record, FEED_DATA);
-        info.setSyndFeed(feedFromBytes(bytes));
+        info.setLastModified(record.getLastModified());
+        info.setSyndFeed(feedFromJson(record.getData()));
         return info;
     }
 
@@ -168,14 +163,19 @@ public class FeedCache implements FeedFetcherCache {
     private boolean sendMessagesForChangedEntries(SyndFeed cachedFeed, SyndFeed fetchedFeed) {
         boolean anyChanges = false;
         for (SyndEntry fetchedEntry : fetchedFeed.getEntries()) {
+            boolean foundInCache = false;
             for (SyndEntry cachedEntry : cachedFeed.getEntries()) {
                 if (fetchedEntry.getUri().equals(cachedEntry.getUri())) {
+                    foundInCache = true;
                     if (areEntriesDifferent(fetchedEntry, cachedEntry)) {
-                        LOGGER.debug("Fetched entry different from cached version\n\nfetched\n{}\n\ncached\n{}\n", fetchedEntry, cachedEntry);
                         sendMessageForFeedEntry(fetchedEntry);
                         anyChanges = true;
                     }
                 }
+            }
+            if (!foundInCache) {
+                sendMessageForFeedEntry(fetchedEntry);
+                anyChanges = true;
             }
         }
         return anyChanges;
@@ -183,14 +183,7 @@ public class FeedCache implements FeedFetcherCache {
 
 
     private FeedRecord recordFromFeed(String url, SyndFeedInfo info) throws IOException, FeedException {
-        return new FeedRecord(
-                url,
-                info.getId(),
-                urlToString(info.getUrl()),
-                (Long) info.getLastModified(),
-                info.getETag(),
-                feedToBytes(info.getSyndFeed())
-        );
+        return new FeedRecord(url, (Long) info.getLastModified(), feedToJson(info.getSyndFeed()));
     }
 
 

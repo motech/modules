@@ -4,6 +4,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.motechproject.atomclient.exception.AtomClientConfigurationException;
+import org.motechproject.event.MotechEvent;
+import org.motechproject.event.listener.EventRelay;
 import org.motechproject.server.config.SettingsFacade;
 import org.quartz.CronExpression;
 import org.slf4j.Logger;
@@ -22,6 +24,7 @@ import java.text.ParseException;
 public class AtomClientConfigServiceImpl implements AtomClientConfigService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AtomClientConfigServiceImpl.class);
+    private EventRelay eventRelay;
     private SettingsFacade settingsFacade;
     private String fetchCron;
     private FeedConfigs feedConfigs = new FeedConfigs();
@@ -30,7 +33,12 @@ public class AtomClientConfigServiceImpl implements AtomClientConfigService {
     @Autowired
     public void setSettingsFacade(@Qualifier("atomClientSettings") SettingsFacade settingsFacade) {
         this.settingsFacade = settingsFacade;
+    }
 
+
+    @Autowired
+    public void setEventRelay(EventRelay eventRelay) {
+        this.eventRelay = eventRelay;
     }
 
 
@@ -63,28 +71,7 @@ public class AtomClientConfigServiceImpl implements AtomClientConfigService {
 
     @Override
     public void loadDefaultProperties() {
-        changeCron(settingsFacade.getProperty(Constants.FETCH_CRON_PROPERTY));
-    }
-
-
-    private void changeCron(String cronString) {
-        if (StringUtils.isBlank(cronString)) {
-            fetchCron = "";
-            return;
-        }
-
-        if (StringUtils.equals(fetchCron, cronString)) {
-            return;
-        }
-
-        try {
-            CronExpression.validateExpression(cronString);
-        } catch (ParseException ex) {
-            throw new AtomClientConfigurationException(String.format("Cron expression %s is invalid: %s",
-                    cronString, ex.getMessage()), ex);
-        }
-
-        fetchCron = cronString;
+        setFetchCron(settingsFacade.getProperty(Constants.FETCH_CRON_PROPERTY));
     }
 
 
@@ -111,6 +98,25 @@ public class AtomClientConfigServiceImpl implements AtomClientConfigService {
 
     @Override
     public void setFetchCron(String cronString) {
-        changeCron(cronString);
+        if (StringUtils.isBlank(cronString)) {
+            fetchCron = "";
+            eventRelay.sendEventMessage(new MotechEvent(Constants.RESCHEDULE_FETCH_JOB));
+            return;
+        }
+
+        if (StringUtils.equals(fetchCron, cronString)) {
+            return;
+        }
+
+        try {
+            CronExpression.validateExpression(cronString);
+        } catch (ParseException ex) {
+            throw new AtomClientConfigurationException(String.format("Cron expression %s is invalid: %s",
+                    cronString, ex.getMessage()), ex);
+        }
+
+        fetchCron = cronString;
+
+        eventRelay.sendEventMessage(new MotechEvent(Constants.RESCHEDULE_FETCH_JOB));
     }
 }

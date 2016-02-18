@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -62,6 +63,7 @@ public class AtomClientServiceImpl implements AtomClientService {
 
 
     @Override
+    @Transactional
     public void fetch() {
         if (configService.getFeedConfigs().getFeeds().size() == 0) {
             LOGGER.warn("No feeds to fetch.");

@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Handles:
@@ -19,15 +18,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class AtomClientEventHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AtomClientEventHandler.class);
-
-    @Autowired
     private AtomClientConfigService atomClientConfigService;
-
-    @Autowired
     private AtomClientService atomClientService;
 
 
-    @Transactional
+    @Autowired
+    public void setAtomClientConfigService(AtomClientConfigService atomClientConfigService) {
+        this.atomClientConfigService = atomClientConfigService;
+    }
+
+
+    @Autowired
+    public void setAtomClientService(AtomClientService atomClientService) {
+        this.atomClientService = atomClientService;
+    }
+
+
     @MotechListener(subjects = { ConfigurationConstants.FILE_CHANGED_EVENT_SUBJECT })
     public void handleFileChanged(MotechEvent event) {
         LOGGER.trace("handleFileChanged {}", event);
@@ -48,7 +54,6 @@ public class AtomClientEventHandler {
         }
     }
 
-    @Transactional
     @MotechListener(subjects = { Constants.RESCHEDULE_FETCH_JOB })
     public void handleRescheduleFetchJob(MotechEvent event) {
         LOGGER.trace("handleRescheduleFetchJob {}", event);
@@ -57,7 +62,6 @@ public class AtomClientEventHandler {
     }
 
 
-    @Transactional
     @MotechListener(subjects = { Constants.FETCH_MESSAGE })
     public void handleFetch(MotechEvent event) {
         LOGGER.trace("handleFetch {}", event);
