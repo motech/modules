@@ -1,6 +1,7 @@
 package org.motechproject.dhis2.it;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.dhis2.domain.OrgUnit;
@@ -67,6 +68,8 @@ public class EventHandlerBundleIT extends BaseDhisIT {
     }
 
     @Test
+    // TODO: MOTECH-2149 (either redesign this test or kill it with fire)
+    @Ignore
     public void testHandleRegistration() throws InterruptedException {
         getLogger().debug("Running testHandleRegistration()");
 

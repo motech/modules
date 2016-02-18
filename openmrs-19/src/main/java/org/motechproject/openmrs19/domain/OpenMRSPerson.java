@@ -20,6 +20,7 @@ import static org.hamcrest.Matchers.equalTo;
 public class OpenMRSPerson {
 
     private String id;
+    private String display;
     private String firstName;
     private String middleName;
     private String lastName;
@@ -29,7 +30,7 @@ public class OpenMRSPerson {
     private Boolean birthDateEstimated;
     private Integer age;
     private String gender;
-    private boolean isDead;
+    private Boolean dead;
 
     private List<OpenMRSAttribute> attributes = new ArrayList<OpenMRSAttribute>();
     private DateTime deathDate;
@@ -82,6 +83,14 @@ public class OpenMRSPerson {
         this.id = id;
     }
 
+    public String getDisplay() {
+        return display;
+    }
+
+    public void setDisplay(String display) {
+        this.display = display;
+    }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -94,8 +103,8 @@ public class OpenMRSPerson {
         this.lastName = lastName;
     }
 
-    public void setIsDead(Boolean isDead) {
-        this.isDead = isDead;
+    public void setDead(Boolean dead) {
+        this.dead = dead;
     }
 
     public String getFirstName() {
@@ -152,8 +161,9 @@ public class OpenMRSPerson {
         return birthDateEstimated;
     }
 
-    public Boolean isDead() {
-        return isDead;
+    // TODO: MOTECH-2187: Task data source doesn't support boolean getters 'is..()'
+    public Boolean getDead() {
+        return dead;
     }
 
     public Integer getAge() {
@@ -168,7 +178,7 @@ public class OpenMRSPerson {
         this.age = age;
     }
 
-    @Override
+    @Override //NO CHECKSTYLE Cyclomatic Complexity
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -183,7 +193,7 @@ public class OpenMRSPerson {
         return equalNameData(other) && equalAgeAndBirthDates(other) && Objects.equals(id, other.id)
                 && Objects.equals(address, other.address) && Objects.equals(gender, other.gender)
                 && Objects.equals(attributes, other.attributes) && Objects.equals(deathDate, other.deathDate)
-                && isDead == other.isDead;
+                && dead == other.dead && Objects.equals(display, other.display);
     }
 
     public boolean equalNameData(OpenMRSPerson other) {
@@ -200,6 +210,7 @@ public class OpenMRSPerson {
     public int hashCode() {
         int hash = 1;
         hash = hash * 31 + ObjectUtils.hashCode(id);
+        hash = hash * 31 + ObjectUtils.hashCode(display);
         hash = hash * 31 + ObjectUtils.hashCode(firstName);
         hash = hash * 31 + ObjectUtils.hashCode(middleName);
         hash = hash * 31 + ObjectUtils.hashCode(lastName);
@@ -209,7 +220,7 @@ public class OpenMRSPerson {
         hash = hash * 31 + ObjectUtils.hashCode(birthDateEstimated);
         hash = hash * 31 + ObjectUtils.hashCode(age);
         hash = hash * 31 + ObjectUtils.hashCode(gender);
-        hash = hash * 31 + Boolean.valueOf(isDead).hashCode();
+        hash = hash * 31 + Boolean.valueOf(dead).hashCode();
         hash = hash * 31 + ObjectUtils.hashCode(attributes);
         hash = hash * 31 + ObjectUtils.hashCode(deathDate);
         return hash;

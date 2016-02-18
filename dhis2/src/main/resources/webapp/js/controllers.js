@@ -103,18 +103,13 @@
         };
 
         $scope.getTypeOfProgram = function(program) {
-           if (program.singleEvent) {
-
-               if (program.registration) {
-                   return "dhis2.programType.singleEventWithRegistration"
-
-               } else {
-                   return "dhis2.programType.singleEventWithoutRegistration";
-               }
-
-           } else {
-               return "dhis2.programType.MultipleEventsWithRegistration";
-           }
+            if (program.programType !== undefined && program.programType !== null) {
+                return program.programType === 'WITH_REGISTRATION' ? "dhis2.programType.withRegistration" : "dhis2.programType.withoutRegistration"
+            } else if (program.singleEvent) {
+                return program.registration ? "dhis2.programType.singleEventWithRegistration" : "dhis2.programType.singleEventWithoutRegistration"
+            } else {
+                return "dhis2.programType.MultipleEventsWithRegistration";
+            }
         };
     });
 

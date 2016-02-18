@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -81,8 +80,8 @@ public class PillRegimenJobScheduler {
 
         MotechEvent motechEvent = new MotechEvent(EventKeys.PILLREMINDER_REMINDER_EVENT_SUBJECT_SCHEDULER, eventParams);
         String cronJobExpression = new CronJobSimpleExpressionBuilder(new Time(adjustedCronStartDateTime.toLocalTime())).build();
-        Date endDate = dosage.getEndDate() == null ? null : dosage.getEndDate().toDate();
-        Date startDate = DateUtil.newDateTime(adjustedCronStartDateTime.toDate()).isBefore(DateUtil.now()) ? DateUtil.now().toDate() : adjustedCronStartDateTime.toDate();
+        DateTime endDate = DateUtil.toDateTimeAtStartOfDay(dosage.getEndDate());
+        DateTime startDate = DateUtil.newDateTime(adjustedCronStartDateTime.toDate()).isBefore(DateUtil.now()) ? DateUtil.now() : adjustedCronStartDateTime;
         return new CronSchedulableJob(motechEvent, cronJobExpression, startDate, endDate);
     }
 }

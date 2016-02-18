@@ -46,7 +46,7 @@ public class OffsetCampaignSchedulerService extends CampaignSchedulerService<Off
 
         if (jobTime.isAfter(now())) {
             MotechEvent motechEvent = new MotechEvent(EventKeys.SEND_MESSAGE, jobParams(message.getMessageKey(), enrollment));
-            RunOnceSchedulableJob runOnceSchedulableJob = new RunOnceSchedulableJob(motechEvent, jobTime.toDate());
+            RunOnceSchedulableJob runOnceSchedulableJob = new RunOnceSchedulableJob(motechEvent, jobTime);
 
             try {
                 getSchedulerService().scheduleRunOnceJob(runOnceSchedulableJob);

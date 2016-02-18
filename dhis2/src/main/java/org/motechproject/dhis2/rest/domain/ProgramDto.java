@@ -15,6 +15,7 @@ public class ProgramDto extends BaseDto {
 
     private boolean registration;
     private boolean singleEvent;
+    private String programType;
     private TrackedEntityDto trackedEntity;
     private List<ProgramStageDto> programStages;
     private List<OrganisationUnitDto> organisationUnits;
@@ -34,6 +35,14 @@ public class ProgramDto extends BaseDto {
 
     public void setSingleEvent(boolean singleEvent) {
         this.singleEvent = singleEvent;
+    }
+
+    public String getProgramType() {
+        return programType;
+    }
+
+    public void setProgramType(String programType) {
+        this.programType = programType;
     }
 
     public TrackedEntityDto getTrackedEntity() {

@@ -14,13 +14,13 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.motechproject.commcare.config.AccountConfig;
-import org.motechproject.commcare.exception.CaseParserException;
 import org.motechproject.commcare.exception.CommcareAuthenticationException;
+import org.motechproject.commcare.exception.OpenRosaParserException;
 import org.motechproject.commcare.parser.OpenRosaResponseParser;
 import org.motechproject.commcare.request.FormListRequest;
+import org.motechproject.commcare.request.StockTransactionRequest;
 import org.motechproject.commcare.request.json.CaseRequest;
 import org.motechproject.commcare.request.json.Request;
-import org.motechproject.commcare.request.StockTransactionRequest;
 import org.motechproject.commcare.response.OpenRosaResponse;
 import org.motechproject.commcare.util.CommcareParamHelper;
 import org.slf4j.Logger;
@@ -51,17 +51,17 @@ public class CommCareAPIHttpClient {
     }
 
     /**
-     * Sends a POST request to the CommCare server. It will result in creating new case on the CommCare server based on
-     * the information given in the {@code caseXml}, which should be a valid case represented by an XML string.
+     * Sends a POST request to the CommCare server. It will result in creating new entry on the CommCare server based on
+     * the information given in the {@code xml}, which should be a valid case or form represented by an XML string.
      *
      * @param accountConfig  the CommCare account information
-     * @param caseXml  the case represented as an XML string
+     * @param xml  the submission represented as an XML string
      * @return the CommCare server response as an instance of the {@link OpenRosaResponse} class
-     * @throws CaseParserException if there were problems while parsing server response
+     * @throws OpenRosaParserException if there were problems while parsing server response
      */
-    public OpenRosaResponse caseUploadRequest(AccountConfig accountConfig, String caseXml)
-            throws CaseParserException {
-        return this.postRequest(accountConfig, commcareCaseUploadUrl(accountConfig), caseXml);
+    public OpenRosaResponse submissionRequest(AccountConfig accountConfig, String xml)
+            throws OpenRosaParserException {
+        return this.postRequest(accountConfig, commcareSubmissionUrl(accountConfig), xml);
     }
 
     /**
@@ -407,7 +407,7 @@ public class CommCareAPIHttpClient {
     }
 
     private OpenRosaResponse postRequest(AccountConfig accountConfig, String requestUrl, String body)
-            throws CaseParserException {
+            throws OpenRosaParserException {
 
         PostMethod postMethod = new PostMethod(requestUrl);
 
@@ -439,8 +439,7 @@ public class CommCareAPIHttpClient {
 
         OpenRosaResponseParser responseParser = new OpenRosaResponseParser();
 
-        OpenRosaResponse openRosaResponse = responseParser
-                .parseResponse(response);
+        OpenRosaResponse openRosaResponse = responseParser.parseResponse(response);
 
         if (openRosaResponse == null) {
             openRosaResponse = new OpenRosaResponse();
@@ -545,7 +544,7 @@ public class CommCareAPIHttpClient {
         return String.format("%s%s", commcareDataForwardingEndpointUrl(accountConfig), buildPaginationParams(pageSize, pageNumber));
     }
 
-    String commcareCaseUploadUrl(AccountConfig accountConfig) {
+    String commcareSubmissionUrl(AccountConfig accountConfig) {
         return String.format("%s/%s/receiver/", getCommcareBaseUrl(accountConfig.getBaseUrl()),
                 accountConfig.getDomain());
     }

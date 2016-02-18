@@ -4,11 +4,11 @@ import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.event.listener.annotations.MotechListener;
+import org.motechproject.pillreminder.EventKeys;
 import org.motechproject.pillreminder.dao.PillRegimenDataService;
 import org.motechproject.pillreminder.domain.DailyScheduleDetails;
 import org.motechproject.pillreminder.domain.Dosage;
 import org.motechproject.pillreminder.domain.PillRegimen;
-import org.motechproject.pillreminder.EventKeys;
 import org.motechproject.scheduler.contract.RepeatingSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.slf4j.Logger;
@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -80,17 +79,18 @@ public class ReminderEventHandler {
     private void scheduleRepeatReminders(MotechEvent motechEvent, PillRegimen pillRegimen, Dosage dosage) {
         DateTime dosageTime = dosage.todaysDosageTime();
         DailyScheduleDetails scheduleDetails = pillRegimen.getScheduleDetails();
-        Date startTime = dosageTime.plusMinutes(scheduleDetails.getRepeatIntervalInMinutes()).toDate();
-        Date endTime = dosageTime.plusHours(scheduleDetails.getPillWindowInHours()).plusMinutes(1).toDate();
+        DateTime startTime = dosageTime.plusMinutes(scheduleDetails.getRepeatIntervalInMinutes());
+        DateTime endTime = dosageTime.plusHours(scheduleDetails.getPillWindowInHours()).plusMinutes(1);
         MotechEvent repeatingReminderEvent = createNewMotechEvent(dosage, pillRegimen, motechEvent, EventKeys.PILLREMINDER_REMINDER_EVENT_SUBJECT_SCHEDULER);
 
         repeatingReminderEvent.getParameters().put(MotechSchedulerService.JOB_ID_KEY, String.valueOf(dosage.getId()));
         final int secondsInMinute = 60;
-        RepeatingSchedulableJob retryRemindersJob = new RepeatingSchedulableJob()
-            .setMotechEvent(repeatingReminderEvent)
-            .setStartTime(startTime).setEndTime(endTime)
-            .setRepeatIntervalInSeconds(scheduleDetails.getRepeatIntervalInMinutes() * secondsInMinute)
-            .setIgnorePastFiresAtStart(false);
+        RepeatingSchedulableJob retryRemindersJob = new RepeatingSchedulableJob();
+        retryRemindersJob.setMotechEvent(repeatingReminderEvent);
+        retryRemindersJob.setStartDate(startTime);
+        retryRemindersJob.setEndDate(endTime);
+        retryRemindersJob.setRepeatIntervalInSeconds(scheduleDetails.getRepeatIntervalInMinutes() * secondsInMinute);
+        retryRemindersJob.setIgnorePastFiresAtStart(false);
         schedulerService.safeScheduleRepeatingJob(retryRemindersJob);
     }
 

@@ -123,7 +123,7 @@ public class EnrollmentAlertService {
                 eventRelay.sendEventMessage(event);
                 LOGGER.info("Event {} is sent to trigger Alert  as Alert start time {} already elapsed. ", event, alertsStartTime);
             } else {
-                RunOnceSchedulableJob job = new RunOnceSchedulableJob(event, alertsStartTime.toDate());
+                RunOnceSchedulableJob job = new RunOnceSchedulableJob(event, alertsStartTime);
 
                 schedulerService.safeScheduleRunOnceJob(job);
                 LOGGER.info("Scheduled Job to trigger Milestone Alert {} with Start Time {}.", event, alertsStartTime);
@@ -149,13 +149,13 @@ public class EnrollmentAlertService {
             }
 
             // Schedule the repeating job with the scheduler.
-            RepeatingSchedulableJob job = new RepeatingSchedulableJob()
-                    .setMotechEvent(event)
-                    .setStartTime(alertsStartTime.toDate())
-                    .setEndTime(null)
-                    .setRepeatCount(numberOfAlertsToFire)
-                    .setRepeatIntervalInSeconds(repeatIntervalInSeconds)
-                    .setIgnorePastFiresAtStart(false);
+            RepeatingSchedulableJob job = new RepeatingSchedulableJob();
+            job.setMotechEvent(event);
+            job.setStartDate(alertsStartTime);
+            job.setEndDate(null);
+            job.setRepeatCount(numberOfAlertsToFire);
+            job.setRepeatIntervalInSeconds(repeatIntervalInSeconds);
+            job.setIgnorePastFiresAtStart(false);
             LOGGER.info("Scheduling repeatable Job to trigger Milestone Alert {} with Start Time {}.", event, alertsStartTime);
 
             schedulerService.safeScheduleRepeatingJob(job);

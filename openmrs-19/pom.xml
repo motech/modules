@@ -50,6 +50,7 @@
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>task-channel.json</include>
+                    <include>task-data-provider.json</include>
                 </includes>
                 <filtering>true</filtering>
             </resource>
@@ -57,6 +58,7 @@
                 <directory>src/main/resources</directory>
                 <excludes>
                     <exclude>task-channel.json</exclude>
+                    <exclude>task-data-provider.json</exclude>
                 </excludes>
                 <filtering>false</filtering>
             </resource>
@@ -116,10 +118,14 @@
                 <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
                     <instructions>
+                        <Context-Path>openmrs19</Context-Path>
+                        <Resource-Path>openmrs19/resources</Resource-Path>
+                        <Blueprint-Enabled>true</Blueprint-Enabled>
                         <Export-Package>
-                            org.motechproject.openmrs19.service;version=${project.version},
                             org.motechproject.openmrs19.domain;version=${project.version},
-                            org.motechproject.openmrs19.exception;version=${project.version}
+                            org.motechproject.openmrs19.exception;version=${project.version},
+                            org.motechproject.openmrs19.service;version=${project.version},
+                            org.motechproject.openmrs19.tasks;version=${project.version}
                         </Export-Package>
                         <Import-Package>
                             org.motechproject.event.listener,

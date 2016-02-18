@@ -97,7 +97,7 @@ public class PillRegimenJobSchedulerTest {
         final CronSchedulableJob schedulableJob = jobScheduler.getSchedulableDailyJob(pillRegimen, dosage1);
         assertEquals(String.format("0 %d %d * * ?", 20, 10), schedulableJob.getCronExpression());
         assertEquals(EventKeys.PILLREMINDER_REMINDER_EVENT_SUBJECT_SCHEDULER, schedulableJob.getMotechEvent().getSubject());
-        assertTrue(schedulableJob.getStartTime().getTime() > today.minusDays(1).toDate().getTime());
+        assertTrue(schedulableJob.getStartDate().isAfter(today.minusDays(1).toDateTimeAtStartOfDay()));
     }
 
     @Test
@@ -114,7 +114,7 @@ public class PillRegimenJobSchedulerTest {
         final CronSchedulableJob schedulableJob = jobScheduler.getSchedulableDailyJob(pillRegimen, dosage1);
         assertEquals(String.format("0 %d %d * * ?", 3, 0), schedulableJob.getCronExpression());
         assertEquals(EventKeys.PILLREMINDER_REMINDER_EVENT_SUBJECT_SCHEDULER, schedulableJob.getMotechEvent().getSubject());
-        assertTrue(new LocalDate(schedulableJob.getStartTime()).isEqual(today));
+        assertTrue(new LocalDate(schedulableJob.getStartDate()).isEqual(today));
     }
 }
 
