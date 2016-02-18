@@ -16,12 +16,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Implementation of the {@link org.motechproject.openmrs19.tasks.OpenMRSActionProxyService} interface.
+ */
 @Service("openMRSActionProxyService")
 public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSActionProxyServiceImpl.class);
 
-    private static final String DEFAULT_LOCATION_NAME = "Unknown Location";
+    public static final String DEFAULT_LOCATION_NAME = "Unknown Location";
 
     private OpenMRSFacilityService facilityService;
     private OpenMRSPatientService patientService;
