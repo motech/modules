@@ -192,7 +192,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         List<TriggerEvent> triggerEvents = channel.getTriggerTaskEvents();
         List<ActionEvent> actionEvents = channel.getActionTaskEvents();
 
-        assertEquals(3, actionEvents.size());
+        assertEquals(5, actionEvents.size());
         assertEquals(8, triggerEvents.size());
 
         TaskTriggerInformation expectedForm1 = new TaskTriggerInformation();
@@ -230,6 +230,8 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         verifyTaskAction(channel, prepareStockLedgerAction());
         verifyTaskAction(channel, prepareCreateCaseAction());
         verifyTaskAction(channel, prepareUpdateCaseAction());
+        verifyTaskAction(channel, prepareSendForm1Action());
+        verifyTaskAction(channel, prepareSendForm2Action());
     }
 
     private void verifyTaskAction(Channel channel, ActionEvent expected) {
@@ -436,6 +438,74 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         ActionEventBuilder actionBuilder = new ActionEventBuilder()
                 .setDisplayName(displayName)
                 .setSubject(EventSubjects.UPDATE_CASE + "." + config.getName())
+                .setActionParameters(parameters);
+        return actionBuilder.createActionEvent();
+    }
+
+    private ActionEvent prepareSendForm1Action() {
+        SortedSet<ActionParameter> parameters = new TreeSet<>();
+        ActionParameterBuilder builder;
+        int order = 0;
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName("Is Pregnant?")
+                .setKey(DummyCommcareSchema.FORM_QUESTION1)
+                .setRequired(false)
+                .setType(ParameterType.UNICODE)
+                .setOrder(order++);
+        parameters.add(builder.createActionParameter());
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName("Date of birth")
+                .setKey(DummyCommcareSchema.FORM_QUESTION2)
+                .setRequired(false)
+                .setType(ParameterType.UNICODE)
+                .setOrder(order++);
+        parameters.add(builder.createActionParameter());
+
+        String displayName = String.format("Send Form: form1 [%s]", config.getName());
+
+        ActionEventBuilder actionBuilder = new ActionEventBuilder()
+                .setDisplayName(displayName)
+                .setSubject(EventSubjects.SEND_FORM + ".http://openrosa.org/formdesigner/84FA38A2-93C1-4B9E-AA2A-0E082995FF9E." + config.getName())
+                .setActionParameters(parameters);
+        return actionBuilder.createActionEvent();
+    }
+
+    private ActionEvent prepareSendForm2Action() {
+        SortedSet<ActionParameter> parameters = new TreeSet<>();
+        ActionParameterBuilder builder;
+        int order = 0;
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName("Patient name")
+                .setKey(DummyCommcareSchema.FORM_QUESTION3)
+                .setRequired(false)
+                .setType(ParameterType.UNICODE)
+                .setOrder(order++);
+        parameters.add(builder.createActionParameter());
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName("Last visit")
+                .setKey(DummyCommcareSchema.FORM_QUESTION4)
+                .setRequired(false)
+                .setType(ParameterType.UNICODE)
+                .setOrder(order++);
+        parameters.add(builder.createActionParameter());
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName("Does patient take any medications?")
+                .setKey(DummyCommcareSchema.FORM_QUESTION5)
+                .setRequired(false)
+                .setType(ParameterType.UNICODE)
+                .setOrder(order++);
+        parameters.add(builder.createActionParameter());
+
+        String displayName = String.format("Send Form: form2 [%s]", config.getName());
+
+        ActionEventBuilder actionBuilder = new ActionEventBuilder()
+                .setDisplayName(displayName)
+                .setSubject(EventSubjects.SEND_FORM + ".http://openrosa.org/formdesigner/12KE58A2-54C5-1Z4B-AR2S-Z0345995RF9E." + config.getName())
                 .setActionParameters(parameters);
         return actionBuilder.createActionEvent();
     }
