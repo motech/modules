@@ -117,6 +117,18 @@ The Tasks module will query specific Commcare APIs and make the results availabl
 - Location [Configuration Name]
     This data source is only available to users who have enabled the `Commcare Supply feature <https://confluence.dimagi.com/display/commtrack/Getting+Started+With+CommCare+Supply>`_. Commcare Supply tracks organizations and locations so users can manage supply chain items within this hierarchy. MOTECH queries the `list of locations <https://confluence.dimagi.com/display/commtrack/Locations>`_ for a particular location ID, similar to the Fixture data source. The returned items include latitude, longitude, location name, site codes and location within the location schema.
 
+Task Actions
+^^^^^^^^^^^^
+The Commcare module also exposes several Task actions, that allow for querying the stock ledger API and uploading cases.
+
+- Query Stock Ledger [Configuration Name]
+    Allows to start the stock ledger transaction on the Commcare server.
+- Create Case [Configuration Name]
+    Creates a Commcare Case, by sending Case XML to the Submission API on the Commcare server.
+- Update Case [Configuration Name]
+    Updates a Commcare Case, by sending Case XML to the Submission API on the Commcare server. Case ID is required to identify the case that is supposed to be updated.
+    The case may be optionally closed.
+
 MOTECH 1.0 Enhancements
 -----------------------
 The Commcare module will have the ability to query Commcare Supply stock ledgers and parse the results. This allows MOTECH to store a list of stock items per Commcare module configuration or forward these items and values to DHIS2. (`MOTECH-1929 <https://applab.atlassian.net/browse/MOTECH-1929>`_)

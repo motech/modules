@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        InitializerServicesIT.class
+        InitializerBundleIT.class, IPFTaskServiceBundleIT.class
 })
 public class IpfIntegrationTests {
 }

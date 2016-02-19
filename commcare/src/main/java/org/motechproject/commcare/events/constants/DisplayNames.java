@@ -8,8 +8,17 @@ public final class DisplayNames {
     public static final String QUERY_STOCK_LEDGER = "Query Stock Ledger";
     public static final String RETRIEVED_STOCK_TRANSACTION = "Retrieved Stock Transaction";
 
+    public static final String CREATE_CASE = "Create Case";
+    public static final String UPDATE_CASE = "Update Case";
+    public static final String SEND_FORM = "Send Form";
+
     public static final String CONFIG_NAME = "commcare.configName";
     public static final String CASE_ID = "commcare.caseId";
+    public static final String CASE_TYPE = "commcare.caseType";
+    public static final String CASE_NAME = "commcare.caseName";
+    public static final String CASE_PROPERTIES = "commcare.fieldValues";
+    public static final String CLOSE_CASE = "commcare.closeCase";
+    public static final String OWNER_ID = "commcare.ownerId";
     public static final String SECTION_ID = "commcare.sectionId";
     public static final String START_DATE = "commcare.startDate";
     public static final String END_DATE = "commcare.endDate";

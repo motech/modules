@@ -1,5 +1,7 @@
 package org.motechproject.openmrs19.domain;
 
+import java.util.Objects;
+
 /**
  * Represents a single provider. Provider is a clinician responsible for providing care to a patient. It's part of the
  * MOTECH model.
@@ -48,5 +50,27 @@ public class OpenMRSProvider {
 
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(providerId, person, identifier);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        OpenMRSProvider other = (OpenMRSProvider) obj;
+
+        return Objects.equals(this.providerId, other.providerId) &&
+                Objects.equals(this.person, other.person) &&
+                Objects.equals(this.identifier, other.identifier);
     }
 }

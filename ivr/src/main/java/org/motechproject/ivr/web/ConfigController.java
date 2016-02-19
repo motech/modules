@@ -1,6 +1,7 @@
 package org.motechproject.ivr.web;
 
-import org.motechproject.ivr.domain.Config;
+
+import org.motechproject.ivr.domain.Configs;
 import org.motechproject.ivr.service.ConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
-import java.util.List;
 
 import static org.motechproject.ivr.util.Constants.HAS_MANAGE_IVR_ROLE;
 
@@ -36,7 +35,7 @@ public class ConfigController {
      */
     @RequestMapping(value = "/ivr-configs", method = RequestMethod.GET)
     @ResponseBody
-    public List<Config> getConfigs() {
+    public Configs getConfigs() {
         return configService.allConfigs();
     }
 
@@ -48,7 +47,7 @@ public class ConfigController {
     @RequestMapping(value = "/ivr-configs", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public List<Config> updateConfigs(@RequestBody List<Config> configs) {
+    public Configs updateConfigs(@RequestBody Configs configs) {
         configService.updateConfigs(configs);
         return configService.allConfigs();
     }

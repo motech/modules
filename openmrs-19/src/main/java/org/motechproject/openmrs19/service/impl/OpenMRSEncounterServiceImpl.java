@@ -5,13 +5,13 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.openmrs19.domain.OpenMRSEncounterType;
-import org.motechproject.openmrs19.service.EventKeys;
 import org.motechproject.openmrs19.domain.OpenMRSEncounter;
+import org.motechproject.openmrs19.domain.OpenMRSEncounterType;
 import org.motechproject.openmrs19.domain.OpenMRSObservation;
 import org.motechproject.openmrs19.domain.OpenMRSPatient;
 import org.motechproject.openmrs19.domain.OpenMRSPerson;
 import org.motechproject.openmrs19.domain.OpenMRSProvider;
+import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.helper.EventHelper;
 import org.motechproject.openmrs19.resource.EncounterResource;
 import org.motechproject.openmrs19.resource.model.Concept;
@@ -23,7 +23,7 @@ import org.motechproject.openmrs19.resource.model.Observation;
 import org.motechproject.openmrs19.resource.model.Observation.ObservationValue;
 import org.motechproject.openmrs19.resource.model.Patient;
 import org.motechproject.openmrs19.resource.model.Person;
-import org.motechproject.openmrs19.exception.HttpException;
+import org.motechproject.openmrs19.service.EventKeys;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.util.ConverterUtils;
@@ -97,6 +97,7 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
         Validate.notNull(encounter, "Encounter cannot be null");
         Validate.notNull(encounter.getPatient(), "Patient cannot be null");
         Validate.notEmpty(encounter.getPatient().getPatientId(), "Patient must have an id");
+        Validate.notNull(encounter.getProvider(), "Provider cannot be null");
         Validate.notNull(encounter.getDate(), "Encounter Date cannot be null");
         Validate.notEmpty(encounter.getEncounterType(), "Encounter type cannot be empty");
     }
@@ -109,9 +110,11 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
         encounterType.setName(encounter.getEncounterType());
         converted.setEncounterType(encounterType);
 
-        Location location = new Location();
-        location.setUuid(encounter.getFacility().getFacilityId());
-        converted.setLocation(location);
+        if (encounter.getFacility() != null) {
+            Location location = new Location();
+            location.setUuid(encounter.getFacility().getFacilityId());
+            converted.setLocation(location);
+        }
 
         Patient patient = new Patient();
         patient.setUuid(encounter.getPatient().getPatientId());
@@ -153,13 +156,15 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
 
     private Set<? extends OpenMRSObservation> resolveConceptUuidForConceptNames(Set<? extends OpenMRSObservation> originalObservations) {
         Set<OpenMRSObservation> updatedObs = new HashSet<>();
-        for (OpenMRSObservation observation : originalObservations) {
-            String conceptUuid = conceptAdapter.resolveConceptUuidFromConceptName(observation.getConceptName());
-            if (CollectionUtils.isNotEmpty(observation.getDependentObservations())) {
-                resolveConceptUuidForConceptNames(observation.getDependentObservations());
+        if (originalObservations != null) {
+            for (OpenMRSObservation observation : originalObservations) {
+                String conceptUuid = conceptAdapter.resolveConceptUuidFromConceptName(observation.getConceptName());
+                if (CollectionUtils.isNotEmpty(observation.getDependentObservations())) {
+                    resolveConceptUuidForConceptNames(observation.getDependentObservations());
+                }
+                updatedObs.add(new OpenMRSObservation(observation.getObservationId(), observation.getDate().toDate(), conceptUuid, observation
+                        .getValue()));
             }
-            updatedObs.add(new OpenMRSObservation(observation.getObservationId(), observation.getDate().toDate(), conceptUuid, observation
-                    .getValue()));
         }
 
         return updatedObs;
@@ -239,7 +244,8 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
 
     private OpenMRSEncounter convertToMrsEncounter(Encounter encounter, OpenMRSProvider mrsPerson, OpenMRSPatient patient) {
 
-        return new OpenMRSEncounter.OpenMRSEncounterBuilder().withId(encounter.getUuid()).withProvider(mrsPerson)
+        return new OpenMRSEncounter.OpenMRSEncounterBuilder().withId(encounter.getUuid())
+                .withDisplay(encounter.getDisplay()).withProvider(mrsPerson)
                 .withFacility(ConverterUtils.toOpenMRSFacility(encounter.getLocation()))
                 .withDate(encounter.getEncounterDatetime()).withPatient(patient)
                 .withObservations(convertToMrsObservation(encounter.getObs()))

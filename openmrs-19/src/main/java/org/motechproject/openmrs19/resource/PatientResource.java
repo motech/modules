@@ -39,10 +39,30 @@ public interface PatientResource {
     /**
      * Returns the UUID of the MOTECH patient identifier.
      *
-     * @return  the UUD of the MOTECH patient identifier
+     * @return  the UUID of the MOTECH patient identifier
      * @throws HttpException  when there were problems while fetching MOTECH patient identifier
      */
     String getMotechPatientIdentifierUuid() throws HttpException;
+
+    /**
+     * Returns the patient identifier type name for the given uuid only if the identifier type is supported
+     * by MOTECH. This method is using cache while retrieving data from an OpenMRS server.
+     *
+     * @param identifierTypeUuid the UUID of the patient identifier type
+     * @return the name of the patient identifier type
+     * @throws HttpException when there were problems while fetching patient identifier
+     */
+    String getPatientIdentifierTypeNameByUuid(String identifierTypeUuid) throws HttpException;
+
+    /**
+     * Returns the UUID of the patient identifier type for the given name only if the identifier type is supported
+     * by MOTECH. This method is using cache while retrieving data from an OpenMRS server.
+     *
+     * @param identifierTypeName the name of the patient identifier type
+     * @return the UUID of the patient identifier type
+     * @throws HttpException when there were problems while fetching patient identifier
+     */
+    String getPatientIdentifierTypeUuidByName(String identifierTypeName) throws HttpException;
 
     /**
      * Deletes the patient with the given UUID.

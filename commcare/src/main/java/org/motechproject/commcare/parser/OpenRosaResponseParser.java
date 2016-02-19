@@ -1,7 +1,7 @@
 package org.motechproject.commcare.parser;
 
 import org.apache.xerces.parsers.DOMParser;
-import org.motechproject.commcare.exception.CaseParserException;
+import org.motechproject.commcare.exception.OpenRosaParserException;
 import org.motechproject.commcare.response.OpenRosaResponse;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -21,10 +21,9 @@ public class OpenRosaResponseParser {
      *
      * @param response  the response to be parsed
      * @return the parsed response
-     * @throws CaseParserException if there where problems while parsing the response
+     * @throws OpenRosaParserException if there where problems while parsing the response
      */
-    public OpenRosaResponse parseResponse(String response)
-            throws CaseParserException {
+    public OpenRosaResponse parseResponse(String response) throws OpenRosaParserException {
         DOMParser parser = new DOMParser();
 
         OpenRosaResponse openRosaResponse = new OpenRosaResponse();
@@ -35,9 +34,9 @@ public class OpenRosaResponseParser {
         try {
             parser.parse(inputSource);
         } catch (IOException ex) {
-            throw new CaseParserException(ex, "Could not parse: IOException");
+            throw new OpenRosaParserException(ex, "Could not parse: IOException");
         } catch (SAXException ex) {
-            throw new CaseParserException(ex, "Could not parse: SAXException");
+            throw new OpenRosaParserException(ex, "Could not parse: SAXException");
         }
 
         Document document = parser.getDocument();

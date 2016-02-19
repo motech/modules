@@ -2,8 +2,7 @@ package org.motechproject.ivr.service;
 
 
 import org.motechproject.ivr.domain.Config;
-
-import java.util.List;
+import org.motechproject.ivr.domain.Configs;
 
 /**
  * Config service, manages IVR configs. A {@link org.motechproject.ivr.domain.Config} represents the way to interact with an IVR provider.
@@ -21,9 +20,9 @@ public interface ConfigService {
 
     /**
      * Returns all stored configurations.
-     * @return a list of configurations
+     * @return Configs object
      */
-    List<Config> allConfigs();
+    Configs allConfigs();
 
     /**
      * Checks whether a configuration with the given name exists.
@@ -34,7 +33,13 @@ public interface ConfigService {
 
     /**
      * Updates the configuration. The old configuration collection is overwritten by the new one.
-     * @param configs the collection of configurations to save
+     * @param configs the collection of configurations to save with default configuration
      */
-    void updateConfigs(List<Config> configs);
+    void updateConfigs(Configs configs);
+
+    /**
+     * Returns the default configuration name
+     * @return String default configuration name
+     */
+    String getDefaultConfig();
 }

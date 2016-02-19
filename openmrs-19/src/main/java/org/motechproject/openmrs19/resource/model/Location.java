@@ -14,6 +14,7 @@ import java.lang.reflect.Type;
 public class Location {
 
     private String uuid;
+    private String display;
     private String name;
     private String stateProvince;
     private String country;
@@ -27,6 +28,14 @@ public class Location {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public String getDisplay() {
+        return display;
+    }
+
+    public void setDisplay(String display) {
+        this.display = display;
     }
 
     public String getName() {
