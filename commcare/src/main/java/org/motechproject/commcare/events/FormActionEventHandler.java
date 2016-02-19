@@ -42,7 +42,7 @@ public class FormActionEventHandler {
 
     /**
      * Handles events, connected with sending Commcare forms. The event subject should have the following syntax:
-     * {@code EventSubjects.SEND_FORM.[form XMLNS].[config name]}
+     * {@code EventSubjects.SUBMIT_FORM.[form XMLNS].[config name]}
      *
      * @param event the event, containing parameters necessary to send the Commcare form
      */

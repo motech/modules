@@ -53,7 +53,7 @@ public class FormActionBuilder implements ActionBuilder {
         for (FormSchemaJson form : formSchemas) {
             SortedSet<ActionParameterRequest> parameters = buildActionParameters(form);
 
-            String displayName = DisplayNameHelper.buildDisplayName(DisplayNames.SEND_FORM, form.getFormName(), config.getName());
+            String displayName = DisplayNameHelper.buildDisplayName(DisplayNames.SUBMIT_FORM, form.getFormName(), config.getName());
             ActionEventRequestBuilder actionBuilder = new ActionEventRequestBuilder()
                     .setDisplayName(displayName)
                     .setSubject(EventSubjects.SEND_FORM + "." + form.getXmlns() + "." + config.getName())

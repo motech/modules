@@ -463,7 +463,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setOrder(order++);
         parameters.add(builder.createActionParameter());
 
-        String displayName = String.format("Send Form: form1 [%s]", config.getName());
+        String displayName = String.format("Submit Form: form1 [%s]", config.getName());
 
         ActionEventBuilder actionBuilder = new ActionEventBuilder()
                 .setDisplayName(displayName)
@@ -501,7 +501,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setOrder(order++);
         parameters.add(builder.createActionParameter());
 
-        String displayName = String.format("Send Form: form2 [%s]", config.getName());
+        String displayName = String.format("Submit Form: form2 [%s]", config.getName());
 
         ActionEventBuilder actionBuilder = new ActionEventBuilder()
                 .setDisplayName(displayName)
