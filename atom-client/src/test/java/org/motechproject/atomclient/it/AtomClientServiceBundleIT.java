@@ -71,7 +71,7 @@ public class AtomClientServiceBundleIT extends BasePaxIT {
                         new FeedConfig("http://192.168.33.10:8080/openmrs/ws/atomfeed/patient/recent", "<!\\[CDATA\\[(.*/([0-9a-f-]*)\\?.*)\\]\\]>"),
                         new FeedConfig("http://192.168.33.10:8080/openmrs/ws/atomfeed/Encounter/recent", "<!\\[CDATA\\[(.*)\\]\\]>")
                 ))));
-        atomClientService.rescheduleFetchJob("");
+        atomClientService.scheduleFetchJob("");
     }
 
 

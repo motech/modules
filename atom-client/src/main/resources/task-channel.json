@@ -32,5 +32,11 @@
       ]
     }
   ],
-  "actionTaskEvents": [ ]
+  "actionTaskEvents": [
+    {
+      "subject" : "org.motechproject.atomclient.fetch",
+      "displayName" : "atomclient.task.feed.fetch",
+      "actionParameters" : [ ]
+    }
+  ]
 }

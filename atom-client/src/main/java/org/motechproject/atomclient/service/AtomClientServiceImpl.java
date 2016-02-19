@@ -43,16 +43,15 @@ public class AtomClientServiceImpl implements AtomClientService {
 
     @PostConstruct
     public void initFetchJob() {
-        rescheduleFetchJob(configService.getFetchCron());
+        scheduleFetchJob(configService.getFetchCron());
     }
 
 
     @Override
-    public void rescheduleFetchJob(String cronExpression) {
-
+    public void scheduleFetchJob(String cronExpression) {
         if (cronExpression.isEmpty()) {
-            LOGGER.info("Unscheduling existing fetch job.");
             motechSchedulerService.unscheduleJob(new CronJobId(new MotechEvent(Constants.FETCH_MESSAGE)));
+            LOGGER.info("No fetch job cron.");
             return;
         }
 

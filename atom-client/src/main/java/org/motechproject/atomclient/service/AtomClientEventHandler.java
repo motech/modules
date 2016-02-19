@@ -58,7 +58,7 @@ public class AtomClientEventHandler {
     public void handleRescheduleFetchJob(MotechEvent event) {
         LOGGER.trace("handleRescheduleFetchJob {}", event);
 
-        atomClientService.rescheduleFetchJob(atomClientConfigService.getFetchCron());
+        atomClientService.scheduleFetchJob(atomClientConfigService.getFetchCron());
     }
 
 
