@@ -58,6 +58,9 @@ public class Person {
     @Expose
     private List<Attribute> attributes;
 
+    @Expose
+    private AuditInfo auditInfo;
+
     public String getUuid() {
         return uuid;
     }
@@ -170,9 +173,17 @@ public class Person {
         this.addresses = addresses;
     }
 
+    public AuditInfo getAuditInfo() {
+        return auditInfo;
+    }
+
+    public void setAuditInfo(AuditInfo auditInfo) {
+        this.auditInfo = auditInfo;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, display, gender, age, birthdate, birthdateEstimated, dead, causeOfDeath, deathDate, preferredName, names, preferredAddress, addresses, attributes);
+        return Objects.hash(uuid, display, gender, age, birthdate, birthdateEstimated, dead, causeOfDeath, deathDate, preferredName, names, preferredAddress, addresses, auditInfo, attributes);
     }
 
     /**
@@ -484,6 +495,64 @@ public class Person {
                     Objects.equals(this.address5, other.address5) && Objects.equals(this.address6, other.address6) &&
                     Objects.equals(this.startDate, other.startDate) && Objects.equals(this.endDate, other.endDate) &&
                     Objects.equals(this.latitude, other.latitude) && Objects.equals(this.longitude, other.longitude);
+        }
+    }
+
+    /**
+     * Represents audit info for that person
+     */
+
+    public static class AuditInfo {
+
+        private String uuid;
+
+        @Expose
+        private Date dateCreated;
+
+        @Expose
+        private Date dateChanged;
+
+        public String getUuid() {
+            return uuid;
+        }
+
+        public void setUuid(String uuid) {
+            this.uuid = uuid;
+        }
+
+        public Date getDateCreated() {
+            return dateCreated;
+        }
+
+        public void setDateCreated(Date dateCreated) {
+            this.dateCreated = dateCreated;
+        }
+
+        public Date getDateChanged() {
+            return dateChanged;
+        }
+
+        public void setDateChanged(Date dateChanged) {
+            this.dateChanged = dateChanged;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(uuid, dateCreated, dateChanged);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null || getClass() != obj.getClass()) {
+                return false;
+            }
+            final AuditInfo other = (AuditInfo) obj;
+            return Objects.equals(this.uuid, other.uuid) &&
+                    Objects.equals(this.dateChanged, other.dateChanged) &&
+                    Objects.equals(this.dateCreated, other.dateCreated);
         }
     }
 }

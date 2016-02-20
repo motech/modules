@@ -120,6 +120,20 @@
           "type": "DATE"
         },
         {
+          "displayName": "openMRS.person.dateCreated",
+          "fieldKey": "person.dateCreated",
+          "type": "DATE"
+        },
+        {
+          "displayName": "openMRS.person.dateChanged",
+          "fieldKey": "person.dateChanged",
+          "type": "DATE"
+        },
+        {
+          "displayName": "openMRS.person.newPerson",
+          "fieldKey": "person.newPerson"
+        },
+        {
           "displayName": "openMRS.person.gender",
           "fieldKey": "person.gender"
         },
