@@ -330,21 +330,11 @@ public class Person {
 
     public static class AuditInfo {
 
-        private String uuid;
-
         @Expose
         private Date dateCreated;
 
         @Expose
         private Date dateChanged;
-
-        public String getUuid() {
-            return uuid;
-        }
-
-        public void setUuid(String uuid) {
-            this.uuid = uuid;
-        }
 
         public Date getDateCreated() {
             return dateCreated;
@@ -364,7 +354,7 @@ public class Person {
 
         @Override
         public int hashCode() {
-            return Objects.hash(uuid, dateCreated, dateChanged);
+            return Objects.hash(dateCreated, dateChanged);
         }
 
         @Override
@@ -376,9 +366,8 @@ public class Person {
                 return false;
             }
             final AuditInfo other = (AuditInfo) obj;
-            return Objects.equals(this.uuid, other.uuid) &&
-                    Objects.equals(this.dateChanged, other.dateChanged) &&
-                    Objects.equals(this.dateCreated, other.dateCreated);
+            return Objects.equals(this.dateChanged, other.dateChanged)
+                    && Objects.equals(this.dateCreated, other.dateCreated);
         }
     }
 }
