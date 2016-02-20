@@ -81,6 +81,16 @@ public final class ConverterUtils {
         converted.setAge(person.getAge());
         converted.setBirthDateEstimated(person.isBirthdateEstimated());
 
+        if (person.getAuditInfo() != null) {
+            if (person.getAuditInfo().getDateCreated() != null) {
+                converted.setDateCreated(new DateTime(person.getAuditInfo().getDateCreated()));
+            }
+
+            if (person.getAuditInfo().getDateChanged() != null) {
+                converted.setDateChanged(new DateTime(person.getAuditInfo().getDateChanged()));
+            }
+        }
+
         if (person.getAttributes() != null) {
             for (Attribute attr : person.getAttributes()) {
                 // extract name/value from the display property
