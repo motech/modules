@@ -230,8 +230,8 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         verifyTaskAction(channel, prepareStockLedgerAction());
         verifyTaskAction(channel, prepareCreateCaseAction());
         verifyTaskAction(channel, prepareUpdateCaseAction());
-        verifyTaskAction(channel, prepareSendForm1Action());
-        verifyTaskAction(channel, prepareSendForm2Action());
+        verifyTaskAction(channel, prepareSubmitForm1Action());
+        verifyTaskAction(channel, prepareSubmitForm2Action());
     }
 
     private void verifyTaskAction(Channel channel, ActionEvent expected) {
@@ -442,7 +442,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         return actionBuilder.createActionEvent();
     }
 
-    private ActionEvent prepareSendForm1Action() {
+    private ActionEvent prepareSubmitForm1Action() {
         SortedSet<ActionParameter> parameters = new TreeSet<>();
         ActionParameterBuilder builder;
         int order = 0;
@@ -467,12 +467,12 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         ActionEventBuilder actionBuilder = new ActionEventBuilder()
                 .setDisplayName(displayName)
-                .setSubject(EventSubjects.SEND_FORM + ".http://openrosa.org/formdesigner/84FA38A2-93C1-4B9E-AA2A-0E082995FF9E." + config.getName())
+                .setSubject(EventSubjects.SUBMIT_FORM + ".http://openrosa.org/formdesigner/84FA38A2-93C1-4B9E-AA2A-0E082995FF9E." + config.getName())
                 .setActionParameters(parameters);
         return actionBuilder.createActionEvent();
     }
 
-    private ActionEvent prepareSendForm2Action() {
+    private ActionEvent prepareSubmitForm2Action() {
         SortedSet<ActionParameter> parameters = new TreeSet<>();
         ActionParameterBuilder builder;
         int order = 0;
@@ -505,7 +505,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         ActionEventBuilder actionBuilder = new ActionEventBuilder()
                 .setDisplayName(displayName)
-                .setSubject(EventSubjects.SEND_FORM + ".http://openrosa.org/formdesigner/12KE58A2-54C5-1Z4B-AR2S-Z0345995RF9E." + config.getName())
+                .setSubject(EventSubjects.SUBMIT_FORM + ".http://openrosa.org/formdesigner/12KE58A2-54C5-1Z4B-AR2S-Z0345995RF9E." + config.getName())
                 .setActionParameters(parameters);
         return actionBuilder.createActionEvent();
     }

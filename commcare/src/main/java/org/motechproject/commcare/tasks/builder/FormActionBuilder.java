@@ -56,7 +56,7 @@ public class FormActionBuilder implements ActionBuilder {
             String displayName = DisplayNameHelper.buildDisplayName(DisplayNames.SUBMIT_FORM, form.getFormName(), config.getName());
             ActionEventRequestBuilder actionBuilder = new ActionEventRequestBuilder()
                     .setDisplayName(displayName)
-                    .setSubject(EventSubjects.SEND_FORM + "." + form.getXmlns() + "." + config.getName())
+                    .setSubject(EventSubjects.SUBMIT_FORM + "." + form.getXmlns() + "." + config.getName())
                     .setActionParameters(parameters);
             actions.add(actionBuilder.createActionEventRequest());
         }
