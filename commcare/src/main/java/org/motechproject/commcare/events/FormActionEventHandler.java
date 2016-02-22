@@ -42,12 +42,12 @@ public class FormActionEventHandler {
 
     /**
      * Handles events, connected with sending Commcare forms. The event subject should have the following syntax:
-     * {@code EventSubjects.SEND_FORM.[form XMLNS].[config name]}
+     * {@code EventSubjects.SUBMIT_FORM.[form XMLNS].[config name]}
      *
      * @param event the event, containing parameters necessary to send the Commcare form
      */
-    @MotechListener(subjects = EventSubjects.SEND_FORM + ".*")
-    public void sendForm(MotechEvent event) {
+    @MotechListener(subjects = EventSubjects.SUBMIT_FORM + ".*")
+    public void submitForm(MotechEvent event) {
         String configName = EventSubjects.getConfigName(event.getSubject());
         String xmlns = extractXmlnsFromEventSubject(event.getSubject(), configName);
         Map<String, Object> parameters = event.getParameters();
@@ -67,7 +67,7 @@ public class FormActionEventHandler {
     }
 
     private String extractXmlnsFromEventSubject(String subject, String configName) {
-        return StringUtils.removeEnd(subject.replaceFirst(EventSubjects.SEND_FORM + ".", StringUtils.EMPTY), "." + configName);
+        return StringUtils.removeEnd(subject.replaceFirst(EventSubjects.SUBMIT_FORM + ".", StringUtils.EMPTY), "." + configName);
     }
 
     private FormXml parseEventParametersToFormXml(Map<String, Object> parameters) {
