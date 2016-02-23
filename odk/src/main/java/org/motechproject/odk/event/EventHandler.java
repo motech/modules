@@ -65,8 +65,7 @@ public class EventHandler {
                 }
             }
         } else {
-            LOGGER.error("Unable to save form. Event is missing required parameters");
-            LOGGER.error(event.toString());
+            LOGGER.error("Unable to save form. Event is missing required parameters", event);
         }
     }
 
@@ -98,8 +97,7 @@ public class EventHandler {
                     formDefinition.getConfigurationName() + " Instance ID: " + instanceId);
             formInstanceService.create(instance);
         } catch (FormInstanceBuilderException e) {
-            LOGGER.error("Unable to save form. Configuration name: " + formDefinition.getConfigurationName() + " Title: " + formDefinition.getTitle());
-            LOGGER.error(e.toString());
+            LOGGER.error("Unable to save form. Configuration name: " + formDefinition.getConfigurationName() + " Title: " + formDefinition.getTitle(), e);
         }
     }
 }

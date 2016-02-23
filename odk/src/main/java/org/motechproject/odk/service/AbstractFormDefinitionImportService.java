@@ -70,7 +70,7 @@ public abstract class AbstractFormDefinitionImportService implements FormDefinit
             return new ImportStatus(true);
 
         } catch (Exception e) {
-            LOGGER.error("Unable to import forms.", e.toString());
+            LOGGER.error("Unable to import forms.", e);
             return new ImportStatus(false);
         }
     }
