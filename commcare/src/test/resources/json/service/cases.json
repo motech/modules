@@ -21,7 +21,7 @@
             "case_name":"1234",
             "external_id":"1234",
             "isPregnant":"pregnant",
-            "owner_id":null
+            "owner_id":"54321"
         },
         "server_date_modified":"2012-04-09T19:48:07.950000Z",
         "user_id":"5d622c4336d118a9020d1c758e71f368",
@@ -40,7 +40,7 @@
             "case_type":"checkup",
             "date_opened":"2012-04-12T14:45:18.950000Z",
             "external_id":"Eee",
-            "owner_id":null,
+            "owner_id":"1234567",
             "case_name":"Eee"
         },
         "server_date_modified":"2012-04-12T18:49:15.950000Z",
@@ -60,7 +60,7 @@
             "case_type":"checkup",
             "date_opened":"2012-04-12T11:58:49.950000Z",
             "external_id":"Wer",
-            "owner_id":null,
+            "owner_id":"2222",
             "case_name":"Wer"
         },
         "server_date_modified":"2012-04-12T15:59:01.950000Z",
@@ -86,7 +86,7 @@
             "case_name":"Aaaa",
             "external_id":"Aaaa",
             "isPregnant":"pregnant",
-            "owner_id":null
+            "owner_id":"6537"
         },
         "server_date_modified":"2012-04-10T14:31:44.950000Z",
         "user_id":"5d622c4336d118a9020d1c758e71f368",

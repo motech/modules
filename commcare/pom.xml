@@ -280,7 +280,7 @@
                             <requireUseStrict>true</requireUseStrict>
                             <predefinedVars>
                                 $, angular, blockUI, unblockUI, handleWithStackTrace, alertHandler,
-                                jConfirm, jQuery, parseUri, innerLayout
+                                jQuery, parseUri, innerLayout, BootstrapDialog
                             </predefinedVars>
                             <failOnIssues>${jslint.enable}</failOnIssues>
                         </configuration>
