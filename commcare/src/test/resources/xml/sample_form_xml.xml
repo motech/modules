@@ -1,0 +1,16 @@
+<?xml version='1.0' ?>
+<data name="MCH Registration" uiVersion="1" version="2" xmlns:jrm="http://dev.commcarehq.org/jr/xforms">
+  <mother name="Jane">
+    <child name="John">
+      <registered>yes</registered>
+      <dob>2016-02-25</dob>
+    </child>
+    <child name="Mark">
+      <registered>yes</registered>
+      <dob>2016-02-25</dob>
+    </child>
+  </mother>
+  <n0:meta xmlns:n0="http://openrosa.org/jr/xforms">
+    <n0:start_date>2016-01-01</n0:start_date>
+  </n0:meta>
+</data>

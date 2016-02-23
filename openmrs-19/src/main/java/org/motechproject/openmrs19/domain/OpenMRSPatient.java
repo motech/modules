@@ -1,5 +1,7 @@
 package org.motechproject.openmrs19.domain;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -7,22 +9,23 @@ import java.util.Objects;
  */
 public class OpenMRSPatient {
 
-    private String id;
+    private String patientId;
     private OpenMRSFacility facility;
     private OpenMRSPerson person;
     private String motechId;
+    private Map<String, String> identifiers;
 
     public OpenMRSPatient() {
         this(null);
     }
 
     /**
-     * Creates a patient with the given OpenMRS {@code id}.
+     * Creates a patient with the given OpenMRS {@code patientId}.
      *
-     * @param id  the OpenMRS ID of the patient
+     * @param patientId  the OpenMRS ID of the patient
      */
-    public OpenMRSPatient(String id) {
-        this(id, null, null, null);
+    public OpenMRSPatient(String patientId) {
+        this(patientId, null, null, null, null);
     }
 
     /**
@@ -34,27 +37,43 @@ public class OpenMRSPatient {
      * @param facility  the facility by which the patient is treated
      */
     public OpenMRSPatient(String motechId, OpenMRSPerson person, OpenMRSFacility facility) {
-        this(null, motechId, person, facility);
+        this(motechId, person, facility, null);
     }
 
     /**
-     * Creates a patient with the given {@code motechId} and OpenMRS {@code id} based on the given {@code person}
+     * Creates a patient with the given {@code motechId} and {@code identifiers} based on the given {@code person}
      * details and assigns it to the given {@code facility}.
      *
-     * @param id  the OpenMRS ID of the patient
      * @param motechId  the MOTECH ID of the patient
      * @param person  the personal details about the patient
      * @param facility  the facility by which the patient is treated
+     * @param identifiers the supported identifiers of patient, key - identifier type name, value - identifier number
      */
-    public OpenMRSPatient(String id, String motechId, OpenMRSPerson person, OpenMRSFacility facility) {
-        this.facility = facility;
-        this.person = person;
+    public OpenMRSPatient(String motechId, OpenMRSPerson person, OpenMRSFacility facility, Map<String, String> identifiers) {
+        this(null, motechId, person, facility, identifiers);
+    }
+
+    /**
+     * Creates a patient with the given {@code motechId}, OpenMRS {@code patientId} and {@code identifiers}
+     * based on the given {@code person} details and assigns it to the given {@code facility}.
+     *
+     * @param patientId  the OpenMRS ID of the patient
+     * @param motechId  the MOTECH ID of the patient
+     * @param person  the personal details about the patient
+     * @param facility  the facility by which the patient is treated
+     * @param identifiers the supported identifiers of patient, key - identifier type name, value - identifier number
+     */
+    public OpenMRSPatient(String patientId, String motechId, OpenMRSPerson person, OpenMRSFacility facility,
+                          Map<String, String> identifiers) {
+        this.patientId = patientId;
         this.motechId = motechId;
-        this.id = id;
+        this.person = person;
+        this.facility = facility;
+        this.identifiers = identifiers;
     }
 
     public String getPatientId() {
-        return id;
+        return patientId;
     }
 
     public OpenMRSFacility getFacility() {
@@ -69,6 +88,14 @@ public class OpenMRSPatient {
         return motechId;
     }
 
+    public Map<String, String> getIdentifiers() {
+        if (identifiers == null) {
+            identifiers = new HashMap<>();
+        }
+
+        return identifiers;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -81,21 +108,23 @@ public class OpenMRSPatient {
 
         OpenMRSPatient that = (OpenMRSPatient) o;
 
-        return Objects.equals(facility, that.facility) && Objects.equals(id, that.id) &&
-                Objects.equals(motechId, that.motechId) && Objects.equals(person, that.person);
+        return Objects.equals(facility, that.facility) && Objects.equals(patientId, that.patientId) &&
+                Objects.equals(motechId, that.motechId) && Objects.equals(person, that.person) &&
+                Objects.equals(identifiers, that.identifiers);
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
+        int result = patientId != null ? patientId.hashCode() : 0;
         result = 31 * result + (facility != null ? facility.hashCode() : 0);
         result = 31 * result + (person != null ? person.hashCode() : 0);
         result = 31 * result + (motechId != null ? motechId.hashCode() : 0);
+        result = 31 * result + (identifiers != null ? identifiers.hashCode() : 0);
         return result;
     }
 
-    public void setPatientId(String id) {
-        this.id = id;
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
     }
 
     public void setFacility(OpenMRSFacility facility) {
@@ -108,5 +137,9 @@ public class OpenMRSPatient {
 
     public void setMotechId(String motechId) {
         this.motechId = motechId;
+    }
+
+    public void setIdentifiers(Map<String, String> identifiers) {
+        this.identifiers = identifiers;
     }
 }

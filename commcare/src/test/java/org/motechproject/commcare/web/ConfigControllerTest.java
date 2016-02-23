@@ -114,7 +114,7 @@ public class ConfigControllerTest {
 
         when(configService.getBaseUrl()).thenReturn(baseUrl);
 
-        String returned = controller.getBaseEndpoints();
+        String returned = controller.getBaseEndpoint();
 
         assertEquals(new ObjectMapper().writeValueAsString(new StringMessage(baseUrl)), returned);
     }

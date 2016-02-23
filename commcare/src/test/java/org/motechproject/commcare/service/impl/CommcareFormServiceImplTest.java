@@ -5,6 +5,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.motechproject.commcare.domain.FormXml;
+import org.motechproject.commcare.exception.OpenRosaParserException;
+import org.motechproject.commcare.gateway.FormXmlConverter;
+import org.motechproject.commcare.response.OpenRosaResponse;
 import org.motechproject.commcare.testutil.CommcareFormTestLoader;
 import org.motechproject.commcare.client.CommCareAPIHttpClient;
 import org.motechproject.commcare.config.AccountConfig;
@@ -30,6 +34,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -43,6 +48,9 @@ public class CommcareFormServiceImplTest {
     @Mock
     private CommcareConfigService configService;
 
+    @Mock
+    private FormXmlConverter converter;
+
     @Before
     public void setUp() {
         initMocks(this);
@@ -51,7 +59,7 @@ public class CommcareFormServiceImplTest {
 
         when(configService.getByName(null)).thenReturn(config);
 
-        formService = new CommcareFormServiceImpl(commcareHttpClient, configService);
+        formService = new CommcareFormServiceImpl(commcareHttpClient, configService, converter);
     }
 
     @Test
@@ -255,6 +263,23 @@ public class CommcareFormServiceImplTest {
         CommcareFormList formList = formService.retrieveFormList(null);
 
         basicListVerification(formList);
+    }
+
+    @Test
+    public void shouldUploadFormXmlViaSubmissionApi() throws OpenRosaParserException {
+        FormXml formXml = new FormXml();
+        String xml = "<?xml version='1.0' ?><data></data>";
+        OpenRosaResponse response = new OpenRosaResponse();
+        response.setStatus(201);
+        response.setMessageText("OK");
+
+        when(converter.convertToFormXml(formXml)).thenReturn(xml);
+        when(commcareHttpClient.submissionRequest(any(AccountConfig.class), anyString())).thenReturn(response);
+
+        formService.uploadForm(formXml);
+
+        verify(converter).convertToFormXml(formXml);
+        verify(commcareHttpClient).submissionRequest(any(AccountConfig.class), eq(xml));
     }
 
     private void basicListVerification(CommcareFormList formList) {

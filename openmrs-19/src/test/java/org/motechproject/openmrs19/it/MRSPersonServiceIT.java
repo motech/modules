@@ -146,7 +146,7 @@ public class MRSPersonServiceIT extends BasePaxIT {
         person.setBirthDateEstimated(false);
         person.setGender("M");
         person.setAge(25);
-        person.setIsDead(false);
+        person.setDead(false);
         person.setMiddleName("John");
 
         OpenMRSAttribute attr = new OpenMRSAttribute("Birthplace", "Motech");

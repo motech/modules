@@ -165,7 +165,15 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
 
     @Override
     public String getBaseUrl() {
-        return settingsFacade.getPlatformSettings().getServerUrl() + "/module/commcare/";
+        String serverUrl = settingsFacade.getPlatformSettings().getServerUrl();
+        if (StringUtils.isBlank(serverUrl)) {
+            return "";
+        } else {
+            if (!serverUrl.endsWith("/")) {
+                serverUrl += '/';
+            }
+            return serverUrl + "module/commcare/";
+        }
     }
 
     @Override
@@ -259,7 +267,8 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
 
     private void updateCasesForwarding(Config config, List<String> endpoints) {
         if (config.isForwardCases() && !endpoints.contains(FORWARD_CASE_TYPE)) {
-            forward(config, FORWARD_CASE_TYPE, getCasesUrl(config.getName()));
+            boolean result = forward(config, FORWARD_CASE_TYPE, getCasesUrl(config.getName()));
+            config.setForwardCases(result);
         } else if (!config.isForwardCases() && endpoints.contains(FORWARD_CASE_TYPE)) {
             config.setForwardCases(true);
         }
@@ -267,7 +276,8 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
 
     private void updateFormsForwarding(Config config, List<String> endpoints) {
         if (config.isForwardForms() && !endpoints.contains(FORWARD_FORMS_TYPE)) {
-            forward(config, FORWARD_FORMS_TYPE, getFormsUrl(config.getName()));
+            boolean result = forward(config, FORWARD_FORMS_TYPE, getFormsUrl(config.getName()));
+            config.setForwardForms(result);
         } else if (!config.isForwardForms() && endpoints.contains(FORWARD_FORMS_TYPE)) {
             config.setForwardForms(true);
         }
@@ -275,7 +285,8 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
 
     private void updateStubsForwading(Config config, List<String> endpoints) {
         if (config.isForwardStubs() && !endpoints.contains(FORWARD_STUBS_TYPE)) {
-            forward(config, FORWARD_STUBS_TYPE, getFormStubsUrl(config.getName()));
+            boolean result = forward(config, FORWARD_STUBS_TYPE, getFormStubsUrl(config.getName()));
+            config.setForwardStubs(result);
         } else if (!config.isForwardStubs() && endpoints.contains(FORWARD_STUBS_TYPE)) {
             config.setForwardStubs(true);
         }
@@ -283,18 +294,19 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
 
     private void updateSchemaForwarding(Config config, List<String> endpoints) {
         if (config.isForwardSchema() && !endpoints.contains(FORWARD_SCHEMA_TYPE)) {
-            forward(config, FORWARD_SCHEMA_TYPE, getSchemaChangeUrl(config.getName()));
+            boolean result = forward(config, FORWARD_SCHEMA_TYPE, getSchemaChangeUrl(config.getName()));
+            config.setForwardSchema(result);
         } else if (!config.isForwardSchema() && endpoints.contains(FORWARD_SCHEMA_TYPE)) {
             config.setForwardSchema(true);
         }
     }
 
-    private void forward(Config config, String type, String url) {
+    private boolean forward(Config config, String type, String url) {
         CommcareDataForwardingEndpoint newForwardingEndpoint = new CommcareDataForwardingEndpoint(
                 config.getAccountConfig().getDomain(), type,
                 url, null);
 
-        forwardingEndpointService.createNewDataForwardingRule(newForwardingEndpoint, config);
+        return forwardingEndpointService.createNewDataForwardingRule(newForwardingEndpoint, config);
     }
 
     private String getCasesUrl(String name) {
