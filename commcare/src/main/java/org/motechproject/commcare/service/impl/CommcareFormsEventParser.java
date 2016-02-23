@@ -2,6 +2,7 @@ package org.motechproject.commcare.service.impl;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
+import org.apache.commons.lang.StringUtils;
 import org.motechproject.commons.api.TasksEventParser;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,8 @@ public class CommcareFormsEventParser implements TasksEventParser {
 
     private static final String INITIAL_PARAM_PREFIX = "/data";
     public static final String PARSER_NAME = "CommcareForms";
+
+    private static final String ID = "id";
 
     @Override
     public Map<String, Object> parseEventParameters(String subject, Map<String, Object> entryParameters) {
@@ -63,15 +66,30 @@ public class CommcareFormsEventParser implements TasksEventParser {
     }
 
     private void addParameters(Map<String, Object> parameters, Map<String, Object> parsedParameters, String paramPrefix) {
-        for (Map.Entry<String, Map> entry : ((Multimap<String, Map>) parameters.get(SUB_ELEMENTS)).entries()) {
+        Multimap<String, Map> nodes = (Multimap<String, Map>) parameters.get(SUB_ELEMENTS);
+
+        for (Map.Entry<String, Map> entry : nodes.entries()) {
+            String tagName = entry.getKey();
+            // Create ID postfix, in case we handle repeat data
+            String idPostfix = createIdPostfix(tagName, (Map<String, String>) entry.getValue().get(ATTRIBUTES), nodes);
+
             // If there's a non-null value, add it to the parameters
             String value = (String) entry.getValue().get(VALUE);
             if (value != null) {
-                parsedParameters.put(paramPrefix + "/" + entry.getKey(), value);
+                parsedParameters.put(paramPrefix + "/" + tagName + idPostfix, value);
             }
 
             // Call our method recursively for subelements
-            addParameters(entry.getValue(), parsedParameters, paramPrefix + "/" + entry.getKey());
+            addParameters(entry.getValue(), parsedParameters, paramPrefix + "/" + tagName + idPostfix);
+        }
+    }
+
+    private String createIdPostfix(String key, Map<String, String> attributes, Multimap<String, Map> nodeSubelements) {
+        // We classify node as repeat data if the "id" attribute is present and there is at least one other node of the same name
+        if (attributes.containsKey(ID) && nodeSubelements.get(key).size() > 1) {
+            return "_" + attributes.get(ID);
+        } else {
+            return StringUtils.EMPTY;
         }
     }
 
