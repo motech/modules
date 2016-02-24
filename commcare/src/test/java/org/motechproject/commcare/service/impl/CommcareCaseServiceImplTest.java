@@ -98,8 +98,7 @@ public class CommcareCaseServiceImplTest {
     }
 
     @Test
-    public void testAllCaseServerDateModified()
-    {
+    public void testAllCaseServerDateModified() {
         when(commcareHttpClient.casesRequest(any(AccountConfig.class), any(CaseRequest.class))).thenReturn(casesResponse());
 
         List<CaseInfo> cases = caseService.getCases(50, 1);
