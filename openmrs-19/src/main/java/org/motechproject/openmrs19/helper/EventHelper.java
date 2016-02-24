@@ -67,7 +67,7 @@ public final class EventHelper {
         personParameters.put(EventKeys.PERSON_BIRTH_DATE_ESTIMATED, person.getBirthDateEstimated());
         personParameters.put(EventKeys.PERSON_AGE, person.getAge());
         personParameters.put(EventKeys.PERSON_GENDER, person.getGender());
-        personParameters.put(EventKeys.PERSON_DEAD, person.isDead());
+        personParameters.put(EventKeys.PERSON_DEAD, person.getDead());
         personParameters.put(EventKeys.PERSON_DEATH_DATE, person.getDeathDate());
         return personParameters;
     }

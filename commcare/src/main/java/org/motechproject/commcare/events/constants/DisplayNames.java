@@ -10,6 +10,7 @@ public final class DisplayNames {
 
     public static final String CREATE_CASE = "Create Case";
     public static final String UPDATE_CASE = "Update Case";
+    public static final String SUBMIT_FORM = "Submit Form";
 
     public static final String CONFIG_NAME = "commcare.configName";
     public static final String CASE_ID = "commcare.caseId";

@@ -30,7 +30,9 @@ public class OpenMRSPerson {
     private Boolean birthDateEstimated;
     private Integer age;
     private String gender;
-    private boolean isDead;
+    private Boolean dead;
+    private DateTime dateCreated;
+    private DateTime dateChanged;
 
     private List<OpenMRSAttribute> attributes = new ArrayList<OpenMRSAttribute>();
     private DateTime deathDate;
@@ -103,8 +105,8 @@ public class OpenMRSPerson {
         this.lastName = lastName;
     }
 
-    public void setIsDead(Boolean isDead) {
-        this.isDead = isDead;
+    public void setDead(Boolean dead) {
+        this.dead = dead;
     }
 
     public String getFirstName() {
@@ -139,6 +141,32 @@ public class OpenMRSPerson {
         this.deathDate = deathDate;
     }
 
+    public DateTime getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(DateTime dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public DateTime getDateChanged() {
+        return dateChanged;
+    }
+
+    public void setDateChanged(DateTime dateChanged) {
+        this.dateChanged = dateChanged;
+    }
+
+    //todo: change that to a boolean when you can filter on booleans in task module
+    public String getNewPerson() {
+        if (dateChanged == null || dateChanged.equals(dateCreated)) {
+            return "yes";
+        }
+
+        return "no";
+    }
+
+
     @Deprecated
     public String attrValue(String key) {
         List<OpenMRSAttribute> filteredItems = select(attributes, having(on(OpenMRSAttribute.class).getName(), equalTo(key)));
@@ -161,8 +189,9 @@ public class OpenMRSPerson {
         return birthDateEstimated;
     }
 
-    public Boolean isDead() {
-        return isDead;
+    // TODO: MOTECH-2187: Task data source doesn't support boolean getters 'is..()'
+    public Boolean getDead() {
+        return dead;
     }
 
     public Integer getAge() {
@@ -192,7 +221,8 @@ public class OpenMRSPerson {
         return equalNameData(other) && equalAgeAndBirthDates(other) && Objects.equals(id, other.id)
                 && Objects.equals(address, other.address) && Objects.equals(gender, other.gender)
                 && Objects.equals(attributes, other.attributes) && Objects.equals(deathDate, other.deathDate)
-                && isDead == other.isDead && Objects.equals(display, other.display);
+                && dead == other.dead && Objects.equals(display, other.display)
+                && Objects.equals(dateCreated, other.dateCreated) && Objects.equals(dateChanged, other.dateChanged);
     }
 
     public boolean equalNameData(OpenMRSPerson other) {
@@ -219,9 +249,11 @@ public class OpenMRSPerson {
         hash = hash * 31 + ObjectUtils.hashCode(birthDateEstimated);
         hash = hash * 31 + ObjectUtils.hashCode(age);
         hash = hash * 31 + ObjectUtils.hashCode(gender);
-        hash = hash * 31 + Boolean.valueOf(isDead).hashCode();
+        hash = hash * 31 + Boolean.valueOf(dead).hashCode();
         hash = hash * 31 + ObjectUtils.hashCode(attributes);
         hash = hash * 31 + ObjectUtils.hashCode(deathDate);
+        hash = hash * 31 + ObjectUtils.hashCode(dateCreated);
+        hash = hash * 31 + ObjectUtils.hashCode(dateChanged);
         return hash;
     }
 

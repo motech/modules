@@ -61,6 +61,7 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import static org.apache.commons.lang.StringUtils.equalsIgnoreCase;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -191,7 +192,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         List<TriggerEvent> triggerEvents = channel.getTriggerTaskEvents();
         List<ActionEvent> actionEvents = channel.getActionTaskEvents();
 
-        assertEquals(3, actionEvents.size());
+        assertEquals(5, actionEvents.size());
         assertEquals(8, triggerEvents.size());
 
         TaskTriggerInformation expectedForm1 = new TaskTriggerInformation();
@@ -200,28 +201,28 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         TaskTriggerInformation expectedStockTx = new TaskTriggerInformation();
 
         expectedForm1.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareSchema.XMLNS1);
-        assertTrue(channel.containsTrigger(expectedForm1));
+        assertTrue(containsTrigger(channel, expectedForm1));
 
         expectedForm2.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareSchema.XMLNS2);
-        assertTrue(channel.containsTrigger(expectedForm2));
+        assertTrue(containsTrigger(channel, expectedForm2));
 
         expectedCaseBirth.setSubject("org.motechproject.commcare.api.case." + config.getName() + ".birth");
-        assertTrue(channel.containsTrigger(expectedCaseBirth));
+        assertTrue(containsTrigger(channel, expectedCaseBirth));
 
         expectedStockTx.setSubject(EventSubjects.RECEIVED_STOCK_TRANSACTION + '.' + config.getName());
-        assertTrue(channel.containsTrigger(expectedStockTx));
+        assertTrue(containsTrigger(channel, expectedStockTx));
 
-        TriggerEvent form1Trigger = channel.getTrigger(expectedForm1);
+        TriggerEvent form1Trigger = getTrigger(channel, expectedForm1);
         assertEquals("org.motechproject.commcare.api.forms", form1Trigger.getTriggerListenerSubject());
         assertTriggerParameters(form1Trigger.getEventParameters(),
                 Arrays.asList("/data/pregnant", "/data/dob", "/data/meta/username", "caseId"));
 
-        TriggerEvent form2Trigger = channel.getTrigger(expectedForm2);
+        TriggerEvent form2Trigger = getTrigger(channel, expectedForm2);
         assertEquals("org.motechproject.commcare.api.forms", form2Trigger.getTriggerListenerSubject());
         assertTriggerParameters(form2Trigger.getEventParameters(),
                 Arrays.asList("/data/patient_name", "/data/last_visit", "/data/medications", "/data/meta/username", "/data/case/create/case_type"));
 
-        TriggerEvent caseTrigger = channel.getTrigger(expectedCaseBirth);
+        TriggerEvent caseTrigger = getTrigger(channel, expectedCaseBirth);
         assertEquals("org.motechproject.commcare.api.case", caseTrigger.getTriggerListenerSubject());
         assertTriggerParameters(caseTrigger.getEventParameters(),
                 Arrays.asList("motherName", "childName", "dob", "caseName"));
@@ -229,6 +230,8 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         verifyTaskAction(channel, prepareStockLedgerAction());
         verifyTaskAction(channel, prepareCreateCaseAction());
         verifyTaskAction(channel, prepareUpdateCaseAction());
+        verifyTaskAction(channel, prepareSubmitForm1Action());
+        verifyTaskAction(channel, prepareSubmitForm2Action());
     }
 
     private void verifyTaskAction(Channel channel, ActionEvent expected) {
@@ -437,6 +440,87 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setSubject(EventSubjects.UPDATE_CASE + "." + config.getName())
                 .setActionParameters(parameters);
         return actionBuilder.createActionEvent();
+    }
+
+    private ActionEvent prepareSubmitForm1Action() {
+        SortedSet<ActionParameter> parameters = new TreeSet<>();
+        ActionParameterBuilder builder;
+        int order = 0;
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName("Is Pregnant?")
+                .setKey(DummyCommcareSchema.FORM_QUESTION1)
+                .setRequired(false)
+                .setType(ParameterType.UNICODE)
+                .setOrder(order++);
+        parameters.add(builder.createActionParameter());
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName("Date of birth")
+                .setKey(DummyCommcareSchema.FORM_QUESTION2)
+                .setRequired(false)
+                .setType(ParameterType.UNICODE)
+                .setOrder(order++);
+        parameters.add(builder.createActionParameter());
+
+        String displayName = String.format("Submit Form: form1 [%s]", config.getName());
+
+        ActionEventBuilder actionBuilder = new ActionEventBuilder()
+                .setDisplayName(displayName)
+                .setSubject(EventSubjects.SUBMIT_FORM + ".http://openrosa.org/formdesigner/84FA38A2-93C1-4B9E-AA2A-0E082995FF9E." + config.getName())
+                .setActionParameters(parameters);
+        return actionBuilder.createActionEvent();
+    }
+
+    private ActionEvent prepareSubmitForm2Action() {
+        SortedSet<ActionParameter> parameters = new TreeSet<>();
+        ActionParameterBuilder builder;
+        int order = 0;
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName("Patient name")
+                .setKey(DummyCommcareSchema.FORM_QUESTION3)
+                .setRequired(false)
+                .setType(ParameterType.UNICODE)
+                .setOrder(order++);
+        parameters.add(builder.createActionParameter());
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName("Last visit")
+                .setKey(DummyCommcareSchema.FORM_QUESTION4)
+                .setRequired(false)
+                .setType(ParameterType.UNICODE)
+                .setOrder(order++);
+        parameters.add(builder.createActionParameter());
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName("Does patient take any medications?")
+                .setKey(DummyCommcareSchema.FORM_QUESTION5)
+                .setRequired(false)
+                .setType(ParameterType.UNICODE)
+                .setOrder(order++);
+        parameters.add(builder.createActionParameter());
+
+        String displayName = String.format("Submit Form: form2 [%s]", config.getName());
+
+        ActionEventBuilder actionBuilder = new ActionEventBuilder()
+                .setDisplayName(displayName)
+                .setSubject(EventSubjects.SUBMIT_FORM + ".http://openrosa.org/formdesigner/12KE58A2-54C5-1Z4B-AR2S-Z0345995RF9E." + config.getName())
+                .setActionParameters(parameters);
+        return actionBuilder.createActionEvent();
+    }
+
+    private boolean containsTrigger(Channel channel, TaskTriggerInformation info) {
+        return getTrigger(channel, info) != null ;
+    }
+
+    private TriggerEvent getTrigger(Channel channel, TaskTriggerInformation info) {
+        for (TriggerEvent trigger : channel.getTriggerTaskEvents()) {
+            if (equalsIgnoreCase(trigger.getSubject(), info.getSubject())) {
+                return trigger;
+            }
+        }
+        return null;
     }
 
     private void clearDB() {

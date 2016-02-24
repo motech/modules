@@ -23,7 +23,7 @@ import static org.motechproject.tasks.domain.ParameterType.UNICODE;
  * Responsible for building actions for querying stock ledger for all configurations. There action can then be used in
  * the task module.
  */
-public class QueryStockLedgerActionBuilder {
+public class QueryStockLedgerActionBuilder implements ActionBuilder {
 
     private CommcareConfigService configService;
 
@@ -36,6 +36,7 @@ public class QueryStockLedgerActionBuilder {
      *
      * @return the list of "Query Stock Ledger [{configName}]" actions for all configurations
      */
+    @Override
     public List<ActionEventRequest> buildActions() {
 
         List<ActionEventRequest> actions = new ArrayList<>();

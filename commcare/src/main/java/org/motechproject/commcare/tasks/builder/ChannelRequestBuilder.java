@@ -46,11 +46,15 @@ public class ChannelRequestBuilder {
      * @return the created instance
      */
     public ChannelRequest buildChannelRequest() {
+        // Triggers
         FormTriggerBuilder formTriggerBuilder = new FormTriggerBuilder(schemaService, configService);
         CaseTriggerBuilder caseTriggerBuilder = new CaseTriggerBuilder(schemaService, configService);
         CommonTriggerBuilder commonTriggerBuilder = new CommonTriggerBuilder(configService);
+
+        // Actions
         QueryStockLedgerActionBuilder queryStockLedgerActionBuilder = new QueryStockLedgerActionBuilder(configService);
         CaseActionBuilder caseActionBuilder = new CaseActionBuilder(configService);
+        FormActionBuilder formActionBuilder = new FormActionBuilder(schemaService, configService);
 
         List<TriggerEventRequest> triggers = formTriggerBuilder.buildTriggers();
         triggers.addAll(caseTriggerBuilder.buildTriggers());
@@ -59,6 +63,7 @@ public class ChannelRequestBuilder {
         List<ActionEventRequest> actions = new ArrayList<>();
         actions.addAll(queryStockLedgerActionBuilder.buildActions());
         actions.addAll(caseActionBuilder.buildActions());
+        actions.addAll(formActionBuilder.buildActions());
 
         return new ChannelRequest(DISPLAY_NAME, bundleContext.getBundle().getSymbolicName(),
                 bundleContext.getBundle().getVersion().toString(), null, triggers, actions);
