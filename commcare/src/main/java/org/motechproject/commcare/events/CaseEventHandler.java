@@ -43,7 +43,7 @@ public class CaseEventHandler {
 
         // <update> tag
         UpdateTask updateTask = new UpdateTask();
-        updateTask.setFieldValues((Map<String, String>) parameters.get(EventDataKeys.FIELD_VALUES));
+        updateTask.setFieldValues((Map<String, Object>) parameters.get(EventDataKeys.FIELD_VALUES));
 
         caseTask.setCreateTask(createTask);
         caseTask.setUpdateTask(updateTask);
@@ -63,7 +63,7 @@ public class CaseEventHandler {
         // <update> tag
         UpdateTask updateTask = new UpdateTask();
         updateTask.setOwnerId((String) parameters.get(EventDataKeys.OWNER_ID));
-        updateTask.setFieldValues((Map<String, String>) parameters.get(EventDataKeys.FIELD_VALUES));
+        updateTask.setFieldValues((Map<String, Object>) parameters.get(EventDataKeys.FIELD_VALUES));
 
         // optional <close> tag
         if (parameters.get(EventDataKeys.CLOSE_CASE) != null && (Boolean) parameters.get(EventDataKeys.CLOSE_CASE)) {
