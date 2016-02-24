@@ -11,7 +11,7 @@ public class UpdateTask {
     private String caseName;
     private String dateOpened;
     private String ownerId;
-    private Map<String, String> fieldValues;
+    private Map<String, Object> fieldValues;
 
     public String getCaseType() {
         return this.caseType;
@@ -45,11 +45,11 @@ public class UpdateTask {
         this.ownerId = ownerId;
     }
 
-    public Map<String, String> getFieldValues() {
+    public Map<String, Object> getFieldValues() {
         return this.fieldValues;
     }
 
-    public void setFieldValues(Map<String, String> fieldValues) {
+    public void setFieldValues(Map<String, Object> fieldValues) {
         this.fieldValues = fieldValues;
     }
 }
