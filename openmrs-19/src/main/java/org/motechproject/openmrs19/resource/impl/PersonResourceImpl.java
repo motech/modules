@@ -39,7 +39,8 @@ public class PersonResourceImpl implements PersonResource {
 
     @Override
     public Person createPerson(Person person) throws HttpException {
-        String requestJson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create().toJson(person);
+        String requestJson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+                .registerTypeAdapter(Concept.class, new Concept.ConceptUuidSerializer()).create().toJson(person);
         String responseJson;
         responseJson = restClient.postForJson(openmrsInstance.toInstancePath("/person"), requestJson);
 
