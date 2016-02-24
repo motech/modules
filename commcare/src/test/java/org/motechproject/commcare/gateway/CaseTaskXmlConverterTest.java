@@ -1,6 +1,8 @@
 package org.motechproject.commcare.gateway;
 
 import junit.framework.Assert;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -173,11 +175,13 @@ public class CaseTaskXmlConverterTest {
 
         UpdateTask updateTask = new UpdateTask();
 
-        Map<String, String> fieldValues = new HashMap<String, String>();
+        Map<String, Object> fieldValues = new HashMap<>();
 
         fieldValues.put("KEY1", "VALUE1");
         fieldValues.put("KEY2", "VALUE2");
         fieldValues.put("KEY3", "VALUE3");
+        fieldValues.put("KEY4", 4);
+        fieldValues.put("KEY5", new DateTime(1456250266046L, DateTimeZone.UTC));
 
         updateTask.setCaseName("CASE_NAME");
         updateTask.setCaseType("CASE_TYPE");
@@ -201,6 +205,8 @@ public class CaseTaskXmlConverterTest {
         Assert.assertTrue(xml.contains("<KEY2>VALUE2</KEY2>"));
         Assert.assertTrue(xml.contains("<KEY1>VALUE1</KEY1>"));
         Assert.assertTrue(xml.contains("<KEY3>VALUE3</KEY3>"));
+        Assert.assertTrue(xml.contains("<KEY4>4</KEY4>"));
+        Assert.assertTrue(xml.contains("<KEY5>2016-02-23T17:57:46.046Z</KEY5>"));
     }
 
     @Test
