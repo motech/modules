@@ -31,6 +31,7 @@ public class OpenMRSPerson {
     private Integer age;
     private String gender;
     private Boolean dead;
+    private OpenMRSConcept causeOfDeath;
 
     private List<OpenMRSAttribute> attributes = new ArrayList<OpenMRSAttribute>();
     private DateTime deathDate;
@@ -234,4 +235,11 @@ public class OpenMRSPerson {
         this.id = id;
     }
 
+    public OpenMRSConcept getCauseOfDeath() {
+        return causeOfDeath;
+    }
+
+    public void setCauseOfDeath(OpenMRSConcept causeOfDeath) {
+        this.causeOfDeath = causeOfDeath;
+    }
 }
