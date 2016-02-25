@@ -2,10 +2,12 @@ package org.motechproject.openmrs19.tasks.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.motechproject.openmrs19.domain.OpenMRSConcept;
 import org.motechproject.openmrs19.domain.OpenMRSEncounter;
 import org.motechproject.openmrs19.domain.OpenMRSFacility;
 import org.motechproject.openmrs19.domain.OpenMRSPatient;
 import org.motechproject.openmrs19.domain.OpenMRSProvider;
+import org.motechproject.openmrs19.service.OpenMRSConceptService;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSFacilityService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
@@ -28,6 +30,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSActionProxyServiceImpl.class);
 
+    private OpenMRSConceptService conceptService;
     private OpenMRSEncounterService encounterService;
     private OpenMRSFacilityService facilityService;
     private OpenMRSPatientService patientService;
@@ -52,8 +55,10 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
 
     @Override
     public void createPatient(String firstName, String middleName, String lastName, String address, DateTime dateOfBirth,
-                              Boolean birthDateEstimated, String gender, Boolean dead, String motechId, String locationName,
-                              Map<String, String> identifiers) {
+                              Boolean birthDateEstimated, String gender, Boolean dead, String causeOfDeathUUID, String motechId,
+                              String locationName, Map<String, String> identifiers) {
+        OpenMRSConcept causeOfDeath = conceptService.getConceptByUuid(causeOfDeathUUID);
+
         OpenMRSPerson person = new OpenMRSPerson();
         person.setFirstName(firstName);
         person.setMiddleName(middleName);
@@ -63,6 +68,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         person.setDateOfBirth(dateOfBirth);
         person.setBirthDateEstimated(birthDateEstimated);
         person.setDead(dead);
+        person.setCauseOfDeath(causeOfDeath);
 
         OpenMRSFacility facility = StringUtils.isNotEmpty(locationName) ? getFacilityByName(locationName) : getDefaultFacility();
 
@@ -90,6 +96,11 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         }
 
         return facility;
+    }
+
+    @Autowired
+    public void setConceptService(OpenMRSConceptService conceptService) {
+        this.conceptService = conceptService;
     }
 
     @Autowired

@@ -13,6 +13,7 @@ import org.motechproject.openmrs19.domain.OpenMRSFacility;
 import org.motechproject.openmrs19.domain.OpenMRSPatient;
 import org.motechproject.openmrs19.domain.OpenMRSPerson;
 import org.motechproject.openmrs19.domain.OpenMRSProvider;
+import org.motechproject.openmrs19.service.OpenMRSConceptService;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSFacilityService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
@@ -29,6 +30,9 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OpenMRSActionProxyServiceTest {
+
+    @Mock
+    private OpenMRSConceptService conceptService;
 
     @Mock
     private OpenMRSEncounterService encounterService;
@@ -98,7 +102,7 @@ public class OpenMRSActionProxyServiceTest {
 
         openMRSActionProxyService.createPatient(person.getFirstName(), person.getMiddleName(), person.getLastName(),
                 person.getAddress(), person.getDateOfBirth(), person.getBirthDateEstimated(), person.getGender(),
-                person.getDead(), patient.getMotechId(), facility.getName(), identifiers);
+                person.getDead(), "", patient.getMotechId(), facility.getName(), identifiers);
 
         verify(patientService).createPatient(patientCaptor.capture());
 
@@ -121,7 +125,7 @@ public class OpenMRSActionProxyServiceTest {
 
         openMRSActionProxyService.createPatient(person.getFirstName(), person.getMiddleName(), person.getLastName(),
                 person.getAddress(), person.getDateOfBirth(), person.getBirthDateEstimated(), person.getGender(),
-                person.getDead(), patient.getMotechId(), "", identifiers);
+                person.getDead(), "", patient.getMotechId(), "", identifiers);
 
         verify(patientService).createPatient(patientCaptor.capture());
 
@@ -144,7 +148,7 @@ public class OpenMRSActionProxyServiceTest {
 
         openMRSActionProxyService.createPatient(person.getFirstName(), person.getMiddleName(), person.getLastName(),
                 person.getAddress(), person.getDateOfBirth(), person.getBirthDateEstimated(), person.getGender(),
-                person.getDead(), patient.getMotechId(), facility.getName(), identifiers);
+                person.getDead(), "", patient.getMotechId(), facility.getName(), identifiers);
 
         verify(patientService).createPatient(patientCaptor.capture());
 
