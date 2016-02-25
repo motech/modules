@@ -7,7 +7,7 @@
     <context:annotation-config />
     <context:component-scan base-package="org.motechproject.openmrs19" />
 
-    <bean id="openMrs19Settings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
+    <bean id="openMrs19Settings" class="org.motechproject.config.SettingsFacade" autowire="byType">
         <property name="configFiles">
             <list>
                 <value>classpath:openmrs.properties</value>

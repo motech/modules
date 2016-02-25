@@ -13,7 +13,7 @@ import org.motechproject.commcare.exception.CommcareConnectionFailureException;
 import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.service.CommcareDataForwardingEndpointService;
 import org.motechproject.commcare.util.ConfigsUtils;
-import org.motechproject.server.config.domain.SettingsRecord;
+import org.motechproject.config.domain.SettingsRecord;
 import org.osgi.framework.BundleException;
 
 import java.io.IOException;

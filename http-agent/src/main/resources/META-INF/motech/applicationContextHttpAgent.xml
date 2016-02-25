@@ -11,7 +11,7 @@
     <context:annotation-config/>
     <context:component-scan base-package="org.motechproject.http.agent"/>
 
-    <bean id="httpAgentSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
+    <bean id="httpAgentSettings" class="org.motechproject.config.SettingsFacade" autowire="byType">
         <property name="configFiles">
             <list>
                 <value>classpath:http-agent.properties</value>

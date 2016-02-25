@@ -1,6 +1,6 @@
 package org.motechproject.sms.templates;
 
-import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.config.SettingsFacade;
 
 import java.util.HashMap;
 import java.util.List;

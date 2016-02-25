@@ -9,7 +9,7 @@ import org.motechproject.config.core.constants.ConfigurationConstants;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.config.SettingsFacade;
 import org.motechproject.sms.configs.Config;
 import org.motechproject.sms.configs.Configs;
 import org.motechproject.sms.event.constants.EventSubjects;
