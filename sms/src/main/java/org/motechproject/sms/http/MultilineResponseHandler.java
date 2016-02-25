@@ -19,8 +19,6 @@ import static org.motechproject.sms.util.SmsEvents.outboundEvent;
  */
 public class MultilineResponseHandler extends ResponseHandler {
 
-    public static final String DISPATCHED = "DISPATCHED";
-
     /**
      * Constructs an instance using the provided template and configuration.
      * @param template the template to use
@@ -79,7 +77,7 @@ public class MultilineResponseHandler extends ResponseHandler {
                 getLogger().info(String.format("Sent messageId %s '%s' to %s", messageId, messageForLog(sms),
                         recipient));
                 getAuditRecords().add(new SmsRecord(getConfig().getName(), OUTBOUND, recipient, sms.getMessage(), now(),
-                        DISPATCHED, null, sms.getMotechId(), messageId, null));
+                        getTemplateOutgoingResponse().getSuccessStatus(), null, sms.getMotechId(), messageId, null));
                 getEvents().add(outboundEvent(SmsEventSubjects.DISPATCHED, getConfig().getName(), recipients,
                         sms.getMessage(), sms.getMotechId(), messageId, null, null, null, sms.getCustomParams()));
             }

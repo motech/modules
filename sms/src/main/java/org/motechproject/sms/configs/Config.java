@@ -1,5 +1,7 @@
 package org.motechproject.sms.configs;
 
+import org.motechproject.sms.audit.constants.DeliveryStatuses;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,9 +11,6 @@ import java.util.List;
  * connections to multiple providers. But realistically, most implementations will have one config.
  */
 public class Config {
-
-    public static final String RETRYING = "RETRYING";
-    public static final String ABORTED = "ABORTED";
 
     /**
      * The unique name identifying the configuration.
@@ -160,9 +159,9 @@ public class Config {
      */
     public String retryOrAbortStatus(Integer failureCount) {
         if (failureCount < maxRetries) {
-            return RETRYING;
+            return DeliveryStatuses.RETRYING;
         }
-        return ABORTED;
+        return DeliveryStatuses.ABORTED;
     }
 
     /**
@@ -173,8 +172,8 @@ public class Config {
      */
     public String retryOrAbortSubject(Integer failureCount) {
         if (failureCount < maxRetries) {
-            return RETRYING;
+            return DeliveryStatuses.RETRYING;
         }
-        return ABORTED;
+        return DeliveryStatuses.ABORTED;
     }
 }

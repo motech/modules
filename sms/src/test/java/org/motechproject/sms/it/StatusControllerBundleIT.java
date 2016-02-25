@@ -111,6 +111,6 @@ public class StatusControllerBundleIT extends BasePaxIT {
                 new Range<>(null, null), new HashSet<>(), null,
                 null, messageId, null, null);
         assertEquals(1, smsRecords.size());
-        assertEquals(smsRecords.get(0).getDeliveryStatus(), "DELIVERY_CONFIRMED");
+        assertEquals(smsRecords.get(0).getDeliveryStatus(), "sent");
     }
 }

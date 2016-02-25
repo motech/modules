@@ -5,6 +5,7 @@ import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.sms.audit.SmsRecord;
 import org.motechproject.sms.audit.SmsRecordsDataService;
+import org.motechproject.sms.audit.constants.DeliveryStatuses;
 import org.motechproject.sms.configs.Config;
 import org.motechproject.sms.service.ConfigService;
 import org.motechproject.sms.service.TemplateService;
@@ -35,9 +36,9 @@ import static org.motechproject.sms.audit.SmsDirection.INBOUND;
 public class IncomingController {
 
     private static final String SMS_MODULE = "motech-sms";
-    private static final String RECEIVED = "RECEIVED";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IncomingController.class);
+
     private TemplateService templateService;
     private ConfigService configService;
     private EventRelay eventRelay;
@@ -124,7 +125,7 @@ public class IncomingController {
 
         eventRelay.sendEventMessage(inboundEvent(config.getName(), sender, recipient, message, providerMessageId,
                 timestamp));
-        smsRecordsDataService.create(new SmsRecord(config.getName(), INBOUND, sender, message, now(), RECEIVED,
+        smsRecordsDataService.create(new SmsRecord(config.getName(), INBOUND, sender, message, now(), DeliveryStatuses.RECEIVED,
                 null, null, providerMessageId, null));
     }
 }

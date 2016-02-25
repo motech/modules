@@ -99,6 +99,10 @@ public class Response {
         return isNotBlank(successResponse);
     }
 
+    public String getSuccessStatus() {
+        return successStatus;
+    }
+
     /**
      * Checks whether the given response is a success response.
      * @param response the response to check
