@@ -5,10 +5,10 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.commcare.config.Configs;
 import org.motechproject.commcare.events.constants.EventSubjects;
+import org.motechproject.commcare.service.CommcareApplicationService;
 import org.motechproject.commcare.service.CommcareConfigService;
-import org.motechproject.commcare.service.CommcareSchemaService;
 import org.motechproject.commcare.util.ConfigsUtils;
-import org.motechproject.commcare.util.DummyCommcareSchema;
+import org.motechproject.commcare.util.DummyCommcareApplication;
 import org.motechproject.tasks.contract.EventParameterRequest;
 import org.motechproject.tasks.contract.TriggerEventRequest;
 
@@ -20,21 +20,21 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.motechproject.commcare.util.DummyCommcareSchema.CASE_FIELD1;
-import static org.motechproject.commcare.util.DummyCommcareSchema.CASE_FIELD2;
-import static org.motechproject.commcare.util.DummyCommcareSchema.CASE_FIELD3;
-import static org.motechproject.commcare.util.DummyCommcareSchema.CASE_FIELD4;
-import static org.motechproject.commcare.util.DummyCommcareSchema.CASE_FIELD5;
+import static org.motechproject.commcare.util.DummyCommcareApplication.CASE_FIELD1;
+import static org.motechproject.commcare.util.DummyCommcareApplication.CASE_FIELD2;
+import static org.motechproject.commcare.util.DummyCommcareApplication.CASE_FIELD3;
+import static org.motechproject.commcare.util.DummyCommcareApplication.CASE_FIELD4;
+import static org.motechproject.commcare.util.DummyCommcareApplication.CASE_FIELD5;
 
 public class CaseTriggerBuilderTest {
 
     @Mock
-    private CommcareSchemaService schemaService;
+    private CommcareApplicationService applicationService;
 
     @Mock
     private CommcareConfigService configService;
 
-    private Configs configs = ConfigsUtils.prepareConfigsWithOneConfig();
+    private Configs configs = ConfigsUtils.prepareConfigsWithTwoConfigs();
 
     private CaseTriggerBuilder caseTriggerBuilder;
 
@@ -44,8 +44,10 @@ public class CaseTriggerBuilderTest {
     public void setUp() {
         initMocks(this);
         when(configService.getConfigs()).thenReturn(configs);
-        when(schemaService.getAllCaseTypes(configs.getDefaultConfigName())).thenReturn(DummyCommcareSchema.getCases());
-        caseTriggerBuilder = new CaseTriggerBuilder(schemaService, configService);
+        when(applicationService.getByConfigName("ConfigOne")).thenReturn(DummyCommcareApplication.getApplicationsForCasesInConfigOne());
+        when(applicationService.getByConfigName("ConfigTwo")).thenReturn(DummyCommcareApplication.getApplicationsForCasesInConfigTwo());
+
+        caseTriggerBuilder = new CaseTriggerBuilder(applicationService, configService);
     }
 
     @Test
@@ -56,7 +58,9 @@ public class CaseTriggerBuilderTest {
         assertFalse(triggerEventRequests.isEmpty());
 
         // One trigger for cases is always built, therefore we should always have one case more
-        assertEquals(DummyCommcareSchema.getCases().size() + 1, triggerEventRequests.size());
+        assertEquals(DummyCommcareApplication.getApplicationsForCasesInConfigOne().size() +
+                DummyCommcareApplication.getApplicationsForCasesInConfigTwo().size() + 1, triggerEventRequests.size());
+
 
         for(TriggerEventRequest request : triggerEventRequests) {
 
@@ -66,18 +70,34 @@ public class CaseTriggerBuilderTest {
             switch (subject) {
                 case "org.motechproject.commcare.api.case.ConfigOne.birth":
                     assertEquals(3 + CASE_PREDEFINED_FIELDS, request.getEventParameters().size());
-                    assertEquals("Received Case: birth [ConfigOne]", request.getDisplayName());
+                    assertEquals("Received Case: birth [app1: ConfigOne]", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD1));
                     assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD2));
                     assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD3));
                     break;
                 case "org.motechproject.commcare.api.case.ConfigOne.appointment":
                     assertEquals(2 + CASE_PREDEFINED_FIELDS, request.getEventParameters().size());
-                    assertEquals("Received Case: appointment [ConfigOne]", request.getDisplayName());
+                    assertEquals("Received Case: appointment [app1: ConfigOne]", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD4));
                     assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD5));
                     break;
+                case "org.motechproject.commcare.api.case.ConfigOne.death":
+                    assertEquals(1 + CASE_PREDEFINED_FIELDS, request.getEventParameters().size());
+                    assertEquals("Received Case: death [app2: ConfigOne]", request.getDisplayName());
+                    assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD3));
+                    break;
                 case "org.motechproject.commcare.api.case.ConfigOne":
+                    assertEquals(2, request.getEventParameters().size());
+                    assertEquals("caseId", request.getEventParameters().get(0).getEventKey());
+                    break;
+                case "org.motechproject.commcare.api.case.ConfigTwo.visit":
+                    assertEquals(3 + CASE_PREDEFINED_FIELDS, request.getEventParameters().size());
+                    assertEquals("Received Case: visit [app1: ConfigTwo]", request.getDisplayName());
+                    assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD1));
+                    assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD2));
+                    assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD3));
+                    break;
+                case "org.motechproject.commcare.api.case.ConfigTwo":
                     assertEquals(2, request.getEventParameters().size());
                     assertEquals("caseId", request.getEventParameters().get(0).getEventKey());
                     break;

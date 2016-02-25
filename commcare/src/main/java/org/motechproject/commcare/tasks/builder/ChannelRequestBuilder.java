@@ -1,7 +1,7 @@
 package org.motechproject.commcare.tasks.builder;
 
+import org.motechproject.commcare.service.CommcareApplicationService;
 import org.motechproject.commcare.service.CommcareConfigService;
-import org.motechproject.commcare.service.CommcareSchemaService;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.ChannelRequest;
 import org.motechproject.tasks.contract.TriggerEventRequest;
@@ -22,7 +22,7 @@ public class ChannelRequestBuilder {
 
     private BundleContext bundleContext;
     private CommcareConfigService configService;
-    private CommcareSchemaService schemaService;
+    private CommcareApplicationService applicationService;
 
     /**
      * Creates an instance of the {@link ChannelRequestBuilder} class, which is used for building {@link ChannelRequest}
@@ -30,13 +30,13 @@ public class ChannelRequestBuilder {
      * building new instances.
      *
      * @param configService  the configuration service
-     * @param schemaService  the schema service
+     * @param applicationService the application service
      * @param bundleContext  the bundle context
      */
-    public ChannelRequestBuilder(CommcareConfigService configService, CommcareSchemaService schemaService,
+    public ChannelRequestBuilder(CommcareConfigService configService, CommcareApplicationService applicationService,
                                  BundleContext bundleContext) {
-        this.schemaService = schemaService;
         this.configService = configService;
+        this.applicationService = applicationService;
         this.bundleContext = bundleContext;
     }
 
@@ -46,15 +46,15 @@ public class ChannelRequestBuilder {
      * @return the created instance
      */
     public ChannelRequest buildChannelRequest() {
-        // Triggers
-        FormTriggerBuilder formTriggerBuilder = new FormTriggerBuilder(schemaService, configService);
-        CaseTriggerBuilder caseTriggerBuilder = new CaseTriggerBuilder(schemaService, configService);
+
+        FormTriggerBuilder formTriggerBuilder = new FormTriggerBuilder(applicationService, configService);
+        CaseTriggerBuilder caseTriggerBuilder = new CaseTriggerBuilder(applicationService, configService);
         CommonTriggerBuilder commonTriggerBuilder = new CommonTriggerBuilder(configService);
 
         // Actions
         QueryStockLedgerActionBuilder queryStockLedgerActionBuilder = new QueryStockLedgerActionBuilder(configService);
         CaseActionBuilder caseActionBuilder = new CaseActionBuilder(configService);
-        FormActionBuilder formActionBuilder = new FormActionBuilder(schemaService, configService);
+        FormActionBuilder formActionBuilder = new FormActionBuilder(applicationService, configService);
 
         List<TriggerEventRequest> triggers = formTriggerBuilder.buildTriggers();
         triggers.addAll(caseTriggerBuilder.buildTriggers());
