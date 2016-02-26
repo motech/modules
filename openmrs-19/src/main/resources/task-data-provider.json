@@ -80,7 +80,7 @@
         },
         {
           "displayName": "openMRS.patient.identifiers",
-          "fieldKey": "identifierTypesByValue",
+          "fieldKey": "identifiers",
           "type": "MAP"
         },
         {
