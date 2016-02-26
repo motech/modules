@@ -1,0 +1,106 @@
+{
+  "token": "",
+  "content": "record",
+  "formId": "widgets",
+  "formVersion": "",
+  "data": [
+    {
+      "*meta-instance-id*": "uuid:ffb7423d-2f1c-47c1-ab03-e9f97be15293",
+      "*meta-model-version*": null,
+      "*meta-ui-version*": null,
+      "*meta-submission-date*": "2015-07-20T12:40:40.000-04",
+      "*meta-is-complete*": true,
+      "*meta-date-marked-as-complete*": "2015-07-20T12:40:40.000-04",
+      "intro": null,
+      "my_string": "string",
+      "my_long_text": "long\ntext",
+      "my_int": 6,
+      "my_decimal": 18.3100000000,
+      "my_distress": 6,
+      "my_date": "2018-06-15",
+      "my_date_month_year": "2015-07-01",
+      "my_date_year": "2015-01-01",
+      "my_time": "11:38:00.000-05",
+      "dateTime": "2015-07-20T12:38:00.000-04",
+      "my_select": [
+        "a",
+        "c"
+      ],
+      "select_horizontal_compact": [
+        "c"
+      ],
+      "select_horizontal": [
+        "3",
+        "5",
+        "8"
+      ],
+      "my_select1": "5",
+      "select1_horizontal_compact": "na",
+      "select1_horizontal": "6",
+      "select1_likert": "4",
+      "spinner": "c",
+      "spinner_all": [
+        "b",
+        "c"
+      ],
+      "selectadvance": "c",
+      "grid_test": "b",
+      "grid_test_audio": "b",
+      "table_list_test_label": null,
+      "table_list_1": "no",
+      "table_list_2": "yes",
+      "generated_table_list_label_42": null,
+      "reserved_name_for_field_list_labels_43": null,
+      "table_list_3": "yes",
+      "table_list_4": "no",
+      "happy_sad_second_method": null,
+      "happy_sad_brian2": [
+        "sad"
+      ],
+      "happy_sad_michael2": [
+        "happy"
+      ],
+      "generated_table_list_label_51": null,
+      "reserved_name_for_field_list_labels_52": null,
+      "happy_sad_brian": [
+        "happy"
+      ],
+      "happy_sad_michael": [
+        "happy"
+      ],
+      "country": "nl",
+      "city": "rot",
+      "neighborhood": "centrum",
+      "country2": "usa",
+      "city2": "nyc",
+      "neighborhood2": "harlem",
+      "my_geopoint:Latitude": 43.6632308000,
+      "my_geopoint:Longitude": -70.2763547000,
+      "my_geopoint:Altitude": 0E-10,
+      "my_geopoint:Accuracy": 36.8300000000,
+      "my_geopoint_m:Latitude": 43.6632373000,
+      "my_geopoint_m:Longitude": -70.2763562000,
+      "my_geopoint_m:Altitude": 0E-10,
+      "my_geopoint_m:Accuracy": 37.4180000000,
+      "my_geopoint_hide:Latitude": 43.6632296000,
+      "my_geopoint_hide:Longitude": -70.2763557000,
+      "my_geopoint_hide:Altitude": 0E-10,
+      "my_geopoint_hide:Accuracy": 36.7120000000,
+      "my_geotrace": null,
+      "my_geoshape": "7.9377 -11.5845 0.0 0.0; 7.9324 -11.5902 0.0 0.0; 7.927 -11.5857 0.0 0.0; 7.925 -11.578 0.0 0.0; 7.9267 -11.5722 0.0 0.0; 7.9325 -11.5708 0.0 0.0; 7.9372 -11.5737 0.0 0.0; 7.9393 -11.579 0.0 0.0; 7.9377 -11.5845 0.0 0.0",
+      "my_image": {
+        "filename": "1437410420153.jpg",
+        "type": "image/jpeg",
+        "url": "http://motech-test01.rcg.usm.maine.edu:8080/ODKAggregate/view/binaryData?blobKey=widgets%5B%40version%3Dnull+and+%40uiVersion%3Dnull%5D%2Fwidgets%5B%40key%3Duuid%3Affb7423d-2f1c-47c1-ab03-e9f97be15293%5D%2Fmedia_widgets%3Amy_image"
+      },
+      "my_audio": null,
+      "my_video": null,
+      "my_barcode": null,
+      "my_output": null,
+      "text_media": null,
+      "select_media": "nut",
+      "my_trigger": "OK",
+      "instanceID": "uuid:ffb7423d-2f1c-47c1-ab03-e9f97be15293"
+    }
+  ]
+}
