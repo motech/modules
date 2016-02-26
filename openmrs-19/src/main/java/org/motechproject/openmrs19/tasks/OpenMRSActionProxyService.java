@@ -38,11 +38,12 @@ public interface OpenMRSActionProxyService {
      * @param birthDateEstimated the person birthDateEstimated flag
      * @param gender the person gender, M - Male, F - Female
      * @param dead the person dead flag
+     * @param causeOfDeathUUID the cause of the death
      * @param motechId the patient motechId
      * @param locationName the location name for identifiers
      * @param identifiers the additional identifiers to be stored to patient
      */
     void createPatient(String firstName, String middleName, String lastName, String address, DateTime dateOfBirth,
-                       Boolean birthDateEstimated, String gender, Boolean dead, String motechId, String locationName,
+                       Boolean birthDateEstimated, String gender, Boolean dead, String causeOfDeathUUID, String motechId, String locationName,
                        Map<String, String> identifiers);
 }

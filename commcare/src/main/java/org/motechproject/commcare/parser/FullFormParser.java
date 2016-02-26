@@ -108,10 +108,10 @@ public class FullFormParser {
 
                 if (StringUtils.isNotBlank(value)) {
                     childElement.setValue(value);
-                } else {
-                    addAttributes(childElement, child.getAttributes());
-                    addSubElements(childElement, child.getChildNodes());
                 }
+
+                addAttributes(childElement, child.getAttributes());
+                addSubElements(childElement, child.getChildNodes());
 
                 element.addFormValueElement(childElement.getElementName(), childElement);
             }

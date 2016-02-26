@@ -48,7 +48,7 @@
         },
         {
           "displayName": "openMRS.patient.id",
-          "fieldKey": "patient.id"
+          "fieldKey": "patient.patientId"
         },
         {
           "displayName": "openMRS.patient.display",
