@@ -13,7 +13,7 @@ import org.motechproject.ivr.domain.Config;
 import org.motechproject.ivr.exception.ConfigNotFoundException;
 import org.motechproject.ivr.domain.Configs;
 import org.motechproject.ivr.service.ConfigService;
-import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.config.SettingsFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ import com.google.gson.JsonIOException;
 
 /**
  * See {@link org.motechproject.ivr.service.ConfigService}.
- * Uses the {@link org.motechproject.server.config.SettingsFacade} for storing IVR configurations
+ * Uses the {@link org.motechproject.config.SettingsFacade} for storing IVR configurations
  * inside a json file, since we can have multiple configurations.
  */
 @Service("configService")

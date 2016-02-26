@@ -15,7 +15,7 @@
     <mvc:annotation-driven/>
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
-    <bean id="messageCampaignSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
+    <bean id="messageCampaignSettings" class="org.motechproject.config.SettingsFacade" autowire="byType">
         <property name="rawConfigFiles">
             <list>
                 <value>classpath:message-campaigns.json</value>

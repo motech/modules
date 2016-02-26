@@ -32,7 +32,7 @@
         <constructor-arg ref="httpComponentsClientHttpRequestFactory" />
     </bean>
 
-    <bean id="hubSettings" class="org.motechproject.server.config.SettingsFacade"
+    <bean id="hubSettings" class="org.motechproject.config.SettingsFacade"
         autowire="byType">
         <property name="configFiles">
             <list>

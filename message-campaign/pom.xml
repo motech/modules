@@ -220,8 +220,7 @@
                             org.motechproject.event.listener.annotations,
                             org.motechproject.security.annotations,
                             org.motechproject.security.service,
-                            org.motechproject.server.config,
-                            org.motechproject.server.config.service,
+                            org.motechproject.config,
                             org.motechproject.config.service,
                             org.quartz.simpl,
                             *

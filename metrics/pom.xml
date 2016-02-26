@@ -35,11 +35,10 @@
                             org.aopalliance.aop,
                             org.springframework.aop,
                             org.springframework.aop.framework,
-                            org.motechproject.config.service,
                             org.motechproject.event.listener,
                             org.motechproject.event.listener.annotations,
-                            org.motechproject.server.config,
-                            org.motechproject.server.config.service,
+                            org.motechproject.config,
+                            org.motechproject.config.service,
                             *
                         </Import-Package>
                         <Bundle-DocURL>

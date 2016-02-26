@@ -99,7 +99,7 @@
                             net.sf.cglib.reflect,
                             org.aopalliance.aop,
                             org.motechproject.osgi.web,
-                            org.motechproject.server.config,
+                            org.motechproject.config,
                             org.slf4j,
                             org.slf4j.impl,
                             org.springframework.aop,

@@ -27,7 +27,7 @@ import java.util.Map;
 
 /**
  * See {@link org.motechproject.ivr.service.TemplateService}. Templates are stored using
- * the {@link org.motechproject.server.config.SettingsFacade} as raw configuration files.
+ * the {@link org.motechproject.config.SettingsFacade} as raw configuration files.
  */
 @Service("templateService")
 public class TemplateServiceImpl implements TemplateService {
