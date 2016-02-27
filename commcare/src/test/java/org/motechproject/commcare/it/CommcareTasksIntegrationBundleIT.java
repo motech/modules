@@ -14,7 +14,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.commcare.config.Config;
 import org.motechproject.commcare.domain.CommcareApplicationJson;
-import org.motechproject.commcare.domain.CommcareModuleJson;
 import org.motechproject.commcare.events.constants.DisplayNames;
 import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.commcare.events.constants.EventSubjects;
@@ -191,12 +190,15 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         List<TriggerEvent> triggerEvents = channel.getTriggerTaskEvents();
         List<ActionEvent> actionEvents = channel.getActionTaskEvents();
 
-        assertEquals(6, actionEvents.size());
-        assertEquals(10, triggerEvents.size());
+        assertEquals(7, actionEvents.size());
+        assertEquals(12, triggerEvents.size());
 
         TaskTriggerInformation expectedForm1 = new TaskTriggerInformation();
         TaskTriggerInformation expectedForm2 = new TaskTriggerInformation();
+        TaskTriggerInformation expectedForm3 = new TaskTriggerInformation();
+        TaskTriggerInformation expectedForm4 = new TaskTriggerInformation();
         TaskTriggerInformation expectedCaseBirth = new TaskTriggerInformation();
+        TaskTriggerInformation expectedCaseAppointment = new TaskTriggerInformation();
         TaskTriggerInformation expectedStockTx = new TaskTriggerInformation();
 
         expectedForm1.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareApplication.XMLNS1);
@@ -205,8 +207,17 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         expectedForm2.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareApplication.XMLNS2);
         assertTrue(containsTrigger(channel, expectedForm2));
 
+        expectedForm3.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareApplication.XMLNS3);
+        assertTrue(containsTrigger(channel, expectedForm3));
+
+        expectedForm4.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareApplication.XMLNS4);
+        assertTrue(containsTrigger(channel, expectedForm4));
+
         expectedCaseBirth.setSubject("org.motechproject.commcare.api.case." + config.getName() + ".birth");
         assertTrue(containsTrigger(channel, expectedCaseBirth));
+
+        expectedCaseAppointment.setSubject("org.motechproject.commcare.api.case." + config.getName() + ".appointment");
+        assertTrue(containsTrigger(channel, expectedCaseAppointment));
 
         expectedStockTx.setSubject(EventSubjects.RECEIVED_STOCK_TRANSACTION + '.' + config.getName());
         assertTrue(containsTrigger(channel, expectedStockTx));
@@ -219,18 +230,40 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         TriggerEvent form2Trigger = getTrigger(channel, expectedForm2);
         assertEquals("org.motechproject.commcare.api.forms", form2Trigger.getTriggerListenerSubject());
         assertTriggerParameters(form2Trigger.getEventParameters(),
-                Arrays.asList("/data/patient_name", "/data/last_visit", "/data/medications", "/data/meta/username", "/data/case/create/case_type"));
+                Arrays.asList("/data/patient_name", "/data/meta/username", "/data/case/create/case_type"));
 
-        TriggerEvent caseTrigger = getTrigger(channel, expectedCaseBirth);
-        assertEquals("org.motechproject.commcare.api.case", caseTrigger.getTriggerListenerSubject());
-        assertTriggerParameters(caseTrigger.getEventParameters(),
+        TriggerEvent form3Trigger = getTrigger(channel, expectedForm3);
+        assertEquals("org.motechproject.commcare.api.forms", form3Trigger.getTriggerListenerSubject());
+        assertTriggerParameters(form3Trigger.getEventParameters(),
+                Arrays.asList("/data/last_visit", "/data/meta/username", "/data/case/create/case_type"));
+
+        TriggerEvent form4Trigger = getTrigger(channel, expectedForm4);
+        assertEquals("org.motechproject.commcare.api.forms", form4Trigger.getTriggerListenerSubject());
+        assertTriggerParameters(form4Trigger.getEventParameters(),
+                Arrays.asList("/data/medications", "/data/meta/username", "/data/case/create/case_type"));
+
+        TriggerEvent caseBirthTrigger = getTrigger(channel, expectedCaseBirth);
+        assertEquals("org.motechproject.commcare.api.case", caseBirthTrigger.getTriggerListenerSubject());
+        assertTriggerParameters(caseBirthTrigger.getEventParameters(),
                 Arrays.asList("motherName", "childName", "dob", "caseName"));
+
+        TriggerEvent caseAppointmentTrigger = getTrigger(channel, expectedCaseAppointment);
+        assertEquals("org.motechproject.commcare.api.case", caseAppointmentTrigger.getTriggerListenerSubject());
+        assertTriggerParameters(caseAppointmentTrigger.getEventParameters(),
+                Arrays.asList("visitDate", "isPregnant", "caseName"));
+
+        TriggerEvent caseDeathTrigger = getTrigger(channel, expectedCaseAppointment);
+        assertEquals("org.motechproject.commcare.api.case", caseAppointmentTrigger.getTriggerListenerSubject());
+        assertTriggerParameters(caseAppointmentTrigger.getEventParameters(),
+                Arrays.asList("dod", "caseName"));
 
         verifyTaskAction(channel, prepareStockLedgerAction());
         verifyTaskAction(channel, prepareCreateCaseAction());
         verifyTaskAction(channel, prepareUpdateCaseAction());
         verifyTaskAction(channel, prepareSubmitForm1Action());
         verifyTaskAction(channel, prepareSubmitForm2Action());
+        verifyTaskAction(channel, prepareSubmitForm3Action());
+        verifyTaskAction(channel, prepareSubmitForm4Action());
     }
 
     private void verifyTaskAction(Channel channel, ActionEvent expected) {
@@ -254,27 +287,17 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     }
 
     private void createMockCommcareSchema() {
-        CommcareModuleJson moduleJson1;
-        moduleJson1 = DummyCommcareApplication.getApplicationsForFormsInConfigOne().get(0).getModules().get(0);
-        moduleJson1.setCaseType(DummyCommcareApplication.getApplicationsForCasesInConfigOne().get(0).getModules().get(0).getCaseType());
-        moduleJson1.setCaseProperties(DummyCommcareApplication.getApplicationsForCasesInConfigOne().get(0).getModules().get(0).getCaseProperties());
-        CommcareModuleJson moduleJson2;
-        moduleJson2 = DummyCommcareApplication.getApplicationsForFormsInConfigOne().get(0).getModules().get(1);
-        moduleJson2.setCaseType(DummyCommcareApplication.getApplicationsForCasesInConfigOne().get(0).getModules().get(1).getCaseType());
-        moduleJson2.setCaseProperties(DummyCommcareApplication.getApplicationsForCasesInConfigOne().get(0).getModules().get(1).getCaseProperties());
-
-        CommcareApplicationJson applicationJson1 = new CommcareApplicationJson("123", "TestApp1", "none", Arrays.asList(moduleJson1, moduleJson2));
-
+        CommcareApplicationJson applicationJson1 = DummyCommcareApplication.getApplicationsForConfigOne().get(0);
+        applicationJson1.setCommcareAppId("123");
+        applicationJson1.setApplicationName("TestApp1");
+        applicationJson1.setResourceUri("none");
         applicationJson1.setConfigName(config.getName());
 
-        CommcareModuleJson moduleJson3;
-        moduleJson3 = DummyCommcareApplication.getApplicationsForCasesInConfigOne().get(1).getModules().get(0);
-        moduleJson3.setCaseType(DummyCommcareApplication.getApplicationsForCasesInConfigOne().get(1).getModules().get(0).getCaseType());
-        moduleJson3.setCaseProperties(DummyCommcareApplication.getApplicationsForCasesInConfigOne().get(1).getModules().get(0).getCaseProperties());
-
-        CommcareApplicationJson applicationJson2 = new CommcareApplicationJson("124", "TestApp2", "none", Arrays.asList(moduleJson3));
-
-        applicationJson1.setConfigName(config.getName());
+        CommcareApplicationJson applicationJson2 = DummyCommcareApplication.getApplicationsForConfigOne().get(1);
+        applicationJson2.setCommcareAppId("124");
+        applicationJson2.setApplicationName("TestApp2");
+        applicationJson2.setResourceUri("none");
+        applicationJson2.setConfigName(config.getName());
 
         applicationDataService.create(applicationJson1);
         applicationDataService.create(applicationJson2);
@@ -477,7 +500,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setOrder(order++);
         parameters.add(builder.createActionParameter());
 
-        String displayName = String.format("Submit Form: form1 [%s]", config.getName());
+        String displayName = String.format("Submit Form: form1 [TestApp1: %s]", config.getName());
 
         ActionEventBuilder actionBuilder = new ActionEventBuilder()
                 .setDisplayName(displayName)
@@ -499,6 +522,20 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setOrder(order++);
         parameters.add(builder.createActionParameter());
 
+        String displayName = String.format("Submit Form: form2 [TestApp1: %s]", config.getName());
+
+        ActionEventBuilder actionBuilder = new ActionEventBuilder()
+                .setDisplayName(displayName)
+                .setSubject(EventSubjects.SUBMIT_FORM + ".http://openrosa.org/formdesigner/12KE58A2-54C5-1Z4B-AR2S-Z0345995RF9E." + config.getName())
+                .setActionParameters(parameters);
+        return actionBuilder.createActionEvent();
+    }
+
+    private ActionEvent prepareSubmitForm3Action() {
+        SortedSet<ActionParameter> parameters = new TreeSet<>();
+        ActionParameterBuilder builder;
+        int order = 0;
+
         builder = new ActionParameterBuilder()
                 .setDisplayName("Last visit")
                 .setKey(DummyCommcareApplication.FORM_QUESTION4)
@@ -506,6 +543,20 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setType(ParameterType.UNICODE)
                 .setOrder(order++);
         parameters.add(builder.createActionParameter());
+
+        String displayName = String.format("Submit Form: form3 [TestApp1: %s]", config.getName());
+
+        ActionEventBuilder actionBuilder = new ActionEventBuilder()
+                .setDisplayName(displayName)
+                .setSubject(EventSubjects.SUBMIT_FORM + ".http://openrosa.org/formdesigner/22KE58A2-54C5-1Z4B-AR2S-Z0345995RF9E." + config.getName())
+                .setActionParameters(parameters);
+        return actionBuilder.createActionEvent();
+    }
+
+    private ActionEvent prepareSubmitForm4Action() {
+        SortedSet<ActionParameter> parameters = new TreeSet<>();
+        ActionParameterBuilder builder;
+        int order = 0;
 
         builder = new ActionParameterBuilder()
                 .setDisplayName("Does patient take any medications?")
@@ -515,11 +566,11 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setOrder(order++);
         parameters.add(builder.createActionParameter());
 
-        String displayName = String.format("Submit Form: form2 [%s]", config.getName());
+        String displayName = String.format("Submit Form: form4 [TestApp2: %s]", config.getName());
 
         ActionEventBuilder actionBuilder = new ActionEventBuilder()
                 .setDisplayName(displayName)
-                .setSubject(EventSubjects.SUBMIT_FORM + ".http://openrosa.org/formdesigner/12KE58A2-54C5-1Z4B-AR2S-Z0345995RF9E." + config.getName())
+                .setSubject(EventSubjects.SUBMIT_FORM + ".http://openrosa.org/formdesigner/32KE58A2-54C5-1Z4B-AR2S-Z0345995RF9E." + config.getName())
                 .setActionParameters(parameters);
         return actionBuilder.createActionEvent();
     }

@@ -54,8 +54,8 @@ public class FormTriggerBuilderTest {
     public void setUp() {
         initMocks(this);
         when(configService.getConfigs()).thenReturn(configs);
-        when(applicationService.getByConfigName("ConfigOne")).thenReturn(DummyCommcareApplication.getApplicationsForFormsInConfigOne());
-        when(applicationService.getByConfigName("ConfigTwo")).thenReturn(DummyCommcareApplication.getApplicationsForFormsInConfigTwo());
+        when(applicationService.getByConfigName("ConfigOne")).thenReturn(DummyCommcareApplication.getApplicationsForConfigOne());
+        when(applicationService.getByConfigName("ConfigTwo")).thenReturn(DummyCommcareApplication.getApplicationsForConfigTwo());
 
         formTriggerBuilder = new FormTriggerBuilder(applicationService, configService);
     }
@@ -68,13 +68,13 @@ public class FormTriggerBuilderTest {
         assertFalse(triggers.isEmpty());
 
         int counter = 0;
-        for (CommcareApplicationJson application: DummyCommcareApplication.getApplicationsForFormsInConfigOne()) {
+        for (CommcareApplicationJson application: DummyCommcareApplication.getApplicationsForConfigOne()) {
             for (CommcareModuleJson module: application.getModules()) {
                 counter += module.getFormSchemas().size();
             }
         }
 
-        for (CommcareApplicationJson application: DummyCommcareApplication.getApplicationsForFormsInConfigTwo()) {
+        for (CommcareApplicationJson application: DummyCommcareApplication.getApplicationsForConfigTwo()) {
             for (CommcareModuleJson module: application.getModules()) {
                 counter += module.getFormSchemas().size();
             }

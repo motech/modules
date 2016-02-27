@@ -19,7 +19,7 @@ public final class ResponseXML {
                 "      version=\"41\"\n" +
                 "      name=\"" + FORM_NAME + "\"\n" +
                 "      xmlns:jrm=\"http://dev.commcarehq.org/jr/xforms\"\n" +
-                "      xmlns=\"" + DummyCommcareSchema.XMLNS1 + "\">\n" +
+                "      xmlns=\"" + DummyCommcareApplication.XMLNS1 + "\">\n" +
                 "  <" + ATTR1 + ">" + ATTR1_VALUE + "</" + ATTR1 + ">\n" +
                 "  <" + ATTR2 + ">" + ATTR2_VALUE + "</" + ATTR2 + ">\n" +
                 "  <n0:case case_id=\"" + CASE_ID + "\"\n" +

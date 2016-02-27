@@ -11,7 +11,7 @@ import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.service.impl.CommcareCaseEventParser;
 import org.motechproject.commcare.service.impl.CommcareFormsEventParser;
 import org.motechproject.commcare.util.ConfigsUtils;
-import org.motechproject.commcare.util.DummyCommcareSchema;
+import org.motechproject.commcare.util.DummyCommcareApplication;
 import org.motechproject.commcare.util.ResponseXML;
 import org.motechproject.commcare.web.CasesController;
 import org.motechproject.commcare.web.FullFormController;
@@ -90,7 +90,7 @@ public class CommcareEventParsersTest {
         String parsedSubject = formsEventParser.parseEventSubject(eventSubject, eventParameters);
 
         assertEquals(EventSubjects.FORMS_EVENT, eventSubject);
-        assertEquals(EventSubjects.FORMS_EVENT + "." + config.getName() + "." + DummyCommcareSchema.XMLNS1, parsedSubject);
+        assertEquals(EventSubjects.FORMS_EVENT + "." + config.getName() + "." + DummyCommcareApplication.XMLNS1, parsedSubject);
     }
 
     @Test

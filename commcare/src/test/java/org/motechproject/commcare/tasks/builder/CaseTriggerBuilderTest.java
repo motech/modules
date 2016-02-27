@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.commcare.config.Configs;
+import org.motechproject.commcare.domain.CommcareApplicationJson;
+import org.motechproject.commcare.domain.CommcareModuleJson;
 import org.motechproject.commcare.events.constants.EventSubjects;
 import org.motechproject.commcare.service.CommcareApplicationService;
 import org.motechproject.commcare.service.CommcareConfigService;
@@ -25,6 +27,7 @@ import static org.motechproject.commcare.util.DummyCommcareApplication.CASE_FIEL
 import static org.motechproject.commcare.util.DummyCommcareApplication.CASE_FIELD3;
 import static org.motechproject.commcare.util.DummyCommcareApplication.CASE_FIELD4;
 import static org.motechproject.commcare.util.DummyCommcareApplication.CASE_FIELD5;
+import static org.motechproject.commcare.util.DummyCommcareApplication.CASE_FIELD6;
 
 public class CaseTriggerBuilderTest {
 
@@ -44,8 +47,8 @@ public class CaseTriggerBuilderTest {
     public void setUp() {
         initMocks(this);
         when(configService.getConfigs()).thenReturn(configs);
-        when(applicationService.getByConfigName("ConfigOne")).thenReturn(DummyCommcareApplication.getApplicationsForCasesInConfigOne());
-        when(applicationService.getByConfigName("ConfigTwo")).thenReturn(DummyCommcareApplication.getApplicationsForCasesInConfigTwo());
+        when(applicationService.getByConfigName("ConfigOne")).thenReturn(DummyCommcareApplication.getApplicationsForConfigOne());
+        when(applicationService.getByConfigName("ConfigTwo")).thenReturn(DummyCommcareApplication.getApplicationsForConfigTwo());
 
         caseTriggerBuilder = new CaseTriggerBuilder(applicationService, configService);
     }
@@ -57,9 +60,21 @@ public class CaseTriggerBuilderTest {
 
         assertFalse(triggerEventRequests.isEmpty());
 
-        // One trigger for cases is always built, therefore we should always have one case more
-        assertEquals(DummyCommcareApplication.getApplicationsForCasesInConfigOne().size() +
-                DummyCommcareApplication.getApplicationsForCasesInConfigTwo().size() + 1, triggerEventRequests.size());
+        int counter = 0;
+        for (CommcareApplicationJson application: DummyCommcareApplication.getApplicationsForConfigOne()) {
+            for (CommcareModuleJson module: application.getModules()) {
+                counter ++;
+            }
+        }
+
+        for (CommcareApplicationJson application: DummyCommcareApplication.getApplicationsForConfigTwo()) {
+            for (CommcareModuleJson module: application.getModules()) {
+                counter ++;
+            }
+        }
+
+        // One trigger for cases is always built (for every configuration), therefore we should always have one case more
+        assertEquals(counter + 2, triggerEventRequests.size());
 
 
         for(TriggerEventRequest request : triggerEventRequests) {
@@ -84,7 +99,7 @@ public class CaseTriggerBuilderTest {
                 case "org.motechproject.commcare.api.case.ConfigOne.death":
                     assertEquals(1 + CASE_PREDEFINED_FIELDS, request.getEventParameters().size());
                     assertEquals("Received Case: death [app2: ConfigOne]", request.getDisplayName());
-                    assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD3));
+                    assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD6));
                     break;
                 case "org.motechproject.commcare.api.case.ConfigOne":
                     assertEquals(2, request.getEventParameters().size());
