@@ -199,6 +199,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         TaskTriggerInformation expectedForm4 = new TaskTriggerInformation();
         TaskTriggerInformation expectedCaseBirth = new TaskTriggerInformation();
         TaskTriggerInformation expectedCaseAppointment = new TaskTriggerInformation();
+        TaskTriggerInformation expectedCaseDeath = new TaskTriggerInformation();
         TaskTriggerInformation expectedStockTx = new TaskTriggerInformation();
 
         expectedForm1.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareApplication.XMLNS1);
@@ -218,6 +219,9 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         expectedCaseAppointment.setSubject("org.motechproject.commcare.api.case." + config.getName() + ".appointment");
         assertTrue(containsTrigger(channel, expectedCaseAppointment));
+
+        expectedCaseDeath.setSubject("org.motechproject.commcare.api.case." + config.getName() + ".death");
+        assertTrue(containsTrigger(channel, expectedCaseDeath));
 
         expectedStockTx.setSubject(EventSubjects.RECEIVED_STOCK_TRANSACTION + '.' + config.getName());
         assertTrue(containsTrigger(channel, expectedStockTx));
@@ -252,9 +256,9 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         assertTriggerParameters(caseAppointmentTrigger.getEventParameters(),
                 Arrays.asList("visitDate", "isPregnant", "caseName"));
 
-        TriggerEvent caseDeathTrigger = getTrigger(channel, expectedCaseAppointment);
-        assertEquals("org.motechproject.commcare.api.case", caseAppointmentTrigger.getTriggerListenerSubject());
-        assertTriggerParameters(caseAppointmentTrigger.getEventParameters(),
+        TriggerEvent caseDeathTrigger = getTrigger(channel, expectedCaseDeath);
+        assertEquals("org.motechproject.commcare.api.case", caseDeathTrigger.getTriggerListenerSubject());
+        assertTriggerParameters(caseDeathTrigger.getEventParameters(),
                 Arrays.asList("dod", "caseName"));
 
         verifyTaskAction(channel, prepareStockLedgerAction());
