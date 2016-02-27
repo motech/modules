@@ -4,7 +4,7 @@ import org.motechproject.commcare.CommcareDataProvider;
 import org.motechproject.commcare.service.CommcareApplicationService;
 import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.tasks.builder.ChannelRequestBuilder;
-import org.motechproject.tasks.ex.ValidationException;
+import org.motechproject.tasks.exception.ValidationException;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;

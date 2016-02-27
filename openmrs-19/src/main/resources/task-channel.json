@@ -83,6 +83,11 @@
           "required" : false
         },
         {
+          "key": "causeOfDeathUUID",
+          "displayName": "openMRS.person.causeOfDeath.id",
+          "required": false
+        },
+        {
           "key": "motechId",
           "displayName": "openMRS.motechId",
           "required" : true
