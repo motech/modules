@@ -140,7 +140,9 @@ public final class ConverterUtils {
         }
         converted.setBirthdateEstimated((Boolean) ObjectUtils.defaultIfNull(person.getBirthDateEstimated(), false));
         converted.setDead((Boolean) ObjectUtils.defaultIfNull(person.getDead(), false));
-        converted.setCauseOfDeath(toConcept(person.getCauseOfDeath()));
+        if (person.getCauseOfDeath() != null) {
+            converted.setCauseOfDeath(toConcept(person.getCauseOfDeath()));
+        }
         converted.setGender(person.getGender());
 
         if (includeNames) {
