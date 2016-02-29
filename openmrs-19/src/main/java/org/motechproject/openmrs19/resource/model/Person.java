@@ -5,7 +5,6 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.Expose;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.lang.reflect.Type;
 import java.util.Date;
@@ -289,6 +288,9 @@ public class Person {
         private String uuid;
 
         @Expose
+        private String preferred;
+
+        @Expose
         private String address1;
 
         @Expose
@@ -340,6 +342,14 @@ public class Person {
 
         public void setUuid(String uuid) {
             this.uuid = uuid;
+        }
+
+        public String getPreferred() {
+            return preferred;
+        }
+
+        public void setPreferred(String preferred) {
+            this.preferred = preferred;
         }
 
         public String getAddress1() {

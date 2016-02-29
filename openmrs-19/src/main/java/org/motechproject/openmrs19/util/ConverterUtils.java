@@ -442,7 +442,7 @@ public final class ConverterUtils {
         Person person = new Person();
         person.setUuid(savedPerson.getPersonId());
         converted.setPerson(person);
-
+        converted.getPerson().getPreferredAddress().setPreferred("true");
         Location location = null;
         if (patient.getFacility() != null && StringUtils.isNotBlank(patient.getFacility().getFacilityId())) {
             location = new Location();
