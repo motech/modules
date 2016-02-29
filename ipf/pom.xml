@@ -57,12 +57,12 @@
 
         <!-- Spring -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
+            <groupId>org.apache.servicemix.bundles</groupId>
+            <artifactId>org.apache.servicemix.bundles.spring-context-support</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aop</artifactId>
+            <groupId>org.apache.servicemix.bundles</groupId>
+            <artifactId>org.apache.servicemix.bundles.spring-aop</artifactId>
         </dependency>
 
         <!--Groovy-->
@@ -94,9 +94,6 @@
                             org.motechproject.ipf.service;version=${project.version}
                         </Export-Package>
                         <Import-Package>
-                            net.sf.cglib.core,
-                            net.sf.cglib.proxy,
-                            net.sf.cglib.reflect,
                             org.aopalliance.aop,
                             org.motechproject.osgi.web,
                             org.motechproject.server.config,

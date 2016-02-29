@@ -29,12 +29,12 @@
                             org.motechproject.metrics.*;version=${project.version}
                         </Export-Package>
                         <Import-Package>
-                            net.sf.cglib.core,
-                            net.sf.cglib.proxy,
-                            net.sf.cglib.reflect,
                             org.aopalliance.aop,
+                            org.apache.bval.jsr303,
+                            org.apache.bval.constraints,
                             org.springframework.aop,
                             org.springframework.aop.framework,
+                            org.springframework.validation.beanvalidation,
                             org.motechproject.config.service,
                             org.motechproject.event.listener,
                             org.motechproject.event.listener.annotations,

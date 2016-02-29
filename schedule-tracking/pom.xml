@@ -130,7 +130,11 @@
                             org.aopalliance.aop,
                             org.springframework.aop,
                             org.springframework.aop.framework,
+                            org.springframework.cglib.core,
+                            org.springframework.cglib.proxy,
+                            org.springframework.cglib.reflect,
                             org.springframework.transaction,
+                            org.springframework.validation.beanvalidation,
                             *
                         </Import-Package>
                         <Bundle-DocURL>
