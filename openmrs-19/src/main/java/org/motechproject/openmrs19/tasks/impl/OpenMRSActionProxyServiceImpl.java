@@ -57,7 +57,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     public void createPatient(String firstName, String middleName, String lastName, String address, DateTime dateOfBirth,
                               Boolean birthDateEstimated, String gender, Boolean dead, String causeOfDeathUUID, String motechId,
                               String locationName, Map<String, String> identifiers) {
-        OpenMRSConcept causeOfDeath = conceptService.getConceptByUuid(causeOfDeathUUID);
+        OpenMRSConcept causeOfDeath = StringUtils.isNotEmpty(causeOfDeathUUID) ? conceptService.getConceptByUuid(causeOfDeathUUID) : null;
 
         OpenMRSPerson person = new OpenMRSPerson();
         person.setFirstName(firstName);
