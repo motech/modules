@@ -66,7 +66,22 @@ public final class ConverterUtils {
         converted.setGender(person.getGender());
 
         if (person.getPreferredAddress() != null) {
-            converted.setAddress(person.getPreferredAddress().getAddress1());
+            converted.setAddress(
+                    person.getPreferredAddress().getAddress1() + "," +
+                    person.getPreferredAddress().getAddress2() + "," +
+                    person.getPreferredAddress().getCityVillage() + "," +
+                    person.getPreferredAddress().getStateProvince() + "," +
+                    person.getPreferredAddress().getCountry() + "," +
+                    person.getPreferredAddress().getPostalCode() + "," +
+                    person.getPreferredAddress().getCountryDistrict() + "," +
+                    person.getPreferredAddress().getAddress3() + "," +
+                    person.getPreferredAddress().getAddress4() + "," +
+                    person.getPreferredAddress().getAddress5() + "," +
+                    person.getPreferredAddress().getAddress6() + "," +
+                    person.getPreferredAddress().getStartDate() + "," +
+                    person.getPreferredAddress().getEndDate() + "," +
+                    person.getPreferredAddress().getLatitude() + "," +
+                    person.getPreferredAddress().getLongtitude());
         }
 
         if (person.getBirthdate() != null) {

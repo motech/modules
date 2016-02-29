@@ -5,6 +5,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.Expose;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.lang.reflect.Type;
 import java.util.Date;
@@ -290,6 +291,49 @@ public class Person {
         @Expose
         private String address1;
 
+        @Expose
+        private String address2;
+
+        @Expose
+        private String cityVillage;
+
+        @Expose
+        private String stateProvince;
+
+        @Expose
+        private String country;
+
+        @Expose
+        private String postalCode;
+
+        @Expose
+        private String countryDistrict;
+
+        @Expose
+        private String address3;
+
+        @Expose
+        private String address4;
+
+        @Expose
+        private String address5;
+
+        @Expose
+        private String address6;
+
+        @Expose
+        private String startDate;
+
+        @Expose
+        private String endDate;
+
+        @Expose
+        private String latitude;
+
+        @Expose
+        private String longtitude;
+
+
         public String getUuid() {
             return uuid;
         }
@@ -305,6 +349,121 @@ public class Person {
         public void setAddress1(String address1) {
             this.address1 = address1;
         }
+
+        public String getAddress2() {
+            return address2;
+        }
+
+        public void setAddress2(String address2) {
+            this.address2 = address2;
+        }
+
+        public String getCityVillage() {
+            return cityVillage;
+        }
+
+        public void setCityVillage(String cityVillage) {
+            this.cityVillage = cityVillage;
+        }
+
+        public String getStateProvince() {
+            return stateProvince;
+        }
+
+        public void setStateProvince(String stateProvince) {
+            this.stateProvince = stateProvince;
+        }
+
+        public String getCountry() {
+            return country;
+        }
+
+        public void setCountry(String country) {
+            this.country = country;
+        }
+
+        public String getPostalCode() {
+            return postalCode;
+        }
+
+        public void setPostalCode(String postalCode) {
+            this.postalCode = postalCode;
+        }
+
+        public String getCountryDistrict() {
+            return countryDistrict;
+        }
+
+        public void setCountryDistrict(String countryDistrict) {
+            this.countryDistrict = countryDistrict;
+        }
+
+        public String getAddress3() {
+            return address3;
+        }
+
+        public void setAddress3(String address3) {
+            this.address3 = address3;
+        }
+
+        public String getAddress4() {
+            return address4;
+        }
+
+        public void setAddress4(String address4) {
+            this.address4 = address4;
+        }
+
+        public String getAddress5() {
+            return address5;
+        }
+
+        public void setAddress5(String address5) {
+            this.address5 = address5;
+        }
+
+        public String getAddress6() {
+            return address6;
+        }
+
+        public void setAddress6(String address6) {
+            this.address6 = address6;
+        }
+
+        public String getStartDate() {
+            return startDate;
+        }
+
+        public void setStartDate(String startDate) {
+            this.startDate = startDate;
+        }
+
+        public String getEndDate() {
+            return endDate;
+        }
+
+        public void setEndDate(String endDate) {
+            this.endDate = endDate;
+        }
+
+        public String getLatitude() {
+            return latitude;
+        }
+
+        public void setLatitude(String latitude) {
+            this.latitude = latitude;
+        }
+
+        public String getLongtitude() {
+            return longtitude;
+        }
+
+        public void setLongtitude(String longtitude) {
+            this.longtitude = longtitude;
+        }
+
+
+
 
         @Override
         public int hashCode() {
