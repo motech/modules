@@ -194,7 +194,9 @@ public class OpenMRSPerson {
         return equalNameData(other) && equalAgeAndBirthDates(other) && Objects.equals(id, other.id)
                 && Objects.equals(address, other.address) && Objects.equals(gender, other.gender)
                 && Objects.equals(attributes, other.attributes) && Objects.equals(deathDate, other.deathDate)
-                && dead == other.dead && Objects.equals(display, other.display);
+                && dead == other.dead && Objects.equals(display, other.display)
+                && Objects.equals(causeOfDeath, other.causeOfDeath);
+
     }
 
     public boolean equalNameData(OpenMRSPerson other) {
@@ -224,6 +226,8 @@ public class OpenMRSPerson {
         hash = hash * 31 + Boolean.valueOf(dead).hashCode();
         hash = hash * 31 + ObjectUtils.hashCode(attributes);
         hash = hash * 31 + ObjectUtils.hashCode(deathDate);
+        hash = hash * 31 + ObjectUtils.hashCode(causeOfDeath);
+
         return hash;
     }
 
