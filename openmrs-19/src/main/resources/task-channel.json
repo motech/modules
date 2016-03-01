@@ -74,6 +74,11 @@
         {
           "key": "gender",
           "displayName": "openMRS.person.gender",
+          "type" : "SELECT",
+          "options" : [
+            "M",
+            "F"
+          ],
           "required" : true
         },
         {
