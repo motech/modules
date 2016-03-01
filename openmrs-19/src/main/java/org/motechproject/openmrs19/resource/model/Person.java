@@ -288,9 +288,6 @@ public class Person {
         private String uuid;
 
         @Expose
-        private String preferred;
-
-        @Expose
         private String address1;
 
         @Expose
@@ -341,14 +338,6 @@ public class Person {
 
         public void setUuid(String uuid) {
             this.uuid = uuid;
-        }
-
-        public String getPreferred() {
-            return preferred;
-        }
-
-        public void setPreferred(String preferred) {
-            this.preferred = preferred;
         }
 
         public String getAddress1() {
@@ -486,7 +475,7 @@ public class Person {
 
         @Override
         public int hashCode() {
-            return Objects.hash(uuid, preferred, address1, address2, cityVillage, stateProvince, country, postalCode, countryDistrict, address3, address4, address5, address6, startDate, endDate, latitude, longitude);
+            return Objects.hash(uuid, address1, address2, cityVillage, stateProvince, country, postalCode, countryDistrict, address3, address4, address5, address6, startDate, endDate, latitude, longitude);
         }
 
         @Override //NO CHECKSTYLE Cyclomatic Complexity
@@ -499,15 +488,14 @@ public class Person {
             }
             final PreferredAddress other = (PreferredAddress) obj;
 
-            return  Objects.equals(this.uuid, other.uuid) && Objects.equals(this.preferred, other.preferred) &&
-                    Objects.equals(this.address1, other.address1) && Objects.equals(this.address2, other.address2) &&
-                    Objects.equals(this.cityVillage, other.cityVillage) && Objects.equals(this.stateProvince, other.stateProvince) &&
-                    Objects.equals(this.country, other.country) && Objects.equals(this.postalCode, other.postalCode) &&
-                    Objects.equals(this.countryDistrict, other.countryDistrict) && Objects.equals(this.address3, other.address3) &&
-                    Objects.equals(this.address4, other.address4) && Objects.equals(this.address5, other.address5) &&
-                    Objects.equals(this.address6, other.address6) && Objects.equals(this.startDate, other.startDate) &&
-                    Objects.equals(this.endDate, other.endDate) && Objects.equals(this.latitude, other.latitude) &&
-                    Objects.equals(this.longitude, other.longitude);
+            return  Objects.equals(this.uuid, other.uuid) && Objects.equals(this.address1, other.address1) &&
+                    Objects.equals(this.address2, other.address2) && Objects.equals(this.cityVillage, other.cityVillage) &&
+                    Objects.equals(this.stateProvince, other.stateProvince) && Objects.equals(this.country, other.country) &&
+                    Objects.equals(this.postalCode, other.postalCode) && Objects.equals(this.countryDistrict, other.countryDistrict) &&
+                    Objects.equals(this.address3, other.address3) && Objects.equals(this.address4, other.address4) &&
+                    Objects.equals(this.address5, other.address5) && Objects.equals(this.address6, other.address6) &&
+                    Objects.equals(this.startDate, other.startDate) && Objects.equals(this.endDate, other.endDate) &&
+                    Objects.equals(this.latitude, other.latitude) && Objects.equals(this.longitude, other.longitude);
         }
     }
 
