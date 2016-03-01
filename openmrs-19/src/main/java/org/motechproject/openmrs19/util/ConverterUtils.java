@@ -66,7 +66,7 @@ public final class ConverterUtils {
         converted.setGender(person.getGender());
 
         if (person.getPreferredAddress() != null) {
-            converted.setAddress(person.getPreferredAddress().getFullAdressString());
+            converted.setAddress(person.getPreferredAddress().getFullAddressString());
         }
 
         if (person.getBirthdate() != null) {
@@ -125,7 +125,9 @@ public final class ConverterUtils {
         }
         converted.setBirthdateEstimated((Boolean) ObjectUtils.defaultIfNull(person.getBirthDateEstimated(), false));
         converted.setDead((Boolean) ObjectUtils.defaultIfNull(person.getDead(), false));
-        converted.setCauseOfDeath(toConcept(person.getCauseOfDeath()));
+        if (person.getCauseOfDeath() != null) {
+            converted.setCauseOfDeath(toConcept(person.getCauseOfDeath()));
+        }
         converted.setGender(person.getGender());
 
         if (includeNames) {
@@ -426,7 +428,6 @@ public final class ConverterUtils {
         Patient converted = new Patient();
         Person person = new Person();
         person.setUuid(savedPerson.getPersonId());
-        person.getPreferredAddress().setPreferred("true");
         converted.setPerson(person);
 
         Location location = null;

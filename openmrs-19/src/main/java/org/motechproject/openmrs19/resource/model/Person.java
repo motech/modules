@@ -471,7 +471,7 @@ public class Person {
             this.longitude = longitude;
         }
 
-        public String getFullAdressString() {
+        public String getFullAddressString() {
             StringBuilder address = new StringBuilder();
             return  address.append(address1).append(",").append(address2).append(",")
                     .append(cityVillage).append(",").append(stateProvince).append(",")
