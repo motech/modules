@@ -66,7 +66,7 @@ public final class ConverterUtils {
         converted.setGender(person.getGender());
 
         if (person.getPreferredAddress() != null) {
-            converted.setAddress(person.getPreferredAddress().getAddress1());
+            converted.setAddress(person.getPreferredAddress().getFullAddressString());
         }
 
         if (person.getBirthdate() != null) {
