@@ -42,12 +42,12 @@ public class FormActionEventHandlerTest {
         formFields.put("/data/mother/dob", "1993-02-29");
         formFields.put("/data/mother/child", "Mark");
 
-        event = new MotechEvent(EventSubjects.SEND_FORM + "." + XMLNS + "." + CONFIG, formFields);
+        event = new MotechEvent(EventSubjects.SUBMIT_FORM + "." + XMLNS + "." + CONFIG, formFields);
     }
 
     @Test
-    public void shouldConvertEventParametersAndSendForm() {
-        formActionEventHandler.sendForm(event);
+    public void shouldConvertEventParametersAndSubmitForm() {
+        formActionEventHandler.submitForm(event);
 
         ArgumentCaptor<FormXml> captor = ArgumentCaptor.forClass(FormXml.class);
         verify(commcareFormService).uploadForm(captor.capture(), eq(CONFIG));

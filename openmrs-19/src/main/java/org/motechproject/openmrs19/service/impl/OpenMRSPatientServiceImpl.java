@@ -32,6 +32,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service("patientService")
 public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
@@ -149,6 +150,10 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         Validate.isTrue(StringUtils.isNotEmpty(patient.getMotechId()), "You must provide a motech id to save a patient");
         Validate.notNull(patient.getPerson(), "Person cannot be null when saving a patient");
         Validate.notNull(patient.getFacility(), "Facility cannot be null when saving a patient");
+        if (Objects.equals(patient.getPerson().getDead(), true)) {
+            Validate.notNull(patient.getPerson().getCauseOfDeath(), "Cause of death cannot be null when dead flag is set to true");
+        }
+
     }
 
     @Override

@@ -58,6 +58,9 @@ public class Person {
     @Expose
     private List<Attribute> attributes;
 
+    @Expose
+    private AuditInfo auditInfo;
+
     public String getUuid() {
         return uuid;
     }
@@ -170,9 +173,17 @@ public class Person {
         this.addresses = addresses;
     }
 
+    public AuditInfo getAuditInfo() {
+        return auditInfo;
+    }
+
+    public void setAuditInfo(AuditInfo auditInfo) {
+        this.auditInfo = auditInfo;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, display, gender, age, birthdate, birthdateEstimated, dead, causeOfDeath, deathDate, preferredName, names, preferredAddress, addresses, attributes);
+        return Objects.hash(uuid, display, gender, age, birthdate, birthdateEstimated, dead, causeOfDeath, deathDate, preferredName, names, preferredAddress, addresses, auditInfo, attributes);
     }
 
     /**
@@ -279,6 +290,48 @@ public class Person {
         @Expose
         private String address1;
 
+        @Expose
+        private String address2;
+
+        @Expose
+        private String cityVillage;
+
+        @Expose
+        private String stateProvince;
+
+        @Expose
+        private String country;
+
+        @Expose
+        private String postalCode;
+
+        @Expose
+        private String countryDistrict;
+
+        @Expose
+        private String address3;
+
+        @Expose
+        private String address4;
+
+        @Expose
+        private String address5;
+
+        @Expose
+        private String address6;
+
+        @Expose
+        private String startDate;
+
+        @Expose
+        private String endDate;
+
+        @Expose
+        private String latitude;
+
+        @Expose
+        private String longitude;
+
         public String getUuid() {
             return uuid;
         }
@@ -295,9 +348,188 @@ public class Person {
             this.address1 = address1;
         }
 
+        public String getAddress2() {
+            return address2;
+        }
+
+        public void setAddress2(String address2) {
+            this.address2 = address2;
+        }
+
+        public String getCityVillage() {
+            return cityVillage;
+        }
+
+        public void setCityVillage(String cityVillage) {
+            this.cityVillage = cityVillage;
+        }
+
+        public String getStateProvince() {
+            return stateProvince;
+        }
+
+        public void setStateProvince(String stateProvince) {
+            this.stateProvince = stateProvince;
+        }
+
+        public String getCountry() {
+            return country;
+        }
+
+        public void setCountry(String country) {
+            this.country = country;
+        }
+
+        public String getPostalCode() {
+            return postalCode;
+        }
+
+        public void setPostalCode(String postalCode) {
+            this.postalCode = postalCode;
+        }
+
+        public String getCountryDistrict() {
+            return countryDistrict;
+        }
+
+        public void setCountryDistrict(String countryDistrict) {
+            this.countryDistrict = countryDistrict;
+        }
+
+        public String getAddress3() {
+            return address3;
+        }
+
+        public void setAddress3(String address3) {
+            this.address3 = address3;
+        }
+
+        public String getAddress4() {
+            return address4;
+        }
+
+        public void setAddress4(String address4) {
+            this.address4 = address4;
+        }
+
+        public String getAddress5() {
+            return address5;
+        }
+
+        public void setAddress5(String address5) {
+            this.address5 = address5;
+        }
+
+        public String getAddress6() {
+            return address6;
+        }
+
+        public void setAddress6(String address6) {
+            this.address6 = address6;
+        }
+
+        public String getStartDate() {
+            return startDate;
+        }
+
+        public void setStartDate(String startDate) {
+            this.startDate = startDate;
+        }
+
+        public String getEndDate() {
+            return endDate;
+        }
+
+        public void setEndDate(String endDate) {
+            this.endDate = endDate;
+        }
+
+        public String getLatitude() {
+            return latitude;
+        }
+
+        public void setLatitude(String latitude) {
+            this.latitude = latitude;
+        }
+
+        public String getLongitude() {
+            return longitude;
+        }
+
+        public void setLongitude(String longitude) {
+            this.longitude = longitude;
+        }
+
+        public String getFullAddressString() {
+            StringBuilder address = new StringBuilder();
+            return  address.append(address1).append(",").append(address2).append(",")
+                    .append(cityVillage).append(",").append(stateProvince).append(",")
+                    .append(country).append(",").append(postalCode).append(",")
+                    .append(countryDistrict).append(",").append(address3).append(",")
+                    .append(address4).append(",").append(address5).append(",")
+                    .append(address6).append(",").append(startDate).append(",")
+                    .append(endDate).append(",").append(latitude).append(",")
+                    .append(longitude).append(",")
+                    .toString();
+        }
+
         @Override
         public int hashCode() {
-            return Objects.hash(uuid, address1);
+            return Objects.hash(uuid, address1, address2, cityVillage, stateProvince, country, postalCode, countryDistrict, address3, address4, address5, address6, startDate, endDate, latitude, longitude);
+        }
+
+        @Override //NO CHECKSTYLE Cyclomatic Complexity
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null || getClass() != obj.getClass()) {
+                return false;
+            }
+            final PreferredAddress other = (PreferredAddress) obj;
+
+            return  Objects.equals(this.uuid, other.uuid) && Objects.equals(this.address1, other.address1) &&
+                    Objects.equals(this.address2, other.address2) && Objects.equals(this.cityVillage, other.cityVillage) &&
+                    Objects.equals(this.stateProvince, other.stateProvince) && Objects.equals(this.country, other.country) &&
+                    Objects.equals(this.postalCode, other.postalCode) && Objects.equals(this.countryDistrict, other.countryDistrict) &&
+                    Objects.equals(this.address3, other.address3) && Objects.equals(this.address4, other.address4) &&
+                    Objects.equals(this.address5, other.address5) && Objects.equals(this.address6, other.address6) &&
+                    Objects.equals(this.startDate, other.startDate) && Objects.equals(this.endDate, other.endDate) &&
+                    Objects.equals(this.latitude, other.latitude) && Objects.equals(this.longitude, other.longitude);
+        }
+    }
+
+    /**
+     * Represents audit info for that person
+     */
+
+    public static class AuditInfo {
+
+        @Expose
+        private Date dateCreated;
+
+        @Expose
+        private Date dateChanged;
+
+        public Date getDateCreated() {
+            return dateCreated;
+        }
+
+        public void setDateCreated(Date dateCreated) {
+            this.dateCreated = dateCreated;
+        }
+
+        public Date getDateChanged() {
+            return dateChanged;
+        }
+
+        public void setDateChanged(Date dateChanged) {
+            this.dateChanged = dateChanged;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(dateCreated, dateChanged);
         }
 
         @Override
@@ -308,8 +540,9 @@ public class Person {
             if (obj == null || getClass() != obj.getClass()) {
                 return false;
             }
-            final PreferredAddress other = (PreferredAddress) obj;
-            return Objects.equals(this.uuid, other.uuid) && Objects.equals(this.address1, other.address1);
+            final AuditInfo other = (AuditInfo) obj;
+            return Objects.equals(this.dateChanged, other.dateChanged)
+                    && Objects.equals(this.dateCreated, other.dateCreated);
         }
     }
 }

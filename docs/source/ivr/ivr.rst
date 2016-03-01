@@ -279,8 +279,7 @@ Settings
             Supported URI protocols are ``http://`` (generates REST call) and ``file://`` (generates file)
         * ``ignoredStatusFields``:
             A list of fields to be ignored when receiving IVR Call Status from the provider. All other fields received
-            during IVR Call Status and not mapped to CDR fields are added to the ``providerExtraData``
-          ``CallDetailRecord`` map field.
+            during IVR Call Status and not mapped to CDR fields are added to the ``providerExtraData`` ``CallDetailRecord`` map field.
         * ``servicesMap``:
             A map (in the "key1: value1, key2: value2" notation) of services that can be injected
             in Velocity templates where key is the name used in Velocity and value is the class of the OSGi service, for example

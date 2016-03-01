@@ -771,6 +771,7 @@
         <module>dhis2</module>
         <module>csd</module>
         <module>metrics</module>
+        <module>odk</module>
         <module>ipf</module>
         <module>atom-client</module>
     </modules>
