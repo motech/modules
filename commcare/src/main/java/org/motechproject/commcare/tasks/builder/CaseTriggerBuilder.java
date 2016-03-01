@@ -1,12 +1,16 @@
 package org.motechproject.commcare.tasks.builder;
 
 import org.motechproject.commcare.config.Config;
+import org.motechproject.commcare.domain.CommcareApplicationJson;
+import org.motechproject.commcare.domain.CommcareModuleJson;
+import org.motechproject.commcare.service.CommcareApplicationService;
 import org.motechproject.commcare.service.CommcareConfigService;
-import org.motechproject.commcare.service.CommcareSchemaService;
 import org.motechproject.tasks.contract.EventParameterRequest;
 import org.motechproject.tasks.contract.TriggerEventRequest;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,21 +33,21 @@ import static org.motechproject.commcare.events.constants.EventSubjects.CASE_EVE
  */
 public class CaseTriggerBuilder implements TriggerBuilder {
 
-    private CommcareSchemaService schemaService;
+    private CommcareApplicationService applicationService;
     private CommcareConfigService configService;
 
     private static final String RECEIVED_CASE = "Received Case";
     private static final String RECEIVED_CASE_ID = "Received Case ID";
 
     /**
-     * Creates an instance of the {@link CaseTriggerBuilder} class. It will use the given {@code schemaService} and
+     * Creates an instance of the {@link CaseTriggerBuilder} class. It will use the given {@code applicationService} and
      * {@code configService} for creating case triggers.
      *
-     * @param schemaService  the schema service
+     * @param applicationService the application service
      * @param configService  the configuration service
      */
-    public CaseTriggerBuilder(CommcareSchemaService schemaService, CommcareConfigService configService) {
-        this.schemaService = schemaService;
+    public CaseTriggerBuilder(CommcareApplicationService applicationService, CommcareConfigService configService) {
+        this.applicationService = applicationService;
         this.configService = configService;
     }
 
@@ -51,20 +55,30 @@ public class CaseTriggerBuilder implements TriggerBuilder {
     public List<TriggerEventRequest> buildTriggers() {
         List<TriggerEventRequest> triggers = new ArrayList<>();
 
+        Map<String, Set<String>> caseTypes = new HashMap<>();
+
         for (Config config : configService.getConfigs().getConfigs()) {
-            for (Map.Entry<String, Set<String>> entry : schemaService.getAllCaseTypes(config.getName()).entrySet()) {
-                List<EventParameterRequest> parameterRequests = new ArrayList<>();
-                parameterRequests.add(new EventParameterRequest("commcare.field.configName", CONFIG_NAME));
-                addCommonCaseFields(parameterRequests);
+            for (CommcareApplicationJson application : applicationService.getByConfigName(config.getName())) {
+                for (CommcareModuleJson module : application.getModules()) {
+                    if (!caseTypes.containsKey(module.getCaseType())) {
+                        caseTypes.put(module.getCaseType(), new HashSet<>(module.getCaseProperties()));
 
-                for (String caseProperty : entry.getValue()) {
-                    parameterRequests.add(new EventParameterRequest(caseProperty, caseProperty));
+                        String applicationName = application.getApplicationName();
+
+                        List<EventParameterRequest> parameterRequests = new ArrayList<>();
+                        parameterRequests.add(new EventParameterRequest("commcare.field.configName", CONFIG_NAME));
+                        addCommonCaseFields(parameterRequests);
+
+                        for (String caseProperty : module.getCaseProperties()) {
+                            parameterRequests.add(new EventParameterRequest(caseProperty, caseProperty));
+                        }
+
+                        String displayName = DisplayNameHelper.buildDisplayName(RECEIVED_CASE, module.getCaseType(), applicationName, config.getName());
+
+                        triggers.add(new TriggerEventRequest(displayName, CASE_EVENT + "." + config.getName() + "." + module.getCaseType(),
+                                null, parameterRequests, CASE_EVENT));
+                    }
                 }
-
-                String displayName = DisplayNameHelper.buildDisplayName(RECEIVED_CASE, entry.getKey(), config.getName());
-
-                triggers.add(new TriggerEventRequest(displayName, CASE_EVENT + "." + config.getName() + "." + entry.getKey(),
-                        null, parameterRequests, CASE_EVENT));
             }
         }
 
