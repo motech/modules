@@ -499,8 +499,6 @@ public class Person {
             }
             final PreferredAddress other = (PreferredAddress) obj;
 
-
-
             return  Objects.equals(this.uuid, other.uuid) && Objects.equals(this.preferred, other.preferred) &&
                     Objects.equals(this.address1, other.address1) && Objects.equals(this.address2, other.address2) &&
                     Objects.equals(this.cityVillage, other.cityVillage) && Objects.equals(this.stateProvince, other.stateProvince) &&
