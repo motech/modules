@@ -333,8 +333,7 @@ public class Person {
         private String latitude;
 
         @Expose
-        private String longtitude;
-
+        private String longitude;
 
         public String getUuid() {
             return uuid;
@@ -464,20 +463,30 @@ public class Person {
             this.latitude = latitude;
         }
 
-        public String getLongtitude() {
-            return longtitude;
+        public String getLongitude() {
+            return longitude;
         }
 
-        public void setLongtitude(String longtitude) {
-            this.longtitude = longtitude;
+        public void setLongitude(String longitude) {
+            this.longitude = longitude;
         }
 
-
-
+        public String getFullAdressString() {
+            StringBuilder address = new StringBuilder();
+            return  address.append(address1).append(",").append(address2).append(",")
+                    .append(cityVillage).append(",").append(stateProvince).append(",")
+                    .append(country).append(",").append(postalCode).append(",")
+                    .append(countryDistrict).append(",").append(address3).append(",")
+                    .append(address4).append(",").append(address5).append(",")
+                    .append(address6).append(",").append(startDate).append(",")
+                    .append(endDate).append(",").append(latitude).append(",")
+                    .append(longitude).append(",")
+                    .toString();
+        }
 
         @Override
         public int hashCode() {
-            return Objects.hash(uuid, address1);
+            return Objects.hash(uuid, preferred, address1, address2, cityVillage, stateProvince, country, postalCode, countryDistrict, address3, address4, address5, address6, startDate, endDate, latitude, longitude);
         }
 
         @Override
@@ -489,7 +498,15 @@ public class Person {
                 return false;
             }
             final PreferredAddress other = (PreferredAddress) obj;
-            return Objects.equals(this.uuid, other.uuid) && Objects.equals(this.address1, other.address1);
+            return  Objects.equals(this.uuid, other.uuid) && Objects.equals(this.preferred, other.preferred) &&
+                    Objects.equals(this.address1, other.address1) && Objects.equals(this.address2, other.address2) &&
+                    Objects.equals(this.cityVillage, other.cityVillage) && Objects.equals(this.stateProvince, other.stateProvince) &&
+                    Objects.equals(this.country, other.country) && Objects.equals(this.postalCode, other.postalCode) &&
+                    Objects.equals(this.countryDistrict, other.countryDistrict) && Objects.equals(this.address3, other.address3) &&
+                    Objects.equals(this.address4, other.address4) && Objects.equals(this.address5, other.address5) &&
+                    Objects.equals(this.address6, other.address6) && Objects.equals(this.startDate, other.startDate) &&
+                    Objects.equals(this.endDate, other.endDate) && Objects.equals(this.latitude, other.latitude) &&
+                    Objects.equals(this.longitude, other.longitude);
         }
     }
 
