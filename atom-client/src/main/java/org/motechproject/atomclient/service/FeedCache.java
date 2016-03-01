@@ -8,6 +8,7 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.SyndFeedOutput;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.atomclient.domain.FeedRecord;
 import org.motechproject.atomclient.repository.FeedRecordDataService;
@@ -162,19 +163,19 @@ public class FeedCache implements FeedFetcherCache {
 
 
     private static boolean areEntriesDifferent(SyndEntry e1, SyndEntry e2) {
-        if (!e1.getUpdatedDate().equals(e2.getUpdatedDate())) {
+        if (!ObjectUtils.equals(e1.getUpdatedDate(), e2.getUpdatedDate())) {
             LOGGER.trace("different updated date");
             return true;
         }
-        if (!e1.getPublishedDate().equals(e2.getPublishedDate())) {
+        if (!ObjectUtils.equals(e1.getPublishedDate(), e2.getPublishedDate())) {
             LOGGER.trace("different published date");
             return true;
         }
-        if (!e1.getUri().equals(e2.getUri())) {
+        if (!ObjectUtils.equals(e1.getUri(), e2.getUri())) {
             LOGGER.trace("different uri");
             return true;
         }
-        if (!e1.getContents().equals(e2.getContents())) {
+        if (!ObjectUtils.equals(e1.getContents(), e2.getContents())) {
             LOGGER.trace("different contents");
             return true;
         }
