@@ -458,7 +458,7 @@ public class Person {
                     .append(address4).append(",").append(address5).append(",")
                     .append(address6).append(",").append(startDate).append(",")
                     .append(endDate).append(",").append(latitude).append(",")
-                    .append(longitude).append(",")
+                    .append(longitude)
                     .toString();
         }
 
