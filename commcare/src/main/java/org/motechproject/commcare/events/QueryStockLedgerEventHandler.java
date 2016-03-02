@@ -48,7 +48,7 @@ public class QueryStockLedgerEventHandler {
     @MotechListener(subjects = EventSubjects.QUERY_STOCK_LEDGER + ".*")
     public void handleEvent(MotechEvent event) {
 
-        String configName = getConfigName(event.getSubject());
+        String configName = EventSubjects.getConfigName(event.getSubject());
         Map<String, String> extraData = (Map<String, String>) event.getParameters().get(EXTRA_DATA);
 
         StockTransactionRequest request = parseEventToRequest(event);
@@ -88,10 +88,6 @@ public class QueryStockLedgerEventHandler {
         request.setStartDate(CommcareParamHelper.printObjectAsDateTime(event.getParameters().get(START_DATE)));
         request.setEndDate(CommcareParamHelper.printObjectAsDateTime(event.getParameters().get(END_DATE)));
         return request;
-    }
-
-    private String getConfigName(String subject) {
-        return subject.substring(subject.lastIndexOf('.') + 1);
     }
 
     @Autowired

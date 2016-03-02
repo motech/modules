@@ -52,7 +52,7 @@ public class CommcareCaseServiceImplTest {
 
         config = ConfigsUtils.prepareConfigOne();
 
-        when(configService.getDefault()).thenReturn(config);
+        when(configService.getByName(null)).thenReturn(config);
 
         caseService = new CommcareCaseServiceImpl(converter, commcareHttpClient, configService);
     }
@@ -65,6 +65,9 @@ public class CommcareCaseServiceImplTest {
 
         assertEquals(asList("3ECE7ROKGQ7U1XX1DOL0PNRJW", "63ZB8WGEQY3TJ23PHB2EGD39J", "EP60PTXTZW6HD42KPSY9U018V",
                 "EPKT93XZQ8COVAIQZ7DMQXO7S"), extract(cases, on(CaseInfo.class).getCaseId()));
+
+        assertEquals(asList("54321", "1234567", "2222", "6537"),
+                extract(cases, on(CaseInfo.class).getOwnerId()));
     }
 
     @Test
@@ -95,8 +98,7 @@ public class CommcareCaseServiceImplTest {
     }
 
     @Test
-    public void testAllCaseServerDateModified()
-    {
+    public void testAllCaseServerDateModified() {
         when(commcareHttpClient.casesRequest(any(AccountConfig.class), any(CaseRequest.class))).thenReturn(casesResponse());
 
         List<CaseInfo> cases = caseService.getCases(50, 1);

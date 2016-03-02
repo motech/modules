@@ -74,7 +74,7 @@ public class ConfigController extends CommcareController {
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping("/endpointBaseUrl")
     @ResponseBody
-    public String getBaseEndpoints() throws IOException {
+    public String getBaseEndpoint() throws IOException {
         return new ObjectMapper().writeValueAsString(new StringMessage(configService.getBaseUrl()));
     }
 

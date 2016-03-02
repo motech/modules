@@ -25,6 +25,8 @@ import static org.motechproject.commcare.util.DummyCommcareSchema.FORM_QUESTION2
 import static org.motechproject.commcare.util.DummyCommcareSchema.FORM_QUESTION3;
 import static org.motechproject.commcare.util.DummyCommcareSchema.FORM_QUESTION4;
 import static org.motechproject.commcare.util.DummyCommcareSchema.FORM_QUESTION5;
+import static org.motechproject.commcare.util.DummyCommcareSchema.XMLNS1;
+import static org.motechproject.commcare.util.DummyCommcareSchema.XMLNS2;
 
 public class FormTriggerBuilderTest {
 
@@ -39,6 +41,7 @@ public class FormTriggerBuilderTest {
     private FormTriggerBuilder formTriggerBuilder;
 
     private static final int FORM_PREDEFINED_FIELDS = 11;
+    private static final String BASE_SUBJECT = "org.motechproject.commcare.api.forms.ConfigOne";
 
     @Before
     public void setUp() {
@@ -63,13 +66,13 @@ public class FormTriggerBuilderTest {
 
             String subject = request.getSubject();
             switch (subject) {
-                case "org.motechproject.commcare.api.forms.ConfigOne.form1":
+                case BASE_SUBJECT + "." + XMLNS1:
                     assertEquals(2 + FORM_PREDEFINED_FIELDS, request.getEventParameters().size());
                     assertEquals("Received Form: form1 [ConfigOne]", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION1));
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION2));
                     break;
-                case "org.motechproject.commcare.api.forms.ConfigOne.form2":
+                case BASE_SUBJECT + "." + XMLNS2:
                     assertEquals(3 + FORM_PREDEFINED_FIELDS, request.getEventParameters().size());
                     assertEquals("Received Form: form2 [ConfigOne]", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION3));

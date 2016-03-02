@@ -194,8 +194,8 @@ public class ReminderEventHandlerTest {
         ArgumentCaptor<RepeatingSchedulableJob> captor = ArgumentCaptor.forClass(RepeatingSchedulableJob.class);
         verify(schedulerService).safeScheduleRepeatingJob(captor.capture());
 
-        assertEquals(10, captor.getValue().getStartTime().getHourOfDay());
-        assertEquals(35, captor.getValue().getStartTime().getMinuteOfHour());
+        assertEquals(10, captor.getValue().getStartDate().getHourOfDay());
+        assertEquals(35, captor.getValue().getStartDate().getMinuteOfHour());
         assertEquals(String.valueOf(dosage.getId()), captor.getValue().getMotechEvent().getParameters().get(MotechSchedulerService.JOB_ID_KEY));
     }
 

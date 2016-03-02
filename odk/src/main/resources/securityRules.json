@@ -1,0 +1,81 @@
+[
+  {
+    "active": true,
+    "pattern": "/**/odk/configs/**",
+    "supportedSchemes": [
+      "BASIC"
+    ],
+    "protocol": "HTTP",
+    "priority": 2,
+    "rest": true,
+    "origin": "SYSTEM_MODULE_DHIS2",
+    "version": "0.26",
+    "methodsRequired": [
+      "GET",
+      "POST",
+      "DELETE"
+    ],
+    "permissionAccess": ["configureODK"]
+  },
+  {
+    "active": true,
+    "pattern": "/**/odk/import/**",
+    "supportedSchemes": [
+      "BASIC"
+    ],
+    "protocol": "HTTP",
+    "priority": 2,
+    "rest": true,
+    "origin": "SYSTEM_MODULE_ODK",
+    "version": "1.0",
+    "methodsRequired": [
+      "GET"
+    ],
+    "permissionAccess": ["importFormsODK"]
+  },
+  {
+    "active": true,
+    "pattern": "/**/odk/forms",
+    "supportedSchemes": [
+      "NO_SECURITY"
+    ],
+    "protocol": "HTTP",
+    "priority": 2,
+    "rest": true,
+    "origin": "SYSTEM_MODULE_ODK",
+    "version": "1.0",
+    "methodsRequired": [
+      "GET"
+    ]
+  },
+  {
+    "active": true,
+    "pattern": "/**/odk/formDefinitions/**",
+    "supportedSchemes": [
+      "NO_SECURITY"
+    ],
+    "protocol": "HTTP",
+    "priority": 2,
+    "rest": true,
+    "origin": "SYSTEM_MODULE_ODK",
+    "version": "1.0",
+    "methodsRequired": [
+      "GET"
+    ]
+  },
+  {
+    "active": true,
+    "pattern": "/**/odk/verify/**",
+    "supportedSchemes": [
+      "NO_SECURITY"
+    ],
+    "protocol": "HTTP",
+    "priority": 2,
+    "rest": true,
+    "origin": "SYSTEM_MODULE_ODK",
+    "version": "1.0",
+    "methodsRequired": [
+      "POST"
+    ]
+  }
+]

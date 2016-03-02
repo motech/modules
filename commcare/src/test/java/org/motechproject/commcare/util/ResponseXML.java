@@ -19,7 +19,7 @@ public final class ResponseXML {
                 "      version=\"41\"\n" +
                 "      name=\"" + FORM_NAME + "\"\n" +
                 "      xmlns:jrm=\"http://dev.commcarehq.org/jr/xforms\"\n" +
-                "      xmlns=\"http://openrosa.org/formdesigner/84FA38A2-93C1-4B9E-AA2A-0E082995FF9E\">\n" +
+                "      xmlns=\"" + DummyCommcareSchema.XMLNS1 + "\">\n" +
                 "  <" + ATTR1 + ">" + ATTR1_VALUE + "</" + ATTR1 + ">\n" +
                 "  <" + ATTR2 + ">" + ATTR2_VALUE + "</" + ATTR2 + ">\n" +
                 "  <n0:case case_id=\"" + CASE_ID + "\"\n" +
@@ -38,6 +38,36 @@ public final class ResponseXML {
                 "      <n1:close />\n" +
                 "    </n1:case>\n" +
                 "  </cc_delegation_stub>\n" +
+                "  <n2:meta xmlns:n2=\"http://openrosa.org/jr/xforms\">\n" +
+                "  <n2:deviceID>cloudcare</n2:deviceID>\n" +
+                "  <n2:timeStart>2012-10-23T17:15:18.324-04</n2:timeStart>\n" +
+                "  <n2:timeEnd>2012-10-23T17:15:21.966-04</n2:timeEnd>\n" +
+                "  <n2:username>test</n2:username>\n" +
+                "  <n2:userID>9ad3659b9c0f8c5d141d2d06857874df</n2:userID>\n" +
+                "  <n2:instanceID>c24a85f9-703d-434c-b087-5759f3fa9937</n2:instanceID>\n" +
+                "  <n3:appVersion xmlns:n3=\"http://commcarehq.org/xforms\">2.0</n3:appVersion>\n" +
+                "  </n2:meta>\n" +
+                "</data>";
+    }
+
+    public static String getFormXMLWithRepeatData() {
+        return "<data uiVersion=\"1\"\n" +
+                "      version=\"41\"\n" +
+                "      name=\"Diseases\"\n" +
+                "      xmlns:jrm=\"http://dev.commcarehq.org/jr/xforms\"\n" +
+                "      xmlns=\"" + DummyCommcareSchema.XMLNS1 + "\">\n" +
+                "  <clinic>Clinic1</clinic>\n" +
+                "  <diseases>\n" +
+                "    <disease id=\"3893289\" index=\"0\">\n" +
+                "      <medication id=\"55665\">Med1</medication>\n" +
+                "      <medication id=\"55666\">Med2</medication>\n" +
+                "      <medication id=\"55667\">Med3</medication>\n" +
+                "    </disease>\n" +
+                "    <disease id=\"9539823\" index=\"1\">\n" +
+                "      <medication id=\"55666\">Med2</medication>\n" +
+                "      <medication id=\"55668\">Med4</medication>\n" +
+                "    </disease>\n" +
+                "  </diseases>\n" +
                 "  <n2:meta xmlns:n2=\"http://openrosa.org/jr/xforms\">\n" +
                 "  <n2:deviceID>cloudcare</n2:deviceID>\n" +
                 "  <n2:timeStart>2012-10-23T17:15:18.324-04</n2:timeStart>\n" +

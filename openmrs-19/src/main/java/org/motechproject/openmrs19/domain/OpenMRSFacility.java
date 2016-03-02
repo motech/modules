@@ -9,11 +9,16 @@ import java.util.Objects;
 public class OpenMRSFacility {
 
     private String id;
+    private String display;
     private String name;
     private String country;
     private String region;
     private String countyDistrict;
     private String stateProvince;
+
+    public OpenMRSFacility() {
+        this(null);
+    }
 
     /**
      * Creates a facility with the given {@code id}.
@@ -21,7 +26,7 @@ public class OpenMRSFacility {
      * @param id  the ID of the facility
      */
     public OpenMRSFacility(String id) {
-        this(id, null, null, null, null, null);
+        this(id, null, null, null, null, null, null);
     }
 
     /**
@@ -35,27 +40,33 @@ public class OpenMRSFacility {
      * @param stateProvince  the name of the state/province where the facility is placed
      */
     public OpenMRSFacility(String name, String country, String region, String countyDistrict, String stateProvince) {
-        this(null, name, country, region, countyDistrict, stateProvince);
+        this(null, null, name, country, region, countyDistrict, stateProvince);
     }
 
     /**
-     * Creates a facility with the given {@code name} and {@code id} that is placed in the given {@code country},
+     * Creates a facility with the given {@code name}, {@code display} and {@code id} that is placed in the given {@code country},
      * {@code region}, {@code countryDistrict} and {@code stateProvince}.
      *
      * @param id  the ID of the facility
+     * @param display  the display of the facility
      * @param name  the name of the facility
      * @param country  the name of the country where the facility is placed
      * @param region  the name of the region where the facility is placed
      * @param countyDistrict  the name of the county/district where the facility is placed
      * @param stateProvince  the name of the state/province where the facility is placed
      */
-    public OpenMRSFacility(String id, String name, String country, String region, String countyDistrict, String stateProvince) {
+    public OpenMRSFacility(String id, String display, String name, String country, String region, String countyDistrict, String stateProvince) {
+        this.id = id;
+        this.display = display;
         this.name = name;
         this.country = country;
         this.region = region;
         this.countyDistrict = countyDistrict;
         this.stateProvince = stateProvince;
-        this.id = id;
+    }
+
+    public String getDisplay() {
+        return display;
     }
 
     public String getName() {
@@ -86,6 +97,10 @@ public class OpenMRSFacility {
     @Deprecated
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void setDisplay(String display) {
+        this.display = display;
     }
 
     public void setName(String name) {

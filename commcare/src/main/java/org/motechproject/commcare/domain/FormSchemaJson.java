@@ -23,6 +23,10 @@ public class FormSchemaJson implements Serializable {
     @SerializedName("questions")
     private List<FormSchemaQuestionJson> questions;
 
+    @Expose
+    @SerializedName("xmlns")
+    private String xmlns;
+
     public Map<String, String> getFormNames() {
         return formNames;
     }
@@ -37,6 +41,14 @@ public class FormSchemaJson implements Serializable {
 
     public void setQuestions(List<FormSchemaQuestionJson> questions) {
         this.questions = questions;
+    }
+
+    public String getXmlns() {
+        return xmlns;
+    }
+
+    public void setXmlns(String xmlns) {
+        this.xmlns = xmlns;
     }
 
     /**

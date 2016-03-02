@@ -1,0 +1,10 @@
+[
+  {
+    "recipientName": "test_recipient_1",
+    "recipientUrl": "test_url_1"
+  },
+  {
+    "recipientName": "test_recipient_2",
+    "recipientUrl": "test_url_2"
+  }
+]
