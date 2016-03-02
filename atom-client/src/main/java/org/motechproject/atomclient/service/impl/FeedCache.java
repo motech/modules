@@ -1,4 +1,4 @@
-package org.motechproject.atomclient.service;
+package org.motechproject.atomclient.service.impl;
 
 import com.rometools.fetcher.impl.FeedFetcherCache;
 import com.rometools.fetcher.impl.SyndFeedInfo;
@@ -12,6 +12,8 @@ import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.atomclient.domain.FeedRecord;
 import org.motechproject.atomclient.repository.FeedRecordDataService;
+import org.motechproject.atomclient.service.AtomClientConfigService;
+import org.motechproject.atomclient.service.Constants;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.slf4j.Logger;

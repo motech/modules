@@ -1,9 +1,13 @@
-package org.motechproject.atomclient.service;
+package org.motechproject.atomclient.service.impl;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.motechproject.atomclient.exception.AtomClientConfigurationException;
+import org.motechproject.atomclient.service.AtomClientConfigService;
+import org.motechproject.atomclient.service.Constants;
+import org.motechproject.atomclient.service.FeedConfig;
+import org.motechproject.atomclient.service.FeedConfigs;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.server.config.SettingsFacade;

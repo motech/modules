@@ -1,10 +1,14 @@
-package org.motechproject.atomclient.service;
+package org.motechproject.atomclient.service.impl;
 
 import com.rometools.fetcher.FeedFetcher;
 import com.rometools.fetcher.FetcherException;
 import com.rometools.fetcher.impl.HttpURLFeedFetcher;
 import com.rometools.rome.io.FeedException;
 import org.motechproject.atomclient.repository.FeedRecordDataService;
+import org.motechproject.atomclient.service.AtomClientConfigService;
+import org.motechproject.atomclient.service.AtomClientService;
+import org.motechproject.atomclient.service.Constants;
+import org.motechproject.atomclient.service.FeedConfig;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.scheduler.contract.CronJobId;

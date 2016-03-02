@@ -122,6 +122,7 @@
                             org.motechproject.atomclient.domain;version=${project.version},
                             org.motechproject.atomclient.repository;version=${project.version},
                             org.motechproject.atomclient.service;version=${project.version},
+                            org.motechproject.atomclient.service.impl;version=${project.version},
                             org.motechproject.atomclient.exception;version=${project.version},
                         </Export-Package>
                         <Import-Package>

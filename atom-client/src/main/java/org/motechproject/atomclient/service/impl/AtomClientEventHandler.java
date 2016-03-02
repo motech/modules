@@ -1,6 +1,9 @@
-package org.motechproject.atomclient.service;
+package org.motechproject.atomclient.service.impl;
 
 import org.apache.commons.lang.StringUtils;
+import org.motechproject.atomclient.service.AtomClientConfigService;
+import org.motechproject.atomclient.service.AtomClientService;
+import org.motechproject.atomclient.service.Constants;
 import org.motechproject.config.core.constants.ConfigurationConstants;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
