@@ -1,0 +1,61 @@
+<div class="row">
+	<div class="inside">
+		<div class="row">
+			<div class="panel-group">
+				<div class="panel panel-default dhis2-config">
+					<div class="panel-heading">
+						{{msg('open-lmis.web.settings.configPanelTitle')}}</div>
+					<div class="panel-body">
+						<form name="form" class="form-horizontal inside" novalidate>
+							<div ng-if="isVerifyError()"
+								class="connection-status connection-error alert alert-danger">
+								<span class="fa fw fa-warning"></span> <span
+									class="margin-left1">{{verifyErrorMessage}}</span>
+							</div>
+							<div ng-if="isVerifySuccess()"
+								class="connection-status connection-success alert alert-success">
+								<span class="fa fw fa-check"></span> <span class="margin-left1">{{verifySuccessMessage}}</span>
+							</div>
+							<div class="form-group">
+								<label for="serverURI" class="col-md-3 control-label">{{msg('open-lmis.web.settings.serverURI')}}</label>
+								<div class="col-md-8">
+									<input id="serverURI" type="text" ng-change="draftChanged()"
+										class="form-control" ng-model="settings.serverURI">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="username" class="col-md-3 control-label">{{msg('open-lmis.web.settings.username')}}</label>
+								<div class="col-md-8">
+									<input id="username" type="text" ng-change="draftChanged()"
+										class="form-control" ng-model="settings.username">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="password" class="col-md-3 control-label">{{msg('open-lmis.web.settings.password')}}</label>
+								<div class="col-md-8">
+									<input id="password" type="password" ng-change="draftChanged()"
+										class="form-control" ng-model="settings.password">
+								</div>
+							</div>
+							<div class="col-md-offset-3 col-md-9">
+								<button class="btn btn-default">{{msg('open-lmis.web.settings.cancel')}}</button>
+								<button class="btn btn-primary" ng-click="submit()">{{msg('open-lmis.web.settings.save')}}</button>
+							</div>
+							<div ng-show="retrievalError" class="alert alert-danger">{{msg('open-lmis.web.settings.error.retrieval')}}</div>
+							<div ng-show="updateError" class="alert alert-danger">{{msg('open-lmis.web.settings.error.update')}}</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<h5>{{msg('open-lmis.web.settings.syncHeader')}}</h5>
+		<div class="form-group">
+			<button class="btn btn-primary" ng-click="sync()"
+				ng-disabled="blocked">{{msg('open-lmis.sync')}}</button>
+			<div ng-show="blocked" class="alert alert-info">{{msg('open-lmis.sync.wait')}}</div>
+			<div ng-show="success == 'true' " class="alert alert-success">{{msg('open-lmis.sync.success')}}</div>
+			<div ng-show="success == 'false' " class="alert alert-danger">{{msg('open-lmis.sync.fail')}}</div>
+		</div>
+	</div>
+</div>

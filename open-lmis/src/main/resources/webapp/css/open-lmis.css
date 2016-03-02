@@ -1,0 +1,22 @@
+/* put your custom styles here */
+.open-lmis-program .list-group li button {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+}
+
+.open-lmis-program-panel-heading {
+	height: 75px;
+}
+
+.open-lmis-program-subelement-panel-headng {
+	height: 50px;
+}
+
+.alignleft {
+	float: left;
+}
+
+.alignright {
+	float: right;
+}
