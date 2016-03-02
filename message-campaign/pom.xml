@@ -218,7 +218,6 @@
                             org.springframework.web.multipart.commons,
                             org.motechproject.event,
                             org.motechproject.event.listener.annotations,
-                            org.motechproject.security.annotations,
                             org.motechproject.security.service,
                             org.motechproject.config,
                             org.motechproject.config.service,
