@@ -11,7 +11,7 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertThat;
 
-public class FeedCacheUnitTest {
+public class FeedCacheTest {
 
     @Test
     public void verifyFeedSerialization() throws IOException, ClassNotFoundException, CloneNotSupportedException, FeedException {

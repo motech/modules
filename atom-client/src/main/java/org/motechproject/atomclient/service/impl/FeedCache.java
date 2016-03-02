@@ -99,26 +99,30 @@ public class FeedCache implements FeedFetcherCache {
     }
 
 
-    private Map<String, Object> extractContent(String content, String regex, String key) {
-        Map<String, Object> map = new HashMap<>();
-
+    /**
+     * Given a regex, will extract the first regex capture group from the given
+     * @param content
+     * @param regex
+     * @return
+     */
+    private String extractContent(String content, String regex) {
         if (StringUtils.isBlank(regex)) {
-            return map;
+            return null;
         }
 
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(content);
         if (matcher.find()) {
             if (matcher.groupCount() > 0) {
-                map.put(key, matcher.group(1));
                 if (matcher.groupCount() > 1) {
                     LOGGER.warn("Ignoring {} extra regex extract{} for regex {}", matcher.groupCount() - 1,
                             matcher.groupCount() > 2 ? "s" : "", regex);
                 }
+                return matcher.group(1);
             }
         }
 
-        return map;
+        return null;
     }
 
 
@@ -138,7 +142,10 @@ public class FeedCache implements FeedFetcherCache {
             Integer index = 1;
             for (SyndContent content : entry.getContents()) {
                 rawContent.put(index.toString(), content.getValue());
-                extractedContent.putAll(extractContent(content.getValue(), regex, index.toString()));
+                String extractedContentString = extractContent(content.getValue(), regex);
+                if (!StringUtils.isBlank(extractedContentString)) {
+                    extractedContent.put(index.toString(), extractedContentString);
+                }
                 index++;
             }
         } else {
