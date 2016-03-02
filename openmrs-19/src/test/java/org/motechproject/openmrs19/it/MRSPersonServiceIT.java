@@ -61,15 +61,20 @@ public class MRSPersonServiceIT extends BasePaxIT {
     public void shouldCreatePerson() {
 
         assertNotNull(person.getId());
-        assertEquals(person.getPersonId(), mrsListener.eventParameters.get(EventKeys.PERSON_ID));
-        assertEquals(person.getFirstName(), mrsListener.eventParameters.get(EventKeys.PERSON_FIRST_NAME));
-        assertEquals(person.getLastName(), mrsListener.eventParameters.get(EventKeys.PERSON_LAST_NAME));
+        assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_ID), person.getPersonId());
+        assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_FIRST_NAME), person.getFirstName());
+        assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_LAST_NAME), person.getLastName());
 
         assertTrue(mrsListener.created);
         assertFalse(mrsListener.deleted);
         assertFalse(mrsListener.updated);
     }
 
+    /*
+        We are able to convert fields from openMRS to single string field only for now
+        that is why we are checking assertTrue with contains function for changed address
+        rather than assertEquals for string field
+     */
     @Test
     public void shouldUpdatePerson() throws OpenMRSException, InterruptedException {
 
@@ -95,11 +100,11 @@ public class MRSPersonServiceIT extends BasePaxIT {
         updated = personAdapter.getPersonByUuid(person.getPersonId());
 
         assertNotNull(updated);
-        assertEquals(updated.getFirstName(), newFirstName);
-        assertEquals(updated.getMiddleName(), newMiddleName);
-        assertEquals(updated.getLastName(), newLastName);
-        assertEquals(updated.getAddress(), newAddress);
-        assertEquals(updated.getGender(), newGender);
+        assertEquals(newFirstName, updated.getFirstName());
+        assertEquals(newMiddleName, updated.getMiddleName());
+        assertEquals(newLastName, updated.getLastName());
+        assertTrue(updated.getAddress().contains(newAddress));
+        assertEquals(newGender, updated.getGender());
 
         assertTrue(mrsListener.created);
         assertTrue(mrsListener.updated);
@@ -127,7 +132,7 @@ public class MRSPersonServiceIT extends BasePaxIT {
         OpenMRSPerson fetched = personAdapter.getPersonByUuid(person.getPersonId());
 
         assertNotNull(fetched);
-        assertEquals(fetched.getId(), person.getId());
+        assertEquals(person.getId(), fetched.getId());
     }
 
     @After
