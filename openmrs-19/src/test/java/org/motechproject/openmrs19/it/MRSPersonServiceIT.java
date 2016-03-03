@@ -70,11 +70,6 @@ public class MRSPersonServiceIT extends BasePaxIT {
         assertFalse(mrsListener.updated);
     }
 
-    /*
-        We are able to convert fields from openMRS to single string field only for now
-        that is why we are checking assertTrue with contains function for changed address
-        rather than assertEquals for string field
-     */
     @Test
     public void shouldUpdatePerson() throws OpenMRSException, InterruptedException {
 
@@ -103,6 +98,9 @@ public class MRSPersonServiceIT extends BasePaxIT {
         assertEquals(newFirstName, updated.getFirstName());
         assertEquals(newMiddleName, updated.getMiddleName());
         assertEquals(newLastName, updated.getLastName());
+        // So far OpenMRS module stores only one field of person's address, which is 'address1'.
+        // However while retrieving person from OpenMRS server all person's address fields are put
+        // into one string. That's why it is checked if address field contains address1 value.
         assertTrue(updated.getAddress().contains(newAddress));
         assertEquals(newGender, updated.getGender());
 
