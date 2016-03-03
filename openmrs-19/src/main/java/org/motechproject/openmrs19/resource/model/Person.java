@@ -295,7 +295,7 @@ public class Person {
         private String postalCode;
 
         @Expose
-        private String countryDistrict;
+        private String countyDistrict;
 
         @Expose
         private String address3;
@@ -377,12 +377,12 @@ public class Person {
             this.postalCode = postalCode;
         }
 
-        public String getCountryDistrict() {
-            return countryDistrict;
+        public String getCountyDistrict() {
+            return countyDistrict;
         }
 
-        public void setCountryDistrict(String countryDistrict) {
-            this.countryDistrict = countryDistrict;
+        public void setCountyDistrict(String countyDistrict) {
+            this.countyDistrict = countyDistrict;
         }
 
         public String getAddress3() {
@@ -454,7 +454,7 @@ public class Person {
             return  address.append(address1).append(",").append(address2).append(",")
                     .append(cityVillage).append(",").append(stateProvince).append(",")
                     .append(country).append(",").append(postalCode).append(",")
-                    .append(countryDistrict).append(",").append(address3).append(",")
+                    .append(countyDistrict).append(",").append(address3).append(",")
                     .append(address4).append(",").append(address5).append(",")
                     .append(address6).append(",").append(startDate).append(",")
                     .append(endDate).append(",").append(latitude).append(",")
@@ -464,7 +464,7 @@ public class Person {
 
         @Override
         public int hashCode() {
-            return Objects.hash(uuid, address1, address2, cityVillage, stateProvince, country, postalCode, countryDistrict, address3, address4, address5, address6, startDate, endDate, latitude, longitude);
+            return Objects.hash(uuid, address1, address2, cityVillage, stateProvince, country, postalCode, countyDistrict, address3, address4, address5, address6, startDate, endDate, latitude, longitude);
         }
 
         @Override //NO CHECKSTYLE Cyclomatic Complexity
@@ -479,7 +479,7 @@ public class Person {
             return  Objects.equals(this.uuid, other.uuid) && Objects.equals(this.address1, other.address1) &&
                     Objects.equals(this.address2, other.address2) && Objects.equals(this.cityVillage, other.cityVillage) &&
                     Objects.equals(this.stateProvince, other.stateProvince) && Objects.equals(this.country, other.country) &&
-                    Objects.equals(this.postalCode, other.postalCode) && Objects.equals(this.countryDistrict, other.countryDistrict) &&
+                    Objects.equals(this.postalCode, other.postalCode) && Objects.equals(this.countyDistrict, other.countyDistrict) &&
                     Objects.equals(this.address3, other.address3) && Objects.equals(this.address4, other.address4) &&
                     Objects.equals(this.address5, other.address5) && Objects.equals(this.address6, other.address6) &&
                     Objects.equals(this.startDate, other.startDate) && Objects.equals(this.endDate, other.endDate) &&
