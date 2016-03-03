@@ -33,12 +33,23 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
 
     @Test
     public void shouldGetPersonById() throws HttpException, IOException {
-        Mockito.when(getClient().getJson(Mockito.any(URI.class))).thenReturn(
-                readJsonFromFile("json/person-response.json"));
+        Mockito.when(getClient().getJson(Mockito.any(URI.class)))
+                .thenReturn(readJsonFromFile("json/person-response.json"));
 
         Person person = impl.getPersonById("PPP");
 
         assertNotNull(person);
+    }
+
+    @Test
+    public void shouldGetAllAddressFields() throws HttpException, IOException {
+        Mockito.when(getClient().getJson(Mockito.any(URI.class)))
+                .thenReturn(readJsonFromFile("json/person-response.json"));
+
+        Person person = impl.getPersonById("PPP");
+        String fullAddressFields = "5 Main St.,5/4,Utopia,testProvince,Neverland,69-111,null,null,null,null,null,2016-03-01T00:00:00.000+0000,null,47.613879,-122.342436";
+
+        assertEquals(fullAddressFields, person.getPreferredAddress().getFullAddressString());
     }
 
     @Test
