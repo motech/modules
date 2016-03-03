@@ -72,7 +72,7 @@ public class ConfigsUtils {
         return config;
     }
 
-    public  static  Configs prepareConfigsWithTwoConfigs() {
+    public static Configs prepareConfigsWithTwoConfigs() {
 
         Configs configs = new Configs();
 

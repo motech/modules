@@ -5,8 +5,8 @@ import org.motechproject.commcare.domain.CommcareApplicationJson;
 import org.motechproject.commcare.domain.CommcareModuleJson;
 import org.motechproject.commcare.domain.FormSchemaJson;
 import org.motechproject.commcare.domain.FormSchemaQuestionJson;
-import org.motechproject.commcare.service.CommcareApplicationService;
 import org.motechproject.commcare.service.CommcareConfigService;
+import org.motechproject.commcare.service.CommcareSchemaService;
 import org.motechproject.tasks.contract.EventParameterRequest;
 import org.motechproject.tasks.contract.TriggerEventRequest;
 
@@ -33,7 +33,7 @@ import static org.motechproject.commcare.events.constants.EventSubjects.FORMS_EV
  */
 public class FormTriggerBuilder implements TriggerBuilder {
 
-    private CommcareApplicationService applicationService;
+    private CommcareSchemaService schemaService;
     private CommcareConfigService configService;
 
     private static final String RECEIVED_FORM = "Received Form";
@@ -42,11 +42,11 @@ public class FormTriggerBuilder implements TriggerBuilder {
      * Creates an instance of the {@link FormTriggerBuilder} class that can be used for building form triggers. It will
      * use the given {@code schemaService}, {@code configService} fir building them.
      *
-     * @param applicationService the application service
+     * @param schemaService the schema service
      * @param configService  the configuration service
      */
-    public FormTriggerBuilder(CommcareApplicationService applicationService, CommcareConfigService configService) {
-        this.applicationService = applicationService;
+    public FormTriggerBuilder(CommcareSchemaService schemaService, CommcareConfigService configService) {
+        this.schemaService = schemaService;
         this.configService = configService;
     }
 
@@ -55,7 +55,7 @@ public class FormTriggerBuilder implements TriggerBuilder {
         List<TriggerEventRequest> triggers = new ArrayList<>();
 
         for (Config config : configService.getConfigs().getConfigs()) {
-            for (CommcareApplicationJson application : applicationService.getByConfigName(config.getName())) {
+            for (CommcareApplicationJson application : schemaService.retrieveApplications(config.getName())) {
                 for (CommcareModuleJson module : application.getModules()) {
                     for (FormSchemaJson form : module.getFormSchemas()) {
                         List<EventParameterRequest> parameters = new ArrayList<>();

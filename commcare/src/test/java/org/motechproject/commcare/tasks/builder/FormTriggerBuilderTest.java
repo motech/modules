@@ -7,10 +7,10 @@ import org.motechproject.commcare.config.Configs;
 import org.motechproject.commcare.domain.CommcareApplicationJson;
 import org.motechproject.commcare.domain.CommcareModuleJson;
 import org.motechproject.commcare.events.constants.EventSubjects;
-import org.motechproject.commcare.service.CommcareApplicationService;
 import org.motechproject.commcare.service.CommcareConfigService;
+import org.motechproject.commcare.service.CommcareSchemaService;
 import org.motechproject.commcare.util.ConfigsUtils;
-import org.motechproject.commcare.util.DummyCommcareApplication;
+import org.motechproject.commcare.util.DummyCommcareSchema;
 import org.motechproject.tasks.contract.EventParameterRequest;
 import org.motechproject.tasks.contract.TriggerEventRequest;
 
@@ -22,22 +22,21 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.motechproject.commcare.util.DummyCommcareApplication.FORM_QUESTION1;
-import static org.motechproject.commcare.util.DummyCommcareApplication.FORM_QUESTION2;
-import static org.motechproject.commcare.util.DummyCommcareApplication.FORM_QUESTION3;
-import static org.motechproject.commcare.util.DummyCommcareApplication.FORM_QUESTION4;
-import static org.motechproject.commcare.util.DummyCommcareApplication.FORM_QUESTION5;
-import static org.motechproject.commcare.util.DummyCommcareApplication.FORM_QUESTION6;
-import static org.motechproject.commcare.util.DummyCommcareApplication.XMLNS1;
-import static org.motechproject.commcare.util.DummyCommcareApplication.XMLNS2;
-import static org.motechproject.commcare.util.DummyCommcareApplication.XMLNS3;
-import static org.motechproject.commcare.util.DummyCommcareApplication.XMLNS4;
-import static org.motechproject.commcare.util.DummyCommcareApplication.XMLNS5;
+import static org.motechproject.commcare.util.DummyCommcareSchema.FORM_QUESTION1;
+import static org.motechproject.commcare.util.DummyCommcareSchema.FORM_QUESTION2;
+import static org.motechproject.commcare.util.DummyCommcareSchema.FORM_QUESTION3;
+import static org.motechproject.commcare.util.DummyCommcareSchema.FORM_QUESTION4;
+import static org.motechproject.commcare.util.DummyCommcareSchema.FORM_QUESTION5;
+import static org.motechproject.commcare.util.DummyCommcareSchema.XMLNS1;
+import static org.motechproject.commcare.util.DummyCommcareSchema.XMLNS2;
+import static org.motechproject.commcare.util.DummyCommcareSchema.XMLNS3;
+import static org.motechproject.commcare.util.DummyCommcareSchema.XMLNS4;
+import static org.motechproject.commcare.util.DummyCommcareSchema.XMLNS5;
 
 public class FormTriggerBuilderTest {
 
     @Mock
-    private CommcareApplicationService applicationService;
+    private CommcareSchemaService schemaService;
 
     @Mock
     private CommcareConfigService configService;
@@ -54,10 +53,10 @@ public class FormTriggerBuilderTest {
     public void setUp() {
         initMocks(this);
         when(configService.getConfigs()).thenReturn(configs);
-        when(applicationService.getByConfigName("ConfigOne")).thenReturn(DummyCommcareApplication.getApplicationsForConfigOne());
-        when(applicationService.getByConfigName("ConfigTwo")).thenReturn(DummyCommcareApplication.getApplicationsForConfigTwo());
+        when(schemaService.retrieveApplications("ConfigOne")).thenReturn(DummyCommcareSchema.getApplicationsForConfigOne());
+        when(schemaService.retrieveApplications("ConfigTwo")).thenReturn(DummyCommcareSchema.getApplicationsForConfigTwo());
 
-        formTriggerBuilder = new FormTriggerBuilder(applicationService, configService);
+        formTriggerBuilder = new FormTriggerBuilder(schemaService, configService);
     }
 
     @Test
@@ -68,13 +67,13 @@ public class FormTriggerBuilderTest {
         assertFalse(triggers.isEmpty());
 
         int counter = 0;
-        for (CommcareApplicationJson application: DummyCommcareApplication.getApplicationsForConfigOne()) {
+        for (CommcareApplicationJson application: DummyCommcareSchema.getApplicationsForConfigOne()) {
             for (CommcareModuleJson module: application.getModules()) {
                 counter += module.getFormSchemas().size();
             }
         }
 
-        for (CommcareApplicationJson application: DummyCommcareApplication.getApplicationsForConfigTwo()) {
+        for (CommcareApplicationJson application: DummyCommcareSchema.getApplicationsForConfigTwo()) {
             for (CommcareModuleJson module: application.getModules()) {
                 counter += module.getFormSchemas().size();
             }
@@ -112,7 +111,7 @@ public class FormTriggerBuilderTest {
                 case BASE_SUBJECT_TWO + "." + XMLNS5:
                     assertEquals(1 + FORM_PREDEFINED_FIELDS, request.getEventParameters().size());
                     assertEquals("Received Form: form5 [app1: ConfigTwo]", request.getDisplayName());
-                    assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION6));
+                    assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION4));
                     break;
                 default:
                     fail("Found trigger with incorrect subject: " + subject);

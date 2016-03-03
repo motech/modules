@@ -1,8 +1,8 @@
 package org.motechproject.commcare.tasks;
 
 import org.motechproject.commcare.CommcareDataProvider;
-import org.motechproject.commcare.service.CommcareApplicationService;
 import org.motechproject.commcare.service.CommcareConfigService;
+import org.motechproject.commcare.service.CommcareSchemaService;
 import org.motechproject.commcare.tasks.builder.ChannelRequestBuilder;
 import org.motechproject.tasks.exception.ValidationException;
 import org.osgi.framework.BundleContext;
@@ -26,17 +26,17 @@ public class CommcareTasksNotifier {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommcareTasksNotifier.class);
 
     private BundleContext bundleContext;
-    private CommcareApplicationService applicationService;
+    private CommcareSchemaService schemaService;
     private CommcareDataProvider dataProvider;
     private CommcareConfigService configService;
 
     @Autowired
     public CommcareTasksNotifier(BundleContext bundleContext, CommcareDataProvider dataProvider,
-                                 CommcareConfigService configService, CommcareApplicationService applicationService) {
+                                 CommcareConfigService configService, CommcareSchemaService schemaService) {
         this.bundleContext = bundleContext;
         this.dataProvider = dataProvider;
         this.configService = configService;
-        this.applicationService = applicationService;
+        this.schemaService = schemaService;
     }
 
     @PostConstruct
@@ -63,7 +63,7 @@ public class CommcareTasksNotifier {
             if (service != null) {
                 LOGGER.info("Registering Commcare tasks channel with the channel service");
 
-                ChannelRequestBuilder channelRequestBuilder = new ChannelRequestBuilder(configService, applicationService,
+                ChannelRequestBuilder channelRequestBuilder = new ChannelRequestBuilder(configService, schemaService,
                         bundleContext);
                 TasksChannelServiceInstance instance = new TasksChannelServiceInstance(service, channelRequestBuilder);
                 instance.updateTaskChannel();

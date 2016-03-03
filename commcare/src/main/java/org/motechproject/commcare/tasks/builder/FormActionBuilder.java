@@ -8,8 +8,8 @@ import org.motechproject.commcare.domain.FormSchemaQuestionJson;
 import org.motechproject.commcare.domain.FormSchemaQuestionOptionJson;
 import org.motechproject.commcare.events.constants.DisplayNames;
 import org.motechproject.commcare.events.constants.EventSubjects;
-import org.motechproject.commcare.service.CommcareApplicationService;
 import org.motechproject.commcare.service.CommcareConfigService;
+import org.motechproject.commcare.service.CommcareSchemaService;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
@@ -28,11 +28,11 @@ import java.util.TreeSet;
  */
 public class FormActionBuilder implements ActionBuilder {
 
-    private CommcareApplicationService applicationService;
+    private CommcareSchemaService schemaService;
     private CommcareConfigService configService;
 
-    public FormActionBuilder(CommcareApplicationService applicationService, CommcareConfigService configService) {
-        this.applicationService = applicationService;
+    public FormActionBuilder(CommcareSchemaService schemaService, CommcareConfigService configService) {
+        this.schemaService = schemaService;
         this.configService = configService;
     }
 
@@ -51,7 +51,7 @@ public class FormActionBuilder implements ActionBuilder {
     private List<ActionEventRequest> buildActionsForConfig(Config config) {
         List<ActionEventRequest> actions = new ArrayList<>();
         
-        for (CommcareApplicationJson application : applicationService.getByConfigName(config.getName())) {
+        for (CommcareApplicationJson application : schemaService.retrieveApplications(config.getName())) {
             for (CommcareModuleJson module : application.getModules()) {
                 for (FormSchemaJson form : module.getFormSchemas()) {
                     SortedSet<ActionParameterRequest> parameters = buildActionParameters(form);

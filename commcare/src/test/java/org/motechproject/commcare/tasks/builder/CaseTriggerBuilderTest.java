@@ -7,10 +7,10 @@ import org.motechproject.commcare.config.Configs;
 import org.motechproject.commcare.domain.CommcareApplicationJson;
 import org.motechproject.commcare.domain.CommcareModuleJson;
 import org.motechproject.commcare.events.constants.EventSubjects;
-import org.motechproject.commcare.service.CommcareApplicationService;
 import org.motechproject.commcare.service.CommcareConfigService;
+import org.motechproject.commcare.service.CommcareSchemaService;
 import org.motechproject.commcare.util.ConfigsUtils;
-import org.motechproject.commcare.util.DummyCommcareApplication;
+import org.motechproject.commcare.util.DummyCommcareSchema;
 import org.motechproject.tasks.contract.EventParameterRequest;
 import org.motechproject.tasks.contract.TriggerEventRequest;
 
@@ -22,17 +22,17 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.motechproject.commcare.util.DummyCommcareApplication.CASE_FIELD1;
-import static org.motechproject.commcare.util.DummyCommcareApplication.CASE_FIELD2;
-import static org.motechproject.commcare.util.DummyCommcareApplication.CASE_FIELD3;
-import static org.motechproject.commcare.util.DummyCommcareApplication.CASE_FIELD4;
-import static org.motechproject.commcare.util.DummyCommcareApplication.CASE_FIELD5;
-import static org.motechproject.commcare.util.DummyCommcareApplication.CASE_FIELD6;
+import static org.motechproject.commcare.util.DummyCommcareSchema.CASE_FIELD1;
+import static org.motechproject.commcare.util.DummyCommcareSchema.CASE_FIELD2;
+import static org.motechproject.commcare.util.DummyCommcareSchema.CASE_FIELD3;
+import static org.motechproject.commcare.util.DummyCommcareSchema.CASE_FIELD4;
+import static org.motechproject.commcare.util.DummyCommcareSchema.CASE_FIELD5;
+import static org.motechproject.commcare.util.DummyCommcareSchema.CASE_FIELD6;
 
 public class CaseTriggerBuilderTest {
 
     @Mock
-    private CommcareApplicationService applicationService;
+    private CommcareSchemaService schemaService;
 
     @Mock
     private CommcareConfigService configService;
@@ -47,10 +47,10 @@ public class CaseTriggerBuilderTest {
     public void setUp() {
         initMocks(this);
         when(configService.getConfigs()).thenReturn(configs);
-        when(applicationService.getByConfigName("ConfigOne")).thenReturn(DummyCommcareApplication.getApplicationsForConfigOne());
-        when(applicationService.getByConfigName("ConfigTwo")).thenReturn(DummyCommcareApplication.getApplicationsForConfigTwo());
+        when(schemaService.retrieveApplications("ConfigOne")).thenReturn(DummyCommcareSchema.getApplicationsForConfigOne());
+        when(schemaService.retrieveApplications("ConfigTwo")).thenReturn(DummyCommcareSchema.getApplicationsForConfigTwo());
 
-        caseTriggerBuilder = new CaseTriggerBuilder(applicationService, configService);
+        caseTriggerBuilder = new CaseTriggerBuilder(schemaService, configService);
     }
 
     @Test
@@ -61,19 +61,19 @@ public class CaseTriggerBuilderTest {
         assertFalse(triggerEventRequests.isEmpty());
 
         int counter = 0;
-        for (CommcareApplicationJson application: DummyCommcareApplication.getApplicationsForConfigOne()) {
+        for (CommcareApplicationJson application: DummyCommcareSchema.getApplicationsForConfigOne()) {
             for (CommcareModuleJson module: application.getModules()) {
                 counter ++;
             }
         }
 
-        for (CommcareApplicationJson application: DummyCommcareApplication.getApplicationsForConfigTwo()) {
+        for (CommcareApplicationJson application: DummyCommcareSchema.getApplicationsForConfigTwo()) {
             for (CommcareModuleJson module: application.getModules()) {
                 counter ++;
             }
         }
 
-        // One trigger for cases is always built (for every configuration), therefore we should always have one case more
+        // One trigger for cases is always built (for every configuration), therefore we should be two cases more
         assertEquals(counter + 2, triggerEventRequests.size());
 
 

@@ -3,16 +3,14 @@ package org.motechproject.commcare.tasks.builder;
 import org.motechproject.commcare.config.Config;
 import org.motechproject.commcare.domain.CommcareApplicationJson;
 import org.motechproject.commcare.domain.CommcareModuleJson;
-import org.motechproject.commcare.service.CommcareApplicationService;
 import org.motechproject.commcare.service.CommcareConfigService;
+import org.motechproject.commcare.service.CommcareSchemaService;
 import org.motechproject.tasks.contract.EventParameterRequest;
 import org.motechproject.tasks.contract.TriggerEventRequest;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static org.motechproject.commcare.events.constants.EventDataKeys.API_KEY;
@@ -33,21 +31,21 @@ import static org.motechproject.commcare.events.constants.EventSubjects.CASE_EVE
  */
 public class CaseTriggerBuilder implements TriggerBuilder {
 
-    private CommcareApplicationService applicationService;
+    private CommcareSchemaService schemaService;
     private CommcareConfigService configService;
 
     private static final String RECEIVED_CASE = "Received Case";
     private static final String RECEIVED_CASE_ID = "Received Case ID";
 
     /**
-     * Creates an instance of the {@link CaseTriggerBuilder} class. It will use the given {@code applicationService} and
+     * Creates an instance of the {@link CaseTriggerBuilder} class. It will use the given {@code schemaService} and
      * {@code configService} for creating case triggers.
      *
-     * @param applicationService the application service
+     * @param schemaService the schema service
      * @param configService  the configuration service
      */
-    public CaseTriggerBuilder(CommcareApplicationService applicationService, CommcareConfigService configService) {
-        this.applicationService = applicationService;
+    public CaseTriggerBuilder(CommcareSchemaService schemaService, CommcareConfigService configService) {
+        this.schemaService = schemaService;
         this.configService = configService;
     }
 
@@ -55,13 +53,13 @@ public class CaseTriggerBuilder implements TriggerBuilder {
     public List<TriggerEventRequest> buildTriggers() {
         List<TriggerEventRequest> triggers = new ArrayList<>();
 
-        Map<String, Set<String>> caseTypes = new HashMap<>();
+        Set<String> caseTypes = new HashSet<>();
 
         for (Config config : configService.getConfigs().getConfigs()) {
-            for (CommcareApplicationJson application : applicationService.getByConfigName(config.getName())) {
+            for (CommcareApplicationJson application : schemaService.retrieveApplications(config.getName())) {
                 for (CommcareModuleJson module : application.getModules()) {
-                    if (!caseTypes.containsKey(module.getCaseType())) {
-                        caseTypes.put(module.getCaseType(), new HashSet<>(module.getCaseProperties()));
+                    if (!caseTypes.contains(module.getCaseType())) {
+                        caseTypes.add(module.getCaseType());
 
                         String applicationName = application.getApplicationName();
 

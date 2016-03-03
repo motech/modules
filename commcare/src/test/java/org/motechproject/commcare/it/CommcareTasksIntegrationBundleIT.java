@@ -21,7 +21,7 @@ import org.motechproject.commcare.service.CommcareApplicationDataService;
 import org.motechproject.commcare.tasks.CommcareTasksNotifier;
 import org.motechproject.commcare.tasks.action.CommcareValidatingChannel;
 import org.motechproject.commcare.util.ConfigsUtils;
-import org.motechproject.commcare.util.DummyCommcareApplication;
+import org.motechproject.commcare.util.DummyCommcareSchema;
 import org.motechproject.commcare.util.ResponseXML;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.ActionEventRequestBuilder;
@@ -168,7 +168,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
     private void createTestTask() {
         TaskTriggerInformation triggerInformation = new TaskTriggerInformation("trigger", COMMCARE_CHANNEL_NAME, COMMCARE_CHANNEL_NAME, VERSION,
-                "org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareApplication.XMLNS1, "org.motechproject.commcare.api.forms");
+                "org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareSchema.XMLNS1, "org.motechproject.commcare.api.forms");
 
         TaskActionInformation actionInformation = new TaskActionInformation("action", COMMCARE_CHANNEL_NAME, COMMCARE_CHANNEL_NAME, VERSION,
                 TEST_INTERFACE, "execute");
@@ -202,16 +202,16 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         TaskTriggerInformation expectedCaseDeath = new TaskTriggerInformation();
         TaskTriggerInformation expectedStockTx = new TaskTriggerInformation();
 
-        expectedForm1.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareApplication.XMLNS1);
+        expectedForm1.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareSchema.XMLNS1);
         assertTrue(containsTrigger(channel, expectedForm1));
 
-        expectedForm2.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareApplication.XMLNS2);
+        expectedForm2.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareSchema.XMLNS2);
         assertTrue(containsTrigger(channel, expectedForm2));
 
-        expectedForm3.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareApplication.XMLNS3);
+        expectedForm3.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareSchema.XMLNS3);
         assertTrue(containsTrigger(channel, expectedForm3));
 
-        expectedForm4.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareApplication.XMLNS4);
+        expectedForm4.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareSchema.XMLNS4);
         assertTrue(containsTrigger(channel, expectedForm4));
 
         expectedCaseBirth.setSubject("org.motechproject.commcare.api.case." + config.getName() + ".birth");
@@ -291,13 +291,13 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     }
 
     private void createMockCommcareSchema() {
-        CommcareApplicationJson applicationJson1 = DummyCommcareApplication.getApplicationsForConfigOne().get(0);
+        CommcareApplicationJson applicationJson1 = DummyCommcareSchema.getApplicationsForConfigOne().get(0);
         applicationJson1.setCommcareAppId("123");
         applicationJson1.setApplicationName("TestApp1");
         applicationJson1.setResourceUri("none");
         applicationJson1.setConfigName(config.getName());
 
-        CommcareApplicationJson applicationJson2 = DummyCommcareApplication.getApplicationsForConfigOne().get(1);
+        CommcareApplicationJson applicationJson2 = DummyCommcareSchema.getApplicationsForConfigOne().get(1);
         applicationJson2.setCommcareAppId("124");
         applicationJson2.setApplicationName("TestApp2");
         applicationJson2.setResourceUri("none");
@@ -490,7 +490,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         builder = new ActionParameterBuilder()
                 .setDisplayName("Is Pregnant?")
-                .setKey(DummyCommcareApplication.FORM_QUESTION1)
+                .setKey(DummyCommcareSchema.FORM_QUESTION1)
                 .setRequired(false)
                 .setType(ParameterType.UNICODE)
                 .setOrder(order++);
@@ -498,7 +498,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         builder = new ActionParameterBuilder()
                 .setDisplayName("Date of birth")
-                .setKey(DummyCommcareApplication.FORM_QUESTION2)
+                .setKey(DummyCommcareSchema.FORM_QUESTION2)
                 .setRequired(false)
                 .setType(ParameterType.UNICODE)
                 .setOrder(order++);
@@ -520,7 +520,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         builder = new ActionParameterBuilder()
                 .setDisplayName("Patient name")
-                .setKey(DummyCommcareApplication.FORM_QUESTION3)
+                .setKey(DummyCommcareSchema.FORM_QUESTION3)
                 .setRequired(false)
                 .setType(ParameterType.UNICODE)
                 .setOrder(order++);
@@ -542,7 +542,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         builder = new ActionParameterBuilder()
                 .setDisplayName("Last visit")
-                .setKey(DummyCommcareApplication.FORM_QUESTION4)
+                .setKey(DummyCommcareSchema.FORM_QUESTION4)
                 .setRequired(false)
                 .setType(ParameterType.UNICODE)
                 .setOrder(order++);
@@ -564,7 +564,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         builder = new ActionParameterBuilder()
                 .setDisplayName("Does patient take any medications?")
-                .setKey(DummyCommcareApplication.FORM_QUESTION5)
+                .setKey(DummyCommcareSchema.FORM_QUESTION5)
                 .setRequired(false)
                 .setType(ParameterType.UNICODE)
                 .setOrder(order++);
