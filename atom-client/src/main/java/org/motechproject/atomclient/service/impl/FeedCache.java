@@ -6,8 +6,6 @@ import com.rometools.rome.feed.synd.SyndContent;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
-import com.rometools.rome.io.SyndFeedInput;
-import com.rometools.rome.io.SyndFeedOutput;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.atomclient.domain.FeedRecord;
@@ -20,23 +18,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+/**
+ * This is the 'brains' of this module. We use the rometools {@link com.rometools.fetcher.impl.FeedFetcherCache} mechanism to determine if a feed entry content has changed and send a {@link MotechEvent} if it has.
+ */
 public class FeedCache implements FeedFetcherCache {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(FeedCache.class);
 
-    public static final String FEED_DATA = "feedData";
     private FeedRecordDataService feedRecordDataService;
     private AtomClientConfigService atomClientConfigService;
     private EventRelay eventRelay;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(FeedCache.class);
 
 
     public FeedCache(FeedRecordDataService feedRecordDataService, EventRelay eventRelay,
@@ -44,37 +42,6 @@ public class FeedCache implements FeedFetcherCache {
         this.feedRecordDataService = feedRecordDataService;
         this.eventRelay = eventRelay;
         this.atomClientConfigService = atomClientConfigService;
-    }
-
-
-    public static String feedToString(SyndFeed feed) throws FeedException, UnsupportedEncodingException {
-        SyndFeedOutput syndFeedOutput = new SyndFeedOutput();
-        return syndFeedOutput.outputString(feed);
-    }
-
-
-    public static SyndFeed feedFromString(String xml) throws IOException, ClassNotFoundException, FeedException {
-        SyndFeedInput syndFeedInput = new SyndFeedInput();
-        return syndFeedInput.build(new StringReader(xml));
-    }
-
-
-    public static String urlToString(URL url) throws IOException {
-        return url.toExternalForm();
-    }
-
-
-    public static URL urlFromString(String s) throws IOException {
-        return new URL(s);
-    }
-
-
-    public SyndFeedInfo feedRecordToFeedInfo(FeedRecord record) throws IOException, ClassNotFoundException, FeedException {
-        SyndFeedInfo info = new SyndFeedInfo();
-        info.setUrl(urlFromString(record.getUrl()));
-        info.setLastModified(record.getLastModified());
-        info.setSyndFeed(feedFromString(record.getData()));
-        return info;
     }
 
 
@@ -87,23 +54,85 @@ public class FeedCache implements FeedFetcherCache {
     @Override
     public SyndFeedInfo getFeedInfo(URL feedUrl) {
         try {
-            String url = urlToString(feedUrl);
+            String url = FeedCacheUtils.urlToString(feedUrl);
             FeedRecord record = feedRecordDataService.findByURL(url);
             if (record != null) {
-                return feedRecordToFeedInfo(record);
+                return FeedCacheUtils.feedRecordToFeedInfo(record);
             }
         } catch (IOException | ClassNotFoundException | FeedException ex) {
-            LOGGER.error(ex.getMessage(), ex);
+            LOGGER.error("Error reading FeedRecord from the database {}", ex.getMessage());
         }
         return null;
     }
 
 
     /**
-     * Given a regex, will extract the first regex capture group from the given
-     * @param content
-     * @param regex
-     * @return
+     * Add a SyndFeedInfo object to the cache
+     *
+     * @param feedUrl The url of the feed
+     * @param feedInfo A SyndFeedInfo for the feed
+     */
+    @Override
+    public synchronized void setFeedInfo(URL feedUrl, SyndFeedInfo feedInfo) {
+        try {
+            String url = FeedCacheUtils.urlToString(feedUrl);
+            String regex = atomClientConfigService.getRegexForFeedUrl(url);
+            FeedRecord record = feedRecordDataService.findByURL(url);
+            if (record != null) {
+                SyndFeedInfo cachedFeedInfo = FeedCacheUtils.feedRecordToFeedInfo(record);
+                if (sendMessagesForChangedEntries(url, cachedFeedInfo.getSyndFeed(), feedInfo.getSyndFeed(), regex)) {
+                    feedRecordDataService.delete(record);
+                    feedRecordDataService.create(FeedCacheUtils.recordFromFeed(url, feedInfo));
+                }
+            } else {
+                sendMessagesForNewFeedData(url, feedInfo.getSyndFeed(), regex);
+                feedRecordDataService.create(FeedCacheUtils.recordFromFeed(url, feedInfo));
+            }
+        } catch (IOException | FeedException | ClassNotFoundException ex) {
+            LOGGER.error("Error writing FeedRecord to the database {}", ex.getMessage());
+        }
+    }
+
+
+    /**
+     * Removes all items from the cache.
+     */
+    @Override
+    public void clear() {
+        feedRecordDataService.deleteAll();
+    }
+
+
+    /**
+     * Removes the SyndFeedInfo identified by the url from the cache.
+     *
+     * @return The removed SyndFeedInfo
+     */
+    @Override
+    public SyndFeedInfo remove(URL feedUrl) {
+        try {
+            String url = FeedCacheUtils.urlToString(feedUrl);
+            FeedRecord record = feedRecordDataService.findByURL(url);
+            if (record == null) {
+                LOGGER.error("Trying to remove feedRecord for inexistent URL {}", feedUrl);
+                return null;
+            }
+            LOGGER.debug("*** removing from cache *** {}", url);
+            feedRecordDataService.delete(record);
+            return FeedCacheUtils.feedRecordToFeedInfo(record);
+        } catch (IOException | ClassNotFoundException | FeedException ex) {
+            LOGGER.error("Error removing FeedRecord from the databaase {}", ex.getMessage());
+            return null;
+        }
+    }
+
+
+    /**
+     * Given a regex, will extract the first regex capture group from the given content string
+     *
+     * @param content the content string from which to extract
+     * @param regex   the regular expression that defines what to extract, a blank regex will return null
+     * @return the extracted content part, or null
      */
     private String extractContent(String content, String regex) {
         if (StringUtils.isBlank(regex)) {
@@ -143,7 +172,7 @@ public class FeedCache implements FeedFetcherCache {
             for (SyndContent content : entry.getContents()) {
                 rawContent.put(index.toString(), content.getValue());
                 String extractedContentString = extractContent(content.getValue(), regex);
-                if (!StringUtils.isBlank(extractedContentString)) {
+                if (StringUtils.isNotBlank(extractedContentString)) {
                     extractedContent.put(index.toString(), extractedContentString);
                 }
                 index++;
@@ -165,9 +194,47 @@ public class FeedCache implements FeedFetcherCache {
      * @param feed
      */
     private void sendMessagesForNewFeedData(String url, SyndFeed feed, String regex) {
+        LOGGER.debug("Sending {} message{} for new feed {}", feed.getEntries().size(),
+                feed.getEntries().size() == 1 ? "" : "s", url);
         for (SyndEntry entry : feed.getEntries()) {
             sendMessageForFeedEntry(url, entry, regex);
         }
+    }
+
+
+    /**
+     * Sends a MOTECH event for each changed feed entry and returns true if changes were detected
+     *
+     * @param cachedFeed
+     * @param fetchedFeed
+     * @return true if any changes were detected between the cached entry and the fetched entry
+     */
+    private boolean sendMessagesForChangedEntries(String url, SyndFeed cachedFeed, SyndFeed fetchedFeed, String regex) {
+        boolean anyChanges = false;
+        for (SyndEntry fetchedEntry : fetchedFeed.getEntries()) {
+            boolean foundInCache = false;
+            for (SyndEntry cachedEntry : cachedFeed.getEntries()) {
+                if (fetchedEntry.getUri().equals(cachedEntry.getUri())) {
+                    foundInCache = true;
+                    if (areEntriesDifferent(fetchedEntry, cachedEntry)) {
+                        LOGGER.debug("Sending message for changed entry {} in feed {}", fetchedEntry.getUri(), url);
+                        sendMessageForFeedEntry(url, fetchedEntry, regex);
+                        anyChanges = true;
+                    }
+                }
+            }
+            if (!foundInCache) {
+                LOGGER.debug("Sending message for new entry {} in feed {}", fetchedEntry.getUri(), url);
+                sendMessageForFeedEntry(url, fetchedEntry, regex);
+                anyChanges = true;
+            }
+        }
+
+        if (anyChanges == false) {
+            LOGGER.debug("No changes detected in feed {}", url);
+        }
+
+        return anyChanges;
     }
 
 
@@ -190,101 +257,5 @@ public class FeedCache implements FeedFetcherCache {
         }
 
         return false;
-    }
-
-
-    /**
-     * Sends a MOTECH event for each changed feed entry and returns true if changes were detected
-     *
-     * @param cachedFeed
-     * @param fetchedFeed
-     * @return true if any changes were detected between the cached entry and the fetched entry
-     */
-    private boolean sendMessagesForChangedEntries(String url, SyndFeed cachedFeed, SyndFeed fetchedFeed, String regex) {
-        boolean anyChanges = false;
-        for (SyndEntry fetchedEntry : fetchedFeed.getEntries()) {
-            boolean foundInCache = false;
-            for (SyndEntry cachedEntry : cachedFeed.getEntries()) {
-                if (fetchedEntry.getUri().equals(cachedEntry.getUri())) {
-                    foundInCache = true;
-                    if (areEntriesDifferent(fetchedEntry, cachedEntry)) {
-                        sendMessageForFeedEntry(url, fetchedEntry, regex);
-                        anyChanges = true;
-                    }
-                }
-            }
-            if (!foundInCache) {
-                sendMessageForFeedEntry(url, fetchedEntry, regex);
-                anyChanges = true;
-            }
-        }
-        return anyChanges;
-    }
-
-
-    private FeedRecord recordFromFeed(String url, SyndFeedInfo info) throws IOException, FeedException {
-        return new FeedRecord(url, (Long) info.getLastModified(), feedToString(info.getSyndFeed()));
-    }
-
-
-    /**
-     * Add a SyndFeedInfo object to the cache
-     *
-     * @param feedUrl The url of the feed
-     * @param feedInfo A SyndFeedInfo for the feed
-     */
-    @Override
-    public void setFeedInfo(URL feedUrl, SyndFeedInfo feedInfo) {
-        try {
-            String url = urlToString(feedUrl);
-            String regex = atomClientConfigService.getRegexForFeedUrl(url);
-            FeedRecord record = feedRecordDataService.findByURL(url);
-            if (record != null) {
-                SyndFeedInfo cachedFeedInfo = feedRecordToFeedInfo(record);
-                if (sendMessagesForChangedEntries(url, cachedFeedInfo.getSyndFeed(), feedInfo.getSyndFeed(), regex)) {
-                    feedRecordDataService.delete(record);
-                    feedRecordDataService.create(recordFromFeed(url, feedInfo));
-                }
-            } else {
-                sendMessagesForNewFeedData(url, feedInfo.getSyndFeed(), regex);
-                feedRecordDataService.create(recordFromFeed(url, feedInfo));
-            }
-        } catch (IOException | FeedException | ClassNotFoundException ex) {
-            LOGGER.error(ex.getMessage(), ex);
-        }
-    }
-
-
-    /**
-     * Removes all items from the cache.
-     */
-    @Override
-    public void clear() {
-        feedRecordDataService.deleteAll();
-    }
-
-
-    /**
-     * Removes the SyndFeedInfo identified by the url from the cache.
-     *
-     * @return The removed SyndFeedInfo
-     */
-    @Override
-    public SyndFeedInfo remove(URL feedUrl) {
-        try {
-            String url = urlToString(feedUrl);
-            FeedRecord record = feedRecordDataService.findByURL(url);
-            if (record == null) {
-                LOGGER.error("Trying to remove feedRecord for inexistent URL {}", feedUrl);
-                return null;
-            }
-            LOGGER.debug("*** removing from cache *** {}", url);
-            byte[] bytes = (byte[]) feedRecordDataService.getDetachedField(record, FEED_DATA);
-            feedRecordDataService.delete(record);
-            return feedRecordToFeedInfo(record);
-        } catch (IOException | ClassNotFoundException | FeedException ex) {
-            LOGGER.error(ex.getMessage(), ex);
-            return null;
-        }
     }
 }

@@ -34,6 +34,7 @@
         <apache.servicemix.bundles.ant.version>1.8.1_1</apache.servicemix.bundles.ant.version>
         <apache.servicemix.bundles.javax.inject.version>1_2</apache.servicemix.bundles.javax.inject.version>
         <apache.servicemix.bundles.jopt.simple.version>4.6_1</apache.servicemix.bundles.jopt.simple.version>
+        <apache.servicemix.bundles.jdom.version>2.0.6_1</apache.servicemix.bundles.jdom.version>
         <ibm.jbatch.version>1.0</ibm.jbatch.version>
         <javax.batch.version>1.0</javax.batch.version>
         <apache.ibatis.version>2.3.4.726_4</apache.ibatis.version>
@@ -48,6 +49,7 @@
         <gemston.gemfire.version>7.0.1</gemston.gemfire.version>
         <codehaus.groovy.version>1.8.9</codehaus.groovy.version>
         <javax.el.version>2.2.5</javax.el.version>
+        <rometools.rome.fetcher.version>1.5.99</rometools.rome.fetcher.version>
         <spring.osgi.core.version>1.2.1</spring.osgi.core.version>
 
         <javax.persistence.version>2.1.0</javax.persistence.version>

@@ -1,5 +1,5 @@
-Atom Client Module
-===
+# Atom Client Module
+
 
 This module will periodically fetch from one or more Atom feed sources and send a MOTECH event for each feed content that changed since the last fetch.
 

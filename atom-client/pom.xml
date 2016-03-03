@@ -36,12 +36,12 @@
         <dependency>
             <groupId>com.rometools</groupId>
             <artifactId>rome-fetcher</artifactId>
-            <version>1.5.99</version>
+            <version>${rometools.rome.fetcher.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.servicemix.bundles</groupId>
             <artifactId>org.apache.servicemix.bundles.jdom</artifactId>
-            <version>2.0.6_1</version>
+            <version>${apache.servicemix.bundles.jdom.version}</version>
         </dependency>
     </dependencies>
 

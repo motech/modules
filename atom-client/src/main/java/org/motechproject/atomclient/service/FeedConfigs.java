@@ -3,6 +3,9 @@ package org.motechproject.atomclient.service;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * POJO representation of a set of {@link FeedConfig} used to store the list of atom feeds we want to fetch
+ */
 public class FeedConfigs {
 
     private Set<FeedConfig> feeds;

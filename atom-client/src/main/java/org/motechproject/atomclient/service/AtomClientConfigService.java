@@ -1,6 +1,9 @@
 package org.motechproject.atomclient.service;
 
 
+/**
+ * Service interface used to read settings from the atom-client.default.properties and atom-client-feeds.json files
+ */
 public interface AtomClientConfigService {
 
     /**
@@ -31,14 +34,14 @@ public interface AtomClientConfigService {
     /**
      * Sets the module's feed configurations, this sets the in-memory feeds, and is not persisted
      *
-     * @param feedConfigs
+     * @param feedConfigs a {@link FeedConfigs} object describing the atom feeds to fetch
      */
     void setFeedConfigs(FeedConfigs feedConfigs);
 
     /**
      * Sets the module fetch job cron, ie: when the atom feeds will be fetched, but does not persist the setting
      *
-     * @param fetchCron
+     * @param fetchCron a <a href="http://www.quartz-scheduler.org/documentation/quartz-1.x/tutorials/crontrigger">cron expression</a> that describes how often to fetch, or an empty string which disables automatic fetching
      */
     void setFetchCron(String fetchCron);
 

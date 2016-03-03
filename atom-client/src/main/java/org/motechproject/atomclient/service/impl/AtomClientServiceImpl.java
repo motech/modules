@@ -68,7 +68,7 @@ public class AtomClientServiceImpl implements AtomClientService {
     @Override
     @Transactional
     public void fetch() {
-        if (configService.getFeedConfigs().getFeeds().size() == 0) {
+        if (configService.getFeedConfigs().getFeeds().isEmpty()) {
             LOGGER.warn("No feeds to fetch.");
         }
         for (FeedConfig feedConfig : configService.getFeedConfigs().getFeeds()) {

@@ -15,7 +15,8 @@ import org.springframework.stereotype.Component;
 /**
  * Handles:
  * - (raw or text) config changes by triggering the reload of the appropriate configuration items
- * -
+ * - the rescheduling of the fetch job
+ * - fetch jobs
  */
 @Component
 public class AtomClientEventHandler {

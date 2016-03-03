@@ -30,21 +30,18 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class EventTest {
-    @Mock
-    EventRelay eventRelay;
 
     @Mock
-    FeedRecordDataService feedRecordDataService;
-
+    private EventRelay eventRelay;
     @Mock
-    AtomClientConfigService atomClientConfigService;
-
+    private FeedRecordDataService feedRecordDataService;
     @Mock
-    MotechSchedulerService motechSchedulerService;
+    private AtomClientConfigService atomClientConfigService;
+    @Mock
+    private MotechSchedulerService motechSchedulerService;
 
-    AtomClientServiceImpl atomClientService;
-
-    String feedURL;
+    private AtomClientServiceImpl atomClientService;
+    private String feedURL;
 
 
     static final String ATOM_FEED_DATA = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
@@ -107,7 +104,7 @@ public class EventTest {
 
     @Test
     public void verifyEventNotSentForExistingData() {
-        when(feedRecordDataService.findByURL(feedURL)).thenReturn(new FeedRecord(feedURL, 123L, ATOM_FEED_DATA));
+        when(feedRecordDataService.findByURL(feedURL)).thenReturn(new FeedRecord(feedURL, ATOM_FEED_DATA));
 
         ArgumentCaptor<MotechEvent> event = ArgumentCaptor.forClass(MotechEvent.class);
 
