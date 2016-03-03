@@ -33,12 +33,52 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
 
     @Test
     public void shouldGetPersonById() throws HttpException, IOException {
-        Mockito.when(getClient().getJson(Mockito.any(URI.class))).thenReturn(
-                readJsonFromFile("json/person-response.json"));
+        Mockito.when(getClient().getJson(Mockito.any(URI.class)))
+                .thenReturn(readJsonFromFile("json/person-response.json"));
 
         Person person = impl.getPersonById("PPP");
 
         assertNotNull(person);
+    }
+
+    @Test
+    public void shouldGetAllAdressFields() throws HttpException, IOException {
+        Mockito.when(getClient().getJson(Mockito.any(URI.class)))
+                .thenReturn(readJsonFromFile("json/person-response.json"));
+
+        String address1 = "5 Main St.";
+        String address2 = "5/4";
+        String cityVillage = "Utopia";
+        String stateProvince = "testProvince";
+        String country = "Neverland";
+        String postalCode = "69-111";
+        String countyDistrict = null;
+        String address3 = null;
+        String address4 = null;
+        String address5 = null;
+        String address6 = null;
+        String startDate = "2016-03-01T00:00:00.000+0000";
+        String endDate = null;
+        String latitude = "47.613879";
+        String longitude = "-122.342436";
+
+        Person person = impl.getPersonById("PPP");
+
+        assertEquals(address1, person.getPreferredAddress().getAddress1());
+        assertEquals(address2, person.getPreferredAddress().getAddress2());
+        assertEquals(cityVillage, person.getPreferredAddress().getCityVillage());
+        assertEquals(stateProvince, person.getPreferredAddress().getStateProvince());
+        assertEquals(country, person.getPreferredAddress().getCountry());
+        assertEquals(postalCode, person.getPreferredAddress().getPostalCode());
+        assertEquals(countyDistrict, person.getPreferredAddress().getCountyDistrict());
+        assertEquals(address3, person.getPreferredAddress().getAddress3());
+        assertEquals(address4, person.getPreferredAddress().getAddress4());
+        assertEquals(address5, person.getPreferredAddress().getAddress5());
+        assertEquals(address6, person.getPreferredAddress().getAddress6());
+        assertEquals(startDate, person.getPreferredAddress().getStartDate());
+        assertEquals(endDate, person.getPreferredAddress().getEndDate());
+        assertEquals(latitude, person.getPreferredAddress().getLatitude());
+        assertEquals(longitude, person.getPreferredAddress().getLongitude());
     }
 
     @Test
