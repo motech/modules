@@ -61,6 +61,7 @@ public interface SmsRecordsDataService extends MotechDataService<SmsRecord> {
      * @param phoneNumber the number of the phone the message was received from or delivered to
      * @param messageContent the contents of the SMS message
      * @param timestamp the date-time range the timestamp of the SMS should fall into
+     * @param deliveryStatuses the set of delivery status for the messages
      * @param providerStatus
      * @param motechId the id by which MOTECH identifies the message
      * @param providerId the provider generated ID for the SMS
