@@ -50,8 +50,8 @@
             <version>${motech.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
+            <groupId>org.apache.servicemix.bundles</groupId>
+            <artifactId>org.apache.servicemix.bundles.spring-web</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -84,9 +84,12 @@
                             net.sf.cglib.proxy,
                             net.sf.cglib.reflect,
                             org.aopalliance.aop,
+                            org.apache.bval.jsr303,
+                            org.apache.bval.constraints,
                             org.springframework.aop,
                             org.springframework.aop.framework,
                             org.springframework.transaction,
+                            org.springframework.validation.beanvalidation,
                             *
                         </Import-Package>
                         <Bundle-DocURL>
