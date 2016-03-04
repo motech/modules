@@ -1,6 +1,7 @@
 package org.motechproject.sms.http;
 
 import org.apache.commons.httpclient.Header;
+import org.motechproject.sms.audit.constants.DeliveryStatuses;
 import org.motechproject.sms.util.SmsEventSubjects;
 import org.motechproject.sms.audit.SmsRecord;
 import org.motechproject.sms.configs.Config;
@@ -49,7 +50,7 @@ public class MultilineSingleResponseHandler extends ResponseHandler {
             getLogger().info(String.format("Sent messageId %s '%s' to %s", messageId, messageForLog(sms),
                     sms.getRecipients().get(0)));
             getAuditRecords().add(new SmsRecord(getConfig().getName(), OUTBOUND, sms.getRecipients().get(0),
-                    sms.getMessage(), now(), getTemplateOutgoingResponse().getSuccessStatus(), null, sms.getMotechId(), messageId, null));
+                    sms.getMessage(), now(), DeliveryStatuses.DISPATCHED, null, sms.getMotechId(), messageId, null));
             getEvents().add(outboundEvent(SmsEventSubjects.DISPATCHED, getConfig().getName(), sms.getRecipients(),
                     sms.getMessage(), sms.getMotechId(), messageId, null, null, null, sms.getCustomParams()));
         }

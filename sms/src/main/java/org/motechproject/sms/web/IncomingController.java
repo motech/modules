@@ -70,12 +70,6 @@ public class IncomingController {
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/{configName}")
     public void handleIncoming(@PathVariable String configName, @RequestParam Map<String, String> params) {
-        String sender = null;
-        String recipient = null;
-        String message = null;
-        String providerMessageId = null;
-        DateTime timestamp;
-
         LOGGER.info("Incoming SMS - configName = {}, params = {}", configName, params);
 
         Config config;
@@ -89,28 +83,52 @@ public class IncomingController {
         }
         Template template = templateService.getTemplate(config.getTemplateName());
 
+        eventRelay.sendEventMessage(inboundEvent(config.getName(),
+                getSenderKey(params, template),
+                getRecipientKey(params, template),
+                getMessageKey(params, template),
+                getMsgIdKey(params, template),
+                getTimestampKey(params, template)));
+        smsRecordsDataService.create(new SmsRecord(config.getName(), INBOUND,
+                getSenderKey(params, template),
+                getMessageKey(params, template),
+                now(),
+                getStatusKey(params, template),
+                null, null,
+                getMsgIdKey(params, template), null));
+    }
+
+    private String getSenderKey(Map<String, String> params, Template template) {
+        String sender = null;
         if (params.containsKey(template.getIncoming().getSenderKey())) {
             sender = params.get(template.getIncoming().getSenderKey());
             if (template.getIncoming().hasSenderRegex()) {
                 sender = template.getIncoming().extractSender(sender);
             }
         }
+        return sender;
+    }
 
+    private String getRecipientKey(Map<String, String> params, Template template) {
+        String recipient = null;
         if (params.containsKey(template.getIncoming().getRecipientKey())) {
             recipient = params.get(template.getIncoming().getRecipientKey());
             if (template.getIncoming().hasRecipientRegex()) {
                 recipient = template.getIncoming().extractRecipient(recipient);
             }
         }
+        return recipient;
+    }
 
-        if (params.containsKey(template.getIncoming().getMessageKey())) {
-            message = params.get(template.getIncoming().getMessageKey());
-        }
+    private String getMessageKey(Map<String, String> params, Template template) {
+        return params.containsKey(template.getIncoming().getMessageKey()) ? params.get(template.getIncoming().getMessageKey()) : null;
+    }
 
-        if (params.containsKey(template.getIncoming().getMsgIdKey())) {
-            providerMessageId = params.get(template.getIncoming().getMsgIdKey());
-        }
+    private String getMsgIdKey(Map<String, String> params, Template template) {
+        return params.containsKey(template.getIncoming().getMsgIdKey()) ? params.get(template.getIncoming().getMsgIdKey()) : null;
+    }
 
+    private DateTime getTimestampKey(Map<String, String> params, Template template) {
         if (params.containsKey(template.getIncoming().getTimestampKey())) {
             String dt = params.get(template.getIncoming().getTimestampKey());
             //todo: some providers may send timestamps in a different way, deal it it if/when we see that
@@ -118,14 +136,12 @@ public class IncomingController {
             if (dt.matches("(\\d\\d\\d\\d|\\d\\d)-\\d\\d?-\\d\\d? \\d\\d?:\\d\\d?:\\d\\d?")) {
                 dt = dt.replace(" ", "T");
             }
-            timestamp = DateTime.parse(dt);
-        } else {
-            timestamp = now();
+            return DateTime.parse(dt);
         }
+        return now();
+    }
 
-        eventRelay.sendEventMessage(inboundEvent(config.getName(), sender, recipient, message, providerMessageId,
-                timestamp));
-        smsRecordsDataService.create(new SmsRecord(config.getName(), INBOUND, sender, message, now(), DeliveryStatuses.RECEIVED,
-                null, null, providerMessageId, null));
+    private String getStatusKey(Map<String, String> params, Template template) {
+        return template.getStatus().hasStatusKey() && params.containsKey(template.getStatus().getStatusKey()) ? template.getStatus().getStatusKey() : DeliveryStatuses.RECEIVED;
     }
 }

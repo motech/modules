@@ -10,6 +10,8 @@ public final class DeliveryStatuses {
     public static final String ABORTED = "ABORTED";
     public static final String DISPATCHED = "DISPATCHED";
     public static final String FAILURE_CONFIRMED = "FAILURE_CONFIRMED";
+    public static final String SCHEDULED = "SCHEDULED";
+    public static final String PENDING = "PENDING";
 
     private DeliveryStatuses() {
 

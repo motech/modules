@@ -7,6 +7,7 @@ import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.sms.audit.SmsRecord;
 import org.motechproject.sms.audit.SmsRecordsDataService;
+import org.motechproject.sms.audit.constants.DeliveryStatuses;
 import org.motechproject.sms.configs.Config;
 import org.motechproject.sms.templates.Template;
 import org.motechproject.sms.util.SmsEventParams;
@@ -35,9 +36,6 @@ import static org.motechproject.sms.util.SmsEvents.outboundEvent;
 public class SmsServiceImpl implements SmsService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SmsServiceImpl.class);
-
-    public static final String SCHEDULED = "SCHEDULED";
-    public static final String PENDING = "PENDING";
 
     private EventRelay eventRelay;
     private MotechSchedulerService schedulerService;
@@ -169,7 +167,7 @@ public class SmsServiceImpl implements SmsService {
                     dt = dt.plus(1);
                     for (String recipient : recipients) {
                         smsRecordsDataService.create(new SmsRecord(config.getName(), OUTBOUND, recipient, part, now(),
-                                SCHEDULED, null, motechId, null, null));
+                                DeliveryStatuses.SCHEDULED, null, motechId, null, null));
                     }
                 }
             } else {
@@ -180,7 +178,7 @@ public class SmsServiceImpl implements SmsService {
                     LOGGER.info("Sending message [{}] to [{}].", part.replace("\n", "\\n"), recipients);
                     for (String recipient : recipients) {
                         smsRecordsDataService.create(new SmsRecord(config.getName(), OUTBOUND, recipient, part, now(),
-                                PENDING, null, motechId, null, null));
+                                DeliveryStatuses.PENDING, null, motechId, null, null));
                     }
                 }
             }
