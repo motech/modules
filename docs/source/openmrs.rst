@@ -123,7 +123,7 @@ The following OpenMRS task actions are available:
     +=========================+============================================================+
     |Encounter Date           |The date and time the encounter was created.                |
     +-------------------------+------------------------------------------------------------+
-    |Encounter Type           |The name of the OpenMRS encounter type.                      |
+    |Encounter Type           |The name of the OpenMRS encounter type.                     |
     +-------------------------+------------------------------------------------------------+
     |Location name            |The name of the location where the encounter took place.    |
     |                         |Must exactly match the OpenMRS location name.               |
