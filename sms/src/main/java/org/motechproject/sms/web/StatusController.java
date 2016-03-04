@@ -201,7 +201,7 @@ public class StatusController {
                 eventSubject = SmsEventSubjects.FAILURE_CONFIRMED;
             } else {
                 // If we're not certain the message was delivered or failed, then it's in the DISPATCHED gray area
-                smsRecord.setDeliveryStatus(DeliveryStatuses.DISPATCHED);
+                smsRecord.setDeliveryStatus(statusString);
                 eventSubject = SmsEventSubjects.DISPATCHED;
             }
             eventRelay.sendEventMessage(outboundEvent(eventSubject, configName, recipients,
