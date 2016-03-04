@@ -12,9 +12,9 @@ import org.motechproject.dhis2.service.StageService;
 import org.motechproject.dhis2.service.TrackedEntityAttributeService;
 import org.motechproject.dhis2.service.TrackedEntityService;
 import org.motechproject.tasks.contract.ActionEventRequest;
-import org.motechproject.tasks.contract.ActionEventRequestBuilder;
+import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
-import org.motechproject.tasks.contract.ActionParameterRequestBuilder;
+import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
 import org.motechproject.tasks.contract.ChannelRequest;
 import org.osgi.framework.BundleContext;
 
