@@ -1,6 +1,8 @@
 package org.motechproject.commcare.tasks.builder;
 
 import org.motechproject.commcare.config.Config;
+import org.motechproject.commcare.domain.CommcareApplicationJson;
+import org.motechproject.commcare.domain.CommcareModuleJson;
 import org.motechproject.commcare.domain.FormSchemaJson;
 import org.motechproject.commcare.domain.FormSchemaQuestionJson;
 import org.motechproject.commcare.domain.FormSchemaQuestionOptionJson;
@@ -48,17 +50,21 @@ public class FormActionBuilder implements ActionBuilder {
 
     private List<ActionEventRequest> buildActionsForConfig(Config config) {
         List<ActionEventRequest> actions = new ArrayList<>();
-        List<FormSchemaJson> formSchemas = schemaService.getAllFormSchemas(config.getName());
+        
+        for (CommcareApplicationJson application : schemaService.retrieveApplications(config.getName())) {
+            for (CommcareModuleJson module : application.getModules()) {
+                for (FormSchemaJson form : module.getFormSchemas()) {
+                    SortedSet<ActionParameterRequest> parameters = buildActionParameters(form);
 
-        for (FormSchemaJson form : formSchemas) {
-            SortedSet<ActionParameterRequest> parameters = buildActionParameters(form);
-
-            String displayName = DisplayNameHelper.buildDisplayName(DisplayNames.SUBMIT_FORM, form.getFormName(), config.getName());
-            ActionEventRequestBuilder actionBuilder = new ActionEventRequestBuilder()
-                    .setDisplayName(displayName)
-                    .setSubject(EventSubjects.SUBMIT_FORM + "." + form.getXmlns() + "." + config.getName())
-                    .setActionParameters(parameters);
-            actions.add(actionBuilder.createActionEventRequest());
+                    String displayName = DisplayNameHelper.buildDisplayName(DisplayNames.SUBMIT_FORM, form.getFormName(),
+                            application.getApplicationName(), config.getName());
+                    ActionEventRequestBuilder actionBuilder = new ActionEventRequestBuilder()
+                            .setDisplayName(displayName)
+                            .setSubject(EventSubjects.SUBMIT_FORM + "." + form.getXmlns() + "." + config.getName())
+                            .setActionParameters(parameters);
+                    actions.add(actionBuilder.createActionEventRequest());
+                }
+            }
         }
 
         return actions;
