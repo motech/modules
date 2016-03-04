@@ -63,8 +63,8 @@ public class CommcareTasksNotifier {
             if (service != null) {
                 LOGGER.info("Registering Commcare tasks channel with the channel service");
 
-                ChannelRequestBuilder channelRequestBuilder = new ChannelRequestBuilder(configService,
-                        schemaService, bundleContext);
+                ChannelRequestBuilder channelRequestBuilder = new ChannelRequestBuilder(configService, schemaService,
+                        bundleContext);
                 TasksChannelServiceInstance instance = new TasksChannelServiceInstance(service, channelRequestBuilder);
                 instance.updateTaskChannel();
             } else {
