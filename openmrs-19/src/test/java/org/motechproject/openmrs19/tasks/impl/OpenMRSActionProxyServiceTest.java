@@ -8,11 +8,14 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.motechproject.openmrs19.domain.OpenMRSConcept;
+import org.motechproject.openmrs19.domain.OpenMRSConceptName;
 import org.motechproject.openmrs19.domain.OpenMRSEncounter;
 import org.motechproject.openmrs19.domain.OpenMRSFacility;
 import org.motechproject.openmrs19.domain.OpenMRSPatient;
 import org.motechproject.openmrs19.domain.OpenMRSPerson;
 import org.motechproject.openmrs19.domain.OpenMRSProvider;
+import org.motechproject.openmrs19.service.OpenMRSConceptService;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSFacilityService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
@@ -29,6 +32,9 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OpenMRSActionProxyServiceTest {
+
+    @Mock
+    private OpenMRSConceptService conceptService;
 
     @Mock
     private OpenMRSEncounterService encounterService;
@@ -85,6 +91,10 @@ public class OpenMRSActionProxyServiceTest {
     @Test
     public void shouldCreatePatientWithGivenParameters() {
         OpenMRSPerson person = createTestPerson();
+        OpenMRSConcept causeOfDeath = createTestConcept();
+
+        person.setDead(true);
+        person.setCauseOfDeath(causeOfDeath);
 
         OpenMRSFacility facility = new OpenMRSFacility();
         facility.setName("testLocation");
@@ -94,11 +104,12 @@ public class OpenMRSActionProxyServiceTest {
 
         OpenMRSPatient patient = new OpenMRSPatient("500", person, facility, identifiers);
 
+        doReturn(causeOfDeath).when(conceptService).getConceptByUuid(causeOfDeath.getUuid());
         doReturn(Collections.singletonList(facility)).when(facilityService).getFacilities(facility.getName());
 
         openMRSActionProxyService.createPatient(person.getFirstName(), person.getMiddleName(), person.getLastName(),
                 person.getAddress(), person.getDateOfBirth(), person.getBirthDateEstimated(), person.getGender(),
-                person.getDead(), patient.getMotechId(), facility.getName(), identifiers);
+                person.getDead(), causeOfDeath.getUuid(), patient.getMotechId(), facility.getName(), identifiers);
 
         verify(patientService).createPatient(patientCaptor.capture());
 
@@ -121,7 +132,7 @@ public class OpenMRSActionProxyServiceTest {
 
         openMRSActionProxyService.createPatient(person.getFirstName(), person.getMiddleName(), person.getLastName(),
                 person.getAddress(), person.getDateOfBirth(), person.getBirthDateEstimated(), person.getGender(),
-                person.getDead(), patient.getMotechId(), "", identifiers);
+                person.getDead(), "", patient.getMotechId(), "", identifiers);
 
         verify(patientService).createPatient(patientCaptor.capture());
 
@@ -144,7 +155,7 @@ public class OpenMRSActionProxyServiceTest {
 
         openMRSActionProxyService.createPatient(person.getFirstName(), person.getMiddleName(), person.getLastName(),
                 person.getAddress(), person.getDateOfBirth(), person.getBirthDateEstimated(), person.getGender(),
-                person.getDead(), patient.getMotechId(), facility.getName(), identifiers);
+                person.getDead(), "", patient.getMotechId(), facility.getName(), identifiers);
 
         verify(patientService).createPatient(patientCaptor.capture());
 
@@ -164,5 +175,17 @@ public class OpenMRSActionProxyServiceTest {
         person.setDead(false);
 
         return person;
+    }
+
+    private OpenMRSConcept createTestConcept() {
+        OpenMRSConcept concept = new OpenMRSConcept();
+        OpenMRSConceptName conceptName = new OpenMRSConceptName("testConcept");
+
+        concept.setNames(Collections.singletonList(conceptName));
+        concept.setDataType("TEXT");
+        concept.setConceptClass("Test");
+        concept.setUuid("100");
+
+        return concept;
     }
 }

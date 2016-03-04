@@ -15,18 +15,20 @@
   },
   "preferredAddress":{
     "address1":"5 Main St.",
-    "address2":"",
-    "cityVillage":"",
-    "stateProvince":"",
-    "country":"",
-    "postalCode":"",
+    "address2":"5/4",
+    "cityVillage":"Utopia",
+    "stateProvince":"testProvince",
+    "country":"Neverland",
+    "postalCode":"69-111",
     "countyDistrict":null,
     "address3":null,
     "address4":null,
     "address5":null,
     "address6":null,
-    "startDate":null,
-    "endDate":null
+    "startDate":"2016-03-01T00:00:00.000+0000",
+    "endDate":null,
+    "latitude":"47.613879",
+    "longitude":"-122.342436"
   },
   "attributes":[{
     "display" : "Civil Status = 5555",

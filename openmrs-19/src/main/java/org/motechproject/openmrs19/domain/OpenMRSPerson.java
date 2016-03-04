@@ -31,6 +31,7 @@ public class OpenMRSPerson {
     private Integer age;
     private String gender;
     private Boolean dead;
+    private OpenMRSConcept causeOfDeath;
     private DateTime dateCreated;
     private DateTime dateChanged;
 
@@ -222,7 +223,8 @@ public class OpenMRSPerson {
                 && Objects.equals(address, other.address) && Objects.equals(gender, other.gender)
                 && Objects.equals(attributes, other.attributes) && Objects.equals(deathDate, other.deathDate)
                 && dead == other.dead && Objects.equals(display, other.display)
-                && Objects.equals(dateCreated, other.dateCreated) && Objects.equals(dateChanged, other.dateChanged);
+                && Objects.equals(dateCreated, other.dateCreated) && Objects.equals(dateChanged, other.dateChanged)
+                && Objects.equals(causeOfDeath, other.causeOfDeath);
     }
 
     public boolean equalNameData(OpenMRSPerson other) {
@@ -254,6 +256,7 @@ public class OpenMRSPerson {
         hash = hash * 31 + ObjectUtils.hashCode(deathDate);
         hash = hash * 31 + ObjectUtils.hashCode(dateCreated);
         hash = hash * 31 + ObjectUtils.hashCode(dateChanged);
+        hash = hash * 31 + ObjectUtils.hashCode(causeOfDeath);
         return hash;
     }
 
@@ -265,4 +268,11 @@ public class OpenMRSPerson {
         this.id = id;
     }
 
+    public OpenMRSConcept getCauseOfDeath() {
+        return causeOfDeath;
+    }
+
+    public void setCauseOfDeath(OpenMRSConcept causeOfDeath) {
+        this.causeOfDeath = causeOfDeath;
+    }
 }

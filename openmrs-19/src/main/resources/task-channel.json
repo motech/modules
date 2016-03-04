@@ -74,6 +74,11 @@
         {
           "key": "gender",
           "displayName": "openMRS.person.gender",
+          "type" : "SELECT",
+          "options" : [
+            "M",
+            "F"
+          ],
           "required" : true
         },
         {
@@ -81,6 +86,11 @@
           "displayName": "openMRS.person.dead",
           "type" : "BOOLEAN",
           "required" : false
+        },
+        {
+          "key": "causeOfDeathUUID",
+          "displayName": "openMRS.person.causeOfDeath.id",
+          "required": false
         },
         {
           "key": "motechId",

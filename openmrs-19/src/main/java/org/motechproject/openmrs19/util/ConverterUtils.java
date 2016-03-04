@@ -66,7 +66,7 @@ public final class ConverterUtils {
         converted.setGender(person.getGender());
 
         if (person.getPreferredAddress() != null) {
-            converted.setAddress(person.getPreferredAddress().getAddress1());
+            converted.setAddress(person.getPreferredAddress().getFullAddressString());
         }
 
         if (person.getBirthdate() != null) {
@@ -125,6 +125,9 @@ public final class ConverterUtils {
         }
         converted.setBirthdateEstimated((Boolean) ObjectUtils.defaultIfNull(person.getBirthDateEstimated(), false));
         converted.setDead((Boolean) ObjectUtils.defaultIfNull(person.getDead(), false));
+        if (person.getCauseOfDeath() != null) {
+            converted.setCauseOfDeath(toConcept(person.getCauseOfDeath()));
+        }
         converted.setGender(person.getGender());
 
         if (includeNames) {
@@ -184,8 +187,8 @@ public final class ConverterUtils {
      * @return the observation converted to the MOTECH model used by this module
      */
     public static OpenMRSObservation toOpenMRSObservation(Observation ob) {
-        OpenMRSObservation obs = new OpenMRSObservation(ob.getUuid(), ob.getObsDatetime(), ob.getConcept().getDisplay(), 
-            ob.getValue().getDisplay());
+        OpenMRSObservation obs = new OpenMRSObservation(ob.getUuid(), ob.getObsDatetime(), ob.getConcept().getDisplay(),
+                ob.getValue().getDisplay());
         if (ob.getEncounter() != null && ob.getEncounter().getPatient() != null) {
             obs.setPatientId(ob.getEncounter().getPatient().getUuid());
         }

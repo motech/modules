@@ -1,0 +1,40 @@
+{
+  "_notes": [
+  ],
+  "_geolocation": [
+    null,
+    null
+  ],
+  "_id": 2991757,
+  "today": "2015-07-29",
+  "child_repeat": [
+    {
+      "child_repeat\/age": 2,
+      "child_repeat\/gender": "male",
+      "child_repeat\/name": "Joe"
+    },
+    {
+      "child_repeat\/age": 5,
+      "child_repeat\/gender": "female",
+      "child_repeat\/name": "Jane"
+    }
+  ],
+  "_submission_time": "2015-07-29T19:36:30",
+  "start_time": "2015-07-29T15:36:15.000-04:00",
+  "_uuid": "de1c3a2d-31a0-4153-9954-754a100baf2d",
+  "_bamboo_dataset_id": "",
+  "_tags": [
+  ],
+  "_attachments": [
+  ],
+  "_version": "201507291932",
+  "_submitted_by": null,
+  "phonenumber": "no phonenumber property in enketo",
+  "end_time": "2015-07-29T15:36:29.000-04:00",
+  "_xform_id_string": "tutorialRepeat",
+  "imei": "enketo.org:0NXDujN20ZG0Jaad",
+  "_status": "submitted_via_web",
+  "meta\/instanceID": "uuid:de1c3a2d-31a0-4153-9954-754a100baf2d",
+  "_duration": 14,
+  "formhub\/uuid": "3e792bc2d7ba4e42a26b6b1ca3b0c25d"
+}
