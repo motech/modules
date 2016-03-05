@@ -7,9 +7,9 @@ import org.motechproject.odk.constant.TasksDataTypes;
 import org.motechproject.odk.domain.FormDefinition;
 import org.motechproject.odk.domain.FormElement;
 import org.motechproject.tasks.contract.ActionEventRequest;
-import org.motechproject.tasks.contract.ActionEventRequestBuilder;
+import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
-import org.motechproject.tasks.contract.ActionParameterRequestBuilder;
+import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
