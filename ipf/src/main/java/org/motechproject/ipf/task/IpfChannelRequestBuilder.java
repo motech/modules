@@ -6,9 +6,9 @@ import org.motechproject.ipf.domain.IPFTemplate;
 import org.motechproject.ipf.event.EventSubjects;
 import org.motechproject.ipf.util.Constants;
 import org.motechproject.tasks.contract.ActionEventRequest;
-import org.motechproject.tasks.contract.ActionEventRequestBuilder;
+import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
-import org.motechproject.tasks.contract.ActionParameterRequestBuilder;
+import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
 import org.motechproject.tasks.contract.ChannelRequest;
 import org.osgi.framework.BundleContext;
 

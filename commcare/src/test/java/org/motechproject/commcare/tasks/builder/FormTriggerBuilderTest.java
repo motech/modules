@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.commcare.config.Configs;
+import org.motechproject.commcare.domain.CommcareApplicationJson;
+import org.motechproject.commcare.domain.CommcareModuleJson;
 import org.motechproject.commcare.events.constants.EventSubjects;
 import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.service.CommcareSchemaService;
@@ -27,6 +29,9 @@ import static org.motechproject.commcare.util.DummyCommcareSchema.FORM_QUESTION4
 import static org.motechproject.commcare.util.DummyCommcareSchema.FORM_QUESTION5;
 import static org.motechproject.commcare.util.DummyCommcareSchema.XMLNS1;
 import static org.motechproject.commcare.util.DummyCommcareSchema.XMLNS2;
+import static org.motechproject.commcare.util.DummyCommcareSchema.XMLNS3;
+import static org.motechproject.commcare.util.DummyCommcareSchema.XMLNS4;
+import static org.motechproject.commcare.util.DummyCommcareSchema.XMLNS5;
 
 public class FormTriggerBuilderTest {
 
@@ -36,18 +41,21 @@ public class FormTriggerBuilderTest {
     @Mock
     private CommcareConfigService configService;
 
-    private Configs configs = ConfigsUtils.prepareConfigsWithOneConfig();
+    private Configs configs = ConfigsUtils.prepareConfigsWithTwoConfigs();
 
     private FormTriggerBuilder formTriggerBuilder;
 
     private static final int FORM_PREDEFINED_FIELDS = 11;
-    private static final String BASE_SUBJECT = "org.motechproject.commcare.api.forms.ConfigOne";
+    private static final String BASE_SUBJECT_ONE = "org.motechproject.commcare.api.forms.ConfigOne";
+    private static final String BASE_SUBJECT_TWO = "org.motechproject.commcare.api.forms.ConfigTwo";
 
     @Before
     public void setUp() {
         initMocks(this);
         when(configService.getConfigs()).thenReturn(configs);
-        when(schemaService.getAllFormSchemas(configs.getDefaultConfigName())).thenReturn(DummyCommcareSchema.getForms());
+        when(schemaService.retrieveApplications("ConfigOne")).thenReturn(DummyCommcareSchema.getApplicationsForConfigOne());
+        when(schemaService.retrieveApplications("ConfigTwo")).thenReturn(DummyCommcareSchema.getApplicationsForConfigTwo());
+
         formTriggerBuilder = new FormTriggerBuilder(schemaService, configService);
     }
 
@@ -58,7 +66,20 @@ public class FormTriggerBuilderTest {
 
         assertFalse(triggers.isEmpty());
 
-        assertEquals(DummyCommcareSchema.getForms().size(), triggers.size());
+        int counter = 0;
+        for (CommcareApplicationJson application: DummyCommcareSchema.getApplicationsForConfigOne()) {
+            for (CommcareModuleJson module: application.getModules()) {
+                counter += module.getFormSchemas().size();
+            }
+        }
+
+        for (CommcareApplicationJson application: DummyCommcareSchema.getApplicationsForConfigTwo()) {
+            for (CommcareModuleJson module: application.getModules()) {
+                counter += module.getFormSchemas().size();
+            }
+        }
+
+        assertEquals(counter, triggers.size());
 
         for(TriggerEventRequest request : triggers) {
 
@@ -66,18 +87,31 @@ public class FormTriggerBuilderTest {
 
             String subject = request.getSubject();
             switch (subject) {
-                case BASE_SUBJECT + "." + XMLNS1:
+                case BASE_SUBJECT_ONE + "." + XMLNS1:
                     assertEquals(2 + FORM_PREDEFINED_FIELDS, request.getEventParameters().size());
-                    assertEquals("Received Form: form1 [ConfigOne]", request.getDisplayName());
+                    assertEquals("Received Form: form1 [app1: ConfigOne]", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION1));
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION2));
                     break;
-                case BASE_SUBJECT + "." + XMLNS2:
-                    assertEquals(3 + FORM_PREDEFINED_FIELDS, request.getEventParameters().size());
-                    assertEquals("Received Form: form2 [ConfigOne]", request.getDisplayName());
+                case BASE_SUBJECT_ONE + "." + XMLNS2:
+                    assertEquals(1 + FORM_PREDEFINED_FIELDS, request.getEventParameters().size());
+                    assertEquals("Received Form: form2 [app1: ConfigOne]", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION3));
+                    break;
+                case BASE_SUBJECT_ONE + "." + XMLNS3:
+                    assertEquals(1 + FORM_PREDEFINED_FIELDS, request.getEventParameters().size());
+                    assertEquals("Received Form: form3 [app1: ConfigOne]", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION4));
+                    break;
+                case BASE_SUBJECT_ONE + "." + XMLNS4:
+                    assertEquals(1 + FORM_PREDEFINED_FIELDS, request.getEventParameters().size());
+                    assertEquals("Received Form: form4 [app2: ConfigOne]", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION5));
+                    break;
+                case BASE_SUBJECT_TWO + "." + XMLNS5:
+                    assertEquals(1 + FORM_PREDEFINED_FIELDS, request.getEventParameters().size());
+                    assertEquals("Received Form: form5 [app1: ConfigTwo]", request.getDisplayName());
+                    assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION4));
                     break;
                 default:
                     fail("Found trigger with incorrect subject: " + subject);
