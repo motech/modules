@@ -21,6 +21,7 @@ import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.dhis2.event.EventSubjects;
 import org.motechproject.dhis2.rest.domain.BaseDto;
 import org.motechproject.dhis2.rest.domain.DataElementDto;
+import org.motechproject.dhis2.rest.domain.DataSetDto;
 import org.motechproject.dhis2.rest.domain.DataValueSetDto;
 import org.motechproject.dhis2.rest.domain.DhisDataValueStatusResponse;
 import org.motechproject.dhis2.rest.domain.DhisEventDto;
@@ -118,6 +119,11 @@ public class DhisWebServiceImpl implements DhisWebService {
     @Override
     public List<DataElementDto> getDataElements() {
         return getResources(DATA_ELEMENTS, DataElementDto.class);
+    }
+
+    @Override
+    public List<DataSetDto> getDataSets() {
+        return getResources("dataSets", DataSetDto.class, true);
     }
 
     @Override
@@ -256,10 +262,15 @@ public class DhisWebServiceImpl implements DhisWebService {
         }
     }
 
-    /*Gets a list of dtos*/
     private <T extends BaseDto> List<T> getResources(String resourceName, Class<T> clazz) {
+        return getResources(resourceName, clazz, false);
+    }
+
+    /*Gets a list of dtos*/
+    private <T extends BaseDto> List<T> getResources(String resourceName, Class<T> clazz, boolean getAllFields) {
         Settings settings = settingsService.getSettings();
-        HttpUriRequest request = generateHttpRequest(settings, getURIForResource(settings.getServerURI(), resourceName));
+        HttpUriRequest request = generateHttpRequest(settings, getURIForResource(settings.getServerURI(), resourceName,
+                getAllFields));
 
         LOGGER.debug(String.format("Initiating request for resource: %s, request: %s", resourceName, request.toString()));
 
@@ -387,8 +398,17 @@ public class DhisWebServiceImpl implements DhisWebService {
     }
 
     /*Builds the URL for a particular resource*/
-    private String getURIForResource(String baseURI, String resourceName) {
-        return String.format(baseURI + "/api/%s", resourceName);
+    private String getURIForResource(String baseURI, String resourceName, boolean getAllFields) {
+        StringBuilder sb = new StringBuilder(baseURI);
+
+        sb.append("/api/");
+        sb.append(resourceName);
+
+        if (getAllFields) {
+            sb.append("?fields=:all");
+        }
+
+        return sb.toString();
     }
 
     private Header generateBasicAuthHeader(HttpUriRequest request, Settings settings) {

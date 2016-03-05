@@ -66,6 +66,7 @@
                     interface="org.motechproject.dhis2.repository.TrackedEntityAttributeDataService"/>
     <osgi:reference id="orgUnitDataService" interface="org.motechproject.dhis2.repository.OrgUnitDataService"/>
     <osgi:reference id="dataElementDataService" interface="org.motechproject.dhis2.repository.DataElementDataService"/>
+    <osgi:reference id="dataSetDataService" interface="org.motechproject.dhis2.repository.DataSetDataService"/>
 
     <osgi:reference id="statusMessageService" interface="org.motechproject.admin.service.StatusMessageService" />
 

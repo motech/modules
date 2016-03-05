@@ -6,9 +6,9 @@ import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.event.EventSubjects;
 import org.motechproject.dhis2.rest.domain.ServerVersion;
 import org.motechproject.tasks.contract.ActionEventRequest;
-import org.motechproject.tasks.contract.ActionEventRequestBuilder;
+import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
-import org.motechproject.tasks.contract.ActionParameterRequestBuilder;
+import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
 
 import java.util.ArrayList;
 import java.util.List;

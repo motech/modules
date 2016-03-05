@@ -68,6 +68,12 @@ public class CommcareSchemaServiceImpl implements CommcareSchemaService {
         return getAllCaseTypes(null);
     }
 
+    @Override
+    @Transactional
+    public List<CommcareApplicationJson> retrieveApplications(String configName) {
+        return commcareApplicationDataService.bySourceConfiguration(configName);
+    }
+
     @Autowired
     public void setCommcareApplicationDataService(CommcareApplicationDataService commcareApplicationDataService) {
         this.commcareApplicationDataService = commcareApplicationDataService;
