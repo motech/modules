@@ -1,6 +1,7 @@
 package org.motechproject.dhis2.rest.service;
 
 import org.motechproject.dhis2.rest.domain.DataElementDto;
+import org.motechproject.dhis2.rest.domain.DataSetDto;
 import org.motechproject.dhis2.rest.domain.DataValueSetDto;
 import org.motechproject.dhis2.rest.domain.DhisDataValueStatusResponse;
 import org.motechproject.dhis2.rest.domain.DhisEventDto;
@@ -27,6 +28,12 @@ public interface DhisWebService {
      * @return a list of {@link org.motechproject.dhis2.rest.domain.DataElementDto}
      */
     List<DataElementDto> getDataElements();
+
+    /**
+     * Gets a list of all the Data Sets from DHIS2.
+     * @return a list of {@link DataSetDto}s
+     */
+    List<DataSetDto> getDataSets();
 
     /**
      * Gets the Data Element specified in the URL
