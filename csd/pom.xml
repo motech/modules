@@ -182,7 +182,7 @@
                             <requireUseStrict>true</requireUseStrict>
                             <predefinedVars>
                                 $, angular, blockUI, unblockUI, handleWithStackTrace, alertHandler,
-                                jConfirm, jQuery, parseUri, innerLayout, window, Blob
+                                jQuery, parseUri, innerLayout, window, Blob, BootstrapDialog
                             </predefinedVars>
                             <failOnIssues>${jslint.enable}</failOnIssues>
                         </configuration>

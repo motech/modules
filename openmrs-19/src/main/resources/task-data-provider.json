@@ -48,7 +48,7 @@
         },
         {
           "displayName": "openMRS.patient.id",
-          "fieldKey": "patient.id"
+          "fieldKey": "patient.patientId"
         },
         {
           "displayName": "openMRS.patient.display",
@@ -80,7 +80,7 @@
         },
         {
           "displayName": "openMRS.patient.identifiers",
-          "fieldKey": "identifierTypesByValue",
+          "fieldKey": "identifiers",
           "type": "MAP"
         },
         {
@@ -118,6 +118,20 @@
           "displayName": "openMRS.person.deathDate",
           "fieldKey": "person.deathDate",
           "type": "DATE"
+        },
+        {
+          "displayName": "openMRS.person.dateCreated",
+          "fieldKey": "person.dateCreated",
+          "type": "DATE"
+        },
+        {
+          "displayName": "openMRS.person.dateChanged",
+          "fieldKey": "person.dateChanged",
+          "type": "DATE"
+        },
+        {
+          "displayName": "openMRS.person.newPerson",
+          "fieldKey": "person.newPerson"
         },
         {
           "displayName": "openMRS.person.gender",

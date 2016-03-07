@@ -1,6 +1,8 @@
 package org.motechproject.commcare.tasks.builder;
 
 import org.motechproject.commcare.config.Config;
+import org.motechproject.commcare.domain.CommcareApplicationJson;
+import org.motechproject.commcare.domain.CommcareModuleJson;
 import org.motechproject.commcare.domain.FormSchemaJson;
 import org.motechproject.commcare.domain.FormSchemaQuestionJson;
 import org.motechproject.commcare.service.CommcareConfigService;
@@ -40,7 +42,7 @@ public class FormTriggerBuilder implements TriggerBuilder {
      * Creates an instance of the {@link FormTriggerBuilder} class that can be used for building form triggers. It will
      * use the given {@code schemaService}, {@code configService} fir building them.
      *
-     * @param schemaService  the schema service
+     * @param schemaService the schema service
      * @param configService  the configuration service
      */
     public FormTriggerBuilder(CommcareSchemaService schemaService, CommcareConfigService configService) {
@@ -53,23 +55,27 @@ public class FormTriggerBuilder implements TriggerBuilder {
         List<TriggerEventRequest> triggers = new ArrayList<>();
 
         for (Config config : configService.getConfigs().getConfigs()) {
-            for (FormSchemaJson form : schemaService.getAllFormSchemas(config.getName())) {
-                List<EventParameterRequest> parameters = new ArrayList<>();
-                String formName = form.getFormName();
-                addMetadataFields(parameters);
-                addCaseFields(parameters);
+            for (CommcareApplicationJson application : schemaService.retrieveApplications(config.getName())) {
+                for (CommcareModuleJson module : application.getModules()) {
+                    for (FormSchemaJson form : module.getFormSchemas()) {
+                        List<EventParameterRequest> parameters = new ArrayList<>();
+                        String applicationName = application.getApplicationName();
+                        String formName = form.getFormName();
+                        addMetadataFields(parameters);
+                        addCaseFields(parameters);
 
-                for (FormSchemaQuestionJson question : form.getQuestions()) {
-                    parameters.add(new EventParameterRequest(question.getQuestionValue(), question.getQuestionValue()));
+                        for (FormSchemaQuestionJson question : form.getQuestions()) {
+                            parameters.add(new EventParameterRequest(question.getQuestionValue(), question.getQuestionValue()));
+                        }
+
+                        String displayName = DisplayNameHelper.buildDisplayName(RECEIVED_FORM, formName, applicationName, config.getName());
+
+                        triggers.add(new TriggerEventRequest(displayName, FORMS_EVENT + "." + config.getName() + "." + form.getXmlns(),
+                                null, parameters, FORMS_EVENT));
+                    }
                 }
-
-                String displayName = DisplayNameHelper.buildDisplayName(RECEIVED_FORM, formName, config.getName());
-
-                triggers.add(new TriggerEventRequest(displayName, FORMS_EVENT + "." + config.getName() + "." + form.getXmlns(),
-                        null, parameters, FORMS_EVENT));
             }
         }
-
         return triggers;
     }
 

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:orx="http://openrosa.org/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <h:head>
+        <h:title>ona_nested_repeats</h:title>
+        <model>
+            <instance>
+                <ona_nested_repeats id="ona_nested_repeats" version="201510011600">
+                    <formhub>
+                        <uuid/>
+                    </formhub>
+                    <root_scope_field/>
+                    <outer_group jr:template="">
+                        <outer_group_field/>
+                        <inner_group jr:template="">
+                            <inner_group_field/>
+                        </inner_group>
+                    </outer_group>
+                    <meta>
+                        <instanceID/>
+                    </meta>
+                </ona_nested_repeats>
+            </instance>
+            <bind nodeset="/ona_nested_repeats/root_scope_field" type="string"/>
+            <bind nodeset="/ona_nested_repeats/outer_group/outer_group_field" type="string"/>
+            <bind nodeset="/ona_nested_repeats/outer_group/inner_group/inner_group_field" type="string"/>
+            <bind calculate="concat('uuid:', uuid())" nodeset="/ona_nested_repeats/meta/instanceID" readonly="true()" type="string"/>
+            <bind calculate="'517b7383ae62455482b6f8505e5646e2'" nodeset="/ona_nested_repeats/formhub/uuid" type="string"/>
+        </model>
+    </h:head>
+    <h:body>
+        <input ref="/ona_nested_repeats/root_scope_field">
+            <label>root scope field</label>
+        </input>
+        <group ref="/ona_nested_repeats/outer_group">
+            <label>Outer Group</label>
+            <repeat nodeset="/ona_nested_repeats/outer_group">
+                <input ref="/ona_nested_repeats/outer_group/outer_group_field">
+                    <label>Outer Group Field</label>
+                </input>
+                <group ref="/ona_nested_repeats/outer_group/inner_group">
+                    <label>Inner Group</label>
+                    <repeat nodeset="/ona_nested_repeats/outer_group/inner_group">
+                        <input ref="/ona_nested_repeats/outer_group/inner_group/inner_group_field">
+                            <label>Inner Group Field</label>
+                        </input>
+                    </repeat>
+                </group>
+            </repeat>
+        </group>
+    </h:body>
+</h:html>

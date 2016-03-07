@@ -129,7 +129,7 @@ public class FormValueElement implements FormNode {
      * @return First element matching the given name.
      */
     public FormValueElement getElement(String elementName) {
-        return getElement(elementName, new ArrayList<String>());
+        return getElement(elementName, new ArrayList<>());
     }
 
     /**
@@ -370,7 +370,7 @@ public class FormValueElement implements FormNode {
 
     private List<String> splitPath(String path) {
         List<String> pathToTraverse = new Vector<>();
-        String  trimmedPath = path.replaceFirst("^" + PREFIX_SEARCH_RELATIVE, "");
+        String trimmedPath = path.replaceFirst("^" + PREFIX_SEARCH_RELATIVE, "");
 
         if (StringUtils.isEmpty(trimmedPath)) {
             return pathToTraverse;

@@ -22,7 +22,7 @@ public final class EventSubjects {
     public static final String CONFIG_UPDATED = BASE_SUBJECT + "configupdated";
     public static final String CREATE_CASE = BASE_SUBJECT + "createCase";
     public static final String UPDATE_CASE = BASE_SUBJECT + "updateCase";
-
+    public static final String SUBMIT_FORM = BASE_SUBJECT + "submitForm";
 
     public static String getConfigName(String subject) {
         return subject.substring(subject.lastIndexOf('.') + 1);

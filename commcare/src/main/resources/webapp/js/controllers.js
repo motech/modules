@@ -261,26 +261,31 @@
 
             if ($scope.newConfig || $scope.configOutdated) {
                 if (!$scope.rollback) {
-                    jConfirm(jQuery.i18n.prop('commcare.confirm.discardChanges'), jQuery.i18n.prop("commcare.header.confirm"), function (val) {
-                        if (!val) {
-                            $scope.rollback = true;
-                            $scope.$parent.selectedConfig = $scope.$parent.configurations.configs[$scope.$parent.configurations.configs.indexOf(oldValue)];
-                            $scope.$parent.$apply();
-                        } else if ($scope.newConfig) {
-                            $scope.$parent.configurations.configs.splice($scope.$parent.configurations.configs.indexOf(oldValue), 1);
-                            $scope.$parent.$apply();
-                            $scope.configOutdated = false;
-                            if (newValue === undefined || newValue.name !== "") {
-                                $scope.newConfig = false;
+                    BootstrapDialog.confirm({
+                        title: $scope.msg('commcare.header.confirm'),
+                        message: $scope.msg('commcare.confirm.discardChanges'),
+                        type: BootstrapDialog.TYPE_WARNING,
+                        callback: function(result) {
+                            if (!result) {
+                                $scope.rollback = true;
+                                $scope.$parent.selectedConfig = $scope.$parent.configurations.configs[$scope.$parent.configurations.configs.indexOf(oldValue)];
+                                $scope.$parent.$apply();
+                            } else if ($scope.newConfig) {
+                                $scope.$parent.configurations.configs.splice($scope.$parent.configurations.configs.indexOf(oldValue), 1);
+                                $scope.$parent.$apply();
+                                $scope.configOutdated = false;
+                                if (newValue === undefined || newValue.name !== "") {
+                                    $scope.newConfig = false;
+                                }
+                                $scope.clearMessages();
+                            } else if ($scope.configOutdated) {
+                                $scope.$parent.configurations.configs[$scope.$parent.configurations.configs.indexOf(oldValue)] = $scope.selectedConfigBackup;
+                                $scope.configOutdated = false;
+                                if (newValue.name === "") {
+                                    $scope.newConfig = true;
+                                }
+                                $scope.clearMessages();
                             }
-                            $scope.clearMessages();
-                        } else if ($scope.configOutdated) {
-                            $scope.$parent.configurations.configs[$scope.$parent.configurations.configs.indexOf(oldValue)] = $scope.selectedConfigBackup;
-                            $scope.configOutdated = false;
-                            if (newValue.name === "") {
-                                $scope.newConfig = true;
-                            }
-                            $scope.clearMessages();
                         }
                     });
                 } else {

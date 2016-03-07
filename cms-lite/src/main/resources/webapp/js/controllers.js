@@ -107,14 +107,19 @@
         };
 
         $scope.removeResource = function(type, resource) {
-            jConfirm(jQuery.i18n.prop('cmslite.header.confirm.remove'), jQuery.i18n.prop("cmslite.header.confirm"), function (val) {
-                if (val) {
-                    $scope.select.$remove({ type: type, language: resource.language, name: resource.name}, function () {
-                        $scope.select = {};
-                        $('#cms-lite-table').trigger('reloadGrid');
-                        $('#' + type + 'ResourceModal').modal('hide');
-                        $scope.getLanguages();
-                    }, alertHandler('cmslite.error.removed', 'cmslite.header.error'));
+            BootstrapDialog.confirm({
+                title: $scope.msg('cmslite.header.confirm'),
+                message: $scope.msg('cmslite.header.confirm.remove'),
+                type: BootstrapDialog.TYPE_WARNING,
+                callback: function(result) {
+                    if (result) {
+                        $scope.select.$remove({ type: type, language: resource.language, name: resource.name}, function () {
+                            $scope.select = {};
+                            $('#cms-lite-table').trigger('reloadGrid');
+                            $('#' + type + 'ResourceModal').modal('hide');
+                            $scope.getLanguages();
+                        }, alertHandler('cmslite.error.removed', 'cmslite.header.error'));
+                    }
                 }
             });
         };

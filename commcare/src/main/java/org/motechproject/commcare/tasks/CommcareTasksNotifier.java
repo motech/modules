@@ -4,7 +4,7 @@ import org.motechproject.commcare.CommcareDataProvider;
 import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.service.CommcareSchemaService;
 import org.motechproject.commcare.tasks.builder.ChannelRequestBuilder;
-import org.motechproject.tasks.ex.ValidationException;
+import org.motechproject.tasks.exception.ValidationException;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
@@ -63,8 +63,8 @@ public class CommcareTasksNotifier {
             if (service != null) {
                 LOGGER.info("Registering Commcare tasks channel with the channel service");
 
-                ChannelRequestBuilder channelRequestBuilder = new ChannelRequestBuilder(configService,
-                        schemaService, bundleContext);
+                ChannelRequestBuilder channelRequestBuilder = new ChannelRequestBuilder(configService, schemaService,
+                        bundleContext);
                 TasksChannelServiceInstance instance = new TasksChannelServiceInstance(service, channelRequestBuilder);
                 instance.updateTaskChannel();
             } else {

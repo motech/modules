@@ -6,9 +6,9 @@ import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.commcare.events.constants.EventSubjects;
 import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.tasks.contract.ActionEventRequest;
-import org.motechproject.tasks.contract.ActionEventRequestBuilder;
+import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
-import org.motechproject.tasks.contract.ActionParameterRequestBuilder;
+import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ import static org.motechproject.tasks.domain.ParameterType.UNICODE;
  * The built list of {@link ActionEventRequest}s instances can be passed to the Task module
  * to register channel actions.
  */
-public class CaseActionBuilder {
+public class CaseActionBuilder implements ActionBuilder {
 
     private CommcareConfigService configService;
 
@@ -32,6 +32,7 @@ public class CaseActionBuilder {
         this.configService = configService;
     }
 
+    @Override
     public List<ActionEventRequest> buildActions() {
 
         List<ActionEventRequest> actions = new ArrayList<>();
