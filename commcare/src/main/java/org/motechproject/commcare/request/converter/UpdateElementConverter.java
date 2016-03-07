@@ -48,12 +48,12 @@ public class UpdateElementConverter implements Converter {
             writer.endNode();
         }
 
-        Map<String, String> fieldValues = element.getFieldValues();
+        Map<String, Object> fieldValues = element.getFieldValues();
 
         if (fieldValues != null) {
-            for (Map.Entry<String, String> entry : fieldValues.entrySet()) {
-                writer.startNode((String) entry.getKey());
-                writer.setValue((String) entry.getValue());
+            for (Map.Entry<String, Object> entry : fieldValues.entrySet()) {
+                writer.startNode(entry.getKey());
+                writer.setValue(entry.getValue().toString());
                 writer.endNode();
             }
         }

@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<h:html xmlns="http://www.w3.org/2002/xforms"
+        xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa"
+        >
+    <h:head>
+        <h:title>KoboTestform</h:title>
+        <model>
+            <instance>
+                <KoboTestform id="KoboTestform">
+                    <group_rz3vx17 jr:template="">
+                        <First_Name/>
+                        <Last_Name/>
+                    </group_rz3vx17>
+                    <group_su8of31>
+                        <group_rr5fo58>
+                            <Age/>
+                        </group_rr5fo58>
+                    </group_su8of31>
+                    <start/>
+                    <end/>
+                    <meta>
+                        <instanceID/>
+                    </meta>
+                </KoboTestform>
+            </instance>
+            <bind nodeset="/KoboTestform/group_rz3vx17/First_Name" required="true()" type="string"/>
+            <bind nodeset="/KoboTestform/group_rz3vx17/Last_Name" required="true()" type="string"/>
+            <bind nodeset="/KoboTestform/group_su8of31/group_rr5fo58/Age" required="true()" type="string"/>
+            <bind jr:preload="timestamp" jr:preloadParams="start" nodeset="/KoboTestform/start" type="dateTime"/>
+            <bind jr:preload="timestamp" jr:preloadParams="end" nodeset="/KoboTestform/end" type="dateTime"/>
+            <bind calculate="concat('uuid:', uuid())" nodeset="/KoboTestform/meta/instanceID" readonly="true()"
+                  type="string"/>
+        </model>
+    </h:head>
+    <h:body>
+        <group ref="/KoboTestform/group_rz3vx17">
+            <label>Names</label>
+            <repeat nodeset="/KoboTestform/group_rz3vx17">
+                <input ref="/KoboTestform/group_rz3vx17/First_Name">
+                    <label>First Name</label>
+                </input>
+                <input ref="/KoboTestform/group_rz3vx17/Last_Name">
+                    <label>Last Name</label>
+                </input>
+            </repeat>
+        </group>
+        <group ref="/KoboTestform/group_su8of31">
+            <label>OuterGroup</label>
+            <group ref="/KoboTestform/group_su8of31/group_rr5fo58">
+                <label>InnerGroup</label>
+                <input ref="/KoboTestform/group_su8of31/group_rr5fo58/Age">
+                    <label>Age</label>
+                </input>
+            </group>
+        </group>
+    </h:body>
+</h:html>

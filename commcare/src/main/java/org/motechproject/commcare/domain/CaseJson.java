@@ -42,101 +42,105 @@ public class CaseJson {
     @SerializedName("case_id")
     private String caseId;
 
+    @SerializedName("closed")
+    private boolean closed;
+
+    @SerializedName("indices")
+    private Map<String, Map<String, String>> indices;
+
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public Map<String, Map<String, String>> getIndices() {
+        return indices;
+    }
+
+    public String getCaseId() {
+        return caseId;
+    }
+
+    public String getDateModified() {
+        return dateModified;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public MotechProperties getCaseProperties() {
+        return caseProperties;
+    }
+
+    public String getServerDateModified() {
+        return serverDateModified;
+    }
+
+    public String getServerDateOpened() {
+        return serverDateOpened;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public List<String> getXformIds() {
+        return xformIds;
+    }
+
     public String getDateClosed() {
-        return this.dateClosed;
+        return dateClosed;
     }
 
     public void setDateClosed(String dateClosed) {
         this.dateClosed = dateClosed;
     }
 
-    public String getDomain() {
-        return this.domain;
-    }
-
-    public void setDomain(String domain) {
-        this.domain = domain;
-    }
-
-    public List<String> getXformIds() {
-        return this.xformIds;
-    }
-
-    @SerializedName("closed")
-    private boolean closed;
-
-    public void setXformIds(List<String> xformIds) {
-        this.xformIds = xformIds;
-    }
-
-    public String getVersion() {
-        return this.version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    @SerializedName("indices")
-    private Map<String, Map<String, String>> indices;
-
-    public String getServerDateOpened() {
-        return this.serverDateOpened;
-    }
-
-    public void setServerDateOpened(String serverDateOpened) {
-        this.serverDateOpened = serverDateOpened;
-    }
-
-    public Map<String, String> getProperties() {
-        return this.caseProperties;
-    }
-
-    public String getServerDateModified() {
-        return this.serverDateModified;
-    }
-
-    public void setServerDateModified(String serverDateModified) {
-        this.serverDateModified = serverDateModified;
-    }
-
-    public String getUserId() {
-        return this.userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getDateModified() {
-        return this.dateModified;
-    }
-
-    public void setDateModified(String dateModified) {
-        this.dateModified = dateModified;
-    }
-
-    public String getCaseId() {
-        return this.caseId;
+    public void setIndices(Map<String, Map<String, String>> indices) {
+        this.indices = indices;
     }
 
     public void setCaseId(String caseId) {
         this.caseId = caseId;
     }
 
-    public boolean isClosed() {
-        return this.closed;
+    public void setDateModified(String dateModified) {
+        this.dateModified = dateModified;
     }
 
     public void setClosed(boolean closed) {
         this.closed = closed;
     }
 
-    public Map<String, Map<String, String>> getIndices() {
-        return this.indices;
+    public void setCaseProperties(MotechProperties caseProperties) {
+        this.caseProperties = caseProperties;
     }
 
-    public void setIndices(Map<String, Map<String, String>> indices) {
-        this.indices = indices;
+    public void setServerDateOpened(String serverDateOpened) {
+        this.serverDateOpened = serverDateOpened;
+    }
+
+    public void setServerDateModified(String serverDateModified) {
+        this.serverDateModified = serverDateModified;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public void setXformIds(List<String> xformIds) {
+        this.xformIds = xformIds;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
     }
 }

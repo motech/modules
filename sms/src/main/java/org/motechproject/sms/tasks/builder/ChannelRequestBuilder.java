@@ -15,7 +15,7 @@ import org.motechproject.commons.api.json.MotechJsonReader;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.ChannelRequest;
-import org.motechproject.tasks.json.ActionEventRequestDeserializer;
+import org.motechproject.tasks.contract.json.ActionEventRequestDeserializer;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,0 +1,82 @@
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:h="http://www.w3.org/1999/xhtml"
+        xmlns:jr="http://openrosa.org/javarosa">
+    <h:head>
+        <h:title>nested_repeat</h:title>
+        <model>
+            <instance>
+                <data id="build_nested-repeat_1442500227">
+                    <meta>
+                        <instanceID/>
+                    </meta>
+                    <root_scope_field/>
+                    <outer_repeat_group jr:template="">
+                        <inner_repeat_group jr:template="">
+                            <inner_repeat_group_field/>
+                        </inner_repeat_group>
+                        <outer_repeat_group_field/>
+                    </outer_repeat_group>
+                    <non_repeating_group>
+                        <non_repeating_group_field/>
+                    </non_repeating_group>
+                </data>
+            </instance>
+            <itext>
+                <translation lang="eng">
+                    <text id="/data/root_scope_field:label">
+                        <value>Root Scope Field</value>
+                    </text>
+                    <text id="/data/outer_repeat_group:label">
+                        <value>Outer Repeat Group</value>
+                    </text>
+                    <text id="/data/outer_repeat_group/inner_repeat_group:label">
+                        <value>Inner Repeat Group</value>
+                    </text>
+                    <text id="/data/outer_repeat_group/inner_repeat_group/inner_repeat_group_field:label">
+                        <value>Inner Repeat Group Field</value>
+                    </text>
+                    <text id="/data/outer_repeat_group/outer_repeat_group_field:label">
+                        <value>Outer Repeat Group Field</value>
+                    </text>
+                    <text id="/data/non_repeating_group:label">
+                        <value>non repeating group</value>
+                    </text>
+                    <text id="/data/non_repeating_group/non_repeating_group_field:label">
+                        <value>non repeating group field</value>
+                    </text>
+                </translation>
+            </itext>
+            <bind nodeset="/data/meta/instanceID" type="string" readonly="true()" calculate="concat('uuid:', uuid())"/>
+            <bind nodeset="/data/root_scope_field" type="string"/>
+            <bind nodeset="/data/outer_repeat_group/inner_repeat_group/inner_repeat_group_field" type="string"/>
+            <bind nodeset="/data/outer_repeat_group/outer_repeat_group_field" type="string"/>
+            <bind nodeset="/data/non_repeating_group/non_repeating_group_field" type="string"/>
+        </model>
+    </h:head>
+    <h:body>
+        <input ref="/data/root_scope_field">
+            <label ref="jr:itext('/data/root_scope_field:label')"/>
+        </input>
+        <group>
+            <label ref="jr:itext('/data/outer_repeat_group:label')"/>
+            <repeat nodeset="/data/outer_repeat_group">
+                <group>
+                    <label ref="jr:itext('/data/outer_repeat_group/inner_repeat_group:label')"/>
+                    <repeat nodeset="/data/outer_repeat_group/inner_repeat_group">
+                        <input ref="/data/outer_repeat_group/inner_repeat_group/inner_repeat_group_field">
+                            <label ref="jr:itext('/data/outer_repeat_group/inner_repeat_group/inner_repeat_group_field:label')"/>
+                        </input>
+                    </repeat>
+                </group>
+                <input ref="/data/outer_repeat_group/outer_repeat_group_field">
+                    <label ref="jr:itext('/data/outer_repeat_group/outer_repeat_group_field:label')"/>
+                </input>
+            </repeat>
+        </group>
+        <group>
+            <label ref="jr:itext('/data/non_repeating_group:label')"/>
+            <input ref="/data/non_repeating_group/non_repeating_group_field">
+                <label ref="jr:itext('/data/non_repeating_group/non_repeating_group_field:label')"/>
+            </input>
+        </group>
+    </h:body>
+</h:html>

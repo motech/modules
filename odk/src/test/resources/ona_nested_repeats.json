@@ -1,0 +1,51 @@
+{
+  "_notes": [
+
+  ],
+  "root_scope_field": "root scope",
+  "_id": 4162378,
+  "_attachments": [
+
+  ],
+  "outer_group": [
+    {
+      "outer_group\/outer_group_field": "outer group 1 field",
+      "outer_group\/inner_group": [
+        {
+          "outer_group\/inner_group\/inner_group_field": "outer group 1 inner group field 1"
+        },
+        {
+          "outer_group\/inner_group\/inner_group_field": "outer group 1 inner group field 2"
+        }
+      ]
+    },
+    {
+      "outer_group\/outer_group_field": "outer group 2 field",
+      "outer_group\/inner_group": [
+        {
+          "outer_group\/inner_group\/inner_group_field": "outer group 2 inner group field 1"
+        },
+        {
+          "outer_group\/inner_group\/inner_group_field": "outer group 2 inner group field 2"
+        }
+      ]
+    }
+  ],
+  "_submission_time": "2015-10-29T15:28:45",
+  "_uuid": "d9e30fd7-5f0c-4185-a331-db0f740b3547",
+  "_bamboo_dataset_id": "",
+  "_tags": [
+
+  ],
+  "_geolocation": [
+    null,
+    null
+  ],
+  "_version": "201510011600",
+  "_submitted_by": null,
+  "_xform_id_string": "ona_nested_repeats",
+  "_status": "submitted_via_web",
+  "meta\/instanceID": "uuid:d9e30fd7-5f0c-4185-a331-db0f740b3547",
+  "_duration": "",
+  "formhub\/uuid": "517b7383ae62455482b6f8505e5646e2"
+}

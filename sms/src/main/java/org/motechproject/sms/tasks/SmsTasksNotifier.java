@@ -5,7 +5,7 @@ package org.motechproject.sms.tasks;
 import org.motechproject.sms.configs.Config;
 import org.motechproject.sms.service.ConfigService;
 import org.motechproject.sms.tasks.builder.ChannelRequestBuilder;
-import org.motechproject.tasks.ex.ValidationException;
+import org.motechproject.tasks.exception.ValidationException;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;

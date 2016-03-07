@@ -102,6 +102,39 @@ Each Commcare configuration has it's own set of the following task triggers. The
 - Forms Failed [Configuration Name]
     This task trigger will fire when MOTECH receives an error from the Commcare server showing that form forwarding failed. Only two fields are made available to the task, Message and the Commcare module's configuration name. This is commonly used to alert administrators when there is an error submitting a form and could prove incredibly valuable with large form submissions in remote areas with intermittent internet connectivity.
 
+Some of the CommCare forms may allow for repeating a set of questions and the number of repeats is not predefined by the schema. Due to this fact, it is impossible to generate trigger fields
+in the Tasks UI to access the repeated data. Nevertheless, it is still possible to access the repeated data, by manually crafting the trigger reference and specifying the element that
+is to be accessed. MOTECH will generate trigger keys for repeated questions, if two conditions are met by the received form in its XML representation:
+
+- There must be at least two elements of the same name
+- Those elements must have the "id" attribute set
+
+If that's the case, the generated trigger event keys will have the value of the "id" attribute appended, in order to be able to distinguish one from another and to be able to access repeated data.
+For example, for the following received XML:
+
+.. code-block:: xml
+
+    <?xml version='1.0' ?>
+    <data>
+        <mother name="Jane">
+            <children>
+                <child id="22345">John</child>
+                <child id="22346">Oliver</child>
+            </children>
+        </mother>
+    </data>
+
+The generated trigger event keys will be:
+
+- **/data/mother/children/child_22345**
+- **/data/mother/children/child_22346**
+
+It is now possible to use those values in the task actions, using syntax for custom trigger events, like:
+
+- **{{trigger./data/mother/children/child_22345}}**
+- **{{trigger./data/mother/children/child_22346}}**
+
+
 Task Data Source
 ^^^^^^^^^^^^^^^^
 The Tasks module will query specific Commcare APIs and make the results available to the task. These data sources are useful when supplemental information is needed from a received Case or form such as values from a lookup table, Commcare users and locations. Click Add data source in the task and choose Source: Commcare to make this information available to the task. Each of the following objects are available as a data source.
@@ -116,6 +149,20 @@ The Tasks module will query specific Commcare APIs and make the results availabl
     This data source queries the `Commcare Mobile Workers API <https://confluence.dimagi.com/display/commcarepublic/List+Mobile+Workers>`_ based on the user_id and returns details about the Commcare user.
 - Location [Configuration Name]
     This data source is only available to users who have enabled the `Commcare Supply feature <https://confluence.dimagi.com/display/commtrack/Getting+Started+With+CommCare+Supply>`_. Commcare Supply tracks organizations and locations so users can manage supply chain items within this hierarchy. MOTECH queries the `list of locations <https://confluence.dimagi.com/display/commtrack/Locations>`_ for a particular location ID, similar to the Fixture data source. The returned items include latitude, longitude, location name, site codes and location within the location schema.
+
+Task Actions
+^^^^^^^^^^^^
+The Commcare module also exposes several Task actions, that allow for querying the stock ledger API and uploading cases and forms via submission API.
+
+- Query Stock Ledger [Configuration Name]
+    Allows to start the stock ledger transaction on the Commcare server.
+- Create Case [Configuration Name]
+    Creates a Commcare Case, by sending Case XML to the Submission API on the Commcare server.
+- Update Case [Configuration Name]
+    Updates a Commcare Case, by sending Case XML to the Submission API on the Commcare server. Case ID is required to identify the case that is supposed to be updated.
+    The case may be optionally closed.
+- Submit Form: (Form Name) [Configuration Name]
+    Submits a Commcare Form, by sending Form XML to the Submission API on the Commcare server. The task action fields are generated basing on the schema of the Commcare forms, present on the MOTECH server.
 
 MOTECH 1.0 Enhancements
 -----------------------

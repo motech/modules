@@ -218,6 +218,9 @@ Initiating an outbound call via an API call
 
     Module writers can use the :java:ref:`org.motechproject.ivr.service.OutboundCallService` ``initiateCall`` method.
 
+    ``initiateCall`` method can be called without the ``configName`` parameter. In this case call will be initiated with
+    the default configuration.
+
 
 Initiating an outbound call via a REST call
 -------------------------------------------
@@ -276,8 +279,7 @@ Settings
             Supported URI protocols are ``http://`` (generates REST call) and ``file://`` (generates file)
         * ``ignoredStatusFields``:
             A list of fields to be ignored when receiving IVR Call Status from the provider. All other fields received
-            during IVR Call Status and not mapped to CDR fields are added to the ``providerExtraData``
-          ``CallDetailRecord`` map field.
+            during IVR Call Status and not mapped to CDR fields are added to the ``providerExtraData`` ``CallDetailRecord`` map field.
         * ``servicesMap``:
             A map (in the "key1: value1, key2: value2" notation) of services that can be injected
             in Velocity templates where key is the name used in Velocity and value is the class of the OSGi service, for example
@@ -286,6 +288,9 @@ Settings
             Select if the provider returns JSON data after placing an outbound call.
 
         .. [#] Note: no square brackets
+
+        A configuration can be set as the default from the UI and in the ivr-config.conf file.
+        The default configuration is marked with "star". After creating first configuration it will be marked as default. It can be changed by clicking "Set Default" button in current selected configuration.
 
 Call Detail Records
 ===================
