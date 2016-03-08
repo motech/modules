@@ -223,7 +223,7 @@ public class OpenMRSPerson {
                 && Objects.equals(address, other.address) && Objects.equals(gender, other.gender)
                 && Objects.equals(attributes, other.attributes) && Objects.equals(deathDate, other.deathDate)
                 && dead == other.dead && Objects.equals(display, other.display)
-                && Objects.equals(causeOfDeath, other.causeOfDeath);
+                && Objects.equals(causeOfDeath, other.causeOfDeath)
                 && Objects.equals(dateCreated, other.dateCreated) && Objects.equals(dateChanged, other.dateChanged);
     }
 
