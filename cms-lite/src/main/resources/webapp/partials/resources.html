@@ -1,12 +1,16 @@
 <div class="row">
 
     <div id="operations-resource" class="frame-title">
-        <button type="button" ng-click="showNewResourceModal()" class="btn btn-success">
-            <i class="fa fa-plus"></i>&nbsp;{{msg('cmslite.button.newResource')}}
-        </button>
-        <button type="button" class="btn btn-default" id="cmslite-resource-filters">
-            <i class="fa fa-filter"></i>&nbsp;{{msg('cmslite.resource.filters')}}
-        </button>
+        <div class="btn-group pull-right">
+            <button type="button" ng-click="showNewResourceModal()" class="btn btn-success">
+                <i class="fa fa-plus"></i>&nbsp;{{msg('cmslite.button.newResource')}}
+            </button>
+        </div>
+        <div class="btn-group">
+            <button type="button" class="btn btn-default" id="cmslite-resource-filters">
+                <i class="fa fa-filter"></i>&nbsp;{{msg('cmslite.resource.filters')}}
+            </button>
+        </div>
     </div>
 
     <div id="outside-cms-lite-table" class="overrideJqgridTable">
