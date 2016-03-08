@@ -1,0 +1,42 @@
+{
+  "displayName": "atomclient.task.name",
+  "moduleName": "${project.artifactId}",
+  "moduleVersion": "${parsedVersion.osgiVersion}",
+  "triggerTaskEvents" : [
+    {
+      "subject" : "org.motechproject.atomclient.feedchange",
+      "displayName" : "atomclient.task.feed.change",
+      "eventParameters" : [
+        {
+          "eventKey" : "url",
+          "displayName" : "atomclient.task.feed.change.url"
+        },
+        {
+          "eventKey" : "published_date",
+          "displayName" : "atomclient.task.feed.change.published_date"
+        },
+        {
+          "eventKey" : "updated_date",
+          "displayName" : "atomclient.task.feed.change.updated_date"
+        },
+        {
+          "eventKey" : "raw_content",
+          "type" : "MAP",
+          "displayName" : "atomclient.task.feed.change.raw_content"
+        },
+        {
+          "eventKey" : "extracted_content",
+          "type" : "MAP",
+          "displayName" : "atomclient.task.feed.change.extracted_content"
+        }
+      ]
+    }
+  ],
+  "actionTaskEvents": [
+    {
+      "subject" : "org.motechproject.atomclient.fetch",
+      "displayName" : "atomclient.task.feed.fetch",
+      "actionParameters" : [ ]
+    }
+  ]
+}
