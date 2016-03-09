@@ -1,5 +1,7 @@
 package org.motechproject.dhis2.domain;
 
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
@@ -41,5 +43,26 @@ public class DataElement {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof DataElement)) {
+            return false;
+        }
+
+        DataElement other = (DataElement) o;
+
+        return ObjectUtils.equals(uuid, other.uuid) && ObjectUtils.equals(name, other.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(uuid).append(name).toHashCode();
     }
 }

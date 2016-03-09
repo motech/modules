@@ -92,7 +92,7 @@
                             <filesets>
                                 <fileset>
                                     <directory>
-                                        ${user.home}/.motech/config/org.motechproject.sms
+                                        ${motech.dir}/config/org.motechproject.sms
                                     </directory>
                                     <includes>
                                         <include>**/*</include>
@@ -172,7 +172,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${user.home}/.motech/bundles</outputDirectory>
+                            <outputDirectory>${motech.dir}/bundles</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>target</directory>

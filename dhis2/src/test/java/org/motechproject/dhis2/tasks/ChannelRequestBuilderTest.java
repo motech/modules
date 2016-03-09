@@ -6,20 +6,24 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.dhis2.domain.DataElement;
+import org.motechproject.dhis2.domain.DataSet;
 import org.motechproject.dhis2.domain.Program;
 import org.motechproject.dhis2.domain.Stage;
 import org.motechproject.dhis2.domain.TrackedEntity;
 import org.motechproject.dhis2.domain.TrackedEntityAttribute;
 import org.motechproject.dhis2.event.EventSubjects;
 import org.motechproject.dhis2.rest.domain.ServerVersion;
+import org.motechproject.dhis2.service.DataSetService;
 import org.motechproject.dhis2.service.ProgramService;
 import org.motechproject.dhis2.service.StageService;
 import org.motechproject.dhis2.service.TrackedEntityAttributeService;
 import org.motechproject.dhis2.service.TrackedEntityService;
+import org.motechproject.dhis2.util.DummyData;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.ChannelRequest;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Version;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,7 +32,6 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
-import org.osgi.framework.Version;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ChannelRequestBuilderTest {
@@ -38,6 +41,9 @@ public class ChannelRequestBuilderTest {
 
     @Mock
     private StageService stageService;
+
+    @Mock
+    private DataSetService dataSetService;
 
     @Mock
     private TrackedEntityService trackedEntityService;
@@ -58,9 +64,10 @@ public class ChannelRequestBuilderTest {
     private List<Stage> stages;
     private List<TrackedEntityAttribute> attributes;
     private List<TrackedEntity> trackedEntities;
+    private List<DataSet> dataSets;
 
     private ChannelRequest request;
-    private static final int EXPECTED_ACTIONS_SIZE = 10;
+    private static final int EXPECTED_ACTIONS_SIZE = 11;
 
     @Before
     public void setup() {
@@ -68,6 +75,7 @@ public class ChannelRequestBuilderTest {
         programs = new ArrayList<>();
         stages = new ArrayList<>();
         attributes = new ArrayList<>();
+        dataSets = DummyData.prepareDataSets();
         trackedEntities = new ArrayList<>();
 
         setupStages();
@@ -78,6 +86,7 @@ public class ChannelRequestBuilderTest {
         when(stageService.findAll()).thenReturn(stages);
         when(trackedEntityAttributeService.findAll()).thenReturn(attributes);
         when(trackedEntityService.findAll()).thenReturn(trackedEntities);
+        when(dataSetService.findAll()).thenReturn(dataSets);
 
         when(bundleContext.getBundle()).thenReturn(bundle);
         when(bundle.getVersion()).thenReturn(version);
@@ -86,7 +95,8 @@ public class ChannelRequestBuilderTest {
         when(version.toString()).thenReturn("bundleVersion");
 
         ChannelRequestBuilder builder = new ChannelRequestBuilder(bundleContext, programService, stageService,
-                trackedEntityAttributeService, trackedEntityService, new ServerVersion(ServerVersion.V2_18));
+                trackedEntityAttributeService, trackedEntityService, new ServerVersion(ServerVersion.V2_18),
+                dataSetService);
         request = builder.build();
 
     }
@@ -228,6 +238,4 @@ public class ChannelRequestBuilderTest {
         attributes.add(attribute1);
         attributes.add(attribute2);
     }
-
-
 }
