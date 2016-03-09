@@ -1,6 +1,7 @@
 package org.motechproject.dhis2.service.impl;
 
 import org.motechproject.dhis2.rest.service.DhisWebService;
+import org.motechproject.dhis2.service.DataSetService;
 import org.motechproject.dhis2.service.ProgramService;
 import org.motechproject.dhis2.service.StageService;
 import org.motechproject.dhis2.service.TasksService;
@@ -29,6 +30,7 @@ public class TasksServiceImpl implements TasksService {
     private TrackedEntityAttributeService trackedEntityAttributeService;
     private ChannelService channelService;
     private DhisWebService dhisWebService;
+    private DataSetService dataSetService;
 
     @Autowired
     public TasksServiceImpl(BundleContext bundleContext,
@@ -37,7 +39,8 @@ public class TasksServiceImpl implements TasksService {
                             TrackedEntityService trackedEntityService,
                             TrackedEntityAttributeService trackedEntityAttributeService,
                             ChannelService channelService,
-                            DhisWebService dhisWebService) {
+                            DhisWebService dhisWebService,
+                            DataSetService dataSetService) {
         this.bundleContext = bundleContext;
         this.programService = programService;
         this.stageService = stageService;
@@ -45,13 +48,15 @@ public class TasksServiceImpl implements TasksService {
         this.trackedEntityAttributeService = trackedEntityAttributeService;
         this.channelService = channelService;
         this.dhisWebService = dhisWebService;
+        this.dataSetService = dataSetService;
     }
 
     @Override
     public void updateChannel() {
         LOGGER.debug("Updating DHIS2 task channel...");
-        ChannelRequestBuilder channelRequestBuilder = new ChannelRequestBuilder(
-                bundleContext, programService, stageService, trackedEntityAttributeService, trackedEntityService, dhisWebService.getServerVersion());
+        ChannelRequestBuilder channelRequestBuilder = new ChannelRequestBuilder(bundleContext, programService,
+                stageService, trackedEntityAttributeService, trackedEntityService, dhisWebService.getServerVersion(),
+                dataSetService);
         channelService.registerChannel(channelRequestBuilder.build());
     }
 }

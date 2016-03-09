@@ -15,8 +15,6 @@ import org.motechproject.dhis2.repository.ProgramDataService;
 import org.motechproject.dhis2.repository.StageDataService;
 import org.motechproject.dhis2.repository.TrackedEntityAttributeDataService;
 import org.motechproject.dhis2.repository.TrackedEntityDataService;
-import org.motechproject.dhis2.rest.service.DhisWebService;
-import org.motechproject.dhis2.rest.service.impl.DhisWebServiceImpl;
 import org.motechproject.dhis2.service.TasksService;
 import org.motechproject.tasks.domain.ActionEvent;
 import org.motechproject.tasks.domain.ActionParameter;
