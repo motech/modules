@@ -7,7 +7,7 @@ Atom Client Module
 Description
 ===========
 
-This module will periodically fetch from one or more `Atom feed <https://en.wikipedia.org/wiki/Atom_%28standard%29>`_ sources and send a MOTECH event for each feed content that changed since the last fetch.
+This module will periodically fetch from one or more `Atom feed <https://en.wikipedia.org/wiki/Atom_%28standard%29>`_ sources and send a MOTECH event for each feed content item that changed since the last fetch.
 
 The fetch job is triggered by a MOTECH event with the ``org.motechproject.atomclient.fetch`` subject.
 The module can periodically send a fetch event based on the schedule in the cron expression in the ``atom-client-defaults.properties`` file.
@@ -62,10 +62,10 @@ When fetching and for each feed content item that changed since the last time a 
         The URL identifying the Atom feed
 
     ``published_date``
-        When the content item ws created
+        When the content item was created
 
     ``updated_date``
-        When the content item was changed last
+        When the content item was modified
 
     ``raw_content``
         A map of complete content data, like {"1": "raw content data one", "2": "raw content data two"}
