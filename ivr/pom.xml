@@ -137,7 +137,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${user.home}/.motech/bundles</outputDirectory>
+                            <outputDirectory>${motech.dir}/bundles</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>target</directory>
@@ -166,7 +166,7 @@
                         <configuration>
                             <filesets>
                                 <fileset>
-                                    <directory>${user.home}/.motech/config/org.motechproject.ivr/raw</directory>
+                                    <directory>${motech.dir}/config/org.motechproject.ivr/raw</directory>
                                     <includes>
                                         <include>*.json</include>
                                     </includes>
