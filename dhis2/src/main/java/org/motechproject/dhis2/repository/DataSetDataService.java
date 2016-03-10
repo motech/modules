@@ -1,6 +1,8 @@
 package org.motechproject.dhis2.repository;
 
 import org.motechproject.dhis2.domain.DataSet;
+import org.motechproject.mds.annotations.Lookup;
+import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
 
 /**
@@ -9,4 +11,12 @@ import org.motechproject.mds.service.MotechDataService;
  */
 public interface DataSetDataService extends MotechDataService<DataSet> {
 
+    /**
+     * Retrieves a data set with the given {@code uuid}.
+     *
+     * @param uuid  the UUID of the data set
+     * @return the data set with the given uuid
+     */
+    @Lookup
+    DataSet findByUuid(@LookupField(name = "uuid") String uuid);
 }

@@ -43,6 +43,16 @@ public class DataSetServiceImpl implements DataSetService {
     }
 
     @Override
+    public List<DataSet> findAll() {
+        return dataSetDataService.retrieveAll();
+    }
+
+    @Override
+    public DataSet findByUuid(String uuid) {
+        return dataSetDataService.findByUuid(uuid);
+    }
+
+    @Override
     public void deleteAll() {
         dataSetDataService.deleteAll();
     }
