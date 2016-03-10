@@ -40,7 +40,7 @@ public class DayOfWeekCampaignSchedulingBundleIT extends BaseSchedulingIT {
     public void shouldScheduleMessageAtItsStartTime() throws SchedulerException {
         CampaignRequest campaignRequest = new CampaignRequest(EXTERNAL_ID, CAMPAIGN_NAME, new LocalDate(2020, 7, 10), null); // Friday
         getMessageCampaignService().enroll(campaignRequest);
-        List<DateTime> fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.DayOfWeekCampaign.entity_1.message_key_1");
+        List<DateTime> fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.DayOfWeekCampaign.entity_1.message_key_1-dayofweek");
         assertEquals(asList(
                 newDateTime(2020, 7, 10, 10, 30, 0),
                 newDateTime(2020, 7, 13, 10, 30, 0),
@@ -60,7 +60,7 @@ public class DayOfWeekCampaignSchedulingBundleIT extends BaseSchedulingIT {
     public void shouldScheduleMessageAtUserPreferredTime() throws SchedulerException {
         CampaignRequest campaignRequest = new CampaignRequest(EXTERNAL_ID, CAMPAIGN_NAME, new LocalDate(2020, 7, 10), new Time(8, 20)); // Friday
         getMessageCampaignService().enroll(campaignRequest);
-        List<DateTime> fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.DayOfWeekCampaign.entity_1.message_key_1");
+        List<DateTime> fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.DayOfWeekCampaign.entity_1.message_key_1-dayofweek");
         assertEquals(asList(
                 newDateTime(2020, 7, 10, 8, 20, 0),
                 newDateTime(2020, 7, 13, 8, 20, 0),
@@ -97,7 +97,7 @@ public class DayOfWeekCampaignSchedulingBundleIT extends BaseSchedulingIT {
 
             CampaignRequest campaignRequest = new CampaignRequest(EXTERNAL_ID, CAMPAIGN_NAME, new LocalDate(2020, 7, 10), null); // Friday
             getMessageCampaignService().enroll(campaignRequest);
-            List<DateTime> fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.DayOfWeekCampaign.entity_1.message_key_1");
+            List<DateTime> fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.DayOfWeekCampaign.entity_1.message_key_1-dayofweek");
             assertEquals(asList(
                     newDateTime(2020, 7, 17, 10, 30, 0),
                     newDateTime(2020, 7, 20, 10, 30, 0)),
@@ -119,7 +119,7 @@ public class DayOfWeekCampaignSchedulingBundleIT extends BaseSchedulingIT {
         CampaignEnrollmentsQuery query = new CampaignEnrollmentsQuery().withExternalId(EXTERNAL_ID).withCampaignName(CAMPAIGN_NAME);
         getMessageCampaignService().stopAll(query);
 
-        assertNull(getTrigger("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.DayOfWeekCampaign.entity_1.message_key_1"));
+        assertNull(getTrigger("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.DayOfWeekCampaign.entity_1.message_key_1-dayofweek"));
         assertNull(getTrigger("org.motechproject.messagecampaign.campaign-completed-EndOfCampaignJob.DayOfWeekCampaign.entity_1-runonce"));
     }
 
@@ -128,7 +128,7 @@ public class DayOfWeekCampaignSchedulingBundleIT extends BaseSchedulingIT {
         CampaignRequest campaignRequest = new CampaignRequest(EXTERNAL_ID, CAMPAIGN_NAME, new LocalDate(2020, 7, 10), null);
         getMessageCampaignService().enroll(campaignRequest);
 
-        assertNotNull(getTrigger("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.DayOfWeekCampaign.entity_1.message_key_1"));
+        assertNotNull(getTrigger("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.DayOfWeekCampaign.entity_1.message_key_1-dayofweek"));
         assertNotNull(getTrigger("org.motechproject.messagecampaign.campaign-completed-EndOfCampaignJob.DayOfWeekCampaign.entity_1-runonce"));
 
         List<CampaignMessageRecord> campaignMessageRecords = getCampaignMessageRecordService().findByNameAndType(CampaignType.DAY_OF_WEEK, "message1");
@@ -136,7 +136,7 @@ public class DayOfWeekCampaignSchedulingBundleIT extends BaseSchedulingIT {
 
         getMessageCampaignService().unscheduleMessageJob(campaignMessageRecords.get(0));
 
-        assertNull(getTrigger("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.DayOfWeekCampaign.entity_1.message_key_1"));
+        assertNull(getTrigger("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.DayOfWeekCampaign.entity_1.message_key_1-dayofweek"));
         assertNotNull(getTrigger("org.motechproject.messagecampaign.campaign-completed-EndOfCampaignJob.DayOfWeekCampaign.entity_1-runonce"));
     }
 
@@ -145,7 +145,7 @@ public class DayOfWeekCampaignSchedulingBundleIT extends BaseSchedulingIT {
         CampaignRequest campaignRequest = new CampaignRequest(EXTERNAL_ID, CAMPAIGN_NAME, new LocalDate(2020, 7, 10), null);
         getMessageCampaignService().enroll(campaignRequest);
 
-        List<DateTime> fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.DayOfWeekCampaign.entity_1.message_key_1");
+        List<DateTime> fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.DayOfWeekCampaign.entity_1.message_key_1-dayofweek");
         assertEquals(asList(
                         newDateTime(2020, 7, 10, 10, 30, 0),
                         newDateTime(2020, 7, 13, 10, 30, 0),
@@ -177,7 +177,7 @@ public class DayOfWeekCampaignSchedulingBundleIT extends BaseSchedulingIT {
 
         getMessageCampaignService().rescheduleMessageJob(campaignMessageRecordId);
 
-        fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.DayOfWeekCampaign.entity_1.message_key_1");
+        fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.DayOfWeekCampaign.entity_1.message_key_1-dayofweek");
         assertEquals(asList(
                         newDateTime(2020, 7, 16, 10, 30, 0),
                         newDateTime(2020, 7, 23, 10, 30, 0)),

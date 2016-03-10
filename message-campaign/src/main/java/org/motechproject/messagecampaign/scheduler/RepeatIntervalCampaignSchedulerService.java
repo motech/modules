@@ -69,6 +69,11 @@ public class RepeatIntervalCampaignSchedulerService extends CampaignSchedulerSer
         return new RepeatingJobId(EventKeys.SEND_MESSAGE, messageJobIdFor(messageKey, externalId, campaingName));
     }
 
+    @Override
+    protected List<DateTime> getScheduledJobTimings(String subject, String externalJobIdPrefix, DateTime startDate, DateTime endDate) {
+        return getSchedulerService().getScheduledJobTimingsWithPrefix(new RepeatingJobId(subject, externalJobIdPrefix),startDate, endDate);
+    }
+
     protected DateTime campaignEndDate(RepeatIntervalCampaign campaign, CampaignEnrollment enrollment) {
         Period maxDuration = campaign.getMaxDuration();
         LocalDate endDate = enrollment.getReferenceDate().plus(maxDuration);

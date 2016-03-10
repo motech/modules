@@ -11,7 +11,7 @@ import org.motechproject.messagecampaign.domain.campaign.CampaignMessage;
 import org.motechproject.messagecampaign.domain.campaign.DayOfWeek;
 import org.motechproject.messagecampaign.domain.campaign.DayOfWeekCampaign;
 import org.motechproject.messagecampaign.domain.campaign.DayOfWeekCampaignMessage;
-import org.motechproject.scheduler.contract.CronJobId;
+import org.motechproject.scheduler.contract.DayOfWeekJobId;
 import org.motechproject.scheduler.contract.DayOfWeekSchedulableJob;
 import org.motechproject.scheduler.contract.JobId;
 import org.motechproject.scheduler.service.MotechSchedulerService;
@@ -51,18 +51,23 @@ public class DayOfWeekCampaignSchedulerService extends CampaignSchedulerService<
     public void unscheduleMessageJobs(CampaignEnrollment enrollment) {
         DayOfWeekCampaign campaign = (DayOfWeekCampaign) getCampaignRecordService().findByName(enrollment.getCampaignName()).toCampaign();
         for (DayOfWeekCampaignMessage message : campaign.getMessages()) {
-            getSchedulerService().safeUnscheduleJob(EventKeys.SEND_MESSAGE, messageJobIdFor(message.getMessageKey(), enrollment.getExternalId(), enrollment.getCampaignName()));
+            getSchedulerService().safeUnscheduleDayOfWeekJob(EventKeys.SEND_MESSAGE, messageJobIdFor(message.getMessageKey(), enrollment.getExternalId(), enrollment.getCampaignName()));
         }
     }
 
     @Override
     public JobId getJobId(String messageKey, String externalId, String campaingName) {
-        return new CronJobId(EventKeys.SEND_MESSAGE, messageJobIdFor(messageKey, externalId, campaingName));
+        return new DayOfWeekJobId(EventKeys.SEND_MESSAGE, messageJobIdFor(messageKey, externalId, campaingName));
     }
 
     @Override
     public void unscheduleMessageJob(CampaignEnrollment enrollment, CampaignMessage message) {
-        getSchedulerService().safeUnscheduleJob(EventKeys.SEND_MESSAGE, messageJobIdFor(message.getMessageKey(), enrollment.getExternalId(), enrollment.getCampaignName()));
+        getSchedulerService().safeUnscheduleDayOfWeekJob(EventKeys.SEND_MESSAGE, messageJobIdFor(message.getMessageKey(), enrollment.getExternalId(), enrollment.getCampaignName()));
+    }
+
+    @Override
+    protected List<DateTime> getScheduledJobTimings(String subject, String externalJobIdPrefix, DateTime startDate, DateTime endDate) {
+        return getSchedulerService().getScheduledJobTimingsWithPrefix(new DayOfWeekJobId(subject, externalJobIdPrefix),startDate, endDate);
     }
 
     @Override
