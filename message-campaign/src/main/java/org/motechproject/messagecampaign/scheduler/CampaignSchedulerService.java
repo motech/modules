@@ -10,6 +10,7 @@ import org.motechproject.messagecampaign.domain.campaign.Campaign;
 import org.motechproject.messagecampaign.domain.campaign.CampaignEnrollment;
 import org.motechproject.messagecampaign.domain.campaign.CampaignMessage;
 import org.motechproject.messagecampaign.exception.CampaignEnrollmentException;
+import org.motechproject.scheduler.contract.CronJobId;
 import org.motechproject.scheduler.contract.JobId;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
@@ -132,11 +133,24 @@ public abstract class CampaignSchedulerService<M extends CampaignMessage, C exte
         Map<String, List<DateTime>> messageTimingsMap = new HashMap<>();
         for (M message : campaign.getMessages()) {
             String externalJobIdPrefix = messageJobIdFor(message.getMessageKey(), enrollment.getExternalId(), enrollment.getCampaignName());
-            List<DateTime> dates = schedulerService.getScheduledJobTimingsWithPrefix(EventKeys.SEND_MESSAGE, externalJobIdPrefix, startDate, endDate);
+            List<DateTime> dates = getScheduledJobTimings(EventKeys.SEND_MESSAGE, externalJobIdPrefix, startDate, endDate);
 
             messageTimingsMap.put(message.getName(), dates);
         }
         return messageTimingsMap;
+    }
+
+    /**
+     * Returns list of dates at which jobs will be triggered.
+     *
+     * @param subject  the subject of job, not null
+     * @param externalJobIdPrefix  the prefix of jobs
+     * @param startDate  the {@code Date} after which dates should be added, not null
+     * @param endDate  the {@code Date} before which dates should be added, not null
+     * @return the list of dates
+     */
+    protected List<DateTime> getScheduledJobTimings(String subject, String externalJobIdPrefix, DateTime startDate, DateTime endDate) {
+        return schedulerService.getScheduledJobTimingsWithPrefix(new CronJobId(subject, externalJobIdPrefix), startDate, endDate);
     }
 
     /**

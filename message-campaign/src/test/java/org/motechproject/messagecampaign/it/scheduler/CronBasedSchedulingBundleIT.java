@@ -34,7 +34,7 @@ public class CronBasedSchedulingBundleIT extends BaseSchedulingIT {
     public void shouldScheduleMessages() throws SchedulerException {
         CampaignRequest campaignRequest = new CampaignRequest(EXTERNAL_ID, CAMPAIGN_NAME, new LocalDate(2020, 7, 10), null);
         getMessageCampaignService().enroll(campaignRequest);
-        List<DateTime> fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.Cron based Message Program.entity_1.cron-message");
+        List<DateTime> fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.Cron based Message Program.entity_1.cron-message-cron");
         assertEquals(asList(
                 newDateTime(2020, 11, 11, 11, 11, 0),
                 newDateTime(2021, 11, 11, 11, 11, 0),
@@ -60,7 +60,7 @@ public class CronBasedSchedulingBundleIT extends BaseSchedulingIT {
         getMessageCampaignService().stopAll(query);
 
         assertNull(getTrigger("org.motechproject.messagecampaign.campaign-completed-EndOfCampaignJob.Cron based Message Program.entity_1-runonce"));
-        assertNull(getTrigger("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.Cron based Message Program.entity_1.cron-message"));
+        assertNull(getTrigger("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.Cron based Message Program.entity_1.cron-message-cron"));
     }
 
     @Test
@@ -69,7 +69,7 @@ public class CronBasedSchedulingBundleIT extends BaseSchedulingIT {
         getMessageCampaignService().enroll(campaignRequest);
 
         assertNotNull(getTrigger("org.motechproject.messagecampaign.campaign-completed-EndOfCampaignJob.Cron based Message Program.entity_1-runonce"));
-        assertNotNull(getTrigger("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.Cron based Message Program.entity_1.cron-message"));
+        assertNotNull(getTrigger("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.Cron based Message Program.entity_1.cron-message-cron"));
 
         List<CampaignMessageRecord> campaignMessageRecords = getCampaignMessageRecordService().findByNameAndType(CampaignType.CRON, "First");
         assertEquals(1, campaignMessageRecords.size());
@@ -77,7 +77,7 @@ public class CronBasedSchedulingBundleIT extends BaseSchedulingIT {
         getMessageCampaignService().unscheduleMessageJob(campaignMessageRecords.get(0));
 
         assertNotNull(getTrigger("org.motechproject.messagecampaign.campaign-completed-EndOfCampaignJob.Cron based Message Program.entity_1-runonce"));
-        assertNull(getTrigger("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.Cron based Message Program.entity_1.cron-message"));
+        assertNull(getTrigger("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.Cron based Message Program.entity_1.cron-message-cron"));
     }
 
     @Test
@@ -85,7 +85,7 @@ public class CronBasedSchedulingBundleIT extends BaseSchedulingIT {
         CampaignRequest campaignRequest = new CampaignRequest(EXTERNAL_ID, CAMPAIGN_NAME, new LocalDate(2020, 7, 10), null);
         getMessageCampaignService().enroll(campaignRequest);
 
-        List<DateTime> fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.Cron based Message Program.entity_1.cron-message");
+        List<DateTime> fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.Cron based Message Program.entity_1.cron-message-cron");
         assertEquals(asList(
                         newDateTime(2020, 11, 11, 11, 11, 0),
                         newDateTime(2021, 11, 11, 11, 11, 0),
@@ -117,7 +117,7 @@ public class CronBasedSchedulingBundleIT extends BaseSchedulingIT {
 
         getMessageCampaignService().rescheduleMessageJob(campaignMessageRecordId);
 
-        fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.Cron based Message Program.entity_1.cron-message");
+        fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.Cron based Message Program.entity_1.cron-message-cron");
         assertEquals(asList(
                         newDateTime(2020, 11, 11, 11, 12, 0),
                         newDateTime(2021, 11, 11, 11, 12, 0),

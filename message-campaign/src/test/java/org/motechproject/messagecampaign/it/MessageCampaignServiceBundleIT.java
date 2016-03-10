@@ -63,7 +63,7 @@ public class MessageCampaignServiceBundleIT extends BasePaxIT {
     public void shouldUnscheduleMessageJobsWhenCampaignIsStopped() throws SchedulerException {
         CampaignRequest campaignRequest = new CampaignRequest("entity_1", "PREGNANCY", new LocalDate(2020, 7, 10), null);
 
-        TriggerKey triggerKey = triggerKey("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.PREGNANCY.entity_1.PREGNANCY", "default");
+        TriggerKey triggerKey = triggerKey("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.PREGNANCY.entity_1.PREGNANCY-dayofweek", "default");
 
         messageCampaignService.enroll(campaignRequest);
         assertTrue(scheduler.checkExists(triggerKey));
@@ -77,7 +77,7 @@ public class MessageCampaignServiceBundleIT extends BasePaxIT {
         CampaignRequest campaignRequest = new CampaignRequest("entity_1", "DayOfWeekCampaign", new LocalDate(2020, 7, 10), null);
         messageCampaignService.enroll(campaignRequest);
 
-        List<DateTime> fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.DayOfWeekCampaign.entity_1.message_key_1");
+        List<DateTime> fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.DayOfWeekCampaign.entity_1.message_key_1-dayofweek");
         assertEquals(asList(
                         newDateTime(2020, 7, 10, 10, 30, 0),
                         newDateTime(2020, 7, 13, 10, 30, 0),
@@ -104,7 +104,7 @@ public class MessageCampaignServiceBundleIT extends BasePaxIT {
 
         messageCampaignService.updateEnrollments(campaignRecordService.findByName("DayOfWeekCampaign").getId());
 
-        fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.DayOfWeekCampaign.entity_1.message_key_1");
+        fireTimes = getFireTimes("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.DayOfWeekCampaign.entity_1.message_key_1-dayofweek");
         assertEquals(asList(
                         newDateTime(2020, 7, 10, 10, 30, 0),
                         newDateTime(2020, 7, 13, 10, 30, 0),
@@ -134,7 +134,7 @@ public class MessageCampaignServiceBundleIT extends BasePaxIT {
         enrollment.setReferenceDate(new LocalDate(2020, 7, 10));
 
         TriggerKey messageTriggerKey =
-                triggerKey("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.DayOfWeekCampaign.enrollId.message_key_1", "default");
+                triggerKey("org.motechproject.messagecampaign.fired-campaign-message-MessageJob.DayOfWeekCampaign.enrollId.message_key_1-dayofweek", "default");
 
         TriggerKey endOfCampaignTriggerKey =
                 triggerKey("org.motechproject.messagecampaign.campaign-completed-EndOfCampaignJob.DayOfWeekCampaign.enrollId-runonce", "default");
