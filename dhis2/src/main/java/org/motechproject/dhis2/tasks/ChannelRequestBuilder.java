@@ -7,6 +7,7 @@ import org.motechproject.dhis2.domain.TrackedEntityAttribute;
 import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.event.EventSubjects;
 import org.motechproject.dhis2.rest.domain.ServerVersion;
+import org.motechproject.dhis2.service.DataSetService;
 import org.motechproject.dhis2.service.ProgramService;
 import org.motechproject.dhis2.service.StageService;
 import org.motechproject.dhis2.service.TrackedEntityAttributeService;
@@ -35,19 +36,22 @@ public class ChannelRequestBuilder  {
     private TrackedEntityAttributeService trackedEntityAttributeService;
     private TrackedEntityService trackedEntityService;
     private ServerVersion serverVersion;
+    private DataSetService dataSetService;
 
     public ChannelRequestBuilder(BundleContext bundleContext,
                                  ProgramService programService,
                                  StageService stageService,
                                  TrackedEntityAttributeService trackedEntityAttributeService,
                                  TrackedEntityService trackedEntityService,
-                                 ServerVersion serverVersion) {
+                                 ServerVersion serverVersion,
+                                 DataSetService dataSetService) {
         this.bundleContext = bundleContext;
         this.programService = programService;
         this.stageService = stageService;
         this.trackedEntityAttributeService = trackedEntityAttributeService;
         this.trackedEntityService = trackedEntityService;
         this.serverVersion = serverVersion;
+        this.dataSetService = dataSetService;
     }
 
     /**
@@ -60,6 +64,7 @@ public class ChannelRequestBuilder  {
         ProgramActionBuilder programActionBuilder = new ProgramActionBuilder();
         CreateInstanceActionBuilder createInstanceActionBuilder = new CreateInstanceActionBuilder();
         StageActionBuilder stageActionBuilder = new StageActionBuilder();
+        SendDataValueSetActionBuilder sendDataValueSetActionBuilder = new SendDataValueSetActionBuilder();
 
         List<ActionEventRequest> actions = new ArrayList<>();
 
@@ -72,81 +77,11 @@ public class ChannelRequestBuilder  {
         List<TrackedEntityAttribute> attributes = trackedEntityAttributeService.findAll();
         List<TrackedEntity> trackedEntities = trackedEntityService.findAll();
         actions.addAll(createInstanceActionBuilder.build(attributes, trackedEntities));
-
-        actions.add(addSendDataValueSet());
+        actions.addAll(sendDataValueSetActionBuilder.addSendDataValueSetActions(dataSetService.findAll()));
         actions.add(addSendDataValue());
 
         return new ChannelRequest(DisplayNames.DHIS2_DISPLAY_NAME, bundleContext.getBundle().getSymbolicName(),
                 bundleContext.getBundle().getVersion().toString(), null, new ArrayList<>(), actions);
-
-    }
-
-
-
-    private ActionEventRequest addSendDataValueSet() {
-        int order = 0;
-        ActionParameterRequestBuilder builder = new ActionParameterRequestBuilder();
-        SortedSet<ActionParameterRequest> actionParameterRequests = new TreeSet<>();
-
-        builder.setDisplayName(DisplayNames.DATA_SET)
-                .setKey(EventParams.DATA_SET)
-                .setOrder(order++);
-        actionParameterRequests.add(builder.createActionParameterRequest());
-
-        builder = new ActionParameterRequestBuilder();
-        builder.setDisplayName(DisplayNames.COMPLETE_DATE)
-                .setKey(EventParams.COMPLETE_DATE)
-                .setOrder(order++);
-        actionParameterRequests.add(builder.createActionParameterRequest());
-
-        builder = new ActionParameterRequestBuilder();
-        builder.setDisplayName(DisplayNames.PERIOD)
-                .setKey(EventParams.PERIOD)
-                .setOrder(order++)
-                .setRequired(true);
-        actionParameterRequests.add(builder.createActionParameterRequest());
-
-        builder = new ActionParameterRequestBuilder();
-        builder.setDisplayName(DisplayNames.ORG_UNIT)
-                .setKey(EventParams.LOCATION)
-                .setOrder(order++)
-                .setRequired(true);
-        actionParameterRequests.add(builder.createActionParameterRequest());
-
-        builder = new ActionParameterRequestBuilder();
-        builder.setDisplayName(DisplayNames.CATEGORY_OPTION_COMBO)
-                .setKey(EventParams.CATEGORY_OPTION_COMBO)
-                .setOrder(order++);
-        actionParameterRequests.add(builder.createActionParameterRequest());
-
-        builder = new ActionParameterRequestBuilder();
-        builder.setDisplayName(DisplayNames.COMMENT)
-                .setKey(EventParams.COMMENT)
-                .setOrder(order++);
-        actionParameterRequests.add(builder.createActionParameterRequest());
-
-        builder = new ActionParameterRequestBuilder();
-        builder.setDisplayName(DisplayNames.ATTRIBUTE_OPTION_COMBO)
-                .setKey(EventParams.ATTRIBUTE_OPTION_COMBO)
-                .setOrder(order++);
-        actionParameterRequests.add(builder.createActionParameterRequest());
-
-        builder = new ActionParameterRequestBuilder();
-        builder.setDisplayName(DisplayNames.DATA_VALUES)
-                .setKey(EventParams.DATA_VALUES)
-                .setOrder(order++)
-                .setType("MAP")
-                .setRequired(true);
-
-        actionParameterRequests.add(builder.createActionParameterRequest());
-
-        ActionEventRequestBuilder eventRequestBuilder = new ActionEventRequestBuilder();
-        eventRequestBuilder.setActionParameters(actionParameterRequests)
-                .setDisplayName(DisplayNames.SEND_DATA_VALUE_SET)
-                .setSubject(EventSubjects.SEND_DATA_VALUE_SET)
-                .setName(DisplayNames.SEND_DATA_VALUE_SET);
-
-        return eventRequestBuilder.createActionEventRequest();
 
     }
 

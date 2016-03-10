@@ -34,6 +34,7 @@
         <apache.servicemix.bundles.ant.version>1.8.1_1</apache.servicemix.bundles.ant.version>
         <apache.servicemix.bundles.javax.inject.version>1_2</apache.servicemix.bundles.javax.inject.version>
         <apache.servicemix.bundles.jopt.simple.version>4.6_1</apache.servicemix.bundles.jopt.simple.version>
+        <apache.servicemix.bundles.jdom.version>2.0.6_1</apache.servicemix.bundles.jdom.version>
         <ibm.jbatch.version>1.0</ibm.jbatch.version>
         <javax.batch.version>1.0</javax.batch.version>
         <apache.ibatis.version>2.3.4.726_4</apache.ibatis.version>
@@ -48,6 +49,7 @@
         <gemston.gemfire.version>7.0.1</gemston.gemfire.version>
         <codehaus.groovy.version>1.8.9</codehaus.groovy.version>
         <javax.el.version>2.2.5</javax.el.version>
+        <rometools.rome.fetcher.version>1.5.99</rometools.rome.fetcher.version>
         <spring.osgi.core.version>1.2.1</spring.osgi.core.version>
 
         <javax.persistence.version>2.1.0</javax.persistence.version>
@@ -334,7 +336,7 @@
             <dependency>
                 <groupId>commons-collections</groupId>
                 <artifactId>commons-collections</artifactId>
-                <version>3.2.1</version>
+                <version>3.2.2</version>
             </dependency>
             <dependency>
                 <groupId>commons-codec</groupId>
@@ -748,6 +750,16 @@
                 <artifactId>groovy-all</artifactId>
                 <version>2.4.5</version>
             </dependency>
+            <dependency>
+                <groupId>com.rometools</groupId>
+                <artifactId>rome-fetcher</artifactId>
+                <version>${rometools.rome.fetcher.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.servicemix.bundles</groupId>
+                <artifactId>org.apache.servicemix.bundles.jdom</artifactId>
+                <version>${apache.servicemix.bundles.jdom.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -773,6 +785,7 @@
         <module>metrics</module>
         <module>odk</module>
         <module>ipf</module>
+        <module>atom-client</module>
     </modules>
 
     <build>
@@ -792,7 +805,7 @@
                                 <includeScope>runtime</includeScope>
                                 <overWriteIfNewer>true</overWriteIfNewer>
                                 <excludeArtifactIds>org.apache.felix.framework</excludeArtifactIds>
-                                <outputDirectory>${user.home}/.motech/bundles</outputDirectory>
+                                <outputDirectory>${motech.dir}/bundles</outputDirectory>
                             </configuration>
                         </execution>
                         <execution>
@@ -1006,7 +1019,7 @@
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${user.home}/.motech/config</outputDirectory>
+                                    <outputDirectory>${motech.dir}/config</outputDirectory>
                                     <overwrite>true</overwrite>
                                     <resources>
                                         <resource>
@@ -1038,7 +1051,7 @@
                                     <filesets>
                                         <fileset>
                                             <followSymlinks>false</followSymlinks>
-                                            <directory>${user.home}/.motech/config</directory>
+                                            <directory>${motech.dir}/config</directory>
                                             <includes>
                                                 <include>bootstrap.properties</include>
                                                 <include>motech-settings.properties</include>

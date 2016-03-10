@@ -2,6 +2,7 @@ package org.motechproject.dhis2.event;
 
 import org.motechproject.commons.api.TasksEventParser;
 import org.motechproject.dhis2.domain.DataElement;
+import org.motechproject.dhis2.domain.DataSet;
 import org.motechproject.dhis2.exception.DataElementNotFoundException;
 import org.motechproject.dhis2.rest.domain.AttributeDto;
 import org.motechproject.dhis2.rest.domain.DataValueDto;
@@ -13,6 +14,7 @@ import org.motechproject.dhis2.rest.domain.EnrollmentDto;
 import org.motechproject.dhis2.rest.domain.TrackedEntityInstanceDto;
 import org.motechproject.dhis2.rest.service.DhisWebService;
 import org.motechproject.dhis2.service.DataElementService;
+import org.motechproject.dhis2.service.DataSetService;
 import org.motechproject.dhis2.service.TrackedEntityInstanceMappingService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
@@ -45,6 +47,9 @@ public class EventHandler {
 
     @Autowired
     private DataElementService dataElementService;
+
+    @Autowired
+    private DataSetService dataSetService;
 
     public EventHandler() {
 
@@ -170,33 +175,29 @@ public class EventHandler {
      */
     @MotechListener(subjects = EventSubjects.SEND_DATA_VALUE_SET)
     public void handleDataValueSet(MotechEvent event) {
+
         Map<String, Object> params = prepareDhisAttributesMap(event.getParameters());
-        String dataSet = (String) params.get(EventParams.DATA_SET);
+        DataSet dataSet = dataSetService.findByUuid((String) params.get(EventParams.DATA_SET));
         String completeDate = (String) params.get(EventParams.COMPLETE_DATE);
         String period = (String) params.get(EventParams.PERIOD);
         String orgUnitId = (String) params.get(EventParams.LOCATION);
         String categoryOptionCombo = (String) params.get(EventParams.CATEGORY_OPTION_COMBO);
         String comment = (String) params.get(EventParams.COMMENT);
         String attributeOptionCombo = (String) params.get(EventParams.ATTRIBUTE_OPTION_COMBO);
-        Map<String, Object> dataValues = (Map<String, Object>) params.get(EventParams.DATA_VALUES);
 
 
         List<DataValueDto> dataValueDtos = new ArrayList<>();
 
-        for (Object o : dataValues.entrySet()) {
-            Entry pair = (Entry) o;
-            String dataElement = (String) pair.getKey();
-            String dataElementId = dataElementService.findByName(dataElement).getUuid();
-            String value = (String) pair.getValue();
+        for (DataElement element : dataSet.getDataElementList()) {
             DataValueDto dataValueDto = new DataValueDto();
-            dataValueDto.setDataElement(dataElementId);
-            dataValueDto.setValue(value);
+            dataValueDto.setDataElement(element.getUuid());
+            dataValueDto.setValue((String) params.get(element.getUuid()));
 
             dataValueDtos.add(dataValueDto);
         }
 
         DataValueSetDto dataValueSetDto = new DataValueSetDto();
-        dataValueSetDto.setDataSet(dataSet);
+        dataValueSetDto.setDataSet(dataSet.getUuid());
         dataValueSetDto.setPeriod(period);
         dataValueSetDto.setCompleteDate(completeDate);
         dataValueSetDto.setOrgUnit(orgUnitId);
@@ -205,7 +206,6 @@ public class EventHandler {
         dataValueSetDto.setCategoryOptionCombo(categoryOptionCombo);
         dataValueSetDto.setComment(comment);
         dhisWebService.sendDataValueSet(dataValueSetDto);
-
     }
 
     private TrackedEntityInstanceDto createTrackedEntityInstanceFromParams (Map<String, Object> params) {
