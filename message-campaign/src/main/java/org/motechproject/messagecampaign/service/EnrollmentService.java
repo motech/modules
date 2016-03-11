@@ -110,4 +110,22 @@ public class EnrollmentService {
         }
         return enrollments;
     }
+
+    /**
+     * Marks an enrollment as complete. If the enrollment to mark is not found, null will be returned and nothing
+     * will be marked as completed.
+     * @param externalId external id of the enrollment to mark as completed
+     * @param campaignName name of the campaign name to which the enrollment belongs
+     * @return the updated enrollment, or null if it wasn't found
+     */
+    @Transactional
+    public CampaignEnrollment markEnrollmentAsCompleted(String externalId, String campaignName) {
+        CampaignEnrollment enrollment = campaignEnrollmentDataService.findByExternalIdAndCampaignName(externalId,
+                campaignName);
+        if (enrollment != null) {
+            enrollment.setStatus(CampaignEnrollmentStatus.COMPLETED);
+            campaignEnrollmentDataService.update(enrollment);
+        }
+        return enrollment;
+    }
 }
