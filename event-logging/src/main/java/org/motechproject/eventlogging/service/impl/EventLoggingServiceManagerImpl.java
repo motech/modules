@@ -58,9 +58,7 @@ public class EventLoggingServiceManagerImpl implements EventLoggingServiceManage
             Method method = eventLoggingService.getClass().getMethod("logEvent", MotechEvent.class);
             String classFullName = eventLoggingService.getClass().getName();
             eventListener = new MotechListenerEventProxy(classFullName, eventLoggingService, method);
-        } catch (NoSuchMethodException e) {
-            LOGGER.warn("Unable to write to: add listener for " + eventLoggingService.getClass().getName());
-        } catch (SecurityException e) {
+        } catch (NoSuchMethodException | SecurityException e) {
             LOGGER.warn("Unable to write to: add listener for " + eventLoggingService.getClass().getName());
         }
 
