@@ -46,8 +46,7 @@ public class CommcareAppStructureServiceImpl implements CommcareAppStructureServ
             appStructureResponseJson = parseApplicationsFromResponse(response, config.getName());
             commcareApps.addAll(appStructureResponseJson.getApplications());
             pageNumber++;
-        } while (appStructureResponseJson != null
-                && StringUtils.isNotBlank(appStructureResponseJson.getMetadata().getNextPageQueryString()));
+        } while (StringUtils.isNotBlank(appStructureResponseJson.getMetadata().getNextPageQueryString()));
 
         // Make sure the modules get serialized
         for (CommcareApplicationJson applicationJson : commcareApps) {

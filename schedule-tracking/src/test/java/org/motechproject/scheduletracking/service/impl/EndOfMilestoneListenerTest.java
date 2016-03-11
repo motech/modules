@@ -2,6 +2,7 @@ package org.motechproject.scheduletracking.service.impl;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.commons.date.model.Time;
 import org.motechproject.event.MotechEvent;
@@ -10,6 +11,7 @@ import org.motechproject.scheduletracking.domain.EnrollmentBuilder;
 import org.motechproject.scheduletracking.domain.Schedule;
 import org.motechproject.scheduletracking.events.MilestoneDefaultedEvent;
 import org.motechproject.scheduletracking.repository.dataservices.EnrollmentDataService;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -38,6 +40,12 @@ public class EndOfMilestoneListenerTest {
 
         MotechEvent event = new MilestoneDefaultedEvent(1L, "job_id", "externalId").toMotechEvent();
         endOfMilestoneListener.handle(event);
+
+        // TODO: Improve this
+        ArgumentCaptor<TransactionCallbackWithoutResult> trxCaptor = ArgumentCaptor.forClass(TransactionCallbackWithoutResult.class);
+        verify(enrollmentDataService).doInTransaction(trxCaptor.capture());
+        trxCaptor.getValue().doInTransaction(null);
+
         verify(enrollmentDataService).update(enrollment);
     }
 }
