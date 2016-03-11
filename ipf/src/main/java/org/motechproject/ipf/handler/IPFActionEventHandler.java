@@ -42,7 +42,6 @@ public class IPFActionEventHandler {
      * from xml template or when template is incorrect
      */
     @MotechListener(subjects =  {EventSubjects.ALL_TEMPLATE_ACTIONS})
-    @Transactional
     public void handleIpfTaskAction(MotechEvent event) throws ParserConfigurationException, SAXException, IOException,
             ClassNotFoundException {
         LOGGER.info("Event handled {}", event.getSubject());
