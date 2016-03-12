@@ -14,6 +14,7 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import javax.inject.Inject;
 import java.util.Set;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -36,9 +37,7 @@ public class HealthCheckRegistryServiceBundleIT {
 
         assertNotNull(registered);
 
-        System.out.println(registered);
-
-        assertTrue(registered.size() == 1);
+        assertEquals(1, registered.size());
         assertTrue(registered.contains("threadDeadlockHealthCheck"));
     }
 
@@ -54,14 +53,14 @@ public class HealthCheckRegistryServiceBundleIT {
         Set<String> registered = healthCheckRegistryService.getNames();
 
         assertNotNull(registered);
-        assertTrue(registered.size() == 2);
+        assertEquals(2, registered.size());
         assertTrue(registered.contains("foo"));
 
         healthCheckRegistryService.unregister("foo");
 
         Set<String> unregistered = healthCheckRegistryService.getNames();
 
-        assertTrue(unregistered.size() == 1);
+        assertEquals(1, unregistered.size());
         assertFalse(unregistered.contains("foo"));
     }
 }
