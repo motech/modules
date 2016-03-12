@@ -1,9 +1,9 @@
 package org.motechproject.dhis2.it;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.commons.api.ThreadSuspender;
 import org.motechproject.dhis2.domain.OrgUnit;
 import org.motechproject.dhis2.domain.TrackedEntityInstanceMapping;
 import org.motechproject.dhis2.event.EventParams;
@@ -14,6 +14,7 @@ import org.motechproject.dhis2.service.Settings;
 import org.motechproject.dhis2.service.SettingsService;
 import org.motechproject.dhis2.service.TrackedEntityInstanceMappingService;
 import org.motechproject.event.MotechEvent;
+import org.motechproject.event.listener.EventConsumerInfo;
 import org.motechproject.event.listener.EventListenerRegistryService;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -62,16 +63,18 @@ public class EventHandlerBundleIT extends BaseDhisIT {
     @Inject
     private EventListenerRegistryService eventListenerRegistry;
 
+    @Inject
+    private EventConsumerInfo eventConsumerInfo;
+
     @Before
     public void setUp() {
         orgUnitDataService.create(new OrgUnit(ORGUNIT_NAME,ORGUNIT_ID));
     }
 
     @Test
-    // TODO: MOTECH-2149 (either redesign this test or kill it with fire)
-    @Ignore
     public void testHandleRegistration() throws InterruptedException {
         getLogger().debug("Running testHandleRegistration()");
+        waitForEventConsumerToStart();
 
         final String responseBody = "{\"status\":\"SUCCESS\",\"importCount\":{\"imported\":1,\"updated\":0,\"ignored\"" +
                 ":0,\"deleted\":0},\"reference\":\"IbqmvQFz0zW\"}{\"status\":\"SUCCESS\",\"importCount\":{\"imported\"" +
@@ -128,5 +131,12 @@ public class EventHandlerBundleIT extends BaseDhisIT {
                 return !eventListenerRegistry.hasListener(EventSubjects.CREATE_ENTITY);
             }
         }, 250, 5000).start();
+    }
+
+    private void waitForEventConsumerToStart() {
+        int retries = 0;
+        while (!eventConsumerInfo.isRunning() && retries++ < 60) {
+            ThreadSuspender.sleep(1000);
+        }
     }
 }
