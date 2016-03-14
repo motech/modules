@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.commons.api.Range;
-import org.motechproject.sms.audit.DeliveryStatus;
 import org.motechproject.sms.audit.SmsRecord;
 import org.motechproject.sms.audit.SmsRecordsDataService;
 import org.motechproject.sms.configs.Config;
@@ -112,6 +111,6 @@ public class StatusControllerBundleIT extends BasePaxIT {
                 new Range<>(null, null), new HashSet<>(), null,
                 null, messageId, null, null);
         assertEquals(1, smsRecords.size());
-        assertEquals(smsRecords.get(0).getDeliveryStatus(), DeliveryStatus.DELIVERY_CONFIRMED);
+        assertEquals(smsRecords.get(0).getDeliveryStatus(), "sent");
     }
 }

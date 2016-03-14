@@ -7,10 +7,10 @@ import org.joda.time.format.DateTimeFormatter;
 import org.motechproject.commons.api.Range;
 import org.motechproject.mds.query.QueryParams;
 import org.motechproject.mds.util.Order;
-import org.motechproject.sms.audit.DeliveryStatus;
 import org.motechproject.sms.audit.SmsDirection;
 import org.motechproject.sms.audit.SmsRecordSearchCriteria;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -297,7 +297,7 @@ public class GridSettings {
         QueryParams queryParam = new QueryParams(page, rows, order);
 
         Set<SmsDirection> types = getSmsDirectionFromSettings();
-        Set<DeliveryStatus> deliveryStatusList = getDeliveryStatusFromSettings();
+        Set<String> deliveryStatusList = getDeliveryStatusFromSettings();
         Range<DateTime> range = createRangeFromSettings();
         SmsRecordSearchCriteria criteria = new SmsRecordSearchCriteria();
         if (!types.isEmpty()) {
@@ -340,15 +340,8 @@ public class GridSettings {
         return smsDirections;
     }
 
-    private Set<DeliveryStatus> getDeliveryStatusFromSettings() {
-        Set<DeliveryStatus> statusList = new HashSet<>();
-        String[] statuses = deliveryStatus.split(",");
-        for (String status : statuses) {
-            if (!status.isEmpty()) {
-                statusList.add(DeliveryStatus.valueOf(status));
-            }
-        }
-        return statusList;
+    private Set<String> getDeliveryStatusFromSettings() {
+        return new HashSet<>(Arrays.asList(deliveryStatus.split(",")));
     }
 
     private Range<DateTime> createRangeFromSettings() {

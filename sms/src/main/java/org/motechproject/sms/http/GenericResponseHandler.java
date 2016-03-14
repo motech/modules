@@ -1,12 +1,12 @@
 package org.motechproject.sms.http;
 
 import org.apache.commons.httpclient.Header;
-import org.motechproject.sms.util.SmsEventSubjects;
-import org.motechproject.sms.audit.DeliveryStatus;
 import org.motechproject.sms.audit.SmsRecord;
+import org.motechproject.sms.audit.constants.DeliveryStatuses;
 import org.motechproject.sms.configs.Config;
 import org.motechproject.sms.service.OutgoingSms;
 import org.motechproject.sms.templates.Template;
+import org.motechproject.sms.util.SmsEventSubjects;
 
 import static org.motechproject.commons.date.util.DateUtil.now;
 import static org.motechproject.sms.util.SmsEvents.outboundEvent;
@@ -39,7 +39,7 @@ public class GenericResponseHandler extends ResponseHandler {
                     sms.getRecipients().toString()));
             for (String recipient : sms.getRecipients()) {
                 getAuditRecords().add(new SmsRecord(getConfig().getName(), OUTBOUND, recipient, sms.getMessage(), now(),
-                        DeliveryStatus.DISPATCHED, null, sms.getMotechId(), providerMessageId, null));
+                        DeliveryStatuses.DISPATCHED, null, sms.getMotechId(), providerMessageId, null));
             }
             getEvents().add(outboundEvent(SmsEventSubjects.DISPATCHED, getConfig().getName(), sms.getRecipients(),
                     sms.getMessage(), sms.getMotechId(), providerMessageId, null, null, null, sms.getCustomParams()));
