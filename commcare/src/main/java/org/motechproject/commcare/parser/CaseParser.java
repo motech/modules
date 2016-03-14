@@ -22,6 +22,8 @@ import java.io.StringReader;
  */
 public class CaseParser<T> {
 
+    private static final String NAMESPACE_WILDCARD = "*";
+
     private CaseMapper<T> domainMapper;
     private String xmlDoc;
     private String caseAction;
@@ -68,11 +70,11 @@ public class CaseParser<T> {
      * @return the created instance
      */
     public CaseXml parseCase(Document document) {
-        Element item = (Element) document.getElementsByTagName("case").item(0);
+        Element item = (Element) document.getElementsByTagNameNS(NAMESPACE_WILDCARD, "case").item(0);
         CaseXml ccCase = createCase(item);
         updateAction(ccCase, item);
 
-        Element dataItem = (Element) document.getElementsByTagName("data")
+        Element dataItem = (Element) document.getElementsByTagNameNS(NAMESPACE_WILDCARD, "data")
                 .item(0);
         updateDataFields(ccCase, dataItem);
 
@@ -145,7 +147,7 @@ public class CaseParser<T> {
 
     private String getTextValue(Element ele, String tagName) {
         String textVal = null;
-        NodeList nl = ele.getElementsByTagName(tagName);
+        NodeList nl = ele.getElementsByTagNameNS(NAMESPACE_WILDCARD, tagName);
         if (nl != null && nl.getLength() > 0) {
             Element el = (Element) nl.item(0);
             Node textNode = el.getFirstChild();
@@ -162,7 +164,7 @@ public class CaseParser<T> {
 
     private Node getMatchingNode(Element ele, String tagName) {
         Node element = null;
-        NodeList nl = ele.getElementsByTagName(tagName);
+        NodeList nl = ele.getElementsByTagNameNS(NAMESPACE_WILDCARD, tagName);
         if (nl != null && nl.getLength() > 0) {
             element = nl.item(0);
         }
