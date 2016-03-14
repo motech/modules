@@ -55,7 +55,7 @@ public final class ResponseXML {
                 "      version=\"41\"\n" +
                 "      name=\"Diseases\"\n" +
                 "      xmlns:jrm=\"http://dev.commcarehq.org/jr/xforms\"\n" +
-                "      xmlns=\"" + DummyCommcareSchema.XMLNS1 + "\">\n" +
+                "      xmlns=\"" + "http://openrosa.org/formdesigner/84FA38A2-93C1-4B9E-AA2A-0E082995FF9E" + "\">\n" +
                 "  <clinic>Clinic1</clinic>\n" +
                 "  <diseases>\n" +
                 "    <disease id=\"3893289\" index=\"0\">\n" +
