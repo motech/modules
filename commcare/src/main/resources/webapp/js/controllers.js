@@ -337,7 +337,7 @@
             if (!$scope.newConfig) {
                 BootstrapDialog.confirm({
                     title: $scope.msg('commcare.header.confirm'),
-                    message: $scope.msg('commcare.confirm.removeSetting'),
+                    message: $scope.msg('commcare.confirm.deleteConfig'),
                     type: BootstrapDialog.TYPE_WARNING,
                     callback: function(result) {
                         if (result) {
