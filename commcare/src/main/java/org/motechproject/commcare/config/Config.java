@@ -11,6 +11,9 @@ public class Config {
     public static final String CONFIG_USERNAME = "username";
     public static final String CONFIG_PASSWORD = "password";
 
+    public static final String FULL_DATA_EVENT = "full";
+    public static final String PARTIAL_DATA_EVENT = "partial";
+
     private String name;
     private AccountConfig accountConfig;
     private String eventStrategy;
@@ -73,5 +76,17 @@ public class Config {
 
     public void setAccountConfig(AccountConfig accountConfig) {
         this.accountConfig = accountConfig;
+    }
+
+    public boolean isEventStrategyFull() {
+        return FULL_DATA_EVENT.equals(eventStrategy);
+    }
+
+    public boolean isEventStrategyPartial() {
+        return PARTIAL_DATA_EVENT.equals(eventStrategy);
+    }
+
+    public boolean isEventStrategyMinimal() {
+        return !isEventStrategyFull() && !isEventStrategyPartial();
     }
 }

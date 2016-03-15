@@ -55,8 +55,7 @@ public class CaseTriggerBuilderTest {
 
         assertFalse(triggerEventRequests.isEmpty());
 
-        // One trigger for cases is always built, therefore we should always have one case more
-        assertEquals(DummyCommcareSchema.getCases().size() + 1, triggerEventRequests.size());
+        assertEquals(DummyCommcareSchema.getCases().size(), triggerEventRequests.size());
 
         for(TriggerEventRequest request : triggerEventRequests) {
 
@@ -76,10 +75,6 @@ public class CaseTriggerBuilderTest {
                     assertEquals("Received Case: appointment [ConfigOne]", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD4));
                     assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD5));
-                    break;
-                case "org.motechproject.commcare.api.case.ConfigOne":
-                    assertEquals(2, request.getEventParameters().size());
-                    assertEquals("caseId", request.getEventParameters().get(0).getEventKey());
                     break;
                 default:
                     fail("Found trigger with incorrect subject: " + subject);

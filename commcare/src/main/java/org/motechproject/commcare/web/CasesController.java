@@ -34,9 +34,6 @@ import static org.motechproject.commcare.events.constants.EventDataKeys.FIELD_VA
 public class CasesController extends CommcareController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CasesController.class);
 
-    private static final String FULL_DATA_EVENT = "full";
-    private static final String PARTIAL_DATA_EVENT = "partial";
-
     private EventRelay eventRelay;
     private CommcareConfigService configService;
 
@@ -108,13 +105,12 @@ public class CasesController extends CommcareController {
             caseEvent.setCaseType(caseInstance.getCaseType());
 
             MotechEvent motechCaseEvent;
-            String caseEventStrategy = config.getEventStrategy();
 
-            if (caseEventStrategy.equals(FULL_DATA_EVENT)) {
+            if (config.isEventStrategyFull()) {
                 caseEvent = CaseEvent.fromCaseXml(caseInstance, config.getName());
                 motechCaseEvent = caseEvent.toMotechEventWithData();
                 motechCaseEvent.getParameters().put(FIELD_VALUES, caseEvent.getFieldValues());
-            } else if (caseEventStrategy.equals(PARTIAL_DATA_EVENT)) {
+            } else if (config.isEventStrategyPartial()) {
                 motechCaseEvent = caseEvent.toMotechEventWithData();
             } else {
                 motechCaseEvent = caseEvent.toMotechEventWithoutData();
