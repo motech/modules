@@ -9,7 +9,7 @@
             </div>
             <div class="modal-body">
                 <form id="streamResourceForm" name="streamResourceForm" class="form-horizontal"
-                      action="{{ '../cmsliteapi/resource/stream/' + select.language + '/' + select.name }}"
+                      action="{{ '../cmsliteapi/resource/stream/' + select.language + '/' + select.name + '/' }}"
                       enctype="multipart/form-data" method="POST">
                     <div class="form-group">
                         <!-- read mode -->
@@ -41,7 +41,7 @@
 
             <div class="modal-footer">
                 <a ui-if="mode == 'read'"  class="btn btn-default pull-left"
-                        href="{{ '../cmsliteapi/resource/stream/' + select.language + '/' + select.name }}"
+                        href="{{ '../cmsliteapi/stream/' + select.language + '/' + select.name + '/' }}"
                         target="_blank">
                     {{msg('cmslite.button.goTo')}}
                 </a>
