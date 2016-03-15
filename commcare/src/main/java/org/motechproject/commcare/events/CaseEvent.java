@@ -61,7 +61,7 @@ public class CaseEvent {
 
     /**
      * Creates an instance of the {@link MotechEvent} class based on this {@link CaseEvent}. No data but case ID, custom
-     * parser event key and configuration name will be included in the event as parameters.
+     * parser event key, case type and configuration name will be included in the event as parameters.
      *
      * @return an instance of the {@link MotechEvent}
      */
@@ -70,6 +70,7 @@ public class CaseEvent {
         parameters.put(EventDataKeys.CASE_ID, this.caseId);
         parameters.put(TasksEventParser.CUSTOM_PARSER_EVENT_KEY, CommcareCaseEventParser.PARSER_NAME);
         parameters.put(EventDataKeys.CONFIG_NAME, this.configName);
+        parameters.put(EventDataKeys.CASE_TYPE, this.caseType);
         return new MotechEvent(EventSubjects.CASE_EVENT, parameters);
     }
 
