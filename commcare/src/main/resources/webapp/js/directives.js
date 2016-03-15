@@ -431,7 +431,9 @@
 
                 if (scope.$parent.selectedConfig !== undefined) {
                     scope.downloadingCases = true;
-                    scope.$apply();
+                    if (!scope.$$phase) {
+                        scope.$apply();
+                    }
                 }
 
                 elem.jqGrid(params);
