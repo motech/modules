@@ -43,6 +43,7 @@ public class CommcareEventParsersTest {
     private CommcareCaseEventParser caseEventParser;
 
     private MotechEvent formsEvent;
+    private MotechEvent formsEventWithRepeatData;
     private MotechEvent caseEvent;
 
     private Config config;
@@ -68,15 +69,17 @@ public class CommcareEventParsersTest {
 
         ArgumentCaptor<MotechEvent> captor = ArgumentCaptor.forClass(MotechEvent.class);
         formsController.receiveForm(ResponseXML.getFormXML(), request);
+        formsController.receiveForm(ResponseXML.getFormXMLWithRepeatData(), request);
 
         request.setContent(ResponseXML.getCaseXML().getBytes());
         casesController.receiveCase(request, config.getName());
 
         // Capture MotechEvents
-        verify(eventRelay, times(2)).sendEventMessage(captor.capture());
+        verify(eventRelay, times(3)).sendEventMessage(captor.capture());
         // Assign them to test fields for later use in tests
         formsEvent = captor.getAllValues().get(0);
-        caseEvent = captor.getAllValues().get(1);
+        formsEventWithRepeatData = captor.getAllValues().get(1);
+        caseEvent = captor.getAllValues().get(2);
     }
 
     @Test
@@ -104,6 +107,28 @@ public class CommcareEventParsersTest {
         assertEquals(ATTR1_VALUE, parsedParameters.get("/data/pregnant"));
         assertEquals(ATTR2_VALUE, parsedParameters.get("/data/dob"));
         assertEquals("test", parsedParameters.get("/data/meta/username"));
+    }
+
+    @Test
+    public void shouldParseFormsEventWithRepeatDataProperly() {
+        String eventSubject = formsEventWithRepeatData.getSubject();
+        Map<String, Object> eventParameters = formsEventWithRepeatData.getParameters();
+
+        Map<String, Object> parsedParameters = formsEventParser.parseEventParameters(eventSubject, eventParameters);
+
+        assertTrue(parsedParameters.containsKey("/data/clinic"));
+        assertTrue(parsedParameters.containsKey("/data/diseases/disease_3893289/medication_55665"));
+        assertTrue(parsedParameters.containsKey("/data/diseases/disease_3893289/medication_55666"));
+        assertTrue(parsedParameters.containsKey("/data/diseases/disease_3893289/medication_55667"));
+        assertTrue(parsedParameters.containsKey("/data/diseases/disease_9539823/medication_55666"));
+        assertTrue(parsedParameters.containsKey("/data/diseases/disease_9539823/medication_55668"));
+
+        assertEquals("Clinic1", parsedParameters.get("/data/clinic"));
+        assertEquals("Med1", parsedParameters.get("/data/diseases/disease_3893289/medication_55665"));
+        assertEquals("Med2", parsedParameters.get("/data/diseases/disease_3893289/medication_55666"));
+        assertEquals("Med3", parsedParameters.get("/data/diseases/disease_3893289/medication_55667"));
+        assertEquals("Med2", parsedParameters.get("/data/diseases/disease_9539823/medication_55666"));
+        assertEquals("Med4", parsedParameters.get("/data/diseases/disease_9539823/medication_55668"));
     }
 
     @Test
