@@ -8,7 +8,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -141,11 +140,11 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         HttpResponse response = sendMockForm();
 
         // Make sure that Commcare controller returned 200 after handling the form
-        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+        assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
         // Give Tasks some time to process
         waitForTaskExecution();
         // Ask our OSGi service, which acts as Task action, to verify that correct values were received
-        Assert.assertTrue(validatingChannel.verify());
+        assertTrue(validatingChannel.verify());
     }
 
     private void createDummyActionChannel(Channel channel) {
@@ -193,7 +192,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         List<ActionEvent> actionEvents = channel.getActionTaskEvents();
 
         assertEquals(5, actionEvents.size());
-        assertEquals(8, triggerEvents.size());
+        assertEquals(7, triggerEvents.size());
 
         TaskTriggerInformation expectedForm1 = new TaskTriggerInformation();
         TaskTriggerInformation expectedForm2 = new TaskTriggerInformation();
@@ -221,11 +220,6 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         assertEquals("org.motechproject.commcare.api.forms", form2Trigger.getTriggerListenerSubject());
         assertTriggerParameters(form2Trigger.getEventParameters(),
                 Arrays.asList("/data/patient_name", "/data/last_visit", "/data/medications", "/data/meta/username", "/data/case/create/case_type"));
-
-        TriggerEvent caseTrigger = getTrigger(channel, expectedCaseBirth);
-        assertEquals("org.motechproject.commcare.api.case", caseTrigger.getTriggerListenerSubject());
-        assertTriggerParameters(caseTrigger.getEventParameters(),
-                Arrays.asList("motherName", "childName", "dob", "caseName"));
 
         verifyTaskAction(channel, prepareStockLedgerAction());
         verifyTaskAction(channel, prepareCreateCaseAction());
