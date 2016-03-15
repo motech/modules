@@ -33,7 +33,6 @@ public class CaseTriggerBuilder implements TriggerBuilder {
     private CommcareConfigService configService;
 
     private static final String RECEIVED_CASE = "Received Case";
-    private static final String RECEIVED_CASE_ID = "Received Case ID";
 
     /**
      * Creates an instance of the {@link CaseTriggerBuilder} class. It will use the given {@code schemaService} and
@@ -55,10 +54,17 @@ public class CaseTriggerBuilder implements TriggerBuilder {
             for (Map.Entry<String, Set<String>> entry : schemaService.getAllCaseTypes(config.getName()).entrySet()) {
                 List<EventParameterRequest> parameterRequests = new ArrayList<>();
                 parameterRequests.add(new EventParameterRequest("commcare.field.configName", CONFIG_NAME));
+
                 addCommonCaseFields(parameterRequests);
 
-                for (String caseProperty : entry.getValue()) {
-                    parameterRequests.add(new EventParameterRequest(caseProperty, caseProperty));
+                if (config.isEventStrategyPartial() || config.isEventStrategyFull()) {
+                    addPartialCaseFields(parameterRequests);
+                }
+
+                if (config.isEventStrategyFull()) {
+                    for (String caseProperty : entry.getValue()) {
+                        parameterRequests.add(new EventParameterRequest(caseProperty, caseProperty));
+                    }
                 }
 
                 String displayName = DisplayNameHelper.buildDisplayName(RECEIVED_CASE, entry.getKey(), config.getName());
@@ -68,36 +74,20 @@ public class CaseTriggerBuilder implements TriggerBuilder {
             }
         }
 
-        triggers.addAll(buildTriggersForMinimalStrategy());
-
-        return triggers;
-    }
-
-    private List<TriggerEventRequest> buildTriggersForMinimalStrategy() {
-
-        List<TriggerEventRequest> triggers = new ArrayList<>();
-
-        for (Config config : configService.getConfigs().getConfigs()) {
-            List<EventParameterRequest> parameterRequests = new ArrayList<>();
-            parameterRequests.add(new EventParameterRequest("commcare.caseId", CASE_ID));
-            parameterRequests.add(new EventParameterRequest("commcare.field.configName", CONFIG_NAME));
-
-            String displayName = DisplayNameHelper.buildDisplayName(RECEIVED_CASE_ID, config.getName());
-
-            triggers.add(new TriggerEventRequest(displayName, CASE_EVENT + "." + config.getName(), null,
-                    parameterRequests, CASE_EVENT));
-        }
-
         return triggers;
     }
 
     private void addCommonCaseFields(List<EventParameterRequest> parameters) {
         parameters.add(new EventParameterRequest("commcare.caseId", CASE_ID));
+        parameters.add(new EventParameterRequest("commcare.caseType", CASE_TYPE));
+
+    }
+
+    private void addPartialCaseFields(List<EventParameterRequest> parameters) {
         parameters.add(new EventParameterRequest("commcare.userId", USER_ID));
         parameters.add(new EventParameterRequest("commcare.apiKey", API_KEY));
-        parameters.add(new EventParameterRequest("commcare.dateModified", DATE_MODIFIED));
         parameters.add(new EventParameterRequest("commcare.caseAction", CASE_ACTION));
-        parameters.add(new EventParameterRequest("commcare.caseType", CASE_TYPE));
+        parameters.add(new EventParameterRequest("commcare.dateModified", DATE_MODIFIED));
         parameters.add(new EventParameterRequest("commcare.caseName", CASE_NAME));
         parameters.add(new EventParameterRequest("commcare.ownerId", OWNER_ID));
     }
