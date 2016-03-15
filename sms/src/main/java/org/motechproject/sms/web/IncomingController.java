@@ -3,9 +3,9 @@ package org.motechproject.sms.web;
 import org.joda.time.DateTime;
 import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.sms.audit.DeliveryStatus;
 import org.motechproject.sms.audit.SmsRecord;
 import org.motechproject.sms.audit.SmsRecordsDataService;
+import org.motechproject.sms.audit.constants.DeliveryStatuses;
 import org.motechproject.sms.configs.Config;
 import org.motechproject.sms.service.ConfigService;
 import org.motechproject.sms.service.TemplateService;
@@ -38,6 +38,7 @@ public class IncomingController {
     private static final String SMS_MODULE = "motech-sms";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IncomingController.class);
+
     private TemplateService templateService;
     private ConfigService configService;
     private EventRelay eventRelay;
@@ -69,12 +70,6 @@ public class IncomingController {
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/{configName}")
     public void handleIncoming(@PathVariable String configName, @RequestParam Map<String, String> params) {
-        String sender = null;
-        String recipient = null;
-        String message = null;
-        String providerMessageId = null;
-        DateTime timestamp;
-
         LOGGER.info("Incoming SMS - configName = {}, params = {}", configName, params);
 
         Config config;
@@ -88,28 +83,54 @@ public class IncomingController {
         }
         Template template = templateService.getTemplate(config.getTemplateName());
 
+        eventRelay.sendEventMessage(inboundEvent(config.getName(),
+                getSender(params, template),
+                getRecipient(params, template),
+                getMessage(params, template),
+                getMsgId(params, template),
+                getTimestamp(params, template)));
+        smsRecordsDataService.create(new SmsRecord(config.getName(),
+                INBOUND,
+                getSender(params, template),
+                getMessage(params, template),
+                now(),
+                getStatus(params, template),
+                null,
+                null,
+                getMsgId(params, template), null));
+    }
+
+    private String getSender(Map<String, String> params, Template template) {
+        String sender = null;
         if (params.containsKey(template.getIncoming().getSenderKey())) {
             sender = params.get(template.getIncoming().getSenderKey());
             if (template.getIncoming().hasSenderRegex()) {
                 sender = template.getIncoming().extractSender(sender);
             }
         }
+        return sender;
+    }
 
+    private String getRecipient(Map<String, String> params, Template template) {
+        String recipient = null;
         if (params.containsKey(template.getIncoming().getRecipientKey())) {
             recipient = params.get(template.getIncoming().getRecipientKey());
             if (template.getIncoming().hasRecipientRegex()) {
                 recipient = template.getIncoming().extractRecipient(recipient);
             }
         }
+        return recipient;
+    }
 
-        if (params.containsKey(template.getIncoming().getMessageKey())) {
-            message = params.get(template.getIncoming().getMessageKey());
-        }
+    private String getMessage(Map<String, String> params, Template template) {
+        return params.get(template.getIncoming().getMessageKey());
+    }
 
-        if (params.containsKey(template.getIncoming().getMsgIdKey())) {
-            providerMessageId = params.get(template.getIncoming().getMsgIdKey());
-        }
+    private String getMsgId(Map<String, String> params, Template template) {
+        return params.get(template.getIncoming().getMsgIdKey());
+    }
 
+    private DateTime getTimestamp(Map<String, String> params, Template template) {
         if (params.containsKey(template.getIncoming().getTimestampKey())) {
             String dt = params.get(template.getIncoming().getTimestampKey());
             //todo: some providers may send timestamps in a different way, deal it it if/when we see that
@@ -117,14 +138,12 @@ public class IncomingController {
             if (dt.matches("(\\d\\d\\d\\d|\\d\\d)-\\d\\d?-\\d\\d? \\d\\d?:\\d\\d?:\\d\\d?")) {
                 dt = dt.replace(" ", "T");
             }
-            timestamp = DateTime.parse(dt);
-        } else {
-            timestamp = now();
+            return DateTime.parse(dt);
         }
+        return now();
+    }
 
-        eventRelay.sendEventMessage(inboundEvent(config.getName(), sender, recipient, message, providerMessageId,
-                timestamp));
-        smsRecordsDataService.create(new SmsRecord(config.getName(), INBOUND, sender, message, now(), DeliveryStatus.RECEIVED,
-                null, null, providerMessageId, null));
+    private String getStatus(Map<String, String> params, Template template) {
+        return template.getStatus().hasStatusKey() && params.containsKey(template.getStatus().getStatusKey()) ? params.get(template.getStatus().getStatusKey()) : DeliveryStatuses.RECEIVED;
     }
 }

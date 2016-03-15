@@ -9,7 +9,6 @@ import org.motechproject.messagecampaign.contract.CampaignRequest;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.motechproject.messagecampaign.EventKeys.CAMPAIGN_NAME_KEY;
 import static org.motechproject.messagecampaign.EventKeys.ENROLL_USER_SUBJECT;
@@ -36,7 +35,6 @@ public class MessageCampaignEventHandler {
      * @param event received event
      */
     @MotechListener(subjects = {ENROLL_USER_SUBJECT, UNENROLL_USER_SUBJECT })
-    @Transactional
     public void enrollOrUnenroll(MotechEvent event) {
         CampaignRequest request = new CampaignRequest(
                 getString(event, EXTERNAL_ID_KEY),

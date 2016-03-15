@@ -4,12 +4,12 @@ import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.mds.query.QueryParams;
 import org.motechproject.mds.util.Order;
-import org.motechproject.sms.audit.DeliveryStatus;
 import org.motechproject.sms.audit.SmsAuditService;
 import org.motechproject.sms.audit.SmsRecord;
 import org.motechproject.sms.audit.SmsRecordSearchCriteria;
 import org.motechproject.sms.audit.SmsRecords;
 import org.motechproject.sms.audit.SmsRecordsDataService;
+import org.motechproject.sms.audit.constants.DeliveryStatuses;
 import org.motechproject.sms.configs.Config;
 import org.motechproject.sms.service.ConfigService;
 import org.motechproject.sms.service.TemplateService;
@@ -194,14 +194,14 @@ public class StatusController {
         if (statusString != null) {
             String eventSubject;
             if (statusString.matches(status.getStatusSuccess())) {
-                smsRecord.setDeliveryStatus(DeliveryStatus.DELIVERY_CONFIRMED);
+                smsRecord.setDeliveryStatus(statusString);
                 eventSubject = SmsEventSubjects.DELIVERY_CONFIRMED;
             } else if (status.hasStatusFailure() && statusString.matches(status.getStatusFailure())) {
-                smsRecord.setDeliveryStatus(DeliveryStatus.FAILURE_CONFIRMED);
+                smsRecord.setDeliveryStatus(statusString);
                 eventSubject = SmsEventSubjects.FAILURE_CONFIRMED;
             } else {
                 // If we're not certain the message was delivered or failed, then it's in the DISPATCHED gray area
-                smsRecord.setDeliveryStatus(DeliveryStatus.DISPATCHED);
+                smsRecord.setDeliveryStatus(statusString);
                 eventSubject = SmsEventSubjects.DISPATCHED;
             }
             eventRelay.sendEventMessage(outboundEvent(eventSubject, configName, recipients,
@@ -212,7 +212,7 @@ public class StatusController {
                     configName, params);
             LOGGER.error(msg);
             statusMessageService.warn(msg, SMS_MODULE);
-            smsRecord.setDeliveryStatus(DeliveryStatus.FAILURE_CONFIRMED);
+            smsRecord.setDeliveryStatus(DeliveryStatuses.FAILURE_CONFIRMED);
             eventRelay.sendEventMessage(outboundEvent(SmsEventSubjects.FAILURE_CONFIRMED, configName, recipients,
                     smsRecord.getMessageContent(), smsRecord.getMotechId(), providerMessageId, null, null,
                     now(), null));
