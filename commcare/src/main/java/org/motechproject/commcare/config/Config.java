@@ -1,5 +1,7 @@
 package org.motechproject.commcare.config;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 /**
  * Represents a single Commcare configuration.
  */
@@ -78,14 +80,17 @@ public class Config {
         this.accountConfig = accountConfig;
     }
 
+    @JsonIgnore
     public boolean isEventStrategyFull() {
         return FULL_DATA_EVENT.equals(eventStrategy);
     }
 
+    @JsonIgnore
     public boolean isEventStrategyPartial() {
         return PARTIAL_DATA_EVENT.equals(eventStrategy);
     }
 
+    @JsonIgnore
     public boolean isEventStrategyMinimal() {
         return !isEventStrategyFull() && !isEventStrategyPartial();
     }
