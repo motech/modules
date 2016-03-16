@@ -258,11 +258,11 @@
             });
         };
 
-        $("#messageCampaigns").change(function() {
-            if(!$('#messageCampaigns').val()) {
+        $("#fileInput").change(function() {
+            if(!$('#fileInput').val()) {
                 $('input[type="button"]').attr('disabled','disabled');
             }
-            else if($('#messageCampaigns').val().split(".").pop().toLowerCase() === "json") {
+            else if($('#fileInput').val().split(".").pop().toLowerCase() === "json") {
                 $('input[type="button"]').removeAttr('disabled');
             }
             else {
