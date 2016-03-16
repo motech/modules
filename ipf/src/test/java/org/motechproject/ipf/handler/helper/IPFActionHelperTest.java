@@ -1,13 +1,11 @@
-package org.motechproject.ipf.handler;
+package org.motechproject.ipf.handler.helper;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.motechproject.event.MotechEvent;
 import org.motechproject.ipf.domain.IPFRecipient;
 import org.motechproject.ipf.domain.IPFTemplate;
-import org.motechproject.ipf.event.EventSubjects;
 import org.motechproject.ipf.exception.RecipientNotFoundException;
 import org.motechproject.ipf.exception.TemplateNotFoundException;
 import org.motechproject.ipf.service.IPFRecipientsService;
@@ -23,7 +21,7 @@ import java.util.Map;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class IPFActionEventHandlerTest {
+public class IPFActionHelperTest {
 
     @Mock
     private IPFRecipientsService ipfRecipientsService;
@@ -38,7 +36,7 @@ public class IPFActionEventHandlerTest {
     private IPFRecipient ipfRecipient;
 
     @InjectMocks
-    private IPFActionEventHandler ipfActionEventHandler = new IPFActionEventHandler();
+    private IPFActionHelper ipfActionHelper = new IPFActionHelper();
 
     @Before
     public void setUp() {
@@ -50,9 +48,8 @@ public class IPFActionEventHandlerTest {
         Map<String, Object> params = new HashMap<>();
         params.put(Constants.TEMPLATE_NAME_PARAM, "sampleTemplate2");
         params.put(Constants.RECIPIENT_NAME_PARAM, "sampleRecipient2");
-        MotechEvent motechEvent = new MotechEvent(EventSubjects.TEMPLATE_ACTION + ".testTemplate2", params);
 
-        ipfActionEventHandler.handleIpfTaskAction(motechEvent);
+        ipfActionHelper.handleAction(params);
     }
 
     @Test(expected = RecipientNotFoundException.class)
@@ -60,9 +57,8 @@ public class IPFActionEventHandlerTest {
         Map<String, Object> params = new HashMap<>();
         params.put(Constants.TEMPLATE_NAME_PARAM, "sampleTemplate3");
         params.put(Constants.RECIPIENT_NAME_PARAM, "sampleRecipient3");
-        MotechEvent motechEvent = new MotechEvent(EventSubjects.TEMPLATE_ACTION + ".testTemplate3", params);
 
         when(ipfTemplateDataService.findByName("sampleTemplate3")).thenReturn(ipfTemplate);
-        ipfActionEventHandler.handleIpfTaskAction(motechEvent);
+        ipfActionHelper.handleAction(params);
     }
 }

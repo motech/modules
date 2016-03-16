@@ -5,9 +5,9 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
-import org.motechproject.sms.audit.DeliveryStatus;
 import org.motechproject.sms.audit.SmsRecord;
 import org.motechproject.sms.audit.SmsRecordsDataService;
+import org.motechproject.sms.audit.constants.DeliveryStatuses;
 import org.motechproject.sms.configs.Config;
 import org.motechproject.sms.templates.Template;
 import org.motechproject.sms.util.SmsEventParams;
@@ -167,7 +167,7 @@ public class SmsServiceImpl implements SmsService {
                     dt = dt.plus(1);
                     for (String recipient : recipients) {
                         smsRecordsDataService.create(new SmsRecord(config.getName(), OUTBOUND, recipient, part, now(),
-                                DeliveryStatus.SCHEDULED, null, motechId, null, null));
+                                DeliveryStatuses.SCHEDULED, null, motechId, null, null));
                     }
                 }
             } else {
@@ -178,7 +178,7 @@ public class SmsServiceImpl implements SmsService {
                     LOGGER.info("Sending message [{}] to [{}].", part.replace("\n", "\\n"), recipients);
                     for (String recipient : recipients) {
                         smsRecordsDataService.create(new SmsRecord(config.getName(), OUTBOUND, recipient, part, now(),
-                                DeliveryStatus.PENDING, null, motechId, null, null));
+                                DeliveryStatuses.PENDING, null, motechId, null, null));
                     }
                 }
             }

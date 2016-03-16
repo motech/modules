@@ -1,21 +1,11 @@
 package org.motechproject.commcare.events;
 
-import org.motechproject.commcare.config.Config;
-import org.motechproject.commcare.domain.CommcareApplicationJson;
+import org.motechproject.commcare.config.manager.ConfigurationManager;
 import org.motechproject.commcare.events.constants.EventDataKeys;
-import org.motechproject.commcare.service.CommcareAppStructureService;
-import org.motechproject.commcare.service.CommcareApplicationDataService;
-import org.motechproject.commcare.service.CommcareConfigService;
-import org.motechproject.commcare.tasks.CommcareTasksNotifier;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.mds.filter.Filter;
-import org.motechproject.mds.filter.Filters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import static org.motechproject.commcare.events.constants.EventSubjects.SCHEMA_CHANGE_EVENT;
 
@@ -29,16 +19,7 @@ import static org.motechproject.commcare.events.constants.EventSubjects.SCHEMA_C
 public class AppSchemaChangeEventHandler {
 
     @Autowired
-    private CommcareAppStructureService appStructureService;
-
-    @Autowired
-    private CommcareApplicationDataService commcareApplicationDataService;
-
-    @Autowired
-    private CommcareTasksNotifier commcareTasksNotifier;
-
-    @Autowired
-    private CommcareConfigService configService;
+    private ConfigurationManager configurationManager;
 
     /**
      * Responsible for handling {@code SCHEMA_CHANGE_EVENT}. This event is fired when the CommCare server sends a
@@ -49,27 +30,8 @@ public class AppSchemaChangeEventHandler {
      * @param event  the schema change event to be handled
      */
     @MotechListener(subjects = SCHEMA_CHANGE_EVENT)
-    @Transactional
     public synchronized void schemaChange(MotechEvent event) {
-
-        Config config = configService.getByName((String) event.getParameters().get(EventDataKeys.CONFIG_NAME));
-
-        Filters filters = new Filters(new Filter("configName", config.getName()));
-
-        List<CommcareApplicationJson> serverApps = appStructureService.getAllApplications(config.getName());
-        List<CommcareApplicationJson> storedApps = commcareApplicationDataService.filter(filters, null);
-
-        if (!serverApps.equals(storedApps)) {
-
-            for (CommcareApplicationJson app : storedApps) {
-                commcareApplicationDataService.delete(app);
-            }
-
-            for (CommcareApplicationJson app : serverApps) {
-                commcareApplicationDataService.create(app);
-            }
-
-            commcareTasksNotifier.updateTasksInfo();
-        }
+        String configName = (String) event.getParameters().get(EventDataKeys.CONFIG_NAME);
+        configurationManager.configUpdated(configName);
     }
 }
