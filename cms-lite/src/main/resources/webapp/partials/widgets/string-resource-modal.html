@@ -36,11 +36,11 @@
                    target="_blank">
                     {{msg('cmslite.button.goTo')}}
                 </a>
-                <button ui-if="mode == 'read'" class="btn btn-primary" ng-click="changeMode('write')">
-                    {{msg('cmslite.button.edit')}}
-                </button>
                 <button ui-if="mode == 'read'" class="btn btn-danger" ng-click="removeResource('string', select)">
                     {{msg('cmslite.button.delete')}}
+                </button>
+                <button ui-if="mode == 'read'" class="btn btn-default" ng-click="changeMode('write')">
+                    {{msg('cmslite.button.edit')}}
                 </button>
                 <button ui-if="mode == 'read'" class="btn btn-default" data-dismiss="modal" aria-hidden="true">
                     {{msg('cmslite.button.close')}}

@@ -46,11 +46,11 @@
                     {{msg('cmslite.button.goTo')}}
                 </a>
                 <!-- read mode -->
-                <button ui-if="mode == 'read'" class="btn btn-primary" ng-click="changeMode('write')">
-                    {{msg('cmslite.button.replace')}}
-                </button>
                 <button ui-if="mode == 'read'" class="btn btn-danger" ng-click="removeResource('stream', select)">
                     {{msg('cmslite.button.delete')}}
+                </button>
+                <button ui-if="mode == 'read'" class="btn btn-default" ng-click="changeMode('write')">
+                    {{msg('cmslite.button.replace')}}
                 </button>
                 <button ui-if="mode == 'read'" class="btn btn-default" data-dismiss="modal" aria-hidden="true">
                     {{msg('cmslite.button.close')}}

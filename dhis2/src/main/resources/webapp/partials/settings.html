@@ -48,7 +48,7 @@
 
         <h5>{{msg('dhis2.web.settings.syncHeader')}}</h5>
         <div class="form-group">
-            <button class="btn btn-primary" ng-click="sync()" ng-disabled="blocked"  >
+            <button class="btn btn-default" ng-click="sync()" ng-disabled="blocked"  >
                 {{msg('dhis2.sync')}}
             </button>
             <div ng-show="blocked" class ="alert alert-info">{{msg('dhis2.sync.wait')}}</div>
