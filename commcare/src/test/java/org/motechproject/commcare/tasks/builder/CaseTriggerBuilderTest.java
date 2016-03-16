@@ -62,20 +62,14 @@ public class CaseTriggerBuilderTest {
 
         int counter = 0;
         for (CommcareApplicationJson application: DummyCommcareSchema.getApplicationsForConfigOne()) {
-            for (CommcareModuleJson module: application.getModules()) {
-                counter ++;
-            }
+            counter += application.getModules().size();
         }
 
         for (CommcareApplicationJson application: DummyCommcareSchema.getApplicationsForConfigTwo()) {
-            for (CommcareModuleJson module: application.getModules()) {
-                counter ++;
-            }
+            counter += application.getModules().size();
         }
 
-        // One trigger for cases is always built (for every configuration), therefore we should be two cases more
-        assertEquals(counter + 2, triggerEventRequests.size());
-
+        assertEquals(counter, triggerEventRequests.size());
 
         for(TriggerEventRequest request : triggerEventRequests) {
 
@@ -101,20 +95,12 @@ public class CaseTriggerBuilderTest {
                     assertEquals("Received Case: death [app2: ConfigOne]", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD6));
                     break;
-                case "org.motechproject.commcare.api.case.ConfigOne":
-                    assertEquals(2, request.getEventParameters().size());
-                    assertEquals("caseId", request.getEventParameters().get(0).getEventKey());
-                    break;
                 case "org.motechproject.commcare.api.case.ConfigTwo.visit":
                     assertEquals(3 + CASE_PREDEFINED_FIELDS, request.getEventParameters().size());
                     assertEquals("Received Case: visit [app1: ConfigTwo]", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD1));
                     assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD2));
                     assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD3));
-                    break;
-                case "org.motechproject.commcare.api.case.ConfigTwo":
-                    assertEquals(2, request.getEventParameters().size());
-                    assertEquals("caseId", request.getEventParameters().get(0).getEventKey());
                     break;
                 default:
                     fail("Found trigger with incorrect subject: " + subject);

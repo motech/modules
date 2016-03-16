@@ -6,7 +6,7 @@
         <select class="largeCombobox form-control" ng-model="selectedConfig"
                 ng-options="config.name for config in configs" id="configs" ng-change="getFormDefinitions()"></select>
     </div>
-    <button ng-if="selectedConfig" ng-disabled="importing" type="button" class="btn btn-success" ng-click="import()">
+    <button ng-if="selectedConfig" ng-disabled="importing" type="button" class="btn btn-default" ng-click="import()">
         {{msg('odk.forms.import')}}
     </button>
 
