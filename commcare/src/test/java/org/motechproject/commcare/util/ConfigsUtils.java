@@ -38,7 +38,7 @@ public class ConfigsUtils {
         config.setForwardSchema(false);
         config.setForwardForms(false);
         config.setForwardCases(false);
-        config.setEventStrategy("minimal");
+        config.setEventStrategy("full");
 
         AccountConfig accountConfig = new AccountConfig();
         accountConfig.setBaseUrl("https://baseTwo.url");
@@ -59,7 +59,7 @@ public class ConfigsUtils {
         config.setForwardSchema(false);
         config.setForwardForms(false);
         config.setForwardCases(false);
-        config.setEventStrategy("minimal");
+        config.setEventStrategy("full");
 
         AccountConfig accountConfig = new AccountConfig();
         accountConfig.setBaseUrl("https://baseThree.url");

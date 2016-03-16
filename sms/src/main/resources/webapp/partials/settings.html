@@ -93,7 +93,7 @@
 
                             <div class="form-group">
                                 <div class="col-md-offset-3 col-md-9">
-                                    <button class="btn btn-sm btn-primary" ng-show="config.configs.length > 1" ng-disabled="config.defaultConfigName == conf.name" ng-click="setDefaultConfig(conf.name, $index)"> <i class="fa fa-fw fa-star"></i> {{msg('sms.settings.set_default')}} </button>
+                                    <button class="btn btn-sm btn-default" ng-show="config.configs.length > 1" ng-disabled="config.defaultConfigName == conf.name" ng-click="setDefaultConfig(conf.name, $index)"> <i class="fa fa-fw fa-star"></i> {{msg('sms.settings.set_default')}} </button>
                                     <button class="btn btn-sm btn-danger" ng-click="deleteConfig($index)"> <i class="fa fa-fw fa-trash-o"></i> {{msg('sms.settings.delete')}} </button>
                                 </div>
                             </div>

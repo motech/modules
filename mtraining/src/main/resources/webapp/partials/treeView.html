@@ -43,26 +43,26 @@
     </div>
 
     <div class="buttons panel panel-default">
-        <button class="btn btn-success ng-binding" ng-click="saveCourses()" ng-disabled="!unsaved">
+        <button class="btn btn-primary ng-binding" ng-click="saveCourses()" ng-disabled="!unsaved">
             <i class="fa fa-lg fa-floppy-o"></i> {{msg('mtraining.save')}}
         </button>
         <button class="btn btn-danger ng-binding" ng-disabled="isRemoveButtonDisabled()" ng-click="removeMember()">
             <i class="fa fa-lg fa-trash-o"></i> {{msg('mtraining.removeMember')}}
         </button>
-        <button class="btn btn-danger ng-binding" ng-disabled="!unsaved" ng-click="cancel()">
+        <button class="btn btn-default ng-binding" ng-disabled="!unsaved" ng-click="cancel()">
             <i class="fa fa-lg fa-times"></i> {{msg('mtraining.cancel')}}
         </button>
     </div>
     <div class="buttons panel panel-default">
-        <button class="btn btn-warning ng-binding" ng-disabled="isStateButtonDisabled('Active')" ng-click="changeState('Active')">
+        <button class="btn btn-default ng-binding" ng-disabled="isStateButtonDisabled('Active')" ng-click="changeState('Active')">
             <i class="fa fa-flag-o"></i>
             <span> {{msg('mtraining.activate')}}</span>
         </button>
-        <button class="btn btn-warning ng-binding" ng-disabled="isStateButtonDisabled('Inactive')" ng-click="changeState('Inactive')">
+        <button class="btn btn-default ng-binding" ng-disabled="isStateButtonDisabled('Inactive')" ng-click="changeState('Inactive')">
             <i class="fa fa-flag-o"></i>
             <span> {{msg('mtraining.deactivate')}}</span>
         </button>
-        <button class="btn btn-warning ng-binding" ng-disabled="isStateButtonDisabled('Pending')" ng-click="changeState('Pending')">
+        <button class="btn btn-default ng-binding" ng-disabled="isStateButtonDisabled('Pending')" ng-click="changeState('Pending')">
             <i class="fa fa-flag-o"></i>
             <span> {{msg('mtraining.pending')}}</span>
         </button>
@@ -73,7 +73,7 @@
             <option value="Inactive">{{msg('mtraining.inactive')}}</option>
             <option value="Pending">{{msg('mtraining.pending')}}</option>
         </select>
-        <button class="btn btn-warning ng-binding pathButton" ng-disabled="isButtonDisabled()" ng-click="changePathState()">
+        <button class="btn btn-primary ng-binding pathButton" ng-disabled="isButtonDisabled()" ng-click="changePathState()">
             <i class="fa fa-flag-o"></i>
             <span> {{msg('mtraining.pathState')}}</span>
         </button>
