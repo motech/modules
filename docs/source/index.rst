@@ -12,6 +12,11 @@ Collects alerts for users in an inbox-like container
 
 Provides appointment scheduling and reminders
 
+:std:ref:`Atom Client <atom-client-module>`
+---------------------------------------------
+
+Fetches Atom feed(s) and publishes events when content changes
+
 :std:ref:`Batch <batch-module>`
 -------------------------------
 
