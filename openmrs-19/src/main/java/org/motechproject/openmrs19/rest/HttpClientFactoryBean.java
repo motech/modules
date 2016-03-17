@@ -4,7 +4,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
-import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.config.SettingsFacade;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Qualifier;
 

@@ -10,7 +10,7 @@ import org.motechproject.atomclient.service.FeedConfig;
 import org.motechproject.atomclient.service.FeedConfigs;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.config.SettingsFacade;
 import org.quartz.CronExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

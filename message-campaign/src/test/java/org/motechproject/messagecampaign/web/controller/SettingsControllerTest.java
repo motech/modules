@@ -10,7 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.motechproject.messagecampaign.exception.MessageCampaignException;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
-import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.config.SettingsFacade;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockMultipartFile;

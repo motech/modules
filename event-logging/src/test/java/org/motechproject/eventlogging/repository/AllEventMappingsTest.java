@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.eventlogging.matchers.MappingsJson;
 import org.motechproject.eventlogging.matchers.ParametersPresentEventFlag;
-import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.config.SettingsFacade;
 
 import java.util.List;
 import java.util.Map;

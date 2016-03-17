@@ -18,7 +18,7 @@
     <context:annotation-config/>
     <context:component-scan base-package="org.motechproject.csd"/>
 
-    <bean id="csdSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
+    <bean id="csdSettings" class="org.motechproject.config.SettingsFacade" autowire="byType">
         <property name="rawConfigFiles">
             <list>
                 <value>classpath:csd-configs.json</value>

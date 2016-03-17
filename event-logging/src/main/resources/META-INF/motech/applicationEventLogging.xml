@@ -8,7 +8,7 @@
     <context:annotation-config />
     <context:component-scan base-package="org.motechproject.eventlogging" />
 
-    <bean id="eventLoggingSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
+    <bean id="eventLoggingSettings" class="org.motechproject.config.SettingsFacade" autowire="byType">
         <property name="rawConfigFiles">
             <list>
                 <value>classpath:event-mappings.json</value>

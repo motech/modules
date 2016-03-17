@@ -4,7 +4,7 @@ import org.motechproject.http.agent.service.HttpAgent;
 import org.motechproject.http.agent.service.Method;
 import org.motechproject.hub.service.DistributionServiceDelegate;
 import org.motechproject.hub.util.HubConstants;
-import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.config.SettingsFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -77,7 +77,7 @@ public class DistributionServiceDelegateImpl implements
      * all fields set to the autowired parameter values.
      *
      * @param httpAgentImpl autowired {@link org.motechproject.http.agent.service.HttpAgent}
-     * @param settingsFacade autowired {@link org.motechproject.server.config.SettingsFacade}
+     * @param settingsFacade autowired {@link org.motechproject.config.SettingsFacade}
      */
     @Autowired
     public DistributionServiceDelegateImpl(HttpAgent httpAgentImpl,

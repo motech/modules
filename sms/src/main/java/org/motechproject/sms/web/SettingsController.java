@@ -1,7 +1,7 @@
 package org.motechproject.sms.web;
 
 import org.apache.commons.io.IOUtils;
-import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.config.SettingsFacade;
 import org.motechproject.sms.configs.Configs;
 import org.motechproject.sms.json.TemplateJsonParser;
 import org.motechproject.sms.service.ConfigService;

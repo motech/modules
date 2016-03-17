@@ -11,7 +11,7 @@ import org.motechproject.hub.service.ContentDistributionService;
 import org.motechproject.hub.service.SubscriptionService;
 import org.motechproject.hub.util.HubConstants;
 import org.motechproject.hub.validation.HubValidator;
-import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.config.SettingsFacade;
 import org.osgi.framework.BundleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
