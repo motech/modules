@@ -7,7 +7,7 @@ import org.motechproject.messagecampaign.exception.CampaignJsonException;
 import org.motechproject.messagecampaign.exception.CampaignValidationException;
 import org.motechproject.messagecampaign.service.MessageCampaignService;
 import org.motechproject.messagecampaign.web.MessageCampaignController;
-import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.config.SettingsFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.InputStreamResource;

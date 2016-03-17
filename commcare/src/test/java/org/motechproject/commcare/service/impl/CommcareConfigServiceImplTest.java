@@ -8,8 +8,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.commcare.client.CommCareAPIHttpClient;
 import org.motechproject.commcare.service.CommcareDataForwardingEndpointService;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.server.config.SettingsFacade;
-import org.motechproject.server.config.domain.MotechSettings;
+import org.motechproject.config.SettingsFacade;
+import org.motechproject.config.domain.MotechSettings;
 
 import java.io.ByteArrayInputStream;
 

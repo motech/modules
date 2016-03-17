@@ -20,7 +20,7 @@
     <context:component-scan base-package="org.motechproject.ivr"/>
     <security:global-method-security pre-post-annotations="enabled" />
 
-    <bean id="ivrSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
+    <bean id="ivrSettings" class="org.motechproject.config.SettingsFacade" autowire="byType">
         <property name="rawConfigFiles">
             <list>
                 <value>classpath:ivr-configs.json</value>

@@ -28,7 +28,7 @@ import org.motechproject.messagecampaign.scheduler.CampaignSchedulerService;
 import org.motechproject.scheduler.contract.JobId;
 import org.motechproject.scheduler.exception.MotechSchedulerException;
 import org.motechproject.scheduler.service.MotechSchedulerService;
-import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.config.SettingsFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

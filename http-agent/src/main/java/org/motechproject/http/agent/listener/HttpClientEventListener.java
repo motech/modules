@@ -8,7 +8,7 @@ import org.motechproject.http.agent.domain.EventDataKeys;
 import org.motechproject.http.agent.domain.EventSubjects;
 import org.motechproject.http.agent.factory.HttpComponentsClientHttpRequestFactoryWithAuth;
 import org.motechproject.http.agent.service.Method;
-import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.config.SettingsFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

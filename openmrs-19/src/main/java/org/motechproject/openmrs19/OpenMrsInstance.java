@@ -2,7 +2,7 @@ package org.motechproject.openmrs19;
 
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.commons.api.MotechException;
-import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.config.SettingsFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

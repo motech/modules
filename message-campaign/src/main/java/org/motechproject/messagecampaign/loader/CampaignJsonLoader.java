@@ -6,7 +6,7 @@ import org.motechproject.commons.api.json.MotechJsonReader;
 import org.motechproject.messagecampaign.dao.CampaignRecordService;
 import org.motechproject.messagecampaign.domain.campaign.CampaignRecord;
 import org.motechproject.messagecampaign.web.model.CampaignDto;
-import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.config.SettingsFacade;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.io.IOException;

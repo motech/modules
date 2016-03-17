@@ -102,7 +102,7 @@
                             org.codehaus.jackson.annotate,
                             org.motechproject.scheduler.service,
                             org.motechproject.commons.sql.service,
-                            org.motechproject.server.config,
+                            org.motechproject.config,
                             org.postgresql,
                             org.springframework.jdbc.core,
                             *
