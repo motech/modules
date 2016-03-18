@@ -328,7 +328,7 @@
         };
     });
 
-    directives.directive('commcareCaseJqgrid', function ($compile) {
+    directives.directive('commcareCaseJqgrid', function ($compile, $timeout) {
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
@@ -428,9 +428,7 @@
                 if (scope.$parent.selectedConfig) {
                     params.url = '../commcare/caseList/' + scope.$parent.selectedConfig.name + '?caseName=&dateModifiedStart=&dateModifiedEnd=';
                     scope.downloadingCases = true;
-                    setTimeout(function () {
-                        scope.$apply();
-                    }, 0);
+                    $timeout(function() {}, 0);
                 }
 
                 elem.jqGrid(params);
