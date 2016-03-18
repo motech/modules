@@ -428,10 +428,10 @@
                 if (scope.$parent.selectedConfig) {
                     params.url = '../commcare/caseList/' + scope.$parent.selectedConfig.name + '?caseName=&dateModifiedStart=&dateModifiedEnd=';
                     scope.downloadingCases = true;
-                    $timeout(function() {}, 0);
                 }
 
-                elem.jqGrid(params);
+                $timeout(function() {}, 0).then(elem.jqGrid(params));
+
             }
         };
     });
