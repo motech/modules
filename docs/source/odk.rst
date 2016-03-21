@@ -58,7 +58,7 @@ Tasks Module Integration
 ************************
 Once the form definitions for a configuration are imported, a set of Tasks triggers and actions are generated for each form definition and repeat group within that definition
 
-Task Actions
+Task Triggers
 ============
 
 Received Form [Configuration Name][Form Title]
@@ -90,7 +90,7 @@ This is triggered when there is an error either receiving or processing a form i
 * Message - A human readable message explaining the nature of the error
 * JSON Content - this contains the actual JSON content of the form instance.
 
-Task Triggers
+Task Actions
 =============
 
 Save Form Instance [Configuration Name] [Form Title]
