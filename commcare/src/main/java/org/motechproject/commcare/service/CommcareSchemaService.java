@@ -1,5 +1,6 @@
 package org.motechproject.commcare.service;
 
+import org.motechproject.commcare.domain.CommcareApplicationJson;
 import org.motechproject.commcare.domain.FormSchemaJson;
 
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.Set;
 
 /**
  * The <code>CommcareSchemaService</code> is responsible for retrieving
- * CommCare schemas from MOTECH database. The important point is that implementers
+ * CommCare applications and schemas from MOTECH database. The important point is that implementers
  * should NOT query CommCareHQ for data, but rather use current, local copy of the data.
  */
 public interface CommcareSchemaService {
@@ -35,4 +36,11 @@ public interface CommcareSchemaService {
      * Same as {@link #getAllCaseTypes(String) getAllCaseTypes} but uses default CommcareHQ configuration.
      */
     Map<String, Set<String>> getAllCaseTypes();
+
+    /**
+     * Retrieves applications by configuration name
+     *
+     * @return the list of matching applications
+     */
+    List<CommcareApplicationJson> retrieveApplications(String configName);
 }

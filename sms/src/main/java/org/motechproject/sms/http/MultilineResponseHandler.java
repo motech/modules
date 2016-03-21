@@ -1,8 +1,8 @@
 package org.motechproject.sms.http;
 
 import org.apache.commons.httpclient.Header;
-import org.motechproject.sms.audit.DeliveryStatus;
 import org.motechproject.sms.audit.SmsRecord;
+import org.motechproject.sms.audit.constants.DeliveryStatuses;
 import org.motechproject.sms.configs.Config;
 import org.motechproject.sms.service.OutgoingSms;
 import org.motechproject.sms.templates.Template;
@@ -19,6 +19,7 @@ import static org.motechproject.sms.util.SmsEvents.outboundEvent;
  * Deals with multi-line responses, like the ones sent by Clickatell.
  */
 public class MultilineResponseHandler extends ResponseHandler {
+
     /**
      * Constructs an instance using the provided template and configuration.
      * @param template the template to use
@@ -77,7 +78,7 @@ public class MultilineResponseHandler extends ResponseHandler {
                 getLogger().info(String.format("Sent messageId %s '%s' to %s", messageId, messageForLog(sms),
                         recipient));
                 getAuditRecords().add(new SmsRecord(getConfig().getName(), OUTBOUND, recipient, sms.getMessage(), now(),
-                        DeliveryStatus.DISPATCHED, null, sms.getMotechId(), messageId, null));
+                        DeliveryStatuses.DISPATCHED, null, sms.getMotechId(), messageId, null));
                 getEvents().add(outboundEvent(SmsEventSubjects.DISPATCHED, getConfig().getName(), recipients,
                         sms.getMessage(), sms.getMotechId(), messageId, null, null, null, sms.getCustomParams()));
             }

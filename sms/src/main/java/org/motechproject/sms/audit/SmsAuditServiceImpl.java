@@ -44,7 +44,6 @@ public class SmsAuditServiceImpl implements SmsAuditService {
         Set<SmsDirection> directionsEnum = toEnumSet(SmsDirection.class, directions);
 
         Set<String> statuses = criteria.getDeliveryStatuses();
-        Set<DeliveryStatus> statusesEnum = toEnumSet(DeliveryStatus.class, statuses);
 
         Range<DateTime> timestampRange = criteria.getTimestampRange();
 
@@ -60,10 +59,10 @@ public class SmsAuditServiceImpl implements SmsAuditService {
 
         if (count) {
             return smsRecordsDataService.countFindByCriteria(config, directionsEnum, phoneNumber, messageContent,
-                    timestampRange, statusesEnum, providerStatus, motechId, providerId, errorMessage);
+                    timestampRange, statuses, providerStatus, motechId, providerId, errorMessage);
         } else {
             return smsRecordsDataService.findByCriteria(
-                    config, directionsEnum, phoneNumber, messageContent, timestampRange, statusesEnum,
+                    config, directionsEnum, phoneNumber, messageContent, timestampRange, statuses,
                     providerStatus, motechId, providerId, errorMessage, queryParams);
         }
     }

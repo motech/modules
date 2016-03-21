@@ -30,13 +30,13 @@ public class ChannelRequestBuilder {
      * building new instances.
      *
      * @param configService  the configuration service
-     * @param schemaService  the schema service
+     * @param schemaService the schema service
      * @param bundleContext  the bundle context
      */
     public ChannelRequestBuilder(CommcareConfigService configService, CommcareSchemaService schemaService,
                                  BundleContext bundleContext) {
-        this.schemaService = schemaService;
         this.configService = configService;
+        this.schemaService = schemaService;
         this.bundleContext = bundleContext;
     }
 
@@ -46,7 +46,7 @@ public class ChannelRequestBuilder {
      * @return the created instance
      */
     public ChannelRequest buildChannelRequest() {
-        // Triggers
+
         FormTriggerBuilder formTriggerBuilder = new FormTriggerBuilder(schemaService, configService);
         CaseTriggerBuilder caseTriggerBuilder = new CaseTriggerBuilder(schemaService, configService);
         CommonTriggerBuilder commonTriggerBuilder = new CommonTriggerBuilder(configService);

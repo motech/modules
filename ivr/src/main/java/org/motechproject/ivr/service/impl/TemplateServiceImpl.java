@@ -11,7 +11,7 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.ivr.domain.Template;
 import org.motechproject.ivr.exception.TemplateNotFoundException;
 import org.motechproject.ivr.service.TemplateService;
-import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.config.SettingsFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ import java.util.Map;
 
 /**
  * See {@link org.motechproject.ivr.service.TemplateService}. Templates are stored using
- * the {@link org.motechproject.server.config.SettingsFacade} as raw configuration files.
+ * the {@link org.motechproject.config.SettingsFacade} as raw configuration files.
  */
 @Service("templateService")
 public class TemplateServiceImpl implements TemplateService {

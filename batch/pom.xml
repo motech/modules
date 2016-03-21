@@ -102,7 +102,7 @@
                             org.codehaus.jackson.annotate,
                             org.motechproject.scheduler.service,
                             org.motechproject.commons.sql.service,
-                            org.motechproject.server.config,
+                            org.motechproject.config,
                             org.postgresql,
                             org.springframework.jdbc.core,
                             *
@@ -125,7 +125,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${user.home}/.motech/bundles</outputDirectory>
+                            <outputDirectory>${motech.dir}/bundles</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>target</directory>

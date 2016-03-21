@@ -23,7 +23,7 @@
                                 </select>
                             </div>
                             <div class="col-md-2" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.csd.fetch.tooltip')}}">
-                                <button type="button" class="col-md-10 btn btn-success" ng-click="fetch()"
+                                <button type="button" class="col-md-10 btn btn-primary" ng-click="fetch()"
                                         ng-disabled="isFetchingCSD || isLoadingXml || isDownloadingXml || !hasConfig">
                                     {{msg('csd.web.csd.fetch')}} <i class="fa fa-refresh fa-spin" ng-show="isFetchingCSD"></i>
                                 </button>
@@ -44,7 +44,7 @@
                         <div class="form-group">
                             <div class="col-md-2 margin-left2">
                                 <div data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.csd.showXml.btn.tooltip')}}">
-                                    <button target="_self" href="#showXmlModal" type="button" class="col-md-12 btn btn-success" data-toggle="modal"
+                                    <button target="_self" href="#showXmlModal" type="button" class="col-md-12 btn btn-default" data-toggle="modal"
                                             data-backdrop="static" ng-click="showXml()" ng-disabled="isFetchingCSD || isDownloadingXml">
                                         {{msg('csd.web.csd.showXml.btn')}} <i class="fa fa-refresh fa-spin" ng-show="isLoadingXml"></i>
                                     </button>
@@ -55,7 +55,7 @@
                         <div class="form-group">
                             <div class="col-md-2 margin-left2">
                                 <div data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('csd.web.csd.downloadXml.btn.tooltip')}}">
-                                    <button type="button" class="col-md-12 btn btn-success" ng-disabled="isFetchingCSD || isLoadingXml || isDownloadingXml" ng-click="downloadXml()">
+                                    <button type="button" class="col-md-12 btn btn-default" ng-disabled="isFetchingCSD || isLoadingXml || isDownloadingXml" ng-click="downloadXml()">
                                         {{msg('csd.web.csd.downloadXml.btn')}} <i class="fa fa-refresh fa-spin" ng-show="isDownloadingXml"></i>
                                     </button>
                                 </div>

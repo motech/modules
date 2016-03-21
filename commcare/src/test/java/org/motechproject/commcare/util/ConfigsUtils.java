@@ -38,7 +38,7 @@ public class ConfigsUtils {
         config.setForwardSchema(false);
         config.setForwardForms(false);
         config.setForwardCases(false);
-        config.setEventStrategy("minimal");
+        config.setEventStrategy("full");
 
         AccountConfig accountConfig = new AccountConfig();
         accountConfig.setBaseUrl("https://baseTwo.url");
@@ -59,7 +59,7 @@ public class ConfigsUtils {
         config.setForwardSchema(false);
         config.setForwardForms(false);
         config.setForwardCases(false);
-        config.setEventStrategy("minimal");
+        config.setEventStrategy("full");
 
         AccountConfig accountConfig = new AccountConfig();
         accountConfig.setBaseUrl("https://baseThree.url");
@@ -72,15 +72,18 @@ public class ConfigsUtils {
         return config;
     }
 
-    public static Configs prepareConfigsWithOneConfig() {
+    public static Configs prepareConfigsWithTwoConfigs() {
 
         Configs configs = new Configs();
 
-        Config config = prepareConfigOne();
+        Config config1 = prepareConfigOne();
+        Config config2 = prepareConfigTwo();
 
-        configs.saveConfig(config);
-        configs.setDefaultConfigName(config.getName());
+        configs.saveConfig(config1);
+        configs.saveConfig(config2);
+        configs.setDefaultConfigName((config1.getName()));
+        configs.setDefaultConfigName((config2.getName()));
 
-        return configs;
+        return  configs;
     }
 }

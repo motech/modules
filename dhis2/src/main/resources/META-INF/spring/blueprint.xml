@@ -25,7 +25,7 @@
 
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
-    <bean id="dhisSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
+    <bean id="dhisSettings" class="org.motechproject.config.SettingsFacade" autowire="byType">
         <property name="rawConfigFiles">
             <list>
                 <value>classpath:dhis2-settings.json</value>
@@ -66,6 +66,7 @@
                     interface="org.motechproject.dhis2.repository.TrackedEntityAttributeDataService"/>
     <osgi:reference id="orgUnitDataService" interface="org.motechproject.dhis2.repository.OrgUnitDataService"/>
     <osgi:reference id="dataElementDataService" interface="org.motechproject.dhis2.repository.DataElementDataService"/>
+    <osgi:reference id="dataSetDataService" interface="org.motechproject.dhis2.repository.DataSetDataService"/>
 
     <osgi:reference id="statusMessageService" interface="org.motechproject.admin.service.StatusMessageService" />
 

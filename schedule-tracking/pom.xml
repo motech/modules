@@ -121,8 +121,7 @@
                         </Export-Package>
                         <Import-Package>
                             org.motechproject.event.listener.annotations,
-                            org.motechproject.server.config,
-                            org.motechproject.server.config.service,
+                            org.motechproject.config,
                             org.motechproject.config.service,
                             net.sf.cglib.core,
                             net.sf.cglib.proxy,
@@ -150,7 +149,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${user.home}/.motech/bundles</outputDirectory>
+                            <outputDirectory>${motech.dir}/bundles</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>target</directory>

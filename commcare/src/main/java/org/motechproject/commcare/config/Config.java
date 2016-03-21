@@ -1,5 +1,7 @@
 package org.motechproject.commcare.config;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 /**
  * Represents a single Commcare configuration.
  */
@@ -10,6 +12,9 @@ public class Config {
     public static final String CONFIG_DOMAIN = "commcareDomain";
     public static final String CONFIG_USERNAME = "username";
     public static final String CONFIG_PASSWORD = "password";
+
+    public static final String FULL_DATA_EVENT = "full";
+    public static final String PARTIAL_DATA_EVENT = "partial";
 
     private String name;
     private AccountConfig accountConfig;
@@ -73,5 +78,20 @@ public class Config {
 
     public void setAccountConfig(AccountConfig accountConfig) {
         this.accountConfig = accountConfig;
+    }
+
+    @JsonIgnore
+    public boolean isEventStrategyFull() {
+        return FULL_DATA_EVENT.equals(eventStrategy);
+    }
+
+    @JsonIgnore
+    public boolean isEventStrategyPartial() {
+        return PARTIAL_DATA_EVENT.equals(eventStrategy);
+    }
+
+    @JsonIgnore
+    public boolean isEventStrategyMinimal() {
+        return !isEventStrategyFull() && !isEventStrategyPartial();
     }
 }

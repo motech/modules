@@ -6,6 +6,7 @@ import org.motechproject.dhis2.domain.Stage;
 import org.motechproject.dhis2.domain.TrackedEntity;
 import org.motechproject.dhis2.domain.TrackedEntityAttribute;
 import org.motechproject.dhis2.rest.domain.DataElementDto;
+import org.motechproject.dhis2.rest.domain.DataSetDto;
 import org.motechproject.dhis2.rest.domain.OrganisationUnitDto;
 import org.motechproject.dhis2.rest.domain.ProgramDto;
 import org.motechproject.dhis2.rest.domain.ProgramStageDataElementDto;
@@ -13,8 +14,9 @@ import org.motechproject.dhis2.rest.domain.ProgramStageDto;
 import org.motechproject.dhis2.rest.domain.ProgramTrackedEntityAttributeDto;
 import org.motechproject.dhis2.rest.domain.TrackedEntityAttributeDto;
 import org.motechproject.dhis2.rest.domain.TrackedEntityDto;
-import org.motechproject.dhis2.service.DataElementService;
 import org.motechproject.dhis2.rest.service.DhisWebService;
+import org.motechproject.dhis2.service.DataElementService;
+import org.motechproject.dhis2.service.DataSetService;
 import org.motechproject.dhis2.service.OrgUnitService;
 import org.motechproject.dhis2.service.ProgramService;
 import org.motechproject.dhis2.service.StageService;
@@ -57,6 +59,9 @@ public class SyncServiceImpl implements SyncService {
     @Autowired
     private OrgUnitService orgUnitService;
 
+    @Autowired
+    private DataSetService dataSetService;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(SyncServiceImpl.class);
 
     @Override
@@ -67,6 +72,7 @@ public class SyncServiceImpl implements SyncService {
             long startTime = System.nanoTime();
             dropExistingData();
             addDataElements();
+            addDataSets();
             addAttributes();
             addTrackedEntities();
             addPrograms();
@@ -93,6 +99,14 @@ public class SyncServiceImpl implements SyncService {
 
         for (DataElementDto dataElementDto : dataElementDtos) {
             dataElementService.createFromDetails(dataElementDto);
+        }
+    }
+
+    private void addDataSets() {
+        List<DataSetDto> dataSetDtos = dhisWebService.getDataSets();
+
+        for (DataSetDto dataSetDto : dataSetDtos) {
+            dataSetService.createFromDetails(dataSetDto);
         }
     }
 
@@ -232,6 +246,7 @@ public class SyncServiceImpl implements SyncService {
     }
 
     private void dropExistingData() {
+        dataSetService.deleteAll();
         programService.deleteAll();
         trackedEntityAttributeService.deleteAll();
         trackedEntityService.deleteAll();

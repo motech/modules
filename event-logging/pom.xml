@@ -55,8 +55,7 @@
                         <Import-Package>
                             org.motechproject.event,
                             org.motechproject.event.listener.annotations,
-                            org.motechproject.server.config,
-                            org.motechproject.server.config.service,
+                            org.motechproject.config,
                             org.motechproject.config.service,
                             org.springframework.beans.factory.xml,
                             org.springframework.context.config,
@@ -79,7 +78,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${user.home}/.motech/bundles</outputDirectory>
+                            <outputDirectory>${motech.dir}/bundles</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>target</directory>

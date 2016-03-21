@@ -94,7 +94,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${user.home}/.motech/bundles</outputDirectory>
+                            <outputDirectory>${motech.dir}/bundles</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>target</directory>
@@ -124,8 +124,7 @@
                         </Export-Package>
                         <Import-Package>
                             org.motechproject.event.listener,
-                            org.motechproject.server.config,
-                            org.motechproject.server.config.service,
+                            org.motechproject.config,
                             org.motechproject.config.service,
                             org.motechproject.osgi.web,
                             net.sf.cglib.core,

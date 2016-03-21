@@ -110,7 +110,7 @@
                             <filesets>
                                 <fileset>
                                     <directory>
-                                        ${user.home}/.motech/config/org.motechproject.message-campaign
+                                        ${motech.dir}/config/org.motechproject.message-campaign
                                     </directory>
                                     <includes>
                                         <include>**/*</include>
@@ -173,7 +173,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${user.home}/.motech/bundles</outputDirectory>
+                            <outputDirectory>${motech.dir}/bundles</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>target</directory>
@@ -219,8 +219,7 @@
                             org.motechproject.event,
                             org.motechproject.event.listener.annotations,
                             org.motechproject.security.service,
-                            org.motechproject.server.config,
-                            org.motechproject.server.config.service,
+                            org.motechproject.config,
                             org.motechproject.config.service,
                             org.quartz.simpl,
                             *
@@ -250,7 +249,7 @@
                                 </goals>
                                 <configuration>
                                     <outputDirectory>
-                                        ${user.home}/.motech/config/org.motechproject.message-campaign/raw
+                                        ${motech.dir}/config/org.motechproject.message-campaign/raw
                                     </outputDirectory>
                                     <resources>
                                         <resource>
@@ -278,7 +277,7 @@
                                     <excludeDefaultDirectories>true</excludeDefaultDirectories>
                                     <filesets>
                                         <fileset>
-                                            <directory>${user.home}/.motech/config</directory>
+                                            <directory>${motech.dir}/config</directory>
                                             <includes>
                                                 <include>org.motechproject.message-campaign/**</include>
                                             </includes>
@@ -297,7 +296,7 @@
                                     <excludeDefaultDirectories>true</excludeDefaultDirectories>
                                     <filesets>
                                         <fileset>
-                                            <directory>${user.home}/.motech/config</directory>
+                                            <directory>${motech.dir}/config</directory>
                                             <includes>
                                                 <include>org.motechproject.message-campaign/**</include>
                                             </includes>
