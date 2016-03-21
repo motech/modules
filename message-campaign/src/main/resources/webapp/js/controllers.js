@@ -257,21 +257,6 @@
                 }
             });
         };
-
-        $("#fileInput").change(function() {
-            if(!$('#fileInput').val()) {
-                $('input[type="button"]').attr('disabled','disabled');
-            }
-            else if($('#fileInput').val().split(".").pop().toLowerCase() === "json") {
-                $('input[type="button"]').removeAttr('disabled');
-            }
-            else {
-                $('input[type="button"]').attr('disabled','disabled');
-                motechAlert('msgCampaign.settings.notSupported', 'msgCampaign.error');
-            }
-
-
-        });
     });
 
 }());

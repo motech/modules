@@ -7,13 +7,9 @@
         <div class="form-group fileiput fileinput-new" data-provides="fileinput">
             <label class="col-md-2 col-sm-3 control-label">{{msg('msgCampaign.settings.fileChosen')}}</label>
             <div class="col-md-8 col-sm-7 form-inline">
-                <div motech-file-upload-message-campaign></div>
+                <div motech-file-upload-message-campaign accept="&#46;json"></div>
                 <span class="form-hint fileinput-new">{{msg('msgCampaign.settings.messageCampaignsHint')}}</span>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-sm-offset-3 col-md-8 col-sm-7">
-                <input ng-click="uploadSettings()" type="button" value="{{msg('msgCampaign.settings.submit')}}" class="btn btn-primary">
+                <input ng-click="uploadSettings()" type="button" value="{{msg('msgCampaign.settings.submit')}}" class="btn btn-primary fileinput-exists">
             </div>
         </div>
     </form>
