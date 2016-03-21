@@ -13,7 +13,7 @@
     <context:annotation-config/>
     <context:component-scan base-package="org.motechproject.odk"/>
 
-    <bean id="odkSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
+    <bean id="odkSettings" class="org.motechproject.config.SettingsFacade" autowire="byType">
         <property name="rawConfigFiles">
             <list>
                 <value>classpath:settings.json</value>

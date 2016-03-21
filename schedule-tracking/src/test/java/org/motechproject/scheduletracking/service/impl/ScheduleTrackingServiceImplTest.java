@@ -27,8 +27,8 @@ import org.motechproject.scheduletracking.service.EnrollmentsQuery;
 import org.motechproject.scheduletracking.repository.dataservices.ScheduleDataService;
 import org.motechproject.scheduletracking.service.ScheduleTrackingService;
 import org.motechproject.scheduletracking.service.contract.UpdateCriteria;
-import org.motechproject.server.config.SettingsFacade;
-import org.motechproject.server.config.domain.SettingsRecord;
+import org.motechproject.config.SettingsFacade;
+import org.motechproject.config.domain.SettingsRecord;
 
 import java.io.File;
 import java.io.IOException;

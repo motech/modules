@@ -8,7 +8,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -139,11 +138,11 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         HttpResponse response = sendMockForm();
 
         // Make sure that Commcare controller returned 200 after handling the form
-        Assert.assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+        assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
         // Give Tasks some time to process
         waitForTaskExecution();
         // Ask our OSGi service, which acts as Task action, to verify that correct values were received
-        Assert.assertTrue(validatingChannel.verify());
+        assertTrue(validatingChannel.verify());
     }
 
     private void createDummyActionChannel(Channel channel) {
@@ -191,7 +190,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         List<ActionEvent> actionEvents = channel.getActionTaskEvents();
 
         assertEquals(7, actionEvents.size());
-        assertEquals(12, triggerEvents.size());
+        assertEquals(11, triggerEvents.size());
 
         TaskTriggerInformation expectedForm1 = new TaskTriggerInformation();
         TaskTriggerInformation expectedForm2 = new TaskTriggerInformation();

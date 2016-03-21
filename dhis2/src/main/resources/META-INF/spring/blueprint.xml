@@ -25,7 +25,7 @@
 
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
-    <bean id="dhisSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
+    <bean id="dhisSettings" class="org.motechproject.config.SettingsFacade" autowire="byType">
         <property name="rawConfigFiles">
             <list>
                 <value>classpath:dhis2-settings.json</value>

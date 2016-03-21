@@ -24,7 +24,7 @@ import org.motechproject.hub.model.Modes;
 import org.motechproject.hub.service.ContentDistributionService;
 import org.motechproject.hub.service.SubscriptionService;
 import org.motechproject.hub.validation.HubValidator;
-import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.config.SettingsFacade;
 import org.springframework.http.HttpStatus;
 
 /**

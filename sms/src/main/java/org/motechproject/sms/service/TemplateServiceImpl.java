@@ -9,7 +9,7 @@ import org.motechproject.commons.api.MotechException;
 import org.motechproject.config.core.constants.ConfigurationConstants;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.config.SettingsFacade;
 import org.motechproject.sms.templates.Template;
 import org.motechproject.sms.templates.TemplateForWeb;
 import org.slf4j.Logger;

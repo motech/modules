@@ -328,7 +328,7 @@
         };
     });
 
-    directives.directive('commcareCaseJqgrid', function ($compile) {
+    directives.directive('commcareCaseJqgrid', function ($compile, $timeout) {
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
@@ -427,14 +427,11 @@
 
                 if (scope.$parent.selectedConfig) {
                     params.url = '../commcare/caseList/' + scope.$parent.selectedConfig.name + '?caseName=&dateModifiedStart=&dateModifiedEnd=';
-                }
-
-                if (scope.$parent.selectedConfig !== undefined) {
                     scope.downloadingCases = true;
-                    scope.$apply();
                 }
 
-                elem.jqGrid(params);
+                $timeout(function() {}, 0).then(elem.jqGrid(params));
+
             }
         };
     });

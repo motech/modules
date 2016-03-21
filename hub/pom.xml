@@ -84,8 +84,8 @@
                             org.springframework.beans.factory.annotation,
                             org.motechproject.http.agent.service;version=${project.version},
                             org.motechproject.bundle.extender,
-                            org.motechproject.server.config,
-                            org.motechproject.server.config.service,
+                            org.motechproject.config,
+                            org.motechproject.config.service,
                             *
                         </Import-Package>
                         <Bundle-DocURL>

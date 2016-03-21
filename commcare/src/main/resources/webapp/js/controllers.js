@@ -335,17 +335,26 @@
 
         $scope.deleteConfig = function() {
             if (!$scope.newConfig) {
-                blockUI();
-                Configurations.remove({'name': $scope.selectedConfig.name},
-                    function success() {
-                        $scope.$parent.selectedConfig = undefined;
-                        $scope.getConfigurations();
-                        unblockUI();
-                    },
-                    function failure() {
-                        unblockUI();
+                BootstrapDialog.confirm({
+                    title: $scope.msg('commcare.header.confirm'),
+                    message: $scope.msg('commcare.confirm.deleteConfig'),
+                    type: BootstrapDialog.TYPE_WARNING,
+                    callback: function(result) {
+                        if (result) {
+                            blockUI();
+                            Configurations.remove({'name': $scope.selectedConfig.name},
+                                function success() {
+                                    $scope.$parent.selectedConfig = undefined;
+                                    $scope.getConfigurations();
+                                    unblockUI();
+                                },
+                                function failure() {
+                                    unblockUI();
+                                }
+                            );
+                        }
                     }
-                );
+                });
             } else {
                 $scope.$parent.selectedConfig = $scope.getDefault();
             }

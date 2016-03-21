@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.motechproject.ipf.domain.IPFRecipient;
 import org.motechproject.ipf.util.Constants;
-import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.config.SettingsFacade;
 
 import java.util.Collection;
 

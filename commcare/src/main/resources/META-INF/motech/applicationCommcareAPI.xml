@@ -15,7 +15,7 @@
     <mvc:annotation-driven/>
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
-    <bean id="commcareAPISettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
+    <bean id="commcareAPISettings" class="org.motechproject.config.SettingsFacade" autowire="byType">
         <property name="configFiles">
             <list>
                 <value>classpath:commcare.properties</value>

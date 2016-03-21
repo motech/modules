@@ -2,7 +2,7 @@ package org.motechproject.mtraining.web;
 
 import org.apache.commons.io.IOUtils;
 import org.motechproject.mtraining.util.Constants;
-import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.config.SettingsFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;

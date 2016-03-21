@@ -12,5 +12,5 @@
 
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
-    <bean id="pillReminderSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType" />
+    <bean id="pillReminderSettings" class="org.motechproject.config.SettingsFacade" autowire="byType" />
 </beans>
