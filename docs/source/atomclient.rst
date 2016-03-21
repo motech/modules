@@ -68,10 +68,10 @@ When fetching and for each feed content item that changed since the last time a 
         When the content item was modified
 
     ``raw_content``
-        A map of complete content data, like {"1": "raw content data one", "2": "raw content data two"}
+        Complete content data
 
     ``extracted_content``
-        If a valid non blank regex was specified in the feed config, extracted_content will contain a map of extracted content values, so for example if the regex specified to extract the first three characters of the raw content above, the map would be: {"1": "raw", "2": "raw"}
+        If a valid non blank regex was specified in the feed config, extracted_content will contain the extracted content value
 
 It also responds to the ``Fetch!`` task action by, you got it, fetching the Atom feed(s).
 

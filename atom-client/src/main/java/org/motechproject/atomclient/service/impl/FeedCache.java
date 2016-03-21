@@ -162,20 +162,20 @@ public class FeedCache implements FeedFetcherCache {
      */
     private void sendMessageForFeedEntry(String url, SyndEntry entry, String regex) {
         Map<String, Object> parameters = new HashMap<>();
-        Map<String, Object> rawContent = new HashMap<>();
-        Map<String, Object> extractedContent = new HashMap<>();
+        String rawContent = "";
+        String extractedContent = "";
         parameters.put("url", url);
         parameters.put("published_date", entry.getPublishedDate());
         parameters.put("updated_date", entry.getUpdatedDate());
-        if (entry.getContents() != null) {
-            Integer index = 1;
-            for (SyndContent content : entry.getContents()) {
-                rawContent.put(index.toString(), content.getValue());
-                String extractedContentString = extractContent(content.getValue(), regex);
-                if (StringUtils.isNotBlank(extractedContentString)) {
-                    extractedContent.put(index.toString(), extractedContentString);
-                }
-                index++;
+        if (entry.getContents() != null && entry.getContents().size() > 0) {
+            if (entry.getContents().size() > 1) {
+                LOGGER.warn("More than one (actually {}) content element for this entry! Discarding all but the first.", entry.getContents().size());
+            }
+            SyndContent content = entry.getContents().get(0);
+            rawContent = content.getValue();
+            String extractedContentString = extractContent(content.getValue(), regex);
+            if (StringUtils.isNotBlank(extractedContentString)) {
+                extractedContent = extractedContentString;
             }
         } else {
             LOGGER.warn("NULL content for entry {}", entry.getUri());
