@@ -27,8 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import java.util.List;
-
 /**
  * Default implementation of {@link org.motechproject.hub.service.ContentDistributionService}
  */
