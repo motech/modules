@@ -83,7 +83,7 @@
      * Settings
      *
      */
-    controllers.controller('SmsSettingsCtrl', function ($scope, $http, $timeout) {
+    controllers.controller('SmsSettingsCtrl', function ($scope, $http, $timeout, ModalServ) {
         $scope.errors = [];
         $scope.messages = [];
         $scope.dupeNames = [];
@@ -312,15 +312,15 @@
         };
 
         $scope.importTemplates = function () {
-            blockUI();
+            ModalServ.blockUI();
 
             $('#importTemplatesForm').ajaxSubmit({
                 success: function () {
                     getTemplates();
                     $('#importTemplatesForm').resetForm();
                     $('#importTemplatesModal').modal('hide');
-                    handleResponse('sms.success', 'sms.templates.success', '');
-                    unblockUI();
+                    ModalServ.handleResponse('sms.success', 'sms.templates.success', '');
+                    ModalServ.unblockUI();
                 },
                 error: function (response) {
                     handleWithStackTrace('sms.error.header', 'sms.error.body', response);

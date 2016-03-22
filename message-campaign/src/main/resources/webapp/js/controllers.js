@@ -243,17 +243,17 @@
         });
     });
 
-    controllers.controller('MCSettingsCtrl', function ($scope) {
+    controllers.controller('MCSettingsCtrl', function ($scope, ModalServ) {
         $scope.uploadSettings = function () {
-            blockUI();
+            ModalServ.blockUI();
             $("#messageCampaignSettingsForm").ajaxSubmit({
                 success: function() {
                     motechAlert('msgCampaign.settings.success.saved', 'msgCampaign.saved');
-                    unblockUI();
+                    ModalServ.unblockUI();
                 },
                 error: function(response) {
                     $scope.alert(response.responseText, "msgCampaign.error");
-                    unblockUI();
+                    ModalServ.unblockUI();
                 }
             });
         };
