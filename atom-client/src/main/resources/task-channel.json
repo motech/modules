@@ -21,12 +21,10 @@
         },
         {
           "eventKey" : "raw_content",
-          "type" : "MAP",
           "displayName" : "atomclient.task.feed.change.raw_content"
         },
         {
           "eventKey" : "extracted_content",
-          "type" : "MAP",
           "displayName" : "atomclient.task.feed.change.extracted_content"
         }
       ]
