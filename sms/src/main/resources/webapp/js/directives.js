@@ -1,7 +1,6 @@
 (function () {
     'use strict';
 
-    var directives = angular.module('sms.directives', []);
     // from http://stackoverflow.com/questions/14859266/input-autofocus-attribute
     angular.module('ng').directive('ngFocus', function($timeout) {
         return {
@@ -19,20 +18,6 @@
                     }
                 });
             }
-        };
-    });
-
-    // TODO: Can be removed after common file upload directive work again. (MOTECH-2265)
-    directives.directive('motechFileUploadSms', function($http, $templateCache, $compile) {
-        return function(scope, element, attrs) {
-            $http.get('../server/resources/partials/motech-file-upload.html', { cache: $templateCache }).success(function(response) {
-                var contents = $compile(element.html(response).contents())(scope),
-                    input = contents.find("input");
-                element.replaceWith(contents);
-                if (attrs.accept !== null &&  attrs.accept !== "") {
-                    input.attr("accept", attrs.accept);
-                }
-            });
         };
     });
 }());
