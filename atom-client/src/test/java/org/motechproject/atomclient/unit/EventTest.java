@@ -19,7 +19,6 @@ import org.motechproject.testing.osgi.http.SimpleHttpServer;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
@@ -95,10 +94,7 @@ public class EventTest {
         assertEquals(Constants.FEED_CHANGE_MESSAGE, event.getValue().getSubject());
         assertTrue(event.getValue().getParameters().containsKey("extracted_content"));
         MotechEvent capturedEvent = event.getValue();
-        Map<String, Object> extractedContent = (Map<String, Object>) capturedEvent.getParameters().get("extracted_content");
-        assertNotNull(extractedContent);
-        assertTrue(extractedContent.containsKey("1"));
-        assertEquals((String) extractedContent.get("1"), "aca97062-35c5-4a23-baf8-56e6eec76320");
+        assertEquals("aca97062-35c5-4a23-baf8-56e6eec76320", capturedEvent.getParameters().get("extracted_content"));
     }
 
 
