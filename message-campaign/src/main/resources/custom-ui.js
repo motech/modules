@@ -160,7 +160,7 @@ $scope.setRelatedEntity = function(field) {
         }
     }
     if (relatedClass !== undefined) {
-        ModalServ.blockUI();
+        ModalService.blockUI();
         $http.get('../mds/entities/getEntityByClassName?entityClassName=' + relatedClass).success(function (data) {
             $scope.relatedEntity = data;
             $scope.editedField = field;
@@ -195,7 +195,7 @@ $scope.setRelatedEntity = function(field) {
                     handleResponse('mds.error', 'mds.dataBrowsing.error.instancesList', response);
                 }
             );
-            ModalServ.unblockUI();
+            ModalService.unblockUI();
 
         }).error(function(response)
         {
@@ -289,7 +289,7 @@ $scope.messageTypeChanged = function(messageType) {
 };
 
 $scope.addInstance = function(module, entityName) {
-    ModalServ.blockUI();
+    ModalService.blockUI();
 
     // load the entity if coming from the 'Add' link in the main DataBrowser page
     if (!$scope.selectedEntity) {
@@ -331,13 +331,13 @@ $scope.addInstance = function(module, entityName) {
                         }
                     }
                 });
-                ModalServ.unblockUI();
+                ModalService.unblockUI();
             });
         });
 };
 
 $scope.editInstance = function(id, module, entityName) {
-    ModalServ.blockUI();
+    ModalService.blockUI();
     $scope.setHiddenFilters();
     $scope.instanceEditMode = true;
     cronAttached = false;
@@ -374,8 +374,8 @@ $scope.editInstance = function(id, module, entityName) {
                 });
             }
 
-            ModalServ.unblockUI();
-        }, angularHandler('mds.error', 'mds.error.cannotUpdateInstance'));
+            ModalService.unblockUI();
+        }, ModalService.angularHandler('mds.error', 'mds.error.cannotUpdateInstance'));
 };
 
 $scope.$watch('messageSelectedType.value', function(newValue) {

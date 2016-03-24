@@ -4,7 +4,7 @@
     /* Controllers */
     var controllers = angular.module('dhis2.controllers', []);
 
-    controllers.controller('Dhis2SettingsCtrl', function ($scope, $http, ModalServ) {
+    controllers.controller('Dhis2SettingsCtrl', function ($scope, $http, ModalService) {
 
             $scope.retrievalError = false;
             $scope.updateError = false;
@@ -72,9 +72,9 @@
             };
         });
 
-    controllers.controller('Dhis2ProgramsCtrl', function ($scope, Programs, ModalServ) {
+    controllers.controller('Dhis2ProgramsCtrl', function ($scope, Programs, ModalService) {
         $scope.formError = false;
-        ModalServ.blockUI();
+        ModalService.blockUI();
 
         $scope.programs = Programs.query(function () {
             $scope.formError = false;
@@ -90,10 +90,10 @@
 
             });
 
-            ModalServ.unblockUI();
+            ModalService.unblockUI();
         }, function () {
             $scope.formError = true;
-            ModalServ.unblockUI();
+            ModalService.unblockUI();
         });
         innerLayout({});
 
@@ -113,42 +113,42 @@
         };
     });
 
-    controllers.controller('Dhis2TrackedEntityAttributesCtrl', function($scope, TrackedEntityAttributes, ModalServ) {
-        ModalServ.blockUI();
+    controllers.controller('Dhis2TrackedEntityAttributesCtrl', function($scope, TrackedEntityAttributes, ModalService) {
+        ModalService.blockUI();
         $scope.trackedEntityAttributes = TrackedEntityAttributes.query(function() {
-            ModalServ.unblockUI();
+            ModalService.unblockUI();
         }, function () {
-           ModalServ.unblockUI();
+           ModalService.unblockUI();
         });
         innerLayout({});
     });
 
-    controllers.controller('Dhis2TrackedEntitiesCtrl', function($scope, TrackedEntitie, ModalServs) {
-        ModalServ.blockUI();
+    controllers.controller('Dhis2TrackedEntitiesCtrl', function($scope, TrackedEntitie, ModalServices) {
+        ModalService.blockUI();
         $scope.trackedEntities = TrackedEntities.query(function() {
-            ModalServ.unblockUI();
+            ModalService.unblockUI();
         }, function () {
-            ModalServ.unblockUI();
+            ModalService.unblockUI();
         });
         innerLayout({});
     });
 
-    controllers.controller('Dhis2OrgUnitsCtrl', function($scope, OrgUnits, ModalServ) {
-        ModalServ.blockUI();
+    controllers.controller('Dhis2OrgUnitsCtrl', function($scope, OrgUnits, ModalService) {
+        ModalService.blockUI();
         $scope.orgUnits = OrgUnits.query(function() {
-            ModalServ.unblockUI();
+            ModalService.unblockUI();
         }, function () {
-            ModalServ.unblockUI();
+            ModalService.unblockUI();
         });
         innerLayout({});
     });
 
-    controllers.controller('Dhis2DataElementsCtrl', function($scope, DataElements, ModalServ) {
-        ModalServ.blockUI();
+    controllers.controller('Dhis2DataElementsCtrl', function($scope, DataElements, ModalService) {
+        ModalService.blockUI();
         $scope.dataElements = DataElements.query(function() {
-            ModalServ.unblockUI();
+            ModalService.unblockUI();
         }, function () {
-            ModalServ.unblockUI();
+            ModalService.unblockUI();
         });
         innerLayout({});
     });

@@ -4,7 +4,7 @@
     /* Controllers */
     var controllers = angular.module('mtraining.controllers', []);
 
-    controllers.controller('TreeViewController', function($scope, $http, ModalServ) {
+    controllers.controller('TreeViewController', function($scope, $http, ModalService) {
 
         innerLayout({
             spacing_closed: 30,
@@ -181,18 +181,18 @@
                 $scope.renderTree();
                 $scope.jstree.select_node(0);
                 $scope.loadChapters();
-                ModalServ.unblockUI();
+                ModalService.unblockUI();
             })
             .error(function (data) {
-                ModalServ.unblockUI();
-                ModalServ.motechAlert('mtraining.error.courses', 'mtraining.error.title');
+                ModalService.unblockUI();
+                ModalService.motechAlert('mtraining.error.courses', 'mtraining.error.title');
             });
         };
 
         // Loads courses from server
         $scope.loadTree = function () {
             $scope.clearState();
-            ModalServ.blockUI();
+            ModalService.blockUI();
             $('#jstree').jstree("destroy");
             $scope.loadStructure();
         };
@@ -207,8 +207,8 @@
                 $scope.loadQuizzes();
             })
             .error(function (data) {
-                ModalServ.unblockUI();
-                ModalServ.motechAlert('mtraining.error.chapters', 'mtraining.error.title');
+                ModalService.unblockUI();
+                ModalService.motechAlert('mtraining.error.chapters', 'mtraining.error.title');
             });
         };
 
@@ -218,8 +218,8 @@
                 $scope.lessons = data;
             })
             .error(function (data) {
-                ModalServ.unblockUI();
-                ModalServ.motechAlert('mtraining.error.lessons', 'mtraining.error.title');
+                ModalService.unblockUI();
+                ModalService.motechAlert('mtraining.error.lessons', 'mtraining.error.title');
             });
         };
 
@@ -229,8 +229,8 @@
                 $scope.quizzes = data;
             })
             .error(function (data) {
-                ModalServ.unblockUI();
-                ModalServ.motechAlert('mtraining.error.quizzes', 'mtraining.error.title');
+                ModalService.unblockUI();
+                ModalService.motechAlert('mtraining.error.quizzes', 'mtraining.error.title');
             });
         };
 
@@ -282,18 +282,18 @@
         $scope.saveCourses = function () {
             var coursesToUpdate = $scope.createCoursesStructureToSave();
             if (coursesToUpdate !== null) {
-                ModalServ.blockUI();
+                ModalService.blockUI();
                 $http({
                     method: 'POST',
                     url: '../mtraining/updateCourses',
                     data: coursesToUpdate
                 }).success(function (response) {
                     $scope.loadTree();
-                    ModalServ.unblockUI();
+                    ModalService.unblockUI();
                 })
                 .error(function (response) {
-                    ModalServ.unblockUI();
-                    ModalServ.motechAlert('mtraining.error.save', 'mtraining.error.title');
+                    ModalService.unblockUI();
+                    ModalService.motechAlert('mtraining.error.save', 'mtraining.error.title');
                 });
             }
         };
@@ -304,7 +304,7 @@
 
         $scope.removeMember = function() {
             var node = $scope.jstree.get_node($scope.jstree.get_selected());
-            ModalServ.motechConfirm('mtraining.confirm.removeMember', 'mtraining.confirm', function (val) {
+            ModalService.motechConfirm('mtraining.confirm.removeMember', 'mtraining.confirm', function (val) {
                 if (val) {
                     $scope.deleteMember(node);
                 }
