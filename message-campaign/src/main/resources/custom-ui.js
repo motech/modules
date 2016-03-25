@@ -192,14 +192,14 @@ $scope.setRelatedEntity = function(field) {
                     $scope.allEntityFields = data;
                 },
                 function (response) {
-                    handleResponse('mds.error', 'mds.dataBrowsing.error.instancesList', response);
+                    ModalService.handleResponse('mds.error', 'mds.dataBrowsing.error.instancesList', response);
                 }
             );
             ModalService.unblockUI();
 
         }).error(function(response)
         {
-            handleResponse('mds.error', 'mds.dataBrowsing.error.instancesList', response);
+            ModalService.handleResponse('mds.error', 'mds.dataBrowsing.error.instancesList', response);
         });
     }
 
