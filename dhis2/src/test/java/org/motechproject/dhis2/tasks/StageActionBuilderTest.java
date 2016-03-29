@@ -90,11 +90,12 @@ public class StageActionBuilderTest {
         assertEquals(request.getDisplayName(),DisplayNames.ORG_UNIT);
 
         request = itr.next();
+        assertEquals(request.getKey(),EventParams.STATUS);
+        assertEquals(request.getDisplayName(),DisplayNames.STATUS);
+
+        request = itr.next();
         assertEquals(request.getDisplayName(),dataElement1.getName());
         assertNull(request.getValue());
-
-
-
     }
 
     @Test
@@ -153,9 +154,11 @@ public class StageActionBuilderTest {
         assertEquals(request.getDisplayName(),DisplayNames.ORG_UNIT);
 
         request = itr.next();
+        assertEquals(request.getKey(),EventParams.STATUS);
+        assertEquals(request.getDisplayName(),DisplayNames.STATUS);
+
+        request = itr.next();
         assertEquals(request.getDisplayName(),dataElement1.getName());
         assertNull(request.getValue());
-
-
     }
 }
