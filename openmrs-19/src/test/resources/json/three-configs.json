@@ -1,0 +1,26 @@
+{
+  "configs" : [
+    {
+      "name":"name-fooOne",
+      "openMrsUrl":"openMrsUrl-fooOne",
+      "username":"username-fooOne",
+      "password":"password-fooOne",
+      "motechId":"motechId-fooOne"
+    },
+    {
+      "name":"name-fooTwo",
+      "openMrsUrl":"openMrsUrl-fooTwo",
+      "username":"username-fooTwo",
+      "password":"password-fooTwo",
+      "motechId":"motechId-fooTwo"
+    },
+    {
+      "name":"name-fooThree",
+      "openMrsUrl":"openMrsUrl-fooThree",
+      "username":"username-fooThree",
+      "password":"password-fooThree",
+      "motechId":"motechId-fooThree"
+    }
+  ],
+  "defaultConfigName":"name-fooOne"
+}
