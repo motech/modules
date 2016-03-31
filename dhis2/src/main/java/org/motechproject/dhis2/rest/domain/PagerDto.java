@@ -4,6 +4,7 @@ public class PagerDto {
     private int page;
     private int pageCount;
     private int total;
+    private int pageSize;
     private String prevPage;
     private String nextPage;
 
@@ -29,6 +30,14 @@ public class PagerDto {
 
     public void setTotal(int total) {
         this.total = total;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 
     public String getNextPage() {
