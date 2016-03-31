@@ -128,7 +128,7 @@ public class MRSUserServiceIT extends BasePaxIT {
         OpenMRSPerson person = new OpenMRSPerson();
         person.setFirstName("FooFirstNameTwo");
         person.setLastName("FooLastNameTwo");
-        person.setGender("M");
+        person.setGender("O");
 
         OpenMRSUser user = new OpenMRSUser();
         user.setSecurityRole("Provider");
