@@ -41,7 +41,7 @@
         </constructor-arg>
         <property name="roleForAccess" value="manageCSD"/>
         <property name="settingsURL" value="/csd/settings" />
-        <property name="defaultURL" value="/csd/csd"/>
+        <property name="defaultURL" value="/csd/dashboard"/>
     </bean>
 
     <osgi:service ref="configService" interface="org.motechproject.csd.service.ConfigService" />

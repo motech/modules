@@ -1,8 +1,8 @@
 <div ng-controller="MCMainCtrl" id="inner-center" class="message-campaign inner-center ui-layout-center ui-layout-pane ui-layout-pane-center">
     <div class="header-footer-breadcrumb">
         <ul class="breadcrumb" role="navigation">
-            <li><a role="menu" href=".">{{msg('server.home')}}</a></li>
-            <li><a role="menu" href="#/messageCampaign/campaigns">{{msg('messageCampaign')}}</a></li>
+            <li><a role="menu" ui-sref="home">{{msg('server.home')}}</a></li>
+            <li><a role="menu" ui-sref="messageCampaign.campaigns">{{msg('messageCampaign')}}</a></li>
             <li ng-show="selectedTabState.selectedTab === 'campaigns'" ng-class="{'active': selectedTabState.selectedTab === 'campaigns'}">{{msg('msgCampaign.campaigns')}} list</li>
             <li ng-show="selectedTabState.selectedTab === 'admin'" ng-class="{'active': selectedTabState.selectedTab === 'admin'}">{{msg('msgCampaign.admin')}}</li>
             <li ng-show="selectedTabState.selectedTab === 'settings'" ng-class="{'active': selectedTabState.selectedTab === 'settings'}">{{msg('msgCampaign.settings')}}</li>
@@ -10,15 +10,15 @@
     </div>
     <div class="header-footer">
         <ul id="content-tabs" class="nav nav-tabs">
-            <li ng-class="{'active': selectedTabState.selectedTab === 'campaigns'}" ng-click="selectedTabState.selectedTab = 'campaigns'"><a href="#/messageCampaign/campaigns">{{msg('msgCampaign.campaigns')}}</a></li>
-            <li ng-class="{'active': selectedTabState.selectedTab === 'admin'}" ng-click="selectedTabState.selectedTab = 'admin'"><a href="#/messageCampaign/admin">{{msg('msgCampaign.admin')}}</a></li>
-            <li ng-class="{'active': selectedTabState.selectedTab === 'settings'}" ng-click="selectedTabState.selectedTab = 'settings'"><a href="#/messageCampaign/settings">{{msg('msgCampaign.settings')}}</a></li>
+            <li ng-class="{'active': selectedTabState.selectedTab === 'campaigns'}" ng-click="selectedTabState.selectedTab = 'campaigns'"><a ui-sref="messageCampaign.campaigns">{{msg('msgCampaign.campaigns')}}</a></li>
+            <li ng-class="{'active': selectedTabState.selectedTab === 'admin'}" ng-click="selectedTabState.selectedTab = 'admin'"><a ui-sref="messageCampaign.admin">{{msg('msgCampaign.admin')}}</a></li>
+            <li ng-class="{'active': selectedTabState.selectedTab === 'settings'}" ng-click="selectedTabState.selectedTab = 'settings'"><a ui-sref="messageCampaign.settings">{{msg('msgCampaign.settings')}}</a></li>
         </ul>
     </div>
     <div ng-controller="MdsEmbeddableCtrl" class="ui-layout-content">
         <div class="tab-content" id="tab-content">
             <div id="main-content" class="active">
-                <div ng-view></div>
+                <div ui-view="messageCampaignView"></div>
             </div>
         </div>
     </div>

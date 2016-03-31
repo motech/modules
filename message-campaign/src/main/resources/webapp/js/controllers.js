@@ -71,9 +71,9 @@
         };
     });
 
-     controllers.controller('MCEnrollmentsCtrl', function ($scope, $routeParams, Enrollments) {
+     controllers.controller('MCEnrollmentsCtrl', function ($scope, $stateParams, Enrollments) {
 
-        $scope.campaignName = $routeParams.campaignName;
+        $scope.campaignName = $stateParams.campaignName;
 
         function getPanelWidth() {
             return document.getElementById("main-content").offsetWidth-13;

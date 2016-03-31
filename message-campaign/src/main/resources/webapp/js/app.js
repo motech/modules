@@ -1,7 +1,8 @@
 (function () {
     'use strict';
 
-    var messageCampaignModule = angular.module('messageCampaign', ['motech-dashboard', 'messageCampaign.services', 'messageCampaign.controllers', 'ngCookies', 'data-services']), campaignRecordId, campaignMessageRecordId;
+    var messageCampaignModule = angular.module('messageCampaign', ['motech-dashboard', 'messageCampaign.services',
+    'messageCampaign.controllers', 'ngCookies', 'data-services']), campaignRecordId, campaignMessageRecordId;
 
     $.ajax({
         url: '../mds/entities/getEntity/MOTECH Message Campaign/CampaignRecord',
@@ -19,15 +20,121 @@
         async: false
     });
 
-    messageCampaignModule.config(['$routeProvider', function ($routeProvider) {
-        $routeProvider
-            .when('/messageCampaign/campaigns', { templateUrl: '../messagecampaign/resources/partials/campaigns.html', controller: 'MCCampaignsCtrl' })
-            .when('/messageCampaign/enrollments/:campaignName', { templateUrl: '../messagecampaign/resources/partials/enrollments.html', controller: 'MCEnrollmentsCtrl' })
-            .when('/messageCampaign/admin', { templateUrl: '../messagecampaign/resources/partials/admin.html' })
-            .when('/messageCampaign/campaignRecord', { redirectTo: '/mds/dataBrowser/' + campaignRecordId + '/messagecampaign' })
-            .when('/messageCampaign/campaignMessageRecord', { redirectTo: '/mds/dataBrowser/' + campaignMessageRecordId + '/messagecampaign' })
-            .when('/messageCampaign/settings', {templateUrl: '../messagecampaign/resources/partials/settings.html', controller: 'MCSettingsCtrl'})
-            .when('/messageCampaign/campaigns/:campaignId', { redirectTo: '/mds/dataBrowser/' + campaignRecordId + '/:campaignId/messagecampaign' });
+    messageCampaignModule.config(['$stateProvider', function ($stateProvider) {
+        $stateProvider
+            .state('messageCampaign', {
+                url: "/messageCampaign",
+                abstract: true,
+                views: {
+                    "moduleToLoad": {
+                        templateUrl: "../messagecampaign/resources/index.html"
+                    }
+                },
+                resolve: {
+                    loadMyService: ['$ocLazyLoad', function($ocLazyLoad) {
+                        return $ocLazyLoad.load('data-services');
+                    }]
+                }
+            })
+            .state('messageCampaign.campaigns', {
+                url: '/campaigns',
+                parent: 'messageCampaign',
+                views: {
+                    'messageCampaignView': {
+                        templateUrl: '../messagecampaign/resources/partials/campaigns.html',
+                        controller: 'MCCampaignsCtrl'
+                    }
+                }
+            })
+            .state('messageCampaign.enrollments', {
+                url: '/enrollments/:campaignName',
+                parent: 'messageCampaign',
+                views: {
+                    'messageCampaignView': {
+                        templateUrl: '../messagecampaign/resources/partials/enrollments.html',
+                        controller: 'MCEnrollmentsCtrl'
+                    }
+                }
+            })
+            .state('messageCampaign.settings', {
+                url: '/settings',
+                parent: 'messageCampaign',
+                views: {
+                    'messageCampaignView': {
+                        templateUrl: '../messagecampaign/resources/partials/settings.html',
+                        controller: 'MCSettingsCtrl'
+                    }
+                }
+            })
+            .state('messageCampaign.admin', {
+                url: '/admin',
+                parent: 'messageCampaign',
+                views: {
+                    'messageCampaignView': {
+                        templateUrl: '../messagecampaign/resources/partials/admin.html'
+                    }
+                }
+            })
+            .state('messageCampaign.campaignRecord', {
+                url: '/campaignRecord/mds/dataBrowser/:entityId/:moduleName',
+                parent: 'messageCampaign',
+                views: {
+                    'messageCampaignView': {
+                        templateUrl: '../mds/resources/partials/dataBrowser.html',
+                        controller: 'MdsDataBrowserCtrl'
+                    }
+                },
+                resolve:{
+                    entityId: ['$stateParams', function ($stateParams) {
+                        $stateParams.entityId = campaignRecordId;
+                        return campaignRecordId;
+                    }],
+                    moduleName: ['$stateParams', function ($stateParams) {
+                        $stateParams.moduleName = 'messagecampaign';
+                        return 'messagecampaign';
+                    }]
+                }
+            })
+            .state('messageCampaign.campaignMessageRecord', {
+                url: '/campaignMessageRecord/mds/dataBrowser/:entityId/:moduleName',
+                parent: 'messageCampaign',
+                views: {
+                    'messageCampaignView': {
+                        templateUrl: '../mds/resources/partials/dataBrowser.html',
+                        controller: 'MdsDataBrowserCtrl'
+                    }
+                },
+                resolve:{
+                    entityId: ['$stateParams', function ($stateParams) {
+                        $stateParams.entityId = campaignMessageRecordId;
+                        return campaignMessageRecordId;
+                    }],
+                    moduleName: ['$stateParams', function ($stateParams) {
+                        $stateParams.moduleName = 'messagecampaign';
+                        return 'messagecampaign';
+                    }]
+                }
+            })
+            .state('mtraining.campaign', {
+                url: '/campaign/mds/dataBrowser/:campaignId/:messagecampaign',
+                parent: 'messageCampaign',
+                views: {
+                    'messageCampaignView': {
+                        templateUrl: '../mds/resources/partials/dataBrowser.html',
+                        controller: 'MdsDataBrowserCtrl'
+                    }
+                },
+                resolve:{
+                    entityId: ['$stateParams', function ($stateParams) {
+                        $stateParams.campaignId = campaignRecordId;
+                        return campaignRecordId;
+                    }],
+                    moduleName: ['$stateParams', function ($stateParams) {
+                        $stateParams.moduleName = 'messagecampaign';
+                        return 'messagecampaign';
+                    }]
+                }
+            });
     }]
     );
 }());

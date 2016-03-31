@@ -1,8 +1,8 @@
 <div id="inner-center" class="cms-lite inner-center ui-layout-center ui-layout-pane ui-layout-pane-center">
     <div class="header-footer-breadcrumb">
         <ul class="breadcrumb" role="navigation">
-            <li><a role="menu" href=".">{{msg('server.home')}}</a></li>
-            <li><a role="menu" href="#/cmslite/resources">{{msg('cmslite')}}</a></li>
+            <li><a role="menu" ui-sref="home">{{msg('server.home')}}</a></li>
+            <li><a role="menu" ui-sref="cmslite.resources">{{msg('cmslite')}}</a></li>
             <li ng-show="selectedTabState.selectedTab === 'resources'" ng-class="{'active': selectedTabState.selectedTab === 'resources'}">
                 {{msg('cmslite.header.resourceCMS')}}
             </li>
@@ -11,7 +11,7 @@
     <div class="header-footer">
         <ul id="content-tabs" class="nav nav-tabs">
             <li ng-class="{'active': selectedTabState.selectedTab === 'resources'}" ng-click="selectedTabState.selectedTab = 'resources'">
-                <a href="#/cmslite/resources">{{msg('cmslite.header.resourceCMS')}}</a>
+                <a ui-sref="cmslite.resources">{{msg('cmslite.header.resourceCMS')}}</a>
             </li>
         </ul>
     </div>
@@ -19,7 +19,7 @@
     <div class="ui-layout-content">
         <div class="tab-content" id="tab-content">
             <div id="main-content" class="active">
-                <div ng-view></div>
+                <div ui-view="cmsliteView"></div>
             </div>
         </div>
     </div>

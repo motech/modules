@@ -1,8 +1,8 @@
 <div id="inner-center" class="inner-center ui-layout-center ui-layout-pane ui-layout-pane-center">
     <div class="header-footer-breadcrumb">
         <ul class="breadcrumb" role="navigation">
-            <li><a role="menu" href=".">{{msg('server.home')}}</a></li>
-            <li><a role="menu" href="#/odk/settings">{{msg('odk')}}</a></li>
+            <li><a role="menu" ui-sref="home">{{msg('server.home')}}</a></li>
+            <li><a role="menu" ui-sref="odk.settings">{{msg('odk')}}</a></li>
             <li ng-show="active('#/odk/settings')" ng-class="active('#/odk/settings')">{{msg('odk.settings')}}</li>
             <li ng-show="active('#/odk/forms')" ng-class="active('#/odk/forms')">{{msg('odk.forms')}}</li>
 
@@ -10,21 +10,16 @@
     </div>
     <div class="header-footer">
         <ul id="content-tabs" class="nav nav-tabs">
-            <li ng-class="active('#/odk/settings')"><a href="#/odk/settings">{{msg('odk.settings')}}</a></li>
-            <li ng-class="active('#/odk/forms')"><a href="#/odk/forms">{{msg('odk.forms')}}</a></li>
+            <li ng-class="active('#/odk/settings')"><a ui-sref="odk.settings">{{msg('odk.settings')}}</a></li>
+            <li ng-class="active('#/odk/forms')"><a ui-sref="odk.forms">{{msg('odk.forms')}}</a></li>
         </ul>
     </div>
     <div class="ui-layout-content">
         <div class="tab-content" id="tab-content">
             <div id="main-content" class="tab-pane active">
-                <div ng-view></div>
+                <div ui-view="odkView"></div>
             </div>
         </div>
     </div>
 </div>
 
-<div id="inner-east" class="metrics inner-east ui-layout-pane ui-layout-pane-east">
-    <div class="header-toolbar header-footer"></div>
-    <div class="filter-header"></div>
-    <div class="ui-layout-content"></div>
-</div>

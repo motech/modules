@@ -1,31 +1,24 @@
 <div id="inner-center" class="csd inner-center ui-layout-center ui-layout-pane ui-layout-pane-center">
     <div class="header-footer-breadcrumb">
         <ul class="breadcrumb" role="navigation">
-            <li><a role="menu" href=".">{{msg('server.home')}}</a></li>
-            <li><a role="menu" href="#/settings">{{msg('csd')}}</a></li>
+            <li><a role="menu" ui-sref="home">{{msg('server.home')}}</a></li>
+            <li><a role="menu" ui-sref="csd.settings">{{msg('csd')}}</a></li>
             <li ng-show="selectedTabState.selectedTab === 'settings'" ng-class="{'active': selectedTabState.selectedTab === 'settings'}">{{msg('csd.web.settings.title')}}</li>
-            <li ng-show="selectedTabState.selectedTab === 'csd'" ng-class="{'active': selectedTabState.selectedTab === 'csd'}">{{msg('csd.web.csd.title')}}</li>
+            <li ng-show="selectedTabState.selectedTab === 'dashboard'" ng-class="{'active': selectedTabState.selectedTab === 'dashboard'}">{{msg('csd.web.csd.title')}}</li>
         </ul>
     </div>
     <div class="header-footer">
         <ul id="content-tabs" class="nav nav-tabs">
-            <li ng-class="{'active': selectedTabState.selectedTab === 'csd'}" ng-click="selectedTabState.selectedTab = 'csd'"><a href="#/csd/csd">{{msg('csd.web.csd.title')}}</a></li>
-            <li ng-class="{'active': selectedTabState.selectedTab === 'settings'}" ng-click="selectedTabState.selectedTab = 'settings'"><a href="#/csd/settings">{{msg('csd.web.settings.title')}}</a></li>
+            <li ng-class="{'active': selectedTabState.selectedTab === 'dashboard'}" ng-click="selectedTabState.selectedTab = 'dashboard'"><a ui-sref="csd.dashboard">{{msg('csd.web.csd.title')}}</a></li>
+            <li ng-class="{'active': selectedTabState.selectedTab === 'settings'}" ng-click="selectedTabState.selectedTab = 'settings'"><a ui-sref="csd.settings">{{msg('csd.web.settings.title')}}</a></li>
         </ul>
     </div>
     <div class="ui-layout-content">
         <div class="tab-content" id="tab-content">
             <div id="main-content" class="active">
-                <div ng-view></div>
+                <div ui-view="csdView"></div>
             </div>
         </div>
     </div>
 </div>
 
-<div id="inner-east" class="csd inner-east ui-layout-pane ui-layout-pane-east">
-    <div class="header-toolbar header-footer"></div>
-    <div class="ui-layout-content">
-        <div class="inside">
-        </div>
-    </div>
-</div>
