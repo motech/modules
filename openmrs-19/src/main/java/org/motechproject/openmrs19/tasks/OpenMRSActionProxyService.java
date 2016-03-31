@@ -36,7 +36,7 @@ public interface OpenMRSActionProxyService {
      * @param address the address of person
      * @param dateOfBirth the person date of birth
      * @param birthDateEstimated the person birthDateEstimated flag
-     * @param gender the person gender, M - Male, F - Female
+     * @param gender the person gender
      * @param dead the person dead flag
      * @param causeOfDeathUUID the cause of the death
      * @param motechId the patient motechId
