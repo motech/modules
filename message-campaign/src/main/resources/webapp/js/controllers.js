@@ -3,7 +3,7 @@
 
     var controllers = angular.module('messageCampaign.controllers', []);
 
-    controllers.controller('MCMainCtrl', function ($scope, Campaigns, ModalService) {
+    controllers.controller('MCMainCtrl', function ($scope, Campaigns, Modal) {
 
         $scope.alert = function(response, title) {
 
@@ -24,11 +24,11 @@
                 params = messageDto.params;
             }
 
-            ModalService.motechAlert(message, title, params);
+            Modal.motechAlert(message, title, params);
         };
     });
 
-    controllers.controller('MCCampaignsCtrl', function ($scope, Campaigns, ModalService) {
+    controllers.controller('MCCampaignsCtrl', function ($scope, Campaigns, Modal) {
 
         $scope.$on('$viewContentLoaded', function () {
             $scope.campaigns = Campaigns.query(
@@ -65,13 +65,13 @@
                     window.location.replace('#/messageCampaign/campaigns/' + response.id);
                 },
                 failure: function failure(response) {
-                    ModalService.motechAlert(response.data, "msgCampaign.error");
+                    Modal.motechAlert(response.data, "msgCampaign.error");
                 }
             });
         };
     });
 
-     controllers.controller('MCEnrollmentsCtrl', function ($scope, $routeParams, Enrollments, ModalService) {
+     controllers.controller('MCEnrollmentsCtrl', function ($scope, $routeParams, Enrollments, Modal) {
 
         $scope.campaignName = $routeParams.campaignName;
 
@@ -177,7 +177,7 @@
 
             function deleteRows(rowIds) {
                 if (rowIds.length === 0) {
-                    ModalService.motechAlert("msgCampaign.enrollment.noUserSelected", "msgCampaign.enrollment.invalidAction");
+                    Modal.motechAlert("msgCampaign.enrollment.noUserSelected", "msgCampaign.enrollment.invalidAction");
                     return;
                 }
                 motechConfirm("msgCampaign.enrollment.deleteConfirmMsg", "msgCampaign.enrollment.deleteConfirmTitle",
@@ -222,7 +222,7 @@
                     rowId, row;
                 for (i = 0; i < rowIds.length; i+=1) {
                     if (isNewRow(rowIds[i])) {
-                        ModalService.motechAlert("msgCampaign.enrollment.unsavedEnrollement", "msgCampaign.enrollment.invalidAction");
+                        Modal.motechAlert("msgCampaign.enrollment.unsavedEnrollement", "msgCampaign.enrollment.invalidAction");
                         return;
                     }
                 }
@@ -243,17 +243,17 @@
         });
     });
 
-    controllers.controller('MCSettingsCtrl', function ($scope, ModalService) {
+    controllers.controller('MCSettingsCtrl', function ($scope, Modal) {
         $scope.uploadSettings = function () {
-            ModalService.blockUI();
+            Modal.openLoadingModal();
             $("#messageCampaignSettingsForm").ajaxSubmit({
                 success: function() {
-                    ModalService.motechAlert('msgCampaign.settings.success.saved', 'msgCampaign.saved');
-                    ModalService.unblockUI();
+                    Modal.motechAlert('msgCampaign.settings.success.saved', 'msgCampaign.saved');
+                    Modal.closeLoadingModal();
                 },
                 error: function(response) {
                     $scope.alert(response.responseText, "msgCampaign.error");
-                    ModalService.unblockUI();
+                    Modal.closeLoadingModal();
                 }
             });
         };
@@ -267,7 +267,7 @@
             }
             else {
                 $('input[type="button"]').attr('disabled','disabled');
-                ModalService.motechAlert('msgCampaign.settings.notSupported', 'msgCampaign.error');
+                Modal.motechAlert('msgCampaign.settings.notSupported', 'msgCampaign.error');
             }
         });
     });

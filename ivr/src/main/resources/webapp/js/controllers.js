@@ -8,7 +8,7 @@
      * Templates
      *
      */
-    controllers.controller('IvrTemplatesCtrl', function ($scope, $http, $timeout, ModalService) {
+    controllers.controller('IvrTemplatesCtrl', function ($scope, $http, $timeout, Modal) {
         $scope.errors = [];
         $scope.messages = [];
         $scope.dupeNames = [];
@@ -126,7 +126,7 @@
                 })
                 .error (function (response) {
                 //todo: better than that!
-                ModalService.handleWithStackTrace('ivr.error.header', 'ivr.error.body', response);
+                Modal.handleWithStackTrace('ivr.error.header', 'ivr.error.body', response);
             });
         };
     });
@@ -136,7 +136,7 @@
      * Settings
      *
      */
-    controllers.controller('IvrSettingsCtrl', function ($scope, $http, $timeout, ModalService) {
+    controllers.controller('IvrSettingsCtrl', function ($scope, $http, $timeout, Modal) {
         $scope.errors = [];
         $scope.messages = [];
         $scope.dupeNames = [];
@@ -293,7 +293,7 @@
                 })
                 .error (function (response) {
                 //todo: better than that!
-                ModalService.handleWithStackTrace('ivr.error.header', 'ivr.error.body', response);
+                Modal.handleWithStackTrace('ivr.error.header', 'ivr.error.body', response);
             });
         };
     });

@@ -6,7 +6,7 @@
 
     var controllers = angular.module('cmslite.controllers', []);
 
-    controllers.controller('CmsResourceCtrl', function ($scope, $rootScope, $http, Resources, $location, ModalService) {
+    controllers.controller('CmsResourceCtrl', function ($scope, $rootScope, $http, Resources, $location, Modal) {
         innerLayout({
             spacing_closed: 30,
             east__minSize: 200,
@@ -70,18 +70,18 @@
 
         $scope.editStringResource = function() {
             if ($scope.validateField('stringResourceForm', 'value')) {
-                ModalService.blockUI();
+                Modal.openLoadingModal();
 
                 $('#stringResourceForm').ajaxSubmit({
                     success: function () {
                         $scope.select = Resources.get({ type: 'string', language: $scope.select.language, name: $scope.select.name}, function () {
                             $scope.changeMode('read');
-                            ModalService.unblockUI();
+                            Modal.closeLoadingModal();
                         });
                     },
                     error: function (response) {
-                        ModalService.handleWithStackTrace('cmslite.header.error', 'cmslite.error.resource.save', response);
-                        ModalService.unblockUI();
+                        Modal.handleWithStackTrace('cmslite.header.error', 'cmslite.error.resource.save', response);
+                        Modal.closeLoadingModal();
                     }
                 });
             }
@@ -89,25 +89,25 @@
 
         $scope.editStreamResource = function() {
             if ($scope.validateFileField('streamResourceForm', 'contentFile')) {
-                ModalService.blockUI();
+                Modal.openLoadingModal();
 
                 $('#streamResourceForm').ajaxSubmit({
                     success: function () {
                         $scope.select = Resources.get({ type: 'stream', language: $scope.select.language, name: $scope.select.name}, function () {
                             $scope.changeMode('read');
-                            ModalService.unblockUI();
+                            Modal.closeLoadingModal();
                         });
                     },
                     error: function (response) {
-                        ModalService.handleWithStackTrace('cmslite.header.error', 'cmslite.error.resource.save', response);
-                        ModalService.unblockUI();
+                        Modal.handleWithStackTrace('cmslite.header.error', 'cmslite.error.resource.save', response);
+                        Modal.closeLoadingModal();
                     }
                 });
             }
         };
 
         $scope.removeResource = function(type, resource) {
-            ModalService.confirm({
+            Modal.confirm({
                 title: $scope.msg('cmslite.header.confirm'),
                 message: $scope.msg('cmslite.header.confirm.remove'),
                 type: BootstrapDialog.TYPE_WARNING,
@@ -118,7 +118,7 @@
                             $('#cms-lite-table').trigger('reloadGrid');
                             $('#' + type + 'ResourceModal').modal('hide');
                             $scope.getLanguages();
-                        }, ModalService.alertHandler('cmslite.error.removed', 'cmslite.header.error'));
+                        }, Modal.alertHandler('cmslite.error.removed', 'cmslite.header.error'));
                     }
                 }
             });
@@ -126,18 +126,18 @@
 
         $scope.saveNewResource = function () {
             if ($scope.validateForm('newResourceForm')) {
-                ModalService.blockUI();
+                Modal.openLoadingModal();
                 $('#newResourceForm').ajaxSubmit({
                     success: function () {
                         $('#cms-lite-table').trigger('reloadGrid');
                         $('#newResourceModal').modal('hide');
 
                         $scope.getLanguages();
-                        ModalService.unblockUI();
+                        Modal.closeLoadingModal();
                     },
                     error: function (response) {
-                        ModalService.handleWithStackTrace('cmslite.header.error', 'cmslite.error.resource.save', response);
-                        ModalService.unblockUI();
+                        Modal.handleWithStackTrace('cmslite.header.error', 'cmslite.error.resource.save', response);
+                        Modal.closeLoadingModal();
                     }
                 });
             }
