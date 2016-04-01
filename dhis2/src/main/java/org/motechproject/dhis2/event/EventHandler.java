@@ -275,6 +275,7 @@ public class EventHandler {
         String program = (String) params.remove(EventParams.PROGRAM);
         String date = (String) params.remove(EventParams.DATE);
         String stage = (String) params.remove(EventParams.STAGE);
+        String status = (String) params.remove(EventParams.STATUS);
 
         List<DataValueDto> dataValues = new ArrayList<>();
 
@@ -289,6 +290,7 @@ public class EventHandler {
         dhisEventDto.setEventDate(date);
         dhisEventDto.setProgramStage(stage);
         dhisEventDto.setOrgUnit(orgUnitId);
+        dhisEventDto.setStatus(status);
         dhisEventDto.setDataValues(dataValues);
 
         return dhisEventDto;
