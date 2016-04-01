@@ -76,13 +76,25 @@ public class ConfigsUtils {
 
         Configs configs = new Configs();
 
-        Config config1 = prepareConfigOne();
-        Config config2 = prepareConfigTwo();
+        Config defaultConfig = prepareConfigOne();
 
-        configs.saveConfig(config1);
-        configs.saveConfig(config2);
-        configs.setDefaultConfigName((config1.getName()));
-        configs.setDefaultConfigName((config2.getName()));
+        configs.saveConfig(defaultConfig);
+        configs.saveConfig(prepareConfigTwo());
+        configs.setDefaultConfigName(defaultConfig.getName());
+
+        return  configs;
+    }
+
+    public static Configs prepareConfigsWithThreeConfigs() {
+
+        Configs configs = new Configs();
+
+        Config defaultConfig = prepareConfigOne();
+
+        configs.saveConfig(defaultConfig);
+        configs.saveConfig(prepareConfigTwo());
+        configs.saveConfig(prepareConfigThree());
+        configs.setDefaultConfigName(defaultConfig.getName());
 
         return  configs;
     }
