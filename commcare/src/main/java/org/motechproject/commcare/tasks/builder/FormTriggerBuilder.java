@@ -58,20 +58,22 @@ public class FormTriggerBuilder implements TriggerBuilder {
             for (CommcareApplicationJson application : schemaService.retrieveApplications(config.getName())) {
                 for (CommcareModuleJson module : application.getModules()) {
                     for (FormSchemaJson form : module.getFormSchemas()) {
-                        List<EventParameterRequest> parameters = new ArrayList<>();
-                        String applicationName = application.getApplicationName();
-                        String formName = form.getFormName();
-                        addMetadataFields(parameters);
-                        addCaseFields(parameters);
+                        if (form.getXmlns() != null) {
+                            List<EventParameterRequest> parameters = new ArrayList<>();
+                            String applicationName = application.getApplicationName();
+                            String formName = form.getFormName();
+                            addMetadataFields(parameters);
+                            addCaseFields(parameters);
 
-                        for (FormSchemaQuestionJson question : form.getQuestions()) {
-                            parameters.add(new EventParameterRequest(question.getQuestionValue(), question.getQuestionValue()));
+                            for (FormSchemaQuestionJson question : form.getQuestions()) {
+                                parameters.add(new EventParameterRequest(question.getQuestionValue(), question.getQuestionValue()));
+                            }
+
+                            String displayName = DisplayNameHelper.buildDisplayName(RECEIVED_FORM, formName, applicationName, config.getName());
+
+                            triggers.add(new TriggerEventRequest(displayName, FORMS_EVENT + "." + config.getName() + "." + form.getXmlns(),
+                                    null, parameters, FORMS_EVENT));
                         }
-
-                        String displayName = DisplayNameHelper.buildDisplayName(RECEIVED_FORM, formName, applicationName, config.getName());
-
-                        triggers.add(new TriggerEventRequest(displayName, FORMS_EVENT + "." + config.getName() + "." + form.getXmlns(),
-                                null, parameters, FORMS_EVENT));
                     }
                 }
             }
