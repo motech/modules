@@ -179,13 +179,13 @@ public final class DummyCommcareSchema {
         questionJson7.setQuestionLabel("Last visit");
         questionJson7.setQuestionValue(FORM_QUESTION4);
 
-        FormSchemaJson formSchemaJson6 = new FormSchemaJson();
-        formSchemaJson6.setFormNames(formNames6);
-        formSchemaJson6.setQuestions(Collections.singletonList(questionJson7));
-        formSchemaJson6.setXmlns(null);
+        FormSchemaJson formSchemaWithNullXmlns = new FormSchemaJson();
+        formSchemaWithNullXmlns.setFormNames(formNames6);
+        formSchemaWithNullXmlns.setQuestions(Collections.singletonList(questionJson7));
+        formSchemaWithNullXmlns.setXmlns(null);
 
         CommcareModuleJson commcareModuleJson5 = new CommcareModuleJson();
-        commcareModuleJson5.setFormSchemas(Collections.singletonList(formSchemaJson6));
+        commcareModuleJson5.setFormSchemas(Collections.singletonList(formSchemaWithNullXmlns));
         commcareModuleJson5.setCaseType("visit");
         commcareModuleJson5.setCaseProperties(fields1);
 
