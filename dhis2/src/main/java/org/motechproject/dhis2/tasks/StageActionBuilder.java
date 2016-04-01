@@ -8,8 +8,10 @@ import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
+import org.motechproject.tasks.domain.ParameterType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -20,8 +22,12 @@ import java.util.TreeSet;
  */
 public class StageActionBuilder {
 
-    private static final String UNICODE = "UNICODE";
     private int counter;
+    private static final SortedSet<String> EVENT_STATUSES = new TreeSet<>();
+
+    static {
+        EVENT_STATUSES.addAll(Arrays.asList("ACTIVE", "COMPLETED", "VISITED", "SCHEDULE", "OVERDUE", "SKIPPED"));
+    }
 
     /**
      * Builds a list of action event request from a list of program stages.
@@ -33,9 +39,7 @@ public class StageActionBuilder {
         List<ActionEventRequest> actionEventRequests = new ArrayList<>();
 
         for (Stage stage : stages) {
-
             counter = 0;
-
             SortedSet<ActionParameterRequest> actionParameters = new TreeSet<>();
             ActionEventRequestBuilder builder = new ActionEventRequestBuilder();
 
@@ -47,7 +51,7 @@ public class StageActionBuilder {
                 actionParameterBuilder = new ActionParameterRequestBuilder()
                         .setDisplayName(DisplayNames.EXTERNAL_ID)
                         .setKey(EventParams.EXTERNAL_ID)
-                        .setType(UNICODE)
+                        .setType(ParameterType.UNICODE.getValue())
                         .setRequired(true)
                         .setOrder(counter++);
 
@@ -94,19 +98,30 @@ public class StageActionBuilder {
                     .setDisplayName(DisplayNames.EVENT_DATE)
                     .setOrder(counter++)
                     .setKey(EventParams.DATE)
-                    .setType(UNICODE)
+                    .setType(ParameterType.UNICODE.getValue())
                     .setRequired(true);
 
             actionParameters.add(actionParameterBuilder.createActionParameterRequest());
 
             actionParameterBuilder = new ActionParameterRequestBuilder()
                     .setDisplayName(DisplayNames.ORG_UNIT)
-                    .setType(UNICODE)
+                    .setType(ParameterType.UNICODE.getValue())
                     .setKey(EventParams.LOCATION)
                     .setOrder(counter++)
                     .setRequired(true);
 
             actionParameters.add(actionParameterBuilder.createActionParameterRequest());
+
+            actionParameterBuilder = new ActionParameterRequestBuilder()
+                    .setDisplayName(DisplayNames.STATUS)
+                    .setType(ParameterType.SELECT.getValue())
+                    .setOptions(EVENT_STATUSES)
+                    .setKey(EventParams.STATUS)
+                    .setOrder(counter++)
+                    .setRequired(false);
+
+            actionParameters.add(actionParameterBuilder.createActionParameterRequest());
+
 
             actionParameters.addAll(buildRequestForStage(stage));
 
@@ -134,7 +149,7 @@ public class StageActionBuilder {
             ActionParameterRequestBuilder actionParameterBuilder = new ActionParameterRequestBuilder()
                     .setDisplayName(element.getName())
                     .setKey(element.getUuid())
-                    .setType(UNICODE)
+                    .setType(ParameterType.UNICODE.getValue())
                     .setOrder(counter++);
 
             parameterRequests.add(actionParameterBuilder.createActionParameterRequest());
