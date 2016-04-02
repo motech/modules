@@ -49,7 +49,7 @@
         <gemston.gemfire.version>7.0.1</gemston.gemfire.version>
         <codehaus.groovy.version>1.8.9</codehaus.groovy.version>
         <javax.el.version>2.2.5</javax.el.version>
-        <rometools.rome.fetcher.version>1.5.99</rometools.rome.fetcher.version>
+        <rometools.rome.fetcher.version>1.6.0</rometools.rome.fetcher.version>
         <spring.osgi.core.version>1.2.1</spring.osgi.core.version>
 
         <javax.persistence.version>2.1.0</javax.persistence.version>
