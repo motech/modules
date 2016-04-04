@@ -5,10 +5,10 @@ import org.motechproject.dhis2.domain.Stage;
 import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.event.EventSubjects;
 import org.motechproject.tasks.contract.ActionEventRequest;
-import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
+import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
-import org.motechproject.tasks.domain.ParameterType;
+import org.motechproject.tasks.domain.mds.ParameterType;
 
 import java.util.ArrayList;
 import java.util.Arrays;

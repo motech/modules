@@ -23,20 +23,20 @@ import org.motechproject.commcare.util.ConfigsUtils;
 import org.motechproject.commcare.util.DummyCommcareSchema;
 import org.motechproject.commcare.util.ResponseXML;
 import org.motechproject.tasks.contract.ActionEventRequest;
-import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
+import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
-import org.motechproject.tasks.domain.ActionEvent;
-import org.motechproject.tasks.domain.ActionEventBuilder;
-import org.motechproject.tasks.domain.ActionParameter;
-import org.motechproject.tasks.domain.ActionParameterBuilder;
-import org.motechproject.tasks.domain.Channel;
-import org.motechproject.tasks.domain.EventParameter;
-import org.motechproject.tasks.domain.ParameterType;
-import org.motechproject.tasks.domain.Task;
-import org.motechproject.tasks.domain.TaskActionInformation;
-import org.motechproject.tasks.domain.TaskTriggerInformation;
-import org.motechproject.tasks.domain.TriggerEvent;
+import org.motechproject.tasks.domain.mds.ParameterType;
+import org.motechproject.tasks.domain.mds.channel.ActionEvent;
+import org.motechproject.tasks.domain.mds.channel.ActionParameter;
+import org.motechproject.tasks.domain.mds.channel.Channel;
+import org.motechproject.tasks.domain.mds.channel.EventParameter;
+import org.motechproject.tasks.domain.mds.channel.TriggerEvent;
+import org.motechproject.tasks.domain.mds.channel.builder.ActionEventBuilder;
+import org.motechproject.tasks.domain.mds.channel.builder.ActionParameterBuilder;
+import org.motechproject.tasks.domain.mds.task.Task;
+import org.motechproject.tasks.domain.mds.task.TaskActionInformation;
+import org.motechproject.tasks.domain.mds.task.TaskTriggerInformation;
 import org.motechproject.tasks.osgi.test.AbstractTaskBundleIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.testing.osgi.helper.ServiceRetriever;
@@ -161,7 +161,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setSubject("validate").setDescription(null).setServiceInterface(TEST_INTERFACE)
                 .setServiceMethod("execute").setActionParameters(actionParameterRequests).createActionEventRequest();
 
-        channel.addActionTaskEvent(ActionEventBuilder.fromActionEventRequest(actionEventRequest).createActionEvent());
+        channel.addActionTaskEvent(ActionEventBuilder.fromActionEventRequest(actionEventRequest).build());
         getChannelService().addOrUpdate(channel);
     }
 
@@ -347,7 +347,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setType(ParameterType.UNICODE)
                 .setRequired(true)
                 .setOrder(order++);
-        parameters.add(builder.createActionParameter());
+        parameters.add(builder.build());
 
         builder = new ActionParameterBuilder()
                 .setDisplayName(DisplayNames.SECTION_ID)
@@ -355,7 +355,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setType(ParameterType.UNICODE)
                 .setRequired(true)
                 .setOrder(order++);
-        parameters.add(builder.createActionParameter());
+        parameters.add(builder.build());
 
         builder = new ActionParameterBuilder()
                 .setDisplayName(DisplayNames.START_DATE)
@@ -363,7 +363,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setType(ParameterType.DATE)
                 .setRequired(false)
                 .setOrder(order++);
-        parameters.add(builder.createActionParameter());
+        parameters.add(builder.build());
 
         builder = new ActionParameterBuilder()
                 .setDisplayName(DisplayNames.END_DATE)
@@ -371,7 +371,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setType(ParameterType.DATE)
                 .setRequired(false)
                 .setOrder(order++);
-        parameters.add(builder.createActionParameter());
+        parameters.add(builder.build());
 
         builder = new ActionParameterBuilder()
                 .setDisplayName(DisplayNames.EXTRA_DATA)
@@ -379,7 +379,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setType(ParameterType.MAP)
                 .setRequired(false)
                 .setOrder(order);
-        parameters.add(builder.createActionParameter());
+        parameters.add(builder.build());
 
         String displayName = String.format("Query Stock Ledger [%s]", config.getName());
 
@@ -387,7 +387,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setDisplayName(displayName)
                 .setSubject(EventSubjects.QUERY_STOCK_LEDGER + "." + config.getName())
                 .setActionParameters(parameters);
-        return actionBuilder.createActionEvent();
+        return actionBuilder.build();
     }
 
     private ActionEvent prepareCreateCaseAction() {
@@ -401,7 +401,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setType(ParameterType.UNICODE)
                 .setRequired(true)
                 .setOrder(order++);
-        parameters.add(builder.createActionParameter());
+        parameters.add(builder.build());
 
         builder = new ActionParameterBuilder()
                 .setDisplayName(DisplayNames.OWNER_ID)
@@ -409,7 +409,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setType(ParameterType.UNICODE)
                 .setRequired(false)
                 .setOrder(order++);
-        parameters.add(builder.createActionParameter());
+        parameters.add(builder.build());
 
         builder = new ActionParameterBuilder()
                 .setDisplayName(DisplayNames.CASE_NAME)
@@ -417,7 +417,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setType(ParameterType.UNICODE)
                 .setRequired(true)
                 .setOrder(order++);
-        parameters.add(builder.createActionParameter());
+        parameters.add(builder.build());
 
         builder = new ActionParameterBuilder()
                 .setDisplayName(DisplayNames.CASE_PROPERTIES)
@@ -425,7 +425,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setType(ParameterType.MAP)
                 .setRequired(false)
                 .setOrder(order++);
-        parameters.add(builder.createActionParameter());
+        parameters.add(builder.build());
 
         String displayName = String.format("Create Case [%s]", config.getName());
 
@@ -433,7 +433,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setDisplayName(displayName)
                 .setSubject(EventSubjects.CREATE_CASE + "." + config.getName())
                 .setActionParameters(parameters);
-        return actionBuilder.createActionEvent();
+        return actionBuilder.build();
     }
 
     private ActionEvent prepareUpdateCaseAction() {
@@ -447,7 +447,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setType(ParameterType.UNICODE)
                 .setRequired(true)
                 .setOrder(order++);
-        parameters.add(builder.createActionParameter());
+        parameters.add(builder.build());
 
         builder = new ActionParameterBuilder()
                 .setDisplayName(DisplayNames.OWNER_ID)
@@ -455,7 +455,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setType(ParameterType.UNICODE)
                 .setRequired(true)
                 .setOrder(order++);
-        parameters.add(builder.createActionParameter());
+        parameters.add(builder.build());
 
         builder = new ActionParameterBuilder()
                 .setDisplayName(DisplayNames.CLOSE_CASE)
@@ -463,7 +463,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setType(ParameterType.BOOLEAN)
                 .setRequired(false)
                 .setOrder(order++);
-        parameters.add(builder.createActionParameter());
+        parameters.add(builder.build());
 
         builder = new ActionParameterBuilder()
                 .setDisplayName(DisplayNames.CASE_PROPERTIES)
@@ -471,7 +471,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setType(ParameterType.MAP)
                 .setRequired(false)
                 .setOrder(order++);
-        parameters.add(builder.createActionParameter());
+        parameters.add(builder.build());
 
         String displayName = String.format("Update Case [%s]", config.getName());
 
@@ -479,7 +479,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setDisplayName(displayName)
                 .setSubject(EventSubjects.UPDATE_CASE + "." + config.getName())
                 .setActionParameters(parameters);
-        return actionBuilder.createActionEvent();
+        return actionBuilder.build();
     }
 
     private ActionEvent prepareSubmitForm1Action() {
@@ -493,7 +493,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setRequired(false)
                 .setType(ParameterType.UNICODE)
                 .setOrder(order++);
-        parameters.add(builder.createActionParameter());
+        parameters.add(builder.build());
 
         builder = new ActionParameterBuilder()
                 .setDisplayName("Date of birth")
@@ -501,7 +501,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setRequired(false)
                 .setType(ParameterType.UNICODE)
                 .setOrder(order++);
-        parameters.add(builder.createActionParameter());
+        parameters.add(builder.build());
 
         String displayName = String.format("Submit Form: form1 [TestApp1: %s]", config.getName());
 
@@ -509,7 +509,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setDisplayName(displayName)
                 .setSubject(EventSubjects.SUBMIT_FORM + ".http://openrosa.org/formdesigner/84FA38A2-93C1-4B9E-AA2A-0E082995FF9E." + config.getName())
                 .setActionParameters(parameters);
-        return actionBuilder.createActionEvent();
+        return actionBuilder.build();
     }
 
     private ActionEvent prepareSubmitForm2Action() {
@@ -523,7 +523,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setRequired(false)
                 .setType(ParameterType.UNICODE)
                 .setOrder(order++);
-        parameters.add(builder.createActionParameter());
+        parameters.add(builder.build());
 
         String displayName = String.format("Submit Form: form2 [TestApp1: %s]", config.getName());
 
@@ -531,7 +531,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setDisplayName(displayName)
                 .setSubject(EventSubjects.SUBMIT_FORM + ".http://openrosa.org/formdesigner/12KE58A2-54C5-1Z4B-AR2S-Z0345995RF9E." + config.getName())
                 .setActionParameters(parameters);
-        return actionBuilder.createActionEvent();
+        return actionBuilder.build();
     }
 
     private ActionEvent prepareSubmitForm3Action() {
@@ -545,7 +545,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setRequired(false)
                 .setType(ParameterType.UNICODE)
                 .setOrder(order++);
-        parameters.add(builder.createActionParameter());
+        parameters.add(builder.build());
 
         String displayName = String.format("Submit Form: form3 [TestApp1: %s]", config.getName());
 
@@ -553,7 +553,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setDisplayName(displayName)
                 .setSubject(EventSubjects.SUBMIT_FORM + ".http://openrosa.org/formdesigner/22KE58A2-54C5-1Z4B-AR2S-Z0345995RF9E." + config.getName())
                 .setActionParameters(parameters);
-        return actionBuilder.createActionEvent();
+        return actionBuilder.build();
     }
 
     private ActionEvent prepareSubmitForm4Action() {
@@ -567,7 +567,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setRequired(false)
                 .setType(ParameterType.UNICODE)
                 .setOrder(order++);
-        parameters.add(builder.createActionParameter());
+        parameters.add(builder.build());
 
         String displayName = String.format("Submit Form: form4 [TestApp2: %s]", config.getName());
 
@@ -575,7 +575,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setDisplayName(displayName)
                 .setSubject(EventSubjects.SUBMIT_FORM + ".http://openrosa.org/formdesigner/32KE58A2-54C5-1Z4B-AR2S-Z0345995RF9E." + config.getName())
                 .setActionParameters(parameters);
-        return actionBuilder.createActionEvent();
+        return actionBuilder.build();
     }
 
     private boolean containsTrigger(Channel channel, TaskTriggerInformation info) {

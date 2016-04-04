@@ -55,28 +55,65 @@ public class FormTriggerBuilder implements TriggerBuilder {
         List<TriggerEventRequest> triggers = new ArrayList<>();
 
         for (Config config : configService.getConfigs().getConfigs()) {
-            for (CommcareApplicationJson application : schemaService.retrieveApplications(config.getName())) {
-                for (CommcareModuleJson module : application.getModules()) {
-                    for (FormSchemaJson form : module.getFormSchemas()) {
-                        List<EventParameterRequest> parameters = new ArrayList<>();
-                        String applicationName = application.getApplicationName();
-                        String formName = form.getFormName();
-                        addMetadataFields(parameters);
-                        addCaseFields(parameters);
-
-                        for (FormSchemaQuestionJson question : form.getQuestions()) {
-                            parameters.add(new EventParameterRequest(question.getQuestionValue(), question.getQuestionValue()));
-                        }
-
-                        String displayName = DisplayNameHelper.buildDisplayName(RECEIVED_FORM, formName, applicationName, config.getName());
-
-                        triggers.add(new TriggerEventRequest(displayName, FORMS_EVENT + "." + config.getName() + "." + form.getXmlns(),
-                                null, parameters, FORMS_EVENT));
-                    }
-                }
-            }
+            triggers.addAll(buildTriggersForConfig(config));
         }
         return triggers;
+    }
+
+    private List<TriggerEventRequest> buildTriggersForConfig(Config config) {
+        List<TriggerEventRequest> triggers = new ArrayList<>();
+
+        for (CommcareApplicationJson application : schemaService.retrieveApplications(config.getName())) {
+            triggers.addAll(buildTriggerForApplication(config, application));
+        }
+
+        return triggers;
+    }
+
+    private List<TriggerEventRequest> buildTriggerForApplication(Config config, CommcareApplicationJson application) {
+        List<TriggerEventRequest> triggers = new ArrayList<>();
+
+        for (CommcareModuleJson module : application.getModules()) {
+            triggers.addAll(buildTriggersForModule(config, application, module));
+        }
+
+        return triggers;
+    }
+
+    private List<TriggerEventRequest> buildTriggersForModule(Config config, CommcareApplicationJson application,
+                                                             CommcareModuleJson module) {
+        List<TriggerEventRequest> triggers = new ArrayList<>();
+
+        for (FormSchemaJson form : module.getFormSchemas()) {
+            if (form.getXmlns() != null) {
+                triggers.add(buildTriggerForForm(config, application, form));
+            }
+        }
+
+        return triggers;
+    }
+
+    private TriggerEventRequest buildTriggerForForm(Config config, CommcareApplicationJson application,
+                                                    FormSchemaJson form) {
+        String applicationName = application.getApplicationName();
+        String formName = form.getFormName();
+
+        String displayName = DisplayNameHelper.buildDisplayName(RECEIVED_FORM, formName, applicationName, config.getName());
+
+        return new TriggerEventRequest(displayName, FORMS_EVENT + "." + config.getName() + "." + form.getXmlns(),
+                null, buildTriggerParameters(form), FORMS_EVENT);
+    }
+
+    private List<EventParameterRequest> buildTriggerParameters(FormSchemaJson form) {
+        List<EventParameterRequest> parameters = new ArrayList<>();
+        addMetadataFields(parameters);
+        addCaseFields(parameters);
+
+        for (FormSchemaQuestionJson question : form.getQuestions()) {
+            parameters.add(new EventParameterRequest(question.getQuestionValue(), question.getQuestionValue()));
+        }
+
+        return parameters;
     }
 
     private void addCaseFields(List<EventParameterRequest> parameters) {
