@@ -4,7 +4,7 @@
     /* Controllers */
     var controllers = angular.module('dhis2.controllers', []);
 
-    controllers.controller('Dhis2SettingsCtrl', function ($scope, $http) {
+    controllers.controller('Dhis2SettingsCtrl', function ($scope, $http, Modal) {
 
             $scope.retrievalError = false;
             $scope.updateError = false;
@@ -72,9 +72,9 @@
             };
         });
 
-    controllers.controller('Dhis2ProgramsCtrl', function ($scope, Programs) {
+    controllers.controller('Dhis2ProgramsCtrl', function ($scope, Programs, Modal) {
         $scope.formError = false;
-        blockUI();
+        Modal.openLoadingModal();
 
         $scope.programs = Programs.query(function () {
             $scope.formError = false;
@@ -90,10 +90,10 @@
 
             });
 
-            unblockUI();
+            Modal.closeLoadingModal();
         }, function () {
             $scope.formError = true;
-            unblockUI();
+            Modal.closeLoadingModal();
         });
         innerLayout({});
 
@@ -113,42 +113,42 @@
         };
     });
 
-    controllers.controller('Dhis2TrackedEntityAttributesCtrl', function($scope, TrackedEntityAttributes) {
-        blockUI();
+    controllers.controller('Dhis2TrackedEntityAttributesCtrl', function($scope, TrackedEntityAttributes, Modal) {
+        Modal.openLoadingModal();
         $scope.trackedEntityAttributes = TrackedEntityAttributes.query(function() {
-            unblockUI();
+            Modal.closeLoadingModal();
         }, function () {
-           unblockUI();
+           Modal.closeLoadingModal();
         });
         innerLayout({});
     });
 
-    controllers.controller('Dhis2TrackedEntitiesCtrl', function($scope, TrackedEntities) {
-        blockUI();
+    controllers.controller('Dhis2TrackedEntitiesCtrl', function($scope, TrackedEntitie, Modals) {
+        Modal.openLoadingModal();
         $scope.trackedEntities = TrackedEntities.query(function() {
-            unblockUI();
+            Modal.closeLoadingModal();
         }, function () {
-            unblockUI();
+            Modal.closeLoadingModal();
         });
         innerLayout({});
     });
 
-    controllers.controller('Dhis2OrgUnitsCtrl', function($scope, OrgUnits) {
-        blockUI();
+    controllers.controller('Dhis2OrgUnitsCtrl', function($scope, OrgUnits, Modal) {
+        Modal.openLoadingModal();
         $scope.orgUnits = OrgUnits.query(function() {
-            unblockUI();
+            Modal.closeLoadingModal();
         }, function () {
-            unblockUI();
+            Modal.closeLoadingModal();
         });
         innerLayout({});
     });
 
-    controllers.controller('Dhis2DataElementsCtrl', function($scope, DataElements) {
-        blockUI();
+    controllers.controller('Dhis2DataElementsCtrl', function($scope, DataElements, Modal) {
+        Modal.openLoadingModal();
         $scope.dataElements = DataElements.query(function() {
-            unblockUI();
+            Modal.closeLoadingModal();
         }, function () {
-            unblockUI();
+            Modal.closeLoadingModal();
         });
         innerLayout({});
     });

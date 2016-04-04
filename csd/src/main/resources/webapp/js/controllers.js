@@ -8,7 +8,7 @@
      * Settings
      *
      */
-    controllers.controller('CsdSettingsCtrl', function ($scope, $http, $timeout) {
+    controllers.controller('CsdSettingsCtrl', function ($scope, $http, $timeout, Modal) {
         $scope.errors = [];
         $scope.messages = [];
         $scope.dupeUrls = [];
@@ -135,7 +135,7 @@
                     });
                 })
                 .error (function (response) {
-                    handleWithStackTrace('csd.error.header', 'csd.error.body', response);
+                    Modal.handleWithStackTrace('csd.error.header', 'csd.error.body', response);
                 });
         };
     });

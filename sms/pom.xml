@@ -154,8 +154,8 @@
                             <disallowIncrAndDecr>true</disallowIncrAndDecr>
                             <requireUseStrict>true</requireUseStrict>
                             <predefinedVars>
-                                $, angular, motechAlert, handleWithStackTrace, jQuery, parseUri,
-                                innerLayout, blockUI, unblockUI, handleResponse, getAvailableTabs
+                                $, angular, handleWithStackTrace, jQuery, parseUri,
+                                innerLayout, handleResponse, getAvailableTabs
                             </predefinedVars>
                             <failOnIssues>${jslint.enable}</failOnIssues>
                         </configuration>
