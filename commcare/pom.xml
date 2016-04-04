@@ -94,6 +94,11 @@
             <artifactId>org.apache.servicemix.bundles.antlr</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient-osgi</artifactId>
+            <version>4.4.1</version>
+        </dependency>
+        <dependency>
             <groupId>${motech.groupId}</groupId>
             <artifactId>motech-tasks</artifactId>
             <version>${motech.version}</version>
