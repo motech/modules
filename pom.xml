@@ -783,6 +783,7 @@
         <module>metrics</module>
         <module>ipf</module>
         <module>atom-client</module>
+        <module>odk</module>
     </modules>
 
     <build>

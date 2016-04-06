@@ -1,0 +1,140 @@
+<div class="row">
+
+    <div class="form-inline toolbox">
+
+        <div class="form-inline form-group">
+            <label for="configs">{{msg('odk.selectConfig')}}: </label>
+            <select class="largeCombobox form-control" id="configs" ng-model="selectedConfig"
+                    ng-options="config.name for config in configs" ng-change="changeUrl()">
+            </select>
+        </div>
+        <div class="btn-group form-group">
+            <a ng-click="addConfig()" type="button" class="form-group btn btn-success">
+                <i class="fa fa-plus"></i> {{msg('odk.addConfig')}}
+            </a>
+            <a ng-if="selectedConfig" ng-disabled="selectedConfig.verified == false" ng-click="saveConfig()"
+               type="button" class="btn btn-primary">
+                <i class="fa fw fa-save"></i> {{msg('odk.save')}}
+            </a>
+            <a ng-if="selectedConfig" ng-click="deleteConfig()" type="button" class="btn btn-danger input-small">
+                <i class="fa fa-fw fa-trash-o"></i> {{msg('odk.delete')}}
+            </a>
+            <a ng-if="selectedConfig" ng-click="verifyConfig()" type="button" class="btn btn-default">
+                <i class="fa fw fa-check-circle-o"></i> {{msg('odk.verify')}}
+            </a>
+        </div>
+    </div>
+
+    <form ng-if="selectedConfig" name="configForm">
+
+        <div class="row inside form-group">
+            <h4 class="inside form-group">{{msg('odk.settings.section.accountSettings')}}</h4>
+
+            <div class="form-group">
+                <label class="col-md-3 col-sm-4 control-label"
+                       for="type">{{msg('odk.settings.label.configType')}}</label>
+
+                <div class="col-md-9 col-sm-8 form-inline">
+                    <select required ng-change="unverify()" class="form-control input-small"
+                            ng-model="selectedConfig.type"
+                            ng-options="configType.type as configType.name for configType in configTypes"
+                            id="type"></select>
+
+                    <div class="form-hints">
+                        <span ng-hide="selectedConfig.type" class="form-hint-error">{{msg('odk.settings.label.hint.type')}}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 col-sm-4 control-label"
+                       for="name">{{msg('odk.settings.label.configName')}}</label>
+
+                <div class="col-md-9 col-sm-8 form-inline">
+                    <input required ng-change="unverify()" class="form-control input-xlarge-fluid"
+                           ng-model="selectedConfig.name" type="text" id="name"
+                           placeholder="{{msg('odk.settings.label.configName')}}"/>
+
+                    <div class="form-hints">
+                        <span ng-hide="selectedConfig.name" class="form-hint-error">{{msg('odk.settings.label.hint.name')}}</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-md-3 col-sm-4 control-label" for="url">{{msg('odk.settings.label.baseUrl')}}</label>
+
+                <div class="col-md-9 col-sm-8 form-inline">
+                    <input required ng-change="unverify()" class="form-control input-xlarge-fluid"
+                           ng-model="selectedConfig.url" type="url" name="url" id="url"
+                           placeholder="{{msg('odk.settings.label.baseUrl')}}"/>
+
+                    <div class="form-hints">
+                        <span ng-if="!configForm.url.$valid " class="form-hint-error">{{msg('odk.settings.label.hint.url')}}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 col-sm-4 control-label"
+                       for="username">{{msg('odk.settings.label.username')}}</label>
+
+                <div class="col-md-9 col-sm-8 form-inline">
+                    <input required ng-change="unverify()" class="form-control input-xlarge-fluid"
+                           ng-model="selectedConfig.username" type="text" id="username"
+                           placeholder="{{msg('odk.settings.label.username')}}"/>
+
+                    <div class="form-hints">
+                        <span ng-hide="selectedConfig.username" class="form-hint-error">{{msg('odk.settings.label.hint.username')}}</span>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 col-sm-4 control-label"
+                       for="password">{{msg('odk.settings.label.password')}}</label>
+
+                <div class="col-md-9 col-sm-8 form-inline">
+                    <input required ng-change="unverify()" class="form-control input-xlarge-fluid"
+                           ng-model="selectedConfig.password" type="password" id="password"
+                           placeholder="{{msg('odk.settings.label.password')}}"/>
+
+                    <div class="form-hints">
+                        <span ng-hide="selectedConfig.password" class="form-hint-error">{{msg('odk.settings.label.hint.password')}}</span>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div ng-if="saveSuccess" class="alert alert-success" role="alert" id="saveSuccess">
+        {{msg('odk.settings.save.success')}}
+    </div>
+    <div ng-if="verifiedSuccess" class="alert alert-success" role="alert" id="verifySuccess">
+        {{msg('odk.settings.verify.success')}}
+    </div>
+    <div ng-if="verifiedFail" class="alert alert-danger" role="alert" id="verifyFail">
+        {{msg('odk.settings.verify.fail')}}
+    </div>
+    <div ng-if="deleteSuccess" class="alert alert-success" role="alert" id="deleteSuccess">
+        {{msg('odk.settings.delete.success')}}
+    </div>
+    <div ng-if="getConfigError" class="alert alert-danger" role="alert" id="getError">
+        {{msg('odk.settings.get.error')}}
+    </div>
+    <div ng-if="saveError" class="alert alert-danger" role="alert" id="saveError">{{msg('odk.settings.save.error')}}
+    </div>
+    <div ng-if="deleteError" class="alert alert-danger" role="alert" id="deleteError">
+        {{msg('odk.settings.delete.error')}}
+    </div>
+
+    <div ng-show="selectedConfig != null">
+            <h4 >{{msg('odk.formsList.forwardingUrl')}}</h4>
+            <div>{{url}}</div>
+            <div>{{msg('odk.formsList.noSpaces')}}</div>
+    </div>
+
+</div>
