@@ -41,7 +41,7 @@ public class FormTriggerBuilderTest {
     @Mock
     private CommcareConfigService configService;
 
-    private Configs configs = ConfigsUtils.prepareConfigsWithTwoConfigs();
+    private Configs configs = ConfigsUtils.prepareConfigsWithThreeConfigs();
 
     private FormTriggerBuilder formTriggerBuilder;
 
@@ -55,6 +55,7 @@ public class FormTriggerBuilderTest {
         when(configService.getConfigs()).thenReturn(configs);
         when(schemaService.retrieveApplications("ConfigOne")).thenReturn(DummyCommcareSchema.getApplicationsForConfigOne());
         when(schemaService.retrieveApplications("ConfigTwo")).thenReturn(DummyCommcareSchema.getApplicationsForConfigTwo());
+        when(schemaService.retrieveApplications("ConfigThree")).thenReturn(DummyCommcareSchema.getApplicationsForConfigThree());
 
         formTriggerBuilder = new FormTriggerBuilder(schemaService, configService);
     }

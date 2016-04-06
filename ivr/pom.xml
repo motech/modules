@@ -4,12 +4,12 @@
     <parent>
         <artifactId>modules</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.29-SNAPSHOT</version>
         <relativePath>../</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.29-SNAPSHOT</version>
     <description>IVR Module</description>
     <artifactId>ivr</artifactId>
     <name>IVR Module</name>
@@ -163,17 +163,27 @@
                     <plugin>
                         <artifactId>maven-clean-plugin</artifactId>
                         <version>2.6.1</version>
-                        <configuration>
-                            <filesets>
-                                <fileset>
-                                    <directory>${motech.dir}/config/org.motechproject.ivr/raw</directory>
-                                    <includes>
-                                        <include>*.json</include>
-                                    </includes>
-                                    <followSymlinks>false</followSymlinks>
-                                </fileset>
-                            </filesets>
-                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>clean-config</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>clean</goal>
+                                </goals>
+                                <configuration>
+                                    <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                                    <filesets>
+                                        <fileset>
+                                            <directory>${motech.dir}/config/org.motechproject.ivr/raw</directory>
+                                            <includes>
+                                                <include>*.json</include>
+                                            </includes>
+                                            <followSymlinks>false</followSymlinks>
+                                        </fileset>
+                                    </filesets>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
