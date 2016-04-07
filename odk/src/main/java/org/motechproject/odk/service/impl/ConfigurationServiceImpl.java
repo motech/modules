@@ -7,7 +7,7 @@ import org.apache.commons.io.IOUtils;
 import org.motechproject.odk.domain.Configuration;
 import org.motechproject.odk.domain.Settings;
 import org.motechproject.odk.service.ConfigurationService;
-import org.motechproject.config.SettingsFacade;
+import org.motechproject.server.config.SettingsFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
