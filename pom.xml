@@ -785,7 +785,6 @@
         <module>metrics</module>
         <module>odk</module>
         <module>ipf</module>
-        <module>motech-metrics</module>
         <module>atom-client</module>
     </modules>
 
