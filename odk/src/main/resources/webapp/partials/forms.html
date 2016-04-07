@@ -1,0 +1,103 @@
+<div>
+    <h3>{{msg('odk.forms.import.importFormDefinitions')}}</h3>
+
+    <div class="form-inline form-group">
+        <label for="configs">{{msg('odk.settings.label.configName')}}</label>
+        <select class="largeCombobox form-control" ng-model="selectedConfig"
+                ng-options="config.name for config in configs" id="configs" ng-change="getFormDefinitions()"></select>
+    </div>
+    <button ng-if="selectedConfig" ng-disabled="importing" type="button" class="btn btn-default" ng-click="import()">
+        {{msg('odk.forms.import')}}
+    </button>
+
+    <div ng-if="importSuccess" class="alert alert-success" role="alert" id="importSuccess">
+        {{msg('odk.forms.import.success')}}
+    </div>
+    <div ng-if="importFail" class="alert alert-danger" role="alert" id="importFail">{{msg('odk.forms.import.error')}}
+    </div>
+    <div ng-if="importing" class="alert alert-info" role="alert" id="importing">{{msg('odk.forms.import.importing')}}
+    </div>
+    <div ng-if="formDefFail" class="alert alert-danger" role="alert" id="formDefFail">{{msg('odk.forms.import.formDefFail')}}</div>
+    <div ng-if="configsFail" class="alert alert-danger" role="alert" id="configsFail">{{msg('odk.forms.import.configsFail')}}</div>
+
+
+    <br><br>
+
+    <h3>{{msg('odk.formlist.forms')}}</h3>
+    <br>
+    <div class="form-def-row">
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-2"><strong>{{msg('odk.formsList.title')}}</strong></div>
+            <div class="col-lg-6 col-md-6 col-sm-6"><strong>{{msg('odk.formsList.forwardingUrl')}}</strong></div>
+            <div class="col-lg-3 col-sm-5 col-md-4" align="left"><strong>{{msg('odk.formsList.details')}}</strong></div>
+        </div>
+    </div>
+
+    <div ng-repeat="formDefinition in formDefinitions track by $index" class="form-def-row">
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-2">{{formDefinition.title}}</div>
+            <div class="col-lg-6 col-md-6 col-sm-6">{{href + formDefinition.configurationName + "/" + formDefinition.title}}</div>
+
+            <div class="col-lg-3 col-sm-5 col-md-4" align="left">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#xformModal"
+                            ng-click="selectFormDef(formDefinition)">{{msg('odk.formList.xform')}}
+                    </button>
+                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#viewModal"
+                            ng-click="selectFormDef(formDefinition)">{{msg('odk.formList.view')}}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="xformModal" class="modal modal-wide fade bs-example-modal-lg" tabindex="-1" role="dialog"
+             aria-labelledby="xformModalLabel">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <h4 class="modal-title">{{selectedFormDef.title}}</h4>
+
+                    <div class="modal-body">
+                        <pre>{{selectedFormDef.xform}}</pre>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="viewModal" class="modal modal-wide fade bs-example-modal-lg" tabindex="-1" role="dialog"
+             aria-labelledby="viewModalLabel">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <h4 class="modal-title">{{selectedFormDef.title}}</h4>
+
+                    <div class="modal-body">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Name</th>
+                                <th>label</th>
+                                <th>type</th>
+                            </tr>
+                            <tr ng-repeat="formElement in selectedFormDef.formElements">
+                                <td>{{formElement.name}}</td>
+                                <td>{{formElement.label}}</td>
+                                <td>{{formElement.type}}</td>
+                            </tr>
+                        </table>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
