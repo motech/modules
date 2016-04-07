@@ -9,7 +9,7 @@ public class IHEInitializerTest {
     IHEInitializerImpl iheInitializer = new IHEInitializerImpl();
 
     @Test
-    public void someTest() {
+    public void testInitialization() {
         assertEquals("Groovy compiled", iheInitializer.init());
     }
 }
