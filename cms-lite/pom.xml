@@ -93,8 +93,6 @@
                             javax.servlet.*;resolution:=optional,
                             org.aopalliance.aop,
                             org.motechproject.config,
-                            org.apache.bval.jsr303,
-                            org.apache.bval.constraints,
                             org.eclipse.gemini.blueprint.config,
                             org.motechproject.server.config,
                             org.motechproject.server.config.service,

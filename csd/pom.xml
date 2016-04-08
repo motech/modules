@@ -111,8 +111,6 @@
                         <Context-Path>csd</Context-Path>
                         <Resource-Path>csd/resources</Resource-Path>
                         <Import-Package>
-                            org.apache.bval.jsr303,
-                            org.apache.bval.constraints,
                             org.motechproject.mds.service,
                             org.springframework.cglib.core,
                             org.springframework.cglib.proxy,

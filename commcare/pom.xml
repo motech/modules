@@ -220,8 +220,6 @@
                         </Export-Package>
                         <Import-Package>
                             org.aopalliance.aop,
-                            org.apache.bval.jsr303,
-                            org.apache.bval.constraints,
                             org.motechproject.event.listener,
                             org.motechproject.event.listener.annotations,
                             org.motechproject.config,

@@ -209,8 +209,6 @@
                             net.sf.cglib.proxy,
                             net.sf.cglib.reflect,
                             org.aopalliance.aop,
-                            org.apache.bval.jsr303,
-                            org.apache.bval.constraints,
                             org.apache.commons.fileupload,
                             org.springframework.aop,
                             org.springframework.aop.framework,

@@ -70,8 +70,6 @@
                         <Resource-Path>odk/resources</Resource-Path>
                         <Import-Package>
                             org.aopalliance.aop,
-                            org.apache.bval.jsr303,
-                            org.apache.bval.constraints,
                             org.motechproject.admin.domain,
                             org.motechproject.admin.messages,
                             org.motechproject.config.service,

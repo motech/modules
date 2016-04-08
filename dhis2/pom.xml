@@ -78,8 +78,6 @@
                         <Context-Path>dhis2</Context-Path>
                         <Resource-Path>dhis2/resources</Resource-Path>
                         <Import-Package>
-                            org.apache.bval.jsr303,
-                            org.apache.bval.constraints,
                             org.aopalliance.aop,
                             org.motechproject.admin.domain,
                             org.motechproject.admin.messages,

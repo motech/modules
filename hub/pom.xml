@@ -43,8 +43,6 @@
                         </Export-Package>
                         <Import-Package>
                             org.aopalliance.aop,
-                            org.apache.bval.jsr303,
-                            org.apache.bval.constraints,
                             org.springframework.aop,
                             org.springframework.aop.framework,
                             org.springframework.transaction,
