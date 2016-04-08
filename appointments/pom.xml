@@ -63,9 +63,6 @@
                             org.motechproject.appointments.domain;version=${project.version}
                         </Export-Package>
                         <Import-Package>
-                            net.sf.cglib.core,
-                            net.sf.cglib.proxy,
-                            net.sf.cglib.reflect,
                             org.aopalliance.aop,
                             org.slf4j,
                             org.slf4j.impl,

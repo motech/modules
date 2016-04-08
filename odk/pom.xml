@@ -57,7 +57,6 @@
 
     </dependencies>
 
-
     <build>
         <plugins>
             <plugin>
@@ -70,13 +69,13 @@
                         <Context-Path>odk</Context-Path>
                         <Resource-Path>odk/resources</Resource-Path>
                         <Import-Package>
-                            net.sf.cglib.core,
-                            net.sf.cglib.proxy,
-                            net.sf.cglib.reflect,
                             org.aopalliance.aop,
+                            org.apache.bval.jsr303,
+                            org.apache.bval.constraints,
                             org.motechproject.admin.domain,
                             org.motechproject.admin.messages,
                             org.motechproject.config.service,
+                            org.springframework.validation.beanvalidation,
                             *
                         </Import-Package>
                         <Export-Package>
