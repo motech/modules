@@ -133,8 +133,7 @@
                             <disallowIncrAndDecr>true</disallowIncrAndDecr>
                             <requireUseStrict>true</requireUseStrict>
                             <predefinedVars>
-                                $, angular, motechAlert, motechConfirm, handleWithStackTrace, jQuery, parseUri, innerLayout,
-                                getAvailableTabs
+                                $, angular, jQuery, parseUri, innerLayout, getAvailableTabs
                             </predefinedVars>
                             <failOnIssues>${jslint.enable}</failOnIssues>
                             <excludes>

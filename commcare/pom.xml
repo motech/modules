@@ -278,8 +278,7 @@
                             <disallowIncrAndDecr>true</disallowIncrAndDecr>
                             <requireUseStrict>true</requireUseStrict>
                             <predefinedVars>
-                                $, angular, handleWithStackTrace,
-                                jQuery, parseUri, innerLayout, BootstrapDialog
+                                $, angular, jQuery, parseUri, innerLayout
                             </predefinedVars>
                             <failOnIssues>${jslint.enable}</failOnIssues>
                         </configuration>

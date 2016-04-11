@@ -175,8 +175,7 @@
                             <disallowIncrAndDecr>true</disallowIncrAndDecr>
                             <requireUseStrict>true</requireUseStrict>
                             <predefinedVars>
-                                $, angular, handleWithStackTrace, alertHandler,
-                                jQuery, parseUri, innerLayout, BootstrapDialog, motechAlert
+                                $, angular, jQuery, parseUri, innerLayout
                             </predefinedVars>
                             <failOnIssues>${jslint.enable}</failOnIssues>
                         </configuration>

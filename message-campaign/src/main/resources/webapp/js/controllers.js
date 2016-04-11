@@ -3,7 +3,7 @@
 
     var controllers = angular.module('messageCampaign.controllers', []);
 
-    controllers.controller('MCMainCtrl', function ($scope, Campaigns, Modal) {
+    controllers.controller('MCMainCtrl', function ($scope, Campaigns, ModalFactory, LoadingModal) {
 
         $scope.alert = function(response, title) {
 
@@ -24,11 +24,11 @@
                 params = messageDto.params;
             }
 
-            Modal.motechAlert(message, title, params);
+            ModalFactory.motechAlert(message, title, params);
         };
     });
 
-    controllers.controller('MCCampaignsCtrl', function ($scope, Campaigns, Modal) {
+    controllers.controller('MCCampaignsCtrl', function ($scope, Campaigns, ModalFactory, LoadingModal) {
 
         $scope.$on('$viewContentLoaded', function () {
             $scope.campaigns = Campaigns.query(
@@ -42,7 +42,7 @@
         });
 
         $scope.deleteCampaign = function(campaignName) {
-            motechConfirm("msgCampaign.campaign.deleteConfirmMsg", "msgCampaign.campaign.deleteConfirmTitle",
+            ModalFactory.motechConfirm("msgCampaign.campaign.deleteConfirmMsg", "msgCampaign.campaign.deleteConfirmTitle",
                 function (response) {
                     if (!response) {
                         return;
@@ -65,13 +65,13 @@
                     window.location.replace('#/messageCampaign/campaigns/' + response.id);
                 },
                 failure: function failure(response) {
-                    Modal.motechAlert(response.data, "msgCampaign.error");
+                    ModalFactory.motechAlert(response.data, "msgCampaign.error");
                 }
             });
         };
     });
 
-     controllers.controller('MCEnrollmentsCtrl', function ($scope, $routeParams, Enrollments, Modal) {
+     controllers.controller('MCEnrollmentsCtrl', function ($scope, $routeParams, Enrollments, ModalFactory, LoadingModal) {
 
         $scope.campaignName = $routeParams.campaignName;
 
@@ -177,10 +177,10 @@
 
             function deleteRows(rowIds) {
                 if (rowIds.length === 0) {
-                    Modal.motechAlert("msgCampaign.enrollment.noUserSelected", "msgCampaign.enrollment.invalidAction");
+                    ModalFactory.motechAlert("msgCampaign.enrollment.noUserSelected", "msgCampaign.enrollment.invalidAction");
                     return;
                 }
-                motechConfirm("msgCampaign.enrollment.deleteConfirmMsg", "msgCampaign.enrollment.deleteConfirmTitle",
+                ModalFactory.motechConfirm("msgCampaign.enrollment.deleteConfirmMsg", "msgCampaign.enrollment.deleteConfirmTitle",
                     function (response) {
                     var i, rowData, grid = jQuery("#enrollmentsTable"),
                         refresh, rowId,
@@ -222,7 +222,7 @@
                     rowId, row;
                 for (i = 0; i < rowIds.length; i+=1) {
                     if (isNewRow(rowIds[i])) {
-                        Modal.motechAlert("msgCampaign.enrollment.unsavedEnrollement", "msgCampaign.enrollment.invalidAction");
+                        ModalFactory.motechAlert("msgCampaign.enrollment.unsavedEnrollement", "msgCampaign.enrollment.invalidAction");
                         return;
                     }
                 }
@@ -243,17 +243,17 @@
         });
     });
 
-    controllers.controller('MCSettingsCtrl', function ($scope, Modal) {
+    controllers.controller('MCSettingsCtrl', function ($scope, ModalFactory, LoadingModal) {
         $scope.uploadSettings = function () {
-            Modal.openLoadingModal();
+            LoadingModal.open();
             $("#messageCampaignSettingsForm").ajaxSubmit({
                 success: function() {
-                    Modal.motechAlert('msgCampaign.settings.success.saved', 'msgCampaign.saved');
-                    Modal.closeLoadingModal();
+                    ModalFactory.motechAlert('msgCampaign.settings.success.saved', 'msgCampaign.saved');
+                    LoadingModal.close();
                 },
                 error: function(response) {
                     $scope.alert(response.responseText, "msgCampaign.error");
-                    Modal.closeLoadingModal();
+                    LoadingModal.close();
                 }
             });
         };
@@ -267,7 +267,7 @@
             }
             else {
                 $('input[type="button"]').attr('disabled','disabled');
-                Modal.motechAlert('msgCampaign.settings.notSupported', 'msgCampaign.error');
+                ModalFactory.motechAlert('msgCampaign.settings.notSupported', 'msgCampaign.error');
             }
         });
     });

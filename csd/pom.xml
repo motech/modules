@@ -181,8 +181,7 @@
                             <disallowIncrAndDecr>true</disallowIncrAndDecr>
                             <requireUseStrict>true</requireUseStrict>
                             <predefinedVars>
-                                $, angular, handleWithStackTrace,
-                                jQuery, parseUri, innerLayout, window, Blob
+                                $, angular, jQuery, parseUri, innerLayout, window, Blob
                             </predefinedVars>
                             <failOnIssues>${jslint.enable}</failOnIssues>
                         </configuration>
