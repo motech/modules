@@ -1,17 +1,26 @@
-package org.motechproject.openmrs19.resource.model;
+package org.motechproject.openmrs19.domain;
+
+import com.google.gson.annotations.Expose;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
- * Represents a single OpenMRS user. It's a part of the OpenMRS model.
+ * Represents a single OpenMRS user. It's a part of the MOTECH model.
  */
 public class User {
 
     private String uuid;
+
+    @Expose
     private String username;
+    @Expose
     private String password;
+    @Expose
     private Person person;
+    @Expose
     private String systemId;
+    @Expose
     private List<Role> roles;
 
     public String getUuid() {
@@ -62,7 +71,24 @@ public class User {
         this.roles = roles;
     }
 
-    public String getFirstRole() {
-        return roles.get(0).getDisplay();
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid, username, password, person, systemId, roles);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        User other = (User) obj;
+
+        return Objects.equals(this.uuid, other.uuid) && Objects.equals(this.username, other.username) && Objects.equals(this.password, other.password) &&
+                Objects.equals(this.person, other.person) && Objects.equals(this.systemId, other.systemId) && Objects.equals(this.roles, other.roles);
     }
 }

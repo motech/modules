@@ -1,6 +1,6 @@
 package org.motechproject.openmrs19.service;
 
-import org.motechproject.openmrs19.domain.OpenMRSUser;
+import org.motechproject.openmrs19.domain.User;
 import org.motechproject.openmrs19.exception.UserAlreadyExistsException;
 import org.motechproject.openmrs19.exception.UserDeleteException;
 
@@ -12,12 +12,12 @@ import java.util.List;
 public interface OpenMRSUserService {
 
     /**
-     * Key to obtain {@link OpenMRSUser} from {@link #createUser(OpenMRSUser)} and {@link #updateUser(OpenMRSUser)}
+     * Key to obtain {@link User} from {@link #createUser(User)} and {@link #updateUser(User)}
      */
     String USER_KEY = "mrsUser";
 
     /**
-     * Key to obtain password from {@link #createUser(OpenMRSUser)} and {@link #updateUser(OpenMRSUser)}
+     * Key to obtain password from {@link #createUser(User)} and {@link #updateUser(User)}
      */
     String PASSWORD_KEY = "password";
 
@@ -36,7 +36,7 @@ public interface OpenMRSUserService {
      * @return  the created user
      * @throws UserAlreadyExistsException if the user already exists
      */
-    OpenMRSUser createUser(OpenMRSUser user) throws UserAlreadyExistsException;
+    User createUser(User user) throws UserAlreadyExistsException;
 
     /**
      * Resets the password of the user with the given {@code username}.
@@ -51,7 +51,7 @@ public interface OpenMRSUserService {
      *
      * @return the list of all users
      */
-    List<OpenMRSUser> getAllUsers();
+    List<User> getAllUsers();
 
     /**
      * Return the user with the given {@code uuid}.
@@ -59,7 +59,7 @@ public interface OpenMRSUserService {
      * @param uuid  the UUID of the user
      * @return the user with the given UUID, null if the user doesn't exist
      */
-    OpenMRSUser getUserByUuid(String uuid);
+    User getUserByUuid(String uuid);
 
     /**
      * Returns the user with the given {@code userName}.
@@ -67,7 +67,7 @@ public interface OpenMRSUserService {
      * @param userName  the username of the user
      * @return the user with the given username, null if the user doesn't exist
      */
-    OpenMRSUser getUserByUserName(String userName);
+    User getUserByUserName(String userName);
 
     /**
      * Updates the user with the information stored in the given {@code user}.
@@ -75,7 +75,7 @@ public interface OpenMRSUserService {
      * @param user  the user to be used as an update source
      * @return the update user, null if the user doesn't exist
      */
-    OpenMRSUser updateUser(OpenMRSUser user);
+    User updateUser(User user);
 
     /**
      * Deletes the user with the given {@code uuid}. If the provider with the given {@code uuid} doesn't exist an

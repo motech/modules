@@ -4,21 +4,19 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.openmrs19.OpenMrsInstance;
+import org.motechproject.openmrs19.domain.Concept;
+import org.motechproject.openmrs19.domain.Observation;
+import org.motechproject.openmrs19.domain.Observation.ObservationValue;
+import org.motechproject.openmrs19.domain.ObservationListResult;
+import org.motechproject.openmrs19.domain.Person;
 import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.resource.ObservationResource;
-import org.motechproject.openmrs19.resource.model.Observation;
-import org.motechproject.openmrs19.resource.model.Observation.ObservationValue;
-import org.motechproject.openmrs19.resource.model.Observation.ObservationValueDeserializer;
-import org.motechproject.openmrs19.resource.model.ObservationListResult;
 import org.motechproject.openmrs19.rest.RestClient;
 import org.motechproject.openmrs19.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Type;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class ObservationResourceImpl implements ObservationResource {
@@ -37,9 +35,8 @@ public class ObservationResourceImpl implements ObservationResource {
         String responseJson = restClient.getJson(openmrsInstance.toInstancePathWithParams("/obs?patient={uuid}&v=full",
                 uuid));
 
-        Map<Type, Object> adapters = getObsAdapters();
-        ObservationListResult result = (ObservationListResult) JsonUtils.readJsonWithAdapters(responseJson,
-                ObservationListResult.class, adapters);
+        ObservationListResult result = (ObservationListResult) JsonUtils.readJson(responseJson,
+                ObservationListResult.class);
         return result;
     }
 
@@ -57,29 +54,25 @@ public class ObservationResourceImpl implements ObservationResource {
 
     @Override
     public Observation getObservationById(String uuid) throws HttpException {
-        Map<Type, Object> adapters = getObsAdapters();
         String responseJson = restClient.getJson(openmrsInstance.toInstancePathWithParams("/obs/{uuid}?v=full", uuid));
-        return (Observation) JsonUtils.readJsonWithAdapters(responseJson, Observation.class, adapters);
+        return (Observation) JsonUtils.readJson(responseJson, Observation.class);
     }
 
     @Override
     public Observation createObservation(Observation observation) throws HttpException {
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(Observation.class, new Observation.ObservationSerializer())
-                .create();
-        String responseJson = restClient.postForJson(openmrsInstance.toInstancePath("/obs"), gson.toJson(observation));
-        return (Observation) JsonUtils.readJsonWithAdapters(responseJson, Observation.class, getObsAdapters());
+        Gson gson = new GsonBuilder().registerTypeAdapter(ObservationValue.class, new Observation.ObservationValueSerializer())
+                .registerTypeAdapter(Concept.class, new Concept.ConceptUuidSerializer())
+                .registerTypeAdapter(Person.class, new Person.PersonSerializer())
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
+
+        String requestJson = gson.toJson(observation);
+
+        String responseJson = restClient.postForJson(openmrsInstance.toInstancePath("/obs"), requestJson);
+        return (Observation) JsonUtils.readJson(responseJson, Observation.class);
     }
 
     @Override
     public void deleteObservation(String uuid) throws HttpException {
         restClient.delete(openmrsInstance.toInstancePathWithParams("/obs/{uuid}?purge", uuid));
     }
-
-    private Map<Type, Object> getObsAdapters() {
-        Map<Type, Object> adapters = new HashMap<Type, Object>();
-        adapters.put(ObservationValue.class, new ObservationValueDeserializer());
-        return adapters;
-    }
-
 }

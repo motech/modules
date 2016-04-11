@@ -1,18 +1,13 @@
-package org.motechproject.openmrs19.resource.model;
+package org.motechproject.openmrs19.domain;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-
-import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a single OpenMRS encounter. An encounter is a single, specific interaction between the patient and a
  * provider. It can be any interaction and includes doctor visits, laboratory tests, food distribution, home visits,
- * counselor appointments, etc. It's a part of the OpenMRS model.
+ * counselor appointments, etc. It's a part of the MOTECH model.
  */
 public class Encounter {
 
@@ -24,6 +19,27 @@ public class Encounter {
     private Patient patient;
     private Person provider;
     private List<Observation> obs;
+
+    /**
+     * Default constructor.
+     */
+    public Encounter() {
+    }
+
+    public Encounter(Location location, EncounterType encounterType, Date encounterDatetime, Patient patient,
+                     Person provider) {
+        this(location, encounterType, encounterDatetime, patient, provider, null);
+    }
+
+    public Encounter(Location location, EncounterType encounterType, Date encounterDatetime, Patient patient,
+                     Person provider, List<Observation> obs) {
+        this.location = location;
+        this.encounterType = encounterType;
+        this.encounterDatetime = encounterDatetime;
+        this.patient = patient;
+        this.provider = provider;
+        this.obs = obs;
+    }
 
     public String getUuid() {
         return uuid;
@@ -89,51 +105,26 @@ public class Encounter {
         this.obs = obs;
     }
 
-    /**
-     * Represent a single type of the encounter.
-     */
-    public static class EncounterType {
-
-        private String uuid;
-        private String name;
-        private String description;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
-        public String getUuid() {
-            return uuid;
-        }
-
-        public void setUuid(String uuid) {
-            this.uuid = uuid;
-        }
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid, display, location, encounterType, encounterDatetime, patient, provider, obs);
     }
 
-    /**
-     * Implementation of the {@link JsonSerializer} interface for the
-     * {@link org.motechproject.openmrs19.resource.model.Encounter.EncounterType} class. It represents the encounter
-     * as its name.
-     */
-    public static class EncounterTypeSerializer implements JsonSerializer<EncounterType> {
-
-        @Override
-        public JsonElement serialize(EncounterType src, Type typeOfSrc, JsonSerializationContext context) {
-            return new JsonPrimitive(src.getName());
+    @Override //NO CHECKSTYLE Cyclomatic Complexity
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
         }
 
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        Encounter other = (Encounter) obj;
+
+        return Objects.equals(this.uuid, other.uuid) && Objects.equals(this.display, other.display) &&
+                Objects.equals(this.location, other.location) && Objects.equals(this.encounterType, other.encounterType) &&
+                Objects.equals(this.encounterDatetime, other.encounterDatetime) && Objects.equals(this.patient, other.patient) &&
+                Objects.equals(this.provider, other.provider) && Objects.equals(this.obs, other.obs);
     }
 }

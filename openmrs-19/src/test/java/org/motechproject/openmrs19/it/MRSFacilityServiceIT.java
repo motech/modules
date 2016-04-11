@@ -7,9 +7,9 @@ import org.junit.runner.RunWith;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventListener;
 import org.motechproject.event.listener.EventListenerRegistryService;
-import org.motechproject.openmrs19.domain.OpenMRSFacility;
+import org.motechproject.openmrs19.domain.Location;
 import org.motechproject.openmrs19.service.EventKeys;
-import org.motechproject.openmrs19.service.OpenMRSFacilityService;
+import org.motechproject.openmrs19.service.OpenMRSLocationService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
@@ -34,7 +34,7 @@ import static org.junit.Assert.assertTrue;
 public class MRSFacilityServiceIT extends BasePaxIT {
 
     @Inject
-    private OpenMRSFacilityService facilityAdapter;
+    private OpenMRSLocationService facilityAdapter;
 
     @Inject
     EventListenerRegistryService eventListenerRegistry;
@@ -43,13 +43,13 @@ public class MRSFacilityServiceIT extends BasePaxIT {
 
     MrsListener mrsListener;
 
-    OpenMRSFacility facilityOne;
-    OpenMRSFacility facilityTwo;
+    Location facilityOne;
+    Location facilityTwo;
 
     @Before
     public void initialize() throws InterruptedException {
         mrsListener = new MrsListener();
-        eventListenerRegistry.registerListener(mrsListener, Arrays.asList(EventKeys.CREATED_NEW_FACILITY_SUBJECT, EventKeys.UPDATED_FACILITY_SUBJECT, EventKeys.DELETED_FACILITY_SUBJECT));
+        eventListenerRegistry.registerListener(mrsListener, Arrays.asList(EventKeys.CREATED_NEW_LOCATION_SUBJECT, EventKeys.UPDATED_LOCATION_SUBJECT, EventKeys.DELETED_LOCATION_SUBJECT));
 
         facilityOne = createFacility(prepareFacilityOne());
         facilityTwo = createFacility(prepareFacilityTwo());
@@ -63,11 +63,11 @@ public class MRSFacilityServiceIT extends BasePaxIT {
         assertTrue(mrsListener.created);
         assertFalse(mrsListener.updated);
         assertFalse(mrsListener.deleted);
-        assertEquals(facilityTwo.getName(), mrsListener.eventParameters.get(EventKeys.FACILITY_NAME));
-        assertEquals(facilityTwo.getCountry(), mrsListener.eventParameters.get(EventKeys.FACILITY_COUNTRY));
-        assertEquals(facilityTwo.getRegion(), mrsListener.eventParameters.get(EventKeys.FACILITY_REGION));
-        assertEquals(facilityTwo.getCountyDistrict(), mrsListener.eventParameters.get(EventKeys.FACILITY_COUNTY_DISTRICT));
-        assertEquals(facilityTwo.getStateProvince(), mrsListener.eventParameters.get(EventKeys.FACILITY_STATE_PROVINCE));
+        assertEquals(facilityTwo.getName(), mrsListener.eventParameters.get(EventKeys.LOCATION_NAME));
+        assertEquals(facilityTwo.getCountry(), mrsListener.eventParameters.get(EventKeys.LOCATION_COUNTRY));
+        assertEquals(facilityTwo.getAddress6(), mrsListener.eventParameters.get(EventKeys.LOCATION_REGION));
+        assertEquals(facilityTwo.getCountyDistrict(), mrsListener.eventParameters.get(EventKeys.LOCATION_COUNTY_DISTRICT));
+        assertEquals(facilityTwo.getStateProvince(), mrsListener.eventParameters.get(EventKeys.LOCATION_STATE_PROVINCE));
 
         deleteFacility(facilityOne);
     }
@@ -81,17 +81,17 @@ public class MRSFacilityServiceIT extends BasePaxIT {
         facilityOne.setCountry(newCountry);
         facilityOne.setStateProvince(newStateProvince);
 
-        OpenMRSFacility updatedFacility;
+        Location updatedFacility;
 
         synchronized (lock) {
-            updatedFacility = facilityAdapter.updateFacility(facilityOne);
+            updatedFacility = facilityAdapter.updateLocation(facilityOne);
             assertNotNull(updatedFacility);
 
             lock.wait(60000);
         }
 
-        assertEquals(updatedFacility.getStateProvince(), mrsListener.eventParameters.get(EventKeys.FACILITY_STATE_PROVINCE));
-        assertEquals(updatedFacility.getCountry(), mrsListener.eventParameters.get(EventKeys.FACILITY_COUNTRY));
+        assertEquals(updatedFacility.getStateProvince(), mrsListener.eventParameters.get(EventKeys.LOCATION_STATE_PROVINCE));
+        assertEquals(updatedFacility.getCountry(), mrsListener.eventParameters.get(EventKeys.LOCATION_COUNTRY));
 
         assertTrue(mrsListener.created);
         assertTrue(mrsListener.updated);
@@ -102,8 +102,8 @@ public class MRSFacilityServiceIT extends BasePaxIT {
     public void shouldDeleteFacility() throws InterruptedException {
 
         synchronized (lock) {
-            facilityAdapter.deleteFacility(facilityOne.getFacilityId());
-            assertNull(facilityAdapter.getFacilityByUuid(facilityOne.getFacilityId()));
+            facilityAdapter.deleteLocation(facilityOne.getUuid());
+            assertNull(facilityAdapter.getLocationByUuid(facilityOne.getUuid()));
 
             lock.wait(60000);
         }
@@ -116,7 +116,7 @@ public class MRSFacilityServiceIT extends BasePaxIT {
     @Test
     public void shouldGetFacilities() {
 
-        List<? extends OpenMRSFacility> facilities = facilityAdapter.getFacilities(1, 3);
+        List<? extends Location> facilities = facilityAdapter.getLocations(1, 3);
 
         assertEquals(3, facilities.size());
         assertTrue(facilities.containsAll(Arrays.asList(facilityOne, facilityTwo)));
@@ -125,7 +125,7 @@ public class MRSFacilityServiceIT extends BasePaxIT {
     @Test
     public void shouldGetAllFacilities() {
 
-        List<? extends OpenMRSFacility> facilities = facilityAdapter.getAllFacilities();
+        List<? extends Location> facilities = facilityAdapter.getAllLocations();
 
         assertEquals(3, facilities.size());
         assertTrue(facilities.containsAll(Arrays.asList(facilityOne, facilityTwo)));
@@ -134,7 +134,7 @@ public class MRSFacilityServiceIT extends BasePaxIT {
     @Test
     public void shouldFindFacilitiesByName() {
 
-        List<? extends OpenMRSFacility> facilities = facilityAdapter.getFacilities("FooName");
+        List<? extends Location> facilities = facilityAdapter.getLocations("FooName");
 
         assertEquals(2, facilities.size());
     }
@@ -142,7 +142,7 @@ public class MRSFacilityServiceIT extends BasePaxIT {
     @Test
     public void shouldFindFacilityById() {
 
-        assertNotNull(facilityAdapter.getFacilityByUuid(facilityOne.getFacilityId()));
+        assertNotNull(facilityAdapter.getLocationByUuid(facilityOne.getUuid()));
     }
 
     @After
@@ -152,20 +152,20 @@ public class MRSFacilityServiceIT extends BasePaxIT {
         eventListenerRegistry.clearListenersForBean("mrsTestListener");
     }
 
-    private OpenMRSFacility prepareFacilityOne() {
-        return new OpenMRSFacility("FooName", "FooCountry", "FooRegion", "FooCountryDistrict", "FooStateProvince");
+    private Location prepareFacilityOne() {
+        return new Location("FooName", "FooCountry", "FooRegion", "FooCountryDistrict", "FooStateProvince");
     }
 
-    private OpenMRSFacility prepareFacilityTwo() {
-        return new OpenMRSFacility("FooNameTwo", "FooCountryTwo", "FooRegionTwo", "FooCountryDistrictTwo", "FooStateProvinceTwo");
+    private Location prepareFacilityTwo() {
+        return new Location("FooNameTwo", "FooCountryTwo", "FooRegionTwo", "FooCountryDistrictTwo", "FooStateProvinceTwo");
     }
 
-    private OpenMRSFacility createFacility(OpenMRSFacility facility) throws InterruptedException {
+    private Location createFacility(Location facility) throws InterruptedException {
 
-        OpenMRSFacility created;
+        Location created;
 
         synchronized (lock) {
-            created = facilityAdapter.createFacility(facility);
+            created = facilityAdapter.createLocation(facility);
             assertNotNull(created);
 
             lock.wait(60000);
@@ -174,10 +174,10 @@ public class MRSFacilityServiceIT extends BasePaxIT {
         return created;
     }
 
-    private void deleteFacility(OpenMRSFacility facility) {
-        facilityAdapter.deleteFacility(facility.getFacilityId());
+    private void deleteFacility(Location facility) {
+        facilityAdapter.deleteLocation(facility.getUuid());
 
-        assertNull(facilityAdapter.getFacilityByUuid(facility.getFacilityId()));
+        assertNull(facilityAdapter.getLocationByUuid(facility.getUuid()));
     }
 
     public class MrsListener implements EventListener {
@@ -188,11 +188,11 @@ public class MRSFacilityServiceIT extends BasePaxIT {
         private Map<String, Object> eventParameters;
 
         public void handle(MotechEvent event) {
-            if (event.getSubject().equals(EventKeys.CREATED_NEW_FACILITY_SUBJECT)) {
+            if (event.getSubject().equals(EventKeys.CREATED_NEW_LOCATION_SUBJECT)) {
                 created = true;
-            } else if (event.getSubject().equals(EventKeys.UPDATED_FACILITY_SUBJECT)) {
+            } else if (event.getSubject().equals(EventKeys.UPDATED_LOCATION_SUBJECT)) {
                 updated = true;
-            } else if (event.getSubject().equals(EventKeys.DELETED_FACILITY_SUBJECT)) {
+            } else if (event.getSubject().equals(EventKeys.DELETED_LOCATION_SUBJECT)) {
                 deleted = true;
             }
             eventParameters = event.getParameters();

@@ -7,8 +7,8 @@ import org.junit.runner.RunWith;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventListener;
 import org.motechproject.event.listener.EventListenerRegistryService;
-import org.motechproject.openmrs19.domain.OpenMRSConcept;
-import org.motechproject.openmrs19.domain.OpenMRSConceptName;
+import org.motechproject.openmrs19.domain.Concept;
+import org.motechproject.openmrs19.domain.ConceptName;
 import org.motechproject.openmrs19.exception.ConceptNameAlreadyInUseException;
 import org.motechproject.openmrs19.service.EventKeys;
 import org.motechproject.openmrs19.service.OpenMRSConceptService;
@@ -45,8 +45,8 @@ public class MRSConceptServiceIT extends BasePaxIT {
 
     MrsListener mrsListener;
 
-    OpenMRSConcept conceptOne;
-    OpenMRSConcept conceptTwo;
+    Concept conceptOne;
+    Concept conceptTwo;
 
     @Before
     public void setUp() throws ConceptNameAlreadyInUseException, InterruptedException {
@@ -64,8 +64,8 @@ public class MRSConceptServiceIT extends BasePaxIT {
     public void shouldCreateConcept() throws ConceptNameAlreadyInUseException {
 
         assertEquals(conceptOne.getName().getName(), mrsListener.eventParameters.get(EventKeys.CONCEPT_NAME));
-        assertEquals(conceptOne.getDataType(), mrsListener.eventParameters.get(EventKeys.CONCEPT_DATA_TYPE));
-        assertEquals(conceptOne.getConceptClass(), mrsListener.eventParameters.get(EventKeys.CONCEPT_CONCEPT_CLASS));
+        assertEquals(conceptOne.getDatatype().getDisplay(), mrsListener.eventParameters.get(EventKeys.CONCEPT_DATA_TYPE));
+        assertEquals(conceptOne.getConceptClass().getDisplay(), mrsListener.eventParameters.get(EventKeys.CONCEPT_CONCEPT_CLASS));
 
         assertTrue(mrsListener.created);
         assertFalse(mrsListener.updated);
@@ -75,20 +75,18 @@ public class MRSConceptServiceIT extends BasePaxIT {
     @Test
     public void shouldUpdateConcept() throws InterruptedException, ConceptNameAlreadyInUseException {
 
-        conceptOne.setDataType("Text");
-        conceptOne.setConceptClass("Test");
-
-        OpenMRSConcept updatedConcept;
+        conceptOne.setDatatype(new Concept.DataType("Text"));
+        conceptOne.setConceptClass(new Concept.ConceptClass("Test"));
 
         synchronized (lock) {
-            updatedConcept = (OpenMRSConcept) conceptAdapter.updateConcept(conceptOne);
+            conceptAdapter.updateConcept(conceptOne);
             lock.wait(6000);
         }
 
-        assertNotNull(updatedConcept);
+        Concept updatedConcept = conceptAdapter.getConceptByUuid(conceptOne.getUuid());
 
-        assertEquals(conceptOne.getDataType(), mrsListener.eventParameters.get(EventKeys.CONCEPT_DATA_TYPE));
-        assertEquals(conceptOne.getConceptClass(), mrsListener.eventParameters.get(EventKeys.CONCEPT_CONCEPT_CLASS));
+        assertEquals("Text", updatedConcept.getDatatype().getDisplay());
+        assertEquals("Test", updatedConcept.getConceptClass().getDisplay());
 
         assertTrue(mrsListener.created);
         assertTrue(mrsListener.updated);
@@ -113,7 +111,7 @@ public class MRSConceptServiceIT extends BasePaxIT {
     @Test
     public void shouldGetAllConcepts() throws ConceptNameAlreadyInUseException, InterruptedException {
 
-        List<? extends OpenMRSConcept> concepts = conceptAdapter.getAllConcepts();
+        List<? extends Concept> concepts = conceptAdapter.getAllConcepts();
 
         assertTrue(concepts.size() >= 2);
     }
@@ -121,7 +119,7 @@ public class MRSConceptServiceIT extends BasePaxIT {
     @Test
     public void shouldGetConcepts() {
 
-        List<? extends OpenMRSConcept> concepts = conceptAdapter.getConcepts(1, 1);
+        List<? extends Concept> concepts = conceptAdapter.getConcepts(1, 1);
 
         assertTrue(concepts.size() == 1);
 
@@ -134,7 +132,7 @@ public class MRSConceptServiceIT extends BasePaxIT {
     @Test
     public void shouldFindSingleConceptByName() throws InterruptedException, ConceptNameAlreadyInUseException {
 
-        List<? extends OpenMRSConcept> concepts = conceptAdapter.search(conceptOne.getName().getName());
+        List<? extends Concept> concepts = conceptAdapter.search(conceptOne.getName().getName());
 
         assertEquals(1, concepts.size());
 
@@ -151,33 +149,33 @@ public class MRSConceptServiceIT extends BasePaxIT {
         eventListenerRegistry.clearListenersForBean(mrsListener.getIdentifier());
     }
 
-    private OpenMRSConcept prepareConceptOne() {
+    private Concept prepareConceptOne() {
 
-        OpenMRSConcept concept = new OpenMRSConcept();
-        OpenMRSConceptName conceptName = new OpenMRSConceptName("FooConceptOne");
+        Concept concept = new Concept();
+        ConceptName conceptName = new ConceptName("FooConceptOne");
 
         concept.setNames(Arrays.asList(conceptName));
-        concept.setDataType("TEXT");
-        concept.setConceptClass("Test");
+        concept.setDatatype(new Concept.DataType("TEXT"));
+        concept.setConceptClass(new Concept.ConceptClass("Test"));
 
         return concept;
     }
 
-    private OpenMRSConcept prepareConceptTwo() {
+    private Concept prepareConceptTwo() {
 
-        OpenMRSConcept concept = new OpenMRSConcept();
-        OpenMRSConceptName conceptName = new OpenMRSConceptName("FooConceptTwo");
+        Concept concept = new Concept();
+        ConceptName conceptName = new ConceptName("FooConceptTwo");
 
         concept.setNames(Arrays.asList(conceptName));
-        concept.setDataType("TEXT");
-        concept.setConceptClass("Test");
+        concept.setDatatype(new Concept.DataType("TEXT"));
+        concept.setConceptClass(new Concept.ConceptClass("Test"));
 
         return concept;
     }
 
-    private OpenMRSConcept createConcept(OpenMRSConcept concept) throws ConceptNameAlreadyInUseException, InterruptedException {
+    private Concept createConcept(Concept concept) throws ConceptNameAlreadyInUseException, InterruptedException {
 
-        OpenMRSConcept created;
+        Concept created;
 
         synchronized (lock) {
             created = conceptAdapter.createConcept(concept);
@@ -187,7 +185,7 @@ public class MRSConceptServiceIT extends BasePaxIT {
         return created;
     }
 
-    private void deleteConcept(OpenMRSConcept concept) throws InterruptedException {
+    private void deleteConcept(Concept concept) throws InterruptedException {
 
         conceptAdapter.deleteConcept(concept.getUuid());
         assertNull(conceptAdapter.getConceptByUuid(concept.getUuid()));

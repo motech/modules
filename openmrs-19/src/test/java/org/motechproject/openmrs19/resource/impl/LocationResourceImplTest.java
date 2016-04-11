@@ -5,9 +5,9 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.motechproject.openmrs19.domain.Location;
+import org.motechproject.openmrs19.domain.LocationListResult;
 import org.motechproject.openmrs19.exception.HttpException;
-import org.motechproject.openmrs19.resource.model.Location;
-import org.motechproject.openmrs19.resource.model.LocationListResult;
 
 import java.io.IOException;
 import java.net.URI;

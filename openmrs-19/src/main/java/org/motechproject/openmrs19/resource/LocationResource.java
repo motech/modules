@@ -1,8 +1,8 @@
 package org.motechproject.openmrs19.resource;
 
+import org.motechproject.openmrs19.domain.Location;
+import org.motechproject.openmrs19.domain.LocationListResult;
 import org.motechproject.openmrs19.exception.HttpException;
-import org.motechproject.openmrs19.resource.model.Location;
-import org.motechproject.openmrs19.resource.model.LocationListResult;
 
 /**
  * Interface for locations management.

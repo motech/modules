@@ -1,8 +1,8 @@
 package org.motechproject.openmrs19.resource;
 
 import org.motechproject.openmrs19.exception.HttpException;
-import org.motechproject.openmrs19.resource.model.Observation;
-import org.motechproject.openmrs19.resource.model.ObservationListResult;
+import org.motechproject.openmrs19.domain.Observation;
+import org.motechproject.openmrs19.domain.ObservationListResult;
 
 /**
  * Interface for observations management.

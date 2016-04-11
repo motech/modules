@@ -3,16 +3,12 @@ package org.motechproject.openmrs19.resource.impl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.motechproject.openmrs19.OpenMrsInstance;
+import org.motechproject.openmrs19.domain.Attribute;
+import org.motechproject.openmrs19.domain.AttributeTypeListResult;
+import org.motechproject.openmrs19.domain.Concept;
+import org.motechproject.openmrs19.domain.Person;
 import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.resource.PersonResource;
-import org.motechproject.openmrs19.resource.model.Attribute;
-import org.motechproject.openmrs19.resource.model.Attribute.AttributeType;
-import org.motechproject.openmrs19.resource.model.Attribute.AttributeTypeSerializer;
-import org.motechproject.openmrs19.resource.model.AttributeTypeListResult;
-import org.motechproject.openmrs19.resource.model.Concept;
-import org.motechproject.openmrs19.resource.model.Person;
-import org.motechproject.openmrs19.resource.model.Person.PreferredAddress;
-import org.motechproject.openmrs19.resource.model.Person.PreferredName;
 import org.motechproject.openmrs19.rest.RestClient;
 import org.motechproject.openmrs19.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +28,7 @@ public class PersonResourceImpl implements PersonResource {
 
     @Override
     public Person getPersonById(String uuid) throws HttpException {
-        String responseJson = null;
-        responseJson = restClient.getJson(openmrsInstance.toInstancePathWithParams("/person/{uuid}?v=full", uuid));
+        String responseJson = restClient.getJson(openmrsInstance.toInstancePathWithParams("/person/{uuid}?v=full", uuid));
         return (Person) JsonUtils.readJson(responseJson, Person.class);
     }
 
@@ -49,7 +44,7 @@ public class PersonResourceImpl implements PersonResource {
 
     @Override
     public void createPersonAttribute(String personUuid, Attribute attribute) throws HttpException {
-        Gson gson = new GsonBuilder().registerTypeAdapter(AttributeType.class, new AttributeTypeSerializer()).create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(Attribute.AttributeType.class, new Attribute.AttributeTypeSerializer()).create();
         String requestJson = gson.toJson(attribute);
 
         restClient.postForJson(openmrsInstance.toInstancePathWithParams("/person/{uuid}/attribute", personUuid),
@@ -58,8 +53,7 @@ public class PersonResourceImpl implements PersonResource {
 
     @Override
     public AttributeTypeListResult queryPersonAttributeTypeByName(String name) throws HttpException {
-        String responseJson = null;
-        responseJson = restClient.getJson(openmrsInstance.toInstancePathWithParams("/personattributetype?q={name}",
+        String responseJson = restClient.getJson(openmrsInstance.toInstancePathWithParams("/personattributetype?q={name}",
                 name));
 
         AttributeTypeListResult result = (AttributeTypeListResult) JsonUtils.readJson(responseJson,
@@ -79,21 +73,18 @@ public class PersonResourceImpl implements PersonResource {
 
     @Override
     public Person updatePerson(Person person) throws HttpException {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Concept.class, new Concept.ConceptUuidSerializer())
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
-        // uuid cannot be set on an update call
-        String personUuid = person.getUuid();
-        person.setUuid(null);
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+                .registerTypeAdapter(Concept.class, new Concept.ConceptUuidSerializer()).create();
 
         String requestJson = gson.toJson(person);
-        String responseJson = restClient.postForJson(openmrsInstance.toInstancePathWithParams("/person/{uuid}?v=full", personUuid),
+        String responseJson = restClient.postForJson(openmrsInstance.toInstancePathWithParams("/person/{uuid}?v=full", person.getUuid()),
                 requestJson);
 
         return (Person) JsonUtils.readJson(responseJson, Person.class);
     }
 
     @Override
-    public void updatePersonName(String uuid, PreferredName name) throws HttpException {
+    public void updatePersonName(String uuid, Person.Name name) throws HttpException {
         Gson gson = new GsonBuilder().create();
         // setting uuid and display to null so they are not included in request
         String nameUuid = name.getUuid();
@@ -107,7 +98,7 @@ public class PersonResourceImpl implements PersonResource {
     }
 
     @Override
-    public void updatePersonAddress(String uuid, PreferredAddress address) throws HttpException {
+    public void updatePersonAddress(String uuid, Person.Address address) throws HttpException {
         Gson gson = new GsonBuilder().create();
         // setting uuid to null so it is not included in request
         String addrUuid = address.getUuid();

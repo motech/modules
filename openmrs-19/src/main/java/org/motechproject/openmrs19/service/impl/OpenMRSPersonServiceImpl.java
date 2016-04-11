@@ -4,35 +4,26 @@ import org.apache.commons.lang.Validate;
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.openmrs19.domain.OpenMRSAttribute;
-import org.motechproject.openmrs19.domain.OpenMRSPerson;
+import org.motechproject.openmrs19.domain.Attribute;
+import org.motechproject.openmrs19.domain.Concept;
+import org.motechproject.openmrs19.domain.Person;
 import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.exception.OpenMRSException;
 import org.motechproject.openmrs19.helper.EventHelper;
 import org.motechproject.openmrs19.resource.PersonResource;
-import org.motechproject.openmrs19.resource.model.Attribute;
-import org.motechproject.openmrs19.resource.model.Attribute.AttributeType;
-import org.motechproject.openmrs19.resource.model.AttributeTypeListResult;
-import org.motechproject.openmrs19.resource.model.Concept;
-import org.motechproject.openmrs19.resource.model.Person;
 import org.motechproject.openmrs19.service.EventKeys;
 import org.motechproject.openmrs19.service.OpenMRSPersonService;
-import org.motechproject.openmrs19.util.ConverterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service("personService")
 public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSPersonServiceImpl.class);
-
-    private final Map<String, String> attributeTypeUuidCache = new HashMap<>();
 
     private final PersonResource personResource;
     private final EventRelay eventRelay;
@@ -44,10 +35,10 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
     }
 
     @Override
-    public OpenMRSPerson getPersonByUuid(String uuid) {
+    public Person getPersonByUuid(String uuid) {
 
         try {
-            return ConverterUtils.toOpenMRSPerson(personResource.getPersonById(uuid));
+            return personResource.getPersonById(uuid);
         } catch (HttpException e) {
             LOGGER.error("Failed to retrieve person with uuid: " + uuid);
             return null;
@@ -55,62 +46,60 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
     }
 
     @Override
-    public OpenMRSPerson createPerson(OpenMRSPerson openMRSPerson) {
-
-        Validate.notNull(openMRSPerson, "Person cannot be null");
-
-        Person converted = ConverterUtils.toPerson(openMRSPerson, true);
+    public Person createPerson(Person person) {
+        Validate.notNull(person, "Person cannot be null");
 
         try {
-            OpenMRSPerson saved;
-
-            saved = ConverterUtils.toOpenMRSPerson(personResource.createPerson(converted));
+            Person saved = personResource.createPerson(person);
             saveAttributesForPerson(saved);
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_PERSON_SUBJECT, EventHelper.personParameters(saved)));
 
             return saved;
 
         } catch (HttpException e) {
-            throw new OpenMRSException("Failed to create person for: " + openMRSPerson.getFullName(), e);
+            throw new OpenMRSException("Failed to create person for: " + person.getDisplay(), e);
         }
     }
 
     @Override
-    public OpenMRSPerson createPerson(String firstName, String lastName, DateTime dateOfBirth,
-                                      String gender, String address, List<OpenMRSAttribute> attributes)  {
+    public Person createPerson(String givenName, String familyName, DateTime birthDate,
+                               String gender, String address, List<Attribute> attributes)  {
 
-        OpenMRSPerson person = new OpenMRSPerson();
-        person.setFirstName(firstName);
-        person.setLastName(lastName);
-        person.setDateOfBirth(dateOfBirth);
+        Person person = new Person();
+
+        person.setBirthdate(birthDate.toDate());
         person.setGender(gender);
-        person.setAddress(address);
-        person.setAttributes(ConverterUtils.copyAttributeList(attributes));
+        person.setAttributes(attributes);
+
+        Person.Name name = new Person.Name();
+        name.setGivenName(givenName);
+        name.setFamilyName(familyName);
+
+        Person.Address preferredAddress = new Person.Address();
+        preferredAddress.setAddress1(address);
 
         return createPerson(person);
     }
 
     @Override
-    public OpenMRSPerson updatePerson(OpenMRSPerson openMRSPerson) {
-
-        Person converted = ConverterUtils.toPerson(openMRSPerson, true);
+    public Person updatePerson(Person person) {
 
         try {
-            OpenMRSPerson updated = ConverterUtils.toOpenMRSPerson(personResource.updatePerson(converted));
+            Person updated = personResource.updatePerson(person);
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.UPDATED_PERSON_SUBJECT, EventHelper.personParameters(updated)));
 
             return updated;
 
         } catch (HttpException e) {
-            throw new OpenMRSException("Failed to update a person in OpenMRS with id: " + openMRSPerson.getPersonId(), e);
+            throw new OpenMRSException("Failed to update a person in OpenMRS with id: " + person.getUuid(), e);
         }
     }
 
-    public void savePersonCauseOfDeath(String patientId, Date dateOfDeath, Concept causeOfDeath) {
+    public void savePersonCauseOfDeath(String patientId, Date deathDate, Concept causeOfDeath) {
         Person person = new Person();
         person.setUuid(patientId);
         person.setDead(true);
-        person.setDeathDate(dateOfDeath);
+        person.setDeathDate(deathDate);
         person.setCauseOfDeath(causeOfDeath);
 
         try {
@@ -122,67 +111,39 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
 
     @Override
     public void deletePerson(String uuid) {
-
         try {
             personResource.deletePerson(uuid);
-            eventRelay.sendEventMessage(new MotechEvent(EventKeys.DELETED_PERSON_SUBJECT, EventHelper.personParameters(new OpenMRSPerson(uuid))));
+            eventRelay.sendEventMessage(new MotechEvent(EventKeys.DELETED_PERSON_SUBJECT, EventHelper.personParameters(new Person(uuid))));
         } catch (HttpException e) {
             throw new OpenMRSException("Failed to remove person with UUID: " + uuid, e);
         }
     }
 
-    public void saveAttributesForPerson(OpenMRSPerson person) {
-        for (OpenMRSAttribute attribute : person.getAttributes()) {
-            Attribute attr = new Attribute();
-            attr.setValue(attribute.getValue());
-            attr.setAttributeType(getAttributeTypeUuid(attribute.getName()));
+    public void saveAttributesForPerson(Person person) {
+        for (Attribute attribute : person.getAttributes()) {
 
             try {
-                personResource.createPersonAttribute(person.getPersonId(), attr);
+                personResource.createPersonAttribute(person.getUuid(), attribute);
             } catch (HttpException e) {
-                LOGGER.warn("Unable to add attribute to person with id: " + person.getPersonId());
+                LOGGER.warn("Unable to add attribute to person with id: " + person.getUuid());
             }
         }
     }
 
-    public void deleteAllAttributes(OpenMRSPerson person) {
+    public void deleteAllAttributes(Person person) {
         Person saved;
         try {
-            saved = personResource.getPersonById(person.getPersonId());
+            saved = personResource.getPersonById(person.getUuid());
         } catch (HttpException e) {
-            throw new OpenMRSException("Failed to retrieve person when deleting attributes with uuid: " + person.getPersonId(), e);
+            throw new OpenMRSException("Failed to retrieve person when deleting attributes with uuid: " + person.getUuid(), e);
         }
 
-        List<Attribute> attributes = saved.getAttributes();
-        for (Attribute attr : attributes) {
+        for (Attribute attribute : saved.getAttributes()) {
             try {
-                personResource.deleteAttribute(person.getPersonId(), attr);
+                personResource.deleteAttribute(person.getUuid(), attribute);
             } catch (HttpException e) {
-                LOGGER.warn("Failed to delete attribute with name: " + attr.getName());
+                LOGGER.warn("Failed to delete attribute with name: " + attribute.getName());
             }
         }
-    }
-
-    private AttributeType getAttributeTypeUuid(String name) {
-        if (!attributeTypeUuidCache.containsKey(name)) {
-            AttributeTypeListResult result;
-            try {
-                result = personResource.queryPersonAttributeTypeByName(name);
-            } catch (HttpException e) {
-                throw new OpenMRSException("HTTP request failed to get attribute type uuid for attribute with name: " + name, e);
-            }
-
-            if (result.getResults().size() == 0) {
-                throw new OpenMRSException("No attribute with name: " + name + " found in OpenMRS");
-            } else if (result.getResults().size() > 1) {
-                LOGGER.warn("Found more than 1 attribute with name: " + name);
-            }
-            attributeTypeUuidCache.put(name, result.getResults().get(0).getUuid());
-        }
-
-        AttributeType type = new AttributeType();
-        type.setUuid(attributeTypeUuidCache.get(name));
-
-        return type;
     }
 }

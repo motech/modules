@@ -1,6 +1,6 @@
 package org.motechproject.openmrs19.service;
 
-import org.motechproject.openmrs19.domain.OpenMRSObservation;
+import org.motechproject.openmrs19.domain.Observation;
 import org.motechproject.openmrs19.exception.ObservationNotFoundException;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public interface OpenMRSObservationService {
      * @param reason  the reason for voiding the observation
      * @throws ObservationNotFoundException if the observation doesn't exist
      */
-    void voidObservation(OpenMRSObservation observation, String reason) throws ObservationNotFoundException;
+    void voidObservation(Observation observation, String reason) throws ObservationNotFoundException;
 
     /**
      * Returns the latest observation of the concept with the given {@code conceptName} for a patient with the given
@@ -27,7 +27,7 @@ public interface OpenMRSObservationService {
      * @param conceptName  the name of the observation concept
      * @return  the latest observation for the given concept name and patient MOTECH ID
      */
-    OpenMRSObservation findObservation(String motechId, String conceptName);
+    Observation findObservation(String motechId, String conceptName);
 
     /**
      * Returns a list of observations of the concept with the given {@code conceptName} for a patient with the given
@@ -37,7 +37,7 @@ public interface OpenMRSObservationService {
      * @param conceptName  the name of the observation concept
      * @return the list of observations for the given concept name and patient MOTECH ID
      */
-    List<OpenMRSObservation> findObservations(String patientMotechId, String conceptName);
+    List<Observation> findObservations(String patientMotechId, String conceptName);
 
     /**
      * Returns the observation with given {@code uuid}.
@@ -45,7 +45,7 @@ public interface OpenMRSObservationService {
      * @param uuid  the UUID of the observation
      * @return the observation with the given UUID, null if the observation doesn't exist
      */
-    OpenMRSObservation getObservationByUuid(String uuid);
+    Observation getObservationByUuid(String uuid);
 
     /**
      * Creates the given {@code observation} on the OpenMRS server.
@@ -53,7 +53,7 @@ public interface OpenMRSObservationService {
      * @param observation  the observation to be created
      * @return  the created observation
      */
-    OpenMRSObservation createObservation(OpenMRSObservation observation);
+    Observation createObservation(Observation observation);
 
     /**
      * Deletes the observation with the given {@code uuid} from the OpenMRS server. If the observation with the given

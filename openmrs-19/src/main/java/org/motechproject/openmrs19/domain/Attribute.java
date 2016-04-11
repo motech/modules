@@ -1,4 +1,4 @@
-package org.motechproject.openmrs19.resource.model;
+package org.motechproject.openmrs19.domain;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -13,30 +13,57 @@ import java.util.List;
  */
 public class Attribute {
 
-    private String display;
     private String uuid;
+    private String display;
     private String value;
     private String name;
     private String description;
     private String format;
     private AttributeType attributeType;
-
     private List<Link> links;
 
-    public List<Link> getLinks() {
-        return links;
+    /**
+     * Represents a single link.
+     */
+    public static class Link {
+
+        private String uri;
+
+        public String getUri() {
+            return uri;
+        }
+
+        public void setUri(String uri) {
+            this.uri = uri;
+        }
     }
 
-    public void setLinks(List<Link> links) {
-        this.links = links;
+    /**
+     * Represents a single attribute type stored as ID.
+     */
+    public static class AttributeType {
+
+        private String uuid;
+
+        public String getUuid() {
+            return uuid;
+        }
+
+        public void setUuid(String uuid) {
+            this.uuid = uuid;
+        }
     }
 
-    public String getDisplay() {
-        return display;
-    }
+    /**
+     * Implementation of the {@link JsonSerializer} interface for the
+     * {@link AttributeType} class.
+     */
+    public static class AttributeTypeSerializer implements JsonSerializer<AttributeType> {
 
-    public void setDisplay(String display) {
-        this.display = display;
+        @Override
+        public JsonElement serialize(AttributeType src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src.getUuid());
+        }
     }
 
     public String getUuid() {
@@ -45,6 +72,14 @@ public class Attribute {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public String getDisplay() {
+        return display;
+    }
+
+    public void setDisplay(String display) {
+        this.display = display;
     }
 
     public String getValue() {
@@ -87,47 +122,11 @@ public class Attribute {
         this.attributeType = attributeType;
     }
 
-    /**
-     * Represents a single link.
-     */
-    public static class Link {
-
-        private String uri;
-
-        public String getUri() {
-            return uri;
-        }
-
-        public void setUri(String uri) {
-            this.uri = uri;
-        }
+    public List<Link> getLinks() {
+        return links;
     }
 
-    /**
-     * Represents a single attribute type stored as ID.
-     */
-    public static class AttributeType {
-
-        private String uuid;
-
-        public String getUuid() {
-            return uuid;
-        }
-
-        public void setUuid(String uuid) {
-            this.uuid = uuid;
-        }
-    }
-
-    /**
-     * Implementation of the {@link JsonSerializer} interface for the
-     * {@link org.motechproject.openmrs19.resource.model.Attribute.AttributeType} class.
-     */
-    public static class AttributeTypeSerializer implements JsonSerializer<AttributeType> {
-
-        @Override
-        public JsonElement serialize(AttributeType src, Type typeOfSrc, JsonSerializationContext context) {
-            return new JsonPrimitive(src.getUuid());
-        }
+    public void setLinks(List<Link> links) {
+        this.links = links;
     }
 }

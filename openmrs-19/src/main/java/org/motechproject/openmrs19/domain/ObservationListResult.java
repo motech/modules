@@ -1,9 +1,9 @@
-package org.motechproject.openmrs19.resource.model;
+package org.motechproject.openmrs19.domain;
 
 import java.util.List;
 
 /**
- * Stores a list of {@link Observation}s. This class is used as a result of a query to the OpenMRS server.
+ * Stores a list of {@link org.motechproject.openmrs19.domain.Observation}s. This class is used as a result of a query to the OpenMRS server.
  */
 public class ObservationListResult {
 

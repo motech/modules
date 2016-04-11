@@ -11,7 +11,7 @@
 
     <osgi:service ref="conceptService" interface="org.motechproject.openmrs19.service.OpenMRSConceptService"/>
     <osgi:service ref="encounterService" interface="org.motechproject.openmrs19.service.OpenMRSEncounterService"/>
-    <osgi:service ref="facilityService" interface="org.motechproject.openmrs19.service.OpenMRSFacilityService"/>
+    <osgi:service ref="locationService" interface="org.motechproject.openmrs19.service.OpenMRSLocationService"/>
     <osgi:service ref="observationService" interface="org.motechproject.openmrs19.service.OpenMRSObservationService"/>
     <osgi:service ref="patientService" interface="org.motechproject.openmrs19.service.OpenMRSPatientService"/>
     <osgi:service ref="personService" interface="org.motechproject.openmrs19.service.OpenMRSPersonService"/>

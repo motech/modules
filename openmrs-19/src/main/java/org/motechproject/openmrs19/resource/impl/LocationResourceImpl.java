@@ -4,12 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.lang.Validate;
 import org.motechproject.openmrs19.OpenMrsInstance;
+import org.motechproject.openmrs19.domain.Location;
+import org.motechproject.openmrs19.domain.LocationListResult;
 import org.motechproject.openmrs19.exception.HttpException;
-import org.motechproject.openmrs19.rest.RestClient;
 import org.motechproject.openmrs19.resource.LocationResource;
-import org.motechproject.openmrs19.resource.model.Concept;
-import org.motechproject.openmrs19.resource.model.Location;
-import org.motechproject.openmrs19.resource.model.LocationListResult;
+import org.motechproject.openmrs19.rest.RestClient;
 import org.motechproject.openmrs19.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -67,7 +66,7 @@ public class LocationResourceImpl implements LocationResource {
 
     @Override
     public Location updateLocation(Location location) throws HttpException {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Concept.class, new Concept.ConceptSerializer()).create();
+        Gson gson = new GsonBuilder().create();
         // uuid cannot be set on an update call
         String locationUuid = location.getUuid();
         location.setUuid(null);

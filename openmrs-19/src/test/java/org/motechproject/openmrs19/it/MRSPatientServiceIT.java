@@ -7,18 +7,17 @@ import org.junit.runner.RunWith;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventListener;
 import org.motechproject.event.listener.EventListenerRegistryService;
-import org.motechproject.openmrs19.domain.OpenMRSAttribute;
-import org.motechproject.openmrs19.domain.OpenMRSConcept;
-import org.motechproject.openmrs19.domain.OpenMRSConceptName;
-import org.motechproject.openmrs19.domain.OpenMRSFacility;
-import org.motechproject.openmrs19.domain.OpenMRSPatient;
-import org.motechproject.openmrs19.domain.OpenMRSPerson;
+import org.motechproject.openmrs19.domain.Concept;
+import org.motechproject.openmrs19.domain.ConceptName;
+import org.motechproject.openmrs19.domain.Location;
+import org.motechproject.openmrs19.domain.Patient;
+import org.motechproject.openmrs19.domain.Person;
 import org.motechproject.openmrs19.exception.ConceptNameAlreadyInUseException;
 import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.exception.PatientNotFoundException;
 import org.motechproject.openmrs19.service.EventKeys;
 import org.motechproject.openmrs19.service.OpenMRSConceptService;
-import org.motechproject.openmrs19.service.OpenMRSFacilityService;
+import org.motechproject.openmrs19.service.OpenMRSLocationService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.service.OpenMRSPersonService;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -29,8 +28,8 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +48,7 @@ public class MRSPatientServiceIT extends BasePaxIT {
     final Object lock = new Object();
 
     @Inject
-    private OpenMRSFacilityService facilityAdapter;
+    private OpenMRSLocationService facilityAdapter;
 
     @Inject
     private OpenMRSPatientService patientAdapter;
@@ -65,8 +64,8 @@ public class MRSPatientServiceIT extends BasePaxIT {
 
     MrsListener mrsListener;
 
-    OpenMRSPatient patient;
-    OpenMRSConcept causeOfDeath;
+    Patient patient;
+    Concept causeOfDeath;
 
     @Before
     public void setUp() throws InterruptedException, ConceptNameAlreadyInUseException {
@@ -74,7 +73,7 @@ public class MRSPatientServiceIT extends BasePaxIT {
         eventListenerRegistry.registerListener(mrsListener, Arrays.asList(EventKeys.CREATED_NEW_PATIENT_SUBJECT,
                 EventKeys.UPDATED_PATIENT_SUBJECT, EventKeys.PATIENT_DECEASED_SUBJECT, EventKeys.DELETED_PATIENT_SUBJECT));
 
-        String uuid = savePatient(preparePatient()).getPatientId();
+        String uuid = savePatient(preparePatient()).getUuid();
         patient = patientAdapter.getPatientByUuid(uuid);
         prepareConceptOfDeath();
     }
@@ -83,8 +82,8 @@ public class MRSPatientServiceIT extends BasePaxIT {
     public void shouldCreatePatient() {
 
         assertNotNull(patient.getMotechId());
-        assertEquals(patient.getPatientId(), mrsListener.eventParameters.get(EventKeys.PATIENT_ID));
-        assertEquals(patient.getPerson().getPersonId(), mrsListener.eventParameters.get(EventKeys.PERSON_ID));
+        assertEquals(patient.getUuid(), mrsListener.eventParameters.get(EventKeys.PATIENT_ID));
+        assertEquals(patient.getPerson().getUuid(), mrsListener.eventParameters.get(EventKeys.PERSON_ID));
 
         assertTrue(mrsListener.created);
         assertFalse(mrsListener.deceased);
@@ -98,25 +97,22 @@ public class MRSPatientServiceIT extends BasePaxIT {
         final String newFirstName = "Changed Name";
         final String newAddress = "Changed Address";
 
-        patient.getPerson().setFirstName(newFirstName);
-        patient.getPerson().setAddress(newAddress);
+        Person.Name name = patient.getPerson().getNames().get(0);
+        name.setGivenName(newFirstName);
 
-        OpenMRSPatient updated;
+        Person.Address address = patient.getPerson().getAddresses().get(0);
+        address.setAddress1(newAddress);
 
         synchronized (lock) {
-            updated = patientAdapter.updatePatient(patient);
-            assertNotNull(updated);
+            patientAdapter.updatePatient(patient);
 
             lock.wait(60000);
         }
 
-        assertEquals("Changed Name", updated.getPerson().getFirstName());
-        assertEquals("Changed Address", updated.getPerson().getAddress());
+        Patient updated = patientAdapter.getPatientByUuid(patient.getUuid());
 
-        assertEquals(updated.getPatientId(), mrsListener.eventParameters.get(EventKeys.PATIENT_ID));
-        assertEquals(updated.getFacility().getFacilityId(), mrsListener.eventParameters.get(EventKeys.FACILITY_ID));
-        assertEquals(updated.getPerson().getPersonId(), mrsListener.eventParameters.get(EventKeys.PERSON_ID));
-        assertEquals(updated.getMotechId(), mrsListener.eventParameters.get(EventKeys.MOTECH_ID));
+        assertEquals("Changed Name", updated.getPerson().getPreferredName().getGivenName());
+        assertEquals("Changed Address", updated.getPerson().getPreferredAddress().getAddress1());
 
         assertTrue(mrsListener.created);
         assertFalse(mrsListener.deceased);
@@ -127,7 +123,7 @@ public class MRSPatientServiceIT extends BasePaxIT {
     @Test
     public void shouldGetPatientByMotechId() {
 
-        OpenMRSPatient fetched = patientAdapter.getPatientByMotechId(patient.getMotechId());
+        Patient fetched = patientAdapter.getPatientByMotechId(patient.getMotechId());
 
         assertNotNull(fetched);
         assertEquals(fetched, patient);
@@ -136,7 +132,7 @@ public class MRSPatientServiceIT extends BasePaxIT {
     @Test
     public void shouldGetByUuid() {
 
-        OpenMRSPatient fetched = patientAdapter.getPatientByUuid(patient.getPatientId());
+        Patient fetched = patientAdapter.getPatientByUuid(patient.getUuid());
 
         assertNotNull(fetched);
         assertEquals(fetched, patient);
@@ -145,16 +141,16 @@ public class MRSPatientServiceIT extends BasePaxIT {
     @Test
     public void shouldSearchForPatient() throws InterruptedException, PatientNotFoundException {
 
-        List<OpenMRSPatient> found = patientAdapter.search(patient.getPerson().getFirstName(), patient.getMotechId());
+        List<Patient> found = patientAdapter.search(patient.getPerson().getPreferredName().getGivenName(), patient.getMotechId());
 
-        assertEquals(patient.getPerson().getFirstName(), found.get(0).getPerson().getFirstName());
+        assertEquals(patient.getPerson().getPreferredName().getGivenName(), found.get(0).getPerson().getPreferredName().getGivenName());
     }
 
     @Test
     public void shouldDeceasePerson() throws HttpException, PatientNotFoundException, InterruptedException {
 
         patientAdapter.deceasePatient(patient.getMotechId(), causeOfDeath, new Date(), null);
-        OpenMRSPatient deceased = patientAdapter.getPatientByMotechId(patient.getMotechId());
+        Patient deceased = patientAdapter.getPatientByMotechId(patient.getMotechId());
         assertTrue(deceased.getPerson().getDead());
     }
 
@@ -162,8 +158,8 @@ public class MRSPatientServiceIT extends BasePaxIT {
     public void shouldDeletePatient() throws PatientNotFoundException, InterruptedException {
 
         synchronized (lock) {
-            patientAdapter.deletePatient(patient.getPatientId());
-            assertNull(patientAdapter.getPatientByUuid(patient.getPatientId()));
+            patientAdapter.deletePatient(patient.getUuid());
+            assertNull(patientAdapter.getPatientByUuid(patient.getUuid()));
 
             lock.wait(60000);
         }
@@ -173,18 +169,18 @@ public class MRSPatientServiceIT extends BasePaxIT {
         assertTrue(mrsListener.deleted);
         assertFalse(mrsListener.deceased);
 
-        assertEquals(patient.getPatientId(), mrsListener.eventParameters.get(EventKeys.PATIENT_ID));
+        assertEquals(patient.getUuid(), mrsListener.eventParameters.get(EventKeys.PATIENT_ID));
     }
 
     @After
     public void tearDown() throws InterruptedException, PatientNotFoundException {
 
-        String uuid = patient.getFacility().getFacilityId();
+        String uuid = patient.getLocationForMotechId().getUuid();
 
         deletePatient(patient);
 
         if (uuid != null) {
-            facilityAdapter.deleteFacility(uuid);
+            facilityAdapter.deleteLocation(uuid);
         }
 
         conceptAdapter.deleteConcept(causeOfDeath.getUuid());
@@ -192,31 +188,31 @@ public class MRSPatientServiceIT extends BasePaxIT {
         eventListenerRegistry.clearListenersForBean("mrsTestListener");
     }
 
-    private OpenMRSPatient preparePatient() {
+    private Patient preparePatient() {
+        Person person = new Person();
 
-        OpenMRSPerson person = new OpenMRSPerson();
-        person.setFirstName("John");
-        person.setLastName("Smith");
-        person.setAddress("10 Fifth Avenue");
-        person.setBirthDateEstimated(false);
+        Person.Name name = new Person.Name();
+        name.setGivenName("John");
+        name.setFamilyName("Smith");
+        person.setNames(Collections.singletonList(name));
+
+        Person.Address address = new Person.Address();
+        address.setAddress1("10 Fifth Avenue");
+        person.setAddresses(Collections.singletonList(address));
+
+        person.setBirthdateEstimated(false);
         person.setGender("M");
 
-        OpenMRSAttribute attr = new OpenMRSAttribute("Birthplace", "Motech");
-        List<OpenMRSAttribute> attributes = new ArrayList<>();
-        attributes.add(attr);
-        person.setAttributes(attributes);
-        OpenMRSFacility facility = facilityAdapter.createFacility(new OpenMRSFacility("FooName", "FooCountry", "FooRegion", "FooCountryDistrict", "FooStateProvince"));
+        Location location = facilityAdapter.createLocation(new Location("FooName", "FooCountry", "FooRegion", "FooCountryDistrict", "FooStateProvince"));
 
-        assertNotNull(facility);
+        assertNotNull(location);
 
-        OpenMRSPatient patient = new OpenMRSPatient("602", person, facility);
-
-        return patient;
+        return new Patient(person, "602", location);
     }
 
-    private OpenMRSPatient savePatient(OpenMRSPatient patient) throws InterruptedException {
+    private Patient savePatient(Patient patient) throws InterruptedException {
 
-        OpenMRSPatient created;
+        Patient created;
 
         synchronized (lock) {
             created = patientAdapter.createPatient(patient);
@@ -228,23 +224,23 @@ public class MRSPatientServiceIT extends BasePaxIT {
         return created;
     }
 
-    private void deletePatient(OpenMRSPatient patient) throws PatientNotFoundException, InterruptedException {
+    private void deletePatient(Patient patient) throws PatientNotFoundException, InterruptedException {
 
-        String facilityId = patient.getFacility().getFacilityId();
+        String facilityId = patient.getLocationForMotechId().getUuid();
 
-        patientAdapter.deletePatient(patient.getPatientId());
-        assertNull(patientAdapter.getPatientByUuid(patient.getPatientId()));
+        patientAdapter.deletePatient(patient.getUuid());
+        assertNull(patientAdapter.getPatientByUuid(patient.getUuid()));
 
-        facilityAdapter.deleteFacility(facilityId);
+        facilityAdapter.deleteLocation(facilityId);
     }
 
     private void prepareConceptOfDeath() throws ConceptNameAlreadyInUseException {
-        OpenMRSConcept concept = new OpenMRSConcept();
-        OpenMRSConceptName conceptName = new OpenMRSConceptName("FooConceptOne");
+        Concept concept = new Concept();
+        ConceptName conceptName = new ConceptName("FooConceptOne");
 
         concept.setNames(Arrays.asList(conceptName));
-        concept.setDataType("TEXT");
-        concept.setConceptClass("Test");
+        concept.setDatatype(new Concept.DataType("TEXT"));
+        concept.setConceptClass(new Concept.ConceptClass("Test"));
 
         String uuid =  conceptAdapter.createConcept(concept).getUuid();
         causeOfDeath = conceptAdapter.getConceptByUuid(uuid);

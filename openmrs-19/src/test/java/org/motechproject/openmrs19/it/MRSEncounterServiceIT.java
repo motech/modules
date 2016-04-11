@@ -8,30 +8,26 @@ import org.junit.runner.RunWith;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventListener;
 import org.motechproject.event.listener.EventListenerRegistryService;
-import org.motechproject.openmrs19.domain.OpenMRSConcept;
-import org.motechproject.openmrs19.domain.OpenMRSConceptName;
-import org.motechproject.openmrs19.domain.OpenMRSEncounter;
-import org.motechproject.openmrs19.domain.OpenMRSEncounterType;
-import org.motechproject.openmrs19.domain.OpenMRSFacility;
-import org.motechproject.openmrs19.domain.OpenMRSObservation;
-import org.motechproject.openmrs19.domain.OpenMRSPatient;
-import org.motechproject.openmrs19.domain.OpenMRSPerson;
-import org.motechproject.openmrs19.domain.OpenMRSProvider;
-import org.motechproject.openmrs19.domain.OpenMRSUser;
+import org.motechproject.openmrs19.domain.Concept;
+import org.motechproject.openmrs19.domain.ConceptName;
+import org.motechproject.openmrs19.domain.Encounter;
+import org.motechproject.openmrs19.domain.EncounterType;
+import org.motechproject.openmrs19.domain.Location;
+import org.motechproject.openmrs19.domain.Observation;
+import org.motechproject.openmrs19.domain.Patient;
+import org.motechproject.openmrs19.domain.Person;
+import org.motechproject.openmrs19.domain.Provider;
 import org.motechproject.openmrs19.exception.ConceptNameAlreadyInUseException;
 import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.exception.PatientNotFoundException;
-import org.motechproject.openmrs19.exception.UserAlreadyExistsException;
-import org.motechproject.openmrs19.exception.UserDeleteException;
 import org.motechproject.openmrs19.service.EventKeys;
 import org.motechproject.openmrs19.service.OpenMRSConceptService;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
-import org.motechproject.openmrs19.service.OpenMRSFacilityService;
+import org.motechproject.openmrs19.service.OpenMRSLocationService;
 import org.motechproject.openmrs19.service.OpenMRSObservationService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.service.OpenMRSPersonService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
-import org.motechproject.openmrs19.service.OpenMRSUserService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
@@ -43,9 +39,8 @@ import javax.inject.Inject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
 
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
@@ -60,10 +55,7 @@ import static org.junit.Assert.assertTrue;
 public class MRSEncounterServiceIT extends BasePaxIT {
 
     @Inject
-    private OpenMRSUserService userAdapter;
-
-    @Inject
-    private OpenMRSFacilityService facilityAdapter;
+    private OpenMRSLocationService facilityAdapter;
 
     @Inject
     private OpenMRSEncounterService encounterAdapter;
@@ -91,21 +83,20 @@ public class MRSEncounterServiceIT extends BasePaxIT {
     private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
     MrsListener mrsListener;
 
-    OpenMRSPerson personOne;
-    OpenMRSPerson personTwo;
-    OpenMRSEncounterType encounterType;
-    OpenMRSEncounter encounter;
-    OpenMRSFacility facility;
-    OpenMRSUser user;
-    OpenMRSPatient patient;
-    OpenMRSObservation observation;
-    OpenMRSProvider provider;
-    OpenMRSConcept concept;
+    Person personOne;
+    Person personTwo;
+    EncounterType encounterType;
+    Encounter encounter;
+    Location facility;
+    Patient patient;
+    Observation observation;
+    Provider provider;
+    Concept concept;
 
     String date = "2012-09-05";
 
     @Before
-    public void setUp() throws UserAlreadyExistsException, ParseException, ConceptNameAlreadyInUseException, InterruptedException {
+    public void setUp() throws ParseException, ConceptNameAlreadyInUseException, InterruptedException {
         mrsListener = new MrsListener();
         eventListenerRegistry.registerListener(mrsListener, Arrays.asList(EventKeys.CREATED_NEW_ENCOUNTER_SUBJECT,
                 EventKeys.DELETED_ENCOUNTER_SUBJECT));
@@ -114,33 +105,32 @@ public class MRSEncounterServiceIT extends BasePaxIT {
     }
 
     @Test
-    public void shouldCreateEncounter() throws UserAlreadyExistsException, HttpException, ParseException, InterruptedException {
+    public void shouldCreateEncounter() throws HttpException, ParseException, InterruptedException {
 
         assertTrue(mrsListener.created);
         assertFalse(mrsListener.deleted);
 
-        assertEquals(encounter.getEncounterId(), mrsListener.eventParameters.get(EventKeys.ENCOUNTER_ID));
-        assertEquals(encounter.getProvider().getProviderId(), mrsListener.eventParameters.get(EventKeys.PROVIDER_ID));
-        assertEquals(encounter.getCreator().getUserId(), mrsListener.eventParameters.get(EventKeys.USER_ID));
-        assertEquals(encounter.getFacility().getFacilityId(), mrsListener.eventParameters.get(EventKeys.FACILITY_ID));
-        assertEquals(encounter.getDate(), mrsListener.eventParameters.get(EventKeys.ENCOUNTER_DATE));
-        assertEquals(encounter.getEncounterType(), mrsListener.eventParameters.get(EventKeys.ENCOUNTER_TYPE));
+        assertEquals(encounter.getUuid(), mrsListener.eventParameters.get(EventKeys.ENCOUNTER_ID));
+        assertEquals(encounter.getProvider().getUuid(), mrsListener.eventParameters.get(EventKeys.PROVIDER_ID));
+        assertEquals(encounter.getLocation().getUuid(), mrsListener.eventParameters.get(EventKeys.LOCATION_ID));
+        assertEquals(encounter.getEncounterDatetime(), mrsListener.eventParameters.get(EventKeys.ENCOUNTER_DATE));
+        assertEquals(encounter.getEncounterType().getUuid(), mrsListener.eventParameters.get(EventKeys.ENCOUNTER_TYPE));
     }
 
     @Test
     public void shouldGetLatestEncounter() {
-        OpenMRSEncounter encounter = encounterAdapter.getLatestEncounterByPatientMotechId(patient.getMotechId(), encounterType.getName());
+        Encounter encounter = encounterAdapter.getLatestEncounterByPatientMotechId(patient.getMotechId(), encounterType.getName());
 
         assertNotNull(encounter);
-        assertEquals(new LocalDate("2012-09-05"), encounter.getDate().toLocalDate());
+        assertEquals(new LocalDate("2012-09-05"), new LocalDate(encounter.getEncounterDatetime()));
     }
 
     @Test
     public void shouldDeleteEncounter() throws InterruptedException {
 
         synchronized (lock) {
-            encounterAdapter.deleteEncounter(encounter.getEncounterId());
-            assertNull(encounterAdapter.getEncounterByUuid(encounter.getEncounterId()));
+            encounterAdapter.deleteEncounter(encounter.getUuid());
+            assertNull(encounterAdapter.getEncounterByUuid(encounter.getUuid()));
 
             lock.wait(60000);
         }
@@ -150,25 +140,22 @@ public class MRSEncounterServiceIT extends BasePaxIT {
     }
 
     @After
-    public void tearDown() throws UserDeleteException, PatientNotFoundException, InterruptedException {
+    public void tearDown() throws PatientNotFoundException, InterruptedException {
 
         if (encounter != null) {
-            encounterAdapter.deleteEncounter(encounter.getEncounterId());
+            encounterAdapter.deleteEncounter(encounter.getUuid());
         }
         if (observation != null) {
-            obsAdapter.deleteObservation(observation.getObservationId());
-        }
-        if (user != null) {
-            userAdapter.deleteUser(user.getUserId());
+            obsAdapter.deleteObservation(observation.getUuid());
         }
         if (provider != null) {
-            providerService.deleteProvider(provider.getProviderId());
+            providerService.deleteProvider(provider.getUuid());
         }
         if (patient != null) {
-            patientAdapter.deletePatient(patient.getPatientId());
+            patientAdapter.deletePatient(patient.getUuid());
         }
         if (facility != null) {
-            facilityAdapter.deleteFacility(facility.getFacilityId());
+            facilityAdapter.deleteLocation(facility.getUuid());
         }
         if (concept != null) {
             conceptAdapter.deleteConcept(concept.getUuid());
@@ -177,10 +164,10 @@ public class MRSEncounterServiceIT extends BasePaxIT {
             encounterAdapter.deleteEncounterType(encounterType.getUuid());
         }
         if (personOne != null) {
-            personAdapter.deletePerson(personOne.getPersonId());
+            personAdapter.deletePerson(personOne.getUuid());
         }
         if (personTwo != null) {
-            personAdapter.deletePerson(personTwo.getPersonId());
+            personAdapter.deletePerson(personTwo.getUuid());
         }
 
         eventListenerRegistry.clearListenersForBean("mrsTestListener");
@@ -211,32 +198,26 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         }
     }
 
-    private OpenMRSEncounter prepareEncounterOne() throws UserAlreadyExistsException, ParseException, ConceptNameAlreadyInUseException {
+    private Encounter prepareEncounterOne() throws ParseException, ConceptNameAlreadyInUseException {
 
         preparePersonOne();
         preparePersonTwo();
         prepareConcept();
-        prepareUser();
         prepareProvider();
         prepareFacility();
         preparePatient();
         prepareEncounterType();
         prepareObservations();
 
-        Set<OpenMRSObservation> observations = new HashSet<>();
-        observations.add(observation);
-
-        OpenMRSEncounter encounter = new OpenMRSEncounter.OpenMRSEncounterBuilder()
-                .withEncounterType(encounterType.getName()).withDate(format.parse(date)).withCreator(user)
-                .withFacility(facility).withObservations(observations).withPatient(patient).withProvider(provider)
-                .build();
+        Encounter encounter = new Encounter(facility, encounterType, format.parse(date), patient, provider.getPerson(),
+                Collections.singletonList(observation));
 
         return encounter;
     }
 
-    private OpenMRSEncounter createEncounter(OpenMRSEncounter encounter) throws InterruptedException {
+    private Encounter createEncounter(Encounter encounter) throws InterruptedException {
 
-        OpenMRSEncounter saved;
+        Encounter saved;
 
         synchronized (lock) {
             saved = encounterAdapter.createEncounter(encounter);
@@ -249,74 +230,79 @@ public class MRSEncounterServiceIT extends BasePaxIT {
     }
 
     private void prepareConcept() throws ConceptNameAlreadyInUseException {
-        OpenMRSConcept tempConcept = new OpenMRSConcept();
-        tempConcept.setNames(Arrays.asList(new OpenMRSConceptName("FooConcept")));
-        tempConcept.setDataType("Boolean");
-        tempConcept.setConceptClass("Test");
+        Concept tempConcept = new Concept();
+        tempConcept.setNames(Arrays.asList(new ConceptName("FooConcept")));
+        tempConcept.setDatatype(new Concept.DataType("Boolean"));
+        tempConcept.setConceptClass(new Concept.ConceptClass("Test"));
         concept = conceptAdapter.createConcept(tempConcept);
     }
 
     private void preparePersonOne() {
-        OpenMRSPerson person = new OpenMRSPerson();
-        person.setFirstName("FooFirstName");
-        person.setLastName("FooLastName");
+        Person person = new Person();
+
+        Person.Name name = new Person.Name();
+        name.setGivenName("FooFirstName");
+        name.setFamilyName("FooLastName");
+        person.setNames(Collections.singletonList(name));
+
         person.setGender("M");
-        String personUuid = personAdapter.createPerson(person).getPersonId();
+        String personUuid = personAdapter.createPerson(person).getUuid();
         personOne = personAdapter.getPersonByUuid(personUuid);
     }
 
     private void preparePersonTwo() {
-        OpenMRSPerson person = new OpenMRSPerson();
-        person.setFirstName("FooNameTwo");
-        person.setLastName("FooLastNameTwo");
+        Person person = new Person();
+
+        Person.Name name = new Person.Name();
+        name.setGivenName("FooNameTwo");
+        name.setFamilyName("FooLastNameTwo");
+        person.setNames(Collections.singletonList(name));
+
         person.setGender("F");
-        String personUuid = personAdapter.createPerson(person).getPersonId();
+        String personUuid = personAdapter.createPerson(person).getUuid();
         personTwo = personAdapter.getPersonByUuid(personUuid);
     }
 
-    private void prepareUser() throws UserAlreadyExistsException {
-        OpenMRSUser tempUser = new OpenMRSUser();
-        tempUser.setUserName("FooUserName");
-        tempUser.setPerson(personOne);
-        tempUser.setSecurityRole("Provider");
-        user = userAdapter.createUser(tempUser);
-    }
-
     private void prepareProvider() {
-        OpenMRSProvider tempProvider = new OpenMRSProvider();
+        Provider tempProvider = new Provider();
         tempProvider.setPerson(personOne);
         tempProvider.setIdentifier("FooIdentifier");
-        String providerUuid = providerService.createProvider(tempProvider).getProviderId();
+        String providerUuid = providerService.createProvider(tempProvider).getUuid();
         provider = providerService.getProviderByUuid(providerUuid);
     }
 
     private void prepareFacility() {
-        OpenMRSFacility tempFacility = new OpenMRSFacility("FooName", "FooCountry", "FooRegion", "FooCountryDistrict", "FooStateProvince");
-        String facilityUuid = facilityAdapter.createFacility(tempFacility).getFacilityId();
-        facility = facilityAdapter.getFacilityByUuid(facilityUuid);
+        Location tempFacility = new Location("FooName", "FooCountry", "FooRegion", "FooCountryDistrict", "FooStateProvince");
+        String facilityUuid = facilityAdapter.createLocation(tempFacility).getUuid();
+        facility = facilityAdapter.getLocationByUuid(facilityUuid);
     }
 
     private void preparePatient() {
-        OpenMRSPatient tempPatient = new OpenMRSPatient();
-        tempPatient.setFacility(facility);
+        Patient tempPatient = new Patient();
+        tempPatient.setLocationForMotechId(facility);
         tempPatient.setPerson(personTwo);
         tempPatient.setMotechId("666");
-        String patientUuid = patientAdapter.createPatient(tempPatient).getPatientId();
+        String patientUuid = patientAdapter.createPatient(tempPatient).getUuid();
         patient = patientAdapter.getPatientByUuid(patientUuid);
     }
 
     private void prepareEncounterType() {
-        OpenMRSEncounterType tempEncounterType = new OpenMRSEncounterType();
-        tempEncounterType.setName("FooType");
+        EncounterType tempEncounterType = new EncounterType("FooType");
         tempEncounterType.setDescription("FooDescription");
+
         String encounterUuid = encounterAdapter.createEncounterType(tempEncounterType).getUuid();
         encounterType = encounterAdapter.getEncounterTypeByUuid(encounterUuid);
     }
 
     private void prepareObservations() throws ParseException {
-        OpenMRSObservation tempObservation = new OpenMRSObservation<>(format.parse(date), concept.getDisplay(), "true");
-        tempObservation.setPatientId(patient.getMotechId());
-        String observationUuid = obsAdapter.createObservation(tempObservation).getObservationId();
+        Observation tempObservation = new Observation();
+
+        tempObservation.setObsDatetime(format.parse(date));
+        tempObservation.setConcept(concept);
+        tempObservation.setValue(new Observation.ObservationValue("true"));
+        tempObservation.setPerson(patient.getPerson());
+
+        String observationUuid = obsAdapter.createObservation(tempObservation).getUuid();
         observation = obsAdapter.getObservationByUuid(observationUuid);
     }
 }

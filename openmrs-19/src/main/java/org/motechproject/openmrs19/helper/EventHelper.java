@@ -1,13 +1,13 @@
 package org.motechproject.openmrs19.helper;
 
+import org.motechproject.openmrs19.domain.Concept;
+import org.motechproject.openmrs19.domain.Encounter;
+import org.motechproject.openmrs19.domain.Location;
+import org.motechproject.openmrs19.domain.Observation;
+import org.motechproject.openmrs19.domain.Patient;
+import org.motechproject.openmrs19.domain.Person;
+import org.motechproject.openmrs19.domain.Provider;
 import org.motechproject.openmrs19.service.EventKeys;
-import org.motechproject.openmrs19.domain.OpenMRSConcept;
-import org.motechproject.openmrs19.domain.OpenMRSEncounter;
-import org.motechproject.openmrs19.domain.OpenMRSFacility;
-import org.motechproject.openmrs19.domain.OpenMRSObservation;
-import org.motechproject.openmrs19.domain.OpenMRSPatient;
-import org.motechproject.openmrs19.domain.OpenMRSPerson;
-import org.motechproject.openmrs19.domain.OpenMRSProvider;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,23 +25,23 @@ public final class EventHelper {
     }
 
     /**
-     * Parses the given {@link OpenMRSPatient} to a map of parameters, which can then be attached to a
+     * Parses the given {@link Patient} to a map of parameters, which can then be attached to a
      * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
      *
      * @param patient  the patient to be parsed
      * @return the map of the parameters
      */
-    public static Map<String, Object> patientParameters(OpenMRSPatient patient) {
+    public static Map<String, Object> patientParameters(Patient patient) {
         Map<String, Object> patientParameters = new HashMap<>();
-        patientParameters.put(EventKeys.PATIENT_ID, patient.getPatientId());
-        if (patient.getFacility() != null) {
-            patientParameters.put(EventKeys.FACILITY_ID, patient.getFacility().getFacilityId());
+        patientParameters.put(EventKeys.PATIENT_ID, patient.getUuid());
+        if (patient.getLocationForMotechId() != null) {
+            patientParameters.put(EventKeys.LOCATION_ID, patient.getLocationForMotechId().getUuid());
         } else {
-            patientParameters.put(EventKeys.FACILITY_ID, null);
+            patientParameters.put(EventKeys.LOCATION_ID, null);
         }
         patientParameters.put(EventKeys.MOTECH_ID, patient.getMotechId());
         if (patient.getPerson() != null) {
-            patientParameters.put(EventKeys.PERSON_ID, patient.getPerson().getPersonId());
+            patientParameters.put(EventKeys.PERSON_ID, patient.getPerson().getUuid());
         } else {
             patientParameters.put(EventKeys.PERSON_ID, null);
         }
@@ -49,22 +49,27 @@ public final class EventHelper {
     }
 
     /**
-     * Parses the given {@link OpenMRSPerson} to a map of parameters, which can then be attached to a
+     * Parses the given {@link Person} to a map of parameters, which can then be attached to a
      * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
      *
      * @param person  the person to be parsed
      * @return the map of the parameters
      */
-    public static Map<String, Object> personParameters(OpenMRSPerson person) {
+    public static Map<String, Object> personParameters(Person person) {
         Map<String, Object> personParameters = new HashMap<>();
-        personParameters.put(EventKeys.PERSON_ID, person.getPersonId());
-        personParameters.put(EventKeys.PERSON_FIRST_NAME, person.getFirstName());
-        personParameters.put(EventKeys.PERSON_MIDDLE_NAME, person.getMiddleName());
-        personParameters.put(EventKeys.PERSON_LAST_NAME, person.getLastName());
-        personParameters.put(EventKeys.PERSON_PREFERRED_NAME, person.getPreferredName());
-        personParameters.put(EventKeys.PERSON_ADDRESS, person.getAddress());
-        personParameters.put(EventKeys.PERSON_DATE_OF_BIRTH, person.getDateOfBirth());
-        personParameters.put(EventKeys.PERSON_BIRTH_DATE_ESTIMATED, person.getBirthDateEstimated());
+        personParameters.put(EventKeys.PERSON_ID, person.getUuid());
+
+        if (person.getPreferredName() != null) {
+            personParameters.put(EventKeys.PERSON_FIRST_NAME, person.getPreferredName().getGivenName());
+            personParameters.put(EventKeys.PERSON_MIDDLE_NAME, person.getPreferredName().getMiddleName());
+            personParameters.put(EventKeys.PERSON_LAST_NAME, person.getPreferredName().getFamilyName());
+        }
+        if (person.getPreferredAddress() != null) {
+            personParameters.put(EventKeys.PERSON_ADDRESS, person.getPreferredAddress().getFullAddressString());
+        }
+
+        personParameters.put(EventKeys.PERSON_DATE_OF_BIRTH, person.getBirthdate());
+        personParameters.put(EventKeys.PERSON_BIRTH_DATE_ESTIMATED, person.getBirthdateEstimated());
         personParameters.put(EventKeys.PERSON_AGE, person.getAge());
         personParameters.put(EventKeys.PERSON_GENDER, person.getGender());
         personParameters.put(EventKeys.PERSON_DEAD, person.getDead());
@@ -73,45 +78,27 @@ public final class EventHelper {
     }
 
     /**
-     * Parses the given {@link OpenMRSEncounter} to a map of parameters, which can then be attached to a
+     * Parses the given {@link Encounter} to a map of parameters, which can then be attached to a
      * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
      *
      * @param encounter  the encounter to be parsed
      * @return the map of the parameters
      */
-    public static Map<String, Object> encounterParameters(OpenMRSEncounter encounter) {
+    public static Map<String, Object> encounterParameters(Encounter encounter) {
         Map<String, Object> encounterParameters = new HashMap<>();
-        encounterParameters.put(EventKeys.ENCOUNTER_ID, encounter.getEncounterId());
+        encounterParameters.put(EventKeys.ENCOUNTER_ID, encounter.getUuid());
         if (encounter.getProvider() != null) {
-            encounterParameters.put(EventKeys.PROVIDER_ID, encounter.getProvider().getProviderId());
+            encounterParameters.put(EventKeys.PROVIDER_ID, encounter.getProvider().getUuid());
         } else {
             encounterParameters.put(EventKeys.PROVIDER_ID, null);
         }
-        if (encounter.getCreator() != null) {
-            encounterParameters.put(EventKeys.USER_ID, encounter.getCreator().getUserId());
+        if (encounter.getLocation() != null) {
+            encounterParameters.put(EventKeys.LOCATION_ID, encounter.getLocation().getUuid());
         } else {
-            encounterParameters.put(EventKeys.USER_ID, null);
+            encounterParameters.put(EventKeys.LOCATION_ID, null);
         }
-        if (encounter.getFacility() != null) {
-            encounterParameters.put(EventKeys.FACILITY_ID, encounter.getFacility().getFacilityId());
-        } else {
-            encounterParameters.put(EventKeys.FACILITY_ID, null);
-        }
-        encounterParameters.put(EventKeys.ENCOUNTER_DATE, encounter.getDate());
-        if (encounter.getObservations() != null && !encounter.getObservations().isEmpty()) {
-            OpenMRSObservation obs = encounter.getObservations().iterator().next();
-            encounterParameters.put(EventKeys.OBSERVATION_DATE, obs.getDate());
-            encounterParameters.put(EventKeys.OBSERVATION_CONCEPT_NAME, obs.getConceptName());
-            encounterParameters.put(EventKeys.PATIENT_ID, obs.getPatientId());
-            encounterParameters.put(EventKeys.OBSERVATION_VALUE, obs.getValue());
-        } else {
-            encounterParameters.put(EventKeys.OBSERVATION_DATE, null);
-            encounterParameters.put(EventKeys.OBSERVATION_CONCEPT_NAME, null);
-            encounterParameters.put(EventKeys.PATIENT_ID, null);
-            encounterParameters.put(EventKeys.OBSERVATION_VALUE, null);
-        }
-
-        encounterParameters.put(EventKeys.ENCOUNTER_TYPE, encounter.getEncounterType());
+        encounterParameters.put(EventKeys.ENCOUNTER_DATE, encounter.getEncounterDatetime());
+        encounterParameters.put(EventKeys.ENCOUNTER_TYPE, encounter.getEncounterType().getUuid());
         return encounterParameters;
     }
 
@@ -129,51 +116,53 @@ public final class EventHelper {
     }
 
     /**
-     * Parses the given {@link OpenMRSObservation} to a map of parameters, which can then be attached to a
+     * Parses the given {@link Observation} to a map of parameters, which can then be attached to a
      * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
      *
      * @param obs  the observation to be parsed
      * @return the map of the parameters
      */
-    public static Map<String, Object> observationParameters(OpenMRSObservation obs) {
+    public static Map<String, Object> observationParameters(Observation obs) {
         Map<String, Object> observationParameters = new HashMap<>();
-        observationParameters.put(EventKeys.OBSERVATION_DATE, obs.getDate());
-        observationParameters.put(EventKeys.OBSERVATION_CONCEPT_NAME, obs.getConceptName());
-        observationParameters.put(EventKeys.PATIENT_ID, obs.getPatientId());
-        observationParameters.put(EventKeys.OBSERVATION_VALUE, obs.getValue());
+        observationParameters.put(EventKeys.OBSERVATION_DATE, obs.getObsDatetime());
+        if (obs.getConcept().getName() != null) {
+            observationParameters.put(EventKeys.OBSERVATION_CONCEPT_NAME, obs.getConcept().getName().getName());
+        }
+        observationParameters.put(EventKeys.PATIENT_ID, obs.getPerson().getUuid());
+        observationParameters.put(EventKeys.OBSERVATION_VALUE, obs.getValue().getDisplay());
         return  observationParameters;
     }
 
     /**
-     * Parses the given {@link OpenMRSFacility} to a map of parameters, which can then be attached to a
+     * Parses the given {@link Location} to a map of parameters, which can then be attached to a
      * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
      *
-     * @param facility  the facility to be parsed
+     * @param location  the location to be parsed
      * @return the map of the parameters
      */
-    public static Map<String, Object> facilityParameters(OpenMRSFacility facility) {
-        Map<String, Object> facilityParameters = new HashMap<>();
-        facilityParameters.put(EventKeys.FACILITY_ID, facility.getFacilityId());
-        facilityParameters.put(EventKeys.FACILITY_NAME, facility.getName());
-        facilityParameters.put(EventKeys.FACILITY_COUNTRY, facility.getCountry());
-        facilityParameters.put(EventKeys.FACILITY_REGION, facility.getRegion());
-        facilityParameters.put(EventKeys.FACILITY_COUNTY_DISTRICT, facility.getCountyDistrict());
-        facilityParameters.put(EventKeys.FACILITY_STATE_PROVINCE, facility.getStateProvince());
-        return facilityParameters;
+    public static Map<String, Object> locationParameters(Location location) {
+        Map<String, Object> locationParameters = new HashMap<>();
+        locationParameters.put(EventKeys.LOCATION_ID, location.getUuid());
+        locationParameters.put(EventKeys.LOCATION_NAME, location.getName());
+        locationParameters.put(EventKeys.LOCATION_COUNTRY, location.getCountry());
+        locationParameters.put(EventKeys.LOCATION_REGION, location.getAddress6());
+        locationParameters.put(EventKeys.LOCATION_COUNTY_DISTRICT, location.getCountyDistrict());
+        locationParameters.put(EventKeys.LOCATION_STATE_PROVINCE, location.getStateProvince());
+        return locationParameters;
     }
 
     /**
-     * Parses the given {@link OpenMRSProvider} to a map of parameters, which can then be attached to a
+     * Parses the given {@link Provider} to a map of parameters, which can then be attached to a
      * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
      *
      * @param provider  the provider to be parsed
      * @return the map of the parameters
      */
-    public static Map<String, Object> providerParameters(OpenMRSProvider provider) {
+    public static Map<String, Object> providerParameters(Provider provider) {
         Map<String, Object> providerParameters = new HashMap<>();
-        providerParameters.put(EventKeys.PROVIDER_ID, provider.getProviderId());
+        providerParameters.put(EventKeys.PROVIDER_ID, provider.getUuid());
         if (provider.getPerson() != null) {
-            providerParameters.put(EventKeys.PERSON_ID, provider.getPerson().getPersonId());
+            providerParameters.put(EventKeys.PERSON_ID, provider.getPerson().getUuid());
         } else {
             providerParameters.put(EventKeys.PERSON_ID, null);
         }
@@ -181,18 +170,18 @@ public final class EventHelper {
     }
 
     /**
-     * Parses the given {@link OpenMRSConcept} to a map of parameters, which can then be attached to a
+     * Parses the given {@link Concept} to a map of parameters, which can then be attached to a
      * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
      *
      * @param concept  the concept to be parsed
      * @return the map of the parameters
      */
-    public static Map<String, Object> conceptParameters(OpenMRSConcept concept) {
+    public static Map<String, Object> conceptParameters(Concept concept) {
         Map<String, Object> conceptParameters = new HashMap<>();
         conceptParameters.put(EventKeys.CONCEPT_NAME, concept.getDisplay());
         conceptParameters.put(EventKeys.CONCEPT_UUID, concept.getUuid());
-        conceptParameters.put(EventKeys.CONCEPT_DATA_TYPE, concept.getDataType());
-        conceptParameters.put(EventKeys.CONCEPT_CONCEPT_CLASS, concept.getConceptClass());
+        conceptParameters.put(EventKeys.CONCEPT_DATA_TYPE, concept.getDatatype().getDisplay());
+        conceptParameters.put(EventKeys.CONCEPT_CONCEPT_CLASS, concept.getConceptClass().getDisplay());
         return conceptParameters;
     }
 }

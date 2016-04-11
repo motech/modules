@@ -1,4 +1,4 @@
-package org.motechproject.openmrs19.resource.model;
+package org.motechproject.openmrs19.domain;
 
 import java.util.List;
 

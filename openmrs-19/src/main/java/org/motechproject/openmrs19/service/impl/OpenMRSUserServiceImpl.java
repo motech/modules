@@ -1,31 +1,24 @@
 package org.motechproject.openmrs19.service.impl;
 
 import org.apache.commons.lang.Validate;
-import org.motechproject.openmrs19.domain.OpenMRSPerson;
-import org.motechproject.openmrs19.domain.OpenMRSUser;
 import org.motechproject.openmrs19.domain.Password;
+import org.motechproject.openmrs19.domain.Person;
+import org.motechproject.openmrs19.domain.Role;
+import org.motechproject.openmrs19.domain.User;
+import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.exception.OpenMRSException;
 import org.motechproject.openmrs19.exception.UserAlreadyExistsException;
 import org.motechproject.openmrs19.exception.UserDeleteException;
 import org.motechproject.openmrs19.resource.UserResource;
-import org.motechproject.openmrs19.resource.model.Role;
-import org.motechproject.openmrs19.resource.model.RoleListResult;
-import org.motechproject.openmrs19.resource.model.User;
-import org.motechproject.openmrs19.resource.model.UserListResult;
-import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.service.OpenMRSUserService;
-import org.motechproject.openmrs19.util.ConverterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service("userService")
 public class OpenMRSUserServiceImpl implements OpenMRSUserService {
@@ -33,7 +26,6 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSUserServiceImpl.class);
 
     private static final int DEFAULT_PASSWORD_LENGTH = 8;
-    private final Map<String, String> cachedRoles = new HashMap<>();
 
     private final UserResource userResource;
     private final OpenMRSPersonServiceImpl personAdapter;
@@ -53,10 +45,9 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
     }
 
     @Override
-    public List<OpenMRSUser> getAllUsers() {
-
+    public List<User> getAllUsers() {
         try {
-            return toPartialOpenMRSUsers(userResource.getAllUsers());
+            return userResource.getAllUsers().getResults();
         } catch (HttpException e) {
             LOGGER.error("Failed to get all users from OpenMRS: " + e.getMessage());
             return Collections.emptyList();
@@ -64,22 +55,21 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
     }
 
     @Override
-    public OpenMRSUser getUserByUserName(String userName) {
-
+    public User getUserByUserName(String userName) {
         Validate.notEmpty(userName, "Username cannot be empty");
 
-        UserListResult results;
+        List<User> results;
 
         try {
-            results = userResource.queryForUsersByUsername(userName);
+            results = userResource.queryForUsersByUsername(userName).getResults();
         } catch (HttpException e) {
             LOGGER.error("Failed to retrieve user by username: " + userName + " with error: " + e.getMessage());
             return null;
         }
 
-        OpenMRSUser openMRSUser = null;
+        User openMRSUser = null;
 
-        for (User user : results.getResults()) {
+        for (User user : results) {
             if (user.getUsername().equals(userName)) {
                 openMRSUser = getUserByUuid(user.getUuid());
             }
@@ -88,12 +78,12 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
         return openMRSUser;
     }
 
-    public OpenMRSUser getUserByUuid(String uuid) {
-
+    @Override
+    public User getUserByUuid(String uuid) {
         Validate.notEmpty(uuid, "UUID cannot be empty");
 
         try {
-            return ConverterUtils.toOpenMRSUser(userResource.getUserById(uuid));
+            return userResource.getUserById(uuid);
         } catch (HttpException e) {
             LOGGER.error("Failed to retrieve user with UUID: " + uuid + " with error: " + e.getMessage());
             return null;
@@ -101,28 +91,22 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
     }
 
     @Override
-    public OpenMRSUser createUser(OpenMRSUser user) throws UserAlreadyExistsException {
-
+    public User createUser(User user) throws UserAlreadyExistsException {
         validateUserForSave(user);
         validateUserNameUsage(user);
-
-        // attempt to retrieve the roleUuid before saving the person
-        // its possible the role doesn't exist in the OpenMRS, in which case
-        // an exception is thrown. If the person is saved prior to checking
-        // for the role, there would need to be another call to delete the
-        // person
+        // If the person is saved prior to checking for the role, there would need to be another call to delete the person
         // otherwise it would leave the OpenMRS in an inconsistent state
-        getRoleUuidByRoleName(user);
+        validateRoles(user.getRoles());
 
-        if (user.getPerson().getId() == null) {
-            OpenMRSPerson savedPerson = personAdapter.createPerson(user.getPerson());
+        if (user.getPerson().getUuid() == null) {
+            Person savedPerson = personAdapter.createPerson(user.getPerson());
             user.setPerson(savedPerson);
         }
 
-        User converted = convertToUser(user, password.generate());
+        user.setPassword(password.generate());
 
         try {
-            return ConverterUtils.toOpenMRSUser(userResource.createUser(converted));
+            return userResource.createUser(user);
         } catch (HttpException e) {
             LOGGER.error("Failed to save user: " + e.getMessage());
             return null;
@@ -131,17 +115,16 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
 
     @Override
     public String setNewPasswordForUser(String username) {
-
         Validate.notEmpty(username, "Username cannot be empty");
 
-        OpenMRSUser user = getUserByUserName(username);
+        User user = getUserByUserName(username);
         if (user == null) {
             throw new UsernameNotFoundException("No user found with username: " + username);
         }
 
         User tmp = new User();
         tmp.setPassword(password.generate());
-        tmp.setUuid(user.getUserId());
+        tmp.setUuid(user.getUuid());
 
         try {
             userResource.updateUser(tmp);
@@ -154,23 +137,21 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
     }
 
     @Override
-    public OpenMRSUser updateUser(OpenMRSUser user) {
-
+    public User updateUser(User user) {
         validateUserForUpdate(user);
 
-        User converted = convertToUser(user, password.generate());
+        user.setPassword(password.generate());
 
         try {
-            return ConverterUtils.toOpenMRSUser(userResource.updateUser(converted));
+            return userResource.updateUser(user);
         } catch (HttpException e) {
-            LOGGER.error("Failed to update user: " + user.getUserId());
+            LOGGER.error("Failed to update user: " + user.getUuid());
             return null;
         }
     }
 
     @Override
     public void deleteUser(String uuid) throws UserDeleteException {
-
         Validate.notEmpty(uuid);
 
         try {
@@ -181,93 +162,53 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
 
     }
 
-    private List<OpenMRSUser> toPartialOpenMRSUsers(UserListResult users) {
-
-        List<OpenMRSUser> openMRSUsers = new ArrayList<>();
-
-        for (User user : users.getResults()) {
-            OpenMRSUser openMRSUser = new OpenMRSUser();
-            openMRSUser.setUserId(user.getUuid());
-            openMRSUser.setUserName(user.getUsername());
-            openMRSUsers.add(openMRSUser);
-        }
-
-        return openMRSUsers;
-    }
-
-    private void validateUserNameUsage(OpenMRSUser user) throws UserAlreadyExistsException {
-        if (getUserByUserName(user.getUserName()) != null) {
-            throw new UserAlreadyExistsException("Already found user with username: " + user.getUserName());
+    private void validateUserNameUsage(User user) throws UserAlreadyExistsException {
+        if (getUserByUserName(user.getUsername()) != null) {
+            throw new UserAlreadyExistsException("Already found user with username: " + user.getUsername());
         }
     }
 
-    private void validateUserForSave(OpenMRSUser user) {
+    private void validateUserForSave(User user) {
         Validate.notNull(user, "User cannot be null");
-        Validate.notEmpty(user.getUserName(), "Username cannot be empty");
+        Validate.notEmpty(user.getUsername(), "Username cannot be empty");
         Validate.notNull(user.getPerson(), "Person cannot be null");
     }
 
-    private void validateUserForUpdate(OpenMRSUser user) {
+    private void validateUserForUpdate(User user) {
         Validate.notNull(user, "User cannot be null");
-        Validate.notEmpty(user.getUserId(), "User id cannot be empty");
+        Validate.notEmpty(user.getUuid(), "User id cannot be empty");
         Validate.notNull(user.getPerson(), "User Person cannot be null");
-        Validate.notEmpty(user.getPerson().getPersonId(), "User person id cannot be empty");
+        Validate.notEmpty(user.getPerson().getUuid(), "User person id cannot be empty");
     }
 
-    private User convertToUser(OpenMRSUser user, String password) {
-        User converted = new User();
-        converted.setPassword(password);
-        converted.setPerson(ConverterUtils.toPerson(user.getPerson(), false));
-        converted.setRoles(convertRoles(user));
-        converted.setUsername(user.getUserName());
-        converted.setSystemId(user.getSystemId());
-        converted.setUuid(user.getUserId());
-        return converted;
-    }
+    private void validateRoles(List<Role> roles) {
+        List<Role> retrievedRoles = getAllRoles();
+        for (Role role : roles) {
+            boolean roleExist = false;
+            for (Role retrieveRole : retrievedRoles) {
+                if (retrieveRole.getName().equals(role.getName())) {
+                    role.setUuid(retrieveRole.getUuid());
+                    roleExist = true;
+                    break;
+                }
+            }
 
-    private List<Role> convertRoles(OpenMRSUser user) {
-        List<Role> roles = new ArrayList<>();
-        Role role = new Role();
-        role.setUuid(getRoleUuidByRoleName(user));
-        roles.add(role);
-        return roles;
-    }
-
-    private String getRoleUuidByRoleName(OpenMRSUser user) {
-        if (!roleIsPresentInOpenMrs(user.getSecurityRole())) {
-            throw new OpenMRSException("No OpenMRS role found with name: " + user.getSecurityRole());
+            if (!roleExist) {
+                throw new OpenMRSException("No OpenMRS role found with name: " + role.getName());
+            }
         }
-
-        return cachedRoles.get(user.getSecurityRole());
     }
 
-    private boolean roleIsPresentInOpenMrs(String securityRole) {
-        if (cachedRoles.containsKey(securityRole)) {
-            return true;
-        }
+    private List<Role> getAllRoles() {
+        List<Role> roles;
 
-        populateRoleCache();
-        return cachedRoles.containsKey(securityRole);
-    }
-
-    private void populateRoleCache() {
-        RoleListResult result;
         try {
-            result = userResource.getAllRoles();
+            roles = userResource.getAllRoles().getResults();
         } catch (HttpException e) {
             LOGGER.error("Failed to retrieve the list of roles: " + e.getMessage());
-            return;
+            return null;
         }
 
-        cachedRoles.putAll(handleResult(result.getResults()));
-    }
-
-    private Map<String, String> handleResult(List<Role> results) {
-        Map<String, String> roleMap = new HashMap<>();
-        for (Role role : results) {
-            roleMap.put(role.getDisplay(), role.getUuid());
-        }
-
-        return roleMap;
+        return roles;
     }
 }

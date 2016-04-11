@@ -1,13 +1,11 @@
 package org.motechproject.openmrs19.domain;
 
-import org.motechproject.openmrs19.resource.model.Concept;
-
 import java.util.Objects;
 
 /**
  * Represents a single concept name. Also stores information about its locale and type.
  */
-public class OpenMRSConceptName {
+public class ConceptName {
 
     public static final String DEFAULT_LOCALE = "en";
     public static final String DEFAULT_CONCEPT_NAME_TYPE = "FULLY_SPECIFIED";
@@ -21,7 +19,7 @@ public class OpenMRSConceptName {
      *
      * @param name  the name of the concept
      */
-    public OpenMRSConceptName(String name) {
+    public ConceptName(String name) {
         this(name, DEFAULT_LOCALE, DEFAULT_CONCEPT_NAME_TYPE);
     }
 
@@ -32,19 +30,10 @@ public class OpenMRSConceptName {
      * @param locale  the locale of the concept name
      * @param conceptNameType  the type of the concept name
      */
-    public OpenMRSConceptName(String name, String locale, String conceptNameType) {
+    public ConceptName(String name, String locale, String conceptNameType) {
         this.name = name;
         this.locale = locale;
         this.conceptNameType = conceptNameType;
-    }
-
-    /**
-     * Copying constructor.
-     *
-     * @param conceptName  the concept name to copy
-     */
-    public OpenMRSConceptName(Concept.ConceptName conceptName) {
-        this(conceptName.getName(), conceptName.getLocale(), conceptName.getConceptNameType());
     }
 
     public String getName() {
@@ -76,11 +65,11 @@ public class OpenMRSConceptName {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof OpenMRSConceptName)) {
+        if (!(o instanceof ConceptName)) {
             return false;
         }
 
-        OpenMRSConceptName conceptName = (OpenMRSConceptName) o;
+        ConceptName conceptName = (ConceptName) o;
 
         return Objects.equals(name, conceptName.name) && Objects.equals(locale, conceptName.locale) &&
                 Objects.equals(conceptNameType, conceptName.conceptNameType);
@@ -89,5 +78,14 @@ public class OpenMRSConceptName {
     @Override
     public int hashCode() {
         return Objects.hash(name, locale, conceptNameType);
+    }
+
+    @Override
+    public String toString() {
+        return "ConceptName{" +
+                "name='" + name + '\'' +
+                ", locale='" + locale + '\'' +
+                ", conceptNameType='" + conceptNameType + '\'' +
+                '}';
     }
 }

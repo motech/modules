@@ -7,10 +7,9 @@ import org.junit.runner.RunWith;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventListener;
 import org.motechproject.event.listener.EventListenerRegistryService;
-import org.motechproject.openmrs19.service.EventKeys;
-import org.motechproject.openmrs19.domain.OpenMRSAttribute;
-import org.motechproject.openmrs19.domain.OpenMRSPerson;
+import org.motechproject.openmrs19.domain.Person;
 import org.motechproject.openmrs19.exception.OpenMRSException;
+import org.motechproject.openmrs19.service.EventKeys;
 import org.motechproject.openmrs19.service.OpenMRSPersonService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -20,9 +19,8 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
 import java.util.Map;
 
 import static junit.framework.Assert.assertNull;
@@ -46,7 +44,7 @@ public class MRSPersonServiceIT extends BasePaxIT {
 
     private MrsListener mrsListener;
 
-    private OpenMRSPerson person;
+    private Person person;
 
     @Before
     public void initialize() throws InterruptedException {
@@ -60,10 +58,10 @@ public class MRSPersonServiceIT extends BasePaxIT {
     @Test
     public void shouldCreatePerson() {
 
-        assertNotNull(person.getId());
-        assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_ID), person.getPersonId());
-        assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_FIRST_NAME), person.getFirstName());
-        assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_LAST_NAME), person.getLastName());
+        assertNotNull(person.getUuid());
+        assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_ID), person.getUuid());
+        assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_FIRST_NAME), person.getPreferredName().getGivenName());
+        assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_LAST_NAME), person.getPreferredName().getFamilyName());
 
         assertTrue(mrsListener.created);
         assertFalse(mrsListener.deleted);
@@ -79,29 +77,35 @@ public class MRSPersonServiceIT extends BasePaxIT {
         final String newAddress = "NewFooAddress";
         final String newGender = "F";
 
-        person.setFirstName(newFirstName);
-        person.setMiddleName(newMiddleName);
-        person.setLastName(newLastName);
-        person.setAddress(newAddress);
+        Person.Name name = new Person.Name();
+        name.setGivenName(newFirstName);
+        name.setMiddleName(newMiddleName);
+        name.setFamilyName(newLastName);
+        person.setNames(Collections.singletonList(name));
+
+        Person.Address address = new Person.Address();
+        address.setAddress1(newAddress);
+        person.setAddresses(Collections.singletonList(address));
+
         person.setGender(newGender);
 
-        OpenMRSPerson updated;
+        Person updated;
 
         synchronized (lock) {
             assertNotNull(personAdapter.updatePerson(person));
             lock.wait(60000);
         }
 
-        updated = personAdapter.getPersonByUuid(person.getPersonId());
+        updated = personAdapter.getPersonByUuid(person.getUuid());
 
         assertNotNull(updated);
-        assertEquals(newFirstName, updated.getFirstName());
-        assertEquals(newMiddleName, updated.getMiddleName());
-        assertEquals(newLastName, updated.getLastName());
+        assertEquals(newFirstName, updated.getPreferredName().getGivenName());
+        assertEquals(newMiddleName, updated.getPreferredName().getMiddleName());
+        assertEquals(newLastName, updated.getPreferredName().getFamilyName());
         // So far OpenMRS module stores only one field of person's address, which is 'address1'.
         // However while retrieving person from OpenMRS server all person's address fields are put
         // into one string. That's why it is checked if address field contains address1 value.
-        assertTrue(updated.getAddress().contains(newAddress));
+        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newAddress));
         assertEquals(newGender, updated.getGender());
 
         assertTrue(mrsListener.created);
@@ -113,8 +117,8 @@ public class MRSPersonServiceIT extends BasePaxIT {
     public void shouldDeletePerson() throws InterruptedException {
 
         synchronized (lock) {
-            personAdapter.deletePerson(person.getPersonId());
-            assertNull(personAdapter.getPersonByUuid(person.getPersonId()));
+            personAdapter.deletePerson(person.getUuid());
+            assertNull(personAdapter.getPersonByUuid(person.getUuid()));
 
             lock.wait(60000);
         }
@@ -127,10 +131,10 @@ public class MRSPersonServiceIT extends BasePaxIT {
     @Test
     public void shouldGetById() throws InterruptedException {
 
-        OpenMRSPerson fetched = personAdapter.getPersonByUuid(person.getPersonId());
+        Person fetched = personAdapter.getPersonByUuid(person.getUuid());
 
         assertNotNull(fetched);
-        assertEquals(person.getId(), fetched.getId());
+        assertEquals(person.getUuid(), fetched.getUuid());
     }
 
     @After
@@ -141,28 +145,29 @@ public class MRSPersonServiceIT extends BasePaxIT {
         eventListenerRegistry.clearListenersForBean("mrsTestListener");
     }
 
-    private OpenMRSPerson preparePerson() {
-        OpenMRSPerson person = new OpenMRSPerson();
-        person.setFirstName("John");
-        person.setLastName("Smith");
-        person.setAddress("10 Fifth Avenue");
-        person.setBirthDateEstimated(false);
+    private Person preparePerson() {
+        Person person = new Person();
+
+        Person.Name name = new Person.Name();
+        name.setGivenName("John");
+        name.setMiddleName("John");
+        name.setFamilyName("Smith");
+        person.setNames(Collections.singletonList(name));
+
+        Person.Address address = new Person.Address();
+        address.setAddress1("10 Fifth Avenue");
+        person.setAddresses(Collections.singletonList(address));
+
         person.setGender("M");
         person.setAge(25);
         person.setDead(false);
-        person.setMiddleName("John");
-
-        OpenMRSAttribute attr = new OpenMRSAttribute("Birthplace", "Motech");
-        List<OpenMRSAttribute> attributes = new ArrayList<>();
-        attributes.add(attr);
-        person.setAttributes(attributes);
 
         return person;
     }
 
-    private OpenMRSPerson savePerson(OpenMRSPerson person) throws InterruptedException {
+    private Person savePerson(Person person) throws InterruptedException {
 
-        OpenMRSPerson created;
+        Person created;
 
         synchronized (lock) {
             created = personAdapter.createPerson(person);
@@ -174,10 +179,10 @@ public class MRSPersonServiceIT extends BasePaxIT {
         return created;
     }
 
-    private void deletePerson(OpenMRSPerson person) throws InterruptedException {
+    private void deletePerson(Person person) throws InterruptedException {
 
-        personAdapter.deletePerson(person.getPersonId());
-        assertNull(personAdapter.getPersonByUuid(person.getPersonId()));
+        personAdapter.deletePerson(person.getUuid());
+        assertNull(personAdapter.getPersonByUuid(person.getUuid()));
     }
 
     public class MrsListener implements EventListener {
