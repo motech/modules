@@ -50,6 +50,7 @@ public class EventHandlerTest {
     private static final String PERIOD = "period";
     private static final String CATEGORY_COMBO = "categoryOption";
     private static final String COMMENT = "comment";
+    private static final String STATUS = "ACTIVE";
 
 
 
@@ -156,6 +157,7 @@ public class EventHandlerTest {
         programStageDto.setEventDate(DATE);
         programStageDto.setOrgUnit(ORGUNIT_ID);
         programStageDto.setProgramStage(STAGE_ID);
+        programStageDto.setStatus(STATUS);
 
         when(dhisWebservice.createEvent(programStageDto)).thenReturn(response);
         when(trackedEntityInstanceMappingService.mapFromExternalId(ENTITY_INSTANCE_ID))
@@ -168,6 +170,7 @@ public class EventHandlerTest {
         params.put(EventParams.PROGRAM, PROGRAM_ID);
         params.put(EventParams.DATE, DATE);
         params.put(EventParams.STAGE,STAGE_ID);
+        params.put(EventParams.STATUS, STATUS);
         params.put(DATA_ELEMENT_ID, DATA_ELEMENT_VALUE);
 
         MotechEvent event = new MotechEvent(EventSubjects.UPDATE_PROGRAM_STAGE, params);

@@ -206,11 +206,13 @@ public class SyncServiceImpl implements SyncService {
 
         for (ProgramStageDataElementDto programStageDataElementDto : programStageDataElementDtos) {
             DataElementDto dataElementDto = programStageDataElementDto.getDataElement();
-            DataElement dataElement = dataElementService.findById(dataElementDto.getId());
-            if (dataElement == null) {
-                dataElement = dataElementService.createFromDetails(dataElementDto);
+            if (dataElementDto != null) {
+                DataElement dataElement = dataElementService.findById(dataElementDto.getId());
+                if (dataElement == null) {
+                    dataElement = dataElementService.createFromDetails(dataElementDto);
+                }
+                dataElements.add(dataElement);
             }
-            dataElements.add(dataElement);
         }
         return dataElements;
     }
