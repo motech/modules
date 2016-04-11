@@ -1,0 +1,12 @@
+{
+  "configs" : [
+    {
+      "name":"name-fooOne",
+      "openMrsUrl":"openMrsUrl-fooOne",
+      "username":"username-fooOne",
+      "password":"password-fooOne",
+      "motechId":"motechId-fooOne"
+    }
+  ],
+  "defaultConfigName":"name-fooOne"
+}

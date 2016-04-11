@@ -76,7 +76,7 @@
                 </div>
                 <div class="modal-body">
                     <div ng-show="!statusError && !importFormsProgressShow && !initImportComplete" class="form-group">
-                        <div><img ng-hide="totalForms &gt; 0" alt="loading" src="./../../static/img/load.gif">&nbsp;<strong></strong>&nbsp{{msg('commcare.retrievingForms')}}</div>
+                        <div><img ng-hide="totalForms &gt; 0" alt="loading" src="./../../static/common/img/load.gif">&nbsp;<strong></strong>&nbsp{{msg('commcare.retrievingForms')}}</div>
                     </div>
                     <div ng-show="!statusError && totalForms &gt; 0 && initImportComplete && !(importFormsProgressShow || importInProgress)" class="form-group">
                         <div><strong>{{totalForms}}</strong>&nbsp{{msg('commcare.formsWillImported')}}</div>

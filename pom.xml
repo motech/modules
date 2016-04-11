@@ -4,7 +4,7 @@
 
     <artifactId>modules</artifactId>
     <groupId>org.motechproject</groupId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.29-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>MOTECH Modules</name>
 
@@ -14,7 +14,7 @@
 
     <properties>
         <motech.groupId>org.motechproject</motech.groupId>
-        <motech.version>1.0-SNAPSHOT</motech.version>
+        <motech.version>0.29-SNAPSHOT</motech.version>
 
         <jasmine.server.port>8234</jasmine.server.port>
 
@@ -49,7 +49,7 @@
         <gemston.gemfire.version>7.0.1</gemston.gemfire.version>
         <codehaus.groovy.version>1.8.9</codehaus.groovy.version>
         <javax.el.version>2.2.5</javax.el.version>
-        <rometools.rome.fetcher.version>1.5.99</rometools.rome.fetcher.version>
+        <rometools.rome.fetcher.version>1.6.0</rometools.rome.fetcher.version>
         <spring.osgi.core.version>1.2.1</spring.osgi.core.version>
 
         <javax.persistence.version>2.1.0</javax.persistence.version>
@@ -784,8 +784,7 @@
         <module>csd</module>
         <module>metrics</module>
         <module>odk</module>
-        <module>ipf</module>
-        <module>motech-metrics</module>
+        <module>ihe-interop</module>
         <module>atom-client</module>
     </modules>
 

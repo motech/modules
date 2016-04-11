@@ -162,4 +162,39 @@ public final class DummyCommcareSchema {
 
         return applicationsInConfig2;
     }
+
+    public static List<CommcareApplicationJson> getApplicationsForConfigThree() {
+        List<CommcareApplicationJson> applicationsInConfig3 = new ArrayList<>();
+
+        Map<String, String> formNames6 = new HashMap<>();
+        formNames6.put("en", "form6");
+
+        List<String> fields1 = new ArrayList<>();
+
+        fields1.add(CASE_FIELD1);
+        fields1.add(CASE_FIELD2);
+        fields1.add(CASE_FIELD3);
+
+        FormSchemaQuestionJson questionJson7 = new FormSchemaQuestionJson();
+        questionJson7.setQuestionLabel("Last visit");
+        questionJson7.setQuestionValue(FORM_QUESTION4);
+
+        FormSchemaJson formSchemaWithNullXmlns = new FormSchemaJson();
+        formSchemaWithNullXmlns.setFormNames(formNames6);
+        formSchemaWithNullXmlns.setQuestions(Collections.singletonList(questionJson7));
+        formSchemaWithNullXmlns.setXmlns(null);
+
+        CommcareModuleJson commcareModuleJson5 = new CommcareModuleJson();
+        commcareModuleJson5.setFormSchemas(Collections.singletonList(formSchemaWithNullXmlns));
+        commcareModuleJson5.setCaseType("visit");
+        commcareModuleJson5.setCaseProperties(fields1);
+
+        CommcareApplicationJson commcareApplicationJson3 = new CommcareApplicationJson();
+        commcareApplicationJson3.setApplicationName("app1");
+        commcareApplicationJson3.setModules(Collections.singletonList((commcareModuleJson5)));
+
+        applicationsInConfig3.add(commcareApplicationJson3);
+
+        return applicationsInConfig3;
+    }
 }
