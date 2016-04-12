@@ -42,9 +42,6 @@
                             org.motechproject.hub.service.impl;version=${project.version}
                         </Export-Package>
                         <Import-Package>
-                            net.sf.cglib.core,
-                            net.sf.cglib.proxy,
-                            net.sf.cglib.reflect,
                             org.aopalliance.aop,
                             org.springframework.aop,
                             org.springframework.aop.framework,
@@ -69,6 +66,7 @@
                             org.springframework.transaction.annotation,
                             org.springframework.http,
                             org.springframework.stereotype,
+                            org.springframework.validation.beanvalidation,
                             org.springframework.web.bind.annotation,
                             javax.annotation,
                             org.apache.commons.io,
