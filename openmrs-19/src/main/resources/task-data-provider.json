@@ -3,7 +3,7 @@
   "objects": [
     {
       "displayName": "openMRS.encounter",
-      "type": "OpenMRSEncounter",
+      "type": "Encounter",
       "lookupFields": [
         {
           "displayName": "openMRS.lookup.uuid",
@@ -14,8 +14,8 @@
       ],
       "fields": [
         {
-          "displayName": "openMRS.encounter.id",
-          "fieldKey": "id"
+          "displayName": "openMRS.encounter.uuid",
+          "fieldKey": "uuid"
         },
         {
           "displayName": "openMRS.encounter.display",
@@ -23,7 +23,7 @@
         },
         {
           "displayName": "openMRS.encounter.date",
-          "fieldKey": "date",
+          "fieldKey": "encounterDatetime",
           "type": "DATE"
         },
         {
@@ -31,24 +31,24 @@
           "fieldKey": "encounterType"
         },
         {
-          "displayName": "openMRS.provider.id",
-          "fieldKey": "provider.providerId"
+          "displayName": "openMRS.provider.uuid",
+          "fieldKey": "provider.uuid"
         },
         {
           "displayName": "openMRS.provider.display",
-          "fieldKey": "provider.person.display"
+          "fieldKey": "provider.display"
         },
         {
-          "displayName": "openMRS.location.id",
-          "fieldKey": "facility.id"
+          "displayName": "openMRS.location.uuid",
+          "fieldKey": "location.uuid"
         },
         {
           "displayName": "openMRS.location.display",
-          "fieldKey": "facility.display"
+          "fieldKey": "location.display"
         },
         {
-          "displayName": "openMRS.patient.id",
-          "fieldKey": "patient.patientId"
+          "displayName": "openMRS.patient.uuid",
+          "fieldKey": "patient.uuid"
         },
         {
           "displayName": "openMRS.patient.display",
@@ -58,7 +58,7 @@
     },
     {
       "displayName": "openMRS.patient",
-      "type": "OpenMRSPatient",
+      "type": "Patient",
       "lookupFields": [
         {
           "displayName": "openMRS.lookup.motechId",
@@ -75,12 +75,12 @@
       ],
       "fields": [
         {
-          "displayName": "openMRS.patient.id",
-          "fieldKey": "patientId"
+          "displayName": "openMRS.patient.uuid",
+          "fieldKey": "uuid"
         },
         {
           "displayName": "openMRS.patient.identifiers",
-          "fieldKey": "identifiers",
+          "fieldKey": "identifiersMap",
           "type": "MAP"
         },
         {
@@ -88,8 +88,8 @@
           "fieldKey": "motechId"
         },
         {
-          "displayName": "openMRS.person.id",
-          "fieldKey": "person.id"
+          "displayName": "openMRS.person.uuid",
+          "fieldKey": "person.uuid"
         },
         {
           "displayName": "openMRS.person.display",
@@ -97,7 +97,7 @@
         },
         {
           "displayName": "openMRS.person.address",
-          "fieldKey": "person.address"
+          "fieldKey": "person.preferredAddress.fullAddressString"
         },
         {
           "displayName": "openMRS.person.age",
@@ -105,13 +105,13 @@
           "type": "INTEGER"
         },
         {
-          "displayName": "openMRS.person.birthDateEstimated",
-          "fieldKey": "person.birthDateEstimated",
+          "displayName": "openMRS.person.birthdateEstimated",
+          "fieldKey": "person.birthdateEstimated",
           "type": "BOOLEAN"
         },
         {
-          "displayName": "openMRS.person.dateOfBirth",
-          "fieldKey": "person.dateOfBirth",
+          "displayName": "openMRS.person.birthdate",
+          "fieldKey": "person.birthdate",
           "type": "DATE"
         },
         {
@@ -121,17 +121,17 @@
         },
         {
           "displayName": "openMRS.person.dateCreated",
-          "fieldKey": "person.dateCreated",
+          "fieldKey": "person.auditInfo.dateCreated",
           "type": "DATE"
         },
         {
           "displayName": "openMRS.person.dateChanged",
-          "fieldKey": "person.dateChanged",
+          "fieldKey": "person.auditInfo.dateChanged",
           "type": "DATE"
         },
         {
           "displayName": "openMRS.person.newPerson",
-          "fieldKey": "person.newPerson"
+          "fieldKey": "person.auditInfo.newPerson"
         },
         {
           "displayName": "openMRS.person.gender",
@@ -146,7 +146,7 @@
     },
     {
       "displayName": "openMRS.provider",
-      "type": "OpenMRSProvider",
+      "type": "Provider",
       "lookupFields": [
         {
           "displayName": "openMRS.lookup.uuid",
@@ -157,16 +157,16 @@
       ],
       "fields": [
         {
-          "displayName": "openMRS.provider.id",
-          "fieldKey": "providerId"
+          "displayName": "openMRS.provider.uuid",
+          "fieldKey": "uuid"
         },
         {
           "displayName": "openMRS.provider.identifier",
           "fieldKey": "identifier"
         },
         {
-          "displayName": "openMRS.person.id",
-          "fieldKey": "person.id"
+          "displayName": "openMRS.person.uuid",
+          "fieldKey": "person.uuid"
         },
         {
           "displayName": "openMRS.person.display",

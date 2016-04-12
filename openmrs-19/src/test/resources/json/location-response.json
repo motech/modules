@@ -1,8 +1,8 @@
 {
   "uuid": "AAABBBCCC",
   "name": "Location Name",
-  "stateProvince": "Facility State",
-  "country": "Facility Country",
-  "countyDistrict": "Facility District",
+  "stateProvince": "Location State",
+  "country": "Location Country",
+  "countyDistrict": "Location District",
   "address6": "Region"
 }

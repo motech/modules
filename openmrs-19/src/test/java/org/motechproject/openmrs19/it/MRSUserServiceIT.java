@@ -4,8 +4,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.openmrs19.domain.OpenMRSPerson;
-import org.motechproject.openmrs19.domain.OpenMRSUser;
+import org.motechproject.openmrs19.domain.Person;
+import org.motechproject.openmrs19.domain.Role;
+import org.motechproject.openmrs19.domain.User;
 import org.motechproject.openmrs19.exception.UserAlreadyExistsException;
 import org.motechproject.openmrs19.exception.UserDeleteException;
 import org.motechproject.openmrs19.service.OpenMRSPersonService;
@@ -18,6 +19,7 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -38,8 +40,8 @@ public class MRSUserServiceIT extends BasePaxIT {
     @Inject
     private OpenMRSPersonService personAdapter;
 
-    private OpenMRSUser userOne;
-    private OpenMRSUser userTwo;
+    private User userOne;
+    private User userTwo;
 
     @Before
     public void setUp() throws UserAlreadyExistsException {
@@ -49,14 +51,14 @@ public class MRSUserServiceIT extends BasePaxIT {
 
     @Test
     public void shouldCreateUser() {
-        assertEquals(userOne.getUserName(), USER_ONE_USER_NAME);
-        assertEquals(userOne.getSecurityRole(), USER_ONE_SECURITY_ROLE);
+        assertEquals(USER_ONE_USER_NAME, userOne.getUsername());
+        assertEquals(USER_ONE_SECURITY_ROLE, userOne.getRoles().get(0).getDisplay());
     }
 
     @Test
     public void shouldSetNewPassword() {
 
-        String newPassword = userAdapter.setNewPasswordForUser(userOne.getUserName());
+        String newPassword = userAdapter.setNewPasswordForUser(userOne.getUsername());
 
         assertNotNull(newPassword);
     }
@@ -64,7 +66,7 @@ public class MRSUserServiceIT extends BasePaxIT {
     @Test
     public void shouldGetUserById() {
 
-        OpenMRSUser user = userAdapter.getUserByUuid(userOne.getUserId());
+        User user = userAdapter.getUserByUuid(userOne.getUuid());
 
         assertNotNull(user);
         assertEquals(user, userOne);
@@ -73,7 +75,7 @@ public class MRSUserServiceIT extends BasePaxIT {
     @Test
     public void shouldGetUserByUsername() {
 
-        OpenMRSUser user = userAdapter.getUserByUserName(userOne.getUserName());
+        User user = userAdapter.getUserByUserName(userOne.getUsername());
 
         assertNotNull(user);
         assertEquals(user, userOne);
@@ -82,13 +84,13 @@ public class MRSUserServiceIT extends BasePaxIT {
     @Test
     public void shouldGetAllUsers() {
 
-        List<OpenMRSUser> users = userAdapter.getAllUsers();
+        List<User> users = userAdapter.getAllUsers();
 
         // 4 including daemon and admin
         assertEquals(4, users.size());
 
-        assertEquals(users.get(2).getUserId(), userOne.getUserId());
-        assertEquals(users.get(3).getUserId(), userTwo.getUserId());
+        assertEquals(users.get(2).getUuid(), userOne.getUuid());
+        assertEquals(users.get(3).getUuid(), userTwo.getUuid());
     }
 
     @Test
@@ -96,12 +98,12 @@ public class MRSUserServiceIT extends BasePaxIT {
 
         final String newUsername = "newFooUsername";
 
-        userOne.setUserName(newUsername);
+        userOne.setUsername(newUsername);
 
-        OpenMRSUser updated = userAdapter.updateUser(userOne);
+        User updated = userAdapter.updateUser(userOne);
 
         assertNotNull(updated);
-        assertEquals(updated.getUserName(), newUsername);
+        assertEquals(updated.getUsername(), newUsername);
     }
 
     @After
@@ -110,49 +112,63 @@ public class MRSUserServiceIT extends BasePaxIT {
         deleteUser(userTwo);
     }
 
-    private OpenMRSUser prepareUserOne() {
-        OpenMRSPerson person = new OpenMRSPerson();
-        person.setFirstName("FooFirstNameOne");
-        person.setLastName("FooLastNameOne");
+    private User prepareUserOne() {
+        Person person = new Person();
+
+        Person.Name name = new Person.Name();
+        name.setGivenName("FooFirstNameOne");
+        name.setFamilyName("FooLastNameOne");
+        person.setNames(Collections.singletonList(name));
+
         person.setGender("M");
 
-        OpenMRSUser user = new OpenMRSUser();
-        user.setSecurityRole(USER_ONE_SECURITY_ROLE);
-        user.setUserName(USER_ONE_USER_NAME);
+        Role role = new Role();
+        role.setName(USER_ONE_SECURITY_ROLE);
+
+        User user = new User();
+        user.setUsername(USER_ONE_USER_NAME);
         user.setPerson(person);
+        user.setRoles(Collections.singletonList(role));
 
         return user;
     }
 
-    private OpenMRSUser prepareUserTwo() {
-        OpenMRSPerson person = new OpenMRSPerson();
-        person.setFirstName("FooFirstNameTwo");
-        person.setLastName("FooLastNameTwo");
+    private User prepareUserTwo() {
+        Person person = new Person();
+
+        Person.Name name = new Person.Name();
+        name.setGivenName("FooFirstNameTwo");
+        name.setFamilyName("FooLastNameTwo");
+        person.setNames(Collections.singletonList(name));
+
         person.setGender("O");
 
-        OpenMRSUser user = new OpenMRSUser();
-        user.setSecurityRole("Provider");
-        user.setUserName("fooUserTwo");
+        Role role = new Role();
+        role.setName("Provider");
+
+        User user = new User();
+        user.setUsername("fooUserTwo");
         user.setPerson(person);
+        user.setRoles(Collections.singletonList(role));
 
         return user;
     }
 
-    private OpenMRSUser createUser(OpenMRSUser user) throws UserAlreadyExistsException {
+    private User createUser(User user) throws UserAlreadyExistsException {
 
-        OpenMRSUser saved = userAdapter.createUser(user);
+        User saved = userAdapter.createUser(user);
 
         assertNotNull(saved);
-        assertNotNull(saved.getUserId());
+        assertNotNull(saved.getUuid());
 
         return saved;
     }
 
-    private void deleteUser(OpenMRSUser user) throws UserDeleteException {
+    private void deleteUser(User user) throws UserDeleteException {
 
-        userAdapter.deleteUser(user.getUserId());
-        assertNull(userAdapter.getUserByUserName(user.getUserName()));
+        userAdapter.deleteUser(user.getUuid());
+        assertNull(userAdapter.getUserByUserName(user.getUsername()));
 
-        personAdapter.deletePerson(user.getPerson().getPersonId());
+        personAdapter.deletePerson(user.getPerson().getUuid());
     }
 }

@@ -4,8 +4,8 @@ package org.motechproject.openmrs19.it;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.openmrs19.domain.OpenMRSPerson;
-import org.motechproject.openmrs19.domain.OpenMRSProvider;
+import org.motechproject.openmrs19.domain.Person;
+import org.motechproject.openmrs19.domain.Provider;
 import org.motechproject.openmrs19.service.OpenMRSPersonService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -16,6 +16,8 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
+
+import java.util.Collections;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
@@ -31,25 +33,30 @@ public class MRSProviderServiceIT extends BasePaxIT {
     @Inject
     private OpenMRSPersonService personService;
 
-    OpenMRSProvider provider;
+    Provider provider;
 
     @Test
     public void shouldSaveProvider() {
 
-        OpenMRSPerson person = new OpenMRSPerson();
-        person.setFirstName("FooFirstName");
-        person.setLastName("FooLastName");
+        Person person = new Person();
+
+        Person.Name name = new Person.Name();
+        name.setGivenName("FooFirstName");
+        name.setFamilyName("FooLastName");
+        person.setNames(Collections.singletonList(name));
+
         person.setGender("F");
+
         person = personService.createPerson(person);
 
-        OpenMRSProvider provider = new OpenMRSProvider();
+        Provider provider = new Provider();
         provider.setIdentifier("FooIdentifier");
         provider.setPerson(person);
 
         this.provider = providerService.createProvider(provider);
 
         assertNotNull(this.provider);
-        assertEquals(this.provider.getPerson().getPersonId(), person.getPersonId());
+        assertEquals(this.provider.getPerson().getUuid(), person.getUuid());
         assertEquals(this.provider.getIdentifier(), provider.getIdentifier());
 
     }
@@ -58,9 +65,9 @@ public class MRSProviderServiceIT extends BasePaxIT {
     public void tearDown() {
 
         if (provider != null) {
-            String uuid = provider.getPerson().getPersonId();
+            String uuid = provider.getPerson().getUuid();
 
-            providerService.deleteProvider(provider.getProviderId());
+            providerService.deleteProvider(provider.getUuid());
             personService.deletePerson(uuid);
         }
     }

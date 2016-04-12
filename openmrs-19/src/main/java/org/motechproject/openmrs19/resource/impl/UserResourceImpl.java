@@ -3,16 +3,14 @@ package org.motechproject.openmrs19.resource.impl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.motechproject.openmrs19.OpenMrsInstance;
+import org.motechproject.openmrs19.domain.Person;
+import org.motechproject.openmrs19.domain.Role;
+import org.motechproject.openmrs19.domain.RoleListResult;
+import org.motechproject.openmrs19.domain.User;
+import org.motechproject.openmrs19.domain.UserListResult;
 import org.motechproject.openmrs19.exception.HttpException;
-import org.motechproject.openmrs19.rest.RestClient;
 import org.motechproject.openmrs19.resource.UserResource;
-import org.motechproject.openmrs19.resource.model.Person;
-import org.motechproject.openmrs19.resource.model.Person.PersonSerializer;
-import org.motechproject.openmrs19.resource.model.Role;
-import org.motechproject.openmrs19.resource.model.Role.RoleSerializer;
-import org.motechproject.openmrs19.resource.model.RoleListResult;
-import org.motechproject.openmrs19.resource.model.User;
-import org.motechproject.openmrs19.resource.model.UserListResult;
+import org.motechproject.openmrs19.rest.RestClient;
 import org.motechproject.openmrs19.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -52,8 +50,8 @@ public class UserResourceImpl implements UserResource {
     }
 
     private Gson getGsonWithAdapters() {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Person.class, new PersonSerializer())
-                .registerTypeAdapter(Role.class, new RoleSerializer()).create();
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().registerTypeAdapter(Person.class, new Person.PersonSerializer())
+                .registerTypeAdapter(Role.class, new Role.RoleSerializer()).create();
         return gson;
     }
 
@@ -66,11 +64,10 @@ public class UserResourceImpl implements UserResource {
     @Override
     public User updateUser(User user) throws HttpException {
         Gson gson = getGsonWithAdapters();
-        String uuid = user.getUuid();
-        user.setUuid(null);
+
         String requestJson = gson.toJson(user);
 
-        String responseJson = restClient.postForJson(openmrsInstance.toInstancePathWithParams("/user/{uuid}", uuid),
+        String responseJson = restClient.postForJson(openmrsInstance.toInstancePathWithParams("/user/{uuid}", user.getUuid()),
                 requestJson);
 
         return (User) JsonUtils.readJson(responseJson, User.class);

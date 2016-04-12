@@ -8,16 +8,19 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.motechproject.openmrs19.domain.OpenMRSConcept;
-import org.motechproject.openmrs19.domain.OpenMRSConceptName;
-import org.motechproject.openmrs19.domain.OpenMRSEncounter;
-import org.motechproject.openmrs19.domain.OpenMRSFacility;
-import org.motechproject.openmrs19.domain.OpenMRSPatient;
-import org.motechproject.openmrs19.domain.OpenMRSPerson;
-import org.motechproject.openmrs19.domain.OpenMRSProvider;
+import org.motechproject.openmrs19.domain.Concept;
+import org.motechproject.openmrs19.domain.ConceptName;
+import org.motechproject.openmrs19.domain.Encounter;
+import org.motechproject.openmrs19.domain.EncounterType;
+import org.motechproject.openmrs19.domain.Identifier;
+import org.motechproject.openmrs19.domain.IdentifierType;
+import org.motechproject.openmrs19.domain.Location;
+import org.motechproject.openmrs19.domain.Patient;
+import org.motechproject.openmrs19.domain.Person;
+import org.motechproject.openmrs19.domain.Provider;
 import org.motechproject.openmrs19.service.OpenMRSConceptService;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
-import org.motechproject.openmrs19.service.OpenMRSFacilityService;
+import org.motechproject.openmrs19.service.OpenMRSLocationService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
 import org.motechproject.openmrs19.tasks.OpenMRSActionProxyService;
@@ -40,7 +43,7 @@ public class OpenMRSActionProxyServiceTest {
     private OpenMRSEncounterService encounterService;
 
     @Mock
-    private OpenMRSFacilityService facilityService;
+    private OpenMRSLocationService locationService;
 
     @Mock
     private OpenMRSPatientService patientService;
@@ -49,39 +52,37 @@ public class OpenMRSActionProxyServiceTest {
     private OpenMRSProviderService providerService;
 
     @Captor
-    private ArgumentCaptor<OpenMRSEncounter> encounterCaptor;
+    private ArgumentCaptor<Encounter> encounterCaptor;
 
     @Captor
-    private ArgumentCaptor<OpenMRSPatient> patientCaptor;
+    private ArgumentCaptor<Patient> patientCaptor;
 
     @InjectMocks
     private OpenMRSActionProxyService openMRSActionProxyService = new OpenMRSActionProxyServiceImpl();
 
     @Test
     public void shouldCreateEncounterWithGivenParameters() {
-        OpenMRSFacility facility = new OpenMRSFacility(null);
-        facility.setName("testLocation");
+        Location location = new Location();
+        location.setName("testLocation");
 
-        OpenMRSPatient patient = new OpenMRSPatient();
-        patient.setPatientId("10");
+        Patient patient = new Patient();
+        patient.setUuid("10");
 
-        OpenMRSProvider provider = new OpenMRSProvider();
-        provider.setProviderId("20");
+        Provider provider = new Provider();
+        provider.setUuid("20");
 
-        OpenMRSEncounter encounter = new OpenMRSEncounter.OpenMRSEncounterBuilder()
-                .withDate(new DateTime("2000-08-16T07:22:05Z").toDate())
-                .withEncounterType("testEncounterType")
-                .withFacility(facility)
-                .withPatient(patient)
-                .withProvider(provider)
-                .build();
+        Person person = new Person();
+        person.setUuid("30");
+        provider.setPerson(person);
 
-        doReturn(Collections.singletonList(facility)).when(facilityService).getFacilities(facility.getName());
-        doReturn(patient).when(patientService).getPatientByUuid(patient.getPatientId());
-        doReturn(provider).when(providerService).getProviderByUuid(provider.getProviderId());
+        Encounter encounter = new Encounter(location, new EncounterType("testEncounterType"), new DateTime("2000-08-16T07:22:05Z").toDate(), patient, provider.getPerson());
 
-        openMRSActionProxyService.createEncounter(encounter.getDate(), encounter.getEncounterType(), facility.getName(),
-                patient.getPatientId(), provider.getProviderId());
+        doReturn(Collections.singletonList(location)).when(locationService).getLocations(location.getName());
+        doReturn(patient).when(patientService).getPatientByUuid(patient.getUuid());
+        doReturn(provider).when(providerService).getProviderByUuid(provider.getUuid());
+
+        openMRSActionProxyService.createEncounter(new DateTime(encounter.getEncounterDatetime()),
+                encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid());
 
         verify(encounterService).createEncounter(encounterCaptor.capture());
 
@@ -90,26 +91,29 @@ public class OpenMRSActionProxyServiceTest {
 
     @Test
     public void shouldCreatePatientWithGivenParameters() {
-        OpenMRSPerson person = createTestPerson();
-        OpenMRSConcept causeOfDeath = createTestConcept();
+        Person person = createTestPerson();
+        Concept causeOfDeath = createTestConcept();
 
         person.setDead(true);
         person.setCauseOfDeath(causeOfDeath);
 
-        OpenMRSFacility facility = new OpenMRSFacility();
-        facility.setName("testLocation");
+        Location location = new Location();
+        location.setName("testLocation");
 
-        Map<String, String> identifiers = new HashMap<>();
-        identifiers.put("CommCare CaseID", "1000");
+        Identifier identifier = new Identifier("1000", new IdentifierType("CommCare CaseID"));
 
-        OpenMRSPatient patient = new OpenMRSPatient("500", person, facility, identifiers);
+        Patient patient = new Patient(Collections.singletonList(identifier), person, "500", location);
+
+        Map<String, String> identifiersMap = new HashMap<>();
+        identifiersMap.put("CommCare CaseID", "1000");
 
         doReturn(causeOfDeath).when(conceptService).getConceptByUuid(causeOfDeath.getUuid());
-        doReturn(Collections.singletonList(facility)).when(facilityService).getFacilities(facility.getName());
+        doReturn(Collections.singletonList(location)).when(locationService).getLocations(location.getName());
 
-        openMRSActionProxyService.createPatient(person.getFirstName(), person.getMiddleName(), person.getLastName(),
-                person.getAddress(), person.getDateOfBirth(), person.getBirthDateEstimated(), person.getGender(),
-                person.getDead(), causeOfDeath.getUuid(), patient.getMotechId(), facility.getName(), identifiers);
+        openMRSActionProxyService.createPatient(person.getPreferredName().getGivenName(), person.getPreferredName().getMiddleName(),
+                person.getPreferredName().getFamilyName(), person.getPreferredAddress().getAddress1(), new DateTime(person.getBirthdate()),
+                person.getBirthdateEstimated(), person.getGender(), person.getDead(), causeOfDeath.getUuid(), patient.getMotechId(),
+                location.getName(), identifiersMap);
 
         verify(patientService).createPatient(patientCaptor.capture());
 
@@ -118,21 +122,24 @@ public class OpenMRSActionProxyServiceTest {
 
     @Test
     public void shouldCreatePatientWithDefaultLocationWhenLocationNameIsNotProvided() {
-        OpenMRSPerson person = createTestPerson();
+        Person person = createTestPerson();
 
-        OpenMRSFacility facility = new OpenMRSFacility();
-        facility.setName(OpenMRSActionProxyService.DEFAULT_LOCATION_NAME);
+        Location location = new Location();
+        location.setName(OpenMRSActionProxyService.DEFAULT_LOCATION_NAME);
 
-        Map<String, String> identifiers = new HashMap<>();
-        identifiers.put("CommCare CaseID", "1000");
+        Identifier identifier = new Identifier("1000", new IdentifierType("CommCare CaseID"));
 
-        OpenMRSPatient patient = new OpenMRSPatient("500", person, facility, identifiers);
+        Patient patient = new Patient(Collections.singletonList(identifier), person, "500", location);
 
-        doReturn(Collections.singletonList(facility)).when(facilityService).getFacilities(OpenMRSActionProxyService.DEFAULT_LOCATION_NAME);
+        Map<String, String> identifiersMap = new HashMap<>();
+        identifiersMap.put("CommCare CaseID", "1000");
 
-        openMRSActionProxyService.createPatient(person.getFirstName(), person.getMiddleName(), person.getLastName(),
-                person.getAddress(), person.getDateOfBirth(), person.getBirthDateEstimated(), person.getGender(),
-                person.getDead(), "", patient.getMotechId(), "", identifiers);
+        doReturn(Collections.singletonList(location)).when(locationService).getLocations(OpenMRSActionProxyService.DEFAULT_LOCATION_NAME);
+
+        openMRSActionProxyService.createPatient(person.getPreferredName().getGivenName(), person.getPreferredName().getMiddleName(),
+                person.getPreferredName().getFamilyName(), person.getPreferredAddress().getAddress1(), new DateTime(person.getBirthdate()),
+                person.getBirthdateEstimated(), person.getGender(), person.getDead(), "", patient.getMotechId(),
+                "", identifiersMap);
 
         verify(patientService).createPatient(patientCaptor.capture());
 
@@ -141,21 +148,24 @@ public class OpenMRSActionProxyServiceTest {
 
     @Test
     public void shouldNotUsedDefaultLocationWhenLocationForGivenNameIsNotFound() {
-        OpenMRSPerson person = createTestPerson();
+        Person person = createTestPerson();
 
-        OpenMRSFacility facility = new OpenMRSFacility();
-        facility.setName("testLocationNameForNotExistingLocation");
+        Location location = new Location();
+        location.setName("testLocationNameForNotExistingLocation");
 
-        Map<String, String> identifiers = new HashMap<>();
-        identifiers.put("CommCare CaseID", "1000");
+        Identifier identifier = new Identifier("1000", new IdentifierType("CommCare CaseID"));
 
-        OpenMRSPatient patient = new OpenMRSPatient("500", person, null, identifiers);
+        Patient patient = new Patient(Collections.singletonList(identifier), person, "500", null);
 
-        doReturn(Collections.emptyList()).when(facilityService).getFacilities(facility.getName());
+        Map<String, String> identifiersMap = new HashMap<>();
+        identifiersMap.put("CommCare CaseID", "1000");
 
-        openMRSActionProxyService.createPatient(person.getFirstName(), person.getMiddleName(), person.getLastName(),
-                person.getAddress(), person.getDateOfBirth(), person.getBirthDateEstimated(), person.getGender(),
-                person.getDead(), "", patient.getMotechId(), facility.getName(), identifiers);
+        doReturn(Collections.emptyList()).when(locationService).getLocations(location.getName());
+
+        openMRSActionProxyService.createPatient(person.getPreferredName().getGivenName(), person.getPreferredName().getMiddleName(),
+                person.getPreferredName().getFamilyName(), person.getPreferredAddress().getAddress1(), new DateTime(person.getBirthdate()),
+                person.getBirthdateEstimated(), person.getGender(), person.getDead(), "", patient.getMotechId(),
+                location.getName(), identifiersMap);
 
         verify(patientService).createPatient(patientCaptor.capture());
 
@@ -163,27 +173,37 @@ public class OpenMRSActionProxyServiceTest {
         assertEquals(patient, patientCaptor.getValue());
     }
 
-    private OpenMRSPerson createTestPerson() {
-        OpenMRSPerson person = new OpenMRSPerson();
-        person.setFirstName("John");
-        person.setMiddleName("Robert");
-        person.setLastName("Smith");
+    private Person createTestPerson() {
+        Person person = new Person();
+
+        Person.Name name = new Person.Name();
+        name.setGivenName("John");
+        name.setMiddleName("Robert");
+        name.setFamilyName("Smith");
+        person.setPreferredName(name);
+        person.setNames(Collections.singletonList(name));
+
+        Person.Address address = new Person.Address();
+        address.setAddress1("Gdynia");
+        person.setPreferredAddress(address);
+        person.setAddresses(Collections.singletonList(address));
+
         person.setGender("M");
-        person.setAddress("Gdynia");
-        person.setDateOfBirth(new DateTime("2000-08-16T07:22:05Z"));
-        person.setBirthDateEstimated(true);
+
+        person.setBirthdate(new DateTime("2000-08-16T07:22:05Z").toDate());
+        person.setBirthdateEstimated(true);
         person.setDead(false);
 
         return person;
     }
 
-    private OpenMRSConcept createTestConcept() {
-        OpenMRSConcept concept = new OpenMRSConcept();
-        OpenMRSConceptName conceptName = new OpenMRSConceptName("testConcept");
+    private Concept createTestConcept() {
+        Concept concept = new Concept();
+        ConceptName conceptName = new ConceptName("testConcept");
 
         concept.setNames(Collections.singletonList(conceptName));
-        concept.setDataType("TEXT");
-        concept.setConceptClass("Test");
+        concept.setDatatype(new Concept.DataType("TEXT"));
+        concept.setConceptClass(new Concept.ConceptClass("Test"));
         concept.setUuid("100");
 
         return concept;

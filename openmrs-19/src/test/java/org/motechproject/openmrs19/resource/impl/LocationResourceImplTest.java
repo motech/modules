@@ -5,9 +5,9 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.motechproject.openmrs19.domain.Location;
+import org.motechproject.openmrs19.domain.LocationListResult;
 import org.motechproject.openmrs19.exception.HttpException;
-import org.motechproject.openmrs19.resource.model.Location;
-import org.motechproject.openmrs19.resource.model.LocationListResult;
 
 import java.io.IOException;
 import java.net.URI;
@@ -73,9 +73,9 @@ public class LocationResourceImplTest extends AbstractResourceImplTest {
     private Location buildLocation() {
         Location loc = new Location();
         loc.setName("Location Name");
-        loc.setStateProvince("Facility State");
-        loc.setCountry("Facility Country");
-        loc.setCountyDistrict("Facility District");
+        loc.setStateProvince("Location State");
+        loc.setCountry("Location Country");
+        loc.setCountyDistrict("Location District");
         loc.setAddress6("Region");
         loc.setDescription("Location Name");
 

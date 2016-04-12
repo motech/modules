@@ -12,9 +12,9 @@ public final class OpenMRSTasksConstants {
     public static final String BY_UUID = "openMRS.lookup.uuid";
 
     // Lookup objects
-    public static final String ENCOUNTER = "OpenMRSEncounter";
-    public static final String PATIENT = "OpenMRSPatient";
-    public static final String PROVIDER = "OpenMRSProvider";
+    public static final String ENCOUNTER = "Encounter";
+    public static final String PATIENT = "Patient";
+    public static final String PROVIDER = "Provider";
 
     // Field names
     public static final String MOTECH_ID = "openMRS.motechId";

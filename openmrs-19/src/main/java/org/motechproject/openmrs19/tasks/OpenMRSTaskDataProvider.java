@@ -1,9 +1,9 @@
 package org.motechproject.openmrs19.tasks;
 
 import org.motechproject.commons.api.AbstractDataProvider;
-import org.motechproject.openmrs19.domain.OpenMRSEncounter;
-import org.motechproject.openmrs19.domain.OpenMRSPatient;
-import org.motechproject.openmrs19.domain.OpenMRSProvider;
+import org.motechproject.openmrs19.domain.Encounter;
+import org.motechproject.openmrs19.domain.Patient;
+import org.motechproject.openmrs19.domain.Provider;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
@@ -35,7 +35,7 @@ import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.UUID;
 @Service("openMRSTaskDataProvider")
 public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSTaskDataProvider.class);
-    private static final List<Class<?>> SUPPORTED_CLASSES = Arrays.asList(OpenMRSPatient.class, OpenMRSProvider.class, OpenMRSEncounter.class);
+    private static final List<Class<?>> SUPPORTED_CLASSES = Arrays.asList(Patient.class, Provider.class, Encounter.class);
 
     private OpenMRSEncounterService encounterService;
     private OpenMRSPatientService patientService;
@@ -88,8 +88,8 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         return obj;
     }
 
-    private OpenMRSEncounter getEncounter(String lookupName, Map<String, String> lookupFields) {
-        OpenMRSEncounter encounter = null;
+    private Encounter getEncounter(String lookupName, Map<String, String> lookupFields) {
+        Encounter encounter = null;
 
         switch (lookupName) {
             case BY_UUID: encounter = encounterService.getEncounterByUuid(lookupFields.get(UUID));
@@ -101,8 +101,8 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         return encounter;
     }
 
-    private OpenMRSPatient getPatient(String lookupName, Map<String, String> lookupFields) {
-        OpenMRSPatient patient = null;
+    private Patient getPatient(String lookupName, Map<String, String> lookupFields) {
+        Patient patient = null;
 
         switch (lookupName) {
             case BY_MOTECH_ID: patient = patientService.getPatientByMotechId(lookupFields.get(MOTECH_ID));
@@ -116,8 +116,8 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         return patient;
     }
 
-    private OpenMRSProvider getProvider(String lookupName, Map<String, String> lookupFields) {
-        OpenMRSProvider provider = null;
+    private Provider getProvider(String lookupName, Map<String, String> lookupFields) {
+        Provider provider = null;
 
         switch (lookupName) {
             case BY_UUID: provider = providerService.getProviderByUuid(lookupFields.get(UUID));
