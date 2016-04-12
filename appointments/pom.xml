@@ -27,6 +27,11 @@
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-web-security</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
             <artifactId>motech-scheduler</artifactId>
             <version>${motech.version}</version>
         </dependency>
