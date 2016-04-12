@@ -170,19 +170,19 @@ public class ResourceController {
      * Updates an existing stream content in the CMS system. Performed by the UI.
      * @param language the language for the content
      * @param name the name of the content
-     * @param contentFile the file that should be persisted as this content
+     * @param file the file that should be persisted as this content
      * @throws ContentNotFoundException if the content does not exist
      * @throws IOException if there were IO issues with the uploaded file
      */
     @RequestMapping(value = "/resource/stream/{language}/{name}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public void editStreamContent(@PathVariable String language, @PathVariable String name,
-                                  @RequestParam MultipartFile contentFile) throws ContentNotFoundException, IOException {
+                                  @RequestParam MultipartFile file) throws ContentNotFoundException, IOException {
         StreamContent streamContent = cmsLiteService.getStreamContent(language, name);
 
-        streamContent.setChecksum(md5Hex(contentFile.getBytes()));
-        streamContent.setContentType(contentFile.getContentType());
-        streamContent.setContent(ArrayUtils.toObject(contentFile.getBytes()));
+        streamContent.setChecksum(md5Hex(file.getBytes()));
+        streamContent.setContentType(file.getContentType());
+        streamContent.setContent(ArrayUtils.toObject(file.getBytes()));
 
         cmsLiteService.addContent(streamContent);
     }
@@ -193,7 +193,7 @@ public class ResourceController {
      * @param name the name of the content
      * @param language the language of the content
      * @param value the value of the content in case of a string content
-     * @param contentFile the file to be saved as the content in case of a stream content
+     * @param file the file to be saved as the content in case of a stream content
      * @throws CMSLiteException if a wrong combination of parameters was passed
      * @throws IOException if there were IO issues with the uploaded file
      */
@@ -203,7 +203,7 @@ public class ResourceController {
                            @RequestParam String name,
                            @RequestParam String language,
                            @RequestParam(required = false) String value,
-                           @RequestParam(required = false) MultipartFile contentFile) throws CMSLiteException, IOException {
+                           @RequestParam(required = false) MultipartFile file) throws CMSLiteException, IOException {
         if (isBlank(type)) {
             throw new CMSLiteException("Resource type is required");
         }
@@ -229,7 +229,7 @@ public class ResourceController {
                 cmsLiteService.addContent(new StringContent(language, name, value));
                 break;
             case "stream":
-                if (null == contentFile) {
+                if (null == file) {
                     throw new CMSLiteException("Resource content is required");
                 }
 
@@ -237,10 +237,10 @@ public class ResourceController {
                     throw new CMSLiteException(String.format("Resource %s in %s language already exists.", name, language));
                 }
 
-                String checksum = md5Hex(contentFile.getBytes());
-                String contentType = contentFile.getContentType();
+                String checksum = md5Hex(file.getBytes());
+                String contentType = file.getContentType();
 
-                cmsLiteService.addContent(new StreamContent(language, name, ArrayUtils.toObject(contentFile.getBytes()), checksum, contentType));
+                cmsLiteService.addContent(new StreamContent(language, name, ArrayUtils.toObject(file.getBytes()), checksum, contentType));
                 break;
             default:
                 throw new CMSLiteException(String.format("\"%s\" is not a valid content type!", type));

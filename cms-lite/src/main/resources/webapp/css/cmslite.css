@@ -4,9 +4,9 @@
     font-size:0.9em;
 }
 
-.cms-lite .fileupload .uneditable-input,
-.cms-lite .fileupload .btn.btn-file,
-.cms-lite .fileupload a.fileupload-exists {
+.cms-lite .fileinput .uneditable-input,
+.cms-lite .fileinput .btn.btn-file,
+.cms-lite .fileinput a.fileinput-exists {
     margin-bottom: 5px;
     overflow-x: hidden;
 }
