@@ -7,7 +7,7 @@ import java.util.Objects;
 /**
  * Represents a single OpenMRS encounter. An encounter is a single, specific interaction between the patient and a
  * provider. It can be any interaction and includes doctor visits, laboratory tests, food distribution, home visits,
- * counselor appointments, etc. It's a part of the MOTECH model.
+ * counselor appointments, etc.
  */
 public class Encounter {
 

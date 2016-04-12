@@ -11,8 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Represents a single concept. Concepts are individual data points collected from a population of patients. It's a part
- * of the MOTECH model.
+ * Represents a single concept. Concepts are individual data points collected from a population of patients.
  */
 public class Concept {
 

@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 /**
- * Represents a single attribute of a user. It's a part of the OpenMRS model.
+ * Represents a single attribute of a user.
  */
 public class Attribute {
 

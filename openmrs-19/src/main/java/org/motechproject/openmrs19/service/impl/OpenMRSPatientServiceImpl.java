@@ -70,7 +70,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
 
             return savedPatient;
         } catch (HttpException e) {
-            LOGGER.error("Failed to create a patient in OpenMRS with MoTeCH Id: " + patient.getMotechId());
+            LOGGER.error("Failed to create a patient in OpenMRS with MOTECH Id: " + patient.getMotechId());
             return null;
         }
     }
@@ -140,7 +140,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         try {
             patientList = patientResource.queryForPatient(motechId);
         } catch (HttpException e) {
-            LOGGER.error("Failed search for patient by MoTeCH Id: " + motechId);
+            LOGGER.error("Failed search for patient by MOTECH Id: " + motechId);
             return null;
         }
 
@@ -236,7 +236,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         try {
             motechPatientIdentifierTypeUuid = patientResource.getMotechPatientIdentifierUuid();
         } catch (HttpException e) {
-            LOGGER.error("There was an exception retrieving the MoTeCH Identifier Type UUID");
+            LOGGER.error("There was an exception retrieving the MOTECH Identifier Type UUID");
             return null;
         }
 

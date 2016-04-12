@@ -91,7 +91,7 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
 
     @Override
     public Observation findObservation(String motechId, String conceptName) {
-        Validate.notEmpty(motechId, "MoTeCH Id cannot be empty");
+        Validate.notEmpty(motechId, "MOTECH Id cannot be empty");
         Validate.notEmpty(conceptName, "Concept name cannot be empty");
 
         List<Observation> observations = findObservations(motechId, conceptName);

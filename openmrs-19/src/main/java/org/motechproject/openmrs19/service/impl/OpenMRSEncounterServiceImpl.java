@@ -172,7 +172,7 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
     }
 
     private List<Encounter> getAllEncountersByPatientMotechId(String motechId) {
-        Validate.notEmpty(motechId, "MoTeCH Id cannot be empty");
+        Validate.notEmpty(motechId, "MOTECH Id cannot be empty");
 
         List<Encounter> encounters = new ArrayList<>();
         Patient patient = patientAdapter.getPatientByMotechId(motechId);

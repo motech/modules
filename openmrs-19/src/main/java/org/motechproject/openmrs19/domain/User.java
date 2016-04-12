@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Represents a single OpenMRS user. It's a part of the MOTECH model.
+ * Represents a single OpenMRS user.
  */
 public class User {
 

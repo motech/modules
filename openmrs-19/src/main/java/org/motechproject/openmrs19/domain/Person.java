@@ -14,7 +14,7 @@ import java.util.Objects;
 
 /**
  * Represents a single person. This class stores personal information about the person. It's used by the
- * {@link Patient}. It's part of the MOTECH model.
+ * {@link Patient}.
  */
 public class Person {
 

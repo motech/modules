@@ -9,8 +9,7 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 
 /**
- * Represents a single facility. A facility is a physical place where patients can be seen. It's a part of the MOTECH
- * model.
+ * Represents a single facility. A facility is a physical place where patients can be seen.
  */
 public class Location {
 

@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 
 /**
- * Represents a single identifier type. It's a part of the OpenMRS model.
+ * Represents a single identifier type.
  */
 public class IdentifierType {
 

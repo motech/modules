@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Represents a single patient. It's a part of MOTECH model.
+ * Represents a single patient.
  */
 public class Patient {
 

@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 
 /**
- * Represents a single role. A role is a group of privileges in the OpenMRS system. It's a part of the OpenMRS model.
+ * Represents a single role. A role is a group of privileges in the OpenMRS system.
  */
 public class Role {
 

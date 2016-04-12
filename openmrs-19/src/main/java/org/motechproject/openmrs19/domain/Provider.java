@@ -9,8 +9,7 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 
 /**
- * Represents a single provider. Provider is a clinician responsible for providing care to a patient. It's part of the
- * MOTECH model.
+ * Represents a single provider. Provider is a clinician responsible for providing care to a patient.
  */
 public class Provider {
 
