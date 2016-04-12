@@ -6,12 +6,20 @@
 
     <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d %t %-5p [%c] %m%n"/>
+            <param name="ConversionPattern" value="%d %-5p [%c] %m%n"/>
         </layout>
     </appender>
 
-    <logger name="org.springframework.web">
-        <level value="ERROR"/>
+    <logger name="org.motechproject.ihe.interop.service.impl.IHEInitializerImpl">
+        <level value="INFO"/>
+    </logger>
+
+    <logger name="org.motechproject.ihe.interop.groovy.impl.IHEGroovyInitializerImpl">
+        <level value="INFO"/>
+    </logger>
+
+    <logger name="org.motechproject.ihe.interop.handler.IHEActionEventHandler">
+        <level value="INFO"/>
     </logger>
 
     <root>
