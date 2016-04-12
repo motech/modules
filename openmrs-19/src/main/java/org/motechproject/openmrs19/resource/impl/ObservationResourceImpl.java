@@ -61,7 +61,7 @@ public class ObservationResourceImpl implements ObservationResource {
     @Override
     public Observation createObservation(Observation observation) throws HttpException {
         Gson gson = new GsonBuilder().registerTypeAdapter(ObservationValue.class, new Observation.ObservationValueSerializer())
-                .registerTypeAdapter(Concept.class, new Concept.ConceptUuidSerializer())
+                .registerTypeAdapter(Concept.class, new Concept.ConceptSerializer())
                 .registerTypeAdapter(Person.class, new Person.PersonSerializer())
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
 

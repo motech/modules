@@ -95,7 +95,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         Location location = null;
 
         if (StringUtils.isNotEmpty(locationName)) {
-            List<? extends Location> locations = locationService.getLocations(locationName);
+            List<Location> locations = locationService.getLocations(locationName);
             if (locations.isEmpty()) {
                 LOGGER.warn("There is no location with name {}", locationName);
             } else {

@@ -75,6 +75,7 @@ public class Patient {
         return identifiers;
     }
 
+    // This getter is used in Task Data Provider to convert identifierList to map
     public Map<String, String> getIdentifiersMap() {
         Map<String, String> identifiersMap = new HashMap<>();
 

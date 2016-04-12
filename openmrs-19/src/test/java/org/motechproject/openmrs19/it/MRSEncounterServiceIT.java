@@ -55,7 +55,7 @@ import static org.junit.Assert.assertTrue;
 public class MRSEncounterServiceIT extends BasePaxIT {
 
     @Inject
-    private OpenMRSLocationService facilityAdapter;
+    private OpenMRSLocationService locationAdapter;
 
     @Inject
     private OpenMRSEncounterService encounterAdapter;
@@ -87,7 +87,7 @@ public class MRSEncounterServiceIT extends BasePaxIT {
     Person personTwo;
     EncounterType encounterType;
     Encounter encounter;
-    Location facility;
+    Location location;
     Patient patient;
     Observation observation;
     Provider provider;
@@ -154,8 +154,8 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         if (patient != null) {
             patientAdapter.deletePatient(patient.getUuid());
         }
-        if (facility != null) {
-            facilityAdapter.deleteLocation(facility.getUuid());
+        if (location != null) {
+            locationAdapter.deleteLocation(location.getUuid());
         }
         if (concept != null) {
             conceptAdapter.deleteConcept(concept.getUuid());
@@ -204,12 +204,12 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         preparePersonTwo();
         prepareConcept();
         prepareProvider();
-        prepareFacility();
+        prepareLocation();
         preparePatient();
         prepareEncounterType();
         prepareObservations();
 
-        Encounter encounter = new Encounter(facility, encounterType, format.parse(date), patient, provider.getPerson(),
+        Encounter encounter = new Encounter(location, encounterType, format.parse(date), patient, provider.getPerson(),
                 Collections.singletonList(observation));
 
         return encounter;
@@ -271,15 +271,15 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         provider = providerService.getProviderByUuid(providerUuid);
     }
 
-    private void prepareFacility() {
-        Location tempFacility = new Location("FooName", "FooCountry", "FooRegion", "FooCountryDistrict", "FooStateProvince");
-        String facilityUuid = facilityAdapter.createLocation(tempFacility).getUuid();
-        facility = facilityAdapter.getLocationByUuid(facilityUuid);
+    private void prepareLocation() {
+        Location tempLocation = new Location("FooName", "FooCountry", "FooRegion", "FooCountryDistrict", "FooStateProvince");
+        String locationUuid = locationAdapter.createLocation(tempLocation).getUuid();
+        location = locationAdapter.getLocationByUuid(locationUuid);
     }
 
     private void preparePatient() {
         Patient tempPatient = new Patient();
-        tempPatient.setLocationForMotechId(facility);
+        tempPatient.setLocationForMotechId(location);
         tempPatient.setPerson(personTwo);
         tempPatient.setMotechId("666");
         String patientUuid = patientAdapter.createPatient(tempPatient).getUuid();

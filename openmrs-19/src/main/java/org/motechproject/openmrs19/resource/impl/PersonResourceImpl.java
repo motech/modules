@@ -35,7 +35,7 @@ public class PersonResourceImpl implements PersonResource {
     @Override
     public Person createPerson(Person person) throws HttpException {
         String requestJson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
-                .registerTypeAdapter(Concept.class, new Concept.ConceptUuidSerializer()).create().toJson(person);
+                .registerTypeAdapter(Concept.class, new Concept.ConceptSerializer()).create().toJson(person);
         String responseJson;
         responseJson = restClient.postForJson(openmrsInstance.toInstancePath("/person"), requestJson);
 
@@ -74,7 +74,7 @@ public class PersonResourceImpl implements PersonResource {
     @Override
     public Person updatePerson(Person person) throws HttpException {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
-                .registerTypeAdapter(Concept.class, new Concept.ConceptUuidSerializer()).create();
+                .registerTypeAdapter(Concept.class, new Concept.ConceptSerializer()).create();
 
         String requestJson = gson.toJson(person);
         String responseJson = restClient.postForJson(openmrsInstance.toInstancePathWithParams("/person/{uuid}?v=full", person.getUuid()),
@@ -85,28 +85,21 @@ public class PersonResourceImpl implements PersonResource {
 
     @Override
     public void updatePersonName(String uuid, Person.Name name) throws HttpException {
-        Gson gson = new GsonBuilder().create();
-        // setting uuid and display to null so they are not included in request
-        String nameUuid = name.getUuid();
-        name.setDisplay(null);
-        name.setUuid(null);
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
         String requestJson = gson.toJson(name);
         restClient.postWithEmptyResponseBody(
-                openmrsInstance.toInstancePathWithParams("/person/{personUuid}/name/{nameUuid}", uuid, nameUuid),
+                openmrsInstance.toInstancePathWithParams("/person/{personUuid}/name/{nameUuid}", uuid, name.getUuid()),
                 requestJson);
     }
 
     @Override
     public void updatePersonAddress(String uuid, Person.Address address) throws HttpException {
-        Gson gson = new GsonBuilder().create();
-        // setting uuid to null so it is not included in request
-        String addrUuid = address.getUuid();
-        address.setUuid(null);
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
         String requestJson = gson.toJson(address);
         restClient.postWithEmptyResponseBody(
-                openmrsInstance.toInstancePathWithParams("/person/{personUuid}/address/{addressUuid}", uuid, addrUuid),
+                openmrsInstance.toInstancePathWithParams("/person/{personUuid}/address/{addressUuid}", uuid, address.getUuid()),
                 requestJson);
     }
 

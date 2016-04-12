@@ -36,6 +36,7 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
         this.eventRelay = eventRelay;
     }
 
+    @Override
     public String resolveConceptUuidFromConceptName(String name) {
         if (conceptCache.containsKey(name)) {
             return conceptCache.get(name);
@@ -64,7 +65,6 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
 
     @Override
     public Concept createConcept(Concept concept) throws ConceptNameAlreadyInUseException {
-
         validateConceptForSave(concept);
         validateConceptNameUsage(concept);
 
@@ -84,7 +84,6 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
 
     @Override
     public Concept getConceptByUuid(String uuid) {
-
         Validate.notEmpty(uuid, "Concept Id cannot be empty");
 
         Concept concept;
@@ -101,15 +100,12 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
 
     @Override
     public List<Concept> search(String phrase) {
-
         Validate.notEmpty(phrase, "Name cannot be empty");
 
         List<Concept> concepts;
 
         try {
-
             concepts = conceptResource.queryForConceptsByName(phrase).getResults();
-
         } catch (HttpException e) {
             LOGGER.error("Failed search for concept: " + phrase);
             concepts = Collections.emptyList();
@@ -120,13 +116,10 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
 
     @Override
     public List<Concept> getAllConcepts() {
-
         List<Concept> concepts;
 
         try {
-
             concepts = conceptResource.getAllConcepts().getResults();
-
         } catch (HttpException e) {
             LOGGER.error("Failed to retrieve all concepts");
             concepts = Collections.emptyList();
@@ -135,14 +128,12 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
         return concepts;
     }
 
+    @Override
     public List<Concept> getConcepts(int page, int pageSize) {
-
         List<Concept> concepts;
 
         try {
-
             concepts = conceptResource.getConcepts(page, pageSize).getResults();
-
         } catch (HttpException e) {
             LOGGER.error("Error while fetching concepts with pagination!");
             concepts = Collections.emptyList();
@@ -153,14 +144,11 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
 
     @Override
     public void deleteConcept(String uuid) {
-
         try {
-
             Concept concept = conceptResource.getConceptById(uuid);
             conceptResource.deleteConcept(uuid);
             conceptCache.remove(concept.getName().getName());
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.DELETED_CONCEPT_SUBJECT, EventHelper.conceptParameters(concept)));
-
         } catch (HttpException e) {
             LOGGER.error("Failed to remove concept with ID " + uuid);
         }
@@ -168,16 +156,12 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
 
     @Override
     public Concept updateConcept(Concept concept) {
-
         validateConceptForUpdate(concept);
-
         Concept updatedConcept;
 
         try {
-
             updatedConcept = conceptResource.updateConcept(concept);
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.UPDATED_CONCEPT_SUBJECT, EventHelper.conceptParameters(updatedConcept)));
-
         } catch (HttpException e) {
             LOGGER.error("Failed to update concept with name " + concept.getName());
             updatedConcept = null;
@@ -204,6 +188,5 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
                 throw new ConceptNameAlreadyInUseException(String.format("Name \"%s\" already in use!", concept.getNames().get(0).getName()));
             }
         }
-
     }
 }

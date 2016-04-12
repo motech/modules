@@ -31,8 +31,8 @@ public class LocationResourceImpl implements LocationResource {
         return (LocationListResult) JsonUtils.readJson(json, LocationListResult.class);
     }
 
+    @Override
     public LocationListResult getLocations(int page, int pageSize) throws HttpException {
-
         Validate.isTrue(page > 0, "Page number must be a positive value!");
         Validate.isTrue(pageSize > 0, "Page size must be a positive value!");
 
@@ -58,7 +58,7 @@ public class LocationResourceImpl implements LocationResource {
 
     @Override
     public Location createLocation(Location location) throws HttpException {
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         String jsonRequest = gson.toJson(location);
         String jsonResponse = restClient.postForJson(openmrsInstance.toInstancePath("/location"), jsonRequest);
         return (Location) JsonUtils.readJson(jsonResponse, Location.class);
@@ -66,12 +66,10 @@ public class LocationResourceImpl implements LocationResource {
 
     @Override
     public Location updateLocation(Location location) throws HttpException {
-        Gson gson = new GsonBuilder().create();
-        // uuid cannot be set on an update call
-        String locationUuid = location.getUuid();
-        location.setUuid(null);
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+
         String jsonRequest = gson.toJson(location);
-        String responseJson = restClient.postForJson(openmrsInstance.toInstancePathWithParams("/location/{uuid}", locationUuid),
+        String responseJson = restClient.postForJson(openmrsInstance.toInstancePathWithParams("/location/{uuid}", location.getUuid()),
                 jsonRequest);
         return (Location) JsonUtils.readJson(responseJson, Location.class);
     }

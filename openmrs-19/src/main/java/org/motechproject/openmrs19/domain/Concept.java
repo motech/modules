@@ -141,21 +141,9 @@ public class Concept {
 
     /**
      * Implementation of the {@link JsonSerializer} interface for the {@link Concept} class. It represents the concept
-     * as its display name.
-     */
-    public static class ConceptSerializer implements JsonSerializer<Concept> {
-
-        @Override
-        public JsonElement serialize(Concept src, Type typeOfSrc, JsonSerializationContext context) {
-            return new JsonPrimitive(src.getDisplay());
-        }
-    }
-
-    /**
-     * Implementation of the {@link JsonSerializer} interface for the {@link Concept} class. It represents the concept
      * as its ID.
      */
-    public static class ConceptUuidSerializer implements JsonSerializer<Concept> {
+    public static class ConceptSerializer implements JsonSerializer<Concept> {
 
         @Override
         public JsonElement serialize(Concept concept, Type type, JsonSerializationContext jsonSerializationContext) {

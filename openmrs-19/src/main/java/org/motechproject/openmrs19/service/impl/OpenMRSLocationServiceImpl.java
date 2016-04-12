@@ -30,8 +30,7 @@ public class OpenMRSLocationServiceImpl implements OpenMRSLocationService {
     }
 
     @Override
-    public List<? extends Location> getAllLocations() {
-
+    public List<Location> getAllLocations() {
         List<Location> locations;
 
         try {
@@ -45,8 +44,7 @@ public class OpenMRSLocationServiceImpl implements OpenMRSLocationService {
     }
 
     @Override
-    public List<? extends Location> getLocations(int page, int pageSize) {
-
+    public List<Location> getLocations(int page, int pageSize) {
         List<Location> locations;
 
         try {
@@ -60,8 +58,7 @@ public class OpenMRSLocationServiceImpl implements OpenMRSLocationService {
     }
 
     @Override
-    public List<? extends Location> getLocations(String locationName) {
-
+    public List<Location> getLocations(String locationName) {
         Validate.notEmpty(locationName, "Location name cannot be empty");
 
         List<Location> locations;
@@ -77,7 +74,6 @@ public class OpenMRSLocationServiceImpl implements OpenMRSLocationService {
 
     @Override
     public Location getLocationByUuid(String uuid) {
-
         Validate.notEmpty(uuid, "Location id cannot be empty");
 
         try {
@@ -90,19 +86,13 @@ public class OpenMRSLocationServiceImpl implements OpenMRSLocationService {
 
     @Override
     public Location createLocation(Location location) {
-
         Validate.notNull(location, "Location cannot be null");
-
-        // The uuid cannot be included with the request, otherwise OpenMRS will
-        // fail
-        location.setUuid(null);
 
         try {
             Location saved = locationResource.createLocation(location);
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_LOCATION_SUBJECT, EventHelper.locationParameters(saved)));
 
             return saved;
-
         } catch (HttpException e) {
             LOGGER.error("Could not create location with name: " + location.getName());
             return null;

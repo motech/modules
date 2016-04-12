@@ -73,9 +73,9 @@ public class LocationResourceImplTest extends AbstractResourceImplTest {
     private Location buildLocation() {
         Location loc = new Location();
         loc.setName("Location Name");
-        loc.setStateProvince("Facility State");
-        loc.setCountry("Facility Country");
-        loc.setCountyDistrict("Facility District");
+        loc.setStateProvince("Location State");
+        loc.setCountry("Location Country");
+        loc.setCountyDistrict("Location District");
         loc.setAddress6("Region");
         loc.setDescription("Location Name");
 

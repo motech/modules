@@ -26,14 +26,14 @@ public interface OpenMRSLocationService {
      * @param pageSize  the size of the page
      * @return  the list of locations on the given page
      */
-    List<? extends Location> getLocations(int page, int pageSize);
+    List<Location> getLocations(int page, int pageSize);
 
     /**
      * Returns a list of all the locations on the OpenMRS server.
      *
      * @return the list of all locations
      */
-    List<? extends Location> getAllLocations();
+    List<Location> getAllLocations();
 
     /**
      * Returns a list of locations that have the given {@code locationName}.
@@ -41,7 +41,7 @@ public interface OpenMRSLocationService {
      * @param locationName  the name of the location
      * @return the list of matching locations
      */
-    List<? extends Location> getLocations(String locationName);
+    List<Location> getLocations(String locationName);
 
     /**
      * Returns the location with the given {@code uuid}.

@@ -14,9 +14,9 @@ public final class EventKeys {
     public static final String COMMENT = "Comment";
     public static final String PATIENT_ID = "PatientId";
     public static final String PERSON_ID = "PersonId";
-    public static final String PERSON_FIRST_NAME = "PersonFirstName";
+    public static final String PERSON_GIVEN_NAME = "PersonFirstName";
     public static final String PERSON_MIDDLE_NAME = "PersonMiddleName";
-    public static final String PERSON_LAST_NAME = "PersonLastName";
+    public static final String PERSON_FAMILY_NAME = "PersonLastName";
     public static final String PERSON_PREFERRED_NAME = "PersonPreferredName";
     public static final String PERSON_ADDRESS = "PersonAddress";
     public static final String PERSON_DATE_OF_BIRTH = "PersonDateOfBirth";

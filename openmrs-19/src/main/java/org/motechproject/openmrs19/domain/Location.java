@@ -4,22 +4,30 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.google.gson.annotations.Expose;
 
 import java.lang.reflect.Type;
 import java.util.Objects;
 
 /**
- * Represents a single facility. A facility is a physical place where patients can be seen.
+ * Represents a single location. A location is a physical place where patients can be seen.
  */
 public class Location {
 
     private String uuid;
     private String display;
+
+    @Expose
     private String name;
+    @Expose
     private String country;
+    @Expose
     private String address6;
+    @Expose
     private String countyDistrict;
+    @Expose
     private String stateProvince;
+    @Expose
     private String description;
 
     public Location() {
@@ -27,39 +35,39 @@ public class Location {
     }
 
     /**
-     * Creates a facility with the given {@code uuid}.
+     * Creates a location with the given {@code uuid}.
      *
-     * @param uuid  the ID of the facility
+     * @param uuid  the ID of the location
      */
     public Location(String uuid) {
         this(uuid, null, null, null, null, null, null);
     }
 
     /**
-     * Creates a facility with the given {@code name} that is placed in the given {@code country}, {@code address6},
+     * Creates a location with the given {@code name} that is placed in the given {@code country}, {@code address6},
      * {@code countryDistrict} and {@code stateProvince}.
      *
-     * @param name  the name of the facility
-     * @param country  the name of the country where the facility is placed
-     * @param address6  the name of the region where the facility is placed
-     * @param countyDistrict  the name of the county/district where the facility is placed
-     * @param stateProvince  the name of the state/province where the facility is placed
+     * @param name  the name of the location
+     * @param country  the name of the country where the location is placed
+     * @param address6  the name of the region where the location is placed
+     * @param countyDistrict  the name of the county/district where the location is placed
+     * @param stateProvince  the name of the state/province where the location is placed
      */
     public Location(String name, String country, String address6, String countyDistrict, String stateProvince) {
         this(null, null, name, country, address6, countyDistrict, stateProvince);
     }
 
     /**
-     * Creates a facility with the given {@code name}, {@code display} and {@code uuid} that is placed in the given {@code country},
+     * Creates a location with the given {@code name}, {@code display} and {@code uuid} that is placed in the given {@code country},
      * {@code address6}, {@code countryDistrict} and {@code stateProvince}.
      *
-     * @param uuid  the ID of the facility
-     * @param display  the display of the facility
-     * @param name  the name of the facility
-     * @param country  the name of the country where the facility is placed
-     * @param address6  the name of the region where the facility is placed
-     * @param countyDistrict  the name of the county/district where the facility is placed
-     * @param stateProvince  the name of the state/province where the facility is placed
+     * @param uuid  the ID of the location
+     * @param display  the display of the location
+     * @param name  the name of the location
+     * @param country  the name of the country where the location is placed
+     * @param address6  the name of the region where the location is placed
+     * @param countyDistrict  the name of the county/district where the location is placed
+     * @param stateProvince  the name of the state/province where the location is placed
      */
     public Location(String uuid, String display, String name, String country, String address6, String countyDistrict, String stateProvince) {
         this.uuid = uuid;

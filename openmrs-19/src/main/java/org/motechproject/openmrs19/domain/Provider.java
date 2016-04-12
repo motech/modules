@@ -1,11 +1,5 @@
 package org.motechproject.openmrs19.domain;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-
-import java.lang.reflect.Type;
 import java.util.Objects;
 
 /**
@@ -31,30 +25,6 @@ public class Provider {
      */
     public Provider(Person person) {
         this.person = person;
-    }
-
-    /**
-     * Implementation of the {@link JsonSerializer} for the {@link Provider} class.
-     */
-    public static class ProviderSerializer implements JsonSerializer<Provider> {
-
-        @Override
-        public JsonElement serialize(Provider src, Type typeOfSrc, JsonSerializationContext context) {
-
-            JsonObject object = new JsonObject();
-
-            if (src.uuid != null) {
-                object.addProperty("uuid", src.uuid);
-            }
-            if (src.person != null) {
-                object.addProperty("person", src.person.getUuid());
-            }
-            if (src.identifier != null) {
-                object.addProperty("identifier", src.identifier);
-            }
-
-            return object;
-        }
     }
 
     public String getUuid() {

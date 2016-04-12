@@ -101,7 +101,6 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
 
     @Override
     public Observation getObservationByUuid(String uuid) {
-
         try {
             return obsResource.getObservationById(uuid);
         } catch (HttpException e) {
@@ -134,7 +133,6 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
             LOGGER.error("Error while creating observation!");
             return null;
         }
-
     }
 
     @Override

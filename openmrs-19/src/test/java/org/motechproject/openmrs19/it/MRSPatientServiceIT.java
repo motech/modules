@@ -48,7 +48,7 @@ public class MRSPatientServiceIT extends BasePaxIT {
     final Object lock = new Object();
 
     @Inject
-    private OpenMRSLocationService facilityAdapter;
+    private OpenMRSLocationService locationAdapter;
 
     @Inject
     private OpenMRSPatientService patientAdapter;
@@ -180,7 +180,7 @@ public class MRSPatientServiceIT extends BasePaxIT {
         deletePatient(patient);
 
         if (uuid != null) {
-            facilityAdapter.deleteLocation(uuid);
+            locationAdapter.deleteLocation(uuid);
         }
 
         conceptAdapter.deleteConcept(causeOfDeath.getUuid());
@@ -203,7 +203,7 @@ public class MRSPatientServiceIT extends BasePaxIT {
         person.setBirthdateEstimated(false);
         person.setGender("M");
 
-        Location location = facilityAdapter.createLocation(new Location("FooName", "FooCountry", "FooRegion", "FooCountryDistrict", "FooStateProvince"));
+        Location location = locationAdapter.createLocation(new Location("FooName", "FooCountry", "FooRegion", "FooCountryDistrict", "FooStateProvince"));
 
         assertNotNull(location);
 
@@ -226,12 +226,12 @@ public class MRSPatientServiceIT extends BasePaxIT {
 
     private void deletePatient(Patient patient) throws PatientNotFoundException, InterruptedException {
 
-        String facilityId = patient.getLocationForMotechId().getUuid();
+        String locationId = patient.getLocationForMotechId().getUuid();
 
         patientAdapter.deletePatient(patient.getUuid());
         assertNull(patientAdapter.getPatientByUuid(patient.getUuid()));
 
-        facilityAdapter.deleteLocation(facilityId);
+        locationAdapter.deleteLocation(locationId);
     }
 
     private void prepareConceptOfDeath() throws ConceptNameAlreadyInUseException {

@@ -97,23 +97,23 @@ public class OpenMRSActionProxyServiceTest {
         person.setDead(true);
         person.setCauseOfDeath(causeOfDeath);
 
-        Location facility = new Location();
-        facility.setName("testLocation");
+        Location location = new Location();
+        location.setName("testLocation");
 
         Identifier identifier = new Identifier("1000", new IdentifierType("CommCare CaseID"));
 
-        Patient patient = new Patient(Collections.singletonList(identifier), person, "500", facility);
+        Patient patient = new Patient(Collections.singletonList(identifier), person, "500", location);
 
         Map<String, String> identifiersMap = new HashMap<>();
         identifiersMap.put("CommCare CaseID", "1000");
 
         doReturn(causeOfDeath).when(conceptService).getConceptByUuid(causeOfDeath.getUuid());
-        doReturn(Collections.singletonList(facility)).when(locationService).getLocations(facility.getName());
+        doReturn(Collections.singletonList(location)).when(locationService).getLocations(location.getName());
 
         openMRSActionProxyService.createPatient(person.getPreferredName().getGivenName(), person.getPreferredName().getMiddleName(),
                 person.getPreferredName().getFamilyName(), person.getPreferredAddress().getAddress1(), new DateTime(person.getBirthdate()),
                 person.getBirthdateEstimated(), person.getGender(), person.getDead(), causeOfDeath.getUuid(), patient.getMotechId(),
-                facility.getName(), identifiersMap);
+                location.getName(), identifiersMap);
 
         verify(patientService).createPatient(patientCaptor.capture());
 
@@ -124,17 +124,17 @@ public class OpenMRSActionProxyServiceTest {
     public void shouldCreatePatientWithDefaultLocationWhenLocationNameIsNotProvided() {
         Person person = createTestPerson();
 
-        Location facility = new Location();
-        facility.setName(OpenMRSActionProxyService.DEFAULT_LOCATION_NAME);
+        Location location = new Location();
+        location.setName(OpenMRSActionProxyService.DEFAULT_LOCATION_NAME);
 
         Identifier identifier = new Identifier("1000", new IdentifierType("CommCare CaseID"));
 
-        Patient patient = new Patient(Collections.singletonList(identifier), person, "500", facility);
+        Patient patient = new Patient(Collections.singletonList(identifier), person, "500", location);
 
         Map<String, String> identifiersMap = new HashMap<>();
         identifiersMap.put("CommCare CaseID", "1000");
 
-        doReturn(Collections.singletonList(facility)).when(locationService).getLocations(OpenMRSActionProxyService.DEFAULT_LOCATION_NAME);
+        doReturn(Collections.singletonList(location)).when(locationService).getLocations(OpenMRSActionProxyService.DEFAULT_LOCATION_NAME);
 
         openMRSActionProxyService.createPatient(person.getPreferredName().getGivenName(), person.getPreferredName().getMiddleName(),
                 person.getPreferredName().getFamilyName(), person.getPreferredAddress().getAddress1(), new DateTime(person.getBirthdate()),
@@ -150,8 +150,8 @@ public class OpenMRSActionProxyServiceTest {
     public void shouldNotUsedDefaultLocationWhenLocationForGivenNameIsNotFound() {
         Person person = createTestPerson();
 
-        Location facility = new Location();
-        facility.setName("testLocationNameForNotExistingLocation");
+        Location location = new Location();
+        location.setName("testLocationNameForNotExistingLocation");
 
         Identifier identifier = new Identifier("1000", new IdentifierType("CommCare CaseID"));
 
@@ -160,12 +160,12 @@ public class OpenMRSActionProxyServiceTest {
         Map<String, String> identifiersMap = new HashMap<>();
         identifiersMap.put("CommCare CaseID", "1000");
 
-        doReturn(Collections.emptyList()).when(locationService).getLocations(facility.getName());
+        doReturn(Collections.emptyList()).when(locationService).getLocations(location.getName());
 
         openMRSActionProxyService.createPatient(person.getPreferredName().getGivenName(), person.getPreferredName().getMiddleName(),
                 person.getPreferredName().getFamilyName(), person.getPreferredAddress().getAddress1(), new DateTime(person.getBirthdate()),
                 person.getBirthdateEstimated(), person.getGender(), person.getDead(), "", patient.getMotechId(),
-                facility.getName(), identifiersMap);
+                location.getName(), identifiersMap);
 
         verify(patientService).createPatient(patientCaptor.capture());
 

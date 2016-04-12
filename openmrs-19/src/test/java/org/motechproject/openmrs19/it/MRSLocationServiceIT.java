@@ -31,10 +31,10 @@ import static org.junit.Assert.assertTrue;
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
-public class MRSFacilityServiceIT extends BasePaxIT {
+public class MRSLocationServiceIT extends BasePaxIT {
 
     @Inject
-    private OpenMRSLocationService facilityAdapter;
+    private OpenMRSLocationService locationAdapter;
 
     @Inject
     EventListenerRegistryService eventListenerRegistry;
@@ -43,55 +43,55 @@ public class MRSFacilityServiceIT extends BasePaxIT {
 
     MrsListener mrsListener;
 
-    Location facilityOne;
-    Location facilityTwo;
+    Location locationOne;
+    Location locationTwo;
 
     @Before
     public void initialize() throws InterruptedException {
         mrsListener = new MrsListener();
         eventListenerRegistry.registerListener(mrsListener, Arrays.asList(EventKeys.CREATED_NEW_LOCATION_SUBJECT, EventKeys.UPDATED_LOCATION_SUBJECT, EventKeys.DELETED_LOCATION_SUBJECT));
 
-        facilityOne = createFacility(prepareFacilityOne());
-        facilityTwo = createFacility(prepareFacilityTwo());
+        locationOne = createLocation(prepareLocationOne());
+        locationTwo = createLocation(prepareLocationTwo());
     }
 
     @Test
-    public void shouldCreateFacility() throws InterruptedException {
+    public void shouldCreateLocation() throws InterruptedException {
 
-        assertNotNull(facilityTwo);
+        assertNotNull(locationTwo);
 
         assertTrue(mrsListener.created);
         assertFalse(mrsListener.updated);
         assertFalse(mrsListener.deleted);
-        assertEquals(facilityTwo.getName(), mrsListener.eventParameters.get(EventKeys.LOCATION_NAME));
-        assertEquals(facilityTwo.getCountry(), mrsListener.eventParameters.get(EventKeys.LOCATION_COUNTRY));
-        assertEquals(facilityTwo.getAddress6(), mrsListener.eventParameters.get(EventKeys.LOCATION_REGION));
-        assertEquals(facilityTwo.getCountyDistrict(), mrsListener.eventParameters.get(EventKeys.LOCATION_COUNTY_DISTRICT));
-        assertEquals(facilityTwo.getStateProvince(), mrsListener.eventParameters.get(EventKeys.LOCATION_STATE_PROVINCE));
+        assertEquals(locationTwo.getName(), mrsListener.eventParameters.get(EventKeys.LOCATION_NAME));
+        assertEquals(locationTwo.getCountry(), mrsListener.eventParameters.get(EventKeys.LOCATION_COUNTRY));
+        assertEquals(locationTwo.getAddress6(), mrsListener.eventParameters.get(EventKeys.LOCATION_REGION));
+        assertEquals(locationTwo.getCountyDistrict(), mrsListener.eventParameters.get(EventKeys.LOCATION_COUNTY_DISTRICT));
+        assertEquals(locationTwo.getStateProvince(), mrsListener.eventParameters.get(EventKeys.LOCATION_STATE_PROVINCE));
 
-        deleteFacility(facilityOne);
+        deleteLocation(locationOne);
     }
 
     @Test
-    public void shouldUpdateFacility() throws InterruptedException {
+    public void shouldUpdateLocation() throws InterruptedException {
 
         final String newCountry = "FooCountryTwo";
         final String newStateProvince = "FooStateProvinceTwo";
 
-        facilityOne.setCountry(newCountry);
-        facilityOne.setStateProvince(newStateProvince);
+        locationOne.setCountry(newCountry);
+        locationOne.setStateProvince(newStateProvince);
 
-        Location updatedFacility;
+        Location updatedLocation;
 
         synchronized (lock) {
-            updatedFacility = facilityAdapter.updateLocation(facilityOne);
-            assertNotNull(updatedFacility);
+            updatedLocation = locationAdapter.updateLocation(locationOne);
+            assertNotNull(updatedLocation);
 
             lock.wait(60000);
         }
 
-        assertEquals(updatedFacility.getStateProvince(), mrsListener.eventParameters.get(EventKeys.LOCATION_STATE_PROVINCE));
-        assertEquals(updatedFacility.getCountry(), mrsListener.eventParameters.get(EventKeys.LOCATION_COUNTRY));
+        assertEquals(updatedLocation.getStateProvince(), mrsListener.eventParameters.get(EventKeys.LOCATION_STATE_PROVINCE));
+        assertEquals(updatedLocation.getCountry(), mrsListener.eventParameters.get(EventKeys.LOCATION_COUNTRY));
 
         assertTrue(mrsListener.created);
         assertTrue(mrsListener.updated);
@@ -99,11 +99,11 @@ public class MRSFacilityServiceIT extends BasePaxIT {
     }
 
     @Test
-    public void shouldDeleteFacility() throws InterruptedException {
+    public void shouldDeleteLocation() throws InterruptedException {
 
         synchronized (lock) {
-            facilityAdapter.deleteLocation(facilityOne.getUuid());
-            assertNull(facilityAdapter.getLocationByUuid(facilityOne.getUuid()));
+            locationAdapter.deleteLocation(locationOne.getUuid());
+            assertNull(locationAdapter.getLocationByUuid(locationOne.getUuid()));
 
             lock.wait(60000);
         }
@@ -114,58 +114,58 @@ public class MRSFacilityServiceIT extends BasePaxIT {
     }
 
     @Test
-    public void shouldGetFacilities() {
+    public void shouldGetLocations() {
 
-        List<? extends Location> facilities = facilityAdapter.getLocations(1, 3);
+        List<Location> locations = locationAdapter.getLocations(1, 3);
 
-        assertEquals(3, facilities.size());
-        assertTrue(facilities.containsAll(Arrays.asList(facilityOne, facilityTwo)));
+        assertEquals(3, locations.size());
+        assertTrue(locations.containsAll(Arrays.asList(locationOne, locationTwo)));
     }
 
     @Test
-    public void shouldGetAllFacilities() {
+    public void shouldGetAllLocations() {
 
-        List<? extends Location> facilities = facilityAdapter.getAllLocations();
+        List<Location> locations = locationAdapter.getAllLocations();
 
-        assertEquals(3, facilities.size());
-        assertTrue(facilities.containsAll(Arrays.asList(facilityOne, facilityTwo)));
+        assertEquals(3, locations.size());
+        assertTrue(locations.containsAll(Arrays.asList(locationOne, locationTwo)));
     }
 
     @Test
-    public void shouldFindFacilitiesByName() {
+    public void shouldFindLocationsByName() {
 
-        List<? extends Location> facilities = facilityAdapter.getLocations("FooName");
+        List<Location> locations = locationAdapter.getLocations("FooName");
 
-        assertEquals(2, facilities.size());
+        assertEquals(2, locations.size());
     }
 
     @Test
-    public void shouldFindFacilityById() {
+    public void shouldFindLocationById() {
 
-        assertNotNull(facilityAdapter.getLocationByUuid(facilityOne.getUuid()));
+        assertNotNull(locationAdapter.getLocationByUuid(locationOne.getUuid()));
     }
 
     @After
     public void tearDown() {
-        deleteFacility(facilityOne);
-        deleteFacility(facilityTwo);
+        deleteLocation(locationOne);
+        deleteLocation(locationTwo);
         eventListenerRegistry.clearListenersForBean("mrsTestListener");
     }
 
-    private Location prepareFacilityOne() {
+    private Location prepareLocationOne() {
         return new Location("FooName", "FooCountry", "FooRegion", "FooCountryDistrict", "FooStateProvince");
     }
 
-    private Location prepareFacilityTwo() {
+    private Location prepareLocationTwo() {
         return new Location("FooNameTwo", "FooCountryTwo", "FooRegionTwo", "FooCountryDistrictTwo", "FooStateProvinceTwo");
     }
 
-    private Location createFacility(Location facility) throws InterruptedException {
+    private Location createLocation(Location location) throws InterruptedException {
 
         Location created;
 
         synchronized (lock) {
-            created = facilityAdapter.createLocation(facility);
+            created = locationAdapter.createLocation(location);
             assertNotNull(created);
 
             lock.wait(60000);
@@ -174,10 +174,10 @@ public class MRSFacilityServiceIT extends BasePaxIT {
         return created;
     }
 
-    private void deleteFacility(Location facility) {
-        facilityAdapter.deleteLocation(facility.getUuid());
+    private void deleteLocation(Location location) {
+        locationAdapter.deleteLocation(location.getUuid());
 
-        assertNull(facilityAdapter.getLocationByUuid(facility.getUuid()));
+        assertNull(locationAdapter.getLocationByUuid(location.getUuid()));
     }
 
     public class MrsListener implements EventListener {

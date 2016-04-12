@@ -60,9 +60,9 @@ public final class EventHelper {
         personParameters.put(EventKeys.PERSON_ID, person.getUuid());
 
         if (person.getPreferredName() != null) {
-            personParameters.put(EventKeys.PERSON_FIRST_NAME, person.getPreferredName().getGivenName());
+            personParameters.put(EventKeys.PERSON_GIVEN_NAME, person.getPreferredName().getGivenName());
             personParameters.put(EventKeys.PERSON_MIDDLE_NAME, person.getPreferredName().getMiddleName());
-            personParameters.put(EventKeys.PERSON_LAST_NAME, person.getPreferredName().getFamilyName());
+            personParameters.put(EventKeys.PERSON_FAMILY_NAME, person.getPreferredName().getFamilyName());
         }
         if (person.getPreferredAddress() != null) {
             personParameters.put(EventKeys.PERSON_ADDRESS, person.getPreferredAddress().getFullAddressString());

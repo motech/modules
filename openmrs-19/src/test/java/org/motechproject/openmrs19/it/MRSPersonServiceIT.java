@@ -60,8 +60,8 @@ public class MRSPersonServiceIT extends BasePaxIT {
 
         assertNotNull(person.getUuid());
         assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_ID), person.getUuid());
-        assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_FIRST_NAME), person.getPreferredName().getGivenName());
-        assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_LAST_NAME), person.getPreferredName().getFamilyName());
+        assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_GIVEN_NAME), person.getPreferredName().getGivenName());
+        assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_FAMILY_NAME), person.getPreferredName().getFamilyName());
 
         assertTrue(mrsListener.created);
         assertFalse(mrsListener.deleted);

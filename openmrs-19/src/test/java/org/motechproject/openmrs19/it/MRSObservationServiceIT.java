@@ -59,7 +59,7 @@ public class MRSObservationServiceIT extends BasePaxIT {
     private OpenMRSPatientService patientAdapter;
 
     @Inject
-    private OpenMRSLocationService facilityAdapter;
+    private OpenMRSLocationService locationAdapter;
 
     @Inject
     EventListenerRegistryService eventListenerRegistry;
@@ -70,7 +70,7 @@ public class MRSObservationServiceIT extends BasePaxIT {
     Observation observation;
     Concept concept;
     Person person;
-    Location facility;
+    Location location;
     Patient patient;
 
     @Before
@@ -157,8 +157,8 @@ public class MRSObservationServiceIT extends BasePaxIT {
         if (patient != null) {
             patientAdapter.deletePatient(patient.getUuid());
         }
-        if (facility != null) {
-            facilityAdapter.deleteLocation(facility.getUuid());
+        if (location != null) {
+            locationAdapter.deleteLocation(location.getUuid());
         }
         if (person != null) {
             personAdapter.deletePerson(person.getUuid());
@@ -173,7 +173,7 @@ public class MRSObservationServiceIT extends BasePaxIT {
     private Observation prepareObservation() throws ConceptNameAlreadyInUseException {
 
         preparePerson();
-        prepareFacility();
+        prepareLocation();
         preparePatient();
         prepareConcept();
 
@@ -255,15 +255,15 @@ public class MRSObservationServiceIT extends BasePaxIT {
         this.person = personAdapter.getPersonByUuid(uuid);
     }
 
-    private void prepareFacility() {
-        Location tempFacility = new Location("FooName", "FooCountry", "FooRegion", "FooCountryDistrict", "FooStateProvince");
-        String facilityUuid = facilityAdapter.createLocation(tempFacility).getUuid();
-        facility = facilityAdapter.getLocationByUuid(facilityUuid);
+    private void prepareLocation() {
+        Location tempLocation = new Location("FooName", "FooCountry", "FooRegion", "FooCountryDistrict", "FooStateProvince");
+        String locationUuid = locationAdapter.createLocation(tempLocation).getUuid();
+        location = locationAdapter.getLocationByUuid(locationUuid);
     }
 
     private void preparePatient() {
         Patient tempPatient = new Patient();
-        tempPatient.setLocationForMotechId(facility);
+        tempPatient.setLocationForMotechId(location);
         tempPatient.setPerson(person);
         tempPatient.setMotechId("666");
         String patientUuid = patientAdapter.createPatient(tempPatient).getUuid();

@@ -96,7 +96,7 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
         validateUserNameUsage(user);
         // If the person is saved prior to checking for the role, there would need to be another call to delete the person
         // otherwise it would leave the OpenMRS in an inconsistent state
-        validateRoles(user.getRoles());
+        resolveRoleUuidFromRoleName(user.getRoles());
 
         if (user.getPerson().getUuid() == null) {
             Person savedPerson = personAdapter.createPerson(user.getPerson());
@@ -181,7 +181,7 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
         Validate.notEmpty(user.getPerson().getUuid(), "User person id cannot be empty");
     }
 
-    private void validateRoles(List<Role> roles) {
+    private void resolveRoleUuidFromRoleName(List<Role> roles) {
         List<Role> retrievedRoles = getAllRoles();
         for (Role role : roles) {
             boolean roleExist = false;
