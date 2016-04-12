@@ -42,6 +42,8 @@
                         <Import-Package>
                             org.springframework.beans,
                             org.springframework.web.servlet.config,
+                            org.apache.bval.jsr303,
+                            org.apache.bval.constraints,
                             org.apache.commons.dbcp,
                             org.apache.commons.lang,
                             org.springframework.util,
@@ -99,6 +101,7 @@
                             org.springframework.aop.scope,
                             org.springframework.batch.core.job.flow.support,
                             org.springframework.batch.core.job.flow.support.state,
+                            org.springframework.validation.beanvalidation,
                             org.codehaus.jackson.annotate,
                             org.motechproject.scheduler.service,
                             org.motechproject.commons.sql.service,
@@ -260,6 +263,12 @@
             <groupId>org.springframework.retry</groupId>
             <artifactId>org.motechproject.org.springframework.retry</artifactId>
             <version>${springframework.retry.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -270,8 +279,8 @@
             <artifactId>jackson-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-oxm</artifactId>
+            <groupId>org.apache.servicemix.bundles</groupId>
+            <artifactId>org.apache.servicemix.bundles.spring-oxm</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
@@ -285,6 +294,14 @@
                 <exclusion>
                     <groupId>org.slf4j</groupId>
                     <artifactId>jcl-over-slf4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-beans</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -366,6 +383,11 @@
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-platform-dataservices</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-web-security</artifactId>
             <version>${motech.version}</version>
         </dependency>
         <dependency>
