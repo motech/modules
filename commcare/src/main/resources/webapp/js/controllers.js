@@ -367,6 +367,22 @@
                 && $scope.configOutdated;
         };
 
+        $scope.syncConfig = function() {
+            blockUI();
+            Configurations.sync($scope.selectedConfig,
+                function success() {
+                unblockUI();
+                },
+                function failure(response) {
+                unblockUI();
+            });
+        };
+
+        $scope.syncAllowed = function() {
+            return $scope.validateConfig()
+                && !($scope.configOutdated);
+        };
+
         $scope.verify = function() {
             blockUI();
             Configurations.verify($scope.selectedConfig,

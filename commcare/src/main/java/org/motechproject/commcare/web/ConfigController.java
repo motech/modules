@@ -72,6 +72,13 @@ public class ConfigController extends CommcareController {
     }
 
     @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value="/sync", method = RequestMethod.POST)
+    @ResponseBody
+    public Config syncConfig(@RequestBody Config config) {
+        return configService.syncConfig(config);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
     @RequestMapping("/endpointBaseUrl")
     @ResponseBody
     public String getBaseEndpoint() throws IOException {

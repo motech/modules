@@ -23,6 +23,9 @@
              <a ng-if="selectedConfig" ng-disabled="!validateConfig()" ng-click="validateConfig() && verify()" type="button" class="btn btn-default">
                  <i class="fa fw fa-check-circle-o"></i> {{msg('commcare.verify')}}
              </a>
+             <a ng-if="selectedConfig" ng-disabled="!syncAllowed()" ng-click="syncConfig()" type="button" class="btn btn-default">
+                 <i class="fa fa-refresh"></i> {{msg('commcare.sync')}}
+             </a>
          </div>
      </div>
 
