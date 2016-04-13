@@ -371,10 +371,10 @@
             blockUI();
             Configurations.sync($scope.selectedConfig,
                 function success() {
-                unblockUI();
+                    unblockUI();
                 },
                 function failure(response) {
-                unblockUI();
+                    unblockUI();
             });
         };
 
