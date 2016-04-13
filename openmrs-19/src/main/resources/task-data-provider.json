@@ -52,7 +52,7 @@
         },
         {
           "displayName": "openMRS.patient.display",
-          "fieldKey": "patient.person.display"
+          "fieldKey": "patient.display"
         }
       ]
     },
