@@ -4,22 +4,14 @@
     <div class="col-lg-9 col-md-12 col-sm-12">
     <form action="../messagecampaign/settings/" id="messageCampaignSettingsForm" name="messageCampaignSettingsForm"
           class="form-horizontal margin-before2" method="post" enctype="multipart/form-data" novalidate>
-        <div class="form-group fileupload fileupload-new" data-provides="fileupload">
+        <div class="form-group fileiput fileinput-new" data-provides="fileinput">
             <label class="col-md-2 col-sm-3 control-label">{{msg('msgCampaign.settings.fileChosen')}}</label>
             <div class="col-md-8 col-sm-7 form-inline">
-                <div class="form-control uneditable-input input-xlarge fileupload-exists"><span class="glyphicon glyphicon-file"></span>&nbsp;<span class="fileupload-preview"></span></div>
-                <span class="btn btn-default btn-file">
-                    <span class="fileupload-new">{{msg('msgCampaign.button.selectFile')}}</span>
-                    <span class="fileupload-exists">{{msg('msgCampaign.button.changeFile')}}</span>
-                    <input type="file" id="messageCampaigns" name="messageCampaigns" class="input-file" accept="&#46;json" />
-                </span>
-                <a href="#" target="_self" class="btn btn-danger fileupload-exists" data-dismiss="fileupload"><i class="fa fa-trash-o"></i>&nbsp;{{msg('msgCampaign.button.remove')}}</a>
-                <span class="form-hint fileupload-new">{{msg('msgCampaign.settings.messageCampaignsHint')}}</span>
+                <motech-file-upload accept="&#46;json"></motech-file-upload>
+                <span class="form-hint fileinput-new">{{msg('msgCampaign.settings.messageCampaignsHint')}}</span>
             </div>
-        </div>
-        <div class="form-group">
             <div class="col-md-offset-2 col-sm-offset-3 col-md-8 col-sm-7">
-                <input ng-click="uploadSettings()" type="button" value="{{msg('msgCampaign.settings.submit')}}" class="btn btn-primary" disabled/>
+                <input ng-click="uploadSettings()" type="button" value="{{msg('msgCampaign.settings.submit')}}" class="btn btn-primary fileinput-exists">
             </div>
         </div>
     </form>

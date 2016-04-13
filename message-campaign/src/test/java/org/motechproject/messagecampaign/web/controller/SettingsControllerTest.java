@@ -61,7 +61,7 @@ public class SettingsControllerTest {
     @Test
     public void shouldReturn200WhenSubmittingCorrectCampaign() throws Exception {
 
-        MockMultipartFile jsonCampaign = new MockMultipartFile("messageCampaigns", "orig", null,
+        MockMultipartFile jsonCampaign = new MockMultipartFile("file", "orig.json", null,
                 loadJson(CORRECT_CAMPAIGN_JSON).getBytes());
 
         doNothing().when(settingsFacade).saveRawConfig(any(String.class), any(Resource.class));

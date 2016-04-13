@@ -1,6 +1,6 @@
 (function () {
     'use strict';
-    
+
     // from http://stackoverflow.com/questions/14859266/input-autofocus-attribute
     angular.module('ng').directive('ngFocus', function($timeout) {
         return {
