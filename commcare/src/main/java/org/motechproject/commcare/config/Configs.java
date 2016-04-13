@@ -132,8 +132,8 @@ public class Configs {
      *
      * @param config  the update source
      */
-    public void updateConfig(Config config) {
-        deleteConfig(config.getName());
+    public void updateConfig(Config config, String oldName) {
+        deleteConfig(oldName);
         configs.add(config);
     }
 

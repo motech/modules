@@ -13,9 +13,10 @@ public interface CommcareConfigService {
      * Creates the given configuration.
      *
      * @param configuration  the configuration to be saved
+     * @param oldName   name of configuration before update
      * @return  the saved configuration
      */
-    Config saveConfig(Config configuration) throws CommcareConnectionFailureException;
+    Config saveConfig(Config configuration, String oldName) throws CommcareConnectionFailureException;
 
     /**
      * Deletes the configuration with the given name.

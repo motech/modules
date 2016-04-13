@@ -26,6 +26,7 @@
                 for (i = 0; i < data.configs.length; i += 1) {
                     if (data.configs[i].name === data.defaultConfigName) {
                         $scope.selectedConfig = data.configs[i];
+                        $scope.oldName = data.configs[i].name;
                         return;
                     }
                 }
@@ -322,6 +323,7 @@
                 function success(data) {
                     $scope.$parent.configurations.configs.push(data);
                     $scope.$parent.selectedConfig = data;
+                    $scope.oldName = data.name;
                     if ($scope.$parent.selectedConfig.eventStrategy === "") {
                         $scope.$parent.selectedConfig.eventStrategy = $scope.eventStrategyOptions[0];
                     }
@@ -476,7 +478,10 @@
 
         $scope.saveConfig = function(element) {
             blockUI();
-            Configurations.save($scope.selectedConfig,
+            Configurations.save({
+                    oldName: $scope.oldName
+                },
+                $scope.selectedConfig,
                 function success(data) {
                     $scope.verifySuccessMessage = $scope.msg('commcare.save.success');
                     $scope.verifyErrorMessage = '';
@@ -504,6 +509,7 @@
                 if ($scope.$parent.configurations.configs[i].name === config.name) {
                     $scope.$parent.configurations.configs[i] = config;
                     $scope.$parent.selectedConfig = $scope.configurations.configs[i];
+                    $scope.oldName = $scope.configurations.configs[i].name;
                     return;
                 }
             }

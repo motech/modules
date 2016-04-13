@@ -79,10 +79,15 @@ public class ConfigControllerTest {
     public void testSaveSettings() throws BundleException, CommcareAuthenticationException, CommcareConnectionFailureException {
 
         Config config = ConfigsUtils.prepareConfigThree();
+        String oldName = config.getName();
+        controller.saveConfig(config, oldName);
 
-        controller.saveConfig(config);
+        verify(configService).saveConfig(config, oldName);
 
-        verify(configService).saveConfig(config);
+        config.setName("updatedName");
+
+        verify(configService).saveConfig(config, oldName);
+
     }
 
     @Test
