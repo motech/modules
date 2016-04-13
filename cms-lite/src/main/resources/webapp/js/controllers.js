@@ -88,7 +88,7 @@
         };
 
         $scope.editStreamResource = function() {
-            if ($scope.validateFileField('streamResourceForm', 'contentFile')) {
+            if ($scope.validateFileField('streamResourceForm', 'fileInput')) {
                 blockUI();
 
                 $('#streamResourceForm').ajaxSubmit({
@@ -147,7 +147,7 @@
             var name = $scope.validateField(formId, 'name'),
                 language = $scope.validateField(formId, 'language'),
                 value = $scope.validateField(formId, 'value'),
-                contentFile = $scope.validateFileField(formId, 'contentFile');
+                contentFile = $scope.validateFileField(formId, 'fileInput');
 
             return name && language && ($scope.resourceType === 'string' ? value : contentFile);
         };

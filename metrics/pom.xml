@@ -27,6 +27,11 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>motech-platform-web-security</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>motech-platform-server-config</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -59,10 +64,6 @@
             <groupId>io.dropwizard.metrics</groupId>
             <artifactId>metrics-graphite</artifactId>
             <version>${metrics.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -115,12 +116,16 @@
                         <Resource-Path>metrics/resources</Resource-Path>
                         <Blueprint-Enabled>true</Blueprint-Enabled>
                         <Import-Package>
-                            net.sf.cglib.core,
-                            net.sf.cglib.proxy,
-                            net.sf.cglib.reflect,
                             org.aopalliance.aop,
                             org.springframework.aop,
                             org.springframework.aop.framework,
+                            org.springframework.cglib.core,
+                            org.springframework.cglib.proxy,
+                            org.springframework.validation.beanvalidation,
+                            org.motechproject.config,
+                            org.motechproject.config.service,
+                            org.motechproject.event.listener,
+                            org.motechproject.event.listener.annotations,
                             *
                         </Import-Package>
                         <Export-Package>

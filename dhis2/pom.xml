@@ -78,9 +78,6 @@
                         <Context-Path>dhis2</Context-Path>
                         <Resource-Path>dhis2/resources</Resource-Path>
                         <Import-Package>
-                            net.sf.cglib.core,
-                            net.sf.cglib.proxy,
-                            net.sf.cglib.reflect,
                             org.aopalliance.aop,
                             org.motechproject.admin.domain,
                             org.motechproject.admin.messages,
@@ -89,7 +86,11 @@
                             org.motechproject.mds.service,
                             org.springframework.aop,
                             org.springframework.aop.framework,
+                            org.springframework.cglib.core,
+                            org.springframework.cglib.proxy,
+                            org.springframework.cglib.reflect,
                             org.springframework.transaction,
+                            org.springframework.validation.beanvalidation,
                             *
                         </Import-Package>
                         <Export-Package>
