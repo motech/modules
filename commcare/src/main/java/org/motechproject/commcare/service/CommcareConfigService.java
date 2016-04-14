@@ -70,9 +70,9 @@ public interface CommcareConfigService {
 
     /**
      * Refreshes the CommCare application metadata in the given configuration.
-     * @param config the configuration to be synchronized
+     * @param name name of the configuration to be synchronized
      */
-    Config syncConfig(Config config);
+    void syncConfig(String name);
 
     Config create();
 

@@ -164,13 +164,8 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
     }
 
     @Override
-    public Config syncConfig(Config config) {
-
-        eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_UPDATED, prepareParams(config.getName())));
-        configs.updateConfig(config);
-        updateConfigs();
-
-        return config;
+    public void syncConfig(String name) {
+        eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_UPDATED, prepareParams(name)));
     }
 
     @Override

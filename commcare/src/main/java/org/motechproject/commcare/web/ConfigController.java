@@ -74,8 +74,12 @@ public class ConfigController extends CommcareController {
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value="/sync", method = RequestMethod.POST)
     @ResponseBody
-    public Config syncConfig(@RequestBody Config config) {
-        return configService.syncConfig(config);
+    public void syncConfig(@RequestBody Config config) {
+        if (configService.verifyConfig(config)) {
+            configService.syncConfig(config.getName());
+        } else {
+            throw new CommcareAuthenticationException("Motech was unable to authenticate to CommCareHQ. Please verify your account settings.");
+        }
     }
 
     @ResponseStatus(HttpStatus.OK)

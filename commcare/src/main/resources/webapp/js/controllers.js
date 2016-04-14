@@ -371,9 +371,15 @@
             blockUI();
             Configurations.sync($scope.selectedConfig,
                 function success() {
+                    $scope.syncSuccessMessage = $scope.msg('commcare.sync.success');
+                    $scope.syncSuccess = true;
+                    $scope.syncedConfig = $scope.selectedConfig.name;
                     unblockUI();
                 },
                 function failure(response) {
+                    $scope.syncErrorMessage = response.data;
+                    $scope.syncSuccess = false;
+                    $scope.syncedConfig = $scope.selectedConfig.name;
                     unblockUI();
             });
         };
@@ -381,6 +387,16 @@
         $scope.syncAllowed = function() {
             return $scope.validateConfig()
                 && !($scope.configOutdated);
+        };
+
+        $scope.isSyncSuccess = function() {
+            return $scope.syncSuccess === true
+                && $scope.syncedConfig === $scope.selectedConfig.name;
+        };
+
+        $scope.isSyncError = function() {
+            return $scope.syncSuccess === false
+                && $scope.syncedConfig === $scope.selectedConfig.name;
         };
 
         $scope.verify = function() {
@@ -527,6 +543,10 @@
 
         $scope.clearMessages = function() {
             $scope.connectionVerified = undefined;
+            $scope.syncSuccess = undefined;
+            $scope.syncedConfig = "";
+            $scope.syncErrorMessage = "";
+            $scope.syncSuccessMessage = "";
             $scope.verifySuccessMessage = "";
             $scope.verifyErrorMessage = "";
         };
