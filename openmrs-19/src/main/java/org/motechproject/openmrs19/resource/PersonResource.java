@@ -1,11 +1,9 @@
 package org.motechproject.openmrs19.resource;
 
+import org.motechproject.openmrs19.domain.Attribute;
+import org.motechproject.openmrs19.domain.AttributeTypeListResult;
+import org.motechproject.openmrs19.domain.Person;
 import org.motechproject.openmrs19.exception.HttpException;
-import org.motechproject.openmrs19.resource.model.Attribute;
-import org.motechproject.openmrs19.resource.model.AttributeTypeListResult;
-import org.motechproject.openmrs19.resource.model.Person;
-import org.motechproject.openmrs19.resource.model.Person.PreferredAddress;
-import org.motechproject.openmrs19.resource.model.Person.PreferredName;
 
 /**
  * Interface for persons management.
@@ -73,7 +71,7 @@ public interface PersonResource {
      * @param name  the new preferred name
      * @throws HttpException  when there were problems while updating person name
      */
-    void updatePersonName(String uuid, PreferredName name) throws HttpException;
+    void updatePersonName(String uuid, Person.Name name) throws HttpException;
 
     /**
      * Update the preferred address of the person with given UUID.
@@ -82,7 +80,7 @@ public interface PersonResource {
      * @param address  the new preferred address
      * @throws HttpException
      */
-    void updatePersonAddress(String uuid, PreferredAddress address) throws HttpException;
+    void updatePersonAddress(String uuid, Person.Address address) throws HttpException;
 
     /**
      * Deletes the person with the given UUID from the OpenMRs server.
@@ -91,5 +89,4 @@ public interface PersonResource {
      * @throws HttpException  when there were problems while deleting person
      */
     void deletePerson(String personUuid) throws HttpException;
-
 }

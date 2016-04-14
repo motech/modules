@@ -1,7 +1,7 @@
 package org.motechproject.openmrs19.resource;
 
+import org.motechproject.openmrs19.domain.Provider;
 import org.motechproject.openmrs19.exception.HttpException;
-import org.motechproject.openmrs19.resource.model.Provider;
 
 /**
  * Interface for providers management.

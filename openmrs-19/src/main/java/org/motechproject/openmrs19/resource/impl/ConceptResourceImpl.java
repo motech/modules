@@ -4,10 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.lang.Validate;
 import org.motechproject.openmrs19.OpenMrsInstance;
+import org.motechproject.openmrs19.domain.Concept;
+import org.motechproject.openmrs19.domain.ConceptListResult;
 import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.resource.ConceptResource;
-import org.motechproject.openmrs19.resource.model.Concept;
-import org.motechproject.openmrs19.resource.model.ConceptListResult;
 import org.motechproject.openmrs19.rest.RestClient;
 import org.motechproject.openmrs19.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,15 +73,14 @@ public class ConceptResourceImpl implements ConceptResource {
 
     @Override
     public Concept updateConcept(Concept concept) throws HttpException {
-        Gson gson = new GsonBuilder()
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
                 .registerTypeAdapter(Concept.DataType.class, new Concept.DataTypeSerializer())
                 .registerTypeAdapter(Concept.ConceptClass.class, new Concept.ConceptClassSerializer())
                 .create();
-        // uuid cannot be set on an update call
-        String uuid = concept.getUuid();
-        concept.setUuid(null);
+
         String jsonRequest = gson.toJson(concept);
-        String json = restClient.postForJson(openmrsInstance.toInstancePathWithParams("/concept/{uuid}", uuid),
+
+        String json = restClient.postForJson(openmrsInstance.toInstancePathWithParams("/concept/{uuid}", concept.getUuid()),
                 jsonRequest);
 
         return (Concept) JsonUtils.readJson(json, Concept.class);

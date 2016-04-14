@@ -5,12 +5,12 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.motechproject.openmrs19.domain.Person;
+import org.motechproject.openmrs19.domain.Role;
+import org.motechproject.openmrs19.domain.RoleListResult;
+import org.motechproject.openmrs19.domain.User;
+import org.motechproject.openmrs19.domain.UserListResult;
 import org.motechproject.openmrs19.exception.HttpException;
-import org.motechproject.openmrs19.resource.model.Person;
-import org.motechproject.openmrs19.resource.model.Role;
-import org.motechproject.openmrs19.resource.model.RoleListResult;
-import org.motechproject.openmrs19.resource.model.User;
-import org.motechproject.openmrs19.resource.model.UserListResult;
 
 import java.io.IOException;
 import java.net.URI;
