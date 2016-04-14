@@ -44,7 +44,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
                 .thenReturn(readJsonFromFile("json/person-response.json"));
 
         Person person = impl.getPersonById("PPP");
-        String fullAddressFields = "5 Main St.,5/4,Utopia,testProvince,Neverland,69-111,null,null,null,null,null,2016-03-01T00:00:00.000+0000,null,47.613879,-122.342436";
+        String fullAddressFields = "5 Main St.,5/4,Utopia,testProvince,Neverland,69-111,null,null,null,null,null,Tue Mar 01 01:00:00 CET 2016,null,47.613879,-122.342436";
 
         assertEquals(fullAddressFields, person.getPreferredAddress().getFullAddressString());
     }

@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Implementation of the {@link org.motechproject.openmrs19.tasks.OpenMRSActionProxyService} interface.
@@ -54,8 +55,11 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     }
 
     @Override
-    public void createPatient(String givenName, String middleName, String familyName, String address, DateTime birthdate,
-                              Boolean birthdateEstimated, String gender, Boolean dead, String causeOfDeathUUID, String motechId,
+    public void createPatient(String givenName, String middleName, String familyName, String address1, String address2,
+                              String address3, String address4, String address5, String address6, String cityVillage, String stateProvince,
+                              String country, String postalCode, String countyDistrict, String latitude, String longitude,
+                              DateTime startDate, DateTime endDate, DateTime birthdate, Boolean birthdateEstimated,
+                              String gender, Boolean dead, String causeOfDeathUUID, String motechId,
                               String locationForMotechId, Map<String, String> identifiers) {
         Concept causeOfDeath = StringUtils.isNotEmpty(causeOfDeathUUID) ? conceptService.getConceptByUuid(causeOfDeathUUID) : null;
 
@@ -69,11 +73,25 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         person.setNames(Collections.singletonList(personName));
 
         Person.Address personAddress = new Person.Address();
-        personAddress.setAddress1(address);
+        personAddress.setAddress1(address1);
+        personAddress.setAddress2(address2);
+        personAddress.setAddress3(address3);
+        personAddress.setAddress4(address4);
+        personAddress.setAddress5(address5);
+        personAddress.setAddress6(address6);
+        personAddress.setCityVillage(cityVillage);
+        personAddress.setStateProvince(stateProvince);
+        personAddress.setCountry(country);
+        personAddress.setPostalCode(postalCode);
+        personAddress.setCountyDistrict(countyDistrict);
+        personAddress.setLatitude(latitude);
+        personAddress.setLongitude(longitude);
+        personAddress.setStartDate(Objects.nonNull(startDate) ? startDate.toDate() : null);
+        personAddress.setEndDate(Objects.nonNull(endDate) ? endDate.toDate() : null);
         person.setPreferredAddress(personAddress);
         person.setAddresses(Collections.singletonList(personAddress));
 
-        person.setBirthdate(birthdate.toDate());
+        person.setBirthdate(Objects.nonNull(startDate) ? startDate.toDate() : null);
         person.setBirthdateEstimated(birthdateEstimated);
         person.setDead(dead);
         person.setCauseOfDeath(causeOfDeath);

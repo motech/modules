@@ -111,9 +111,16 @@ public class OpenMRSActionProxyServiceTest {
         doReturn(Collections.singletonList(location)).when(locationService).getLocations(location.getName());
 
         openMRSActionProxyService.createPatient(person.getPreferredName().getGivenName(), person.getPreferredName().getMiddleName(),
-                person.getPreferredName().getFamilyName(), person.getPreferredAddress().getAddress1(), new DateTime(person.getBirthdate()),
-                person.getBirthdateEstimated(), person.getGender(), person.getDead(), causeOfDeath.getUuid(), patient.getMotechId(),
-                location.getName(), identifiersMap);
+                person.getPreferredName().getFamilyName(), person.getPreferredAddress().getAddress1(),
+                person.getPreferredAddress().getAddress2(), person.getPreferredAddress().getAddress3(),
+                person.getPreferredAddress().getAddress4(), person.getPreferredAddress().getAddress5(),
+                person.getPreferredAddress().getAddress6(), person.getPreferredAddress().getCityVillage(),
+                person.getPreferredAddress().getStateProvince(), person.getPreferredAddress().getCountry(),
+                person.getPreferredAddress().getPostalCode(), person.getPreferredAddress().getCountyDistrict(),
+                person.getPreferredAddress().getLatitude(), person.getPreferredAddress().getLongitude(),
+                new DateTime(person.getPreferredAddress().getStartDate()), new DateTime(person.getPreferredAddress().getEndDate()),
+                new DateTime(person.getBirthdate()), person.getBirthdateEstimated(), person.getGender(), person.getDead(),
+                causeOfDeath.getUuid(), patient.getMotechId(), location.getName(), identifiersMap);
 
         verify(patientService).createPatient(patientCaptor.capture());
 
@@ -137,9 +144,16 @@ public class OpenMRSActionProxyServiceTest {
         doReturn(Collections.singletonList(location)).when(locationService).getLocations(OpenMRSActionProxyService.DEFAULT_LOCATION_NAME);
 
         openMRSActionProxyService.createPatient(person.getPreferredName().getGivenName(), person.getPreferredName().getMiddleName(),
-                person.getPreferredName().getFamilyName(), person.getPreferredAddress().getAddress1(), new DateTime(person.getBirthdate()),
-                person.getBirthdateEstimated(), person.getGender(), person.getDead(), "", patient.getMotechId(),
-                "", identifiersMap);
+                person.getPreferredName().getFamilyName(), person.getPreferredAddress().getAddress1(),
+                person.getPreferredAddress().getAddress2(), person.getPreferredAddress().getAddress3(),
+                person.getPreferredAddress().getAddress4(), person.getPreferredAddress().getAddress5(),
+                person.getPreferredAddress().getAddress6(), person.getPreferredAddress().getCityVillage(),
+                person.getPreferredAddress().getStateProvince(), person.getPreferredAddress().getCountry(),
+                person.getPreferredAddress().getPostalCode(), person.getPreferredAddress().getCountyDistrict(),
+                person.getPreferredAddress().getLatitude(), person.getPreferredAddress().getLongitude(),
+                new DateTime(person.getPreferredAddress().getStartDate()), new DateTime(person.getPreferredAddress().getEndDate()),
+                new DateTime(person.getBirthdate()), person.getBirthdateEstimated(), person.getGender(),
+                person.getDead(), "", patient.getMotechId(), "", identifiersMap);
 
         verify(patientService).createPatient(patientCaptor.capture());
 
@@ -163,9 +177,16 @@ public class OpenMRSActionProxyServiceTest {
         doReturn(Collections.emptyList()).when(locationService).getLocations(location.getName());
 
         openMRSActionProxyService.createPatient(person.getPreferredName().getGivenName(), person.getPreferredName().getMiddleName(),
-                person.getPreferredName().getFamilyName(), person.getPreferredAddress().getAddress1(), new DateTime(person.getBirthdate()),
-                person.getBirthdateEstimated(), person.getGender(), person.getDead(), "", patient.getMotechId(),
-                location.getName(), identifiersMap);
+                person.getPreferredName().getFamilyName(), person.getPreferredAddress().getAddress1(),
+                person.getPreferredAddress().getAddress2(), person.getPreferredAddress().getAddress3(),
+                person.getPreferredAddress().getAddress4(), person.getPreferredAddress().getAddress5(),
+                person.getPreferredAddress().getAddress6(), person.getPreferredAddress().getCityVillage(),
+                person.getPreferredAddress().getStateProvince(), person.getPreferredAddress().getCountry(),
+                person.getPreferredAddress().getPostalCode(), person.getPreferredAddress().getCountyDistrict(),
+                person.getPreferredAddress().getLatitude(), person.getPreferredAddress().getLongitude(),
+                new DateTime(person.getPreferredAddress().getStartDate()), new DateTime(person.getPreferredAddress().getEndDate()),
+                new DateTime(person.getBirthdate()), person.getBirthdateEstimated(), person.getGender(),
+                person.getDead(), "", patient.getMotechId(), location.getName(), identifiersMap);
 
         verify(patientService).createPatient(patientCaptor.capture());
 
@@ -185,6 +206,8 @@ public class OpenMRSActionProxyServiceTest {
 
         Person.Address address = new Person.Address();
         address.setAddress1("Gdynia");
+        address.setStartDate(new DateTime("2000-08-16T07:22:05Z").toDate());
+        address.setEndDate(new DateTime("2100-08-16T07:22:05Z").toDate());
         person.setPreferredAddress(address);
         person.setAddresses(Collections.singletonList(address));
 

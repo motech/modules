@@ -107,10 +107,10 @@ public class Person {
         private String address6;
 
         @Expose
-        private String startDate;
+        private Date startDate;
 
         @Expose
-        private String endDate;
+        private Date endDate;
 
         @Expose
         private String latitude;
@@ -214,19 +214,19 @@ public class Person {
             this.address6 = address6;
         }
 
-        public String getStartDate() {
+        public Date getStartDate() {
             return startDate;
         }
 
-        public void setStartDate(String startDate) {
+        public void setStartDate(Date startDate) {
             this.startDate = startDate;
         }
 
-        public String getEndDate() {
+        public Date getEndDate() {
             return endDate;
         }
 
-        public void setEndDate(String endDate) {
+        public void setEndDate(Date endDate) {
             this.endDate = endDate;
         }
 

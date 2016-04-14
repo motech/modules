@@ -96,7 +96,7 @@
           "fieldKey": "person.display"
         },
         {
-          "displayName": "openMRS.person.address",
+          "displayName": "openMRS.address.fullAddress",
           "fieldKey": "person.preferredAddress.fullAddressString"
         },
         {
