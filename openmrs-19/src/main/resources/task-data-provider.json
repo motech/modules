@@ -28,7 +28,7 @@
         },
         {
           "displayName": "openMRS.encounter.type",
-          "fieldKey": "encounterType"
+          "fieldKey": "encounterType.name"
         },
         {
           "displayName": "openMRS.provider.uuid",
