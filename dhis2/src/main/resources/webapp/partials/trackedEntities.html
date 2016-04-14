@@ -1,15 +1,14 @@
-
 <div>
     <div>
         <label>{{msg('dhis2.search')}}</label>
-        <input type="text" ng-model="search.name" >
+        <input type="text" ng-model="searchDhis.name" >
     </div>
     <table class="table table-hover table-striped">
         <tr>
             <th>{{msg('dhis2.name')}}</th>
             <th>{{msg('dhis2.id')}}</th>
         </tr>
-        <tr ng-repeat="trackedEntity in trackedEntities  | filter:search:strict">
+        <tr ng-repeat="trackedEntity in trackedEntities | filter:searchDhis">
             <td>{{trackedEntity.name}}</td>
             <td>{{trackedEntity.uuid}}</td>
         </tr>
