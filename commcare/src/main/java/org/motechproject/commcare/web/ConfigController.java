@@ -67,7 +67,7 @@ public class ConfigController extends CommcareController {
     @RequestMapping(value = "/verify")
     public void verifyConfig(@RequestBody Config config) {
         if (!configService.verifyConfig(config)) {
-            throw new CommcareAuthenticationException("Motech was unable to authenticate to CommCareHQ. Please verify your account settings.");
+            throw new CommcareAuthenticationException();
         }
     }
 
@@ -78,7 +78,7 @@ public class ConfigController extends CommcareController {
         if (configService.verifyConfig(config)) {
             configService.syncConfig(config.getName());
         } else {
-            throw new CommcareAuthenticationException("Motech was unable to authenticate to CommCareHQ. Please verify your account settings.");
+            throw new CommcareAuthenticationException();
         }
     }
 
