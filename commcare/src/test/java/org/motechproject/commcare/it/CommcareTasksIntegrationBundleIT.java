@@ -123,7 +123,8 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     public void testCommcareTasksIntegration() throws InterruptedException, IOException {
 
         config = ConfigsUtils.prepareConfigOne();
-        createConfiguration(config);
+        String oldName = config.getName();
+        createConfiguration(config, oldName);
 
         createMockCommcareSchema();
         commcareTasksNotifier.updateTasksInfo();
@@ -313,8 +314,8 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         return getHttpClient().execute(httpPost);
     }
 
-    private HttpResponse createConfiguration(Config config) throws IOException, InterruptedException {
-        HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/commcare/configs", PORT));
+    private HttpResponse createConfiguration(Config config, String oldName) throws IOException, InterruptedException {
+        HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/commcare/configs?oldName=%s", PORT, oldName));
         httpPost.addHeader("content-type", "application/json");
         httpPost.addHeader("Authorization", "Basic " + DatatypeConverter.printBase64Binary("motech:motech".getBytes("UTF-8")).trim());
 
