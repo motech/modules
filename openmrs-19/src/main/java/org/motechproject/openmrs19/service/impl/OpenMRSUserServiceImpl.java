@@ -1,21 +1,23 @@
 package org.motechproject.openmrs19.service.impl;
 
 import org.apache.commons.lang.Validate;
+import org.motechproject.openmrs19.config.Config;
 import org.motechproject.openmrs19.domain.Password;
 import org.motechproject.openmrs19.domain.Person;
 import org.motechproject.openmrs19.domain.Role;
 import org.motechproject.openmrs19.domain.User;
-import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.exception.OpenMRSException;
 import org.motechproject.openmrs19.exception.UserAlreadyExistsException;
 import org.motechproject.openmrs19.exception.UserDeleteException;
 import org.motechproject.openmrs19.resource.UserResource;
+import org.motechproject.openmrs19.service.OpenMRSConfigService;
 import org.motechproject.openmrs19.service.OpenMRSUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,42 +29,82 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
 
     private static final int DEFAULT_PASSWORD_LENGTH = 8;
 
-    private final UserResource userResource;
     private final OpenMRSPersonServiceImpl personAdapter;
+
+    private final OpenMRSConfigService configService;
+
+    private final UserResource userResource;
+
     private final Password password = new Password(DEFAULT_PASSWORD_LENGTH);
 
     @Autowired
-    public OpenMRSUserServiceImpl(UserResource userResource, OpenMRSPersonServiceImpl personAdapter) {
+    public OpenMRSUserServiceImpl(UserResource userResource, OpenMRSPersonServiceImpl personAdapter,
+                                  OpenMRSConfigService configService) {
         this.userResource = userResource;
         this.personAdapter = personAdapter;
+        this.configService = configService;
+    }
+
+    /**
+     * Creates the given {@code user} on the OpenMRS server. The given {@code config} will be used while performing this
+     * action.
+     *
+     * @param config  the configuration to be used
+     * @param user  the user to be created
+     * @return  the created user
+     * @throws UserAlreadyExistsException if the user already exists
+     */
+    public User createUser(Config config, User user) throws UserAlreadyExistsException {
+        validateUserForSave(user);
+        validateUserNameUsage(user);
+
+        // If the person is saved prior to checking for the role, there would need to be another call to delete the person
+        // otherwise it would leave the OpenMRS in an inconsistent state
+        resolveRoleUuidFromRoleName(config, user.getRoles());
+
+        if (user.getPerson().getUuid() == null) {
+            Person savedPerson = personAdapter.createPerson(config, user.getPerson());
+            user.setPerson(savedPerson);
+        }
+
+        user.setPassword(password.generate());
+
+        try {
+            return userResource.createUser(config, user);
+        } catch (HttpClientErrorException e) {
+            LOGGER.error("Failed to save user: " + e.getMessage());
+            return null;
+        }
     }
 
     @Override
-    public void changeCurrentUserPassword(String currentPassword, String newPassword) {
+    public void changeCurrentUserPassword(String configName, String currentPassword, String newPassword) {
         // no way of doing this operation because you cannot retrieve the
         // password for a user through the web services
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<User> getAllUsers(String configName) {
         try {
-            return userResource.getAllUsers().getResults();
-        } catch (HttpException e) {
+            Config config = configService.getConfigByName(configName);
+            return userResource.getAllUsers(config).getResults();
+        } catch (HttpClientErrorException e) {
             LOGGER.error("Failed to get all users from OpenMRS: " + e.getMessage());
             return Collections.emptyList();
         }
     }
 
     @Override
-    public User getUserByUserName(String userName) {
+    public User getUserByUserName(String configName, String userName) {
         Validate.notEmpty(userName, "Username cannot be empty");
 
         List<User> results;
 
         try {
-            results = userResource.queryForUsersByUsername(userName).getResults();
-        } catch (HttpException e) {
+            Config config = configService.getConfigByName(configName);
+            results = userResource.queryForUsersByUsername(config, userName).getResults();
+        } catch (HttpClientErrorException e) {
             LOGGER.error("Failed to retrieve user by username: " + userName + " with error: " + e.getMessage());
             return null;
         }
@@ -79,42 +121,20 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
     }
 
     @Override
-    public User getUserByUuid(String uuid) {
+    public User getUserByUuid(String configName, String uuid) {
         Validate.notEmpty(uuid, "UUID cannot be empty");
 
         try {
-            return userResource.getUserById(uuid);
-        } catch (HttpException e) {
+            Config config = configService.getConfigByName(configName);
+            return userResource.getUserById(config, uuid);
+        } catch (HttpClientErrorException e) {
             LOGGER.error("Failed to retrieve user with UUID: " + uuid + " with error: " + e.getMessage());
             return null;
         }
     }
 
     @Override
-    public User createUser(User user) throws UserAlreadyExistsException {
-        validateUserForSave(user);
-        validateUserNameUsage(user);
-        // If the person is saved prior to checking for the role, there would need to be another call to delete the person
-        // otherwise it would leave the OpenMRS in an inconsistent state
-        resolveRoleUuidFromRoleName(user.getRoles());
-
-        if (user.getPerson().getUuid() == null) {
-            Person savedPerson = personAdapter.createPerson(user.getPerson());
-            user.setPerson(savedPerson);
-        }
-
-        user.setPassword(password.generate());
-
-        try {
-            return userResource.createUser(user);
-        } catch (HttpException e) {
-            LOGGER.error("Failed to save user: " + e.getMessage());
-            return null;
-        }
-    }
-
-    @Override
-    public String setNewPasswordForUser(String username) {
+    public String setNewPasswordForUser(String configName, String username) {
         Validate.notEmpty(username, "Username cannot be empty");
 
         User user = getUserByUserName(username);
@@ -127,8 +147,9 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
         tmp.setUuid(user.getUuid());
 
         try {
-            userResource.updateUser(tmp);
-        } catch (HttpException e) {
+            Config config = configService.getConfigByName(configName);
+            userResource.updateUser(config, tmp);
+        } catch (HttpClientErrorException e) {
             LOGGER.error("Failed to set password for username: " + username);
             return null;
         }
@@ -137,29 +158,76 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
     }
 
     @Override
-    public User updateUser(User user) {
+    public User updateUser(String configName, User user) {
         validateUserForUpdate(user);
 
         user.setPassword(password.generate());
 
         try {
-            return userResource.updateUser(user);
-        } catch (HttpException e) {
+            Config config = configService.getConfigByName(configName);
+            return userResource.updateUser(config, user);
+        } catch (HttpClientErrorException e) {
             LOGGER.error("Failed to update user: " + user.getUuid());
             return null;
         }
     }
 
     @Override
-    public void deleteUser(String uuid) throws UserDeleteException {
+    public void deleteUser(String configName, String uuid) throws UserDeleteException {
         Validate.notEmpty(uuid);
 
         try {
-            userResource.deleteUser(uuid);
-        } catch (HttpException e) {
+            Config config = configService.getConfigByName(configName);
+            userResource.deleteUser(config, uuid);
+        } catch (HttpClientErrorException e) {
             throw new UserDeleteException("Error occurred while deleting user with UUID: " + uuid, e);
         }
 
+    }
+
+    @Override
+    public void changeCurrentUserPassword(String currentPassword, String newPassword) {
+        changeCurrentUserPassword(null, currentPassword, newPassword);
+    }
+
+    @Override
+    public User createUser(String configName, User user) throws UserAlreadyExistsException {
+        return createUser(configService.getConfigByName(configName), user);
+    }
+
+    @Override
+    public User createUser(User user) throws UserAlreadyExistsException {
+        return createUser(configService.getConfigByName(null), user);
+    }
+
+    @Override
+    public String setNewPasswordForUser(String username) {
+        return setNewPasswordForUser(null, username);
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return getAllUsers(null);
+    }
+
+    @Override
+    public User getUserByUuid(String uuid) {
+        return getUserByUuid(null, uuid);
+    }
+
+    @Override
+    public User getUserByUserName(String userName) {
+        return getUserByUserName(null, userName);
+    }
+
+    @Override
+    public User updateUser(User user) {
+        return updateUser(null, user);
+    }
+
+    @Override
+    public void deleteUser(String uuid) throws UserDeleteException {
+        deleteUser(null, uuid);
     }
 
     private void validateUserNameUsage(User user) throws UserAlreadyExistsException {
@@ -181,8 +249,8 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
         Validate.notEmpty(user.getPerson().getUuid(), "User person id cannot be empty");
     }
 
-    private void resolveRoleUuidFromRoleName(List<Role> roles) {
-        List<Role> retrievedRoles = getAllRoles();
+    private void resolveRoleUuidFromRoleName(Config config, List<Role> roles) {
+        List<Role> retrievedRoles = getAllRoles(config);
         for (Role role : roles) {
             boolean roleExist = false;
             for (Role retrieveRole : retrievedRoles) {
@@ -199,12 +267,12 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
         }
     }
 
-    private List<Role> getAllRoles() {
+    private List<Role> getAllRoles(Config config) {
         List<Role> roles;
 
         try {
-            roles = userResource.getAllRoles().getResults();
-        } catch (HttpException e) {
+            roles = userResource.getAllRoles(config).getResults();
+        } catch (HttpClientErrorException e) {
             LOGGER.error("Failed to retrieve the list of roles: " + e.getMessage());
             return null;
         }

@@ -1,5 +1,7 @@
 package org.motechproject.openmrs19.config;
 
+import java.util.ArrayList;
+
 /**
  * Utility class for providing dummy data for configuration service tests.
  */
@@ -17,7 +19,8 @@ public class ConfigDummyData {
         config.setOpenMrsUrl("openMrsUrl-" + suffix);
         config.setUsername("username-" + suffix);
         config.setPassword("password-" + suffix);
-        config.setMotechId("motechId-" + suffix);
+        config.setMotechPatientIdentifierTypeName("motech_" + suffix + "_type");
+        config.setPatientIdentifierTypeNames(new ArrayList<>());
         return config;
     }
 

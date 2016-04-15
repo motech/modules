@@ -3,6 +3,8 @@ package org.motechproject.openmrs19.validation;
 import org.junit.Test;
 import org.motechproject.openmrs19.config.Config;
 
+import java.util.ArrayList;
+
 import static org.motechproject.openmrs19.validation.ConfigValidator.validateConfig;
 
 public class ConfigValidatorTest {
@@ -11,7 +13,7 @@ public class ConfigValidatorTest {
     private static final String OPEN_MRS_URL = "openMrsUlr";
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
-    private static final String MOTECH_ID = "motechId";
+    private static final String MOTECH_PATIENT_IDENTIFIER_TYPE_NAME = "motechId";
     private static final String EMPTY_STRING = "";
 
     @Test
@@ -21,7 +23,8 @@ public class ConfigValidatorTest {
         config.setOpenMrsUrl(OPEN_MRS_URL);
         config.setUsername(USERNAME);
         config.setPassword(PASSWORD);
-        config.setMotechId(MOTECH_ID);
+        config.setMotechPatientIdentifierTypeName(MOTECH_PATIENT_IDENTIFIER_TYPE_NAME);
+        config.setPatientIdentifierTypeNames(new ArrayList<>());
 
         validateConfig(config);
     }
@@ -33,7 +36,8 @@ public class ConfigValidatorTest {
         config.setOpenMrsUrl(OPEN_MRS_URL);
         config.setUsername(USERNAME);
         config.setPassword(PASSWORD);
-        config.setMotechId(MOTECH_ID);
+        config.setMotechPatientIdentifierTypeName(MOTECH_PATIENT_IDENTIFIER_TYPE_NAME);
+        config.setPatientIdentifierTypeNames(new ArrayList<>());
 
         validateConfig(config);
     }
@@ -45,7 +49,8 @@ public class ConfigValidatorTest {
         config.setOpenMrsUrl(OPEN_MRS_URL);
         config.setUsername(USERNAME);
         config.setPassword(PASSWORD);
-        config.setMotechId(MOTECH_ID);
+        config.setMotechPatientIdentifierTypeName(MOTECH_PATIENT_IDENTIFIER_TYPE_NAME);
+        config.setPatientIdentifierTypeNames(new ArrayList<>());
 
         validateConfig(config);
     }
@@ -57,7 +62,8 @@ public class ConfigValidatorTest {
         config.setOpenMrsUrl(null);
         config.setUsername(USERNAME);
         config.setPassword(PASSWORD);
-        config.setMotechId(MOTECH_ID);
+        config.setMotechPatientIdentifierTypeName(MOTECH_PATIENT_IDENTIFIER_TYPE_NAME);
+        config.setPatientIdentifierTypeNames(new ArrayList<>());
 
         validateConfig(config);
     }
@@ -69,7 +75,8 @@ public class ConfigValidatorTest {
         config.setOpenMrsUrl(EMPTY_STRING);
         config.setUsername(USERNAME);
         config.setPassword(PASSWORD);
-        config.setMotechId(MOTECH_ID);
+        config.setMotechPatientIdentifierTypeName(MOTECH_PATIENT_IDENTIFIER_TYPE_NAME);
+        config.setPatientIdentifierTypeNames(new ArrayList<>());
 
         validateConfig(config);
     }
@@ -81,7 +88,8 @@ public class ConfigValidatorTest {
         config.setOpenMrsUrl(OPEN_MRS_URL);
         config.setUsername(null);
         config.setPassword(PASSWORD);
-        config.setMotechId(MOTECH_ID);
+        config.setMotechPatientIdentifierTypeName(MOTECH_PATIENT_IDENTIFIER_TYPE_NAME);
+        config.setPatientIdentifierTypeNames(new ArrayList<>());
 
         validateConfig(config);
     }
@@ -93,7 +101,8 @@ public class ConfigValidatorTest {
         config.setOpenMrsUrl(OPEN_MRS_URL);
         config.setUsername(EMPTY_STRING);
         config.setPassword(PASSWORD);
-        config.setMotechId(MOTECH_ID);
+        config.setMotechPatientIdentifierTypeName(MOTECH_PATIENT_IDENTIFIER_TYPE_NAME);
+        config.setPatientIdentifierTypeNames(new ArrayList<>());
 
         validateConfig(config);
     }
@@ -105,7 +114,8 @@ public class ConfigValidatorTest {
         config.setOpenMrsUrl(OPEN_MRS_URL);
         config.setUsername(USERNAME);
         config.setPassword(null);
-        config.setMotechId(MOTECH_ID);
+        config.setMotechPatientIdentifierTypeName(MOTECH_PATIENT_IDENTIFIER_TYPE_NAME);
+        config.setPatientIdentifierTypeNames(new ArrayList<>());
 
         validateConfig(config);
     }
@@ -117,33 +127,48 @@ public class ConfigValidatorTest {
         config.setOpenMrsUrl(OPEN_MRS_URL);
         config.setUsername(USERNAME);
         config.setPassword(EMPTY_STRING);
-        config.setMotechId(MOTECH_ID);
+        config.setMotechPatientIdentifierTypeName(MOTECH_PATIENT_IDENTIFIER_TYPE_NAME);
+        config.setPatientIdentifierTypeNames(new ArrayList<>());
 
         validateConfig(config);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowIllegalArgumentExceptionIfMotechIdIsNull() {
+    public void shouldThrowIllegalArgumentExceptionIfMotechPatientIdentifierTypeNameIsNull() {
         Config config = new Config();
         config.setName(NAME);
         config.setOpenMrsUrl(OPEN_MRS_URL);
         config.setUsername(USERNAME);
         config.setPassword(PASSWORD);
-        config.setMotechId(null);
+        config.setMotechPatientIdentifierTypeName(null);
+        config.setPatientIdentifierTypeNames(new ArrayList<>());
 
         validateConfig(config);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowIllegalArgumentExceptionIfMotechIdIsEmpty() {
+    public void shouldThrowIllegalArgumentExceptionIfMotechPatientIdentifierTypeNameIsEmpty() {
         Config config = new Config();
         config.setName(NAME);
         config.setOpenMrsUrl(OPEN_MRS_URL);
         config.setUsername(USERNAME);
         config.setPassword(PASSWORD);
-        config.setMotechId(EMPTY_STRING);
+        config.setMotechPatientIdentifierTypeName(EMPTY_STRING);
+        config.setPatientIdentifierTypeNames(new ArrayList<>());
 
         validateConfig(config);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentExceptionIfPatientIdentifiersTypeNamesIsNull() {
+        Config config = new Config();
+        config.setName(NAME);
+        config.setOpenMrsUrl(OPEN_MRS_URL);
+        config.setUsername(USERNAME);
+        config.setPassword(PASSWORD);
+        config.setMotechPatientIdentifierTypeName(MOTECH_PATIENT_IDENTIFIER_TYPE_NAME);
+        config.setPatientIdentifierTypeNames(null);
+
+        validateConfig(config);
+    }
 }

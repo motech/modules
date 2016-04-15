@@ -4,6 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -36,6 +38,26 @@ public class Attribute {
         public void setUri(String uri) {
             this.uri = uri;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+
+            if (!(o instanceof Link)) {
+                return false;
+            }
+
+            Link other = (Link) o;
+
+            return ObjectUtils.equals(uri, other.uri);
+        }
+
+        @Override
+        public int hashCode() {
+            return new HashCodeBuilder().append(uri).toHashCode();
+        }
     }
 
     /**
@@ -51,6 +73,26 @@ public class Attribute {
 
         public void setUuid(String uuid) {
             this.uuid = uuid;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+
+            if (!(o instanceof AttributeType)) {
+                return false;
+            }
+
+            AttributeType other = (AttributeType) o;
+
+            return ObjectUtils.equals(uuid, other.uuid);
+        }
+
+        @Override
+        public int hashCode() {
+            return new HashCodeBuilder().append(uuid).toHashCode();
         }
     }
 
@@ -128,5 +170,29 @@ public class Attribute {
 
     public void setLinks(List<Link> links) {
         this.links = links;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof Attribute)) {
+            return false;
+        }
+
+        Attribute other = (Attribute) o;
+
+        return ObjectUtils.equals(uuid, other.uuid) && ObjectUtils.equals(display, other.display)
+                && ObjectUtils.equals(value, other.value) && ObjectUtils.equals(name, other.name)
+                && ObjectUtils.equals(description, other.description) && ObjectUtils.equals(format, other.format)
+                && ObjectUtils.equals(attributeType, other.attributeType) && ObjectUtils.equals(links, other.links);
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(uuid).append(display).append(value).append(name).append(description)
+                .append(format).append(attributeType).append(links).toHashCode();
     }
 }

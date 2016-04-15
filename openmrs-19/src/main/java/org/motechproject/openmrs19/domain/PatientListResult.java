@@ -1,5 +1,8 @@
 package org.motechproject.openmrs19.domain;
 
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import java.util.List;
 
 /**
@@ -15,5 +18,25 @@ public class PatientListResult {
 
     public void setResults(List<Patient> results) {
         this.results = results;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof PatientListResult)) {
+            return false;
+        }
+
+        PatientListResult other = (PatientListResult) o;
+
+        return ObjectUtils.equals(results, other.results);
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(results).toHashCode();
     }
 }

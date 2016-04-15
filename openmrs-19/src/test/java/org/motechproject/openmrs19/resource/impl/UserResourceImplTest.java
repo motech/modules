@@ -1,106 +1,144 @@
 package org.motechproject.openmrs19.resource.impl;
 
+import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.motechproject.openmrs19.domain.Person;
-import org.motechproject.openmrs19.domain.Role;
 import org.motechproject.openmrs19.domain.RoleListResult;
 import org.motechproject.openmrs19.domain.User;
 import org.motechproject.openmrs19.domain.UserListResult;
-import org.motechproject.openmrs19.exception.HttpException;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.motechproject.openmrs19.config.Config;
+import org.motechproject.openmrs19.config.ConfigDummyData;
+import org.motechproject.openmrs19.util.JsonUtils;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.web.client.RestOperations;
 
-import java.io.IOException;
 import java.net.URI;
 
-import static ch.lambdaj.Lambda.extract;
-import static ch.lambdaj.Lambda.on;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class UserResourceImplTest extends AbstractResourceImplTest {
 
-    private UserResourceImpl impl;
+    private static final String USER_BY_USERNAME_RESPONSE_JSON = "json/user-by-username-response.json";
+    private static final String USER_UPDATE_NO_USERNAME_JSON = "json/user-update-no-username.json";
+    private static final String USER_LIST_RESPONSE_JSON = "json/user-list-full-response.json";
+    private static final String ROLE_RESPONSE_JSON = "json/role-response.json";
+    private static final String USER_RESPONSE_JSON = "json/user-response.json";
+    private static final String USER_CREATE_JSON = "json/user-create.json";
+
+    @Mock
+    private RestOperations restOperations;
+
+    @Captor
+    private ArgumentCaptor<HttpEntity<String>> requestCaptor;
+
+    private UserResourceImpl userResource;
+
+    private Config config;
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        impl = new UserResourceImpl(getClient(), getInstance());
+        initMocks(this);
+        userResource = new UserResourceImpl(restOperations);
+        config = ConfigDummyData.prepareConfig("one");
     }
 
     @Test
-    public void shouldGetAllUsers() throws HttpException, IOException {
-        Mockito.when(getClient().getJson(Mockito.any(URI.class))).thenReturn(
-                readJsonFromFile("json/user-list-full-response.json"));
-
-        UserListResult result = impl.getAllUsers();
-
-        assertEquals(asList("b187e426-4d07-11e1-a4ea-00ff26c46bb6", "A4F30A1B-5EB9-11DF-A648-37A07F9C90FB", "1752391c-1e30-4682-b699-e3dcab79d4d3"),
-                extract(result.getResults(), on(User.class).getUuid()));
-    }
-
-    @Test
-    public void shouldQueryForUser() throws HttpException, IOException {
-        Mockito.when(getClient().getJson(Mockito.any(URI.class))).thenReturn(
-                readJsonFromFile("json/user-by-username-response.json"));
-
-        UserListResult result = impl.queryForUsersByUsername("AAA");
-
-        assertEquals(asList("UUU"), extract(result.getResults(), on(User.class).getUuid()));
-    }
-
-    @Test
-    public void shouldGetAllRoles() throws HttpException, IOException {
-        Mockito.when(getClient().getJson(Mockito.any(URI.class))).thenReturn(
-                readJsonFromFile("json/role-response.json"));
-
-        RoleListResult result = impl.getAllRoles();
-
-        assertEquals(asList("roleUuid"), extract(result.getResults(), on(Role.class).getUuid()));
-    }
-
-    @Test
-    public void shouldCreateUser() throws IOException, HttpException {
+    public void shouldCreateUser() throws Exception {
         User user = buildUser();
+        URI url = config.toInstancePath("/user");
 
-        impl.createUser(user);
+        when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(USER_RESPONSE_JSON));
 
-        ArgumentCaptor<String> sentJson = ArgumentCaptor.forClass(String.class);
-        Mockito.verify(getClient()).postForJson(Mockito.any(URI.class), sentJson.capture());
-        String expectedJson = readJsonFromFile("json/user-create.json");
+        User created = userResource.createUser(config, user);
 
-        assertEquals(stringToJsonElement(expectedJson), stringToJsonElement(sentJson.getValue()));
-    }
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
 
-    private User buildUser() {
-        User user = new User();
-        user.setUsername("motech");
-        user.setPassword("password");
-        Person person = new Person();
-        person.setUuid("personUuid");
-        user.setPerson(person);
-
-        Role role = new Role();
-        role.setUuid("roleUuid");
-        user.setRoles(asList(role));
-
-        return user;
+        assertThat(created, equalTo(user));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPost(config)));
+        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
+                equalTo(readFromFile(USER_CREATE_JSON, JsonObject.class)));
     }
 
     @Test
-    public void shouldNotIncludeUuidOnUpdateUser() throws HttpException {
-        User user = new User();
-        user.setUuid("AAA");
-        user.setUsername("motech");
+    public void shouldUpdateUser() throws Exception {
+        User user = buildUser();
+        URI url = config.toInstancePathWithParams("/user/{uuid}", user.getUuid());
 
-        impl.updateUser(user);
+        when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(USER_RESPONSE_JSON));
 
-        ArgumentCaptor<String> sentJson = ArgumentCaptor.forClass(String.class);
-        Mockito.verify(getClient()).postForJson(Mockito.any(URI.class), sentJson.capture());
-        String expectedJson = "{\"username\":\"motech\"}";
+        User updated = userResource.updateUser(config, user);
 
-        assertEquals(stringToJsonElement(expectedJson), stringToJsonElement(sentJson.getValue()));
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
+
+        assertThat(updated, equalTo(user));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPost(config)));
+        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
+                equalTo(readFromFile(USER_UPDATE_NO_USERNAME_JSON, JsonObject.class)));
+    }
+
+    @Test
+    public void shouldGetAllUsers() throws Exception {
+        URI url = config.toInstancePath("/user?v=full");
+
+        when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(USER_LIST_RESPONSE_JSON));
+
+        UserListResult result = userResource.getAllUsers(config);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
+
+        assertThat(result, equalTo(readFromFile(USER_LIST_RESPONSE_JSON, UserListResult.class)));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
+        assertThat(requestCaptor.getValue().getBody(), nullValue());
+    }
+
+    @Test
+    public void shouldQueryForUserByUserName() throws Exception {
+        String query = "AAA";
+        URI url = config.toInstancePathWithParams("/user?q={username}&v=full", query);
+
+        when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(USER_BY_USERNAME_RESPONSE_JSON));
+
+        UserListResult result = userResource.queryForUsersByUsername(config, query);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
+
+        assertThat(result, equalTo(readFromFile(USER_BY_USERNAME_RESPONSE_JSON, UserListResult.class)));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
+        assertThat(requestCaptor.getValue().getBody(), nullValue());
+    }
+
+    @Test
+    public void shouldGetAllRoles() throws Exception {
+        URI url = config.toInstancePath("/role?v=full");
+
+        when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(ROLE_RESPONSE_JSON));
+
+        RoleListResult result = userResource.getAllRoles(config);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
+
+        assertThat(result, equalTo(readFromFile(ROLE_RESPONSE_JSON, RoleListResult.class)));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
+        assertThat(requestCaptor.getValue().getBody(), nullValue());
+    }
+
+    private User buildUser() throws Exception {
+        return (User) readFromFile(USER_RESPONSE_JSON, User.class);
     }
 }

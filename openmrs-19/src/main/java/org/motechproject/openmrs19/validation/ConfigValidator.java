@@ -20,7 +20,8 @@ public final class ConfigValidator {
         Validate.notEmpty(config.getOpenMrsUrl(), String.format(FIELD_CANNOT_BE_EMPTY, "OpenMRS URL"));
         Validate.notEmpty(config.getUsername(), String.format(FIELD_CANNOT_BE_EMPTY, "Username"));
         Validate.notEmpty(config.getPassword(), String.format(FIELD_CANNOT_BE_EMPTY, "Password"));
-        Validate.notEmpty(config.getMotechId(), String.format(FIELD_CANNOT_BE_EMPTY, "MOTECH ID"));
+        Validate.notEmpty(config.getMotechPatientIdentifierTypeName(), String.format(FIELD_CANNOT_BE_EMPTY, "Motech patient identifier type name"));
+        Validate.notNull(config.getPatientIdentifierTypeNames(), String.format(FIELD_CANNOT_BE_EMPTY, "Patient identifier type names"));
     }
 
     /**

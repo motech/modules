@@ -66,7 +66,7 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
 
     @Override
     public Config getConfigByName(String name) {
-        return configs.getByName(name);
+        return name == null ? configs.getDefault() : configs.getByName(name);
     }
 
     @Override

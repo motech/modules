@@ -57,7 +57,9 @@ public class Configs {
                 config.setOpenMrsUrl(source.getOpenMrsUrl());
                 config.setUsername(source.getUsername());
                 config.setPassword(source.getPassword());
-                config.setMotechId(source.getMotechId());
+                config.setMotechPatientIdentifierTypeName(source.getMotechPatientIdentifierTypeName());
+                config.getPatientIdentifierTypeNames().clear();
+                config.getPatientIdentifierTypeNames().addAll(source.getPatientIdentifierTypeNames());
                 return;
             }
         }

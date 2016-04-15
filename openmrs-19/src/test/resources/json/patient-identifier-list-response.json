@@ -5,7 +5,12 @@
       "name" : "OpenMRS Identification Number"
     },
     {
-      "name":"MoTeCH Id",
+      "name":"motech_default_type",
+      "uuid":"III"
+    },
+
+    {
+      "name":"motech_one_type",
       "uuid":"III"
     }
   ]

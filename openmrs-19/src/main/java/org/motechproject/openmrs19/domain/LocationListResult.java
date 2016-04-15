@@ -1,5 +1,8 @@
 package org.motechproject.openmrs19.domain;
 
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import java.util.List;
 
 /**
@@ -15,5 +18,25 @@ public class LocationListResult {
 
     public void setResults(List<Location> results) {
         this.results = results;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof LocationListResult)) {
+            return false;
+        }
+
+        LocationListResult other = (LocationListResult) o;
+
+        return ObjectUtils.equals(results, other.results);
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(results).toHashCode();
     }
 }

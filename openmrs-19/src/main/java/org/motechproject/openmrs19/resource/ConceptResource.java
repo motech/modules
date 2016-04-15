@@ -2,7 +2,7 @@ package org.motechproject.openmrs19.resource;
 
 import org.motechproject.openmrs19.domain.Concept;
 import org.motechproject.openmrs19.domain.ConceptListResult;
-import org.motechproject.openmrs19.exception.HttpException;
+import org.motechproject.openmrs19.config.Config;
 
 /**
  * Interface for concepts management.
@@ -10,73 +10,78 @@ import org.motechproject.openmrs19.exception.HttpException;
 public interface ConceptResource {
 
     /**
-     * Fetches all concepts with {@code name} in their names.
+     * Fetches all concepts with {@code name} in their names. The given {@code config} will be used while performing
+     * this action.
      *
+     * @param config  the configuration to be used while performing this action
      * @param name  the string to be included in the concept name
      * @return  the list of concepts containing {@code name} in their name
-     * @throws HttpException  when there was problem while fetching information
      */
-    ConceptListResult queryForConceptsByName(String name) throws HttpException;
+    ConceptListResult queryForConceptsByName(Config config, String name);
 
     /**
-     * Gets concept by its name.
+     * Gets concept by its name. The given {@code config} will be used while performing this action.
      *
+     * @param config  the configuration to be used while performing this action
      * @param name  the name of the concept
      * @return  the concept with given name
-     * @throws HttpException  when there was problem while fetching information
      */
-    Concept getConceptByName(String name) throws HttpException;
+    Concept getConceptByName(Config config, String name);
 
     /**
-     * Gets concept by its UUID.
+     * Gets concept by its UUID. The given {@code config} will be used while performing this action.
      *
+     * @param config  the configuration to be used while performing this action
      * @param uuid  the uuid of the concept
      * @return  the concept with given UUID
-     * @throws HttpException  when there was problem while fetching information
      */
-    Concept getConceptById(String uuid) throws HttpException;
+    Concept getConceptById(Config config, String uuid);
 
     /**
-     * Creates the given concept on the OpenMRS server.
+     * Creates the given concept on the OpenMRS server. The given {@code config} will be used while performing this
+     * action.
      *
+     * @param config  the configuration to be used while performing this action
      * @param concept  the concept to be created
      * @return  the created concept
-     * @throws HttpException  when there was problem while creating concept
      */
-    Concept createConcept(Concept concept) throws HttpException;
+    Concept createConcept(Config config, Concept concept);
 
     /**
-     * Fetches basic information (UUID and name) of all concepts stored on the server.
+     * Fetches basic information (UUID and name) of all concepts stored on the server. The given {@code config} will be
+     * used while performing this action.
      *
+     * @param config  the configuration to be used while performing this action
      * @return  the list of all concepts
-     * @throws HttpException  when there was problem while fetching information
      */
-    ConceptListResult getAllConcepts() throws HttpException;
+    ConceptListResult getAllConcepts(Config config);
 
     /**
-     * Updates concept with the given data.
+     * Updates concept with the given data. The given {@code config} will be used while performing this action.
      *
+     * @param config  the configuration to be used while performing this action
      * @param concept  the concept used as update source
      * @return  the updated concept
-     * @throws HttpException  when there was problem while updating concept
      */
-    Concept updateConcept(Concept concept) throws HttpException;
+    Concept updateConcept(Config config, Concept concept);
 
     /**
-     * Deletes the concept with the given UUID from the OpenMRS server.
+     * Deletes the concept with the given UUID from the OpenMRS server. The given {@code config} will be used while
+     * performing this action.
      *
+     * @param config  the configuration to be used while performing this action
      * @param uuid  the UUID of the concept
-     * @throws HttpException  when there was problem while deleting concept
      */
-    void deleteConcept(String uuid) throws HttpException;
+    void deleteConcept(Config config, String uuid);
 
     /**
-     * Fetches page with given number with size defined in {@code pageSize}. Page numeration starts with 1.
+     * Fetches page with given number with size defined in {@code pageSize}. Page numeration starts with 1. The given
+     * {@code config} will be used while performing this action.
      *
+     * @param config  the configuration to be used while performing this action
      * @param page  the number of the page
      * @param pageSize  the size of the page
      * @return  the list of concepts on the given page
-     * @throws HttpException  when there was problem while fetching information
      */
-    ConceptListResult getConcepts(int page, int pageSize) throws HttpException;
+    ConceptListResult getConcepts(Config config, int page, int pageSize);
 }
