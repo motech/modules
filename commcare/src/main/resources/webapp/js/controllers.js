@@ -26,7 +26,6 @@
                 for (i = 0; i < data.configs.length; i += 1) {
                     if (data.configs[i].name === data.defaultConfigName) {
                         $scope.selectedConfig = data.configs[i];
-                        $scope.oldName = data.configs[i].name;
                         return;
                     }
                 }
@@ -231,6 +230,8 @@
 
         $scope.configOutdated = false;
 
+        $scope.oldName = "";
+
         $scope.copyConfig = function(config) {
             if (!config) {
                 return;
@@ -248,6 +249,7 @@
             copy.forwardSchema = config.forwardSchema;
             copy.forwardStubs = config.forwardStubs;
             copy.forwardCases = config.forwardCases;
+            $scope.oldName = copy.name;
 
             return copy;
         };
@@ -294,6 +296,7 @@
                 }
             } else if (newValue !== undefined && newValue.name === "") {
                 $scope.newConfig = true;
+                $scope.oldName = "";
                 $scope.clearMessages();
             } else {
                 $scope.selectedConfigBackup = $scope.copyConfig(newValue);
@@ -323,7 +326,6 @@
                 function success(data) {
                     $scope.$parent.configurations.configs.push(data);
                     $scope.$parent.selectedConfig = data;
-                    $scope.oldName = data.name;
                     if ($scope.$parent.selectedConfig.eventStrategy === "") {
                         $scope.$parent.selectedConfig.eventStrategy = $scope.eventStrategyOptions[0];
                     }
@@ -509,7 +511,6 @@
                 if ($scope.$parent.configurations.configs[i].name === config.name) {
                     $scope.$parent.configurations.configs[i] = config;
                     $scope.$parent.selectedConfig = $scope.configurations.configs[i];
-                    $scope.oldName = $scope.configurations.configs[i].name;
                     return;
                 }
             }
