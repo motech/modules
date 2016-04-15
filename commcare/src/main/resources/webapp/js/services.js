@@ -19,6 +19,10 @@
                 method: 'POST',
                 url: '../commcare/configs/verify'
             },
+            sync : {
+                method: 'POST',
+                url: '../commcare/configs/sync'
+            },
             getBaseEndpointUrl: {
                 method: 'GET',
                 url: '../commcare/configs/endpointBaseUrl'

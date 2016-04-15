@@ -67,6 +67,13 @@ public interface CommcareConfigService {
      *
      * @return  the template for the configuration
      */
+
+    /**
+     * Refreshes the CommCare application metadata in the given configuration.
+     * @param name name of the configuration to be synchronized
+     */
+    void syncConfig(String name);
+
     Config create();
 
     /**
