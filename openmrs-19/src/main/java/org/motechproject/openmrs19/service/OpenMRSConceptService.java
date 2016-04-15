@@ -1,6 +1,6 @@
 package org.motechproject.openmrs19.service;
 
-import org.motechproject.openmrs19.domain.OpenMRSConcept;
+import org.motechproject.openmrs19.domain.Concept;
 import org.motechproject.openmrs19.exception.ConceptNameAlreadyInUseException;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public interface OpenMRSConceptService {
      * @return the created concept
      * @throws ConceptNameAlreadyInUseException if the concept with the given name already exists
      */
-    OpenMRSConcept createConcept(OpenMRSConcept concept) throws ConceptNameAlreadyInUseException;
+    Concept createConcept(Concept concept) throws ConceptNameAlreadyInUseException;
 
     /**
      * Returns the concept with the given {@code uuid}.
@@ -33,7 +33,7 @@ public interface OpenMRSConceptService {
      * @param uuid  the UUID of the concept
      * @return the concept with the given UUID
      */
-    OpenMRSConcept getConceptByUuid(String uuid);
+    Concept getConceptByUuid(String uuid);
 
     /**
      * Returns a list of the concepts with the given {@code phrase} in their names.
@@ -41,14 +41,14 @@ public interface OpenMRSConceptService {
      * @param phrase  the phrase to search for
      * @return the list of concept with names containing the given phrase
      */
-    List<OpenMRSConcept> search(String phrase);
+    List<Concept> search(String phrase);
 
     /**
      * Returns the basic information (UUID and name) about all the concepts stored on the OpenMRS server.
      *
      * @return the list of all concepts
      */
-    List<OpenMRSConcept> getAllConcepts();
+    List<Concept> getAllConcepts();
 
     /**
      * Deletes the concept with the given {@code uuid} from the OpenMRS server.
@@ -64,7 +64,7 @@ public interface OpenMRSConceptService {
      * @param concept  the concept used as an update source
      * @return the updated concept
      */
-    OpenMRSConcept updateConcept(OpenMRSConcept concept);
+    Concept updateConcept(Concept concept);
 
     /**
      * Returns a list of the concepts. The returned list will contain maximum of {@code pageSize} concepts fetched from
@@ -75,6 +75,6 @@ public interface OpenMRSConceptService {
      * @param pageSize  the size of the page
      * @return  the list of concepts on the given page
      */
-    List<OpenMRSConcept> getConcepts(int page, int pageSize);
+    List<Concept> getConcepts(int page, int pageSize);
 
 }

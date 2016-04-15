@@ -7,16 +7,15 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.motechproject.openmrs19.domain.Concept;
+import org.motechproject.openmrs19.domain.Encounter;
+import org.motechproject.openmrs19.domain.EncounterListResult;
+import org.motechproject.openmrs19.domain.EncounterType;
+import org.motechproject.openmrs19.domain.Location;
+import org.motechproject.openmrs19.domain.Observation;
+import org.motechproject.openmrs19.domain.Patient;
+import org.motechproject.openmrs19.domain.Person;
 import org.motechproject.openmrs19.exception.HttpException;
-import org.motechproject.openmrs19.resource.model.Concept;
-import org.motechproject.openmrs19.resource.model.Encounter;
-import org.motechproject.openmrs19.resource.model.Encounter.EncounterType;
-import org.motechproject.openmrs19.resource.model.EncounterListResult;
-import org.motechproject.openmrs19.resource.model.Location;
-import org.motechproject.openmrs19.resource.model.Observation;
-import org.motechproject.openmrs19.resource.model.Observation.ObservationValue;
-import org.motechproject.openmrs19.resource.model.Patient;
-import org.motechproject.openmrs19.resource.model.Person;
 
 import java.io.IOException;
 import java.net.URI;
@@ -54,8 +53,7 @@ public class EncounterResourceImplTest extends AbstractResourceImplTest {
 
     private Encounter getExpectedEncounter() {
         Encounter encounter = new Encounter();
-        EncounterType type = new EncounterType();
-        type.setName("ADULTINITIAL");
+        EncounterType type = new EncounterType("ADULTINITIAL");
         encounter.setEncounterType(type);
 
         Location loc = new Location();
@@ -71,11 +69,11 @@ public class EncounterResourceImplTest extends AbstractResourceImplTest {
         encounter.setProvider(provider);
 
         Observation obs = new Observation();
+        obs.setUuid("OOO");
         Concept concept = new Concept();
-        concept.setDisplay("CCC");
+        concept.setUuid("CCC");
         obs.setConcept(concept);
-        ObservationValue value = new ObservationValue();
-        value.setDisplay("Test Value");
+        Observation.ObservationValue value = new Observation.ObservationValue("Test Value");
         obs.setValue(value);
         List<Observation> observations = new ArrayList<Observation>();
         observations.add(obs);

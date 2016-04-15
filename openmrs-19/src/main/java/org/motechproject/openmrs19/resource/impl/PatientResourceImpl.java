@@ -6,19 +6,19 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.openmrs19.OpenMrsInstance;
+import org.motechproject.openmrs19.domain.Identifier;
+import org.motechproject.openmrs19.domain.IdentifierListResult;
+import org.motechproject.openmrs19.domain.IdentifierType;
+import org.motechproject.openmrs19.domain.IdentifierType.IdentifierTypeSerializer;
+import org.motechproject.openmrs19.domain.Location;
+import org.motechproject.openmrs19.domain.Location.LocationSerializer;
+import org.motechproject.openmrs19.domain.Patient;
+import org.motechproject.openmrs19.domain.PatientIdentifierListResult;
+import org.motechproject.openmrs19.domain.PatientListResult;
+import org.motechproject.openmrs19.domain.Person;
+import org.motechproject.openmrs19.domain.Person.PersonSerializer;
 import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.resource.PatientResource;
-import org.motechproject.openmrs19.resource.model.Identifier;
-import org.motechproject.openmrs19.resource.model.IdentifierListResult;
-import org.motechproject.openmrs19.resource.model.IdentifierType;
-import org.motechproject.openmrs19.resource.model.IdentifierType.IdentifierTypeSerializer;
-import org.motechproject.openmrs19.resource.model.Location;
-import org.motechproject.openmrs19.resource.model.Location.LocationSerializer;
-import org.motechproject.openmrs19.resource.model.Patient;
-import org.motechproject.openmrs19.resource.model.PatientIdentifierListResult;
-import org.motechproject.openmrs19.resource.model.PatientListResult;
-import org.motechproject.openmrs19.resource.model.Person;
-import org.motechproject.openmrs19.resource.model.Person.PersonSerializer;
 import org.motechproject.openmrs19.rest.RestClient;
 import org.motechproject.openmrs19.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class PatientResourceImpl implements PatientResource {
 
     @Override
     public Patient createPatient(Patient patient) throws HttpException {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Person.class, new PersonSerializer())
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().registerTypeAdapter(Person.class, new PersonSerializer())
                 .registerTypeAdapter(IdentifierType.class, new IdentifierTypeSerializer())
                 .registerTypeAdapter(Location.class, new LocationSerializer()).create();
 
@@ -137,7 +137,7 @@ public class PatientResourceImpl implements PatientResource {
     }
 
     @Override
-    public void updatePatientMotechId(String patientUuid, String newMotechId) throws HttpException {
+    public Patient updatePatientMotechId(String patientUuid, String newMotechId) throws HttpException {
         Gson gson = new GsonBuilder().create();
 
         Identifier patientIdentifier = getPatientIdentifier(patientUuid);
@@ -150,8 +150,10 @@ public class PatientResourceImpl implements PatientResource {
         patientIdentifier.setLocation(null);
 
         String requestJson = gson.toJson(patientIdentifier);
-        restfulClient.postForJson(openmrsInstance.toInstancePathWithParams("/patient/{patientUuid}/identifier/{identifierUuid}",
+        String responseJson = restfulClient.postForJson(openmrsInstance.toInstancePathWithParams("/patient/{patientUuid}/identifier/{identifierUuid}",
                 patientUuid, identifierUuid), requestJson);
+
+        return (Patient) JsonUtils.readJson(responseJson, Patient.class);
     }
 
     private PatientIdentifierListResult getAllPatientIdentifierTypes() throws HttpException {

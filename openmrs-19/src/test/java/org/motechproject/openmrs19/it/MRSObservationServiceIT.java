@@ -7,18 +7,18 @@ import org.junit.runner.RunWith;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventListener;
 import org.motechproject.event.listener.EventListenerRegistryService;
-import org.motechproject.openmrs19.domain.OpenMRSConcept;
-import org.motechproject.openmrs19.domain.OpenMRSConceptName;
-import org.motechproject.openmrs19.domain.OpenMRSFacility;
-import org.motechproject.openmrs19.domain.OpenMRSObservation;
-import org.motechproject.openmrs19.domain.OpenMRSPatient;
-import org.motechproject.openmrs19.domain.OpenMRSPerson;
+import org.motechproject.openmrs19.domain.Concept;
+import org.motechproject.openmrs19.domain.ConceptName;
+import org.motechproject.openmrs19.domain.Location;
+import org.motechproject.openmrs19.domain.Observation;
+import org.motechproject.openmrs19.domain.Patient;
+import org.motechproject.openmrs19.domain.Person;
 import org.motechproject.openmrs19.exception.ConceptNameAlreadyInUseException;
 import org.motechproject.openmrs19.exception.ObservationNotFoundException;
 import org.motechproject.openmrs19.exception.PatientNotFoundException;
 import org.motechproject.openmrs19.service.EventKeys;
 import org.motechproject.openmrs19.service.OpenMRSConceptService;
-import org.motechproject.openmrs19.service.OpenMRSFacilityService;
+import org.motechproject.openmrs19.service.OpenMRSLocationService;
 import org.motechproject.openmrs19.service.OpenMRSObservationService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.service.OpenMRSPersonService;
@@ -31,6 +31,7 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,6 @@ import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -59,7 +59,7 @@ public class MRSObservationServiceIT extends BasePaxIT {
     private OpenMRSPatientService patientAdapter;
 
     @Inject
-    private OpenMRSFacilityService facilityAdapter;
+    private OpenMRSLocationService locationAdapter;
 
     @Inject
     EventListenerRegistryService eventListenerRegistry;
@@ -67,11 +67,11 @@ public class MRSObservationServiceIT extends BasePaxIT {
     MrsListener mrsListener;
     final Object lock = new Object();
 
-    OpenMRSObservation observation;
-    OpenMRSConcept concept;
-    OpenMRSPerson person;
-    OpenMRSFacility facility;
-    OpenMRSPatient patient;
+    Observation observation;
+    Concept concept;
+    Person person;
+    Location location;
+    Patient patient;
 
     @Before
     public void setUp() throws InterruptedException, ConceptNameAlreadyInUseException {
@@ -93,7 +93,7 @@ public class MRSObservationServiceIT extends BasePaxIT {
     @Test
     public void shouldFindSearchedConcept() {
 
-        OpenMRSObservation obs = obsAdapter.findObservation(patient.getMotechId(), concept.getDisplay());
+        Observation obs = obsAdapter.findObservation(patient.getMotechId(), concept.getDisplay());
 
         assertNotNull(obs);
     }
@@ -101,7 +101,7 @@ public class MRSObservationServiceIT extends BasePaxIT {
     @Test
     public void shouldFindListOfObservations() {
 
-        List<OpenMRSObservation> obs = obsAdapter.findObservations(patient.getMotechId(), concept.getDisplay());
+        List<Observation> obs = obsAdapter.findObservations(patient.getMotechId(), concept.getDisplay());
 
         assertNotNull(obs);
         assertTrue(obs.size() > 0);
@@ -137,8 +137,8 @@ public class MRSObservationServiceIT extends BasePaxIT {
     public void shouldDeleteObservation() throws InterruptedException {
 
         synchronized (lock) {
-            obsAdapter.deleteObservation(observation.getObservationId());
-            assertNull(obsAdapter.getObservationByUuid(observation.getObservationId()));
+            obsAdapter.deleteObservation(observation.getUuid());
+            assertNull(obsAdapter.getObservationByUuid(observation.getUuid()));
 
             lock.wait(60000);
         }
@@ -155,13 +155,13 @@ public class MRSObservationServiceIT extends BasePaxIT {
             deleteObservation(observation);
         }
         if (patient != null) {
-            patientAdapter.deletePatient(patient.getPatientId());
+            patientAdapter.deletePatient(patient.getUuid());
         }
-        if (facility != null) {
-            facilityAdapter.deleteFacility(facility.getFacilityId());
+        if (location != null) {
+            locationAdapter.deleteLocation(location.getUuid());
         }
         if (person != null) {
-            personAdapter.deletePerson(person.getPersonId());
+            personAdapter.deletePerson(person.getUuid());
         }
         if (concept != null) {
             conceptAdapter.deleteConcept(concept.getUuid());
@@ -170,19 +170,25 @@ public class MRSObservationServiceIT extends BasePaxIT {
         eventListenerRegistry.clearListenersForBean("mrsTestListener");
     }
 
-    private OpenMRSObservation prepareObservation() throws ConceptNameAlreadyInUseException {
+    private Observation prepareObservation() throws ConceptNameAlreadyInUseException {
 
         preparePerson();
-        prepareFacility();
+        prepareLocation();
         preparePatient();
         prepareConcept();
 
-        return new OpenMRSObservation<Boolean>(new Date(), concept.getDisplay(), patient.getMotechId(), true);
+        Observation observation = new Observation();
+        observation.setObsDatetime(new Date());
+        observation.setPerson(patient.getPerson());
+        observation.setValue(new Observation.ObservationValue("true"));
+        observation.setConcept(concept);
+
+        return observation;
     }
 
-    private OpenMRSObservation saveObservation(OpenMRSObservation observation) throws InterruptedException {
+    private Observation saveObservation(Observation observation) throws InterruptedException {
 
-        OpenMRSObservation saved;
+        Observation saved;
 
         synchronized (lock) {
             saved = obsAdapter.createObservation(observation);
@@ -194,14 +200,14 @@ public class MRSObservationServiceIT extends BasePaxIT {
         return saved;
     }
 
-    private void deleteObservation(OpenMRSObservation observation) throws InterruptedException {
+    private void deleteObservation(Observation observation) throws InterruptedException {
 
         synchronized (lock) {
-            obsAdapter.deleteObservation(observation.getObservationId());
+            obsAdapter.deleteObservation(observation.getUuid());
             lock.wait(60000);
         }
 
-        assertNull(obsAdapter.getObservationByUuid(observation.getObservationId()));
+        assertNull(obsAdapter.getObservationByUuid(observation.getUuid()));
     }
 
     public class MrsListener implements EventListener {
@@ -235,37 +241,40 @@ public class MRSObservationServiceIT extends BasePaxIT {
     }
 
     private void preparePerson() {
-        OpenMRSPerson person = new OpenMRSPerson();
+        Person person = new Person();
 
-        person.setFirstName("FooFirstName");
-        person.setLastName("FooLastName");
+        Person.Name name = new Person.Name();
+        name.setGivenName("FooFirstName");
+        name.setFamilyName("FooLastName");
+        person.setNames(Collections.singletonList(name));
+
         person.setGender("F");
 
-        String uuid = personAdapter.createPerson(person).getPersonId();
+        String uuid = personAdapter.createPerson(person).getUuid();
 
         this.person = personAdapter.getPersonByUuid(uuid);
     }
 
-    private void prepareFacility() {
-        OpenMRSFacility tempFacility = new OpenMRSFacility("FooName", "FooCountry", "FooRegion", "FooCountryDistrict", "FooStateProvince");
-        String facilityUuid = facilityAdapter.createFacility(tempFacility).getFacilityId();
-        facility = facilityAdapter.getFacilityByUuid(facilityUuid);
+    private void prepareLocation() {
+        Location tempLocation = new Location("FooName", "FooCountry", "FooRegion", "FooCountryDistrict", "FooStateProvince");
+        String locationUuid = locationAdapter.createLocation(tempLocation).getUuid();
+        location = locationAdapter.getLocationByUuid(locationUuid);
     }
 
     private void preparePatient() {
-        OpenMRSPatient tempPatient = new OpenMRSPatient();
-        tempPatient.setFacility(facility);
+        Patient tempPatient = new Patient();
+        tempPatient.setLocationForMotechId(location);
         tempPatient.setPerson(person);
         tempPatient.setMotechId("666");
-        String patientUuid = patientAdapter.createPatient(tempPatient).getPatientId();
+        String patientUuid = patientAdapter.createPatient(tempPatient).getUuid();
         patient = patientAdapter.getPatientByUuid(patientUuid);
     }
 
     private void prepareConcept() throws ConceptNameAlreadyInUseException {
-        OpenMRSConcept tempConcept = new OpenMRSConcept();
-        tempConcept.setNames(Arrays.asList(new OpenMRSConceptName("FooConcept")));
-        tempConcept.setDataType("Boolean");
-        tempConcept.setConceptClass("Test");
+        Concept tempConcept = new Concept();
+        tempConcept.setNames(Arrays.asList(new ConceptName("FooConcept")));
+        tempConcept.setDatatype(new Concept.DataType("Boolean"));
+        tempConcept.setConceptClass(new Concept.ConceptClass("Test"));
         String conceptUuid = conceptAdapter.createConcept(tempConcept).getUuid();
         concept = conceptAdapter.getConceptByUuid(conceptUuid);
     }

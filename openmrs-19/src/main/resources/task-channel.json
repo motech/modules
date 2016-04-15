@@ -7,7 +7,7 @@
       "serviceMethod": "createEncounter",
       "actionParameters": [
         {
-          "key": "encounterDate",
+          "key": "encounterDatetime",
           "displayName": "openMRS.encounter.date",
           "type": "DATE",
           "required": true
@@ -24,12 +24,12 @@
         },
         {
           "key": "patientUuid",
-          "displayName": "openMRS.patient.id",
+          "displayName": "openMRS.patient.uuid",
           "required": true
         },
         {
           "key": "providerUuid",
-          "displayName": "openMRS.provider.id",
+          "displayName": "openMRS.provider.uuid",
           "required": true
         }
       ]
@@ -40,8 +40,8 @@
       "serviceMethod": "createPatient",
       "actionParameters": [
         {
-          "key": "firstName",
-          "displayName": "openMRS.person.firstName",
+          "key": "givenName",
+          "displayName": "openMRS.person.givenName",
           "required" : true
         },
         {
@@ -50,8 +50,8 @@
           "required" : false
         },
         {
-          "key": "lastName",
-          "displayName": "openMRS.person.lastName",
+          "key": "familyName",
+          "displayName": "openMRS.person.familyName",
           "required" : true
         },
         {
@@ -60,14 +60,14 @@
           "required" : false
         },
         {
-          "key": "dateOfBirth",
-          "displayName": "openMRS.person.dateOfBirth",
+          "key": "birthdate",
+          "displayName": "openMRS.person.birthdate",
           "type" : "DATE",
           "required" : false
         },
         {
-          "key": "birthDateEstimated",
-          "displayName": "openMRS.person.birthDateEstimated",
+          "key": "birthdateEstimated",
+          "displayName": "openMRS.person.birthdateEstimated",
           "type" : "BOOLEAN",
           "required" : false
         },
@@ -84,7 +84,7 @@
         },
         {
           "key": "causeOfDeathUUID",
-          "displayName": "openMRS.person.causeOfDeath.id",
+          "displayName": "openMRS.person.causeOfDeath.uuid",
           "required": false
         },
         {
@@ -93,7 +93,7 @@
           "required" : true
         },
         {
-          "key": "locationName",
+          "key": "locationForMotechId",
           "displayName": "openMRS.location.name",
           "required" : false
         },
