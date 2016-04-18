@@ -45,16 +45,10 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
         this.configService = configService;
     }
 
-    /**
-     * Creates the given {@code user} on the OpenMRS server. The given {@code config} will be used while performing this
-     * action.
-     *
-     * @param config  the configuration to be used
-     * @param user  the user to be created
-     * @return  the created user
-     * @throws UserAlreadyExistsException if the user already exists
-     */
-    public User createUser(Config config, User user) throws UserAlreadyExistsException {
+    @Override
+    public User createUser(String configName, User user) throws UserAlreadyExistsException {
+        Config config = configService.getConfigByName(configName);
+
         validateUserForSave(user);
         validateUserNameUsage(config, user);
 
@@ -63,7 +57,7 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
         resolveRoleUuidFromRoleName(config, user.getRoles());
 
         if (user.getPerson().getUuid() == null) {
-            Person savedPerson = personAdapter.createPerson(config, user.getPerson());
+            Person savedPerson = personAdapter.createPerson(configName, user.getPerson());
             user.setPerson(savedPerson);
         }
 
@@ -156,11 +150,6 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
             throw new UserDeleteException("Error occurred while deleting user with UUID: " + uuid, e);
         }
 
-    }
-
-    @Override
-    public User createUser(String configName, User user) throws UserAlreadyExistsException {
-        return createUser(configService.getConfigByName(configName), user);
     }
 
     private User getUserByUuid(Config config, String uuid) {

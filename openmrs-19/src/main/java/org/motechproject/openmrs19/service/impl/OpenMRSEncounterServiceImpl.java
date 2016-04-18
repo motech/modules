@@ -13,8 +13,10 @@ import org.motechproject.openmrs19.domain.Patient;
 import org.motechproject.openmrs19.helper.EventHelper;
 import org.motechproject.openmrs19.resource.EncounterResource;
 import org.motechproject.openmrs19.service.EventKeys;
+import org.motechproject.openmrs19.service.OpenMRSConceptService;
 import org.motechproject.openmrs19.service.OpenMRSConfigService;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
+import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +32,8 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSEncounterServiceImpl.class);
 
-    private final OpenMRSConceptServiceImpl conceptAdapter;
-    private final OpenMRSPatientServiceImpl patientAdapter;
+    private final OpenMRSConceptService conceptService;
+    private final OpenMRSPatientService patientService;
 
     private final OpenMRSConfigService configService;
 
@@ -40,12 +42,12 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
     private final EventRelay eventRelay;
 
     @Autowired
-    public OpenMRSEncounterServiceImpl(EncounterResource encounterResource, OpenMRSPatientServiceImpl patientAdapter,
-                                       OpenMRSConceptServiceImpl conceptAdapter, EventRelay eventRelay,
+    public OpenMRSEncounterServiceImpl(EncounterResource encounterResource, OpenMRSPatientService patientAdapter,
+                                       OpenMRSConceptService conceptAdapter, EventRelay eventRelay,
                                        OpenMRSConfigService configService) {
         this.encounterResource = encounterResource;
-        this.patientAdapter = patientAdapter;
-        this.conceptAdapter = conceptAdapter;
+        this.patientService = patientAdapter;
+        this.conceptService = conceptAdapter;
         this.configService = configService;
         this.eventRelay = eventRelay;
     }
@@ -178,7 +180,7 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
         List<Observation> updatedObs = new ArrayList<>();
         if (originalObservations != null) {
             for (Observation observation : originalObservations) {
-                String conceptUuid = conceptAdapter.resolveConceptUuidFromConceptName(config, observation.getConcept().getName().getName());
+                String conceptUuid = conceptService.resolveConceptUuidFromConceptName(config.getName(), observation.getConcept().getName().getName());
                 if (CollectionUtils.isNotEmpty(observation.getGroupsMembers())) {
                     resolveConceptUuidForConceptNames(config, observation.getGroupsMembers());
                 }
@@ -194,7 +196,7 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
         Validate.notEmpty(motechId, "MOTECH Id cannot be empty");
 
         List<Encounter> encounters = new ArrayList<>();
-        Patient patient = patientAdapter.getPatientByMotechId(config, motechId);
+        Patient patient = patientService.getPatientByMotechId(config.getName(), motechId);
 
         if (patient != null) {
             encounters.addAll(getEncountersForPatient(config, patient));

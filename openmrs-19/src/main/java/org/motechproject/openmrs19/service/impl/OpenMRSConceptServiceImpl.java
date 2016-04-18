@@ -45,13 +45,15 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
         this.eventRelay = eventRelay;
     }
 
-    public String resolveConceptUuidFromConceptName(Config config, String name) {
+    @Override
+    public String resolveConceptUuidFromConceptName(String configName, String name) {
         if (conceptCache.containsKey(name)) {
             return conceptCache.get(name);
         }
 
         ConceptListResult results;
         try {
+            Config config = configService.getConfigByName(configName);
             results = conceptResource.queryForConceptsByName(config, name);
         } catch (HttpClientErrorException e) {
             throw new OpenMRSException("There was an error retrieving the uuid of the concept with concept name: " + name, e);
@@ -172,11 +174,6 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
         }
 
         return updatedConcept;
-    }
-
-    @Override
-    public String resolveConceptUuidFromConceptName(String configName, String name) {
-        return resolveConceptUuidFromConceptName(configService.getConfigByName(configName), name);
     }
 
     private List<Concept> search(Config config, String phrase) {

@@ -6,7 +6,6 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.openmrs19.config.Config;
 import org.motechproject.openmrs19.domain.Attribute;
-import org.motechproject.openmrs19.domain.Concept;
 import org.motechproject.openmrs19.domain.Person;
 import org.motechproject.openmrs19.exception.OpenMRSException;
 import org.motechproject.openmrs19.helper.EventHelper;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 @Service("personService")
@@ -43,17 +41,12 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
         this.configService = configService;
     }
 
-    /**
-     * Creates the given person on the OpenMRS server. The given {@code config} will be used while performing this action.
-     *
-     * @param config  the config to be used
-     * @param person  the person to be created
-     * @return  the created person
-     */
-    public Person createPerson(Config config, Person person) {
+    @Override
+    public Person createPerson(String configName, Person person) {
         Validate.notNull(person, "Person cannot be null");
 
         try {
+            Config config = configService.getConfigByName(configName);
             Person saved = personResource.createPerson(config, person);
             saveAttributesForPerson(config, saved);
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_PERSON_SUBJECT, EventHelper.personParameters(saved)));
@@ -96,16 +89,10 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
         return createPerson(configName, person);
     }
 
-    /**
-     * Updates the person with the information stored in the given {@code person}. The given {@code config} will be used
-     * while performing this action.
-     *
-     * @param config the configuration to be used
-     * @param person  the person to be used as an update source
-     * @return the updated person
-     */
-    public Person updatePerson(Config config, Person person) {
+    @Override
+    public Person updatePerson(String configName, Person person) {
         try {
+            Config config = configService.getConfigByName(configName);
             Person updated = personResource.updatePerson(config, person);
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.UPDATED_PERSON_SUBJECT, EventHelper.personParameters(updated)));
 
@@ -126,54 +113,13 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
         }
     }
 
-    @Override
-    public Person createPerson(String configName, Person person) {
-        return createPerson(configService.getConfigByName(configName), person);
-    }
-
-    @Override
-    public Person updatePerson(String configName, Person person) {
-        return updatePerson(configService.getConfigByName(configName), person);
-    }
-
-    public void saveAttributesForPerson(Config config, Person person) {
+    private void saveAttributesForPerson(Config config, Person person) {
         for (Attribute attribute : person.getAttributes()) {
             try {
                 personResource.createPersonAttribute(config, person.getUuid(), attribute);
             } catch (HttpClientErrorException e) {
                 LOGGER.warn("Unable to add attribute to person with id: " + person.getUuid());
             }
-        }
-    }
-
-    public void deleteAllAttributes(Config config, Person person) {
-        Person saved;
-        try {
-            saved = personResource.getPersonById(config, person.getUuid());
-        } catch (HttpClientErrorException e) {
-            throw new OpenMRSException("Failed to retrieve person when deleting attributes with uuid: " + person.getUuid(), e);
-        }
-
-        for (Attribute attribute : saved.getAttributes()) {
-            try {
-                personResource.deleteAttribute(config, person.getUuid(), attribute);
-            } catch (HttpClientErrorException e) {
-                LOGGER.warn("Failed to delete attribute with name: " + attribute.getName());
-            }
-        }
-    }
-
-    public void savePersonCauseOfDeath(Config config, String patientId, Date deathDate, Concept causeOfDeath) {
-        Person person = new Person();
-        person.setUuid(patientId);
-        person.setDead(true);
-        person.setDeathDate(deathDate);
-        person.setCauseOfDeath(causeOfDeath);
-
-        try {
-            personResource.updatePerson(config, person);
-        } catch (HttpClientErrorException e) {
-            throw new OpenMRSException("Failed to save cause of death observation for patient id: " + patientId, e);
         }
     }
 }

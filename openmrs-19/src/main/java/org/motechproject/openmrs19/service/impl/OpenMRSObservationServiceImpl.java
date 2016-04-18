@@ -16,6 +16,7 @@ import org.motechproject.openmrs19.resource.ObservationResource;
 import org.motechproject.openmrs19.service.EventKeys;
 import org.motechproject.openmrs19.service.OpenMRSConfigService;
 import org.motechproject.openmrs19.service.OpenMRSObservationService;
+import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ import java.util.List;
 public class OpenMRSObservationServiceImpl implements OpenMRSObservationService {
     private static final Logger LOGGER = Logger.getLogger(OpenMRSObservationServiceImpl.class);
 
-    private final OpenMRSPatientServiceImpl patientAdapter;
+    private final OpenMRSPatientService patientService;
 
     private final OpenMRSConfigService configService;
 
@@ -39,11 +40,11 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
     private final EventRelay eventRelay;
 
     @Autowired
-    public OpenMRSObservationServiceImpl(ObservationResource obsResource, OpenMRSPatientServiceImpl patientAdapter,
+    public OpenMRSObservationServiceImpl(ObservationResource obsResource, OpenMRSPatientService patientAdapter,
                                          ConceptResource conceptResource, EventRelay eventRelay,
                                          OpenMRSConfigService configService) {
         this.obsResource = obsResource;
-        this.patientAdapter = patientAdapter;
+        this.patientService = patientAdapter;
         this.conceptResource = conceptResource;
         this.eventRelay = eventRelay;
         this.configService = configService;
@@ -103,7 +104,7 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
         try {
             Config config = configService.getConfigByName(configName);
             Concept concept = conceptResource.getConceptByName(config, observation.getConcept().getName().getName());
-            Patient patient = patientAdapter.getPatientByUuid(config, observation.getPerson().getUuid());
+            Patient patient = patientService.getPatientByUuid(configName, observation.getPerson().getUuid());
 
             Validate.notNull(concept);
             Validate.notNull(patient);
@@ -137,7 +138,7 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
         Validate.notEmpty(conceptName, "Concept name cannot be empty");
 
         List<Observation> obs = new ArrayList<>();
-        Patient patient = patientAdapter.getPatientByMotechId(config, motechId);
+        Patient patient = patientService.getPatientByMotechId(config.getName(), motechId);
         if (patient == null) {
             return obs;
         }

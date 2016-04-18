@@ -5,6 +5,7 @@ import org.apache.commons.lang.Validate;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.openmrs19.config.Config;
+import org.motechproject.openmrs19.domain.Attribute;
 import org.motechproject.openmrs19.domain.Concept;
 import org.motechproject.openmrs19.domain.Identifier;
 import org.motechproject.openmrs19.domain.IdentifierType;
@@ -15,9 +16,11 @@ import org.motechproject.openmrs19.exception.OpenMRSException;
 import org.motechproject.openmrs19.exception.PatientNotFoundException;
 import org.motechproject.openmrs19.helper.EventHelper;
 import org.motechproject.openmrs19.resource.PatientResource;
+import org.motechproject.openmrs19.resource.PersonResource;
 import org.motechproject.openmrs19.service.EventKeys;
 import org.motechproject.openmrs19.service.OpenMRSConfigService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
+import org.motechproject.openmrs19.service.OpenMRSPersonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,20 +39,22 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSPatientServiceImpl.class);
 
-    private final OpenMRSPersonServiceImpl personAdapter;
-
+    private final OpenMRSPersonService personService;
     private final OpenMRSConfigService configService;
 
     private final PatientResource patientResource;
+    private final PersonResource personResource;
 
     private final EventRelay eventRelay;
 
     @Autowired
-    public OpenMRSPatientServiceImpl(PatientResource patientResource, OpenMRSPersonServiceImpl personAdapter,
-                                     EventRelay eventRelay, OpenMRSConfigService configService) {
+    public OpenMRSPatientServiceImpl(PatientResource patientResource, PersonResource personResource,
+                                     OpenMRSPersonService personService, EventRelay eventRelay,
+                                     OpenMRSConfigService configService) {
         this.patientResource = patientResource;
+        this.personResource = personResource;
         this.configService = configService;
-        this.personAdapter = personAdapter;
+        this.personService = personService;
         this.eventRelay = eventRelay;
     }
 
@@ -60,7 +65,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         Config config = configService.getConfigByName(configName);
 
         if (patient.getPerson().getUuid() == null) {
-            patient.setPerson(personAdapter.createPerson(config, patient.getPerson()));
+            patient.setPerson(personResource.createPerson(config, patient.getPerson()));
         }
 
         IdentifierType identifierType = new IdentifierType();
@@ -98,63 +103,14 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         return updatePatient(configService.getConfigByName(configName), patient);
     }
 
-    /**
-     * Returns the patient with the given {@code uuid}. The given {@code config} will be used while performing this
-     * action.
-     *
-     * @param config  the configuration to be used
-     * @param uuid  the UUID of the patient
-     * @return the patient with the given UUID, null if the patient doesn't exist
-     */
-    public Patient getPatientByUuid(Config config, String uuid) {
-        Validate.notEmpty(uuid, "Patient Id cannot be empty");
-
-        Patient patient;
-        try {
-            patient = patientResource.getPatientById(config, uuid);
-        } catch (HttpClientErrorException e) {
-            LOGGER.error("Failed to get patient by id: " + uuid);
-            return null;
-        }
-
-        Identifier motechIdentifier = getMotechIdentifier(config, patient);
-        patient.setMotechIdentifierValues(motechIdentifier);
-
-        List<Identifier> identifiers = patient.getIdentifiers();
-        identifiers.remove(motechIdentifier);
-
-        List<Identifier> supportedIdentifierTypeList = getSupportedIdentifierTypeList(config, identifiers);
-        patient.setIdentifiers(supportedIdentifierTypeList);
-
-        return patient;
+    @Override
+    public Patient getPatientByUuid(String configName, String uuid) {
+        return getPatientByUuid(configService.getConfigByName(configName), uuid);
     }
 
-    /**
-     * Returns the patient with the given {@code motechId}. The given {@code config} will be used while performing this
-     * action.
-     *
-     * @param config  the configuration to be used
-     * @param motechId  the MOTECH ID of the patient
-     * @return the patient with the given MOTECH ID, null if the patient doesn't exist
-     */
-    public Patient getPatientByMotechId(Config config, String motechId) {
-        Validate.notEmpty(motechId, "Motech Id cannot be empty");
-
-        PatientListResult patientList;
-        try {
-            patientList = patientResource.queryForPatient(config, motechId);
-        } catch (HttpClientErrorException e) {
-            LOGGER.error("Failed search for patient by MOTECH Id: " + motechId);
-            return null;
-        }
-
-        if (patientList.getResults().size() == 0) {
-            return null;
-        } else if (patientList.getResults().size() > 1) {
-            LOGGER.warn("Search for patient by id returned more than 1 result");
-        }
-
-        return getPatientByUuid(config, patientList.getResults().get(0).getUuid());
+    @Override
+    public Patient getPatientByMotechId(String configName, String motechId) {
+        return getPatientByMotechId(configService.getConfigByName(configName), motechId);
     }
 
     @Override
@@ -202,7 +158,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
             throw new PatientNotFoundException("Cannot decease patient because no patient found with Motech Id: " + motechId);
         }
 
-        personAdapter.savePersonCauseOfDeath(config, patient.getUuid(), dateOfDeath, causeOfDeath);
+        savePersonCauseOfDeath(config, patient.getUuid(), dateOfDeath, causeOfDeath);
         eventRelay.sendEventMessage(new MotechEvent(EventKeys.PATIENT_DECEASED_SUBJECT, EventHelper.patientParameters(patient)));
     }
 
@@ -221,14 +177,47 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         }
     }
 
-    @Override
-    public Patient getPatientByUuid(String configName, String uuid) {
-        return getPatientByUuid(configService.getConfigByName(configName), uuid);
+    private Patient getPatientByUuid(Config config, String uuid) {
+        Validate.notEmpty(uuid, "Patient Id cannot be empty");
+
+        Patient patient;
+        try {
+            patient = patientResource.getPatientById(config, uuid);
+        } catch (HttpClientErrorException e) {
+            LOGGER.error("Failed to get patient by id: " + uuid);
+            return null;
+        }
+
+        Identifier motechIdentifier = getMotechIdentifier(config, patient);
+        patient.setMotechIdentifierValues(motechIdentifier);
+
+        List<Identifier> identifiers = patient.getIdentifiers();
+        identifiers.remove(motechIdentifier);
+
+        List<Identifier> supportedIdentifierTypeList = getSupportedIdentifierTypeList(config, identifiers);
+        patient.setIdentifiers(supportedIdentifierTypeList);
+
+        return patient;
     }
 
-    @Override
-    public Patient getPatientByMotechId(String configName, String motechId) {
-        return getPatientByMotechId(configService.getConfigByName(configName), motechId);
+    private Patient getPatientByMotechId(Config config, String motechId) {
+        Validate.notEmpty(motechId, "Motech Id cannot be empty");
+
+        PatientListResult patientList;
+        try {
+            patientList = patientResource.queryForPatient(config, motechId);
+        } catch (HttpClientErrorException e) {
+            LOGGER.error("Failed search for patient by MOTECH Id: " + motechId);
+            return null;
+        }
+
+        if (patientList.getResults().size() == 0) {
+            return null;
+        } else if (patientList.getResults().size() > 1) {
+            LOGGER.warn("Search for patient by id returned more than 1 result");
+        }
+
+        return getPatientByUuid(config.getName(), patientList.getResults().get(0).getUuid());
     }
 
     private Patient updatePatient(Config config, Patient patient) {
@@ -237,12 +226,12 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
 
         Person person = patient.getPerson();
 
-        personAdapter.updatePerson(config, person);
+        personService.updatePerson(config.getName(), person);
         // the openmrs web service requires an explicit delete request to remove
         // attributes. delete all previous attributes, and then
         // create any attributes attached to the patient
-        personAdapter.deleteAllAttributes(config, person);
-        personAdapter.saveAttributesForPerson(config, person);
+        deleteAllAttributes(config, person);
+        saveAttributesForPerson(config, person);
 
         Patient updatedPatient;
         try {
@@ -351,5 +340,46 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         }
 
         return parsedIdentifiers;
+    }
+
+    private void deleteAllAttributes(Config config, Person person) {
+        Person saved;
+        try {
+            saved = personResource.getPersonById(config, person.getUuid());
+        } catch (HttpClientErrorException e) {
+            throw new OpenMRSException("Failed to retrieve person when deleting attributes with uuid: " + person.getUuid(), e);
+        }
+
+        for (Attribute attribute : saved.getAttributes()) {
+            try {
+                personResource.deleteAttribute(config, person.getUuid(), attribute);
+            } catch (HttpClientErrorException e) {
+                LOGGER.warn("Failed to delete attribute with name: " + attribute.getName());
+            }
+        }
+    }
+
+    private void savePersonCauseOfDeath(Config config, String patientId, Date deathDate, Concept causeOfDeath) {
+        Person person = new Person();
+        person.setUuid(patientId);
+        person.setDead(true);
+        person.setDeathDate(deathDate);
+        person.setCauseOfDeath(causeOfDeath);
+
+        try {
+            personResource.updatePerson(config, person);
+        } catch (HttpClientErrorException e) {
+            throw new OpenMRSException("Failed to save cause of death observation for patient id: " + patientId, e);
+        }
+    }
+
+    private void saveAttributesForPerson(Config config, Person person) {
+        for (Attribute attribute : person.getAttributes()) {
+            try {
+                personResource.createPersonAttribute(config, person.getUuid(), attribute);
+            } catch (HttpClientErrorException e) {
+                LOGGER.warn("Unable to add attribute to person with id: " + person.getUuid());
+            }
+        }
     }
 }
