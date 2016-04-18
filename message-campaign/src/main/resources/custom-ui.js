@@ -192,14 +192,15 @@ $scope.setRelatedEntity = function(field) {
                     $scope.allEntityFields = data;
                 },
                 function (response) {
-                    ModalFactory.handleResponse('mds.error', 'mds.dataBrowsing.error.instancesList', response);
+                    LoadingModal.close();
+                    ModalFactory.showErrorAlertWithResponse('mds.dataBrowsing.error.instancesList', 'mds.error', response);
                 }
             );
             LoadingModal.close();
 
-        }).error(function(response)
-        {
-            ModalFactory.handleResponse('mds.error', 'mds.dataBrowsing.error.instancesList', response);
+        }).error(function(response) {
+            LoadingModal.close();
+            ModalFactory.showErrorAlertWithResponse('mds.dataBrowsing.error.instancesList', 'mds.error', response);
         });
     }
 
@@ -375,7 +376,10 @@ $scope.editInstance = function(id, module, entityName) {
             }
 
             LoadingModal.close();
-        }, ModalFactory.angularHandler('mds.error', 'mds.error.cannotUpdateInstance'));
+        }, function () {
+            LoadingModal.close();
+            ModalFactory.showErrorAlert('mds.error.cannotUpdateInstance', 'mds.error');
+        });
 };
 
 $scope.$watch('messageSelectedType.value', function(newValue) {

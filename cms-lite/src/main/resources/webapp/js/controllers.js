@@ -80,7 +80,7 @@
                         });
                     },
                     error: function (response) {
-                        ModalFactory.handleWithStackTrace('cmslite.header.error', 'cmslite.error.resource.save', response);
+                        ModalFactory.showErrorWithStackTrace('cmslite.error.resource.save', 'cmslite.header.error', response);
                         LoadingModal.close();
                     }
                 });
@@ -99,7 +99,7 @@
                         });
                     },
                     error: function (response) {
-                        ModalFactory.handleWithStackTrace('cmslite.header.error', 'cmslite.error.resource.save', response);
+                        ModalFactory.showErrorWithStackTrace('cmslite.error.resource.save', 'cmslite.header.error', response);
                         LoadingModal.close();
                     }
                 });
@@ -107,7 +107,7 @@
         };
 
         $scope.removeResource = function(type, resource) {
-            ModalFactory.confirm({
+            ModalFactory.showConfirm({
                 title: $scope.msg('cmslite.header.confirm'),
                 message: $scope.msg('cmslite.header.confirm.remove'),
                 type: 'type-warning',
@@ -118,7 +118,9 @@
                             $('#cms-lite-table').trigger('reloadGrid');
                             $('#' + type + 'ResourceModal').modal('hide');
                             $scope.getLanguages();
-                        }, ModalFactory.alertHandler('cmslite.error.removed', 'cmslite.header.error'));
+                        }, function () {
+                            ModalFactory.showErrorAlert('cmslite.error.removed', 'cmslite.header.error');
+                        });
                     }
                 }
             });
@@ -136,7 +138,7 @@
                         LoadingModal.close();
                     },
                     error: function (response) {
-                        ModalFactory.handleWithStackTrace('cmslite.header.error', 'cmslite.error.resource.save', response);
+                        ModalFactory.showErrorWithStackTrace('cmslite.error.resource.save', 'cmslite.header.error', response);
                         LoadingModal.close();
                     }
                 });

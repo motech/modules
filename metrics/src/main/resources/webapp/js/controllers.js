@@ -9,9 +9,9 @@
 
         $scope.submit = function () {
             $scope.settings.$save(function () {
-                ModalFactory.motechAlert('metrics.settings.success.saved', 'server.saved');
+                ModalFactory.showSuccessAlert('metrics.settings.success.saved', 'server.saved');
             }, function () {
-                ModalFactory.motechAlert('metrics.settings.error.saved', 'server.error');
+                ModalFactory.showErrorAlert('metrics.settings.error.saved', 'server.error');
             });
         };
     });

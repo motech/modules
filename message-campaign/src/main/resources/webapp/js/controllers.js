@@ -24,7 +24,10 @@
                 params = messageDto.params;
             }
 
-            ModalFactory.motechAlert(message, title, params);
+            ModalFactory.showAlert({
+                title: jQuery.i18n.prop(title),
+                message: jQuery.i18n.prop.apply(null, [message].concat(params))
+            });
         };
     });
 
@@ -42,7 +45,7 @@
         });
 
         $scope.deleteCampaign = function(campaignName) {
-            ModalFactory.motechConfirm("msgCampaign.campaign.deleteConfirmMsg", "msgCampaign.campaign.deleteConfirmTitle",
+            ModalFactory.showConfirm("msgCampaign.campaign.deleteConfirmMsg", "msgCampaign.campaign.deleteConfirmTitle",
                 function (response) {
                     if (!response) {
                         return;
@@ -65,7 +68,7 @@
                     window.location.replace('#/messageCampaign/campaigns/' + response.id);
                 },
                 failure: function failure(response) {
-                    ModalFactory.motechAlert(response.data, "msgCampaign.error");
+                    ModalFactory.showErrorAlert(null, "msgCampaign.error", response.data);
                 }
             });
         };
@@ -177,10 +180,10 @@
 
             function deleteRows(rowIds) {
                 if (rowIds.length === 0) {
-                    ModalFactory.motechAlert("msgCampaign.enrollment.noUserSelected", "msgCampaign.enrollment.invalidAction");
+                    ModalFactory.showErrorAlert("msgCampaign.enrollment.noUserSelected", "msgCampaign.enrollment.invalidAction");
                     return;
                 }
-                ModalFactory.motechConfirm("msgCampaign.enrollment.deleteConfirmMsg", "msgCampaign.enrollment.deleteConfirmTitle",
+                ModalFactory.showConfirm("msgCampaign.enrollment.deleteConfirmMsg", "msgCampaign.enrollment.deleteConfirmTitle",
                     function (response) {
                     var i, rowData, grid = jQuery("#enrollmentsTable"),
                         refresh, rowId,
@@ -222,7 +225,7 @@
                     rowId, row;
                 for (i = 0; i < rowIds.length; i+=1) {
                     if (isNewRow(rowIds[i])) {
-                        ModalFactory.motechAlert("msgCampaign.enrollment.unsavedEnrollement", "msgCampaign.enrollment.invalidAction");
+                        ModalFactory.showErrorAlert("msgCampaign.enrollment.unsavedEnrollement", "msgCampaign.enrollment.invalidAction");
                         return;
                     }
                 }
@@ -248,11 +251,11 @@
             LoadingModal.open();
             $("#messageCampaignSettingsForm").ajaxSubmit({
                 success: function() {
-                    ModalFactory.motechAlert('msgCampaign.settings.success.saved', 'msgCampaign.saved');
+                    ModalFactory.showSuccessAlert('msgCampaign.settings.success.saved', 'msgCampaign.saved');
                     LoadingModal.close();
                 },
                 error: function(response) {
-                    $scope.alert(response.responseText, "msgCampaign.error");
+                    $scope.showErrorAlert(null, "msgCampaign.error", response.responseText);
                     LoadingModal.close();
                 }
             });
@@ -267,7 +270,7 @@
             }
             else {
                 $('input[type="button"]').attr('disabled','disabled');
-                ModalFactory.motechAlert('msgCampaign.settings.notSupported', 'msgCampaign.error');
+                ModalFactory.showErrorAlert('msgCampaign.settings.notSupported', 'msgCampaign.error');
             }
         });
     });

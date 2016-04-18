@@ -135,7 +135,7 @@
                     });
                 })
                 .error (function (response) {
-                    ModalFactory.handleWithStackTrace('csd.error.header', 'csd.error.body', response);
+                    ModalFactory.showErrorWithStackTrace('csd.error.body', 'csd.error.header', response);
                 });
         };
     });

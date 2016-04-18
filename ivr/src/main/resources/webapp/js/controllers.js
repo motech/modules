@@ -126,7 +126,7 @@
                 })
                 .error (function (response) {
                 //todo: better than that!
-                    ModalFactory.handleWithStackTrace('ivr.error.header', 'ivr.error.body', response);
+                    ModalFactory.showErrorWithStackTrace('ivr.error.body', 'ivr.error.header', response);
             });
         };
     });
@@ -293,7 +293,7 @@
                 })
                 .error (function (response) {
                 //todo: better than that!
-                    ModalFactory.handleWithStackTrace('ivr.error.header', 'ivr.error.body', response);
+                    ModalFactory.showErrorWithStackTrace('ivr.error.body', 'ivr.error.header', response);
             });
         };
     });

@@ -185,7 +185,7 @@
             })
             .error(function (data) {
                 LoadingModal.close();
-                ModalFactory.motechAlert('mtraining.error.courses', 'mtraining.error.title');
+                ModalFactory.showErrorAlert('mtraining.error.courses', 'mtraining.error.title');
             });
         };
 
@@ -208,7 +208,7 @@
             })
             .error(function (data) {
                 LoadingModal.close();
-                ModalFactory.motechAlert('mtraining.error.chapters', 'mtraining.error.title');
+                ModalFactory.showErrorAlert('mtraining.error.chapters', 'mtraining.error.title');
             });
         };
 
@@ -219,7 +219,7 @@
             })
             .error(function (data) {
                 LoadingModal.close();
-                ModalFactory.motechAlert('mtraining.error.lessons', 'mtraining.error.title');
+                ModalFactory.showErrorAlert('mtraining.error.lessons', 'mtraining.error.title');
             });
         };
 
@@ -230,7 +230,7 @@
             })
             .error(function (data) {
                 LoadingModal.close();
-                ModalFactory.motechAlert('mtraining.error.quizzes', 'mtraining.error.title');
+                ModalFactory.showErrorAlert('mtraining.error.quizzes', 'mtraining.error.title');
             });
         };
 
@@ -293,7 +293,7 @@
                 })
                 .error(function (response) {
                     LoadingModal.close();
-                    ModalFactory.motechAlert('mtraining.error.save', 'mtraining.error.title');
+                    ModalFactory.showErrorAlert('mtraining.error.save', 'mtraining.error.title');
                 });
             }
         };
@@ -304,7 +304,7 @@
 
         $scope.removeMember = function() {
             var node = $scope.jstree.get_node($scope.jstree.get_selected());
-            ModalFactory.motechConfirm('mtraining.confirm.removeMember', 'mtraining.confirm', function (val) {
+            ModalFactory.showConfirm('mtraining.confirm.removeMember', 'mtraining.confirm', function (val) {
                 if (val) {
                     $scope.deleteMember(node);
                 }

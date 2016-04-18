@@ -307,7 +307,7 @@
                 })
                 .error (function (response) {
                     //todo: better than that!
-                    ModalFactory.handleWithStackTrace('sms.error.header', 'sms.error.body', response);
+                    ModalFactory.showErrorWithStackTrace('sms.error.body', 'sms.error.header', response);
                 });
         };
 
@@ -319,11 +319,11 @@
                     getTemplates();
                     $('#importTemplatesForm').resetForm();
                     $('#importTemplatesModal').modal('hide');
-                    ModalFactory.handleResponse('sms.success', 'sms.templates.success', '');
+                    ModalFactory.showSuccessAlert('sms.templates.success', 'sms.success');
                     LoadingModal.close();
                 },
                 error: function (response) {
-                    ModalFactory.handleWithStackTrace('sms.error.header', 'sms.error.body', response);
+                    ModalFactory.showErrorWithStackTrace('sms.error.body', 'sms.error.header', response);
                     LoadingModal.close();
                 }
             });

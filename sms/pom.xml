@@ -155,7 +155,7 @@
                             <disallowIncrAndDecr>true</disallowIncrAndDecr>
                             <requireUseStrict>true</requireUseStrict>
                             <predefinedVars>
-                                $, angular, jQuery, parseUri, innerLayout, handleResponse, getAvailableTabs
+                                $, angular, jQuery, parseUri, innerLayout, getAvailableTabs
                             </predefinedVars>
                             <failOnIssues>${jslint.enable}</failOnIssues>
                         </configuration>
