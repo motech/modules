@@ -18,21 +18,11 @@
                         </div>
 
                         <!-- write mode -->
-                        <div class="fileupload fileupload-new" ui-if="mode == 'write'" data-provides="fileupload">
+                        <div class="fileinput fileinput-new" ui-if="mode == 'write'" data-provides="fileinput">
                             <label class="col-sm-3 control-label">{{msg('cmslite.info.fileChosen')}}</label>
 
                             <div class="col-sm-9">
-                                <div class="form-control uneditable-input input-large fileupload-exists">
-                                    <span class="glyphicon glyphicon-file"></span>&nbsp;<span class="fileupload-preview"></span>
-                                </div>
-                                <span class="btn btn-default btn-file">
-                                    <span class="fileupload-new">{{msg('cmslite.button.selectFile')}}</span>
-                                    <span class="fileupload-exists">{{msg('cmslite.button.changeFile')}}</span>
-                                    <input type="file" id="contentFile" name="contentFile" class="input-file"/>
-                                </span>
-                                <span class="form-hint stream" style="display: none;">{{msg('cmslite.error.required.stream')}}</span>
-                                <a href="#" target="_self" class="btn btn-danger fileupload-exists"
-                                   data-dismiss="fileupload"><i class="fa fa-trash-o"></i>&nbsp;{{msg('cmslite.button.remove')}}</a>
+                                <motech-file-upload></motech-file-upload>
                             </div>
                         </div>
                     </div>

@@ -5,13 +5,10 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.motechproject.openmrs19.domain.Attribute;
+import org.motechproject.openmrs19.domain.AttributeTypeListResult;
+import org.motechproject.openmrs19.domain.Person;
 import org.motechproject.openmrs19.exception.HttpException;
-import org.motechproject.openmrs19.resource.model.Attribute;
-import org.motechproject.openmrs19.resource.model.Attribute.AttributeType;
-import org.motechproject.openmrs19.resource.model.AttributeTypeListResult;
-import org.motechproject.openmrs19.resource.model.Person;
-import org.motechproject.openmrs19.resource.model.Person.PreferredAddress;
-import org.motechproject.openmrs19.resource.model.Person.PreferredName;
 
 import java.io.IOException;
 import java.net.URI;
@@ -90,13 +87,13 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
         Person person = new Person();
         person.setGender("M");
 
-        PreferredName name = new PreferredName();
+        Person.Name name = new Person.Name();
         name.setGivenName("John");
         name.setMiddleName("E");
         name.setFamilyName("Doe");
         person.setNames(asList(name));
 
-        PreferredAddress addr = new PreferredAddress();
+        Person.Address addr = new Person.Address();
         addr.setAddress1("5 Main St");
         person.setAddresses(asList(addr));
         return person;
@@ -104,7 +101,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
 
     @Test
     public void shouldCreateAttribute() throws HttpException, IOException {
-        AttributeType at = new AttributeType();
+        Attribute.AttributeType at = new Attribute.AttributeType();
         at.setUuid("AAA");
         Attribute attr = new Attribute();
         attr.setValue("Motech");
@@ -125,7 +122,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
                 readJsonFromFile("json/person-attribute-type-response.json"));
         AttributeTypeListResult result = impl.queryPersonAttributeTypeByName("Citizenship");
 
-        assertEquals(asList("8d871afc-c2cc-11de-8d13-0010c6dffd0f"), extract(result.getResults(), on(AttributeType.class).getUuid()));
+        assertEquals(asList("8d871afc-c2cc-11de-8d13-0010c6dffd0f"), extract(result.getResults(), on(Attribute.AttributeType.class).getUuid()));
     }
 
     @Test
@@ -150,7 +147,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
 
     @Test
     public void shouldNotIncludeUuidInPersonNameUpdate() throws HttpException, IOException {
-        PreferredName name = new PreferredName();
+        Person.Name name = new Person.Name();
         name.setUuid("AAA");
         name.setGivenName("Motech");
         name.setMiddleName("E");
@@ -172,7 +169,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
 
     @Test
     public void shouldNotIncludeUuidInPersonAddressUpdate() throws HttpException, IOException {
-        PreferredAddress addr = new PreferredAddress();
+        Person.Address addr = new Person.Address();
         addr.setAddress1("Test");
         addr.setUuid("AAA");
 
@@ -182,8 +179,8 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
         Mockito.verify(getClient()).postWithEmptyResponseBody(Mockito.any(URI.class), sentJson.capture());
 
         String expectedJson = "{\"address1\":\"Test\"}";
-        PreferredAddress expectedObj = getGson().fromJson(expectedJson, PreferredAddress.class);
-        PreferredAddress sentObject = getGson().fromJson(sentJson.getValue(), PreferredAddress.class);
+        Person.Address expectedObj = getGson().fromJson(expectedJson, Person.Address.class);
+        Person.Address sentObject = getGson().fromJson(sentJson.getValue(), Person.Address.class);
 
         assertEquals(expectedObj, sentObject);
     }

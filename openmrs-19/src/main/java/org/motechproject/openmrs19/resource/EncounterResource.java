@@ -1,8 +1,9 @@
 package org.motechproject.openmrs19.resource;
 
+import org.motechproject.openmrs19.domain.EncounterType;
 import org.motechproject.openmrs19.exception.HttpException;
-import org.motechproject.openmrs19.resource.model.Encounter;
-import org.motechproject.openmrs19.resource.model.EncounterListResult;
+import org.motechproject.openmrs19.domain.Encounter;
+import org.motechproject.openmrs19.domain.EncounterListResult;
 
 /**
  * Interface for encounters management.
@@ -43,7 +44,7 @@ public interface EncounterResource {
      * @return  the saved encounter type
      * @throws HttpException  when there were problems while creating encounter type
      */
-    Encounter.EncounterType createEncounterType(Encounter.EncounterType encounterType) throws HttpException;
+    EncounterType createEncounterType(EncounterType encounterType) throws HttpException;
 
     /**
      * Gets the encounter type by its UUID.
@@ -52,7 +53,7 @@ public interface EncounterResource {
      * @return  the encounter type with the given UUID
      * @throws HttpException  when there were problems while fetching encounter type
      */
-    Encounter.EncounterType getEncounterTypeByUuid(String uuid) throws HttpException;
+    EncounterType getEncounterTypeByUuid(String uuid) throws HttpException;
 
     /**
      * Deletes the encounter type with the given UUID from the OpenMRS server.

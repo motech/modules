@@ -1,8 +1,8 @@
 package org.motechproject.openmrs19.resource;
 
 import org.motechproject.openmrs19.exception.HttpException;
-import org.motechproject.openmrs19.resource.model.Patient;
-import org.motechproject.openmrs19.resource.model.PatientListResult;
+import org.motechproject.openmrs19.domain.Patient;
+import org.motechproject.openmrs19.domain.PatientListResult;
 
 /**
  * Interface for patients management.
@@ -79,6 +79,6 @@ public interface PatientResource {
      * @param newMotechId  the new MOTECH Id
      * @throws HttpException  when there were problems while updating MOTECH Id
      */
-    void updatePatientMotechId(String patientUuid, String newMotechId) throws HttpException;
+    Patient updatePatientMotechId(String patientUuid, String newMotechId) throws HttpException;
 
 }

@@ -4,9 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.motechproject.openmrs19.domain.Observation;
+import org.motechproject.openmrs19.domain.ObservationListResult;
 import org.motechproject.openmrs19.exception.HttpException;
-import org.motechproject.openmrs19.resource.model.Observation;
-import org.motechproject.openmrs19.resource.model.ObservationListResult;
 
 import java.io.IOException;
 import java.net.URI;

@@ -5,9 +5,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.motechproject.openmrs19.domain.OpenMRSEncounter;
-import org.motechproject.openmrs19.domain.OpenMRSPatient;
-import org.motechproject.openmrs19.domain.OpenMRSProvider;
+import org.motechproject.openmrs19.domain.Encounter;
+import org.motechproject.openmrs19.domain.EncounterType;
+import org.motechproject.openmrs19.domain.Patient;
+import org.motechproject.openmrs19.domain.Provider;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
@@ -60,7 +61,7 @@ public class OpenMRSTaskDataProviderTest {
 
     @Test
     public void shouldReturnNullWhenWrongLookupNameForEncounter() {
-        String className = OpenMRSEncounter.class.getSimpleName();
+        String className = Encounter.class.getSimpleName();
 
         Object object = taskDataProvider.lookup(className, "wrongLookupName", null);
 
@@ -70,7 +71,7 @@ public class OpenMRSTaskDataProviderTest {
 
     @Test
     public void shouldReturnNullWhenEmptyLookupFieldsForLookupGetEncounterByUuid() {
-        String className = OpenMRSEncounter.class.getSimpleName();
+        String className = Encounter.class.getSimpleName();
         Map<String, String> lookupFields = new HashMap<>();
 
         when(encounterService.getEncounterByUuid(null)).thenReturn(null);
@@ -83,7 +84,7 @@ public class OpenMRSTaskDataProviderTest {
 
     @Test
     public void shouldReturnNullWhenEncounterNotFoundForLookupGetEncounterByUuid() {
-        String className = OpenMRSEncounter.class.getSimpleName();
+        String className = Encounter.class.getSimpleName();
         Map<String, String> lookupFields = new HashMap<>();
         lookupFields.put(UUID, "4");
 
@@ -97,24 +98,24 @@ public class OpenMRSTaskDataProviderTest {
 
     @Test
     public void shouldReturnEncounterForLookupGetEncounterByUuid() {
-        String className = OpenMRSEncounter.class.getSimpleName();
+        String className = Encounter.class.getSimpleName();
         Map<String, String> lookupFields = new HashMap<>();
         lookupFields.put(UUID, "5");
 
-        OpenMRSEncounter openMRSEncounter = new OpenMRSEncounter();
-        openMRSEncounter.setEncounterType("encounterTypeTest");
+        Encounter encounter = new Encounter();
+        encounter.setEncounterType(new EncounterType("encounterTypeTest"));
 
-        when(encounterService.getEncounterByUuid("5")).thenReturn(openMRSEncounter);
+        when(encounterService.getEncounterByUuid("5")).thenReturn(encounter);
 
         Object object = taskDataProvider.lookup(className, BY_UUID, lookupFields);
 
-        assertEquals(openMRSEncounter, object);
+        assertEquals(encounter, object);
         verify(encounterService).getEncounterByUuid("5");
     }
 
     @Test
     public void shouldReturnNullWhenWrongLookupNameForPatient() {
-        String className = OpenMRSPatient.class.getSimpleName();
+        String className = Patient.class.getSimpleName();
 
         Object object = taskDataProvider.lookup(className, "wrongLookupName", null);
 
@@ -124,7 +125,7 @@ public class OpenMRSTaskDataProviderTest {
 
     @Test
     public void shouldReturnNullWhenEmptyLookupFieldsForLookupGetPatientByUuid() {
-        String className = OpenMRSPatient.class.getSimpleName();
+        String className = Patient.class.getSimpleName();
         Map<String, String> lookupFields = new HashMap<>();
 
         when(patientService.getPatientByUuid(null)).thenReturn(null);
@@ -137,7 +138,7 @@ public class OpenMRSTaskDataProviderTest {
 
     @Test
     public void shouldReturnNullWhenEmptyLookupFieldsForLookupGetPatientByMotechId() {
-        String className = OpenMRSPatient.class.getSimpleName();
+        String className = Patient.class.getSimpleName();
         Map<String, String> lookupFields = new HashMap<>();
 
         when(patientService.getPatientByMotechId(null)).thenReturn(null);
@@ -150,7 +151,7 @@ public class OpenMRSTaskDataProviderTest {
 
     @Test
     public void shouldReturnNullWhenPatientNotFoundForLookupGetPatientByUuid() {
-        String className = OpenMRSPatient.class.getSimpleName();
+        String className = Patient.class.getSimpleName();
         Map<String, String> lookupFields = new HashMap<>();
         lookupFields.put(UUID, "4");
 
@@ -164,7 +165,7 @@ public class OpenMRSTaskDataProviderTest {
 
     @Test
     public void shouldReturnNullWhenPatientNotFoundForLookupGetPatientByMotechId() {
-        String className = OpenMRSPatient.class.getSimpleName();
+        String className = Patient.class.getSimpleName();
         Map<String, String> lookupFields = new HashMap<>();
         lookupFields.put(MOTECH_ID, "4");
 
@@ -178,41 +179,41 @@ public class OpenMRSTaskDataProviderTest {
 
     @Test
     public void shouldReturnPatientForLookupGetPatientByUuid() {
-        String className = OpenMRSPatient.class.getSimpleName();
+        String className = Patient.class.getSimpleName();
         Map<String, String> lookupFields = new HashMap<>();
         lookupFields.put(UUID, "5");
 
-        OpenMRSPatient openMRSPatient = new OpenMRSPatient();
-        openMRSPatient.setMotechId("10");
+        Patient patient = new Patient();
+        patient.setMotechId("10");
 
-        when(patientService.getPatientByUuid("5")).thenReturn(openMRSPatient);
+        when(patientService.getPatientByUuid("5")).thenReturn(patient);
 
         Object object = taskDataProvider.lookup(className, BY_UUID, lookupFields);
 
-        assertEquals(openMRSPatient, object);
+        assertEquals(patient, object);
         verify(patientService).getPatientByUuid("5");
     }
 
     @Test
     public void shouldReturnPatientForLookupGetPatientByMotechId() {
-        String className = OpenMRSPatient.class.getSimpleName();
+        String className = Patient.class.getSimpleName();
         Map<String, String> lookupFields = new HashMap<>();
         lookupFields.put(MOTECH_ID, "5");
 
-        OpenMRSPatient openMRSPatient = new OpenMRSPatient();
-        openMRSPatient.setPatientId("10");
+        Patient patient = new Patient();
+        patient.setUuid("10");
 
-        when(patientService.getPatientByMotechId("5")).thenReturn(openMRSPatient);
+        when(patientService.getPatientByMotechId("5")).thenReturn(patient);
 
         Object object = taskDataProvider.lookup(className, BY_MOTECH_ID, lookupFields);
 
-        assertEquals(openMRSPatient, object);
+        assertEquals(patient, object);
         verify(patientService).getPatientByMotechId("5");
     }
 
     @Test
     public void shouldReturnNullWhenWrongLookupNameForProvider() {
-        String className = OpenMRSProvider.class.getSimpleName();
+        String className = Provider.class.getSimpleName();
 
         Object object = taskDataProvider.lookup(className, "wrongLookupName", null);
 
@@ -222,7 +223,7 @@ public class OpenMRSTaskDataProviderTest {
 
     @Test
     public void shouldReturnNullWhenEmptyLookupFieldsForLookupGetProviderByUuid() {
-        String className = OpenMRSProvider.class.getSimpleName();
+        String className = Provider.class.getSimpleName();
         Map<String, String> lookupFields = new HashMap<>();
 
         when(providerService.getProviderByUuid(null)).thenReturn(null);
@@ -235,7 +236,7 @@ public class OpenMRSTaskDataProviderTest {
 
     @Test
     public void shouldReturnNullWhenProviderNotFoundForLookupGetProviderByUuid() {
-        String className = OpenMRSProvider.class.getSimpleName();
+        String className = Provider.class.getSimpleName();
         Map<String, String> lookupFields = new HashMap<>();
         lookupFields.put(UUID, "4");
 
@@ -249,18 +250,18 @@ public class OpenMRSTaskDataProviderTest {
 
     @Test
     public void shouldReturnProviderForLookupGetProviderByUuid() {
-        String className = OpenMRSProvider.class.getSimpleName();
+        String className = Provider.class.getSimpleName();
         Map<String, String> lookupFields = new HashMap<>();
         lookupFields.put(UUID, "5");
 
-        OpenMRSProvider openMRSProvider = new OpenMRSProvider();
-        openMRSProvider.setIdentifier("testIdentifier");
+        Provider provider = new Provider();
+        provider.setIdentifier("testIdentifier");
 
-        when(providerService.getProviderByUuid("5")).thenReturn(openMRSProvider);
+        when(providerService.getProviderByUuid("5")).thenReturn(provider);
 
         Object object = taskDataProvider.lookup(className, BY_UUID, lookupFields);
 
-        assertEquals(openMRSProvider, object);
+        assertEquals(provider, object);
         verify(providerService).getProviderByUuid("5");
     }
 }

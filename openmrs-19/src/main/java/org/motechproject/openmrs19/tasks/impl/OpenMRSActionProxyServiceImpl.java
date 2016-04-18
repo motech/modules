@@ -2,23 +2,28 @@ package org.motechproject.openmrs19.tasks.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
-import org.motechproject.openmrs19.domain.OpenMRSConcept;
-import org.motechproject.openmrs19.domain.OpenMRSEncounter;
-import org.motechproject.openmrs19.domain.OpenMRSFacility;
-import org.motechproject.openmrs19.domain.OpenMRSPatient;
-import org.motechproject.openmrs19.domain.OpenMRSProvider;
+import org.motechproject.openmrs19.domain.Concept;
+import org.motechproject.openmrs19.domain.Encounter;
+import org.motechproject.openmrs19.domain.EncounterType;
+import org.motechproject.openmrs19.domain.Identifier;
+import org.motechproject.openmrs19.domain.IdentifierType;
+import org.motechproject.openmrs19.domain.Location;
+import org.motechproject.openmrs19.domain.Patient;
+import org.motechproject.openmrs19.domain.Person;
+import org.motechproject.openmrs19.domain.Provider;
 import org.motechproject.openmrs19.service.OpenMRSConceptService;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
-import org.motechproject.openmrs19.service.OpenMRSFacilityService;
+import org.motechproject.openmrs19.service.OpenMRSLocationService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
-import org.motechproject.openmrs19.domain.OpenMRSPerson;
 import org.motechproject.openmrs19.tasks.OpenMRSActionProxyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -32,70 +37,91 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
 
     private OpenMRSConceptService conceptService;
     private OpenMRSEncounterService encounterService;
-    private OpenMRSFacilityService facilityService;
+    private OpenMRSLocationService locationService;
     private OpenMRSPatientService patientService;
     private OpenMRSProviderService providerService;
 
     @Override
-    public void createEncounter(DateTime encounterDate, String encounterType, String locationName, String patientUuid, String providerUuid) {
-        OpenMRSFacility facility = getFacilityByName(locationName);
-        OpenMRSPatient patient = patientService.getPatientByUuid(patientUuid);
-        OpenMRSProvider provider = providerService.getProviderByUuid(providerUuid);
+    public void createEncounter(DateTime encounterDatetime, String encounterType, String locationName, String patientUuid, String providerUuid) {
+        Location location = getLocationByName(locationName);
+        Patient patient = patientService.getPatientByUuid(patientUuid);
+        Provider provider = providerService.getProviderByUuid(providerUuid);
 
-        OpenMRSEncounter encounter = new OpenMRSEncounter.OpenMRSEncounterBuilder()
-                .withDate(encounterDate.toDate())
-                .withEncounterType(encounterType)
-                .withFacility(facility)
-                .withPatient(patient)
-                .withProvider(provider)
-                .build();
+        EncounterType type = new EncounterType(encounterType);
 
+        Encounter encounter = new Encounter(location, type, encounterDatetime.toDate(), patient, provider.getPerson());
         encounterService.createEncounter(encounter);
     }
 
     @Override
-    public void createPatient(String firstName, String middleName, String lastName, String address, DateTime dateOfBirth,
-                              Boolean birthDateEstimated, String gender, Boolean dead, String causeOfDeathUUID, String motechId,
-                              String locationName, Map<String, String> identifiers) {
-        OpenMRSConcept causeOfDeath = StringUtils.isNotEmpty(causeOfDeathUUID) ? conceptService.getConceptByUuid(causeOfDeathUUID) : null;
+    public void createPatient(String givenName, String middleName, String familyName, String address, DateTime birthdate,
+                              Boolean birthdateEstimated, String gender, Boolean dead, String causeOfDeathUUID, String motechId,
+                              String locationForMotechId, Map<String, String> identifiers) {
+        Concept causeOfDeath = StringUtils.isNotEmpty(causeOfDeathUUID) ? conceptService.getConceptByUuid(causeOfDeathUUID) : null;
 
-        OpenMRSPerson person = new OpenMRSPerson();
-        person.setFirstName(firstName);
-        person.setMiddleName(middleName);
-        person.setLastName(lastName);
-        person.setGender(gender);
-        person.setAddress(address);
-        person.setDateOfBirth(dateOfBirth);
-        person.setBirthDateEstimated(birthDateEstimated);
+        Person person = new Person();
+
+        Person.Name personName = new Person.Name();
+        personName.setGivenName(givenName);
+        personName.setMiddleName(middleName);
+        personName.setFamilyName(familyName);
+        person.setPreferredName(personName);
+        person.setNames(Collections.singletonList(personName));
+
+        Person.Address personAddress = new Person.Address();
+        personAddress.setAddress1(address);
+        person.setPreferredAddress(personAddress);
+        person.setAddresses(Collections.singletonList(personAddress));
+
+        person.setBirthdate(birthdate.toDate());
+        person.setBirthdateEstimated(birthdateEstimated);
         person.setDead(dead);
         person.setCauseOfDeath(causeOfDeath);
+        person.setGender(gender);
 
-        OpenMRSFacility facility = StringUtils.isNotEmpty(locationName) ? getFacilityByName(locationName) : getDefaultFacility();
+        Location location = StringUtils.isNotEmpty(locationForMotechId) ? getLocationByName(locationForMotechId) : getDefaultLocation();
 
-        OpenMRSPatient patient = new OpenMRSPatient(motechId, person, facility, identifiers);
+        List<Identifier> identifierList = convertIdentifierMapToList(identifiers);
+
+        Patient patient = new Patient(identifierList, person, motechId, location);
         patientService.createPatient(patient);
     }
 
-    private OpenMRSFacility getDefaultFacility() {
-        return getFacilityByName(DEFAULT_LOCATION_NAME);
+    private Location getDefaultLocation() {
+        return getLocationByName(DEFAULT_LOCATION_NAME);
     }
 
-    private OpenMRSFacility getFacilityByName(String locationName) {
-        OpenMRSFacility facility = null;
+    private Location getLocationByName(String locationName) {
+        Location location = null;
 
         if (StringUtils.isNotEmpty(locationName)) {
-            List<? extends OpenMRSFacility> facilities = facilityService.getFacilities(locationName);
-            if (facilities.isEmpty()) {
+            List<Location> locations = locationService.getLocations(locationName);
+            if (locations.isEmpty()) {
                 LOGGER.warn("There is no location with name {}", locationName);
             } else {
-                if (facilities.size() > 1) {
+                if (locations.size() > 1) {
                     LOGGER.warn("There is more than one location with name {}.", locationName);
                 }
-                facility = facilities.get(0);
+                location = locations.get(0);
             }
         }
 
-        return facility;
+        return location;
+    }
+
+    private List<Identifier> convertIdentifierMapToList(Map<String, String> identifiers) {
+        List<Identifier> identifierList = new ArrayList<>();
+
+        for (String identifierTypeName : identifiers.keySet()) {
+            IdentifierType identifierType = new IdentifierType();
+            identifierType.setName(identifierTypeName);
+
+            Identifier identifier = new Identifier(identifiers.get(identifierTypeName), identifierType);
+
+            identifierList.add(identifier);
+        }
+
+        return identifierList;
     }
 
     @Autowired
@@ -109,8 +135,8 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     }
 
     @Autowired
-    public void setFacilityService(OpenMRSFacilityService facilityService) {
-        this.facilityService = facilityService;
+    public void setLocationService(OpenMRSLocationService locationService) {
+        this.locationService = locationService;
     }
 
     @Autowired

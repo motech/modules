@@ -58,15 +58,15 @@ public class SettingsController {
 
     /**
      * Imports templates from the uploaded file.
-     * @param jsonFile the file containing the templates
+     * @param file the file containing the templates
      * @throws IOException if there was a problem reading the file
      */
     @RequestMapping(value = "/templates/import", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public void importTemplates(@RequestParam(value = "jsonFile") MultipartFile jsonFile)
+    public void importTemplates(@RequestParam(value = "file") MultipartFile file)
             throws IOException {
         StringWriter writer = new StringWriter();
-        IOUtils.copy(jsonFile.getInputStream(), writer);
+        IOUtils.copy(file.getInputStream(), writer);
 
         templateJsonParser.importTemplates(writer.toString());
     }

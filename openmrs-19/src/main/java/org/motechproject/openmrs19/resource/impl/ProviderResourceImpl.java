@@ -3,9 +3,10 @@ package org.motechproject.openmrs19.resource.impl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.motechproject.openmrs19.OpenMrsInstance;
+import org.motechproject.openmrs19.domain.Person;
+import org.motechproject.openmrs19.domain.Provider;
 import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.resource.ProviderResource;
-import org.motechproject.openmrs19.resource.model.Provider;
 import org.motechproject.openmrs19.rest.RestClient;
 import org.motechproject.openmrs19.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,7 @@ public class ProviderResourceImpl implements ProviderResource {
     @Override
     public Provider createProvider(Provider provider) throws HttpException {
         Gson gson = new GsonBuilder()
-                .registerTypeAdapter(Provider.class, new Provider.ProviderSerializer())
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
+                .registerTypeAdapter(Person.class, new Person.PersonSerializer()).create();
 
         String requestJson = gson.toJson(provider, Provider.class);
         String responseJson = restClient.postForJson(openmrsInstance.toInstancePath("/provider"), requestJson);

@@ -1,8 +1,8 @@
 package org.motechproject.openmrs19.resource;
 
+import org.motechproject.openmrs19.domain.Concept;
+import org.motechproject.openmrs19.domain.ConceptListResult;
 import org.motechproject.openmrs19.exception.HttpException;
-import org.motechproject.openmrs19.resource.model.Concept;
-import org.motechproject.openmrs19.resource.model.ConceptListResult;
 
 /**
  * Interface for concepts management.

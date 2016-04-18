@@ -7,9 +7,10 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.motechproject.openmrs19.domain.Concept;
+import org.motechproject.openmrs19.domain.ConceptName;
 import org.motechproject.openmrs19.exception.HttpException;
-import org.motechproject.openmrs19.resource.model.Concept;
-import org.motechproject.openmrs19.resource.model.ConceptListResult;
+import org.motechproject.openmrs19.domain.ConceptListResult;
 
 import java.io.IOException;
 import java.net.URI;
@@ -59,8 +60,7 @@ public class ConceptResourceImplTest extends AbstractResourceImplTest {
 
     private Concept buildConcept() {
         Concept concept = new Concept();
-        concept.setName(new Concept.ConceptName());
-        concept.getName().setName("Test Concept");
+        concept.setName(new ConceptName("Test Concept"));
         concept.setDisplay("Test Concept");
 
         return concept;

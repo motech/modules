@@ -260,19 +260,6 @@
                 }
             });
         };
-
-        $("#messageCampaigns").change(function() {
-            if(!$('#messageCampaigns').val()) {
-                $('input[type="button"]').attr('disabled','disabled');
-            }
-            else if($('#messageCampaigns').val().split(".").pop().toLowerCase() === "json") {
-                $('input[type="button"]').removeAttr('disabled');
-            }
-            else {
-                $('input[type="button"]').attr('disabled','disabled');
-                ModalFactory.showErrorAlert('msgCampaign.settings.notSupported', 'msgCampaign.error');
-            }
-        });
     });
 
 }());
