@@ -46,4 +46,17 @@ public interface OpenMRSActionProxyService {
     void createPatient(String givenName, String middleName, String familyName, String address, DateTime birthdate,
                        Boolean birthdateEstimated, String gender, Boolean dead, String causeOfDeathUUID, String motechId,
                        String locationForMotechId, Map<String, String> identifiers);
+
+    /**
+     * Updates a person with the given {@personUuid}
+     *
+     * @param personUuid the person uuid
+     * @param givenName the given name of person
+     * @param middleName the middle name of person
+     * @param familyName the family name of person
+     * @param address the address of person
+     * @param gender the person gender
+     */
+    void updatePerson(String personUuid, String givenName, String middleName, String familyName, String gender, String address);
+
 }

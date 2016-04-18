@@ -104,6 +104,45 @@
           "required" : false
         }
       ]
+    },
+    {
+      "displayName": "openMRS.updatePerson",
+      "serviceInterface": "org.motechproject.openmrs19.tasks.OpenMRSActionProxyService",
+      "serviceMethod": "updatePerson",
+      "actionParameters": [
+        {
+          "key": "personUuid",
+          "displayName": "openMRS.person.uuid",
+          "required": true
+        },
+        {
+        "key": "givenName",
+        "displayName": "openMRS.person.givenName",
+        "required": false
+        },
+        {
+          "key": "middleName",
+          "displayName": "openMRS.person.middleName",
+          "required" : false
+        },
+        {
+          "key": "familyName",
+          "displayName": "openMRS.person.familyName",
+          "required" : false
+        },
+        {
+          "key": "gender",
+          "displayName": "openMRS.person.gender",
+          "required" : false
+        },
+        {
+          "key": "address",
+          "displayName": "openMRS.person.address",
+          "required" : false
+        }
+      ]
+
     }
+
   ]
 }

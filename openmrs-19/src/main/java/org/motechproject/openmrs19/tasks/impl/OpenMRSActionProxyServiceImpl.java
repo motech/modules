@@ -16,6 +16,7 @@ import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSLocationService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
+import org.motechproject.openmrs19.service.OpenMRSPersonService;
 import org.motechproject.openmrs19.tasks.OpenMRSActionProxyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     private OpenMRSLocationService locationService;
     private OpenMRSPatientService patientService;
     private OpenMRSProviderService providerService;
+    private OpenMRSPersonService personService;
 
     @Override
     public void createEncounter(DateTime encounterDatetime, String encounterType, String locationName, String patientUuid, String providerUuid) {
@@ -87,6 +89,27 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         patientService.createPatient(patient);
     }
 
+    @Override
+    public void updatePerson(String personUuid, String givenName, String middleName, String familyName, String gender, String address) {
+        Person person = new Person();
+        person.setUuid(personUuid);
+
+        Person.Name personName = new Person.Name();
+        personName.setGivenName(givenName);
+        personName.setMiddleName(middleName);
+        personName.setFamilyName(familyName);
+        person.setPreferredName(personName);
+        person.setNames(Collections.singletonList(personName));
+
+        Person.Address personAddress = new Person.Address();
+        personAddress.setAddress1(address);
+        person.setPreferredAddress(personAddress);
+        person.setAddresses(Collections.singletonList(personAddress));
+
+        person.setGender(gender);
+
+        personService.updatePerson(person);
+    }
     private Location getDefaultLocation() {
         return getLocationByName(DEFAULT_LOCATION_NAME);
     }
@@ -143,6 +166,9 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     public void setPatientService(OpenMRSPatientService patientService) {
         this.patientService = patientService;
     }
+
+    @Autowired
+    public void setPersonService(OpenMRSPersonService personService) { this.personService = personService; }
 
     @Autowired
     public void setProviderService(OpenMRSProviderService providerService) {
