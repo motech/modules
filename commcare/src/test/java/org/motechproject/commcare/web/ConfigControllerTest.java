@@ -76,16 +76,23 @@ public class ConfigControllerTest {
     }
 
     @Test
-    public void testSaveSettings() throws BundleException, CommcareAuthenticationException, CommcareConnectionFailureException {
+    public void testSaveNewSettings() throws BundleException, CommcareAuthenticationException, CommcareConnectionFailureException {
+
+        Config config = ConfigsUtils.prepareConfigThree();
+        String oldName = null;
+
+        controller.saveConfig(config, oldName);
+        verify(configService).saveNewConfig(config);
+    }
+
+    @Test
+    public void testSaveUpdatedSettings() throws BundleException, CommcareAuthenticationException, CommcareConnectionFailureException {
 
         Config config = ConfigsUtils.prepareConfigThree();
         String oldName = config.getName();
 
         controller.saveConfig(config, oldName);
-
-        verify(configService).saveNewConfig(config);
         verify(configService).saveUpdatedConfig(config, oldName);
-
     }
 
     @Test
