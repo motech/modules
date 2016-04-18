@@ -131,6 +131,7 @@ public class Configs {
      * Updates given configuration
      *
      * @param config  the update source
+     * @param oldName the name of configuration before updates
      */
     public void updateConfig(Config config, String oldName) {
         deleteConfig(oldName);

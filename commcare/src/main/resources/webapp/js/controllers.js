@@ -478,7 +478,7 @@
             );
         };
 
-        $scope.saveConfig = function(element) {
+        $scope.saveUpdatedConfig = function(element) {
             blockUI();
             Configurations.save({
                     oldName: $scope.oldName
@@ -502,6 +502,39 @@
                     $scope.connectionVerified = false;
                     unblockUI();
                 });
+        };
+
+        $scope.saveNewConfig = function(element) {
+            blockUI();
+            Configurations.save(
+                $scope.selectedConfig,
+                function success(data) {
+                    $scope.verifySuccessMessage = $scope.msg('commcare.save.success');
+                    $scope.verifyErrorMessage = '';
+                    $scope.connectionVerified = true;
+                    if ($scope.configurations.defaultConfigName === "") {
+                        $scope.configurations.defaultConfigName = $scope.selectedConfig.name;
+                    }
+                    $scope.updateConfig(data);
+                    $scope.newConfig = false;
+                    $scope.configOutdated = false;
+                    unblockUI();
+                },
+                function failure(response) {
+                    $scope.verifySuccessMessage = '';
+                    $scope.verifyErrorMessage =  response.data;
+                    $scope.connectionVerified = false;
+                    unblockUI();
+                });
+        };
+
+        $scope.saveConfig = function(element) {
+            blockUI();
+            if($scope.oldName!=="") {
+                $scope.saveUpdatedConfig(element);
+            } else {
+                $scope.saveNewConfig(element);
+            }
         };
 
         $scope.updateConfig = function (config) {

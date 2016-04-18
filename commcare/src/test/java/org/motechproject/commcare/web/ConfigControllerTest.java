@@ -80,13 +80,11 @@ public class ConfigControllerTest {
 
         Config config = ConfigsUtils.prepareConfigThree();
         String oldName = config.getName();
+
         controller.saveConfig(config, oldName);
 
-        verify(configService).saveConfig(config, oldName);
-
-        config.setName("updatedName");
-
-        verify(configService).saveConfig(config, oldName);
+        verify(configService).saveNewConfig(config);
+        verify(configService).saveUpdatedConfig(config, oldName);
 
     }
 
