@@ -23,6 +23,9 @@
              <a ng-if="selectedConfig" ng-disabled="!validateConfig()" ng-click="validateConfig() && verify()" type="button" class="btn btn-default">
                  <i class="fa fw fa-check-circle-o"></i> {{msg('commcare.verify')}}
              </a>
+             <a ng-if="selectedConfig" ng-disabled="!syncAllowed()" ng-click="syncAllowed() && syncConfig()" type="button" class="btn btn-default">
+                 <i class="fa fa-refresh"></i> {{msg('commcare.sync')}}
+             </a>
          </div>
      </div>
 
@@ -34,6 +37,14 @@
         <div ng-if="isVerifySuccess()" class="connection-status connection-success alert alert-success">
             <span class="fa fw fa-check"></span>
             <span class="margin-left1">{{verifySuccessMessage}}</span>
+        </div>
+        <div ng-if="isSyncSuccess()" class="connection-status connection-success alert alert-success">
+            <span class="fa fw fa-check"></span>
+            <span class="margin-left1">{{syncSuccessMessage}}</span>
+        </div>
+        <div ng-if="isSyncError()" class="connection-status connection-error alert alert-danger">
+            <span class="fa fw fa-warning"></span>
+            <span class="margin-left1">{{syncErrorMessage}}</span>
         </div>
 
         <div class="row inside form-group">

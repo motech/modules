@@ -366,7 +366,7 @@ public class CommCareAPIHttpClient {
             LOGGER.debug("{} request response status: {}", requestUrl, getMethod.getStatusCode());
             switch (getMethod.getStatusCode()) {
                 case HttpStatus.SC_UNAUTHORIZED:
-                    throw new CommcareAuthenticationException("Couldn't authenticate to CommcareHQ server! Are given credentials correct?");
+                    throw new CommcareAuthenticationException();
                 default:
                     InputStream responseBodyAsStream = getMethod.getResponseBodyAsStream();
                     String responseBody =  IOUtils.toString(responseBodyAsStream);

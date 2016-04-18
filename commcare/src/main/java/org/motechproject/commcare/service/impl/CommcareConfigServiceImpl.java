@@ -193,6 +193,11 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
     }
 
     @Override
+    public void syncConfig(String name) {
+        eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_UPDATED, prepareParams(name)));
+    }
+
+    @Override
     public String getBaseUrl() {
         String serverUrl = settingsFacade.getPlatformSettings().getServerUrl();
         if (StringUtils.isBlank(serverUrl)) {
