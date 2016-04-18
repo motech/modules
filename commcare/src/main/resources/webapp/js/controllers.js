@@ -368,19 +368,19 @@
         };
 
         $scope.syncConfig = function() {
-            blockUI();
+            LoadingModal.open();
             Configurations.sync($scope.selectedConfig,
                 function success() {
                     $scope.syncSuccessMessage = $scope.msg('commcare.sync.success');
                     $scope.syncSuccess = true;
                     $scope.syncedConfig = $scope.selectedConfig.name;
-                    unblockUI();
+                    LoadingModal.close();
                 },
                 function failure(response) {
                     $scope.syncErrorMessage = response.data;
                     $scope.syncSuccess = false;
                     $scope.syncedConfig = $scope.selectedConfig.name;
-                    unblockUI();
+                    LoadingModal.close();
             });
         };
 
