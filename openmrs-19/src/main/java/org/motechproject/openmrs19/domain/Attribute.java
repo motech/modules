@@ -4,11 +4,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a single attribute of a user.
@@ -40,6 +39,11 @@ public class Attribute {
         }
 
         @Override
+        public int hashCode() {
+            return Objects.hash(uri);
+        }
+
+        @Override
         public boolean equals(Object o) {
             if (this == o) {
                 return true;
@@ -51,12 +55,7 @@ public class Attribute {
 
             Link other = (Link) o;
 
-            return ObjectUtils.equals(uri, other.uri);
-        }
-
-        @Override
-        public int hashCode() {
-            return new HashCodeBuilder().append(uri).toHashCode();
+            return Objects.equals(uri, other.uri);
         }
     }
 
@@ -76,6 +75,11 @@ public class Attribute {
         }
 
         @Override
+        public int hashCode() {
+            return Objects.hash(uuid);
+        }
+
+        @Override
         public boolean equals(Object o) {
             if (this == o) {
                 return true;
@@ -87,12 +91,7 @@ public class Attribute {
 
             AttributeType other = (AttributeType) o;
 
-            return ObjectUtils.equals(uuid, other.uuid);
-        }
-
-        @Override
-        public int hashCode() {
-            return new HashCodeBuilder().append(uuid).toHashCode();
+            return Objects.equals(uuid, other.uuid);
         }
     }
 
@@ -173,6 +172,11 @@ public class Attribute {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(uuid, display, value, name, description, format, attributeType, links);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -184,15 +188,9 @@ public class Attribute {
 
         Attribute other = (Attribute) o;
 
-        return ObjectUtils.equals(uuid, other.uuid) && ObjectUtils.equals(display, other.display)
-                && ObjectUtils.equals(value, other.value) && ObjectUtils.equals(name, other.name)
-                && ObjectUtils.equals(description, other.description) && ObjectUtils.equals(format, other.format)
-                && ObjectUtils.equals(attributeType, other.attributeType) && ObjectUtils.equals(links, other.links);
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder().append(uuid).append(display).append(value).append(name).append(description)
-                .append(format).append(attributeType).append(links).toHashCode();
+        return Objects.equals(uuid, other.uuid) && Objects.equals(display, other.display)
+                && Objects.equals(value, other.value) && Objects.equals(name, other.name)
+                && Objects.equals(description, other.description) && Objects.equals(format, other.format)
+                && Objects.equals(attributeType, other.attributeType) && Objects.equals(links, other.links);
     }
 }

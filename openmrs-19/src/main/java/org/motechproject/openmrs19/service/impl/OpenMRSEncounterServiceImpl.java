@@ -77,7 +77,8 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
 
     @Override
     public Encounter getLatestEncounterByPatientMotechId(String configName, String motechId, String encounterType) {
-        List<Encounter> encountersByEncounterType = getEncountersByEncounterType(motechId, encounterType);
+        Config config = configService.getConfigByName(configName);
+        List<Encounter> encountersByEncounterType = getEncountersByEncounterType(config, motechId, encounterType);
 
         Encounter latestEncounter = null;
         for (Encounter encounter : encountersByEncounterType) {
@@ -103,19 +104,7 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
 
     @Override
     public List<Encounter> getEncountersByEncounterType(String configName, String motechId, String encounterType) {
-        Validate.notEmpty(motechId, "MOTECH Id cannot be empty");
-
-        Config config = configService.getConfigByName(configName);
-        List<Encounter> encountersByEncounterType = new ArrayList<>();
-        List<Encounter> encountersByPatientMotechId = getAllEncountersByPatientMotechId(config, motechId);
-
-        for (Encounter encounter : encountersByPatientMotechId) {
-            if (StringUtils.equals(encounter.getEncounterType().getName(), encounterType)) {
-                encountersByEncounterType.add(encounter);
-            }
-        }
-
-        return encountersByEncounterType;
+        return getEncountersByEncounterType(configService.getConfigByName(configName), motechId, encounterType);
     }
 
     @Override
@@ -161,44 +150,19 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
         }
     }
 
-    @Override
-    public Encounter createEncounter(Encounter encounter) {
-        return createEncounter(null, encounter);
-    }
+    private List<Encounter> getEncountersByEncounterType(Config config, String motechId, String encounterType) {
+        Validate.notEmpty(motechId, "MOTECH Id cannot be empty");
 
-    @Override
-    public Encounter getLatestEncounterByPatientMotechId(String motechId, String encounterType) {
-        return getLatestEncounterByPatientMotechId(null, motechId, encounterType);
-    }
+        List<Encounter> encountersByEncounterType = new ArrayList<>();
+        List<Encounter> encountersByPatientMotechId = getAllEncountersByPatientMotechId(config, motechId);
 
-    @Override
-    public Encounter getEncounterByUuid(String uuid) {
-        return getEncounterByUuid(null, uuid);
-    }
+        for (Encounter encounter : encountersByPatientMotechId) {
+            if (StringUtils.equals(encounter.getEncounterType().getName(), encounterType)) {
+                encountersByEncounterType.add(encounter);
+            }
+        }
 
-    @Override
-    public List<Encounter> getEncountersByEncounterType(String motechId, String encounterType) {
-        return getEncountersByEncounterType(null, motechId, encounterType);
-    }
-
-    @Override
-    public void deleteEncounter(String uuid) {
-        deleteEncounter(null, uuid);
-    }
-
-    @Override
-    public EncounterType createEncounterType(EncounterType encounterType) {
-        return createEncounterType(null, encounterType);
-    }
-
-    @Override
-    public EncounterType getEncounterTypeByUuid(String uuid) {
-        return getEncounterTypeByUuid(null, uuid);
-    }
-
-    @Override
-    public void deleteEncounterType(String uuid) {
-        deleteEncounterType(null, uuid);
+        return encountersByEncounterType;
     }
 
     private void validateEncounter(Encounter encounter) {

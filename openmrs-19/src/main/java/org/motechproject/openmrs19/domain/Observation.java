@@ -5,13 +5,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a single observation. An observation is a single piece of information that is recorded about a patient at
@@ -97,6 +96,11 @@ public class Observation {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(uuid, display, concept, encounter, value, obsDatetime, person, groupsMembers);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -108,16 +112,10 @@ public class Observation {
 
         Observation other = (Observation) o;
 
-        return ObjectUtils.equals(uuid, other.uuid) && ObjectUtils.equals(display, other.display)
-                && ObjectUtils.equals(concept, other.concept) && ObjectUtils.equals(encounter, other.encounter)
-                && ObjectUtils.equals(value, other.value) && ObjectUtils.equals(obsDatetime, other.obsDatetime)
-                && ObjectUtils.equals(person, other.person) && ObjectUtils.equals(groupsMembers, other.groupsMembers);
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder().append(uuid).append(display).append(concept).append(encounter).append(value)
-                .append(obsDatetime).append(person).append(groupsMembers).toHashCode();
+        return Objects.equals(uuid, other.uuid) && Objects.equals(display, other.display)
+                && Objects.equals(concept, other.concept) && Objects.equals(encounter, other.encounter)
+                && Objects.equals(value, other.value) && Objects.equals(obsDatetime, other.obsDatetime)
+                && Objects.equals(person, other.person) && Objects.equals(groupsMembers, other.groupsMembers);
     }
 
     /**
@@ -164,6 +162,11 @@ public class Observation {
         }
 
         @Override
+        public int hashCode() {
+            return Objects.hash(display);
+        }
+
+        @Override
         public boolean equals(Object o) {
             if (this == o) {
                 return true;
@@ -175,12 +178,7 @@ public class Observation {
 
             ObservationValue other = (ObservationValue) o;
 
-            return ObjectUtils.equals(display, other.display);
-        }
-
-        @Override
-        public int hashCode() {
-            return new HashCodeBuilder().append(display).toHashCode();
+            return Objects.equals(display, other.display);
         }
     }
 

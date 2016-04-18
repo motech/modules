@@ -86,36 +86,16 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
 
     @Override
     public Patient updatePatient(String configName, Patient patient, String currentMotechId) {
-        if (!patient.getMotechId().equals(currentMotechId) && getPatientByMotechId(patient.getMotechId()) != null) {
+        Config config = configService.getConfigByName(configName);
+        if (!patient.getMotechId().equals(currentMotechId) && getPatientByMotechId(config, patient.getMotechId()) != null) {
             throw new OpenMRSException("Patient with Motech ID" + patient.getMotechId() + "already exists.");
         }
-        return updatePatient(configName, patient);
+        return updatePatient(config, patient);
     }
 
     @Override
     public Patient updatePatient(String configName, Patient patient) {
-        Validate.notNull(patient, "Patient cannot be null");
-        Validate.notEmpty(patient.getUuid(), "Patient Id may not be empty");
-
-        Person person = patient.getPerson();
-        Config config = configService.getConfigByName(configName);
-
-        personAdapter.updatePerson(config, person);
-        // the openmrs web service requires an explicit delete request to remove
-        // attributes. delete all previous attributes, and then
-        // create any attributes attached to the patient
-        personAdapter.deleteAllAttributes(config, person);
-        personAdapter.saveAttributesForPerson(config, person);
-
-        Patient updatedPatient;
-        try {
-            updatedPatient = patientResource.updatePatientMotechId(config, patient.getUuid(), patient.getMotechId());
-            eventRelay.sendEventMessage(new MotechEvent(EventKeys.UPDATED_PATIENT_SUBJECT, EventHelper.patientParameters(updatedPatient)));
-        } catch (HttpClientErrorException e) {
-            throw new OpenMRSException("Failed to update OpenMRS patient with id: " + patient.getUuid(), e);
-        }
-
-        return updatedPatient;
+        return updatePatient(configService.getConfigByName(configName), patient);
     }
 
     /**
@@ -174,7 +154,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
             LOGGER.warn("Search for patient by id returned more than 1 result");
         }
 
-        return getPatientByUuid(patientList.getResults().get(0).getUuid());
+        return getPatientByUuid(config, patientList.getResults().get(0).getUuid());
     }
 
     @Override
@@ -182,9 +162,9 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         Validate.notEmpty(name, "Name cannot be empty");
 
         List<Patient> result;
+        Config config = configService.getConfigByName(configName);
 
         try {
-            Config config = configService.getConfigByName(configName);
             result = patientResource.queryForPatient(config, name).getResults();
         } catch (HttpClientErrorException e) {
             LOGGER.error("Failed search for patient name: " + name);
@@ -194,7 +174,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         List<Patient> patients = new ArrayList<>();
 
         for (Patient partialPatient : result) {
-            Patient patient = getPatientByUuid(partialPatient.getUuid());
+            Patient patient = getPatientByUuid(config, partialPatient.getUuid());
             if (motechId == null) {
                 patients.add(patient);
             } else {
@@ -215,13 +195,13 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
     public void deceasePatient(String configName, String motechId, Concept causeOfDeath, Date dateOfDeath, String comment)
             throws PatientNotFoundException {
         Validate.notEmpty(motechId, "MoTeCh id cannot be empty");
+        Config config = configService.getConfigByName(configName);
 
-        Patient patient = getPatientByMotechId(motechId);
+        Patient patient = getPatientByMotechId(config, motechId);
         if (patient == null) {
             throw new PatientNotFoundException("Cannot decease patient because no patient found with Motech Id: " + motechId);
         }
 
-        Config config = configService.getConfigByName(configName);
         personAdapter.savePersonCauseOfDeath(config, patient.getUuid(), dateOfDeath, causeOfDeath);
         eventRelay.sendEventMessage(new MotechEvent(EventKeys.PATIENT_DECEASED_SUBJECT, EventHelper.patientParameters(patient)));
     }
@@ -242,28 +222,8 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
     }
 
     @Override
-    public Patient createPatient(Patient patient) {
-        return createPatient(null, patient);
-    }
-
-    @Override
-    public Patient updatePatient(Patient patient, String currentMotechId) {
-        return updatePatient(null, patient, currentMotechId);
-    }
-
-    @Override
-    public Patient updatePatient(Patient patient) {
-        return updatePatient(null, patient);
-    }
-
-    @Override
     public Patient getPatientByUuid(String configName, String uuid) {
         return getPatientByUuid(configService.getConfigByName(configName), uuid);
-    }
-
-    @Override
-    public Patient getPatientByUuid(String uuid) {
-        return getPatientByUuid(configService.getConfigByName(null), uuid);
     }
 
     @Override
@@ -271,24 +231,29 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         return getPatientByMotechId(configService.getConfigByName(configName), motechId);
     }
 
-    @Override
-    public Patient getPatientByMotechId(String motechId) {
-        return getPatientByMotechId(configService.getConfigByName(null), motechId);
-    }
+    private Patient updatePatient(Config config, Patient patient) {
+        Validate.notNull(patient, "Patient cannot be null");
+        Validate.notEmpty(patient.getUuid(), "Patient Id may not be empty");
 
-    @Override
-    public List<Patient> search(String name, String motechId) {
-        return search(null, name, motechId);
-    }
+        Person person = patient.getPerson();
 
-    @Override
-    public void deceasePatient(String motechId, Concept causeOfDeath, Date dateOfDeath, String comment) throws PatientNotFoundException {
-        deceasePatient(null, motechId, causeOfDeath, dateOfDeath, comment);
-    }
+        personAdapter.updatePerson(config, person);
+        // the openmrs web service requires an explicit delete request to remove
+        // attributes. delete all previous attributes, and then
+        // create any attributes attached to the patient
+        personAdapter.deleteAllAttributes(config, person);
+        personAdapter.saveAttributesForPerson(config, person);
 
-    @Override
-    public void deletePatient(String uuid) throws PatientNotFoundException {
-        deletePatient(null, uuid);
+        Patient updatedPatient;
+        try {
+            patientResource.updatePatientMotechId(config, patient.getUuid(), patient.getMotechId());
+            updatedPatient = getPatientByUuid(config, patient.getUuid());
+            eventRelay.sendEventMessage(new MotechEvent(EventKeys.UPDATED_PATIENT_SUBJECT, EventHelper.patientParameters(updatedPatient)));
+        } catch (HttpClientErrorException e) {
+            throw new OpenMRSException("Failed to update OpenMRS patient with id: " + patient.getUuid(), e);
+        }
+
+        return updatedPatient;
     }
 
     private void validatePatientBeforeSave(Patient patient) {

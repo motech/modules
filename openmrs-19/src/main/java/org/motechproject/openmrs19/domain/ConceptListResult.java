@@ -1,9 +1,7 @@
 package org.motechproject.openmrs19.domain;
 
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Stores a list of {@link Concept}s. This class is used as a result of a query to the OpenMRS server.
@@ -32,11 +30,11 @@ public class ConceptListResult {
 
         ConceptListResult other = (ConceptListResult) o;
 
-        return ObjectUtils.equals(results, other.results);
+        return Objects.equals(results, other.results);
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(results).toHashCode();
+        return Objects.hash(results);
     }
 }

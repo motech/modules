@@ -53,14 +53,14 @@ public class LocationResourceImpl extends BaseResource implements LocationResour
 
     @Override
     public Location createLocation(Config config, Location location) {
-        String jsonRequest = getGson().toJson(location);
+        String jsonRequest = getGson(false).toJson(location);
         String jsonResponse = postForJson(config, jsonRequest, "/location");
         return (Location) JsonUtils.readJson(jsonResponse, Location.class);
     }
 
     @Override
     public Location updateLocation(Config config, Location location) {
-        String jsonRequest = getGsonWithAdapters().toJson(location);
+        String jsonRequest = getGson(true).toJson(location);
         String responseJson = postForJson(config, jsonRequest, "/location/{uuid}", location.getUuid());
         return (Location) JsonUtils.readJson(responseJson, Location.class);
     }
@@ -70,14 +70,15 @@ public class LocationResourceImpl extends BaseResource implements LocationResour
         delete(config, "/location/{uuid}?purge", uuid);
     }
 
-    private Gson getGson() {
-        return new GsonBuilder().create();
-    }
+    private Gson getGson(boolean withAdapter) {
+        GsonBuilder builder = new GsonBuilder();
 
-    private Gson getGsonWithAdapters() {
-        return new GsonBuilder()
-                .excludeFieldsWithoutExposeAnnotation()
-                .registerTypeAdapter(Concept.class, new Concept.ConceptSerializer())
-                .create();
+        builder.excludeFieldsWithoutExposeAnnotation();
+
+        if (withAdapter) {
+            builder.registerTypeAdapter(Concept.class, new Concept.ConceptSerializer());
+        }
+
+        return builder.create();
     }
 }

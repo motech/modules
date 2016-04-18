@@ -156,39 +156,4 @@ public class OpenMRSLocationServiceImpl implements OpenMRSLocationService {
             return null;
         }
     }
-
-    @Override
-    public Location createLocation(Location location) {
-        return createLocation(null, location);
-    }
-
-    @Override
-    public List<Location> getLocations(int page, int pageSize) {
-        return getLocations(null, page, pageSize);
-    }
-
-    @Override
-    public List<Location> getAllLocations() {
-        return getAllLocations(null);
-    }
-
-    @Override
-    public List<Location> getLocations(String locationName) {
-        return getLocations(null, locationName);
-    }
-
-    @Override
-    public Location getLocationByUuid(String uuid) {
-        return getLocationByUuid(null, uuid);
-    }
-
-    @Override
-    public void deleteLocation(String uuid) {
-        deleteLocation(null, uuid);
-    }
-
-    @Override
-    public Location updateLocation(Location location) {
-        return updateLocation(null, location);
-    }
 }

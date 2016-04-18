@@ -56,7 +56,7 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
      */
     public User createUser(Config config, User user) throws UserAlreadyExistsException {
         validateUserForSave(user);
-        validateUserNameUsage(user);
+        validateUserNameUsage(config, user);
 
         // If the person is saved prior to checking for the role, there would need to be another call to delete the person
         // otherwise it would leave the OpenMRS in an inconsistent state
@@ -97,47 +97,21 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
 
     @Override
     public User getUserByUserName(String configName, String userName) {
-        Validate.notEmpty(userName, "Username cannot be empty");
-
-        List<User> results;
-
-        try {
-            Config config = configService.getConfigByName(configName);
-            results = userResource.queryForUsersByUsername(config, userName).getResults();
-        } catch (HttpClientErrorException e) {
-            LOGGER.error("Failed to retrieve user by username: " + userName + " with error: " + e.getMessage());
-            return null;
-        }
-
-        User openMRSUser = null;
-
-        for (User user : results) {
-            if (user.getUsername().equals(userName)) {
-                openMRSUser = getUserByUuid(user.getUuid());
-            }
-        }
-
-        return openMRSUser;
+        return getUserByUserName(configService.getConfigByName(configName), userName);
     }
 
     @Override
     public User getUserByUuid(String configName, String uuid) {
-        Validate.notEmpty(uuid, "UUID cannot be empty");
-
-        try {
-            Config config = configService.getConfigByName(configName);
-            return userResource.getUserById(config, uuid);
-        } catch (HttpClientErrorException e) {
-            LOGGER.error("Failed to retrieve user with UUID: " + uuid + " with error: " + e.getMessage());
-            return null;
-        }
+        return getUserByUuid(configService.getConfigByName(configName), uuid);
     }
 
     @Override
     public String setNewPasswordForUser(String configName, String username) {
         Validate.notEmpty(username, "Username cannot be empty");
 
-        User user = getUserByUserName(username);
+        Config config = configService.getConfigByName(configName);
+
+        User user = getUserByUserName(config, username);
         if (user == null) {
             throw new UsernameNotFoundException("No user found with username: " + username);
         }
@@ -147,7 +121,6 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
         tmp.setUuid(user.getUuid());
 
         try {
-            Config config = configService.getConfigByName(configName);
             userResource.updateUser(config, tmp);
         } catch (HttpClientErrorException e) {
             LOGGER.error("Failed to set password for username: " + username);
@@ -186,52 +159,46 @@ public class OpenMRSUserServiceImpl implements OpenMRSUserService {
     }
 
     @Override
-    public void changeCurrentUserPassword(String currentPassword, String newPassword) {
-        changeCurrentUserPassword(null, currentPassword, newPassword);
-    }
-
-    @Override
     public User createUser(String configName, User user) throws UserAlreadyExistsException {
         return createUser(configService.getConfigByName(configName), user);
     }
 
-    @Override
-    public User createUser(User user) throws UserAlreadyExistsException {
-        return createUser(configService.getConfigByName(null), user);
+    private User getUserByUuid(Config config, String uuid) {
+        Validate.notEmpty(uuid, "UUID cannot be empty");
+
+        try {
+            return userResource.getUserById(config, uuid);
+        } catch (HttpClientErrorException e) {
+            LOGGER.error("Failed to retrieve user with UUID: " + uuid + " with error: " + e.getMessage());
+            return null;
+        }
     }
 
-    @Override
-    public String setNewPasswordForUser(String username) {
-        return setNewPasswordForUser(null, username);
+    private User getUserByUserName(Config config, String userName) {
+        Validate.notEmpty(userName, "Username cannot be empty");
+
+        List<User> results;
+
+        try {
+            results = userResource.queryForUsersByUsername(config, userName).getResults();
+        } catch (HttpClientErrorException e) {
+            LOGGER.error("Failed to retrieve user by username: " + userName + " with error: " + e.getMessage());
+            return null;
+        }
+
+        User openMRSUser = null;
+
+        for (User user : results) {
+            if (user.getUsername().equals(userName)) {
+                openMRSUser = getUserByUuid(config, user.getUuid());
+            }
+        }
+
+        return openMRSUser;
     }
 
-    @Override
-    public List<User> getAllUsers() {
-        return getAllUsers(null);
-    }
-
-    @Override
-    public User getUserByUuid(String uuid) {
-        return getUserByUuid(null, uuid);
-    }
-
-    @Override
-    public User getUserByUserName(String userName) {
-        return getUserByUserName(null, userName);
-    }
-
-    @Override
-    public User updateUser(User user) {
-        return updateUser(null, user);
-    }
-
-    @Override
-    public void deleteUser(String uuid) throws UserDeleteException {
-        deleteUser(null, uuid);
-    }
-
-    private void validateUserNameUsage(User user) throws UserAlreadyExistsException {
-        if (getUserByUserName(user.getUsername()) != null) {
+    private void validateUserNameUsage(Config config, User user) throws UserAlreadyExistsException {
+        if (getUserByUserName(config, user.getUsername()) != null) {
             throw new UserAlreadyExistsException("Already found user with username: " + user.getUsername());
         }
     }

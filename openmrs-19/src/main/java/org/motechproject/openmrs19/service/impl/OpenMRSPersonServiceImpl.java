@@ -132,33 +132,8 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
     }
 
     @Override
-    public Person createPerson(Person person) {
-        return createPerson(configService.getConfigByName(null), person);
-    }
-
-    @Override
-    public Person createPerson(String firstName, String lastName, DateTime dateOfBirth, String gender, String address, List<Attribute> attributes) {
-        return createPerson(null, firstName, lastName, dateOfBirth, gender, address, attributes);
-    }
-
-    @Override
     public Person updatePerson(String configName, Person person) {
         return updatePerson(configService.getConfigByName(configName), person);
-    }
-
-    @Override
-    public Person updatePerson(Person person) {
-        return updatePerson(configService.getConfigByName(null), person);
-    }
-
-    @Override
-    public void deletePerson(String uuid) {
-        deletePerson(null, uuid);
-    }
-
-    @Override
-    public Person getPersonByUuid(String uuid) {
-        return getPersonByUuid(null, uuid);
     }
 
     public void saveAttributesForPerson(Config config, Person person) {

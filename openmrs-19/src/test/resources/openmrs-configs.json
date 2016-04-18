@@ -2,7 +2,7 @@
   "configs" :
   [
     {
-      "name": "Local OpenMRS",
+      "name": "Test OpenMRS Server",
       "openMrsUrl": "http://${openmrs.host}/openmrs",
       "username": "admin",
       "password": "Admin123",
@@ -10,5 +10,5 @@
       "patientIdentifierTypeNames": []
     }
   ],
-  "defaultConfigName" : "Local OpenMRS"
+  "defaultConfigName" : "Test OpenMRS Server"
 }

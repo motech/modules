@@ -36,7 +36,7 @@ public class PersonResourceImpl extends BaseResource implements PersonResource {
 
     @Override
     public void createPersonAttribute(Config config, String personUuid, Attribute attribute) {
-        String requestJson = buildGsonForAttribute().toJson(attribute);
+        String requestJson = buildGsonWithAttributeTypeAdapter().toJson(attribute);
         postWithEmptyResponseBody(config, requestJson, "/person/{uuid}/attribute", personUuid);
     }
 
@@ -60,13 +60,13 @@ public class PersonResourceImpl extends BaseResource implements PersonResource {
 
     @Override
     public void updatePersonName(Config config, String uuid, Person.Name name) {
-        String requestJson = buildGsonWithPreferredNameAdapter().toJson(name);
+        String requestJson = buildGson().toJson(name);
         postWithEmptyResponseBody(config, requestJson, "/person/{personUuid}/name/{nameUuid}", uuid, name.getUuid());
     }
 
     @Override
     public void updatePersonAddress(Config config, String uuid, Person.Address address) {
-        String requestJson = buildGsonWithPreferredAddressAdapter().toJson(address);
+        String requestJson = buildGson().toJson(address);
         postWithEmptyResponseBody(config, requestJson, "/person/{personUuid}/address/{addressUuid}", uuid, address.getUuid());
     }
 
@@ -76,28 +76,20 @@ public class PersonResourceImpl extends BaseResource implements PersonResource {
     }
 
     private Gson buildGsonWithConceptAdapter() {
-        GsonBuilder builder = new GsonBuilder();
-
-        builder.excludeFieldsWithoutExposeAnnotation();
-        builder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-        builder.registerTypeAdapter(Concept.class, new Concept.ConceptSerializer());
-
-        return builder.create();
+        return new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+                .registerTypeAdapter(Concept.class, new Concept.ConceptSerializer())
+                .create();
     }
 
-    private Gson buildGsonForAttribute() {
+    private Gson buildGsonWithAttributeTypeAdapter() {
         return new GsonBuilder()
                 .registerTypeAdapter(Attribute.AttributeType.class, new Attribute.AttributeTypeSerializer())
                 .create();
     }
 
-    private Gson buildGsonWithPreferredNameAdapter() {
-        return new GsonBuilder()
-                .excludeFieldsWithoutExposeAnnotation()
-                .create();
-    }
-
-    private Gson buildGsonWithPreferredAddressAdapter() {
+    private Gson buildGson() {
         return new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
                 .create();

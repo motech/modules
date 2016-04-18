@@ -73,12 +73,13 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
 
     @Override
     public Concept createConcept(String configName, Concept concept) throws ConceptNameAlreadyInUseException {
+        Config config = configService.getConfigByName(configName);
+
         validateConceptForSave(concept);
-        validateConceptNameUsage(concept);
+        validateConceptNameUsage(config, concept);
 
         Concept created;
         try {
-            Config config = configService.getConfigByName(configName);
             created = conceptResource.createConcept(config, concept);
             conceptCache.put(created.getName().getName(), created.getUuid());
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_CONCEPT_SUBJECT, EventHelper.conceptParameters(created)));
@@ -110,19 +111,7 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
 
     @Override
     public List<Concept> search(String configName, String phrase) {
-        Validate.notEmpty(phrase, "Name cannot be empty");
-
-        List<Concept> concepts;
-
-        try {
-            Config config = configService.getConfigByName(configName);
-            concepts = conceptResource.queryForConceptsByName(config, phrase).getResults();
-        } catch (HttpClientErrorException e) {
-            LOGGER.error("Failed search for concept: " + phrase);
-            concepts = Collections.emptyList();
-        }
-
-        return concepts;
+        return search(configService.getConfigByName(configName), phrase);
     }
 
     @Override
@@ -190,44 +179,19 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
         return resolveConceptUuidFromConceptName(configService.getConfigByName(configName), name);
     }
 
-    @Override
-    public String resolveConceptUuidFromConceptName(String name) {
-        return resolveConceptUuidFromConceptName(configService.getConfigByName(null), name);
-    }
+    private List<Concept> search(Config config, String phrase) {
+        Validate.notEmpty(phrase, "Name cannot be empty");
 
-    @Override
-    public Concept createConcept(Concept concept) throws ConceptNameAlreadyInUseException {
-        return createConcept(null, concept);
-    }
+        List<Concept> concepts;
 
-    @Override
-    public Concept getConceptByUuid(String uuid) {
-        return getConceptByUuid(null, uuid);
-    }
+        try {
+            concepts = conceptResource.queryForConceptsByName(config, phrase).getResults();
+        } catch (HttpClientErrorException e) {
+            LOGGER.error("Failed search for concept: " + phrase);
+            concepts = Collections.emptyList();
+        }
 
-    @Override
-    public List<Concept> search(String phrase) {
-        return search(null, phrase);
-    }
-
-    @Override
-    public List<Concept> getAllConcepts() {
-        return getAllConcepts(null);
-    }
-
-    @Override
-    public void deleteConcept(String uuid) {
-        deleteConcept(null, uuid);
-    }
-
-    @Override
-    public Concept updateConcept(Concept concept) {
-        return updateConcept(null, concept);
-    }
-
-    @Override
-    public List<Concept> getConcepts(int page, int pageSize) {
-        return getConcepts(null, page, pageSize);
+        return concepts;
     }
 
     private void validateConceptForSave(Concept concept) {
@@ -240,8 +204,8 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
         Validate.notNull(concept.getDatatype());
     }
 
-    private void validateConceptNameUsage(Concept concept) throws ConceptNameAlreadyInUseException {
-        List<Concept> concepts = search(concept.getNames().get(0).getName());
+    private void validateConceptNameUsage(Config config, Concept concept) throws ConceptNameAlreadyInUseException {
+        List<Concept> concepts = search(config, concept.getNames().get(0).getName());
 
         for (Concept existingConcept : concepts) {
             if (existingConcept.getDisplay().equals(concept.getNames().get(0).getName())) {

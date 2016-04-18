@@ -39,7 +39,7 @@ public class ProviderResourceImpl extends BaseResource implements ProviderResour
 
     private Gson buildGson() {
         return new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
-                .registerTypeAdapter(Person.class, new Person.PersonSerializer()).create();
+                .registerTypeAdapter(Person.class, new Person.PersonSerializer())
+                .create();
     }
 }

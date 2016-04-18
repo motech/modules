@@ -51,32 +51,7 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
 
     @Override
     public List<Observation> findObservations(String configName, String motechId, String conceptName) {
-        Validate.notEmpty(motechId, "Motech id cannot be empty");
-        Validate.notEmpty(conceptName, "Concept name cannot be empty");
-
-        Config config = configService.getConfigByName(configName);
-
-        List<Observation> obs = new ArrayList<>();
-        Patient patient = patientAdapter.getPatientByMotechId(config, motechId);
-        if (patient == null) {
-            return obs;
-        }
-
-        ObservationListResult result;
-        try {
-            result = obsResource.queryForObservationsByPatientId(config, patient.getUuid());
-        } catch (HttpClientErrorException e) {
-            LOGGER.error("Could not retrieve observations for patient with motech id: " + motechId);
-            return Collections.emptyList();
-        }
-
-        for (Observation ob : result.getResults()) {
-            if (ob.hasConceptByName(conceptName)) {
-                obs.add(ob);
-            }
-        }
-
-        return obs;
+        return findObservations(configService.getConfigByName(configName), motechId, conceptName);
     }
 
     @Override
@@ -102,7 +77,8 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
         Validate.notEmpty(motechId, "MOTECH Id cannot be empty");
         Validate.notEmpty(conceptName, "Concept name cannot be empty");
 
-        List<Observation> observations = findObservations(motechId, conceptName);
+        Config config = configService.getConfigByName(configName);
+        List<Observation> observations = findObservations(config, motechId, conceptName);
 
         return observations.size() == 0 ? null : observations.get(0);
     }
@@ -156,33 +132,30 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
         }
     }
 
-    @Override
-    public void voidObservation(Observation observation, String reason) throws ObservationNotFoundException {
-        voidObservation(null, observation, reason);
-    }
+    private List<Observation> findObservations(Config config, String motechId, String conceptName) {
+        Validate.notEmpty(motechId, "Motech id cannot be empty");
+        Validate.notEmpty(conceptName, "Concept name cannot be empty");
 
-    @Override
-    public Observation findObservation(String motechId, String conceptName) {
-        return findObservation(null, motechId, conceptName);
-    }
+        List<Observation> obs = new ArrayList<>();
+        Patient patient = patientAdapter.getPatientByMotechId(config, motechId);
+        if (patient == null) {
+            return obs;
+        }
 
-    @Override
-    public List<Observation> findObservations(String patientMotechId, String conceptName) {
-        return findObservations(null, patientMotechId, conceptName);
-    }
+        ObservationListResult result;
+        try {
+            result = obsResource.queryForObservationsByPatientId(config, patient.getUuid());
+        } catch (HttpClientErrorException e) {
+            LOGGER.error("Could not retrieve observations for patient with motech id: " + motechId);
+            return Collections.emptyList();
+        }
 
-    @Override
-    public Observation getObservationByUuid(String uuid) {
-        return getObservationByUuid(null, uuid);
-    }
+        for (Observation ob : result.getResults()) {
+            if (ob.hasConceptByName(conceptName)) {
+                obs.add(ob);
+            }
+        }
 
-    @Override
-    public Observation createObservation(Observation observation) {
-        return createObservation(null, observation);
-    }
-
-    @Override
-    public void deleteObservation(String uuid) {
-        deleteObservation(null, uuid);
+        return obs;
     }
 }

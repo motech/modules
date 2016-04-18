@@ -120,14 +120,13 @@ public class PatientResourceImpl extends BaseResource implements PatientResource
     }
 
     @Override
-    public Patient updatePatientMotechId(Config config, String patientUuid, String newMotechId) {
+    public void updatePatientMotechId(Config config, String patientUuid, String newMotechId) {
         Identifier patientIdentifier = getPatientIdentifier(config, patientUuid);
         patientIdentifier.setIdentifier(newMotechId);
 
         String requestJson = buildGson().toJson(patientIdentifier);
-        String responseJson = postForJson(config, requestJson, "/patient/{patientUuid}/identifier/{identifierUuid}",
-                patientUuid, patientIdentifier.getUuid());
-        return (Patient) JsonUtils.readJson(responseJson, Patient.class);
+        postForJson(config, requestJson, "/patient/{patientUuid}/identifier/{identifierUuid}", patientUuid,
+                patientIdentifier.getUuid());
     }
 
     private PatientIdentifierListResult getAllPatientIdentifierTypes(Config config) {

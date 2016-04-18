@@ -1,8 +1,8 @@
 package org.motechproject.openmrs19.resource;
 
+import org.motechproject.openmrs19.config.Config;
 import org.motechproject.openmrs19.domain.Patient;
 import org.motechproject.openmrs19.domain.PatientListResult;
-import org.motechproject.openmrs19.config.Config;
 
 /**
  * Interface for patients management.
@@ -84,7 +84,6 @@ public interface PatientResource {
      * @param config  the configuration to be used while performing this action
      * @param patientUuid  the UUID of the patient
      * @param newMotechId  the new MOTECH Id
-     * @return the updated patient
      */
-    Patient updatePatientMotechId(Config config, String patientUuid, String newMotechId);
+    void updatePatientMotechId(Config config, String patientUuid, String newMotechId);
 }

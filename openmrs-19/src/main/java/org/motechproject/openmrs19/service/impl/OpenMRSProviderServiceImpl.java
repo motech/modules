@@ -57,19 +57,4 @@ public class OpenMRSProviderServiceImpl implements OpenMRSProviderService {
             LOGGER.error("Error while deleting provider with UUID: " + uuid);
         }
     }
-
-    @Override
-    public Provider createProvider(Provider provider) {
-        return createProvider(null, provider);
-    }
-
-    @Override
-    public Provider getProviderByUuid(String uuid) {
-        return getProviderByUuid(null, uuid);
-    }
-
-    @Override
-    public void deleteProvider(String uuid) {
-        deleteProvider(null, uuid);
-    }
 }

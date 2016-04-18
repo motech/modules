@@ -47,6 +47,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.motechproject.openmrs19.util.TestConstants.DEFAULT_CONFIG_NAME;
 
 
 @RunWith(PaxExam.class)
@@ -119,7 +120,7 @@ public class MRSEncounterServiceIT extends BasePaxIT {
 
     @Test
     public void shouldGetLatestEncounter() {
-        Encounter encounter = encounterAdapter.getLatestEncounterByPatientMotechId(patient.getMotechId(), encounterType.getName());
+        Encounter encounter = encounterAdapter.getLatestEncounterByPatientMotechId(DEFAULT_CONFIG_NAME, patient.getMotechId(), encounterType.getName());
 
         assertNotNull(encounter);
         assertEquals(new LocalDate("2012-09-05"), new LocalDate(encounter.getEncounterDatetime()));
@@ -129,8 +130,8 @@ public class MRSEncounterServiceIT extends BasePaxIT {
     public void shouldDeleteEncounter() throws InterruptedException {
 
         synchronized (lock) {
-            encounterAdapter.deleteEncounter(encounter.getUuid());
-            assertNull(encounterAdapter.getEncounterByUuid(encounter.getUuid()));
+            encounterAdapter.deleteEncounter(DEFAULT_CONFIG_NAME, encounter.getUuid());
+            assertNull(encounterAdapter.getEncounterByUuid(DEFAULT_CONFIG_NAME, encounter.getUuid()));
 
             lock.wait(60000);
         }
@@ -143,31 +144,31 @@ public class MRSEncounterServiceIT extends BasePaxIT {
     public void tearDown() throws PatientNotFoundException, InterruptedException {
 
         if (encounter != null) {
-            encounterAdapter.deleteEncounter(encounter.getUuid());
+            encounterAdapter.deleteEncounter(DEFAULT_CONFIG_NAME, encounter.getUuid());
         }
         if (observation != null) {
-            obsAdapter.deleteObservation(observation.getUuid());
+            obsAdapter.deleteObservation(DEFAULT_CONFIG_NAME, observation.getUuid());
         }
         if (provider != null) {
-            providerService.deleteProvider(provider.getUuid());
+            providerService.deleteProvider(DEFAULT_CONFIG_NAME, provider.getUuid());
         }
         if (patient != null) {
-            patientAdapter.deletePatient(patient.getUuid());
+            patientAdapter.deletePatient(DEFAULT_CONFIG_NAME, patient.getUuid());
         }
         if (location != null) {
-            locationAdapter.deleteLocation(location.getUuid());
+            locationAdapter.deleteLocation(DEFAULT_CONFIG_NAME, location.getUuid());
         }
         if (concept != null) {
-            conceptAdapter.deleteConcept(concept.getUuid());
+            conceptAdapter.deleteConcept(DEFAULT_CONFIG_NAME, concept.getUuid());
         }
         if (encounterType != null) {
-            encounterAdapter.deleteEncounterType(encounterType.getUuid());
+            encounterAdapter.deleteEncounterType(DEFAULT_CONFIG_NAME, encounterType.getUuid());
         }
         if (personOne != null) {
-            personAdapter.deletePerson(personOne.getUuid());
+            personAdapter.deletePerson(DEFAULT_CONFIG_NAME, personOne.getUuid());
         }
         if (personTwo != null) {
-            personAdapter.deletePerson(personTwo.getUuid());
+            personAdapter.deletePerson(DEFAULT_CONFIG_NAME, personTwo.getUuid());
         }
 
         eventListenerRegistry.clearListenersForBean("mrsTestListener");
@@ -220,7 +221,7 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         Encounter saved;
 
         synchronized (lock) {
-            saved = encounterAdapter.createEncounter(encounter);
+            saved = encounterAdapter.createEncounter(DEFAULT_CONFIG_NAME, encounter);
             assertNotNull(saved);
 
             lock.wait(6000);
@@ -234,7 +235,7 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         tempConcept.setNames(Arrays.asList(new ConceptName("FooConcept")));
         tempConcept.setDatatype(new Concept.DataType("Boolean"));
         tempConcept.setConceptClass(new Concept.ConceptClass("Test"));
-        concept = conceptAdapter.createConcept(tempConcept);
+        concept = conceptAdapter.createConcept(DEFAULT_CONFIG_NAME, tempConcept);
     }
 
     private void preparePersonOne() {
@@ -246,8 +247,8 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         person.setNames(Collections.singletonList(name));
 
         person.setGender("M");
-        String personUuid = personAdapter.createPerson(person).getUuid();
-        personOne = personAdapter.getPersonByUuid(personUuid);
+        String personUuid = personAdapter.createPerson(DEFAULT_CONFIG_NAME, person).getUuid();
+        personOne = personAdapter.getPersonByUuid(DEFAULT_CONFIG_NAME, personUuid);
     }
 
     private void preparePersonTwo() {
@@ -259,22 +260,22 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         person.setNames(Collections.singletonList(name));
 
         person.setGender("F");
-        String personUuid = personAdapter.createPerson(person).getUuid();
-        personTwo = personAdapter.getPersonByUuid(personUuid);
+        String personUuid = personAdapter.createPerson(DEFAULT_CONFIG_NAME, person).getUuid();
+        personTwo = personAdapter.getPersonByUuid(DEFAULT_CONFIG_NAME, personUuid);
     }
 
     private void prepareProvider() {
         Provider tempProvider = new Provider();
         tempProvider.setPerson(personOne);
         tempProvider.setIdentifier("FooIdentifier");
-        String providerUuid = providerService.createProvider(tempProvider).getUuid();
-        provider = providerService.getProviderByUuid(providerUuid);
+        String providerUuid = providerService.createProvider(DEFAULT_CONFIG_NAME, tempProvider).getUuid();
+        provider = providerService.getProviderByUuid(DEFAULT_CONFIG_NAME, providerUuid);
     }
 
     private void prepareLocation() {
         Location tempLocation = new Location("FooName", "FooCountry", "FooRegion", "FooCountryDistrict", "FooStateProvince");
-        String locationUuid = locationAdapter.createLocation(tempLocation).getUuid();
-        location = locationAdapter.getLocationByUuid(locationUuid);
+        String locationUuid = locationAdapter.createLocation(DEFAULT_CONFIG_NAME, tempLocation).getUuid();
+        location = locationAdapter.getLocationByUuid(DEFAULT_CONFIG_NAME, locationUuid);
     }
 
     private void preparePatient() {
@@ -282,16 +283,16 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         tempPatient.setLocationForMotechId(location);
         tempPatient.setPerson(personTwo);
         tempPatient.setMotechId("666");
-        String patientUuid = patientAdapter.createPatient(tempPatient).getUuid();
-        patient = patientAdapter.getPatientByUuid(patientUuid);
+        String patientUuid = patientAdapter.createPatient(DEFAULT_CONFIG_NAME, tempPatient).getUuid();
+        patient = patientAdapter.getPatientByUuid(DEFAULT_CONFIG_NAME, patientUuid);
     }
 
     private void prepareEncounterType() {
         EncounterType tempEncounterType = new EncounterType("FooType");
         tempEncounterType.setDescription("FooDescription");
 
-        String encounterUuid = encounterAdapter.createEncounterType(tempEncounterType).getUuid();
-        encounterType = encounterAdapter.getEncounterTypeByUuid(encounterUuid);
+        String encounterUuid = encounterAdapter.createEncounterType(DEFAULT_CONFIG_NAME, tempEncounterType).getUuid();
+        encounterType = encounterAdapter.getEncounterTypeByUuid(DEFAULT_CONFIG_NAME, encounterUuid);
     }
 
     private void prepareObservations() throws ParseException {
@@ -302,7 +303,7 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         tempObservation.setValue(new Observation.ObservationValue("true"));
         tempObservation.setPerson(patient.getPerson());
 
-        String observationUuid = obsAdapter.createObservation(tempObservation).getUuid();
-        observation = obsAdapter.getObservationByUuid(observationUuid);
+        String observationUuid = obsAdapter.createObservation(DEFAULT_CONFIG_NAME, tempObservation).getUuid();
+        observation = obsAdapter.getObservationByUuid(DEFAULT_CONFIG_NAME, observationUuid);
     }
 }
