@@ -1,7 +1,7 @@
 package org.motechproject.openmrs19.service;
 
-import org.motechproject.openmrs19.domain.OpenMRSConcept;
-import org.motechproject.openmrs19.domain.OpenMRSPatient;
+import org.motechproject.openmrs19.domain.Concept;
+import org.motechproject.openmrs19.domain.Patient;
 import org.motechproject.openmrs19.exception.PatientNotFoundException;
 
 import java.util.Date;
@@ -18,7 +18,7 @@ public interface OpenMRSPatientService {
      * @param patient  the patient to be created
      * @return  the created patient
      */
-    OpenMRSPatient createPatient(OpenMRSPatient patient);
+    Patient createPatient(Patient patient);
 
     /**
      * Updates the patient with the  given {@code currentMotechId} with the information stored in the given
@@ -28,7 +28,7 @@ public interface OpenMRSPatientService {
      * @param currentMotechId  the current MOTECH ID of the patient to update (used for searching)
      * @return the updated patient
      */
-    OpenMRSPatient updatePatient(OpenMRSPatient patient, String currentMotechId);
+    Patient updatePatient(Patient patient, String currentMotechId);
 
     /**
      * Updates the patient with the information stored in the given {@code patient}.
@@ -36,7 +36,7 @@ public interface OpenMRSPatientService {
      * @param patient  the patient to be used as an update source
      * @return the updated patient
      */
-    OpenMRSPatient updatePatient(OpenMRSPatient patient);
+    Patient updatePatient(Patient patient);
 
     /**
      * Returns the patient with the given {@code uuid}.
@@ -44,7 +44,7 @@ public interface OpenMRSPatientService {
      * @param uuid  the UUID of the patient
      * @return the patient with the given UUID, null if the patient doesn't exist
      */
-    OpenMRSPatient getPatientByUuid(String uuid);
+    Patient getPatientByUuid(String uuid);
 
     /**
      * Returns the patient with the given {@code motechId}.
@@ -52,7 +52,7 @@ public interface OpenMRSPatientService {
      * @param motechId  the MOTECH ID of the patient
      * @return the patient with the given MOTECH ID, null if the patient doesn't exist
      */
-    OpenMRSPatient getPatientByMotechId(String motechId);
+    Patient getPatientByMotechId(String motechId);
 
     /**
      * If the {@code motechId} is null this method will return a list of patients with given {@code name}, else it will
@@ -63,7 +63,7 @@ public interface OpenMRSPatientService {
      * @param motechId  the MOTECH ID of the patient to be searched for
      * @return list of matched patients
      */
-    List<OpenMRSPatient> search(String name, String motechId);
+    List<Patient> search(String name, String motechId);
 
     /**
      * Marks a patient with the given {@code motechId} as dead with the given {@code dateOfDeath}, {@code causeOfDeath}
@@ -75,7 +75,7 @@ public interface OpenMRSPatientService {
      * @param comment  the additional information for the cause of death
      * @throws PatientNotFoundException if the patient with the given MOTECH ID doesn't exist
      */
-    void deceasePatient(String motechId, OpenMRSConcept causeOfDeath, Date dateOfDeath, String comment) throws PatientNotFoundException;
+    void deceasePatient(String motechId, Concept causeOfDeath, Date dateOfDeath, String comment) throws PatientNotFoundException;
 
     /**
      * Deletes the patient with the given {@code uuid}.

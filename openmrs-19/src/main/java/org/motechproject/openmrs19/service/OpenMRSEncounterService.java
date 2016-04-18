@@ -1,7 +1,7 @@
 package org.motechproject.openmrs19.service;
 
-import org.motechproject.openmrs19.domain.OpenMRSEncounter;
-import org.motechproject.openmrs19.domain.OpenMRSEncounterType;
+import org.motechproject.openmrs19.domain.Encounter;
+import org.motechproject.openmrs19.domain.EncounterType;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public interface OpenMRSEncounterService {
      * @param encounter  the encounter to be created
      * @return the created encounter
      */
-    OpenMRSEncounter createEncounter(OpenMRSEncounter encounter);
+    Encounter createEncounter(Encounter encounter);
 
     /**
      * Returns the latest encounter of type {@code encounterType} for a patient with the given {@code motechId}.
@@ -25,7 +25,7 @@ public interface OpenMRSEncounterService {
      * @param encounterType  the type of the encounter
      * @return the latest encounter of the given type for the patient with the given MOTECH ID
      */
-    OpenMRSEncounter getLatestEncounterByPatientMotechId(String motechId, String encounterType);
+    Encounter getLatestEncounterByPatientMotechId(String motechId, String encounterType);
 
     /**
      * Returns the encounter with the given {@code uuid}.
@@ -33,7 +33,7 @@ public interface OpenMRSEncounterService {
      * @param uuid  the UUID of the encounter
      * @return the encounter with the given UUID
      */
-    OpenMRSEncounter getEncounterByUuid(String uuid);
+    Encounter getEncounterByUuid(String uuid);
 
     /**
      * Returns a list of encounters of the given {@code encounterType} for a patient with the given {@code motechId}.
@@ -42,7 +42,7 @@ public interface OpenMRSEncounterService {
      * @param encounterType  the type of the encounter
      * @return the list of encounters with the given encounter type for a patient with the given MOTECH ID
      */
-    List<OpenMRSEncounter> getEncountersByEncounterType(String motechId, String encounterType);
+    List<Encounter> getEncountersByEncounterType(String motechId, String encounterType);
 
     /**
      * Deletes the encounter with the given {@code uuid} from the OpenMRS server.
@@ -57,7 +57,7 @@ public interface OpenMRSEncounterService {
      * @param encounterType  the encounter type to be created
      * @return  the created encounter type
      */
-    OpenMRSEncounterType createEncounterType(OpenMRSEncounterType encounterType);
+    EncounterType createEncounterType(EncounterType encounterType);
 
     /**
      * Returns the encounter type with the given {@code uuid}.
@@ -65,7 +65,7 @@ public interface OpenMRSEncounterService {
      * @param uuid  the UUID of the encounter type
      * @return  the encounter type with given UUID
      */
-    OpenMRSEncounterType getEncounterTypeByUuid(String uuid);
+    EncounterType getEncounterTypeByUuid(String uuid);
 
     /**
      * Deletes the encounter type with the given {@code uuid}.

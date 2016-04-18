@@ -1,8 +1,8 @@
 package org.motechproject.openmrs19.service;
 
 import org.joda.time.DateTime;
-import org.motechproject.openmrs19.domain.OpenMRSAttribute;
-import org.motechproject.openmrs19.domain.OpenMRSPerson;
+import org.motechproject.openmrs19.domain.Attribute;
+import org.motechproject.openmrs19.domain.Person;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public interface OpenMRSPersonService {
      * @param person  the person to be created
      * @return  the created person
      */
-    OpenMRSPerson createPerson(OpenMRSPerson person);
+    Person createPerson(Person person);
 
     /**
      * Creates a person on the OpenMRS server based on the given information.
@@ -29,8 +29,8 @@ public interface OpenMRSPersonService {
      * @param address  the address of the person
      * @param attributes  a list of attributes for the person
      */
-    OpenMRSPerson createPerson(String firstName, String lastName, DateTime dateOfBirth, String gender,
-                               String address, List<OpenMRSAttribute> attributes);
+    Person createPerson(String firstName, String lastName, DateTime dateOfBirth, String gender,
+                        String address, List<Attribute> attributes);
 
     /**
      * Updates the person with the information stored in the given {@code person}.
@@ -38,7 +38,7 @@ public interface OpenMRSPersonService {
      * @param person  the person to be used as an update source
      * @return the updated person
      */
-    OpenMRSPerson updatePerson(OpenMRSPerson person);
+    Person updatePerson(Person person);
 
     /**
      * Deletes the person with the given {@code uuid} from the OpenMRS server. If the person with the given
@@ -54,5 +54,5 @@ public interface OpenMRSPersonService {
      * @param uuid  the UUID of the person
      * @return the person with the given UUID, null if the person doesn't exist
      */
-    OpenMRSPerson getPersonByUuid(String uuid);
+    Person getPersonByUuid(String uuid);
 }

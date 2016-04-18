@@ -8,8 +8,8 @@ public class CommcareAuthenticationException extends RuntimeException {
 
     private static final long serialVersionUID = -3913685825652130949L;
 
-    public CommcareAuthenticationException(String message) {
-        super(message);
+    public CommcareAuthenticationException() {
+        super("Motech was unable to authenticate to CommCareHQ. Please verify your account settings.");
     }
 
     public CommcareAuthenticationException(Exception ex, String message) {

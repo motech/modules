@@ -1,9 +1,9 @@
 package org.motechproject.openmrs19.resource;
 
+import org.motechproject.openmrs19.domain.RoleListResult;
+import org.motechproject.openmrs19.domain.User;
+import org.motechproject.openmrs19.domain.UserListResult;
 import org.motechproject.openmrs19.exception.HttpException;
-import org.motechproject.openmrs19.resource.model.RoleListResult;
-import org.motechproject.openmrs19.resource.model.User;
-import org.motechproject.openmrs19.resource.model.UserListResult;
 
 /**
  * Interface for users management.
