@@ -158,17 +158,4 @@ public class ConfigValidatorTest {
 
         validateConfig(config);
     }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowIllegalArgumentExceptionIfPatientIdentifiersTypeNamesIsNull() {
-        Config config = new Config();
-        config.setName(NAME);
-        config.setOpenMrsUrl(OPEN_MRS_URL);
-        config.setUsername(USERNAME);
-        config.setPassword(PASSWORD);
-        config.setMotechPatientIdentifierTypeName(MOTECH_PATIENT_IDENTIFIER_TYPE_NAME);
-        config.setPatientIdentifierTypeNames(null);
-
-        validateConfig(config);
-    }
 }
