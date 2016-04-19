@@ -1,9 +1,9 @@
 package org.motechproject.openmrs19.resource;
 
 import org.motechproject.openmrs19.domain.EncounterType;
-import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.domain.Encounter;
 import org.motechproject.openmrs19.domain.EncounterListResult;
+import org.motechproject.openmrs19.config.Config;
 
 /**
  * Interface for encounters management.
@@ -11,64 +11,67 @@ import org.motechproject.openmrs19.domain.EncounterListResult;
 public interface EncounterResource {
 
     /**
-     * Creates given encounter on the OpenMRS server.
+     * Creates given encounter on the OpenMRS server. The given {@code config} will be used while performing this action.
      *
+     * @param config  the name of the configuration
      * @param encounter  the encounter to be created
-     * @return  the saved encounter
-     * @throws HttpException  when there were problems while creating encounter
+     * @return the saved encounter
      */
-    Encounter createEncounter(Encounter encounter) throws HttpException;
+    Encounter createEncounter(Config config, Encounter encounter);
 
     /**
-     * Returns {@code EncounterListResult} of all encounters for the patient with given id.
+     * Returns {@code EncounterListResult} of all encounters for the patient with given id. The given {@code config}
+     * will be used while performing this action.
      *
+     * @param config  the name of the configuration
      * @param id  the id of the patient
-     * @return  the {@code EncounterListResult} of all matching encounter
-     * @throws HttpException  when there were problems while fetching encounters
+     * @return the {@code EncounterListResult} of all matching encounter
      */
-    EncounterListResult queryForAllEncountersByPatientId(String id) throws HttpException;
+    EncounterListResult queryForAllEncountersByPatientId(Config config, String id);
 
     /**
-     * Gets the encounter by its UUID.
+     * Gets the encounter by its UUID. The given {@code config} will be used while performing this action.
      *
+     * @param config  the name of the configuration
      * @param uuid  the UUID of the encounter
-     * @return  the encounter with the given UUID
-     * @throws HttpException  when there were problems while fetching encounter
+     * @return the encounter with the given UUID
      */
-    Encounter getEncounterById(String uuid) throws HttpException;
+    Encounter getEncounterById(Config config, String uuid);
 
     /**
-     * Creates given encounter type on the OpenMRS server.
+     * Creates given encounter type on the OpenMRS server. The given {@code config} will be used while performing this
+     * action.
      *
+     * @param config  the name of the configuration
      * @param encounterType  the encounter type to be created
-     * @return  the saved encounter type
-     * @throws HttpException  when there were problems while creating encounter type
+     * @return the saved encounter type
      */
-    EncounterType createEncounterType(EncounterType encounterType) throws HttpException;
+    EncounterType createEncounterType(Config config, EncounterType encounterType);
 
     /**
-     * Gets the encounter type by its UUID.
+     * Gets the encounter type by its UUID. The given {@code config} will be used while performing this action.
      *
+     * @param config  the name of the configuration
      * @param uuid  the UUID of the encounter type
-     * @return  the encounter type with the given UUID
-     * @throws HttpException  when there were problems while fetching encounter type
+     * @return the encounter type with the given UUID
      */
-    EncounterType getEncounterTypeByUuid(String uuid) throws HttpException;
+    EncounterType getEncounterTypeByUuid(Config config, String uuid);
 
     /**
-     * Deletes the encounter type with the given UUID from the OpenMRS server.
+     * Deletes the encounter type with the given UUID from the OpenMRS server. The given {@code config} will be used
+     * while performing this action.
      *
+     * @param config  the name of the configuration
      * @param uuid  the UUID of the encounter type
-     * @throws HttpException  when there were problems while deleting encounter type
      */
-    void deleteEncounterType(String uuid) throws HttpException;
+    void deleteEncounterType(Config config, String uuid);
 
     /**
-     * Deletes the encounter with the given UUID from the OpenMRS server.
+     * Deletes the encounter with the given UUID from the OpenMRS server. The given {@code config} will be used while
+     * performing this action.
      *
+     * @param config  the name of the configuration
      * @param uuid  the UUID of the encounter
-     * @throws HttpException  when there were problems while deleting encounter
      */
-    void deleteEncounter(String uuid) throws HttpException;
-
+    void deleteEncounter(Config config, String uuid);
 }

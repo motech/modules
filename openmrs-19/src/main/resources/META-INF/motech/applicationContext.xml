@@ -8,11 +8,6 @@
     <context:component-scan base-package="org.motechproject.openmrs19" />
 
     <bean id="openMrs19Settings" class="org.motechproject.config.SettingsFacade" autowire="byType">
-        <property name="configFiles">
-            <list>
-                <value>classpath:openmrs.properties</value>
-            </list>
-        </property>
         <property name="rawConfigFiles">
             <list>
                 <value>classpath:openmrs-configs.json</value>
@@ -20,9 +15,7 @@
         </property>
     </bean>
 
-    <bean id="openMrsHttpClient" init-method="readSettings" depends-on="openMrs19Settings"
-          class="org.motechproject.openmrs19.rest.HttpClientFactoryBean">
-        <constructor-arg ref="openMrs19Settings"/>
+    <bean id="openMrsHttpClient" class="org.motechproject.openmrs19.rest.HttpClientFactoryBean">
     </bean>
 
     <bean id="requestFactory" class="org.springframework.http.client.CommonsClientHttpRequestFactory">

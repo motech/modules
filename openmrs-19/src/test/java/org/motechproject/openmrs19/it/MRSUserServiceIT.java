@@ -25,6 +25,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.motechproject.openmrs19.util.TestConstants.DEFAULT_CONFIG_NAME;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -58,7 +59,7 @@ public class MRSUserServiceIT extends BasePaxIT {
     @Test
     public void shouldSetNewPassword() {
 
-        String newPassword = userAdapter.setNewPasswordForUser(userOne.getUsername());
+        String newPassword = userAdapter.setNewPasswordForUser(DEFAULT_CONFIG_NAME, userOne.getUsername());
 
         assertNotNull(newPassword);
     }
@@ -66,7 +67,7 @@ public class MRSUserServiceIT extends BasePaxIT {
     @Test
     public void shouldGetUserById() {
 
-        User user = userAdapter.getUserByUuid(userOne.getUuid());
+        User user = userAdapter.getUserByUuid(DEFAULT_CONFIG_NAME, userOne.getUuid());
 
         assertNotNull(user);
         assertEquals(user, userOne);
@@ -75,7 +76,7 @@ public class MRSUserServiceIT extends BasePaxIT {
     @Test
     public void shouldGetUserByUsername() {
 
-        User user = userAdapter.getUserByUserName(userOne.getUsername());
+        User user = userAdapter.getUserByUserName(DEFAULT_CONFIG_NAME, userOne.getUsername());
 
         assertNotNull(user);
         assertEquals(user, userOne);
@@ -84,7 +85,7 @@ public class MRSUserServiceIT extends BasePaxIT {
     @Test
     public void shouldGetAllUsers() {
 
-        List<User> users = userAdapter.getAllUsers();
+        List<User> users = userAdapter.getAllUsers(DEFAULT_CONFIG_NAME);
 
         // 4 including daemon and admin
         assertEquals(4, users.size());
@@ -100,7 +101,7 @@ public class MRSUserServiceIT extends BasePaxIT {
 
         userOne.setUsername(newUsername);
 
-        User updated = userAdapter.updateUser(userOne);
+        User updated = userAdapter.updateUser(DEFAULT_CONFIG_NAME, userOne);
 
         assertNotNull(updated);
         assertEquals(updated.getUsername(), newUsername);
@@ -156,7 +157,7 @@ public class MRSUserServiceIT extends BasePaxIT {
 
     private User createUser(User user) throws UserAlreadyExistsException {
 
-        User saved = userAdapter.createUser(user);
+        User saved = userAdapter.createUser(DEFAULT_CONFIG_NAME, user);
 
         assertNotNull(saved);
         assertNotNull(saved.getUuid());
@@ -166,9 +167,9 @@ public class MRSUserServiceIT extends BasePaxIT {
 
     private void deleteUser(User user) throws UserDeleteException {
 
-        userAdapter.deleteUser(user.getUuid());
-        assertNull(userAdapter.getUserByUserName(user.getUsername()));
+        userAdapter.deleteUser(DEFAULT_CONFIG_NAME, user.getUuid());
+        assertNull(userAdapter.getUserByUserName(DEFAULT_CONFIG_NAME, user.getUsername()));
 
-        personAdapter.deletePerson(user.getPerson().getUuid());
+        personAdapter.deletePerson(DEFAULT_CONFIG_NAME, user.getPerson().getUuid());
     }
 }
