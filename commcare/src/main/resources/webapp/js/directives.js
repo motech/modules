@@ -425,6 +425,13 @@
                     }
                 };
 
+                if(scope.$parent.getDefault().name === "") {
+                    scope.$parent.selectedConfig = undefined;
+                }
+                else if(scope.$parent.selectedConfig.name === "") {
+                    scope.$parent.selectedConfig = scope.$parent.getDefault();
+                }
+
                 if (scope.$parent.selectedConfig) {
                     params.url = '../commcare/caseList/' + scope.$parent.selectedConfig.name + '?caseName=&dateModifiedStart=&dateModifiedEnd=';
                     scope.downloadingCases = true;
