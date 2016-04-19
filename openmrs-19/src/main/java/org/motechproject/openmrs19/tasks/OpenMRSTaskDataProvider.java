@@ -4,9 +4,11 @@ import org.motechproject.commons.api.AbstractDataProvider;
 import org.motechproject.openmrs19.domain.Encounter;
 import org.motechproject.openmrs19.domain.Patient;
 import org.motechproject.openmrs19.domain.Provider;
+import org.motechproject.openmrs19.domain.Relationship;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
+import org.motechproject.openmrs19.service.OpenMRSRelationshipService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,10 @@ import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.MOTECH_ID;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.NAME;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PACKAGE_ROOT;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PATIENT;
+import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PERSON_UUID;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PROVIDER;
+import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.RELATIONSHIP;
+import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.RELATIONSHIP_TYPE_UUID;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.UUID;
 
 /**
@@ -35,15 +40,17 @@ import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.UUID;
 @Service("openMRSTaskDataProvider")
 public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSTaskDataProvider.class);
-    private static final List<Class<?>> SUPPORTED_CLASSES = Arrays.asList(Patient.class, Provider.class, Encounter.class);
+    private static final List<Class<?>> SUPPORTED_CLASSES = Arrays.asList(Patient.class, Provider.class, Encounter.class, Relationship.class);
 
     private OpenMRSEncounterService encounterService;
     private OpenMRSPatientService patientService;
     private OpenMRSProviderService providerService;
+    private OpenMRSRelationshipService relationshipService;
 
     @Autowired
     public OpenMRSTaskDataProvider(ResourceLoader resourceLoader, OpenMRSEncounterService encounterService,
-                                   OpenMRSPatientService patientService, OpenMRSProviderService providerService) {
+                                   OpenMRSPatientService patientService, OpenMRSProviderService providerService,
+                                   OpenMRSRelationshipService relationshipService) {
         Resource resource = resourceLoader.getResource("task-data-provider.json");
         if (resource != null) {
             setBody(resource);
@@ -52,6 +59,7 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         this.encounterService = encounterService;
         this.patientService = patientService;
         this.providerService = providerService;
+        this.relationshipService = relationshipService;
     }
 
     @Override
@@ -81,6 +89,8 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
                 case PATIENT: obj = getPatient(lookupName, lookupFields);
                     break;
                 case PROVIDER: obj = getProvider(lookupName, lookupFields);
+                    break;
+                case RELATIONSHIP: obj = getRelationship(lookupFields);
                     break;
             }
         }
@@ -127,5 +137,10 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         }
 
         return provider;
+    }
+
+    private Relationship getRelationship(Map<String, String> lookupFields) {
+        return relationshipService.getByTypeUuidAndPersonUuid(null, lookupFields.get(RELATIONSHIP_TYPE_UUID),
+                lookupFields.get(PERSON_UUID));
     }
 }
