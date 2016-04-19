@@ -21,7 +21,6 @@ public final class ConfigValidator {
         Validate.notEmpty(config.getUsername(), String.format(FIELD_CANNOT_BE_EMPTY, "Username"));
         Validate.notEmpty(config.getPassword(), String.format(FIELD_CANNOT_BE_EMPTY, "Password"));
         Validate.notEmpty(config.getMotechPatientIdentifierTypeName(), String.format(FIELD_CANNOT_BE_EMPTY, "Motech patient identifier type name"));
-        Validate.notNull(config.getPatientIdentifierTypeNames(), String.format(FIELD_CANNOT_BE_EMPTY, "Patient identifier type names"));
     }
 
     /**

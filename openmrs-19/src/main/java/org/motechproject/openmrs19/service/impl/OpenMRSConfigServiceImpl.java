@@ -3,6 +3,7 @@ package org.motechproject.openmrs19.service.impl;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.motechproject.config.SettingsFacade;
 import org.motechproject.openmrs19.config.Config;
 import org.motechproject.openmrs19.config.Configs;
@@ -66,7 +67,7 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
 
     @Override
     public Config getConfigByName(String name) {
-        return name == null ? configs.getDefault() : configs.getByName(name);
+        return StringUtils.isEmpty(name) ? configs.getDefault() : configs.getByName(name);
     }
 
     @Override

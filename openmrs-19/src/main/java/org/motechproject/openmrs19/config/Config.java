@@ -7,6 +7,7 @@ import org.springframework.web.util.UriTemplate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -95,6 +96,9 @@ public class Config {
     }
 
     public List<String> getPatientIdentifierTypeNames() {
+        if (patientIdentifierTypeNames == null) {
+            patientIdentifierTypeNames = new ArrayList<>();
+        }
         return patientIdentifierTypeNames;
     }
 

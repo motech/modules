@@ -12,12 +12,12 @@ import java.util.List;
 public interface OpenMRSUserService {
 
     /**
-     * Key to obtain {@link User} from {@link #createUser(User)} and {@link #updateUser(User)}
+     * Key to obtain {@link User} from {@link #createUser(String, User)} and {@link #updateUser(String, User)}
      */
     String USER_KEY = "mrsUser";
 
     /**
-     * Key to obtain password from {@link #createUser(User)} and {@link #updateUser(User)}
+     * Key to obtain password from {@link #createUser(String, User)} and {@link #updateUser(String, User)}
      */
     String PASSWORD_KEY = "password";
 

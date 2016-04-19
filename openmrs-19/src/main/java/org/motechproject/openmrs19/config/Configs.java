@@ -58,8 +58,7 @@ public class Configs {
                 config.setUsername(source.getUsername());
                 config.setPassword(source.getPassword());
                 config.setMotechPatientIdentifierTypeName(source.getMotechPatientIdentifierTypeName());
-                config.getPatientIdentifierTypeNames().clear();
-                config.getPatientIdentifierTypeNames().addAll(source.getPatientIdentifierTypeNames());
+                config.setPatientIdentifierTypeNames(source.getPatientIdentifierTypeNames());
                 return;
             }
         }

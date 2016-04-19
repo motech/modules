@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.lang.Validate;
 import org.motechproject.openmrs19.config.Config;
-import org.motechproject.openmrs19.domain.Concept;
 import org.motechproject.openmrs19.domain.Location;
 import org.motechproject.openmrs19.domain.LocationListResult;
 import org.motechproject.openmrs19.resource.LocationResource;
@@ -53,14 +52,14 @@ public class LocationResourceImpl extends BaseResource implements LocationResour
 
     @Override
     public Location createLocation(Config config, Location location) {
-        String jsonRequest = getGson(false).toJson(location);
+        String jsonRequest = getGson().toJson(location);
         String jsonResponse = postForJson(config, jsonRequest, "/location");
         return (Location) JsonUtils.readJson(jsonResponse, Location.class);
     }
 
     @Override
     public Location updateLocation(Config config, Location location) {
-        String jsonRequest = getGson(true).toJson(location);
+        String jsonRequest = getGson().toJson(location);
         String responseJson = postForJson(config, jsonRequest, "/location/{uuid}", location.getUuid());
         return (Location) JsonUtils.readJson(responseJson, Location.class);
     }
@@ -70,15 +69,7 @@ public class LocationResourceImpl extends BaseResource implements LocationResour
         delete(config, "/location/{uuid}?purge", uuid);
     }
 
-    private Gson getGson(boolean withAdapter) {
-        GsonBuilder builder = new GsonBuilder();
-
-        builder.excludeFieldsWithoutExposeAnnotation();
-
-        if (withAdapter) {
-            builder.registerTypeAdapter(Concept.class, new Concept.ConceptSerializer());
-        }
-
-        return builder.create();
+    private Gson getGson() {
+        return new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     }
 }
