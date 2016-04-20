@@ -4,7 +4,6 @@ import org.motechproject.commcare.CommcareDataProvider;
 import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.service.CommcareSchemaService;
 import org.motechproject.commcare.tasks.builder.ChannelRequestBuilder;
-import org.motechproject.tasks.exception.ValidationException;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
@@ -45,13 +44,13 @@ public class CommcareTasksNotifier {
 
         try {
             updateChannel();
-        } catch (ValidationException e) {
+        } catch (RuntimeException e) {
             LOGGER.error("Channel generated was not accepted by tasks due to validation errors", e);
         }
 
         try {
             dataProvider.updateDataProvider();
-        } catch (ValidationException e) {
+        } catch (RuntimeException e) {
             LOGGER.error("Data Provider generated was not accepted by tasks due to validation errors", e);
         }
     }
