@@ -91,7 +91,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         person.setPreferredAddress(personAddress);
         person.setAddresses(Collections.singletonList(personAddress));
 
-        person.setBirthdate(Objects.nonNull(startDate) ? startDate.toDate() : null);
+        person.setBirthdate(Objects.nonNull(birthdate) ? birthdate.toDate() : null);
         person.setBirthdateEstimated(birthdateEstimated);
         person.setDead(dead);
         person.setCauseOfDeath(causeOfDeath);

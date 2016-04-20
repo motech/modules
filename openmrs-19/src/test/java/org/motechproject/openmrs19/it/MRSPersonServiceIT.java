@@ -19,8 +19,12 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Map;
 
 import static junit.framework.Assert.assertNull;
@@ -45,27 +49,57 @@ public class MRSPersonServiceIT extends BasePaxIT {
     private MrsListener mrsListener;
 
     private Person person;
+    private Person responsePerson;
 
     @Before
-    public void initialize() throws InterruptedException {
+    public void initialize() throws InterruptedException, ParseException {
         mrsListener = new MrsListener();
         eventListenerRegistry.registerListener(mrsListener, Arrays.asList(EventKeys.CREATED_NEW_PERSON_SUBJECT,
             EventKeys.UPDATED_PERSON_SUBJECT, EventKeys.DELETED_PERSON_SUBJECT));
 
-        person = savePerson(preparePerson());
+        person = preparePerson();
+        responsePerson = savePerson(person);
     }
 
     @Test
     public void shouldCreatePerson() {
 
-        assertNotNull(person.getUuid());
-        assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_ID), person.getUuid());
-        assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_GIVEN_NAME), person.getPreferredName().getGivenName());
-        assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_FAMILY_NAME), person.getPreferredName().getFamilyName());
+        assertNotNull(responsePerson.getUuid());
+        assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_ID), responsePerson.getUuid());
+        assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_GIVEN_NAME), responsePerson.getPreferredName().getGivenName());
+        assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_FAMILY_NAME), responsePerson.getPreferredName().getFamilyName());
 
         assertTrue(mrsListener.created);
         assertFalse(mrsListener.deleted);
         assertFalse(mrsListener.updated);
+    }
+
+    @Test
+    public void shouldCreatePersonWithFields() {
+        Person createdPerson = personAdapter.getPersonByUuid(responsePerson.getUuid());
+
+        assertEquals(person.getPreferredName().getGivenName(), createdPerson.getPreferredName().getGivenName());
+        assertEquals(person.getPreferredName().getMiddleName(), createdPerson.getPreferredName().getMiddleName());
+        assertEquals(person.getPreferredName().getFamilyName(), createdPerson.getPreferredName().getFamilyName());
+
+        Person.Address personAddress = person.getPreferredAddress();
+        Person.Address createdPersonAddress = createdPerson.getPreferredAddress();
+
+        assertEquals(personAddress.getAddress1(), createdPersonAddress.getAddress1());
+        assertEquals(personAddress.getAddress2(), createdPersonAddress.getAddress2());
+        assertEquals(personAddress.getAddress3(), createdPersonAddress.getAddress3());
+        assertEquals(personAddress.getAddress4(), createdPersonAddress.getAddress4());
+        assertEquals(personAddress.getAddress5(), createdPersonAddress.getAddress5());
+        assertEquals(personAddress.getAddress6(), createdPersonAddress.getAddress6());
+        assertEquals(personAddress.getCityVillage(), createdPersonAddress.getCityVillage());
+        assertEquals(personAddress.getStateProvince(), createdPersonAddress.getStateProvince());
+        assertEquals(personAddress.getCountry(), createdPersonAddress.getCountry());
+        assertEquals(personAddress.getCountyDistrict(), createdPersonAddress.getCountyDistrict());
+        assertEquals(personAddress.getPostalCode(), createdPersonAddress.getPostalCode());
+        assertEquals(personAddress.getLatitude(), createdPersonAddress.getLatitude());
+        assertEquals(personAddress.getLongitude(), createdPersonAddress.getLongitude());
+        assertEquals(personAddress.getStartDate(), createdPersonAddress.getStartDate());
+        assertEquals(personAddress.getEndDate(), createdPersonAddress.getEndDate());
     }
 
     @Test
@@ -81,29 +115,29 @@ public class MRSPersonServiceIT extends BasePaxIT {
         name.setGivenName(newFirstName);
         name.setMiddleName(newMiddleName);
         name.setFamilyName(newLastName);
-        person.setNames(Collections.singletonList(name));
+        responsePerson.setNames(Collections.singletonList(name));
 
         Person.Address address = new Person.Address();
         address.setAddress1(newAddress);
-        person.setAddresses(Collections.singletonList(address));
+        responsePerson.setAddresses(Collections.singletonList(address));
 
-        person.setGender(newGender);
+        responsePerson.setGender(newGender);
 
         Person updated;
 
         synchronized (lock) {
-            assertNotNull(personAdapter.updatePerson(person));
+            assertNotNull(personAdapter.updatePerson(responsePerson));
             lock.wait(60000);
         }
 
-        updated = personAdapter.getPersonByUuid(person.getUuid());
+        updated = personAdapter.getPersonByUuid(responsePerson.getUuid());
 
         assertNotNull(updated);
         assertEquals(newFirstName, updated.getPreferredName().getGivenName());
         assertEquals(newMiddleName, updated.getPreferredName().getMiddleName());
         assertEquals(newLastName, updated.getPreferredName().getFamilyName());
-        // So far OpenMRS module stores only one field of person's address, which is 'address1'.
-        // However while retrieving person from OpenMRS server all person's address fields are put
+        // So far OpenMRS module stores only one field of responsePerson's address, which is 'address1'.
+        // However while retrieving responsePerson from OpenMRS server all responsePerson's address fields are put
         // into one string. That's why it is checked if address field contains address1 value.
         assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newAddress));
         assertEquals(newGender, updated.getGender());
@@ -117,8 +151,8 @@ public class MRSPersonServiceIT extends BasePaxIT {
     public void shouldDeletePerson() throws InterruptedException {
 
         synchronized (lock) {
-            personAdapter.deletePerson(person.getUuid());
-            assertNull(personAdapter.getPersonByUuid(person.getUuid()));
+            personAdapter.deletePerson(responsePerson.getUuid());
+            assertNull(personAdapter.getPersonByUuid(responsePerson.getUuid()));
 
             lock.wait(60000);
         }
@@ -131,31 +165,37 @@ public class MRSPersonServiceIT extends BasePaxIT {
     @Test
     public void shouldGetById() throws InterruptedException {
 
-        Person fetched = personAdapter.getPersonByUuid(person.getUuid());
+        Person fetched = personAdapter.getPersonByUuid(responsePerson.getUuid());
 
         assertNotNull(fetched);
-        assertEquals(person.getUuid(), fetched.getUuid());
+        assertEquals(responsePerson.getUuid(), fetched.getUuid());
     }
 
     @After
     public void tearDown() throws InterruptedException {
 
-        deletePerson(person);
+        deletePerson(responsePerson);
 
         eventListenerRegistry.clearListenersForBean("mrsTestListener");
     }
 
-    private Person preparePerson() {
+    private Person preparePerson() throws ParseException {
         Person person = new Person();
 
         Person.Name name = new Person.Name();
         name.setGivenName("John");
         name.setMiddleName("John");
         name.setFamilyName("Smith");
+        person.setPreferredName(name);
         person.setNames(Collections.singletonList(name));
 
-        Person.Address address = new Person.Address();
-        address.setAddress1("10 Fifth Avenue");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        Date startDate = dateFormat.parse("2016-03-01T00:00:00.000+0000");
+        Date endDate = dateFormat.parse("2100-03-01T00:00:00.000+0000");
+
+        Person.Address address = new Person.Address("10 Fifth Avenue", "line 2", "line 3", "line 4", "line 5", "line 6",
+                "BestCity", "Gondor", "Middle-earth", "00-000", "Ithilien", "30.00", "76.234", startDate, endDate);
+        person.setPreferredAddress(address);
         person.setAddresses(Collections.singletonList(address));
 
         person.setGender("M");

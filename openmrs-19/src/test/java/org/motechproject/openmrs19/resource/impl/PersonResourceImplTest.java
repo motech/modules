@@ -12,6 +12,10 @@ import org.motechproject.openmrs19.exception.HttpException;
 
 import java.io.IOException;
 import java.net.URI;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static ch.lambdaj.Lambda.extract;
 import static ch.lambdaj.Lambda.on;
@@ -39,14 +43,35 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
     }
 
     @Test
-    public void shouldGetAllAddressFields() throws HttpException, IOException {
+    public void shouldGetAllAddressFields() throws HttpException, IOException, ParseException {
         Mockito.when(getClient().getJson(Mockito.any(URI.class)))
                 .thenReturn(readJsonFromFile("json/person-response.json"));
 
         Person person = impl.getPersonById("PPP");
-        String fullAddressFields = "5 Main St.,5/4,Utopia,testProvince,Neverland,69-111,null,null,null,null,null,Tue Mar 01 01:00:00 CET 2016,null,47.613879,-122.342436";
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        Date startDate = dateFormat.parse("2016-03-01T00:00:00.000+0000");
+        Date endDate = dateFormat.parse("2100-03-01T00:00:00.000+0000");
+        String fullAddressFields = "5 Main St.,5/4,Utopia,testProvince,Neverland,69-111,testCountyDistrict,line 3,line 4,line 5,line 6,"
+            + startDate + "," + endDate +",47.613879,-122.342436";
 
         assertEquals(fullAddressFields, person.getPreferredAddress().getFullAddressString());
+    }
+
+    @Test
+    public void shouldGetPersonWithFields() throws HttpException, IOException {
+        Mockito.when(getClient().getJson(Mockito.any(URI.class)))
+                .thenReturn(readJsonFromFile("json/person-response.json"));
+
+        Person person = impl.getPersonById("PPP");
+
+        assertEquals("John", person.getPreferredName().getGivenName());
+        assertEquals("Doe", person.getPreferredName().getFamilyName());
+
+        assertEquals("5 Main St.", person.getPreferredAddress().getAddress1());
+        assertEquals("5/4", person.getPreferredAddress().getAddress2());
+        assertEquals("Neverland", person.getPreferredAddress().getCountry());
+        assertEquals("69-111", person.getPreferredAddress().getPostalCode());
+        assertEquals("Utopia", person.getPreferredAddress().getCityVillage());
     }
 
     @Test

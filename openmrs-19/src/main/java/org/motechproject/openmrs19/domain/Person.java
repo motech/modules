@@ -118,6 +118,28 @@ public class Person {
         @Expose
         private String longitude;
 
+        public Address() { }
+
+        public Address(String address1, String address2, String address3, String address4, String address5, String address6,
+                       String cityVillage, String stateProvince, String country, String postalCode, String countyDistrict,
+                       String latitude, String longitude, Date startDate, Date endDate) {
+            this.address1 = address1;
+            this.address2 = address2;
+            this.address3 = address3;
+            this.address4 = address4;
+            this.address5 = address5;
+            this.address6 = address6;
+            this.cityVillage = cityVillage;
+            this.stateProvince = stateProvince;
+            this.country = country;
+            this.postalCode = postalCode;
+            this.countyDistrict = countyDistrict;
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.startDate = startDate;
+            this.endDate = endDate;
+        }
+
         public String getUuid() {
             return uuid;
         }
