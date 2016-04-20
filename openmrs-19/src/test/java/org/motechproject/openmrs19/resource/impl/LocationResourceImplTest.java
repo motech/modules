@@ -1,115 +1,141 @@
 package org.motechproject.openmrs19.resource.impl;
 
+import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.motechproject.openmrs19.domain.Location;
 import org.motechproject.openmrs19.domain.LocationListResult;
-import org.motechproject.openmrs19.exception.HttpException;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.motechproject.openmrs19.config.Config;
+import org.motechproject.openmrs19.config.ConfigDummyData;
+import org.motechproject.openmrs19.util.JsonUtils;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.web.client.RestOperations;
 
-import java.io.IOException;
 import java.net.URI;
 
-import static ch.lambdaj.Lambda.extract;
-import static ch.lambdaj.Lambda.on;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class LocationResourceImplTest extends AbstractResourceImplTest {
 
-    private LocationResourceImpl impl;
+    private static final String LOCATION_LIST_RESPONSE_JSON = "json/location-list-response.json";
+    private static final String LOCATION_RESPONSE_JSON = "json/location-response.json";
+    private static final String CREATE_LOCATION_JSON = "json/location-create.json";
+
+    @Mock
+    private RestOperations restOperations;
+
+    @Captor
+    private ArgumentCaptor<HttpEntity<String>> requestCaptor;
+
+    private LocationResourceImpl locationResource;
+
+    private Config config;
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        impl = new LocationResourceImpl(getClient(), getInstance());
+        initMocks(this);
+        locationResource = new LocationResourceImpl(restOperations);
+        config = ConfigDummyData.prepareConfig("one");
     }
 
     @Test
-    public void shouldCreateLocation() throws IOException, HttpException {
-        Location loc = buildLocation();
-        impl.createLocation(loc);
+    public void shouldCreateLocation() throws Exception {
+        Location location = prepareLocation();
+        URI uri = config.toInstancePath("/location");
 
-        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        Mockito.verify(getClient()).postForJson(Mockito.any(URI.class), captor.capture());
+        when(restOperations.exchange(eq(uri), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(LOCATION_RESPONSE_JSON));
 
-        String expectedJson = readJsonFromFile("json/location-create.json");
+        Location created = locationResource.createLocation(config, location);
 
-        Location expectedObj = getGson().fromJson(expectedJson, Location.class);
-        Location sentObject = getGson().fromJson(captor.getValue(), Location.class);
+        verify(restOperations).exchange(eq(uri), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
 
-        assertEquals(expectedObj.getAddress6(), sentObject.getAddress6());
-        assertEquals(expectedObj.getName(), sentObject.getName());
-        assertEquals(expectedObj.getStateProvince(), sentObject.getStateProvince());
-        assertEquals(expectedObj.getCountry(), sentObject.getCountry());
-        assertEquals(expectedObj.getCountyDistrict(), sentObject.getCountyDistrict());
-        assertEquals(expectedObj.getDescription(), sentObject.getDescription());
+        assertThat(created, equalTo(location));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPost(config)));
+        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
+                equalTo(readFromFile(CREATE_LOCATION_JSON, JsonObject.class)));
     }
 
     @Test
-    public void shouldUpdateLocation() throws IOException, HttpException {
-        Location loc = buildLocation();
-        impl.updateLocation(loc);
+    public void shouldUpdateLocation() throws Exception {
+        Location location = prepareLocation();
+        URI url = config.toInstancePathWithParams("/location/{uuid}", location.getUuid());
 
-        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        Mockito.verify(getClient()).postForJson(Mockito.any(URI.class), captor.capture());
+        when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(LOCATION_RESPONSE_JSON));
 
-        String expectedJson = readJsonFromFile("json/location-create.json");
+        Location updated = locationResource.updateLocation(config, location);
 
-        Location expectedObj = getGson().fromJson(expectedJson, Location.class);
-        Location sentObject = getGson().fromJson(captor.getValue(), Location.class);
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
 
-        assertEquals(expectedObj.getAddress6(), sentObject.getAddress6());
-        assertEquals(expectedObj.getName(), sentObject.getName());
-        assertEquals(expectedObj.getStateProvince(), sentObject.getStateProvince());
-        assertEquals(expectedObj.getCountry(), sentObject.getCountry());
-        assertEquals(expectedObj.getCountyDistrict(), sentObject.getCountyDistrict());
-        assertEquals(expectedObj.getDescription(), sentObject.getDescription());
-    }
-
-    private Location buildLocation() {
-        Location loc = new Location();
-        loc.setName("Location Name");
-        loc.setStateProvince("Location State");
-        loc.setCountry("Location Country");
-        loc.setCountyDistrict("Location District");
-        loc.setAddress6("Region");
-        loc.setDescription("Location Name");
-
-        return loc;
+        assertThat(updated, equalTo(location));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPost(config)));
+        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
+                equalTo(readFromFile(CREATE_LOCATION_JSON, JsonObject.class)));
     }
 
     @Test
-    public void shouldParseAllLocations() throws HttpException, IOException {
-        Mockito.when(getClient().getJson(Mockito.any(URI.class))).thenReturn(
-                readJsonFromFile("json/location-list-response.json"));
+    public void shouldGetAllLocations() throws Exception {
+        URI url = config.toInstancePath("/location?v=full");
 
-        LocationListResult result = impl.getAllLocations();
+        when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(LOCATION_LIST_RESPONSE_JSON));
 
-        assertEquals(asList("AAABBBCCC"), extract(result.getResults(), on(Location.class).getUuid()));
+        LocationListResult result = locationResource.getAllLocations(config);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
+
+        assertThat(result, equalTo(readFromFile(LOCATION_LIST_RESPONSE_JSON, LocationListResult.class)));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
+        assertThat(requestCaptor.getValue().getBody(), nullValue());
     }
 
     @Test
-    public void shouldQueryForLocationByName() throws HttpException, IOException {
-        Mockito.when(getClient().getJson(Mockito.any(URI.class))).thenReturn(
-                readJsonFromFile("json/location-list-response.json"));
+    public void shouldGetLocationById() throws Exception {
+        String locationId = "LLL";
+        URI url = config.toInstancePathWithParams("/location/{uuid}", locationId);
 
-        LocationListResult result = impl.queryForLocationByName("Test");
+        when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(LOCATION_RESPONSE_JSON));
 
-        assertEquals(asList("AAABBBCCC"), extract(result.getResults(), on(Location.class).getUuid()));
+        Location location = locationResource.getLocationById(config, locationId);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
+
+        assertThat(location, equalTo(readFromFile(LOCATION_RESPONSE_JSON, Location.class)));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
+        assertThat(requestCaptor.getValue().getBody(), nullValue());
     }
 
     @Test
-    public void shouldParseSingleLocation() throws HttpException, IOException {
-        Mockito.when(getClient().getJson(Mockito.any(URI.class))).thenReturn(
-                readJsonFromFile("json/location-create.json"));
+    public void shouldQueryForLocationByName() throws Exception {
+        String query = "Test";
+        URI url = config.toInstancePathWithParams("/location?q={name}&v=full", query);
 
-        Location location = impl.getLocationById("LLL");
+        when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(LOCATION_LIST_RESPONSE_JSON));
 
-        assertNotNull(location);
+        LocationListResult result = locationResource.queryForLocationByName(config, query);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
+
+        assertThat(result, equalTo(readFromFile(LOCATION_LIST_RESPONSE_JSON, LocationListResult.class)));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
+        assertThat(requestCaptor.getValue().getBody(), nullValue());
     }
 
+    private Location prepareLocation() throws Exception {
+        return (Location) readFromFile(LOCATION_RESPONSE_JSON, Location.class);
+    }
 }

@@ -1,96 +1,91 @@
 package org.motechproject.openmrs19.resource.impl;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.motechproject.openmrs19.domain.Concept;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.motechproject.openmrs19.config.Config;
+import org.motechproject.openmrs19.config.ConfigDummyData;
 import org.motechproject.openmrs19.domain.Encounter;
 import org.motechproject.openmrs19.domain.EncounterListResult;
-import org.motechproject.openmrs19.domain.EncounterType;
-import org.motechproject.openmrs19.domain.Location;
-import org.motechproject.openmrs19.domain.Observation;
-import org.motechproject.openmrs19.domain.Patient;
-import org.motechproject.openmrs19.domain.Person;
-import org.motechproject.openmrs19.exception.HttpException;
+import org.motechproject.openmrs19.resource.EncounterResource;
+import org.motechproject.openmrs19.util.JsonUtils;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.web.client.RestOperations;
 
-import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
-import static ch.lambdaj.Lambda.extract;
-import static ch.lambdaj.Lambda.on;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class EncounterResourceImplTest extends AbstractResourceImplTest {
 
+    private static final String ENCOUNTER_BY_PATIENT_RESPONSE_JSON = "json/encounter-by-patient-response.json";
+    private static final String ENCOUNTER_RESPONSE_JSON = "json/encounter-response.json";
+    private static final String CREATE_ENCOUNTER_JSON = "json/encounter-create.json";
+
+    @Mock
+    private RestOperations restOperations;
+
+    @Captor
+    private ArgumentCaptor<HttpEntity<String>> requestCaptor;
+
+    private EncounterResource encounterResource;
+
+    private Config config;
+
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        initMocks(this);
+        encounterResource = new EncounterResourceImpl(restOperations);
+        config = ConfigDummyData.prepareConfig("one");
     }
 
     @Test
-    public void shouldWriteEncounterCreateJson() throws IOException, HttpException {
-        Encounter encounter = getExpectedEncounter();
+    public void shouldCreateEncounter() throws Exception {
+        Encounter encounter = prepareEncounter();
+        URI url = config.toInstancePath("/encounter?v=full");
 
-        EncounterResourceImpl impl = new EncounterResourceImpl(getClient(), getInstance());
-        impl.createEncounter(encounter);
+        when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(ENCOUNTER_RESPONSE_JSON));
 
-        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        Mockito.verify(getClient()).postForJson(Mockito.any(URI.class), captor.capture());
+        Encounter created = encounterResource.createEncounter(config, encounter);
 
-        String expectedJson = readJsonFromFile("json/encounter-create.json");
-        JsonElement expectedJsonObj = getGson().fromJson(expectedJson, JsonObject.class);
-        JsonElement foundJsonObj = getGson().fromJson(captor.getValue(), JsonObject.class);
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
 
-        assertEquals(expectedJsonObj, foundJsonObj);
-    }
-
-    private Encounter getExpectedEncounter() {
-        Encounter encounter = new Encounter();
-        EncounterType type = new EncounterType("ADULTINITIAL");
-        encounter.setEncounterType(type);
-
-        Location loc = new Location();
-        loc.setUuid("LLL");
-        encounter.setLocation(loc);
-
-        Patient patient = new Patient();
-        patient.setUuid("PPP");
-        encounter.setPatient(patient);
-
-        Person provider = new Person();
-        provider.setUuid("PPR");
-        encounter.setProvider(provider);
-
-        Observation obs = new Observation();
-        obs.setUuid("OOO");
-        Concept concept = new Concept();
-        concept.setUuid("CCC");
-        obs.setConcept(concept);
-        Observation.ObservationValue value = new Observation.ObservationValue("Test Value");
-        obs.setValue(value);
-        List<Observation> observations = new ArrayList<Observation>();
-        observations.add(obs);
-        encounter.setObs(observations);
-
-        return encounter;
+        assertThat(created, equalTo(encounter));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPost(config)));
+        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
+                equalTo(readFromFile(CREATE_ENCOUNTER_JSON, JsonObject.class)));
     }
 
     @Test
-    public void shouldReadEncounterListResult() throws IOException, HttpException {
-        String responseJson = readJsonFromFile("json/encounter-by-patient-response.json");
+    public void shouldQueryAllEncountersBYPatientId() throws Exception {
+        String patientId = "200";
+        URI url = config.toInstancePathWithParams("/encounter?patient={id}&v=full", patientId);
 
-        Mockito.when(getClient().getJson(Mockito.any(URI.class))).thenReturn(responseJson);
+        when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(ENCOUNTER_BY_PATIENT_RESPONSE_JSON));
 
-        EncounterResourceImpl impl = new EncounterResourceImpl(getClient(), getInstance());
-        EncounterListResult result = impl.queryForAllEncountersByPatientId("200");
+        EncounterListResult result = encounterResource.queryForAllEncountersByPatientId(config, patientId);
 
-        assertEquals(asList("446d0bec-5e65-4f25-aacd-ee7da78ec616"), extract(result.getResults(), on(Encounter.class).getUuid()));
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
+
+        assertThat(result, equalTo(readFromFile(ENCOUNTER_BY_PATIENT_RESPONSE_JSON, EncounterListResult.class)));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
+        assertThat(requestCaptor.getValue().getBody(), nullValue());
+    }
+
+    public Encounter prepareEncounter() throws Exception {
+        return (Encounter) readFromFile(ENCOUNTER_RESPONSE_JSON, Encounter.class);
     }
 }

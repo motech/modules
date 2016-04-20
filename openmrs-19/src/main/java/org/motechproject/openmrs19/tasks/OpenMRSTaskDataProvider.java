@@ -92,7 +92,7 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         Encounter encounter = null;
 
         switch (lookupName) {
-            case BY_UUID: encounter = encounterService.getEncounterByUuid(lookupFields.get(UUID));
+            case BY_UUID: encounter = encounterService.getEncounterByUuid(null, lookupFields.get(UUID));
                 break;
             default: LOGGER.error("Lookup with name {} doesn't exist for encounter object", lookupName);
                 break;
@@ -105,9 +105,9 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         Patient patient = null;
 
         switch (lookupName) {
-            case BY_MOTECH_ID: patient = patientService.getPatientByMotechId(lookupFields.get(MOTECH_ID));
+            case BY_MOTECH_ID: patient = patientService.getPatientByMotechId(null, lookupFields.get(MOTECH_ID));
                 break;
-            case BY_UUID: patient = patientService.getPatientByUuid(lookupFields.get(UUID));
+            case BY_UUID: patient = patientService.getPatientByUuid(null, lookupFields.get(UUID));
                 break;
             default: LOGGER.error("Lookup with name {} doesn't exist for patient object", lookupName);
                 break;
@@ -120,7 +120,7 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         Provider provider = null;
 
         switch (lookupName) {
-            case BY_UUID: provider = providerService.getProviderByUuid(lookupFields.get(UUID));
+            case BY_UUID: provider = providerService.getProviderByUuid(null, lookupFields.get(UUID));
                 break;
             default: LOGGER.error("Lookup with name {} doesn't exist for provider object", lookupName);
                 break;

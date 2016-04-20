@@ -2,46 +2,44 @@ package org.motechproject.openmrs19.resource.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.motechproject.openmrs19.OpenMrsInstance;
+import org.motechproject.openmrs19.config.Config;
 import org.motechproject.openmrs19.domain.Person;
 import org.motechproject.openmrs19.domain.Provider;
-import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.resource.ProviderResource;
-import org.motechproject.openmrs19.rest.RestClient;
 import org.motechproject.openmrs19.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestOperations;
 
 @Component
-public class ProviderResourceImpl implements ProviderResource {
-
-    private final RestClient restClient;
-    private final OpenMrsInstance openmrsInstance;
+public class ProviderResourceImpl extends BaseResource implements ProviderResource {
 
     @Autowired
-    public ProviderResourceImpl(RestClient restClient, OpenMrsInstance openmrsInstance) {
-        this.restClient = restClient;
-        this.openmrsInstance = openmrsInstance;
+    public ProviderResourceImpl(RestOperations restOperations) {
+        super(restOperations);
     }
 
     @Override
-    public Provider createProvider(Provider provider) throws HttpException {
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(Person.class, new Person.PersonSerializer()).create();
-
-        String requestJson = gson.toJson(provider, Provider.class);
-        String responseJson = restClient.postForJson(openmrsInstance.toInstancePath("/provider"), requestJson);
+    public Provider createProvider(Config config, Provider provider) {
+        String requestJson = buildGson().toJson(provider, Provider.class);
+        String responseJson = postForJson(config, requestJson, "/provider");
         return (Provider) JsonUtils.readJson(responseJson, Provider.class);
     }
 
     @Override
-    public Provider getByUuid(String uuid) throws HttpException {
-        String responseJson = restClient.getJson(openmrsInstance.toInstancePathWithParams("/provider/{uuid}", uuid));
+    public Provider getByUuid(Config config, String uuid) {
+        String responseJson = getJson(config, "/provider/{uuid}", uuid);
         return (Provider) JsonUtils.readJson(responseJson, Provider.class);
     }
 
     @Override
-    public void deleteProvider(String uuid) throws HttpException {
-        restClient.delete(openmrsInstance.toInstancePathWithParams("/provider/{uuid}?purge", uuid));
+    public void deleteProvider(Config config, String uuid) {
+        delete(config, "/provider/{uuid}?purge", uuid);
+    }
+
+    private Gson buildGson() {
+        return new GsonBuilder()
+                .registerTypeAdapter(Person.class, new Person.PersonSerializer())
+                .create();
     }
 }

@@ -61,23 +61,24 @@ public class ConceptName {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(name, locale, conceptNameType);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
+
         if (!(o instanceof ConceptName)) {
             return false;
         }
 
-        ConceptName conceptName = (ConceptName) o;
+        ConceptName other = (ConceptName) o;
 
-        return Objects.equals(name, conceptName.name) && Objects.equals(locale, conceptName.locale) &&
-                Objects.equals(conceptNameType, conceptName.conceptNameType);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, locale, conceptNameType);
+        return Objects.equals(name, other.name) && Objects.equals(locale, other.locale)
+                && Objects.equals(conceptNameType, other.conceptNameType);
     }
 
     @Override

@@ -1,115 +1,141 @@
 package org.motechproject.openmrs19.resource.impl;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.motechproject.openmrs19.domain.Concept;
-import org.motechproject.openmrs19.domain.ConceptName;
-import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.domain.ConceptListResult;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.motechproject.openmrs19.config.Config;
+import org.motechproject.openmrs19.config.ConfigDummyData;
+import org.motechproject.openmrs19.util.JsonUtils;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.web.client.RestOperations;
 
-import java.io.IOException;
 import java.net.URI;
 
-import static ch.lambdaj.Lambda.extract;
-import static ch.lambdaj.Lambda.on;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ConceptResourceImplTest extends AbstractResourceImplTest {
 
-    private ConceptResourceImpl impl;
+    private static final String CONCEPT_LIST_RESPONSE_JSON = "json/concept-list-response.json";
+    private static final String CONCEPT_RESPONSE_JSON = "json/concept-response.json";
+    private static final String CONCEPT_CREATE_JSON = "json/concept-create.json";
+
+    @Mock
+    private RestOperations restOperations;
+
+    @Captor
+    private ArgumentCaptor<HttpEntity<String>> requestCaptor;
+
+    private ConceptResourceImpl conceptResource;
+
+    private Config config;
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        impl = new ConceptResourceImpl(getClient(), getInstance());
+        initMocks(this);
+        conceptResource = new ConceptResourceImpl(restOperations);
+        config = ConfigDummyData.prepareConfig("one");
     }
 
     @Test
-    public void shouldHandleConceptListResultJson() throws IOException, HttpException {
-        String json = readJsonFromFile("json/concept-list-response.json");
-        Mockito.when(getClient().getJson(Mockito.any(URI.class))).thenReturn(json);
+    public void shouldCreateConcept() throws Exception {
+        Concept concept = prepareConcept();
+        URI url = config.toInstancePath("/concept");
 
-        ConceptResourceImpl impl = new ConceptResourceImpl(getClient(), getInstance());
-        ConceptListResult result = impl.queryForConceptsByName("test");
+        when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(CONCEPT_RESPONSE_JSON));
 
-        assertEquals(asList("Test Concept"), extract(result.getResults(), on(Concept.class).getDisplay()));
+        Concept created = conceptResource.createConcept(config, concept);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
+
+        assertThat(created, equalTo(concept));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPost(config)));
+        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
+                equalTo(readFromFile(CONCEPT_CREATE_JSON, JsonObject.class)));
     }
 
     @Test
-    public void shouldCreateConcept() throws IOException, HttpException {
-        Concept concept = buildConcept();
-        impl.createConcept(concept);
+    public void shouldUpdateConcept() throws Exception {
+        Concept concept = prepareConcept();
+        URI url = config.toInstancePathWithParams("/concept/{uuid}", concept.getUuid());
 
-        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        Mockito.verify(getClient()).postForJson(Mockito.any(URI.class), captor.capture());
+        when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(CONCEPT_RESPONSE_JSON));
 
-        String expectedJson = readJsonFromFile("json/concept-create.json");
+        Concept updated = conceptResource.updateConcept(config, concept);
 
-        JsonElement expectedObj = getGson().fromJson(expectedJson, JsonObject.class);
-        JsonElement sentObject = getGson().fromJson(captor.getValue(), JsonObject.class);
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
 
-        assertEquals(expectedObj, sentObject);
-    }
-
-    private Concept buildConcept() {
-        Concept concept = new Concept();
-        concept.setName(new ConceptName("Test Concept"));
-        concept.setDisplay("Test Concept");
-
-        return concept;
+        assertThat(updated, equalTo(concept));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPost(config)));
+        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
+                equalTo(readFromFile(CONCEPT_CREATE_JSON, JsonObject.class)));
     }
 
     @Test
-    public void shouldParseAllConcepts() throws HttpException, IOException {
-        Mockito.when(getClient().getJson(Mockito.any(URI.class))).thenReturn(
-                readJsonFromFile("json/concept-list-response.json"));
+    public void shouldGetAllConcepts() throws Exception {
+        URI url = config.toInstancePath("/concept?v=full");
 
-        ConceptListResult result = impl.getAllConcepts();
+        when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(CONCEPT_LIST_RESPONSE_JSON));
 
-        assertEquals(asList("8bb05db3-6c7b-474a-9f79-6f5dd3ad5002"), extract(result.getResults(), on(Concept.class).getUuid()));
+        ConceptListResult result = conceptResource.getAllConcepts(config);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
+
+        assertThat(result, equalTo(readFromFile(CONCEPT_LIST_RESPONSE_JSON, ConceptListResult.class)));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
+        assertThat(requestCaptor.getValue().getBody(), nullValue());
     }
 
     @Test
-    public void shouldQueryForConceptByName() throws HttpException, IOException {
-        Mockito.when(getClient().getJson(Mockito.any(URI.class))).thenReturn(
-                readJsonFromFile("json/concept-list-response.json"));
+    public void shouldGetConceptById() throws Exception {
+        String conceptId = "LLL";
+        URI url = config.toInstancePathWithParams("/concept/{uuid}", conceptId);
 
-        ConceptListResult result = impl.queryForConceptsByName("Test");
+        when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(CONCEPT_CREATE_JSON));
 
-        assertEquals(asList("8bb05db3-6c7b-474a-9f79-6f5dd3ad5002"), extract(result.getResults(), on(Concept.class).getUuid()));
+        Concept concept = conceptResource.getConceptById(config, conceptId);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
+
+        assertThat(concept, equalTo(readFromFile(CONCEPT_CREATE_JSON, Concept.class)));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
+        assertThat(requestCaptor.getValue().getBody(), nullValue());
     }
 
     @Test
-    public void shouldUpdateConcept() throws IOException, HttpException {
-        Concept concept = buildConcept();
-        impl.updateConcept(concept);
+    public void shouldQueryForConceptByName() throws Exception {
+        String query = "Test";
+        URI url = config.toInstancePathWithParams("/concept?v=full&q={conceptName}", query);
 
-        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        Mockito.verify(getClient()).postForJson(Mockito.any(URI.class), captor.capture());
+        when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(CONCEPT_LIST_RESPONSE_JSON));
 
-        String expectedJson = readJsonFromFile("json/concept-create.json");
+        ConceptListResult result = conceptResource.queryForConceptsByName(config, query);
 
-        Concept expectedObj = getGson().fromJson(expectedJson, Concept.class);
-        Concept sentObject = getGson().fromJson(captor.getValue(), Concept.class);
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
 
-        assertEquals(expectedObj.getUuid(), sentObject.getUuid());
-        assertEquals(expectedObj.getDisplay(), sentObject.getDisplay());
+        assertThat(result, equalTo(readFromFile(CONCEPT_LIST_RESPONSE_JSON, ConceptListResult.class)));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
+        assertThat(requestCaptor.getValue().getBody(), nullValue());
     }
 
-    @Test
-    public void shouldParseSingleConcept() throws HttpException, IOException {
-        Mockito.when(getClient().getJson(Mockito.any(URI.class))).thenReturn(
-                readJsonFromFile("json/concept-create.json"));
-
-        Concept concept = impl.getConceptById("LLL");
-
-        assertNotNull(concept);
+    private Concept prepareConcept() throws Exception {
+        return (Concept) readFromFile(CONCEPT_RESPONSE_JSON, Concept.class);
     }
 }

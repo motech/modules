@@ -28,6 +28,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.motechproject.openmrs19.util.TestConstants.DEFAULT_CONFIG_NAME;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -92,11 +93,11 @@ public class MRSPersonServiceIT extends BasePaxIT {
         Person updated;
 
         synchronized (lock) {
-            assertNotNull(personAdapter.updatePerson(person));
+            assertNotNull(personAdapter.updatePerson(DEFAULT_CONFIG_NAME, person));
             lock.wait(60000);
         }
 
-        updated = personAdapter.getPersonByUuid(person.getUuid());
+        updated = personAdapter.getPersonByUuid(DEFAULT_CONFIG_NAME, person.getUuid());
 
         assertNotNull(updated);
         assertEquals(newFirstName, updated.getPreferredName().getGivenName());
@@ -117,8 +118,8 @@ public class MRSPersonServiceIT extends BasePaxIT {
     public void shouldDeletePerson() throws InterruptedException {
 
         synchronized (lock) {
-            personAdapter.deletePerson(person.getUuid());
-            assertNull(personAdapter.getPersonByUuid(person.getUuid()));
+            personAdapter.deletePerson(DEFAULT_CONFIG_NAME, person.getUuid());
+            assertNull(personAdapter.getPersonByUuid(DEFAULT_CONFIG_NAME, person.getUuid()));
 
             lock.wait(60000);
         }
@@ -131,7 +132,7 @@ public class MRSPersonServiceIT extends BasePaxIT {
     @Test
     public void shouldGetById() throws InterruptedException {
 
-        Person fetched = personAdapter.getPersonByUuid(person.getUuid());
+        Person fetched = personAdapter.getPersonByUuid(DEFAULT_CONFIG_NAME, person.getUuid());
 
         assertNotNull(fetched);
         assertEquals(person.getUuid(), fetched.getUuid());
@@ -170,7 +171,7 @@ public class MRSPersonServiceIT extends BasePaxIT {
         Person created;
 
         synchronized (lock) {
-            created = personAdapter.createPerson(person);
+            created = personAdapter.createPerson(DEFAULT_CONFIG_NAME, person);
             assertNotNull(created);
 
             lock.wait(60000);
@@ -181,8 +182,8 @@ public class MRSPersonServiceIT extends BasePaxIT {
 
     private void deletePerson(Person person) throws InterruptedException {
 
-        personAdapter.deletePerson(person.getUuid());
-        assertNull(personAdapter.getPersonByUuid(person.getUuid()));
+        personAdapter.deletePerson(DEFAULT_CONFIG_NAME, person.getUuid());
+        assertNull(personAdapter.getPersonByUuid(DEFAULT_CONFIG_NAME, person.getUuid()));
     }
 
     public class MrsListener implements EventListener {

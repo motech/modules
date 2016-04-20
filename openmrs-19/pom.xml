@@ -223,13 +223,13 @@
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${user.home}/.motech/config/org.motechproject.openmrs-19/</outputDirectory>
+                                    <outputDirectory>${user.home}/.motech/config/org.motechproject.openmrs-19/raw</outputDirectory>
                                     <overwrite>true</overwrite>
                                     <resources>
                                         <resource>
-                                            <directory>src/test/resources/</directory>
+                                            <directory>src/test/resources</directory>
                                             <filtering>true</filtering>
-                                            <include>openmrs.properties</include>
+                                            <include>openmrs-configs.json</include>
                                         </resource>
                                     </resources>
                                 </configuration>
@@ -285,7 +285,7 @@
                                             <followSymlinks>false</followSymlinks>
                                             <directory>${user.home}/.motech/config</directory>
                                             <includes>
-                                                <include>org.motechproject.openmrs-19/openmrs.properties</include>
+                                                <include>org.motechproject.openmrs-19/raw/openmrs-configs.json</include>
                                                 <include>bootstrap.properties</include>
                                                 <include>motech-settings.properties</include>
                                                 <include>datanucleus.properties</include>

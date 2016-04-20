@@ -3,19 +3,21 @@ package org.motechproject.openmrs19.service.impl;
 import org.apache.commons.lang.Validate;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
+import org.motechproject.openmrs19.config.Config;
 import org.motechproject.openmrs19.domain.Concept;
 import org.motechproject.openmrs19.domain.ConceptListResult;
 import org.motechproject.openmrs19.exception.ConceptNameAlreadyInUseException;
-import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.exception.OpenMRSException;
 import org.motechproject.openmrs19.helper.EventHelper;
 import org.motechproject.openmrs19.resource.ConceptResource;
 import org.motechproject.openmrs19.service.EventKeys;
 import org.motechproject.openmrs19.service.OpenMRSConceptService;
+import org.motechproject.openmrs19.service.OpenMRSConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,28 +26,36 @@ import java.util.Map;
 
 @Service("conceptService")
 public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSConceptServiceImpl.class);
 
-    private final Map<String, String> conceptCache = new HashMap<>();
+    private final OpenMRSConfigService configService;
+
     private final ConceptResource conceptResource;
+
     private final EventRelay eventRelay;
 
+    private final Map<String, String> conceptCache = new HashMap<>();
+
     @Autowired
-    public OpenMRSConceptServiceImpl(ConceptResource conceptResource, EventRelay eventRelay) {
+    public OpenMRSConceptServiceImpl(ConceptResource conceptResource, EventRelay eventRelay,
+                                     OpenMRSConfigService configService) {
         this.conceptResource = conceptResource;
+        this.configService = configService;
         this.eventRelay = eventRelay;
     }
 
     @Override
-    public String resolveConceptUuidFromConceptName(String name) {
+    public String resolveConceptUuidFromConceptName(String configName, String name) {
         if (conceptCache.containsKey(name)) {
             return conceptCache.get(name);
         }
 
         ConceptListResult results;
         try {
-            results = conceptResource.queryForConceptsByName(name);
-        } catch (HttpException e) {
+            Config config = configService.getConfigByName(configName);
+            results = conceptResource.queryForConceptsByName(config, name);
+        } catch (HttpClientErrorException e) {
             throw new OpenMRSException("There was an error retrieving the uuid of the concept with concept name: " + name, e);
         }
 
@@ -64,17 +74,19 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
     }
 
     @Override
-    public Concept createConcept(Concept concept) throws ConceptNameAlreadyInUseException {
+    public Concept createConcept(String configName, Concept concept) throws ConceptNameAlreadyInUseException {
+        Config config = configService.getConfigByName(configName);
+
         validateConceptForSave(concept);
-        validateConceptNameUsage(concept);
+        validateConceptNameUsage(config, concept);
 
         Concept created;
         try {
-            created = conceptResource.createConcept(concept);
+            created = conceptResource.createConcept(config, concept);
             conceptCache.put(created.getName().getName(), created.getUuid());
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_CONCEPT_SUBJECT, EventHelper.conceptParameters(created)));
 
-        } catch (HttpException e) {
+        } catch (HttpClientErrorException e) {
             LOGGER.error("Failed to create a concept in OpenMRS with name: " + concept.getName());
             created = null;
         }
@@ -83,14 +95,15 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
     }
 
     @Override
-    public Concept getConceptByUuid(String uuid) {
+    public Concept getConceptByUuid(String configName, String uuid) {
         Validate.notEmpty(uuid, "Concept Id cannot be empty");
 
         Concept concept;
 
         try {
-            concept = conceptResource.getConceptById(uuid);
-        } catch (HttpException e) {
+            Config config = configService.getConfigByName(configName);
+            concept = conceptResource.getConceptById(config, uuid);
+        } catch (HttpClientErrorException e) {
             LOGGER.error("Failed to get concept with ID " + uuid);
             concept = null;
         }
@@ -99,28 +112,18 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
     }
 
     @Override
-    public List<Concept> search(String phrase) {
-        Validate.notEmpty(phrase, "Name cannot be empty");
-
-        List<Concept> concepts;
-
-        try {
-            concepts = conceptResource.queryForConceptsByName(phrase).getResults();
-        } catch (HttpException e) {
-            LOGGER.error("Failed search for concept: " + phrase);
-            concepts = Collections.emptyList();
-        }
-
-        return concepts;
+    public List<Concept> search(String configName, String phrase) {
+        return search(configService.getConfigByName(configName), phrase);
     }
 
     @Override
-    public List<Concept> getAllConcepts() {
+    public List<Concept> getAllConcepts(String configName) {
         List<Concept> concepts;
 
         try {
-            concepts = conceptResource.getAllConcepts().getResults();
-        } catch (HttpException e) {
+            Config config = configService.getConfigByName(configName);
+            concepts = conceptResource.getAllConcepts(config).getResults();
+        } catch (HttpClientErrorException e) {
             LOGGER.error("Failed to retrieve all concepts");
             concepts = Collections.emptyList();
         }
@@ -129,12 +132,13 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
     }
 
     @Override
-    public List<Concept> getConcepts(int page, int pageSize) {
+    public List<Concept> getConcepts(String configName, int page, int pageSize) {
         List<Concept> concepts;
 
         try {
-            concepts = conceptResource.getConcepts(page, pageSize).getResults();
-        } catch (HttpException e) {
+            Config config = configService.getConfigByName(configName);
+            concepts = conceptResource.getConcepts(config, page, pageSize).getResults();
+        } catch (HttpClientErrorException e) {
             LOGGER.error("Error while fetching concepts with pagination!");
             concepts = Collections.emptyList();
         }
@@ -143,31 +147,48 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
     }
 
     @Override
-    public void deleteConcept(String uuid) {
+    public void deleteConcept(String configName, String uuid) {
         try {
-            Concept concept = conceptResource.getConceptById(uuid);
-            conceptResource.deleteConcept(uuid);
+            Config config = configService.getConfigByName(configName);
+            Concept concept = conceptResource.getConceptById(config, uuid);
+            conceptResource.deleteConcept(config, uuid);
             conceptCache.remove(concept.getName().getName());
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.DELETED_CONCEPT_SUBJECT, EventHelper.conceptParameters(concept)));
-        } catch (HttpException e) {
+        } catch (HttpClientErrorException e) {
             LOGGER.error("Failed to remove concept with ID " + uuid);
         }
     }
 
     @Override
-    public Concept updateConcept(Concept concept) {
+    public Concept updateConcept(String configName, Concept concept) {
         validateConceptForUpdate(concept);
         Concept updatedConcept;
 
         try {
-            updatedConcept = conceptResource.updateConcept(concept);
+            Config config = configService.getConfigByName(configName);
+            updatedConcept = conceptResource.updateConcept(config, concept);
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.UPDATED_CONCEPT_SUBJECT, EventHelper.conceptParameters(updatedConcept)));
-        } catch (HttpException e) {
+        } catch (HttpClientErrorException e) {
             LOGGER.error("Failed to update concept with name " + concept.getName());
             updatedConcept = null;
         }
 
         return updatedConcept;
+    }
+
+    private List<Concept> search(Config config, String phrase) {
+        Validate.notEmpty(phrase, "Name cannot be empty");
+
+        List<Concept> concepts;
+
+        try {
+            concepts = conceptResource.queryForConceptsByName(config, phrase).getResults();
+        } catch (HttpClientErrorException e) {
+            LOGGER.error("Failed search for concept: " + phrase);
+            concepts = Collections.emptyList();
+        }
+
+        return concepts;
     }
 
     private void validateConceptForSave(Concept concept) {
@@ -180,8 +201,8 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
         Validate.notNull(concept.getDatatype());
     }
 
-    private void validateConceptNameUsage(Concept concept) throws ConceptNameAlreadyInUseException {
-        List<Concept> concepts = search(concept.getNames().get(0).getName());
+    private void validateConceptNameUsage(Config config, Concept concept) throws ConceptNameAlreadyInUseException {
+        List<Concept> concepts = search(config, concept.getNames().get(0).getName());
 
         for (Concept existingConcept : concepts) {
             if (existingConcept.getDisplay().equals(concept.getNames().get(0).getName())) {
