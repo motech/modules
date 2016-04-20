@@ -82,7 +82,7 @@ public class ConfigControllerTest {
         String oldName = null;
 
         controller.saveConfig(config, oldName);
-        verify(configService).saveNewConfig(config);
+        verify(configService).addConfig(config);
     }
 
     @Test
@@ -92,7 +92,7 @@ public class ConfigControllerTest {
         String oldName = config.getName();
 
         controller.saveConfig(config, oldName);
-        verify(configService).saveUpdatedConfig(config, oldName);
+        verify(configService).updateConfig(config, oldName);
     }
 
     @Test

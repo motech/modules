@@ -236,7 +236,7 @@
             if (!config) {
                 return;
             }
-            var copy = {};
+            var oldName, copy = {};
 
             copy.name = config.name;
             copy.accountConfig = {};
@@ -249,9 +249,12 @@
             copy.forwardSchema = config.forwardSchema;
             copy.forwardStubs = config.forwardStubs;
             copy.forwardCases = config.forwardCases;
-            $scope.oldName = copy.name;
+            oldName = copy.name;
 
-            return copy;
+            return {
+                copy: copy,
+                oldName: oldName
+            };
         };
 
         innerLayout({
@@ -299,7 +302,11 @@
                 $scope.oldName = "";
                 $scope.clearMessages();
             } else {
-                $scope.selectedConfigBackup = $scope.copyConfig(newValue);
+                var copy = {};
+
+                copy = $scope.copyConfig(newValue);
+                $scope.selectedConfigBackup = copy.copy;
+                $scope.oldName = copy.oldName;
                 $scope.configOutdated = false;
                 $scope.newConfig = false;
                 $scope.clearMessages();
@@ -510,7 +517,7 @@
             );
         };
 
-        $scope.saveUpdatedConfig = function(element) {
+        $scope.saveUpdateConfig = function(element) {
             blockUI();
             Configurations.save({
                     oldName: $scope.oldName
@@ -562,7 +569,7 @@
 
         $scope.saveConfig = function(element) {
             blockUI();
-            if($scope.oldName!=="") {
+            if($scope.oldName) {
                 $scope.saveUpdatedConfig(element);
             } else {
                 $scope.saveNewConfig(element);

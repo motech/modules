@@ -78,7 +78,7 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
     }
 
     @Override
-    public Config saveUpdatedConfig(Config config, String oldName) throws CommcareConnectionFailureException {
+    public Config updateConfig(Config config, String oldName) throws CommcareConnectionFailureException {
 
         if (configs.nameInUse(oldName)) {
             if (!isSameServer(config.getAccountConfig(), configs.getByName(oldName).getAccountConfig())) {
@@ -107,32 +107,8 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
     }
 
     @Override
-    public Config saveNewConfig(Config config) throws CommcareConnectionFailureException {
-
-        if (configs.nameInUse(config.getName())) {
-            if (!isSameServer(config.getAccountConfig(), configs.getByName(config.getName()).getAccountConfig())) {
-                eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_UPDATED, prepareParams(config.getName())));
-            }
-            configs.updateConfig(config, config.getName());
-        } else {
-            validateConfig(config);
-            configs.saveConfig(config);
-            eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_CREATED, prepareParams(config.getName())));
-        }
-
-        if (verifyConfig(config)) {
-            updateForwardingRules(config);
-        } else {
-            LOGGER.info(String.format("Configuration \"%s\" couldn't be verified. Forwarding rules are not updated!", config.getName()));
-        }
-
-        if (!configs.hasDefault()) {
-            setDefault(config.getName());
-        }
-
-        updateConfigs();
-
-        return config;
+    public Config addConfig(Config config) throws CommcareConnectionFailureException {
+        return updateConfig(config, config.getName());
     }
 
     private void validateConfig(Config config) {

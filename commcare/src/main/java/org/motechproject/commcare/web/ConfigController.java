@@ -56,9 +56,9 @@ public class ConfigController extends CommcareController {
     @ResponseBody
     public Config saveConfig(@RequestBody Config config, @RequestParam(required = false) String oldName) throws CommcareConnectionFailureException {
         if(oldName == null) {
-            return configService.saveNewConfig(config);
+            return configService.addConfig(config);
         } else {
-            return configService.saveUpdatedConfig(config, oldName);
+            return configService.updateConfig(config, oldName);
         }
     }
 

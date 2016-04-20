@@ -25,8 +25,6 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class CommcareConfigServiceImplTest {
 
-
-
     private CommcareConfigServiceImpl configService;
 
     @Mock
@@ -78,9 +76,10 @@ public class CommcareConfigServiceImplTest {
         Config config = configService.create();
         config.setName("newName");
 
-        Config savedConfig = configService.saveNewConfig(config);
+        Config savedConfig = configService.addConfig(config);
         assertEquals(config.getName(), savedConfig.getName());
     }
+
     @Test
     public void shouldReturnConfigurationWithUpdatedName() throws CommcareConnectionFailureException {
 
@@ -98,7 +97,7 @@ public class CommcareConfigServiceImplTest {
         updatedConfig.setName("UpdatedOne");
 
         String oldName = firstConfig.getName();
-        Config savedConfig = configService.saveUpdatedConfig(updatedConfig, oldName);
+        Config savedConfig = configService.updateConfig(updatedConfig, oldName);
 
         assertEquals("UpdatedOne", savedConfig.getName());
     }

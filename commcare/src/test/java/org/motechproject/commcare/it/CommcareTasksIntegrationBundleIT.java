@@ -123,8 +123,11 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     public void testCommcareTasksIntegration() throws InterruptedException, IOException {
 
         config = ConfigsUtils.prepareConfigOne();
-        String oldName = config.getName();
-        createConfiguration(config, oldName);
+        HttpResponse configurationResponse = createConfiguration(config);
+        assertEquals(HttpStatus.SC_OK, configurationResponse.getStatusLine().getStatusCode());
+
+        configurationResponse = updateConfiguration(config, config.getName());
+        assertEquals(HttpStatus.SC_OK, configurationResponse.getStatusLine().getStatusCode());
 
         createMockCommcareSchema();
         commcareTasksNotifier.updateTasksInfo();
@@ -314,8 +317,18 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         return getHttpClient().execute(httpPost);
     }
 
-    private HttpResponse createConfiguration(Config config, String oldName) throws IOException, InterruptedException {
-        HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/commcare/configs?oldName=%s", PORT, oldName));
+    private HttpResponse createConfiguration(Config config) throws IOException, InterruptedException {
+        return updateConfiguration(config, null);
+    }
+
+    private HttpResponse updateConfiguration(Config config, String oldName) throws IOException, InterruptedException {
+        HttpPost httpPost;
+        if(oldName == null) {
+            httpPost = new HttpPost(String.format("http://localhost:%d/commcare/configs", PORT));
+        } else {
+            httpPost = new HttpPost(String.format("http://localhost:%d/commcare/configs?oldName=%s", PORT, oldName));
+        }
+
         httpPost.addHeader("content-type", "application/json");
         httpPost.addHeader("Authorization", "Basic " + DatatypeConverter.printBase64Binary("motech:motech".getBytes("UTF-8")).trim());
 
