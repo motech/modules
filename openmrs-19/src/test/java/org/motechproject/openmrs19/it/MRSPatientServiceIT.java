@@ -39,6 +39,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.motechproject.openmrs19.util.TestConstants.DEFAULT_CONFIG_NAME;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -74,7 +75,7 @@ public class MRSPatientServiceIT extends BasePaxIT {
                 EventKeys.UPDATED_PATIENT_SUBJECT, EventKeys.PATIENT_DECEASED_SUBJECT, EventKeys.DELETED_PATIENT_SUBJECT));
 
         String uuid = savePatient(preparePatient()).getUuid();
-        patient = patientAdapter.getPatientByUuid(uuid);
+        patient = patientAdapter.getPatientByUuid(DEFAULT_CONFIG_NAME, uuid);
         prepareConceptOfDeath();
     }
 
@@ -96,6 +97,7 @@ public class MRSPatientServiceIT extends BasePaxIT {
 
         final String newFirstName = "Changed Name";
         final String newAddress = "Changed Address";
+        final String newMotechId = "604";
 
         Person.Name name = patient.getPerson().getNames().get(0);
         name.setGivenName(newFirstName);
@@ -103,16 +105,19 @@ public class MRSPatientServiceIT extends BasePaxIT {
         Person.Address address = patient.getPerson().getAddresses().get(0);
         address.setAddress1(newAddress);
 
+        patient.setMotechId(newMotechId);
+
         synchronized (lock) {
-            patientAdapter.updatePatient(patient);
+            patientAdapter.updatePatient(DEFAULT_CONFIG_NAME, patient);
 
             lock.wait(60000);
         }
 
-        Patient updated = patientAdapter.getPatientByUuid(patient.getUuid());
+        Patient updated = patientAdapter.getPatientByUuid(DEFAULT_CONFIG_NAME, patient.getUuid());
 
-        assertEquals("Changed Name", updated.getPerson().getPreferredName().getGivenName());
-        assertEquals("Changed Address", updated.getPerson().getPreferredAddress().getAddress1());
+        assertEquals(newFirstName, updated.getPerson().getPreferredName().getGivenName());
+        assertEquals(newAddress, updated.getPerson().getPreferredAddress().getAddress1());
+        assertEquals(newMotechId, updated.getMotechId());
 
         assertTrue(mrsListener.created);
         assertFalse(mrsListener.deceased);
@@ -123,7 +128,7 @@ public class MRSPatientServiceIT extends BasePaxIT {
     @Test
     public void shouldGetPatientByMotechId() {
 
-        Patient fetched = patientAdapter.getPatientByMotechId(patient.getMotechId());
+        Patient fetched = patientAdapter.getPatientByMotechId(DEFAULT_CONFIG_NAME, patient.getMotechId());
 
         assertNotNull(fetched);
         assertEquals(fetched, patient);
@@ -132,7 +137,7 @@ public class MRSPatientServiceIT extends BasePaxIT {
     @Test
     public void shouldGetByUuid() {
 
-        Patient fetched = patientAdapter.getPatientByUuid(patient.getUuid());
+        Patient fetched = patientAdapter.getPatientByUuid(DEFAULT_CONFIG_NAME, patient.getUuid());
 
         assertNotNull(fetched);
         assertEquals(fetched, patient);
@@ -141,7 +146,7 @@ public class MRSPatientServiceIT extends BasePaxIT {
     @Test
     public void shouldSearchForPatient() throws InterruptedException, PatientNotFoundException {
 
-        List<Patient> found = patientAdapter.search(patient.getPerson().getPreferredName().getGivenName(), patient.getMotechId());
+        List<Patient> found = patientAdapter.search(DEFAULT_CONFIG_NAME, patient.getPerson().getPreferredName().getGivenName(), patient.getMotechId());
 
         assertEquals(patient.getPerson().getPreferredName().getGivenName(), found.get(0).getPerson().getPreferredName().getGivenName());
     }
@@ -149,8 +154,8 @@ public class MRSPatientServiceIT extends BasePaxIT {
     @Test
     public void shouldDeceasePerson() throws HttpException, PatientNotFoundException, InterruptedException {
 
-        patientAdapter.deceasePatient(patient.getMotechId(), causeOfDeath, new Date(), null);
-        Patient deceased = patientAdapter.getPatientByMotechId(patient.getMotechId());
+        patientAdapter.deceasePatient(DEFAULT_CONFIG_NAME, patient.getMotechId(), causeOfDeath, new Date(), null);
+        Patient deceased = patientAdapter.getPatientByMotechId(DEFAULT_CONFIG_NAME, patient.getMotechId());
         assertTrue(deceased.getPerson().getDead());
     }
 
@@ -158,8 +163,8 @@ public class MRSPatientServiceIT extends BasePaxIT {
     public void shouldDeletePatient() throws PatientNotFoundException, InterruptedException {
 
         synchronized (lock) {
-            patientAdapter.deletePatient(patient.getUuid());
-            assertNull(patientAdapter.getPatientByUuid(patient.getUuid()));
+            patientAdapter.deletePatient(DEFAULT_CONFIG_NAME, patient.getUuid());
+            assertNull(patientAdapter.getPatientByUuid(DEFAULT_CONFIG_NAME, patient.getUuid()));
 
             lock.wait(60000);
         }
@@ -180,10 +185,10 @@ public class MRSPatientServiceIT extends BasePaxIT {
         deletePatient(patient);
 
         if (uuid != null) {
-            locationAdapter.deleteLocation(uuid);
+            locationAdapter.deleteLocation(DEFAULT_CONFIG_NAME, uuid);
         }
 
-        conceptAdapter.deleteConcept(causeOfDeath.getUuid());
+        conceptAdapter.deleteConcept(DEFAULT_CONFIG_NAME, causeOfDeath.getUuid());
 
         eventListenerRegistry.clearListenersForBean("mrsTestListener");
     }
@@ -203,7 +208,7 @@ public class MRSPatientServiceIT extends BasePaxIT {
         person.setBirthdateEstimated(false);
         person.setGender("M");
 
-        Location location = locationAdapter.createLocation(new Location("FooName", "FooCountry", "FooRegion", "FooCountryDistrict", "FooStateProvince"));
+        Location location = locationAdapter.createLocation(DEFAULT_CONFIG_NAME, new Location("FooName", "FooCountry", "FooRegion", "FooCountryDistrict", "FooStateProvince"));
 
         assertNotNull(location);
 
@@ -215,7 +220,7 @@ public class MRSPatientServiceIT extends BasePaxIT {
         Patient created;
 
         synchronized (lock) {
-            created = patientAdapter.createPatient(patient);
+            created = patientAdapter.createPatient(DEFAULT_CONFIG_NAME, patient);
             assertNotNull(created);
 
             lock.wait(60000);
@@ -228,10 +233,10 @@ public class MRSPatientServiceIT extends BasePaxIT {
 
         String locationId = patient.getLocationForMotechId().getUuid();
 
-        patientAdapter.deletePatient(patient.getUuid());
-        assertNull(patientAdapter.getPatientByUuid(patient.getUuid()));
+        patientAdapter.deletePatient(DEFAULT_CONFIG_NAME, patient.getUuid());
+        assertNull(patientAdapter.getPatientByUuid(DEFAULT_CONFIG_NAME, patient.getUuid()));
 
-        locationAdapter.deleteLocation(locationId);
+        locationAdapter.deleteLocation(DEFAULT_CONFIG_NAME, locationId);
     }
 
     private void prepareConceptOfDeath() throws ConceptNameAlreadyInUseException {
@@ -242,8 +247,8 @@ public class MRSPatientServiceIT extends BasePaxIT {
         concept.setDatatype(new Concept.DataType("TEXT"));
         concept.setConceptClass(new Concept.ConceptClass("Test"));
 
-        String uuid =  conceptAdapter.createConcept(concept).getUuid();
-        causeOfDeath = conceptAdapter.getConceptByUuid(uuid);
+        String uuid =  conceptAdapter.createConcept(DEFAULT_CONFIG_NAME, concept).getUuid();
+        causeOfDeath = conceptAdapter.getConceptByUuid(DEFAULT_CONFIG_NAME, uuid);
     }
 
     public class MrsListener implements EventListener {

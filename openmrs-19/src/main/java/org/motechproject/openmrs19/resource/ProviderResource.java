@@ -1,7 +1,7 @@
 package org.motechproject.openmrs19.resource;
 
 import org.motechproject.openmrs19.domain.Provider;
-import org.motechproject.openmrs19.exception.HttpException;
+import org.motechproject.openmrs19.config.Config;
 
 /**
  * Interface for providers management.
@@ -9,29 +9,31 @@ import org.motechproject.openmrs19.exception.HttpException;
 public interface ProviderResource {
 
     /**
-     * Creates the given provider on the OpenMRS server.
+     * Creates the given provider on the OpenMRS server. The given {@code config} will be used while performing this
+     * action.
      *
+     * @param config  the configuration to be used while performing this action
      * @param provider  the provider to be created
      * @return  the saved provider
-     * @throws HttpException  when there were problems while creating provider
      */
-    Provider createProvider(Provider provider) throws HttpException;
+    Provider createProvider(Config config, Provider provider);
 
     /**
-     * Gets provider by its UUID.
+     * Gets provider by its UUID. The given {@code config} will be used while performing this action.
      *
+     * @param config  the configuration to be used while performing this action
      * @param uuid  the UUID of the provider
      * @return  the provider with the given UUID
-     * @throws HttpException  when there were problems while fetching provider
      */
-    Provider getByUuid(String uuid) throws HttpException;
+    Provider getByUuid(Config config, String uuid);
 
     /**
-     * Deletes the provider with the given UUID from the OpenMRS server.
+     * Deletes the provider with the given UUID from the OpenMRS server. The given {@code config} will be used while
+     * performing this action.
      *
+     * @param config  the configuration to be used while performing this action
      * @param uuid  the UUID of the provider
-     * @throws HttpException  when there were problems while deleting provider
      */
-    void deleteProvider(String uuid) throws HttpException;
+    void deleteProvider(Config config, String uuid);
 
 }

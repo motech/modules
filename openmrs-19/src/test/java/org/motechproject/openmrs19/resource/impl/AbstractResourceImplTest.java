@@ -1,49 +1,63 @@
 package org.motechproject.openmrs19.resource.impl;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
-import org.mockito.Mock;
-import org.motechproject.openmrs19.OpenMrsInstance;
-import org.motechproject.openmrs19.rest.RestClient;
+import org.motechproject.openmrs19.config.Config;
+import org.motechproject.openmrs19.util.JsonUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 
-import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
 
 public abstract class AbstractResourceImplTest {
-    @Mock
-    private RestClient client;
 
-    @Mock
-    private OpenMrsInstance instance; 
-
-    private Gson gson = new GsonBuilder().create();
-    
-    protected String readJsonFromFile(String filename) throws IOException {
-        Resource resouce = new ClassPathResource(filename);
-        String json = IOUtils.toString(resouce.getInputStream());
-        resouce.getInputStream().close();
+    protected String readJsonFromFile(String filename) throws Exception {
+        Resource resource = new ClassPathResource(filename);
+        String json;
+        try(InputStream is = resource.getInputStream()) {
+            json = IOUtils.toString(is);
+        }
 
         return json;
     }
 
-    protected JsonElement stringToJsonElement(String expectedJson) {
-        JsonElement expectedJsonObj = getGson().fromJson(expectedJson, JsonObject.class);
-        return expectedJsonObj;
+    protected ResponseEntity<String> getResponse(String file) throws Exception {
+        return new ResponseEntity<>(readJsonFromFile(file), HttpStatus.OK);
     }
 
-    public RestClient getClient() {
-        return client;
+    protected Object readFromFile(String filename, Class type) throws Exception {
+        return JsonUtils.readJson(readJsonFromFile(filename), type);
     }
 
-    public Gson getGson() {
-        return gson;
+    protected HttpHeaders getHeadersForPost(Config config) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Arrays.asList(MediaType.ALL));
+        headers.add("Authorization", "Basic " + prepareCredentials(config));
+        return headers;
     }
 
-    public OpenMrsInstance getInstance() {
-        return instance;
+    protected HttpHeaders getHeadersForPostWithoutResponse(Config config) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Authorization", "Basic " + prepareCredentials(config));
+        return headers;
+    }
+
+    protected HttpHeaders getHeadersForGet(Config config) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Basic " + prepareCredentials(config));
+        return headers;
+    }
+
+    private String prepareCredentials(Config config) {
+        return new String(Base64.encodeBase64(
+                String.format("%s:%s", config.getUsername(), config.getPassword()).getBytes()
+        ));
     }
 }

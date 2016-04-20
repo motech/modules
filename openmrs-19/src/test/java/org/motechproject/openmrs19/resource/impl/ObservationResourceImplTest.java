@@ -2,38 +2,64 @@ package org.motechproject.openmrs19.resource.impl;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.motechproject.openmrs19.domain.Observation;
 import org.motechproject.openmrs19.domain.ObservationListResult;
-import org.motechproject.openmrs19.exception.HttpException;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.motechproject.openmrs19.config.Config;
+import org.motechproject.openmrs19.config.ConfigDummyData;
+import org.motechproject.openmrs19.resource.ObservationResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.web.client.RestOperations;
 
-import java.io.IOException;
 import java.net.URI;
 
-import static ch.lambdaj.Lambda.extract;
-import static ch.lambdaj.Lambda.on;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ObservationResourceImplTest extends AbstractResourceImplTest {
 
-    private ObservationResourceImpl impl;
+    private static final String OBSERVATION_LIST_RESPONSE_JSON = "json/observation-list-response.json";
+
+    @Mock
+    private RestOperations restOperations;
+
+    @Captor
+    private ArgumentCaptor<HttpEntity<String>> requestCaptor;
+
+    private ObservationResource observationResource;
+
+    private Config config;
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        impl = new ObservationResourceImpl(getClient(), getInstance());
+        initMocks(this);
+        observationResource = new ObservationResourceImpl(restOperations);
+        config = ConfigDummyData.prepareConfig("one");
     }
 
     @Test
-    public void shouldGetObservationByPatientId() throws HttpException, IOException {
-        Mockito.when(getClient().getJson(Mockito.any(URI.class))).thenReturn(
-                readJsonFromFile("json/observation-list-response.json"));
+    public void shouldQueryForObservationByPatientId() throws Exception {
+        String patientId = "OOO";
+        URI url = config.toInstancePathWithParams("/obs?patient={uuid}&v=full", patientId);
 
-        ObservationListResult result = impl.queryForObservationsByPatientId("OOO");
+        when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(OBSERVATION_LIST_RESPONSE_JSON));
 
-        assertEquals(asList("OOO"), extract(result.getResults(), on(Observation.class).getUuid()));
+        ObservationListResult result = observationResource.queryForObservationsByPatientId(config, patientId);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
+
+        assertThat(result, equalTo(readFromFile(OBSERVATION_LIST_RESPONSE_JSON, ObservationListResult.class)));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
+        assertThat(requestCaptor.getValue().getBody(), nullValue());
     }
 
 }

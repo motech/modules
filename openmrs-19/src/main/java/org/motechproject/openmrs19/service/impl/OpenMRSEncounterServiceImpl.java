@@ -5,20 +5,23 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
+import org.motechproject.openmrs19.config.Config;
 import org.motechproject.openmrs19.domain.Encounter;
 import org.motechproject.openmrs19.domain.EncounterType;
 import org.motechproject.openmrs19.domain.Observation;
 import org.motechproject.openmrs19.domain.Patient;
-import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.helper.EventHelper;
 import org.motechproject.openmrs19.resource.EncounterResource;
 import org.motechproject.openmrs19.service.EventKeys;
+import org.motechproject.openmrs19.service.OpenMRSConceptService;
+import org.motechproject.openmrs19.service.OpenMRSConfigService;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,39 +29,47 @@ import java.util.List;
 
 @Service("encounterService")
 public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSEncounterServiceImpl.class);
 
-    private final OpenMRSPatientService patientAdapter;
-    private final OpenMRSConceptServiceImpl conceptAdapter;
+    private final OpenMRSConceptService conceptService;
+    private final OpenMRSPatientService patientService;
+
+    private final OpenMRSConfigService configService;
+
     private final EncounterResource encounterResource;
+
     private final EventRelay eventRelay;
 
     @Autowired
     public OpenMRSEncounterServiceImpl(EncounterResource encounterResource, OpenMRSPatientService patientAdapter,
-            OpenMRSConceptServiceImpl conceptAdapter, EventRelay eventRelay) {
+                                       OpenMRSConceptService conceptAdapter, EventRelay eventRelay,
+                                       OpenMRSConfigService configService) {
         this.encounterResource = encounterResource;
-        this.patientAdapter = patientAdapter;
-        this.conceptAdapter = conceptAdapter;
+        this.patientService = patientAdapter;
+        this.conceptService = conceptAdapter;
+        this.configService = configService;
         this.eventRelay = eventRelay;
     }
 
     @Override
-    public Encounter createEncounter(Encounter encounter) {
+    public Encounter createEncounter(String configName, Encounter encounter) {
         validateEncounter(encounter);
 
         Encounter createdEncounter;
+        Config config = configService.getConfigByName(configName);
 
         // OpenMRS expects the observations to reference a concept uuid rather
         // than just a concept name. Attempt to map all concept names to concept
         // uuid's for each of the observations
-        List<Observation> updatedObs = resolveConceptUuidForConceptNames(encounter.getObs());
+        List<Observation> updatedObs = resolveConceptUuidForConceptNames(config, encounter.getObs());
 
         try {
             encounter.setObs(updatedObs);
-            createdEncounter = encounterResource.createEncounter(encounter);
+            createdEncounter = encounterResource.createEncounter(config, encounter);
 
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_ENCOUNTER_SUBJECT, EventHelper.encounterParameters(createdEncounter)));
-        } catch (HttpException e) {
+        } catch (HttpClientErrorException e) {
             LOGGER.error("Could not create encounter: " + e.getMessage());
             return null;
         }
@@ -67,8 +78,9 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
     }
 
     @Override
-    public Encounter getLatestEncounterByPatientMotechId(String motechId, String encounterType) {
-        List<Encounter> encountersByEncounterType = getEncountersByEncounterType(motechId, encounterType);
+    public Encounter getLatestEncounterByPatientMotechId(String configName, String motechId, String encounterType) {
+        Config config = configService.getConfigByName(configName);
+        List<Encounter> encountersByEncounterType = getEncountersByEncounterType(config, motechId, encounterType);
 
         Encounter latestEncounter = null;
         for (Encounter encounter : encountersByEncounterType) {
@@ -83,20 +95,68 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
     }
 
     @Override
-    public Encounter getEncounterByUuid(String uuid) {
+    public Encounter getEncounterByUuid(String configName, String uuid) {
         try {
-            return encounterResource.getEncounterById(uuid);
-        } catch (HttpException e) {
+            Config config = configService.getConfigByName(configName);
+            return encounterResource.getEncounterById(config, uuid);
+        } catch (HttpClientErrorException e) {
             return null;
         }
     }
 
     @Override
-    public List<Encounter> getEncountersByEncounterType(String motechId, String encounterType) {
+    public List<Encounter> getEncountersByEncounterType(String configName, String motechId, String encounterType) {
+        return getEncountersByEncounterType(configService.getConfigByName(configName), motechId, encounterType);
+    }
+
+    @Override
+    public void deleteEncounter(String configName, String uuid) {
+        try {
+            Config config = configService.getConfigByName(configName);
+            encounterResource.deleteEncounter(config, uuid);
+            eventRelay.sendEventMessage(new MotechEvent(EventKeys.DELETED_ENCOUNTER_SUBJECT, EventHelper.encounterParameters(uuid)));
+        } catch (HttpClientErrorException e) {
+            LOGGER.error("Error deleting encounter with UUID: " + uuid);
+        }
+    }
+
+    @Override
+    public EncounterType createEncounterType(String configName, EncounterType encounterType) {
+        try {
+            Config config = configService.getConfigByName(configName);
+            return encounterResource.createEncounterType(config, encounterType);
+        } catch (HttpClientErrorException e) {
+            LOGGER.error("Error while creating encounter type with name: " + encounterType.getName());
+            return null;
+        }
+    }
+
+    @Override
+    public EncounterType getEncounterTypeByUuid(String configName, String uuid) {
+        try {
+            Config config = configService.getConfigByName(configName);
+            return encounterResource.getEncounterTypeByUuid(config, uuid);
+        } catch (HttpClientErrorException e) {
+            LOGGER.error("Error while fetching encounter type with UUID: " + uuid);
+            return null;
+        }
+    }
+
+    @Override
+    public void deleteEncounterType(String configName, String uuid) {
+        try {
+            Config config = configService.getConfigByName(configName);
+            encounterResource.deleteEncounterType(config, uuid);
+        } catch (HttpClientErrorException e) {
+            LOGGER.error("Error deleting encounter type with UUID: " + uuid);
+        }
+    }
+
+    private List<Encounter> getEncountersByEncounterType(Config config, String motechId, String encounterType) {
         Validate.notEmpty(motechId, "MOTECH Id cannot be empty");
 
         List<Encounter> encountersByEncounterType = new ArrayList<>();
-        List<Encounter> encountersByPatientMotechId = getAllEncountersByPatientMotechId(motechId);
+        List<Encounter> encountersByPatientMotechId = getAllEncountersByPatientMotechId(config, motechId);
 
         for (Encounter encounter : encountersByPatientMotechId) {
             if (StringUtils.equals(encounter.getEncounterType().getName(), encounterType)) {
@@ -105,45 +165,6 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
         }
 
         return encountersByEncounterType;
-    }
-
-    @Override
-    public void deleteEncounter(String uuid) {
-        try {
-            encounterResource.deleteEncounter(uuid);
-            eventRelay.sendEventMessage(new MotechEvent(EventKeys.DELETED_ENCOUNTER_SUBJECT, EventHelper.encounterParameters(uuid)));
-        } catch (HttpException e) {
-            LOGGER.error("Error deleting encounter with UUID: " + uuid);
-        }
-    }
-
-    @Override
-    public EncounterType createEncounterType(EncounterType encounterType) {
-        try {
-            return encounterResource.createEncounterType(encounterType);
-        } catch (HttpException e) {
-            LOGGER.error("Error while creating encounter type with name: " + encounterType.getName());
-            return null;
-        }
-    }
-
-    @Override
-    public EncounterType getEncounterTypeByUuid(String uuid) {
-        try {
-            return encounterResource.getEncounterTypeByUuid(uuid);
-        } catch (HttpException e) {
-            LOGGER.error("Error while fetching encounter type with UUID: " + uuid);
-            return null;
-        }
-    }
-
-    @Override
-    public void deleteEncounterType(String uuid) {
-        try {
-            encounterResource.deleteEncounterType(uuid);
-        } catch (HttpException e) {
-            LOGGER.error("Error deleting encounter type with UUID: " + uuid);
-        }
     }
 
     private void validateEncounter(Encounter encounter) {
@@ -155,13 +176,13 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
         Validate.notNull(encounter.getEncounterType(), "Encounter type cannot be null");
     }
 
-    private List<Observation> resolveConceptUuidForConceptNames(List<Observation> originalObservations) {
+    private List<Observation> resolveConceptUuidForConceptNames(Config config, List<Observation> originalObservations) {
         List<Observation> updatedObs = new ArrayList<>();
         if (originalObservations != null) {
             for (Observation observation : originalObservations) {
-                String conceptUuid = conceptAdapter.resolveConceptUuidFromConceptName(observation.getConcept().getName().getName());
+                String conceptUuid = conceptService.resolveConceptUuidFromConceptName(config.getName(), observation.getConcept().getName().getName());
                 if (CollectionUtils.isNotEmpty(observation.getGroupsMembers())) {
-                    resolveConceptUuidForConceptNames(observation.getGroupsMembers());
+                    resolveConceptUuidForConceptNames(config, observation.getGroupsMembers());
                 }
                 observation.getConcept().setUuid(conceptUuid);
                 updatedObs.add(observation);
@@ -171,24 +192,24 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
         return updatedObs;
     }
 
-    private List<Encounter> getAllEncountersByPatientMotechId(String motechId) {
+    private List<Encounter> getAllEncountersByPatientMotechId(Config config, String motechId) {
         Validate.notEmpty(motechId, "MOTECH Id cannot be empty");
 
         List<Encounter> encounters = new ArrayList<>();
-        Patient patient = patientAdapter.getPatientByMotechId(motechId);
+        Patient patient = patientService.getPatientByMotechId(config.getName(), motechId);
 
         if (patient != null) {
-            encounters.addAll(getEncountersForPatient(patient));
+            encounters.addAll(getEncountersForPatient(config, patient));
         }
 
         return encounters;
     }
 
-    private List<Encounter> getEncountersForPatient(Patient patient) {
+    private List<Encounter> getEncountersForPatient(Config config, Patient patient) {
         List<Encounter> result;
         try {
-            result = encounterResource.queryForAllEncountersByPatientId(patient.getUuid()).getResults();
-        } catch (HttpException e) {
+            result = encounterResource.queryForAllEncountersByPatientId(config, patient.getUuid()).getResults();
+        } catch (HttpClientErrorException e) {
             LOGGER.error("Error retrieving encounters for patient: " + patient.getUuid());
             return Collections.emptyList();
         }

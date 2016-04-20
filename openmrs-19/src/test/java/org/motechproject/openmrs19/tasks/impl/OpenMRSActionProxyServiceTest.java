@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
@@ -77,14 +78,14 @@ public class OpenMRSActionProxyServiceTest {
 
         Encounter encounter = new Encounter(location, new EncounterType("testEncounterType"), new DateTime("2000-08-16T07:22:05Z").toDate(), patient, provider.getPerson());
 
-        doReturn(Collections.singletonList(location)).when(locationService).getLocations(location.getName());
-        doReturn(patient).when(patientService).getPatientByUuid(patient.getUuid());
-        doReturn(provider).when(providerService).getProviderByUuid(provider.getUuid());
+        doReturn(Collections.singletonList(location)).when(locationService).getLocations(eq(null), eq(location.getName()));
+        doReturn(patient).when(patientService).getPatientByUuid(eq(null), eq(patient.getUuid()));
+        doReturn(provider).when(providerService).getProviderByUuid(eq(null), eq(provider.getUuid()));
 
         openMRSActionProxyService.createEncounter(new DateTime(encounter.getEncounterDatetime()),
                 encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid());
 
-        verify(encounterService).createEncounter(encounterCaptor.capture());
+        verify(encounterService).createEncounter(eq(null), encounterCaptor.capture());
 
         assertEquals(encounter, encounterCaptor.getValue());
     }
@@ -107,8 +108,8 @@ public class OpenMRSActionProxyServiceTest {
         Map<String, String> identifiersMap = new HashMap<>();
         identifiersMap.put("CommCare CaseID", "1000");
 
-        doReturn(causeOfDeath).when(conceptService).getConceptByUuid(causeOfDeath.getUuid());
-        doReturn(Collections.singletonList(location)).when(locationService).getLocations(location.getName());
+        doReturn(causeOfDeath).when(conceptService).getConceptByUuid(eq(null), eq(causeOfDeath.getUuid()));
+        doReturn(Collections.singletonList(location)).when(locationService).getLocations(eq(null), eq(location.getName()));
 
         Person.Address personAddress = person.getPreferredAddress();
 
@@ -121,7 +122,7 @@ public class OpenMRSActionProxyServiceTest {
                 new DateTime(personAddress.getEndDate()), new DateTime(person.getBirthdate()), person.getBirthdateEstimated(),
                 person.getGender(), person.getDead(), causeOfDeath.getUuid(), patient.getMotechId(), location.getName(), identifiersMap);
 
-        verify(patientService).createPatient(patientCaptor.capture());
+        verify(patientService).createPatient(eq(null), patientCaptor.capture());
 
         assertEquals(patient, patientCaptor.getValue());
     }
@@ -140,7 +141,7 @@ public class OpenMRSActionProxyServiceTest {
         Map<String, String> identifiersMap = new HashMap<>();
         identifiersMap.put("CommCare CaseID", "1000");
 
-        doReturn(Collections.singletonList(location)).when(locationService).getLocations(OpenMRSActionProxyService.DEFAULT_LOCATION_NAME);
+        doReturn(Collections.singletonList(location)).when(locationService).getLocations(eq(null), eq(OpenMRSActionProxyService.DEFAULT_LOCATION_NAME));
 
         Person.Address personAddress = person.getPreferredAddress();
 
@@ -153,7 +154,7 @@ public class OpenMRSActionProxyServiceTest {
                 new DateTime(personAddress.getEndDate()), new DateTime(person.getBirthdate()), person.getBirthdateEstimated(),
                 person.getGender(), person.getDead(), "", patient.getMotechId(), location.getName(), identifiersMap);
 
-        verify(patientService).createPatient(patientCaptor.capture());
+        verify(patientService).createPatient(eq(null), patientCaptor.capture());
 
         assertEquals(patient, patientCaptor.getValue());
     }
@@ -172,7 +173,7 @@ public class OpenMRSActionProxyServiceTest {
         Map<String, String> identifiersMap = new HashMap<>();
         identifiersMap.put("CommCare CaseID", "1000");
 
-        doReturn(Collections.emptyList()).when(locationService).getLocations(location.getName());
+        doReturn(Collections.emptyList()).when(locationService).getLocations(eq(null), eq(location.getName()));
 
         Person.Address personAddress = person.getPreferredAddress();
 
@@ -185,7 +186,7 @@ public class OpenMRSActionProxyServiceTest {
                 new DateTime(personAddress.getEndDate()), new DateTime(person.getBirthdate()), person.getBirthdateEstimated(),
                 person.getGender(), person.getDead(), "", patient.getMotechId(), location.getName(), identifiersMap);
 
-        verify(patientService).createPatient(patientCaptor.capture());
+        verify(patientService).createPatient(eq(null), patientCaptor.capture());
 
         // the expected patient object has location value set to null, the actual object should be the same
         assertEquals(patient, patientCaptor.getValue());

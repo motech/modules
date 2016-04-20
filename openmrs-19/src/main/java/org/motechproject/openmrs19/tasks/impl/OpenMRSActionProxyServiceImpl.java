@@ -45,13 +45,13 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     @Override
     public void createEncounter(DateTime encounterDatetime, String encounterType, String locationName, String patientUuid, String providerUuid) {
         Location location = getLocationByName(locationName);
-        Patient patient = patientService.getPatientByUuid(patientUuid);
-        Provider provider = providerService.getProviderByUuid(providerUuid);
+        Patient patient = patientService.getPatientByUuid(null, patientUuid);
+        Provider provider = providerService.getProviderByUuid(null, providerUuid);
 
         EncounterType type = new EncounterType(encounterType);
 
         Encounter encounter = new Encounter(location, type, encounterDatetime.toDate(), patient, provider.getPerson());
-        encounterService.createEncounter(encounter);
+        encounterService.createEncounter(null, encounter);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
                               DateTime startDate, DateTime endDate, DateTime birthdate, Boolean birthdateEstimated,
                               String gender, Boolean dead, String causeOfDeathUUID, String motechId,
                               String locationForMotechId, Map<String, String> identifiers) {
-        Concept causeOfDeath = StringUtils.isNotEmpty(causeOfDeathUUID) ? conceptService.getConceptByUuid(causeOfDeathUUID) : null;
+        Concept causeOfDeath = StringUtils.isNotEmpty(causeOfDeathUUID) ? conceptService.getConceptByUuid(null, causeOfDeathUUID) : null;
 
         Person person = new Person();
 
@@ -102,7 +102,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         List<Identifier> identifierList = convertIdentifierMapToList(identifiers);
 
         Patient patient = new Patient(identifierList, person, motechId, location);
-        patientService.createPatient(patient);
+        patientService.createPatient(null, patient);
     }
 
     private Location getDefaultLocation() {
@@ -113,7 +113,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         Location location = null;
 
         if (StringUtils.isNotEmpty(locationName)) {
-            List<Location> locations = locationService.getLocations(locationName);
+            List<Location> locations = locationService.getLocations(null, locationName);
             if (locations.isEmpty()) {
                 LOGGER.warn("There is no location with name {}", locationName);
             } else {

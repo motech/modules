@@ -10,6 +10,7 @@ import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a single observation. An observation is a single piece of information that is recorded about a patient at
@@ -94,6 +95,29 @@ public class Observation {
         this.groupsMembers = groupsMembers;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid, display, concept, encounter, value, obsDatetime, person, groupsMembers);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof Observation)) {
+            return false;
+        }
+
+        Observation other = (Observation) o;
+
+        return Objects.equals(uuid, other.uuid) && Objects.equals(display, other.display)
+                && Objects.equals(concept, other.concept) && Objects.equals(encounter, other.encounter)
+                && Objects.equals(value, other.value) && Objects.equals(obsDatetime, other.obsDatetime)
+                && Objects.equals(person, other.person) && Objects.equals(groupsMembers, other.groupsMembers);
+    }
+
     /**
      * Implementation of the {@link JsonSerializer} interface for the {@link Observation} class.
      */
@@ -135,6 +159,26 @@ public class Observation {
 
         public void setDisplay(String display) {
             this.display = display;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(display);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+
+            if (!(o instanceof ObservationValue)) {
+                return false;
+            }
+
+            ObservationValue other = (ObservationValue) o;
+
+            return Objects.equals(display, other.display);
         }
     }
 

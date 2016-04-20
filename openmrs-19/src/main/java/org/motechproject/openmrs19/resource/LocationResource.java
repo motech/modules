@@ -2,7 +2,7 @@ package org.motechproject.openmrs19.resource;
 
 import org.motechproject.openmrs19.domain.Location;
 import org.motechproject.openmrs19.domain.LocationListResult;
-import org.motechproject.openmrs19.exception.HttpException;
+import org.motechproject.openmrs19.config.Config;
 
 /**
  * Interface for locations management.
@@ -10,64 +10,67 @@ import org.motechproject.openmrs19.exception.HttpException;
 public interface LocationResource {
 
     /**
-     * Returns {@code LocationListResult} of all locations stored on the OpenMRS server.
+     * Returns {@code LocationListResult} of all locations stored on the OpenMRS server. The given {@code config} will
+     * be used while performing this action.
      *
+     * @param config  the configuration to be used while performing this action
      * @return  the list of all locations
-     * @throws HttpException  when there were problems while fetching locations
      */
-    LocationListResult getAllLocations() throws HttpException;
+    LocationListResult getAllLocations(Config config);
 
     /**
-     * Returns {@code LocationListResult} of all locations matching given name.
+     * Returns {@code LocationListResult} of all locations matching given name. The given {@code config} will be used
+     * while performing this action.
      *
+     * @param config  the configuration to be used while performing this action
      * @param locationName  the name to be matched
      * @return  the list of matching locations
-     * @throws HttpException  when there were problems while fetching locations
      */
-    LocationListResult queryForLocationByName(String locationName) throws HttpException;
+    LocationListResult queryForLocationByName(Config config, String locationName);
 
     /**
-     * Gets location by its UUID.
+     * Gets location by its UUID. The given {@code config} will be used while performing this action.
      *
+     * @param config  the configuration to be used while performing this action
      * @param uuid  the UUID of the location
      * @return  the location with given UUID
-     * @throws HttpException  when there were problems while fetching location
      */
-    Location getLocationById(String uuid) throws HttpException;
+    Location getLocationById(Config config, String uuid);
 
     /**
-     * Create given location on the OpenMRS server.
+     * Create given location on the OpenMRS server. The given {@code config} will be used while performing this action.
      *
+     * @param config  the configuration to be used while performing this action
      * @param location  the location to be create
      * @return  the saved location
-     * @throws HttpException  when there were problems while creating location
      */
-    Location createLocation(Location location) throws HttpException;
+    Location createLocation(Config config, Location location);
 
     /**
-     * Updates location with given data.
+     * Updates location with given data. The given {@code config} will be used while performing this action.
      *
+     * @param config  the configuration to be used while performing this action
      * @param location  the update source
      * @return  the updated location
-     * @throws HttpException  when there were problems while updating location
      */
-    Location updateLocation(Location location) throws HttpException;
+    Location updateLocation(Config config, Location location);
 
     /**
-     * Deletes the location with the given UUID.
+     * Deletes the location with the given UUID. The given {@code config} will be used while performing this action.
      *
+     * @param config  the configuration to be used while performing this action
      * @param uuid  the uuid of the location
-     * @throws HttpException  when there were problems while deleting location
      */
-    void deleteLocation(String uuid) throws HttpException;
+    void deleteLocation(Config config, String uuid);
 
     /**
-     * Fetches page with given number with size defined in {@code pageSize}. Page numeration starts with 1.
+     * Fetches page with given number with size defined in {@code pageSize}. Page numeration starts with 1. The given
+     * {@code config} will be used while performing this action.
      *
+     * @param config  the configuration to be used while performing this action
      * @param page  the number of the page
      * @param pageSize  the size of the page
      * @return  the list of locations on the given page
-     * @throws HttpException  when there were problems while fetching locations
      */
-    LocationListResult getLocations(int page, int pageSize) throws HttpException;
+    LocationListResult getLocations(Config config, int page, int pageSize);
 }
