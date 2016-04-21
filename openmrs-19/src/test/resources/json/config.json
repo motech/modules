@@ -5,7 +5,8 @@
       "openMrsUrl":"openMrsUrl-fooOne",
       "username":"username-fooOne",
       "password":"password-fooOne",
-      "motechId":"motechId-fooOne"
+      "motechPatientIdentifierTypeName":"motech_fooOne_type",
+      "patientIdentifierTypeNames": []
     }
   ],
   "defaultConfigName":"name-fooOne"

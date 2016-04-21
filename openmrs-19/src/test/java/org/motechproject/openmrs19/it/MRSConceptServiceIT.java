@@ -29,6 +29,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.motechproject.openmrs19.util.TestConstants.DEFAULT_CONFIG_NAME;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -79,11 +80,11 @@ public class MRSConceptServiceIT extends BasePaxIT {
         conceptOne.setConceptClass(new Concept.ConceptClass("Test"));
 
         synchronized (lock) {
-            conceptAdapter.updateConcept(conceptOne);
+            conceptAdapter.updateConcept(DEFAULT_CONFIG_NAME, conceptOne);
             lock.wait(6000);
         }
 
-        Concept updatedConcept = conceptAdapter.getConceptByUuid(conceptOne.getUuid());
+        Concept updatedConcept = conceptAdapter.getConceptByUuid(DEFAULT_CONFIG_NAME, conceptOne.getUuid());
 
         assertEquals("Text", updatedConcept.getDatatype().getDisplay());
         assertEquals("Test", updatedConcept.getConceptClass().getDisplay());
@@ -97,8 +98,8 @@ public class MRSConceptServiceIT extends BasePaxIT {
     public void shouldDeleteConcept() throws InterruptedException, ConceptNameAlreadyInUseException {
 
         synchronized (lock) {
-            conceptAdapter.deleteConcept(conceptOne.getUuid());
-            assertNull(conceptAdapter.getConceptByUuid(conceptOne.getUuid()));
+            conceptAdapter.deleteConcept(DEFAULT_CONFIG_NAME, conceptOne.getUuid());
+            assertNull(conceptAdapter.getConceptByUuid(DEFAULT_CONFIG_NAME, conceptOne.getUuid()));
 
             lock.wait(60000);
         }
@@ -111,7 +112,7 @@ public class MRSConceptServiceIT extends BasePaxIT {
     @Test
     public void shouldGetAllConcepts() throws ConceptNameAlreadyInUseException, InterruptedException {
 
-        List<? extends Concept> concepts = conceptAdapter.getAllConcepts();
+        List<? extends Concept> concepts = conceptAdapter.getAllConcepts(DEFAULT_CONFIG_NAME);
 
         assertTrue(concepts.size() >= 2);
     }
@@ -119,11 +120,11 @@ public class MRSConceptServiceIT extends BasePaxIT {
     @Test
     public void shouldGetConcepts() {
 
-        List<? extends Concept> concepts = conceptAdapter.getConcepts(1, 1);
+        List<? extends Concept> concepts = conceptAdapter.getConcepts(DEFAULT_CONFIG_NAME, 1, 1);
 
         assertTrue(concepts.size() == 1);
 
-        concepts = conceptAdapter.getConcepts(1, 2);
+        concepts = conceptAdapter.getConcepts(DEFAULT_CONFIG_NAME, 1, 2);
 
         assertTrue(concepts.size() == 2);
 
@@ -132,7 +133,7 @@ public class MRSConceptServiceIT extends BasePaxIT {
     @Test
     public void shouldFindSingleConceptByName() throws InterruptedException, ConceptNameAlreadyInUseException {
 
-        List<? extends Concept> concepts = conceptAdapter.search(conceptOne.getName().getName());
+        List<? extends Concept> concepts = conceptAdapter.search(DEFAULT_CONFIG_NAME, conceptOne.getName().getName());
 
         assertEquals(1, concepts.size());
 
@@ -178,7 +179,7 @@ public class MRSConceptServiceIT extends BasePaxIT {
         Concept created;
 
         synchronized (lock) {
-            created = conceptAdapter.createConcept(concept);
+            created = conceptAdapter.createConcept(DEFAULT_CONFIG_NAME, concept);
             assertNotNull(created);
             lock.wait(60000);
         }
@@ -187,8 +188,8 @@ public class MRSConceptServiceIT extends BasePaxIT {
 
     private void deleteConcept(Concept concept) throws InterruptedException {
 
-        conceptAdapter.deleteConcept(concept.getUuid());
-        assertNull(conceptAdapter.getConceptByUuid(concept.getUuid()));
+        conceptAdapter.deleteConcept(DEFAULT_CONFIG_NAME, concept.getUuid());
+        assertNull(conceptAdapter.getConceptByUuid(DEFAULT_CONFIG_NAME, concept.getUuid()));
 
     }
 

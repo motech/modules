@@ -5,76 +5,59 @@ import com.google.common.collect.HashBiMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.lang.StringUtils;
-import org.motechproject.openmrs19.OpenMrsInstance;
+import org.motechproject.openmrs19.config.Config;
 import org.motechproject.openmrs19.domain.Identifier;
 import org.motechproject.openmrs19.domain.IdentifierListResult;
 import org.motechproject.openmrs19.domain.IdentifierType;
-import org.motechproject.openmrs19.domain.IdentifierType.IdentifierTypeSerializer;
 import org.motechproject.openmrs19.domain.Location;
-import org.motechproject.openmrs19.domain.Location.LocationSerializer;
 import org.motechproject.openmrs19.domain.Patient;
 import org.motechproject.openmrs19.domain.PatientIdentifierListResult;
 import org.motechproject.openmrs19.domain.PatientListResult;
 import org.motechproject.openmrs19.domain.Person;
-import org.motechproject.openmrs19.domain.Person.PersonSerializer;
-import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.resource.PatientResource;
-import org.motechproject.openmrs19.rest.RestClient;
 import org.motechproject.openmrs19.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestOperations;
 
 @Component
-public class PatientResourceImpl implements PatientResource {
-
-    private RestClient restfulClient;
-    private OpenMrsInstance openmrsInstance;
+public class PatientResourceImpl extends BaseResource implements PatientResource {
 
     private String motechIdTypeUuid;
     private BiMap<String, String> identifierTypeUuidByName = HashBiMap.create();
 
     @Autowired
-    public PatientResourceImpl(RestClient restClient, OpenMrsInstance instance) {
-        this.restfulClient = restClient;
-        this.openmrsInstance = instance;
+    public PatientResourceImpl(RestOperations restOperations) {
+        super(restOperations);
     }
 
     @Override
-    public Patient createPatient(Patient patient) throws HttpException {
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().registerTypeAdapter(Person.class, new PersonSerializer())
-                .registerTypeAdapter(IdentifierType.class, new IdentifierTypeSerializer())
-                .registerTypeAdapter(Location.class, new LocationSerializer()).create();
-
-        String requestJson = gson.toJson(patient);
-        String responseJson = restfulClient.postForJson(openmrsInstance.toInstancePath("/patient"), requestJson);
-
+    public Patient createPatient(Config config, Patient patient) {
+        String requestJson = buildGsonWithAdapters(true).toJson(patient);
+        String responseJson = postForJson(config, requestJson, "/patient");
         return (Patient) JsonUtils.readJson(responseJson, Patient.class);
     }
 
     @Override
-    public PatientListResult queryForPatient(String motechId) throws HttpException {
-        String responseJson = restfulClient.getJson(openmrsInstance.toInstancePathWithParams("/patient?q={motechId}",
-                motechId));
-
+    public PatientListResult queryForPatient(Config config, String motechId) {
+        String responseJson = getJson(config, "/patient?q={motechId}", motechId);
         return (PatientListResult) JsonUtils.readJson(responseJson, PatientListResult.class);
     }
 
     @Override
-    public Patient getPatientById(String patientId) throws HttpException {
-        String responseJson = restfulClient.getJson(openmrsInstance.toInstancePathWithParams("/patient/{uuid}?v=full",
-                patientId));
-
+    public Patient getPatientById(Config config, String patientId) {
+        String responseJson = getJson(config, "/patient/{uuid}?v=full", patientId);
         return (Patient) JsonUtils.readJson(responseJson, Patient.class);
     }
 
     @Override
-    public String getMotechPatientIdentifierUuid() throws HttpException {
+    public String getMotechPatientIdentifierUuid(Config config) {
         if (StringUtils.isNotEmpty(motechIdTypeUuid)) {
             return motechIdTypeUuid;
         }
 
-        PatientIdentifierListResult result = getAllPatientIdentifierTypes();
-        String motechPatientIdentifierTypeName = openmrsInstance.getMotechPatientIdentifierTypeName();
+        PatientIdentifierListResult result = getAllPatientIdentifierTypes(config);
+        String motechPatientIdentifierTypeName = config.getMotechPatientIdentifierTypeName();
         for (IdentifierType type : result.getResults()) {
             if (motechPatientIdentifierTypeName.equals(type.getName())) {
                 motechIdTypeUuid = type.getUuid();
@@ -86,15 +69,15 @@ public class PatientResourceImpl implements PatientResource {
     }
 
     @Override
-    public String getPatientIdentifierTypeNameByUuid(String identifierTypeUuid) throws HttpException {
+    public String getPatientIdentifierTypeNameByUuid(Config config, String identifierTypeUuid) {
         // Firstly, we try to retrieve a name from the cache
         String identifierTypeName = identifierTypeUuidByName.get(identifierTypeUuid);
 
         if (identifierTypeName == null) {
-            PatientIdentifierListResult result = getAllPatientIdentifierTypes();
+            PatientIdentifierListResult result = getAllPatientIdentifierTypes(config);
             for (IdentifierType type : result.getResults()) {
                 if (StringUtils.equals(identifierTypeUuid, type.getUuid())) {
-                    if (isIdentifierTypeSupportedInMotech(type.getName())) {
+                    if (isIdentifierTypeSupportedInMotech(config, type.getName())) {
                         identifierTypeName = type.getName();
                         // After retrieving an identifierType from an OpenMRS server, the uuid and name are stored in cache
                         identifierTypeUuidByName.put(identifierTypeUuid, identifierTypeName);
@@ -109,15 +92,15 @@ public class PatientResourceImpl implements PatientResource {
     }
 
     @Override
-    public String getPatientIdentifierTypeUuidByName(String identifierTypeName) throws HttpException {
+    public String getPatientIdentifierTypeUuidByName(Config config, String identifierTypeName) {
         // Firstly, we try to retrieve a uuid from the cache
         String identifierTypeUuid = identifierTypeUuidByName.inverse().get(identifierTypeName);
 
         if (identifierTypeUuid == null) {
-            PatientIdentifierListResult result = getAllPatientIdentifierTypes();
+            PatientIdentifierListResult result = getAllPatientIdentifierTypes(config);
             for (IdentifierType type : result.getResults()) {
                 if (StringUtils.equals(identifierTypeName, type.getName())) {
-                    if (isIdentifierTypeSupportedInMotech(type.getName())) {
+                    if (isIdentifierTypeSupportedInMotech(config, type.getName())) {
                         identifierTypeUuid = type.getUuid();
                         // After retrieving an identifierType from an OpenMRS server, the uuid and name are stored in cache
                         identifierTypeUuidByName.put(identifierTypeUuid, identifierTypeName);
@@ -132,44 +115,49 @@ public class PatientResourceImpl implements PatientResource {
     }
 
     @Override
-    public void deletePatient(String uuid) throws HttpException {
-        restfulClient.delete(openmrsInstance.toInstancePathWithParams("/patient/{uuid}?purge", uuid));
+    public void deletePatient(Config config, String uuid) {
+        delete(config, "/patient/{uuid}?purge", uuid);
     }
 
     @Override
-    public Patient updatePatientMotechId(String patientUuid, String newMotechId) throws HttpException {
-        Gson gson = new GsonBuilder().create();
-
-        Identifier patientIdentifier = getPatientIdentifier(patientUuid);
+    public void updatePatientMotechId(Config config, String patientUuid, String newMotechId) {
+        Identifier patientIdentifier = getPatientIdentifier(config, patientUuid);
         patientIdentifier.setIdentifier(newMotechId);
-        String identifierUuid = patientIdentifier.getUuid();
 
-        // setting uuid, type and location to null so they are not included in request.
-        patientIdentifier.setUuid(null);
-        patientIdentifier.setIdentifierType(null);
-        patientIdentifier.setLocation(null);
-
-        String requestJson = gson.toJson(patientIdentifier);
-        String responseJson = restfulClient.postForJson(openmrsInstance.toInstancePathWithParams("/patient/{patientUuid}/identifier/{identifierUuid}",
-                patientUuid, identifierUuid), requestJson);
-
-        return (Patient) JsonUtils.readJson(responseJson, Patient.class);
+        String requestJson = buildGson().toJson(patientIdentifier);
+        postForJson(config, requestJson, "/patient/{patientUuid}/identifier/{identifierUuid}", patientUuid,
+                patientIdentifier.getUuid());
     }
 
-    private PatientIdentifierListResult getAllPatientIdentifierTypes() throws HttpException {
-        String responseJson = restfulClient.getJson(openmrsInstance.toInstancePath("/patientidentifiertype?v=full"));
+    private PatientIdentifierListResult getAllPatientIdentifierTypes(Config config) {
+        String responseJson = getJson(config, "/patientidentifiertype?v=full");
         return (PatientIdentifierListResult) JsonUtils.readJson(responseJson, PatientIdentifierListResult.class);
     }
 
-    private Identifier getPatientIdentifier(String patientUuid) throws HttpException {
-        String responseJson =
-                restfulClient.getJson(openmrsInstance.toInstancePathWithParams("/patient/{patientUuid}/identifier", patientUuid));
-        IdentifierListResult identifierListResult =
-                (IdentifierListResult) JsonUtils.readJson(responseJson, IdentifierListResult.class);
-        return identifierListResult.getResults().get(0);
+    private Identifier getPatientIdentifier(Config config, String patientUuid) {
+        String responseJson = getJson(config, "/patient/{patientUuid}/identifier", patientUuid);
+        return ((IdentifierListResult) JsonUtils.readJson(responseJson, IdentifierListResult.class)).getResults().get(0);
     }
 
-    private boolean isIdentifierTypeSupportedInMotech(String identifierTypeName) {
-        return openmrsInstance.getPatientIdentifierTypeNames().contains(identifierTypeName);
+    private boolean isIdentifierTypeSupportedInMotech(Config config, String identifierTypeName) {
+        return config.getPatientIdentifierTypeNames().contains(identifierTypeName);
+    }
+
+    private Gson buildGsonWithAdapters(boolean excludeFieldsWithoutExposeAnnotation) {
+        GsonBuilder builder = new GsonBuilder();
+
+        if (excludeFieldsWithoutExposeAnnotation) {
+            builder.excludeFieldsWithoutExposeAnnotation();
+        }
+
+        builder.registerTypeAdapter(Person.class, new Person.PersonSerializer());
+        builder.registerTypeAdapter(IdentifierType.class, new IdentifierType.IdentifierTypeSerializer());
+        builder.registerTypeAdapter(Location.class, new Location.LocationSerializer());
+
+        return builder.create();
+    }
+
+    private Gson buildGson() {
+        return new GsonBuilder().create();
     }
 }

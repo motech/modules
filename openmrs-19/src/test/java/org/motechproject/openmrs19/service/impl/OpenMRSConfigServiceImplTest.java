@@ -31,8 +31,8 @@ public class OpenMRSConfigServiceImplTest {
 
     private static final String OPEN_MRS_CONFIGS_FILE_NAME = "openmrs-configs.json";
     private static final String EMPTY_CONFIGS = "json/empty-configs.json";
-    private static final String ONE_CONFIG = "json/one-config.json";
-    private static final String THREE_CONFIG = "json/three-configs.json";
+    private static final String CONFIG_JSON = "json/config.json";
+    private static final String CONFIGS_JSON = "json/configs.json";
 
     private static final String SUFFIX_ONE = "fooOne";
     private static final String SUFFIX_TWO = "fooTwo";
@@ -53,7 +53,7 @@ public class OpenMRSConfigServiceImplTest {
 
     @Test
     public void shouldAddValidConfig() throws Exception {
-        loadConfig(EMPTY_CONFIGS);
+        loadConfigs(EMPTY_CONFIGS);
 
         Config config = ConfigDummyData.prepareConfig(SUFFIX_ONE);
 
@@ -68,7 +68,7 @@ public class OpenMRSConfigServiceImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfConfigIsInvalidDuringAdd() throws Exception {
         try {
-            loadConfig(EMPTY_CONFIGS);
+            loadConfigs(EMPTY_CONFIGS);
 
             Config config = ConfigDummyData.prepareConfig(SUFFIX_ONE);
             config.setName(null);
@@ -84,7 +84,7 @@ public class OpenMRSConfigServiceImplTest {
     @Test(expected = ConfigurationAlreadyExistsException.class)
     public void shouldThrowConfigurationAlreadyExistsIfAddingDuplicate() throws Exception {
         try {
-            loadConfig(ONE_CONFIG);
+            loadConfigs(CONFIG_JSON);
 
             Config config = ConfigDummyData.prepareConfig(SUFFIX_ONE);
 
@@ -99,13 +99,13 @@ public class OpenMRSConfigServiceImplTest {
 
     @Test
     public void shouldUpdateConfigurationIfItExists() throws Exception {
-        loadConfig(ONE_CONFIG);
+        loadConfigs(CONFIG_JSON);
         
         Config config = ConfigDummyData.prepareConfig(SUFFIX_ONE);
         config.setOpenMrsUrl("foo.openmrs.url");
         config.setUsername("fooUsername");
         config.setPassword("fooPassword");
-        config.setMotechId("fooMotechId");
+        config.setMotechPatientIdentifierTypeName("fooMotechId");
 
         configService.updateConfig(config);
 
@@ -118,7 +118,7 @@ public class OpenMRSConfigServiceImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfConfigIsInvalidDuringUpdate() throws Exception {
         try {
-            loadConfig(ONE_CONFIG);
+            loadConfigs(CONFIG_JSON);
 
             Config config = ConfigDummyData.prepareConfig(SUFFIX_ONE);
             config.setName(null);
@@ -135,7 +135,7 @@ public class OpenMRSConfigServiceImplTest {
     @Test(expected = ConfigurationNotFoundException.class)
     public void shouldThrowConfigurationNotFoundExceptionIfThereIsNoConfigurationWithTheSameName() throws Exception {
         try {
-            loadConfig(EMPTY_CONFIGS);
+            loadConfigs(EMPTY_CONFIGS);
 
             Config config = ConfigDummyData.prepareConfig(SUFFIX_ONE);
 
@@ -149,7 +149,7 @@ public class OpenMRSConfigServiceImplTest {
 
     @Test
     public void shouldDeleteConfigurationIfItExists() throws Exception {
-        loadConfig(ONE_CONFIG);
+        loadConfigs(CONFIG_JSON);
 
         configService.deleteConfig(ConfigDummyData.getName(SUFFIX_ONE));
 
@@ -161,7 +161,7 @@ public class OpenMRSConfigServiceImplTest {
     @Test(expected = ConfigurationNotFoundException.class)
     public void shouldThrowConfigurationNotFoundExceptionIfTryingToDeleteNonexistentConfiguration() throws Exception {
         try {
-            loadConfig(ONE_CONFIG);
+            loadConfigs(CONFIG_JSON);
 
             configService.deleteConfig(ConfigDummyData.getName(NON_EXISTENT));
         } finally {
@@ -174,7 +174,7 @@ public class OpenMRSConfigServiceImplTest {
 
     @Test
     public void shouldMarkConfigurationAsDefault() throws Exception {
-        loadConfig(THREE_CONFIG);
+        loadConfigs(CONFIGS_JSON);
 
         configService.markConfigAsDefault(ConfigDummyData.getName(SUFFIX_TWO));
 
@@ -192,7 +192,7 @@ public class OpenMRSConfigServiceImplTest {
     public void shouldThrowConfigurationNotFoundExceptionIfTryingToMarkNonexistentConfigurationAsDefault()
             throws Exception {
         try {
-            loadConfig(THREE_CONFIG);
+            loadConfigs(CONFIGS_JSON);
 
             configService.markConfigAsDefault(ConfigDummyData.getName(NON_EXISTENT));
         } finally {
@@ -209,7 +209,7 @@ public class OpenMRSConfigServiceImplTest {
 
     @Test
     public void shouldGetConfigs() throws Exception {
-        loadConfig(THREE_CONFIG);
+        loadConfigs(CONFIGS_JSON);
 
         List<Config> configs = configService.getConfigs();
 
@@ -220,20 +220,28 @@ public class OpenMRSConfigServiceImplTest {
 
     @Test
     public void shouldGetConfigByName() throws Exception {
-        loadConfig(THREE_CONFIG);
+        loadConfigs(CONFIGS_JSON);
 
         assertThat(configService.getConfigByName(ConfigDummyData.getName(SUFFIX_TWO)),
                 equalTo(ConfigDummyData.prepareConfig(SUFFIX_TWO)));
     }
 
     @Test
+    public void shouldGetDefaultConfigIfNullIsPassed() throws Exception {
+        loadConfigs(CONFIGS_JSON);
+
+        assertThat(configService.getConfigByName(null),
+                equalTo(ConfigDummyData.prepareConfig(SUFFIX_ONE)));
+    }
+
+    @Test
     public void shouldGetDefaultConfig() throws Exception {
-        loadConfig(THREE_CONFIG);
+        loadConfigs(CONFIGS_JSON);
 
         assertThat(configService.getDefaultConfig(), equalTo(ConfigDummyData.prepareConfig(SUFFIX_ONE)));
     }
 
-    private void loadConfig(String fileName) throws Exception {
+    private void loadConfigs(String fileName) throws Exception {
         try(InputStream is = getClass().getClassLoader().getResourceAsStream(fileName)) {
             when(settingsFacade.getRawConfig(OPEN_MRS_CONFIGS_FILE_NAME)).thenReturn(is);
             configService.postConstruct();
