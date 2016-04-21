@@ -31,6 +31,12 @@
           "key": "providerUuid",
           "displayName": "openMRS.provider.uuid",
           "required": true
+        },
+        {
+          "key": "observation",
+          "displayName": "openMRS.observations",
+          "type" : "MAP",
+          "required" : false
         }
       ]
     },

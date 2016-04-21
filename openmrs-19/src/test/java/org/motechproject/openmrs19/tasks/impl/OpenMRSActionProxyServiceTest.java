@@ -15,6 +15,7 @@ import org.motechproject.openmrs19.domain.EncounterType;
 import org.motechproject.openmrs19.domain.Identifier;
 import org.motechproject.openmrs19.domain.IdentifierType;
 import org.motechproject.openmrs19.domain.Location;
+import org.motechproject.openmrs19.domain.Observation;
 import org.motechproject.openmrs19.domain.Patient;
 import org.motechproject.openmrs19.domain.Person;
 import org.motechproject.openmrs19.domain.Provider;
@@ -25,8 +26,11 @@ import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
 import org.motechproject.openmrs19.tasks.OpenMRSActionProxyService;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
@@ -75,15 +79,20 @@ public class OpenMRSActionProxyServiceTest {
         Person person = new Person();
         person.setUuid("30");
         provider.setPerson(person);
+        
+        DateTime encounterDatetime = new DateTime("2000-08-16T07:22:05Z");
+        Map<String, String> observations = new HashMap();
+        observations.put("1","1");
+        List<Observation> obsList = convertObservationMapToList(observations, encounterDatetime);
 
-        Encounter encounter = new Encounter(location, new EncounterType("testEncounterType"), new DateTime("2000-08-16T07:22:05Z").toDate(), patient, provider.getPerson());
+        Encounter encounter = new Encounter(location, new EncounterType("testEncounterType"), encounterDatetime.toDate(), patient, provider.getPerson(), obsList);
 
         doReturn(Collections.singletonList(location)).when(locationService).getLocations(eq(null), eq(location.getName()));
         doReturn(patient).when(patientService).getPatientByUuid(eq(null), eq(patient.getUuid()));
         doReturn(provider).when(providerService).getProviderByUuid(eq(null), eq(provider.getUuid()));
 
         openMRSActionProxyService.createEncounter(new DateTime(encounter.getEncounterDatetime()),
-                encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid());
+                encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid(), observations);
 
         verify(encounterService).createEncounter(eq(null), encounterCaptor.capture());
 
@@ -208,5 +217,26 @@ public class OpenMRSActionProxyServiceTest {
         concept.setUuid("100");
 
         return concept;
+    }
+
+    private List<Observation> convertObservationMapToList(Map<String, String> observations, DateTime obsDatetime) {
+        List<Observation> observationList = new ArrayList<>();
+
+        for (String observationConceptName : observations.keySet()) {
+            Observation observation = new Observation();
+
+            ConceptName conceptName = new ConceptName(observationConceptName);
+            Concept concept = new Concept(conceptName);
+            observation.setConcept(concept);
+
+            String observationMapValue = observations.get(observationConceptName);
+            Observation.ObservationValue observationValue = new Observation.ObservationValue(observationMapValue);
+            observation.setValue(observationValue);
+
+            observation.setObsDatetime(obsDatetime.toDate());
+
+            observationList.add(observation);
+        }
+        return observationList;
     }
 }
