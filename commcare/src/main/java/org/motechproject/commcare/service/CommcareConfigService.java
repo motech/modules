@@ -10,12 +10,21 @@ import org.motechproject.commcare.exception.CommcareConnectionFailureException;
 public interface CommcareConfigService {
 
     /**
+     *Used for changing configuration names.
+     *
+     * @param configuration  the configuration to be saved
+     * @param oldName   name of configuration before the update
+     * @return  the saved configuration
+     */
+    Config updateConfig(Config configuration, String oldName) throws CommcareConnectionFailureException;
+
+    /**
      * Creates the given configuration.
      *
      * @param configuration  the configuration to be saved
      * @return  the saved configuration
      */
-    Config saveConfig(Config configuration) throws CommcareConnectionFailureException;
+    Config addConfig(Config configuration) throws CommcareConnectionFailureException;
 
     /**
      * Deletes the configuration with the given name.

@@ -78,13 +78,13 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
     }
 
     @Override
-    public Config saveConfig(Config config) throws CommcareConnectionFailureException {
+    public Config updateConfig(Config config, String oldName) throws CommcareConnectionFailureException {
 
-        if (configs.nameInUse(config.getName())) {
-            if (!isSameServer(config.getAccountConfig(), configs.getByName(config.getName()).getAccountConfig())) {
-                eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_UPDATED, prepareParams(config.getName())));
+        if (configs.nameInUse(oldName)) {
+            if (!isSameServer(config.getAccountConfig(), configs.getByName(oldName).getAccountConfig())) {
+                eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_UPDATED, prepareParams(oldName)));
             }
-            configs.updateConfig(config);
+            configs.updateConfig(config, oldName);
         } else {
             validateConfig(config);
             configs.saveConfig(config);
@@ -104,6 +104,11 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
         updateConfigs();
 
         return config;
+    }
+
+    @Override
+    public Config addConfig(Config config) throws CommcareConnectionFailureException {
+        return updateConfig(config, config.getName());
     }
 
     private void validateConfig(Config config) {
