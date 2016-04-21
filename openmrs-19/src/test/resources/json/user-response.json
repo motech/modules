@@ -1,0 +1,12 @@
+{
+  "username": "motech",
+  "password": "password",
+  "person": {
+    "uuid": "personUuid"
+  },
+  "roles": [
+    {
+      "uuid": "roleUuid"
+    }
+  ]
+}

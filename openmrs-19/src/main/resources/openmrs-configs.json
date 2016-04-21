@@ -1,6 +1,4 @@
 {
-  "configs" :
-  [
-  ],
-  "defaultConfig" : ""
+  "configs" : [],
+  "defaultConfigName" : null
 }

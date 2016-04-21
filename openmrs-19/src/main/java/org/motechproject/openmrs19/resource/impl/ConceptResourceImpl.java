@@ -3,104 +3,96 @@ package org.motechproject.openmrs19.resource.impl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.lang.Validate;
-import org.motechproject.openmrs19.OpenMrsInstance;
+import org.motechproject.openmrs19.config.Config;
 import org.motechproject.openmrs19.domain.Concept;
 import org.motechproject.openmrs19.domain.ConceptListResult;
-import org.motechproject.openmrs19.exception.HttpException;
 import org.motechproject.openmrs19.resource.ConceptResource;
-import org.motechproject.openmrs19.rest.RestClient;
 import org.motechproject.openmrs19.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestOperations;
 
 import java.util.List;
 
 @Component
-public class ConceptResourceImpl implements ConceptResource {
+public class ConceptResourceImpl extends BaseResource implements ConceptResource {
 
-    private final OpenMrsInstance openmrsInstance;
-    private final RestClient restClient;
+    private static final String GET_CONCEPTS_PATH = "/concept?v=full&limit={pageSize}&startIndex={startIndex}";
 
     @Autowired
-    public ConceptResourceImpl(RestClient restClient, OpenMrsInstance openmrsInstance) {
-        this.restClient = restClient;
-        this.openmrsInstance = openmrsInstance;
+    public ConceptResourceImpl(RestOperations restOperations) {
+        super(restOperations);
     }
 
     @Override
-    public ConceptListResult queryForConceptsByName(String name) throws HttpException {
-        String responseJson = restClient.getJson(openmrsInstance.toInstancePathWithParams("/concept?v=full&q={conceptName}",
-                name));
+    public ConceptListResult queryForConceptsByName(Config config, String name) {
+        String responseJson = getJson(config, "/concept?v=full&q={conceptName}", name);
         return (ConceptListResult) JsonUtils.readJson(responseJson, ConceptListResult.class);
     }
 
     @Override
-    public Concept getConceptByName(String name) throws HttpException {
-        List<Concept> concepts = queryForConceptsByName(name).getResults();
+    public Concept getConceptByName(Config config, String name) {
+        List<Concept> concepts = queryForConceptsByName(config, name).getResults();
+
         for (Concept concept : concepts) {
             if (concept.getDisplay().equals(name)) {
                 return concept;
             }
         }
+
         return null;
     }
 
     @Override
-    public Concept getConceptById(String uuid) throws HttpException {
-        String responseJson = restClient.getJson(openmrsInstance.toInstancePathWithParams("/concept/{uuid}",
-                uuid));
+    public Concept getConceptById(Config config, String uuid) {
+        String responseJson = getJson(config, "/concept/{uuid}", uuid);
         return (Concept) JsonUtils.readJson(responseJson, Concept.class);
     }
 
     @Override
-    public Concept createConcept(Concept concept) throws HttpException {
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(Concept.DataType.class, new Concept.DataTypeSerializer())
-                .registerTypeAdapter(Concept.ConceptClass.class, new Concept.ConceptClassSerializer())
-                .create();
-
-        String requestJson = gson.toJson(concept);
-        String responseJson = restClient.postForJson(openmrsInstance.toInstancePath("/concept"), requestJson);
-
+    public Concept createConcept(Config config, Concept concept) {
+        String requestJson = buildGson(false).toJson(concept);
+        String responseJson = postForJson(config, requestJson, "/concept");
         return (Concept) JsonUtils.readJson(responseJson, Concept.class);
     }
 
     @Override
-    public ConceptListResult getAllConcepts() throws HttpException {
-        String json = restClient.getJson(openmrsInstance.toInstancePath("/concept?v=full"));
-        return (ConceptListResult) JsonUtils.readJson(json, ConceptListResult.class);
+    public ConceptListResult getAllConcepts(Config config) {
+        String responseJson = getJson(config, "/concept?v=full");
+        return (ConceptListResult) JsonUtils.readJson(responseJson, ConceptListResult.class);
     }
 
     @Override
-    public Concept updateConcept(Concept concept) throws HttpException {
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
-                .registerTypeAdapter(Concept.DataType.class, new Concept.DataTypeSerializer())
-                .registerTypeAdapter(Concept.ConceptClass.class, new Concept.ConceptClassSerializer())
-                .create();
-
-        String jsonRequest = gson.toJson(concept);
-
-        String json = restClient.postForJson(openmrsInstance.toInstancePathWithParams("/concept/{uuid}", concept.getUuid()),
-                jsonRequest);
-
-        return (Concept) JsonUtils.readJson(json, Concept.class);
+    public Concept updateConcept(Config config, Concept concept) {
+        String requestJson = buildGson(true).toJson(concept);
+        String responseJson = postForJson(config, requestJson, "/concept/{uuid}", concept.getUuid());
+        return (Concept) JsonUtils.readJson(responseJson, Concept.class);
     }
 
     @Override
-    public void deleteConcept(String uuid) throws HttpException {
-        restClient.delete(openmrsInstance.toInstancePathWithParams("/concept/{uuid}?purge", uuid));
+    public void deleteConcept(Config config, String uuid) {
+        delete(config, "/concept/{uuid}?purge", uuid);
     }
 
     @Override
-    public ConceptListResult getConcepts(int page, int pageSize) throws HttpException {
-
+    public ConceptListResult getConcepts(Config config, int page, int pageSize) {
         Validate.isTrue(page > 0, "Page number must be a positive value!");
         Validate.isTrue(pageSize > 0, "Page size must be a positive value!");
 
-        int startIndex = (page - 1) * pageSize;
-        String json = restClient.getJson(openmrsInstance
-                .toInstancePathWithParams("/concept?v=full&limit={pageSize}&startIndex={startIndex}", pageSize, startIndex));
+        String json = getJson(config, GET_CONCEPTS_PATH, pageSize, (page - 1) * pageSize);
+
         return (ConceptListResult) JsonUtils.readJson(json, ConceptListResult.class);
     }
 
+    private Gson buildGson(boolean excludeFieldsWithoutExposeAnnotation) {
+        GsonBuilder builder = new GsonBuilder();
+
+        if (excludeFieldsWithoutExposeAnnotation) {
+            builder.excludeFieldsWithoutExposeAnnotation();
+        }
+
+        builder.registerTypeAdapter(Concept.DataType.class, new Concept.DataTypeSerializer());
+        builder.registerTypeAdapter(Concept.ConceptClass.class, new Concept.ConceptClassSerializer());
+        return builder.create();
+    }
 }

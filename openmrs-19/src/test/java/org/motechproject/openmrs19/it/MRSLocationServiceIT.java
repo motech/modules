@@ -27,6 +27,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.motechproject.openmrs19.util.TestConstants.DEFAULT_CONFIG_NAME;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -84,7 +85,7 @@ public class MRSLocationServiceIT extends BasePaxIT {
         Location updatedLocation;
 
         synchronized (lock) {
-            updatedLocation = locationAdapter.updateLocation(locationOne);
+            updatedLocation = locationAdapter.updateLocation(DEFAULT_CONFIG_NAME, locationOne);
             assertNotNull(updatedLocation);
 
             lock.wait(60000);
@@ -102,8 +103,8 @@ public class MRSLocationServiceIT extends BasePaxIT {
     public void shouldDeleteLocation() throws InterruptedException {
 
         synchronized (lock) {
-            locationAdapter.deleteLocation(locationOne.getUuid());
-            assertNull(locationAdapter.getLocationByUuid(locationOne.getUuid()));
+            locationAdapter.deleteLocation(DEFAULT_CONFIG_NAME, locationOne.getUuid());
+            assertNull(locationAdapter.getLocationByUuid(DEFAULT_CONFIG_NAME, locationOne.getUuid()));
 
             lock.wait(60000);
         }
@@ -116,7 +117,7 @@ public class MRSLocationServiceIT extends BasePaxIT {
     @Test
     public void shouldGetLocations() {
 
-        List<Location> locations = locationAdapter.getLocations(1, 3);
+        List<Location> locations = locationAdapter.getLocations(DEFAULT_CONFIG_NAME, 1, 3);
 
         assertEquals(3, locations.size());
         assertTrue(locations.containsAll(Arrays.asList(locationOne, locationTwo)));
@@ -125,7 +126,7 @@ public class MRSLocationServiceIT extends BasePaxIT {
     @Test
     public void shouldGetAllLocations() {
 
-        List<Location> locations = locationAdapter.getAllLocations();
+        List<Location> locations = locationAdapter.getAllLocations(DEFAULT_CONFIG_NAME);
 
         assertEquals(3, locations.size());
         assertTrue(locations.containsAll(Arrays.asList(locationOne, locationTwo)));
@@ -134,7 +135,7 @@ public class MRSLocationServiceIT extends BasePaxIT {
     @Test
     public void shouldFindLocationsByName() {
 
-        List<Location> locations = locationAdapter.getLocations("FooName");
+        List<Location> locations = locationAdapter.getLocations(DEFAULT_CONFIG_NAME, "FooName");
 
         assertEquals(2, locations.size());
     }
@@ -142,7 +143,7 @@ public class MRSLocationServiceIT extends BasePaxIT {
     @Test
     public void shouldFindLocationById() {
 
-        assertNotNull(locationAdapter.getLocationByUuid(locationOne.getUuid()));
+        assertNotNull(locationAdapter.getLocationByUuid(DEFAULT_CONFIG_NAME, locationOne.getUuid()));
     }
 
     @After
@@ -165,7 +166,7 @@ public class MRSLocationServiceIT extends BasePaxIT {
         Location created;
 
         synchronized (lock) {
-            created = locationAdapter.createLocation(location);
+            created = locationAdapter.createLocation(DEFAULT_CONFIG_NAME, location);
             assertNotNull(created);
 
             lock.wait(60000);
@@ -175,9 +176,9 @@ public class MRSLocationServiceIT extends BasePaxIT {
     }
 
     private void deleteLocation(Location location) {
-        locationAdapter.deleteLocation(location.getUuid());
+        locationAdapter.deleteLocation(DEFAULT_CONFIG_NAME, location.getUuid());
 
-        assertNull(locationAdapter.getLocationByUuid(location.getUuid()));
+        assertNull(locationAdapter.getLocationByUuid(DEFAULT_CONFIG_NAME, location.getUuid()));
     }
 
     public class MrsListener implements EventListener {

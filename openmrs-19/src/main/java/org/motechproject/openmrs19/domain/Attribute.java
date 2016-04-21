@@ -7,6 +7,7 @@ import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a single attribute of a user.
@@ -36,6 +37,26 @@ public class Attribute {
         public void setUri(String uri) {
             this.uri = uri;
         }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(uri);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+
+            if (!(o instanceof Link)) {
+                return false;
+            }
+
+            Link other = (Link) o;
+
+            return Objects.equals(uri, other.uri);
+        }
     }
 
     /**
@@ -51,6 +72,26 @@ public class Attribute {
 
         public void setUuid(String uuid) {
             this.uuid = uuid;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(uuid);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+
+            if (!(o instanceof AttributeType)) {
+                return false;
+            }
+
+            AttributeType other = (AttributeType) o;
+
+            return Objects.equals(uuid, other.uuid);
         }
     }
 
@@ -128,5 +169,28 @@ public class Attribute {
 
     public void setLinks(List<Link> links) {
         this.links = links;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid, display, value, name, description, format, attributeType, links);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof Attribute)) {
+            return false;
+        }
+
+        Attribute other = (Attribute) o;
+
+        return Objects.equals(uuid, other.uuid) && Objects.equals(display, other.display)
+                && Objects.equals(value, other.value) && Objects.equals(name, other.name)
+                && Objects.equals(description, other.description) && Objects.equals(format, other.format)
+                && Objects.equals(attributeType, other.attributeType) && Objects.equals(links, other.links);
     }
 }
