@@ -140,7 +140,15 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     }
 
     private Relationship getRelationship(Map<String, String> lookupFields) {
-        return relationshipService.getByTypeUuidAndPersonUuid(null, lookupFields.get(RELATIONSHIP_TYPE_UUID),
-                lookupFields.get(PERSON_UUID));
+        String typeUuid = lookupFields.get(RELATIONSHIP_TYPE_UUID);
+        String personUuid = lookupFields.get(PERSON_UUID);
+        List<Relationship> relationships =  relationshipService.getByTypeUuidAndPersonUuid(null, typeUuid, personUuid);
+
+        if (relationships.size() > 1) {
+            LOGGER.warn(String.format("Multiple relationships found for the type with the \"%s\" UUID and the person" +
+                    "with the \"%s\" UUID. The first relationship in the list will be returned", typeUuid, personUuid));
+        }
+
+        return relationships.isEmpty() ? null : relationships.get(0);
     }
 }

@@ -18,7 +18,9 @@ import org.motechproject.openmrs19.service.OpenMRSProviderService;
 import org.motechproject.openmrs19.service.OpenMRSRelationshipService;
 import org.springframework.core.io.ResourceLoader;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
@@ -287,7 +289,7 @@ public class OpenMRSTaskDataProviderTest {
         lookupFields.put(RELATIONSHIP_TYPE_UUID, relationshipTypeUuid);
         lookupFields.put(PERSON_UUID, personUuid);
 
-        Relationship expected = prepareRelationship();
+        List<Relationship> expected = prepareRelationship();
 
         when(relationshipService.getByTypeUuidAndPersonUuid(eq(null), eq(relationshipTypeUuid), eq(personUuid)))
                 .thenReturn(expected);
@@ -296,10 +298,10 @@ public class OpenMRSTaskDataProviderTest {
 
         verify(relationshipService).getByTypeUuidAndPersonUuid(eq(null), eq(relationshipTypeUuid), eq(personUuid));
 
-        assertEquals(expected, object);
+        assertEquals(expected.get(0), object);
     }
 
-    private Relationship prepareRelationship() {
+    private List<Relationship> prepareRelationship() {
         Relationship relationship = new Relationship();
         relationship.setUuid("relationShipUuid");
         relationship.setEndDate("endDate");
@@ -318,6 +320,6 @@ public class OpenMRSTaskDataProviderTest {
         relationship.setPersonB(personB);
         relationship.setRelationshipType(type);
 
-        return relationship;
+        return Arrays.asList(relationship);
     }
 }
