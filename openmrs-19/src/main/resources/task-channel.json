@@ -34,7 +34,7 @@
         },
         {
           "key": "observation",
-          "displayName": "openMRS.observations",
+          "displayName": "openMRS.encounter.observation",
           "type" : "MAP",
           "required" : false
         }

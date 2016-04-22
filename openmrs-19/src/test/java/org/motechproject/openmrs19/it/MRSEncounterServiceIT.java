@@ -116,10 +116,6 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         assertEquals(encounter.getLocation().getUuid(), mrsListener.eventParameters.get(EventKeys.LOCATION_ID));
         assertEquals(encounter.getEncounterDatetime(), mrsListener.eventParameters.get(EventKeys.ENCOUNTER_DATE));
         assertEquals(encounter.getEncounterType().getUuid(), mrsListener.eventParameters.get(EventKeys.ENCOUNTER_TYPE));
-    }
-
-    @Test
-    public void shouldCreateEncounterWithObservation() throws HttpException, ParseException, InterruptedException {
 
         Encounter fetchedEncounter = encounterAdapter.getEncounterByUuid(DEFAULT_CONFIG_NAME, encounter.getUuid());
         Observation fetchedObservation = obsAdapter.getObservationByUuid(DEFAULT_CONFIG_NAME, fetchedEncounter.getObs().get(0).getUuid());
@@ -311,7 +307,7 @@ public class MRSEncounterServiceIT extends BasePaxIT {
 
         tempObservation.setObsDatetime(format.parse(date));
         tempObservation.setConcept(concept);
-        tempObservation.setValue(new Observation.ObservationValue("True"));
+        tempObservation.setValue(new Observation.ObservationValue("true"));
         tempObservation.setPerson(patient.getPerson());
 
         String observationUuid = obsAdapter.createObservation(DEFAULT_CONFIG_NAME, tempObservation).getUuid();

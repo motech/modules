@@ -81,9 +81,10 @@ public class OpenMRSActionProxyServiceTest {
         provider.setPerson(person);
         
         DateTime encounterDatetime = new DateTime("2000-08-16T07:22:05Z");
-        Map<String, String> observations = new HashMap();
-        observations.put("1","1");
-        List<Observation> obsList = convertObservationMapToList(observations, encounterDatetime);
+        Map<String, String> observations = new HashMap<>();
+        observations.put("testConceptName","testObservationValueName");
+
+        List<Observation> obsList = createObservationList();
 
         Encounter encounter = new Encounter(location, new EncounterType("testEncounterType"), encounterDatetime.toDate(), patient, provider.getPerson(), obsList);
 
@@ -209,7 +210,7 @@ public class OpenMRSActionProxyServiceTest {
 
     private Concept createTestConcept() {
         Concept concept = new Concept();
-        ConceptName conceptName = new ConceptName("testConcept");
+        ConceptName conceptName = new ConceptName("testConceptName");
 
         concept.setNames(Collections.singletonList(conceptName));
         concept.setDatatype(new Concept.DataType("TEXT"));
@@ -219,24 +220,16 @@ public class OpenMRSActionProxyServiceTest {
         return concept;
     }
 
-    private List<Observation> convertObservationMapToList(Map<String, String> observations, DateTime obsDatetime) {
-        List<Observation> observationList = new ArrayList<>();
+    private List<Observation> createObservationList() {
+        Observation observation = new Observation();
 
-        for (String observationConceptName : observations.keySet()) {
-            Observation observation = new Observation();
+        ConceptName conceptName = new ConceptName("testConceptName");
+        Concept concept = new Concept(conceptName);
 
-            ConceptName conceptName = new ConceptName(observationConceptName);
-            Concept concept = new Concept(conceptName);
-            observation.setConcept(concept);
+        observation.setConcept(concept);
+        observation.setValue(new Observation.ObservationValue("testObservationValueName"));
+        observation.setObsDatetime(new DateTime("2000-08-16T07:22:05Z").toDate());
 
-            String observationMapValue = observations.get(observationConceptName);
-            Observation.ObservationValue observationValue = new Observation.ObservationValue(observationMapValue);
-            observation.setValue(observationValue);
-
-            observation.setObsDatetime(obsDatetime.toDate());
-
-            observationList.add(observation);
-        }
-        return observationList;
+        return Collections.singletonList(observation);
     }
 }
