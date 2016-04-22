@@ -11,6 +11,13 @@
                 method: 'GET',
                 url: '../commcare/configs/new'
             },
+            save: {
+                method: 'POST',
+                url: '../commcare/configs',
+                params: {
+                    oldName: "@oldName"
+                }
+            },
             makeDefault: {
                 method: 'POST',
                 url: '../commcare/configs/default'
