@@ -3,19 +3,23 @@ package org.motechproject.openmrs19.tasks;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.motechproject.openmrs19.config.Config;
+import org.motechproject.openmrs19.config.Configs;
 import org.motechproject.openmrs19.domain.Encounter;
 import org.motechproject.openmrs19.domain.EncounterType;
 import org.motechproject.openmrs19.domain.Patient;
 import org.motechproject.openmrs19.domain.Provider;
+import org.motechproject.openmrs19.service.OpenMRSConfigService;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
+import org.motechproject.openmrs19.tasks.builder.OpenMRSTaskDataProviderBuilder;
 import org.springframework.core.io.ResourceLoader;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
@@ -40,13 +44,20 @@ public class OpenMRSTaskDataProviderTest {
     private OpenMRSProviderService providerService;
 
     @Mock
+    private OpenMRSConfigService configService;
+
+    @Mock
     private ResourceLoader resourceLoader;
+
+    @InjectMocks
+    private OpenMRSTaskDataProviderBuilder taskDataProviderBuilder = new OpenMRSTaskDataProviderBuilder();
 
     private OpenMRSTaskDataProvider taskDataProvider;
 
     @Before
     public void setUp() {
-        taskDataProvider = new OpenMRSTaskDataProvider(resourceLoader, encounterService, patientService, providerService);
+        taskDataProvider = new OpenMRSTaskDataProvider(taskDataProviderBuilder, encounterService, patientService, providerService);
+        when(configService.getConfigs()).thenReturn(new ArrayList<>());
     }
 
     @Test

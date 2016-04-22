@@ -31,4 +31,15 @@
         </property>
     </bean>
 
+    <bean id="openMRSVelocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+        <property name="velocityProperties">
+            <value>
+                resource.loader=class
+                class.resource.loader.class=org.motechproject.openmrs19.tasks.VelocityResourceLoader
+            </value>
+        </property>
+    </bean>
+
+    <bean id="openMRSTaskDataProviderBuilder" class="org.motechproject.openmrs19.tasks.builder.OpenMRSTaskDataProviderBuilder"/>
+
 </beans>

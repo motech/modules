@@ -1,0 +1,180 @@
+{
+  "name": "openMRS",
+  "objects": [
+    #foreach($config in $configurations)
+        {
+          "displayName": "Encounter [$config.getName()]",
+          "type": "Encounter",
+          "lookupFields": [
+            {
+              "displayName": "openMRS.lookup.uuid",
+              "fields": [
+                "openMRS.uuid"
+              ]
+            }
+          ],
+          "fields": [
+            {
+              "displayName": "openMRS.encounter.uuid",
+              "fieldKey": "uuid"
+            },
+            {
+              "displayName": "openMRS.encounter.display",
+              "fieldKey": "display"
+            },
+            {
+              "displayName": "openMRS.encounter.date",
+              "fieldKey": "encounterDatetime",
+              "type": "DATE"
+            },
+            {
+              "displayName": "openMRS.encounter.type",
+              "fieldKey": "encounterType.name"
+            },
+            {
+              "displayName": "openMRS.provider.uuid",
+              "fieldKey": "provider.uuid"
+            },
+            {
+              "displayName": "openMRS.provider.display",
+              "fieldKey": "provider.display"
+            },
+            {
+              "displayName": "openMRS.location.uuid",
+              "fieldKey": "location.uuid"
+            },
+            {
+              "displayName": "openMRS.location.display",
+              "fieldKey": "location.display"
+            },
+            {
+              "displayName": "openMRS.patient.uuid",
+              "fieldKey": "patient.uuid"
+            },
+            {
+              "displayName": "openMRS.patient.display",
+              "fieldKey": "patient.display"
+            }
+          ]
+        },
+        {
+          "displayName": "Patient [$config.getName()]",
+          "type": "Patient",
+          "lookupFields": [
+            {
+              "displayName": "openMRS.lookup.motechId",
+              "fields": [
+                "openMRS.motechId"
+              ]
+            },
+            {
+              "displayName": "openMRS.lookup.uuid",
+              "fields": [
+                "openMRS.uuid"
+              ]
+            }
+          ],
+          "fields": [
+            {
+              "displayName": "openMRS.patient.uuid",
+              "fieldKey": "uuid"
+            },
+            {
+              "displayName": "openMRS.patient.identifiers",
+              "fieldKey": "identifiersMap",
+              "type": "MAP"
+            },
+            {
+              "displayName": "openMRS.motechId",
+              "fieldKey": "motechId"
+            },
+            {
+              "displayName": "openMRS.person.uuid",
+              "fieldKey": "person.uuid"
+            },
+            {
+              "displayName": "openMRS.person.display",
+              "fieldKey": "person.display"
+            },
+            {
+              "displayName": "openMRS.person.address",
+              "fieldKey": "person.preferredAddress.fullAddressString"
+            },
+            {
+              "displayName": "openMRS.person.age",
+              "fieldKey": "person.age",
+              "type": "INTEGER"
+            },
+            {
+              "displayName": "openMRS.person.birthdateEstimated",
+              "fieldKey": "person.birthdateEstimated",
+              "type": "BOOLEAN"
+            },
+            {
+              "displayName": "openMRS.person.birthdate",
+              "fieldKey": "person.birthdate",
+              "type": "DATE"
+            },
+            {
+              "displayName": "openMRS.person.deathDate",
+              "fieldKey": "person.deathDate",
+              "type": "DATE"
+            },
+            {
+              "displayName": "openMRS.person.dateCreated",
+              "fieldKey": "person.auditInfo.dateCreated",
+              "type": "DATE"
+            },
+            {
+              "displayName": "openMRS.person.dateChanged",
+              "fieldKey": "person.auditInfo.dateChanged",
+              "type": "DATE"
+            },
+            {
+              "displayName": "openMRS.person.newPerson",
+              "fieldKey": "person.auditInfo.newPerson"
+            },
+            {
+              "displayName": "openMRS.person.gender",
+              "fieldKey": "person.gender"
+            },
+            {
+              "displayName": "openMRS.person.dead",
+              "fieldKey": "person.dead",
+              "type": "BOOLEAN"
+            }
+          ]
+        },
+        {
+          "displayName": "Provider [$config.getName()]",
+          "type": "Provider",
+          "lookupFields": [
+            {
+              "displayName": "openMRS.lookup.uuid",
+              "fields": [
+                "openMRS.uuid"
+              ]
+            }
+          ],
+          "fields": [
+            {
+              "displayName": "openMRS.provider.uuid",
+              "fieldKey": "uuid"
+            },
+            {
+              "displayName": "openMRS.provider.identifier",
+              "fieldKey": "identifier"
+            },
+            {
+              "displayName": "openMRS.person.uuid",
+              "fieldKey": "person.uuid"
+            },
+            {
+              "displayName": "openMRS.person.display",
+              "fieldKey": "person.display"
+            }
+          ]
+        }#if( $velocityHasNext ),#end
+    #end
+  ]
+}

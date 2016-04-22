@@ -7,11 +7,10 @@ import org.motechproject.openmrs19.domain.Provider;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
+import org.motechproject.openmrs19.tasks.builder.OpenMRSTaskDataProviderBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -40,18 +39,21 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     private OpenMRSEncounterService encounterService;
     private OpenMRSPatientService patientService;
     private OpenMRSProviderService providerService;
+    private OpenMRSTaskDataProviderBuilder dataProviderBuilder;
 
     @Autowired
-    public OpenMRSTaskDataProvider(ResourceLoader resourceLoader, OpenMRSEncounterService encounterService,
+    public OpenMRSTaskDataProvider(OpenMRSTaskDataProviderBuilder taskDataProviderBuilder, OpenMRSEncounterService encounterService,
                                    OpenMRSPatientService patientService, OpenMRSProviderService providerService) {
-        Resource resource = resourceLoader.getResource("task-data-provider.json");
-        if (resource != null) {
-            setBody(resource);
-        }
 
         this.encounterService = encounterService;
         this.patientService = patientService;
         this.providerService = providerService;
+        this.dataProviderBuilder = taskDataProviderBuilder;
+
+        String body = dataProviderBuilder.generateDataProvider();
+        if (body != null) {
+            setBody(body);
+        }
     }
 
     @Override
@@ -128,4 +130,5 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
 
         return provider;
     }
+
 }
