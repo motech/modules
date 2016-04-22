@@ -1,5 +1,6 @@
 package org.motechproject.openmrs19.tasks.impl;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.motechproject.openmrs19.domain.Concept;
@@ -49,7 +50,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         Patient patient = patientService.getPatientByUuid(null, patientUuid);
         Provider provider = providerService.getProviderByUuid(null, providerUuid);
 
-        List<Observation> observationList = convertObservationMapToList(observations, encounterDatetime);
+        List<Observation> observationList = MapUtils.isNotEmpty(observations) ? convertObservationMapToList(observations, encounterDatetime) : null;
 
         EncounterType type = new EncounterType(encounterType);
 

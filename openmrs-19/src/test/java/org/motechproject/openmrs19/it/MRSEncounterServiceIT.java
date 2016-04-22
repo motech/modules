@@ -117,8 +117,7 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         assertEquals(encounter.getEncounterDatetime(), mrsListener.eventParameters.get(EventKeys.ENCOUNTER_DATE));
         assertEquals(encounter.getEncounterType().getUuid(), mrsListener.eventParameters.get(EventKeys.ENCOUNTER_TYPE));
 
-        Encounter fetchedEncounter = encounterAdapter.getEncounterByUuid(DEFAULT_CONFIG_NAME, encounter.getUuid());
-        Observation fetchedObservation = obsAdapter.getObservationByUuid(DEFAULT_CONFIG_NAME, fetchedEncounter.getObs().get(0).getUuid());
+        Observation fetchedObservation = obsAdapter.getObservationByUuid(DEFAULT_CONFIG_NAME, encounter.getObs().get(0).getUuid());
 
         assertEquals(observation.getValue(), fetchedObservation.getValue());
         assertEquals(observation.getConcept(), fetchedObservation.getConcept());
