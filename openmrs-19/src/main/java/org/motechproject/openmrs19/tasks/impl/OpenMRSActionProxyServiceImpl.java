@@ -1,13 +1,16 @@
 package org.motechproject.openmrs19.tasks.impl;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.motechproject.openmrs19.domain.Concept;
+import org.motechproject.openmrs19.domain.ConceptName;
 import org.motechproject.openmrs19.domain.Encounter;
 import org.motechproject.openmrs19.domain.EncounterType;
 import org.motechproject.openmrs19.domain.Identifier;
 import org.motechproject.openmrs19.domain.IdentifierType;
 import org.motechproject.openmrs19.domain.Location;
+import org.motechproject.openmrs19.domain.Observation;
 import org.motechproject.openmrs19.domain.Patient;
 import org.motechproject.openmrs19.domain.Person;
 import org.motechproject.openmrs19.domain.Provider;
@@ -42,14 +45,17 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     private OpenMRSProviderService providerService;
 
     @Override
-    public void createEncounter(DateTime encounterDatetime, String encounterType, String locationName, String patientUuid, String providerUuid) {
+    public void createEncounter(DateTime encounterDatetime, String encounterType, String locationName, String patientUuid, String providerUuid, Map<String, String> observations) {
         Location location = getLocationByName(locationName);
         Patient patient = patientService.getPatientByUuid(null, patientUuid);
         Provider provider = providerService.getProviderByUuid(null, providerUuid);
 
+        //While creating observations, the encounterDateTime is used as a obsDateTime.
+        List<Observation> observationList = MapUtils.isNotEmpty(observations) ? convertObservationMapToList(observations, encounterDatetime) : null;
+
         EncounterType type = new EncounterType(encounterType);
 
-        Encounter encounter = new Encounter(location, type, encounterDatetime.toDate(), patient, provider.getPerson());
+        Encounter encounter = new Encounter(location, type, encounterDatetime.toDate(), patient, provider.getPerson(), observationList);
         encounterService.createEncounter(null, encounter);
     }
 
@@ -122,6 +128,27 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         }
 
         return identifierList;
+    }
+
+    private List<Observation> convertObservationMapToList(Map<String, String> observations, DateTime obsDatetime) {
+        List<Observation> observationList = new ArrayList<>();
+
+        for (String observationConceptName : observations.keySet()) {
+            Observation observation = new Observation();
+
+            ConceptName conceptName = new ConceptName(observationConceptName);
+            Concept concept = new Concept(conceptName);
+            observation.setConcept(concept);
+
+            String observationMapValue = observations.get(observationConceptName);
+            Observation.ObservationValue observationValue = new Observation.ObservationValue(observationMapValue);
+            observation.setValue(observationValue);
+
+            observation.setObsDatetime(obsDatetime.toDate());
+
+            observationList.add(observation);
+        }
+        return observationList;
     }
 
     @Autowired
