@@ -83,24 +83,7 @@ public class MRSPersonServiceIT extends BasePaxIT {
         assertEquals(person.getPreferredName().getMiddleName(), fetchedPerson.getPreferredName().getMiddleName());
         assertEquals(person.getPreferredName().getFamilyName(), fetchedPerson.getPreferredName().getFamilyName());
 
-        Person.Address personAddress = person.getPreferredAddress();
-        Person.Address fetchedPersonAddress = fetchedPerson.getPreferredAddress();
-
-        assertEquals(personAddress.getAddress1(), fetchedPersonAddress.getAddress1());
-        assertEquals(personAddress.getAddress2(), fetchedPersonAddress.getAddress2());
-        assertEquals(personAddress.getAddress3(), fetchedPersonAddress.getAddress3());
-        assertEquals(personAddress.getAddress4(), fetchedPersonAddress.getAddress4());
-        assertEquals(personAddress.getAddress5(), fetchedPersonAddress.getAddress5());
-        assertEquals(personAddress.getAddress6(), fetchedPersonAddress.getAddress6());
-        assertEquals(personAddress.getCityVillage(), fetchedPersonAddress.getCityVillage());
-        assertEquals(personAddress.getStateProvince(), fetchedPersonAddress.getStateProvince());
-        assertEquals(personAddress.getCountry(), fetchedPersonAddress.getCountry());
-        assertEquals(personAddress.getCountyDistrict(), fetchedPersonAddress.getCountyDistrict());
-        assertEquals(personAddress.getPostalCode(), fetchedPersonAddress.getPostalCode());
-        assertEquals(personAddress.getLatitude(), fetchedPersonAddress.getLatitude());
-        assertEquals(personAddress.getLongitude(), fetchedPersonAddress.getLongitude());
-        assertEquals(personAddress.getStartDate(), fetchedPersonAddress.getStartDate());
-        assertEquals(personAddress.getEndDate(), fetchedPersonAddress.getEndDate());
+        assertEquals(person.getPreferredAddress(), fetchedPerson.getPreferredAddress());
     }
 
     @Test

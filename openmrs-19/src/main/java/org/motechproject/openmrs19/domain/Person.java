@@ -296,14 +296,14 @@ public class Person {
             }
             final Address other = (Address) obj;
 
-            return  Objects.equals(this.uuid, other.uuid) && Objects.equals(this.address1, other.address1) &&
-                    Objects.equals(this.address2, other.address2) && Objects.equals(this.cityVillage, other.cityVillage) &&
-                    Objects.equals(this.stateProvince, other.stateProvince) && Objects.equals(this.country, other.country) &&
-                    Objects.equals(this.postalCode, other.postalCode) && Objects.equals(this.countyDistrict, other.countyDistrict) &&
-                    Objects.equals(this.address3, other.address3) && Objects.equals(this.address4, other.address4) &&
-                    Objects.equals(this.address5, other.address5) && Objects.equals(this.address6, other.address6) &&
-                    Objects.equals(this.startDate, other.startDate) && Objects.equals(this.endDate, other.endDate) &&
-                    Objects.equals(this.latitude, other.latitude) && Objects.equals(this.longitude, other.longitude);
+            return  Objects.equals(this.address1, other.address1) && Objects.equals(this.address2, other.address2) &&
+                    Objects.equals(this.cityVillage, other.cityVillage) && Objects.equals(this.stateProvince, other.stateProvince) &&
+                    Objects.equals(this.country, other.country) && Objects.equals(this.postalCode, other.postalCode) &&
+                    Objects.equals(this.countyDistrict, other.countyDistrict) && Objects.equals(this.address3, other.address3) &&
+                    Objects.equals(this.address4, other.address4) && Objects.equals(this.address5, other.address5) &&
+                    Objects.equals(this.address6, other.address6) && Objects.equals(this.startDate, other.startDate) &&
+                    Objects.equals(this.endDate, other.endDate) && Objects.equals(this.latitude, other.latitude) &&
+                    Objects.equals(this.longitude, other.longitude);
         }
     }
 

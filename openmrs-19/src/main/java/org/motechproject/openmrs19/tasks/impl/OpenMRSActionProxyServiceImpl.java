@@ -78,22 +78,9 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         person.setPreferredName(personName);
         person.setNames(Collections.singletonList(personName));
 
-        Person.Address personAddress = new Person.Address();
-        personAddress.setAddress1(address1);
-        personAddress.setAddress2(address2);
-        personAddress.setAddress3(address3);
-        personAddress.setAddress4(address4);
-        personAddress.setAddress5(address5);
-        personAddress.setAddress6(address6);
-        personAddress.setCityVillage(cityVillage);
-        personAddress.setStateProvince(stateProvince);
-        personAddress.setCountry(country);
-        personAddress.setPostalCode(postalCode);
-        personAddress.setCountyDistrict(countyDistrict);
-        personAddress.setLatitude(latitude);
-        personAddress.setLongitude(longitude);
-        personAddress.setStartDate(Objects.nonNull(startDate) ? startDate.toDate() : null);
-        personAddress.setEndDate(Objects.nonNull(endDate) ? endDate.toDate() : null);
+        Person.Address personAddress = new Person.Address(address1, address2, address3, address4, address5, address6,
+                cityVillage, stateProvince, country, postalCode, countyDistrict, latitude, longitude,
+                Objects.nonNull(startDate) ? startDate.toDate() : null, Objects.nonNull(endDate) ? endDate.toDate() : null);
         person.setPreferredAddress(personAddress);
         person.setAddresses(Collections.singletonList(personAddress));
 
