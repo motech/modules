@@ -114,7 +114,7 @@
                     <span class="glyphicon glyphicon-info-sign" data-trigger="hover" data-placement="right" bs-popover="{{msg('commcare.settings.tooltip.eventStrategy')}}" data-original-title=""></span>
                 </label>
                 <div class="col-md-9 col-sm-8 form-inline">
-                    <select class="form-control input-auto" ng-change="draftChanged()" ng-model="selectedConfig.eventStrategy" autosave="change" ng-options="option for option in eventStrategyOptions" required>
+                    <select class="form-control input-auto" ng-change="draftChanged()" ng-model="selectedConfig.eventStrategy" ng-options="option for option in eventStrategyOptions" required>
                         <option ng-if="!selectedConfig.eventStrategy" value="">-- {{msg('commcare.select')}} --</option>
                     </select>
                     <div class="form-hints">
