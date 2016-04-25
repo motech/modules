@@ -1,0 +1,16 @@
+{
+  "results":[
+    {
+      "uuid": "relationshipUuid",
+      "personA": {
+        "uuid": "personAUuid"
+      },
+      "personB": {
+        "uuid": "personBUuid"
+      },
+      "relationshipType": {
+        "uuid": "relationshipTypeUuid"
+      }
+    }
+  ]
+}
