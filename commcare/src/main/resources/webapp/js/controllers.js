@@ -305,8 +305,10 @@
                 var copy = {};
 
                 copy = $scope.copyConfig(newValue);
-                $scope.selectedConfigBackup = copy.copy;
-                $scope.oldName = copy.oldName;
+                if(copy) {
+                    $scope.selectedConfigBackup = copy.copy;
+                    $scope.oldName = copy.oldName;
+                }
                 $scope.configOutdated = false;
                 $scope.newConfig = false;
                 $scope.clearMessages();
@@ -570,7 +572,7 @@
         $scope.saveConfig = function(element) {
             blockUI();
             if($scope.oldName) {
-                $scope.saveUpdatedConfig(element);
+                $scope.saveUpdateConfig(element);
             } else {
                 $scope.saveNewConfig(element);
             }
