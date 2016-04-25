@@ -34,7 +34,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
     private static final String PERSON_NAME_UPDATE_JSON = "json/person-name-update.json";
     private static final String PERSON_RESPONSE_JSON = "json/person-response.json";
     private static final String CREATE_PERSON_JSON = "json/person-create.json";
-    private static final String UPDATE_ADDRESS_JSON = "json/address-update.json";
+    private static final String UPDATE_ADDRESS_JSON = "json/person-address-update.json";
 
     @Mock
     private RestOperations restOperations;

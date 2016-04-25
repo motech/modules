@@ -283,7 +283,7 @@ public class Person {
 
         @Override
         public int hashCode() {
-            return Objects.hash(uuid, address1, address2, cityVillage, stateProvince, country, postalCode, countyDistrict, address3, address4, address5, address6, startDate, endDate, latitude, longitude);
+            return Objects.hash(address1, address2, cityVillage, stateProvince, country, postalCode, countyDistrict, address3, address4, address5, address6, startDate, endDate, latitude, longitude);
         }
 
         @Override //NO CHECKSTYLE Cyclomatic Complexity
