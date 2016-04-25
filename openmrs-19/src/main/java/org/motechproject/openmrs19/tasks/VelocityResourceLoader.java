@@ -5,7 +5,7 @@ import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import java.io.InputStream;
 
 /**
- * Loads resources for velocity from the CommCare bundle.
+ * Loads resources for velocity from the OpenMRS bundle.
  */
 public class VelocityResourceLoader extends ClasspathResourceLoader {
 

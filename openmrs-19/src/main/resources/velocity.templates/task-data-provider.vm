@@ -4,7 +4,7 @@
     #foreach($config in $configurations)
         {
           "displayName": "Encounter [$config.getName()]",
-          "type": "Encounter",
+          "type": "Encounter-$config.getName()",
           "lookupFields": [
             {
               "displayName": "openMRS.lookup.uuid",
@@ -59,7 +59,7 @@
         },
         {
           "displayName": "Patient [$config.getName()]",
-          "type": "Patient",
+          "type": "Patient-$config.getName()",
           "lookupFields": [
             {
               "displayName": "openMRS.lookup.motechId",
@@ -147,7 +147,7 @@
         },
         {
           "displayName": "Provider [$config.getName()]",
-          "type": "Provider",
+          "type": "Provider-$config.getName()",
           "lookupFields": [
             {
               "displayName": "openMRS.lookup.uuid",

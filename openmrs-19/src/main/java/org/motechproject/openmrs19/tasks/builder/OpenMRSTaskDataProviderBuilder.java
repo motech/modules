@@ -15,6 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The <code>OpenMRSTaskDataProviderBuilder</code> class is responsible for building
+ * JSON file, containing information about available OpenMRS objects.
+ * The constructed JSON is used in the {@link org.motechproject.openmrs19.tasks.OpenMRSTaskDataProvider}
+ */
 @Component
 public class OpenMRSTaskDataProviderBuilder {
 

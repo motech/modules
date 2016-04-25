@@ -53,6 +53,8 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         String body = dataProviderBuilder.generateDataProvider();
         if (body != null) {
             setBody(body);
+        } else {
+            LOGGER.warn("OpenMRS configuration is empty.");
         }
     }
 
@@ -75,14 +77,17 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     public Object lookup(String type, String lookupName, Map<String, String> lookupFields) {
         Object obj = null;
 
+        String objectType = type.substring(0, type.lastIndexOf('-'));
+        String configName = type.substring(type.lastIndexOf('-')+1);
+
         //In case of any trouble with the type, 'supports' method logs an error
-        if (supports(type)) {
-            switch (type) {
-                case ENCOUNTER: obj = getEncounter(lookupName, lookupFields);
+        if (supports(objectType)) {
+            switch (objectType) {
+                case ENCOUNTER: obj = getEncounter(lookupName, lookupFields, configName);
                     break;
-                case PATIENT: obj = getPatient(lookupName, lookupFields);
+                case PATIENT: obj = getPatient(lookupName, lookupFields, configName);
                     break;
-                case PROVIDER: obj = getProvider(lookupName, lookupFields);
+                case PROVIDER: obj = getProvider(lookupName, lookupFields, configName);
                     break;
             }
         }
@@ -90,11 +95,11 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         return obj;
     }
 
-    private Encounter getEncounter(String lookupName, Map<String, String> lookupFields) {
+    private Encounter getEncounter(String lookupName, Map<String, String> lookupFields, String configName) {
         Encounter encounter = null;
 
         switch (lookupName) {
-            case BY_UUID: encounter = encounterService.getEncounterByUuid(null, lookupFields.get(UUID));
+            case BY_UUID: encounter = encounterService.getEncounterByUuid(configName, lookupFields.get(UUID));
                 break;
             default: LOGGER.error("Lookup with name {} doesn't exist for encounter object", lookupName);
                 break;
@@ -103,13 +108,13 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         return encounter;
     }
 
-    private Patient getPatient(String lookupName, Map<String, String> lookupFields) {
+    private Patient getPatient(String lookupName, Map<String, String> lookupFields, String configName) {
         Patient patient = null;
 
         switch (lookupName) {
-            case BY_MOTECH_ID: patient = patientService.getPatientByMotechId(null, lookupFields.get(MOTECH_ID));
+            case BY_MOTECH_ID: patient = patientService.getPatientByMotechId(configName, lookupFields.get(MOTECH_ID));
                 break;
-            case BY_UUID: patient = patientService.getPatientByUuid(null, lookupFields.get(UUID));
+            case BY_UUID: patient = patientService.getPatientByUuid(configName, lookupFields.get(UUID));
                 break;
             default: LOGGER.error("Lookup with name {} doesn't exist for patient object", lookupName);
                 break;
@@ -118,11 +123,11 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         return patient;
     }
 
-    private Provider getProvider(String lookupName, Map<String, String> lookupFields) {
+    private Provider getProvider(String lookupName, Map<String, String> lookupFields, String configName) {
         Provider provider = null;
 
         switch (lookupName) {
-            case BY_UUID: provider = providerService.getProviderByUuid(null, lookupFields.get(UUID));
+            case BY_UUID: provider = providerService.getProviderByUuid(configName, lookupFields.get(UUID));
                 break;
             default: LOGGER.error("Lookup with name {} doesn't exist for provider object", lookupName);
                 break;
