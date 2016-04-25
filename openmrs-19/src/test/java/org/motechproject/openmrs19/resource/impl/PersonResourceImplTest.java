@@ -34,7 +34,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
     private static final String PERSON_NAME_UPDATE_JSON = "json/person-name-update.json";
     private static final String PERSON_RESPONSE_JSON = "json/person-response.json";
     private static final String CREATE_PERSON_JSON = "json/person-create.json";
-    private static final String UPDATE_ADDRESS_JSON = "json/person-address-update.json";
+    private static final String UPDATE_PERSON_ADDRESS_JSON = "json/person-address-update.json";
 
     @Mock
     private RestOperations restOperations;
@@ -167,7 +167,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
 
         assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPostWithoutResponse(config)));
         assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
-                equalTo(readFromFile(UPDATE_ADDRESS_JSON, JsonObject.class)));
+                equalTo(readFromFile(UPDATE_PERSON_ADDRESS_JSON, JsonObject.class)));
     }
 
     private Person preparePerson() throws Exception {
@@ -194,6 +194,6 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
         return name;
     }
     private Person.Address prepareAddress() throws Exception {
-        return  (Person.Address) readFromFile(UPDATE_ADDRESS_JSON, Person.Address.class);
+        return  (Person.Address) readFromFile(UPDATE_PERSON_ADDRESS_JSON, Person.Address.class);
     }
 }
