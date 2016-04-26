@@ -43,4 +43,18 @@ public interface CommcareSchemaService {
      * @return the list of matching applications
      */
     List<CommcareApplicationJson> retrieveApplications(String configName);
+    
+    /**
+     * Retrieves case types with application name
+     * @return Map of case types. Key represents a case type, while a value is a
+     *         application name the case type belongs to.
+     */
+    Map<String, String> getCaseTypesToApplicationName(String configName);
+
+    /**
+     * Retrieves forms with application name
+     * @return Map of forms. Key represents a form, while a value is a
+     *         application name the form belongs to.
+     */
+    Map<FormSchemaJson, String> getFormsToApplicationName(String configName);
 }

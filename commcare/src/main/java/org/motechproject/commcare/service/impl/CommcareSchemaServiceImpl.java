@@ -67,6 +67,39 @@ public class CommcareSchemaServiceImpl implements CommcareSchemaService {
     public Map<String, Set<String>> getAllCaseTypes() {
         return getAllCaseTypes(null);
     }
+    
+    @Override
+    @Transactional
+    public Map<String, String> getCaseTypesToApplicationName(String configName) {
+        Map<String, String> caseTypesToApplicationName = new HashMap<>();
+
+        for (CommcareApplicationJson app : commcareApplicationDataService.bySourceConfiguration(configName)) {
+            for (CommcareModuleJson module : app.getModules()) {
+                String caseType = module.getCaseType();
+                if (!caseTypesToApplicationName.containsKey(caseType)) {
+                    caseTypesToApplicationName.put(caseType, app.getApplicationName());
+                }
+            }
+        }
+
+       return caseTypesToApplicationName;
+    }
+    
+    @Override
+    @Transactional
+    public Map<FormSchemaJson, String> getFormsToApplicationName(String configName) {
+        Map<FormSchemaJson, String> formsToApplicationName = new HashMap<>();
+
+        for (CommcareApplicationJson app : commcareApplicationDataService.bySourceConfiguration(configName)) {
+            for (CommcareModuleJson module : app.getModules()) {
+                for (FormSchemaJson form : module.getFormSchemas()) {
+                    formsToApplicationName.put(form, app.getApplicationName());
+                }
+            }
+        }
+
+        return formsToApplicationName;
+    }
 
     @Override
     @Transactional

@@ -2,9 +2,7 @@ package org.motechproject.commcare.tasks.builder;
 
 import org.motechproject.commcare.domain.FormSchemaJson;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Helper class used for storing configuration name as well as all forms and cases that originated from the said
@@ -14,22 +12,22 @@ public class ConfigurationData {
 
     private String configName;
 
-    private List<FormSchemaJson> forms;
+    private Map<FormSchemaJson, String> formsToApplication;
 
-    private Map<String, Set<String>> cases;
+    private Map<String, String> casesToApplication;
 
     /**
-     * Creates an instance of the {@link ConfigurationData} class. It will store the given {@code forms}, {@code cases}
-     * for the configuration with the given {@code configName}.
+     * Creates an instance of the {@link ConfigurationData} class. It will store the given {@code formsToApplication}
+     * , {@code casesToApplication} mapped to application names for the configuration with the given {@code configName}.
      *
      * @param configName  the name of the configuration
      * @param forms  the list of all forms that originate from the given configuration
      * @param cases  the list of all cases that originate from the given configuration
      */
-    public ConfigurationData(String configName, List<FormSchemaJson> forms, Map<String, Set<String>> cases) {
+    public ConfigurationData(String configName, Map<FormSchemaJson, String> formsToApplication, Map<String, String> casesToApplication) {
         this.configName = configName;
-        this.forms = forms;
-        this.cases = cases;
+        this.formsToApplication = formsToApplication;
+        this.casesToApplication = casesToApplication;
     }
 
     public String getConfigName() {
@@ -40,19 +38,19 @@ public class ConfigurationData {
         this.configName = configName;
     }
 
-    public List<FormSchemaJson> getForms() {
-        return forms;
+    public Map<FormSchemaJson, String> getFormsToApplication() {
+        return formsToApplication;
     }
 
-    public void setForms(List<FormSchemaJson> forms) {
-        this.forms = forms;
+    public void setFormsToApplication(Map<FormSchemaJson, String> formsToApplication) {
+        this.formsToApplication = formsToApplication;
     }
 
-    public Map<String, Set<String>> getCases() {
-        return cases;
+    public Map<String, String> getCasesToApplication() {
+        return casesToApplication;
     }
 
-    public void setCases(Map<String, Set<String>> cases) {
-        this.cases = cases;
+    public void setCasesToApplication(Map<String, String> casesToApplication) {
+        this.casesToApplication = casesToApplication;
     }
 }
