@@ -160,7 +160,7 @@ $scope.setRelatedEntity = function(field) {
         }
     }
     if (relatedClass !== undefined) {
-        blockUI();
+        LoadingModal.open();
         $http.get('../mds/entities/getEntityByClassName?entityClassName=' + relatedClass).success(function (data) {
             $scope.relatedEntity = data;
             $scope.editedField = field;
@@ -192,14 +192,15 @@ $scope.setRelatedEntity = function(field) {
                     $scope.allEntityFields = data;
                 },
                 function (response) {
-                    handleResponse('mds.error', 'mds.dataBrowsing.error.instancesList', response);
+                    LoadingModal.close();
+                    ModalFactory.showErrorAlertWithResponse('mds.dataBrowsing.error.instancesList', 'mds.error', response);
                 }
             );
-            unblockUI();
+            LoadingModal.close();
 
-        }).error(function(response)
-        {
-            handleResponse('mds.error', 'mds.dataBrowsing.error.instancesList', response);
+        }).error(function(response) {
+            LoadingModal.close();
+            ModalFactory.showErrorAlertWithResponse('mds.dataBrowsing.error.instancesList', 'mds.error', response);
         });
     }
 
@@ -289,7 +290,7 @@ $scope.messageTypeChanged = function(messageType) {
 };
 
 $scope.addInstance = function(module, entityName) {
-    blockUI();
+    LoadingModal.open();
 
     // load the entity if coming from the 'Add' link in the main DataBrowser page
     if (!$scope.selectedEntity) {
@@ -331,13 +332,13 @@ $scope.addInstance = function(module, entityName) {
                         }
                     }
                 });
-                unblockUI();
+                LoadingModal.close();
             });
         });
 };
 
 $scope.editInstance = function(id, module, entityName) {
-    blockUI();
+    LoadingModal.open();
     $scope.setHiddenFilters();
     $scope.instanceEditMode = true;
     cronAttached = false;
@@ -374,8 +375,11 @@ $scope.editInstance = function(id, module, entityName) {
                 });
             }
 
-            unblockUI();
-        }, angularHandler('mds.error', 'mds.error.cannotUpdateInstance'));
+            LoadingModal.close();
+        }, function () {
+            LoadingModal.close();
+            ModalFactory.showErrorAlert('mds.error.cannotUpdateInstance', 'mds.error');
+        });
 };
 
 $scope.$watch('messageSelectedType.value', function(newValue) {

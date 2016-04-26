@@ -3,7 +3,7 @@
 
     /* App Module */
 
-    var csd = angular.module('csd', ['motech-dashboard', 'csd.controllers', 'csd.directives', 'ngCookies', 'ui.bootstrap']);
+    var csd = angular.module('csd', ['motech-dashboard', 'csd.controllers', 'csd.directives', 'ngCookies', 'ui.bootstrap', 'uiServices']);
 
         csd.config(['$stateProvider', function ($stateProvider) {
             $stateProvider

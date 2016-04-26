@@ -2,7 +2,7 @@
     'use strict';
 
     var messageCampaignModule = angular.module('messageCampaign', ['motech-dashboard', 'messageCampaign.services',
-    'messageCampaign.controllers', 'ngCookies', 'data-services']), campaignRecordId, campaignMessageRecordId;
+    'messageCampaign.controllers', 'ngCookies', 'data-services', 'uiServices']), campaignRecordId, campaignMessageRecordId;
 
     $.ajax({
         url: '../mds/entities/getEntity/MOTECH Message Campaign/CampaignRecord',

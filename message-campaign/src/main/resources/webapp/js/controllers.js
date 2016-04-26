@@ -3,7 +3,7 @@
 
     var controllers = angular.module('messageCampaign.controllers', []);
 
-    controllers.controller('MCMainCtrl', function ($scope, Campaigns) {
+    controllers.controller('MCMainCtrl', function ($scope, Campaigns, ModalFactory, LoadingModal) {
 
         $scope.alert = function(response, title) {
 
@@ -24,11 +24,14 @@
                 params = messageDto.params;
             }
 
-            motechAlert(message, title, params);
+            ModalFactory.showAlert({
+                title: jQuery.i18n.prop(title),
+                message: jQuery.i18n.prop.apply(null, [message].concat(params))
+            });
         };
     });
 
-    controllers.controller('MCCampaignsCtrl', function ($scope, Campaigns) {
+    controllers.controller('MCCampaignsCtrl', function ($scope, Campaigns, ModalFactory, LoadingModal) {
 
         $scope.$on('$viewContentLoaded', function () {
             $scope.campaigns = Campaigns.query(
@@ -42,7 +45,7 @@
         });
 
         $scope.deleteCampaign = function(campaignName) {
-            motechConfirm("msgCampaign.campaign.deleteConfirmMsg", "msgCampaign.campaign.deleteConfirmTitle",
+            ModalFactory.showConfirm("msgCampaign.campaign.deleteConfirmMsg", "msgCampaign.campaign.deleteConfirmTitle",
                 function (response) {
                     if (!response) {
                         return;
@@ -65,13 +68,13 @@
                     window.location.replace('#/messageCampaign/campaigns/' + response.id);
                 },
                 failure: function failure(response) {
-                    motechAlert(response.data, "msgCampaign.error");
+                    ModalFactory.showErrorAlert(null, "msgCampaign.error", response.data);
                 }
             });
         };
     });
 
-     controllers.controller('MCEnrollmentsCtrl', function ($scope, $stateParams, Enrollments) {
+     controllers.controller('MCEnrollmentsCtrl', function ($scope, $stateParams, Enrollments, ModalFactory, LoadingModal) {
 
         $scope.campaignName = $stateParams.campaignName;
 
@@ -177,10 +180,10 @@
 
             function deleteRows(rowIds) {
                 if (rowIds.length === 0) {
-                    motechAlert("msgCampaign.enrollment.noUserSelected", "msgCampaign.enrollment.invalidAction");
+                    ModalFactory.showErrorAlert("msgCampaign.enrollment.noUserSelected", "msgCampaign.enrollment.invalidAction");
                     return;
                 }
-                motechConfirm("msgCampaign.enrollment.deleteConfirmMsg", "msgCampaign.enrollment.deleteConfirmTitle",
+                ModalFactory.showConfirm("msgCampaign.enrollment.deleteConfirmMsg", "msgCampaign.enrollment.deleteConfirmTitle",
                     function (response) {
                     var i, rowData, grid = jQuery("#enrollmentsTable"),
                         refresh, rowId,
@@ -222,7 +225,7 @@
                     rowId, row;
                 for (i = 0; i < rowIds.length; i+=1) {
                     if (isNewRow(rowIds[i])) {
-                        motechAlert("msgCampaign.enrollment.unsavedEnrollement", "msgCampaign.enrollment.invalidAction");
+                        ModalFactory.showErrorAlert("msgCampaign.enrollment.unsavedEnrollement", "msgCampaign.enrollment.invalidAction");
                         return;
                     }
                 }
@@ -243,17 +246,17 @@
         });
     });
 
-    controllers.controller('MCSettingsCtrl', function ($scope) {
+    controllers.controller('MCSettingsCtrl', function ($scope, ModalFactory, LoadingModal) {
         $scope.uploadSettings = function () {
-            blockUI();
+            LoadingModal.open();
             $("#messageCampaignSettingsForm").ajaxSubmit({
                 success: function() {
-                    motechAlert('msgCampaign.settings.success.saved', 'msgCampaign.saved');
-                    unblockUI();
+                    ModalFactory.showSuccessAlert('msgCampaign.settings.success.saved', 'msgCampaign.saved');
+                    LoadingModal.close();
                 },
                 error: function(response) {
-                    $scope.alert(response.responseText, "msgCampaign.error");
-                    unblockUI();
+                    $scope.showErrorAlert(null, "msgCampaign.error", response.responseText);
+                    LoadingModal.close();
                 }
             });
         };

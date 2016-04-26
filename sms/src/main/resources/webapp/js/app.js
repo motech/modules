@@ -3,8 +3,8 @@
 
     /* App Module */
 
-    var smsModule = angular.module('sms', ['motech-dashboard', 'sms.controllers', 'ngCookies', 'ui.bootstrap', 'ngSanitize',
-                                   'data-services']), id;
+    var smsModule = angular.module('sms', ['motech-dashboard', 'sms.controllers', 'ngCookies',
+                'ui.bootstrap', 'ngSanitize', 'data-services', 'uiServices']), id;
 
     $.ajax({
         url: '../mds/entities/getEntity/SMS Module/SmsRecord',

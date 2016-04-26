@@ -136,7 +136,7 @@
                             <disallowIncrAndDecr>true</disallowIncrAndDecr>
                             <requireUseStrict>true</requireUseStrict>
                             <predefinedVars>
-                                $, angular, blockUI, unblockUI, MCCampaignsCtrl, MCEnrollmentsCtrl, jQuery, window, motechAlert, motechConfirm
+                                $, angular, MCCampaignsCtrl, MCEnrollmentsCtrl, jQuery, window
                             </predefinedVars>
                             <failOnIssues>${jslint.enable}</failOnIssues>
                         </configuration>
