@@ -46,16 +46,16 @@ public class OpenMRSTaskDataProviderBuilderTest {
     }
 
     @Test
-    public void generatedProviderShouldReturnJSONWithFourObjectsForOneConfiguration() {
+    public void generatedProviderShouldReturnJSONWithFourObjectsForOneConfiguration() throws IOException {
         assertEquals(4, getGeneratedJSONObjectsCount(1));
     }
 
     @Test
-    public void generatedProviderShouldReturnJSONWithEightObjectsForTwoConfigurations() {
+    public void generatedProviderShouldReturnJSONWithEightObjectsForTwoConfigurations() throws IOException {
         assertEquals(8, getGeneratedJSONObjectsCount(2));
     }
 
-    private int getGeneratedJSONObjectsCount(int amountOfConfigs) {
+    private int getGeneratedJSONObjectsCount(int amountOfConfigs) throws IOException {
         List<Config> simpleConfigs = new ArrayList<>();
 
         for(int i = 0; i < amountOfConfigs; i++) {
@@ -73,12 +73,7 @@ public class OpenMRSTaskDataProviderBuilderTest {
         velocityPropertiesMap.put("class.resource.loader.class", "org.motechproject.openmrs19.tasks.VelocityResourceLoader");
         vefb.setVelocityPropertiesMap(velocityPropertiesMap);
 
-        VelocityEngine velocityEngine = null;
-        try {
-            velocityEngine = vefb.createVelocityEngine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        VelocityEngine velocityEngine = vefb.createVelocityEngine();
         assertNotNull(velocityEngine);
 
         openMRSTaskDataProviderBuilder.setVelocityEngine(velocityEngine);
