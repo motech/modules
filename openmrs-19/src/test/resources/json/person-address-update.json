@@ -1,0 +1,18 @@
+{
+  "uuid":"AAA",
+  "address1":"5 Main St.",
+  "address2":"5/4",
+  "cityVillage":"Utopia",
+  "stateProvince":"testProvince",
+  "country":"Neverland",
+  "postalCode":"69-111",
+  "countyDistrict":"testCountyDistrict",
+  "address3":"line 3",
+  "address4":"line 4",
+  "address5":"line 5",
+  "address6":"line 6",
+  "startDate":"2016-03-01T00:00:00.000+0000",
+  "endDate":"2100-03-01T00:00:00.000+0000",
+  "latitude":"47.613879",
+  "longitude":"-122.342436"
+}

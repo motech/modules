@@ -96,7 +96,7 @@
           "fieldKey": "person.display"
         },
         {
-          "displayName": "openMRS.person.address",
+          "displayName": "openMRS.address.fullAddress",
           "fieldKey": "person.preferredAddress.fullAddressString"
         },
         {
@@ -171,6 +171,41 @@
         {
           "displayName": "openMRS.person.display",
           "fieldKey": "person.display"
+        }
+      ]
+    },
+    {
+      "displayName": "openMRS.relationship",
+      "type": "Relationship",
+      "lookupFields": [
+        {
+          "displayName": "openMRS.person",
+          "fields": [
+            "openMRS.person.uuid",
+            "openMRS.relationshipType.uuid"
+          ]
+        }
+      ],
+      "fields": [
+        {
+          "displayName": "openMRS.relationship.uuid",
+          "fieldKey": "uuid"
+        },
+        {
+          "displayName": "openMRS.relationship.personA.uuid",
+          "fieldKey": "personA.uuid"
+        },
+        {
+          "displayName": "openMRS.relationship.personB.uuid",
+          "fieldKey": "personB.uuid"
+        },
+        {
+          "displayName": "openMRS.relationship.startDate",
+          "fieldKey": "startDate"
+        },
+        {
+          "displayName": "openMRS.relationship.endDate",
+          "fieldKey": "endDate"
         }
       ]
     }

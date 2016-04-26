@@ -1,104 +1,125 @@
 package org.motechproject.openmrs19.resource.impl;
 
-import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.motechproject.openmrs19.domain.Identifier;
-import org.motechproject.openmrs19.domain.IdentifierType;
-import org.motechproject.openmrs19.domain.Location;
 import org.motechproject.openmrs19.domain.Patient;
 import org.motechproject.openmrs19.domain.PatientListResult;
-import org.motechproject.openmrs19.domain.Person;
-import org.motechproject.openmrs19.exception.HttpException;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.motechproject.openmrs19.config.Config;
+import org.motechproject.openmrs19.config.ConfigDummyData;
+import org.motechproject.openmrs19.resource.PatientResource;
+import org.motechproject.openmrs19.util.JsonUtils;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.web.client.RestOperations;
 
-import java.io.IOException;
 import java.net.URI;
 
-import static ch.lambdaj.Lambda.extract;
-import static ch.lambdaj.Lambda.on;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class PatientResourceImplTest extends AbstractResourceImplTest {
 
-    private PatientResourceImpl impl;
+    private static final String PATIENT_IDENTIFIER_LIST_RESPONSE_JSON = "json/patient-identifier-list-response.json";
+    private static final String PATIENT_LIST_RESPONSE_JSON = "json/patient-list-response.json";
+    private static final String PATIENT_RESPONSE_JSON = "json/patient-response.json";
+    private static final String CREATE_PATIENT_JSON = "json/patient-create.json";
+
+    @Mock
+    private RestOperations restOperations;
+
+    @Captor
+    private ArgumentCaptor<HttpEntity<String>> requestCaptor;
+
+    private PatientResource patientResource;
+
+    private Config config;
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        impl = new PatientResourceImpl(getClient(), getInstance());
+        initMocks(this);
+        patientResource = new PatientResourceImpl(restOperations);
+        config = ConfigDummyData.prepareConfig("one");
     }
 
     @Test
-    public void shouldCreatePatient() throws HttpException, IOException {
-        Patient patient = buildPatient();
+    public void shouldCreatePatient() throws Exception {
+        Patient patient = preparePatient();
+        URI url = config.toInstancePath("/patient");
 
-        impl.createPatient(patient);
+        when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(PATIENT_RESPONSE_JSON));
 
-        ArgumentCaptor<String> sentJson = ArgumentCaptor.forClass(String.class);
+        Patient created = patientResource.createPatient(config, patient);
 
-        Mockito.verify(getClient()).postForJson(Mockito.any(URI.class), sentJson.capture());
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
 
-        String expectedJson = readJsonFromFile("json/patient-create.json");
-        JsonElement expectedJsonObj = stringToJsonElement(expectedJson);
-        JsonElement sentJsonObj = stringToJsonElement(sentJson.getValue());
-
-        assertEquals(expectedJsonObj, sentJsonObj);
-    }
-
-    private Patient buildPatient() {
-        Patient patient = new Patient();
-        Person person = new Person();
-        person.setUuid("AAA");
-        patient.setPerson(person);
-
-        Identifier identifier = new Identifier();
-        Location location = new Location();
-        location.setUuid("LLL");
-        IdentifierType it = new IdentifierType();
-        it.setUuid("III");
-
-        identifier.setIdentifier("558");
-        identifier.setLocation(location);
-        identifier.setIdentifierType(it);
-
-        return patient;
+        assertThat(created, equalTo(patient));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPost(config)));
+        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
+                equalTo(readFromFile(CREATE_PATIENT_JSON, JsonObject.class)));
     }
 
     @Test
-    public void shouldQueryForPatient() throws HttpException, IOException {
-        Mockito.when(getClient().getJson(Mockito.any(URI.class))).thenReturn(
-                readJsonFromFile("json/patient-list-response.json"));
+    public void shouldQueryForPatient() throws Exception {
+        String patientId = "558";
+        URI url = config.toInstancePathWithParams("/patient?q={motechId}", patientId);
 
-        PatientListResult result = impl.queryForPatient("558");
+        when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(PATIENT_LIST_RESPONSE_JSON));
 
-        assertEquals(asList("PPP"), extract(result.getResults(), on(Patient.class).getUuid()));
-    }
+        PatientListResult result = patientResource.queryForPatient(config, patientId);
 
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
 
-
-    @Test
-    public void shouldGetPatientById() throws HttpException, IOException {
-        Mockito.when(getClient().getJson(Mockito.any(URI.class))).thenReturn(
-                readJsonFromFile("json/patient-response.json"));
-
-        Patient patient = impl.getPatientById("123");
-
-        assertNotNull(patient);
+        assertThat(result, equalTo(readFromFile(PATIENT_LIST_RESPONSE_JSON, PatientListResult.class)));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
+        assertThat(requestCaptor.getValue().getBody(), nullValue());
     }
 
     @Test
-    public void shouldFindMotechIdentifierType() throws HttpException, IOException {
-        Mockito.when(getClient().getJson(Mockito.any(URI.class))).thenReturn(
-                readJsonFromFile("json/patient-identifier-list-response.json"));
+    public void shouldGetPatientById() throws Exception {
+        String patientId = "123";
+        URI url = config.toInstancePathWithParams("/patient/{uuid}?v=full", patientId);
 
-        Mockito.when(getInstance().getMotechPatientIdentifierTypeName()).thenReturn("MoTeCH Id");
-        String uuid = impl.getMotechPatientIdentifierUuid();
+        when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(PATIENT_RESPONSE_JSON));
 
-        assertEquals("III", uuid);
+        Patient patient = patientResource.getPatientById(config, patientId);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
+
+        assertThat(patient, equalTo(readFromFile(PATIENT_RESPONSE_JSON, Patient.class)));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
+        assertThat(requestCaptor.getValue().getBody(), nullValue());
+    }
+
+    @Test
+    public void shouldGetMotechPatientIdentifierUuid() throws Exception {
+        URI url = config.toInstancePath("/patientidentifiertype?v=full");
+
+        when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(PATIENT_IDENTIFIER_LIST_RESPONSE_JSON));
+
+        String uuid = patientResource.getMotechPatientIdentifierUuid(config);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
+
+        assertThat(uuid, equalTo("III"));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
+        assertThat(requestCaptor.getValue().getBody(), nullValue());
+    }
+
+    private Patient preparePatient() throws Exception {
+        return (Patient) readFromFile(PATIENT_RESPONSE_JSON, Patient.class);
     }
 }

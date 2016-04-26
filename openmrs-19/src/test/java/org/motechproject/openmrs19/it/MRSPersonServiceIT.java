@@ -19,8 +19,12 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Map;
 
 import static junit.framework.Assert.assertNull;
@@ -28,6 +32,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.motechproject.openmrs19.util.TestConstants.DEFAULT_CONFIG_NAME;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -45,27 +50,40 @@ public class MRSPersonServiceIT extends BasePaxIT {
     private MrsListener mrsListener;
 
     private Person person;
+    private Person createdPerson;
 
     @Before
-    public void initialize() throws InterruptedException {
+    public void initialize() throws InterruptedException, ParseException {
         mrsListener = new MrsListener();
         eventListenerRegistry.registerListener(mrsListener, Arrays.asList(EventKeys.CREATED_NEW_PERSON_SUBJECT,
             EventKeys.UPDATED_PERSON_SUBJECT, EventKeys.DELETED_PERSON_SUBJECT));
 
-        person = savePerson(preparePerson());
+        person = preparePerson();
+        createdPerson = savePerson(person);
     }
 
     @Test
     public void shouldCreatePerson() {
 
-        assertNotNull(person.getUuid());
-        assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_ID), person.getUuid());
-        assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_GIVEN_NAME), person.getPreferredName().getGivenName());
-        assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_FAMILY_NAME), person.getPreferredName().getFamilyName());
+        assertNotNull(createdPerson.getUuid());
+        assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_ID), createdPerson.getUuid());
+        assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_GIVEN_NAME), createdPerson.getPreferredName().getGivenName());
+        assertEquals(mrsListener.eventParameters.get(EventKeys.PERSON_FAMILY_NAME), createdPerson.getPreferredName().getFamilyName());
 
         assertTrue(mrsListener.created);
         assertFalse(mrsListener.deleted);
         assertFalse(mrsListener.updated);
+    }
+
+    @Test
+    public void shouldCreatePersonWithFields() {
+        Person fetchedPerson = personAdapter.getPersonByUuid(DEFAULT_CONFIG_NAME, createdPerson.getUuid());
+
+        assertEquals(person.getPreferredName().getGivenName(), fetchedPerson.getPreferredName().getGivenName());
+        assertEquals(person.getPreferredName().getMiddleName(), fetchedPerson.getPreferredName().getMiddleName());
+        assertEquals(person.getPreferredName().getFamilyName(), fetchedPerson.getPreferredName().getFamilyName());
+
+        assertEquals(person.getPreferredAddress(), fetchedPerson.getPreferredAddress());
     }
 
     @Test
@@ -81,29 +99,29 @@ public class MRSPersonServiceIT extends BasePaxIT {
         name.setGivenName(newFirstName);
         name.setMiddleName(newMiddleName);
         name.setFamilyName(newLastName);
-        person.setNames(Collections.singletonList(name));
+        createdPerson.setNames(Collections.singletonList(name));
 
         Person.Address address = new Person.Address();
         address.setAddress1(newAddress);
-        person.setAddresses(Collections.singletonList(address));
+        createdPerson.setAddresses(Collections.singletonList(address));
 
-        person.setGender(newGender);
+        createdPerson.setGender(newGender);
 
         Person updated;
 
         synchronized (lock) {
-            assertNotNull(personAdapter.updatePerson(person));
+            assertNotNull(personAdapter.updatePerson(DEFAULT_CONFIG_NAME, createdPerson));
             lock.wait(60000);
         }
 
-        updated = personAdapter.getPersonByUuid(person.getUuid());
+        updated = personAdapter.getPersonByUuid(DEFAULT_CONFIG_NAME, createdPerson.getUuid());
 
         assertNotNull(updated);
         assertEquals(newFirstName, updated.getPreferredName().getGivenName());
         assertEquals(newMiddleName, updated.getPreferredName().getMiddleName());
         assertEquals(newLastName, updated.getPreferredName().getFamilyName());
-        // So far OpenMRS module stores only one field of person's address, which is 'address1'.
-        // However while retrieving person from OpenMRS server all person's address fields are put
+        // So far OpenMRS module stores only one field of createdPerson's address, which is 'address1'.
+        // However while retrieving createdPerson from OpenMRS server all createdPerson's address fields are put
         // into one string. That's why it is checked if address field contains address1 value.
         assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newAddress));
         assertEquals(newGender, updated.getGender());
@@ -117,8 +135,8 @@ public class MRSPersonServiceIT extends BasePaxIT {
     public void shouldDeletePerson() throws InterruptedException {
 
         synchronized (lock) {
-            personAdapter.deletePerson(person.getUuid());
-            assertNull(personAdapter.getPersonByUuid(person.getUuid()));
+            personAdapter.deletePerson(DEFAULT_CONFIG_NAME, createdPerson.getUuid());
+            assertNull(personAdapter.getPersonByUuid(DEFAULT_CONFIG_NAME, createdPerson.getUuid()));
 
             lock.wait(60000);
         }
@@ -131,31 +149,37 @@ public class MRSPersonServiceIT extends BasePaxIT {
     @Test
     public void shouldGetById() throws InterruptedException {
 
-        Person fetched = personAdapter.getPersonByUuid(person.getUuid());
+        Person fetched = personAdapter.getPersonByUuid(DEFAULT_CONFIG_NAME, createdPerson.getUuid());
 
         assertNotNull(fetched);
-        assertEquals(person.getUuid(), fetched.getUuid());
+        assertEquals(createdPerson.getUuid(), fetched.getUuid());
     }
 
     @After
     public void tearDown() throws InterruptedException {
 
-        deletePerson(person);
+        deletePerson(createdPerson);
 
         eventListenerRegistry.clearListenersForBean("mrsTestListener");
     }
 
-    private Person preparePerson() {
+    private Person preparePerson() throws ParseException {
         Person person = new Person();
 
         Person.Name name = new Person.Name();
         name.setGivenName("John");
         name.setMiddleName("John");
         name.setFamilyName("Smith");
+        person.setPreferredName(name);
         person.setNames(Collections.singletonList(name));
 
-        Person.Address address = new Person.Address();
-        address.setAddress1("10 Fifth Avenue");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        Date startDate = dateFormat.parse("2016-03-01T00:00:00.000+0000");
+        Date endDate = dateFormat.parse("2100-03-01T00:00:00.000+0000");
+
+        Person.Address address = new Person.Address("10 Fifth Avenue", "line 2", "line 3", "line 4", "line 5", "line 6",
+                "BestCity", "Gondor", "Middle-earth", "00-000", "Ithilien", "30.00", "76.234", startDate, endDate);
+        person.setPreferredAddress(address);
         person.setAddresses(Collections.singletonList(address));
 
         person.setGender("M");
@@ -170,7 +194,7 @@ public class MRSPersonServiceIT extends BasePaxIT {
         Person created;
 
         synchronized (lock) {
-            created = personAdapter.createPerson(person);
+            created = personAdapter.createPerson(DEFAULT_CONFIG_NAME, person);
             assertNotNull(created);
 
             lock.wait(60000);
@@ -181,8 +205,8 @@ public class MRSPersonServiceIT extends BasePaxIT {
 
     private void deletePerson(Person person) throws InterruptedException {
 
-        personAdapter.deletePerson(person.getUuid());
-        assertNull(personAdapter.getPersonByUuid(person.getUuid()));
+        personAdapter.deletePerson(DEFAULT_CONFIG_NAME, person.getUuid());
+        assertNull(personAdapter.getPersonByUuid(DEFAULT_CONFIG_NAME, person.getUuid()));
     }
 
     public class MrsListener implements EventListener {

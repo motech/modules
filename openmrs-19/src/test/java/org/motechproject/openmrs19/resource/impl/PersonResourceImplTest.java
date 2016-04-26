@@ -1,187 +1,199 @@
 package org.motechproject.openmrs19.resource.impl;
 
+import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.motechproject.openmrs19.config.Config;
+import org.motechproject.openmrs19.config.ConfigDummyData;
 import org.motechproject.openmrs19.domain.Attribute;
 import org.motechproject.openmrs19.domain.AttributeTypeListResult;
 import org.motechproject.openmrs19.domain.Person;
-import org.motechproject.openmrs19.exception.HttpException;
+import org.motechproject.openmrs19.util.JsonUtils;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.web.client.RestOperations;
 
-import java.io.IOException;
 import java.net.URI;
 
-import static ch.lambdaj.Lambda.extract;
-import static ch.lambdaj.Lambda.on;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class PersonResourceImplTest extends AbstractResourceImplTest {
-    private PersonResourceImpl impl;
+
+    private static final String PERSON_ATTRIBUTE_TYPE_RESPONSE_JSON = "json/person-attribute-type-response.json";
+    private static final String CREATE_PERSON_ATTRIBUTE_JSON = "json/person-attribute-create.json";
+    private static final String PERSON_NAME_UPDATE_JSON = "json/person-name-update.json";
+    private static final String PERSON_RESPONSE_JSON = "json/person-response.json";
+    private static final String CREATE_PERSON_JSON = "json/person-create.json";
+    private static final String UPDATE_PERSON_ADDRESS_JSON = "json/person-address-update.json";
+
+    @Mock
+    private RestOperations restOperations;
+
+    @Captor
+    private ArgumentCaptor<HttpEntity<String>> requestCaptor;
+
+    private PersonResourceImpl personResource;
+
+    private Config config;
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        impl = new PersonResourceImpl(getClient(), getInstance());
+        initMocks(this);
+        personResource = new PersonResourceImpl(restOperations);
+        config = ConfigDummyData.prepareConfig("one");
+    }
+
+
+    @Test
+    public void shouldCreatePerson() throws Exception {
+        Person person = preparePerson();
+        URI url = config.toInstancePath("/person");
+
+        when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(PERSON_RESPONSE_JSON));
+
+        Person created = personResource.createPerson(config, person);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
+
+        assertThat(created, equalTo(person));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPost(config)));
+        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
+                equalTo(readFromFile(CREATE_PERSON_JSON, JsonObject.class)));
     }
 
     @Test
-    public void shouldGetPersonById() throws HttpException, IOException {
-        Mockito.when(getClient().getJson(Mockito.any(URI.class)))
-                .thenReturn(readJsonFromFile("json/person-response.json"));
+    public void shouldUpdatePerson() throws Exception {
+        Person person = preparePerson();
+        URI url = config.toInstancePathWithParams("/person/{uuid}?v=full", person.getUuid());
 
-        Person person = impl.getPersonById("PPP");
+        when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(PERSON_RESPONSE_JSON));
 
-        assertNotNull(person);
+        Person updated = personResource.updatePerson(config, person);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
+
+        assertThat(updated, equalTo(preparePerson()));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPost(config)));
+        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
+                equalTo(readFromFile(CREATE_PERSON_JSON, JsonObject.class)));
     }
 
     @Test
-    public void shouldGetAllAddressFields() throws HttpException, IOException {
-        Mockito.when(getClient().getJson(Mockito.any(URI.class)))
-                .thenReturn(readJsonFromFile("json/person-response.json"));
+    public void shouldGetPersonById() throws Exception {
+        String personId = "PPP";
+        URI url = config.toInstancePathWithParams("/person/{uuid}?v=full", personId);
 
-        Person person = impl.getPersonById("PPP");
-        String fullAddressFields = "5 Main St.,5/4,Utopia,testProvince,Neverland,69-111,null,null,null,null,null,2016-03-01T00:00:00.000+0000,null,47.613879,-122.342436";
+        when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(PERSON_RESPONSE_JSON));
 
-        assertEquals(fullAddressFields, person.getPreferredAddress().getFullAddressString());
+        Person person = personResource.getPersonById(config, personId);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
+
+        assertThat(person, equalTo(preparePerson()));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
+        assertThat(requestCaptor.getValue().getBody(), nullValue());
     }
 
     @Test
-    public void shouldCreatePerson() throws HttpException, IOException {
-        Person person = buildPerson();
-        impl.createPerson(person);
+    public void shouldCreatePersonAttribute() throws Exception {
+        String personId = "PPP";
+        Attribute attribute = prepareAttribute();
+        URI url = config.toInstancePathWithParams("/person/{uuid}/attribute", personId);
 
-        ArgumentCaptor<String> sentJson = ArgumentCaptor.forClass(String.class);
-        Mockito.verify(getClient()).postForJson(Mockito.any(URI.class), sentJson.capture());
-        String expectedJson = readJsonFromFile("json/person-create.json");
+        personResource.createPersonAttribute(config, personId, attribute);
 
-        Person expectedObj = getGson().fromJson(expectedJson, Person.class);
-        Person sentObject = getGson().fromJson(sentJson.getValue(), Person.class);
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
 
-        assertEquals(expectedObj.getGender(), sentObject.getGender());
-        assertEquals(expectedObj.getNames(), sentObject.getNames());
-        assertEquals(expectedObj.getAddresses(), sentObject.getAddresses());
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPostWithoutResponse(config)));
+        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
+                equalTo(readFromFile(CREATE_PERSON_ATTRIBUTE_JSON, JsonObject.class)));
     }
 
     @Test
-    public void shouldUpdatePerson() throws HttpException, IOException {
-        Person person = buildPerson();
-        impl.updatePerson(person);
+    public void shouldQueryPersonAttributeTypeByName() throws Exception {
+        String attributeTypeName = "Citizenship";
+        URI url = config.toInstancePathWithParams("/personattributetype?q={name}", attributeTypeName);
 
-        ArgumentCaptor<String> sentJson = ArgumentCaptor.forClass(String.class);
-        Mockito.verify(getClient()).postForJson(Mockito.any(URI.class), sentJson.capture());
-        String expectedJson = readJsonFromFile("json/person-create.json");
+        when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(PERSON_ATTRIBUTE_TYPE_RESPONSE_JSON));
 
-        Person expectedObj = getGson().fromJson(expectedJson, Person.class);
-        Person sentObject = getGson().fromJson(sentJson.getValue(), Person.class);
+        AttributeTypeListResult result = personResource.queryPersonAttributeTypeByName(config, attributeTypeName);
 
-        assertEquals(expectedObj.getGender(), sentObject.getGender());
-        assertEquals(expectedObj.getNames(), sentObject.getNames());
-        assertEquals(expectedObj.getAddresses(), sentObject.getAddresses());
-    }
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
 
-    private Person buildPerson() {
-        Person person = new Person();
-        person.setGender("M");
-
-        Person.Name name = new Person.Name();
-        name.setGivenName("John");
-        name.setMiddleName("E");
-        name.setFamilyName("Doe");
-        person.setNames(asList(name));
-
-        Person.Address addr = new Person.Address();
-        addr.setAddress1("5 Main St");
-        person.setAddresses(asList(addr));
-        return person;
+        assertThat(result, equalTo(readFromFile(PERSON_ATTRIBUTE_TYPE_RESPONSE_JSON, AttributeTypeListResult.class)));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
+        assertThat(requestCaptor.getValue().getBody(), nullValue());
     }
 
     @Test
-    public void shouldCreateAttribute() throws HttpException, IOException {
-        Attribute.AttributeType at = new Attribute.AttributeType();
-        at.setUuid("AAA");
-        Attribute attr = new Attribute();
-        attr.setValue("Motech");
-        attr.setAttributeType(at);
+    public void shouldUpdatePersonName() throws Exception {
+        String personId = "CCC";
+        Person.Name name = prepareName();
+        URI url = config.toInstancePathWithParams("/person/{personUuid}/name/{nameUuid}", personId, name.getUuid());
 
-        impl.createPersonAttribute("PPP", attr);
+        personResource.updatePersonName(config, personId, name);
 
-        ArgumentCaptor<String> sentJson = ArgumentCaptor.forClass(String.class);
-        Mockito.verify(getClient()).postForJson(Mockito.any(URI.class), sentJson.capture());
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
 
-        String expectedJson = readJsonFromFile("json/person-attribute-create.json");
-        assertEquals(stringToJsonElement(expectedJson), stringToJsonElement(sentJson.getValue()));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPostWithoutResponse(config)));
+        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
+                equalTo(readFromFile(PERSON_NAME_UPDATE_JSON, JsonObject.class)));
     }
 
     @Test
-    public void shouldGetAttributeTypeByName() throws HttpException, IOException {
-        Mockito.when(getClient().getJson(Mockito.any(URI.class))).thenReturn(
-                readJsonFromFile("json/person-attribute-type-response.json"));
-        AttributeTypeListResult result = impl.queryPersonAttributeTypeByName("Citizenship");
+    public void shouldUpdatePersonAddress() throws Exception {
+        String personId = "CCC";
+        Person.Address preferredAddress = prepareAddress();
+        URI url = config.toInstancePathWithParams("/person/{personUuid}/address/{addressUuid}", personId,
+                preferredAddress.getUuid());
 
-        assertEquals(asList("8d871afc-c2cc-11de-8d13-0010c6dffd0f"), extract(result.getResults(), on(Attribute.AttributeType.class).getUuid()));
+        personResource.updatePersonAddress(config, personId, preferredAddress);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
+
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPostWithoutResponse(config)));
+        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
+                equalTo(readFromFile(UPDATE_PERSON_ADDRESS_JSON, JsonObject.class)));
     }
 
-    @Test
-    public void shouldNotIncludeUuidOnPersonUpdate() throws HttpException, IOException {
-        Person person = new Person();
-        person.setUuid("AAA");
-        person.setGender("F");
-
-        impl.updatePerson(person);
-
-        ArgumentCaptor<String> sentJson = ArgumentCaptor.forClass(String.class);
-        Mockito.verify(getClient()).postForJson(Mockito.any(URI.class), sentJson.capture());
-
-        String expectedJson = readJsonFromFile("json/person-update.json");
-        Person expectedObj = getGson().fromJson(expectedJson, Person.class);
-        Person sentObject = getGson().fromJson(sentJson.getValue(), Person.class);
-
-        assertEquals(expectedObj.getGender(), sentObject.getGender());
-        assertEquals(expectedObj.getNames(), sentObject.getNames());
-        assertEquals(expectedObj.getAddresses(), sentObject.getAddresses());
+    private Person preparePerson() throws Exception {
+        return (Person) readFromFile(PERSON_RESPONSE_JSON, Person.class);
     }
 
-    @Test
-    public void shouldNotIncludeUuidInPersonNameUpdate() throws HttpException, IOException {
+    private Attribute prepareAttribute() {
+        Attribute attribute = new Attribute();
+        attribute.setValue("Motech");
+
+        Attribute.AttributeType attributeType = new Attribute.AttributeType();
+        attributeType.setUuid("AAA");
+        attribute.setAttributeType(attributeType);
+
+        return attribute;
+    }
+
+    private Person.Name prepareName() {
         Person.Name name = new Person.Name();
         name.setUuid("AAA");
         name.setGivenName("Motech");
         name.setMiddleName("E");
         name.setGivenName("Test");
-
-        impl.updatePersonName("CCC", name);
-
-        ArgumentCaptor<String> sentJson = ArgumentCaptor.forClass(String.class);
-        Mockito.verify(getClient()).postWithEmptyResponseBody(Mockito.any(URI.class), sentJson.capture());
-
-        String expectedJson = readJsonFromFile("json/person-name-update.json");
-        Person expectedObj = getGson().fromJson(expectedJson, Person.class);
-        Person sentObject = getGson().fromJson(sentJson.getValue(), Person.class);
-
-        assertEquals(expectedObj.getGender(), sentObject.getGender());
-        assertEquals(expectedObj.getNames(), sentObject.getNames());
-        assertEquals(expectedObj.getAddresses(), sentObject.getAddresses());
+        return name;
     }
-
-    @Test
-    public void shouldNotIncludeUuidInPersonAddressUpdate() throws HttpException, IOException {
-        Person.Address addr = new Person.Address();
-        addr.setAddress1("Test");
-        addr.setUuid("AAA");
-
-        impl.updatePersonAddress("CCC", addr);
-
-        ArgumentCaptor<String> sentJson = ArgumentCaptor.forClass(String.class);
-        Mockito.verify(getClient()).postWithEmptyResponseBody(Mockito.any(URI.class), sentJson.capture());
-
-        String expectedJson = "{\"address1\":\"Test\"}";
-        Person.Address expectedObj = getGson().fromJson(expectedJson, Person.Address.class);
-        Person.Address sentObject = getGson().fromJson(sentJson.getValue(), Person.Address.class);
-
-        assertEquals(expectedObj, sentObject);
+    private Person.Address prepareAddress() throws Exception {
+        return  (Person.Address) readFromFile(UPDATE_PERSON_ADDRESS_JSON, Person.Address.class);
     }
 }

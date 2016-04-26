@@ -218,7 +218,7 @@
         });
     });
 
-    controllers.controller('CommcareSettingsCtrl', function ($scope, Configurations) {
+    controllers.controller('CommcareSettingsCtrl', function ($scope, Configurations, ModalFactory, LoadingModal) {
 
         $scope.eventStrategyOptions = [ 'minimal', 'partial', 'full' ];
 
@@ -230,11 +230,13 @@
 
         $scope.configOutdated = false;
 
+        $scope.oldName = "";
+
         $scope.copyConfig = function(config) {
             if (!config) {
                 return;
             }
-            var copy = {};
+            var oldName, copy = {};
 
             copy.name = config.name;
             copy.accountConfig = {};
@@ -247,8 +249,12 @@
             copy.forwardSchema = config.forwardSchema;
             copy.forwardStubs = config.forwardStubs;
             copy.forwardCases = config.forwardCases;
+            oldName = copy.name;
 
-            return copy;
+            return {
+                copy: copy,
+                oldName: oldName
+            };
         };
 
         innerLayout({
@@ -261,10 +267,10 @@
 
             if ($scope.newConfig || $scope.configOutdated) {
                 if (!$scope.rollback) {
-                    BootstrapDialog.confirm({
+                    ModalFactory.confirm({
                         title: $scope.msg('commcare.header.confirm'),
                         message: $scope.msg('commcare.confirm.discardChanges'),
-                        type: BootstrapDialog.TYPE_WARNING,
+                        type: 'type-warning',
                         callback: function(result) {
                             if (!result) {
                                 $scope.rollback = true;
@@ -293,9 +299,16 @@
                 }
             } else if (newValue !== undefined && newValue.name === "") {
                 $scope.newConfig = true;
+                $scope.oldName = "";
                 $scope.clearMessages();
             } else {
-                $scope.selectedConfigBackup = $scope.copyConfig(newValue);
+                var copy = {};
+
+                copy = $scope.copyConfig(newValue);
+                if(copy) {
+                    $scope.selectedConfigBackup = copy.copy;
+                    $scope.oldName = copy.oldName;
+                }
                 $scope.configOutdated = false;
                 $scope.newConfig = false;
                 $scope.clearMessages();
@@ -317,7 +330,7 @@
         };
 
         $scope.addConfig = function() {
-            blockUI();
+            LoadingModal.open();
             Configurations.create(
                 function success(data) {
                     $scope.$parent.configurations.configs.push(data);
@@ -325,31 +338,31 @@
                     if ($scope.$parent.selectedConfig.eventStrategy === "") {
                         $scope.$parent.selectedConfig.eventStrategy = $scope.eventStrategyOptions[0];
                     }
-                    unblockUI();
+                    LoadingModal.close();
                 },
                 function failure() {
-                    unblockUI();
+                    LoadingModal.close();
                 }
             );
         };
 
         $scope.deleteConfig = function() {
             if (!$scope.newConfig) {
-                BootstrapDialog.confirm({
+                ModalFactory.confirm({
                     title: $scope.msg('commcare.header.confirm'),
                     message: $scope.msg('commcare.confirm.deleteConfig'),
-                    type: BootstrapDialog.TYPE_WARNING,
+                    type: 'type-warning',
                     callback: function(result) {
                         if (result) {
-                            blockUI();
+                            LoadingModal.open();
                             Configurations.remove({'name': $scope.selectedConfig.name},
                                 function success() {
                                     $scope.$parent.selectedConfig = undefined;
                                     $scope.getConfigurations();
-                                    unblockUI();
+                                    LoadingModal.close();
                                 },
                                 function failure() {
-                                    unblockUI();
+                                    LoadingModal.close();
                                 }
                             );
                         }
@@ -368,19 +381,19 @@
         };
 
         $scope.syncConfig = function() {
-            blockUI();
+            LoadingModal.open();
             Configurations.sync($scope.selectedConfig,
                 function success() {
                     $scope.syncSuccessMessage = $scope.msg('commcare.sync.success');
                     $scope.syncSuccess = true;
                     $scope.syncedConfig = $scope.selectedConfig.name;
-                    unblockUI();
+                    LoadingModal.close();
                 },
                 function failure(response) {
                     $scope.syncErrorMessage = response.data;
                     $scope.syncSuccess = false;
                     $scope.syncedConfig = $scope.selectedConfig.name;
-                    unblockUI();
+                    LoadingModal.close();
             });
         };
 
@@ -400,19 +413,19 @@
         };
 
         $scope.verify = function() {
-            blockUI();
+            LoadingModal.open();
             Configurations.verify($scope.selectedConfig,
                 function success()  {
                     $scope.verifySuccessMessage = $scope.msg('commcare.verify.success');
                     $scope.verifyErrorMessage = '';
                     $scope.connectionVerified = true;
-                    unblockUI();
+                    LoadingModal.close();
                 },
                 function failure(response) {
                     $scope.verifyErrorMessage = response.data;
                     $scope.verifySuccessMessage = '';
                     $scope.connectionVerified = false;
-                    unblockUI();
+                    LoadingModal.close();
                 });
         };
 
@@ -494,21 +507,24 @@
         };
 
         $scope.makeDefault = function() {
-            blockUI();
+            LoadingModal.open();
             Configurations.makeDefault($scope.selectedConfig.name,
                 function success() {
                     $scope.getConfigurations();
-                    unblockUI();
+                    LoadingModal.close();
                 },
                 function failure() {
-                    unblockUI();
+                    LoadingModal.close();
                 }
             );
         };
 
-        $scope.saveConfig = function(element) {
-            blockUI();
-            Configurations.save($scope.selectedConfig,
+        $scope.saveUpdateConfig = function(element) {
+            LoadingModal.open();
+            Configurations.save({
+                    oldName: $scope.oldName
+                },
+                $scope.selectedConfig,
                 function success(data) {
                     $scope.verifySuccessMessage = $scope.msg('commcare.save.success');
                     $scope.verifyErrorMessage = '';
@@ -519,14 +535,47 @@
                     $scope.updateConfig(data);
                     $scope.newConfig = false;
                     $scope.configOutdated = false;
-                    unblockUI();
+                    LoadingModal.close();
                 },
                 function failure(response) {
                     $scope.verifySuccessMessage = '';
                     $scope.verifyErrorMessage =  response.data;
                     $scope.connectionVerified = false;
-                    unblockUI();
+                    LoadingModal.close();
                 });
+        };
+
+        $scope.saveNewConfig = function(element) {
+            LoadingModal.open();
+            Configurations.save(
+                $scope.selectedConfig,
+                function success(data) {
+                    $scope.verifySuccessMessage = $scope.msg('commcare.save.success');
+                    $scope.verifyErrorMessage = '';
+                    $scope.connectionVerified = true;
+                    if ($scope.configurations.defaultConfigName === "") {
+                        $scope.configurations.defaultConfigName = $scope.selectedConfig.name;
+                    }
+                    $scope.updateConfig(data);
+                    $scope.newConfig = false;
+                    $scope.configOutdated = false;
+                    LoadingModal.close();
+                },
+                function failure(response) {
+                    $scope.verifySuccessMessage = '';
+                    $scope.verifyErrorMessage =  response.data;
+                    $scope.connectionVerified = false;
+                    LoadingModal.close();
+                });
+        };
+
+        $scope.saveConfig = function(element) {
+            LoadingModal.open();
+            if($scope.oldName) {
+                $scope.saveUpdateConfig(element);
+            } else {
+                $scope.saveNewConfig(element);
+            }
         };
 
         $scope.updateConfig = function (config) {
@@ -552,7 +601,7 @@
         };
     });
 
-    controllers.controller('CommcareModulesCtrl', function ($scope, Schema) {
+    controllers.controller('CommcareModulesCtrl', function ($scope, Schema, LoadingModal) {
 
         $scope.formError = false;
 
@@ -566,13 +615,13 @@
             if (!$scope.$parent.selectedConfig) {
                 return;
             }
-            blockUI();
+            LoadingModal.open();
             $scope.applications = Schema.query({name: $scope.selectedConfig.name}, function() {
                 $scope.formError = false;
-                unblockUI();
+                LoadingModal.close();
             }, function() {
                 $scope.formError = true;
-                unblockUI();
+                LoadingModal.close();
             });
         });
 

@@ -46,7 +46,7 @@ public class ConfigsTest {
         config.setOpenMrsUrl("otherOpenMrsUrl");
         config.setUsername("otherUsername");
         config.setPassword("otherPassword");
-        config.setMotechId("otherMotechId");
+        config.setMotechPatientIdentifierTypeName("otherMotechId");
         configs.update(config);
 
         Configs expectedConfigs = prepareConfigs(SUFFIX_ONE, SUFFIX_TWO, SUFFIX_THREE);

@@ -16,11 +16,11 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
-
 import java.util.Collections;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
+import static org.motechproject.openmrs19.util.TestConstants.DEFAULT_CONFIG_NAME;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -47,13 +47,13 @@ public class MRSProviderServiceIT extends BasePaxIT {
 
         person.setGender("F");
 
-        person = personService.createPerson(person);
+        person = personService.createPerson(DEFAULT_CONFIG_NAME, person);
 
         Provider provider = new Provider();
         provider.setIdentifier("FooIdentifier");
         provider.setPerson(person);
 
-        this.provider = providerService.createProvider(provider);
+        this.provider = providerService.createProvider(DEFAULT_CONFIG_NAME, provider);
 
         assertNotNull(this.provider);
         assertEquals(this.provider.getPerson().getUuid(), person.getUuid());
@@ -67,8 +67,8 @@ public class MRSProviderServiceIT extends BasePaxIT {
         if (provider != null) {
             String uuid = provider.getPerson().getUuid();
 
-            providerService.deleteProvider(provider.getUuid());
-            personService.deletePerson(uuid);
+            providerService.deleteProvider(DEFAULT_CONFIG_NAME, provider.getUuid());
+            personService.deletePerson(DEFAULT_CONFIG_NAME, uuid);
         }
     }
 
