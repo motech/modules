@@ -3,15 +3,15 @@
 
     var controllers = angular.module('metrics.controllers', []);
 
-    controllers.controller('MetricsConfigCtrl', function ($scope, Config) {
+    controllers.controller('MetricsConfigCtrl', function ($scope, Config, ModalFactory) {
         $scope.settings = Config.get();
         $scope.timeUnits = Config.timeUnits();
 
         $scope.submit = function () {
             $scope.settings.$save(function () {
-                motechAlert('metrics.settings.success.saved', 'server.saved');
+                ModalFactory.showSuccessAlert('metrics.settings.success.saved', 'server.saved');
             }, function () {
-                motechAlert('metrics.settings.error.saved', 'server.error');
+                ModalFactory.showErrorAlert('metrics.settings.error.saved', 'server.error');
             });
         };
     });

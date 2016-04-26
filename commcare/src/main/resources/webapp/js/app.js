@@ -3,7 +3,8 @@
 
     /* App Module */
 
-    angular.module('commcare', ['motech-dashboard', 'commcare.services', 'commcare.controllers', 'commcare.directives', 'ngCookies']).config(['$routeProvider',
+    angular.module('commcare', ['motech-dashboard', 'commcare.services', 'commcare.controllers',
+            'commcare.directives', 'ngCookies', 'uiServices']).config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider.
                 when('/commcare/settings', {templateUrl: '../commcare/resources/partials/settings.html', controller: 'CommcareSettingsCtrl' }).
