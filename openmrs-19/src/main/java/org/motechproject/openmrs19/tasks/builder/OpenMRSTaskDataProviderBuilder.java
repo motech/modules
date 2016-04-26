@@ -25,7 +25,7 @@ public class OpenMRSTaskDataProviderBuilder {
 
     private VelocityEngine velocityEngine;
     private OpenMRSConfigService openMRSConfigService;
-g
+    
     public String generateDataProvider() {
         Map<String, Object> model = new HashMap<>();
         List<Config> configurations = openMRSConfigService.getConfigs();
