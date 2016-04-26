@@ -34,6 +34,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
     private static final String PERSON_NAME_UPDATE_JSON = "json/person-name-update.json";
     private static final String PERSON_RESPONSE_JSON = "json/person-response.json";
     private static final String CREATE_PERSON_JSON = "json/person-create.json";
+    private static final String UPDATE_PERSON_ADDRESS_JSON = "json/person-address-update.json";
 
     @Mock
     private RestOperations restOperations;
@@ -65,7 +66,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
 
         verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
 
-        assertThat(created, equalTo(preparePerson()));
+        assertThat(created, equalTo(person));
         assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPost(config)));
         assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
                 equalTo(readFromFile(CREATE_PERSON_JSON, JsonObject.class)));
@@ -101,7 +102,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
 
         verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
 
-        assertThat(person, equalTo(readFromFile(PERSON_RESPONSE_JSON, Person.class)));
+        assertThat(person, equalTo(preparePerson()));
         assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
         assertThat(requestCaptor.getValue().getBody(), nullValue());
     }
@@ -166,7 +167,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
 
         assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPostWithoutResponse(config)));
         assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
-                equalTo(JsonUtils.readJson("{\"address1\":\"Test\"}", JsonObject.class)));
+                equalTo(readFromFile(UPDATE_PERSON_ADDRESS_JSON, JsonObject.class)));
     }
 
     private Person preparePerson() throws Exception {
@@ -192,10 +193,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
         name.setGivenName("Test");
         return name;
     }
-    private Person.Address prepareAddress() {
-        Person.Address address = new Person.Address();
-        address.setAddress1("Test");
-        address.setUuid("AAA");
-        return address;
+    private Person.Address prepareAddress() throws Exception {
+        return  (Person.Address) readFromFile(UPDATE_PERSON_ADDRESS_JSON, Person.Address.class);
     }
 }
