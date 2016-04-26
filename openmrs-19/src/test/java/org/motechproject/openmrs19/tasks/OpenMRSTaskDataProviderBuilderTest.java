@@ -46,13 +46,13 @@ public class OpenMRSTaskDataProviderBuilderTest {
     }
 
     @Test
-    public void generatedProviderShouldReturnJSONWithThreeObjectsForOneConfiguration() {
-        assertEquals(3, getGeneratedJSONObjectsCount(1));
+    public void generatedProviderShouldReturnJSONWithFourObjectsForOneConfiguration() {
+        assertEquals(4, getGeneratedJSONObjectsCount(1));
     }
 
     @Test
-    public void generatedProviderShouldReturnJSONWithSixObjectsForTwoConfigurations() {
-        assertEquals(6, getGeneratedJSONObjectsCount(2));
+    public void generatedProviderShouldReturnJSONWithEightObjectsForTwoConfigurations() {
+        assertEquals(8, getGeneratedJSONObjectsCount(2));
     }
 
     private int getGeneratedJSONObjectsCount(int amountOfConfigs) {

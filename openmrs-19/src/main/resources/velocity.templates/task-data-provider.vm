@@ -174,7 +174,43 @@
               "fieldKey": "person.display"
             }
           ]
-        }#if( $velocityHasNext ),#end
+        },
+        {
+          "displayName": "Relationship [$config.getName()]",
+          "type": "Relationship-$config.getName()",
+          "lookupFields": [
+            {
+              "displayName": "openMRS.person",
+              "fields": [
+                "openMRS.person.uuid",
+                "openMRS.relationshipType.uuid"
+              ]
+            }
+          ],
+          "fields": [
+            {
+              "displayName": "openMRS.relationship.uuid",
+              "fieldKey": "uuid"
+            },
+            {
+              "displayName": "openMRS.relationship.personA.uuid",
+              "fieldKey": "personA.uuid"
+            },
+            {
+              "displayName": "openMRS.relationship.personB.uuid",
+              "fieldKey": "personB.uuid"
+            },
+            {
+              "displayName": "openMRS.relationship.startDate",
+              "fieldKey": "startDate"
+            },
+            {
+              "displayName": "openMRS.relationship.endDate",
+              "fieldKey": "endDate"
+            }
+          ]
+        }
+        #if( $velocityHasNext ),#end
     #end
   ]
 }

@@ -4,10 +4,13 @@ import org.motechproject.commons.api.AbstractDataProvider;
 import org.motechproject.openmrs19.domain.Encounter;
 import org.motechproject.openmrs19.domain.Patient;
 import org.motechproject.openmrs19.domain.Provider;
+import org.motechproject.openmrs19.domain.Relationship;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
 import org.motechproject.openmrs19.tasks.builder.OpenMRSTaskDataProviderBuilder;
+import org.motechproject.openmrs19.service.OpenMRSRelationshipService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +27,10 @@ import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.MOTECH_ID;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.NAME;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PACKAGE_ROOT;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PATIENT;
+import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PERSON_UUID;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PROVIDER;
+import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.RELATIONSHIP;
+import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.RELATIONSHIP_TYPE_UUID;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.UUID;
 
 /**
@@ -34,21 +40,25 @@ import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.UUID;
 @Service("openMRSTaskDataProvider")
 public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSTaskDataProvider.class);
-    private static final List<Class<?>> SUPPORTED_CLASSES = Arrays.asList(Patient.class, Provider.class, Encounter.class);
+    private static final List<Class<?>> SUPPORTED_CLASSES = Arrays.asList(Patient.class, Provider.class, Encounter.class, Relationship.class);
 
     private OpenMRSEncounterService encounterService;
     private OpenMRSPatientService patientService;
     private OpenMRSProviderService providerService;
     private OpenMRSTaskDataProviderBuilder dataProviderBuilder;
+    private OpenMRSRelationshipService relationshipService;
 
     @Autowired
     public OpenMRSTaskDataProvider(OpenMRSTaskDataProviderBuilder taskDataProviderBuilder, OpenMRSEncounterService encounterService,
-                                   OpenMRSPatientService patientService, OpenMRSProviderService providerService) {
+                                   OpenMRSPatientService patientService, OpenMRSProviderService providerService,
+                                   OpenMRSRelationshipService relationshipService) {
+
 
         this.encounterService = encounterService;
         this.patientService = patientService;
         this.providerService = providerService;
         this.dataProviderBuilder = taskDataProviderBuilder;
+        this.relationshipService = relationshipService;
 
         String body = dataProviderBuilder.generateDataProvider();
         if (body != null) {
@@ -56,6 +66,7 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         } else {
             LOGGER.warn("OpenMRS configuration is empty.");
         }
+
     }
 
     @Override
@@ -88,6 +99,8 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
                 case PATIENT: obj = getPatient(lookupName, lookupFields, configName);
                     break;
                 case PROVIDER: obj = getProvider(lookupName, lookupFields, configName);
+                    break;
+                case RELATIONSHIP: obj = getRelationship(lookupFields, configName);
                     break;
             }
         }
@@ -134,6 +147,19 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         }
 
         return provider;
+    }
+
+    private Relationship getRelationship(Map<String, String> lookupFields, String configName) {
+        String typeUuid = lookupFields.get(RELATIONSHIP_TYPE_UUID);
+        String personUuid = lookupFields.get(PERSON_UUID);
+        List<Relationship> relationships =  relationshipService.getByTypeUuidAndPersonUuid(configName, typeUuid, personUuid);
+
+        if (relationships.size() > 1) {
+            LOGGER.warn(String.format("Multiple relationships found for the type with the \"%s\" UUID and the person" +
+                    "with the \"%s\" UUID. The first relationship in the list will be returned", typeUuid, personUuid));
+        }
+
+        return relationships.isEmpty() ? null : relationships.get(0);
     }
 
 }

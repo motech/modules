@@ -116,6 +116,14 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         assertEquals(encounter.getLocation().getUuid(), mrsListener.eventParameters.get(EventKeys.LOCATION_ID));
         assertEquals(encounter.getEncounterDatetime(), mrsListener.eventParameters.get(EventKeys.ENCOUNTER_DATE));
         assertEquals(encounter.getEncounterType().getUuid(), mrsListener.eventParameters.get(EventKeys.ENCOUNTER_TYPE));
+
+        //In created encounter json there are only two fields in observation: uuid and display. Because of that in order to
+        //get other observation values we need to get observation by uuid from OpenMRS server.
+        Observation fetchedObservation = obsAdapter.getObservationByUuid(DEFAULT_CONFIG_NAME, encounter.getObs().get(0).getUuid());
+
+        assertEquals(observation.getValue(), fetchedObservation.getValue());
+        assertEquals(observation.getConcept(), fetchedObservation.getConcept());
+        assertEquals(observation.getObsDatetime(), fetchedObservation.getObsDatetime());
     }
 
     @Test

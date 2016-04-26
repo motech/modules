@@ -1,16 +1,15 @@
 package org.motechproject.openmrs19.tasks;
 
-import org.apache.velocity.app.VelocityEngine;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.motechproject.openmrs19.config.Config;
 import org.motechproject.openmrs19.domain.Encounter;
 import org.motechproject.openmrs19.domain.EncounterType;
 import org.motechproject.openmrs19.domain.Patient;
+import org.motechproject.openmrs19.domain.Person;
 import org.motechproject.openmrs19.domain.Provider;
 import org.motechproject.openmrs19.service.OpenMRSConfigService;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
@@ -20,17 +19,27 @@ import org.motechproject.openmrs19.tasks.builder.OpenMRSTaskDataProviderBuilder;
 import org.springframework.core.io.ResourceLoader;
 
 import java.util.ArrayList;
+import org.motechproject.openmrs19.domain.Relationship;
+import org.motechproject.openmrs19.domain.RelationshipType;
+import org.motechproject.openmrs19.service.OpenMRSRelationshipService;
+
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.BY_MOTECH_ID;
+import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.BY_PERSON_UUID;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.BY_UUID;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.MOTECH_ID;
+import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PERSON_UUID;
+import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.RELATIONSHIP_TYPE_UUID;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.UUID;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -49,6 +58,9 @@ public class OpenMRSTaskDataProviderTest {
     private OpenMRSConfigService configService;
 
     @Mock
+    private OpenMRSRelationshipService relationshipService;
+
+    @Mock
     private ResourceLoader resourceLoader;
 
     @InjectMocks
@@ -58,8 +70,9 @@ public class OpenMRSTaskDataProviderTest {
 
     @Before
     public void setUp() {
-        taskDataProvider = new OpenMRSTaskDataProvider(taskDataProviderBuilder, encounterService, patientService, providerService);
         when(configService.getConfigs()).thenReturn(new ArrayList<>());
+        taskDataProvider = new OpenMRSTaskDataProvider(taskDataProviderBuilder, encounterService, patientService,
+                providerService, relationshipService);
     }
 
     @Test
@@ -294,4 +307,47 @@ public class OpenMRSTaskDataProviderTest {
         verify(providerService).getProviderByUuid(configName, "5");
     }
 
+    @Test
+    public void shouldReturnRelationshipForLookupGetRelationshipByTypeUuidAndPersonBUuid() {
+        String relationshipTypeUuid = "relationshipTypeUuid";
+        String personUuid = "personUuid";
+        String configName = "simpleConfig";
+        String objectType = "Relationship-" + configName;
+
+        Map<String, String> lookupFields = new HashMap<>();
+        lookupFields.put(RELATIONSHIP_TYPE_UUID, relationshipTypeUuid);
+        lookupFields.put(PERSON_UUID, personUuid);
+
+        List<Relationship> expected = prepareRelationship();
+
+        when(relationshipService.getByTypeUuidAndPersonUuid(eq(configName), eq(relationshipTypeUuid), eq(personUuid))).thenReturn(expected);
+
+        Object object = taskDataProvider.lookup(objectType, BY_PERSON_UUID, lookupFields);
+
+        verify(relationshipService).getByTypeUuidAndPersonUuid(eq(configName), eq(relationshipTypeUuid), eq(personUuid));
+
+        assertEquals(expected.get(0), object);
+    }
+
+    private List<Relationship> prepareRelationship() {
+        Relationship relationship = new Relationship();
+        relationship.setUuid("relationShipUuid");
+        relationship.setEndDate("endDate");
+        relationship.setStartDate("startDate");
+
+        Person personA = new Person();
+        personA.setUuid("personAUuid");
+
+        Person personB = new Person();
+        personB.setUuid("personBUuid");
+
+        RelationshipType type = new RelationshipType();
+        type.setUuid("relationshipTypeUuid");
+
+        relationship.setPersonA(personA);
+        relationship.setPersonB(personB);
+        relationship.setRelationshipType(type);
+
+        return Arrays.asList(relationship);
+    }
 }
