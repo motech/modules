@@ -23,6 +23,7 @@ import org.motechproject.openmrs19.service.OpenMRSConceptService;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSLocationService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
+import org.motechproject.openmrs19.service.OpenMRSPersonService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
 import org.motechproject.openmrs19.tasks.OpenMRSActionProxyService;
 
@@ -54,6 +55,9 @@ public class OpenMRSActionProxyServiceTest {
     private OpenMRSPatientService patientService;
 
     @Mock
+    private OpenMRSPersonService personService;
+
+    @Mock
     private OpenMRSProviderService providerService;
 
     @Captor
@@ -61,6 +65,9 @@ public class OpenMRSActionProxyServiceTest {
 
     @Captor
     private ArgumentCaptor<Patient> patientCaptor;
+
+    @Captor
+    private ArgumentCaptor<Person> personCaptor;
 
     @InjectMocks
     private OpenMRSActionProxyService openMRSActionProxyService = new OpenMRSActionProxyServiceImpl();
@@ -200,6 +207,24 @@ public class OpenMRSActionProxyServiceTest {
 
         // the expected patient object has location value set to null, the actual object should be the same
         assertEquals(patient, patientCaptor.getValue());
+    }
+
+    @Test
+    public void shouldUpdatePersonWithGivenParameters() {
+        Person person = createTestPerson();
+        Person.Address personAddress = person.getPreferredAddress();
+
+        openMRSActionProxyService.updatePerson(person.getUuid(), person.getPreferredName().getGivenName(), person.getPreferredName().getMiddleName(),
+                person.getPreferredName().getFamilyName(), personAddress.getAddress1(), personAddress.getAddress2(),
+                personAddress.getAddress3(), personAddress.getAddress4(), personAddress.getAddress5(),
+                personAddress.getAddress6(), personAddress.getCityVillage(), personAddress.getStateProvince(),
+                personAddress.getCountry(), personAddress.getPostalCode(), personAddress.getCountyDistrict(),
+                personAddress.getLatitude(), personAddress.getLongitude(), new DateTime(personAddress.getStartDate()),
+                new DateTime(personAddress.getEndDate()), new DateTime(person.getBirthdate()), person.getBirthdateEstimated(),
+                person.getGender(), person.getDead(), "");
+
+        verify(personService).updatePerson(eq(null), personCaptor.capture());
+        assertEquals(person, personCaptor.getValue());
     }
 
     private Person createTestPerson() {

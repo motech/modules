@@ -1,5 +1,6 @@
 package org.motechproject.openmrs19.it;
 
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -92,20 +93,41 @@ public class MRSPersonServiceIT extends BasePaxIT {
         final String newFirstName = "NewFooFirstName";
         final String newMiddleName = "NewFooMiddleName";
         final String newLastName = "NewFooLastName";
-        final String newAddress = "NewFooAddress";
+        final String newAddress1 = "NewFooAddress1";
+        final String newAddress2 = "NewFooAddress2";
+        final String newAddress3 = "NewFooAddress3";
+        final String newAddress4 = "NewFooAddress4";
+        final String newAddress5 = "NewFooAddress5";
+        final String newAddress6 = "NewFooAddress6";
+        final String newCityVillage = "NewCityVillage";
+        final String newCountry = "NewCountry";
+        final String newCountyDistrict = "NewCountyDistrict";
+        final String newLatitude = "11.324";
+        final String newLongitude = "33.333";
+        final String newStateProvince = "NewStateProvince";
+        final String newPostalCode = "NewPostalCode";
+        final DateTime newStartDate = new DateTime("2010-01-16T00:00:00Z");
+        final DateTime newEndDate = new DateTime("2013-01-16T00:00:00Z");
+        final DateTime newBirthdate = new DateTime("1999-01-16T00:00:00Z");
+        final Boolean newBirthdateEstimated = false;
         final String newGender = "F";
+        final Boolean newDead = false;
 
         Person.Name name = new Person.Name();
         name.setGivenName(newFirstName);
         name.setMiddleName(newMiddleName);
         name.setFamilyName(newLastName);
-        createdPerson.setNames(Collections.singletonList(name));
+        createdPerson.setPreferredName(name);
 
-        Person.Address address = new Person.Address();
-        address.setAddress1(newAddress);
-        createdPerson.setAddresses(Collections.singletonList(address));
+        Person.Address address = new Person.Address(newAddress1, newAddress2, newAddress3, newAddress4, newAddress5, newAddress6,
+                newCityVillage, newStateProvince, newCountry, newPostalCode, newCountyDistrict,
+                newLatitude, newLongitude, newStartDate.toDate(), newEndDate.toDate());
+        createdPerson.setPreferredAddress(address);
 
         createdPerson.setGender(newGender);
+        createdPerson.setBirthdate(newBirthdate.toDate());
+        createdPerson.setBirthdateEstimated(newBirthdateEstimated);
+        createdPerson.setDead(newDead);
 
         Person updated;
 
@@ -120,15 +142,30 @@ public class MRSPersonServiceIT extends BasePaxIT {
         assertEquals(newFirstName, updated.getPreferredName().getGivenName());
         assertEquals(newMiddleName, updated.getPreferredName().getMiddleName());
         assertEquals(newLastName, updated.getPreferredName().getFamilyName());
+
         // So far OpenMRS module stores only one field of createdPerson's address, which is 'address1'.
         // However while retrieving createdPerson from OpenMRS server all createdPerson's address fields are put
-        // into one string. That's why it is checked if address field contains address1 value.
-        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newAddress));
-        assertEquals(newGender, updated.getGender());
+        // into one string. That's why it is checked if address field contains new fields value.
+        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newAddress1));
+        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newAddress2));
+        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newAddress3));
+        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newAddress4));
+        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newAddress5));
+        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newAddress6));
+        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newCityVillage));
+        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newCountry));
+        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newCountyDistrict));
+        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newLatitude));
+        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newLongitude));
+        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newStateProvince));
+        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newPostalCode));
+        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newStartDate.toDate().toString()));
+        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newEndDate.toDate().toString()));
 
-        assertTrue(mrsListener.created);
-        assertTrue(mrsListener.updated);
-        assertFalse(mrsListener.deleted);
+        assertEquals(newGender, updated.getGender());
+        assertEquals(newBirthdate.toDate(), updated.getBirthdate());
+        assertEquals(newBirthdateEstimated, updated.getBirthdateEstimated());
+        assertEquals(newDead, updated.getDead());
     }
 
     @Test

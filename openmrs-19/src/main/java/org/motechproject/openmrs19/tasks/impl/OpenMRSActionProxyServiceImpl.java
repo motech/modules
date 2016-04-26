@@ -71,26 +71,11 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
                               String locationForMotechId, Map<String, String> identifiers) {
         Concept causeOfDeath = StringUtils.isNotEmpty(causeOfDeathUUID) ? conceptService.getConceptByUuid(null, causeOfDeathUUID) : null;
 
-        Person person = new Person();
-
-        Person.Name personName = new Person.Name();
-        personName.setGivenName(givenName);
-        personName.setMiddleName(middleName);
-        personName.setFamilyName(familyName);
-        person.setPreferredName(personName);
-        person.setNames(Collections.singletonList(personName));
-
-        Person.Address personAddress = new Person.Address(address1, address2, address3, address4, address5, address6,
-                cityVillage, stateProvince, country, postalCode, countyDistrict, latitude, longitude,
-                Objects.nonNull(startDate) ? startDate.toDate() : null, Objects.nonNull(endDate) ? endDate.toDate() : null);
-        person.setPreferredAddress(personAddress);
-        person.setAddresses(Collections.singletonList(personAddress));
-
-        person.setBirthdate(Objects.nonNull(birthdate) ? birthdate.toDate() : null);
-        person.setBirthdateEstimated(birthdateEstimated);
-        person.setDead(dead);
-        person.setCauseOfDeath(causeOfDeath);
-        person.setGender(gender);
+        Person person = preparePerson(givenName, middleName, familyName, address1, address2,
+                address3, address4, address5, address6, cityVillage, stateProvince,
+                country, postalCode, countyDistrict, latitude, longitude,
+                startDate, endDate, birthdate, birthdateEstimated,
+                gender, dead, causeOfDeath);
 
         Location location = StringUtils.isNotEmpty(locationForMotechId) ? getLocationByName(locationForMotechId) : getDefaultLocation();
 
@@ -101,25 +86,21 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     }
 
     @Override
-    public void updatePerson(String personUuid, String givenName, String middleName, String familyName, String gender, String address) {
-        Person person = new Person();
+    public void updatePerson(String personUuid, String givenName, String middleName, String familyName, String address1, String address2,
+                             String address3, String address4, String address5, String address6, String cityVillage, String stateProvince,
+                             String country, String postalCode, String countyDistrict, String latitude, String longitude,
+                             DateTime startDate, DateTime endDate, DateTime birthdate, Boolean birthdateEstimated,
+                             String gender, Boolean dead, String causeOfDeathUUID) {
+        Concept causeOfDeath = StringUtils.isNotEmpty(causeOfDeathUUID) ? conceptService.getConceptByUuid(null, causeOfDeathUUID) : null;
+
+        Person person = preparePerson(givenName, middleName, familyName, address1, address2,
+                address3, address4, address5, address6, cityVillage, stateProvince,
+                country, postalCode, countyDistrict, latitude, longitude,
+                startDate, endDate, birthdate, birthdateEstimated,
+                gender, dead, causeOfDeath);
         person.setUuid(personUuid);
 
-        Person.Name personName = new Person.Name();
-        personName.setGivenName(givenName);
-        personName.setMiddleName(middleName);
-        personName.setFamilyName(familyName);
-        person.setPreferredName(personName);
-        person.setNames(Collections.singletonList(personName));
-
-        Person.Address personAddress = new Person.Address();
-        personAddress.setAddress1(address);
-        person.setPreferredAddress(personAddress);
-        person.setAddresses(Collections.singletonList(personAddress));
-
-        person.setGender(gender);
-
-        personService.updatePerson(person);
+        personService.updatePerson(null, person);
     }
     private Location getDefaultLocation() {
         return getLocationByName(DEFAULT_LOCATION_NAME);
@@ -177,6 +158,35 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
             observationList.add(observation);
         }
         return observationList;
+    }
+
+    private Person preparePerson(String givenName, String middleName, String familyName, String address1, String address2,
+                                 String address3, String address4, String address5, String address6, String cityVillage, String stateProvince,
+                                 String country, String postalCode, String countyDistrict, String latitude, String longitude,
+                                 DateTime startDate, DateTime endDate, DateTime birthdate, Boolean birthdateEstimated,
+                                 String gender, Boolean dead, Concept causeOfDeath)  {
+        Person person = new Person();
+
+        Person.Name personName = new Person.Name();
+        personName.setGivenName(givenName);
+        personName.setMiddleName(middleName);
+        personName.setFamilyName(familyName);
+        person.setPreferredName(personName);
+        person.setNames(Collections.singletonList(personName));
+
+        Person.Address personAddress = new Person.Address(address1, address2, address3, address4, address5, address6,
+                cityVillage, stateProvince, country, postalCode, countyDistrict, latitude, longitude,
+                Objects.nonNull(startDate) ? startDate.toDate() : null, Objects.nonNull(endDate) ? endDate.toDate() : null);
+        person.setPreferredAddress(personAddress);
+        person.setAddresses(Collections.singletonList(personAddress));
+
+        person.setBirthdate(Objects.nonNull(birthdate) ? birthdate.toDate() : null);
+        person.setBirthdateEstimated(birthdateEstimated);
+        person.setDead(dead);
+        person.setCauseOfDeath(causeOfDeath);
+        person.setGender(gender);
+
+        return person;
     }
 
     @Autowired

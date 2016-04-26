@@ -93,7 +93,20 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
     public Person updatePerson(String configName, Person person) {
         try {
             Config config = configService.getConfigByName(configName);
-            Person updated = personResource.updatePerson(config, person);
+            Person fetchedPerson = personResource.getPersonById(config, person.getUuid());
+
+            Person.Address addressForUpdate = fetchedPerson.getPreferredAddress();
+            if(addressForUpdate != null) {
+                person.getPreferredAddress().setUuid(addressForUpdate.getUuid());
+            }
+            personResource.updatePersonAddress(config, person.getUuid(), person.getPreferredAddress());
+
+            Person.Name nameForUpdate = fetchedPerson.getPreferredName();
+            person.getPreferredName().setUuid(nameForUpdate.getUuid());
+            personResource.updatePersonName(config, person.getUuid(), person.getPreferredName());
+
+            Person generalInformationForUpdate = prepareGeneralInformationForUpdate(person);
+            Person updated = personResource.updatePerson(config, generalInformationForUpdate);
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.UPDATED_PERSON_SUBJECT, EventHelper.personParameters(updated)));
 
             return updated;
@@ -121,5 +134,17 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
                 LOGGER.warn("Unable to add attribute to person with id: " + person.getUuid());
             }
         }
+    }
+
+    public Person prepareGeneralInformationForUpdate(Person person) {
+        Person generalInformationForUpdate = new Person();
+        generalInformationForUpdate.setUuid(person.getUuid());
+        generalInformationForUpdate.setBirthdate(person.getBirthdate());
+        generalInformationForUpdate.setBirthdateEstimated(person.getBirthdateEstimated());
+        generalInformationForUpdate.setGender(person.getGender());
+        generalInformationForUpdate.setDead(person.getDead());
+        generalInformationForUpdate.setCauseOfDeath(person.getCauseOfDeath());
+
+        return generalInformationForUpdate;
     }
 }

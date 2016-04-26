@@ -67,7 +67,7 @@ public class PersonResourceImpl extends BaseResource implements PersonResource {
     @Override
     public void updatePersonAddress(Config config, String uuid, Person.Address address) {
         String requestJson = buildGson().toJson(address);
-        postWithEmptyResponseBody(config, requestJson, "/person/{personUuid}/address/{addressUuid}", uuid, address.getUuid());
+        postWithEmptyResponseBody(config, requestJson, "/person/{personUuid}/address/{addressUuid}?v=full", uuid, address.getUuid());
     }
 
     @Override
@@ -92,6 +92,7 @@ public class PersonResourceImpl extends BaseResource implements PersonResource {
     private Gson buildGson() {
         return new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
                 .create();
     }
 }
