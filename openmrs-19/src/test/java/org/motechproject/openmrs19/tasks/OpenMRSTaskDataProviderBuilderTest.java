@@ -11,8 +11,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.openmrs19.config.Config;
 import org.motechproject.openmrs19.service.OpenMRSConfigService;
 import org.motechproject.openmrs19.tasks.builder.OpenMRSTaskDataProviderBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.ui.velocity.VelocityEngineFactoryBean;
 
 import java.io.IOException;
@@ -22,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.TestCase.assertNull;
 import static org.mockito.Mockito.when;
 
@@ -80,10 +79,7 @@ public class OpenMRSTaskDataProviderBuilderTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        if(velocityEngine == null) {
-            return 0;
-        }
+        assertNotNull(velocityEngine);
 
         openMRSTaskDataProviderBuilder.setVelocityEngine(velocityEngine);
 

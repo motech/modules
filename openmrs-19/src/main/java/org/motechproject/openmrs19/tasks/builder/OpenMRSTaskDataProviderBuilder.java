@@ -3,10 +3,10 @@ package org.motechproject.openmrs19.tasks.builder;
 import org.apache.velocity.app.VelocityEngine;
 import org.motechproject.openmrs19.config.Config;
 import org.motechproject.openmrs19.service.OpenMRSConfigService;
-import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import javax.annotation.Resource;

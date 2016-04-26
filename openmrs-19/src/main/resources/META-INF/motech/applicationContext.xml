@@ -40,6 +40,4 @@
         </property>
     </bean>
 
-    <bean id="openMRSTaskDataProviderBuilder" class="org.motechproject.openmrs19.tasks.builder.OpenMRSTaskDataProviderBuilder"/>
-
 </beans>

@@ -1,11 +1,13 @@
 package org.motechproject.openmrs19.tasks;
 
+import org.apache.velocity.app.VelocityEngine;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.motechproject.openmrs19.config.Config;
 import org.motechproject.openmrs19.domain.Encounter;
 import org.motechproject.openmrs19.domain.EncounterType;
 import org.motechproject.openmrs19.domain.Patient;
@@ -16,12 +18,16 @@ import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
 import org.motechproject.openmrs19.tasks.builder.OpenMRSTaskDataProviderBuilder;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.ui.velocity.VelocityEngineFactoryBean;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -291,4 +297,5 @@ public class OpenMRSTaskDataProviderTest {
         assertEquals(provider, object);
         verify(providerService).getProviderByUuid(configName, "5");
     }
+
 }
