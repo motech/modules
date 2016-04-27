@@ -8,12 +8,12 @@ import org.motechproject.openmrs19.domain.Relationship;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
+import org.motechproject.openmrs19.tasks.builder.OpenMRSTaskDataProviderBuilder;
 import org.motechproject.openmrs19.service.OpenMRSRelationshipService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -45,21 +45,28 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     private OpenMRSEncounterService encounterService;
     private OpenMRSPatientService patientService;
     private OpenMRSProviderService providerService;
+    private OpenMRSTaskDataProviderBuilder dataProviderBuilder;
     private OpenMRSRelationshipService relationshipService;
 
     @Autowired
-    public OpenMRSTaskDataProvider(ResourceLoader resourceLoader, OpenMRSEncounterService encounterService,
+    public OpenMRSTaskDataProvider(OpenMRSTaskDataProviderBuilder taskDataProviderBuilder, OpenMRSEncounterService encounterService,
                                    OpenMRSPatientService patientService, OpenMRSProviderService providerService,
                                    OpenMRSRelationshipService relationshipService) {
-        Resource resource = resourceLoader.getResource("task-data-provider.json");
-        if (resource != null) {
-            setBody(resource);
-        }
+
 
         this.encounterService = encounterService;
         this.patientService = patientService;
         this.providerService = providerService;
+        this.dataProviderBuilder = taskDataProviderBuilder;
         this.relationshipService = relationshipService;
+
+        String body = dataProviderBuilder.generateDataProvider();
+        if (body != null) {
+            setBody(body);
+        } else {
+            LOGGER.warn("OpenMRS configuration is empty.");
+        }
+
     }
 
     @Override
@@ -81,16 +88,19 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     public Object lookup(String type, String lookupName, Map<String, String> lookupFields) {
         Object obj = null;
 
+        String objectType = type.substring(0, type.lastIndexOf('-'));
+        String configName = type.substring(type.lastIndexOf('-')+1);
+
         //In case of any trouble with the type, 'supports' method logs an error
-        if (supports(type)) {
-            switch (type) {
-                case ENCOUNTER: obj = getEncounter(lookupName, lookupFields);
+        if (supports(objectType)) {
+            switch (objectType) {
+                case ENCOUNTER: obj = getEncounter(lookupName, lookupFields, configName);
                     break;
-                case PATIENT: obj = getPatient(lookupName, lookupFields);
+                case PATIENT: obj = getPatient(lookupName, lookupFields, configName);
                     break;
-                case PROVIDER: obj = getProvider(lookupName, lookupFields);
+                case PROVIDER: obj = getProvider(lookupName, lookupFields, configName);
                     break;
-                case RELATIONSHIP: obj = getRelationship(lookupFields);
+                case RELATIONSHIP: obj = getRelationship(lookupFields, configName);
                     break;
             }
         }
@@ -98,11 +108,11 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         return obj;
     }
 
-    private Encounter getEncounter(String lookupName, Map<String, String> lookupFields) {
+    private Encounter getEncounter(String lookupName, Map<String, String> lookupFields, String configName) {
         Encounter encounter = null;
 
         switch (lookupName) {
-            case BY_UUID: encounter = encounterService.getEncounterByUuid(null, lookupFields.get(UUID));
+            case BY_UUID: encounter = encounterService.getEncounterByUuid(configName, lookupFields.get(UUID));
                 break;
             default: LOGGER.error("Lookup with name {} doesn't exist for encounter object", lookupName);
                 break;
@@ -111,13 +121,13 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         return encounter;
     }
 
-    private Patient getPatient(String lookupName, Map<String, String> lookupFields) {
+    private Patient getPatient(String lookupName, Map<String, String> lookupFields, String configName) {
         Patient patient = null;
 
         switch (lookupName) {
-            case BY_MOTECH_ID: patient = patientService.getPatientByMotechId(null, lookupFields.get(MOTECH_ID));
+            case BY_MOTECH_ID: patient = patientService.getPatientByMotechId(configName, lookupFields.get(MOTECH_ID));
                 break;
-            case BY_UUID: patient = patientService.getPatientByUuid(null, lookupFields.get(UUID));
+            case BY_UUID: patient = patientService.getPatientByUuid(configName, lookupFields.get(UUID));
                 break;
             default: LOGGER.error("Lookup with name {} doesn't exist for patient object", lookupName);
                 break;
@@ -126,11 +136,11 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         return patient;
     }
 
-    private Provider getProvider(String lookupName, Map<String, String> lookupFields) {
+    private Provider getProvider(String lookupName, Map<String, String> lookupFields, String configName) {
         Provider provider = null;
 
         switch (lookupName) {
-            case BY_UUID: provider = providerService.getProviderByUuid(null, lookupFields.get(UUID));
+            case BY_UUID: provider = providerService.getProviderByUuid(configName, lookupFields.get(UUID));
                 break;
             default: LOGGER.error("Lookup with name {} doesn't exist for provider object", lookupName);
                 break;
@@ -139,10 +149,10 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         return provider;
     }
 
-    private Relationship getRelationship(Map<String, String> lookupFields) {
+    private Relationship getRelationship(Map<String, String> lookupFields, String configName) {
         String typeUuid = lookupFields.get(RELATIONSHIP_TYPE_UUID);
         String personUuid = lookupFields.get(PERSON_UUID);
-        List<Relationship> relationships =  relationshipService.getByTypeUuidAndPersonUuid(null, typeUuid, personUuid);
+        List<Relationship> relationships =  relationshipService.getByTypeUuidAndPersonUuid(configName, typeUuid, personUuid);
 
         if (relationships.size() > 1) {
             LOGGER.warn(String.format("Multiple relationships found for the type with the \"%s\" UUID and the person" +
@@ -151,4 +161,5 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
 
         return relationships.isEmpty() ? null : relationships.get(0);
     }
+
 }
