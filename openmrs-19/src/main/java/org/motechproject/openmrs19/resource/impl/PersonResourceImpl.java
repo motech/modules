@@ -54,7 +54,7 @@ public class PersonResourceImpl extends BaseResource implements PersonResource {
     @Override
     public Person updatePerson(Config config, Person person) {
         String requestJson = buildGsonWithUpdatePersonAdapter().toJson(person);
-        String responseJson = postForJson(config, requestJson, "/person/{uuid}", person.getUuid());
+        String responseJson = postForJson(config, requestJson, "/person/{uuid}?v=full", person.getUuid());
         return (Person) JsonUtils.readJson(responseJson, Person.class);
     }
 
@@ -85,7 +85,6 @@ public class PersonResourceImpl extends BaseResource implements PersonResource {
 
     private Gson buildGsonWithUpdatePersonAdapter() {
         return new GsonBuilder()
-                .excludeFieldsWithoutExposeAnnotation()
                 .registerTypeAdapter(Person.class, new Person.PersonUpdateSerializer())
                 .create();
     }

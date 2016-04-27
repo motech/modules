@@ -75,7 +75,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
     @Test
     public void shouldUpdatePerson() throws Exception {
         Person person = preparePerson();
-        URI url = config.toInstancePathWithParams("/person/{uuid}", person.getUuid());
+        URI url = config.toInstancePathWithParams("/person/{uuid}?v=full", person.getUuid());
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
                 .thenReturn(getResponse(PERSON_RESPONSE_JSON));

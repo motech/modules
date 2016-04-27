@@ -143,21 +143,7 @@ public class MRSPersonServiceIT extends BasePaxIT {
         assertEquals(newMiddleName, updated.getPreferredName().getMiddleName());
         assertEquals(newLastName, updated.getPreferredName().getFamilyName());
 
-        assertEquals(newAddress1, updated.getPreferredAddress().getAddress1());
-        assertEquals(newAddress2, updated.getPreferredAddress().getAddress2());
-        assertEquals(newAddress3, updated.getPreferredAddress().getAddress3());
-        assertEquals(newAddress4, updated.getPreferredAddress().getAddress4());
-        assertEquals(newAddress5, updated.getPreferredAddress().getAddress5());
-        assertEquals(newAddress6, updated.getPreferredAddress().getAddress6());
-        assertEquals(newCityVillage, updated.getPreferredAddress().getCityVillage());
-        assertEquals(newCountry, updated.getPreferredAddress().getCountry());
-        assertEquals(newCountyDistrict, updated.getPreferredAddress().getCountyDistrict());
-        assertEquals(newLatitude, updated.getPreferredAddress().getLatitude());
-        assertEquals(newLongitude, updated.getPreferredAddress().getLongitude());
-        assertEquals(newStateProvince, updated.getPreferredAddress().getStateProvince());
-        assertEquals(newPostalCode, updated.getPreferredAddress().getPostalCode());
-        assertEquals(newStartDate.toDate(), updated.getPreferredAddress().getStartDate());
-        assertEquals(newEndDate.toDate(), updated.getPreferredAddress().getEndDate());
+        assertEquals(address, updated.getPreferredAddress());
 
         assertEquals(newGender, updated.getGender());
         assertEquals(newBirthdate.toDate(), updated.getBirthdate());

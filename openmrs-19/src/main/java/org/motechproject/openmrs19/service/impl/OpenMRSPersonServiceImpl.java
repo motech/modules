@@ -91,11 +91,10 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
 
     @Override
     public Person updatePerson(String configName, Person person) {
-
+        Validate.notEmpty(person.getUuid(), "Person uuid cannot be null");
         try {
             Config config = configService.getConfigByName(configName);
 
-            Validate.notNull(person.getUuid(), "Person uuid cannot be null");
             Person fetchedPerson = personResource.getPersonById(config, person.getUuid());
 
             //Update is splited on separately update address, names and general information, because of
