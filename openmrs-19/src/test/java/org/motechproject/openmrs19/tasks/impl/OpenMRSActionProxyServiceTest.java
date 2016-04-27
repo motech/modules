@@ -110,7 +110,7 @@ public class OpenMRSActionProxyServiceTest {
     @Test
     public void shouldCreatePatientWithGivenParameters() {
         Person person = createTestPerson();
-        Concept causeOfDeath = createTestConcept();
+        Concept causeOfDeath = createTestConcept("testCauseOfDeath");
 
         person.setDead(true);
         person.setCauseOfDeath(causeOfDeath);
@@ -212,8 +212,14 @@ public class OpenMRSActionProxyServiceTest {
     @Test
     public void shouldUpdatePersonWithGivenParameters() {
         Person person = createTestPerson();
+        Concept causeOfDeath = createTestConcept("testCauseOfDeathConcept");
+
+        person.setDead(true);
+        person.setCauseOfDeath(causeOfDeath);
+
         Person.Address personAddress = person.getPreferredAddress();
 
+        doReturn(causeOfDeath).when(conceptService).getConceptByUuid(eq(null), eq(causeOfDeath.getUuid()));
         openMRSActionProxyService.updatePerson(person.getUuid(), person.getPreferredName().getGivenName(), person.getPreferredName().getMiddleName(),
                 person.getPreferredName().getFamilyName(), personAddress.getAddress1(), personAddress.getAddress2(),
                 personAddress.getAddress3(), personAddress.getAddress4(), personAddress.getAddress5(),
@@ -221,7 +227,7 @@ public class OpenMRSActionProxyServiceTest {
                 personAddress.getCountry(), personAddress.getPostalCode(), personAddress.getCountyDistrict(),
                 personAddress.getLatitude(), personAddress.getLongitude(), new DateTime(personAddress.getStartDate()),
                 new DateTime(personAddress.getEndDate()), new DateTime(person.getBirthdate()), person.getBirthdateEstimated(),
-                person.getGender(), person.getDead(), "");
+                person.getGender(), person.getDead(), causeOfDeath.getUuid());
 
         verify(personService).updatePerson(eq(null), personCaptor.capture());
         assertEquals(person, personCaptor.getValue());
@@ -252,9 +258,9 @@ public class OpenMRSActionProxyServiceTest {
         return person;
     }
 
-    private Concept createTestConcept() {
+    private Concept createTestConcept(String testConceptName) {
         Concept concept = new Concept();
-        ConceptName conceptName = new ConceptName("testConceptName");
+        ConceptName conceptName = new ConceptName(testConceptName);
 
         concept.setNames(Collections.singletonList(conceptName));
         concept.setDatatype(new Concept.DataType("TEXT"));

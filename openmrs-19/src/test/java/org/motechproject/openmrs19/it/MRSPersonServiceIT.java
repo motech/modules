@@ -143,24 +143,21 @@ public class MRSPersonServiceIT extends BasePaxIT {
         assertEquals(newMiddleName, updated.getPreferredName().getMiddleName());
         assertEquals(newLastName, updated.getPreferredName().getFamilyName());
 
-        // So far OpenMRS module stores only one field of createdPerson's address, which is 'address1'.
-        // However while retrieving createdPerson from OpenMRS server all createdPerson's address fields are put
-        // into one string. That's why it is checked if address field contains new fields value.
-        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newAddress1));
-        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newAddress2));
-        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newAddress3));
-        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newAddress4));
-        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newAddress5));
-        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newAddress6));
-        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newCityVillage));
-        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newCountry));
-        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newCountyDistrict));
-        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newLatitude));
-        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newLongitude));
-        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newStateProvince));
-        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newPostalCode));
-        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newStartDate.toDate().toString()));
-        assertTrue(updated.getPreferredAddress().getFullAddressString().contains(newEndDate.toDate().toString()));
+        assertEquals(newAddress1, updated.getPreferredAddress().getAddress1());
+        assertEquals(newAddress2, updated.getPreferredAddress().getAddress2());
+        assertEquals(newAddress3, updated.getPreferredAddress().getAddress3());
+        assertEquals(newAddress4, updated.getPreferredAddress().getAddress4());
+        assertEquals(newAddress5, updated.getPreferredAddress().getAddress5());
+        assertEquals(newAddress6, updated.getPreferredAddress().getAddress6());
+        assertEquals(newCityVillage, updated.getPreferredAddress().getCityVillage());
+        assertEquals(newCountry, updated.getPreferredAddress().getCountry());
+        assertEquals(newCountyDistrict, updated.getPreferredAddress().getCountyDistrict());
+        assertEquals(newLatitude, updated.getPreferredAddress().getLatitude());
+        assertEquals(newLongitude, updated.getPreferredAddress().getLongitude());
+        assertEquals(newStateProvince, updated.getPreferredAddress().getStateProvince());
+        assertEquals(newPostalCode, updated.getPreferredAddress().getPostalCode());
+        assertEquals(newStartDate.toDate(), updated.getPreferredAddress().getStartDate());
+        assertEquals(newEndDate.toDate(), updated.getPreferredAddress().getEndDate());
 
         assertEquals(newGender, updated.getGender());
         assertEquals(newBirthdate.toDate(), updated.getBirthdate());

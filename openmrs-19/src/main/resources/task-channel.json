@@ -191,7 +191,7 @@
         {
           "key": "personUuid",
           "displayName": "openMRS.person.uuid",
-          "required": false
+          "required": true
         },
         {
           "key": "givenName",
