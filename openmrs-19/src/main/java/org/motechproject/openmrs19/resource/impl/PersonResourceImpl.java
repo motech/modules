@@ -67,7 +67,7 @@ public class PersonResourceImpl extends BaseResource implements PersonResource {
     @Override
     public void updatePersonAddress(Config config, String uuid, Person.Address address) {
         String requestJson = buildGson().toJson(address);
-        postWithEmptyResponseBody(config, requestJson, "/person/{personUuid}/address/{addressUuid}?v=full", uuid, address.getUuid());
+        postWithEmptyResponseBody(config, requestJson, "/person/{personUuid}/address/{addressUuid}", uuid, address.getUuid());
     }
 
     @Override

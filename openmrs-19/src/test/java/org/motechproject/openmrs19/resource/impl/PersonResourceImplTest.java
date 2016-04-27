@@ -158,7 +158,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
     public void shouldUpdatePersonAddress() throws Exception {
         String personId = "CCC";
         Person.Address preferredAddress = prepareAddress();
-        URI url = config.toInstancePathWithParams("/person/{personUuid}/address/{addressUuid}?v=full", personId,
+        URI url = config.toInstancePathWithParams("/person/{personUuid}/address/{addressUuid}", personId,
                 preferredAddress.getUuid());
 
         personResource.updatePersonAddress(config, personId, preferredAddress);
