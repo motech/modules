@@ -91,8 +91,23 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
 
     @Override
     public Person updatePerson(String configName, Person person) {
+        Validate.notEmpty(person.getUuid(), "Person uuid cannot be null");
         try {
             Config config = configService.getConfigByName(configName);
+
+            Person fetchedPerson = personResource.getPersonById(config, person.getUuid());
+
+            //Updating address and name of person must be done separately.
+            Person.Address addressForUpdate = fetchedPerson.getPreferredAddress();
+            if(addressForUpdate != null) {
+                person.getPreferredAddress().setUuid(addressForUpdate.getUuid());
+            }
+            personResource.updatePersonAddress(config, person.getUuid(), person.getPreferredAddress());
+
+            Person.Name nameForUpdate = fetchedPerson.getPreferredName();
+            person.getPreferredName().setUuid(nameForUpdate.getUuid());
+            personResource.updatePersonName(config, person.getUuid(), person.getPreferredName());
+
             Person updated = personResource.updatePerson(config, person);
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.UPDATED_PERSON_SUBJECT, EventHelper.personParameters(updated)));
 

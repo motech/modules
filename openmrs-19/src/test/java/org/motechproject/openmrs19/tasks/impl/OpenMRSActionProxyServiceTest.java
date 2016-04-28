@@ -23,6 +23,7 @@ import org.motechproject.openmrs19.service.OpenMRSConceptService;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSLocationService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
+import org.motechproject.openmrs19.service.OpenMRSPersonService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
 import org.motechproject.openmrs19.tasks.OpenMRSActionProxyService;
 
@@ -54,6 +55,9 @@ public class OpenMRSActionProxyServiceTest {
     private OpenMRSPatientService patientService;
 
     @Mock
+    private OpenMRSPersonService personService;
+
+    @Mock
     private OpenMRSProviderService providerService;
 
     @Captor
@@ -61,6 +65,9 @@ public class OpenMRSActionProxyServiceTest {
 
     @Captor
     private ArgumentCaptor<Patient> patientCaptor;
+
+    @Captor
+    private ArgumentCaptor<Person> personCaptor;
 
     @InjectMocks
     private OpenMRSActionProxyService openMRSActionProxyService = new OpenMRSActionProxyServiceImpl();
@@ -103,7 +110,7 @@ public class OpenMRSActionProxyServiceTest {
     @Test
     public void shouldCreatePatientWithGivenParameters() {
         Person person = createTestPerson();
-        Concept causeOfDeath = createTestConcept();
+        Concept causeOfDeath = createTestConcept("testCauseOfDeath");
 
         person.setDead(true);
         person.setCauseOfDeath(causeOfDeath);
@@ -202,6 +209,30 @@ public class OpenMRSActionProxyServiceTest {
         assertEquals(patient, patientCaptor.getValue());
     }
 
+    @Test
+    public void shouldUpdatePersonWithGivenParameters() {
+        Person person = createTestPerson();
+        Concept causeOfDeath = createTestConcept("testCauseOfDeathConcept");
+
+        person.setDead(true);
+        person.setCauseOfDeath(causeOfDeath);
+
+        Person.Address personAddress = person.getPreferredAddress();
+
+        doReturn(causeOfDeath).when(conceptService).getConceptByUuid(eq(null), eq(causeOfDeath.getUuid()));
+        openMRSActionProxyService.updatePerson(person.getUuid(), person.getPreferredName().getGivenName(), person.getPreferredName().getMiddleName(),
+                person.getPreferredName().getFamilyName(), personAddress.getAddress1(), personAddress.getAddress2(),
+                personAddress.getAddress3(), personAddress.getAddress4(), personAddress.getAddress5(),
+                personAddress.getAddress6(), personAddress.getCityVillage(), personAddress.getStateProvince(),
+                personAddress.getCountry(), personAddress.getPostalCode(), personAddress.getCountyDistrict(),
+                personAddress.getLatitude(), personAddress.getLongitude(), new DateTime(personAddress.getStartDate()),
+                new DateTime(personAddress.getEndDate()), new DateTime(person.getBirthdate()), person.getBirthdateEstimated(),
+                person.getGender(), person.getDead(), causeOfDeath.getUuid());
+
+        verify(personService).updatePerson(eq(null), personCaptor.capture());
+        assertEquals(person, personCaptor.getValue());
+    }
+
     private Person createTestPerson() {
         Person person = new Person();
 
@@ -227,9 +258,9 @@ public class OpenMRSActionProxyServiceTest {
         return person;
     }
 
-    private Concept createTestConcept() {
+    private Concept createTestConcept(String testConceptName) {
         Concept concept = new Concept();
-        ConceptName conceptName = new ConceptName("testConceptName");
+        ConceptName conceptName = new ConceptName(testConceptName);
 
         concept.setNames(Collections.singletonList(conceptName));
         concept.setDatatype(new Concept.DataType("TEXT"));

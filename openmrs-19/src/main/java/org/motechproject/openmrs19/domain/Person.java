@@ -1,12 +1,14 @@
 package org.motechproject.openmrs19.domain;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.Expose;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -442,6 +444,34 @@ public class Person {
         @Override
         public JsonElement serialize(Person src, Type typeOfSrc, JsonSerializationContext context) {
             return new JsonPrimitive(src.getUuid());
+        }
+    }
+
+    public static class PersonUpdateSerializer implements JsonSerializer<Person> {
+
+        @Override
+        public JsonElement serialize(Person src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject person = new JsonObject();
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+
+            if (src.birthdate != null) {
+                person.addProperty("birthdate", sdf.format(src.getBirthdate()));
+            }
+            if (src.birthdateEstimated != null) {
+                person.addProperty("birthdateEstimated", src.getBirthdateEstimated());
+            }
+            if (src.gender != null) {
+                person.addProperty("gender", src.getGender());
+            }
+            if (src.dead != null) {
+                person.addProperty("dead", src.getDead());
+            }
+            if(src.causeOfDeath != null) {
+                person.addProperty("causeOfDeath", src.getCauseOfDeath().getUuid());
+            }
+
+            return person;
         }
     }
 
