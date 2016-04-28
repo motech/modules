@@ -29,10 +29,10 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class PatientResourceImplTest extends AbstractResourceImplTest {
 
-    private static final String PATIENT_IDENTIFIER_LIST_RESPONSE_JSON = "json/patient-identifier-list-response.json";
-    private static final String PATIENT_LIST_RESPONSE_JSON = "json/patient-list-response.json";
-    private static final String PATIENT_RESPONSE_JSON = "json/patient-response.json";
-    private static final String CREATE_PATIENT_JSON = "json/patient-create.json";
+    private static final String PATIENT_IDENTIFIER_LIST_RESPONSE_JSON = "json/patient/patient-identifier-list-response.json";
+    private static final String PATIENT_LIST_RESPONSE_JSON = "json/patient/patient-list-response.json";
+    private static final String PATIENT_RESPONSE_JSON = "json/patient/patient-response.json";
+    private static final String CREATE_PATIENT_JSON = "json/patient/patient-create.json";
 
     @Mock
     private RestOperations restOperations;

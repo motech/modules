@@ -13,11 +13,14 @@ import org.motechproject.openmrs19.domain.Location;
 import org.motechproject.openmrs19.domain.Observation;
 import org.motechproject.openmrs19.domain.Patient;
 import org.motechproject.openmrs19.domain.Person;
+import org.motechproject.openmrs19.domain.Program;
+import org.motechproject.openmrs19.domain.ProgramEnrollment;
 import org.motechproject.openmrs19.domain.Provider;
 import org.motechproject.openmrs19.service.OpenMRSConceptService;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSLocationService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
+import org.motechproject.openmrs19.service.OpenMRSProgramEnrollmentService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
 import org.motechproject.openmrs19.tasks.OpenMRSActionProxyService;
 import org.slf4j.Logger;
@@ -44,6 +47,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     private OpenMRSLocationService locationService;
     private OpenMRSPatientService patientService;
     private OpenMRSProviderService providerService;
+    private OpenMRSProgramEnrollmentService programEnrollmentService;
 
     @Override
     public void createEncounter(DateTime encounterDatetime, String encounterType, String locationName, String patientUuid, String providerUuid, Map<String, String> observations) {
@@ -96,6 +100,23 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
 
         Patient patient = new Patient(identifierList, person, motechId, location);
         patientService.createPatient(null, patient);
+    }
+
+    @Override
+    public void createProgramEnrollment(String patientUuid, String programUuid, DateTime dateEnrolled, DateTime dateCompleted) {
+        Patient patient = new Patient();
+        patient.setUuid(patientUuid);
+
+        Program program = new Program();
+        program.setUuid(programUuid);
+
+        ProgramEnrollment programEnrollment = new ProgramEnrollment();
+        programEnrollment.setPatient(patient);
+        programEnrollment.setProgram(program);
+        programEnrollment.setDateEnrolled(Objects.nonNull(dateEnrolled) ? dateEnrolled.toDate() : null);
+        programEnrollment.setDateCompleted(Objects.nonNull(dateCompleted) ? dateCompleted.toDate() : null);
+
+        programEnrollmentService.createProgramEnrollment(null, programEnrollment);
     }
 
     private Location getDefaultLocation() {
@@ -179,5 +200,10 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     @Autowired
     public void setProviderService(OpenMRSProviderService providerService) {
         this.providerService = providerService;
+    }
+
+    @Autowired
+    public void setProgramEnrollmentService(OpenMRSProgramEnrollmentService programEnrollmentService) {
+        this.programEnrollmentService = programEnrollmentService;
     }
 }

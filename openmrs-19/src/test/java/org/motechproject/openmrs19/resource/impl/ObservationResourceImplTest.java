@@ -26,7 +26,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ObservationResourceImplTest extends AbstractResourceImplTest {
 
-    private static final String OBSERVATION_LIST_RESPONSE_JSON = "json/observation-list-response.json";
+    private static final String OBSERVATION_LIST_RESPONSE_JSON = "json/observation/observation-list-response.json";
 
     @Mock
     private RestOperations restOperations;

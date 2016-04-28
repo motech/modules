@@ -64,4 +64,13 @@ public interface OpenMRSActionProxyService {
                        DateTime startDate, DateTime endDate, DateTime birthdate, Boolean birthdateEstimated,
                        String gender, Boolean dead, String causeOfDeathUUID, String motechId,
                        String locationForMotechId, Map<String, String> identifiers);
+
+    /**
+     * Creates a program enrollment with the given params. The required fields are: {@code patientUuid}, {@code programUuid}, {@code dateEnrolled}.
+     * @param patientUuid the patient uuid
+     * @param programUuid the program uuid
+     * @param dateEnrolled the program enrollment date
+     * @param dateCompleted the program completed date
+     */
+    void createProgramEnrollment(String patientUuid, String programUuid, DateTime dateEnrolled, DateTime dateCompleted);
 }

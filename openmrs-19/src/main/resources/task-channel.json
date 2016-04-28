@@ -182,6 +182,35 @@
           "required" : false
         }
       ]
+    },
+    {
+      "displayName": "openMRS.createProgramEnrollment",
+      "serviceInterface": "org.motechproject.openmrs19.tasks.OpenMRSActionProxyService",
+      "serviceMethod": "createProgramEnrollment",
+      "actionParameters": [
+        {
+          "key": "name",
+          "displayName": "openMRS.programEnrollment.patientUuid",
+          "required": true
+        },
+        {
+          "key": "description",
+          "displayName": "openMRS.programEnrollment.programUuid",
+          "required": true
+        },
+        {
+          "key": "conceptUuid",
+          "displayName": "openMRS.programEnrollment.dateEnrolled",
+          "type": "DATE",
+          "required": true
+        },
+        {
+          "key": "dateCompleted",
+          "displayName": "openMRS.programEnrollment.dateCompleted",
+          "type": "DATE",
+          "required": false
+        }
+      ]
     }
   ]
 }

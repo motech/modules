@@ -30,9 +30,9 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class OpenMRSConfigServiceImplTest {
 
     private static final String OPEN_MRS_CONFIGS_FILE_NAME = "openmrs-configs.json";
-    private static final String EMPTY_CONFIGS = "json/empty-configs.json";
-    private static final String CONFIG_JSON = "json/config.json";
-    private static final String CONFIGS_JSON = "json/configs.json";
+    private static final String EMPTY_CONFIGS = "json/config/empty-configs.json";
+    private static final String CONFIG_JSON = "json/config/config.json";
+    private static final String CONFIGS_JSON = "json/config/configs.json";
 
     private static final String SUFFIX_ONE = "fooOne";
     private static final String SUFFIX_TWO = "fooTwo";
