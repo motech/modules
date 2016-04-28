@@ -22,6 +22,7 @@ import org.motechproject.openmrs19.service.OpenMRSLocationService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.service.OpenMRSProgramEnrollmentService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
+import org.motechproject.openmrs19.service.OpenMRSPersonService;
 import org.motechproject.openmrs19.tasks.OpenMRSActionProxyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +49,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     private OpenMRSPatientService patientService;
     private OpenMRSProviderService providerService;
     private OpenMRSProgramEnrollmentService programEnrollmentService;
+    private OpenMRSPersonService personService;
 
     @Override
     public void createEncounter(DateTime encounterDatetime, String encounterType, String locationName, String patientUuid, String providerUuid, Map<String, String> observations) {
@@ -73,26 +75,11 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
                               String locationForMotechId, Map<String, String> identifiers) {
         Concept causeOfDeath = StringUtils.isNotEmpty(causeOfDeathUUID) ? conceptService.getConceptByUuid(null, causeOfDeathUUID) : null;
 
-        Person person = new Person();
-
-        Person.Name personName = new Person.Name();
-        personName.setGivenName(givenName);
-        personName.setMiddleName(middleName);
-        personName.setFamilyName(familyName);
-        person.setPreferredName(personName);
-        person.setNames(Collections.singletonList(personName));
-
-        Person.Address personAddress = new Person.Address(address1, address2, address3, address4, address5, address6,
-                cityVillage, stateProvince, country, postalCode, countyDistrict, latitude, longitude,
-                Objects.nonNull(startDate) ? startDate.toDate() : null, Objects.nonNull(endDate) ? endDate.toDate() : null);
-        person.setPreferredAddress(personAddress);
-        person.setAddresses(Collections.singletonList(personAddress));
-
-        person.setBirthdate(Objects.nonNull(birthdate) ? birthdate.toDate() : null);
-        person.setBirthdateEstimated(birthdateEstimated);
-        person.setDead(dead);
-        person.setCauseOfDeath(causeOfDeath);
-        person.setGender(gender);
+        Person person = preparePerson(givenName, middleName, familyName, address1, address2,
+                address3, address4, address5, address6, cityVillage, stateProvince,
+                country, postalCode, countyDistrict, latitude, longitude,
+                startDate, endDate, birthdate, birthdateEstimated,
+                gender, dead, causeOfDeath);
 
         Location location = StringUtils.isNotEmpty(locationForMotechId) ? getLocationByName(locationForMotechId) : getDefaultLocation();
 
@@ -100,6 +87,24 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
 
         Patient patient = new Patient(identifierList, person, motechId, location);
         patientService.createPatient(null, patient);
+    }
+
+    @Override
+    public void updatePerson(String personUuid, String givenName, String middleName, String familyName, String address1, String address2,
+                             String address3, String address4, String address5, String address6, String cityVillage, String stateProvince,
+                             String country, String postalCode, String countyDistrict, String latitude, String longitude,
+                             DateTime startDate, DateTime endDate, DateTime birthdate, Boolean birthdateEstimated,
+                             String gender, Boolean dead, String causeOfDeathUUID) {
+        Concept causeOfDeath = StringUtils.isNotEmpty(causeOfDeathUUID) ? conceptService.getConceptByUuid(null, causeOfDeathUUID) : null;
+
+        Person person = preparePerson(givenName, middleName, familyName, address1, address2,
+                address3, address4, address5, address6, cityVillage, stateProvince,
+                country, postalCode, countyDistrict, latitude, longitude,
+                startDate, endDate, birthdate, birthdateEstimated,
+                gender, dead, causeOfDeath);
+        person.setUuid(personUuid);
+
+        personService.updatePerson(null, person);
     }
 
     @Override
@@ -177,6 +182,35 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         return observationList;
     }
 
+    private Person preparePerson(String givenName, String middleName, String familyName, String address1, String address2,
+                                 String address3, String address4, String address5, String address6, String cityVillage, String stateProvince,
+                                 String country, String postalCode, String countyDistrict, String latitude, String longitude,
+                                 DateTime startDate, DateTime endDate, DateTime birthdate, Boolean birthdateEstimated,
+                                 String gender, Boolean dead, Concept causeOfDeath)  {
+        Person person = new Person();
+
+        Person.Name personName = new Person.Name();
+        personName.setGivenName(givenName);
+        personName.setMiddleName(middleName);
+        personName.setFamilyName(familyName);
+        person.setPreferredName(personName);
+        person.setNames(Collections.singletonList(personName));
+
+        Person.Address personAddress = new Person.Address(address1, address2, address3, address4, address5, address6,
+                cityVillage, stateProvince, country, postalCode, countyDistrict, latitude, longitude,
+                Objects.nonNull(startDate) ? startDate.toDate() : null, Objects.nonNull(endDate) ? endDate.toDate() : null);
+        person.setPreferredAddress(personAddress);
+        person.setAddresses(Collections.singletonList(personAddress));
+
+        person.setBirthdate(Objects.nonNull(birthdate) ? birthdate.toDate() : null);
+        person.setBirthdateEstimated(birthdateEstimated);
+        person.setDead(dead);
+        person.setCauseOfDeath(causeOfDeath);
+        person.setGender(gender);
+
+        return person;
+    }
+
     @Autowired
     public void setConceptService(OpenMRSConceptService conceptService) {
         this.conceptService = conceptService;
@@ -196,6 +230,9 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     public void setPatientService(OpenMRSPatientService patientService) {
         this.patientService = patientService;
     }
+
+    @Autowired
+    public void setPersonService(OpenMRSPersonService personService) { this.personService = personService; }
 
     @Autowired
     public void setProviderService(OpenMRSProviderService providerService) {
