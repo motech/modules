@@ -97,9 +97,7 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
 
             Person fetchedPerson = personResource.getPersonById(config, person.getUuid());
 
-            //Update is splited on separately update address, names and general information, because of
-            //personResource.updatePerson method not update preferred address and names, but it adds
-            //new address and names field.
+            //Updating address and name of person must be done separately.
             Person.Address addressForUpdate = fetchedPerson.getPreferredAddress();
             if(addressForUpdate != null) {
                 person.getPreferredAddress().setUuid(addressForUpdate.getUuid());
