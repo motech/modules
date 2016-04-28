@@ -16,6 +16,7 @@ import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
 import org.motechproject.openmrs19.tasks.builder.OpenMRSTaskDataProviderBuilder;
+import org.osgi.framework.BundleContext;
 import org.springframework.core.io.ResourceLoader;
 
 import java.util.ArrayList;
@@ -61,6 +62,9 @@ public class OpenMRSTaskDataProviderTest {
     private OpenMRSRelationshipService relationshipService;
 
     @Mock
+    private BundleContext bundleContext;
+
+    @Mock
     private ResourceLoader resourceLoader;
 
     @InjectMocks
@@ -72,7 +76,7 @@ public class OpenMRSTaskDataProviderTest {
     public void setUp() {
         when(configService.getConfigs()).thenReturn(new ArrayList<>());
         taskDataProvider = new OpenMRSTaskDataProvider(taskDataProviderBuilder, encounterService, patientService,
-                providerService, relationshipService);
+                providerService, relationshipService, bundleContext);
     }
 
     @Test

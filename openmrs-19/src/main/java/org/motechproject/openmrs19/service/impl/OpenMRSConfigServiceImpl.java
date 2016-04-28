@@ -5,9 +5,12 @@ import com.google.gson.JsonIOException;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.config.SettingsFacade;
+import org.motechproject.event.MotechEvent;
+import org.motechproject.event.listener.EventRelay;
 import org.motechproject.openmrs19.config.Config;
 import org.motechproject.openmrs19.config.Configs;
 import org.motechproject.openmrs19.service.OpenMRSConfigService;
+import org.motechproject.openmrs19.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -15,7 +18,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.motechproject.openmrs19.validation.ConfigValidator.validateConfig;
 
@@ -23,6 +28,8 @@ import static org.motechproject.openmrs19.validation.ConfigValidator.validateCon
 public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
 
     private static final String OPEN_MRS_CONFIGS_FILE_NAME = "openmrs-configs.json";
+
+    private EventRelay eventRelay;
 
     @Autowired
     private SettingsFacade settingsFacade;
@@ -92,5 +99,14 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
         String jsonText = gson.toJson(configs, Configs.class);
         ByteArrayResource resource = new ByteArrayResource(jsonText.getBytes());
         settingsFacade.saveRawConfig(OPEN_MRS_CONFIGS_FILE_NAME, resource);
+
+        Map<String, Object> parameters = new HashMap<>();
+        eventRelay.sendEventMessage(new MotechEvent(Constants.CONFIG_CHANGE_EVENT, parameters));
+    }
+
+
+    @Autowired
+    public void setEventRelay(EventRelay eventRelay) {
+        this.eventRelay = eventRelay;
     }
 }

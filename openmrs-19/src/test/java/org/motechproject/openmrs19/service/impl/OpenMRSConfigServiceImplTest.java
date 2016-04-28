@@ -5,14 +5,19 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.motechproject.config.SettingsFacade;
+import org.motechproject.event.MotechEvent;
+import org.motechproject.event.listener.EventRelay;
 import org.motechproject.openmrs19.config.Config;
 import org.motechproject.openmrs19.exception.config.ConfigurationAlreadyExistsException;
 import org.motechproject.openmrs19.exception.config.ConfigurationNotFoundException;
 import org.motechproject.openmrs19.config.ConfigDummyData;
+import org.motechproject.openmrs19.util.Constants;
 import org.springframework.core.io.Resource;
 
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -21,10 +26,7 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class OpenMRSConfigServiceImplTest {
@@ -42,6 +44,9 @@ public class OpenMRSConfigServiceImplTest {
     @Mock
     private SettingsFacade settingsFacade;
 
+    @Mock
+    private EventRelay eventRelay;
+
     @InjectMocks
     private OpenMRSConfigServiceImpl configService;
 
@@ -49,6 +54,9 @@ public class OpenMRSConfigServiceImplTest {
     public void setUp() throws Exception {
         configService = new OpenMRSConfigServiceImpl();
         initMocks(this);
+
+        doNothing().when(eventRelay).sendEventMessage(new MotechEvent(Constants.CONFIG_CHANGE_EVENT, new HashMap<>()));
+        configService.setEventRelay(eventRelay);
     }
 
     @Test
