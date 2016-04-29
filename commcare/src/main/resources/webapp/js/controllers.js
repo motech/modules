@@ -376,8 +376,7 @@
         $scope.saveAllowed = function() {
             return $scope.validateConfig()
                 && $scope.validateConfigName()
-                && $scope.validateUrlAndDomain()
-                && $scope.configOutdated;
+                && $scope.validateUrlAndDomain();
         };
 
         $scope.syncConfig = function() {

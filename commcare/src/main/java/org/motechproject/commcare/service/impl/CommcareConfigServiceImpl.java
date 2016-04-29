@@ -227,6 +227,7 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
     private Config createTemplate() {
         Config config = new Config();
         config.setName(getProperty(CONFIG_NAME));
+        config.setSaved(false);
 
         AccountConfig accountConfig = new AccountConfig();
         accountConfig.setBaseUrl(getProperty(CONFIG_BASE_URL));

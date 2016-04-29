@@ -23,6 +23,7 @@ public class Config {
     private boolean forwardForms;
     private boolean forwardStubs;
     private boolean forwardSchema;
+    private boolean saved;
 
     public String getEventStrategy() {
         return eventStrategy;
@@ -78,6 +79,14 @@ public class Config {
 
     public void setAccountConfig(AccountConfig accountConfig) {
         this.accountConfig = accountConfig;
+    }
+
+    public void setSaved(boolean saved) {
+        this.saved = saved;
+    }
+
+    public boolean isSaved() {
+        return this.saved;
     }
 
     @JsonIgnore
