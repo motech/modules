@@ -6,7 +6,7 @@ $scope.backToEntityList = function() {
     window.location.replace('#/messageCampaign/admin');
 };
 
-if ($routeParams.instanceId !== undefined) {
+if ($stateParams.instanceId !== undefined) {
     $scope.unselectInstance = function() {
         cronAttached = false;
         window.location.replace('#/messageCampaign/campaigns');
