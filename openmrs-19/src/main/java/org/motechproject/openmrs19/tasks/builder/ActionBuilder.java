@@ -24,6 +24,10 @@ import static org.motechproject.tasks.domain.mds.ParameterType.MAP;
  */
 public class ActionBuilder {
 
+    private static final String CREATE_ENCOUNTER = "Create Encounter";
+    private static final String CREATE_PATIENT = "Create Patient";
+    private static final String UPDATE_PATIENT = "Update Patient";
+
     private OpenMRSConfigService configService;
 
     public ActionBuilder(OpenMRSConfigService configService) {
@@ -60,7 +64,7 @@ public class ActionBuilder {
         actionParameters.add(prepareParameter(Keys.OBSERVATION, DisplayNames.OBSERVATION, MAP, false, order));
 
         return new ActionEventRequestBuilder()
-                .setDisplayName(String.format("Create Encounter [%s]", configName))
+                .setDisplayName(getDisplayName(CREATE_ENCOUNTER, configName))
                 .setServiceInterface("org.motechproject.openmrs19.tasks.OpenMRSActionProxyService")
                 .setServiceMethod("createEncounter")
                 .setActionParameters(actionParameters)
@@ -80,7 +84,7 @@ public class ActionBuilder {
         parameters.add(prepareParameter(Keys.IDENTIFIERS, DisplayNames.IDENTIFIERS, MAP, false, order));
 
         return new ActionEventRequestBuilder()
-                .setDisplayName(String.format("Create Patient [%s]", configName))
+                .setDisplayName(getDisplayName(CREATE_PATIENT, configName))
                 .setServiceInterface("org.motechproject.openmrs19.tasks.OpenMRSActionProxyService")
                 .setServiceMethod("createPatient")
                 .setActionParameters(parameters)
@@ -96,7 +100,7 @@ public class ActionBuilder {
         parameters.addAll(prepareCommonParameters(order));
 
         return new ActionEventRequestBuilder()
-                .setDisplayName(String.format("Update Patient [%s]", configName))
+                .setDisplayName(getDisplayName(UPDATE_PATIENT, configName))
                 .setServiceInterface("org.motechproject.openmrs19.tasks.OpenMRSActionProxyService")
                 .setServiceMethod("updatePerson")
                 .setActionParameters(parameters)
@@ -163,5 +167,9 @@ public class ActionBuilder {
                 .setDisplayName(displayName)
                 .setRequired(required)
                 .setOrder(order);
+    }
+
+    private String getDisplayName(String actionName, String configName) {
+        return String.format("%s [%s]", actionName, configName);
     }
 }
