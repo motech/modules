@@ -19,7 +19,7 @@ import java.util.List;
 
 import static org.motechproject.openmrs19.validation.ConfigValidator.validateConfig;
 
-@Service
+@Service("configService")
 public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
 
     private static final String OPEN_MRS_CONFIGS_FILE_NAME = "openmrs-configs.json";
@@ -32,6 +32,24 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
     @PostConstruct
     public void postConstruct() {
         loadConfigs();
+    }
+
+    @Override
+    public void deleteAllConfigs() {
+        configs.getConfigs().clear();
+        configs.setDefaultConfigName(null);
+        updateConfigs();
+    }
+
+    @Override
+    public void saveAllConfigs(Configs configs) {
+        List<Config> allConfigs = configs.getConfigs();
+        if (configs.getByName(configs.getDefaultConfigName()) != null) {
+            this.configs.setDefaultConfigName(configs.getDefaultConfigName());
+        }
+        for (int i=0; i<configs.getConfigs().size(); i++) {
+            addConfig(allConfigs.get(i));
+        }
     }
 
     @Override
@@ -61,18 +79,18 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
     }
 
     @Override
-    public List<Config> getConfigs() {
-        return configs.getConfigs();
+    public Configs getConfigs() {
+        return configs;
     }
 
     @Override
     public Config getConfigByName(String name) {
-        return StringUtils.isEmpty(name) ? configs.getDefault() : configs.getByName(name);
+        return StringUtils.isEmpty(name) ? configs.getByName(configs.getDefaultConfigName()) : configs.getByName(name);
     }
 
     @Override
     public Config getDefaultConfig() {
-        return configs.getDefault();
+        return configs.getByName(configs.getDefaultConfigName());
     }
 
     private synchronized void loadConfigs() {
