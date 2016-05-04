@@ -32,6 +32,11 @@ Provides basic content storage and retrieval
 
 Integrates the MOTECH platform with CommCareHQ, an open-source platform to help manage community health workers
 
+:std:ref:`Care Services Discovery (CSD) <csd-module>`
+-----------------------------------------------------
+
+Consumes the `IHE Care Services Discovery Profile <http://wiki.ihe.net/index.php/Care_Services_Discovery>`_ from a CSD registry such as `OpenInfoMan <https://github.com/openhie/openinfoman>`_, representing the information natively in MOTECH within MDS.
+
 :std:ref:`Data Services <data-services-module>`
 -----------------------------------------------
 
@@ -62,6 +67,11 @@ Supports transliteration of English strings to Hindi using ITRANS encoding
 
 Provides an implementation of the PubSubHubbub Hub spec; exposes an API so other modules can act as publisher and make contents available to it for distribution
 
+:std:ref:`IVR <ivr-module>`
+---------------------------
+
+Integrating the MOTECH platform with a Interactive Voice Response (IVR) providers thus enabling support for voice/audio dialogs
+
 :std:ref:`Message Campaign <message-campaign-module>`
 -----------------------------------------------------
 
@@ -91,11 +101,6 @@ Enrolls users for alerts based on complex scheduling rules
 ---------------------------------------
 
 Publishes events on a schedule, using the open source Quartz engine.
-
-:std:ref:`IVR <ivr-module>`
----------------------------
-
-Integrating the MOTECH platform with a Interactive Voice Response (IVR) providers thus enabling support for voice/audio dialogs
 
 :std:ref:`SMS <sms-module>`
 ---------------------------
