@@ -1,8 +1,11 @@
 package org.motechproject.openmrs19.resource;
 
 import org.motechproject.openmrs19.config.Config;
+import org.motechproject.openmrs19.domain.Identifier;
 import org.motechproject.openmrs19.domain.Patient;
 import org.motechproject.openmrs19.domain.PatientListResult;
+
+import java.util.List;
 
 /**
  * Interface for patients management.
@@ -48,6 +51,15 @@ public interface PatientResource {
     String getMotechPatientIdentifierUuid(Config config);
 
     /**
+     * Returns the patient's identifier list.
+     *
+     * @param config  the configuration to be used while performing this action
+     * @param patientUuid the UUID of the patient
+     * @return  the identifier list of the patient
+     */
+    List<Identifier> getPatientIdentifierList(Config config, String patientUuid);
+
+    /**
      * Returns the patient identifier type name for the given uuid only if the identifier type is supported by MOTECH.
      * This method is using cache while retrieving data from an OpenMRS server. The given {@code config} will be used
      * while performing this action.
@@ -86,4 +98,14 @@ public interface PatientResource {
      * @param newMotechId  the new MOTECH Id
      */
     void updatePatientMotechId(Config config, String patientUuid, String newMotechId);
+
+    /**
+     * Updates the identifier for the patient with given UUID. The given {@code config} will be used while performing
+     * this action.
+     *
+     * @param config  the configuration to be used while performing this action
+     * @param patientUuid  the UUID of the patient
+     * @param updatedIdentifier  the updated patient identifier
+     */
+    void updatePatientIdentifier(Config config, String patientUuid, Identifier updatedIdentifier);
 }

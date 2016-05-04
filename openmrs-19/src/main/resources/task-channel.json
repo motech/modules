@@ -182,6 +182,24 @@
           "required" : false
         }
       ]
+    },
+    {
+      "displayName": "openMRS.updatePatientIdentifiers",
+      "serviceInterface": "org.motechproject.openmrs19.tasks.OpenMRSActionProxyService",
+      "serviceMethod": "updatePatientIdentifiers",
+      "actionParameters": [
+        {
+          "key": "patientUuid",
+          "displayName": "openMRS.patient.uuid",
+          "required": true
+        },
+        {
+          "key": "identifiers",
+          "displayName": "openMRS.patient.identifiers",
+          "type" : "MAP",
+          "required" : false
+        }
+      ]
     }
   ]
 }

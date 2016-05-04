@@ -45,6 +45,16 @@ public interface OpenMRSPatientService {
     Patient updatePatient(String configName, Patient patient);
 
     /**
+     * Updates the patient's identifier with the information stored in the given {@code patient}. Configuration with the given
+     * {@code configName} will be used while performing this action.
+     *
+     * @param configName  the name of the configuration
+     * @param patient  the patient to be used as an update source
+     * @return the updated patient
+     */
+    Patient updatePatientIdentifiers(String configName, Patient patient);
+
+    /**
      * Returns the patient with the given {@code uuid}. Configuration with the given {@code configName} will be used
      * while performing this action.
      *

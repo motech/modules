@@ -104,6 +104,11 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
     }
 
     @Override
+    public Patient updatePatientIdentifiers(String configName, Patient patient) {
+        return updatePatientIdentifiers(configService.getConfigByName(configName), patient);
+    }
+
+    @Override
     public Patient getPatientByUuid(String configName, String uuid) {
         return getPatientByUuid(configService.getConfigByName(configName), uuid);
     }
@@ -243,6 +248,40 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         }
 
         return updatedPatient;
+    }
+
+    private Patient updatePatientIdentifiers(Config config, Patient patient) {
+        Validate.notNull(patient, "Patient cannot be null");
+        Validate.notEmpty(patient.getUuid(), "Patient Id may not be empty");
+
+        List<Identifier> identifiersList = patientResource.getPatientIdentifierList(config, patient.getUuid());
+        Patient updatedPatient;
+        try {
+            //Patient Identifiers have to be update separately.
+            updatePatientIdentifiers(config, patient, identifiersList);
+            updatedPatient = getPatientByUuid(config, patient.getUuid());
+            eventRelay.sendEventMessage(new MotechEvent(EventKeys.UPDATED_PATIENT_SUBJECT, EventHelper.patientParameters(updatedPatient)));
+        } catch (HttpClientErrorException e) {
+            throw new OpenMRSException("Failed to update OpenMRS patient with id: " + patient.getUuid(), e);
+        }
+        return updatedPatient;
+    }
+
+    private void updatePatientIdentifiers(Config config, Patient patient, List<Identifier> fetchedIdentifierList){
+        String fetchedIdentifierDisplay, newIdentifierName;
+
+        for(Identifier fetchedIdentifier : fetchedIdentifierList) {
+            for(Identifier newIdentifier : patient.getIdentifiers()) {
+                //Display field in indetifierType on the OpenMRS server contains the name. Name field there is empty.
+                fetchedIdentifierDisplay = fetchedIdentifier.getIdentifierType().getDisplay();
+                newIdentifierName = newIdentifier.getIdentifierType().getName();
+
+                if(newIdentifierName.equals(fetchedIdentifierDisplay)){
+                    fetchedIdentifier.setIdentifier(newIdentifier.getIdentifier());
+                    patientResource.updatePatientIdentifier(config, patient.getUuid(), fetchedIdentifier);
+                }
+            }
+        }
     }
 
     private void validatePatientBeforeSave(Patient patient) {

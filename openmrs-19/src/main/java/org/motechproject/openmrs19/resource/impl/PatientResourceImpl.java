@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestOperations;
 
+import java.util.List;
+
 @Component
 public class PatientResourceImpl extends BaseResource implements PatientResource {
 
@@ -114,6 +116,11 @@ public class PatientResourceImpl extends BaseResource implements PatientResource
         return identifierTypeUuid;
     }
 
+    public List<Identifier> getPatientIdentifierList(Config config, String patientUuid) {
+        String responseJson = getJson(config, "/patient/{patientUuid}/identifier", patientUuid);
+        return ((IdentifierListResult) JsonUtils.readJson(responseJson, IdentifierListResult.class)).getResults();
+    }
+
     @Override
     public void deletePatient(Config config, String uuid) {
         delete(config, "/patient/{uuid}?purge", uuid);
@@ -127,6 +134,13 @@ public class PatientResourceImpl extends BaseResource implements PatientResource
         String requestJson = buildGson().toJson(patientIdentifier);
         postForJson(config, requestJson, "/patient/{patientUuid}/identifier/{identifierUuid}", patientUuid,
                 patientIdentifier.getUuid());
+    }
+
+    @Override
+    public void updatePatientIdentifier(Config config, String patientUuid, Identifier updatedIdentifier) {
+        String requestJson = buildGson().toJson(updatedIdentifier);
+        postForJson(config, requestJson, "/patient/{patientUuid}/identifier/{identifierUuid}", patientUuid,
+                updatedIdentifier.getUuid());
     }
 
     private PatientIdentifierListResult getAllPatientIdentifierTypes(Config config) {

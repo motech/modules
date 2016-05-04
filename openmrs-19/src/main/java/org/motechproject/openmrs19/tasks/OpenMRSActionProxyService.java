@@ -64,4 +64,11 @@ public interface OpenMRSActionProxyService {
                        DateTime startDate, DateTime endDate, DateTime birthdate, Boolean birthdateEstimated,
                        String gender, Boolean dead, String causeOfDeathUUID, String motechId,
                        String locationForMotechId, Map<String, String> identifiers);
+    /**
+      * Updates a patient with the given {@patientUuid}
+      *
+      * @param patientUuid the patient uuid
+      * @param identifiers the identifiers to be stored to patient
+    */
+    void updatePatientIdentifiers(String patientUuid, Map<String, String> identifiers);
 }

@@ -98,6 +98,17 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         patientService.createPatient(null, patient);
     }
 
+    @Override
+    public void updatePatientIdentifiers(String patientUuid, Map<String, String> identifiers) {
+        Patient patient = new Patient();
+
+        List<Identifier> identifierList = convertIdentifierMapToList(identifiers);
+        patient.setIdentifiers(identifierList);
+        patient.setUuid(patientUuid);
+
+        patientService.updatePatientIdentifiers(null, patient);
+    }
+
     private Location getDefaultLocation() {
         return getLocationByName(DEFAULT_LOCATION_NAME);
     }

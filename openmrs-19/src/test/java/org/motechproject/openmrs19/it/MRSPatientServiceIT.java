@@ -9,6 +9,8 @@ import org.motechproject.event.listener.EventListener;
 import org.motechproject.event.listener.EventListenerRegistryService;
 import org.motechproject.openmrs19.domain.Concept;
 import org.motechproject.openmrs19.domain.ConceptName;
+import org.motechproject.openmrs19.domain.Identifier;
+import org.motechproject.openmrs19.domain.IdentifierType;
 import org.motechproject.openmrs19.domain.Location;
 import org.motechproject.openmrs19.domain.Patient;
 import org.motechproject.openmrs19.domain.Person;
@@ -28,6 +30,7 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -99,10 +102,10 @@ public class MRSPatientServiceIT extends BasePaxIT {
         final String newAddress = "Changed Address";
         final String newMotechId = "604";
 
-        Person.Name name = patient.getPerson().getNames().get(0);
+        Person.Name name = patient.getPerson().getPreferredName();
         name.setGivenName(newFirstName);
 
-        Person.Address address = patient.getPerson().getAddresses().get(0);
+        Person.Address address = patient.getPerson().getPreferredAddress();
         address.setAddress1(newAddress);
 
         patient.setMotechId(newMotechId);
@@ -123,6 +126,25 @@ public class MRSPatientServiceIT extends BasePaxIT {
         assertFalse(mrsListener.deceased);
         assertTrue(mrsListener.updated);
         assertFalse(mrsListener.deleted);
+    }
+
+    @Test
+    public void shouldUpdatePatientIdentifiers() throws InterruptedException {
+
+        Patient testPatient = patientAdapter.getPatientByMotechId(DEFAULT_CONFIG_NAME, patient.getMotechId());
+
+        String newOldIdentificationNumber = "612";
+        testPatient.getIdentifiers().get(0).setIdentifier(newOldIdentificationNumber);
+
+        synchronized (lock) {
+            patientAdapter.updatePatientIdentifiers(DEFAULT_CONFIG_NAME, testPatient);
+
+            lock.wait(60000);
+        }
+        Patient updated = patientAdapter.getPatientByUuid(DEFAULT_CONFIG_NAME, testPatient.getUuid());
+
+        assertEquals("Old Identification Number", updated.getIdentifiers().get(0).getIdentifierType().getDisplay());
+        assertEquals(newOldIdentificationNumber, updated.getIdentifiers().get(0).getIdentifier());
     }
 
     @Test
@@ -212,7 +234,7 @@ public class MRSPatientServiceIT extends BasePaxIT {
 
         assertNotNull(location);
 
-        return new Patient(person, "602", location);
+        return new Patient(prepareIdentifier(), person, "602", location);
     }
 
     private Patient savePatient(Patient patient) throws InterruptedException {
@@ -249,6 +271,18 @@ public class MRSPatientServiceIT extends BasePaxIT {
 
         String uuid =  conceptAdapter.createConcept(DEFAULT_CONFIG_NAME, concept).getUuid();
         causeOfDeath = conceptAdapter.getConceptByUuid(DEFAULT_CONFIG_NAME, uuid);
+    }
+
+    private List<Identifier> prepareIdentifier() {
+        List<Identifier> testList = new ArrayList<>();
+
+        Identifier testIdentifier1 = new Identifier("603", new IdentifierType("Old Identification Number"));
+        testIdentifier1.setUuid("2222");
+        Location location = locationAdapter.createLocation(DEFAULT_CONFIG_NAME, new Location("FooName", "FooCountry", "FooRegion", "FooCountryDistrict", "FooStateProvince"));
+        testIdentifier1.setLocation(location);
+        testList.add(testIdentifier1);
+
+        return testList;
     }
 
     public class MrsListener implements EventListener {
