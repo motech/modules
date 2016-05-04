@@ -31,6 +31,12 @@
           "key": "providerUuid",
           "displayName": "openMRS.provider.uuid",
           "required": true
+        },
+        {
+          "key": "observation",
+          "displayName": "openMRS.encounter.observation",
+          "type" : "MAP",
+          "required" : false
         }
       ]
     },
@@ -55,9 +61,81 @@
           "required" : true
         },
         {
-          "key": "address",
-          "displayName": "openMRS.person.address",
+          "key": "address1",
+          "displayName": "openMRS.address.address1",
           "required" : false
+        },
+        {
+          "key": "address2",
+          "displayName": "openMRS.address.address2",
+          "required": false
+        },
+        {
+          "key": "address3",
+          "displayName": "openMRS.address.address3",
+          "required": false
+        },
+        {
+          "key": "address4",
+          "displayName": "openMRS.address.address4",
+          "required": false
+        },
+        {
+          "key": "address5",
+          "displayName": "openMRS.address.address5",
+          "required": false
+        },
+        {
+          "key": "address6",
+          "displayName": "openMRS.address.address6",
+          "required": false
+        },
+        {
+          "key": "cityVillage",
+          "displayName": "openMRS.address.cityVillage",
+          "required": false
+        },
+        {
+          "key": "stateProvince",
+          "displayName": "openMRS.address.stateProvince",
+          "required": false
+        },
+        {
+          "key": "country",
+          "displayName": "openMRS.address.country",
+          "required": false
+        },
+        {
+          "key": "postalCode",
+          "displayName": "openMRS.address.postalCode",
+          "required": false
+        },
+        {
+          "key": "countryDistrict",
+          "displayName": "openMRS.address.countyDistrict",
+          "required": false
+        },
+        {
+          "key": "latitude",
+          "displayName": "openMRS.address.latitude",
+          "required": false
+        },
+        {
+          "key": "longitude",
+          "displayName": "openMRS.address.longitude",
+          "required": false
+        },
+        {
+          "key": "startDate",
+          "displayName": "openMRS.address.startDate",
+          "type": "DATE",
+          "required": false
+        },
+        {
+          "key": "endDate",
+          "displayName": "openMRS.address.endDate",
+          "type": "DATE",
+          "required": false
         },
         {
           "key": "birthdate",
@@ -104,6 +182,140 @@
           "required" : false
         }
       ]
+    },
+    {
+      "displayName": "openMRS.updatePerson",
+      "serviceInterface": "org.motechproject.openmrs19.tasks.OpenMRSActionProxyService",
+      "serviceMethod": "updatePerson",
+      "actionParameters": [
+        {
+          "key": "personUuid",
+          "displayName": "openMRS.person.uuid",
+          "required": true
+        },
+        {
+          "key": "givenName",
+          "displayName": "openMRS.person.givenName",
+          "required" : false
+        },
+        {
+          "key": "middleName",
+          "displayName": "openMRS.person.middleName",
+          "required" : false
+        },
+        {
+          "key": "familyName",
+          "displayName": "openMRS.person.familyName",
+          "required" : false
+        },
+        {
+          "key": "address1",
+          "displayName": "openMRS.address.address1",
+          "required" : false
+        },
+        {
+          "key": "address2",
+          "displayName": "openMRS.address.address2",
+          "required": false
+        },
+        {
+          "key": "address3",
+          "displayName": "openMRS.address.address3",
+          "required": false
+        },
+        {
+          "key": "address4",
+          "displayName": "openMRS.address.address4",
+          "required": false
+        },
+        {
+          "key": "address5",
+          "displayName": "openMRS.address.address5",
+          "required": false
+        },
+        {
+          "key": "address6",
+          "displayName": "openMRS.address.address6",
+          "required": false
+        },
+        {
+          "key": "cityVillage",
+          "displayName": "openMRS.address.cityVillage",
+          "required": false
+        },
+        {
+          "key": "stateProvince",
+          "displayName": "openMRS.address.stateProvince",
+          "required": false
+        },
+        {
+          "key": "country",
+          "displayName": "openMRS.address.country",
+          "required": false
+        },
+        {
+          "key": "postalCode",
+          "displayName": "openMRS.address.postalCode",
+          "required": false
+        },
+        {
+          "key": "countryDistrict",
+          "displayName": "openMRS.address.countyDistrict",
+          "required": false
+        },
+        {
+          "key": "latitude",
+          "displayName": "openMRS.address.latitude",
+          "required": false
+        },
+        {
+          "key": "longitude",
+          "displayName": "openMRS.address.longitude",
+          "required": false
+        },
+        {
+          "key": "startDate",
+          "displayName": "openMRS.address.startDate",
+          "type": "DATE",
+          "required": false
+        },
+        {
+          "key": "endDate",
+          "displayName": "openMRS.address.endDate",
+          "type": "DATE",
+          "required": false
+        },
+        {
+          "key": "birthdate",
+          "displayName": "openMRS.person.birthdate",
+          "type" : "DATE",
+          "required" : false
+        },
+        {
+          "key": "birthdateEstimated",
+          "displayName": "openMRS.person.birthdateEstimated",
+          "type" : "BOOLEAN",
+          "required" : false
+        },
+        {
+          "key": "gender",
+          "displayName": "openMRS.person.gender",
+          "required" : false
+        },
+        {
+          "key": "dead",
+          "displayName": "openMRS.person.dead",
+          "type" : "BOOLEAN",
+          "required" : false
+        },
+        {
+          "key": "causeOfDeathUUID",
+          "displayName": "openMRS.person.causeOfDeath.uuid",
+          "required": false
+        }
+      ]
+
     }
+
   ]
 }

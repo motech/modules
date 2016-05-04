@@ -99,10 +99,10 @@ public class MRSPatientServiceIT extends BasePaxIT {
         final String newAddress = "Changed Address";
         final String newMotechId = "604";
 
-        Person.Name name = patient.getPerson().getNames().get(0);
+        Person.Name name = patient.getPerson().getPreferredName();
         name.setGivenName(newFirstName);
 
-        Person.Address address = patient.getPerson().getAddresses().get(0);
+        Person.Address address = patient.getPerson().getPreferredAddress();
         address.setAddress1(newAddress);
 
         patient.setMotechId(newMotechId);

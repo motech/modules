@@ -4,7 +4,7 @@
     /* App Module */
 
     var cmslite = angular.module('cmslite', ['motech-dashboard', 'cmslite.controllers', 'cmslite.services', 'cmslite.directives',
-                                 'ngCookies', 'motech-widgets']);
+                                 'ngCookies', 'motech-widgets', 'uiServices']);
     $.ajax({
         url: '../cmsliteapi/resource/all/languages',
         success:  function(data) {
@@ -17,14 +17,27 @@
         $rootScope.usedLanguages = usedLanguages;
     });
 
-    cmslite.config(['$routeProvider',
-        function ($routeProvider) {
-            $routeProvider.when('/cmslite/resources',
-                {
-                    templateUrl: '../cmsliteapi/resources/partials/resources.html',
-                    controller: 'CmsResourceCtrl'
+    cmslite.config(['$stateProvider', function ($stateProvider) {
+        $stateProvider
+            .state('cmslite', {
+                url: "/cmslite",
+                abstract: true,
+                views: {
+                    "moduleToLoad": {
+                        templateUrl: "../cmsliteapi/resources/index.html"
+                    }
                 }
-            );
+            })
+            .state('cmslite.resources', {
+                url: '/resources',
+                parent: 'cmslite',
+                views: {
+                    'cmsliteView': {
+                        templateUrl: '../cmsliteapi/resources/partials/resources.html',
+                        controller: 'CmsResourceCtrl'
+                    }
+                }
+            });
         }
     ]);
 }());

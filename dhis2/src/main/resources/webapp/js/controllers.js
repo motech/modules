@@ -72,9 +72,9 @@
             };
         });
 
-    controllers.controller('Dhis2ProgramsCtrl', function ($scope, Programs) {
+    controllers.controller('Dhis2ProgramsCtrl', function ($scope, Programs, LoadingModal) {
         $scope.formError = false;
-        blockUI();
+        LoadingModal.open();
 
         $scope.programs = Programs.query(function () {
             $scope.formError = false;
@@ -90,10 +90,10 @@
 
             });
 
-            unblockUI();
+            LoadingModal.close();
         }, function () {
             $scope.formError = true;
-            unblockUI();
+            LoadingModal.close();
         });
         innerLayout({});
 
@@ -113,42 +113,42 @@
         };
     });
 
-    controllers.controller('Dhis2TrackedEntityAttributesCtrl', function($scope, TrackedEntityAttributes) {
-        blockUI();
+    controllers.controller('Dhis2TrackedEntityAttributesCtrl', function($scope, TrackedEntityAttributes, LoadingModal) {
+        LoadingModal.open();
         $scope.trackedEntityAttributes = TrackedEntityAttributes.query(function() {
-            unblockUI();
+            LoadingModal.close();
         }, function () {
-           unblockUI();
+           LoadingModal.close();
         });
         innerLayout({});
     });
 
-    controllers.controller('Dhis2TrackedEntitiesCtrl', function($scope, TrackedEntities) {
-        blockUI();
+    controllers.controller('Dhis2TrackedEntitiesCtrl', function($scope, TrackedEntitie, LoadingModal) {
+        LoadingModal.open();
         $scope.trackedEntities = TrackedEntities.query(function() {
-            unblockUI();
+            LoadingModal.close();
         }, function () {
-            unblockUI();
+            LoadingModal.close();
         });
         innerLayout({});
     });
 
-    controllers.controller('Dhis2OrgUnitsCtrl', function($scope, OrgUnits) {
-        blockUI();
+    controllers.controller('Dhis2OrgUnitsCtrl', function($scope, OrgUnits, LoadingModal) {
+        LoadingModal.open();
         $scope.orgUnits = OrgUnits.query(function() {
-            unblockUI();
+            LoadingModal.close();
         }, function () {
-            unblockUI();
+            LoadingModal.close();
         });
         innerLayout({});
     });
 
-    controllers.controller('Dhis2DataElementsCtrl', function($scope, DataElements) {
-        blockUI();
+    controllers.controller('Dhis2DataElementsCtrl', function($scope, DataElements, LoadingModal) {
+        LoadingModal.open();
         $scope.dataElements = DataElements.query(function() {
-            unblockUI();
+            LoadingModal.close();
         }, function () {
-            unblockUI();
+            LoadingModal.close();
         });
         innerLayout({});
     });

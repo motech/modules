@@ -1,8 +1,8 @@
 <div id="inner-center" class="mtraining inner-center ui-layout-center ui-layout-pane ui-layout-pane-center">
     <div class="header-footer-breadcrumb">
         <ul class="breadcrumb" role="navigation">
-            <li><a role="menu" href=".">{{msg('server.home')}}</a></li>
-            <li><a role="menu" href="#/mtraining/treeView">{{msg('mtraining')}}</a></li>
+            <li><a role="menu" ui-sref="home">{{msg('server.home')}}</a></li>
+            <li><a role="menu" ui-sref="mtraining.treeView">{{msg('mtraining')}}</a></li>
             <li ng-show="selectedTabState.selectedTab === 'treeView'" ng-class="{'active': selectedTabState.selectedTab === 'treeView'}">{{msg('mtraining.treeView')}}</li>
         </ul>
     </div>
@@ -11,7 +11,7 @@
             <li ng-class="{'active': selectedTabState.selectedTab === tab}"
                 ng-click="selectedTabState.selectedTab = tab"
                 ng-repeat="tab in MTRAINING_AVAILABLE_TABS">
-                <a href="#/mtraining/{{tab}}">
+                <a ui-sref="mtraining.{{tab}}">
                     {{msg('mtraining.' + tab)}}
                 </a>
             </li>

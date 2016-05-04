@@ -53,7 +53,7 @@ public class PersonResourceImpl extends BaseResource implements PersonResource {
 
     @Override
     public Person updatePerson(Config config, Person person) {
-        String requestJson = buildGsonWithConceptAdapter().toJson(person);
+        String requestJson = buildGsonWithUpdatePersonAdapter().toJson(person);
         String responseJson = postForJson(config, requestJson, "/person/{uuid}?v=full", person.getUuid());
         return (Person) JsonUtils.readJson(responseJson, Person.class);
     }
@@ -83,6 +83,12 @@ public class PersonResourceImpl extends BaseResource implements PersonResource {
                 .create();
     }
 
+    private Gson buildGsonWithUpdatePersonAdapter() {
+        return new GsonBuilder()
+                .registerTypeAdapter(Person.class, new Person.PersonUpdateSerializer())
+                .create();
+    }
+
     private Gson buildGsonWithAttributeTypeAdapter() {
         return new GsonBuilder()
                 .registerTypeAdapter(Attribute.AttributeType.class, new Attribute.AttributeTypeSerializer())
@@ -92,6 +98,7 @@ public class PersonResourceImpl extends BaseResource implements PersonResource {
     private Gson buildGson() {
         return new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
                 .create();
     }
 }

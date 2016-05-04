@@ -356,6 +356,7 @@
                             label: 'Case Name',
                             name: 'caseName',
                             index: 'caseName',
+                            sortable: false,
                             width: '200'
                         },
                         {
