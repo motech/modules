@@ -267,7 +267,7 @@
 
             if ($scope.newConfig || $scope.configOutdated) {
                 if (!$scope.rollback) {
-                    ModalFactory.confirm({
+                    ModalFactory.showConfirm({
                         title: $scope.msg('commcare.header.confirm'),
                         message: $scope.msg('commcare.confirm.discardChanges'),
                         type: 'type-warning',
@@ -348,7 +348,7 @@
 
         $scope.deleteConfig = function() {
             if (!$scope.newConfig) {
-                ModalFactory.confirm({
+                ModalFactory.showConfirm({
                     title: $scope.msg('commcare.header.confirm'),
                     message: $scope.msg('commcare.confirm.deleteConfig'),
                     type: 'type-warning',

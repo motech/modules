@@ -3,11 +3,38 @@
 
     /* App Module */
 
-    angular.module('csd', ['motech-dashboard', 'csd.controllers', 'csd.directives', 'ngCookies', 'ui.bootstrap', 'uiServices']).config(
-    ['$routeProvider',
-        function ($routeProvider) {
-            $routeProvider.
-                when('/csd/csd', {templateUrl: '../csd/resources/partials/csd.html', controller: 'CsdCtrl'}).
-                when('/csd/settings', {templateUrl: '../csd/resources/partials/settings.html', controller: 'CsdSettingsCtrl'});
-    }]);
+    var csd = angular.module('csd', ['motech-dashboard', 'csd.controllers', 'csd.directives', 'ngCookies', 'ui.bootstrap', 'uiServices']);
+
+        csd.config(['$stateProvider', function ($stateProvider) {
+            $stateProvider
+                .state('csd', {
+                    url: "/csd",
+                    abstract: true,
+                    views: {
+                        "moduleToLoad": {
+                            templateUrl: "../csd/resources/index.html"
+                        }
+                    }
+                })
+                .state('csd.dashboard', {
+                    url: '/dashboard',
+                    parent: 'csd',
+                    views: {
+                        'csdView': {
+                            templateUrl: '../csd/resources/partials/csd.html',
+                            controller: 'CsdCtrl'
+                        }
+                    }
+                })
+                .state('csd.settings', {
+                    url: '/settings',
+                    parent: 'csd',
+                    views: {
+                        'csdView': {
+                            templateUrl: '../csd/resources/partials/settings.html',
+                            controller: 'CsdSettingsCtrl'
+                        }
+                    }
+                });
+        }]);
 }());

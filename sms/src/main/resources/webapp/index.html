@@ -1,8 +1,8 @@
 <div id="inner-center" class="sms inner-center ui-layout-center ui-layout-pane ui-layout-pane-center">
     <div class="header-footer-breadcrumb">
         <ul class="breadcrumb" role="navigation">
-            <li><a role="menu" href=".">{{msg('server.home')}}</a></li>
-            <li><a role="menu" href="#/send">{{msg('motech-sms')}}</a></li>
+            <li><a role="menu" ui-sref="home">{{msg('server.home')}}</a></li>
+            <li><a role="menu" ui-sref="sms.send">{{msg('motech-sms')}}</a></li>
             <li ng-show="selectedTabState.selectedTab === 'send'" ng-class="{'active': selectedTabState.selectedTab === 'send'}">{{msg('sms.web.send.title')}}</li>
             <li ng-show="selectedTabState.selectedTab === 'log'" ng-class="{'active': selectedTabState.selectedTab === 'log'}">{{msg('sms.web.log.title')}}</li>
             <li ng-show="selectedTabState.selectedTab === 'settings'" ng-class="{'active': selectedTabState.selectedTab === 'settings'}">{{msg('sms.web.settings.title')}}</li>
@@ -12,8 +12,8 @@
         <ul id="content-tabs" class="nav nav-tabs">
             <li ng-class="{'active': selectedTabState.selectedTab === tab}"
                 ng-click="selectedTabState.selectedTab = tab"
-                ng-repeat="tab in AVAILABLE_TABS">
-                <a href="#/sms/{{tab}}">
+                ng-repeat="tab in SMS_AVAILABLE_TABS">
+                <a ui-sref="sms.{{tab}}">
                     {{msg('sms.web.' + tab + '.title')}}
                 </a>
             </li>

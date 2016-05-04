@@ -2,8 +2,8 @@
     <div id="inner-center" class="commcare inner-center ui-layout-center ui-layout-pane ui-layout-pane-center">
         <div class="header-footer-breadcrumb">
             <ul class="breadcrumb" role="navigation">
-                <li><a role="menu" href=".">{{msg('server.home')}}</a></li>
-                <li><a role="menu" href="#/settings">{{msg('commcare')}}</a></li>
+                <li><a role="menu" ui-sref="home">{{msg('server.home')}}</a></li>
+                <li><a role="menu" ui-sref="commcare.settings">{{msg('commcare')}}</a></li>
                 <li ng-show="selectedTabState.selectedTab === 'settings'" ng-class="{'active': selectedTabState.selectedTab === 'settings'}">{{msg('commcare.tab.settings')}}</li>
                 <li ng-show="selectedTabState.selectedTab === 'import'" ng-class="{'active': selectedTabState.selectedTab === 'import'}">{{msg('commcare.tab.import')}}</li>
                 <li ng-show="selectedTabState.selectedTab === 'forms'" ng-class="{'active': selectedTabState.selectedTab === 'forms'}">{{msg('commcare.tab.forms')}}</li>
@@ -12,16 +12,16 @@
         </div>
         <div class="header-footer">
             <ul id="content-tabs" class="nav nav-tabs">
-                <li ng-class="{'active': selectedTabState.selectedTab === 'settings'}" ng-click="selectedTabState.selectedTab = 'settings'"><a href="#/commcare/settings">{{msg('commcare.tab.settings')}}</a></li>
-                <li ng-class="{'active': selectedTabState.selectedTab === 'import'}" ng-click="selectedTabState.selectedTab = 'import'"><a href="#/commcare/import">{{msg('commcare.tab.import')}}</a></li>
-                <li ng-class="{'active': selectedTabState.selectedTab === 'forms'}" ng-click="selectedTabState.selectedTab = 'forms'"><a href="#/commcare/forms">{{msg('commcare.tab.forms')}}</a></li>
-                <li ng-class="{'active': selectedTabState.selectedTab === 'cases'}" ng-click="selectedTabState.selectedTab = 'cases'"><a href="#/commcare/cases">{{msg('commcare.tab.cases')}}</a></li>
+                <li ng-class="{'active': selectedTabState.selectedTab === 'settings'}" ng-click="selectedTabState.selectedTab = 'settings'"><a ui-sref="commcare.settings">{{msg('commcare.tab.settings')}}</a></li>
+                <li ng-class="{'active': selectedTabState.selectedTab === 'import'}" ng-click="selectedTabState.selectedTab = 'import'"><a ui-sref="commcare.import">{{msg('commcare.tab.import')}}</a></li>
+                <li ng-class="{'active': selectedTabState.selectedTab === 'forms'}" ng-click="selectedTabState.selectedTab = 'forms'"><a ui-sref="commcare.forms">{{msg('commcare.tab.forms')}}</a></li>
+                <li ng-class="{'active': selectedTabState.selectedTab === 'cases'}" ng-click="selectedTabState.selectedTab = 'cases'"><a ui-sref="commcare.cases">{{msg('commcare.tab.cases')}}</a></li>
             </ul>
         </div>
         <div class="ui-layout-content">
             <div class="tab-content" id="tab-content">
                 <div id="main-content" class="active">
-                    <div ng-view></div>
+                    <div ui-view="commcareView"></div>
                 </div>
             </div>
         </div>
