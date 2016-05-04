@@ -128,12 +128,18 @@ public class PatientResourceImpl extends BaseResource implements PatientResource
 
     @Override
     public void updatePatientMotechId(Config config, String patientUuid, String newMotechId) {
-        Identifier patientIdentifier = getPatientIdentifier(config, patientUuid);
-        patientIdentifier.setIdentifier(newMotechId);
+        List<Identifier> patientIdentifiers = getPatientIdentifierList(config, patientUuid);
 
-        String requestJson = buildGson().toJson(patientIdentifier);
-        postForJson(config, requestJson, "/patient/{patientUuid}/identifier/{identifierUuid}", patientUuid,
-                patientIdentifier.getUuid());
+        for (Identifier patientIdentifier : patientIdentifiers) {
+            if(patientIdentifier.getIdentifierType().getDisplay().equals("MOTECH Id")) {
+                patientIdentifier.setIdentifier(newMotechId);
+
+                String requestJson = buildGson().toJson(patientIdentifier);
+                postForJson(config, requestJson, "/patient/{patientUuid}/identifier/{identifierUuid}", patientUuid,
+                        patientIdentifier.getUuid());
+                break;
+            }
+        }
     }
 
     @Override
