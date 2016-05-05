@@ -5,16 +5,16 @@
 
     var controllers = angular.module('openmrs19.controllers',[]);
 
-    controllers.controller('OpenMRSSettingsCtrl', function($scope, OpenMRSConfig) {
+    controllers.controller('OpenMRSSettingsCtrl', function($scope, OpenMRSConfig, LoadingModal) {
 
-        $scope.configs = undefined;
+        $scope.configs = [];
         $scope.selectedConfig = undefined;
         $scope.configOutdated = false;
-        $scope.newPatientIdentifierType={};
+        $scope.newPatientIdentifierType = {};
+        $scope.failureMessage = undefined;
 
         $scope.getDefault = function () {
-            var i;
-            for (i = 0; i < $scope.configs.configs.length; i += 1) {
+            for (var i = 0; i < $scope.configs.configs.length; i++) {
                 if ($scope.configs.configs[i].name === $scope.configs.defaultConfigName) {
                     return $scope.configs.configs[i];
                 }
@@ -22,21 +22,22 @@
             return undefined;
         };
 
-         $scope.getConfigs = function () {
-             OpenMRSConfig.get(
-             function success(data) {
-                 $scope.configs = data;
-                 $scope.configs.configs.patientIdentifierTypeNames=[];
-                 $scope.configOutdated = false;
-                 if ($scope.selectedConfig === undefined) {
-                    $scope.selectedConfig = $scope.getDefault();
-                 }
-            });
+        $scope.getConfigs = function() {
+            OpenMRSConfig.get(
+                function success(data) {
+                    $scope.configs = data;
+                    $scope.configs.configs.patientIdentifierTypeNames=[];
+                    $scope.configOutdated = false;
+                    if (!$scope.selectedConfig) {
+                        $scope.selectedConfig = $scope.getDefault();
+                    }
+                }
+            );
         };
 
         $scope.getConfigs();
 
-        $scope.addConfig = function () {
+        $scope.addConfig = function() {
             $scope.selectedConfig = {
                 'name':'',
                 'openMrsUrl':'',
@@ -47,18 +48,14 @@
             };
         };
 
-        $scope.hasValue = function(prop) {
-            return $scope.selectedConfig[prop] !== null &&
-                $scope.selectedConfig[prop] !== undefined &&
-                $scope.selectedConfig[prop] !== "";
-        };
-
         $scope.draftChanged = function() {
             $scope.configOutdated = true;
         };
 
         $scope.selectChanged = function() {
             $scope.configOutdated = false;
+            $scope.newPatientIdentifierType.name = "";
+            $scope.failureMessage="";
         };
 
         $scope.addPatientIdentifierType = function() {
@@ -73,11 +70,11 @@
         };
 
         $scope.validateConfig = function() {
-            return $scope.hasValue('name')
-                && $scope.hasValue('openMrsUrl')
-                && $scope.hasValue('username')
-                && $scope.hasValue('password')
-                && $scope.hasValue('motechPatientIdentifierTypeName');
+            return $scope.selectedConfig['name']
+                && $scope.selectedConfig['openMrsUrl']
+                && $scope.selectedConfig['username']
+                && $scope.selectedConfig['password']
+                && $scope.selectedConfig['motechPatientIdentifierTypeName'];
         };
 
         $scope.saveAllowed = function() {
@@ -86,7 +83,7 @@
         };
 
         $scope.isNewConfig = function() {
-            for (var i=0; i<$scope.configs.configs.length; i++) {
+            for (var i = 0; i < $scope.configs.configs.length; i++) {
                 if ($scope.selectedConfig.name === $scope.configs.configs[i].name) {
                     return false;
                 }
@@ -94,21 +91,23 @@
             return true;
         };
 
-        $scope.saveConfig = function () {
+        $scope.saveConfig = function() {
             if ($scope.isNewConfig()) {
                 $scope.configs.configs.push($scope.selectedConfig);
             }
             else if ($scope.getDefault() === undefined) {
                 $scope.configs.defaultConfigName = $scope.selectedConfig.name;
             }
-            blockUI();
+            LoadingModal.open();
             OpenMRSConfig.save($scope.configs,
                 function success() {
                     $scope.configOutdated = false;
-                    unblockUI();
+                    $scope.failureMessage="";
+                    LoadingModal.close();
                 },
                 function failure() {
-                    unblockUI();
+                    $scope.failureMessage = $scope.msg('openMRS.config.save.failure');
+                    LoadingModal.close();
                 }
             );
         };
@@ -121,15 +120,20 @@
 
         $scope.deleteConfig = function() {
             $scope.configs.configs.splice($scope.configs.configs.indexOf($scope.selectedConfig), 1);
-            blockUI();
+            if ($scope.selectedConfig.name === $scope.configs.defaultConfigName) {
+                $scope.configs.defaultConfigName = undefined;
+            }
+            LoadingModal.open();
             OpenMRSConfig.save($scope.configs,
                 function success() {
                     $scope.selectedConfig = undefined;
                     $scope.getConfigs();
-                    unblockUI();
+                    $scope.failureMessage="";
+                    LoadingModal.close();
                 },
                 function failure() {
-                    unblockUI()
+                    $scope.failureMessage = $scope.msg('openMRS.config.delete.failure');
+                    LoadingModal.close();
                 }
             );
         };
@@ -140,15 +144,17 @@
 
         $scope.makeDefault = function() {
             $scope.configs.defaultConfigName = $scope.selectedConfig.name;
-            blockUI();
+            LoadingModal.open();
             OpenMRSConfig.save($scope.configs,
                 function success() {
                     $scope.selectedConfig = undefined;
                     $scope.getConfigs();
-                    unblockUI();
+                    $scope.failureMessage="";
+                    LoadingModal.close();
                 },
                 function failure() {
-                    unblockUI();
+                    $scope.failureMessage = $scope.msg('openMRS.config.makeDefault.failure');
+                    LoadingModal.close();
                 }
             );
         };

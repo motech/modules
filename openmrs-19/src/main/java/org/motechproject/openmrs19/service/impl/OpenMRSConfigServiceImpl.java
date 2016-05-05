@@ -11,11 +11,11 @@ import org.motechproject.openmrs19.service.OpenMRSConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 import static org.motechproject.openmrs19.validation.ConfigValidator.validateConfig;
 
@@ -35,6 +35,7 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
     }
 
     @Override
+    @Transactional
     public void deleteAllConfigs() {
         configs.getConfigs().clear();
         configs.setDefaultConfigName(null);
@@ -42,17 +43,16 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
     }
 
     @Override
+    @Transactional
     public void saveAllConfigs(Configs configs) {
-        List<Config> allConfigs = configs.getConfigs();
-        if (configs.getByName(configs.getDefaultConfigName()) != null) {
-            this.configs.setDefaultConfigName(configs.getDefaultConfigName());
-        }
-        for (int i=0; i<configs.getConfigs().size(); i++) {
-            addConfig(allConfigs.get(i));
+        this.configs.setDefaultConfigName(configs.getDefaultConfigName());
+        for (Config config : configs.getConfigs()) {
+            addConfig(config);
         }
     }
 
     @Override
+    @Transactional
     public void addConfig(Config config) {
         validateConfig(config);
         configs.add(config);
@@ -60,6 +60,7 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
     }
 
     @Override
+    @Transactional
     public void updateConfig(Config config) {
         validateConfig(config);
         configs.update(config);
@@ -67,28 +68,33 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
     }
 
     @Override
+    @Transactional
     public void deleteConfig(String name) {
         configs.delete(name);
         updateConfigs();
     }
 
     @Override
+    @Transactional
     public void markConfigAsDefault(String name) {
         configs.markAsDefault(name);
         updateConfigs();
     }
 
     @Override
+    @Transactional
     public Configs getConfigs() {
         return configs;
     }
 
     @Override
+    @Transactional
     public Config getConfigByName(String name) {
         return StringUtils.isEmpty(name) ? configs.getByName(configs.getDefaultConfigName()) : configs.getByName(name);
     }
 
     @Override
+    @Transactional
     public Config getDefaultConfig() {
         return configs.getByName(configs.getDefaultConfigName());
     }

@@ -8,7 +8,7 @@
         </div>
 
         <div class="btn-group form-group">
-            <a ng-click="addConfig()" type="button" class="form-group btn btn-success">
+            <a ng-click="selectChanged(); addConfig()" type="button" class="form-group btn btn-success">
                 <i class="fa fa-plus"></i>{{msg('openMRS.addConfig')}}
             </a>
             <a ng-if="selectedConfig" ng-disabled="!saveAllowed()" ng-click="saveAllowed() && saveConfig()" type="button" class="btn btn-primary">
@@ -23,6 +23,10 @@
         </div>
         </div>
     <form ng-if="selectedConfig" class="commcare inside form-horizontal" novalidate>
+        <div ng-if="failureMessage" class="connection-status connection-error alert alert-danger">
+            <span class="fa fw fa-warning"></span>
+            <span class="margin-left1">{{failureMessage}}</span>
+        </div>
         <div class="row inside form-group">
             <h4 class="inside form-group">{{msg('openMRS.config')}}</h4>
             <div class="form-group">
@@ -47,23 +51,23 @@
                     <input class="form-control input-xlarge-fluid" ng-change="draftChanged()" ng-model="selectedConfig.motechPatientIdentifierTypeName" type="text" id="motechID" />
                 </div>
                 <div ng-if="selectedConfig.patientIdentifierTypeNames.length >= 1">
-                <label class="col-md-3 col-sm-4 control-label" >
-                    {{msg('openMRS.config.patientIdentifierTypes')}}
-                </label>
-                <div class="col-md-9 col-sm-8 form-inline">
-                <ul ng-repeat="patientIdentifierTypeName in selectedConfig.patientIdentifierTypeNames">
-                    <li type="text">
-                    {{patientIdentifierTypeName}}
-                    <a type="button" ng-click="removePatientIdentifierType(patientIdentifierTypeName)" class="btn btn-danger input-small">
-                        <i class="fa fa-times"></i>{{msg('openMRS.delete')}}</a>
-                    </li>
-                </ul>
-                </div>
+                    <label class="col-md-3 col-sm-4 control-label" >
+                        {{msg('openMRS.config.patientIdentifierTypes')}}
+                    </label>
+                    <div class="col-md-9 col-sm-8 form-inline">
+                        <ul ng-repeat="patientIdentifierTypeName in selectedConfig.patientIdentifierTypeNames">
+                            <li type="text">
+                                {{patientIdentifierTypeName}}
+                                <a type="button" ng-click="removePatientIdentifierType(patientIdentifierTypeName)" class="btn btn-danger input-small">
+                                <i class="fa fa-times"></i>{{msg('openMRS.delete')}}</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <label class="col-md-3 col-sm-4 control-label" for="newPatientIdentifierType">{{msg('openMRS.config.patientIdentifierType')}}</label>
                 <div class="col-md-9 col-sm-8 form-inline">
                     <input class="form-control input-xlarge-fluid" ng-model="newPatientIdentifierType.name" type="text" id="newPatientIdentifierType"/>
-                    <a type="button" ng-click="addPatientIdentifierType()" class="btn btn-default">
+                    <a type="button" ng-disabled="!newPatientIdentifierType.name" ng-click="newPatientIdentifierType.name && addPatientIdentifierType()" class="btn btn-default">
                         {{msg('openMRS.addPatientIdentifierType')}}</a>
                 </div>
             </div>
