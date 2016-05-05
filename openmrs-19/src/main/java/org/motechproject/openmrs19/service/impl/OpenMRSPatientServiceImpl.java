@@ -267,17 +267,19 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         return updatedPatient;
     }
 
-    private void updatePatientIdentifiers(Config config, Patient patient, List<Identifier> fetchedIdentifierList){
-        String fetchedIdentifierDisplay, newIdentifierName;
+    private void updatePatientIdentifiers(Config config, Patient patient, List<Identifier> fetchedIdentifierList) {
+        String fetchedIdentifierDisplay;
+        String newIdentifierName;
 
-        for(Identifier fetchedIdentifier : fetchedIdentifierList) {
-            for(Identifier newIdentifier : patient.getIdentifiers()) {
+        for (Identifier fetchedIdentifier : fetchedIdentifierList) {
+            for (Identifier newIdentifier : patient.getIdentifiers()) {
                 //Display field in indetifierType on the OpenMRS server contains the name. Name field there is empty.
                 fetchedIdentifierDisplay = fetchedIdentifier.getIdentifierType().getDisplay();
                 newIdentifierName = newIdentifier.getIdentifierType().getName();
 
-                if(newIdentifierName.equals(fetchedIdentifierDisplay)){
+                if (newIdentifierName.equals(fetchedIdentifierDisplay)) {
                     fetchedIdentifier.setIdentifier(newIdentifier.getIdentifier());
+
                     patientResource.updatePatientIdentifier(config, patient.getUuid(), fetchedIdentifier);
                 }
             }

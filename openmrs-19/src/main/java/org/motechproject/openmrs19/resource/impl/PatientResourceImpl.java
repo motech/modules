@@ -116,11 +116,6 @@ public class PatientResourceImpl extends BaseResource implements PatientResource
         return identifierTypeUuid;
     }
 
-    public List<Identifier> getPatientIdentifierList(Config config, String patientUuid) {
-        String responseJson = getJson(config, "/patient/{patientUuid}/identifier", patientUuid);
-        return ((IdentifierListResult) JsonUtils.readJson(responseJson, IdentifierListResult.class)).getResults();
-    }
-
     @Override
     public void deletePatient(Config config, String uuid) {
         delete(config, "/patient/{uuid}?purge", uuid);
@@ -129,9 +124,8 @@ public class PatientResourceImpl extends BaseResource implements PatientResource
     @Override
     public void updatePatientMotechId(Config config, String patientUuid, String newMotechId) {
         List<Identifier> patientIdentifiers = getPatientIdentifierList(config, patientUuid);
-
         for (Identifier patientIdentifier : patientIdentifiers) {
-            if(patientIdentifier.getIdentifierType().getDisplay().equals("MOTECH Id")) {
+            if ("MOTECH Id".equals(patientIdentifier.getIdentifierType().getDisplay())) {
                 patientIdentifier.setIdentifier(newMotechId);
 
                 String requestJson = buildGson().toJson(patientIdentifier);
@@ -154,9 +148,9 @@ public class PatientResourceImpl extends BaseResource implements PatientResource
         return (PatientIdentifierListResult) JsonUtils.readJson(responseJson, PatientIdentifierListResult.class);
     }
 
-    private Identifier getPatientIdentifier(Config config, String patientUuid) {
+    public List<Identifier> getPatientIdentifierList(Config config, String patientUuid) {
         String responseJson = getJson(config, "/patient/{patientUuid}/identifier", patientUuid);
-        return ((IdentifierListResult) JsonUtils.readJson(responseJson, IdentifierListResult.class)).getResults().get(0);
+        return ((IdentifierListResult) JsonUtils.readJson(responseJson, IdentifierListResult.class)).getResults();
     }
 
     private boolean isIdentifierTypeSupportedInMotech(Config config, String identifierTypeName) {
