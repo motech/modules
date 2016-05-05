@@ -18,9 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.motechproject.openmrs19.validation.ConfigValidator.validateConfig;
 
@@ -29,6 +27,7 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
 
     private static final String OPEN_MRS_CONFIGS_FILE_NAME = "openmrs-configs.json";
 
+    @Autowired
     private EventRelay eventRelay;
 
     @Autowired
@@ -100,13 +99,6 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
         ByteArrayResource resource = new ByteArrayResource(jsonText.getBytes());
         settingsFacade.saveRawConfig(OPEN_MRS_CONFIGS_FILE_NAME, resource);
 
-        Map<String, Object> parameters = new HashMap<>();
-        eventRelay.sendEventMessage(new MotechEvent(Constants.CONFIG_CHANGE_EVENT, parameters));
-    }
-
-
-    @Autowired
-    public void setEventRelay(EventRelay eventRelay) {
-        this.eventRelay = eventRelay;
+        eventRelay.sendEventMessage(new MotechEvent(Constants.CONFIG_CHANGE_EVENT));
     }
 }

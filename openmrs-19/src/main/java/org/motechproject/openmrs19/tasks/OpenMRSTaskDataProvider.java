@@ -73,7 +73,7 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         generateProvider(null);
     }
 
-    @MotechListener(subjects = {Constants.CONFIG_CHANGE_EVENT})
+    @MotechListener(subjects = { Constants.CONFIG_CHANGE_EVENT })
     public void generateProvider(MotechEvent event) {
         String body = dataProviderBuilder.generateDataProvider();
         setBody(body);
@@ -112,7 +112,7 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         Object obj = null;
 
         String objectType = type.substring(0, type.lastIndexOf('-'));
-        String configName = type.substring(type.lastIndexOf('-')+1);
+        String configName = type.substring(type.lastIndexOf('-') + 1);
 
         //In case of any trouble with the type, 'supports' method logs an error
         if (supports(objectType)) {
