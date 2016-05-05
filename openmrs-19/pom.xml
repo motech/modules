@@ -137,6 +137,7 @@
                             org.springframework.context.config,
                             org.springframework.http.client,
                             org.springframework.http.converter,
+                            org.springframework.validation.beanvalidation,
                             *
                         </Import-Package>
                         <Bundle-DocURL>
