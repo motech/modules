@@ -26,7 +26,7 @@ public class ActionBuilder {
 
     private static final String CREATE_ENCOUNTER = "Create Encounter";
     private static final String CREATE_PATIENT = "Create Patient";
-    private static final String UPDATE_PATIENT = "Update Patient";
+    private static final String UPDATE_PERSON = "Update Person";
 
     private OpenMRSConfigService configService;
 
@@ -100,7 +100,7 @@ public class ActionBuilder {
         parameters.addAll(prepareCommonParameters(order));
 
         return new ActionEventRequestBuilder()
-                .setDisplayName(getDisplayName(UPDATE_PATIENT, configName))
+                .setDisplayName(getDisplayName(UPDATE_PERSON, configName))
                 .setServiceInterface("org.motechproject.openmrs19.tasks.OpenMRSActionProxyService")
                 .setServiceMethod("updatePerson")
                 .setActionParameters(parameters)
