@@ -66,7 +66,7 @@ public class OpenMRSConfigServiceImplTest {
         configService.addConfig(config);
 
         verify(settingsFacade, times(1)).saveRawConfig(eq(OPEN_MRS_CONFIGS_FILE_NAME), Matchers.any(Resource.class));
-        verify(eventRelay, times(1)).sendEventMessage(eq(new MotechEvent(EventSubjects.UPDATE_TASKS_CHANNEL)));
+        verify(eventRelay, times(1)).sendEventMessage(eq(new MotechEvent(EventSubjects.CONFIG_CHANGE_EVENT)));
 
         assertThat(configService.getConfigs().size(), is(1));
         assertThat(configService.getConfigs(), hasItem(config));
@@ -83,7 +83,7 @@ public class OpenMRSConfigServiceImplTest {
             configService.addConfig(config);
         } finally {
             verify(settingsFacade, never()).saveRawConfig(eq(OPEN_MRS_CONFIGS_FILE_NAME), Matchers.any(Resource.class));
-            verify(eventRelay, never()).sendEventMessage(eq(new MotechEvent(EventSubjects.UPDATE_TASKS_CHANNEL)));
+            verify(eventRelay, never()).sendEventMessage(eq(new MotechEvent(EventSubjects.CONFIG_CHANGE_EVENT)));
 
             assertThat(configService.getConfigs().size(), is(0));
         }
@@ -99,7 +99,7 @@ public class OpenMRSConfigServiceImplTest {
             configService.addConfig(config);
         } finally {
             verify(settingsFacade, never()).saveRawConfig(eq(OPEN_MRS_CONFIGS_FILE_NAME), Matchers.any(Resource.class));
-            verify(eventRelay, never()).sendEventMessage(eq(new MotechEvent(EventSubjects.UPDATE_TASKS_CHANNEL)));
+            verify(eventRelay, never()).sendEventMessage(eq(new MotechEvent(EventSubjects.CONFIG_CHANGE_EVENT)));
 
             assertThat(configService.getConfigs().size(), is(1));
             assertThat(configService.getConfigs(), hasItem(ConfigDummyData.prepareConfig(SUFFIX_ONE)));
@@ -119,7 +119,7 @@ public class OpenMRSConfigServiceImplTest {
         configService.updateConfig(config);
 
         verify(settingsFacade).saveRawConfig(eq(OPEN_MRS_CONFIGS_FILE_NAME), Matchers.any(Resource.class));
-        verify(eventRelay, times(1)).sendEventMessage(eq(new MotechEvent(EventSubjects.UPDATE_TASKS_CHANNEL)));
+        verify(eventRelay, times(1)).sendEventMessage(eq(new MotechEvent(EventSubjects.CONFIG_CHANGE_EVENT)));
 
         assertThat(configService.getConfigs().size(), is(1));
         assertThat(configService.getConfigs(), hasItem(config));
@@ -136,7 +136,7 @@ public class OpenMRSConfigServiceImplTest {
             configService.updateConfig(config);
         } finally {
             verify(settingsFacade, never()).saveRawConfig(eq(OPEN_MRS_CONFIGS_FILE_NAME), Matchers.any(Resource.class));
-            verify(eventRelay, never()).sendEventMessage(eq(new MotechEvent(EventSubjects.UPDATE_TASKS_CHANNEL)));
+            verify(eventRelay, never()).sendEventMessage(eq(new MotechEvent(EventSubjects.CONFIG_CHANGE_EVENT)));
 
             assertThat(configService.getConfigs().size(), is(1));
             assertThat(configService.getConfigs(), hasItem(ConfigDummyData.prepareConfig(SUFFIX_ONE)));
@@ -153,7 +153,7 @@ public class OpenMRSConfigServiceImplTest {
             configService.updateConfig(config);
         } finally {
             verify(settingsFacade, never()).saveRawConfig(eq(OPEN_MRS_CONFIGS_FILE_NAME), Matchers.any(Resource.class));
-            verify(eventRelay, never()).sendEventMessage(eq(new MotechEvent(EventSubjects.UPDATE_TASKS_CHANNEL)));
+            verify(eventRelay, never()).sendEventMessage(eq(new MotechEvent(EventSubjects.CONFIG_CHANGE_EVENT)));
 
             assertThat(configService.getConfigs().size(), is(0));
         }
@@ -166,7 +166,7 @@ public class OpenMRSConfigServiceImplTest {
         configService.deleteConfig(ConfigDummyData.getName(SUFFIX_ONE));
 
         verify(settingsFacade, times(1)).saveRawConfig(eq(OPEN_MRS_CONFIGS_FILE_NAME), Matchers.any(Resource.class));
-        verify(eventRelay, times(1)).sendEventMessage(eq(new MotechEvent(EventSubjects.UPDATE_TASKS_CHANNEL)));
+        verify(eventRelay, times(1)).sendEventMessage(eq(new MotechEvent(EventSubjects.CONFIG_CHANGE_EVENT)));
 
         assertThat(configService.getConfigs().size(), is(0));
     }
@@ -179,7 +179,7 @@ public class OpenMRSConfigServiceImplTest {
             configService.deleteConfig(ConfigDummyData.getName(NON_EXISTENT));
         } finally {
             verify(settingsFacade, never()).saveRawConfig(eq(OPEN_MRS_CONFIGS_FILE_NAME), Matchers.any(Resource.class));
-            verify(eventRelay, never()).sendEventMessage(eq(new MotechEvent(EventSubjects.UPDATE_TASKS_CHANNEL)));
+            verify(eventRelay, never()).sendEventMessage(eq(new MotechEvent(EventSubjects.CONFIG_CHANGE_EVENT)));
 
             assertThat(configService.getConfigs().size(), is(1));
             assertThat(configService.getConfigs(), hasItem(ConfigDummyData.prepareConfig(SUFFIX_ONE)));
@@ -193,7 +193,7 @@ public class OpenMRSConfigServiceImplTest {
         configService.markConfigAsDefault(ConfigDummyData.getName(SUFFIX_TWO));
 
         verify(settingsFacade, times(1)).saveRawConfig(eq(OPEN_MRS_CONFIGS_FILE_NAME), Matchers.any(Resource.class));
-        verify(eventRelay, times(1)).sendEventMessage(eq(new MotechEvent(EventSubjects.UPDATE_TASKS_CHANNEL)));
+        verify(eventRelay, times(1)).sendEventMessage(eq(new MotechEvent(EventSubjects.CONFIG_CHANGE_EVENT)));
 
         Config expectedDefaultConfig = ConfigDummyData.prepareConfig(SUFFIX_TWO);
 
@@ -212,7 +212,7 @@ public class OpenMRSConfigServiceImplTest {
             configService.markConfigAsDefault(ConfigDummyData.getName(NON_EXISTENT));
         } finally {
             verify(settingsFacade, never()).saveRawConfig(eq(OPEN_MRS_CONFIGS_FILE_NAME), Matchers.any(Resource.class));
-            verify(eventRelay, never()).sendEventMessage(eq(new MotechEvent(EventSubjects.UPDATE_TASKS_CHANNEL)));
+            verify(eventRelay, never()).sendEventMessage(eq(new MotechEvent(EventSubjects.CONFIG_CHANGE_EVENT)));
 
             Config expectedDefaultConfig = ConfigDummyData.prepareConfig(SUFFIX_ONE);
 

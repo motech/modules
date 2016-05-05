@@ -40,7 +40,7 @@ public class OpenMRSTasksNotifier {
         updateTasksChannel();
     }
 
-    @MotechListener(subjects = EventSubjects.UPDATE_TASKS_CHANNEL)
+    @MotechListener(subjects = EventSubjects.CONFIG_CHANGE_EVENT)
     public void updateTasksChannel(MotechEvent motechEvent) {
         LOGGER.info("OpenMRS update requested through MotechEvent", motechEvent);
         updateTasksChannel();

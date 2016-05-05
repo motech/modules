@@ -5,7 +5,7 @@ package org.motechproject.openmrs19.tasks.constants;
  */
 public final class EventSubjects {
 
-    public static final String UPDATE_TASKS_CHANNEL = "org.motechproject.openmrs.updateTasksChannel";
+    public static final String CONFIG_CHANGE_EVENT = "org.motechproject.openmrs.configChange";
 
     /**
      * Utility class, should not be initiated.

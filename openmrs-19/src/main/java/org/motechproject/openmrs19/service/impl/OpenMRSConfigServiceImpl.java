@@ -94,6 +94,6 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
         String jsonText = gson.toJson(configs, Configs.class);
         ByteArrayResource resource = new ByteArrayResource(jsonText.getBytes());
         settingsFacade.saveRawConfig(OPEN_MRS_CONFIGS_FILE_NAME, resource);
-        eventRelay.sendEventMessage(new MotechEvent(EventSubjects.UPDATE_TASKS_CHANNEL));
+        eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_CHANGE_EVENT));
     }
 }
