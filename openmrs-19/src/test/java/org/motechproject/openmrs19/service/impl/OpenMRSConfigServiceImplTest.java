@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.motechproject.config.SettingsFacade;
+import org.motechproject.event.listener.EventRelay;
 import org.motechproject.openmrs19.config.Config;
 import org.motechproject.openmrs19.exception.config.ConfigurationAlreadyExistsException;
 import org.motechproject.openmrs19.exception.config.ConfigurationNotFoundException;
@@ -41,6 +42,9 @@ public class OpenMRSConfigServiceImplTest {
 
     @Mock
     private SettingsFacade settingsFacade;
+
+    @Mock
+    private EventRelay eventRelay;
 
     @InjectMocks
     private OpenMRSConfigServiceImpl configService;
