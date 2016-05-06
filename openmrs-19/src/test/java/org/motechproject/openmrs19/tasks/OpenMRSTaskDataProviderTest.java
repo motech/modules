@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.motechproject.openmrs19.config.Configs;
 import org.motechproject.openmrs19.domain.Encounter;
 import org.motechproject.openmrs19.domain.EncounterType;
 import org.motechproject.openmrs19.domain.Patient;
@@ -21,8 +22,6 @@ import org.motechproject.openmrs19.service.OpenMRSRelationshipService;
 import org.motechproject.openmrs19.tasks.builder.OpenMRSTaskDataProviderBuilder;
 import org.osgi.framework.BundleContext;
 import org.springframework.core.io.ResourceLoader;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -73,7 +72,7 @@ public class OpenMRSTaskDataProviderTest {
 
     @Before
     public void setUp() {
-        when(configService.getConfigs()).thenReturn(new ArrayList<>());
+        when(configService.getConfigs()).thenReturn(new Configs());
         taskDataProvider = new OpenMRSTaskDataProvider(taskDataProviderBuilder, encounterService, patientService,
                 providerService, relationshipService, bundleContext);
     }

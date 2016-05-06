@@ -68,8 +68,8 @@ public class OpenMRSConfigServiceImplTest {
         verify(settingsFacade, times(1)).saveRawConfig(eq(OPEN_MRS_CONFIGS_FILE_NAME), Matchers.any(Resource.class));
         verify(eventRelay, times(1)).sendEventMessage(eq(new MotechEvent(EventSubjects.CONFIG_CHANGE_EVENT)));
 
-        assertThat(configService.getConfigs().size(), is(1));
-        assertThat(configService.getConfigs(), hasItem(config));
+        assertThat(configService.getConfigs().getConfigs().size(), is(1));
+        assertThat(configService.getConfigs().getConfigs(), hasItem(config));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -85,7 +85,7 @@ public class OpenMRSConfigServiceImplTest {
             verify(settingsFacade, never()).saveRawConfig(eq(OPEN_MRS_CONFIGS_FILE_NAME), Matchers.any(Resource.class));
             verify(eventRelay, never()).sendEventMessage(eq(new MotechEvent(EventSubjects.CONFIG_CHANGE_EVENT)));
 
-            assertThat(configService.getConfigs().size(), is(0));
+            assertThat(configService.getConfigs().getConfigs().size(), is(0));
         }
     }
 
@@ -101,8 +101,8 @@ public class OpenMRSConfigServiceImplTest {
             verify(settingsFacade, never()).saveRawConfig(eq(OPEN_MRS_CONFIGS_FILE_NAME), Matchers.any(Resource.class));
             verify(eventRelay, never()).sendEventMessage(eq(new MotechEvent(EventSubjects.CONFIG_CHANGE_EVENT)));
 
-            assertThat(configService.getConfigs().size(), is(1));
-            assertThat(configService.getConfigs(), hasItem(ConfigDummyData.prepareConfig(SUFFIX_ONE)));
+            assertThat(configService.getConfigs().getConfigs().size(), is(1));
+            assertThat(configService.getConfigs().getConfigs(), hasItem(ConfigDummyData.prepareConfig(SUFFIX_ONE)));
         }
     }
 
@@ -121,8 +121,8 @@ public class OpenMRSConfigServiceImplTest {
         verify(settingsFacade).saveRawConfig(eq(OPEN_MRS_CONFIGS_FILE_NAME), Matchers.any(Resource.class));
         verify(eventRelay, times(1)).sendEventMessage(eq(new MotechEvent(EventSubjects.CONFIG_CHANGE_EVENT)));
 
-        assertThat(configService.getConfigs().size(), is(1));
-        assertThat(configService.getConfigs(), hasItem(config));
+        assertThat(configService.getConfigs().getConfigs().size(), is(1));
+        assertThat(configService.getConfigs().getConfigs(), hasItem(config));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -138,8 +138,8 @@ public class OpenMRSConfigServiceImplTest {
             verify(settingsFacade, never()).saveRawConfig(eq(OPEN_MRS_CONFIGS_FILE_NAME), Matchers.any(Resource.class));
             verify(eventRelay, never()).sendEventMessage(eq(new MotechEvent(EventSubjects.CONFIG_CHANGE_EVENT)));
 
-            assertThat(configService.getConfigs().size(), is(1));
-            assertThat(configService.getConfigs(), hasItem(ConfigDummyData.prepareConfig(SUFFIX_ONE)));
+            assertThat(configService.getConfigs().getConfigs().size(), is(1));
+            assertThat(configService.getConfigs().getConfigs(), hasItem(ConfigDummyData.prepareConfig(SUFFIX_ONE)));
         }
     }
 
@@ -155,7 +155,7 @@ public class OpenMRSConfigServiceImplTest {
             verify(settingsFacade, never()).saveRawConfig(eq(OPEN_MRS_CONFIGS_FILE_NAME), Matchers.any(Resource.class));
             verify(eventRelay, never()).sendEventMessage(eq(new MotechEvent(EventSubjects.CONFIG_CHANGE_EVENT)));
 
-            assertThat(configService.getConfigs().size(), is(0));
+            assertThat(configService.getConfigs().getConfigs().size(), is(0));
         }
     }
 
@@ -168,7 +168,7 @@ public class OpenMRSConfigServiceImplTest {
         verify(settingsFacade, times(1)).saveRawConfig(eq(OPEN_MRS_CONFIGS_FILE_NAME), Matchers.any(Resource.class));
         verify(eventRelay, times(1)).sendEventMessage(eq(new MotechEvent(EventSubjects.CONFIG_CHANGE_EVENT)));
 
-        assertThat(configService.getConfigs().size(), is(0));
+        assertThat(configService.getConfigs().getConfigs().size(), is(0));
     }
 
     @Test(expected = ConfigurationNotFoundException.class)
@@ -181,8 +181,8 @@ public class OpenMRSConfigServiceImplTest {
             verify(settingsFacade, never()).saveRawConfig(eq(OPEN_MRS_CONFIGS_FILE_NAME), Matchers.any(Resource.class));
             verify(eventRelay, never()).sendEventMessage(eq(new MotechEvent(EventSubjects.CONFIG_CHANGE_EVENT)));
 
-            assertThat(configService.getConfigs().size(), is(1));
-            assertThat(configService.getConfigs(), hasItem(ConfigDummyData.prepareConfig(SUFFIX_ONE)));
+            assertThat(configService.getConfigs().getConfigs().size(), is(1));
+            assertThat(configService.getConfigs().getConfigs(), hasItem(ConfigDummyData.prepareConfig(SUFFIX_ONE)));
         }
     }
 
@@ -198,8 +198,8 @@ public class OpenMRSConfigServiceImplTest {
         Config expectedDefaultConfig = ConfigDummyData.prepareConfig(SUFFIX_TWO);
 
         assertThat(configService.getDefaultConfig(), equalTo(expectedDefaultConfig));
-        assertThat(configService.getConfigs().size(), is(3));
-        assertThat(configService.getConfigs(), hasItems(ConfigDummyData.prepareConfig(SUFFIX_ONE),
+        assertThat(configService.getConfigs().getConfigs().size(), is(3));
+        assertThat(configService.getConfigs().getConfigs(), hasItems(ConfigDummyData.prepareConfig(SUFFIX_ONE),
                 expectedDefaultConfig, ConfigDummyData.prepareConfig(SUFFIX_THREE)));
     }
 
@@ -217,8 +217,8 @@ public class OpenMRSConfigServiceImplTest {
             Config expectedDefaultConfig = ConfigDummyData.prepareConfig(SUFFIX_ONE);
 
             assertThat(configService.getDefaultConfig(), equalTo(expectedDefaultConfig));
-            assertThat(configService.getConfigs().size(), is(3));
-            assertThat(configService.getConfigs(), hasItems(expectedDefaultConfig,
+            assertThat(configService.getConfigs().getConfigs().size(), is(3));
+            assertThat(configService.getConfigs().getConfigs(), hasItems(expectedDefaultConfig,
                     ConfigDummyData.prepareConfig(SUFFIX_TWO), ConfigDummyData.prepareConfig(SUFFIX_THREE)));
         }
     }
@@ -227,7 +227,7 @@ public class OpenMRSConfigServiceImplTest {
     public void shouldGetConfigs() throws Exception {
         loadConfigs(CONFIGS_JSON);
 
-        List<Config> configs = configService.getConfigs();
+        List<Config> configs = configService.getConfigs().getConfigs();
 
         assertThat(configs.size(), is(3));
         assertThat(configs, hasItems(ConfigDummyData.prepareConfig(SUFFIX_ONE), ConfigDummyData.prepareConfig(SUFFIX_TWO),

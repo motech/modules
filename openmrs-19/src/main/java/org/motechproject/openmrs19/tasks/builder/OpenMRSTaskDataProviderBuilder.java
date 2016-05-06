@@ -28,7 +28,7 @@ public class OpenMRSTaskDataProviderBuilder {
     
     public String generateDataProvider() {
         Map<String, Object> model = new HashMap<>();
-        List<Config> configurations = openMRSConfigService.getConfigs();
+        List<Config> configurations = openMRSConfigService.getConfigs().getConfigs();
 
         if (configurations.isEmpty()) {
             // return null in case of no configurations - the provider won't get registered

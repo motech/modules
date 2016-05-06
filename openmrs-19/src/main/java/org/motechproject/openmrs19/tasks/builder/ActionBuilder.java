@@ -41,7 +41,7 @@ public class ActionBuilder {
      */
     public List<ActionEventRequest> buildActions() {
         List<ActionEventRequest> actions = new ArrayList<>();
-        for (Config config : configService.getConfigs()) {
+        for (Config config : configService.getConfigs().getConfigs()) {
             String configName = config.getName();
             actions.add(buildCreateEncounterAction(configName));
             actions.add(buildCreatePatientAction(configName));
