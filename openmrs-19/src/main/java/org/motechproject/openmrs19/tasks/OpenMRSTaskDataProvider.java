@@ -1,6 +1,10 @@
 package org.motechproject.openmrs19.tasks;
 
+import org.apache.commons.lang.StringUtils;
 import org.motechproject.commons.api.AbstractDataProvider;
+import org.motechproject.commons.api.DataProvider;
+import org.motechproject.event.MotechEvent;
+import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.openmrs19.domain.Encounter;
 import org.motechproject.openmrs19.domain.Patient;
 import org.motechproject.openmrs19.domain.Provider;
@@ -8,9 +12,11 @@ import org.motechproject.openmrs19.domain.Relationship;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
-import org.motechproject.openmrs19.tasks.builder.OpenMRSTaskDataProviderBuilder;
 import org.motechproject.openmrs19.service.OpenMRSRelationshipService;
-
+import org.motechproject.openmrs19.tasks.builder.OpenMRSTaskDataProviderBuilder;
+import org.motechproject.openmrs19.tasks.constants.EventSubjects;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,26 +53,40 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     private OpenMRSProviderService providerService;
     private OpenMRSTaskDataProviderBuilder dataProviderBuilder;
     private OpenMRSRelationshipService relationshipService;
+    private BundleContext bundleContext;
+    private ServiceRegistration serviceRegistration;
 
     @Autowired
     public OpenMRSTaskDataProvider(OpenMRSTaskDataProviderBuilder taskDataProviderBuilder, OpenMRSEncounterService encounterService,
                                    OpenMRSPatientService patientService, OpenMRSProviderService providerService,
-                                   OpenMRSRelationshipService relationshipService) {
-
-
+                                   OpenMRSRelationshipService relationshipService, BundleContext bundleContext) {
         this.encounterService = encounterService;
         this.patientService = patientService;
         this.providerService = providerService;
         this.dataProviderBuilder = taskDataProviderBuilder;
         this.relationshipService = relationshipService;
+        this.bundleContext = bundleContext;
 
+        generateProvider(null);
+    }
+
+    @MotechListener(subjects = { EventSubjects.CONFIG_CHANGE_EVENT })
+    public void generateProvider(MotechEvent event) {
         String body = dataProviderBuilder.generateDataProvider();
-        if (body != null) {
-            setBody(body);
-        } else {
-            LOGGER.warn("OpenMRS configuration is empty.");
+        setBody(body);
+
+        // we unregister the service, then register again
+        if (serviceRegistration != null) {
+            serviceRegistration.unregister();
+            serviceRegistration = null;
         }
 
+        if (StringUtils.isNotBlank(body)) {
+            serviceRegistration = bundleContext.registerService(DataProvider.class.getName(), this, null);
+            LOGGER.info("OpenMRS data provider registered");
+        } else {
+            LOGGER.info("Omitting registration of empty OpenMRS data provider");
+        }
     }
 
     @Override
@@ -89,7 +109,7 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         Object obj = null;
 
         String objectType = type.substring(0, type.lastIndexOf('-'));
-        String configName = type.substring(type.lastIndexOf('-')+1);
+        String configName = type.substring(type.lastIndexOf('-') + 1);
 
         //In case of any trouble with the type, 'supports' method logs an error
         if (supports(objectType)) {
@@ -161,5 +181,4 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
 
         return relationships.isEmpty() ? null : relationships.get(0);
     }
-
 }

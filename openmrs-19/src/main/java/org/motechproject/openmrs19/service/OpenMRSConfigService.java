@@ -1,15 +1,25 @@
 package org.motechproject.openmrs19.service;
 
 import org.motechproject.openmrs19.config.Config;
+import org.motechproject.openmrs19.config.Configs;
 import org.motechproject.openmrs19.exception.config.ConfigurationAlreadyExistsException;
 import org.motechproject.openmrs19.exception.config.ConfigurationNotFoundException;
-
-import java.util.List;
 
 /**
  * Service responsible for managing configurations for the OpenMRS servers.
  */
 public interface OpenMRSConfigService {
+
+    /**
+     * Deletes all configurations.
+     */
+    void deleteAllConfigs();
+
+    /**
+     * Saves the given list of configurations.
+     * @param configs list of configurations to be saved
+     */
+    void saveAllConfigs(Configs configs);
 
     /**
      * Saves the given configuration. If configuration with the same name already exists
@@ -48,7 +58,7 @@ public interface OpenMRSConfigService {
      *
      * @return the list of all configurations
      */
-    List<Config> getConfigs();
+    Configs getConfigs();
 
     /**
      * Returns configuration by its name.
