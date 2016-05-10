@@ -48,10 +48,12 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     private OpenMRSPersonService personService;
 
     @Override
-    public void createEncounter(DateTime encounterDatetime, String encounterType, String locationName, String patientUuid, String providerUuid, Map<String, String> observations) {
-        Location location = getLocationByName(locationName);
-        Patient patient = patientService.getPatientByUuid(null, patientUuid);
-        Provider provider = providerService.getProviderByUuid(null, providerUuid);
+    public void createEncounter(String configName, DateTime encounterDatetime, String encounterType,
+                                String locationName, String patientUuid, String providerUuid,
+                                Map<String, String> observations) {
+        Location location = getLocationByName(configName, locationName);
+        Patient patient = patientService.getPatientByUuid(configName, patientUuid);
+        Provider provider = providerService.getProviderByUuid(configName, providerUuid);
 
         //While creating observations, the encounterDateTime is used as a obsDateTime.
         List<Observation> observationList = MapUtils.isNotEmpty(observations) ? convertObservationMapToList(observations, encounterDatetime) : null;
@@ -59,30 +61,31 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         EncounterType type = new EncounterType(encounterType);
 
         Encounter encounter = new Encounter(location, type, encounterDatetime.toDate(), patient, provider.getPerson(), observationList);
-        encounterService.createEncounter(null, encounter);
+        encounterService.createEncounter(configName, encounter);
     }
 
     @Override
-    public void createPatient(String givenName, String middleName, String familyName, String address1, String address2,
-                              String address3, String address4, String address5, String address6, String cityVillage, String stateProvince,
-                              String country, String postalCode, String countyDistrict, String latitude, String longitude,
-                              DateTime startDate, DateTime endDate, DateTime birthdate, Boolean birthdateEstimated,
+    public void createPatient(String configName, String givenName, String middleName, String familyName,
+                              String address1, String address2, String address3, String address4, String address5,
+                              String address6, String cityVillage, String stateProvince, String country,
+                              String postalCode, String countyDistrict, String latitude, String longitude,
+                              DateTime startDate, DateTime endDate, DateTime birthDate, Boolean birthDateEstimated,
                               String gender, Boolean dead, String causeOfDeathUUID, String motechId,
                               String locationForMotechId, Map<String, String> identifiers) {
-        Concept causeOfDeath = StringUtils.isNotEmpty(causeOfDeathUUID) ? conceptService.getConceptByUuid(null, causeOfDeathUUID) : null;
+        Concept causeOfDeath = StringUtils.isNotEmpty(causeOfDeathUUID) ? conceptService.getConceptByUuid(configName, causeOfDeathUUID) : null;
 
         Person person = preparePerson(givenName, middleName, familyName, address1, address2,
                 address3, address4, address5, address6, cityVillage, stateProvince,
                 country, postalCode, countyDistrict, latitude, longitude,
-                startDate, endDate, birthdate, birthdateEstimated,
+                startDate, endDate, birthDate, birthDateEstimated,
                 gender, dead, causeOfDeath);
 
-        Location location = StringUtils.isNotEmpty(locationForMotechId) ? getLocationByName(locationForMotechId) : getDefaultLocation();
+        Location location = StringUtils.isNotEmpty(locationForMotechId) ? getLocationByName(configName, locationForMotechId) : getDefaultLocation(configName);
 
         List<Identifier> identifierList = convertIdentifierMapToList(identifiers);
 
         Patient patient = new Patient(identifierList, person, motechId, location);
-        patientService.createPatient(null, patient);
+        patientService.createPatient(configName, patient);
     }
 
     @Override
@@ -97,32 +100,33 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     }
 
     @Override
-    public void updatePerson(String personUuid, String givenName, String middleName, String familyName, String address1, String address2,
-                             String address3, String address4, String address5, String address6, String cityVillage, String stateProvince,
-                             String country, String postalCode, String countyDistrict, String latitude, String longitude,
-                             DateTime startDate, DateTime endDate, DateTime birthdate, Boolean birthdateEstimated,
+    public void updatePerson(String configName, String personUuid, String givenName, String middleName,
+                             String familyName, String address1, String address2, String address3, String address4,
+                             String address5, String address6, String cityVillage, String stateProvince, String country,
+                             String postalCode, String countyDistrict, String latitude, String longitude,
+                             DateTime startDate, DateTime endDate, DateTime birthDate, Boolean birthDateEstimated,
                              String gender, Boolean dead, String causeOfDeathUUID) {
-        Concept causeOfDeath = StringUtils.isNotEmpty(causeOfDeathUUID) ? conceptService.getConceptByUuid(null, causeOfDeathUUID) : null;
+        Concept causeOfDeath = StringUtils.isNotEmpty(causeOfDeathUUID) ? conceptService.getConceptByUuid(configName, causeOfDeathUUID) : null;
 
         Person person = preparePerson(givenName, middleName, familyName, address1, address2,
                 address3, address4, address5, address6, cityVillage, stateProvince,
                 country, postalCode, countyDistrict, latitude, longitude,
-                startDate, endDate, birthdate, birthdateEstimated,
+                startDate, endDate, birthDate, birthDateEstimated,
                 gender, dead, causeOfDeath);
         person.setUuid(personUuid);
 
-        personService.updatePerson(null, person);
+        personService.updatePerson(configName, person);
     }
 
-    private Location getDefaultLocation() {
-        return getLocationByName(DEFAULT_LOCATION_NAME);
+    private Location getDefaultLocation(String configName) {
+        return getLocationByName(configName, DEFAULT_LOCATION_NAME);
     }
 
-    private Location getLocationByName(String locationName) {
+    private Location getLocationByName(String configName, String locationName) {
         Location location = null;
 
         if (StringUtils.isNotEmpty(locationName)) {
-            List<Location> locations = locationService.getLocations(null, locationName);
+            List<Location> locations = locationService.getLocations(configName, locationName);
             if (locations.isEmpty()) {
                 LOGGER.warn("There is no location with name {}", locationName);
             } else {
@@ -175,7 +179,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     private Person preparePerson(String givenName, String middleName, String familyName, String address1, String address2,
                                  String address3, String address4, String address5, String address6, String cityVillage, String stateProvince,
                                  String country, String postalCode, String countyDistrict, String latitude, String longitude,
-                                 DateTime startDate, DateTime endDate, DateTime birthdate, Boolean birthdateEstimated,
+                                 DateTime startDate, DateTime endDate, DateTime birthDate, Boolean birthDateEstimated,
                                  String gender, Boolean dead, Concept causeOfDeath)  {
         Person person = new Person();
 
@@ -192,8 +196,8 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         person.setPreferredAddress(personAddress);
         person.setAddresses(Collections.singletonList(personAddress));
 
-        person.setBirthdate(Objects.nonNull(birthdate) ? birthdate.toDate() : null);
-        person.setBirthdateEstimated(birthdateEstimated);
+        person.setBirthdate(Objects.nonNull(birthDate) ? birthDate.toDate() : null);
+        person.setBirthdateEstimated(birthDateEstimated);
         person.setDead(dead);
         person.setCauseOfDeath(causeOfDeath);
         person.setGender(gender);

@@ -115,15 +115,18 @@ public class Configs {
     }
 
     /**
-     * Returns the default configuration.
-     *
-     * @return the default configuration
+     * Returns name of default configuration.
      */
-    public Config getDefault() {
-        if (defaultConfigName != null) {
-            return getByName(defaultConfigName);
-        }
-        return null;
+    public String getDefaultConfigName() {
+        return defaultConfigName;
+    }
+
+    /**
+     * Sets name of default configuration.
+     * @param name the name of the default configuration
+     */
+    public void setDefaultConfigName(String name) {
+        defaultConfigName = name;
     }
 
     /**
