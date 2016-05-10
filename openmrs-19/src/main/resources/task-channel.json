@@ -197,7 +197,7 @@
           "key": "identifiers",
           "displayName": "openMRS.patient.identifiers",
           "type": "MAP",
-          "required": false
+          "required": true
         }
       ]
     },

@@ -143,7 +143,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
             IdentifierType identifierType = new IdentifierType();
             identifierType.setName(identifierTypeName);
 
-            Identifier identifier = new Identifier(identifiers.get(identifierTypeName), identifierType);
+            Identifier identifier = new Identifier(identifiers.get(identifierTypeName), identifierType, getDefaultLocation());
 
             identifierList.add(identifier);
         }

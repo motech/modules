@@ -105,7 +105,7 @@ public interface PatientResource {
      *
      * @param config  the configuration to be used while performing this action
      * @param patientUuid  the UUID of the patient
-     * @param updatedIdentifier  the updated patient identifier
+     * @param identifier  the patient's identifier, which is to be updated.
      */
-    void updatePatientIdentifier(Config config, String patientUuid, Identifier updatedIdentifier);
+    void updatePatientIdentifier(Config config, String patientUuid, Identifier identifier);
 }

@@ -133,8 +133,8 @@ public class MRSPatientServiceIT extends BasePaxIT {
 
         Patient testPatient = patientAdapter.getPatientByMotechId(DEFAULT_CONFIG_NAME, patient.getMotechId());
 
-        String newOldIdentificationNumber = "612";
-        testPatient.getIdentifiers().get(0).setIdentifier(newOldIdentificationNumber);
+        String newIdentifiactionNumber = "612";
+        testPatient.getIdentifiers().get(0).setIdentifier(newIdentifiactionNumber);
 
         synchronized (lock) {
             patientAdapter.updatePatientIdentifiers(DEFAULT_CONFIG_NAME, testPatient);
@@ -143,8 +143,8 @@ public class MRSPatientServiceIT extends BasePaxIT {
         }
         Patient updated = patientAdapter.getPatientByUuid(DEFAULT_CONFIG_NAME, testPatient.getUuid());
 
-        assertEquals("Old Identification Number", updated.getIdentifiers().get(0).getIdentifierType().getDisplay());
-        assertEquals(newOldIdentificationNumber, updated.getIdentifiers().get(0).getIdentifier());
+        assertEquals("Old Identification Number", updated.getIdentifiers().get(0).getIdentifierType().getName());
+        assertEquals(newIdentifiactionNumber, updated.getIdentifiers().get(0).getIdentifier());
     }
 
     @Test

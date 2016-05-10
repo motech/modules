@@ -117,6 +117,12 @@ public class PatientResourceImpl extends BaseResource implements PatientResource
     }
 
     @Override
+    public List<Identifier> getPatientIdentifierList(Config config, String patientUuid) {
+        String responseJson = getJson(config, "/patient/{patientUuid}/identifier?v=full", patientUuid);
+        return ((IdentifierListResult) JsonUtils.readJson(responseJson, IdentifierListResult.class)).getResults();
+    }
+
+    @Override
     public void deletePatient(Config config, String uuid) {
         delete(config, "/patient/{uuid}?purge", uuid);
     }
@@ -125,7 +131,7 @@ public class PatientResourceImpl extends BaseResource implements PatientResource
     public void updatePatientMotechId(Config config, String patientUuid, String newMotechId) {
         List<Identifier> patientIdentifiers = getPatientIdentifierList(config, patientUuid);
         for (Identifier patientIdentifier : patientIdentifiers) {
-            if ("MOTECH Id".equals(patientIdentifier.getIdentifierType().getDisplay())) {
+            if ("MOTECH Id".equals(patientIdentifier.getIdentifierType().getName())) {
                 patientIdentifier.setIdentifier(newMotechId);
 
                 String requestJson = buildGson().toJson(patientIdentifier);
@@ -146,11 +152,6 @@ public class PatientResourceImpl extends BaseResource implements PatientResource
     private PatientIdentifierListResult getAllPatientIdentifierTypes(Config config) {
         String responseJson = getJson(config, "/patientidentifiertype?v=full");
         return (PatientIdentifierListResult) JsonUtils.readJson(responseJson, PatientIdentifierListResult.class);
-    }
-
-    public List<Identifier> getPatientIdentifierList(Config config, String patientUuid) {
-        String responseJson = getJson(config, "/patient/{patientUuid}/identifier", patientUuid);
-        return ((IdentifierListResult) JsonUtils.readJson(responseJson, IdentifierListResult.class)).getResults();
     }
 
     private boolean isIdentifierTypeSupportedInMotech(Config config, String identifierTypeName) {

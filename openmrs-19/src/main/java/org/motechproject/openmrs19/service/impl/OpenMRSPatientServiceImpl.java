@@ -252,7 +252,10 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
 
     private Patient updatePatientIdentifiers(Config config, Patient patient) {
         Validate.notNull(patient, "Patient cannot be null");
-        Validate.notEmpty(patient.getUuid(), "Patient Id may not be empty");
+        Validate.notEmpty(patient.getUuid(), "Patient Id cannot be empty");
+
+        IdentifierType identifierType = new IdentifierType();
+        identifierType.setUuid(getMotechPatientIdentifierTypeUuid(config));
 
         List<Identifier> identifiersList = patientResource.getPatientIdentifierList(config, patient.getUuid());
         Patient updatedPatient;
@@ -260,29 +263,33 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
             //Patient Identifiers have to be update separately.
             updatePatientIdentifiers(config, patient, identifiersList);
             updatedPatient = getPatientByUuid(config, patient.getUuid());
-            eventRelay.sendEventMessage(new MotechEvent(EventKeys.UPDATED_PATIENT_SUBJECT, EventHelper.patientParameters(updatedPatient)));
+            eventRelay.sendEventMessage(new MotechEvent(EventKeys.UPDATED_PATIENT_IDENTIFIERS_SUBJECT, EventHelper.patientParameters(updatedPatient)));
         } catch (HttpClientErrorException e) {
-            throw new OpenMRSException("Failed to update OpenMRS patient with id: " + patient.getUuid(), e);
+            throw new OpenMRSException("Failed to update OpenMRS patient's identifiers for patient with id: " + patient.getUuid(), e);
         }
         return updatedPatient;
     }
 
     private void updatePatientIdentifiers(Config config, Patient patient, List<Identifier> fetchedIdentifierList) {
-        String fetchedIdentifierDisplay;
+        String fetchedIdentifierName;
         String newIdentifierName;
+        Boolean isUpdate = false;
 
-        for (Identifier fetchedIdentifier : fetchedIdentifierList) {
-            for (Identifier newIdentifier : patient.getIdentifiers()) {
-                //Display field in indetifierType on the OpenMRS server contains the name. Name field there is empty.
-                fetchedIdentifierDisplay = fetchedIdentifier.getIdentifierType().getDisplay();
+        for (Identifier newIdentifier : patient.getIdentifiers()) {
+            for (Identifier fetchedIdentifier : fetchedIdentifierList) {
+                fetchedIdentifierName = fetchedIdentifier.getIdentifierType().getName();
                 newIdentifierName = newIdentifier.getIdentifierType().getName();
 
-                if (newIdentifierName.equals(fetchedIdentifierDisplay)) {
+                if (newIdentifierName.equals(fetchedIdentifierName)) {
                     fetchedIdentifier.setIdentifier(newIdentifier.getIdentifier());
-
                     patientResource.updatePatientIdentifier(config, patient.getUuid(), fetchedIdentifier);
+                    isUpdate = true;
                 }
             }
+            if (!isUpdate) {
+                patientResource.updatePatientIdentifier(config, patient.getUuid(), newIdentifier);
+            }
+            isUpdate = false;
         }
     }
 

@@ -7,7 +7,12 @@
       "username": "admin",
       "password": "Admin123",
       "motechPatientIdentifierTypeName": "MOTECH Id",
-      "patientIdentifierTypeNames": []
+      "patientIdentifierTypeNames":
+      [
+        "MOTECH Id",
+        "Old Identification Number",
+        "OpenMRS Identification Number"
+      ]
     }
   ],
   "defaultConfigName" : "Test OpenMRS Server"
