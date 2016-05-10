@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.openmrs19.config.Config;
+import org.motechproject.openmrs19.config.Configs;
 import org.motechproject.openmrs19.service.OpenMRSConfigService;
 import org.motechproject.openmrs19.tasks.builder.OpenMRSTaskDataProviderBuilder;
 import org.springframework.ui.velocity.VelocityEngineFactoryBean;
@@ -39,7 +40,7 @@ public class OpenMRSTaskDataProviderBuilderTest {
 
     @Test
     public void generatedProviderShouldReturnNullWhenConfigsListIsEmpty() {
-        when(configService.getConfigs()).thenReturn(new ArrayList<>());
+        when(configService.getConfigs()).thenReturn(new Configs());
         openMRSTaskDataProviderBuilder.setOpenMRSConfigService(configService);
 
         assertNull(openMRSTaskDataProviderBuilder.generateDataProvider());
@@ -64,7 +65,9 @@ public class OpenMRSTaskDataProviderBuilderTest {
             simpleConfigs.add(simpleConfig);
         }
 
-        when(configService.getConfigs()).thenReturn(simpleConfigs);
+        Configs configs = new Configs(simpleConfigs, "simpleConfiguration");
+
+        when(configService.getConfigs()).thenReturn(configs);
         openMRSTaskDataProviderBuilder.setOpenMRSConfigService(configService);
 
         VelocityEngineFactoryBean vefb = new VelocityEngineFactoryBean();

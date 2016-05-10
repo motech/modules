@@ -3,13 +3,59 @@
 
     /* App Module */
 
-    angular.module('commcare', ['motech-dashboard', 'commcare.services', 'commcare.controllers',
-            'commcare.directives', 'ngCookies', 'uiServices']).config(['$routeProvider',
-        function ($routeProvider) {
-            $routeProvider.
-                when('/commcare/settings', {templateUrl: '../commcare/resources/partials/settings.html', controller: 'CommcareSettingsCtrl' }).
-                when('/commcare/import', {templateUrl: '../commcare/resources/partials/importForms.html', controller: 'CommcareImportFormsCtrl' }).
-                when('/commcare/forms', {templateUrl: '../commcare/resources/partials/forms.html', controller: 'CommcareModulesCtrl' }).
-                when('/commcare/cases', {templateUrl: '../commcare/resources/partials/cases.html', controller: 'CommcareCaseSchemasCtrl' });
+    var commcare = angular.module('commcare', ['motech-dashboard', 'commcare.services', 'commcare.controllers',
+                    'commcare.directives', 'ngCookies', 'uiServices']);
+
+    commcare.config(['$stateProvider', function ($stateProvider) {
+        $stateProvider
+            .state('commcare', {
+                url: "/commcare",
+                abstract: true,
+                views: {
+                    "moduleToLoad": {
+                        templateUrl: "../commcare/resources/index.html"
+                    }
+                }
+            })
+            .state('commcare.settings', {
+                url: '/settings',
+                parent: 'commcare',
+                views: {
+                    'commcareView': {
+                        templateUrl: '../commcare/resources/partials/settings.html',
+                        controller: 'CommcareSettingsCtrl'
+                    }
+                }
+            })
+            .state('commcare.import', {
+                url: '/import',
+                parent: 'commcare',
+                views: {
+                    'commcareView': {
+                        templateUrl: '../commcare/resources/partials/importForms.html',
+                        controller: 'CommcareImportFormsCtrl'
+                    }
+                }
+            })
+            .state('commcare.forms', {
+                url: '/forms',
+                parent: 'commcare',
+                views: {
+                    'commcareView': {
+                        templateUrl: '../commcare/resources/partials/forms.html',
+                        controller: 'CommcareModulesCtrl'
+                    }
+                }
+            })
+            .state('commcare.cases', {
+                url: '/cases',
+                parent: 'commcare',
+                views: {
+                    'commcareView': {
+                        templateUrl: '../commcare/resources/partials/cases.html',
+                        controller: 'CommcareCaseSchemasCtrl'
+                    }
+                }
+            });
     }]);
 }());

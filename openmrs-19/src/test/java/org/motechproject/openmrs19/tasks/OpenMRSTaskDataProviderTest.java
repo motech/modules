@@ -6,23 +6,22 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.motechproject.openmrs19.config.Configs;
 import org.motechproject.openmrs19.domain.Encounter;
 import org.motechproject.openmrs19.domain.EncounterType;
 import org.motechproject.openmrs19.domain.Patient;
 import org.motechproject.openmrs19.domain.Person;
 import org.motechproject.openmrs19.domain.Provider;
+import org.motechproject.openmrs19.domain.Relationship;
+import org.motechproject.openmrs19.domain.RelationshipType;
 import org.motechproject.openmrs19.service.OpenMRSConfigService;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
-import org.motechproject.openmrs19.tasks.builder.OpenMRSTaskDataProviderBuilder;
-import org.springframework.core.io.ResourceLoader;
-
-import java.util.ArrayList;
-import org.motechproject.openmrs19.domain.Relationship;
-import org.motechproject.openmrs19.domain.RelationshipType;
 import org.motechproject.openmrs19.service.OpenMRSRelationshipService;
-
+import org.motechproject.openmrs19.tasks.builder.OpenMRSTaskDataProviderBuilder;
+import org.osgi.framework.BundleContext;
+import org.springframework.core.io.ResourceLoader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -61,6 +60,9 @@ public class OpenMRSTaskDataProviderTest {
     private OpenMRSRelationshipService relationshipService;
 
     @Mock
+    private BundleContext bundleContext;
+
+    @Mock
     private ResourceLoader resourceLoader;
 
     @InjectMocks
@@ -70,9 +72,9 @@ public class OpenMRSTaskDataProviderTest {
 
     @Before
     public void setUp() {
-        when(configService.getConfigs()).thenReturn(new ArrayList<>());
+        when(configService.getConfigs()).thenReturn(new Configs());
         taskDataProvider = new OpenMRSTaskDataProvider(taskDataProviderBuilder, encounterService, patientService,
-                providerService, relationshipService);
+                providerService, relationshipService, bundleContext);
     }
 
     @Test

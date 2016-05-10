@@ -74,9 +74,9 @@
         };
     });
 
-     controllers.controller('MCEnrollmentsCtrl', function ($scope, $routeParams, Enrollments, ModalFactory, LoadingModal) {
+     controllers.controller('MCEnrollmentsCtrl', function ($scope, $stateParams, Enrollments, ModalFactory, LoadingModal) {
 
-        $scope.campaignName = $routeParams.campaignName;
+        $scope.campaignName = $stateParams.campaignName;
 
         function getPanelWidth() {
             return document.getElementById("main-content").offsetWidth-13;
