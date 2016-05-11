@@ -113,6 +113,7 @@ public interface OpenMRSActionProxyService {
      * Creates a program enrollment with the given params.
      * The required fields are: {@code patientUuid}, {@code programUuid}, {@code dateEnrolled}.
      *
+     * @param configName  the name of the configuration
      * @param patientUuid the patient uuid
      * @param programUuid the program uuid
      * @param dateEnrolled the program enrollment date
