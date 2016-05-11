@@ -96,7 +96,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         patient.setIdentifiers(identifierList);
         patient.setUuid(patientUuid);
 
-        patientService.updatePatientIdentifiers(null, patient);
+        patientService.updatePatientIdentifiers(configName, patient);
     }
 
     @Override

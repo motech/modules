@@ -131,22 +131,26 @@ public class PatientResourceImpl extends BaseResource implements PatientResource
     public void updatePatientMotechId(Config config, String patientUuid, String newMotechId) {
         List<Identifier> patientIdentifiers = getPatientIdentifierList(config, patientUuid);
         for (Identifier patientIdentifier : patientIdentifiers) {
-            if ("MOTECH Id".equals(patientIdentifier.getIdentifierType().getName())) {
+            if (config.getMotechPatientIdentifierTypeName().equals(patientIdentifier.getIdentifierType().getName())) {
                 patientIdentifier.setIdentifier(newMotechId);
 
-                String requestJson = buildGson().toJson(patientIdentifier);
-                postForJson(config, requestJson, "/patient/{patientUuid}/identifier/{identifierUuid}", patientUuid,
-                        patientIdentifier.getUuid());
+                updatePatientIdentifier(config, patientUuid, patientIdentifier);
                 break;
             }
         }
     }
 
     @Override
-    public void updatePatientIdentifier(Config config, String patientUuid, Identifier updatedIdentifier) {
-        String requestJson = buildGson().toJson(updatedIdentifier);
+    public void updatePatientIdentifier(Config config, String patientUuid, Identifier identifier) {
+        String requestJson = buildGson().toJson(identifier);
         postForJson(config, requestJson, "/patient/{patientUuid}/identifier/{identifierUuid}", patientUuid,
-                updatedIdentifier.getUuid());
+                identifier.getUuid());
+    }
+
+    @Override
+    public void addPatientIdentifier(Config config, String patientUuid, Identifier identifier) {
+        String requestJson = buildGson().toJson(identifier);
+        postForJson(config, requestJson, "/patient/{patientUuid}/identifier/", patientUuid);
     }
 
     private PatientIdentifierListResult getAllPatientIdentifierTypes(Config config) {

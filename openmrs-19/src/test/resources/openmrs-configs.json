@@ -9,7 +9,6 @@
       "motechPatientIdentifierTypeName": "MOTECH Id",
       "patientIdentifierTypeNames":
       [
-        "MOTECH Id",
         "Old Identification Number",
         "OpenMRS Identification Number"
       ]

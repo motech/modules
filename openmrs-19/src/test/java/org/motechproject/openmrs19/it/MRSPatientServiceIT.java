@@ -149,6 +149,26 @@ public class MRSPatientServiceIT extends BasePaxIT {
     }
 
     @Test
+    public void shouldAddPatientIdentifiers() throws InterruptedException {
+
+        Patient testPatient = new Patient();
+        Identifier newIdentifier = new Identifier("1234-4", new IdentifierType("OpenMRS Identification Number"));
+
+        testPatient.setUuid(patient.getUuid());
+        testPatient.setIdentifiers(Collections.singletonList(newIdentifier));
+
+        synchronized (lock) {
+            patientAdapter.updatePatientIdentifiers(DEFAULT_CONFIG_NAME, testPatient);
+
+            lock.wait(60000);
+        }
+        Patient updated = patientAdapter.getPatientByUuid(DEFAULT_CONFIG_NAME, testPatient.getUuid());
+
+        assertEquals(newIdentifier.getIdentifierType().getName(), updated.getIdentifiers().get(1).getIdentifierType().getName());
+        assertEquals(newIdentifier.getIdentifier(), updated.getIdentifiers().get(1).getIdentifier());
+    }
+
+    @Test
     public void shouldGetPatientByMotechId() {
 
         Patient fetched = patientAdapter.getPatientByMotechId(DEFAULT_CONFIG_NAME, patient.getMotechId());
