@@ -1,5 +1,7 @@
 package org.motechproject.ihe.interop.service;
 
+import java.io.IOException;
+
 /**
  * Service for CDA Templates
  */
@@ -11,5 +13,5 @@ public interface IHETemplateService {
      * @param url URL address where template will be sent
      * @param template XML template with filled fields
      */
-    void sendTemplateToRecipientUrl(String url, String template);
+    void sendTemplateToRecipientUrl(String url, String template) throws IOException;
 }
