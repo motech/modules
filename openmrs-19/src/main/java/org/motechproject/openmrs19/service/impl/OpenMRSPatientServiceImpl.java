@@ -227,7 +227,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
 
     private Patient updatePatient(Config config, Patient patient) {
         Validate.notNull(patient, "Patient cannot be null");
-        Validate.notEmpty(patient.getUuid(), "Patient Id may not be empty");
+        Validate.notEmpty(patient.getUuid(), "Patient Id cannot be empty");
 
         Person person = patient.getPerson();
 

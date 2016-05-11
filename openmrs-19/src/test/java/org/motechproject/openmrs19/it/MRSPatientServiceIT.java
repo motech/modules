@@ -70,6 +70,7 @@ public class MRSPatientServiceIT extends BasePaxIT {
 
     Patient patient;
     Concept causeOfDeath;
+    Location location;
 
     @Before
     public void setUp() throws InterruptedException, ConceptNameAlreadyInUseException {
@@ -230,7 +231,7 @@ public class MRSPatientServiceIT extends BasePaxIT {
         person.setBirthdateEstimated(false);
         person.setGender("M");
 
-        Location location = locationAdapter.createLocation(DEFAULT_CONFIG_NAME, new Location("FooName", "FooCountry", "FooRegion", "FooCountryDistrict", "FooStateProvince"));
+        location = locationAdapter.createLocation(DEFAULT_CONFIG_NAME, new Location("FooName", "FooCountry", "FooRegion", "FooCountryDistrict", "FooStateProvince"));
 
         assertNotNull(location);
 
@@ -278,7 +279,6 @@ public class MRSPatientServiceIT extends BasePaxIT {
 
         Identifier testIdentifier1 = new Identifier("603", new IdentifierType("Old Identification Number"));
         testIdentifier1.setUuid("2222");
-        Location location = locationAdapter.createLocation(DEFAULT_CONFIG_NAME, new Location("FooName", "FooCountry", "FooRegion", "FooCountryDistrict", "FooStateProvince"));
         testIdentifier1.setLocation(location);
         testList.add(testIdentifier1);
 
