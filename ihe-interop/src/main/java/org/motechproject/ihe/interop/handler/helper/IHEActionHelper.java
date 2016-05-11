@@ -1,8 +1,9 @@
 package org.motechproject.ihe.interop.handler.helper;
 
+import groovy.lang.Writable;
+import groovy.text.StreamingTemplateEngine;
+import groovy.text.Template;
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
 import org.motechproject.ihe.interop.domain.CdaTemplate;
 import org.motechproject.ihe.interop.domain.HL7Recipient;
 import org.motechproject.ihe.interop.exception.RecipientNotFoundException;
@@ -19,7 +20,6 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.Map;
 
 /**
@@ -66,13 +66,9 @@ public class IHEActionHelper {
         }
 
         Byte[] templateData = (Byte[]) iheTemplateDataService.getDetachedField(cdaTemplate, TEMPLATE_DATA_FIELD_NAME);
-
-        VelocityContext context = new VelocityContext();
-        for (String key : parameters.keySet()) {
-            context.put(key, parameters.get(key));
-        }
-        StringWriter writer = new StringWriter();
-        Velocity.evaluate(context, writer, "template", new String(ArrayUtils.toPrimitive(templateData)));
-        LOGGER.info("Template with name {}:\n{}", cdaTemplate.getTemplateName(), writer.toString());
+        StreamingTemplateEngine streamingTemplateEngine = new StreamingTemplateEngine();
+        Template template = streamingTemplateEngine.createTemplate(new String(ArrayUtils.toPrimitive(templateData)));
+        Writable writable = template.make(parameters);
+        LOGGER.info("Template with name {}:\n{}", cdaTemplate.getTemplateName(), writable.toString());
     }
 }
