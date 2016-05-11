@@ -15,4 +15,7 @@
     <osgi:service id="iheTaskServiceOsgi" ref="iheTaskService" interface="org.motechproject.ihe.interop.service.IHETaskService"/>
 
     <osgi:service id="hl7RecipientsServiceOsgi" ref="hl7RecipientsService" interface="org.motechproject.ihe.interop.service.HL7RecipientsService"/>
+
+    <osgi:service id="iheSendingTemplateServiceOsgi" ref="iheSendingTemplateService" interface="org.motechproject.ihe.interop.service.IHESendingTemplateService"/>
+
 </beans>
