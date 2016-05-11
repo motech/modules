@@ -118,5 +118,6 @@ public interface OpenMRSActionProxyService {
      * @param dateEnrolled the program enrollment date
      * @param dateCompleted the program completed date
      */
-    void createProgramEnrollment(String patientUuid, String programUuid, DateTime dateEnrolled, DateTime dateCompleted);
+    void createProgramEnrollment(String configName, String patientUuid, String programUuid,
+                                 DateTime dateEnrolled, DateTime dateCompleted, String locationName);
 }

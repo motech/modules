@@ -321,17 +321,17 @@
       "serviceMethod": "createProgramEnrollment",
       "actionParameters": [
         {
-          "key": "name",
+          "key": "patientUuid",
           "displayName": "openMRS.programEnrollment.patientUuid",
           "required": true
         },
         {
-          "key": "description",
+          "key": "programUuid",
           "displayName": "openMRS.programEnrollment.programUuid",
           "required": true
         },
         {
-          "key": "conceptUuid",
+          "key": "dateEnrolled",
           "displayName": "openMRS.programEnrollment.dateEnrolled",
           "type": "DATE",
           "required": true

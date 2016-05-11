@@ -27,6 +27,8 @@ public class ActionBuilder {
     private static final String CREATE_ENCOUNTER = "Create Encounter";
     private static final String CREATE_PATIENT = "Create Patient";
     private static final String UPDATE_PERSON = "Update Person";
+    private static final String CREATE_PROGRAM_ENROLLMENT = "Create Program Enrollment";
+    private static final String OPENMRS_ACTION_PROXY_SERVICE = "org.motechproject.openmrs19.tasks.OpenMRSActionProxyService";
 
     private OpenMRSConfigService configService;
 
@@ -46,6 +48,7 @@ public class ActionBuilder {
             actions.add(buildCreateEncounterAction(configName));
             actions.add(buildCreatePatientAction(configName));
             actions.add(buildUpdatePatientAction(configName));
+            actions.add(buildCreateProgramEnrollmentAction(configName));
         }
         return actions;
     }
@@ -65,7 +68,7 @@ public class ActionBuilder {
 
         return new ActionEventRequestBuilder()
                 .setDisplayName(getDisplayName(CREATE_ENCOUNTER, configName))
-                .setServiceInterface("org.motechproject.openmrs19.tasks.OpenMRSActionProxyService")
+                .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
                 .setServiceMethod("createEncounter")
                 .setActionParameters(actionParameters)
                 .createActionEventRequest();
@@ -85,7 +88,7 @@ public class ActionBuilder {
 
         return new ActionEventRequestBuilder()
                 .setDisplayName(getDisplayName(CREATE_PATIENT, configName))
-                .setServiceInterface("org.motechproject.openmrs19.tasks.OpenMRSActionProxyService")
+                .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
                 .setServiceMethod("createPatient")
                 .setActionParameters(parameters)
                 .createActionEventRequest();
@@ -101,8 +104,28 @@ public class ActionBuilder {
 
         return new ActionEventRequestBuilder()
                 .setDisplayName(getDisplayName(UPDATE_PERSON, configName))
-                .setServiceInterface("org.motechproject.openmrs19.tasks.OpenMRSActionProxyService")
+                .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
                 .setServiceMethod("updatePerson")
+                .setActionParameters(parameters)
+                .createActionEventRequest();
+    }
+
+    private ActionEventRequest buildCreateProgramEnrollmentAction(String configName) {
+        SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
+
+        int order = 0;
+
+        parameters.add(prepareParameter(Keys.CONFIG_NAME, DisplayNames.CONFIG_NAME, configName, false, true, order++));
+        parameters.add(prepareParameter(Keys.PATIENT_UUID, DisplayNames.PATIENT_UUID, true, order++));
+        parameters.add(prepareParameter(Keys.PROGRAM_UUID, DisplayNames.PROGRAM_UUID, true, order++));
+        parameters.add(prepareParameter(Keys.DATE_ENROLLED, DisplayNames.DATE_ENROLLED, DATE, true, order++));
+        parameters.add(prepareParameter(Keys.DATE_COMPLETED, DisplayNames.DATE_COMPLETED, DATE, false, order++));
+        parameters.add(prepareParameter(Keys.LOCATION_NAME, DisplayNames.LOCATION_NAME, false, order));
+
+        return new ActionEventRequestBuilder()
+                .setDisplayName(getDisplayName(CREATE_PROGRAM_ENROLLMENT, configName))
+                .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
+                .setServiceMethod("createProgramEnrollment")
                 .setActionParameters(parameters)
                 .createActionEventRequest();
     }

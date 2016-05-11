@@ -44,6 +44,11 @@ public final class DisplayNames {
     public static final String LOCATION_FOR_MOTECH_ID = "openMRS.location.name";
     public static final String IDENTIFIERS = "openMRS.patient.identifiers";
 
+    //Program action
+    public static final String PROGRAM_UUID = "openMRS.programEnrollment.programUuid";
+    public static final String DATE_ENROLLED = "openMRS.programEnrollment.dateEnrolled";
+    public static final String DATE_COMPLETED = "openMRS.programEnrollment.dateCompleted";
+
     /**
      * Utility class, should not be initiated.
      */

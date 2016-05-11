@@ -112,20 +112,27 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     }
 
     @Override
-    public void createProgramEnrollment(String patientUuid, String programUuid, DateTime dateEnrolled, DateTime dateCompleted) {
+    public void createProgramEnrollment(String configName, String patientUuid, String programUuid,
+                                        DateTime dateEnrolled, DateTime dateCompleted, String locationName) {
         Patient patient = new Patient();
         patient.setUuid(patientUuid);
 
         Program program = new Program();
         program.setUuid(programUuid);
 
+        Location location = null;
+        if (StringUtils.isNotBlank(locationName)) {
+            location = getLocationByName(configName, locationName);
+        }
+
         ProgramEnrollment programEnrollment = new ProgramEnrollment();
         programEnrollment.setPatient(patient);
         programEnrollment.setProgram(program);
-        programEnrollment.setDateEnrolled(Objects.nonNull(dateEnrolled) ? dateEnrolled.toDate() : null);
+        programEnrollment.setDateEnrolled(dateEnrolled.toDate());
         programEnrollment.setDateCompleted(Objects.nonNull(dateCompleted) ? dateCompleted.toDate() : null);
+        programEnrollment.setLocation(location);
 
-        programEnrollmentService.createProgramEnrollment(null, programEnrollment);
+        programEnrollmentService.createProgramEnrollment(configName, programEnrollment);
     }
 
     private Location getDefaultLocation(String configName) {
