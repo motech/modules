@@ -117,6 +117,7 @@ public interface OpenMRSActionProxyService {
      * @param programUuid the program uuid
      * @param dateEnrolled the program enrollment date
      * @param dateCompleted the program completed date
+     * @param locationName the name of location
      */
     void createProgramEnrollment(String configName, String patientUuid, String programUuid,
                                  DateTime dateEnrolled, DateTime dateCompleted, String locationName);
