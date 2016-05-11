@@ -1,16 +1,15 @@
 package org.motechproject.ihe.interop.handler.helper;
 
-import groovy.lang.Writable;
-import groovy.text.Template;
-import groovy.text.XmlTemplateEngine;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+import org.motechproject.ihe.interop.domain.CdaTemplate;
 import org.motechproject.ihe.interop.domain.HL7Recipient;
+import org.motechproject.ihe.interop.exception.RecipientNotFoundException;
+import org.motechproject.ihe.interop.exception.TemplateNotFoundException;
 import org.motechproject.ihe.interop.service.HL7RecipientsService;
 import org.motechproject.ihe.interop.service.IHETemplateDataService;
 import org.motechproject.ihe.interop.util.Constants;
-import org.motechproject.ihe.interop.domain.CdaTemplate;
-import org.motechproject.ihe.interop.exception.RecipientNotFoundException;
-import org.motechproject.ihe.interop.exception.TemplateNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +19,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Map;
 
 /**
@@ -66,9 +66,13 @@ public class IHEActionHelper {
         }
 
         Byte[] templateData = (Byte[]) iheTemplateDataService.getDetachedField(cdaTemplate, TEMPLATE_DATA_FIELD_NAME);
-        XmlTemplateEngine xmlTemplateEngine = new XmlTemplateEngine();
-        Template xmlTemplate = xmlTemplateEngine.createTemplate(new String(ArrayUtils.toPrimitive(templateData)));
-        Writable writable = xmlTemplate.make(parameters);
-        LOGGER.info("Template with name {}:\n{}", cdaTemplate.getTemplateName(), writable.toString());
+
+        VelocityContext context = new VelocityContext();
+        for (String key : parameters.keySet()) {
+            context.put(key, parameters.get(key));
+        }
+        StringWriter writer = new StringWriter();
+        Velocity.evaluate(context, writer, "template", new String(ArrayUtils.toPrimitive(templateData)));
+        LOGGER.info("Template with name {}:\n{}", cdaTemplate.getTemplateName(), writer.toString());
     }
 }
