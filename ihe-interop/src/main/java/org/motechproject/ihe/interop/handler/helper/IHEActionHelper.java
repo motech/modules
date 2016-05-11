@@ -3,14 +3,17 @@ package org.motechproject.ihe.interop.handler.helper;
 import groovy.lang.Writable;
 import groovy.text.Template;
 import groovy.text.XmlTemplateEngine;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.lang.ArrayUtils;
+import org.motechproject.ihe.interop.domain.CdaTemplate;
 import org.motechproject.ihe.interop.domain.HL7Recipient;
+import org.motechproject.ihe.interop.exception.RecipientNotFoundException;
+import org.motechproject.ihe.interop.exception.TemplateNotFoundException;
 import org.motechproject.ihe.interop.service.HL7RecipientsService;
 import org.motechproject.ihe.interop.service.IHETemplateDataService;
 import org.motechproject.ihe.interop.util.Constants;
-import org.motechproject.ihe.interop.domain.CdaTemplate;
-import org.motechproject.ihe.interop.exception.RecipientNotFoundException;
-import org.motechproject.ihe.interop.exception.TemplateNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.Map;
 
 /**
@@ -70,5 +74,20 @@ public class IHEActionHelper {
         Template xmlTemplate = xmlTemplateEngine.createTemplate(new String(ArrayUtils.toPrimitive(templateData)));
         Writable writable = xmlTemplate.make(parameters);
         LOGGER.info("Template with name {}:\n{}", cdaTemplate.getTemplateName(), writable.toString());
+        sendTemplate(hl7Recipient.getRecipientUrl(), writable.toString());
+    }
+
+    private void sendTemplate(String url, String template) throws IOException{
+        PostMethod post = new PostMethod(url);
+        post.setRequestEntity(new StringRequestEntity(template, "application/xml", "utf-8"));
+        HttpClient client = new HttpClient();
+        LOGGER.info("Sending template to URL: {}", url);
+        try {
+            int responseCode = client.executeMethod(post);
+            LOGGER.info("Response code: {}", responseCode);
+            LOGGER.info("Response body: {}", post.getResponseBodyAsString());
+        } catch (ConnectException e) {
+            LOGGER.error("Cannot connect with URL: ", url);
+        }
     }
 }
