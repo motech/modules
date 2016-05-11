@@ -8,8 +8,8 @@
 
     <div class="form-inline toolbox">
             <label class="form-group">{{msg('commcare.selectConfig')}}: </label>
-            <select ng-disabled="downloadingCases" class="form-control largeCombobox" ng-model="$parent.selectedConfig" ng-options="config.name for config in $parent.configurations.configs | filter:config.saved=true">
-                <option ng-if="!$parent.selectedConfig" value="">{{msg('commcare.select')}}</option>
+            <select ng-disabled="downloadingCases" class="form-control largeCombobox" ng-model="$parent.selectedConfig" ng-options="config.name for config in $parent.configurations.configs | filterUnsavedConfig:newlyCreatedConfig">
+                <option ng-if="!$parent.selectedConfig || (selectedConfig === newlyCreatedConfig)" value="">{{msg('commcare.select')}}</option>
             </select>
             <button type="button" class="form-group btn btn-default" id="commcare-case-filters">
                 <i class="fa fa-filter"></i>&nbsp;{{msg('commcare.filters')}}

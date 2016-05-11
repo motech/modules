@@ -37,7 +37,6 @@ public class Configs {
     public void saveConfig(Config config) {
         if (!contains(config)) {
             configs.add(config);
-            config.setSaved(true);
         }
     }
 
