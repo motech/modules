@@ -335,6 +335,7 @@
                 function success(data) {
                     $scope.$parent.configurations.configs.push(data);
                     $scope.$parent.selectedConfig = data;
+                    $scope.$parent.newlyCreatedConfig = data;
                     if ($scope.$parent.selectedConfig.eventStrategy === "") {
                         $scope.$parent.selectedConfig.eventStrategy = $scope.eventStrategyOptions[0];
                     }
@@ -376,8 +377,7 @@
         $scope.saveAllowed = function() {
             return $scope.validateConfig()
                 && $scope.validateConfigName()
-                && $scope.validateUrlAndDomain()
-                && $scope.configOutdated;
+                && $scope.validateUrlAndDomain();
         };
 
         $scope.syncConfig = function() {
@@ -535,6 +535,7 @@
                     $scope.updateConfig(data);
                     $scope.newConfig = false;
                     $scope.configOutdated = false;
+                    $scope.$parent.newlyCreatedConfig = undefined;
                     LoadingModal.close();
                 },
                 function failure(response) {
@@ -559,6 +560,7 @@
                     $scope.updateConfig(data);
                     $scope.newConfig = false;
                     $scope.configOutdated = false;
+                    $scope.$parent.newlyCreatedConfig = undefined;
                     LoadingModal.close();
                 },
                 function failure(response) {
