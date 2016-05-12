@@ -12,18 +12,16 @@ import org.motechproject.openmrs19.domain.EncounterType;
 import org.motechproject.openmrs19.domain.Patient;
 import org.motechproject.openmrs19.domain.Person;
 import org.motechproject.openmrs19.domain.Provider;
+import org.motechproject.openmrs19.domain.Relationship;
+import org.motechproject.openmrs19.domain.RelationshipType;
 import org.motechproject.openmrs19.service.OpenMRSConfigService;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
+import org.motechproject.openmrs19.service.OpenMRSRelationshipService;
 import org.motechproject.openmrs19.tasks.builder.OpenMRSTaskDataProviderBuilder;
 import org.osgi.framework.BundleContext;
 import org.springframework.core.io.ResourceLoader;
-
-import org.motechproject.openmrs19.domain.Relationship;
-import org.motechproject.openmrs19.domain.RelationshipType;
-import org.motechproject.openmrs19.service.OpenMRSRelationshipService;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;

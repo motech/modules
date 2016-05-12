@@ -10,7 +10,7 @@ import org.motechproject.event.listener.EventRelay;
 import org.motechproject.openmrs19.config.Config;
 import org.motechproject.openmrs19.config.Configs;
 import org.motechproject.openmrs19.service.OpenMRSConfigService;
-import org.motechproject.openmrs19.util.Constants;
+import org.motechproject.openmrs19.tasks.constants.EventSubjects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -28,16 +28,24 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
     private static final String OPEN_MRS_CONFIGS_FILE_NAME = "openmrs-configs.json";
 
     @Autowired
-    private EventRelay eventRelay;
+    private SettingsFacade settingsFacade;
 
     @Autowired
-    private SettingsFacade settingsFacade;
+    private EventRelay eventRelay;
 
     private Configs configs;
 
     @PostConstruct
     public void postConstruct() {
-        loadConfigs();
+        try (InputStream is = settingsFacade.getRawConfig(OPEN_MRS_CONFIGS_FILE_NAME)) {
+            String jsonText = IOUtils.toString(is);
+            Gson gson = new Gson();
+            configs = gson.fromJson(jsonText, Configs.class);
+        } catch (IOException e) {
+            throw new JsonIOException("Unable to read " + OPEN_MRS_CONFIGS_FILE_NAME, e);
+        } catch (RuntimeException e) {
+            throw new JsonIOException("Malformed " + OPEN_MRS_CONFIGS_FILE_NAME + " file", e);
+        }
     }
 
     @Override
@@ -105,24 +113,11 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
         return configs.getByName(configs.getDefaultConfigName());
     }
 
-    private synchronized void loadConfigs() {
-        try (InputStream is = settingsFacade.getRawConfig(OPEN_MRS_CONFIGS_FILE_NAME)) {
-            String jsonText = IOUtils.toString(is);
-            Gson gson = new Gson();
-            configs = gson.fromJson(jsonText, Configs.class);
-        } catch (IOException e) {
-            throw new JsonIOException("Unable to read " + OPEN_MRS_CONFIGS_FILE_NAME, e);
-        } catch (RuntimeException e) {
-            throw new JsonIOException("Malformed " + OPEN_MRS_CONFIGS_FILE_NAME + " file", e);
-        }
-    }
-
     private void updateConfigs() {
         Gson gson = new Gson();
         String jsonText = gson.toJson(configs, Configs.class);
         ByteArrayResource resource = new ByteArrayResource(jsonText.getBytes());
         settingsFacade.saveRawConfig(OPEN_MRS_CONFIGS_FILE_NAME, resource);
-
-        eventRelay.sendEventMessage(new MotechEvent(Constants.CONFIG_CHANGE_EVENT));
+        eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_CHANGE_EVENT));
     }
 }

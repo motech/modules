@@ -14,8 +14,7 @@ import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
 import org.motechproject.openmrs19.service.OpenMRSRelationshipService;
 import org.motechproject.openmrs19.tasks.builder.OpenMRSTaskDataProviderBuilder;
-
-import org.motechproject.openmrs19.util.Constants;
+import org.motechproject.openmrs19.tasks.constants.EventSubjects;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
@@ -61,8 +60,6 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     public OpenMRSTaskDataProvider(OpenMRSTaskDataProviderBuilder taskDataProviderBuilder, OpenMRSEncounterService encounterService,
                                    OpenMRSPatientService patientService, OpenMRSProviderService providerService,
                                    OpenMRSRelationshipService relationshipService, BundleContext bundleContext) {
-
-
         this.encounterService = encounterService;
         this.patientService = patientService;
         this.providerService = providerService;
@@ -73,7 +70,7 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         generateProvider(null);
     }
 
-    @MotechListener(subjects = { Constants.CONFIG_CHANGE_EVENT })
+    @MotechListener(subjects = { EventSubjects.CONFIG_CHANGE_EVENT })
     public void generateProvider(MotechEvent event) {
         String body = dataProviderBuilder.generateDataProvider();
         setBody(body);

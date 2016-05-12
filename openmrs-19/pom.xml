@@ -43,6 +43,12 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>com.springsource.org.apache.commons.httpclient</artifactId>
         </dependency>
+        <dependency>
+            <groupId>${motech.groupId}</groupId>
+            <artifactId>motech-tasks</artifactId>
+            <version>${motech.version}</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
     <build>
         <resources>
