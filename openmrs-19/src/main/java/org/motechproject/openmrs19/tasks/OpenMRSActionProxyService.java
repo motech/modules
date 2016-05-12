@@ -72,6 +72,16 @@ public interface OpenMRSActionProxyService {
                        Map<String, String> identifiers);
 
     /**
+      * Updates a patient with the given {@patientUuid}. Configuration with the given {@code configName} will be used
+      * while performing this action.
+      *
+      * @param configName  the name of the configuration
+      * @param patientUuid the patient uuid
+      * @param identifiers the identifiers to be stored to patient
+    */
+    void updatePatientIdentifiers(String configName, String patientUuid, Map<String, String> identifiers);
+
+    /**
      * Updates a person with the given {@code personUuid}. Configuration with the given {@code configName} will be used
      * while performing this action.
      *

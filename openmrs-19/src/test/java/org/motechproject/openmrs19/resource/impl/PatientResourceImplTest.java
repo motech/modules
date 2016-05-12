@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.motechproject.openmrs19.domain.Identifier;
 import org.motechproject.openmrs19.domain.Patient;
 import org.motechproject.openmrs19.domain.PatientListResult;
 import org.mockito.Captor;
@@ -18,6 +19,7 @@ import org.springframework.web.client.RestOperations;
 
 import java.net.URI;
 
+import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -33,6 +35,7 @@ public class PatientResourceImplTest extends AbstractResourceImplTest {
     private static final String PATIENT_LIST_RESPONSE_JSON = "json/patient/patient-list-response.json";
     private static final String PATIENT_RESPONSE_JSON = "json/patient/patient-response.json";
     private static final String CREATE_PATIENT_JSON = "json/patient/patient-create.json";
+    private static final String UPDATE_PATIENT_IDENTIFIER_JSON = "json/patient/patient-identifier-update.json";
 
     @Mock
     private RestOperations restOperations;
@@ -117,6 +120,26 @@ public class PatientResourceImplTest extends AbstractResourceImplTest {
         assertThat(uuid, equalTo("III"));
         assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
         assertThat(requestCaptor.getValue().getBody(), nullValue());
+    }
+
+    @Test
+    public void shouldUpdatePatientIdentifiers() throws Exception {
+        Patient patient = preparePatient();
+        String patientId = patient.getUuid();
+        String identifierId = patient.getIdentifiers().get(0).getUuid();
+        URI url = config.toInstancePathWithParams("/patient/{uuid}/identifier/{identifierId}", patientId, identifierId);
+
+        when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(PATIENT_RESPONSE_JSON));
+
+        patient.getIdentifiers().get(0).setIdentifier("1000");
+
+        patientResource.updatePatientIdentifier(config, patient.getUuid(), patient.getIdentifiers().get(0));
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
+
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPost(config)));
+        assertEquals(JsonUtils.readJson(requestCaptor.getValue().getBody(), Identifier.class), readFromFile(UPDATE_PATIENT_IDENTIFIER_JSON, Identifier.class));
     }
 
     private Patient preparePatient() throws Exception {

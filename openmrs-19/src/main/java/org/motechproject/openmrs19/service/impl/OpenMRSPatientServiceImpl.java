@@ -41,7 +41,6 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
 
     private final OpenMRSPersonService personService;
     private final OpenMRSConfigService configService;
-
     private final PatientResource patientResource;
     private final PersonResource personResource;
 
@@ -101,6 +100,11 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
     @Override
     public Patient updatePatient(String configName, Patient patient) {
         return updatePatient(configService.getConfigByName(configName), patient);
+    }
+
+    @Override
+    public Patient updatePatientIdentifiers(String configName, Patient patient) {
+        return updatePatientIdentifiers(configService.getConfigByName(configName), patient);
     }
 
     @Override
@@ -222,7 +226,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
 
     private Patient updatePatient(Config config, Patient patient) {
         Validate.notNull(patient, "Patient cannot be null");
-        Validate.notEmpty(patient.getUuid(), "Patient Id may not be empty");
+        Validate.notEmpty(patient.getUuid(), "Patient Id cannot be empty");
 
         Person person = patient.getPerson();
 
@@ -245,6 +249,56 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         return updatedPatient;
     }
 
+    private Patient updatePatientIdentifiers(Config config, Patient patient) {
+        Validate.notNull(patient, "Patient cannot be null");
+        Validate.notEmpty(patient.getUuid(), "Patient Id cannot be empty");
+
+        List<Identifier> identifiersList = patientResource.getPatientIdentifierList(config, patient.getUuid());
+        Patient updatedPatient;
+        try {
+            //Patient Identifiers have to be update separately.
+            updatePatientIdentifiers(config, patient, identifiersList);
+            updatedPatient = getPatientByUuid(config, patient.getUuid());
+            eventRelay.sendEventMessage(new MotechEvent(EventKeys.UPDATED_PATIENT_IDENTIFIERS_SUBJECT, EventHelper.patientParameters(updatedPatient)));
+        } catch (HttpClientErrorException e) {
+            throw new OpenMRSException("Failed to update OpenMRS patient's identifiers for patient with id: " + patient.getUuid(), e);
+        }
+        return updatedPatient;
+    }
+
+    private void updatePatientIdentifiers(Config config, Patient patient, List<Identifier> fetchedIdentifierList) {
+        String fetchedIdentifierName;
+        String newIdentifierName;
+
+        for (Identifier newIdentifier : patient.getIdentifiers()) {
+            boolean isUpdated = false;
+
+            for (Identifier fetchedIdentifier : fetchedIdentifierList) {
+                fetchedIdentifierName = fetchedIdentifier.getIdentifierType().getName();
+                newIdentifierName = newIdentifier.getIdentifierType().getName();
+
+                if (newIdentifierName.equals(fetchedIdentifierName)) {
+                    fetchedIdentifier.setIdentifier(newIdentifier.getIdentifier());
+                    patientResource.updatePatientIdentifier(config, patient.getUuid(), fetchedIdentifier);
+                    isUpdated = true;
+                }
+            }
+            if (!isUpdated) {
+                addNewPatientIdentifier(config, patient, newIdentifier);
+            }
+        }
+    }
+
+    private void addNewPatientIdentifier(Config config, Patient patient, Identifier newIdentifier) {
+        String uuid = patientResource.getPatientIdentifierTypeUuidByName(config, newIdentifier.getIdentifierType().getName());
+
+        if (uuid == null) {
+            LOGGER.warn("The identifier type with name {} is not supported", newIdentifier.getIdentifierType().getName());
+        } else {
+            newIdentifier.getIdentifierType().setUuid(uuid);
+            patientResource.addPatientIdentifier(config, patient.getUuid(), newIdentifier);
+        }
+    }
     private void validatePatientBeforeSave(Patient patient) {
         Validate.notNull(patient, "Patient cannot be null");
         Validate.isTrue(StringUtils.isNotEmpty(patient.getMotechId()), "You must provide a motech id to save a patient");
@@ -269,6 +323,11 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         } catch (HttpClientErrorException e) {
             LOGGER.error("There was an exception retrieving the MOTECH Identifier Type UUID");
             return null;
+        }
+
+        if (motechPatientIdentifierTypeUuid == null) {
+            throw new OpenMRSException(String.format("Motech ID \"%s\" is not available on the OpenMRS server",
+                    config.getMotechPatientIdentifierTypeName()));
         }
 
         return motechPatientIdentifierTypeUuid;

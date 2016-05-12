@@ -4,13 +4,14 @@ import groovy.lang.Writable;
 import groovy.text.Template;
 import groovy.text.XmlTemplateEngine;
 import org.apache.commons.lang.ArrayUtils;
-import org.motechproject.ihe.interop.domain.HL7Recipient;
-import org.motechproject.ihe.interop.service.HL7RecipientsService;
-import org.motechproject.ihe.interop.service.IHETemplateDataService;
-import org.motechproject.ihe.interop.util.Constants;
 import org.motechproject.ihe.interop.domain.CdaTemplate;
+import org.motechproject.ihe.interop.domain.HL7Recipient;
 import org.motechproject.ihe.interop.exception.RecipientNotFoundException;
 import org.motechproject.ihe.interop.exception.TemplateNotFoundException;
+import org.motechproject.ihe.interop.service.HL7RecipientsService;
+import org.motechproject.ihe.interop.service.IHETemplateDataService;
+import org.motechproject.ihe.interop.service.IHETemplateService;
+import org.motechproject.ihe.interop.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,9 @@ public class IHEActionHelper {
 
     @Autowired
     private HL7RecipientsService hl7RecipientsService;
+
+    @Autowired
+    private IHETemplateService iheTemplateService;
 
     /**
      * Sends data to the HL7 recipient. Template data, recipient name and template name are in the parameters map.
@@ -70,5 +74,6 @@ public class IHEActionHelper {
         Template xmlTemplate = xmlTemplateEngine.createTemplate(new String(ArrayUtils.toPrimitive(templateData)));
         Writable writable = xmlTemplate.make(parameters);
         LOGGER.info("Template with name {}:\n{}", cdaTemplate.getTemplateName(), writable.toString());
+        iheTemplateService.sendTemplateToRecipientUrl(hl7Recipient.getRecipientUrl(), writable.toString());
     }
 }
