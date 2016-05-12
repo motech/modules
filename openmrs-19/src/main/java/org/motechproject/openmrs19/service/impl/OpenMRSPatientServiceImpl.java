@@ -270,9 +270,8 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         String fetchedIdentifierName;
         String newIdentifierName;
 
-
         for (Identifier newIdentifier : patient.getIdentifiers()) {
-            boolean isUpdate = false;
+            boolean isUpdated = false;
 
             for (Identifier fetchedIdentifier : fetchedIdentifierList) {
                 fetchedIdentifierName = fetchedIdentifier.getIdentifierType().getName();
@@ -281,10 +280,10 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
                 if (newIdentifierName.equals(fetchedIdentifierName)) {
                     fetchedIdentifier.setIdentifier(newIdentifier.getIdentifier());
                     patientResource.updatePatientIdentifier(config, patient.getUuid(), fetchedIdentifier);
-                    isUpdate = true;
+                    isUpdated = true;
                 }
             }
-            if (!isUpdate) {
+            if (!isUpdated) {
                 addNewPatientIdentifier(config, patient, newIdentifier);
             }
         }
@@ -292,9 +291,13 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
 
     private void addNewPatientIdentifier(Config config, Patient patient, Identifier newIdentifier) {
         String uuid = patientResource.getPatientIdentifierTypeUuidByName(config, newIdentifier.getIdentifierType().getName());
-        newIdentifier.getIdentifierType().setUuid(uuid);
 
-        patientResource.addPatientIdentifier(config, patient.getUuid(), newIdentifier);
+        if (uuid == null) {
+            LOGGER.warn("The identifier type with name {} is not supported", newIdentifier.getIdentifierType().getName());
+        } else {
+            newIdentifier.getIdentifierType().setUuid(uuid);
+            patientResource.addPatientIdentifier(config, patient.getUuid(), newIdentifier);
+        }
     }
     private void validatePatientBeforeSave(Patient patient) {
         Validate.notNull(patient, "Patient cannot be null");
