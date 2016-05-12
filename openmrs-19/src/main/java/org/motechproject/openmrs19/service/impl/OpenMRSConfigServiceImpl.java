@@ -2,6 +2,13 @@ package org.motechproject.openmrs19.service.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.auth.AuthScope;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.config.SettingsFacade;
@@ -11,6 +18,8 @@ import org.motechproject.openmrs19.config.Config;
 import org.motechproject.openmrs19.config.Configs;
 import org.motechproject.openmrs19.service.OpenMRSConfigService;
 import org.motechproject.openmrs19.tasks.constants.EventSubjects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -26,6 +35,7 @@ import static org.motechproject.openmrs19.validation.ConfigValidator.validateCon
 public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
 
     private static final String OPEN_MRS_CONFIGS_FILE_NAME = "openmrs-configs.json";
+    private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSConfigServiceImpl.class);
 
     @Autowired
     private SettingsFacade settingsFacade;
@@ -53,7 +63,6 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
     public void deleteAllConfigs() {
         configs.getConfigs().clear();
         configs.setDefaultConfigName(null);
-        updateConfigs();
     }
 
     @Override
@@ -61,8 +70,10 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
     public void saveAllConfigs(Configs configs) {
         this.configs.setDefaultConfigName(configs.getDefaultConfigName());
         for (Config config : configs.getConfigs()) {
-            addConfig(config);
+            validateConfig(config);
+            this.configs.add(config);
         }
+        updateConfigs();
     }
 
     @Override
@@ -111,6 +122,27 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
     @Transactional
     public Config getDefaultConfig() {
         return configs.getByName(configs.getDefaultConfigName());
+    }
+
+    @Override
+    @Transactional
+    public boolean verifyConfig(Config config) {
+        HttpMethod method = new GetMethod(config.toInstancePath("/concept").toString());
+        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(config.getUsername(), config.getPassword());
+        HttpClient client = new HttpClient();
+        client.getState().setCredentials(AuthScope.ANY, credentials);
+        int status = 0;
+        try {
+            status = client.executeMethod(method);
+        } catch (HttpException e) {
+            LOGGER.warn("HttpException while sending request to OpenMRS: " + e.getMessage());
+        } catch (IOException e) {
+            LOGGER.warn("IOException while sending request to OpenMRS: " + e.getMessage());
+        } finally {
+            method.releaseConnection();
+        }
+
+        return status == HttpStatus.SC_OK;
     }
 
     private void updateConfigs() {

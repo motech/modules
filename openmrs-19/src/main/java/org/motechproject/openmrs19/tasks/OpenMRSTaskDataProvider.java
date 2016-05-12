@@ -71,7 +71,7 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     }
 
     @MotechListener(subjects = { EventSubjects.CONFIG_CHANGE_EVENT })
-    public void generateProvider(MotechEvent event) {
+    public synchronized void generateProvider(MotechEvent event) {
         String body = dataProviderBuilder.generateDataProvider();
         setBody(body);
 
