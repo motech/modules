@@ -467,7 +467,7 @@ public class Person {
             if (src.dead != null) {
                 person.addProperty("dead", src.getDead());
             }
-            if(src.causeOfDeath != null) {
+            if (src.causeOfDeath != null) {
                 person.addProperty("causeOfDeath", src.getCauseOfDeath().getUuid());
             }
 

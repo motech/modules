@@ -46,6 +46,7 @@ public final class EventKeys {
 
     public static final String CREATED_NEW_PATIENT_SUBJECT = BASE_SUBJECT + "Patient.Created";
     public static final String UPDATED_PATIENT_SUBJECT = BASE_SUBJECT + "Patient.Updated";
+    public static final String UPDATED_PATIENT_IDENTIFIERS_SUBJECT = BASE_SUBJECT + "PatientIdentifiers.Updated";
     public static final String PATIENT_DECEASED_SUBJECT = BASE_SUBJECT + "Patient.Deceased";
     public static final String DELETED_PATIENT_SUBJECT = BASE_SUBJECT + "Patient.Deleted";
     public static final String CREATED_NEW_OBSERVATION_SUBJECT = BASE_SUBJECT + "Observation.Created";
