@@ -39,6 +39,8 @@ public final class EventKeys {
     public static final String ENCOUNTER_DATE = "EncounterDate";
     public static final String PROVIDER_ID = "ProviderId";
     public static final String USER_ID = "UserId";
+    public static final String PROGRAM_ID = "ProgramId";
+    public static final String PROGRAM_ENROLLMENT_ID = "ProgramEnrollmentId";
 
     public static final String BASE_SUBJECT = "org.motechproject.mrs.api.";
 
@@ -66,6 +68,7 @@ public final class EventKeys {
     public static final String UPDATED_CONCEPT_SUBJECT = BASE_SUBJECT + "Concept.Updated";
     public static final String DELETED_CONCEPT_SUBJECT = BASE_SUBJECT + "Concept.Deleted";
     public static final String VOIDED_OBSERVATION_SUBJECT = "Observation.Voided";
+    public static final String CREATED_PROGRAM_ENROLLMENT = BASE_SUBJECT + "ProgramEnrollment.Created";
 
     /**
      * Utility class, should not be instantiated.

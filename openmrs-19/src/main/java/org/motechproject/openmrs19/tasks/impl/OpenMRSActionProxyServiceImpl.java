@@ -13,11 +13,14 @@ import org.motechproject.openmrs19.domain.Location;
 import org.motechproject.openmrs19.domain.Observation;
 import org.motechproject.openmrs19.domain.Patient;
 import org.motechproject.openmrs19.domain.Person;
+import org.motechproject.openmrs19.domain.Program;
+import org.motechproject.openmrs19.domain.ProgramEnrollment;
 import org.motechproject.openmrs19.domain.Provider;
 import org.motechproject.openmrs19.service.OpenMRSConceptService;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSLocationService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
+import org.motechproject.openmrs19.service.OpenMRSProgramEnrollmentService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
 import org.motechproject.openmrs19.service.OpenMRSPersonService;
 import org.motechproject.openmrs19.tasks.OpenMRSActionProxyService;
@@ -45,6 +48,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     private OpenMRSLocationService locationService;
     private OpenMRSPatientService patientService;
     private OpenMRSProviderService providerService;
+    private OpenMRSProgramEnrollmentService programEnrollmentService;
     private OpenMRSPersonService personService;
 
     @Override
@@ -116,6 +120,30 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         person.setUuid(personUuid);
 
         personService.updatePerson(configName, person);
+    }
+
+    @Override
+    public void createProgramEnrollment(String configName, String patientUuid, String programUuid,
+                                        DateTime dateEnrolled, DateTime dateCompleted, String locationName) {
+        Patient patient = new Patient();
+        patient.setUuid(patientUuid);
+
+        Program program = new Program();
+        program.setUuid(programUuid);
+
+        Location location = null;
+        if (StringUtils.isNotBlank(locationName)) {
+            location = getLocationByName(configName, locationName);
+        }
+
+        ProgramEnrollment programEnrollment = new ProgramEnrollment();
+        programEnrollment.setPatient(patient);
+        programEnrollment.setProgram(program);
+        programEnrollment.setDateEnrolled(dateEnrolled.toDate());
+        programEnrollment.setDateCompleted(Objects.nonNull(dateCompleted) ? dateCompleted.toDate() : null);
+        programEnrollment.setLocation(location);
+
+        programEnrollmentService.createProgramEnrollment(configName, programEnrollment);
     }
 
     private Location getDefaultLocation(String configName) {
@@ -231,5 +259,10 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     @Autowired
     public void setProviderService(OpenMRSProviderService providerService) {
         this.providerService = providerService;
+    }
+
+    @Autowired
+    public void setProgramEnrollmentService(OpenMRSProgramEnrollmentService programEnrollmentService) {
+        this.programEnrollmentService = programEnrollmentService;
     }
 }

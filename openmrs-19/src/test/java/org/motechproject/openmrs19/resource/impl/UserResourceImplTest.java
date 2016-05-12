@@ -29,12 +29,12 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class UserResourceImplTest extends AbstractResourceImplTest {
 
-    private static final String USER_BY_USERNAME_RESPONSE_JSON = "json/user-by-username-response.json";
-    private static final String USER_UPDATE_NO_USERNAME_JSON = "json/user-update-no-username.json";
-    private static final String USER_LIST_RESPONSE_JSON = "json/user-list-full-response.json";
-    private static final String ROLE_RESPONSE_JSON = "json/role-response.json";
-    private static final String USER_RESPONSE_JSON = "json/user-response.json";
-    private static final String USER_CREATE_JSON = "json/user-create.json";
+    private static final String USER_BY_USERNAME_RESPONSE_JSON = "json/user/user-by-username-response.json";
+    private static final String USER_UPDATE_NO_USERNAME_JSON = "json/user/user-update-no-username.json";
+    private static final String USER_LIST_RESPONSE_JSON = "json/user/user-list-full-response.json";
+    private static final String ROLE_RESPONSE_JSON = "json/role/role-response.json";
+    private static final String USER_RESPONSE_JSON = "json/user/user-response.json";
+    private static final String USER_CREATE_JSON = "json/user/user-create.json";
 
     @Mock
     private RestOperations restOperations;

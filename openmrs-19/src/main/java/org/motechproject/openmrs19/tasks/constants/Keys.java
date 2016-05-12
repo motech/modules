@@ -44,6 +44,11 @@ public final class Keys {
     public static final String LOCATION_FOR_MOTECH_ID = "locationForMotechId";
     public static final String IDENTIFIERS = "identifiers";
 
+    //Program action
+    public static final String PROGRAM_UUID = "programUuid";
+    public static final String DATE_ENROLLED = "dateEnrolled";
+    public static final String DATE_COMPLETED = "dateCompleted";
+
     /**
      * Utility class, should not be initiated.
      */
