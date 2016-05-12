@@ -322,6 +322,11 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
             return null;
         }
 
+        if (motechPatientIdentifierTypeUuid == null) {
+            throw new OpenMRSException(String.format("Motech ID \"%s\" is not available on the OpenMRS server",
+                    config.getMotechPatientIdentifierTypeName()));
+        }
+
         return motechPatientIdentifierTypeUuid;
     }
 
