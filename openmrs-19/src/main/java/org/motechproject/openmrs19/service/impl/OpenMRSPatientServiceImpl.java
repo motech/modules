@@ -9,7 +9,6 @@ import org.motechproject.openmrs19.domain.Attribute;
 import org.motechproject.openmrs19.domain.Concept;
 import org.motechproject.openmrs19.domain.Identifier;
 import org.motechproject.openmrs19.domain.IdentifierType;
-import org.motechproject.openmrs19.domain.Location;
 import org.motechproject.openmrs19.domain.Patient;
 import org.motechproject.openmrs19.domain.PatientListResult;
 import org.motechproject.openmrs19.domain.Person;
@@ -20,7 +19,6 @@ import org.motechproject.openmrs19.resource.PatientResource;
 import org.motechproject.openmrs19.resource.PersonResource;
 import org.motechproject.openmrs19.service.EventKeys;
 import org.motechproject.openmrs19.service.OpenMRSConfigService;
-import org.motechproject.openmrs19.service.OpenMRSLocationService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
 import org.motechproject.openmrs19.service.OpenMRSPersonService;
 import org.slf4j.Logger;
@@ -43,7 +41,6 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
 
     private final OpenMRSPersonService personService;
     private final OpenMRSConfigService configService;
-    private final OpenMRSLocationService locationService;
     private final PatientResource patientResource;
     private final PersonResource personResource;
 
@@ -51,13 +48,12 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
 
     @Autowired
     public OpenMRSPatientServiceImpl(PatientResource patientResource, PersonResource personResource,
-                                     OpenMRSPersonService personService, OpenMRSLocationService locationService, EventRelay eventRelay,
+                                     OpenMRSPersonService personService, EventRelay eventRelay,
                                      OpenMRSConfigService configService) {
         this.patientResource = patientResource;
         this.personResource = personResource;
         this.configService = configService;
         this.personService = personService;
-        this.locationService = locationService;
         this.eventRelay = eventRelay;
     }
 
@@ -296,10 +292,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
 
     private void addNewPatientIdentifier(Config config, Patient patient, Identifier newIdentifier) {
         String uuid = patientResource.getPatientIdentifierTypeUuidByName(config, newIdentifier.getIdentifierType().getName());
-        List<Location> locations = locationService.getLocations(config.getName(), "Unknown Location");
-
         newIdentifier.getIdentifierType().setUuid(uuid);
-        newIdentifier.setLocation(locations.get(0));
 
         patientResource.addPatientIdentifier(config, patient.getUuid(), newIdentifier);
     }

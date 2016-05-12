@@ -110,7 +110,7 @@ public interface PatientResource {
     void updatePatientIdentifier(Config config, String patientUuid, Identifier identifier);
 
     /**
-     * Add the identifier for the patient with given UUID. The given {@code config} will be used while performing
+     * Adds the identifier for the patient with given UUID. The given {@code config} will be used while performing
      * this action.
      *
      * @param config  the configuration to be used while performing this action
