@@ -74,6 +74,7 @@ public class IHEActionHelperTest {
         Map<String, Object> params = new HashMap<>();
         params.put(Constants.TEMPLATE_NAME_PARAM, "sampleTemplate4");
         params.put(Constants.RECIPIENT_NAME_PARAM, "sampleRecipient4");
+        params.put("TITLE", "Document title");
 
         byte[] bytes = IOUtils.toByteArray(getClass().getResourceAsStream("/large_template_sample.txt"));
         Byte[] byteObjects = new Byte[bytes.length];
