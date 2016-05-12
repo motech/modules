@@ -135,6 +135,34 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         programEnrollmentService.createProgramEnrollment(configName, programEnrollment);
     }
 
+    @Override
+    public void changeStateOfProgramEnrollment(String configName, String programEnrollmentUuid, String stateUuid, DateTime startDate) {
+        Program.State state = new Program.State();
+        state.setUuid(stateUuid);
+
+        ProgramEnrollment.StateStatus stateStatus = new ProgramEnrollment.StateStatus();
+        stateStatus.setState(state);
+        stateStatus.setStartDate(startDate.toDate());
+
+        List<ProgramEnrollment.StateStatus> stateStatuses = new ArrayList<>();
+        stateStatuses.add(stateStatus);
+
+        ProgramEnrollment programEnrollment = new ProgramEnrollment();
+        programEnrollment.setUuid(programEnrollmentUuid);
+        programEnrollment.setStates(stateStatuses);
+
+        programEnrollmentService.updateProgramEnrollment(configName, programEnrollment);
+    }
+
+    @Override
+    public void completeProgramEnrollment(String configName, String programEnrollmentUuid, DateTime dateCompleted) {
+        ProgramEnrollment programEnrollment = new ProgramEnrollment();
+        programEnrollment.setUuid(programEnrollmentUuid);
+        programEnrollment.setDateCompleted(dateCompleted.toDate());
+
+        programEnrollmentService.updateProgramEnrollment(configName, programEnrollment);
+    }
+
     private Location getDefaultLocation(String configName) {
         return getLocationByName(configName, DEFAULT_LOCATION_NAME);
     }

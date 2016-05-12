@@ -28,6 +28,8 @@ public class ActionBuilder {
     private static final String CREATE_PATIENT = "Create Patient";
     private static final String UPDATE_PERSON = "Update Person";
     private static final String CREATE_PROGRAM_ENROLLMENT = "Create Program Enrollment";
+    private static final String CHANGE_PROGRAM_ENROLLMENT_STATE = "Change Program Enrollment State";
+    private static final String COMPLETE_PROGRAM_ENROLLMENT = "Complete Program Enrollment";
     private static final String OPENMRS_ACTION_PROXY_SERVICE = "org.motechproject.openmrs19.tasks.OpenMRSActionProxyService";
 
     private OpenMRSConfigService configService;
@@ -49,6 +51,8 @@ public class ActionBuilder {
             actions.add(buildCreatePatientAction(configName));
             actions.add(buildUpdatePatientAction(configName));
             actions.add(buildCreateProgramEnrollmentAction(configName));
+            actions.add(buildChangeStateOfProgramEnrollmentAction(configName));
+            actions.add(buildCompleteProgramEnrollmentAction(configName));
         }
         return actions;
     }
@@ -126,6 +130,41 @@ public class ActionBuilder {
                 .setDisplayName(getDisplayName(CREATE_PROGRAM_ENROLLMENT, configName))
                 .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
                 .setServiceMethod("createProgramEnrollment")
+                .setActionParameters(parameters)
+                .createActionEventRequest();
+    }
+
+    private ActionEventRequest buildChangeStateOfProgramEnrollmentAction(String configName) {
+        SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
+
+        int order = 0;
+
+        parameters.add(prepareParameter(Keys.CONFIG_NAME, DisplayNames.CONFIG_NAME, configName, false, true, order++));
+        parameters.add(prepareParameter(Keys.PROGRAM_ENROLLMENT_UUID, DisplayNames.PROGRAM_ENROLLMENT_UUID, true, order++));
+        parameters.add(prepareParameter(Keys.STATE_UUID, DisplayNames.STATE_UUID, true, order++));
+        parameters.add(prepareParameter(Keys.STATE_START_DATE, DisplayNames.STATE_START_DATE, DATE, true, order));
+
+        return new ActionEventRequestBuilder()
+                .setDisplayName(getDisplayName(CHANGE_PROGRAM_ENROLLMENT_STATE, configName))
+                .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
+                .setServiceMethod("changeStateOfProgramEnrollment")
+                .setActionParameters(parameters)
+                .createActionEventRequest();
+    }
+
+    private ActionEventRequest buildCompleteProgramEnrollmentAction(String configName) {
+        SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
+
+        int order = 0;
+
+        parameters.add(prepareParameter(Keys.CONFIG_NAME, DisplayNames.CONFIG_NAME, configName, false, true, order++));
+        parameters.add(prepareParameter(Keys.PROGRAM_ENROLLMENT_UUID, DisplayNames.PROGRAM_ENROLLMENT_UUID, true, order++));
+        parameters.add(prepareParameter(Keys.DATE_COMPLETED, DisplayNames.DATE_COMPLETED, DATE, true, order));
+
+        return new ActionEventRequestBuilder()
+                .setDisplayName(getDisplayName(COMPLETE_PROGRAM_ENROLLMENT, configName))
+                .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
+                .setServiceMethod("completeProgramEnrollment")
                 .setActionParameters(parameters)
                 .createActionEventRequest();
     }

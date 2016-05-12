@@ -107,6 +107,14 @@ public class Program {
         @Expose
         private Concept concept;
 
+        public static class ProgramSerializer implements JsonSerializer<State> {
+
+            @Override
+            public JsonElement serialize(State src, Type typeOfSrc, JsonSerializationContext context) {
+                return new JsonPrimitive(src.getUuid());
+            }
+        }
+
         public String getUuid() {
             return uuid;
         }

@@ -5,21 +5,18 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.openmrs19.config.Config;
 import org.motechproject.openmrs19.domain.ProgramEnrollment;
+import org.motechproject.openmrs19.exception.OpenMRSException;
 import org.motechproject.openmrs19.helper.EventHelper;
 import org.motechproject.openmrs19.resource.ProgramEnrollmentResource;
 import org.motechproject.openmrs19.service.EventKeys;
 import org.motechproject.openmrs19.service.OpenMRSConfigService;
 import org.motechproject.openmrs19.service.OpenMRSProgramEnrollmentService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 @Service("programEnrollmentService")
 public class OpenMRSProgramEnrollmentServiceImpl implements OpenMRSProgramEnrollmentService {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSProgramEnrollmentServiceImpl.class);
 
     private final OpenMRSConfigService configService;
 
@@ -45,8 +42,20 @@ public class OpenMRSProgramEnrollmentServiceImpl implements OpenMRSProgramEnroll
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_PROGRAM_ENROLLMENT, EventHelper.programEnrollmentParameters(created)));
             return created;
         } catch (HttpClientErrorException e) {
-            LOGGER.error("Could not create program enrollment: " + e.getMessage());
-            return null;
+            throw new OpenMRSException("Could not create program enrollment for patient with uuid: "
+                    + programEnrollment.getPatient().getUuid(), e);
+        }
+    }
+
+    @Override
+    public ProgramEnrollment updateProgramEnrollment(String configName, ProgramEnrollment programEnrollment) {
+        validateProgramEnrollmentToUpdate(programEnrollment);
+
+        try {
+            Config config = configService.getConfigByName(configName);
+            return programEnrollmentResource.updateProgramEnrollment(config, programEnrollment);
+        } catch (HttpClientErrorException e) {
+            throw new OpenMRSException("Could not update program enrollment with uuid: " + programEnrollment.getUuid(), e);
         }
     }
 
@@ -55,5 +64,10 @@ public class OpenMRSProgramEnrollmentServiceImpl implements OpenMRSProgramEnroll
         Validate.notNull(programEnrollment.getPatient(), "Patient cannot be null");
         Validate.notNull(programEnrollment.getProgram(), "Program cannot be null");
         Validate.notNull(programEnrollment.getDateEnrolled(), "Enrolled date cannot be null");
+    }
+
+    private void validateProgramEnrollmentToUpdate(ProgramEnrollment programEnrollment) {
+        Validate.notNull(programEnrollment, "Program Enrollment cannot be null");
+        Validate.notEmpty(programEnrollment.getUuid(), "Program Enrollment UUID cannot be null");
     }
 }
