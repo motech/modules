@@ -89,6 +89,17 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     }
 
     @Override
+    public void updatePatientIdentifiers(String configName, String patientUuid, Map<String, String> identifiers) {
+        Patient patient = new Patient();
+
+        List<Identifier> identifierList = convertIdentifierMapToList(identifiers);
+        patient.setIdentifiers(identifierList);
+        patient.setUuid(patientUuid);
+
+        patientService.updatePatientIdentifiers(configName, patient);
+    }
+
+    @Override
     public void updatePerson(String configName, String personUuid, String givenName, String middleName,
                              String familyName, String address1, String address2, String address3, String address4,
                              String address5, String address6, String cityVillage, String stateProvince, String country,
@@ -106,6 +117,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
 
         personService.updatePerson(configName, person);
     }
+
     private Location getDefaultLocation(String configName) {
         return getLocationByName(configName, DEFAULT_LOCATION_NAME);
     }

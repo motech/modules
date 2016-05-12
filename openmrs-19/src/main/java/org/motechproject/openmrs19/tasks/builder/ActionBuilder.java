@@ -23,9 +23,10 @@ import static org.motechproject.tasks.domain.mds.ParameterType.MAP;
  * Responsible for building actions for the Tasks channel.
  */
 public class ActionBuilder {
-
+    private static final String OPENMRS_ACTION_PROXY_SERVICE = "org.motechproject.openmrs19.tasks.OpenMRSActionProxyService";
     private static final String CREATE_ENCOUNTER = "Create Encounter";
     private static final String CREATE_PATIENT = "Create Patient";
+    private static final String UPDATE_PATIENT_IDENTIFIERS = "Update Patient Identifiers";
     private static final String UPDATE_PERSON = "Update Person";
 
     private OpenMRSConfigService configService;
@@ -46,6 +47,7 @@ public class ActionBuilder {
             actions.add(buildCreateEncounterAction(configName));
             actions.add(buildCreatePatientAction(configName));
             actions.add(buildUpdatePatientAction(configName));
+            actions.add(buildUpdatePatientIdentifiersAction(configName));
         }
         return actions;
     }
@@ -65,7 +67,7 @@ public class ActionBuilder {
 
         return new ActionEventRequestBuilder()
                 .setDisplayName(getDisplayName(CREATE_ENCOUNTER, configName))
-                .setServiceInterface("org.motechproject.openmrs19.tasks.OpenMRSActionProxyService")
+                .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
                 .setServiceMethod("createEncounter")
                 .setActionParameters(actionParameters)
                 .createActionEventRequest();
@@ -85,7 +87,7 @@ public class ActionBuilder {
 
         return new ActionEventRequestBuilder()
                 .setDisplayName(getDisplayName(CREATE_PATIENT, configName))
-                .setServiceInterface("org.motechproject.openmrs19.tasks.OpenMRSActionProxyService")
+                .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
                 .setServiceMethod("createPatient")
                 .setActionParameters(parameters)
                 .createActionEventRequest();
@@ -101,8 +103,24 @@ public class ActionBuilder {
 
         return new ActionEventRequestBuilder()
                 .setDisplayName(getDisplayName(UPDATE_PERSON, configName))
-                .setServiceInterface("org.motechproject.openmrs19.tasks.OpenMRSActionProxyService")
+                .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
                 .setServiceMethod("updatePerson")
+                .setActionParameters(parameters)
+                .createActionEventRequest();
+    }
+
+    private ActionEventRequest buildUpdatePatientIdentifiersAction(String configName) {
+        SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
+        int order = 0;
+
+        parameters.add(prepareParameter(Keys.CONFIG_NAME, DisplayNames.CONFIG_NAME, configName, false, true, order++));
+        parameters.add(prepareParameter(Keys.PERSON_UUID, DisplayNames.PERSON_UUID, true, order++));
+        parameters.add(prepareParameter(Keys.IDENTIFIERS, DisplayNames.IDENTIFIERS, MAP, true, order));
+
+        return new ActionEventRequestBuilder()
+                .setDisplayName(getDisplayName(UPDATE_PATIENT_IDENTIFIERS, configName))
+                .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
+                .setServiceMethod("updatePatientIdentifiers")
                 .setActionParameters(parameters)
                 .createActionEventRequest();
     }
