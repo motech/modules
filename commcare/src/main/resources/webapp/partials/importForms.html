@@ -9,8 +9,8 @@
         <div class="form-group toolbox">
             <label class="col-lg-2 col-md-3 col-sm-4 control-label">{{msg('commcare.selectConfig')}}: </label>
             <div class="col-lg-10 col-md-9 col-sm-8">
-                <select class="form-control input-auto" ng-change="updateImportRequest('config', $parent.selectedConfig.name)" ng-model="$parent.selectedConfig" ng-options="config.name for config in $parent.configurations.configs">
-                    <option ng-if="!$parent.selectedConfig" value="">{{msg('commcare.select')}}</option>
+                <select class="form-control input-auto" ng-change="updateImportRequest('config', $parent.selectedConfig.name)" ng-model="$parent.selectedConfig" ng-options="config.name for config in $parent.configurations.configs | filterUnsavedConfig:newlyCreatedConfig">
+                    <option ng-if="!$parent.selectedConfig || (selectedConfig === newlyCreatedConfig)" value="">{{msg('commcare.select')}}</option>
                 </select>
             </div>
         </div>

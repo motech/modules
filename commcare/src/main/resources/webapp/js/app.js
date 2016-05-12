@@ -4,7 +4,7 @@
     /* App Module */
 
     var commcare = angular.module('commcare', ['motech-dashboard', 'commcare.services', 'commcare.controllers',
-                    'commcare.directives', 'ngCookies', 'uiServices']);
+                    'commcare.directives', 'commcare.filters', 'ngCookies', 'uiServices']);
 
     commcare.config(['$stateProvider', function ($stateProvider) {
         $stateProvider
