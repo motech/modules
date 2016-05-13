@@ -1,0 +1,46 @@
+package org.motechproject.rapidpro.webservice;
+
+import org.motechproject.rapidpro.exception.WebServiceException;
+import org.motechproject.rapidpro.webservice.dto.Contact;
+
+/*
+ * Webservice interface for RapidPro REST API
+ */
+public interface ContactWebService {
+
+    /**
+     * Creates a new contact or updates an existing contact. If the dto has a value for UUID, the contact will be
+     * updated. Otherwise, it will create a new contact with those fields.
+     *
+     * @param contact A representation of a Contact
+     * @return {@link Contact} The body of the response from RapidPro
+     * @throws WebServiceException
+     */
+    Contact createOrUpdateContact(Contact contact) throws WebServiceException;
+
+    /**
+     * Deletes a contact by its UUID, if it exists
+     *
+     * @param uuid The rapidpro UUID of the contact.
+     * @throws WebServiceException
+     */
+    void deleteContactByUUID(String uuid) throws WebServiceException;
+
+    /**
+     * Finds a contact with the corresponding UUID, if it exists.
+     *
+     * @param uuid The rapidpro UUID of the contact
+     * @return {@link Contact} A representation of the contact.
+     * @throws WebServiceException
+     */
+    Contact getContactByUUID(String uuid) throws WebServiceException;
+
+    /**
+     * Finds a contact with the phone number, if it exists.
+     *
+     * @param phoneNumber The unique phone number of the Contact
+     * @return {@link Contact}
+     * @throws WebServiceException
+     */
+    Contact getContactByPhoneNumber(String phoneNumber) throws WebServiceException;
+}

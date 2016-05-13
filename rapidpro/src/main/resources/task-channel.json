@@ -1,0 +1,115 @@
+{
+  "displayName": "rapidpro.tasks.name",
+  "moduleName": "${project.artifactId}",
+  "moduleVersion": "${parsedVersion.osgiVersion}",
+  "actionTaskEvents": [
+    {
+      "subject": "org.motechproject.rapidpro.create-contact",
+      "displayName": "rapidpro.tasks.createContact",
+      "actionParameters": [
+        {
+          "key": "externalId",
+          "displayName": "rapidpro.tasks.externalId",
+          "type": "UNICODE",
+          "required": true
+        },
+        {
+          "key": "name",
+          "displayName": "rapidpro.tasks.contactName",
+          "type": "UNICODE",
+          "required": true
+        },
+        {
+          "key": "phone",
+          "displayName": "rapidpro.tasks.phone",
+          "type": "UNICODE",
+          "required": true
+        },
+        {
+          "key": "language",
+          "displayName": "rapidpro.tasks.language",
+          "type": "UNICODE",
+          "required": false
+        },
+        {
+          "key": "blocked",
+          "displayName": "rapidpro.tasks.blocked",
+          "type": "BOOLEAN",
+          "required": false
+        },
+        {
+          "key": "failed",
+          "displayName": "rapidpro.tasks.failed",
+          "type": "BOOLEAN",
+          "required": false
+        },
+        {
+          "key": "fields",
+          "displayName": "rapidpro.tasks.fields",
+          "type": "MAP",
+          "required": false
+        }
+      ]
+    },
+    {
+      "subject": "org.motechproject.rapidpro.update-contact",
+      "displayName": "rapidpro.tasks.updateContact",
+      "actionParameters": [
+        {
+          "key": "externalId",
+          "displayName": "rapidpro.tasks.externalId",
+          "type": "UNICODE",
+          "required": true
+        },
+        {
+          "key": "name",
+          "displayName": "rapidpro.tasks.contactName",
+          "type": "UNICODE",
+          "required": true
+        },
+        {
+          "key": "phone",
+          "displayName": "rapidpro.tasks.phone",
+          "type": "UNICODE",
+          "required": true
+        },
+        {
+          "key": "language",
+          "displayName": "rapidpro.tasks.language",
+          "type": "UNICODE",
+          "required": false
+        },
+        {
+          "key": "blocked",
+          "displayName": "rapidpro.tasks.blocked",
+          "type": "BOOLEAN",
+          "required": false
+        },
+        {
+          "key": "failed",
+          "displayName": "rapidpro.tasks.failed",
+          "type": "BOOLEAN",
+          "required": false
+        },
+        {
+          "key": "fields",
+          "displayName": "rapidpro.tasks.fields",
+          "type": "MAP",
+          "required": false
+        }
+      ]
+    },
+    {
+      "subject": "org.motechproject.rapidpro.delete-contact",
+      "displayName": "rapidpro.tasks.deleteContact",
+      "actionParameters": [
+        {
+          "key": "externalId",
+          "displayName": "rapidpro.tasks.externalId",
+          "type": "UNICODE",
+          "required": true
+        }
+      ]
+    }
+  ]
+}
