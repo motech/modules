@@ -1,0 +1,13 @@
+{
+  "uuid":"AAA",
+  "identifier":"1000",
+  "identifierType":
+  {
+    "uuid":"III"
+  },
+  "location":
+  {
+    "uuid":
+    "LLL"
+  }
+}

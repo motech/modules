@@ -6,6 +6,7 @@ import org.motechproject.openmrs19.domain.Location;
 import org.motechproject.openmrs19.domain.Observation;
 import org.motechproject.openmrs19.domain.Patient;
 import org.motechproject.openmrs19.domain.Person;
+import org.motechproject.openmrs19.domain.ProgramEnrollment;
 import org.motechproject.openmrs19.domain.Provider;
 import org.motechproject.openmrs19.service.EventKeys;
 
@@ -183,5 +184,15 @@ public final class EventHelper {
         conceptParameters.put(EventKeys.CONCEPT_DATA_TYPE, concept.getDatatype().getDisplay());
         conceptParameters.put(EventKeys.CONCEPT_CONCEPT_CLASS, concept.getConceptClass().getDisplay());
         return conceptParameters;
+    }
+
+    public static Map<String, Object> programEnrollmentParameters(ProgramEnrollment programEnrollment) {
+        Map<String, Object> parameters = new HashMap<>();
+
+        parameters.put(EventKeys.PROGRAM_ENROLLMENT_ID, programEnrollment.getUuid());
+        parameters.put(EventKeys.PROGRAM_ID, programEnrollment.getProgram().getUuid());
+        parameters.put(EventKeys.PATIENT_ID, programEnrollment.getPatient().getUuid());
+
+        return parameters;
     }
 }

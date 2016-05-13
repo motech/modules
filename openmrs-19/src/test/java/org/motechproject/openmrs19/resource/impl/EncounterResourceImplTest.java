@@ -29,9 +29,9 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class EncounterResourceImplTest extends AbstractResourceImplTest {
 
-    private static final String ENCOUNTER_BY_PATIENT_RESPONSE_JSON = "json/encounter-by-patient-response.json";
-    private static final String ENCOUNTER_RESPONSE_JSON = "json/encounter-response.json";
-    private static final String CREATE_ENCOUNTER_JSON = "json/encounter-create.json";
+    private static final String ENCOUNTER_BY_PATIENT_RESPONSE_JSON = "json/encounter/encounter-by-patient-response.json";
+    private static final String ENCOUNTER_RESPONSE_JSON = "json/encounter/encounter-response.json";
+    private static final String CREATE_ENCOUNTER_JSON = "json/encounter/encounter-create.json";
 
     @Mock
     private RestOperations restOperations;
