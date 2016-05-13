@@ -77,7 +77,7 @@ public class Program {
 
         @Override
         public int hashCode() {
-            return Objects.hash(description, concept, states);
+            return Objects.hash(uuid, description, concept, states);
         }
 
         @Override
@@ -92,8 +92,8 @@ public class Program {
 
             Workflow other = (Workflow) obj;
 
-            return Objects.equals(this.description, other.description) && Objects.equals(this.concept, other.concept) &&
-                    Objects.equals(this.states, other.states);
+            return Objects.equals(this.uuid, other.uuid) && Objects.equals(this.description, other.description) &&
+                    Objects.equals(this.concept, other.concept) && Objects.equals(this.states, other.states);
         }
     }
 
@@ -141,7 +141,7 @@ public class Program {
 
         @Override
         public int hashCode() {
-            return Objects.hash(description, concept);
+            return Objects.hash(uuid, description, concept);
         }
 
         @Override
@@ -156,7 +156,8 @@ public class Program {
 
             State other = (State) obj;
 
-            return Objects.equals(this.description, other.description) && Objects.equals(this.concept, other.concept);
+            return Objects.equals(this.uuid, other.uuid) && Objects.equals(this.description, other.description) &&
+                    Objects.equals(this.concept, other.concept);
         }
     }
 
@@ -202,7 +203,7 @@ public class Program {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, concept, allWorkflows);
+        return Objects.hash(uuid, name, description, concept, allWorkflows);
     }
 
     @Override
@@ -217,7 +218,8 @@ public class Program {
 
         Program other = (Program) obj;
 
-        return Objects.equals(this.name, other.name) && Objects.equals(this.description, other.description) &&
-                Objects.equals(this.concept, other.concept) && Objects.equals(this.allWorkflows, other.allWorkflows);
+        return Objects.equals(this.uuid, other.uuid) && Objects.equals(this.name, other.name) &&
+                Objects.equals(this.description, other.description) && Objects.equals(this.concept, other.concept) &&
+                Objects.equals(this.allWorkflows, other.allWorkflows);
     }
 }
