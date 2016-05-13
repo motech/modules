@@ -4,13 +4,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.motechproject.ihe.interop.domain.CdaTemplate;
 import org.motechproject.ihe.interop.domain.HL7Recipient;
 import org.motechproject.ihe.interop.exception.RecipientNotFoundException;
 import org.motechproject.ihe.interop.exception.TemplateNotFoundException;
 import org.motechproject.ihe.interop.service.HL7RecipientsService;
 import org.motechproject.ihe.interop.service.IHETemplateDataService;
 import org.motechproject.ihe.interop.util.Constants;
-import org.motechproject.ihe.interop.domain.CdaTemplate;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
