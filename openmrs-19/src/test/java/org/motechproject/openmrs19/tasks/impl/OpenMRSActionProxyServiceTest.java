@@ -244,6 +244,24 @@ public class OpenMRSActionProxyServiceTest {
         assertEquals(person, personCaptor.getValue());
     }
 
+    @Test
+    public void shouldUpdatePatientIdentifiers() {
+        Patient patient = new Patient();
+        patient.setUuid("10");
+
+        Map<String, String> identifiersMap = new HashMap<>();
+        identifiersMap.put("CommCare CaseID", "1000");
+
+        openMRSActionProxyService.updatePatientIdentifiers(CONFIG_NAME, patient.getUuid(), identifiersMap);
+        verify(patientService).updatePatientIdentifiers(eq(CONFIG_NAME), patientCaptor.capture());
+
+        Identifier patientCaptorIdentifier = patientCaptor.getValue().getIdentifiers().get(0);
+
+        assertEquals(patient.getUuid(), patientCaptor.getValue().getUuid());
+        assertEquals("1000", patientCaptorIdentifier.getIdentifier());
+        assertEquals("CommCare CaseID", patientCaptorIdentifier.getIdentifierType().getName());
+    }
+
     private Person createTestPerson() {
         Person person = new Person();
 
