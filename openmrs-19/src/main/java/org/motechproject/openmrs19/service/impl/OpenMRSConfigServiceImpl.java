@@ -125,7 +125,6 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
     }
 
     @Override
-    @Transactional
     public boolean verifyConfig(Config config) {
         HttpMethod method = new GetMethod(config.toInstancePath("/concept").toString());
         UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(config.getUsername(), config.getPassword());

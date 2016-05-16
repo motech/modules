@@ -26,11 +26,11 @@
         </div>
         </div>
     <form ng-if="selectedConfig" class="inside form-horizontal" novalidate>
-        <div ng-if="failureMessage" class="connection-status connection-error alert alert-danger">
+        <div ng-if="failureMessage" class="alert alert-danger">
             <span class="fa fw fa-warning"></span>
             <span class="margin-left1">{{failureMessage}}</span>
         </div>
-        <div ng-if="successMessage" class="connection-status connection-success alert alert-success">
+        <div ng-if="successMessage" class="alert alert-success">
             <span class="fa fw fa-check"></span>
             <span class="margin-left1">{{successMessage}}</span>
         </div>
