@@ -1,6 +1,7 @@
 package org.motechproject.dhis2.rest.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import java.util.Objects;
 
