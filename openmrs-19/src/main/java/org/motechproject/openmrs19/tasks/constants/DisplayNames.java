@@ -16,7 +16,7 @@ public final class DisplayNames {
     public static final String OBSERVATION = "openMRS.encounter.observation";
 
     //Patient action
-    public static final String PERSON_UUID = "openMrs.person.uuid";
+    public static final String PERSON_UUID = "openMRS.person.uuid";
     public static final String GIVEN_NAME = "openMRS.person.givenName";
     public static final String MIDDLE_NAME = "openMRS.person.middleName";
     public static final String FAMILY_NAME = "openMRS.person.familyName";
@@ -43,6 +43,11 @@ public final class DisplayNames {
     public static final String MOTECH_ID = "openMRS.motechId";
     public static final String LOCATION_FOR_MOTECH_ID = "openMRS.location.name";
     public static final String IDENTIFIERS = "openMRS.patient.identifiers";
+
+    //Program action
+    public static final String PROGRAM_UUID = "openMRS.programEnrollment.programUuid";
+    public static final String DATE_ENROLLED = "openMRS.programEnrollment.dateEnrolled";
+    public static final String DATE_COMPLETED = "openMRS.programEnrollment.dateCompleted";
 
     /**
      * Utility class, should not be initiated.

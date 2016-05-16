@@ -28,9 +28,9 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ConceptResourceImplTest extends AbstractResourceImplTest {
 
-    private static final String CONCEPT_LIST_RESPONSE_JSON = "json/concept-list-response.json";
-    private static final String CONCEPT_RESPONSE_JSON = "json/concept-response.json";
-    private static final String CONCEPT_CREATE_JSON = "json/concept-create.json";
+    private static final String CONCEPT_LIST_RESPONSE_JSON = "json/concept/concept-list-response.json";
+    private static final String CONCEPT_RESPONSE_JSON = "json/concept/concept-response.json";
+    private static final String CONCEPT_CREATE_JSON = "json/concept/concept-create.json";
 
     @Mock
     private RestOperations restOperations;
