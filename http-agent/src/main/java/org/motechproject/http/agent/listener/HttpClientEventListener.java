@@ -6,7 +6,9 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.http.agent.domain.EventDataKeys;
 import org.motechproject.http.agent.domain.EventSubjects;
+import org.motechproject.http.agent.domain.HTTPActionRecord;
 import org.motechproject.http.agent.factory.HttpComponentsClientHttpRequestFactoryWithAuth;
+import org.motechproject.http.agent.service.HTTPActionService;
 import org.motechproject.http.agent.service.Method;
 import org.motechproject.config.SettingsFacade;
 import org.slf4j.Logger;
@@ -40,23 +42,25 @@ public class HttpClientEventListener {
 
     private RestTemplate basicRestTemplate;
     private SettingsFacade settings;
+    private HTTPActionService httpActionService;
 
     @Autowired
     public HttpClientEventListener(RestTemplate basicRestTemplate,
-            @Qualifier("httpAgentSettings") SettingsFacade settings) {
+                                   @Qualifier("httpAgentSettings") SettingsFacade settings, HTTPActionService httpActionService) {
         HttpComponentsClientHttpRequestFactory requestFactory = (HttpComponentsClientHttpRequestFactory) basicRestTemplate
                 .getRequestFactory();
         requestFactory.setConnectTimeout(Integer.parseInt(settings
                 .getProperty(HTTP_CONNECT_TIMEOUT)));
         requestFactory.setReadTimeout(Integer.parseInt(settings
                 .getProperty(HTTP_READ_TIMEOUT)));
-
+        this.httpActionService = httpActionService;
         this.basicRestTemplate = basicRestTemplate;
         this.settings = settings;
     }
 
     /**
      * Handles an event and sends an http request. Request sections such as headers, url or method are built from event parameters.
+     *
      * @param motechEvent the event which contains data for request
      */
     @MotechListener(subjects = EventSubjects.HTTP_REQUEST)
@@ -84,6 +88,7 @@ public class HttpClientEventListener {
                 url, String.valueOf(requestData)));
 
         executeFor(url, entity, method, username, password);
+
     }
 
     /**
@@ -91,6 +96,7 @@ public class HttpClientEventListener {
      * parameters. Returns the response from the performed request. Retry count(default value is 1) and retry
      * interval(default value is 0, expressed in milliseconds) can be specified by event parameters(keys:
      * org.motechproject.http.agent.domain.EventDataKeys.RETRY_COUNT and org.motechproject.http.agent.domain.EventDataKeys.RETRY_INTERVAL).
+     *
      * @param motechEvent the event which contains data for request
      * @return response from the posted request
      */
@@ -105,7 +111,7 @@ public class HttpClientEventListener {
                 .fromString((String) methodObj);
         int retryCount = 1; // default retry count = 1
         long retryInterval = 0; // by default, no waiting time between two
-                                // retries
+        // retries
         if (parameters.get(EventDataKeys.RETRY_COUNT) != null) {
             retryCount = (int) parameters.get(EventDataKeys.RETRY_COUNT);
         }
@@ -137,7 +143,7 @@ public class HttpClientEventListener {
             retValue = r.call();
         } catch (Exception e) { // Http request failed for all retries
             LOGGER.error("Posting Http request -- Url: {}, Data: {} failed after {} retries at interval of {} ms.",
-                            url, String.valueOf(requestData), String.valueOf(retryCount), String.valueOf(retryInterval),
+                    url, String.valueOf(requestData), String.valueOf(retryCount), String.valueOf(retryInterval),
                     e);
         }
         return retValue;
@@ -145,7 +151,7 @@ public class HttpClientEventListener {
     }
 
     private void executeFor(String url, HttpEntity<Object> requestData,
-            Method method, String username, String password) {
+                            Method method, String username, String password) {
         RestTemplate restTemplate;
 
         if (StringUtils.isNotBlank(username)
@@ -155,14 +161,23 @@ public class HttpClientEventListener {
         } else {
             restTemplate = basicRestTemplate;
         }
-
-        method.execute(restTemplate, url, requestData);
+        doExecuteForReturnType(url, requestData, method, restTemplate);
     }
 
     private ResponseEntity<?> executeForReturnType(String url,
-            Object requestData, Method method) {
-        return method
-                .executeWithReturnType(basicRestTemplate, url, requestData);
+                                                   Object requestData, Method method) {
+        return doExecuteForReturnType(url, requestData, method, basicRestTemplate);
+    }
+
+    private ResponseEntity<?> doExecuteForReturnType(String url, Object requestData, Method method,
+                                                     RestTemplate restTemplate) {
+
+        ResponseEntity<?> response = method.execute(restTemplate, url, requestData);
+        HTTPActionRecord httpActionRecord = new HTTPActionRecord(url, requestData.toString(), response.getBody().toString(),
+                response.getStatusCode().toString());
+        httpActionService.create(httpActionRecord);
+
+        return response;
     }
 
     private HttpComponentsClientHttpRequestFactoryWithAuth usernamePasswordRequestFactory(
