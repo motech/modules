@@ -209,6 +209,71 @@
               "fieldKey": "endDate"
             }
           ]
+        },
+        {
+          "displayName": "Program Enrollment [$config.getName()]",
+          "type": "ProgramEnrollment-$config.getName()",
+          "lookupFields": [
+            {
+              "displayName": "openMRS.lookup.motechId",
+              "fields": [
+                "openMRS.motechId"
+              ]
+            },
+            {
+              "displayName": "openMRS.lookup.uuid",
+              "fields": [
+                "openMRS.uuid"
+              ]
+            },
+            {
+              "displayName": "openMRS.lookup.motechIdAndProgramName",
+              "fields": [
+                "openMRS.motechId",
+                "openMRS.programName"
+              ]
+            },
+            {
+              "displayName": "openMRS.lookup.uuidAndProgramName",
+              "fields": [
+                "openMRS.uuid",
+                "openMRS.programName"
+              ]
+            }
+          ],
+          "fields": [
+            {
+              "displayName": "openMRS.programEnrollment.uuid",
+              "fieldKey": "uuid"
+            },
+            {
+              "displayName": "openMRS.patient.uuid",
+              "fieldKey": "patient.uuid"
+            },
+            {
+              "displayName": "openMRS.program.uuid",
+              "fieldKey": "program.uuid"
+            },
+            {
+              "displayName": "openMRS.programEnrollment.dateEnrolled",
+              "fieldKey": "dateEnrolled",
+              "type": "DATE"
+            },
+            {
+              "displayName": "openMRS.programEnrollment.dateCompleted",
+              "fieldKey": "dateCompleted",
+              "type": "DATE"
+            },
+            {
+              "displayName": "openMRS.location.name",
+              "fieldKey": "location.name"
+            },
+            {
+              "displayName": "openMRS.programEnrollment.states",
+              "fieldKey": "states",
+              "type": "LIST"
+            }
+          ]
         }
         #if( $velocityHasNext ),#end
     #end

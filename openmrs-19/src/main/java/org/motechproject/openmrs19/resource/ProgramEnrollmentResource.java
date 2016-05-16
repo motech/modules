@@ -3,6 +3,8 @@ package org.motechproject.openmrs19.resource;
 import org.motechproject.openmrs19.config.Config;
 import org.motechproject.openmrs19.domain.ProgramEnrollment;
 
+import java.util.List;
+
 /**
  * Interface for programs enrollment management.
  */
@@ -27,4 +29,6 @@ public interface ProgramEnrollmentResource {
      * @return the updated program enrollment
      */
     ProgramEnrollment updateProgramEnrollment(Config config, ProgramEnrollment programEnrollment);
+
+    List<ProgramEnrollment> getProgramEnrollmentByPatientUuid(Config config, String patientUuid);
 }

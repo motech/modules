@@ -1,5 +1,6 @@
 package org.motechproject.openmrs19.tasks;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.commons.api.AbstractDataProvider;
 import org.motechproject.commons.api.DataProvider;
@@ -7,10 +8,12 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.openmrs19.domain.Encounter;
 import org.motechproject.openmrs19.domain.Patient;
+import org.motechproject.openmrs19.domain.ProgramEnrollment;
 import org.motechproject.openmrs19.domain.Provider;
 import org.motechproject.openmrs19.domain.Relationship;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
+import org.motechproject.openmrs19.service.OpenMRSProgramEnrollmentService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
 import org.motechproject.openmrs19.service.OpenMRSRelationshipService;
 import org.motechproject.openmrs19.tasks.builder.OpenMRSTaskDataProviderBuilder;
@@ -22,18 +25,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.BY_MOTECH_ID;
+import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.BY_MOTECH_ID_AND_PROGRAM_NAME;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.BY_UUID;
+import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.BY_UUID_AMD_PROGRAM_NAME;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.ENCOUNTER;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.MOTECH_ID;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.NAME;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PACKAGE_ROOT;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PATIENT;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PERSON_UUID;
+import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PROGRAM_ENROLLMENT;
+import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PROGRAM_NAME;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PROVIDER;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.RELATIONSHIP;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.RELATIONSHIP_TYPE_UUID;
@@ -46,25 +54,28 @@ import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.UUID;
 @Service("openMRSTaskDataProvider")
 public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSTaskDataProvider.class);
-    private static final List<Class<?>> SUPPORTED_CLASSES = Arrays.asList(Patient.class, Provider.class, Encounter.class, Relationship.class);
+    private static final List<Class<?>> SUPPORTED_CLASSES = Arrays.asList(Patient.class, Provider.class, Encounter.class, Relationship.class, ProgramEnrollment.class);
 
     private OpenMRSEncounterService encounterService;
     private OpenMRSPatientService patientService;
     private OpenMRSProviderService providerService;
     private OpenMRSTaskDataProviderBuilder dataProviderBuilder;
     private OpenMRSRelationshipService relationshipService;
+    private OpenMRSProgramEnrollmentService programEnrollmentService;
     private BundleContext bundleContext;
     private ServiceRegistration serviceRegistration;
 
     @Autowired
-    public OpenMRSTaskDataProvider(OpenMRSTaskDataProviderBuilder taskDataProviderBuilder, OpenMRSEncounterService encounterService,
-                                   OpenMRSPatientService patientService, OpenMRSProviderService providerService,
-                                   OpenMRSRelationshipService relationshipService, BundleContext bundleContext) {
+    public OpenMRSTaskDataProvider(OpenMRSTaskDataProviderBuilder taskDataProviderBuilder,
+                                   OpenMRSEncounterService encounterService, OpenMRSPatientService patientService,
+                                   OpenMRSProviderService providerService, OpenMRSRelationshipService relationshipService,
+                                   OpenMRSProgramEnrollmentService programEnrollmentService, BundleContext bundleContext) {
         this.encounterService = encounterService;
         this.patientService = patientService;
         this.providerService = providerService;
         this.dataProviderBuilder = taskDataProviderBuilder;
         this.relationshipService = relationshipService;
+        this.programEnrollmentService = programEnrollmentService;
         this.bundleContext = bundleContext;
 
         generateProvider(null);
@@ -122,6 +133,7 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
                     break;
                 case RELATIONSHIP: obj = getRelationship(lookupFields, configName);
                     break;
+                case PROGRAM_ENROLLMENT: obj = getProgramEnrollment(lookupName, lookupFields, configName);
             }
         }
 
@@ -180,5 +192,42 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         }
 
         return relationships.isEmpty() ? null : relationships.get(0);
+    }
+
+    private ProgramEnrollment getProgramEnrollment(String lookupName, Map<String, String> lookupFields, String configName) {
+        List<ProgramEnrollment> programEnrollments = new ArrayList<>();
+
+        switch (lookupName) {
+            case BY_MOTECH_ID: {
+                programEnrollments = programEnrollmentService.getProgramEnrollmentByPatientMotechId(configName, lookupFields.get(MOTECH_ID));
+                break;
+            }
+            case BY_UUID: {
+                programEnrollments = programEnrollmentService.getProgramEnrollmentByPatientUuid(configName, lookupFields.get(UUID));
+                break;
+            }
+            case BY_MOTECH_ID_AND_PROGRAM_NAME: {
+                for (ProgramEnrollment programEnrollment : programEnrollmentService.getProgramEnrollmentByPatientMotechId(configName, lookupFields.get(MOTECH_ID))) {
+                    if (programEnrollment.getProgram().getName().equals(lookupFields.get(PROGRAM_NAME))) {
+                        programEnrollments.add(programEnrollment);
+                    }
+                }
+                break;
+            }
+            case BY_UUID_AMD_PROGRAM_NAME: {
+                for (ProgramEnrollment programEnrollment : programEnrollmentService.getProgramEnrollmentByPatientUuid(configName, lookupFields.get(UUID))) {
+                    if (programEnrollment.getProgram().getName().equals(lookupFields.get(PROGRAM_NAME))) {
+                        programEnrollments.add(programEnrollment);
+                    }
+                }
+                break;
+            }
+            default: {
+                LOGGER.error("Lookup with name {} doesn't exist for patient object", lookupName);
+                break;
+            }
+        }
+
+        return CollectionUtils.isEmpty(programEnrollments) ? null : programEnrollments.get(0);
     }
 }

@@ -17,6 +17,7 @@ import org.motechproject.openmrs19.domain.RelationshipType;
 import org.motechproject.openmrs19.service.OpenMRSConfigService;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
+import org.motechproject.openmrs19.service.OpenMRSProgramEnrollmentService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
 import org.motechproject.openmrs19.service.OpenMRSRelationshipService;
 import org.motechproject.openmrs19.tasks.builder.OpenMRSTaskDataProviderBuilder;
@@ -60,6 +61,9 @@ public class OpenMRSTaskDataProviderTest {
     private OpenMRSRelationshipService relationshipService;
 
     @Mock
+    private OpenMRSProgramEnrollmentService programEnrollmentService;
+
+    @Mock
     private BundleContext bundleContext;
 
     @Mock
@@ -74,7 +78,7 @@ public class OpenMRSTaskDataProviderTest {
     public void setUp() {
         when(configService.getConfigs()).thenReturn(new Configs());
         taskDataProvider = new OpenMRSTaskDataProvider(taskDataProviderBuilder, encounterService, patientService,
-                providerService, relationshipService, bundleContext);
+                providerService, relationshipService, programEnrollmentService, bundleContext);
     }
 
     @Test
