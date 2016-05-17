@@ -19,14 +19,14 @@ public class IHETemplateServiceImpl implements IHETemplateService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IHETemplateServiceImpl.class);
 
+    private HttpClient client = new HttpClient();
+
     @Override
-    public void sendTemplateToRecipientUrl(String url, String template) throws IOException {
+    public void sendTemplateToRecipientUrl(String template, PostMethod post) throws IOException {
 
-        PostMethod post = new PostMethod(url);
         post.setRequestEntity(new StringRequestEntity(template, "application/xml", "utf-8"));
-        HttpClient client = new HttpClient();
 
-        LOGGER.info("Sending template to URL: {}", url);
+        LOGGER.info("Sending template to URL: {}", post.getURI().toString());
         int responseCode = client.executeMethod(post);
         LOGGER.info("Response code: {}", responseCode);
     }

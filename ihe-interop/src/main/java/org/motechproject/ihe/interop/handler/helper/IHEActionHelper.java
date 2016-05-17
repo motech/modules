@@ -3,6 +3,7 @@ package org.motechproject.ihe.interop.handler.helper;
 import groovy.lang.Writable;
 import groovy.text.Template;
 import groovy.text.XmlTemplateEngine;
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.lang.ArrayUtils;
 import org.motechproject.ihe.interop.domain.CdaTemplate;
 import org.motechproject.ihe.interop.domain.HL7Recipient;
@@ -74,6 +75,6 @@ public class IHEActionHelper {
         Template xmlTemplate = xmlTemplateEngine.createTemplate(new String(ArrayUtils.toPrimitive(templateData)));
         Writable writable = xmlTemplate.make(parameters);
         LOGGER.info("Template with name {}:\n{}", cdaTemplate.getTemplateName(), writable.toString());
-        iheTemplateService.sendTemplateToRecipientUrl(hl7Recipient.getRecipientUrl(), writable.toString());
+        iheTemplateService.sendTemplateToRecipientUrl(writable.toString(), new PostMethod(hl7Recipient.getRecipientUrl()));
     }
 }
