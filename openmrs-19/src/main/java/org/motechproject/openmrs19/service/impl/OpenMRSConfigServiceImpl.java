@@ -16,6 +16,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.openmrs19.config.Config;
 import org.motechproject.openmrs19.config.Configs;
+import org.motechproject.openmrs19.exception.config.ConfigurationNotFoundException;
 import org.motechproject.openmrs19.service.OpenMRSConfigService;
 import org.motechproject.openmrs19.tasks.constants.EventSubjects;
 import org.slf4j.Logger;
@@ -115,7 +116,14 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
     @Override
     @Transactional
     public Config getConfigByName(String name) {
-        return StringUtils.isEmpty(name) ? configs.getByName(configs.getDefaultConfigName()) : configs.getByName(name);
+        Config config = StringUtils.isEmpty(name) ?
+                configs.getByName(configs.getDefaultConfigName()) : configs.getByName(name);
+
+        if (config == null) {
+            throw new ConfigurationNotFoundException(name);
+        }
+
+        return config;
     }
 
     @Override
