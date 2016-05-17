@@ -9,23 +9,30 @@
 
         <div class="btn-group form-group">
             <a ng-click="selectChanged(); addConfig()" type="button" class="form-group btn btn-success">
-                <i class="fa fa-plus"></i>{{msg('openMRS.addConfig')}}
+                <i class="fa fa-plus"></i> {{msg('openMRS.addConfig')}}
             </a>
             <a ng-if="selectedConfig" ng-disabled="!saveAllowed()" ng-click="saveAllowed() && saveConfig()" type="button" class="btn btn-primary">
-                <i class="fa fw fa-save"></i>{{msg('openMRS.save')}}
+                <i class="fa fw fa-save"></i> {{msg('openMRS.save')}}
             </a>
             <a ng-if="selectedConfig" ng-disabled="!deleteAllowed()" ng-click="deleteAllowed() && deleteConfig()" type="button" class="btn btn-danger input-small">
-                <i class="fa fa-fw fa-trash-o"></i>{{msg('openMRS.delete')}}
+                <i class="fa fa-fw fa-trash-o"></i> {{msg('openMRS.delete')}}
             </a>
-            <a ng-if="selectedConfig" ng-disabled="isDefault()"  ng-click="!isDefault() && makeDefault()" type="button" class="btn btn-default">
-                <i class="fa fw" ng-class="{'fa-square-o': !isDefault(), 'fa-check-square-o': isDefault()}"></i>{{msg('openMRS.makeDefault')}}
+            <a ng-if="selectedConfig" ng-disabled="!makeDefaultAllowed()"  ng-click="makeDefaultAllowed() && makeDefault()" type="button" class="btn btn-default">
+                <i class="fa fw" ng-class="{'fa-square-o': !isDefault(), 'fa-check-square-o': isDefault()}"></i> {{msg('openMRS.makeDefault')}}
+            </a>
+            <a ng-if="selectedConfig" ng-disabled="!validateConfig()" ng-click="validateConfig() && verifyConfig()" type="button" class="btn btn-default">
+                <i class="fa fw fa-check-circle-o"></i> {{msg('openMRS.verify')}}
             </a>
         </div>
         </div>
-    <form ng-if="selectedConfig" class="commcare inside form-horizontal" novalidate>
-        <div ng-if="failureMessage" class="connection-status connection-error alert alert-danger">
+    <form ng-if="selectedConfig" class="inside form-horizontal" novalidate>
+        <div ng-if="failureMessage" class="alert alert-danger">
             <span class="fa fw fa-warning"></span>
             <span class="margin-left1">{{failureMessage}}</span>
+        </div>
+        <div ng-if="successMessage" class="alert alert-success">
+            <span class="fa fw fa-check"></span>
+            <span class="margin-left1">{{successMessage}}</span>
         </div>
         <div class="row inside form-group">
             <h4 class="inside form-group">{{msg('openMRS.config')}}</h4>
@@ -33,22 +40,38 @@
                 <label class="col-md-3 col-sm-4 control-label" for="name">{{msg('openMRS.config.name')}}</label>
                 <div class="col-md-9 col-sm-8 form-inline">
                     <input class="form-control input-xlarge-fluid" ng-change="draftChanged()" ng-model="selectedConfig.name" type="text" id="name" />
+                    <div class="form-hints">
+                        <span ng-hide="selectedConfig.name" class="form-hint-error">{{msg('openMRS.config.error.nameRequired')}}</span>
+                        <span ng-if="selectedConfig.name && !validateName()" class="form-hint-error">{{msg('openMRS.config.error.wrongName')}}</span>
+                    </div>
                 </div>
                 <label class="col-md-3 col-sm-4 control-label" for="url">{{msg('openMRS.config.url')}}</label>
                 <div class="col-md-9 col-sm-8 form-inline">
                     <input class="form-control input-xlarge-fluid" ng-change="draftChanged()" ng-model="selectedConfig.openMrsUrl" type="text" id="url" />
+                    <div class="form-hints">
+                        <span ng-hide="selectedConfig.openMrsUrl" class="form-hint-error">{{msg('openMRS.config.error.urlRequired')}}</span>
+                    </div>
                 </div>
                 <label class="col-md-3 col-sm-4 control-label" for="username">{{msg('openMRS.config.username')}}</label>
                 <div class="col-md-9 col-sm-8 form-inline">
                     <input class="form-control input-xlarge-fluid" ng-change="draftChanged()" ng-model="selectedConfig.username" type="text" id="username" />
+                    <div class="form-hints">
+                        <span ng-hide="selectedConfig.username" class="form-hint-error">{{msg('openMRS.config.error.usernameRequired')}}</span>
+                    </div>
                 </div>
                 <label class="col-md-3 col-sm-4 control-label" for="password">{{msg('openMRS.config.password')}}</label>
                 <div class="col-md-9 col-sm-8 form-inline">
                     <input class="form-control input-xlarge-fluid" ng-change="draftChanged()" ng-model="selectedConfig.password" type="password" id="password" />
+                    <div class="form-hints">
+                        <span ng-hide="selectedConfig.password" class="form-hint-error">{{msg('openMRS.config.error.passwordRequired')}}</span>
+                    </div>
                 </div>
                 <label class="col-md-3 col-sm-4 control-label" for="motechID">{{msg('openMRS.config.motechID')}}</label>
                 <div class="col-md-9 col-sm-8 form-inline">
                     <input class="form-control input-xlarge-fluid" ng-change="draftChanged()" ng-model="selectedConfig.motechPatientIdentifierTypeName" type="text" id="motechID" />
+                    <div class="form-hints">
+                        <span ng-hide="selectedConfig.motechPatientIdentifierTypeName" class="form-hint-error">{{msg('openMRS.config.error.motechIDRequired')}}</span>
+                    </div>
                 </div>
                 <div ng-if="selectedConfig.patientIdentifierTypeNames.length >= 1">
                     <label class="col-md-3 col-sm-4 control-label" >
@@ -58,16 +81,20 @@
                         <ul ng-repeat="patientIdentifierTypeName in selectedConfig.patientIdentifierTypeNames">
                             <li type="text">
                                 {{patientIdentifierTypeName}}
-                                <a type="button" ng-click="removePatientIdentifierType(patientIdentifierTypeName)" class="btn btn-danger input-small">
-                                <i class="fa fa-times"></i>{{msg('openMRS.delete')}}</a>
+                                <a type="button" ng-click="removePatientIdentifierType(patientIdentifierTypeName)" class="btn btn-danger btn-sm input-small">
+                                <i class="fa fa-times"></i> {{msg('openMRS.delete')}}</a>
                             </li>
                         </ul>
                     </div>
                 </div>
                 <label class="col-md-3 col-sm-4 control-label" for="newPatientIdentifierType">{{msg('openMRS.config.patientIdentifierType')}}</label>
                 <div class="col-md-9 col-sm-8 form-inline">
-                    <input class="form-control input-xlarge-fluid" ng-model="newPatientIdentifierType.name" type="text" id="newPatientIdentifierType"/>
-                    <a type="button" ng-disabled="!newPatientIdentifierType.name" ng-click="newPatientIdentifierType.name && addPatientIdentifierType()" class="btn btn-default">
+                    <input class="form-control input-xlarge-fluid" ng-model="newPatientIdentifierType.name" ng-change="draftChanged()" type="text" id="newPatientIdentifierType"/>
+                    <div class="form-hints">
+                        <span ng-if="patientIdentifierTypeNameExists()" class="form-hint-error">{{msg('openMRS.config.error.patientIdentifierTypeExists')}}</span>
+                    </div>
+                    <br/>
+                    <a type="button" ng-disabled="!validatePatientIdentifierType()" ng-click="validatePatientIdentifierType() && addPatientIdentifierType()" class="btn btn-default">
                         {{msg('openMRS.addPatientIdentifierType')}}</a>
                 </div>
             </div>
