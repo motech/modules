@@ -1,6 +1,6 @@
 package org.motechproject.dhis2.rest.domain;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * A class to model a DHIS2 Data Value Set
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class DataValueSetDto {
 
     private String completeDate;

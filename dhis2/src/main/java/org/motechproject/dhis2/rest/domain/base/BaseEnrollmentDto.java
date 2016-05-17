@@ -1,6 +1,6 @@
 package org.motechproject.dhis2.rest.domain.base;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.motechproject.dhis2.rest.domain.AttributeDto;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.Objects;
  * @see org.motechproject.dhis2.rest.domain.v2_19.EnrollmentDto
  * @see org.motechproject.dhis2.rest.domain.v2_21.EnrollmentDto
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public abstract class BaseEnrollmentDto {
 
     private String trackedEntityInstance;

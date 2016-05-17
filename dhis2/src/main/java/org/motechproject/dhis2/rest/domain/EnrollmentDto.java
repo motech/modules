@@ -1,7 +1,6 @@
 package org.motechproject.dhis2.rest.domain;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.List;
 import java.util.Objects;
@@ -9,7 +8,7 @@ import java.util.Objects;
 /**
  * A class to model enrollments posted to the DHIS2 API.
  */
-@JsonInclude(Include.NON_NULL)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class EnrollmentDto {
     private String trackedEntityInstance;
     private String program;
