@@ -67,11 +67,11 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
 
     @Override
     @Transactional
-    public void saveAllConfigs(Configs configs) {
-        this.configs.setDefaultConfigName(configs.getDefaultConfigName());
-        for (Config config : configs.getConfigs()) {
+    public void saveAllConfigs(Configs newConfigs) {
+        configs.setDefaultConfigName(newConfigs.getDefaultConfigName());
+        for (Config config : newConfigs.getConfigs()) {
             validateConfig(config);
-            this.configs.add(config);
+            configs.add(config);
         }
         updateConfigs();
     }
