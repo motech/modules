@@ -22,6 +22,8 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Helper used in order to make transactions work in handler methods.
@@ -73,7 +75,12 @@ public class IHEActionHelper {
         StreamingTemplateEngine streamingTemplateEngine = new StreamingTemplateEngine();
         Template template = streamingTemplateEngine.createTemplate(new String(ArrayUtils.toPrimitive(templateData)));
         Writable writable = template.make(parameters);
-        LOGGER.info("Template with name {}:\n{}", cdaTemplate.getTemplateName(), writable.toString());
-        iheTemplateService.sendTemplateToRecipientUrl(hl7Recipient.getRecipientUrl(), writable.toString());
+        String result = writable.toString();
+        Pattern regex = Pattern.compile("(?s)<!--.*?-->", Pattern.DOTALL);
+        Matcher regexMatcher = regex.matcher(result);
+        result = regexMatcher.replaceAll("");
+        result.replaceAll("(?s)<!--.*?-->", "");
+        LOGGER.info("Template with name {}:\n{}", cdaTemplate.getTemplateName(), result);
+        iheTemplateService.sendTemplateToRecipientUrl(hl7Recipient.getRecipientUrl(), result);
     }
 }
