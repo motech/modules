@@ -26,7 +26,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class RelationshipResourceImplTest extends AbstractResourceImplTest {
 
-    private static final String CONCEPT_LIST_RESPONSE_JSON = "json/relationship-list-response.json";
+    private static final String CONCEPT_LIST_RESPONSE_JSON = "json/relationship/relationship-list-response.json";
     @Mock
     private RestOperations restOperations;
 

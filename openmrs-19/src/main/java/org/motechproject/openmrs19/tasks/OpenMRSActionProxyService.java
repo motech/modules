@@ -72,6 +72,16 @@ public interface OpenMRSActionProxyService {
                        Map<String, String> identifiers);
 
     /**
+      * Updates a patient with the given {@patientUuid}. Configuration with the given {@code configName} will be used
+      * while performing this action.
+      *
+      * @param configName  the name of the configuration
+      * @param patientUuid the patient uuid
+      * @param identifiers the identifiers to be stored to patient
+    */
+    void updatePatientIdentifiers(String configName, String patientUuid, Map<String, String> identifiers);
+
+    /**
      * Updates a person with the given {@code personUuid}. Configuration with the given {@code configName} will be used
      * while performing this action.
      *
@@ -108,4 +118,18 @@ public interface OpenMRSActionProxyService {
                       String countyDistrict, String latitude, String longitude, DateTime startDate, DateTime endDate,
                       DateTime birthDate, Boolean birthDateEstimated, String gender, Boolean dead,
                       String causeOfDeathUUID);
+
+    /**
+     * Creates a program enrollment with the given params.
+     * The required fields are: {@code patientUuid}, {@code programUuid}, {@code dateEnrolled}.
+     *
+     * @param configName  the name of the configuration
+     * @param patientUuid the patient uuid
+     * @param programUuid the program uuid
+     * @param dateEnrolled the program enrollment date
+     * @param dateCompleted the program completed date
+     * @param locationName the name of location
+     */
+    void createProgramEnrollment(String configName, String patientUuid, String programUuid,
+                                 DateTime dateEnrolled, DateTime dateCompleted, String locationName);
 }

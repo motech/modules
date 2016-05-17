@@ -99,7 +99,7 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
 
             //Updating address and name of person must be done separately.
             Person.Address addressForUpdate = fetchedPerson.getPreferredAddress();
-            if(addressForUpdate != null) {
+            if (addressForUpdate != null) {
                 person.getPreferredAddress().setUuid(addressForUpdate.getUuid());
             }
             personResource.updatePersonAddress(config, person.getUuid(), person.getPreferredAddress());

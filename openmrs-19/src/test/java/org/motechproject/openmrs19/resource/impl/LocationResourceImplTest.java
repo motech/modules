@@ -28,9 +28,9 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class LocationResourceImplTest extends AbstractResourceImplTest {
 
-    private static final String LOCATION_LIST_RESPONSE_JSON = "json/location-list-response.json";
-    private static final String LOCATION_RESPONSE_JSON = "json/location-response.json";
-    private static final String CREATE_LOCATION_JSON = "json/location-create.json";
+    private static final String LOCATION_LIST_RESPONSE_JSON = "json/location/location-list-response.json";
+    private static final String LOCATION_RESPONSE_JSON = "json/location/location-response.json";
+    private static final String CREATE_LOCATION_JSON = "json/location/location-create.json";
 
     @Mock
     private RestOperations restOperations;
