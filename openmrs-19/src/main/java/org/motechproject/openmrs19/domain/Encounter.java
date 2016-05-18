@@ -18,6 +18,7 @@ public class Encounter {
     private Date encounterDatetime;
     private Patient patient;
     private Person provider;
+    private List<Person> encounterProviders;
     private List<Observation> obs;
 
     /**
@@ -95,6 +96,14 @@ public class Encounter {
 
     public void setProvider(Person provider) {
         this.provider = provider;
+    }
+
+    public List<Person> getEncounterProviders() {
+        return encounterProviders;
+    }
+
+    public void setEncounterProviders(List<Person> encounterProviders) {
+        this.encounterProviders = encounterProviders;
     }
 
     public List<Observation> getObs() {

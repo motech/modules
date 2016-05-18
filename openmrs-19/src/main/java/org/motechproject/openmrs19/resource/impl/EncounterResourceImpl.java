@@ -28,19 +28,30 @@ public class EncounterResourceImpl extends BaseResource implements EncounterReso
     public Encounter createEncounter(Config config, Encounter encounter) {
         String requestJson = buildGsonWithAdapters().toJson(encounter);
         String responseJson = postForJson(config, requestJson, "/encounter?v=full");
-        return (Encounter) JsonUtils.readJson(responseJson, Encounter.class);
+
+        Encounter createdEncounter = (Encounter) JsonUtils.readJson(responseJson, Encounter.class);
+        getProviderFromEncounterProviderList(createdEncounter);
+        return createdEncounter;
     }
 
     @Override
     public EncounterListResult queryForAllEncountersByPatientId(Config config, String id) {
         String responseJson = getJson(config, "/encounter?patient={id}&v=full", id);
-        return (EncounterListResult) JsonUtils.readJson(responseJson, EncounterListResult.class);
+        
+        EncounterListResult encounterList = (EncounterListResult) JsonUtils.readJson(responseJson, EncounterListResult.class);
+        for(Encounter encounter : encounterList.getResults()) {
+            getProviderFromEncounterProviderList(encounter);
+        }
+        return encounterList;
     }
 
     @Override
     public Encounter getEncounterById(Config config, String uuid) {
         String responseJson = getJson(config, "/encounter/{uuid}?v=full", uuid);
-        return (Encounter) JsonUtils.readJson(responseJson, Encounter.class);
+
+        Encounter createdEncounter = (Encounter) JsonUtils.readJson(responseJson, Encounter.class);
+        getProviderFromEncounterProviderList(createdEncounter);
+        return createdEncounter;
     }
 
     @Override
@@ -79,5 +90,12 @@ public class EncounterResourceImpl extends BaseResource implements EncounterReso
                 .registerTypeAdapter(EncounterType.class, new EncounterType.EncounterTypeSerializer())
                 .registerTypeAdapter(Observation.class, new Observation.ObservationSerializer())
                 .create();
+    }
+
+    private void getProviderFromEncounterProviderList(Encounter encounter) {
+        //When OpenMRS version is 1.12, then providers are stored on the list.
+        if(encounter.getProvider()==null && !encounter.getEncounterProviders().isEmpty()) {
+            encounter.setProvider(encounter.getEncounterProviders().get(0));
+        }
     }
 }
