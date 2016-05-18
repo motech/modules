@@ -17,9 +17,11 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -80,11 +82,12 @@ public class IHEActionHelperTest {
             byteObjects[i++] = b;
         }
 
-
         when(iheTemplateDataService.findByName("sampleTemplate3")).thenReturn(cdaTemplate);
         when(hl7RecipientsService.getRecipientbyName("sampleRecipient3")).thenReturn(hl7Recipient);
         when((Byte[]) iheTemplateDataService.getDetachedField(cdaTemplate, "templateData")).thenReturn(byteObjects);
 
         iheActionHelper.handleAction(params);
+
+        verify(iheTemplateService).sendTemplateToRecipientUrl(hl7Recipient.getRecipientUrl(), new String(bytes, StandardCharsets.UTF_8));
     }
 }
