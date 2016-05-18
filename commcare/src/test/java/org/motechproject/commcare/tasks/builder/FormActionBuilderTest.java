@@ -43,9 +43,10 @@ public class FormActionBuilderTest {
 
     @Test
     public void shouldNotAllowActionParametersDisplayNameLongerThan255Characters() {
-        String shortenedDisplayName = "Super long question label, that is so long, that the registration of the Commcare Task channel fails! (And this is caused by the fact, that the Task module display name column only allows 255 characters, while the label you are reading has got obviously w";
+        String displayName = "Super long question label, that is so long, that the registration of the Commcare Task channel fails! (And this is caused by the fact, that the Task module display name column only allows 255 characters, while the label you are reading has got obviously way more than that)";
+        String shortenedDisplayName = displayName.substring(0, 255);
 
-        when(schemaService.retrieveApplications("ConfigOne")).thenReturn(DummyCommcareSchema.getApplicationsForConfigFour());
+        when(schemaService.retrieveApplications("ConfigOne")).thenReturn(DummyCommcareSchema.getApplicationsWithCustomQuestionLabel(displayName));
         List<ActionEventRequest> actionEventRequests = formActionBuilder.buildActions();
 
         assertEquals(actionEventRequests.get(0).getActionParameters().first().getDisplayName().length(), 255);

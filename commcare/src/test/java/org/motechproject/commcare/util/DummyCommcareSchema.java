@@ -198,14 +198,14 @@ public final class DummyCommcareSchema {
         return applicationsInConfig3;
     }
 
-    public static List<CommcareApplicationJson> getApplicationsForConfigFour() {
+    public static List<CommcareApplicationJson> getApplicationsWithCustomQuestionLabel(String questionLabel) {
         List<CommcareApplicationJson> applicationsInConfig = new ArrayList<>();
         Map<String, String> formNames = new HashMap<>();
         formNames.put("en", "form");
         List<String> fields = new ArrayList<>();
         fields.add("motherName");
         FormSchemaQuestionJson questionJson = new FormSchemaQuestionJson();
-        questionJson.setQuestionLabel("Super long question label, that is so long, that the registration of the Commcare Task channel fails! (And this is caused by the fact, that the Task module display name column only allows 255 characters, while the label you are reading has got obviously way more than that)");
+        questionJson.setQuestionLabel(questionLabel);
         questionJson.setQuestionValue("/data/question1");
         FormSchemaJson formSchemaJson = new FormSchemaJson();
         formSchemaJson.setFormNames(formNames);
