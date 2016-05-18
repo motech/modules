@@ -1,5 +1,6 @@
 package org.motechproject.commcare.tasks.builder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.motechproject.commcare.config.Config;
 import org.motechproject.commcare.domain.CommcareApplicationJson;
 import org.motechproject.commcare.domain.CommcareModuleJson;
@@ -28,7 +29,7 @@ import java.util.TreeSet;
  */
 public class FormActionBuilder implements ActionBuilder {
 
-    private static final int MAX_LABEL_LENGHT = 255;
+    private static final int MAX_LABEL_LENGTH = 255;
 
     private CommcareSchemaService schemaService;
     private CommcareConfigService configService;
@@ -75,14 +76,13 @@ public class FormActionBuilder implements ActionBuilder {
     private SortedSet<ActionParameterRequest> buildActionParameters(FormSchemaJson form) {
         SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
         int order = 0;
-        String displayName;
         for (FormSchemaQuestionJson question : form.getQuestions()) {
             ActionParameterRequestBuilder builder = new ActionParameterRequestBuilder();
 
-            displayName = ("").equals(question.getQuestionLabel()) ? question.getQuestionValue() : question.getQuestionLabel();
+            String displayName = StringUtils.isBlank(question.getQuestionLabel()) ? question.getQuestionValue() : question.getQuestionLabel();
 
-            if (displayName.length() > MAX_LABEL_LENGHT) {
-                displayName = displayName.substring(0, MAX_LABEL_LENGHT);
+            if (displayName.length() > MAX_LABEL_LENGTH) {
+                displayName = displayName.substring(0, MAX_LABEL_LENGTH);
             }
 
             builder.setDisplayName(displayName)
