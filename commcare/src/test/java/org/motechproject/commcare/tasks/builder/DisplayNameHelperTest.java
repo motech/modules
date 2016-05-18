@@ -20,4 +20,5 @@ public class DisplayNameHelperTest {
     public void shouldBuildDisplayNamesWithTwoArguments() {
         assertEquals("User [myConf]", DisplayNameHelper.buildDisplayName("User", "myConf"));
     }
+
 }
