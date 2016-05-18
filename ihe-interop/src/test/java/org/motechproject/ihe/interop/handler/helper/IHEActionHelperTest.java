@@ -85,6 +85,7 @@ public class IHEActionHelperTest {
         when(iheTemplateDataService.findByName("sampleTemplate3")).thenReturn(cdaTemplate);
         when(hl7RecipientsService.getRecipientbyName("sampleRecipient3")).thenReturn(hl7Recipient);
         when((Byte[]) iheTemplateDataService.getDetachedField(cdaTemplate, "templateData")).thenReturn(byteObjects);
+        verify(iheTemplateService).sendTemplateToRecipientUrl(hl7Recipient.getRecipientUrl(), new String(bytes, StandardCharsets.UTF_8));
 
         iheActionHelper.handleAction(params);
 

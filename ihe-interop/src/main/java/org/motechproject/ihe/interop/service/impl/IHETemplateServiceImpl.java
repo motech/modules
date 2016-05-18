@@ -23,10 +23,11 @@ public class IHETemplateServiceImpl implements IHETemplateService {
     public void sendTemplateToRecipientUrl(String url, String template) throws IOException {
 
         PostMethod post = new PostMethod(url);
-        post.setRequestEntity(new StringRequestEntity(template, "application/xml", "utf-8"));
         HttpClient client = new HttpClient();
 
-        LOGGER.info("Sending template to URL: {}", url);
+        post.setRequestEntity(new StringRequestEntity(template, "application/xml", "utf-8"));
+
+        LOGGER.info("Sending template to URL: {}", post.getURI().toString());
         int responseCode = client.executeMethod(post);
         LOGGER.info("Response code: {}", responseCode);
     }
