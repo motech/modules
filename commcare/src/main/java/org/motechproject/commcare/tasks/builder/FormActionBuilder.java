@@ -28,6 +28,8 @@ import java.util.TreeSet;
  */
 public class FormActionBuilder implements ActionBuilder {
 
+    private static final int MAX_LABEL_LENGHT = 255;
+
     private CommcareSchemaService schemaService;
     private CommcareConfigService configService;
 
@@ -73,10 +75,17 @@ public class FormActionBuilder implements ActionBuilder {
     private SortedSet<ActionParameterRequest> buildActionParameters(FormSchemaJson form) {
         SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
         int order = 0;
-
+        String displayName;
         for (FormSchemaQuestionJson question : form.getQuestions()) {
             ActionParameterRequestBuilder builder = new ActionParameterRequestBuilder();
-            builder.setDisplayName(question.getQuestionLabel())
+
+            displayName = ("").equals(question.getQuestionLabel()) ? question.getQuestionValue() : question.getQuestionLabel();
+
+            if (displayName.length() > MAX_LABEL_LENGHT) {
+                displayName = displayName.substring(0, MAX_LABEL_LENGHT);
+            }
+
+            builder.setDisplayName(displayName)
                     .setKey(question.getQuestionValue())
                     .setOrder(order++);
 
