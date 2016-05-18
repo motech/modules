@@ -617,6 +617,9 @@
             if (!$scope.$parent.selectedConfig) {
                 return;
             }
+            if ($scope.$parent.selectedConfig === $scope.$parent.newlyCreatedConfig) {
+                return;
+            }
             LoadingModal.open();
             $scope.applications = Schema.query({name: $scope.selectedConfig.name}, function() {
                 $scope.formError = false;

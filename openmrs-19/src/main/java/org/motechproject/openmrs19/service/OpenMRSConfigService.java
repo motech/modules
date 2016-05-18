@@ -74,4 +74,12 @@ public interface OpenMRSConfigService {
      * @return the default configuration
      */
     Config getDefaultConfig();
+
+    /**
+     *  Verifies OpenMRS connection with the given configuration.
+     *
+     * @param config  the configuration to be verified
+     * @return true if connection was successful
+     */
+    boolean verifyConfig(Config config);
 }

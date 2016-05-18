@@ -1,8 +1,8 @@
 package org.motechproject.ihe.interop.handler.helper;
 
 import groovy.lang.Writable;
+import groovy.text.StreamingTemplateEngine;
 import groovy.text.Template;
-import groovy.text.XmlTemplateEngine;
 import org.apache.commons.lang.ArrayUtils;
 import org.motechproject.ihe.interop.domain.CdaTemplate;
 import org.motechproject.ihe.interop.domain.HL7Recipient;
@@ -70,9 +70,9 @@ public class IHEActionHelper {
         }
 
         Byte[] templateData = (Byte[]) iheTemplateDataService.getDetachedField(cdaTemplate, TEMPLATE_DATA_FIELD_NAME);
-        XmlTemplateEngine xmlTemplateEngine = new XmlTemplateEngine();
-        Template xmlTemplate = xmlTemplateEngine.createTemplate(new String(ArrayUtils.toPrimitive(templateData)));
-        Writable writable = xmlTemplate.make(parameters);
+        StreamingTemplateEngine streamingTemplateEngine = new StreamingTemplateEngine();
+        Template template = streamingTemplateEngine.createTemplate(new String(ArrayUtils.toPrimitive(templateData)));
+        Writable writable = template.make(parameters);
         LOGGER.info("Template with name {}:\n{}", cdaTemplate.getTemplateName(), writable.toString());
         iheTemplateService.sendTemplateToRecipientUrl(hl7Recipient.getRecipientUrl(), writable.toString());
     }
