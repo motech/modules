@@ -37,11 +37,6 @@
             <version>${motech.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${fasterxml.jackson.version}</version>
-        </dependency>
-        <dependency>
             <groupId>${motech.groupId}</groupId>
             <artifactId>motech-tasks</artifactId>
             <version>${motech.version}</version>

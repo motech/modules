@@ -1,6 +1,6 @@
 package org.motechproject.dhis2.rest.domain;
 
-import com.fasterxml.jackson.annotation.JsonAnySetter;
+import org.codehaus.jackson.annotate.JsonAnySetter;
 
 import java.util.List;
 
