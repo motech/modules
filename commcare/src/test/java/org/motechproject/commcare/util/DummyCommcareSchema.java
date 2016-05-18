@@ -90,8 +90,9 @@ public final class DummyCommcareSchema {
         return cases;
     }
 
-    public static List<CommcareApplicationJson> getApplicationsWithCustomQuestionLabel(String questionLabel) {
-        List<CommcareApplicationJson> applicationsInConfig = new ArrayList<>();
+    public static List<FormSchemaJson> getFormSchemasWithCustomQuestionLabel(String questionLabel) {
+        List<FormSchemaJson> schemas = new ArrayList<>();
+
         Map<String, String> formNames = new HashMap<>();
         formNames.put("en", "form");
         List<String> fields = new ArrayList<>();
@@ -103,15 +104,10 @@ public final class DummyCommcareSchema {
         formSchemaJson.setFormNames(formNames);
         formSchemaJson.setQuestions(Arrays.asList(questionJson));
         formSchemaJson.setXmlns("http://openrosa.org/formdesigner/BC5BF86E-6586-484E-99DF-CFAE2D0604D3");
-        CommcareModuleJson commcareModuleJson = new CommcareModuleJson();
-        commcareModuleJson.setFormSchemas(Arrays.asList(formSchemaJson));
-        commcareModuleJson.setCaseType("birth");
-        commcareModuleJson.setCaseProperties(fields);
-        CommcareApplicationJson commcareApplicationJson = new CommcareApplicationJson();
-        commcareApplicationJson.setApplicationName("app");
-        commcareApplicationJson.setModules(Arrays.asList(commcareModuleJson));
-        applicationsInConfig.add(commcareApplicationJson);
 
-        return applicationsInConfig;
+        schemas.add(formSchemaJson);
+
+
+        return schemas;
     }
 }
