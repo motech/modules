@@ -54,7 +54,7 @@ public class FormActionBuilderTest {
     }
 
     @Test
-    public void shouldNotAllowActionParametersDisplayNameBlank() {
+    public void shouldUseQuestionIdAsDisplayNameIfQuestionLabelIsEmpty() {
         String blankDisplayName = "";
 
         when(schemaService.retrieveApplications("ConfigOne")).thenReturn(DummyCommcareSchema.getApplicationsWithCustomQuestionLabel(blankDisplayName));
