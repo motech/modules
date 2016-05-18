@@ -89,4 +89,25 @@ public final class DummyCommcareSchema {
 
         return cases;
     }
+
+    public static List<FormSchemaJson> getFormSchemasWithCustomQuestionLabel(String questionLabel) {
+        List<FormSchemaJson> schemas = new ArrayList<>();
+
+        Map<String, String> formNames = new HashMap<>();
+        formNames.put("en", "form");
+        List<String> fields = new ArrayList<>();
+        fields.add("motherName");
+        FormSchemaQuestionJson questionJson = new FormSchemaQuestionJson();
+        questionJson.setQuestionLabel(questionLabel);
+        questionJson.setQuestionValue("/data/question1");
+        FormSchemaJson formSchemaJson = new FormSchemaJson();
+        formSchemaJson.setFormNames(formNames);
+        formSchemaJson.setQuestions(Arrays.asList(questionJson));
+        formSchemaJson.setXmlns("http://openrosa.org/formdesigner/BC5BF86E-6586-484E-99DF-CFAE2D0604D3");
+
+        schemas.add(formSchemaJson);
+
+
+        return schemas;
+    }
 }
