@@ -21,7 +21,7 @@
         <span class="margin-left1">{{loadingError}}</span>
     </div>
 
-    <div id="commcareCase" class="overrideJqgridTable">
+    <div ng-if="selectedConfig !== newlyCreatedConfig" id="commcareCase" class="overrideJqgridTable">
         <table id="case-table" commcare-case-jqgrid="page-commcare-case-table"></table>
         <div id="page-commcare-case-table"></div>
     </div>

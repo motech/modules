@@ -76,11 +76,11 @@ public class FormActionBuilder implements ActionBuilder {
     private SortedSet<ActionParameterRequest> buildActionParameters(FormSchemaJson form) {
         SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
         int order = 0;
-        String displayName;
+
         for (FormSchemaQuestionJson question : form.getQuestions()) {
             ActionParameterRequestBuilder builder = new ActionParameterRequestBuilder();
 
-            displayName = (StringUtils.isBlank(question.getQuestionLabel())) ? question.getQuestionValue() : question.getQuestionLabel();
+            String displayName = StringUtils.isBlank(question.getQuestionLabel()) ? question.getQuestionValue() : question.getQuestionLabel();
 
             if (displayName.length() > MAX_LABEL_LENGTH) {
                 displayName = displayName.substring(0, MAX_LABEL_LENGTH);
