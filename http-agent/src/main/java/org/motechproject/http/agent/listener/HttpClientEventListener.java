@@ -6,7 +6,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.http.agent.domain.EventDataKeys;
 import org.motechproject.http.agent.domain.EventSubjects;
-import org.motechproject.http.agent.domain.HTTPActionRecord;
+import org.motechproject.http.agent.domain.HTTPActionAudit;
 import org.motechproject.http.agent.factory.HttpComponentsClientHttpRequestFactoryWithAuth;
 import org.motechproject.http.agent.service.HTTPActionService;
 import org.motechproject.http.agent.service.Method;
@@ -173,9 +173,9 @@ public class HttpClientEventListener {
                                                      RestTemplate restTemplate) {
 
         ResponseEntity<?> response = method.execute(restTemplate, url, requestData);
-        HTTPActionRecord httpActionRecord = new HTTPActionRecord(url, requestData.toString(), response.getBody().toString(),
+        HTTPActionAudit httpActionAudit = new HTTPActionAudit(url, requestData.toString(), response.getBody().toString(),
                 response.getStatusCode().toString());
-        httpActionService.create(httpActionRecord);
+        httpActionService.create(httpActionAudit);
 
         return response;
     }
