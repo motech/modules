@@ -73,7 +73,7 @@ public class SyncServiceImpl implements SyncService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SyncServiceImpl.class);
     
     @Value("${openlmis.stockstatus.fromyear}")
-    private int fromYear;
+    private String fromYear;
 
     @Override
     @Transactional
@@ -168,7 +168,7 @@ public class SyncServiceImpl implements SyncService {
         DateTime now = new DateTime();
         List<Program> programs = programService.findAll();
         for (Program program : programs) {
-            for (int year = fromYear; year <= now.getYear(); year++) {
+            for (int year = Integer.parseInt(fromYear); year <= now.getYear(); year++) {
                 int lastMonth = (year == now.getYear() ? now.getMonthOfYear() : DateTimeConstants.DECEMBER);
                 for (int month = DateTimeConstants.JANUARY; month <= lastMonth; month++) {
                     List<StockStatusDto> stockStatusDtos = openlmisWebService.getStockStatus(month, year, program.getCode());
