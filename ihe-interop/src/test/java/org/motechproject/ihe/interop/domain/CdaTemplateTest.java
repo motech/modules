@@ -26,7 +26,9 @@ public class CdaTemplateTest {
                 "</ClinicalDocument>";
         Map<String, String> properties = new HashMap<>();
 
-        CdaTemplate cdaTemplate = new CdaTemplate("templateName", byteObjects, properties);
+        CdaTemplate cdaTemplate = new CdaTemplate();
+        cdaTemplate.setTemplateData(byteObjects);
+        
         bytes = new byte[cdaTemplate.getTemplateData().length];
         i = 0;
         for (Byte b : cdaTemplate.getTemplateData()) {
