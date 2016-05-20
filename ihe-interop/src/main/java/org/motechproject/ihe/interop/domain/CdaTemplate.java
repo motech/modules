@@ -61,22 +61,20 @@ public class CdaTemplate {
     }
 
     private Byte[] removeCommentsFromTemplate(Byte[] data) {
-
         byte[] bytes = new byte[data.length];
         int i = 0;
         for (Byte b : data) {
-            bytes[i++] = b.byteValue();
+            bytes[i++] = b;
         }
         String templateString = new String(bytes);
         Pattern regex = Pattern.compile("(?s)<!--.*?-->", Pattern.DOTALL);
         Matcher regexMatcher = regex.matcher(templateString);
         templateString = regexMatcher.replaceAll("");
-        templateString.replaceAll("(?s)<!--.*?-->", "");
         bytes = templateString.getBytes();
         Byte[] byteObjects = new Byte[bytes.length];
         i = 0;
         for (byte b : bytes) {
-            byteObjects[i++] = new Byte(b);
+            byteObjects[i++] = b;
         }
 
         return byteObjects;
