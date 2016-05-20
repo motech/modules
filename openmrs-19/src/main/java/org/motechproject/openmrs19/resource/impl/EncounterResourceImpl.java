@@ -2,6 +2,7 @@ package org.motechproject.openmrs19.resource.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.collections.CollectionUtils;
 import org.motechproject.openmrs19.config.Config;
 import org.motechproject.openmrs19.domain.Encounter;
 import org.motechproject.openmrs19.domain.EncounterListResult;
@@ -28,19 +29,30 @@ public class EncounterResourceImpl extends BaseResource implements EncounterReso
     public Encounter createEncounter(Config config, Encounter encounter) {
         String requestJson = buildGsonWithAdapters().toJson(encounter);
         String responseJson = postForJson(config, requestJson, "/encounter?v=full");
-        return (Encounter) JsonUtils.readJson(responseJson, Encounter.class);
+
+        Encounter createdEncounter = (Encounter) JsonUtils.readJson(responseJson, Encounter.class);
+        setProviderFromEncounterProviderList(createdEncounter);
+        return createdEncounter;
     }
 
     @Override
     public EncounterListResult queryForAllEncountersByPatientId(Config config, String id) {
         String responseJson = getJson(config, "/encounter?patient={id}&v=full", id);
-        return (EncounterListResult) JsonUtils.readJson(responseJson, EncounterListResult.class);
+        
+        EncounterListResult encounterList = (EncounterListResult) JsonUtils.readJson(responseJson, EncounterListResult.class);
+        for(Encounter encounter : encounterList.getResults()) {
+            setProviderFromEncounterProviderList(encounter);
+        }
+        return encounterList;
     }
 
     @Override
     public Encounter getEncounterById(Config config, String uuid) {
         String responseJson = getJson(config, "/encounter/{uuid}?v=full", uuid);
-        return (Encounter) JsonUtils.readJson(responseJson, Encounter.class);
+
+        Encounter createdEncounter = (Encounter) JsonUtils.readJson(responseJson, Encounter.class);
+        setProviderFromEncounterProviderList(createdEncounter);
+        return createdEncounter;
     }
 
     @Override
@@ -79,5 +91,17 @@ public class EncounterResourceImpl extends BaseResource implements EncounterReso
                 .registerTypeAdapter(EncounterType.class, new EncounterType.EncounterTypeSerializer())
                 .registerTypeAdapter(Observation.class, new Observation.ObservationSerializer())
                 .create();
+    }
+
+    /**
+     * Sets provider from the list to a single provider object in encounter. Since OpenMRS version 1.10
+     * providers in encounter are stored as a list.
+     *
+     * @param encounter
+     */
+    private void setProviderFromEncounterProviderList(Encounter encounter) {
+        if (encounter.getProvider() == null && CollectionUtils.isNotEmpty(encounter.getEncounterProviders())) {
+            encounter.setProvider(encounter.getEncounterProviders().get(0));
+        }
     }
 }

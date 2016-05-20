@@ -121,6 +121,7 @@
                             org.springframework.aop.framework,
                             org.springframework.cglib.core,
                             org.springframework.cglib.proxy,
+                            org.springframework.cglib.reflect,
                             org.springframework.validation.beanvalidation,
                             org.motechproject.config,
                             org.motechproject.config.service,
