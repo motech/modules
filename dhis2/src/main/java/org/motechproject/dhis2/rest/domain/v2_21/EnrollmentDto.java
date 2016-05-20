@@ -1,7 +1,6 @@
 package org.motechproject.dhis2.rest.domain.v2_21;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.motechproject.dhis2.rest.domain.AttributeDto;
 import org.motechproject.dhis2.rest.domain.base.BaseEnrollmentDto;
 
@@ -11,7 +10,7 @@ import java.util.Objects;
 /**
  * A class to model enrollments posted to the DHIS2 server in version 2.21 or higher.
  */
-@JsonInclude(Include.NON_NULL)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class EnrollmentDto extends BaseEnrollmentDto {
 
     private String enrollmentDate;
