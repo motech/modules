@@ -3,12 +3,12 @@
 
         <div class="form-inline form-group">
             <label>{{msg('openMRS.selectConfig')}}: </label>
-            <select class="largeCombobox form-control" ng-change="selectChanged()" ng-model="selectedConfig" ng-options="config.name for config in configs.configs">
+            <select class="largeCombobox form-control" ng-model="selectedConfig" ng-options="config.name for config in configs.configs">
             </select>
         </div>
 
         <div class="btn-group form-group">
-            <a ng-click="selectChanged(); addConfig()" type="button" class="form-group btn btn-success">
+            <a ng-click="addConfig()" type="button" class="form-group btn btn-success">
                 <i class="fa fa-plus"></i> {{msg('openMRS.addConfig')}}
             </a>
             <a ng-if="selectedConfig" ng-disabled="!saveAllowed()" ng-click="saveAllowed() && saveConfig()" type="button" class="btn btn-primary">
@@ -41,7 +41,7 @@
                 <div class="col-md-9 col-sm-8 form-inline">
                     <input class="form-control input-xlarge-fluid" ng-change="draftChanged()" ng-model="selectedConfig.name" type="text" id="name" />
                     <div class="form-hints">
-                        <span ng-hide="selectedConfig.name" class="form-hint-error">{{msg('openMRS.config.error.nameRequired')}}</span>
+                        <span ng-hide="selectedConfig.name.length>0" class="form-hint-error">{{msg('openMRS.config.error.nameRequired')}}</span>
                         <span ng-if="selectedConfig.name && !validateName()" class="form-hint-error">{{msg('openMRS.config.error.wrongName')}}</span>
                     </div>
                 </div>
@@ -49,28 +49,30 @@
                 <div class="col-md-9 col-sm-8 form-inline">
                     <input class="form-control input-xlarge-fluid" ng-change="draftChanged()" ng-model="selectedConfig.openMrsUrl" type="text" id="url" />
                     <div class="form-hints">
-                        <span ng-hide="selectedConfig.openMrsUrl" class="form-hint-error">{{msg('openMRS.config.error.urlRequired')}}</span>
+                        <span ng-hide="selectedConfig.openMrsUrl.length>0" class="form-hint-error">{{msg('openMRS.config.error.urlRequired')}}</span>
                     </div>
                 </div>
                 <label class="col-md-3 col-sm-4 control-label" for="username">{{msg('openMRS.config.username')}}</label>
                 <div class="col-md-9 col-sm-8 form-inline">
                     <input class="form-control input-xlarge-fluid" ng-change="draftChanged()" ng-model="selectedConfig.username" type="text" id="username" />
                     <div class="form-hints">
-                        <span ng-hide="selectedConfig.username" class="form-hint-error">{{msg('openMRS.config.error.usernameRequired')}}</span>
+                        <span ng-hide="selectedConfig.username.length>0" class="form-hint-error">{{msg('openMRS.config.error.usernameRequired')}}</span>
                     </div>
                 </div>
                 <label class="col-md-3 col-sm-4 control-label" for="password">{{msg('openMRS.config.password')}}</label>
                 <div class="col-md-9 col-sm-8 form-inline">
                     <input class="form-control input-xlarge-fluid" ng-change="draftChanged()" ng-model="selectedConfig.password" type="password" id="password" />
                     <div class="form-hints">
-                        <span ng-hide="selectedConfig.password" class="form-hint-error">{{msg('openMRS.config.error.passwordRequired')}}</span>
+                        <span ng-hide="selectedConfig.password.length>0" class="form-hint-error">{{msg('openMRS.config.error.passwordRequired')}}</span>
                     </div>
                 </div>
-                <label class="col-md-3 col-sm-4 control-label" for="motechID">{{msg('openMRS.config.motechID')}}</label>
+                <label class="col-md-3 col-sm-4 control-label" for="motechID">{{msg('openMRS.config.motechID')}}
+                    <span class="glyphicon glyphicon-info-sign" data-trigger="hover" data-placement="right" bs-popover="{{msg('openMRS.config.info.motechID')}}" data-original-title=""/>
+                </label>
                 <div class="col-md-9 col-sm-8 form-inline">
                     <input class="form-control input-xlarge-fluid" ng-change="draftChanged()" ng-model="selectedConfig.motechPatientIdentifierTypeName" type="text" id="motechID" />
                     <div class="form-hints">
-                        <span ng-hide="selectedConfig.motechPatientIdentifierTypeName" class="form-hint-error">{{msg('openMRS.config.error.motechIDRequired')}}</span>
+                        <span ng-hide="selectedConfig.motechPatientIdentifierTypeName.length>0" class="form-hint-error">{{msg('openMRS.config.error.motechIDRequired')}}</span>
                     </div>
                 </div>
                 <div ng-if="selectedConfig.patientIdentifierTypeNames.length >= 1">
@@ -89,7 +91,7 @@
                 </div>
                 <label class="col-md-3 col-sm-4 control-label" for="newPatientIdentifierType">{{msg('openMRS.config.patientIdentifierType')}}</label>
                 <div class="col-md-9 col-sm-8 form-inline">
-                    <input class="form-control input-xlarge-fluid" ng-model="newPatientIdentifierType.name" ng-change="draftChanged()" type="text" id="newPatientIdentifierType"/>
+                    <input class="form-control input-xlarge-fluid" ng-model="newPatientIdentifierType.name" type="text" id="newPatientIdentifierType"/>
                     <div class="form-hints">
                         <span ng-if="patientIdentifierTypeNameExists()" class="form-hint-error">{{msg('openMRS.config.error.patientIdentifierTypeExists')}}</span>
                     </div>

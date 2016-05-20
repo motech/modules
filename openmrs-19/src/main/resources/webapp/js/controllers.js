@@ -5,7 +5,7 @@
 
     var controllers = angular.module('openmrs19.controllers',[]);
 
-    controllers.controller('OpenMRSSettingsCtrl', function($scope, OpenMRSConfig, LoadingModal) {
+    controllers.controller('OpenMRSSettingsCtrl', function($scope, OpenMRSConfig, LoadingModal, ModalFactory) {
 
         $scope.configs = [];
         $scope.selectedConfig = undefined;
@@ -14,10 +14,50 @@
         $scope.newPatientIdentifierType = {};
         $scope.failureMessage = undefined;
         $scope.successMessage = undefined;
+        $scope.rollback = false;
 
-        $scope.getDefault = function() {
+        $scope.$watch('selectedConfig', function(newValue, oldValue) {
+            if ($scope.configOutdated) {
+                if(!$scope.rollback) {
+                    ModalFactory.showConfirm({
+                        title: $scope.msg('openMRS.header.confirm'),
+                        message: $scope.msg('openMRS.confirm.discardChanges'),
+                        type: 'type-warning',
+                        callback: function(result) {
+                            if (result) {
+                                $scope.getConfigs();
+                                $scope.clearMessages();
+                                $scope.newPatientIdentifierType.name = "";
+                            }
+                            else {
+                                $scope.rollback = true;
+                                $scope.configOutdated = true;
+                                $scope.selectedConfig = oldValue;
+                                $scope.$apply();
+                            }
+                        }
+                    });
+                }
+                else {
+                    $scope.rollback = false;
+                }
+            }
+            else {
+               $scope.originalConfig = angular.copy($scope.selectedConfig);
+               $scope.configOutdated = false;
+               $scope.clearMessages();
+               $scope.newPatientIdentifierType.name = "";
+            }
+        });
+
+        $scope.clearMessages = function() {
+            $scope.failureMessage="";
+            $scope.successMessage="";
+        }
+
+        $scope.getConfig = function(name) {
             for (var i = 0; i < $scope.configs.configs.length; i++) {
-                if ($scope.configs.configs[i].name === $scope.configs.defaultConfigName) {
+                if ($scope.configs.configs[i].name === name) {
                     return $scope.configs.configs[i];
                 }
             }
@@ -31,9 +71,12 @@
                     $scope.configs.configs.patientIdentifierTypeNames=[];
                     $scope.configOutdated = false;
                     if (!$scope.selectedConfig) {
-                        $scope.selectedConfig = $scope.getDefault();
-                        $scope.originalConfig = angular.copy($scope.selectedConfig);
+                        $scope.selectedConfig = $scope.getConfig($scope.configs.defaultConfigName);
                     }
+                    else if ($scope.selectedConfig.name != "") {
+                        $scope.selectedConfig = $scope.getConfig($scope.selectedConfig.name);
+                    }
+                     $scope.originalConfig = angular.copy($scope.selectedConfig);
                 }
             );
         };
@@ -49,21 +92,16 @@
                 'motechPatientIdentifierTypeName':'',
                 'patientIdentifierTypeNames':[]
             };
-            $scope.originalConfig = angular.copy($scope.selectedConfig);
         };
 
         $scope.draftChanged = function() {
-            $scope.configOutdated = true;
-            $scope.failureMessage="";
-            $scope.successMessage="";
-        };
-
-        $scope.selectChanged = function() {
-            $scope.originalConfig = angular.copy($scope.selectedConfig);
-            $scope.configOutdated = false;
-            $scope.newPatientIdentifierType.name = "";
-            $scope.failureMessage="";
-            $scope.successMessage="";
+            if (angular.equals($scope.selectedConfig, $scope.originalConfig)) {
+                $scope.configOutdated = false;
+            }
+            else {
+                $scope.configOutdated = true;
+            }
+            $scope.clearMessages();
         };
 
         $scope.patientIdentifierTypeNameExists = function() {
@@ -83,12 +121,12 @@
         $scope.addPatientIdentifierType = function() {
             $scope.selectedConfig.patientIdentifierTypeNames.push($scope.newPatientIdentifierType.name);
             $scope.newPatientIdentifierType.name = "";
-            $scope.configOutdated = true;
+            $scope.draftChanged();
         };
 
         $scope.removePatientIdentifierType = function(patientIdentifierTypeName) {
             $scope.selectedConfig.patientIdentifierTypeNames.splice($scope.selectedConfig.patientIdentifierTypeNames.indexOf(patientIdentifierTypeName), 1);
-            $scope.configOutdated = true;
+            $scope.draftChanged();
         };
 
         $scope.validateConfig = function() {
@@ -137,16 +175,15 @@
             if (!$scope.configsWithGivenName()) {
                 $scope.configs.configs.push($scope.selectedConfig);
             }
-            else if ($scope.getDefault() === undefined) {
+            else if ($scope.getConfig($scope.configs.defaultConfigName) === undefined) {
                 $scope.configs.defaultConfigName = $scope.selectedConfig.name;
             }
             LoadingModal.open();
             OpenMRSConfig.save($scope.configs,
                 function success() {
                     $scope.originalConfig = angular.copy($scope.selectedConfig);
-                    $scope.configOutdated = false;
-                    $scope.failureMessage="";
-                    $scope.successMessage="";
+                    $scope.getConfigs();
+                    $scope.clearMessages();
                     LoadingModal.close();
                 },
                 function failure() {
@@ -173,8 +210,7 @@
                 function success() {
                     $scope.selectedConfig = undefined;
                     $scope.getConfigs();
-                    $scope.failureMessage="";
-                    $scope.successMessage="";
+                    $scope.clearMessages();
                     LoadingModal.close();
                 },
                 function failure() {
@@ -186,7 +222,7 @@
         };
 
         $scope.isDefault = function() {
-            return $scope.selectedConfig.name === $scope.configs.defaultConfigName;
+            return $scope.originalConfig.name === $scope.configs.defaultConfigName;
         }
 
         $scope.makeDefaultAllowed = function() {
@@ -201,8 +237,7 @@
             OpenMRSConfig.save($scope.configs,
                 function success() {
                     $scope.selectedConfig = undefined;
-                    $scope.failureMessage="";
-                    $scope.successMessage="";
+                    $scope.clearMessages();
                     $scope.getConfigs();
                     LoadingModal.close();
                 },
