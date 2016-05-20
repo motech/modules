@@ -76,6 +76,7 @@ public class FormActionBuilder implements ActionBuilder {
     private SortedSet<ActionParameterRequest> buildActionParameters(FormSchemaJson form) {
         SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
         int order = 0;
+
         for (FormSchemaQuestionJson question : form.getQuestions()) {
             ActionParameterRequestBuilder builder = new ActionParameterRequestBuilder();
 
