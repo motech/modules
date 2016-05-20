@@ -217,24 +217,12 @@
             {
               "displayName": "openMRS.lookup.motechId",
               "fields": [
-                "openMRS.motechId"
-              ]
-            },
-            {
-              "displayName": "openMRS.lookup.uuid",
-              "fields": [
-                "openMRS.uuid"
-              ]
-            },
-            {
-              "displayName": "openMRS.lookup.motechIdAndProgramName",
-              "fields": [
                 "openMRS.motechId",
                 "openMRS.programName"
               ]
             },
             {
-              "displayName": "openMRS.lookup.uuidAndProgramName",
+              "displayName": "openMRS.lookup.uuid",
               "fields": [
                 "openMRS.uuid",
                 "openMRS.programName"
@@ -269,9 +257,12 @@
               "fieldKey": "location.name"
             },
             {
-              "displayName": "openMRS.programEnrollment.states",
-              "fieldKey": "states",
-              "type": "LIST"
+              "displayName": "openMRS.programEnrollment.notEnrolled",
+              fieldKey: "notEnrolled"
+            },
+            {
+              "displayName": "openMRS.programEnrollment.currentState",
+              "fieldKey": "currentState"
             }
           ]
         }

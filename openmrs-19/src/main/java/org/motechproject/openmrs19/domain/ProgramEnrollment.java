@@ -1,6 +1,7 @@
 package org.motechproject.openmrs19.domain;
 
 import com.google.gson.annotations.Expose;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -31,6 +32,8 @@ public class ProgramEnrollment {
 
     @Expose
     private List<StateStatus> states;
+
+    private boolean notEnrolled;
 
     public static class StateStatus {
 
@@ -153,6 +156,26 @@ public class ProgramEnrollment {
 
     public void setStates(List<StateStatus> states) {
         this.states = states;
+    }
+
+    public boolean isNotEnrolled() {
+        return notEnrolled;
+    }
+
+    public void setNotEnrolled(boolean notEnrolled) {
+        this.notEnrolled = notEnrolled;
+    }
+
+    public StateStatus getCurrentState() {
+        if (CollectionUtils.isNotEmpty(states)) {
+            for (StateStatus state : states) {
+                if (state.endDate == null) {
+                    return state;
+                }
+            }
+        }
+
+        return null;
     }
 
     @Override

@@ -31,9 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.BY_MOTECH_ID;
-import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.BY_MOTECH_ID_AND_PROGRAM_NAME;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.BY_UUID;
-import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.BY_UUID_AMD_PROGRAM_NAME;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.ENCOUNTER;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.MOTECH_ID;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.NAME;
@@ -199,14 +197,6 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
 
         switch (lookupName) {
             case BY_MOTECH_ID: {
-                programEnrollments = programEnrollmentService.getProgramEnrollmentByPatientMotechId(configName, lookupFields.get(MOTECH_ID));
-                break;
-            }
-            case BY_UUID: {
-                programEnrollments = programEnrollmentService.getProgramEnrollmentByPatientUuid(configName, lookupFields.get(UUID));
-                break;
-            }
-            case BY_MOTECH_ID_AND_PROGRAM_NAME: {
                 for (ProgramEnrollment programEnrollment : programEnrollmentService.getProgramEnrollmentByPatientMotechId(configName, lookupFields.get(MOTECH_ID))) {
                     if (programEnrollment.getProgram().getName().equals(lookupFields.get(PROGRAM_NAME))) {
                         programEnrollments.add(programEnrollment);
@@ -214,7 +204,7 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
                 }
                 break;
             }
-            case BY_UUID_AMD_PROGRAM_NAME: {
+            case BY_UUID: {
                 for (ProgramEnrollment programEnrollment : programEnrollmentService.getProgramEnrollmentByPatientUuid(configName, lookupFields.get(UUID))) {
                     if (programEnrollment.getProgram().getName().equals(lookupFields.get(PROGRAM_NAME))) {
                         programEnrollments.add(programEnrollment);
@@ -228,6 +218,31 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
             }
         }
 
-        return CollectionUtils.isEmpty(programEnrollments) ? null : programEnrollments.get(0);
+        if (CollectionUtils.isEmpty(programEnrollments)) {
+            Patient patient = null;
+
+            switch (lookupName) {
+                case BY_MOTECH_ID: {
+                    patient = patientService.getPatientByMotechId(configName, lookupFields.get(MOTECH_ID));
+                    break;
+                }
+                case BY_UUID: {
+                    patient = patientService.getPatientByUuid(configName, lookupFields.get(UUID));
+                }
+                default: {
+                    LOGGER.error("Lookup with name {} doesn't exist for patient object", lookupName);
+                    break;
+                }
+            }
+
+            ProgramEnrollment notEnrolled = new ProgramEnrollment();
+
+            notEnrolled.setNotEnrolled(true);
+            notEnrolled.setPatient(patient);
+
+            return notEnrolled;
+        } else {
+            return programEnrollments.get(0);
+        }
     }
 }
