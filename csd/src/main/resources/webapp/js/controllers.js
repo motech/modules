@@ -222,7 +222,14 @@
                 saveData($scope.xml, "CSD.xml");
                 $scope.isDownloadingXml = false;
             } else {
-                $http.get('../csd/csd-getXml')
+                $http({
+                    method: 'GET',
+                    url:'../csd/csd-getXml',
+                    headers: {
+                        'Content-Type': 'application/xml',
+                        'Accept': 'application/xml'
+                        }
+                    })
                     .success(function(response){
                         $scope.xml = response;
                         saveData(response, "CSD.xml");
