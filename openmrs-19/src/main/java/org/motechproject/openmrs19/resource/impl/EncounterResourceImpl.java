@@ -31,7 +31,7 @@ public class EncounterResourceImpl extends BaseResource implements EncounterReso
         String responseJson = postForJson(config, requestJson, "/encounter?v=full");
 
         Encounter createdEncounter = (Encounter) JsonUtils.readJson(responseJson, Encounter.class);
-        getProviderFromEncounterProviderList(createdEncounter);
+        setProviderFromEncounterProviderList(createdEncounter);
         return createdEncounter;
     }
 
@@ -41,7 +41,7 @@ public class EncounterResourceImpl extends BaseResource implements EncounterReso
         
         EncounterListResult encounterList = (EncounterListResult) JsonUtils.readJson(responseJson, EncounterListResult.class);
         for(Encounter encounter : encounterList.getResults()) {
-            getProviderFromEncounterProviderList(encounter);
+            setProviderFromEncounterProviderList(encounter);
         }
         return encounterList;
     }
@@ -51,7 +51,7 @@ public class EncounterResourceImpl extends BaseResource implements EncounterReso
         String responseJson = getJson(config, "/encounter/{uuid}?v=full", uuid);
 
         Encounter createdEncounter = (Encounter) JsonUtils.readJson(responseJson, Encounter.class);
-        getProviderFromEncounterProviderList(createdEncounter);
+        setProviderFromEncounterProviderList(createdEncounter);
         return createdEncounter;
     }
 
@@ -94,12 +94,12 @@ public class EncounterResourceImpl extends BaseResource implements EncounterReso
     }
 
     /**
-     * Rewrites provider from the list to single provider object in encounter. Since OpenMRS version 1.10
-     * providers in encounter are stored on the list.
+     * Sets provider from the list to a single provider object in encounter. Since OpenMRS version 1.10
+     * providers in encounter are stored as a list.
      *
      * @param encounter
      */
-    private void getProviderFromEncounterProviderList(Encounter encounter) {
+    private void setProviderFromEncounterProviderList(Encounter encounter) {
         if (encounter.getProvider() == null && CollectionUtils.isNotEmpty(encounter.getEncounterProviders())) {
             encounter.setProvider(encounter.getEncounterProviders().get(0));
         }
