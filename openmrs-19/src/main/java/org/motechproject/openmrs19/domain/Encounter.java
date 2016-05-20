@@ -18,8 +18,9 @@ public class Encounter {
     private Date encounterDatetime;
     private Patient patient;
     private Person provider;
-    private List<Person> encounterProviders;
     private List<Observation> obs;
+    //This field is new in OpenMRS since version 1.10
+    private List<Person> encounterProviders;
 
     /**
      * Default constructor.

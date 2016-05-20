@@ -2,6 +2,7 @@ package org.motechproject.openmrs19.resource.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.collections.CollectionUtils;
 import org.motechproject.openmrs19.config.Config;
 import org.motechproject.openmrs19.domain.Encounter;
 import org.motechproject.openmrs19.domain.EncounterListResult;
@@ -92,9 +93,14 @@ public class EncounterResourceImpl extends BaseResource implements EncounterReso
                 .create();
     }
 
+    /**
+     * Rewrites provider from the list to single provider object in encounter. Since OpenMRS version 1.10
+     * providers in encounter are stored on the list.
+     *
+     * @param encounter
+     */
     private void getProviderFromEncounterProviderList(Encounter encounter) {
-        //When OpenMRS version is 1.12, then providers are stored on the list.
-        if(encounter.getProvider()==null && !encounter.getEncounterProviders().isEmpty()) {
+        if (encounter.getProvider() == null && CollectionUtils.isNotEmpty(encounter.getEncounterProviders())) {
             encounter.setProvider(encounter.getEncounterProviders().get(0));
         }
     }
