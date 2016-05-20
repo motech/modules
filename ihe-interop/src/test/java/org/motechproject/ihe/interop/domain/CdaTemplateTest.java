@@ -8,7 +8,6 @@ public class CdaTemplateTest {
 
     @Test
     public void shouldRemoveCommentsFromXml() {
-
         String templateWithComments = "<ClinicalDocument>\n" +
                 "<!--  This is comment line -->\n" +
                 "</ClinicalDocument>";
