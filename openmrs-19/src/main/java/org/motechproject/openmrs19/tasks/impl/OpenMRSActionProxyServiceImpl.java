@@ -1,6 +1,5 @@
 package org.motechproject.openmrs19.tasks.impl;
 
-import com.google.common.base.Strings;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
@@ -21,9 +20,9 @@ import org.motechproject.openmrs19.service.OpenMRSConceptService;
 import org.motechproject.openmrs19.service.OpenMRSEncounterService;
 import org.motechproject.openmrs19.service.OpenMRSLocationService;
 import org.motechproject.openmrs19.service.OpenMRSPatientService;
+import org.motechproject.openmrs19.service.OpenMRSPersonService;
 import org.motechproject.openmrs19.service.OpenMRSProgramEnrollmentService;
 import org.motechproject.openmrs19.service.OpenMRSProviderService;
-import org.motechproject.openmrs19.service.OpenMRSPersonService;
 import org.motechproject.openmrs19.tasks.OpenMRSActionProxyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -154,7 +153,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         programEnrollment.setUuid(programEnrollmentUuid);
         programEnrollment.setDateCompleted(Objects.nonNull(programCompletedDate) ? programCompletedDate.toDate() : null);
 
-        if (!Strings.isNullOrEmpty(stateUuid)) {
+        if (StringUtils.isNotBlank(stateUuid)) {
             Program.State state = new Program.State();
             state.setUuid(stateUuid);
 
