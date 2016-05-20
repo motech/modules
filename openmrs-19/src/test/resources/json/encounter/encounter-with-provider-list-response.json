@@ -1,0 +1,28 @@
+{
+  "location": {
+    "uuid": "LLL"
+  },
+  "encounterType": {
+    "name": "ADULTINITIAL"
+  },
+  "patient": {
+    "uuid": "PPP"
+  },
+  "encounterProviders": [
+    {
+      "provider": {
+        "uuid": "PPR"
+      }
+    }
+  ],
+  "obs": [
+    {
+      "concept": {
+        "display": "CCC"
+      },
+      "value": {
+        "display": "Test Value"
+      }
+    }
+  ]
+}

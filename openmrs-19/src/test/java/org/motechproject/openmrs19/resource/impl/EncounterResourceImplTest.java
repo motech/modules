@@ -31,6 +31,7 @@ public class EncounterResourceImplTest extends AbstractResourceImplTest {
 
     private static final String ENCOUNTER_BY_PATIENT_RESPONSE_JSON = "json/encounter/encounter-by-patient-response.json";
     private static final String ENCOUNTER_RESPONSE_JSON = "json/encounter/encounter-response.json";
+    private static final String ENCOUNTER_WITH_PROVIDER_LIST_JSON = "json/encounter/encounter-with-provider-list-response.json";
     private static final String CREATE_ENCOUNTER_JSON = "json/encounter/encounter-create.json";
 
     @Mock
@@ -63,6 +64,22 @@ public class EncounterResourceImplTest extends AbstractResourceImplTest {
         verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
 
         assertThat(created, equalTo(encounter));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPost(config)));
+        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
+                equalTo(readFromFile(CREATE_ENCOUNTER_JSON, JsonObject.class)));
+    }
+
+    @Test
+    public void shouldCreateEncounterWithProviderList() throws Exception {
+        Encounter encounter = prepareEncounter();
+        URI url = config.toInstancePath("/encounter?v=full");
+
+        when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(ENCOUNTER_WITH_PROVIDER_LIST_JSON));
+
+        encounterResource.createEncounter(config, encounter);
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
+
         assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPost(config)));
         assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
                 equalTo(readFromFile(CREATE_ENCOUNTER_JSON, JsonObject.class)));
