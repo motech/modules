@@ -141,14 +141,6 @@ public interface OpenMRSActionProxyService {
      * @param stateUuid the state uuid
      * @param startDate the state start date
      */
-    void changeStateOfProgramEnrollment(String configName, String programEnrollmentUuid, String stateUuid, DateTime startDate);
-
-    /**
-     * Completes program enrollment by setting complete date.
-     *
-     * @param configName the name of the configuration
-     * @param programEnrollmentUuid the program enrollment uuid
-     * @param dateCompleted the program completed date
-     */
-    void completeProgramEnrollment(String configName, String programEnrollmentUuid, DateTime dateCompleted);
+    void changeStateOfProgramEnrollment(String configName, String programEnrollmentUuid, DateTime programCompletedDate,
+                                        String stateUuid, DateTime startDate);
 }

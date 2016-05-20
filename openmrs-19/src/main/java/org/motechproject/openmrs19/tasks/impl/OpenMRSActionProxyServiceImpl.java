@@ -1,5 +1,6 @@
 package org.motechproject.openmrs19.tasks.impl;
 
+import com.google.common.base.Strings;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
@@ -147,29 +148,22 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     }
 
     @Override
-    public void changeStateOfProgramEnrollment(String configName, String programEnrollmentUuid, String stateUuid, DateTime startDate) {
-        Program.State state = new Program.State();
-        state.setUuid(stateUuid);
-
-        ProgramEnrollment.StateStatus stateStatus = new ProgramEnrollment.StateStatus();
-        stateStatus.setState(state);
-        stateStatus.setStartDate(startDate.toDate());
-
-        List<ProgramEnrollment.StateStatus> stateStatuses = new ArrayList<>();
-        stateStatuses.add(stateStatus);
-
+    public void changeStateOfProgramEnrollment(String configName, String programEnrollmentUuid, DateTime programCompletedDate,
+                                               String stateUuid, DateTime startDate) {
         ProgramEnrollment programEnrollment = new ProgramEnrollment();
         programEnrollment.setUuid(programEnrollmentUuid);
-        programEnrollment.setStates(stateStatuses);
+        programEnrollment.setDateCompleted(Objects.nonNull(programCompletedDate) ? programCompletedDate.toDate() : null);
 
-        programEnrollmentService.updateProgramEnrollment(configName, programEnrollment);
-    }
+        if (!Strings.isNullOrEmpty(stateUuid)) {
+            Program.State state = new Program.State();
+            state.setUuid(stateUuid);
 
-    @Override
-    public void completeProgramEnrollment(String configName, String programEnrollmentUuid, DateTime dateCompleted) {
-        ProgramEnrollment programEnrollment = new ProgramEnrollment();
-        programEnrollment.setUuid(programEnrollmentUuid);
-        programEnrollment.setDateCompleted(dateCompleted.toDate());
+            ProgramEnrollment.StateStatus stateStatus = new ProgramEnrollment.StateStatus();
+            stateStatus.setState(state);
+            stateStatus.setStartDate(startDate.toDate());
+
+            programEnrollment.setStates(Collections.singletonList(stateStatus));
+        }
 
         programEnrollmentService.updateProgramEnrollment(configName, programEnrollment);
     }

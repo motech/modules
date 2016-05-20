@@ -308,6 +308,7 @@ public class OpenMRSActionProxyServiceTest {
         state.setUuid("c2d72f91-75b6-4bd9-a400-1c66a170f028");
 
         DateTime startDate = new DateTime("2000-08-16T07:22:05Z");
+        DateTime completedDate = new DateTime("2010-08-16T07:22:05Z");
 
         ProgramEnrollment.StateStatus stateStatus = new ProgramEnrollment.StateStatus();
         stateStatus.setState(state);
@@ -315,23 +316,11 @@ public class OpenMRSActionProxyServiceTest {
 
         ProgramEnrollment programEnrollment = new ProgramEnrollment();
         programEnrollment.setUuid("aaef37f5-ffaa-4f94-af6e-54907b0c0fd4");
+        programEnrollment.setDateCompleted(completedDate.toDate());
         programEnrollment.setStates(Collections.singletonList(stateStatus));
 
-        openMRSActionProxyService.changeStateOfProgramEnrollment(CONFIG_NAME, programEnrollment.getUuid(), state.getUuid(), startDate);
-
-        verify(programEnrollmentService).updateProgramEnrollment(eq(CONFIG_NAME), programEnrollmentCaptor.capture());
-        assertEquals(programEnrollment, programEnrollmentCaptor.getValue());
-    }
-
-    @Test
-    public void shouldCompleteProgramEnrollment() {
-        DateTime dateCompleted = new DateTime("2000-08-16T07:22:05Z");
-
-        ProgramEnrollment programEnrollment = new ProgramEnrollment();
-        programEnrollment.setUuid("0a39a2b7-279f-4ce6-b977-7d2d3694d1fd");
-        programEnrollment.setDateCompleted(dateCompleted.toDate());
-
-        openMRSActionProxyService.completeProgramEnrollment(CONFIG_NAME, programEnrollment.getUuid(), dateCompleted);
+        openMRSActionProxyService.changeStateOfProgramEnrollment(CONFIG_NAME, programEnrollment.getUuid(), completedDate,
+                state.getUuid(), startDate);
 
         verify(programEnrollmentService).updateProgramEnrollment(eq(CONFIG_NAME), programEnrollmentCaptor.capture());
         assertEquals(programEnrollment, programEnrollmentCaptor.getValue());
