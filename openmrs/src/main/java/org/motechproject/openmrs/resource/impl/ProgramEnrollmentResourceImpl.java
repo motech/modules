@@ -28,12 +28,20 @@ public class ProgramEnrollmentResourceImpl extends BaseResource implements Progr
         return (ProgramEnrollment) JsonUtils.readJson(responseJson, ProgramEnrollment.class);
     }
 
+    @Override
+    public ProgramEnrollment updateProgramEnrollment(Config config, ProgramEnrollment programEnrollment) {
+        String requestJson = buildGsonWithAdapters().toJson(programEnrollment);
+        String responseJson = postForJson(config, requestJson, "/programenrollment/{uuid}", programEnrollment.getUuid());
+        return (ProgramEnrollment) JsonUtils.readJson(responseJson, ProgramEnrollment.class);
+    }
+
     private Gson buildGsonWithAdapters() {
         return new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
                 .registerTypeAdapter(Patient.class, new Patient.PatientSerializer())
                 .registerTypeAdapter(Program.class, new Program.ProgramSerializer())
+                .registerTypeAdapter(Program.State.class, new Program.State.ProgramSerializer())
                 .registerTypeAdapter(Location.class, new Location.LocationSerializer())
                 .create();
     }

@@ -20,9 +20,9 @@ import org.motechproject.openmrs.service.OpenMRSConceptService;
 import org.motechproject.openmrs.service.OpenMRSEncounterService;
 import org.motechproject.openmrs.service.OpenMRSLocationService;
 import org.motechproject.openmrs.service.OpenMRSPatientService;
+import org.motechproject.openmrs.service.OpenMRSPersonService;
 import org.motechproject.openmrs.service.OpenMRSProgramEnrollmentService;
 import org.motechproject.openmrs.service.OpenMRSProviderService;
-import org.motechproject.openmrs.service.OpenMRSPersonService;
 import org.motechproject.openmrs.tasks.OpenMRSActionProxyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,6 +144,27 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         programEnrollment.setLocation(location);
 
         programEnrollmentService.createProgramEnrollment(configName, programEnrollment);
+    }
+
+    @Override
+    public void changeStateOfProgramEnrollment(String configName, String programEnrollmentUuid, DateTime programCompletedDate,
+                                               String stateUuid, DateTime startDate) {
+        ProgramEnrollment programEnrollment = new ProgramEnrollment();
+        programEnrollment.setUuid(programEnrollmentUuid);
+        programEnrollment.setDateCompleted(Objects.nonNull(programCompletedDate) ? programCompletedDate.toDate() : null);
+
+        if (StringUtils.isNotBlank(stateUuid)) {
+            Program.State state = new Program.State();
+            state.setUuid(stateUuid);
+
+            ProgramEnrollment.StateStatus stateStatus = new ProgramEnrollment.StateStatus();
+            stateStatus.setState(state);
+            stateStatus.setStartDate(startDate.toDate());
+
+            programEnrollment.setStates(Collections.singletonList(stateStatus));
+        }
+
+        programEnrollmentService.updateProgramEnrollment(configName, programEnrollment);
     }
 
     private Location getDefaultLocation(String configName) {

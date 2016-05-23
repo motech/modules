@@ -8,6 +8,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.config.ConfigDummyData;
+import org.motechproject.openmrs.domain.Location;
 import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.Program;
 import org.motechproject.openmrs.domain.ProgramEnrollment;
@@ -70,12 +71,34 @@ public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest 
                 equalTo(readFromFile(PROGRAM_ENROLLMENT_CREATE, JsonObject.class)));
     }
 
+    @Test
+    public void shouldUpdateProgramEnrollment() throws Exception {
+        ProgramEnrollment programEnrollment = prepareProgramEnrollment();
+
+        URI url = config.toInstancePathWithParams("/programenrollment/{uuid}", programEnrollment.getUuid());
+
+        when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponse(PROGRAM_ENROLLMENT_RESPONSE));
+
+        ProgramEnrollment updated = programEnrollmentResource.updateProgramEnrollment(config, programEnrollment);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
+
+        assertThat(updated, equalTo(programEnrollment));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPost(config)));
+        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
+                equalTo(readFromFile(PROGRAM_ENROLLMENT_CREATE, JsonObject.class)));
+    }
+
     private ProgramEnrollment prepareProgramEnrollment() throws Exception {
         Program program = new Program();
         program.setUuid("37677597-27e3-4613-9514-e4d2b7b89cfd");
 
         Patient patient = new Patient();
         patient.setUuid("159ff70f-cc96-4d18-a252-e0aac0481a39");
+
+        Location location = new Location();
+        location.setUuid("433f6e08-8c8c-4c64-8cac-1ee96df2d5cc");
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         Date dateEnrolled = dateFormat.parse("2016-01-01T00:00:00.000+0200");
@@ -86,6 +109,7 @@ public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest 
         programEnrollment.setPatient(patient);
         programEnrollment.setDateEnrolled(dateEnrolled);
         programEnrollment.setDateCompleted(dateCompleted);
+        programEnrollment.setLocation(location);
 
         return programEnrollment;
     }

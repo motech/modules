@@ -18,12 +18,15 @@ import org.motechproject.openmrs.domain.Location;
 import org.motechproject.openmrs.domain.Observation;
 import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.Person;
+import org.motechproject.openmrs.domain.Program;
+import org.motechproject.openmrs.domain.ProgramEnrollment;
 import org.motechproject.openmrs.domain.Provider;
 import org.motechproject.openmrs.service.OpenMRSConceptService;
 import org.motechproject.openmrs.service.OpenMRSEncounterService;
 import org.motechproject.openmrs.service.OpenMRSLocationService;
 import org.motechproject.openmrs.service.OpenMRSPatientService;
 import org.motechproject.openmrs.service.OpenMRSPersonService;
+import org.motechproject.openmrs.service.OpenMRSProgramEnrollmentService;
 import org.motechproject.openmrs.service.OpenMRSProviderService;
 import org.motechproject.openmrs.tasks.OpenMRSActionProxyService;
 
@@ -60,6 +63,9 @@ public class OpenMRSActionProxyServiceTest {
     @Mock
     private OpenMRSProviderService providerService;
 
+    @Mock
+    private OpenMRSProgramEnrollmentService programEnrollmentService;
+
     @Captor
     private ArgumentCaptor<Encounter> encounterCaptor;
 
@@ -68,6 +74,9 @@ public class OpenMRSActionProxyServiceTest {
 
     @Captor
     private ArgumentCaptor<Person> personCaptor;
+
+    @Captor
+    private ArgumentCaptor<ProgramEnrollment> programEnrollmentCaptor;
 
     @InjectMocks
     private OpenMRSActionProxyService openMRSActionProxyService = new OpenMRSActionProxyServiceImpl();
@@ -260,6 +269,61 @@ public class OpenMRSActionProxyServiceTest {
         assertEquals(patient.getUuid(), patientCaptor.getValue().getUuid());
         assertEquals("1000", patientCaptorIdentifier.getIdentifier());
         assertEquals("CommCare CaseID", patientCaptorIdentifier.getIdentifierType().getName());
+    }
+
+    public void shouldCreateProgramEnrollment() {
+        Patient patient = new Patient();
+        patient.setUuid("aaef37f5-ffaa-4f94-af6e-54907b0c0fd4");
+
+        Program program = new Program();
+        program.setUuid("a7bdec92-b9d4-4f1c-9323-ce515bf986ec");
+
+        Location location = new Location();
+        location.setUuid("d4ff64b5-ad57-4029-9564-949e76b80d07");
+        location.setName("Unknown Location");
+
+        DateTime dateEnrolled = new DateTime("2000-08-16T07:22:05Z");
+        DateTime dateCompleted = new DateTime("2100-08-16T07:22:05Z");
+
+        ProgramEnrollment programEnrollment = new ProgramEnrollment();
+
+        programEnrollment.setPatient(patient);
+        programEnrollment.setProgram(program);
+        programEnrollment.setDateEnrolled(dateEnrolled.toDate());
+        programEnrollment.setDateCompleted(dateCompleted.toDate());
+        programEnrollment.setLocation(location);
+
+        doReturn(Collections.singletonList(location)).when(locationService).getLocations(eq(CONFIG_NAME), eq(location.getName()));
+
+        openMRSActionProxyService.createProgramEnrollment(CONFIG_NAME, patient.getUuid(), program.getUuid(),
+                dateEnrolled, dateCompleted, location.getName());
+
+        verify(programEnrollmentService).createProgramEnrollment(eq(CONFIG_NAME), programEnrollmentCaptor.capture());
+        assertEquals(programEnrollment, programEnrollmentCaptor.getValue());
+    }
+
+    @Test
+    public void shouldChangeStateOfProgramEnrollment() {
+        Program.State state = new Program.State();
+        state.setUuid("c2d72f91-75b6-4bd9-a400-1c66a170f028");
+
+        DateTime startDate = new DateTime("2000-08-16T07:22:05Z");
+        DateTime completedDate = new DateTime("2010-08-16T07:22:05Z");
+
+        ProgramEnrollment.StateStatus stateStatus = new ProgramEnrollment.StateStatus();
+        stateStatus.setState(state);
+        stateStatus.setStartDate(startDate.toDate());
+
+        ProgramEnrollment programEnrollment = new ProgramEnrollment();
+        programEnrollment.setUuid("aaef37f5-ffaa-4f94-af6e-54907b0c0fd4");
+        programEnrollment.setDateCompleted(completedDate.toDate());
+        programEnrollment.setStates(Collections.singletonList(stateStatus));
+
+        openMRSActionProxyService.changeStateOfProgramEnrollment(CONFIG_NAME, programEnrollment.getUuid(), completedDate,
+                state.getUuid(), startDate);
+
+        verify(programEnrollmentService).updateProgramEnrollment(eq(CONFIG_NAME), programEnrollmentCaptor.capture());
+        assertEquals(programEnrollment, programEnrollmentCaptor.getValue());
     }
 
     private Person createTestPerson() {

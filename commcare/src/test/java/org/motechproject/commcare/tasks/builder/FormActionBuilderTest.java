@@ -52,4 +52,14 @@ public class FormActionBuilderTest {
         assertEquals(actionEventRequests.get(0).getActionParameters().first().getDisplayName().length(), 255);
         assertEquals(actionEventRequests.get(0).getActionParameters().first().getDisplayName(), shortenedDisplayName);
     }
+
+    @Test
+    public void shouldUseQuestionIdAsDisplayNameIfQuestionLabelIsEmpty() {
+        String blankDisplayName = "";
+
+        when(schemaService.retrieveApplications("ConfigOne")).thenReturn(DummyCommcareSchema.getApplicationsWithCustomQuestionLabel(blankDisplayName));
+        List<ActionEventRequest> actionEventRequests = formActionBuilder.buildActions();
+
+        assertEquals(actionEventRequests.get(0).getActionParameters().first().getDisplayName(), actionEventRequests.get(0).getActionParameters().first().getKey());
+    }
 }

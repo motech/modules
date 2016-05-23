@@ -79,7 +79,7 @@ public class ProgramEnrollment {
 
         @Override
         public int hashCode() {
-            return Objects.hash(state, startDate, endDate);
+            return Objects.hash(uuid, state, startDate, endDate);
         }
 
         @Override
@@ -94,8 +94,8 @@ public class ProgramEnrollment {
 
             StateStatus other = (StateStatus) obj;
 
-            return Objects.equals(this.state, other.state) && Objects.equals(this.startDate, other.startDate) &&
-                    Objects.equals(this.endDate, other.endDate);
+            return Objects.equals(this.uuid, other.uuid) && Objects.equals(this.state, other.state) &&
+                    Objects.equals(this.startDate, other.startDate) && Objects.equals(this.endDate, other.endDate);
         }
     }
 
@@ -157,7 +157,7 @@ public class ProgramEnrollment {
 
     @Override
     public int hashCode() {
-        return Objects.hash(program, patient, dateEnrolled, dateCompleted, location, states);
+        return Objects.hash(uuid, program, patient, dateEnrolled, dateCompleted, location, states);
     }
 
     @Override
@@ -172,8 +172,9 @@ public class ProgramEnrollment {
 
         ProgramEnrollment other = (ProgramEnrollment) obj;
 
-        return Objects.equals(this.program, other.program) && Objects.equals(this.patient, other.patient) &&
-                Objects.equals(this.dateEnrolled, other.dateEnrolled) && Objects.equals(this.dateCompleted, other.dateCompleted) &&
-                Objects.equals(this.location, other.location) && Objects.equals(this.states, other.states);
+        return Objects.equals(this.uuid, other.uuid) && Objects.equals(this.program, other.program) &&
+                Objects.equals(this.patient, other.patient) && Objects.equals(this.dateEnrolled, other.dateEnrolled) &&
+                Objects.equals(this.dateCompleted, other.dateCompleted) && Objects.equals(this.location, other.location) &&
+                Objects.equals(this.states, other.states);
     }
 }
