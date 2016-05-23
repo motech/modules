@@ -8,7 +8,7 @@ import java.util.Objects;
 /**
  * The <code>HTTPActionAudit</code> class represents a record of a http Action.
  */
-@Entity
+@Entity(nonEditable = true)
 public class HTTPActionAudit {
 
     @Field

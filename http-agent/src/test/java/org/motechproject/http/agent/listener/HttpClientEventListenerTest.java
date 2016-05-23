@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -147,6 +146,6 @@ public class HttpClientEventListenerTest {
 
         HTTPActionAudit httpActionAudit = new HTTPActionAudit(url, request.toString(), responseEntity.getBody().toString(),
                 responseEntity.getStatusCode().toString());
-        verify(httpActionService,times(1)).create(eq(httpActionAudit));
+        verify(httpActionService).create(eq(httpActionAudit));
     }
 }
