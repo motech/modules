@@ -1,6 +1,7 @@
 package org.motechproject.dhis2.rest.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 /**
  * A class to model DHIS2 response details that result from creating entities.

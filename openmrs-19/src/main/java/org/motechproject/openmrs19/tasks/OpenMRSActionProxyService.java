@@ -132,4 +132,15 @@ public interface OpenMRSActionProxyService {
      */
     void createProgramEnrollment(String configName, String patientUuid, String programUuid,
                                  DateTime dateEnrolled, DateTime dateCompleted, String locationName);
+
+    /**
+     * Changes state of program enrollment. Program enrollment is identified by UUID.
+     *
+     * @param configName the name of the configuration
+     * @param programEnrollmentUuid the program enrollment uuid
+     * @param stateUuid the state uuid
+     * @param startDate the state start date
+     */
+    void changeStateOfProgramEnrollment(String configName, String programEnrollmentUuid, DateTime programCompletedDate,
+                                        String stateUuid, DateTime startDate);
 }

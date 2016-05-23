@@ -19,6 +19,8 @@ public class Encounter {
     private Patient patient;
     private Person provider;
     private List<Observation> obs;
+    //This field is new in OpenMRS since version 1.10
+    private List<Person> encounterProviders;
 
     /**
      * Default constructor.
@@ -95,6 +97,14 @@ public class Encounter {
 
     public void setProvider(Person provider) {
         this.provider = provider;
+    }
+
+    public List<Person> getEncounterProviders() {
+        return encounterProviders;
+    }
+
+    public void setEncounterProviders(List<Person> encounterProviders) {
+        this.encounterProviders = encounterProviders;
     }
 
     public List<Observation> getObs() {

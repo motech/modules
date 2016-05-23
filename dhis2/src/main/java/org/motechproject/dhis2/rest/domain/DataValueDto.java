@@ -1,6 +1,6 @@
 package org.motechproject.dhis2.rest.domain;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.Objects;
 
@@ -8,7 +8,7 @@ import java.util.Objects;
  * A class to model data values associated with program stage events in the DHIS2 API.
  */
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class DataValueDto {
     private String value;
     private String dataElement;
