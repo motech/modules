@@ -77,9 +77,10 @@ public class IHEActionHelperTest {
         params.put(Constants.TEMPLATE_NAME_PARAM, "sampleTemplate3");
         params.put(Constants.RECIPIENT_NAME_PARAM, "sampleRecipient3");
 
-        InputStream inputStream = getClass().getResourceAsStream("/empty_template.xml");
-        byte[] bytes = IOUtils.toByteArray(inputStream);
-        inputStream.close();
+        byte[] bytes;
+        try (InputStream inputStream = getClass().getResourceAsStream("/empty_template1.xml")) {
+            bytes = IOUtils.toByteArray(inputStream);
+        }
         Byte[] byteObjects = ArrayUtils.toObject(bytes);
 
         when(iheTemplateDataService.findByName("sampleTemplate3")).thenReturn(cdaTemplate);
