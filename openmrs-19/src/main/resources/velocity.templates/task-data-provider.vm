@@ -215,16 +215,16 @@
           "type": "ProgramEnrollment-$config.getName()",
           "lookupFields": [
             {
-              "displayName": "openMRS.lookup.motechId",
+              "displayName": "openMRS.lookup.motechIdAndProgramName",
               "fields": [
-                "openMRS.motechId",
+                "openMRS.patient.motechId",
                 "openMRS.programName"
               ]
             },
             {
-              "displayName": "openMRS.lookup.uuid",
+              "displayName": "openMRS.lookup.uuidAndProgramName",
               "fields": [
-                "openMRS.uuid",
+                "openMRS.patient.uuid",
                 "openMRS.programName"
               ]
             }
@@ -257,8 +257,8 @@
               "fieldKey": "location.name"
             },
             {
-              "displayName": "openMRS.programEnrollment.notEnrolled",
-              fieldKey: "notEnrolled"
+              "displayName": "openMRS.programEnrollment.enrolled",
+              fieldKey: "enrolled"
             },
             {
               "displayName": "openMRS.programEnrollment.currentState",

@@ -343,49 +343,13 @@ public class OpenMRSTaskDataProviderTest {
     }
 
     @Test
-    public void shouldReturnNullWhenWrongLookupNameForProgramEnrollment() {
+    public void shouldReturnNotEnrolledWhenWrongLookupNameForProgramEnrollment() {
         String className = ProgramEnrollment.class.getSimpleName();
 
         Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, "wrongLookupName", null);
 
-        assertNull(object);
+        assertEquals(ProgramEnrollment.NOT_ENROLLED, ((ProgramEnrollment) object).getEnrolled());
         verifyZeroInteractions(programEnrollmentService);
-    }
-
-    @Test
-    public void shouldReturnProgramEnrollmentForPatientUuid() {
-        String className = ProgramEnrollment.class.getSimpleName();
-
-        Map<String, String> lookupFields = new HashMap<>();
-        lookupFields.put(UUID, DEFAULT_UUID);
-
-        List<ProgramEnrollment> expected = prepareProgramEnrollments();
-        when(programEnrollmentService.getProgramEnrollmentByPatientUuid(eq(CONFIG_NAME), eq(DEFAULT_UUID)))
-                .thenReturn(expected);
-
-        Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, BY_UUID, lookupFields);
-
-        verify(programEnrollmentService).getProgramEnrollmentByPatientUuid(eq(CONFIG_NAME), eq(DEFAULT_UUID));
-
-        assertEquals(expected.get(0), object);
-    }
-
-    @Test
-    public void shouldReturnProgramEnrollmentForPatientMotechId() {
-        String className = ProgramEnrollment.class.getSimpleName();
-
-        Map<String, String> lookupFields = new HashMap<>();
-        lookupFields.put(MOTECH_ID, DEFAULT_MOTECH_ID);
-
-        List<ProgramEnrollment> expected = prepareProgramEnrollments();
-        when(programEnrollmentService.getProgramEnrollmentByPatientMotechId(eq(CONFIG_NAME), eq(DEFAULT_MOTECH_ID)))
-                .thenReturn(expected);
-
-        Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, BY_MOTECH_ID, lookupFields);
-
-        verify(programEnrollmentService).getProgramEnrollmentByPatientMotechId(eq(CONFIG_NAME), eq(DEFAULT_MOTECH_ID));
-
-        assertEquals(expected.get(0), object);
     }
 
     @Test
@@ -427,41 +391,7 @@ public class OpenMRSTaskDataProviderTest {
     }
 
     @Test
-    public void shouldReturnNullWhenProgramEnrollmentNotFonundForLookupByUuid() {
-        String className = ProgramEnrollment.class.getSimpleName();
-
-        Map<String, String> lookupFields = new HashMap<>();
-        lookupFields.put(UUID, DEFAULT_UUID);
-
-        when(programEnrollmentService.getProgramEnrollmentByPatientUuid(eq(CONFIG_NAME), eq(DEFAULT_UUID)))
-                .thenReturn(Collections.emptyList());
-
-        Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, BY_UUID, lookupFields);
-
-        verify(programEnrollmentService).getProgramEnrollmentByPatientUuid(eq(CONFIG_NAME), eq(DEFAULT_UUID));
-
-        assertNull(object);
-    }
-
-    @Test
-    public void shouldReturnNullWhenProgramEnrollmentNotFoundForLookupByMotechId() {
-        String className = ProgramEnrollment.class.getSimpleName();
-
-        Map<String, String> lookupFields = new HashMap<>();
-        lookupFields.put(MOTECH_ID, DEFAULT_MOTECH_ID);
-
-        when(programEnrollmentService.getProgramEnrollmentByPatientMotechId(eq(CONFIG_NAME), eq(DEFAULT_MOTECH_ID)))
-                .thenReturn(Collections.emptyList());
-
-        Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, BY_MOTECH_ID, lookupFields);
-
-        verify(programEnrollmentService).getProgramEnrollmentByPatientMotechId(eq(CONFIG_NAME), eq(DEFAULT_MOTECH_ID));
-
-        assertNull(object);
-    }
-
-    @Test
-    public void shouldReturnNullWhenProgramEnrollmentNotFoundForLookupByUuidAndProgramName() {
+    public void shouldReturnNotEnrolledWhenProgramEnrollmentNotFoundForLookupByUuidAndProgramName() {
         String className = ProgramEnrollment.class.getSimpleName();
 
         Map<String, String> lookupFields = new HashMap<>();
@@ -475,11 +405,11 @@ public class OpenMRSTaskDataProviderTest {
 
         verify(programEnrollmentService).getProgramEnrollmentByPatientUuid(eq(CONFIG_NAME), eq(DEFAULT_UUID));
 
-        assertNull(object);
+        assertEquals(ProgramEnrollment.NOT_ENROLLED, ((ProgramEnrollment) object).getEnrolled());
     }
 
     @Test
-    public void shouldReturnNullWhenProgramEnrollmentNotFoundForLookupByMotechIdAndProgramName() {
+    public void shouldReturnNotEnrolledWhenProgramEnrollmentNotFoundForLookupByMotechIdAndProgramName() {
         String className = ProgramEnrollment.class.getSimpleName();
 
         Map<String, String> lookupFields = new HashMap<>();
@@ -493,7 +423,7 @@ public class OpenMRSTaskDataProviderTest {
 
         verify(programEnrollmentService).getProgramEnrollmentByPatientMotechId(eq(CONFIG_NAME), eq(DEFAULT_MOTECH_ID));
 
-        assertNull(object);
+        assertEquals(ProgramEnrollment.NOT_ENROLLED, ((ProgramEnrollment) object).getEnrolled());
     }
 
     private List<Relationship> prepareRelationship() {

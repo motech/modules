@@ -12,6 +12,8 @@ import java.util.Objects;
  * A program enrollment stores information about program states assigned to a patient.
  */
 public class ProgramEnrollment {
+    public static final String ENROLLED = "enrolled";
+    public static final String NOT_ENROLLED = "not enrolled";
 
     private String uuid;
 
@@ -33,7 +35,7 @@ public class ProgramEnrollment {
     @Expose
     private List<StateStatus> states;
 
-    private boolean notEnrolled;
+    private String enrolled = ENROLLED;
 
     public static class StateStatus {
 
@@ -158,12 +160,12 @@ public class ProgramEnrollment {
         this.states = states;
     }
 
-    public boolean isNotEnrolled() {
-        return notEnrolled;
+    public String getEnrolled() {
+        return enrolled;
     }
 
-    public void setNotEnrolled(boolean notEnrolled) {
-        this.notEnrolled = notEnrolled;
+    public void setEnrolled(String enrolled) {
+        this.enrolled = enrolled;
     }
 
     public StateStatus getCurrentState() {

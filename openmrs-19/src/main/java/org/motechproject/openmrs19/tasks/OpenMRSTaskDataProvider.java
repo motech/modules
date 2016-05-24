@@ -31,7 +31,9 @@ import java.util.List;
 import java.util.Map;
 
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.BY_MOTECH_ID;
+import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.BY_MOTECH_ID_AND_PROGRAM_NAME;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.BY_UUID;
+import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.BY_UUID_AMD_PROGRAM_NAME;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.ENCOUNTER;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.MOTECH_ID;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.NAME;
@@ -193,23 +195,15 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     }
 
     private ProgramEnrollment getProgramEnrollment(String lookupName, Map<String, String> lookupFields, String configName) {
-        List<ProgramEnrollment> programEnrollments = new ArrayList<>();
+        List<ProgramEnrollment> programEnrollments = null;
 
         switch (lookupName) {
-            case BY_MOTECH_ID: {
-                for (ProgramEnrollment programEnrollment : programEnrollmentService.getProgramEnrollmentByPatientMotechId(configName, lookupFields.get(MOTECH_ID))) {
-                    if (programEnrollment.getProgram().getName().equals(lookupFields.get(PROGRAM_NAME))) {
-                        programEnrollments.add(programEnrollment);
-                    }
-                }
+            case BY_MOTECH_ID_AND_PROGRAM_NAME: {
+                programEnrollments = programEnrollmentService.getProgramEnrollmentByPatientMotechId(configName, lookupFields.get(MOTECH_ID));
                 break;
             }
-            case BY_UUID: {
-                for (ProgramEnrollment programEnrollment : programEnrollmentService.getProgramEnrollmentByPatientUuid(configName, lookupFields.get(UUID))) {
-                    if (programEnrollment.getProgram().getName().equals(lookupFields.get(PROGRAM_NAME))) {
-                        programEnrollments.add(programEnrollment);
-                    }
-                }
+            case BY_UUID_AMD_PROGRAM_NAME: {
+                programEnrollments = programEnrollmentService.getProgramEnrollmentByPatientUuid(configName, lookupFields.get(UUID));
                 break;
             }
             default: {
@@ -218,31 +212,23 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
             }
         }
 
-        if (CollectionUtils.isEmpty(programEnrollments)) {
-            Patient patient = null;
+        if(CollectionUtils.isNotEmpty(programEnrollments)) {
+            List<ProgramEnrollment> filteredProgramEnrollments = new ArrayList<>();
 
-            switch (lookupName) {
-                case BY_MOTECH_ID: {
-                    patient = patientService.getPatientByMotechId(configName, lookupFields.get(MOTECH_ID));
-                    break;
-                }
-                case BY_UUID: {
-                    patient = patientService.getPatientByUuid(configName, lookupFields.get(UUID));
-                }
-                default: {
-                    LOGGER.error("Lookup with name {} doesn't exist for patient object", lookupName);
-                    break;
+            for (ProgramEnrollment programEnrollment : programEnrollments) {
+                if (programEnrollment.getProgram().getName().equals(lookupFields.get(PROGRAM_NAME))) {
+                    filteredProgramEnrollments.add(programEnrollment);
                 }
             }
 
-            ProgramEnrollment notEnrolled = new ProgramEnrollment();
-
-            notEnrolled.setNotEnrolled(true);
-            notEnrolled.setPatient(patient);
-
-            return notEnrolled;
-        } else {
-            return programEnrollments.get(0);
+            if (CollectionUtils.isNotEmpty(filteredProgramEnrollments)) {
+                return filteredProgramEnrollments.get(0);
+            }
         }
+
+        ProgramEnrollment notEnrolled = new ProgramEnrollment();
+        notEnrolled.setEnrolled(ProgramEnrollment.NOT_ENROLLED);
+
+        return notEnrolled;
     }
 }
