@@ -16,13 +16,7 @@ public enum Method {
      */
     POST {
         @Override
-        public void execute(RestTemplate restTemplate, String url,
-                Object request) {
-            restTemplate.postForLocation(url, request);
-        }
-
-        @Override
-        public ResponseEntity<?> executeWithReturnType(
+        public ResponseEntity<?> execute(
                 RestTemplate restTemplate, String url, Object request) {
             return restTemplate.exchange(url, HttpMethod.POST,
                     (HttpEntity<?>) request, String.class);
@@ -34,13 +28,7 @@ public enum Method {
      */
     PUT {
         @Override
-        public void execute(RestTemplate restTemplate, String url,
-                Object request) {
-            restTemplate.put(url, request);
-        }
-
-        @Override
-        public ResponseEntity<?> executeWithReturnType(
+        public ResponseEntity<?> execute(
                 RestTemplate restTemplate, String url, Object request) {
             return restTemplate.exchange(url, HttpMethod.PUT,
                     (HttpEntity<?>) request, String.class);
@@ -52,13 +40,7 @@ public enum Method {
      */
     DELETE {
         @Override
-        public void execute(RestTemplate restTemplate, String url,
-                Object request) {
-            restTemplate.delete(url, request);
-        }
-
-        @Override
-        public ResponseEntity<?> executeWithReturnType(
+        public ResponseEntity<?> execute(
                 RestTemplate restTemplate, String url, Object request) {
             return restTemplate.exchange(url, HttpMethod.DELETE,
                     (HttpEntity<?>) request, String.class);
@@ -69,17 +51,8 @@ public enum Method {
      * Represents http GET.
      */
     GET {
-
         @Override
-        public void execute(RestTemplate restTemplate, String url,
-                Object request) {
-            restTemplate.getForObject(url, String.class,
-                    (HttpEntity<?>) request);
-
-        }
-
-        @Override
-        public ResponseEntity<?> executeWithReturnType(
+        public ResponseEntity<?> execute(
                 RestTemplate restTemplate, String url, Object request) {
             return restTemplate.exchange(url, HttpMethod.GET,
                     (HttpEntity<?>) request, String.class);
@@ -88,23 +61,13 @@ public enum Method {
     };
 
     /**
-     * Sends a request to the specified URL through the given restTemplate.
-     * @param restTemplate the client which will be used to send the request
-     * @param url the url for the request
-     * @param request the request to send
-     */
-    public abstract void execute(RestTemplate restTemplate, String url, Object request);
-
-
-
-    /**
      * Sends a request to the specified URL through the given restTemplate and returns the response for the request.
      * @param restTemplate the client which will be used to send the request
      * @param url the url for the request
      * @param request the request to send
      * @return response from the posted request
      */
-    public abstract ResponseEntity<?> executeWithReturnType(RestTemplate restTemplate, String url, Object request);
+    public abstract ResponseEntity<?> execute(RestTemplate restTemplate, String url, Object request);
 
     /**
      * Returns method type from the given string.
