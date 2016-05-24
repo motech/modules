@@ -1,6 +1,7 @@
 package org.motechproject.ihe.interop.handler.helper;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -17,6 +18,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -75,12 +77,10 @@ public class IHEActionHelperTest {
         params.put(Constants.TEMPLATE_NAME_PARAM, "sampleTemplate3");
         params.put(Constants.RECIPIENT_NAME_PARAM, "sampleRecipient3");
 
-        byte[] bytes = IOUtils.toByteArray(getClass().getResourceAsStream("/empty_template.xml"));
-        Byte[] byteObjects = new Byte[bytes.length];
-        int i = 0;
-        for (byte b : bytes) {
-            byteObjects[i++] = b;
-        }
+        InputStream inputStream = getClass().getResourceAsStream("/empty_template.xml");
+        byte[] bytes = IOUtils.toByteArray(inputStream);
+        inputStream.close();
+        Byte[] byteObjects = ArrayUtils.toObject(bytes);
 
         when(iheTemplateDataService.findByName("sampleTemplate3")).thenReturn(cdaTemplate);
         when(hl7RecipientsService.getRecipientbyName("sampleRecipient3")).thenReturn(hl7Recipient);
