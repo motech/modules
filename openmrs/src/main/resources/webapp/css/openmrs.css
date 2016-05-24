@@ -20,3 +20,7 @@
     font-size: 11px;
     position: relative;
 }
+
+.popover {
+    min-width: 340px;
+}

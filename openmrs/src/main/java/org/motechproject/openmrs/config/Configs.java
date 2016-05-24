@@ -37,7 +37,6 @@ public class Configs {
         if (getByName(config.getName()) != null) {
             throw new ConfigurationAlreadyExistsException(config.getName());
         }
-
         configs.add(config);
 
         if (defaultConfigName == null) {
