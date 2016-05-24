@@ -39,6 +39,8 @@ import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.MOTECH_ID;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.NAME;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PACKAGE_ROOT;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PATIENT;
+import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PATIENT_MOTECH_ID;
+import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PATIENT_UUID;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PERSON_UUID;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PROGRAM_ENROLLMENT;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PROGRAM_NAME;
@@ -199,11 +201,11 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
 
         switch (lookupName) {
             case BY_MOTECH_ID_AND_PROGRAM_NAME: {
-                programEnrollments = programEnrollmentService.getProgramEnrollmentByPatientMotechId(configName, lookupFields.get(MOTECH_ID));
+                programEnrollments = programEnrollmentService.getProgramEnrollmentByPatientMotechId(configName, lookupFields.get(PATIENT_MOTECH_ID));
                 break;
             }
             case BY_UUID_AMD_PROGRAM_NAME: {
-                programEnrollments = programEnrollmentService.getProgramEnrollmentByPatientUuid(configName, lookupFields.get(UUID));
+                programEnrollments = programEnrollmentService.getProgramEnrollmentByPatientUuid(configName, lookupFields.get(PATIENT_UUID));
                 break;
             }
             default: {

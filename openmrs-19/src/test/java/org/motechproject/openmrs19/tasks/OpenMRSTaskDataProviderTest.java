@@ -43,6 +43,8 @@ import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.BY_PERSON_
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.BY_UUID;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.BY_UUID_AMD_PROGRAM_NAME;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.MOTECH_ID;
+import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PATIENT_MOTECH_ID;
+import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PATIENT_UUID;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PERSON_UUID;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.PROGRAM_NAME;
 import static org.motechproject.openmrs19.tasks.OpenMRSTasksConstants.RELATIONSHIP_TYPE_UUID;
@@ -357,7 +359,7 @@ public class OpenMRSTaskDataProviderTest {
         String className = ProgramEnrollment.class.getSimpleName();
 
         Map<String, String> lookupFields = new HashMap<>();
-        lookupFields.put(UUID, DEFAULT_UUID);
+        lookupFields.put(PATIENT_UUID, DEFAULT_UUID);
         lookupFields.put(PROGRAM_NAME, PROGRAM_DEFAULT_NAME);
 
         List<ProgramEnrollment> expected = prepareProgramEnrollments();
@@ -376,7 +378,7 @@ public class OpenMRSTaskDataProviderTest {
         String className = ProgramEnrollment.class.getSimpleName();
 
         Map<String, String> lookupFields = new HashMap<>();
-        lookupFields.put(MOTECH_ID, DEFAULT_MOTECH_ID);
+        lookupFields.put(PATIENT_MOTECH_ID, DEFAULT_MOTECH_ID);
         lookupFields.put(PROGRAM_NAME, PROGRAM_DEFAULT_NAME);
 
         List<ProgramEnrollment> expected = prepareProgramEnrollments();
@@ -395,7 +397,7 @@ public class OpenMRSTaskDataProviderTest {
         String className = ProgramEnrollment.class.getSimpleName();
 
         Map<String, String> lookupFields = new HashMap<>();
-        lookupFields.put(UUID, DEFAULT_UUID);
+        lookupFields.put(PATIENT_UUID, DEFAULT_UUID);
         lookupFields.put(PROGRAM_NAME, PROGRAM_ANOTHER_NAME);
 
         when(programEnrollmentService.getProgramEnrollmentByPatientUuid(eq(CONFIG_NAME), eq(DEFAULT_UUID)))
@@ -413,7 +415,7 @@ public class OpenMRSTaskDataProviderTest {
         String className = ProgramEnrollment.class.getSimpleName();
 
         Map<String, String> lookupFields = new HashMap<>();
-        lookupFields.put(MOTECH_ID, DEFAULT_MOTECH_ID);
+        lookupFields.put(PATIENT_MOTECH_ID, DEFAULT_MOTECH_ID);
         lookupFields.put(PROGRAM_NAME, PROGRAM_ANOTHER_NAME);
 
         when(programEnrollmentService.getProgramEnrollmentByPatientMotechId(eq(CONFIG_NAME), eq(DEFAULT_MOTECH_ID)))
