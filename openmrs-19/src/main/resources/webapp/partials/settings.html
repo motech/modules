@@ -3,12 +3,12 @@
 
         <div class="form-inline form-group">
             <label>{{msg('openMRS.selectConfig')}}: </label>
-            <select class="largeCombobox form-control" ng-model="selectedConfig" ng-options="config.name for config in configs.configs">
+            <select class="largeCombobox form-control" ng-model="selectedConfig" ng-change="onConfigChange(selectedConfig, oldValue)" ng-click="oldValue = selectedConfig" ng-options="config.name for config in configs.configs">
             </select>
         </div>
 
         <div class="btn-group form-group">
-            <a ng-click="addConfig()" type="button" class="form-group btn btn-success">
+            <a ng-click="addConfig(selectedConfig)" type="button" class="form-group btn btn-success">
                 <i class="fa fa-plus"></i> {{msg('openMRS.addConfig')}}
             </a>
             <a ng-if="selectedConfig" ng-disabled="!saveAllowed()" ng-click="saveAllowed() && saveConfig()" type="button" class="btn btn-primary">

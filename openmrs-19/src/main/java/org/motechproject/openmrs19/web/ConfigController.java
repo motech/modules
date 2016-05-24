@@ -5,6 +5,7 @@ import org.motechproject.openmrs19.config.Configs;
 import org.motechproject.openmrs19.exception.OpenMRSAuthenticationException;
 import org.motechproject.openmrs19.service.OpenMRSConfigService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,7 +40,7 @@ public class ConfigController extends OpenMRSController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @RequestMapping(value = "/verify")
+    @RequestMapping(value = "/verify", produces = MediaType.TEXT_PLAIN_VALUE)
     public void verifyConfig(@RequestBody Config config) {
         if (!configService.verifyConfig(config)) {
             throw new OpenMRSAuthenticationException("Motech was unable to authenticate to OpenMRS. Please verify your account settings.");
