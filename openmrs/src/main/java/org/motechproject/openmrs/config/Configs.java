@@ -37,10 +37,6 @@ public class Configs {
         if (getByName(config.getName()) != null) {
             throw new ConfigurationAlreadyExistsException(config.getName());
         }
-        String openMrsUrl = config.getOpenMrsUrl();
-        if (openMrsUrl.charAt(openMrsUrl.length() - 1) == '/') {
-            config.setOpenMrsUrl(openMrsUrl.substring(0, openMrsUrl.length()-1));
-        }
         configs.add(config);
 
         if (defaultConfigName == null) {

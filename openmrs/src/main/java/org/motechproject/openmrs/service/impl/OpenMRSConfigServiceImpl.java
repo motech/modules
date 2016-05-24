@@ -53,7 +53,7 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
             Gson gson = new Gson();
             configs = gson.fromJson(jsonText, Configs.class);
             for (Config config: configs.getConfigs()) {
-                validateOpenMrsUrl(config);
+                adjustOpenMrsUrl(config);
             }
         } catch (IOException e) {
             throw new JsonIOException("Unable to read " + OPEN_MRS_CONFIGS_FILE_NAME, e);
@@ -137,7 +137,7 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
 
     @Override
     public boolean verifyConfig(Config config) {
-        validateOpenMrsUrl(config);
+        adjustOpenMrsUrl(config);
         HttpMethod method = new GetMethod(config.toInstancePath("/concept").toString());
         UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(config.getUsername(), config.getPassword());
         HttpClient client = new HttpClient();
@@ -164,7 +164,7 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
         eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_CHANGE_EVENT));
     }
 
-    private void validateOpenMrsUrl(Config config) {
+    private void adjustOpenMrsUrl(Config config) {
         String openMrsUrl = config.getOpenMrsUrl();
         if (openMrsUrl.charAt(openMrsUrl.length() - 1) == '/') {
             config.setOpenMrsUrl(openMrsUrl.substring(0, openMrsUrl.length()-1));
