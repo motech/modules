@@ -8,15 +8,6 @@
              </select>
          </div>
          <div class="btn-group form-group">
-             <a ng-click="addConfig()" type="button" class="form-group btn btn-success">
-                 <i class="fa fa-plus"></i> {{msg('commcare.addConfig')}}
-             </a>
-             <a ng-if="selectedConfig" ng-disabled="!saveAllowed()" ng-click="saveAllowed() && saveConfig()" type="button" class="btn btn-primary">
-                 <i class="fa fw fa-save"></i> {{msg('commcare.save')}}
-             </a>
-             <a ng-if="selectedConfig" ng-click="deleteConfig()" type="button" class="btn btn-danger input-small">
-                 <i class="fa fa-fw fa-trash-o"></i> {{msg('commcare.delete')}}
-             </a>
              <a ng-if="selectedConfig" ng-disabled="isDefaultConfig() || newConfig" ng-click="!(isDefaultConfig() || newConfig) && makeDefault()" type="button" class="btn btn-default">
                  <i class="fa fw" ng-class="{'fa-square-o': !isDefaultConfig() || newConfig, 'fa-check-square-o': isDefaultConfig() && !newConfig}"></i> {{msg('commcare.makeDefault')}}
              </a>
@@ -25,6 +16,17 @@
              </a>
              <a ng-if="selectedConfig" ng-disabled="!syncAllowed()" ng-click="syncAllowed() && syncConfig()" type="button" class="btn btn-default">
                  <i class="fa fa-refresh"></i> {{msg('commcare.sync')}}
+             </a>
+         </div>
+         <div class="btn-group form-group pull-right">
+             <a ng-if="selectedConfig" ng-disabled="!saveAllowed()" ng-click="saveAllowed() && saveConfig()" type="button" class="btn btn-primary">
+                 <i class="fa fw fa-save"></i> {{msg('commcare.save')}}
+             </a>
+             <a ng-if="selectedConfig" ng-click="deleteConfig()" type="button" class="btn btn-danger input-small">
+                 <i class="fa fa-fw fa-trash-o"></i> {{msg('commcare.delete')}}
+             </a>
+             <a ng-click="addConfig()" type="button" class="form-group btn btn-success">
+                 <i class="fa fa-plus"></i> {{msg('commcare.addConfig')}}
              </a>
          </div>
      </div>
