@@ -837,7 +837,7 @@
         <module>mtraining</module>
         <module>sms</module>
         <module>message-campaign</module>
-        <module>openmrs-19</module>
+        <module>openmrs</module>
         <module>pill-reminder</module>
         <module>schedule-tracking</module>
         <module>batch</module>
