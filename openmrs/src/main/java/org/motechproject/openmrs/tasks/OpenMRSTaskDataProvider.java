@@ -25,10 +25,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_MOTECH_ID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_MOTECH_ID_AND_PROGRAM_NAME;
@@ -214,23 +214,26 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
             }
         }
 
+        return filterByProgramName(programEnrollments, lookupFields.get(PROGRAM_NAME));
+    }
+
+    private ProgramEnrollment filterByProgramName(List<ProgramEnrollment> programEnrollments, String programName) {
+        ProgramEnrollment result = null;
+
         if(CollectionUtils.isNotEmpty(programEnrollments)) {
-            List<ProgramEnrollment> filteredProgramEnrollments = new ArrayList<>();
-
             for (ProgramEnrollment programEnrollment : programEnrollments) {
-                if (programEnrollment.getProgram().getName().equals(lookupFields.get(PROGRAM_NAME))) {
-                    filteredProgramEnrollments.add(programEnrollment);
+                if (programEnrollment.getProgram().getName().equals(programName)) {
+                    result = programEnrollment;
+                    break;
                 }
-            }
-
-            if (CollectionUtils.isNotEmpty(filteredProgramEnrollments)) {
-                return filteredProgramEnrollments.get(0);
             }
         }
 
-        ProgramEnrollment notEnrolled = new ProgramEnrollment();
-        notEnrolled.setEnrolled(ProgramEnrollment.NOT_ENROLLED);
+        if (Objects.isNull(result)) {
+            result = new ProgramEnrollment();
+            result.setEnrolled(false);
+        }
 
-        return notEnrolled;
+        return result;
     }
 }

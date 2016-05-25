@@ -258,7 +258,7 @@
             },
             {
               "displayName": "openMRS.programEnrollment.enrolled",
-              fieldKey: "enrolled"
+              fieldKey: "enrolledString"
             },
             {
               "displayName": "openMRS.programEnrollment.currentState.uuid",

@@ -348,9 +348,14 @@ public class OpenMRSTaskDataProviderTest {
     public void shouldReturnNotEnrolledWhenWrongLookupNameForProgramEnrollment() {
         String className = ProgramEnrollment.class.getSimpleName();
 
-        Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, "wrongLookupName", null);
+        Map<String, String> lookupFields = new HashMap<>();
+        lookupFields.put(PATIENT_UUID, DEFAULT_UUID);
+        lookupFields.put(PROGRAM_NAME, PROGRAM_DEFAULT_NAME);
 
-        assertEquals(ProgramEnrollment.NOT_ENROLLED, ((ProgramEnrollment) object).getEnrolled());
+        Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, "wrongLookupName", lookupFields);
+
+        assertEquals(false, ((ProgramEnrollment) object).isEnrolled());
+        assertEquals(ProgramEnrollment.NOT_ENROLLED, ((ProgramEnrollment) object).getEnrolledString());
         verifyZeroInteractions(programEnrollmentService);
     }
 
@@ -407,7 +412,8 @@ public class OpenMRSTaskDataProviderTest {
 
         verify(programEnrollmentService).getProgramEnrollmentByPatientUuid(eq(CONFIG_NAME), eq(DEFAULT_UUID));
 
-        assertEquals(ProgramEnrollment.NOT_ENROLLED, ((ProgramEnrollment) object).getEnrolled());
+        assertEquals(false, ((ProgramEnrollment) object).isEnrolled());
+        assertEquals(ProgramEnrollment.NOT_ENROLLED, ((ProgramEnrollment) object).getEnrolledString());
     }
 
     @Test
@@ -425,7 +431,8 @@ public class OpenMRSTaskDataProviderTest {
 
         verify(programEnrollmentService).getProgramEnrollmentByPatientMotechId(eq(CONFIG_NAME), eq(DEFAULT_MOTECH_ID));
 
-        assertEquals(ProgramEnrollment.NOT_ENROLLED, ((ProgramEnrollment) object).getEnrolled());
+        assertEquals(false, ((ProgramEnrollment) object).isEnrolled());
+        assertEquals(ProgramEnrollment.NOT_ENROLLED, ((ProgramEnrollment) object).getEnrolledString());
     }
 
     private List<Relationship> prepareRelationship() {

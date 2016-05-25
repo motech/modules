@@ -391,7 +391,7 @@ public class Person {
         private Date dateCreated;
         private Date dateChanged;
 
-        //todo: change that to a boolean when you can filter on booleans in task module
+        //todo: MOTECH-2203
         public String getNewPerson() {
             if (dateChanged == null || dateChanged.equals(dateCreated)) {
                 return "yes";

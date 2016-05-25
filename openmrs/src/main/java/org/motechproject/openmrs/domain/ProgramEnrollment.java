@@ -35,7 +35,11 @@ public class ProgramEnrollment {
     @Expose
     private List<StateStatus> states;
 
-    private String enrolled = ENROLLED;
+    private boolean enrolled;
+
+    public ProgramEnrollment() {
+        enrolled = true;
+    }
 
     public static class StateStatus {
 
@@ -160,24 +164,32 @@ public class ProgramEnrollment {
         this.states = states;
     }
 
-    public String getEnrolled() {
+    public boolean isEnrolled() {
         return enrolled;
     }
 
-    public void setEnrolled(String enrolled) {
+    public void setEnrolled(boolean enrolled) {
         this.enrolled = enrolled;
     }
 
+    //todo: MOTECH-2203
+    public String getEnrolledString() {
+        return enrolled ? ENROLLED : NOT_ENROLLED;
+    }
+
     public StateStatus getCurrentState() {
+        StateStatus result = null;
+
         if (CollectionUtils.isNotEmpty(states)) {
             for (StateStatus state : states) {
                 if (state.endDate == null) {
-                    return state;
+                    result = state;
+                    break;
                 }
             }
         }
 
-        return null;
+        return result;
     }
 
     @Override
