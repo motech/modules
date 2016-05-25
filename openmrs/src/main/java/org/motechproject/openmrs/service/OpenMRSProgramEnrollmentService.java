@@ -2,6 +2,8 @@ package org.motechproject.openmrs.service;
 
 import org.motechproject.openmrs.domain.ProgramEnrollment;
 
+import java.util.List;
+
 /**
  * Interface for handling programs enrollment on the OpenMRS server.
  */
@@ -26,4 +28,24 @@ public interface OpenMRSProgramEnrollmentService {
      * @return the updated program enrollment
      */
     ProgramEnrollment updateProgramEnrollment(String configName, ProgramEnrollment programEnrollment);
+
+    /**
+     * Returns program enrollments associated with the patient having given UUID.
+     * Configuration with the given {@code configName} will be used while performing this action.
+     *
+     * @param configName the name of the configuration
+     * @param patientUuid the UUID of the patient
+     * @return list of matching program enrollments
+     */
+    List<ProgramEnrollment> getProgramEnrollmentByPatientUuid(String configName, String patientUuid);
+
+    /**
+     * Returns program enrollments associated with the patient having given MOTECH ID.
+     * Configuration with the given {@code configName} will be used while performing this action.
+     *
+     * @param configName the name of the configuration
+     * @param patientMotechId the MOTECH ID of the patient
+     * @return list of matching program enrollments
+     */
+    List<ProgramEnrollment> getProgramEnrollmentByPatientMotechId(String configName, String patientMotechId);
 }

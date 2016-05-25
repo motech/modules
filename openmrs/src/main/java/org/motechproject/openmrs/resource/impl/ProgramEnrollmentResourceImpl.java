@@ -3,6 +3,7 @@ package org.motechproject.openmrs.resource.impl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.motechproject.openmrs.config.Config;
+import org.motechproject.openmrs.domain.ProgramEnrollmentListResult;
 import org.motechproject.openmrs.domain.Location;
 import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.Program;
@@ -12,6 +13,8 @@ import org.motechproject.openmrs.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestOperations;
+
+import java.util.List;
 
 @Component
 public class ProgramEnrollmentResourceImpl extends BaseResource implements ProgramEnrollmentResource {
@@ -33,6 +36,13 @@ public class ProgramEnrollmentResourceImpl extends BaseResource implements Progr
         String requestJson = buildGsonWithAdapters().toJson(programEnrollment);
         String responseJson = postForJson(config, requestJson, "/programenrollment/{uuid}", programEnrollment.getUuid());
         return (ProgramEnrollment) JsonUtils.readJson(responseJson, ProgramEnrollment.class);
+    }
+
+    @Override
+    public List<ProgramEnrollment> getProgramEnrollmentByPatientUuid(Config config, String patientUuid) {
+        String responseJson = getJson(config, "/programenrollment?patient={uuid}&v=full", patientUuid);
+        ProgramEnrollmentListResult programEnrollmentListResult = (ProgramEnrollmentListResult) JsonUtils.readJson(responseJson, ProgramEnrollmentListResult.class);
+        return programEnrollmentListResult.getResults();
     }
 
     private Gson buildGsonWithAdapters() {
