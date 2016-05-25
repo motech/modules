@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Created by user on 13.05.16.
+ * Stores a list of {@link ProgramEnrollment}s. This class is used as a result of a query to the OpenMRS server.
  */
 public class ProgramEnrollmentListResult {
 
