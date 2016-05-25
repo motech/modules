@@ -20,6 +20,7 @@
                 <entry key="messages" value="../openmrs/resources/messages/"/>
             </map>
         </constructor-arg>
+        <property name="settingsURL" value="/openmrs/settings"/>
         <property name="defaultURL" value="/openmrs/settings" />
     </bean>
 

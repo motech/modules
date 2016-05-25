@@ -9,7 +9,9 @@
         return $resource('../openmrs/configs', {}, {
             verify: {
                 method: 'POST',
-                url: '../openmrs/configs/verify'
+                url: '../openmrs/configs/verify',
+                'Content-Type': 'text/plain',
+                'Accept': 'text/plain'
             }}
         );
     });
