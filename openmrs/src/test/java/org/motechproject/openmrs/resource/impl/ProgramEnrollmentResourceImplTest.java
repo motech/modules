@@ -1,7 +1,6 @@
 package org.motechproject.openmrs.resource.impl;
 
 import com.google.gson.JsonObject;
-import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -22,11 +21,8 @@ import java.net.URI;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -38,7 +34,6 @@ public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest 
 
     private static final String PROGRAM_ENROLLMENT_CREATE = "json/programEnrollment/program-enrollment-create.json";
     private static final String PROGRAM_ENROLLMENT_RESPONSE = "json/programEnrollment/program-enrollment-response.json";
-    private static final String PROGRAM_ENROLLMENT_TABLE = "json/programEnrollment/program-enrollment-table.json";
 
     @Mock
     private RestOperations restOperations;
@@ -95,26 +90,27 @@ public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest 
                 equalTo(readFromFile(PROGRAM_ENROLLMENT_CREATE, JsonObject.class)));
     }
 
-    @Test
-    public void shouldGetProgramEnrollmentByPatientUuid() throws Exception {
-        ProgramEnrollment programEnrollment = prepareProgramEnrollment();
-
-        URI url = config.toInstancePathWithParams("/programenrollment?patient={uuid}&v=full", programEnrollment.getPatient().getUuid());
-
-        when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(PROGRAM_ENROLLMENT_TABLE));
-
-        List<ProgramEnrollment> fetched = programEnrollmentResource.getProgramEnrollmentByPatientUuid(config, programEnrollment.getPatient().getUuid());
-
-        verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
-
-        assertThat(fetched, hasItem(programEnrollment));
-        assertThat(fetched.size(), equalTo(1));
-        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
-        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class), nullValue());
-    }
-
     private ProgramEnrollment prepareProgramEnrollment() throws Exception {
-        return (ProgramEnrollment) readFromFile(PROGRAM_ENROLLMENT_RESPONSE, ProgramEnrollment.class);
+        Program program = new Program();
+        program.setUuid("37677597-27e3-4613-9514-e4d2b7b89cfd");
+
+        Patient patient = new Patient();
+        patient.setUuid("159ff70f-cc96-4d18-a252-e0aac0481a39");
+
+        Location location = new Location();
+        location.setUuid("433f6e08-8c8c-4c64-8cac-1ee96df2d5cc");
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        Date dateEnrolled = dateFormat.parse("2016-01-01T00:00:00.000+0200");
+        Date dateCompleted = dateFormat.parse("2016-12-12T00:00:00.000+0200");
+
+        ProgramEnrollment programEnrollment = new ProgramEnrollment();
+        programEnrollment.setProgram(program);
+        programEnrollment.setPatient(patient);
+        programEnrollment.setDateEnrolled(dateEnrolled);
+        programEnrollment.setDateCompleted(dateCompleted);
+        programEnrollment.setLocation(location);
+
+        return programEnrollment;
     }
 }
