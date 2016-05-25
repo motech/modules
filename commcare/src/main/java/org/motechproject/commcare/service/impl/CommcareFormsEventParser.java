@@ -68,6 +68,8 @@ public class CommcareFormsEventParser implements TasksEventParser {
     private void addParameters(Map<String, Object> parameters, Map<String, Object> parsedParameters, String paramPrefix) {
         Multimap<String, Map> nodes = (Multimap<String, Map>) parameters.get(SUB_ELEMENTS);
 
+        addAttributes(parameters, parsedParameters, paramPrefix);
+
         for (Map.Entry<String, Map> entry : nodes.entries()) {
             String tagName = entry.getKey();
             // Create ID postfix, in case we handle repeat data
@@ -75,12 +77,22 @@ public class CommcareFormsEventParser implements TasksEventParser {
 
             // If there's a non-null value, add it to the parameters
             String value = (String) entry.getValue().get(VALUE);
+
             if (value != null) {
                 parsedParameters.put(paramPrefix + "/" + tagName + idPostfix, value);
             }
 
             // Call our method recursively for subelements
             addParameters(entry.getValue(), parsedParameters, paramPrefix + "/" + tagName + idPostfix);
+        }
+    }
+
+    private void addAttributes(Map<String, Object> parameters, Map<String, Object> parsedParameters, String paramPrefix) {
+        HashMap<String, String> nodes = (HashMap<String, String>) parameters.get(ATTRIBUTES);
+
+        for (String key : nodes.keySet()) {
+            String attr = nodes.get(key);
+            parsedParameters.put(paramPrefix + "/@" + key, attr);
         }
     }
 
