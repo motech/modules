@@ -78,7 +78,7 @@ public class IHEActionHelperTest {
         params.put(Constants.RECIPIENT_NAME_PARAM, "sampleRecipient3");
 
         byte[] bytes;
-        try (InputStream inputStream = getClass().getResourceAsStream("/empty_template1.xml")) {
+        try (InputStream inputStream = getClass().getResourceAsStream("/empty_template.xml")) {
             bytes = IOUtils.toByteArray(inputStream);
         }
         Byte[] byteObjects = ArrayUtils.toObject(bytes);
