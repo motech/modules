@@ -22,13 +22,13 @@ import static org.motechproject.commcare.events.constants.EventDataKeys.START_DA
 @Component
 public class ImportFormActionEventHandler {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImportFormActionEventHandler.class);
+
     @Autowired
     private EventRelay eventRelay;
 
     @Autowired
     private CommcareFormService formService;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ImportFormActionEventHandler.class);
 
     /**
      * Handles the {@code EventSubjects.IMPORT_FORMS} events. This will import commcare forms for specific configuration
