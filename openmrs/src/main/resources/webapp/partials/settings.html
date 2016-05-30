@@ -3,7 +3,7 @@
 
         <div class="form-inline form-group">
             <label>{{msg('openMRS.selectConfig')}}: </label>
-            <select class="largeCombobox form-control" ng-model="selectedConfig" ng-change="onConfigChange(selectedConfig, oldValue)" ng-click="oldValue = selectedConfig" ng-options="config.name for config in configs.configs">
+            <select class="largeCombobox form-control" ng-model="selectedConfig" ng-change="onConfigChange(selectedConfig, {{selectedConfig || 'null'}})" ng-options="config.name for config in configs.configs">
             </select>
         </div>
 
@@ -26,6 +26,7 @@
         </div>
         </div>
     <form ng-if="selectedConfig" class="inside form-horizontal" novalidate>
+
         <div ng-if="failureMessage" class="alert alert-danger">
             <span class="fa fw fa-warning"></span>
             <span class="margin-left1">{{failureMessage}}</span>

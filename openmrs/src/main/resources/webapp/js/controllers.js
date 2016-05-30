@@ -27,7 +27,10 @@
                            $scope.newPatientIdentifierType.name = "";
                        }
                        else {
-                           $scope.selectedConfig = oldConfig;
+                           $scope.selectedConfig = $scope.getConfig(oldConfig.name);
+                           if (!$scope.selectedConfig) {
+                            $scope.selectedConfig = oldConfig;
+                           }
                            $scope.$apply();
                        }
                    }
