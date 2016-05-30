@@ -88,7 +88,7 @@ public class CommcareFormsEventParser implements TasksEventParser {
     }
 
     private void addAttributes(Map<String, Object> parameters, Map<String, Object> parsedParameters, String paramPrefix) {
-        HashMap<String, String> nodes = (HashMap<String, String>) parameters.get(ATTRIBUTES);
+        Map<String, String> nodes = (Map<String, String>) parameters.get(ATTRIBUTES);
 
         for (String key : nodes.keySet()) {
             String attr = nodes.get(key);

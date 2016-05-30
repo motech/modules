@@ -33,6 +33,8 @@ import static org.motechproject.commcare.util.ResponseXML.CASE_ID;
 import static org.motechproject.commcare.util.ResponseXML.USER_ID;
 import static org.motechproject.commcare.util.ResponseXML.DATE_MODIFIED;
 import static org.motechproject.commcare.util.ResponseXML.XMLNS;
+import static org.motechproject.commcare.util.ResponseXML.DATE;
+import static org.motechproject.commcare.util.ResponseXML.ATTR;
 
 public class CommcareEventParsersTest {
 
@@ -181,10 +183,14 @@ public class CommcareEventParsersTest {
         assertTrue(parsedParameters.containsKey("/data/case/@user_id"));
         assertTrue(parsedParameters.containsKey("/data/case/@date_modified"));
         assertTrue(parsedParameters.containsKey("/data/case/@xmlns"));
+        assertTrue(parsedParameters.containsKey("/data/case/update/@date"));
+        assertTrue(parsedParameters.containsKey("/data/case/update/number/@attr"));
 
         assertEquals(CASE_ID, parsedParameters.get("/data/case/@case_id"));
         assertEquals(USER_ID, parsedParameters.get("/data/case/@user_id"));
         assertEquals(DATE_MODIFIED, parsedParameters.get("/data/case/@date_modified"));
         assertEquals(XMLNS, parsedParameters.get("/data/case/@xmlns"));
+        assertEquals(DATE, parsedParameters.get("/data/case/update/@date"));
+        assertEquals(ATTR, parsedParameters.get("/data/case/update/number/@attr"));
     }
 }

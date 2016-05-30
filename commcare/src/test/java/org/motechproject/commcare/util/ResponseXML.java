@@ -15,6 +15,8 @@ public final class ResponseXML {
     public static final String USER_ID = "9ad3659b9c0f8c5d141d2d06857874df";
     public static final String DATE_MODIFIED = "2012-10-23T17:15:21.966-04";
     public static final String XMLNS = "http://commcarehq.org/case/transaction/v2";
+    public static final String DATE = "2016-05-28";
+    public static final String ATTR = "example";
 
     public static String getFormXML() {
         return "<data uiVersion=\"1\"\n" +
@@ -28,8 +30,8 @@ public final class ResponseXML {
                 "           user_id=\""+ USER_ID +"\"\n" +
                 "           date_modified=\""+ DATE_MODIFIED +"\"\n" +
                 "           xmlns:n0=\""+ XMLNS +"\">\n" +
-                "    <n0:update>\n" +
-                "      <n0:number>8</n0:number>\n" +
+                "    <n0:update date=\""+DATE+"\">\n" +
+                "      <n0:number attr=\""+ATTR+"\">8</n0:number>\n" +
                 "    </n0:update>\n" +
                 "  </n0:case>\n" +
                 "  <cc_delegation_stub delegation_id=\"0e6db0c4-d07f-435c-89e5-64855440605c\">\n" +
