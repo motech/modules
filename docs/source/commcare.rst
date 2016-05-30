@@ -140,6 +140,32 @@ It is now possible to use those values in the task actions, using syntax for cus
 - **{{trigger./data/mother/children/child_22345}}**
 - **{{trigger./data/mother/children/child_22346}}**
 
+Special Case - Accessing Atributtes
+"""""""""""""""""""""""""""""""""""
+
+It is also possible to acess values of the form atttributes.
+
+.. code-block:: xml
+
+   <?xml version='1.0' ?>
+   <data>
+       <mother name="Jane">
+           <children>
+               <child age="15">John</child>
+           </children>
+       </mother>
+   </data>
+
+The generate trigger expression for an attribute will be:
+
+- **/data/mother/@name**
+- **/data/mother/children/child/@age**
+
+It is now possible to use those values in the task actions, using syntax for custom trigger events, like:
+
+- **{{trigger./data/mother/@name}}**
+- **{{trigger./data/mother/children/child/@age}}**
+
 Task Data Source
 ^^^^^^^^^^^^^^^^
 The Tasks module will query specific Commcare APIs and make the results available to the task. These data sources are useful when supplemental information is needed from a received Case or form such as values from a lookup table, Commcare users and locations. Click Add data source in the task and choose Source: Commcare to make this information available to the task. Each of the following objects are available as a data source.
