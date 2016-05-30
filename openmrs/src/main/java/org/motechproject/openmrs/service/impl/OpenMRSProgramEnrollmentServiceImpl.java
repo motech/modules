@@ -4,30 +4,39 @@ import org.apache.commons.lang.Validate;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.openmrs.config.Config;
+import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.ProgramEnrollment;
 import org.motechproject.openmrs.exception.OpenMRSException;
 import org.motechproject.openmrs.helper.EventHelper;
 import org.motechproject.openmrs.resource.ProgramEnrollmentResource;
 import org.motechproject.openmrs.service.EventKeys;
 import org.motechproject.openmrs.service.OpenMRSConfigService;
+import org.motechproject.openmrs.service.OpenMRSPatientService;
 import org.motechproject.openmrs.service.OpenMRSProgramEnrollmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Service("programEnrollmentService")
 public class OpenMRSProgramEnrollmentServiceImpl implements OpenMRSProgramEnrollmentService {
 
     private final OpenMRSConfigService configService;
 
+    private final OpenMRSPatientService patientService;
+
     private final ProgramEnrollmentResource programEnrollmentResource;
 
     private final EventRelay eventRelay;
 
     @Autowired
-    public OpenMRSProgramEnrollmentServiceImpl(OpenMRSConfigService configService, ProgramEnrollmentResource programEnrollmentResource,
-                                               EventRelay eventRelay) {
+    public OpenMRSProgramEnrollmentServiceImpl(OpenMRSConfigService configService, OpenMRSPatientService patientService,
+                                               ProgramEnrollmentResource programEnrollmentResource, EventRelay eventRelay) {
         this.configService = configService;
+        this.patientService = patientService;
         this.programEnrollmentResource = programEnrollmentResource;
         this.eventRelay = eventRelay;
     }
@@ -57,6 +66,18 @@ public class OpenMRSProgramEnrollmentServiceImpl implements OpenMRSProgramEnroll
         } catch (HttpClientErrorException e) {
             throw new OpenMRSException("Could not update program enrollment with uuid: " + programEnrollment.getUuid(), e);
         }
+    }
+
+    @Override
+    public List<ProgramEnrollment> getProgramEnrollmentByPatientUuid(String configName, String patientUuid) {
+        return programEnrollmentResource.getProgramEnrollmentByPatientUuid(configService.getConfigByName(configName), patientUuid);
+    }
+
+    @Override
+    public List<ProgramEnrollment> getProgramEnrollmentByPatientMotechId(String configName, String patientMotechId) {
+        Patient patient = patientService.getPatientByMotechId(configName, patientMotechId);
+
+        return Objects.nonNull(patient) ? getProgramEnrollmentByPatientUuid(configName, patient.getUuid()) : new ArrayList<>();
     }
 
     private void validateProgramEnrollment(ProgramEnrollment programEnrollment) {

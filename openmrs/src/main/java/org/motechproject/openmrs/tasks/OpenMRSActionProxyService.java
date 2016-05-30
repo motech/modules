@@ -138,6 +138,7 @@ public interface OpenMRSActionProxyService {
      *
      * @param configName the name of the configuration
      * @param programEnrollmentUuid the program enrollment uuid
+     * @param programCompletedDate the program enrollment completed date
      * @param stateUuid the state uuid
      * @param startDate the state start date
      */
