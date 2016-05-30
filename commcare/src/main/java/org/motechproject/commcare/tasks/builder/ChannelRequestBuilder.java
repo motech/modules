@@ -52,6 +52,7 @@ public class ChannelRequestBuilder {
         CommonTriggerBuilder commonTriggerBuilder = new CommonTriggerBuilder(configService);
 
         // Actions
+        ImportFormActionBuilder importFormActionBuilder = new ImportFormActionBuilder(configService);
         QueryStockLedgerActionBuilder queryStockLedgerActionBuilder = new QueryStockLedgerActionBuilder(configService);
         CaseActionBuilder caseActionBuilder = new CaseActionBuilder(configService);
         FormActionBuilder formActionBuilder = new FormActionBuilder(schemaService, configService);
@@ -61,6 +62,7 @@ public class ChannelRequestBuilder {
         triggers.addAll(commonTriggerBuilder.buildTriggers());
 
         List<ActionEventRequest> actions = new ArrayList<>();
+        actions.addAll(importFormActionBuilder.buildActions());
         actions.addAll(queryStockLedgerActionBuilder.buildActions());
         actions.addAll(caseActionBuilder.buildActions());
         actions.addAll(formActionBuilder.buildActions());

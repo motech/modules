@@ -38,6 +38,7 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
     private int pageCount;
     private String lastImportedDate;
     private String lastImportedFormId;
+    private String lastStartedImportingFormId;
     private boolean inError;
     private String errorMessage;
 
@@ -111,11 +112,13 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
                         }
                     } catch (RuntimeException e) {
                         LOGGER.error("Error while importing forms", e);
+                        LOGGER.error("{} of {} forms imported. Recently tried to import form with id: .", importCount, totalCount, lastStartedImportingFormId);
                         handleImportError(e, configName);
                     }
                 } while (importInProgress && hasMore);
 
-                LOGGER.info("Form import finished");
+                LOGGER.info("Form import finished. {} of {} forms imported.", importCount, totalCount);
+
 
                 importInProgress = false;
             }
@@ -193,6 +196,8 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
         // iterate backwards
         for (CommcareForm form : Lists.reverse(formList.getObjects())) {
             FullFormEvent formEvent = new FullFormEvent(form.getForm(), form.getReceivedOn(), form.getConfigName());
+
+            lastStartedImportingFormId = form.getId();
 
             eventRelay.sendEventMessage(formEvent.toMotechEvent());
 

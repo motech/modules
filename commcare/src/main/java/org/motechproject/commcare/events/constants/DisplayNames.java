@@ -30,6 +30,8 @@ public final class DisplayNames {
     public static final String TYPE = "commcare.type";
     public static final String EXTRA_DATA = "commcare.extraData";
 
+    public static final String IMPORT_FORMS = "Import Forms";
+
     /**
      * Utility class, should not be initiated.
      */
