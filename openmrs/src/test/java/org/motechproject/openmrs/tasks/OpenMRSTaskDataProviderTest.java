@@ -1,5 +1,6 @@
 package org.motechproject.openmrs.tasks;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,13 +27,16 @@ import org.motechproject.openmrs.tasks.builder.OpenMRSTaskDataProviderBuilder;
 import org.osgi.framework.BundleContext;
 import org.springframework.core.io.ResourceLoader;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -354,8 +358,14 @@ public class OpenMRSTaskDataProviderTest {
 
         Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, "wrongLookupName", lookupFields);
 
-        assertEquals(false, ((ProgramEnrollment) object).isEnrolled());
-        assertEquals(ProgramEnrollment.NOT_ENROLLED, ((ProgramEnrollment) object).getEnrolledString());
+        assertTrue(object instanceof ProgramEnrollment);
+
+        ProgramEnrollment actual = (ProgramEnrollment) object;
+
+        assertFalse(actual.isEnrolled());
+        assertEquals(ProgramEnrollment.NOT_ENROLLED, actual.getEnrolledString());
+        assertNull(actual.getCurrentState());
+
         verifyZeroInteractions(programEnrollmentService);
     }
 
@@ -375,7 +385,12 @@ public class OpenMRSTaskDataProviderTest {
 
         verify(programEnrollmentService).getProgramEnrollmentByPatientUuid(eq(CONFIG_NAME), eq(DEFAULT_UUID));
 
-        assertEquals(expected.get(0), object);
+        assertTrue(object instanceof ProgramEnrollment);
+
+        ProgramEnrollment actual = (ProgramEnrollment) object;
+
+        assertEquals(expected.get(0), actual);
+        assertEquals(expected.get(0).getCurrentState(), actual.getCurrentState());
     }
 
     @Test
@@ -394,7 +409,12 @@ public class OpenMRSTaskDataProviderTest {
 
         verify(programEnrollmentService).getProgramEnrollmentByPatientMotechId(eq(CONFIG_NAME), eq(DEFAULT_MOTECH_ID));
 
-        assertEquals(expected.get(0), object);
+        assertTrue(object instanceof ProgramEnrollment);
+
+        ProgramEnrollment actual = (ProgramEnrollment) object;
+
+        assertEquals(expected.get(0), actual);
+        assertEquals(expected.get(0).getCurrentState(), actual.getCurrentState());
     }
 
     @Test
@@ -412,8 +432,13 @@ public class OpenMRSTaskDataProviderTest {
 
         verify(programEnrollmentService).getProgramEnrollmentByPatientUuid(eq(CONFIG_NAME), eq(DEFAULT_UUID));
 
-        assertEquals(false, ((ProgramEnrollment) object).isEnrolled());
-        assertEquals(ProgramEnrollment.NOT_ENROLLED, ((ProgramEnrollment) object).getEnrolledString());
+        assertTrue(object instanceof ProgramEnrollment);
+
+        ProgramEnrollment actual = (ProgramEnrollment) object;
+
+        assertFalse(actual.isEnrolled());
+        assertEquals(ProgramEnrollment.NOT_ENROLLED, actual.getEnrolledString());
+        assertNull(actual.getCurrentState());
     }
 
     @Test
@@ -431,8 +456,13 @@ public class OpenMRSTaskDataProviderTest {
 
         verify(programEnrollmentService).getProgramEnrollmentByPatientMotechId(eq(CONFIG_NAME), eq(DEFAULT_MOTECH_ID));
 
-        assertEquals(false, ((ProgramEnrollment) object).isEnrolled());
-        assertEquals(ProgramEnrollment.NOT_ENROLLED, ((ProgramEnrollment) object).getEnrolledString());
+        assertTrue(object instanceof ProgramEnrollment);
+
+        ProgramEnrollment actual = (ProgramEnrollment) object;
+
+        assertFalse(actual.isEnrolled());
+        assertEquals(ProgramEnrollment.NOT_ENROLLED, actual.getEnrolledString());
+        assertNull(actual.getCurrentState());
     }
 
     private List<Relationship> prepareRelationship() {
@@ -460,8 +490,20 @@ public class OpenMRSTaskDataProviderTest {
     private List<ProgramEnrollment> prepareProgramEnrollments() {
         Program program = new Program();
         program.setName(PROGRAM_DEFAULT_NAME);
+
+        DateTime startDate = new DateTime("2000-08-16T07:22:05Z");
+        DateTime endDate = new DateTime("2010-08-16T07:22:05Z");
+
+        ProgramEnrollment.StateStatus firstState = new ProgramEnrollment.StateStatus();
+        firstState.setStartDate(startDate.toDate());
+        firstState.setEndDate(endDate.toDate());
+
+        ProgramEnrollment.StateStatus lastState = new ProgramEnrollment.StateStatus();
+        lastState.setStartDate(endDate.toDate());
+
         ProgramEnrollment programEnrollment = new ProgramEnrollment();
         programEnrollment.setProgram(program);
+        programEnrollment.setStates(Arrays.asList(firstState, lastState));
 
         return Collections.singletonList(programEnrollment);
     }
