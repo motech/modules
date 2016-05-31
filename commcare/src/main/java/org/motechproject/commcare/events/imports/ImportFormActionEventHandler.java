@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+
 import static org.motechproject.commcare.events.constants.EventDataKeys.END_DATE;
 import static org.motechproject.commcare.events.constants.EventDataKeys.START_DATE;
 
@@ -30,6 +32,13 @@ public class ImportFormActionEventHandler {
     @Autowired
     private CommcareFormService formService;
 
+    private CommcareFormImporterImpl importer;
+
+    @PostConstruct
+    public void init() {
+        importer = new CommcareFormImporterImpl(eventRelay, formService);
+    }
+
     /**
      * Handles the {@code EventSubjects.IMPORT_FORMS} events. This will import commcare forms for specific configuration
      *
@@ -43,11 +52,14 @@ public class ImportFormActionEventHandler {
         DateTime endDate = (DateTime) event.getParameters().get(END_DATE);
         Range<DateTime> dateRange = new Range<>(startDate, endDate);
 
-        CommcareFormImporterImpl importer = new CommcareFormImporterImpl(eventRelay, formService);
         int formsToImport = importer.countForImport(dateRange, configName);
 
         LOGGER.info("{} commcare forms to be imported.", formsToImport);
 
         importer.startImport(dateRange, configName);
+    }
+
+    public void setImporter(CommcareFormImporterImpl importer) {
+        this.importer = importer;
     }
 }

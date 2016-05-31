@@ -38,9 +38,9 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
     private int pageCount;
     private String lastImportedDate;
     private String lastImportedFormId;
-    private String lastStartedImportingFormId;
     private boolean inError;
     private String errorMessage;
+    private String lastFormXMLNSToBeImported;
 
     public CommcareFormImporterImpl(EventRelay eventRelay, CommcareFormService formService) {
         this.eventRelay = eventRelay;
@@ -112,12 +112,12 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
                         }
                     } catch (RuntimeException e) {
                         LOGGER.error("Error while importing forms", e);
-                        LOGGER.error("{} of {} forms imported. Recently tried to import form with id: {}", importCount, totalCount, lastStartedImportingFormId);
+                        LOGGER.error("{} of {} forms imported.", importCount, totalCount);
                         handleImportError(e, configName);
                     }
                 } while (importInProgress && hasMore);
 
-                LOGGER.info("Form import finished. {} of {} forms imported.", importCount, totalCount);
+                LOGGER.info("Form import finished. {} of {} forms imported. Last form xmlns to be imported was {}", importCount, totalCount, lastFormXMLNSToBeImported);
 
 
                 importInProgress = false;
@@ -188,6 +188,7 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
         errorMessage = null;
         // calculate the page number, since we are going backwards
         pageCount = (int) Math.ceil((double) totalCount / fetchSize);
+        lastFormXMLNSToBeImported = null;
 
         LOGGER.debug("Initialized for import");
     }
@@ -197,7 +198,7 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
         for (CommcareForm form : Lists.reverse(formList.getObjects())) {
             FullFormEvent formEvent = new FullFormEvent(form.getForm(), form.getReceivedOn(), form.getConfigName());
 
-            lastStartedImportingFormId = form.getId();
+            lastFormXMLNSToBeImported = formEvent.getAttributes().get("xmlns");
 
             eventRelay.sendEventMessage(formEvent.toMotechEvent());
 

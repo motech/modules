@@ -112,4 +112,9 @@ public class FullFormEvent {
 
         return elements;
     }
+
+    public Map<String, String> getAttributes() {
+        return attributes;
+    }
+
 }
