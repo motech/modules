@@ -254,7 +254,7 @@
                                 </goals>
                                 <configuration>
                                     <includes>
-                                        <include>**/**/*IntegrationTests.java</include>
+                                        <include>**/**/version${openmrs.version}/*IntegrationTests.java</include>
                                     </includes>
                                     <encoding>UTF-8</encoding>
                                     <summaryFile>target/failsafe-reports/failsafe-summary-it.xml</summaryFile>
