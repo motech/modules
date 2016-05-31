@@ -13,7 +13,7 @@ import java.util.Objects;
  */
 public class ProgramEnrollment {
     public static final String ENROLLED = "enrolled";
-    public static final String NOT_ENROLLED = "not enrolled";
+    public static final String NOT_ENROLLED = "not_enrolled";
 
     private String uuid;
 

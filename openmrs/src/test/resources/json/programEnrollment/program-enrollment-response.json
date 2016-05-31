@@ -9,5 +9,6 @@
   "dateCompleted": "2016-12-12T00:00:00.000+0200",
   "location": {
     "uuid": "433f6e08-8c8c-4c64-8cac-1ee96df2d5cc"
-  }
+  },
+  "states": []
 }
