@@ -19,7 +19,8 @@ import java.util.Map;
 import java.util.LinkedHashMap;
 
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ImportFormActionEventHandlerTest {
