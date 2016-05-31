@@ -390,7 +390,9 @@ public class OpenMRSTaskDataProviderTest {
         ProgramEnrollment actual = (ProgramEnrollment) object;
 
         assertEquals(expected.get(0), actual);
-        assertEquals(expected.get(0).getCurrentState(), actual.getCurrentState());
+
+        //Get state without endDate - this is what getCurrentState() should return
+        assertEquals(expected.get(0).getStates().get(1), actual.getCurrentState());
     }
 
     @Test
@@ -414,7 +416,9 @@ public class OpenMRSTaskDataProviderTest {
         ProgramEnrollment actual = (ProgramEnrollment) object;
 
         assertEquals(expected.get(0), actual);
-        assertEquals(expected.get(0).getCurrentState(), actual.getCurrentState());
+        
+        //Get state without endDate - this is what getCurrentState() should return
+        assertEquals(expected.get(0).getStates().get(1), actual.getCurrentState());
     }
 
     @Test
