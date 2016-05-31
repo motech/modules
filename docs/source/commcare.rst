@@ -143,7 +143,8 @@ It is now possible to use those values in the task actions, using syntax for cus
 Special Case - Accessing Atributtes
 """""""""""""""""""""""""""""""""""
 
-It is also possible to acess values of the form atttributes.
+The attributes are a special case, because the trigger fields for attributes are not generated on the Tasks UI.
+Nevertheless, it is still possible to access values of the attributes. For this purpose we use the custom syntax to retrieve attributes values.
 
 .. code-block:: xml
 
@@ -156,7 +157,7 @@ It is also possible to acess values of the form atttributes.
        </mother>
    </data>
 
-The generate trigger expression for an attribute will be:
+The generated trigger expression for an attribute will be:
 
 - **/data/mother/@name**
 - **/data/mother/children/child/@age**
