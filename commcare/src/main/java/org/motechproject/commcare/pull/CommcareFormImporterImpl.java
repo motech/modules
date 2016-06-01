@@ -112,12 +112,12 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
                         }
                     } catch (RuntimeException e) {
                         LOGGER.error("Error while importing forms", e);
-                        LOGGER.error("{} of {} forms imported.", importCount, totalCount);
+                        LOGGER.error("{} of {} forms imported. Last form xmlns to be imported was {}", importCount, totalCount, lastFormXMLNSToBeImported);
                         handleImportError(e, configName);
                     }
                 } while (importInProgress && hasMore);
 
-                LOGGER.info("Form import finished. {} of {} forms imported. Last form xmlns to be imported was {}", importCount, totalCount, lastFormXMLNSToBeImported);
+                LOGGER.info("Form import finished. {} of {} forms imported. ", importCount, totalCount);
 
 
                 importInProgress = false;

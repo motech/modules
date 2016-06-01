@@ -4,7 +4,6 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.commcare.events.constants.EventSubjects;
 import org.motechproject.commcare.pull.CommcareFormImporterImpl;
@@ -20,6 +19,7 @@ import java.util.LinkedHashMap;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -40,6 +40,7 @@ public class ImportFormActionEventHandlerTest {
 
     private ImportFormActionEventHandler eventHandler;
 
+    @Mock
     private CommcareFormImporterImpl importer;
 
     @Before
@@ -52,13 +53,15 @@ public class ImportFormActionEventHandlerTest {
     public void shouldCallImporterMethodsWithCorrectArguments() {
         Range<DateTime> range = new Range<>(DATES.get(0), DATES.get(1));
 
-        importer = Mockito.mock(CommcareFormImporterImpl.class);
-        when(importer.countForImport(eq(range), eq(CONFIG_NAME))).thenReturn(0);
-        doNothing().when(importer).startImport(eq(range), eq(CONFIG_NAME));
+        when(importer.countForImport(range, CONFIG_NAME)).thenReturn(0);
+        doNothing().when(importer).startImport(range, CONFIG_NAME);
         eventHandler.setImporter(importer);
 
         MotechEvent event = prepareEvent(true);
         eventHandler.handleEvent(event);
+
+        verify(importer).countForImport(eq(range), eq(CONFIG_NAME));
+        verify(importer).startImport(eq(range), eq(CONFIG_NAME));
     }
 
     @Test(expected = IllegalArgumentException.class)

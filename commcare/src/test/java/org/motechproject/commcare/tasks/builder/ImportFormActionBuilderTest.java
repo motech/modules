@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.commcare.config.Configs;
+import org.motechproject.commcare.events.constants.EventSubjects;
 import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.util.ConfigsUtils;
 import org.motechproject.tasks.contract.ActionEventRequest;
@@ -37,5 +38,25 @@ public class ImportFormActionBuilderTest {
     public void buildActionsShouldReturnTwoActionsForTwoConfigs() {
         List<ActionEventRequest> eventRequests = importFormActionBuilder.buildActions();
         assertEquals(2, eventRequests.size());
+
+        String firstConfigName = configs.getConfigs().get(0).getName();
+        String secondConfigName = configs.getConfigs().get(1).getName();
+
+        String expectedDisplayNameForFirstConfig = "Import Forms [" + firstConfigName + "]";
+        String expectedSubjectForFirstConfig = EventSubjects.IMPORT_FORMS + "." + firstConfigName;
+        String expectedDisplayNameForSecondConfig = "Import Forms [" + secondConfigName + "]";
+        String expectedSubjectForSecondConfig = EventSubjects.IMPORT_FORMS + "." + secondConfigName;
+
+        ActionEventRequest eventRequestForFirsConfig = eventRequests.get(0);
+        ActionEventRequest eventRequestForSecondConfig = eventRequests.get(1);
+
+        assertEquals(expectedDisplayNameForFirstConfig, eventRequestForFirsConfig.getDisplayName());
+        assertEquals(expectedSubjectForFirstConfig, eventRequestForFirsConfig.getSubject());
+        assertEquals(expectedDisplayNameForSecondConfig, eventRequestForSecondConfig.getDisplayName());
+        assertEquals(expectedSubjectForSecondConfig, eventRequestForSecondConfig.getSubject());
     }
+
+
+
+
 }
