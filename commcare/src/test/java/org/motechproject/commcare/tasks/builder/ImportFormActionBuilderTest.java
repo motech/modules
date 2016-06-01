@@ -56,7 +56,4 @@ public class ImportFormActionBuilderTest {
         assertEquals(expectedSubjectForSecondConfig, eventRequestForSecondConfig.getSubject());
     }
 
-
-
-
 }
