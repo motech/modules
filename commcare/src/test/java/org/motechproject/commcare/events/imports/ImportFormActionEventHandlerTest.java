@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.commcare.events.constants.EventSubjects;
 import org.motechproject.commcare.pull.CommcareFormImporterImpl;
+import org.motechproject.commcare.pull.CommcareTasksFormImporterFactory;
 import org.motechproject.commcare.service.CommcareFormService;
 import org.motechproject.commons.api.Range;
 import org.motechproject.event.MotechEvent;
@@ -18,9 +19,7 @@ import java.util.Map;
 import java.util.LinkedHashMap;
 
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ImportFormActionEventHandlerTest {
@@ -38,26 +37,32 @@ public class ImportFormActionEventHandlerTest {
     @Mock
     private CommcareFormService formService;
 
+    @Mock
+    private CommcareTasksFormImporterFactory importerFactory;
+
     private ImportFormActionEventHandler eventHandler;
 
     @Mock
-    private CommcareFormImporterImpl importer;
+    private CommcareFormImporterImpl importer = new CommcareFormImporterImpl(eventRelay, formService);
 
     @Before
     public void setUp() {
         initMocks(this);
         eventHandler = new ImportFormActionEventHandler();
+        eventHandler.setImporterFactory(importerFactory);
     }
 
     @Test
     public void shouldCallImporterMethodsWithCorrectArguments() {
         Range<DateTime> range = new Range<>(DATES.get(0), DATES.get(1));
+        MotechEvent event = prepareEvent(true);
+
+        when(importerFactory.getCommcareFormImporter(event)).thenReturn(importer);
 
         when(importer.countForImport(range, CONFIG_NAME)).thenReturn(0);
         doNothing().when(importer).startImport(range, CONFIG_NAME);
-        eventHandler.setImporter(importer);
 
-        MotechEvent event = prepareEvent(true);
+
         eventHandler.handleEvent(event);
 
         verify(importer).countForImport(eq(range), eq(CONFIG_NAME));
@@ -67,7 +72,7 @@ public class ImportFormActionEventHandlerTest {
     @Test(expected = IllegalArgumentException.class)
     public void shouldNotImportFormsWithIncorrectDateRange() {
         MotechEvent event = prepareEvent(false);
-        eventHandler.setImporter(new CommcareFormImporterImpl(eventRelay, formService));
+        when(importerFactory.getCommcareFormImporter(event)).thenReturn(new CommcareFormImporterImpl(eventRelay, formService));
         eventHandler.handleEvent(event);
     }
 
