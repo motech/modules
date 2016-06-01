@@ -28,7 +28,7 @@ public class CommcareTasksFormImporterFactoryTest {
     }
 
     @Test
-    public void shouldReturnTheSameImportersForOneEvent() {
+    public void shouldReturnFormImporterInstance() {
         CommcareFormImporterImpl importer = importerFactory.getCommcareFormImporter();
         assertNotNull(importer);
     }
