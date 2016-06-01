@@ -1,6 +1,7 @@
 package org.motechproject.openmrs.domain;
 
 import com.google.gson.annotations.Expose;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -11,6 +12,8 @@ import java.util.Objects;
  * A program enrollment stores information about program states assigned to a patient.
  */
 public class ProgramEnrollment {
+    public static final String ENROLLED = "enrolled";
+    public static final String NOT_ENROLLED = "not_enrolled";
 
     private String uuid;
 
@@ -31,6 +34,12 @@ public class ProgramEnrollment {
 
     @Expose
     private List<StateStatus> states;
+
+    private boolean enrolled;
+
+    public ProgramEnrollment() {
+        enrolled = true;
+    }
 
     public static class StateStatus {
 
@@ -153,6 +162,34 @@ public class ProgramEnrollment {
 
     public void setStates(List<StateStatus> states) {
         this.states = states;
+    }
+
+    public boolean isEnrolled() {
+        return enrolled;
+    }
+
+    public void setEnrolled(boolean enrolled) {
+        this.enrolled = enrolled;
+    }
+
+    //todo: MOTECH-2203
+    public String getEnrolledString() {
+        return enrolled ? ENROLLED : NOT_ENROLLED;
+    }
+
+    public StateStatus getCurrentState() {
+        StateStatus result = null;
+
+        if (CollectionUtils.isNotEmpty(states)) {
+            for (StateStatus state : states) {
+                if (state.endDate == null) {
+                    result = state;
+                    break;
+                }
+            }
+        }
+
+        return result;
     }
 
     @Override
