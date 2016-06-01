@@ -57,7 +57,7 @@ public class ImportFormActionEventHandlerTest {
         Range<DateTime> range = new Range<>(DATES.get(0), DATES.get(1));
         MotechEvent event = prepareEvent(true);
 
-        when(importerFactory.getCommcareFormImporter(event)).thenReturn(importer);
+        when(importerFactory.getCommcareFormImporter()).thenReturn(importer);
 
         when(importer.countForImport(range, CONFIG_NAME)).thenReturn(0);
         doNothing().when(importer).startImport(range, CONFIG_NAME);
@@ -72,7 +72,7 @@ public class ImportFormActionEventHandlerTest {
     @Test(expected = IllegalArgumentException.class)
     public void shouldNotImportFormsWithIncorrectDateRange() {
         MotechEvent event = prepareEvent(false);
-        when(importerFactory.getCommcareFormImporter(event)).thenReturn(new CommcareFormImporterImpl(eventRelay, formService));
+        when(importerFactory.getCommcareFormImporter()).thenReturn(new CommcareFormImporterImpl(eventRelay, formService));
         eventHandler.handleEvent(event);
     }
 

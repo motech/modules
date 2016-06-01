@@ -33,7 +33,7 @@ public class ImportFormActionEventHandler {
      */
     @MotechListener(subjects = EventSubjects.IMPORT_FORMS + ".*")
     public void handleEvent(MotechEvent event) {
-        CommcareFormImporterImpl importer = importerFactory.getCommcareFormImporter(event);
+        CommcareFormImporterImpl importer = importerFactory.getCommcareFormImporter();
 
         String configName = EventSubjects.getConfigName(event.getSubject());
         DateTime startDate = (DateTime) event.getParameters().get(START_DATE);
