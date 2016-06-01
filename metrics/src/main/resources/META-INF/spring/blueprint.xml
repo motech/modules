@@ -70,7 +70,6 @@
 
     <bean id="metricRegistry" class="com.codahale.metrics.MetricRegistry"/>
     <bean id="healthCheckRegistry" class="com.codahale.metrics.health.HealthCheckRegistry"/>
-    <bean id="healthCheckModule" class="com.codahale.metrics.json.HealthCheckModule"/>
 
     <osgi:service ref="metricRegistryService" interface="org.motechproject.metrics.service.MetricRegistryService"/>
     <osgi:service ref="healthCheckRegistryService" interface="org.motechproject.metrics.service.HealthCheckRegistryService"/>
