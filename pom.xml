@@ -18,7 +18,7 @@
 
         <jasmine.server.port>8234</jasmine.server.port>
 
-        <external.dependency.release.tag>r031</external.dependency.release.tag>
+        <external.dependency.release.tag>r033</external.dependency.release.tag>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <modules.root.dir>${basedir}</modules.root.dir>
         <jdk.version>1.8</jdk.version>
@@ -42,7 +42,6 @@
         <springsource.hibernate.version>3.6.0.Final-${external.dependency.release.tag}</springsource.hibernate.version>
         <springframework.amqp.version>1.3.3.RELEASE-${external.dependency.release.tag}</springframework.amqp.version>
         <springframework.retry.version>1.1.0.RELEASE-${external.dependency.release.tag}</springframework.retry.version>
-        <fasterxml.jackson.version>2.4.0</fasterxml.jackson.version>
         <spring.data.commons.version>1.6.4.RELEASE</spring.data.commons.version>
         <thoughtworks.xstream.version>1.4.8</thoughtworks.xstream.version>
         <codehaus.jettison.version>1.2</codehaus.jettison.version>
@@ -595,16 +594,6 @@
                 <groupId>org.simpleframework</groupId>
                 <artifactId>org.motechproject.org.simpleframework.xml</artifactId>
                 <version>1.6.2-${external.dependency.release.tag}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>${fasterxml.jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-core</artifactId>
-                <version>${fasterxml.jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.servicemix.bundles</groupId>

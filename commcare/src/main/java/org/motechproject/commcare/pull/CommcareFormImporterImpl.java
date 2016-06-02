@@ -40,6 +40,7 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
     private String lastImportedFormId;
     private boolean inError;
     private String errorMessage;
+    private String lastFormXMLNSToBeImported;
 
     public CommcareFormImporterImpl(EventRelay eventRelay, CommcareFormService formService) {
         this.eventRelay = eventRelay;
@@ -111,11 +112,13 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
                         }
                     } catch (RuntimeException e) {
                         LOGGER.error("Error while importing forms", e);
+                        LOGGER.error("{} of {} forms imported. Last form xmlns to be imported was {}", importCount, totalCount, lastFormXMLNSToBeImported);
                         handleImportError(e, configName);
                     }
                 } while (importInProgress && hasMore);
 
-                LOGGER.info("Form import finished");
+                LOGGER.info("Form import finished. {} of {} forms imported. ", importCount, totalCount);
+
 
                 importInProgress = false;
             }
@@ -185,6 +188,7 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
         errorMessage = null;
         // calculate the page number, since we are going backwards
         pageCount = (int) Math.ceil((double) totalCount / fetchSize);
+        lastFormXMLNSToBeImported = null;
 
         LOGGER.debug("Initialized for import");
     }
@@ -193,6 +197,8 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
         // iterate backwards
         for (CommcareForm form : Lists.reverse(formList.getObjects())) {
             FullFormEvent formEvent = new FullFormEvent(form.getForm(), form.getReceivedOn(), form.getConfigName());
+
+            lastFormXMLNSToBeImported = formEvent.getAttributes().get("xmlns");
 
             eventRelay.sendEventMessage(formEvent.toMotechEvent());
 
