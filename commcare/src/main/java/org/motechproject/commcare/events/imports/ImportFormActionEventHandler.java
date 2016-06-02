@@ -47,8 +47,4 @@ public class ImportFormActionEventHandler {
         importer.startImport(dateRange, configName);
     }
 
-    public void setImporterFactory(CommcareTasksFormImporterFactory importerFactory) {
-        this.importerFactory = importerFactory;
-    }
-
 }

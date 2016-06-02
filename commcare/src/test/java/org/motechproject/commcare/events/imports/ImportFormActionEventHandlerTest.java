@@ -3,6 +3,7 @@ package org.motechproject.commcare.events.imports;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.commcare.events.constants.EventSubjects;
@@ -40,7 +41,8 @@ public class ImportFormActionEventHandlerTest {
     @Mock
     private CommcareTasksFormImporterFactory importerFactory;
 
-    private ImportFormActionEventHandler eventHandler;
+    @InjectMocks
+    private ImportFormActionEventHandler eventHandler= new ImportFormActionEventHandler();;
 
     @Mock
     private CommcareFormImporterImpl importer = new CommcareFormImporterImpl(eventRelay, formService);
@@ -48,8 +50,6 @@ public class ImportFormActionEventHandlerTest {
     @Before
     public void setUp() {
         initMocks(this);
-        eventHandler = new ImportFormActionEventHandler();
-        eventHandler.setImporterFactory(importerFactory);
     }
 
     @Test
