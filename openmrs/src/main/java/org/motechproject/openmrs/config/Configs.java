@@ -53,6 +53,7 @@ public class Configs {
     public void update(Config source) {
         for (Config config : configs) {
             if (StringUtils.equals(config.getName(), source.getName())) {
+                config.setOpenMrsVersion(source.getOpenMrsVersion());
                 config.setOpenMrsUrl(source.getOpenMrsUrl());
                 config.setUsername(source.getUsername());
                 config.setPassword(source.getPassword());
