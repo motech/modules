@@ -15,6 +15,7 @@ public final class EventSubjects {
     public static final String FORMS_FAIL_EVENT = FORMS_EVENT + ".failed";
     public static final String RECEIVED_STOCK_TRANSACTION = BASE_SUBJECT + "receivedStockTransaction";
     public static final String QUERY_STOCK_LEDGER = BASE_SUBJECT + "queryStockLedger";
+    public static final String IMPORT_FORMS = BASE_SUBJECT + "importForms";
     public static final String SCHEMA_CHANGE_EVENT = BASE_SUBJECT + "schemachange";
     public static final String DEVICE_LOG_EVENT = BASE_SUBJECT + "devicelog";
     public static final String CONFIG_CREATED = BASE_SUBJECT + "configcreated";

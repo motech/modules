@@ -193,7 +193,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         List<TriggerEvent> triggerEvents = channel.getTriggerTaskEvents();
         List<ActionEvent> actionEvents = channel.getActionTaskEvents();
 
-        assertEquals(7, actionEvents.size());
+        assertEquals(8, actionEvents.size());
         assertEquals(11, triggerEvents.size());
 
         TaskTriggerInformation expectedForm1 = new TaskTriggerInformation();
