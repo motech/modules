@@ -10,6 +10,7 @@ import static org.motechproject.openmrs.validation.ConfigValidator.validateConfi
 public class ConfigValidatorTest {
 
     private static final String NAME = "name";
+    private static final String OPEN_MRS_VERSION = "openMrsVersion";
     private static final String OPEN_MRS_URL = "openMrsUlr";
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
@@ -20,6 +21,7 @@ public class ConfigValidatorTest {
     public void shouldPassTheValidationIfAllTheFieldsAreNonEmpty() {
         Config config = new Config();
         config.setName(NAME);
+        config.setOpenMrsVersion(OPEN_MRS_VERSION);
         config.setOpenMrsUrl(OPEN_MRS_URL);
         config.setUsername(USERNAME);
         config.setPassword(PASSWORD);
@@ -33,6 +35,7 @@ public class ConfigValidatorTest {
     public void shouldThrowIllegalArgumentExceptionIfNameIsNull() {
         Config config = new Config();
         config.setName(null);
+        config.setOpenMrsVersion(OPEN_MRS_VERSION);
         config.setOpenMrsUrl(OPEN_MRS_URL);
         config.setUsername(USERNAME);
         config.setPassword(PASSWORD);
@@ -46,6 +49,35 @@ public class ConfigValidatorTest {
     public void shouldThrowIllegalArgumentExceptionIfNameIsEmpty() {
         Config config = new Config();
         config.setName(EMPTY_STRING);
+        config.setOpenMrsVersion(OPEN_MRS_VERSION);
+        config.setOpenMrsUrl(OPEN_MRS_URL);
+        config.setUsername(USERNAME);
+        config.setPassword(PASSWORD);
+        config.setMotechPatientIdentifierTypeName(MOTECH_PATIENT_IDENTIFIER_TYPE_NAME);
+        config.setPatientIdentifierTypeNames(new ArrayList<>());
+
+        validateConfig(config);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentExceptionIfVersionIsNull() {
+        Config config = new Config();
+        config.setName(NAME);
+        config.setOpenMrsVersion(null);
+        config.setOpenMrsUrl(OPEN_MRS_URL);
+        config.setUsername(USERNAME);
+        config.setPassword(PASSWORD);
+        config.setMotechPatientIdentifierTypeName(MOTECH_PATIENT_IDENTIFIER_TYPE_NAME);
+        config.setPatientIdentifierTypeNames(new ArrayList<>());
+
+        validateConfig(config);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentExceptionIfVersionIsEmpty() {
+        Config config = new Config();
+        config.setName(NAME);
+        config.setOpenMrsVersion(EMPTY_STRING);
         config.setOpenMrsUrl(OPEN_MRS_URL);
         config.setUsername(USERNAME);
         config.setPassword(PASSWORD);
@@ -59,6 +91,7 @@ public class ConfigValidatorTest {
     public void shouldThrowIllegalArgumentExceptionIfOpenMrsUrlIsNull() {
         Config config = new Config();
         config.setName(NAME);
+        config.setOpenMrsVersion(OPEN_MRS_VERSION);
         config.setOpenMrsUrl(null);
         config.setUsername(USERNAME);
         config.setPassword(PASSWORD);
@@ -72,6 +105,7 @@ public class ConfigValidatorTest {
     public void shouldThrowIllegalArgumentExceptionIfOpenMrsUrlIsEmpty() {
         Config config = new Config();
         config.setName(NAME);
+        config.setOpenMrsVersion(OPEN_MRS_VERSION);
         config.setOpenMrsUrl(EMPTY_STRING);
         config.setUsername(USERNAME);
         config.setPassword(PASSWORD);
@@ -85,6 +119,7 @@ public class ConfigValidatorTest {
     public void shouldThrowIllegalArgumentExceptionIfUsernameIsNull() {
         Config config = new Config();
         config.setName(NAME);
+        config.setOpenMrsVersion(OPEN_MRS_VERSION);
         config.setOpenMrsUrl(OPEN_MRS_URL);
         config.setUsername(null);
         config.setPassword(PASSWORD);
@@ -98,6 +133,7 @@ public class ConfigValidatorTest {
     public void shouldThrowIllegalArgumentExceptionIfUsernameIsEmpty() {
         Config config = new Config();
         config.setName(NAME);
+        config.setOpenMrsVersion(OPEN_MRS_VERSION);
         config.setOpenMrsUrl(OPEN_MRS_URL);
         config.setUsername(EMPTY_STRING);
         config.setPassword(PASSWORD);
@@ -111,6 +147,7 @@ public class ConfigValidatorTest {
     public void shouldThrowIllegalArgumentExceptionIfPasswordIsNull() {
         Config config = new Config();
         config.setName(NAME);
+        config.setOpenMrsVersion(OPEN_MRS_VERSION);
         config.setOpenMrsUrl(OPEN_MRS_URL);
         config.setUsername(USERNAME);
         config.setPassword(null);
@@ -124,6 +161,7 @@ public class ConfigValidatorTest {
     public void shouldThrowIllegalArgumentExceptionIfPasswordIsEmpty() {
         Config config = new Config();
         config.setName(NAME);
+        config.setOpenMrsVersion(OPEN_MRS_VERSION);
         config.setOpenMrsUrl(OPEN_MRS_URL);
         config.setUsername(USERNAME);
         config.setPassword(EMPTY_STRING);
@@ -137,6 +175,7 @@ public class ConfigValidatorTest {
     public void shouldThrowIllegalArgumentExceptionIfMotechPatientIdentifierTypeNameIsNull() {
         Config config = new Config();
         config.setName(NAME);
+        config.setOpenMrsVersion(OPEN_MRS_VERSION);
         config.setOpenMrsUrl(OPEN_MRS_URL);
         config.setUsername(USERNAME);
         config.setPassword(PASSWORD);
@@ -150,6 +189,7 @@ public class ConfigValidatorTest {
     public void shouldThrowIllegalArgumentExceptionIfMotechPatientIdentifierTypeNameIsEmpty() {
         Config config = new Config();
         config.setName(NAME);
+        config.setOpenMrsVersion(OPEN_MRS_VERSION);
         config.setOpenMrsUrl(OPEN_MRS_URL);
         config.setUsername(USERNAME);
         config.setPassword(PASSWORD);

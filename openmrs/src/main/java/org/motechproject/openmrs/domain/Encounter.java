@@ -1,5 +1,16 @@
 package org.motechproject.openmrs.domain;
 
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import org.motechproject.openmrs.util.JsonUtils;
+
+import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -17,9 +28,7 @@ public class Encounter {
     private EncounterType encounterType;
     private Date encounterDatetime;
     private Patient patient;
-    private Person provider;
     private List<Observation> obs;
-    //This field is new in OpenMRS since version 1.10
     private List<Person> encounterProviders;
 
     /**
@@ -29,17 +38,17 @@ public class Encounter {
     }
 
     public Encounter(Location location, EncounterType encounterType, Date encounterDatetime, Patient patient,
-                     Person provider) {
-        this(location, encounterType, encounterDatetime, patient, provider, null);
+                     List<Person> encounterProviders) {
+        this(location, encounterType, encounterDatetime, patient, encounterProviders, null);
     }
 
     public Encounter(Location location, EncounterType encounterType, Date encounterDatetime, Patient patient,
-                     Person provider, List<Observation> obs) {
+                     List<Person> encounterProviders, List<Observation> obs) {
         this.location = location;
         this.encounterType = encounterType;
         this.encounterDatetime = encounterDatetime;
         this.patient = patient;
-        this.provider = provider;
+        this.encounterProviders = encounterProviders;
         this.obs = obs;
     }
 
@@ -91,14 +100,6 @@ public class Encounter {
         this.patient = patient;
     }
 
-    public Person getProvider() {
-        return provider;
-    }
-
-    public void setProvider(Person provider) {
-        this.provider = provider;
-    }
-
     public List<Person> getEncounterProviders() {
         return encounterProviders;
     }
@@ -117,7 +118,7 @@ public class Encounter {
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, display, location, encounterType, encounterDatetime, patient, provider, obs);
+        return Objects.hash(uuid, display, location, encounterType, encounterDatetime, patient, encounterProviders, obs);
     }
 
     @Override //NO CHECKSTYLE Cyclomatic Complexity
@@ -135,6 +136,63 @@ public class Encounter {
         return Objects.equals(this.uuid, other.uuid) && Objects.equals(this.display, other.display) &&
                 Objects.equals(this.location, other.location) && Objects.equals(this.encounterType, other.encounterType) &&
                 Objects.equals(this.encounterDatetime, other.encounterDatetime) && Objects.equals(this.patient, other.patient) &&
-                Objects.equals(this.provider, other.provider) && Objects.equals(this.obs, other.obs);
+                Objects.equals(this.encounterProviders, other.encounterProviders) && Objects.equals(this.obs, other.obs);
+    }
+
+    public static class EncounterSerializer implements JsonSerializer<Encounter> {
+
+        @Override
+        public JsonElement serialize(Encounter src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject encounter = new JsonObject();
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+            if (src.uuid != null) {
+                encounter.addProperty("uuid", src.getUuid());
+            }
+            if (src.display != null) {
+                encounter.addProperty("display", src.getDisplay());
+            }
+            if (src.location != null) {
+                encounter.addProperty("location", src.getLocation().getUuid());
+            }
+            if (src.encounterType != null) {
+                encounter.addProperty("encounterType", src.getEncounterType().getName());
+            }
+            if (src.encounterDatetime != null) {
+                encounter.addProperty("encounterDatetime", sdf.format(src.getEncounterDatetime()));
+            }
+            if (src.patient != null) {
+                encounter.addProperty("patient", src.getPatient().getUuid());
+            }
+            if (src.encounterProviders != null) {
+                encounter.addProperty("provider", src.getEncounterProviders().get(0).getUuid());
+            }
+            if (src.obs != null) {
+                final JsonElement jsonObs = context.serialize(src.getObs());
+                encounter.add("obs", jsonObs);
+            }
+            return encounter;
+        }
+    }
+
+    public static class EncounterDeserializer implements JsonDeserializer<Encounter> {
+        @Override
+        public Encounter deserialize(final JsonElement src, final Type typeOfT, final JsonDeserializationContext context) {
+
+            final JsonObject jsonEncounter = src.getAsJsonObject();
+
+            final JsonElement jsonProvider = jsonEncounter.get("provider");
+            Person provider;
+            provider = (Person) JsonUtils.readJson(jsonProvider.toString(), Person.class);
+
+            List<Person> encounterProviders = new ArrayList<>();
+            encounterProviders.add(provider);
+
+            Encounter encounter;
+            encounter = (Encounter) JsonUtils.readJson(src.toString(), Encounter.class);
+            encounter.setEncounterProviders(encounterProviders);
+
+            return encounter;
+        }
     }
 }

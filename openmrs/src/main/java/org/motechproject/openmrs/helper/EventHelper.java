@@ -88,8 +88,8 @@ public final class EventHelper {
     public static Map<String, Object> encounterParameters(Encounter encounter) {
         Map<String, Object> encounterParameters = new HashMap<>();
         encounterParameters.put(EventKeys.ENCOUNTER_ID, encounter.getUuid());
-        if (encounter.getProvider() != null) {
-            encounterParameters.put(EventKeys.PROVIDER_ID, encounter.getProvider().getUuid());
+        if (encounter.getEncounterProviders().get(0) != null) {
+            encounterParameters.put(EventKeys.PROVIDER_ID, encounter.getEncounterProviders().get(0).getUuid());
         } else {
             encounterParameters.put(EventKeys.PROVIDER_ID, null);
         }
