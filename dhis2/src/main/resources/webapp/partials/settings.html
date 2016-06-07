@@ -19,7 +19,13 @@
                             <div class="form-group">
                                 <label for="serverURI" class="col-md-3 control-label">{{msg('dhis2.web.settings.serverURI')}}</label>
                                 <div class="col-md-8">
-                                    <input id="serverURI" type="text" ng-change="draftChanged()" class="form-control" ng-model="settings.serverURI">
+                                    <div class="input-group">
+                                        <div class="input-group-btn">
+                                            <select class="btn btn-default dropdown-toggle"
+                                                    data-ng-options="o.name for o in options" data-ng-model="selectedProtocol"></select>
+                                        </div>
+                                        <input id="serverURI" type="text" ng-change="draftChanged()" class="form-control" ng-model="settings.serverURI">
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
