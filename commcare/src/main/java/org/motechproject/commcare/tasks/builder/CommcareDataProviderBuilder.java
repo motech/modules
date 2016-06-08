@@ -47,8 +47,8 @@ public class CommcareDataProviderBuilder {
         List<ConfigurationData> configurations = new ArrayList<>();
         for (Config config : configService.getConfigs().getConfigs()) {
             configurations.add(new ConfigurationData(config.getName(),
-                    schemaService.getFormsToApplicationName(config.getName()),
-                    schemaService.getCaseTypesToApplicationName(config.getName())));
+                    schemaService.getFormsWithApplicationName(config.getName()),
+                    schemaService.getCaseTypesWithApplicationName(config.getName())));
         }
 
         if (configurations.isEmpty()) {

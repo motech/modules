@@ -5,16 +5,18 @@ import org.motechproject.commcare.domain.CommcareModuleJson;
 import org.motechproject.commcare.domain.FormSchemaJson;
 import org.motechproject.commcare.service.CommcareApplicationDataService;
 import org.motechproject.commcare.service.CommcareSchemaService;
+import org.motechproject.commcare.tasks.builder.model.CaseTypeWithDisplayName;
+import org.motechproject.commcare.tasks.builder.model.FormWithDisplayName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Implementation of the {@link org.motechproject.commcare.service.CommcareSchemaService}
@@ -70,35 +72,32 @@ public class CommcareSchemaServiceImpl implements CommcareSchemaService {
     
     @Override
     @Transactional
-    public Map<String, String> getCaseTypesToApplicationName(String configName) {
-        Map<String, String> caseTypesToApplicationName = new HashMap<>();
+    public Set<CaseTypeWithDisplayName> getCaseTypesWithApplicationName(String configName) {
+        Set<CaseTypeWithDisplayName> caseTypesWithApplicationName = new HashSet<>();
 
         for (CommcareApplicationJson app : commcareApplicationDataService.bySourceConfiguration(configName)) {
             for (CommcareModuleJson module : app.getModules()) {
-                String caseType = module.getCaseType();
-                if (!caseTypesToApplicationName.containsKey(caseType)) {
-                    caseTypesToApplicationName.put(caseType, app.getApplicationName());
-                }
+                caseTypesWithApplicationName.add(new CaseTypeWithDisplayName(module.getCaseType(), app.getApplicationName()));
             }
         }
 
-       return caseTypesToApplicationName;
+       return caseTypesWithApplicationName;
     }
     
     @Override
     @Transactional
-    public Map<FormSchemaJson, String> getFormsToApplicationName(String configName) {
-        Map<FormSchemaJson, String> formsToApplicationName = new HashMap<>();
+    public Set<FormWithDisplayName> getFormsWithApplicationName(String configName) {
+        Set<FormWithDisplayName> formWithDisplayName = new HashSet<>();
 
         for (CommcareApplicationJson app : commcareApplicationDataService.bySourceConfiguration(configName)) {
             for (CommcareModuleJson module : app.getModules()) {
                 for (FormSchemaJson form : module.getFormSchemas()) {
-                    formsToApplicationName.put(form, app.getApplicationName());
+                    formWithDisplayName.add(new FormWithDisplayName(form, app.getApplicationName()));
                 }
             }
         }
 
-        return formsToApplicationName;
+        return formWithDisplayName;
     }
 
     @Override

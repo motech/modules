@@ -1,8 +1,9 @@
 package org.motechproject.commcare.tasks.builder;
 
-import org.motechproject.commcare.domain.FormSchemaJson;
+import org.motechproject.commcare.tasks.builder.model.CaseTypeWithDisplayName;
+import org.motechproject.commcare.tasks.builder.model.FormWithDisplayName;
 
-import java.util.Map;
+import java.util.Set;
 
 /**
  * Helper class used for storing configuration name as well as all forms and cases that originated from the said
@@ -12,22 +13,21 @@ public class ConfigurationData {
 
     private String configName;
 
-    private Map<FormSchemaJson, String> formsToApplication;
+    private Set<FormWithDisplayName> formsWithApplication;
 
-    private Map<String, String> casesToApplication;
+    private Set<CaseTypeWithDisplayName> casesWithApplication;
 
     /**
-     * Creates an instance of the {@link ConfigurationData} class. It will store the given {@code formsToApplication}
-     * , {@code casesToApplication} mapped to application names for the configuration with the given {@code configName}.
-     *
+     * Creates an instance of the {@link ConfigurationData} class. It will store the given {@code formsWithApplication}
+     * , {@code casesWithApplication} mapped to application names for the configuration with the given {@code configName}.
      * @param configName  the name of the configuration
-     * @param forms  the list of all forms that originate from the given configuration
-     * @param cases  the list of all cases that originate from the given configuration
+     * @param formsWithApplication  the list of all forms that originate from the given configuration
+     * @param casesWithApplication  the list of all cases that originate from the given configuration
      */
-    public ConfigurationData(String configName, Map<FormSchemaJson, String> formsToApplication, Map<String, String> casesToApplication) {
+    public ConfigurationData(String configName, Set<FormWithDisplayName> formsWithApplication, Set<CaseTypeWithDisplayName> casesWithApplication) {
         this.configName = configName;
-        this.formsToApplication = formsToApplication;
-        this.casesToApplication = casesToApplication;
+        this.formsWithApplication = formsWithApplication;
+        this.casesWithApplication = casesWithApplication;
     }
 
     public String getConfigName() {
@@ -38,19 +38,19 @@ public class ConfigurationData {
         this.configName = configName;
     }
 
-    public Map<FormSchemaJson, String> getFormsToApplication() {
-        return formsToApplication;
+    public Set<FormWithDisplayName> getFormsWithApplication() {
+        return formsWithApplication;
     }
 
-    public void setFormsToApplication(Map<FormSchemaJson, String> formsToApplication) {
-        this.formsToApplication = formsToApplication;
+    public void setFormsWithApplication(Set<FormWithDisplayName> formsWithApplication) {
+        this.formsWithApplication = formsWithApplication;
     }
 
-    public Map<String, String> getCasesToApplication() {
-        return casesToApplication;
+    public Set<CaseTypeWithDisplayName> getCasesWithApplication() {
+        return casesWithApplication;
     }
 
-    public void setCasesToApplication(Map<String, String> casesToApplication) {
-        this.casesToApplication = casesToApplication;
+    public void setCasesWithApplication(Set<CaseTypeWithDisplayName> casesWithApplication) {
+        this.casesWithApplication = casesWithApplication;
     }
 }
