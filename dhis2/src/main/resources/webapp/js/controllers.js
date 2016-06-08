@@ -13,8 +13,6 @@
                 .success(function (response) {
                     $scope.settings = response;
                     $scope.originalSettings = angular.copy($scope.settings);
-                    $scope.options = [{name: "http://", id: 1}, {name: "https://", id: 2}, {name: $scope.msg('dhis2.web.settings.serverURI.other'), id: 3}];
-                    $scope.selectedProtocol = $scope.options[0];
                 })
                 .error(function (response) {
                     $scope.retrievalError = true;
@@ -37,12 +35,11 @@
             };
 
             $scope.submit = function () {
-                if(!$scope.settings.serverURI.match("^(ht|f)tps?:\/\/.+")) {
-                    if($scope.selectedProtocol.id == 3) {
-                        $scope.settings.serverURI = $scope.options[0].name + $scope.settings.serverURI;
-                    } else {
-                        $scope.settings.serverURI = $scope.selectedProtocol.name + $scope.settings.serverURI;
+                if(!$scope.settings.serverURI.match("^https?:\/\/.+")) {
+                    if($scope.settings.serverURI.match("^.+:\/\/.+")) {
+                        $scope.settings.serverURI = $scope.settings.serverURI.substr($scope.settings.serverURI.indexOf("/") + 2);
                     }
+                    $scope.settings.serverURI = "http://" + $scope.settings.serverURI;
                 }
 
                 $http.post('../dhis2/dhis2-settings', $scope.settings)
