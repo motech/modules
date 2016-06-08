@@ -554,7 +554,7 @@
                     $scope.verifySuccessMessage = $scope.msg('commcare.save.success');
                     $scope.verifyErrorMessage = '';
                     $scope.connectionVerified = true;
-                    if ($scope.configurations.defaultConfigName === "" || $scope.configurations.defaultConfigName === null) {
+                    if (!$scope.configurations.defaultConfigName) {
                         $scope.configurations.defaultConfigName = $scope.selectedConfig.name;
                     }
                     $scope.updateConfig(data);
