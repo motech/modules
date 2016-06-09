@@ -297,7 +297,7 @@
                 } else {
                     $scope.rollback = false;
                 }
-            } else if (newValue !== undefined && newValue.name === "") {
+            } else if (newValue && newValue.name === "") {
                 $scope.newConfig = true;
                 $scope.oldName = "";
                 $scope.clearMessages();
