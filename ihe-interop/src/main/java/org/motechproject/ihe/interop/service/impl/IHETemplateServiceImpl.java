@@ -1,14 +1,8 @@
 package org.motechproject.ihe.interop.service.impl;
 
-
-import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthScheme;
 import org.apache.commons.httpclient.auth.AuthScope;
-import org.apache.commons.httpclient.auth.CredentialsProvider;
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.motechproject.ihe.interop.domain.HL7Recipient;
@@ -42,19 +36,17 @@ public class IHETemplateServiceImpl implements IHETemplateService {
     @Override
     public void sendTemplateToRecipientUrlWithBA(HL7Recipient recipient, String template) throws IOException {
 
-        GetMethod get = new GetMethod(recipient.getRecipientUrl());
+        PostMethod post = new PostMethod(recipient.getRecipientUrl());
         HttpClient client = new HttpClient();
         UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(recipient.getRecipientUsername(),
                 recipient.getRecipientPassword());
 
+        post.setRequestEntity(new StringRequestEntity(template, "application/xml", "utf-8"));
         client.getParams().setAuthenticationPreemptive(true);
         client.getState().setCredentials(AuthScope.ANY, credentials);
 
-        int responseCode = client.executeMethod(get);
+        LOGGER.info("Sending template with Basic Authentication to URL: {}", recipient.getRecipientUrl());
+        int responseCode = client.executeMethod(post);
         LOGGER.info("Response code: {}", responseCode);
-
-        if (get.getStatusCode() == HttpStatus.SC_OK) {
-            sendTemplateToRecipientUrl(recipient.getRecipientUrl(), template);
-        }
     }
 }
