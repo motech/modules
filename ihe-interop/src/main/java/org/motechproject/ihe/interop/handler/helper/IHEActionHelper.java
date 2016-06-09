@@ -74,6 +74,11 @@ public class IHEActionHelper {
         Template template = streamingTemplateEngine.createTemplate(new String(ArrayUtils.toPrimitive(templateData)));
         Writable writable = template.make(parameters);
         LOGGER.info("Template with name {}:\n{}", cdaTemplate.getTemplateName(), writable.toString());
-        iheTemplateService.sendTemplateToRecipientUrl(hl7Recipient.getRecipientUrl(), writable.toString());
+
+        if (hl7Recipient.getRecipientUsername() != null && hl7Recipient.getRecipientPassword() != null) {
+            iheTemplateService.sendTemplateToRecipientUrlWithBA(hl7Recipient, writable.toString());
+        } else {
+            iheTemplateService.sendTemplateToRecipientUrl(hl7Recipient.getRecipientUrl(), writable.toString());
+        }
     }
 }
