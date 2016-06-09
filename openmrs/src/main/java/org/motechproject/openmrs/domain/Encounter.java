@@ -139,6 +139,9 @@ public class Encounter {
                 Objects.equals(this.encounterProviders, other.encounterProviders) && Objects.equals(this.obs, other.obs);
     }
 
+    /**
+     * Implementation of the {@link JsonSerializer} interface for the {@link Encounter} class.
+     */
     public static class EncounterSerializer implements JsonSerializer<Encounter> {
 
         @Override
@@ -175,6 +178,9 @@ public class Encounter {
         }
     }
 
+    /**
+     * Implementation of the {@link JsonDeserializer} interface for the {@link Encounter} class.
+     */
     public static class EncounterDeserializer implements JsonDeserializer<Encounter> {
         @Override
         public Encounter deserialize(final JsonElement src, final Type typeOfT, final JsonDeserializationContext context) {

@@ -41,8 +41,8 @@ public class EncounterResourceImpl extends BaseResource implements EncounterReso
         String responseJson = getJson(config, "/encounter?patient={id}&v=full", id);
 
         List<Encounter> encounterList = new ArrayList<>();
-        JsonArray allEncounters = prepareJsonArray(responseJson);
-        for (JsonElement encounter : allEncounters) {
+
+        for (JsonElement encounter : prepareAllEncountersList(responseJson)) {
             encounterList.add(checkVersionAndSetEncounter(config, encounter.toString()));
         }
 
@@ -110,7 +110,7 @@ public class EncounterResourceImpl extends BaseResource implements EncounterReso
         return createdEncounter;
     }
 
-    private  JsonArray prepareJsonArray(String json) {
+    private  JsonArray prepareAllEncountersList(String json) {
         JsonObject obj = new JsonParser().parse(json).getAsJsonObject();
         return obj.getAsJsonArray("results");
     }
