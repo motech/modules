@@ -35,13 +35,6 @@
             };
 
             $scope.submit = function () {
-                if(!$scope.settings.serverURI.match("^https?:\/\/.+")) {
-                    if($scope.settings.serverURI.match("^.+:\/\/.+")) {
-                        $scope.settings.serverURI = $scope.settings.serverURI.substr($scope.settings.serverURI.indexOf("/") + 2);
-                    }
-                    $scope.settings.serverURI = "http://" + $scope.settings.serverURI;
-                }
-
                 $http.post('../dhis2/dhis2-settings', $scope.settings)
                     .success(function (response) {
                         $scope.verifySuccessMessage = $scope.msg('dhis2.web.settings.save.success');
