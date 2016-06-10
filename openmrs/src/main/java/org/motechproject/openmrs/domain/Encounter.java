@@ -117,7 +117,8 @@ public class Encounter {
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, display, location, encounterType, encounterDatetime, patient, provider, obs);
+        return Objects.hash(uuid, display, location, encounterType, encounterDatetime, patient, provider,
+                encounterProviders, obs);
     }
 
     @Override //NO CHECKSTYLE Cyclomatic Complexity
@@ -135,6 +136,7 @@ public class Encounter {
         return Objects.equals(this.uuid, other.uuid) && Objects.equals(this.display, other.display) &&
                 Objects.equals(this.location, other.location) && Objects.equals(this.encounterType, other.encounterType) &&
                 Objects.equals(this.encounterDatetime, other.encounterDatetime) && Objects.equals(this.patient, other.patient) &&
-                Objects.equals(this.provider, other.provider) && Objects.equals(this.obs, other.obs);
+                Objects.equals(this.provider, other.provider) && Objects.equals(this.encounterProviders, other.encounterProviders) &&
+                Objects.equals(this.obs, other.obs);
     }
 }
