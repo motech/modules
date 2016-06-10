@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.motechproject.openmrs.config.Config;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.motechproject.openmrs.validation.ConfigValidator.validateConfig;
 
@@ -19,182 +20,91 @@ public class ConfigValidatorTest {
 
     @Test
     public void shouldPassTheValidationIfAllTheFieldsAreNonEmpty() {
-        Config config = new Config();
-        config.setName(NAME);
-        config.setOpenMrsVersion(OPEN_MRS_VERSION);
-        config.setOpenMrsUrl(OPEN_MRS_URL);
-        config.setUsername(USERNAME);
-        config.setPassword(PASSWORD);
-        config.setMotechPatientIdentifierTypeName(MOTECH_PATIENT_IDENTIFIER_TYPE_NAME);
-        config.setPatientIdentifierTypeNames(new ArrayList<>());
 
-        validateConfig(config);
+        configValidator(NAME, OPEN_MRS_VERSION, OPEN_MRS_URL, USERNAME, PASSWORD, MOTECH_PATIENT_IDENTIFIER_TYPE_NAME, new ArrayList<>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfNameIsNull() {
-        Config config = new Config();
-        config.setName(null);
-        config.setOpenMrsVersion(OPEN_MRS_VERSION);
-        config.setOpenMrsUrl(OPEN_MRS_URL);
-        config.setUsername(USERNAME);
-        config.setPassword(PASSWORD);
-        config.setMotechPatientIdentifierTypeName(MOTECH_PATIENT_IDENTIFIER_TYPE_NAME);
-        config.setPatientIdentifierTypeNames(new ArrayList<>());
 
-        validateConfig(config);
+        configValidator(null, OPEN_MRS_VERSION, OPEN_MRS_URL, USERNAME, PASSWORD, MOTECH_PATIENT_IDENTIFIER_TYPE_NAME, new ArrayList<>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfNameIsEmpty() {
-        Config config = new Config();
-        config.setName(EMPTY_STRING);
-        config.setOpenMrsVersion(OPEN_MRS_VERSION);
-        config.setOpenMrsUrl(OPEN_MRS_URL);
-        config.setUsername(USERNAME);
-        config.setPassword(PASSWORD);
-        config.setMotechPatientIdentifierTypeName(MOTECH_PATIENT_IDENTIFIER_TYPE_NAME);
-        config.setPatientIdentifierTypeNames(new ArrayList<>());
 
-        validateConfig(config);
+        configValidator(EMPTY_STRING, OPEN_MRS_VERSION, OPEN_MRS_URL, USERNAME, PASSWORD, MOTECH_PATIENT_IDENTIFIER_TYPE_NAME, new ArrayList<>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfVersionIsNull() {
-        Config config = new Config();
-        config.setName(NAME);
-        config.setOpenMrsVersion(null);
-        config.setOpenMrsUrl(OPEN_MRS_URL);
-        config.setUsername(USERNAME);
-        config.setPassword(PASSWORD);
-        config.setMotechPatientIdentifierTypeName(MOTECH_PATIENT_IDENTIFIER_TYPE_NAME);
-        config.setPatientIdentifierTypeNames(new ArrayList<>());
 
-        validateConfig(config);
+        configValidator(NAME, null, OPEN_MRS_URL, USERNAME, PASSWORD, MOTECH_PATIENT_IDENTIFIER_TYPE_NAME, new ArrayList<>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfVersionIsEmpty() {
-        Config config = new Config();
-        config.setName(NAME);
-        config.setOpenMrsVersion(EMPTY_STRING);
-        config.setOpenMrsUrl(OPEN_MRS_URL);
-        config.setUsername(USERNAME);
-        config.setPassword(PASSWORD);
-        config.setMotechPatientIdentifierTypeName(MOTECH_PATIENT_IDENTIFIER_TYPE_NAME);
-        config.setPatientIdentifierTypeNames(new ArrayList<>());
 
-        validateConfig(config);
+        configValidator(NAME, EMPTY_STRING, OPEN_MRS_URL, USERNAME, PASSWORD, MOTECH_PATIENT_IDENTIFIER_TYPE_NAME, new ArrayList<>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfOpenMrsUrlIsNull() {
-        Config config = new Config();
-        config.setName(NAME);
-        config.setOpenMrsVersion(OPEN_MRS_VERSION);
-        config.setOpenMrsUrl(null);
-        config.setUsername(USERNAME);
-        config.setPassword(PASSWORD);
-        config.setMotechPatientIdentifierTypeName(MOTECH_PATIENT_IDENTIFIER_TYPE_NAME);
-        config.setPatientIdentifierTypeNames(new ArrayList<>());
 
-        validateConfig(config);
+        configValidator(NAME, OPEN_MRS_VERSION, null, USERNAME, PASSWORD, MOTECH_PATIENT_IDENTIFIER_TYPE_NAME, new ArrayList<>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfOpenMrsUrlIsEmpty() {
-        Config config = new Config();
-        config.setName(NAME);
-        config.setOpenMrsVersion(OPEN_MRS_VERSION);
-        config.setOpenMrsUrl(EMPTY_STRING);
-        config.setUsername(USERNAME);
-        config.setPassword(PASSWORD);
-        config.setMotechPatientIdentifierTypeName(MOTECH_PATIENT_IDENTIFIER_TYPE_NAME);
-        config.setPatientIdentifierTypeNames(new ArrayList<>());
 
-        validateConfig(config);
+        configValidator(NAME, OPEN_MRS_VERSION, EMPTY_STRING, USERNAME, PASSWORD, MOTECH_PATIENT_IDENTIFIER_TYPE_NAME, new ArrayList<>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfUsernameIsNull() {
-        Config config = new Config();
-        config.setName(NAME);
-        config.setOpenMrsVersion(OPEN_MRS_VERSION);
-        config.setOpenMrsUrl(OPEN_MRS_URL);
-        config.setUsername(null);
-        config.setPassword(PASSWORD);
-        config.setMotechPatientIdentifierTypeName(MOTECH_PATIENT_IDENTIFIER_TYPE_NAME);
-        config.setPatientIdentifierTypeNames(new ArrayList<>());
 
-        validateConfig(config);
+        configValidator(NAME, OPEN_MRS_VERSION, OPEN_MRS_URL, null, PASSWORD, MOTECH_PATIENT_IDENTIFIER_TYPE_NAME, new ArrayList<>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfUsernameIsEmpty() {
-        Config config = new Config();
-        config.setName(NAME);
-        config.setOpenMrsVersion(OPEN_MRS_VERSION);
-        config.setOpenMrsUrl(OPEN_MRS_URL);
-        config.setUsername(EMPTY_STRING);
-        config.setPassword(PASSWORD);
-        config.setMotechPatientIdentifierTypeName(MOTECH_PATIENT_IDENTIFIER_TYPE_NAME);
-        config.setPatientIdentifierTypeNames(new ArrayList<>());
 
-        validateConfig(config);
+        configValidator(NAME, OPEN_MRS_VERSION, OPEN_MRS_URL, EMPTY_STRING, PASSWORD, MOTECH_PATIENT_IDENTIFIER_TYPE_NAME, new ArrayList<>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfPasswordIsNull() {
-        Config config = new Config();
-        config.setName(NAME);
-        config.setOpenMrsVersion(OPEN_MRS_VERSION);
-        config.setOpenMrsUrl(OPEN_MRS_URL);
-        config.setUsername(USERNAME);
-        config.setPassword(null);
-        config.setMotechPatientIdentifierTypeName(MOTECH_PATIENT_IDENTIFIER_TYPE_NAME);
-        config.setPatientIdentifierTypeNames(new ArrayList<>());
 
-        validateConfig(config);
+        configValidator(NAME, OPEN_MRS_VERSION, OPEN_MRS_URL, USERNAME, null, MOTECH_PATIENT_IDENTIFIER_TYPE_NAME, new ArrayList<>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfPasswordIsEmpty() {
-        Config config = new Config();
-        config.setName(NAME);
-        config.setOpenMrsVersion(OPEN_MRS_VERSION);
-        config.setOpenMrsUrl(OPEN_MRS_URL);
-        config.setUsername(USERNAME);
-        config.setPassword(EMPTY_STRING);
-        config.setMotechPatientIdentifierTypeName(MOTECH_PATIENT_IDENTIFIER_TYPE_NAME);
-        config.setPatientIdentifierTypeNames(new ArrayList<>());
 
-        validateConfig(config);
+        configValidator(NAME, OPEN_MRS_VERSION, OPEN_MRS_URL, USERNAME, EMPTY_STRING, MOTECH_PATIENT_IDENTIFIER_TYPE_NAME, new ArrayList<>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfMotechPatientIdentifierTypeNameIsNull() {
-        Config config = new Config();
-        config.setName(NAME);
-        config.setOpenMrsVersion(OPEN_MRS_VERSION);
-        config.setOpenMrsUrl(OPEN_MRS_URL);
-        config.setUsername(USERNAME);
-        config.setPassword(PASSWORD);
-        config.setMotechPatientIdentifierTypeName(null);
-        config.setPatientIdentifierTypeNames(new ArrayList<>());
 
-        validateConfig(config);
+        configValidator(NAME, OPEN_MRS_VERSION, OPEN_MRS_URL, USERNAME, PASSWORD, null, new ArrayList<>());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfMotechPatientIdentifierTypeNameIsEmpty() {
+
+        configValidator(NAME, OPEN_MRS_VERSION, OPEN_MRS_URL, USERNAME, PASSWORD, EMPTY_STRING, new ArrayList<>());
+    }
+
+    private void configValidator(String name, String version, String url, String username, String password, String motechPatientIdentifierTypeName, List<String> patientIdentifierTypeNames) {
         Config config = new Config();
-        config.setName(NAME);
-        config.setOpenMrsVersion(OPEN_MRS_VERSION);
-        config.setOpenMrsUrl(OPEN_MRS_URL);
-        config.setUsername(USERNAME);
-        config.setPassword(PASSWORD);
-        config.setMotechPatientIdentifierTypeName(EMPTY_STRING);
-        config.setPatientIdentifierTypeNames(new ArrayList<>());
+        config.setName(name);
+        config.setOpenMrsVersion(version);
+        config.setOpenMrsUrl(url);
+        config.setUsername(username);
+        config.setPassword(password);
+        config.setMotechPatientIdentifierTypeName(motechPatientIdentifierTypeName);
+        config.setPatientIdentifierTypeNames(patientIdentifierTypeNames);
 
         validateConfig(config);
     }

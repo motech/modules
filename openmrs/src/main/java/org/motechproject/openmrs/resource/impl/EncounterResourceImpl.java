@@ -23,6 +23,8 @@ import java.util.List;
 @Component
 public class EncounterResourceImpl extends BaseResource implements EncounterResource {
 
+    private static final String OPENMRS_V19 = "1.9";
+
     @Autowired
     public EncounterResourceImpl(RestOperations restOperations) {
         super(restOperations);
@@ -102,7 +104,7 @@ public class EncounterResourceImpl extends BaseResource implements EncounterReso
 
     private Encounter checkVersionAndSetEncounter(Config config, String responseJson) {
         Encounter createdEncounter;
-        if ("1.9".equals(config.getOpenMrsVersion())) {
+        if (OPENMRS_V19.equals(config.getOpenMrsVersion())) {
             createdEncounter = buildGsonWithAdaptersDeserialize().fromJson(responseJson, Encounter.class);
         } else {
             createdEncounter = (Encounter) JsonUtils.readJson(responseJson, Encounter.class);
@@ -111,6 +113,7 @@ public class EncounterResourceImpl extends BaseResource implements EncounterReso
     }
 
     private  JsonArray prepareAllEncountersList(String json) {
+        
         JsonObject obj = new JsonParser().parse(json).getAsJsonObject();
         return obj.getAsJsonArray("results");
     }

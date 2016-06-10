@@ -10,7 +10,7 @@ import org.motechproject.openmrs.util.JsonUtils;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -188,15 +188,10 @@ public class Encounter {
             final JsonObject jsonEncounter = src.getAsJsonObject();
 
             final JsonElement jsonProvider = jsonEncounter.get("provider");
-            Person provider;
-            provider = (Person) JsonUtils.readJson(jsonProvider.toString(), Person.class);
+            Person provider = (Person) JsonUtils.readJson(jsonProvider.toString(), Person.class);
 
-            List<Person> encounterProviders = new ArrayList<>();
-            encounterProviders.add(provider);
-
-            Encounter encounter;
-            encounter = (Encounter) JsonUtils.readJson(src.toString(), Encounter.class);
-            encounter.setEncounterProviders(encounterProviders);
+            Encounter  encounter = (Encounter) JsonUtils.readJson(src.toString(), Encounter.class);
+            encounter.setEncounterProviders(Collections.singletonList(provider));
 
             return encounter;
         }

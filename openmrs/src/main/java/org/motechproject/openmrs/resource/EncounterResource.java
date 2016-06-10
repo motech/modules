@@ -5,6 +5,7 @@ import org.motechproject.openmrs.domain.Encounter;
 import org.motechproject.openmrs.domain.EncounterListResult;
 import org.motechproject.openmrs.config.Config;
 
+
 /**
  * Interface for encounters management.
  */
