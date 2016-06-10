@@ -112,8 +112,7 @@ public class EncounterResourceImpl extends BaseResource implements EncounterReso
         return createdEncounter;
     }
 
-    private  JsonArray prepareAllEncountersList(String json) {
-        
+    private JsonArray prepareAllEncountersList(String json) {
         JsonObject obj = new JsonParser().parse(json).getAsJsonObject();
         return obj.getAsJsonArray("results");
     }
