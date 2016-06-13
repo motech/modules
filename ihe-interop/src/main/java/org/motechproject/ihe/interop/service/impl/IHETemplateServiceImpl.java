@@ -1,7 +1,6 @@
 package org.motechproject.ihe.interop.service.impl;
 
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.PostMethod;
