@@ -111,6 +111,7 @@ public class OpenMRSConfigServiceImplTest {
         loadConfigs(CONFIG_JSON);
         
         Config config = ConfigDummyData.prepareConfig(SUFFIX_ONE);
+        config.setOpenMrsVersion("foo.openmrs.version");
         config.setOpenMrsUrl("foo.openmrs.url");
         config.setUsername("fooUsername");
         config.setPassword("fooPassword");

@@ -46,6 +46,14 @@
                         <span ng-if="selectedConfig.name && !validateName()" class="form-hint-error">{{msg('openMRS.config.error.wrongName')}}</span>
                     </div>
                 </div>
+                <label class="col-md-3 col-sm-4 control-label" for="url">{{msg('openMRS.config.version')}}</label>
+                <div class="col-md-9 col-sm-8 form-inline">
+                    <select class="form-control input-auto" ng-model="selectedConfig.openMrsVersion" ng-change="draftChanged()" ng-options="version for version in versions">
+                    </select>
+                    <div class="form-hints">
+                        <span ng-hide="selectedConfig.openMrsVersion.length>0" class="form-hint-error">{{msg('openMRS.config.error.versionRequired')}}</span>
+                    </div>
+                </div>
                 <label class="col-md-3 col-sm-4 control-label" for="url">{{msg('openMRS.config.url')}}</label>
                 <div class="col-md-9 col-sm-8 form-inline">
                     <input class="form-control input-xlarge-fluid" ng-change="draftChanged()" ng-model="selectedConfig.openMrsUrl" type="text" id="url" />

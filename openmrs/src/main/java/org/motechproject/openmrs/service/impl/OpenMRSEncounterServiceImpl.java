@@ -171,7 +171,7 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
         Validate.notNull(encounter, "Encounter cannot be null");
         Validate.notNull(encounter.getPatient(), "Patient cannot be null");
         Validate.notEmpty(encounter.getPatient().getUuid(), "Patient must have an id");
-        Validate.notNull(encounter.getProvider(), "Provider cannot be null");
+        Validate.notNull(encounter.getEncounterProviders().get(0), "Provider cannot be null");
         Validate.notNull(encounter.getEncounterDatetime(), "Encounter Date cannot be null");
         Validate.notNull(encounter.getEncounterType(), "Encounter type cannot be null");
     }

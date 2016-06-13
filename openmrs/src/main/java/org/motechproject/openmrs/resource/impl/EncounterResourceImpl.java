@@ -2,23 +2,28 @@ package org.motechproject.openmrs.resource.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.apache.commons.collections.CollectionUtils;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.Encounter;
 import org.motechproject.openmrs.domain.EncounterListResult;
 import org.motechproject.openmrs.domain.EncounterType;
-import org.motechproject.openmrs.domain.Location;
 import org.motechproject.openmrs.domain.Observation;
-import org.motechproject.openmrs.domain.Patient;
-import org.motechproject.openmrs.domain.Person;
 import org.motechproject.openmrs.resource.EncounterResource;
 import org.motechproject.openmrs.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestOperations;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class EncounterResourceImpl extends BaseResource implements EncounterResource {
+
+    private static final String OPENMRS_V19 = "1.9";
 
     @Autowired
     public EncounterResourceImpl(RestOperations restOperations) {
@@ -27,32 +32,33 @@ public class EncounterResourceImpl extends BaseResource implements EncounterReso
 
     @Override
     public Encounter createEncounter(Config config, Encounter encounter) {
-        String requestJson = buildGsonWithAdapters().toJson(encounter);
+        String requestJson = buildGsonWithAdaptersSerialize().toJson(encounter);
         String responseJson = postForJson(config, requestJson, "/encounter?v=full");
 
-        Encounter createdEncounter = (Encounter) JsonUtils.readJson(responseJson, Encounter.class);
-        setProviderFromEncounterProviderList(createdEncounter);
-        return createdEncounter;
+        return checkVersionAndSetEncounter(config, responseJson);
     }
 
     @Override
     public EncounterListResult queryForAllEncountersByPatientId(Config config, String id) {
         String responseJson = getJson(config, "/encounter?patient={id}&v=full", id);
-        
-        EncounterListResult encounterList = (EncounterListResult) JsonUtils.readJson(responseJson, EncounterListResult.class);
-        for(Encounter encounter : encounterList.getResults()) {
-            setProviderFromEncounterProviderList(encounter);
+
+        List<Encounter> encounterList = new ArrayList<>();
+
+        for (JsonElement encounter : prepareAllEncountersList(responseJson)) {
+            encounterList.add(checkVersionAndSetEncounter(config, encounter.toString()));
         }
-        return encounterList;
+
+        EncounterListResult encounters = new EncounterListResult();
+        encounters.setResults(encounterList);
+
+        return encounters;
     }
 
     @Override
     public Encounter getEncounterById(Config config, String uuid) {
         String responseJson = getJson(config, "/encounter/{uuid}?v=full", uuid);
 
-        Encounter createdEncounter = (Encounter) JsonUtils.readJson(responseJson, Encounter.class);
-        setProviderFromEncounterProviderList(createdEncounter);
-        return createdEncounter;
+        return  checkVersionAndSetEncounter(config, responseJson);
     }
 
     @Override
@@ -82,26 +88,32 @@ public class EncounterResourceImpl extends BaseResource implements EncounterReso
         return new GsonBuilder().create();
     }
 
-    private Gson buildGsonWithAdapters() {
+    private Gson buildGsonWithAdaptersSerialize() {
         return new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
-                .registerTypeAdapter(Location.class, new Location.LocationSerializer())
-                .registerTypeAdapter(Patient.class, new Patient.PatientSerializer())
-                .registerTypeAdapter(Person.class, new Person.PersonSerializer())
-                .registerTypeAdapter(EncounterType.class, new EncounterType.EncounterTypeSerializer())
                 .registerTypeAdapter(Observation.class, new Observation.ObservationSerializer())
+                .registerTypeAdapter(Encounter.class, new Encounter.EncounterSerializer())
                 .create();
     }
 
-    /**
-     * Sets provider from the list to a single provider object in encounter. Since OpenMRS version 1.10
-     * providers in encounter are stored as a list.
-     *
-     * @param encounter
-     */
-    private void setProviderFromEncounterProviderList(Encounter encounter) {
-        if (encounter.getProvider() == null && CollectionUtils.isNotEmpty(encounter.getEncounterProviders())) {
-            encounter.setProvider(encounter.getEncounterProviders().get(0));
+    private Gson buildGsonWithAdaptersDeserialize() {
+        return new GsonBuilder()
+                .registerTypeAdapter(Encounter.class, new Encounter.EncounterDeserializer())
+                .create();
+    }
+
+    private Encounter checkVersionAndSetEncounter(Config config, String responseJson) {
+        Encounter createdEncounter;
+        if (OPENMRS_V19.equals(config.getOpenMrsVersion())) {
+            createdEncounter = buildGsonWithAdaptersDeserialize().fromJson(responseJson, Encounter.class);
+        } else {
+            createdEncounter = (Encounter) JsonUtils.readJson(responseJson, Encounter.class);
         }
+        return createdEncounter;
+    }
+
+    private JsonArray prepareAllEncountersList(String json) {
+        JsonObject obj = new JsonParser().parse(json).getAsJsonObject();
+        return obj.getAsJsonArray("results");
     }
 }

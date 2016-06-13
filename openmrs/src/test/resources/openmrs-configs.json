@@ -3,6 +3,7 @@
   [
     {
       "name": "Test OpenMRS Server",
+      "openMrsVersion":"1.9",
       "openMrsUrl": "http://${openmrs.host}/openmrs",
       "username": "admin",
       "password": "Admin123",

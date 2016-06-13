@@ -112,7 +112,7 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         assertFalse(mrsListener.deleted);
 
         assertEquals(encounter.getUuid(), mrsListener.eventParameters.get(EventKeys.ENCOUNTER_ID));
-        assertEquals(encounter.getProvider().getUuid(), mrsListener.eventParameters.get(EventKeys.PROVIDER_ID));
+        assertEquals(encounter.getEncounterProviders().get(0).getUuid(), mrsListener.eventParameters.get(EventKeys.PROVIDER_ID));
         assertEquals(encounter.getLocation().getUuid(), mrsListener.eventParameters.get(EventKeys.LOCATION_ID));
         assertEquals(encounter.getEncounterDatetime(), mrsListener.eventParameters.get(EventKeys.ENCOUNTER_DATE));
         assertEquals(encounter.getEncounterType().getUuid(), mrsListener.eventParameters.get(EventKeys.ENCOUNTER_TYPE));
@@ -218,7 +218,7 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         prepareEncounterType();
         prepareObservations();
 
-        Encounter encounter = new Encounter(location, encounterType, format.parse(date), patient, provider.getPerson(),
+        Encounter encounter = new Encounter(location, encounterType, format.parse(date), patient, Collections.singletonList(provider.getPerson()),
                 Collections.singletonList(observation));
 
         return encounter;
