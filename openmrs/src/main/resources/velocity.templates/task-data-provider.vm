@@ -209,7 +209,8 @@
               "fieldKey": "endDate"
             }
           ]
-        },
+        }
+        #if( $config.getOpenMrsVersion() == "1.10+" ),
         {
           "displayName": "Program Enrollment [$config.getName()]",
           "type": "ProgramEnrollment-$config.getName()",
@@ -266,6 +267,7 @@
             }
           ]
         }
+        #end
         #if( $velocityHasNext ),#end
     #end
   ]

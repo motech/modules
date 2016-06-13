@@ -30,6 +30,7 @@ public class ActionBuilder {
     private static final String CREATE_PROGRAM_ENROLLMENT = "Create Program Enrollment";
     private static final String CHANGE_PROGRAM_ENROLLMENT_STATE = "Change Program Enrollment State";
     private static final String OPENMRS_ACTION_PROXY_SERVICE = "org.motechproject.openmrs.tasks.OpenMRSActionProxyService";
+    private static final String OPENMRS_V1_12 = "1.10+";
 
     private OpenMRSConfigService configService;
 
@@ -49,8 +50,10 @@ public class ActionBuilder {
             actions.add(buildCreateEncounterAction(configName));
             actions.add(buildCreatePatientAction(configName));
             actions.add(buildUpdatePatientAction(configName));
-            actions.add(buildCreateProgramEnrollmentAction(configName));
-            actions.add(buildChangeStateOfProgramEnrollmentAction(configName));
+            if(config.getOpenMrsVersion().equals(OPENMRS_V1_12)) {
+                actions.add(buildCreateProgramEnrollmentAction(configName));
+                actions.add(buildChangeStateOfProgramEnrollmentAction(configName));
+            }
             actions.add(buildUpdatePatientIdentifiersAction(configName));
         }
         return actions;
