@@ -23,5 +23,5 @@ public interface IHETemplateService {
      * @param recipient Recipient which will receive template
      * @param template XML template with filled fields
      */
-    void sendTemplateToRecipientUrlWithBA(HL7Recipient recipient, String template) throws IOException;
+    void sendTemplateToRecipientUrlWithBasicAuthentication(HL7Recipient recipient, String template) throws IOException;
 }

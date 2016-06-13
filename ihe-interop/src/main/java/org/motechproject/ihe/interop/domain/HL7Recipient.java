@@ -19,15 +19,12 @@ public class HL7Recipient {
     public HL7Recipient(String recipientName, String recipientUrl) {
         this.recipientName = recipientName;
         this.recipientUrl = recipientUrl;
-        this.recipientUsername = null;
-        this.recipientPassword = null;
     }
 
     public HL7Recipient(String recipientName, String recipientUrl, String recipientUsername, String recipientPassword) {
-        this.recipientName = recipientName;
-        this.recipientUsername = recipientUsername;
+        this(recipientName, recipientUrl);
         this.recipientPassword = recipientPassword;
-        this.recipientUrl = recipientUrl;
+        this.recipientUsername = recipientUsername;
     }
 
     public String getRecipientName() {

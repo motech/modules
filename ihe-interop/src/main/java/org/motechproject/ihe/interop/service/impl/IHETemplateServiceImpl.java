@@ -1,6 +1,7 @@
 package org.motechproject.ihe.interop.service.impl;
 
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -21,31 +22,41 @@ public class IHETemplateServiceImpl implements IHETemplateService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IHETemplateServiceImpl.class);
 
+    private PostMethod post;
+
+    private HttpClient client;
+
     @Override
     public void sendTemplateToRecipientUrl(String url, String template) throws IOException {
 
-        PostMethod post = new PostMethod(url);
-        post.setRequestEntity(new StringRequestEntity(template, "application/xml", "utf-8"));
-        HttpClient client = new HttpClient();
-
-        LOGGER.info("Sending template to URL: {}", url);
-        int responseCode = client.executeMethod(post);
-        LOGGER.info("Response code: {}", responseCode);
+        setConnectionParameters(url, template);
+        sendTemplate();
     }
 
     @Override
-    public void sendTemplateToRecipientUrlWithBA(HL7Recipient recipient, String template) throws IOException {
+    public void sendTemplateToRecipientUrlWithBasicAuthentication(HL7Recipient recipient, String template) throws IOException {
 
-        PostMethod post = new PostMethod(recipient.getRecipientUrl());
-        HttpClient client = new HttpClient();
         UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(recipient.getRecipientUsername(),
                 recipient.getRecipientPassword());
 
-        post.setRequestEntity(new StringRequestEntity(template, "application/xml", "utf-8"));
+        setConnectionParameters(recipient.getRecipientUrl(), template);
         client.getParams().setAuthenticationPreemptive(true);
         client.getState().setCredentials(AuthScope.ANY, credentials);
 
-        LOGGER.info("Sending template with Basic Authentication to URL: {}", recipient.getRecipientUrl());
+        sendTemplate();
+    }
+
+    private void setConnectionParameters(String url, String template) throws IOException {
+
+        post = new PostMethod(url);
+        post.setRequestEntity(new StringRequestEntity(template, "application/xml", "utf-8"));
+
+        client = new HttpClient();
+    }
+
+    private void sendTemplate() throws IOException {
+
+        LOGGER.info("Sending template to URL: {}", post.getURI().toString());
         int responseCode = client.executeMethod(post);
         LOGGER.info("Response code: {}", responseCode);
     }

@@ -76,7 +76,7 @@ public class IHEActionHelper {
         LOGGER.info("Template with name {}:\n{}", cdaTemplate.getTemplateName(), writable.toString());
 
         if (hl7Recipient.getRecipientUsername() != null && hl7Recipient.getRecipientPassword() != null) {
-            iheTemplateService.sendTemplateToRecipientUrlWithBA(hl7Recipient, writable.toString());
+            iheTemplateService.sendTemplateToRecipientUrlWithBasicAuthentication(hl7Recipient, writable.toString());
         } else {
             iheTemplateService.sendTemplateToRecipientUrl(hl7Recipient.getRecipientUrl(), writable.toString());
         }
