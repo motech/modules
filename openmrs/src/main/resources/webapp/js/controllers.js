@@ -8,6 +8,7 @@
     controllers.controller('OpenMRSSettingsCtrl', function($scope, OpenMRSConfig, LoadingModal, ModalFactory) {
 
         $scope.configs = [];
+        $scope.versions = ["1.9", "1.10+"];
         $scope.selectedConfig = undefined;
         $scope.originalConfig = undefined;
         $scope.newPatientIdentifierType = {};
@@ -78,6 +79,7 @@
         $scope.addConfig = function(oldConfig) {
             $scope.selectedConfig = {
                 'name':'',
+                'openMrsVersion':'',
                 'openMrsUrl':'',
                 'username':'',
                 'password':'',
@@ -118,6 +120,7 @@
 
         $scope.validateConfig = function() {
             return $scope.selectedConfig['name']
+                && $scope.selectedConfig['openMrsVersion']
                 && $scope.selectedConfig['openMrsUrl']
                 && $scope.selectedConfig['username']
                 && $scope.selectedConfig['password']

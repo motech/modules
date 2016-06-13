@@ -19,6 +19,8 @@ public class Config {
 
     private String name;
 
+    private String openMrsVersion;
+
     private String openMrsUrl;
 
     private String username;
@@ -62,6 +64,12 @@ public class Config {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getOpenMrsVersion() {
+        return openMrsVersion;
+    }
+
+    public void setOpenMrsVersion(String openMrsVersion) { this.openMrsVersion = openMrsVersion; }
 
     public String getOpenMrsUrl() {
         return openMrsUrl;
