@@ -1,0 +1,33 @@
+{
+  "displayName": "http.agent",
+  "triggerTaskEvents" : [],
+  "actionTaskEvents": [
+    {
+      "displayName": "http-agent.request",
+      "subject": "SendRequest",
+      "actionParameters": [
+          {
+            "key": "URL",
+            "displayName": "http-agent.url"
+          },
+          {
+            "key": "Username",
+            "displayName": "http-agent.username"
+          },
+          {
+            "key": "Password",
+            "displayName": "http-agent.password"
+          },
+          {
+            "key": "Checkbox",
+            "displayName": "http-agent.checkbox",
+            "type": "BOOLEAN"
+          },
+          {
+            "key": "Map",
+            "displayName": "http-agent.map",
+            "type": "MAP"
+          }
+      ]}
+  ]
+}
