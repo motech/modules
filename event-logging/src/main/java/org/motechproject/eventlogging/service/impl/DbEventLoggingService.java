@@ -2,13 +2,13 @@ package org.motechproject.eventlogging.service.impl;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.eventlogging.converter.impl.DefaultDbToLogConverter;
-import org.motechproject.eventlogging.matchers.DbLoggableEvent;
+import org.motechproject.eventlogging.loggers.impl.DbEventLogger;
 import org.motechproject.eventlogging.matchers.KeyValue;
 import org.motechproject.eventlogging.matchers.LogMappings;
 import org.motechproject.eventlogging.matchers.LoggableEvent;
+import org.motechproject.eventlogging.matchers.MappedLoggableEvent;
 import org.motechproject.eventlogging.matchers.MappingsJson;
 import org.motechproject.eventlogging.matchers.ParametersPresentEventFlag;
-import org.motechproject.eventlogging.loggers.impl.DbEventLogger;
 import org.motechproject.eventlogging.repository.AllEventMappings;
 import org.motechproject.eventlogging.service.EventLogService;
 import org.motechproject.eventlogging.service.EventLoggingService;
@@ -74,7 +74,7 @@ public class DbEventLoggingService implements EventLoggingService {
             } else {
                 List<KeyValue> mappings = null;
 
-                DbLoggableEvent dbLoggableEvent = new DbLoggableEvent(mapping.getSubjects(), null, null);
+                MappedLoggableEvent dbLoggableEvent = new MappedLoggableEvent(mapping.getSubjects(), null, null);
 
                 if (mapping.getMappings() != null) {
                     List<Map<String, String>> mappingList = mapping.getMappings();

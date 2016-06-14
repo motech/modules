@@ -3,12 +3,12 @@ package org.motechproject.eventlogging.service.impl;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.motechproject.eventlogging.loggers.impl.DbEventLogger;
 import org.motechproject.eventlogging.matchers.LogMappings;
-import org.motechproject.eventlogging.matchers.DbLoggableEvent;
 import org.motechproject.eventlogging.matchers.LoggableEvent;
+import org.motechproject.eventlogging.matchers.MappedLoggableEvent;
 import org.motechproject.eventlogging.matchers.MappingsJson;
 import org.motechproject.eventlogging.matchers.ParametersPresentEventFlag;
-import org.motechproject.eventlogging.loggers.impl.DbEventLogger;
 import org.motechproject.eventlogging.repository.AllEventMappings;
 
 import java.util.ArrayList;
@@ -137,13 +137,13 @@ public class DbEventLoggingServiceTest {
 
         assertNotNull(event2);
 
-        assertFalse(event.getClass().equals(DbLoggableEvent.class));
+        assertFalse(event.getClass().equals(MappedLoggableEvent.class));
         assertTrue(event.getClass().equals(LoggableEvent.class));
 
-        assertTrue(event2.getClass().equals(DbLoggableEvent.class));
+        assertTrue(event2.getClass().equals(MappedLoggableEvent.class));
         assertFalse(event2.getClass().equals(LoggableEvent.class));
 
-        DbLoggableEvent castedEvent = (DbLoggableEvent) event2;
+        MappedLoggableEvent castedEvent = (MappedLoggableEvent) event2;
 
         LogMappings logMappings = castedEvent.getMappings();
 

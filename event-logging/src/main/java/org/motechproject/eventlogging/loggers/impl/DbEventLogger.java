@@ -2,10 +2,10 @@ package org.motechproject.eventlogging.loggers.impl;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.eventlogging.converter.impl.DefaultDbToLogConverter;
-import org.motechproject.eventlogging.matchers.DbLoggableEvent;
 import org.motechproject.eventlogging.domain.EventLog;
-import org.motechproject.eventlogging.matchers.LoggableEvent;
 import org.motechproject.eventlogging.loggers.EventLogger;
+import org.motechproject.eventlogging.matchers.LoggableEvent;
+import org.motechproject.eventlogging.matchers.MappedLoggableEvent;
 import org.motechproject.eventlogging.service.EventLogService;
 
 /**
@@ -36,8 +36,8 @@ public class DbEventLogger extends EventLogger {
             if (loggableEvent.isLoggableEvent(eventToLog)) {
                 if (eventConverter != null) {
                     EventLog eventLog;
-                    if (loggableEvent instanceof DbLoggableEvent) {
-                        eventLog = eventConverter.configuredConvertEventToDbLog(eventToLog, loggableEvent);
+                    if (loggableEvent instanceof MappedLoggableEvent) {
+                        eventLog = eventConverter.configuredConvertEventToDbLog(eventToLog, (MappedLoggableEvent)loggableEvent);
                     } else {
                         eventLog = eventConverter.convertToLog(eventToLog);
                     }
