@@ -17,7 +17,6 @@ public class FormWithDisplayName {
 
     public FormSchemaJson getForm() {
         return form;
-
     }
 
     public void setForm(FormSchemaJson form) {
@@ -37,7 +36,6 @@ public class FormWithDisplayName {
         FormWithDisplayName that = (FormWithDisplayName) o;
 
         return form.equals(that.form);
-
     }
 
     @Override
