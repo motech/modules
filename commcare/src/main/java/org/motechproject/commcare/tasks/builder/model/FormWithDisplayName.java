@@ -2,14 +2,17 @@ package org.motechproject.commcare.tasks.builder.model;
 
 import org.motechproject.commcare.domain.FormSchemaJson;
 
+/**
+ * Stores form and it's application name.
+ */
+
 public class FormWithDisplayName {
     private FormSchemaJson form;
+    private String applicationName;
 
-    private String displayName;
-
-    public FormWithDisplayName(FormSchemaJson form, String displayName) {
+    public FormWithDisplayName(FormSchemaJson form, String applicationName) {
         this.form = form;
-        this.displayName = displayName;
+        this.applicationName = applicationName;
     }
 
     public FormSchemaJson getForm() {
@@ -21,12 +24,12 @@ public class FormWithDisplayName {
         this.form = form;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getApplicationName() {
+        return applicationName;
     }
 
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
     }
 
     @Override

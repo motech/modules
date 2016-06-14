@@ -1,13 +1,16 @@
 package org.motechproject.commcare.tasks.builder.model;
 
+/**
+* Stores casetype and it's application name.
+ */
+
 public class CaseTypeWithDisplayName {
     private String caseType;
+    private String applicationName;
 
-    private String displayName;
-
-    public CaseTypeWithDisplayName(String caseType, String displayName) {
+    public CaseTypeWithDisplayName(String caseType, String applicationName) {
         this.caseType = caseType;
-        this.displayName = displayName;
+        this.applicationName = applicationName;
     }
 
     public String getCaseType() {
@@ -18,12 +21,12 @@ public class CaseTypeWithDisplayName {
         this.caseType = caseType;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getApplicationName() {
+        return applicationName;
     }
 
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
     }
 
     @Override
