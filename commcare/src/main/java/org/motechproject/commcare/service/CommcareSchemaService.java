@@ -48,15 +48,13 @@ public interface CommcareSchemaService {
     
     /**
      * Retrieves case types with application name
-     * @return Map of case types. Key represents a case type, while a value is a
-     *         application name the case type belongs to.
+     * @return Set of Cases with display names
      */
     Set<CaseTypeWithDisplayName> getCaseTypesWithApplicationName(String configName);
 
     /**
      * Retrieves forms with application name
-     * @return Map of forms. Key represents a form, while a value is a
-     *         application name the form belongs to.
+     * @return Set of Forms with display names.
      */
     Set<FormWithDisplayName> getFormsWithApplicationName(String configName);
 }
