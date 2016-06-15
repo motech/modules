@@ -59,7 +59,7 @@ public class DbEventLoggingService implements EventLoggingService {
     @PostConstruct
     private DbEventLogger createDefaultEventLogger() {
         defaultDbEventLogger = new DbEventLogger(eventLogService, defaultDbToLogConverter);
-        List<LoggableEvent> loggableEvents = AllEventMappings.converToLoggableEvents(allEventMappings.getAllMappings());
+        List<LoggableEvent> loggableEvents = allEventMappings.converToLoggableEvents();
         defaultDbEventLogger.addLoggableEvents(loggableEvents);
 
         return defaultDbEventLogger;

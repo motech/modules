@@ -7,8 +7,8 @@ public final class Constants {
 
     }
 
-    public static final String DB_ENABLED_PROPERTY = "eventlogging.dbenabled";
-    public static final String FILE_ENABLED_PROPERTY = "eventlogging.fileenabled";
-    public static final String LOGFILE_PATH_PROPERTY = "eventlogging.logfilepath";
+    public static final String DB_ENABLED_PROPERTY = "eventlogging.db.enabled";
+    public static final String FILE_ENABLED_PROPERTY = "eventlogging.file.enabled";
+    public static final String LOGFILE_PATH_PROPERTY = "eventlogging.logfile.path";
 
 }

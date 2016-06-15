@@ -64,7 +64,8 @@ public class AllEventMappings {
      * Returns loggable events from event mappings stored in configuration file.
      * @return list of loggable events
      */
-    public static List<LoggableEvent> converToLoggableEvents(List<MappingsJson> allMappings) {
+    public List<LoggableEvent> converToLoggableEvents() {
+        List<MappingsJson> allMappings = getAllMappings();
         List<LoggableEvent> loggableEvents = new ArrayList<>();
         for (MappingsJson mapping : allMappings) {
             if (mapping.getMappings() == null && mapping.getIncludes() == null && mapping.getExcludes() == null) {

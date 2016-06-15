@@ -3,6 +3,7 @@ package org.motechproject.eventlogging.service.impl;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.motechproject.eventlogging.loggers.impl.DbEventLogger;
 import org.motechproject.eventlogging.matchers.LogMappings;
 import org.motechproject.eventlogging.matchers.LoggableEvent;
@@ -117,6 +118,7 @@ public class DbEventLoggingServiceTest {
         mappings.add(mapping2);
 
         when(allEventMappings.getAllMappings()).thenReturn(mappings);
+        Mockito.doCallRealMethod().when(allEventMappings).converToLoggableEvents();
 
         dbEventLoggingService = new DbEventLoggingService(allEventMappings);
 

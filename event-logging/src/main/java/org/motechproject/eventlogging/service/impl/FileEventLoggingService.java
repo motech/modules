@@ -68,7 +68,7 @@ public class FileEventLoggingService implements EventLoggingService {
         String logFilePath = settingsFacade.getProperty(Constants.LOGFILE_PATH_PROPERTY);
         loggingFiles.add(new File(logFilePath));
 
-        List<LoggableEvent> loggableEvents = AllEventMappings.converToLoggableEvents(allEventMappings.getAllMappings());
+        List<LoggableEvent> loggableEvents = allEventMappings.converToLoggableEvents();
         FileEventLogger logger = new FileEventLogger(loggableEvents, loggingFiles, defaultFileToLogConverter);
         fileEventLoggers.add(logger);
     }
