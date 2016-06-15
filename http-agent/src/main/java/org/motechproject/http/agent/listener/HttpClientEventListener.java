@@ -143,7 +143,7 @@ public class HttpClientEventListener {
         Object requestData = parameters.get(SendRequestConstants.DATA);
         String username = String.valueOf(parameters.get(SendRequestConstants.USERNAME));
         String password = String.valueOf(parameters.get(SendRequestConstants.PASSWORD));
-        boolean checkbox = (boolean) parameters.get(SendRequestConstants.CHECKBOX);
+        boolean redirection = (boolean) parameters.get(SendRequestConstants.REDIRECTION_ABILTY);
         LOGGER.info(String.format("Posting Http request -- Url: %s, Data: %s",
                 url, String.valueOf(requestData)));
 
@@ -159,10 +159,9 @@ public class HttpClientEventListener {
             restTemplate = basicRestTemplate;
         }
         
-        if (!checkbox) {
+        if (!redirection) {
             final HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-            HttpClient httpClient;
-            httpClient = HttpClientBuilder.create().disableRedirectHandling().build();
+            HttpClient httpClient = HttpClientBuilder.create().disableRedirectHandling().build();
             factory.setHttpClient(httpClient);
             restTemplate.setRequestFactory(factory);
         }

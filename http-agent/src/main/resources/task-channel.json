@@ -19,8 +19,8 @@
             "displayName": "http-agent.password"
           },
           {
-            "key": "Checkbox",
-            "displayName": "http-agent.checkbox",
+            "key": "Redirection",
+            "displayName": "http-agent.redirection",
             "type": "BOOLEAN"
           },
           {

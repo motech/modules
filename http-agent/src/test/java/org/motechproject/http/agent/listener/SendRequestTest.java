@@ -21,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
@@ -44,31 +45,31 @@ public class SendRequestTest {
             put(SendRequestConstants.DATA, "aragorn");
             put(SendRequestConstants.USERNAME, "admin");
             put(SendRequestConstants.PASSWORD, "password");
-            put(SendRequestConstants.CHECKBOX, true);
+            put(SendRequestConstants.REDIRECTION_ABILTY, true);
         }});
         RestTemplate restTemplateMock = mock(RestTemplate.class);
         HttpComponentsClientHttpRequestFactory httpComponentsClientHttpRequestFactory = mock(HttpComponentsClientHttpRequestFactory.class);
         SettingsFacade settings = mock(SettingsFacade.class);
         HTTPActionService httpActionService = mock(HTTPActionService.class);
-        ResponseEntity<?> responseEntity = mock(ResponseEntity.class);
-
+        ResponseEntity<?> exceptedResponseEntity;
+        ResponseEntity<?> responseEntity;
         when(settings.getProperty(HttpClientEventListener.HTTP_CONNECT_TIMEOUT)).thenReturn("0");
         when(settings.getProperty(HttpClientEventListener.HTTP_READ_TIMEOUT)).thenReturn("0");
         when(restTemplateMock.getRequestFactory()).thenReturn(httpComponentsClientHttpRequestFactory);
 
         request = new HttpEntity<String>("aragorn");
-        responseEntity = new ResponseEntity<String>("example", HttpStatus.OK);
+        exceptedResponseEntity = new ResponseEntity<String>("example", HttpStatus.OK);
         when(restTemplateMock.exchange(eq("http://commcare.com"),eq(HttpMethod.POST),eq(request), eq(String.class))).
-                thenReturn((ResponseEntity<String>) responseEntity);
+                thenReturn((ResponseEntity<String>) exceptedResponseEntity);
 
         whenNew(RestTemplate.class).withParameterTypes(ClientHttpRequestFactory.class).
                 withArguments(isA(HttpComponentsClientHttpRequestFactoryWithAuth.class)).thenReturn(restTemplateMock);
 
         httpClientEventListener = new HttpClientEventListener(restTemplateMock, settings, httpActionService);
-        httpClientEventListener.handleWithUserPasswordAndReturnType(motechEvent);
-
-        HTTPActionAudit httpActionAudit = new HTTPActionAudit("http://commcare.com", request.toString(), responseEntity.getBody().toString(),
-                responseEntity.getStatusCode().toString());
+        responseEntity = httpClientEventListener.handleWithUserPasswordAndReturnType(motechEvent);
+        assertEquals(responseEntity, exceptedResponseEntity);
+        HTTPActionAudit httpActionAudit = new HTTPActionAudit("http://commcare.com", request.toString(), exceptedResponseEntity.getBody().toString(),
+                exceptedResponseEntity.getStatusCode().toString());
         verify(httpActionService).create(eq(httpActionAudit));
     }
 }
