@@ -31,7 +31,7 @@ public class CaseTypeWithDisplayName {
 
     @Override
     public boolean equals(Object obj) {
-        if (caseType.equals((String) obj)) {
+        if (caseType.equals(obj)) {
             return true;
         }
 
