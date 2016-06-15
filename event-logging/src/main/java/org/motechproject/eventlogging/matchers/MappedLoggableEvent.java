@@ -1,6 +1,10 @@
 package org.motechproject.eventlogging.matchers;
 
+import org.motechproject.event.MotechEvent;
+
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Version of {@link LoggableEvent} class used when working with mappings. Additionaly to LoggableEvent it
@@ -29,4 +33,38 @@ public class MappedLoggableEvent extends LoggableEvent {
     public void setMappings(LogMappings mappings) {
         this.mappings = mappings;
     }
+
+    public Map<String, Object> filterParams(MotechEvent event) {
+        Map<String, Object> initialParameters = event.getParameters();
+
+        LogMappings logMappings = getMappings();
+        List<KeyValue> keyValueList = logMappings.getMappings();
+        List<String> exclusions = logMappings.getExclusions();
+        List<String> inclusions = logMappings.getInclusions();
+        Map<String, Object> finalParameters = new LinkedHashMap<String, Object>(initialParameters);
+
+        for (KeyValue keyValue : keyValueList) {
+            if (initialParameters.containsKey(keyValue.getStartKey())) {
+                if (keyValue.getStartValue().equals(initialParameters.get(keyValue.getStartKey()))) {
+                    finalParameters.put(keyValue.getEndKey(), keyValue.getEndValue());
+                    exclusions.add(keyValue.getStartKey());
+                }
+            }
+        }
+
+        for (String excludeParameter : exclusions) {
+            if (initialParameters.containsKey(excludeParameter)) {
+                finalParameters.remove(excludeParameter);
+            }
+        }
+
+        for (String includeParameter : inclusions) {
+            if (initialParameters.containsKey(includeParameter)) {
+                finalParameters.put(includeParameter, initialParameters.get(includeParameter));
+            }
+        }
+
+        return finalParameters;
+    }
+
 }

@@ -6,7 +6,6 @@ import org.motechproject.eventlogging.converter.impl.DefaultFileToLogConverter;
 import org.motechproject.eventlogging.loggers.EventLogger;
 import org.motechproject.eventlogging.loggers.impl.FileEventLogger;
 import org.motechproject.eventlogging.matchers.LoggableEvent;
-import org.motechproject.eventlogging.matchers.MappingsJson;
 import org.motechproject.eventlogging.repository.AllEventMappings;
 import org.motechproject.eventlogging.service.Constants;
 import org.motechproject.eventlogging.service.EventLoggingService;
@@ -69,13 +68,7 @@ public class FileEventLoggingService implements EventLoggingService {
         String logFilePath = settingsFacade.getProperty(Constants.LOGFILE_PATH_PROPERTY);
         loggingFiles.add(new File(logFilePath));
 
-        List<LoggableEvent> loggableEvents = new ArrayList<>();
-        List<MappingsJson> allMappings = allEventMappings.getAllMappings();
-        for (MappingsJson mapping : allMappings) {
-            LoggableEvent event = new LoggableEvent(mapping.getSubjects(), mapping.getFlags());
-            loggableEvents.add(event);
-        }
-
+        List<LoggableEvent> loggableEvents = AllEventMappings.converToLoggableEvents(allEventMappings.getAllMappings());
         FileEventLogger logger = new FileEventLogger(loggableEvents, loggingFiles, defaultFileToLogConverter);
         fileEventLoggers.add(logger);
     }

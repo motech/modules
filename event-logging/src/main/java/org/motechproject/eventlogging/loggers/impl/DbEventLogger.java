@@ -37,7 +37,7 @@ public class DbEventLogger extends EventLogger {
                 if (eventConverter != null) {
                     EventLog eventLog;
                     if (loggableEvent instanceof MappedLoggableEvent) {
-                        eventLog = eventConverter.configuredConvertEventToDbLog(eventToLog, (MappedLoggableEvent)loggableEvent);
+                        eventLog = eventConverter.configuredConvertEventToDbLog(eventToLog, (MappedLoggableEvent) loggableEvent);
                     } else {
                         eventLog = eventConverter.convertToLog(eventToLog);
                     }
