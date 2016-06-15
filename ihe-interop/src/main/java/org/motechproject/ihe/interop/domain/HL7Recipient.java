@@ -16,15 +16,15 @@ public class HL7Recipient {
     public HL7Recipient() {
     }
 
+    public HL7Recipient(String recipientName, String recipientUrl) {
+        this(recipientName, recipientUrl, null, null);
+    }
+
     public HL7Recipient(String recipientName, String recipientUrl, String recipientUsername, String recipientPassword) {
         this.recipientName = recipientName;
         this.recipientUrl = recipientUrl;
         this.recipientUsername = recipientUsername;
         this.recipientPassword = recipientPassword;
-    }
-
-    public HL7Recipient(String recipientName, String recipientUrl) {
-        this(recipientName, recipientUrl, null, null);
     }
 
     public String getRecipientName() {

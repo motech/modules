@@ -52,6 +52,5 @@ public class IHETemplateServiceImpl implements IHETemplateService {
         LOGGER.info("Sending template to URL: {}", post.getURI().toString());
         int responseCode = client.executeMethod(post);
         LOGGER.info("Response code: {}", responseCode);
-
     }
 }
