@@ -17,7 +17,7 @@ public class HTTPActionAudit {
     @Field
     private String request;
 
-    @Field
+    @Field(type = "TEXT")
     private String responseBody;
 
     @Field
