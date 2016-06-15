@@ -1,5 +1,6 @@
 package org.motechproject.ihe.interop.service.impl;
 
+import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
@@ -21,15 +22,10 @@ public class IHETemplateServiceImpl implements IHETemplateService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IHETemplateServiceImpl.class);
 
-    private PostMethod post;
-
-    private HttpClient client;
-
     @Override
     public void sendTemplateToRecipientUrl(String url, String template) throws IOException {
 
-        setConnectionParameters(url, template);
-        sendTemplate();
+        sendTemplate(url, template, null);
     }
 
     @Override
@@ -38,25 +34,24 @@ public class IHETemplateServiceImpl implements IHETemplateService {
         UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(recipient.getRecipientUsername(),
                 recipient.getRecipientPassword());
 
-        setConnectionParameters(recipient.getRecipientUrl(), template);
-        client.getParams().setAuthenticationPreemptive(true);
-        client.getState().setCredentials(AuthScope.ANY, credentials);
-
-        sendTemplate();
+        sendTemplate(recipient.getRecipientUrl(), template, credentials);
     }
 
-    private void setConnectionParameters(String url, String template) throws IOException {
+    private void sendTemplate(String url, String template, Credentials credentials) throws IOException {
 
-        post = new PostMethod(url);
+        PostMethod post = new PostMethod(url);
+        HttpClient client = new HttpClient();
+
         post.setRequestEntity(new StringRequestEntity(template, "application/xml", "utf-8"));
 
-        client = new HttpClient();
-    }
-
-    private void sendTemplate() throws IOException {
+        if (credentials != null) {
+            client.getParams().setAuthenticationPreemptive(true);
+            client.getState().setCredentials(AuthScope.ANY, credentials);
+        }
 
         LOGGER.info("Sending template to URL: {}", post.getURI().toString());
         int responseCode = client.executeMethod(post);
         LOGGER.info("Response code: {}", responseCode);
+
     }
 }
