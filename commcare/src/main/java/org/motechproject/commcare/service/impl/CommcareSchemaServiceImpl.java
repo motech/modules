@@ -77,7 +77,7 @@ public class CommcareSchemaServiceImpl implements CommcareSchemaService {
 
         for (CommcareApplicationJson app : commcareApplicationDataService.bySourceConfiguration(configName)) {
             for (CommcareModuleJson module : app.getModules()) {
-                caseTypesWithApplicationName.add(new CaseTypeWithApplicationName(module.getCaseType(), app.getApplicationName()));
+                caseTypesWithApplicationName.add(new CaseTypeWithApplicationName(module.getCaseType(), app.getApplicationName(), module.getCaseProperties()));
             }
         }
 

@@ -163,7 +163,7 @@
                                     "displayName" : "commcare.case.field.caseName",
                                     "fieldKey" : "caseName"
                                 },
-                                #foreach($caseField in $entry.getApplicationName())
+                                #foreach($caseField in $entry.getCaseProperties())
                                 {
                                     "displayName" : "$esc.java($caseField)",
                                     "fieldKey" : "$trimmer.trim($esc.java($caseField))"
