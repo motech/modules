@@ -101,7 +101,7 @@
                             ]
                     },
                 #end
-                #foreach ($entry in $config.getCasesWithApplication)
+                #foreach ($entry in $config.getCasesWithApplication())
                     {
                         "displayName": #buildDisplayName("Case", $entry.getCaseType(), $entry.getApplicationName(), $config.getConfigName()),
                         "type": "CaseInfo$trimmer.trim($esc.java($entry.getCaseType()))-$esc.java($config.getConfigName())",
