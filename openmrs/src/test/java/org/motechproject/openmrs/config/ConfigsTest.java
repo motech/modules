@@ -43,6 +43,7 @@ public class ConfigsTest {
         Configs configs = prepareConfigs(SUFFIX_ONE, SUFFIX_TWO, SUFFIX_THREE);
 
         Config config = ConfigDummyData.prepareConfig(SUFFIX_TWO);
+        config.setOpenMrsVersion("otherOpenMrsVersion");
         config.setOpenMrsUrl("otherOpenMrsUrl");
         config.setUsername("otherUsername");
         config.setPassword("otherPassword");

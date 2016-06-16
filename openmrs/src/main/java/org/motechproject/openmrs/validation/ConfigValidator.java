@@ -17,6 +17,7 @@ public final class ConfigValidator {
      */
     public static void validateConfig(Config config) {
         Validate.notEmpty(config.getName(), String.format(FIELD_CANNOT_BE_EMPTY, "Name"));
+        Validate.notEmpty(config.getOpenMrsVersion(), String.format(FIELD_CANNOT_BE_EMPTY, "OpenMRS Version"));
         Validate.notEmpty(config.getOpenMrsUrl(), String.format(FIELD_CANNOT_BE_EMPTY, "OpenMRS URL"));
         Validate.notEmpty(config.getUsername(), String.format(FIELD_CANNOT_BE_EMPTY, "Username"));
         Validate.notEmpty(config.getPassword(), String.format(FIELD_CANNOT_BE_EMPTY, "Password"));

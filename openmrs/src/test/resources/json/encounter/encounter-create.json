@@ -3,7 +3,11 @@
   "encounterType":"ADULTINITIAL",
   "encounterDatetime":"",
   "patient":"PPP",
-  "provider":"PPR",
+  "encounterProviders": [
+    {
+      "uuid": "PPR"
+    }
+  ],
   "obs":[
     {
       "concept":"CCC",

@@ -64,7 +64,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
 
         EncounterType type = new EncounterType(encounterType);
 
-        Encounter encounter = new Encounter(location, type, encounterDatetime.toDate(), patient, provider.getPerson(), observationList);
+        Encounter encounter = new Encounter(location, type, encounterDatetime.toDate(), patient, Collections.singletonList(provider.getPerson()), observationList);
         encounterService.createEncounter(configName, encounter);
     }
 

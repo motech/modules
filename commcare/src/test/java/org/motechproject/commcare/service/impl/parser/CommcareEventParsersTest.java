@@ -29,6 +29,12 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.motechproject.commcare.util.ResponseXML.ATTR1_VALUE;
 import static org.motechproject.commcare.util.ResponseXML.ATTR2_VALUE;
+import static org.motechproject.commcare.util.ResponseXML.CASE_ID;
+import static org.motechproject.commcare.util.ResponseXML.USER_ID;
+import static org.motechproject.commcare.util.ResponseXML.DATE_MODIFIED;
+import static org.motechproject.commcare.util.ResponseXML.XMLNS;
+import static org.motechproject.commcare.util.ResponseXML.DATE;
+import static org.motechproject.commcare.util.ResponseXML.ATTR;
 
 public class CommcareEventParsersTest {
 
@@ -50,6 +56,7 @@ public class CommcareEventParsersTest {
     private MotechEvent caseEvent;
 
     private Config config;
+
 
     @Before
     public void setUp() throws EndpointNotSupported {
@@ -126,6 +133,7 @@ public class CommcareEventParsersTest {
         assertTrue(parsedParameters.containsKey("/data/diseases/disease_9539823/medication_55666"));
         assertTrue(parsedParameters.containsKey("/data/diseases/disease_9539823/medication_55668"));
 
+
         assertEquals("Clinic1", parsedParameters.get("/data/clinic"));
         assertEquals("Med1", parsedParameters.get("/data/diseases/disease_3893289/medication_55665"));
         assertEquals("Med2", parsedParameters.get("/data/diseases/disease_3893289/medication_55666"));
@@ -162,5 +170,27 @@ public class CommcareEventParsersTest {
         assertEquals("Susanna Bones", parsedParameters.get("caseName"));
         assertEquals("yes", parsedParameters.get("dob_known"));
         assertEquals("1990-09-09", parsedParameters.get("dob_calc"));
+    }
+
+    @Test
+    public void shouldParseFormsEventAttributesProperly() {
+        String eventSubject = formsEvent.getSubject();
+        Map<String, Object> eventParameters = formsEvent.getParameters();
+
+        Map<String, Object> parsedParameters = formsEventParser.parseEventParameters(eventSubject, eventParameters);
+
+        assertTrue(parsedParameters.containsKey("/data/case/@case_id"));
+        assertTrue(parsedParameters.containsKey("/data/case/@user_id"));
+        assertTrue(parsedParameters.containsKey("/data/case/@date_modified"));
+        assertTrue(parsedParameters.containsKey("/data/case/@xmlns"));
+        assertTrue(parsedParameters.containsKey("/data/case/update/@date"));
+        assertTrue(parsedParameters.containsKey("/data/case/update/number/@attr"));
+
+        assertEquals(CASE_ID, parsedParameters.get("/data/case/@case_id"));
+        assertEquals(USER_ID, parsedParameters.get("/data/case/@user_id"));
+        assertEquals(DATE_MODIFIED, parsedParameters.get("/data/case/@date_modified"));
+        assertEquals(XMLNS, parsedParameters.get("/data/case/@xmlns"));
+        assertEquals(DATE, parsedParameters.get("/data/case/update/@date"));
+        assertEquals(ATTR, parsedParameters.get("/data/case/update/number/@attr"));
     }
 }

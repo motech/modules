@@ -2,6 +2,7 @@
   "configs" : [
     {
       "name":"name-fooOne",
+      "openMrsVersion":"1.9",
       "openMrsUrl":"openMrsUrl-fooOne",
       "username":"username-fooOne",
       "password":"password-fooOne",

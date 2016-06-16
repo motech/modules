@@ -16,6 +16,7 @@ public class ConfigDummyData {
     public static Config prepareConfig(String suffix) {
         Config config = new Config();
         config.setName(getName(suffix));
+        config.setOpenMrsVersion("openMrsVersion-" + suffix);
         config.setOpenMrsUrl("openMrsUrl-" + suffix);
         config.setUsername("username-" + suffix);
         config.setPassword("password-" + suffix);

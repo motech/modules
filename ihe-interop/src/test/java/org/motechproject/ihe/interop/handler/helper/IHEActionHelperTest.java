@@ -1,5 +1,7 @@
 package org.motechproject.ihe.interop.handler.helper;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -10,14 +12,18 @@ import org.motechproject.ihe.interop.exception.RecipientNotFoundException;
 import org.motechproject.ihe.interop.exception.TemplateNotFoundException;
 import org.motechproject.ihe.interop.service.HL7RecipientsService;
 import org.motechproject.ihe.interop.service.IHETemplateDataService;
+import org.motechproject.ihe.interop.service.IHETemplateService;
 import org.motechproject.ihe.interop.util.Constants;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -28,6 +34,9 @@ public class IHEActionHelperTest {
 
     @Mock
     private IHETemplateDataService iheTemplateDataService;
+
+    @Mock
+    private IHETemplateService iheTemplateService;
 
     @Mock
     private CdaTemplate cdaTemplate;
@@ -60,5 +69,49 @@ public class IHEActionHelperTest {
 
         when(iheTemplateDataService.findByName("sampleTemplate3")).thenReturn(cdaTemplate);
         iheActionHelper.handleAction(params);
+    }
+
+    @Test
+    public void shouldCallSendTemplateMethod() throws IOException, SAXException, ParserConfigurationException, ClassNotFoundException {
+        Map<String, Object> params = new HashMap<>();
+        params.put(Constants.TEMPLATE_NAME_PARAM, "sampleTemplate3");
+        params.put(Constants.RECIPIENT_NAME_PARAM, "sampleRecipient3");
+
+        byte[] bytes;
+        try (InputStream inputStream = getClass().getResourceAsStream("/empty_template.xml")) {
+            bytes = IOUtils.toByteArray(inputStream);
+        }
+        Byte[] byteObjects = ArrayUtils.toObject(bytes);
+
+        when(iheTemplateDataService.findByName("sampleTemplate3")).thenReturn(cdaTemplate);
+        when(hl7RecipientsService.getRecipientbyName("sampleRecipient3")).thenReturn(hl7Recipient);
+        when((Byte[]) iheTemplateDataService.getDetachedField(cdaTemplate, "templateData")).thenReturn(byteObjects);
+
+        iheActionHelper.handleAction(params);
+
+        verify(iheTemplateService).sendTemplateToRecipientUrl(hl7Recipient.getRecipientUrl(), new String(bytes, StandardCharsets.UTF_8));
+    }
+
+    @Test
+    public void shouldCallSendTemplateWithBasicAuthenticationMethod() throws IOException, SAXException, ParserConfigurationException, ClassNotFoundException {
+        Map<String, Object> params = new HashMap<>();
+        params.put(Constants.TEMPLATE_NAME_PARAM, "sampleTemplate3");
+        params.put(Constants.RECIPIENT_NAME_PARAM, "sampleRecipient3");
+
+        HL7Recipient sampleRecipient = new HL7Recipient("sampleName", "sampleUrl", "sampleUsername", "samplePassword");
+
+        byte[] bytes;
+        try (InputStream inputStream = getClass().getResourceAsStream("/empty_template.xml")) {
+            bytes = IOUtils.toByteArray(inputStream);
+        }
+        Byte[] byteObjects = ArrayUtils.toObject(bytes);
+
+        when(iheTemplateDataService.findByName("sampleTemplate3")).thenReturn(cdaTemplate);
+        when((Byte[]) iheTemplateDataService.getDetachedField(cdaTemplate, "templateData")).thenReturn(byteObjects);
+        when(hl7RecipientsService.getRecipientbyName("sampleRecipient3")).thenReturn(sampleRecipient);
+
+        iheActionHelper.handleAction(params);
+
+        verify(iheTemplateService).sendTemplateToRecipientUrlWithBasicAuthentication(sampleRecipient, new String(bytes, StandardCharsets.UTF_8));
     }
 }
