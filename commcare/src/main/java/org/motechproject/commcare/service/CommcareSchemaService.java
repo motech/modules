@@ -2,8 +2,8 @@ package org.motechproject.commcare.service;
 
 import org.motechproject.commcare.domain.CommcareApplicationJson;
 import org.motechproject.commcare.domain.FormSchemaJson;
-import org.motechproject.commcare.tasks.builder.model.CaseTypeWithDisplayName;
-import org.motechproject.commcare.tasks.builder.model.FormWithDisplayName;
+import org.motechproject.commcare.tasks.builder.model.CaseTypeWithApplicationName;
+import org.motechproject.commcare.tasks.builder.model.FormWithApplicationName;
 
 import java.util.List;
 import java.util.Map;
@@ -50,11 +50,11 @@ public interface CommcareSchemaService {
      * Retrieves case types with application name
      * @return Set of Cases with display names
      */
-    Set<CaseTypeWithDisplayName> getCaseTypesWithApplicationName(String configName);
+    Set<CaseTypeWithApplicationName> getCaseTypesWithApplicationName(String configName);
 
     /**
      * Retrieves forms with application name
      * @return Set of Forms with display names.
      */
-    Set<FormWithDisplayName> getFormsWithApplicationName(String configName);
+    Set<FormWithApplicationName> getFormsWithApplicationName(String configName);
 }

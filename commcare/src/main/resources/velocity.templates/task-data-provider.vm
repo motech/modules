@@ -38,10 +38,10 @@
                         ]
                 },
 
-                #foreach ( $entry in $config.getFormsToApplication().entrySet() )
+                #foreach ( $entry in $config.getFormsWithApplication() )
                     {
-                        "displayName": #buildDisplayName("Form", $entry.key.getFormName(), $entry.value, $config.getConfigName()),
-                        "type": "CommcareForm$trimmer.trim($esc.java($entry.key.getFormName()))-$esc.java($config.getConfigName())",
+                        "displayName": #buildDisplayName("Form", $entry.getForm().getFormName(), $entry.getApplicationName(), $config.getConfigName()),
+                        "type": "CommcareForm$trimmer.trim($esc.java($entry.getForm().getFormName()))-$esc.java($config.getConfigName())",
                         "lookupFields": [
                             {
                                 "displayName": "commcare.id",
@@ -55,7 +55,7 @@
                                     "displayName": "commcare.field.configName",
                                     "fieldKey": "configName"
                                 },
-                                #foreach ( $question in $entry.key.getQuestions() )
+                                #foreach ( $question in $entry.getForm().getQuestions() )
                                 {
                                    "displayName" : "$esc.java($question.getQuestionValue())",
                                    "fieldKey" : "$esc.java($question.getQuestionValue())"
@@ -101,10 +101,10 @@
                             ]
                     },
                 #end
-                #foreach ($entry in $config.getCasesToApplication().entrySet())
+                #foreach ($entry in $config.getCasesWithApplication)
                     {
-                        "displayName": #buildDisplayName("Case", $entry.key, $entry.value, $config.getConfigName()),
-                        "type": "CaseInfo$trimmer.trim($esc.java($entry.key))-$esc.java($config.getConfigName())",
+                        "displayName": #buildDisplayName("Case", $entry.getCaseType(), $entry.getApplicationName(), $config.getConfigName()),
+                        "type": "CaseInfo$trimmer.trim($esc.java($entry.getCaseType()))-$esc.java($config.getConfigName())",
                         "lookupFields": [
                                 {
                                     "displayName": "commcare.id",
@@ -163,7 +163,7 @@
                                     "displayName" : "commcare.case.field.caseName",
                                     "fieldKey" : "caseName"
                                 },
-                                #foreach($caseField in $entry.value)
+                                #foreach($caseField in $entry.getApplicationName())
                                 {
                                     "displayName" : "$esc.java($caseField)",
                                     "fieldKey" : "$trimmer.trim($esc.java($caseField))"

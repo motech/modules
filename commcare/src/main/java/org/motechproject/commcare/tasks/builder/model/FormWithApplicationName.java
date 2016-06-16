@@ -6,11 +6,11 @@ import org.motechproject.commcare.domain.FormSchemaJson;
  * Stores form and it's application name.
  */
 
-public class FormWithDisplayName {
+public class FormWithApplicationName {
     private FormSchemaJson form;
     private String applicationName;
 
-    public FormWithDisplayName(FormSchemaJson form, String applicationName) {
+    public FormWithApplicationName(FormSchemaJson form, String applicationName) {
         this.form = form;
         this.applicationName = applicationName;
     }
@@ -33,7 +33,7 @@ public class FormWithDisplayName {
 
     @Override
     public boolean equals(Object o) {
-        FormWithDisplayName that = (FormWithDisplayName) o;
+        FormWithApplicationName that = (FormWithApplicationName) o;
 
         return form.equals(that.form);
     }

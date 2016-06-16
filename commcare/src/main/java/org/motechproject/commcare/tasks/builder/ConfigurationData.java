@@ -1,7 +1,7 @@
 package org.motechproject.commcare.tasks.builder;
 
-import org.motechproject.commcare.tasks.builder.model.CaseTypeWithDisplayName;
-import org.motechproject.commcare.tasks.builder.model.FormWithDisplayName;
+import org.motechproject.commcare.tasks.builder.model.CaseTypeWithApplicationName;
+import org.motechproject.commcare.tasks.builder.model.FormWithApplicationName;
 
 import java.util.Set;
 
@@ -13,9 +13,9 @@ public class ConfigurationData {
 
     private String configName;
 
-    private Set<FormWithDisplayName> formsWithApplication;
+    private Set<FormWithApplicationName> formsWithApplication;
 
-    private Set<CaseTypeWithDisplayName> casesWithApplication;
+    private Set<CaseTypeWithApplicationName> casesWithApplication;
 
     /**
      * Creates an instance of the {@link ConfigurationData} class. It will store the given {@code formsWithApplication}
@@ -24,7 +24,7 @@ public class ConfigurationData {
      * @param formsWithApplication  the list of all forms that originate from the given configuration
      * @param casesWithApplication  the list of all cases that originate from the given configuration
      */
-    public ConfigurationData(String configName, Set<FormWithDisplayName> formsWithApplication, Set<CaseTypeWithDisplayName> casesWithApplication) {
+    public ConfigurationData(String configName, Set<FormWithApplicationName> formsWithApplication, Set<CaseTypeWithApplicationName> casesWithApplication) {
         this.configName = configName;
         this.formsWithApplication = formsWithApplication;
         this.casesWithApplication = casesWithApplication;
@@ -38,19 +38,19 @@ public class ConfigurationData {
         this.configName = configName;
     }
 
-    public Set<FormWithDisplayName> getFormsWithApplication() {
+    public Set<FormWithApplicationName> getFormsWithApplication() {
         return formsWithApplication;
     }
 
-    public void setFormsWithApplication(Set<FormWithDisplayName> formsWithApplication) {
+    public void setFormsWithApplication(Set<FormWithApplicationName> formsWithApplication) {
         this.formsWithApplication = formsWithApplication;
     }
 
-    public Set<CaseTypeWithDisplayName> getCasesWithApplication() {
+    public Set<CaseTypeWithApplicationName> getCasesWithApplication() {
         return casesWithApplication;
     }
 
-    public void setCasesWithApplication(Set<CaseTypeWithDisplayName> casesWithApplication) {
+    public void setCasesWithApplication(Set<CaseTypeWithApplicationName> casesWithApplication) {
         this.casesWithApplication = casesWithApplication;
     }
 }

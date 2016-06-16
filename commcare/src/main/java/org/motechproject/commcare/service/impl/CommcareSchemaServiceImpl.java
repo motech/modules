@@ -5,8 +5,8 @@ import org.motechproject.commcare.domain.CommcareModuleJson;
 import org.motechproject.commcare.domain.FormSchemaJson;
 import org.motechproject.commcare.service.CommcareApplicationDataService;
 import org.motechproject.commcare.service.CommcareSchemaService;
-import org.motechproject.commcare.tasks.builder.model.CaseTypeWithDisplayName;
-import org.motechproject.commcare.tasks.builder.model.FormWithDisplayName;
+import org.motechproject.commcare.tasks.builder.model.CaseTypeWithApplicationName;
+import org.motechproject.commcare.tasks.builder.model.FormWithApplicationName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,12 +72,12 @@ public class CommcareSchemaServiceImpl implements CommcareSchemaService {
     
     @Override
     @Transactional
-    public Set<CaseTypeWithDisplayName> getCaseTypesWithApplicationName(String configName) {
-        Set<CaseTypeWithDisplayName> caseTypesWithApplicationName = new HashSet<>();
+    public Set<CaseTypeWithApplicationName> getCaseTypesWithApplicationName(String configName) {
+        Set<CaseTypeWithApplicationName> caseTypesWithApplicationName = new HashSet<>();
 
         for (CommcareApplicationJson app : commcareApplicationDataService.bySourceConfiguration(configName)) {
             for (CommcareModuleJson module : app.getModules()) {
-                caseTypesWithApplicationName.add(new CaseTypeWithDisplayName(module.getCaseType(), app.getApplicationName()));
+                caseTypesWithApplicationName.add(new CaseTypeWithApplicationName(module.getCaseType(), app.getApplicationName()));
             }
         }
 
@@ -86,18 +86,18 @@ public class CommcareSchemaServiceImpl implements CommcareSchemaService {
     
     @Override
     @Transactional
-    public Set<FormWithDisplayName> getFormsWithApplicationName(String configName) {
-        Set<FormWithDisplayName> formWithDisplayName = new HashSet<>();
+    public Set<FormWithApplicationName> getFormsWithApplicationName(String configName) {
+        Set<FormWithApplicationName> formWithApplicationName = new HashSet<>();
 
         for (CommcareApplicationJson app : commcareApplicationDataService.bySourceConfiguration(configName)) {
             for (CommcareModuleJson module : app.getModules()) {
                 for (FormSchemaJson form : module.getFormSchemas()) {
-                    formWithDisplayName.add(new FormWithDisplayName(form, app.getApplicationName()));
+                    formWithApplicationName.add(new FormWithApplicationName(form, app.getApplicationName()));
                 }
             }
         }
 
-        return formWithDisplayName;
+        return formWithApplicationName;
     }
 
     @Override
