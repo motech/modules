@@ -1,4 +1,4 @@
-package org.motechproject.openmrs.it.version10;
+package org.motechproject.openmrs.it.version1_10;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

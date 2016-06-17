@@ -234,7 +234,7 @@
                                     <overwrite>true</overwrite>
                                     <resources>
                                         <resource>
-                                            <directory>src/test/resources</directory>
+                                            <directory>src/test/resources/config${openmrs.version}</directory>
                                             <filtering>true</filtering>
                                             <include>openmrs-configs.json</include>
                                         </resource>

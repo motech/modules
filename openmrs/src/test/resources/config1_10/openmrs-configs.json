@@ -1,0 +1,19 @@
+{
+  "configs" :
+  [
+    {
+      "name": "Test OpenMRS Server",
+      "openMrsVersion":"1.10",
+      "openMrsUrl": "http://${openmrs.host}/openmrs",
+      "username": "admin",
+      "password": "Admin123",
+      "motechPatientIdentifierTypeName": "MOTECH Id",
+      "patientIdentifierTypeNames":
+      [
+        "Old Identification Number",
+        "OpenMRS Identification Number"
+      ]
+    }
+  ],
+  "defaultConfigName" : "Test OpenMRS Server"
+}
