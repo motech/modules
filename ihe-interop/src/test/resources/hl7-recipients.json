@@ -5,6 +5,8 @@
   },
   {
     "recipientName": "test_recipient_2",
-    "recipientUrl": "test_url_2"
+    "recipientUrl": "test_url_2",
+    "recipientUsername": "test_username_2",
+    "recipientPassword": "test_password_2"
   }
 ]
