@@ -80,6 +80,16 @@ public class OpenMRSProgramEnrollmentServiceImpl implements OpenMRSProgramEnroll
         return Objects.nonNull(patient) ? getProgramEnrollmentByPatientUuid(configName, patient.getUuid()) : new ArrayList<>();
     }
 
+    @Override
+    public void deleteProgramEnrollment(String configName, String uuid) {
+        try {
+            Config config = configService.getConfigByName(configName);
+            programEnrollmentResource.deleteProgramEnrollment(config, uuid);
+        } catch (HttpClientErrorException e) {
+            throw new OpenMRSException("Could not delete program enrollment with uuid: " + uuid, e);
+        }
+    }
+
     private void validateProgramEnrollment(ProgramEnrollment programEnrollment) {
         Validate.notNull(programEnrollment, "Program Enrollment cannot be null");
         Validate.notNull(programEnrollment.getPatient(), "Patient cannot be null");
