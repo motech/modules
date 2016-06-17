@@ -1,4 +1,4 @@
-package org.motechproject.openmrs.it.version1_10;
+package org.motechproject.openmrs.it.version1_12;
 
 import org.joda.time.DateTime;
 import org.junit.After;
