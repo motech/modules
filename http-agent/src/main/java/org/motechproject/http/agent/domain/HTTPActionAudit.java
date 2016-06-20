@@ -14,7 +14,7 @@ public class HTTPActionAudit {
     @Field
     private String url;
 
-    @Field
+    @Field(type = TEXT_AREA_SQL_TYPE)
     private String request;
 
     @Field(type = TEXT_AREA_SQL_TYPE)
