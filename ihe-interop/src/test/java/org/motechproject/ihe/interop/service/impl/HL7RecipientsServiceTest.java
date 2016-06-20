@@ -47,10 +47,14 @@ public class HL7RecipientsServiceTest {
         assertNotNull(rec1);
         assertEquals("test_recipient_1", rec1.getRecipientName());
         assertEquals("test_url_1", rec1.getRecipientUrl());
+        assertNull(rec1.getRecipientUsername());
+        assertNull(rec1.getRecipientPassword());
 
         assertNotNull(rec2);
         assertEquals("test_recipient_2", rec2.getRecipientName());
         assertEquals("test_url_2", rec2.getRecipientUrl());
+        assertEquals("test_username_2", rec2.getRecipientUsername());
+        assertEquals("test_password_2", rec2.getRecipientPassword());
 
         assertNull(rec3);
     }
