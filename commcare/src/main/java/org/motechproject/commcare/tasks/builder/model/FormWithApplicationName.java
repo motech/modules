@@ -34,8 +34,9 @@ public class FormWithApplicationName {
     }
 
     @Override
-    public boolean equals(Object o) {
-        return Objects.equals(this, o);
+    public boolean equals(Object obj) {
+        FormWithApplicationName o = (FormWithApplicationName) obj;
+        return Objects.equals(this.form, o.form) && Objects.equals(this.applicationName, o.applicationName);
     }
 
     @Override

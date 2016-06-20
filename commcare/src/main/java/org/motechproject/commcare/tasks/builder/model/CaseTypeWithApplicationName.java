@@ -44,7 +44,8 @@ public class CaseTypeWithApplicationName {
 
     @Override
     public boolean equals(Object obj) {
-        return Objects.equals(this, obj);
+        CaseTypeWithApplicationName o = (CaseTypeWithApplicationName) obj;
+        return Objects.equals(this.caseType, o.caseType) && Objects.equals(this.applicationName, o.applicationName) && Objects.equals(this.caseProperties, o.caseProperties);
     }
 
     @Override
