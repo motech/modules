@@ -4,6 +4,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpException;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.http.agent.domain.EventDataKeys;
@@ -90,7 +91,6 @@ public class HttpClientEventListener {
         LOGGER.info(String.format("Posting Http request -- Url: %s, Data: %s",
                 url, String.valueOf(requestData)));
 
-
         executeFor(url, entity, method, username, password);
 
     }
@@ -123,7 +123,7 @@ public class HttpClientEventListener {
             retryInterval = (long) parameters.get(EventDataKeys.RETRY_INTERVAL);
         }
 
-        return checkStatusCodeAndReturnResponse(url, requestData, method, basicRestTemplate, retryCount, retryInterval);
+        return sendRequest(url, requestData, method, basicRestTemplate, retryCount, retryInterval);
 
     }
 
@@ -143,7 +143,7 @@ public class HttpClientEventListener {
         Object requestData = parameters.get(SendRequestConstants.DATA);
         String username = String.valueOf(parameters.get(SendRequestConstants.USERNAME));
         String password = String.valueOf(parameters.get(SendRequestConstants.PASSWORD));
-        boolean redirection = (boolean) parameters.get(SendRequestConstants.REDIRECTION_ABILTY);
+        boolean followRedirects = (boolean) parameters.get(SendRequestConstants.FOLLOW_REDIRECTS);
         LOGGER.info(String.format("Posting Http request -- Url: %s, Data: %s",
                 url, String.valueOf(requestData)));
 
@@ -158,10 +158,9 @@ public class HttpClientEventListener {
         } else {
             restTemplate = basicRestTemplate;
         }
-        
-        if (!redirection) {
+        if (followRedirects) {
             final HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-            HttpClient httpClient = HttpClientBuilder.create().disableRedirectHandling().build();
+            HttpClient httpClient = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
             factory.setHttpClient(httpClient);
             restTemplate.setRequestFactory(factory);
         }
@@ -176,10 +175,10 @@ public class HttpClientEventListener {
             retryInterval = (long) parameters.get(EventDataKeys.RETRY_INTERVAL);
         }
 
-        return checkStatusCodeAndReturnResponse(url, entity, Method.POST, restTemplate, retryCount, retryInterval);
+        return sendRequest(url, entity, Method.POST, restTemplate, retryCount, retryInterval);
     }
 
-    private ResponseEntity<?> checkStatusCodeAndReturnResponse(String url, Object requestData, Method method, RestTemplate restTemplate, int retryCount, long retryInterval)
+    private ResponseEntity<?> sendRequest(String url, Object requestData, Method method, RestTemplate restTemplate, int retryCount, long retryInterval)
     {
         ResponseEntity<?> retValue = null;
         Callable<ResponseEntity<?>> task = new Callable<ResponseEntity<?>>() {

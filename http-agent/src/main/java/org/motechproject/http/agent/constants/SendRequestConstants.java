@@ -9,8 +9,8 @@ public final class SendRequestConstants {
     public static final String URL = "URL";
     public static final String USERNAME = "Username";
     public static final String PASSWORD = "Password";
-    public static final String REDIRECTION_ABILTY = "Redirection";
-    public static final String DATA = "Map";
+    public static final String FOLLOW_REDIRECTS = "FollowRedirects";
+    public static final String DATA = "BodyParameters";
 
     private SendRequestConstants() {
 

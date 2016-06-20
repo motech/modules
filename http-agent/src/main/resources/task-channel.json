@@ -19,13 +19,13 @@
             "displayName": "http-agent.password"
           },
           {
-            "key": "Redirection",
-            "displayName": "http-agent.redirection",
+            "key": "FollowRedirects",
+            "displayName": "http-agent.followRedirects",
             "type": "BOOLEAN"
           },
           {
-            "key": "Map",
-            "displayName": "http-agent.map",
+            "key": "BodyParameters",
+            "displayName": "http-agent.bodyParameters",
             "type": "MAP"
           }
       ]}
