@@ -57,8 +57,8 @@
                                 },
                                 #foreach ( $question in $entry.getForm().getQuestions() )
                                 {
-                                   "displayName" : "$esc.java($question.getQuestionValue().split("/")[3]",
-                                   "fieldKey" : "$esc.java($question.getQuestionValue().split("/")[3])"
+                                   "displayName" : "$arrays.asList($esc.java($question.getQuestionValue().split("/"))).get(2)",
+                                   "fieldKey" : "$arrays.asList($esc.java($question.getQuestionValue().split("/"))).get(2)"
                                 },
                                 #end
                                 {
