@@ -39,4 +39,13 @@ public interface ProgramEnrollmentResource {
      * @return the list of matching program enrollments
      */
     List<ProgramEnrollment> getProgramEnrollmentByPatientUuid(Config config, String patientUuid);
+
+    /**
+     * Deletes program enrollment with the given UUID. The given {@code config} will be used
+     * while performing this action.
+     *
+     * @param config the configuration to be used while performing this action
+     * @param uuid the UUID of the program enrollment
+     */
+    void deleteProgramEnrollment(Config config, String uuid);
 }

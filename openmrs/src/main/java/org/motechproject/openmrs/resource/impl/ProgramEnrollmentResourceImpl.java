@@ -45,6 +45,11 @@ public class ProgramEnrollmentResourceImpl extends BaseResource implements Progr
         return programEnrollmentListResult.getResults();
     }
 
+    @Override
+    public void deleteProgramEnrollment(Config config, String uuid) {
+        delete(config, "/programenrollment/{uuid}?purge", uuid);
+    }
+
     private Gson buildGsonWithAdapters() {
         return new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
