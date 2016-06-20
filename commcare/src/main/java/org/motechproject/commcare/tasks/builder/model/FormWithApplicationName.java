@@ -2,6 +2,8 @@ package org.motechproject.commcare.tasks.builder.model;
 
 import org.motechproject.commcare.domain.FormSchemaJson;
 
+import java.util.Objects;
+
 /**
  * Stores form and it's application name.
  */
@@ -33,13 +35,11 @@ public class FormWithApplicationName {
 
     @Override
     public boolean equals(Object o) {
-        FormWithApplicationName that = (FormWithApplicationName) o;
-
-        return form.equals(that.form);
+        return Objects.equals(this, o);
     }
 
     @Override
     public int hashCode() {
-        return form.hashCode();
+        return 2 * form.hashCode() + 3 * applicationName.hashCode();
     }
 }

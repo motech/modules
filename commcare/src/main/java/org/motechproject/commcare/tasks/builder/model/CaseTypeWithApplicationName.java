@@ -1,6 +1,7 @@
 package org.motechproject.commcare.tasks.builder.model;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
 * Stores casetype and it's application name.
@@ -43,15 +44,11 @@ public class CaseTypeWithApplicationName {
 
     @Override
     public boolean equals(Object obj) {
-        if (caseType.equals(obj)) {
-            return true;
-        }
-
-        return false;
+        return Objects.equals(this, obj);
     }
 
     @Override
     public int hashCode() {
-        return caseType.hashCode();
+        return 2*caseType.hashCode() + 3*applicationName.hashCode() + 10*caseProperties.hashCode();
     }
 }
