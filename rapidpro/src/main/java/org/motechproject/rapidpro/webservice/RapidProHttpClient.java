@@ -2,6 +2,7 @@ package org.motechproject.rapidpro.webservice;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -12,6 +13,7 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.osgi.services.HttpClientBuilderFactory;
 import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 import org.motechproject.rapidpro.domain.Settings;
 import org.motechproject.rapidpro.exception.RapidProClientException;
 import org.motechproject.rapidpro.service.SettingsService;
@@ -20,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -53,10 +54,6 @@ public class RapidProHttpClient {
     private static final String NO_SETTINGS = "No settings";
     private static final String NO_API_KEY = "No API key";
     private static final String NO_VERSION = "No API version";
-
-    private static final int STATUS_ERROR_300 = 300;
-    private static final int STATUS_ERROR_400 = 400;
-    private static final int STATUS_ERROR_500 = 500;
 
     private HttpClient client;
     private SettingsService settingsService;
@@ -93,10 +90,10 @@ public class RapidProHttpClient {
      * @return An {@link InputStream} containing the response
      * @throws RapidProClientException
      */
-    public InputStream executePost(String endpoint, ByteArrayOutputStream body, MediaFormat contentType, MediaFormat responseMediaFormat) throws RapidProClientException {
+    public InputStream executePost(String endpoint, byte[] body, MediaFormat contentType, MediaFormat responseMediaFormat) throws RapidProClientException {
         URI uri = buildUri(endpoint, responseMediaFormat, null);
         HttpPost request = new HttpPost(uri);
-        request.setEntity(new ByteArrayEntity(body.toByteArray()));
+        request.setEntity(new ByteArrayEntity(body));
         setContentType(request, contentType);
         return executeRequestWithResponseContent(request);
     }
@@ -145,16 +142,25 @@ public class RapidProHttpClient {
 
     private void checkHttpStatusCode(HttpResponse response) throws RapidProClientException {
         int status = response.getStatusLine().getStatusCode();
-        if (status < STATUS_ERROR_300) {
+        if (status < HttpStatus.SC_MULTIPLE_CHOICES) {
             return;
-        } else if (status < STATUS_ERROR_400) {
-            throw new RapidProClientException(REDIRECTION + status);
-        } else if (status < STATUS_ERROR_500) {
-            throw new RapidProClientException(CLIENT_ERROR + status);
+        } else if (status < HttpStatus.SC_BAD_REQUEST) {
+            throw new RapidProClientException(REDIRECTION + status + getErrorResponseBody(response));
+        } else if (status < HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+            throw new RapidProClientException(CLIENT_ERROR + status + getErrorResponseBody(response));
         } else {
-            throw new RapidProClientException(SERVER_ERROR + status);
+            throw new RapidProClientException(SERVER_ERROR + status + getErrorResponseBody(response));
         }
     }
+
+    private String getErrorResponseBody(HttpResponse response) {
+        try {
+            return EntityUtils.toString(response.getEntity());
+        } catch (IOException e) {
+            return e.getMessage();
+        }
+    }
+
 
     private InputStream executeRequestWithResponseContent(HttpUriRequest request) throws RapidProClientException {
         try {
@@ -172,7 +178,6 @@ public class RapidProHttpClient {
             checkHttpStatusCode(response);
             return response;
         } catch (IOException e) {
-            LOGGER.error(e.getMessage());
             throw new RapidProClientException(UNABLE_TO_EXECUTE, e);
         }
     }

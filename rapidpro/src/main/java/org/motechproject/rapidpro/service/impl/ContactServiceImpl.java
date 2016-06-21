@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 /**
  * Implementaton of {@link ContactService}.
  */
@@ -67,7 +69,7 @@ public class ContactServiceImpl implements ContactService {
         LOGGER.debug(UPDATING_CONTACT + externalId);
         try {
             if (!externalIdNull(externalId)) {
-                String uuid = contactMapperService.getRapidproUUIDFromExternalId(externalId);
+                UUID uuid = contactMapperService.getRapidproUUIDFromExternalId(externalId);
                 Contact fromRapidpro = contactWebService.getContactByUUID(uuid);
                 ContactUtils.mergeContactFields(contact, fromRapidpro);
                 contactWebService.createOrUpdateContact(contact);
@@ -86,7 +88,7 @@ public class ContactServiceImpl implements ContactService {
         LOGGER.debug(DELETING_CONTACT + externalId);
         try {
             if (!externalIdNull(externalId)) {
-                String uuid = contactMapperService.getRapidproUUIDFromExternalId(externalId);
+                UUID uuid = contactMapperService.getRapidproUUIDFromExternalId(externalId);
                 contactWebService.deleteContactByUUID(uuid);
                 contactMapperService.delete(externalId);
 
@@ -109,7 +111,7 @@ public class ContactServiceImpl implements ContactService {
 
         try {
             if (!externalIdNull(externalId)) {
-                String uuid = contactMapperService.getRapidproUUIDFromExternalId(externalId);
+                UUID uuid = contactMapperService.getRapidproUUIDFromExternalId(externalId);
                 contact = contactWebService.getContactByUUID(uuid);
 
             } else {
@@ -146,12 +148,12 @@ public class ContactServiceImpl implements ContactService {
     private void sendWebserviceFailUpdateMessage(WebServiceException e, Contact contact) {
         statusMessageService.warn(WEB_SERVICE_CREATE_UPDATE_FAIL + e.getMessage(), MODULE_NAME);
         LOGGER.warn(WEB_SERVICE_CREATE_UPDATE_FAIL + e.getMessage());
-        LOGGER.warn(CONTACT_DETAILS + contact.toString());
+        LOGGER.warn(CONTACT_DETAILS + contact.toString(), e);
     }
 
     private void sendWebServiceFailDeleteMessage(WebServiceException e) {
         statusMessageService.warn(WEB_SERVICE_DELETE_FAIL + e.getMessage(), MODULE_NAME);
-        LOGGER.warn(WEB_SERVICE_DELETE_FAIL + e.getMessage());
+        LOGGER.warn(WEB_SERVICE_DELETE_FAIL + e.getMessage(), e);
     }
 
     private boolean externalIdNull(String externalId) {

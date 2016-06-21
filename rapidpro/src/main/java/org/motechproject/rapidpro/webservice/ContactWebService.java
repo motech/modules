@@ -3,6 +3,8 @@ package org.motechproject.rapidpro.webservice;
 import org.motechproject.rapidpro.exception.WebServiceException;
 import org.motechproject.rapidpro.webservice.dto.Contact;
 
+import java.util.UUID;
+
 /*
  * Webservice interface for RapidPro REST API
  */
@@ -24,7 +26,7 @@ public interface ContactWebService {
      * @param uuid The rapidpro UUID of the contact.
      * @throws WebServiceException
      */
-    void deleteContactByUUID(String uuid) throws WebServiceException;
+    void deleteContactByUUID(UUID uuid) throws WebServiceException;
 
     /**
      * Finds a contact with the corresponding UUID, if it exists.
@@ -33,7 +35,7 @@ public interface ContactWebService {
      * @return {@link Contact} A representation of the contact.
      * @throws WebServiceException
      */
-    Contact getContactByUUID(String uuid) throws WebServiceException;
+    Contact getContactByUUID(UUID uuid) throws WebServiceException;
 
     /**
      * Finds a contact with the phone number, if it exists.

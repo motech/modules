@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
 
 /**
  * Representation of a Rapidpro Contact.
@@ -15,7 +17,8 @@ import java.util.Map;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Contact {
     private static final long serialVersionUID = 1L;
-    private String uuid;
+
+    private UUID uuid;
     private String name;
     private String language;
     private List<String> urns;
@@ -87,11 +90,11 @@ public class Contact {
         }
     }
 
-    public String getUuid() {
+    public UUID getUuid() {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
 

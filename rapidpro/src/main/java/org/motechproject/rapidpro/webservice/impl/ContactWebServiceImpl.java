@@ -15,10 +15,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Implementation of {@link ContactWebService}
@@ -49,36 +50,39 @@ public class ContactWebServiceImpl implements ContactWebService {
 
     @Override
     public Contact createOrUpdateContact(Contact contact) throws WebServiceException {
+        InputStream response = null;
         try {
             LOGGER.debug(CREATING + contact.toString());
-            ByteArrayOutputStream body = JsonUtils.toOutputStream(contact);
-            InputStream response = client.executePost(CONTACTS_ENDPOINT, body, MediaFormat.JSON, MediaFormat.JSON);
+            byte[] body = JsonUtils.toByteArray(contact);
+            response = client.executePost(CONTACTS_ENDPOINT, body, MediaFormat.JSON, MediaFormat.JSON);
             return (Contact) JsonUtils.toObject(response, CONTACT_TYPE_REF);
+
         } catch (RapidProClientException | JsonUtilException e) {
-            LOGGER.error(e.getMessage());
-            throw new WebServiceException(ERROR_CREATING_OR_UPDATING + contact.toString(), e);
+            throw new WebServiceException(ERROR_CREATING_OR_UPDATING + contact.getName(), e);
+
+        } finally {
+            closeInputStream(response);
         }
     }
 
     @Override
-    public void deleteContactByUUID(String uuid) throws WebServiceException {
+    public void deleteContactByUUID(UUID uuid) throws WebServiceException {
         try {
             LOGGER.debug(DELETING + uuid);
             Map<String, String> params = new HashMap<>();
-            params.put(UUID, uuid);
+            params.put(UUID, uuid.toString());
             client.executeDelete(CONTACTS_ENDPOINT, MediaFormat.JSON, params);
         } catch (RapidProClientException e) {
-            LOGGER.error(e.getMessage());
             throw new WebServiceException(ERROR_DELETING + uuid, e);
         }
     }
 
     @Override
-    public Contact getContactByUUID(String uuid) throws WebServiceException {
+    public Contact getContactByUUID(UUID uuid) throws WebServiceException {
         try {
             LOGGER.debug(FINDING + uuid);
             Map<String, String> params = new HashMap<>();
-            params.put(UUID, uuid);
+            params.put(UUID, uuid.toString());
             return getWithParams(params);
         } catch (RapidProClientException | JsonUtilException e) {
             throw new WebServiceException(ERROR_RETREIVING_UUID + uuid, e);
@@ -109,5 +113,11 @@ public class ContactWebServiceImpl implements ContactWebService {
         } else {
             throw new WebServiceException("Query Returned more than one contact.Parameters:  " + params.toString());
         }
+    }
+
+    private void closeInputStream(InputStream is) {
+        try {
+            is.close();
+        } catch (IOException e) { }
     }
 }

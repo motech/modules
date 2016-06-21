@@ -5,6 +5,8 @@ import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
 import org.motechproject.rapidpro.domain.ContactMapping;
 
+import java.util.UUID;
+
 
 /**
  * Data Service for {@link ContactMapping}.
@@ -15,5 +17,5 @@ public interface ContactMapperDataService extends MotechDataService<ContactMappi
     ContactMapping findByExternalId(@LookupField(name = "externalId") String externalId);
 
     @Lookup
-    ContactMapping findByRapidproUUID(@LookupField(name = "rapidproUUID") String rapidproUUID);
+    ContactMapping findByRapidproUUID(@LookupField(name = "rapidproUUID") UUID rapidproUUID);
 }

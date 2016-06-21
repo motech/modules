@@ -3,6 +3,8 @@ package org.motechproject.rapidpro.service;
 import org.motechproject.rapidpro.domain.ContactMapping;
 import org.motechproject.rapidpro.exception.NoMappingException;
 
+import java.util.UUID;
+
 
 /**
  * Service interface for CRUD operations on {@link ContactMapping}
@@ -16,7 +18,7 @@ public interface ContactMapperService {
      * @return The Contact UUID, if it exists.
      * @throws NoMappingException If no mapping from an External ID to a Rapidpro UUID exists.
      */
-    String getRapidproUUIDFromExternalId(String externalId) throws NoMappingException;
+    UUID getRapidproUUIDFromExternalId(String externalId) throws NoMappingException;
 
     /**
      * Deletes the ContactMapper if it exists.
@@ -32,7 +34,7 @@ public interface ContactMapperService {
      * @param externalId   The external ID mapping to a Rapidpro UUID.
      * @param rapidproUUID The Rapidpro UUID.
      */
-    void create(String externalId, String rapidproUUID);
+    void create(String externalId, UUID rapidproUUID);
 
     /**
      * Checks if a mapping exists from an external ID to a Rapidpro UUID.

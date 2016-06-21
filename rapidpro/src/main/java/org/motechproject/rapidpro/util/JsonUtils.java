@@ -7,6 +7,7 @@ import org.motechproject.rapidpro.exception.JsonUtilException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Utility class for serializing and deserializing objects to or from JSON
@@ -14,6 +15,8 @@ import java.io.InputStream;
 public final class JsonUtils {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final String ERROR_SERIALIZING = "Error serializing object of type: ";
+    private static final String ERROR_DESERIALIZING = "Error deserializing object of type: ";
 
     private JsonUtils() {
     }
@@ -30,25 +33,36 @@ public final class JsonUtils {
         try {
             return MAPPER.readValue(inputStream, typeReference);
         } catch (IOException e) {
-            throw new JsonUtilException("Error deserializing object of type: " + typeReference.getType(), e);
+            throw new JsonUtilException(ERROR_DESERIALIZING + typeReference.getType(), e);
         }
     }
 
     /**
-     * Serializes an Object to a JSON ByteArrayOutputStream
+     * Serializes an Object to a JSON byte array
      *
      * @param o The object to be serialized
-     * @return A ByteArrayOutputStream serial representation of the object
+     * @return A byte array serial representation of the object
      * @throws JsonUtilException If there is an error serializing
      */
-    public static ByteArrayOutputStream toOutputStream(Object o) throws JsonUtilException {
+    public static byte[] toByteArray(Object o) throws JsonUtilException {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         try {
-            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            buffer = new ByteArrayOutputStream();
             MAPPER.writeValue(buffer, o);
-            return buffer;
+            return buffer.toByteArray();
+
         } catch (IOException e) {
-            throw new JsonUtilException("Error serializing object of type: " + o.getClass().getSimpleName(), e);
+            throw new JsonUtilException(ERROR_SERIALIZING + o.getClass().getSimpleName(), e);
+
+        } finally {
+            closeOutputStream(buffer);
         }
+    }
+
+    private static void closeOutputStream(OutputStream os) {
+        try {
+            os.close();
+        } catch (IOException e) { }
     }
 
     /**
@@ -62,7 +76,7 @@ public final class JsonUtils {
         try {
             return MAPPER.writeValueAsString(o);
         } catch (IOException e) {
-            throw new JsonUtilException("Error serializing object of type: " + o.getClass().getSimpleName(), e);
+            throw new JsonUtilException(ERROR_DESERIALIZING + o.getClass().getSimpleName(), e);
         }
     }
 }

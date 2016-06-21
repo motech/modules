@@ -7,6 +7,8 @@ import org.motechproject.rapidpro.service.ContactMapperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 /**
  * Implementation of {@link ContactMapperServiceImpl}
  */
@@ -17,7 +19,7 @@ public class ContactMapperServiceImpl implements ContactMapperService {
     private ContactMapperDataService contactMapperDataService;
 
     @Override
-    public String getRapidproUUIDFromExternalId(String externalId) throws NoMappingException {
+    public UUID getRapidproUUIDFromExternalId(String externalId) throws NoMappingException {
         return getMapper(externalId).getRapidproUUID();
     }
 
@@ -28,7 +30,7 @@ public class ContactMapperServiceImpl implements ContactMapperService {
     }
 
     @Override
-    public void create(String externalId, String rapidproUUID) {
+    public void create(String externalId, UUID rapidproUUID) {
         contactMapperDataService.create(new ContactMapping(externalId, rapidproUUID));
     }
 

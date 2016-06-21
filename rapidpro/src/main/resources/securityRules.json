@@ -3,7 +3,8 @@
     "active": true,
     "pattern": "/**/rapidpro/**",
     "supportedSchemes": [
-      "NO_SECURITY"
+      "NO_SECURITY",
+      "BASIC"
     ],
     "protocol": "HTTP",
     "priority": 2,

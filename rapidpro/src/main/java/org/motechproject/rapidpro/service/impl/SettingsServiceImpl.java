@@ -6,8 +6,6 @@ import org.apache.commons.io.IOUtils;
 import org.motechproject.config.SettingsFacade;
 import org.motechproject.rapidpro.domain.Settings;
 import org.motechproject.rapidpro.service.SettingsService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Component;
@@ -20,8 +18,6 @@ import java.io.InputStream;
 
 @Component("rapidproSettingsService")
 public class SettingsServiceImpl implements SettingsService {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(SettingsService.class);
     private static final String SETTINGS = "settings.json";
 
     private Settings settings;
@@ -58,7 +54,6 @@ public class SettingsServiceImpl implements SettingsService {
             Gson gson = new Gson();
             settings = gson.fromJson(jsonText, Settings.class);
         } catch (Exception e) {
-            LOGGER.debug(e.toString());
             throw new JsonIOException(e);
         }
     }
