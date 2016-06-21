@@ -48,4 +48,13 @@ public interface OpenMRSProgramEnrollmentService {
      * @return list of matching program enrollments
      */
     List<ProgramEnrollment> getProgramEnrollmentByPatientMotechId(String configName, String patientMotechId);
+
+    /**
+     * Deletes program enrollment with the given uuid.
+     * Configuration with the given {@code configName} will be used while performing this action.
+     *
+     * @param configName the name of the configuration
+     * @param uuid the UUID of the program enrollment
+     */
+    void deleteProgramEnrollment(String configName, String uuid);
 }
