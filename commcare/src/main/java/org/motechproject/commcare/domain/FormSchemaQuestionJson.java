@@ -2,6 +2,7 @@ package org.motechproject.commcare.domain;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -70,5 +71,14 @@ public class FormSchemaQuestionJson implements Serializable {
 
     public void setOptions(List<FormSchemaQuestionOptionJson> options) {
         this.options = options;
+    }
+
+    public String getCorrectQuestionValue() {
+        String qValue = questionValue;
+        if(!StringUtils.isBlank(questionValue)) {
+            qValue = questionValue.split("/")[2];
+        }
+
+        return qValue;
     }
 }

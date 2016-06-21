@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Arrays;
 
 /**
  * The <code>CommcareDataProviderBuilder</code> class is responsible for building
@@ -61,7 +60,6 @@ public class CommcareDataProviderBuilder {
         model.put("esc", escapeTool);
         model.put("trimmer", trimmer);
         model.put("DisplayNameHelper", DisplayNameHelper.class);
-        model.put("arrays", Arrays.class);
         StringWriter writer = new StringWriter();
 
         VelocityEngineUtils.mergeTemplate(velocityEngine, COMMCARE_TASK_DATA_PROVIDER, model, writer);
