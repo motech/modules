@@ -1,7 +1,10 @@
 package org.motechproject.http.agent.listener;
 
+import org.apache.http.client.HttpClient;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpException;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.http.agent.domain.EventDataKeys;
@@ -21,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import org.motechproject.http.agent.constants.SendRequestConstants;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -118,16 +122,71 @@ public class HttpClientEventListener {
         if (parameters.get(EventDataKeys.RETRY_INTERVAL) != null) {
             retryInterval = (long) parameters.get(EventDataKeys.RETRY_INTERVAL);
         }
-        ResponseEntity<?> retValue = null;
 
-        // defining a callable which attempts retry if response is not 2xx
+        return sendRequest(url, requestData, method, basicRestTemplate, retryCount, retryInterval);
+
+    }
+
+    /**
+     * Handles an event and sends an http request with username and password parameters. Request sections such as headers, url or method are built from event
+     * parameters. Returns the response from the performed request. Retry count(default value is 1) and retry
+     * interval(default value is 0, expressed in milliseconds) can be specified by event parameters(keys:
+     * org.motechproject.http.agent.domain.EventDataKeys.RETRY_COUNT and org.motechproject.http.agent.domain.EventDataKeys.RETRY_INTERVAL).
+     *
+     * @param motechEvent the event which contains data for request
+     * @return response from the posted request
+     */
+    @MotechListener (subjects = { SendRequestConstants.SEND_REQUEST_SUBJECT })
+    public ResponseEntity<?> handleWithUserPasswordAndReturnType(MotechEvent motechEvent) {
+        Map<String, Object> parameters = motechEvent.getParameters();
+        final String url = String.valueOf(parameters.get(SendRequestConstants.URL));
+        Object requestData = parameters.get(SendRequestConstants.BODY_PARAMETERS);
+        String username = String.valueOf(parameters.get(SendRequestConstants.USERNAME));
+        String password = String.valueOf(parameters.get(SendRequestConstants.PASSWORD));
+        boolean followRedirects = (boolean) parameters.get(SendRequestConstants.FOLLOW_REDIRECTS);
+        LOGGER.info(String.format("Posting Http request -- Url: %s, Data: %s",
+                url, String.valueOf(requestData)));
+
+        HttpEntity<Object> entity = new HttpEntity<>(requestData);
+
+        RestTemplate restTemplate;
+
+        if (StringUtils.isNotBlank(username)
+                || StringUtils.isNotBlank(password)) {
+            restTemplate = new RestTemplate(usernamePasswordRequestFactory(
+                    username, password));
+        } else {
+            restTemplate = basicRestTemplate;
+        }
+        if (followRedirects) {
+            final HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+            HttpClient httpClient = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
+            factory.setHttpClient(httpClient);
+            restTemplate.setRequestFactory(factory);
+        }
+
+        int retryCount = 1; // default retry count = 1
+        long retryInterval = 0; // by default, no waiting time between two
+        // retries
+        if (parameters.get(EventDataKeys.RETRY_COUNT) != null) {
+            retryCount = (int) parameters.get(EventDataKeys.RETRY_COUNT);
+        }
+        if (parameters.get(EventDataKeys.RETRY_INTERVAL) != null) {
+            retryInterval = (long) parameters.get(EventDataKeys.RETRY_INTERVAL);
+        }
+
+        return sendRequest(url, entity, Method.POST, restTemplate, retryCount, retryInterval);
+    }
+
+    private ResponseEntity<?> sendRequest(String url, Object requestData, Method method, RestTemplate restTemplate, int retryCount, long retryInterval)
+    {
+        ResponseEntity<?> retValue = null;
         Callable<ResponseEntity<?>> task = new Callable<ResponseEntity<?>>() {
             public ResponseEntity<?> call() throws HttpException {
 
                 LOGGER.info("Posting Http request -- Url: {}, Data: {}",
                         url, String.valueOf(requestData));
-                ResponseEntity<?> response = executeForReturnType(url,
-                        requestData, method);
+                ResponseEntity<?> response = doExecuteForReturnType(url, requestData, method, restTemplate);
                 if (response.getStatusCode().value() / HUNDRED == 2) {
                     return response;
                 } else {
@@ -135,7 +194,6 @@ public class HttpClientEventListener {
                 }
             }
         };
-
         // Creating new instance of RetriableTask to run the callable
         RetriableTask<ResponseEntity<?>> r = new RetriableTask<>(
                 retryCount, retryInterval, task);
@@ -147,10 +205,9 @@ public class HttpClientEventListener {
                     e);
         }
         return retValue;
-
     }
 
-    private void executeFor(String url, HttpEntity<Object> requestData,
+    private ResponseEntity<?> executeFor(String url, Object requestData,
                             Method method, String username, String password) {
         RestTemplate restTemplate;
 
@@ -161,12 +218,7 @@ public class HttpClientEventListener {
         } else {
             restTemplate = basicRestTemplate;
         }
-        doExecuteForReturnType(url, requestData, method, restTemplate);
-    }
-
-    private ResponseEntity<?> executeForReturnType(String url,
-                                                   Object requestData, Method method) {
-        return doExecuteForReturnType(url, requestData, method, basicRestTemplate);
+        return doExecuteForReturnType(url, requestData, method, restTemplate);
     }
 
     private ResponseEntity<?> doExecuteForReturnType(String url, Object requestData, Method method,

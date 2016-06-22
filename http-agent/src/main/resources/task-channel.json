@@ -1,0 +1,33 @@
+{
+  "displayName": "http.agent",
+  "triggerTaskEvents" : [],
+  "actionTaskEvents": [
+    {
+      "displayName": "http-agent.request",
+      "subject": "SendRequest",
+      "actionParameters": [
+          {
+            "key": "URL",
+            "displayName": "http-agent.url"
+          },
+          {
+            "key": "Username",
+            "displayName": "http-agent.username"
+          },
+          {
+            "key": "Password",
+            "displayName": "http-agent.password"
+          },
+          {
+            "key": "FollowRedirects",
+            "displayName": "http-agent.followRedirects",
+            "type": "BOOLEAN"
+          },
+          {
+            "key": "BodyParameters",
+            "displayName": "http-agent.bodyParameters",
+            "type": "MAP"
+          }
+      ]}
+  ]
+}
