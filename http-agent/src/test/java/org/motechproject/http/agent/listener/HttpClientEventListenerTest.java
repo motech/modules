@@ -168,7 +168,7 @@ public class HttpClientEventListenerTest {
     public void shouldReturnResponse() throws Throwable {
         MotechEvent motechEvent = new MotechEvent(SendRequestConstants.SEND_REQUEST_SUBJECT, new HashMap<String, Object>() {{
             put(SendRequestConstants.URL, url);
-            put(SendRequestConstants.DATA, data);
+            put(SendRequestConstants.BODY_PARAMETERS, data);
             put(SendRequestConstants.USERNAME, admin);
             put(SendRequestConstants.PASSWORD, password);
             put(SendRequestConstants.FOLLOW_REDIRECTS, false);

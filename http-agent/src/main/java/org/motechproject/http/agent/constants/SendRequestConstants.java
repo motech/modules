@@ -10,7 +10,7 @@ public final class SendRequestConstants {
     public static final String USERNAME = "Username";
     public static final String PASSWORD = "Password";
     public static final String FOLLOW_REDIRECTS = "FollowRedirects";
-    public static final String DATA = "BodyParameters";
+    public static final String BODY_PARAMETERS = "BodyParameters";
 
     private SendRequestConstants() {
 

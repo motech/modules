@@ -140,7 +140,7 @@ public class HttpClientEventListener {
     public ResponseEntity<?> handleWithUserPasswordAndReturnType(MotechEvent motechEvent) {
         Map<String, Object> parameters = motechEvent.getParameters();
         final String url = String.valueOf(parameters.get(SendRequestConstants.URL));
-        Object requestData = parameters.get(SendRequestConstants.DATA);
+        Object requestData = parameters.get(SendRequestConstants.BODY_PARAMETERS);
         String username = String.valueOf(parameters.get(SendRequestConstants.USERNAME));
         String password = String.valueOf(parameters.get(SendRequestConstants.PASSWORD));
         boolean followRedirects = (boolean) parameters.get(SendRequestConstants.FOLLOW_REDIRECTS);
@@ -206,8 +206,6 @@ public class HttpClientEventListener {
         }
         return retValue;
     }
-
-
 
     private ResponseEntity<?> executeFor(String url, Object requestData,
                             Method method, String username, String password) {
