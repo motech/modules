@@ -68,6 +68,7 @@ public class ActionBuilder {
     private ActionEventRequest buildCreateEncounterAction(String configName) {
         SortedSet<ActionParameterRequest> actionParameters = new TreeSet<>();
         int order = 0;
+        String serviceMethod = "createEncounter";
 
         actionParameters.add(prepareParameter(Keys.CONFIG_NAME, DisplayNames.CONFIG_NAME, configName, true, true,
                 order++));
@@ -81,7 +82,8 @@ public class ActionBuilder {
         return new ActionEventRequestBuilder()
                 .setDisplayName(getDisplayName(CREATE_ENCOUNTER, configName))
                 .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
-                .setServiceMethod("createEncounter")
+                .setServiceMethod(serviceMethod)
+                .setSubject(serviceMethod + "." + configName)
                 .setActionParameters(actionParameters)
                 .createActionEventRequest();
     }
@@ -89,6 +91,7 @@ public class ActionBuilder {
     private ActionEventRequest buildCreatePatientAction(String configName) {
         SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
         int order = 0;
+        String serviceMethod = "createPatient";
 
         parameters.add(prepareParameter(Keys.CONFIG_NAME, DisplayNames.CONFIG_NAME, configName, false, true, order++));
         parameters.addAll(prepareCommonParameters(order));
@@ -101,7 +104,8 @@ public class ActionBuilder {
         return new ActionEventRequestBuilder()
                 .setDisplayName(getDisplayName(CREATE_PATIENT, configName))
                 .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
-                .setServiceMethod("createPatient")
+                .setServiceMethod(serviceMethod)
+                .setSubject(serviceMethod + "." + configName)
                 .setActionParameters(parameters)
                 .createActionEventRequest();
     }
@@ -109,6 +113,7 @@ public class ActionBuilder {
     private ActionEventRequest buildUpdatePatientAction(String configName) {
         SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
         int order = 0;
+        String serviceMethod = "updatePerson";
 
         parameters.add(prepareParameter(Keys.CONFIG_NAME, DisplayNames.CONFIG_NAME, configName, false, true, order++));
         parameters.add(prepareParameter(Keys.PERSON_UUID, DisplayNames.PERSON_UUID, true, order++));
@@ -117,15 +122,16 @@ public class ActionBuilder {
         return new ActionEventRequestBuilder()
                 .setDisplayName(getDisplayName(UPDATE_PERSON, configName))
                 .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
-                .setServiceMethod("updatePerson")
+                .setServiceMethod(serviceMethod)
+                .setSubject(serviceMethod + "." + configName)
                 .setActionParameters(parameters)
                 .createActionEventRequest();
     }
 
     private ActionEventRequest buildCreateProgramEnrollmentAction(String configName) {
         SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
-
         int order = 0;
+        String serviceMethod = "createProgramEnrollment";
 
         parameters.add(prepareParameter(Keys.CONFIG_NAME, DisplayNames.CONFIG_NAME, configName, false, true, order++));
         parameters.add(prepareParameter(Keys.PATIENT_UUID, DisplayNames.PATIENT_UUID, true, order++));
@@ -137,15 +143,16 @@ public class ActionBuilder {
         return new ActionEventRequestBuilder()
                 .setDisplayName(getDisplayName(CREATE_PROGRAM_ENROLLMENT, configName))
                 .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
-                .setServiceMethod("createProgramEnrollment")
+                .setServiceMethod(serviceMethod)
+                .setSubject(serviceMethod + "." + configName)
                 .setActionParameters(parameters)
                 .createActionEventRequest();
     }
 
     private ActionEventRequest buildChangeStateOfProgramEnrollmentAction(String configName) {
         SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
-
         int order = 0;
+        String serviceMethod = "changeStateOfProgramEnrollment";
 
         parameters.add(prepareParameter(Keys.CONFIG_NAME, DisplayNames.CONFIG_NAME, configName, false, true, order++));
         parameters.add(prepareParameter(Keys.PROGRAM_ENROLLMENT_UUID, DisplayNames.PROGRAM_ENROLLMENT_UUID, true, order++));
@@ -156,7 +163,8 @@ public class ActionBuilder {
         return new ActionEventRequestBuilder()
                 .setDisplayName(getDisplayName(CHANGE_PROGRAM_ENROLLMENT_STATE, configName))
                 .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
-                .setServiceMethod("changeStateOfProgramEnrollment")
+                .setServiceMethod(serviceMethod)
+                .setSubject(serviceMethod + "." + configName)
                 .setActionParameters(parameters)
                 .createActionEventRequest();
     }
@@ -164,6 +172,7 @@ public class ActionBuilder {
     private ActionEventRequest buildUpdatePatientIdentifiersAction(String configName) {
         SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
         int order = 0;
+        String serviceMethod = "updatePatientIdentifiers";
 
         parameters.add(prepareParameter(Keys.CONFIG_NAME, DisplayNames.CONFIG_NAME, configName, false, true, order++));
         parameters.add(prepareParameter(Keys.PERSON_UUID, DisplayNames.PERSON_UUID, true, order++));
@@ -172,7 +181,8 @@ public class ActionBuilder {
         return new ActionEventRequestBuilder()
                 .setDisplayName(getDisplayName(UPDATE_PATIENT_IDENTIFIERS, configName))
                 .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
-                .setServiceMethod("updatePatientIdentifiers")
+                .setServiceMethod(serviceMethod)
+                .setSubject(serviceMethod + "." + configName)
                 .setActionParameters(parameters)
                 .createActionEventRequest();
     }
