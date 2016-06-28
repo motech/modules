@@ -2,7 +2,7 @@ package org.motechproject.http.agent.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
-
+import static org.motechproject.mds.util.Constants.Settings.TEXT_AREA_SQL_TYPE;
 import java.util.Objects;
 
 /**
@@ -14,10 +14,10 @@ public class HTTPActionAudit {
     @Field
     private String url;
 
-    @Field
+    @Field(type = TEXT_AREA_SQL_TYPE)
     private String request;
 
-    @Field
+    @Field(type = TEXT_AREA_SQL_TYPE)
     private String responseBody;
 
     @Field

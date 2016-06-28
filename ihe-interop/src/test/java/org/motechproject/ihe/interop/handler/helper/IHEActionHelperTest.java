@@ -91,4 +91,27 @@ public class IHEActionHelperTest {
 
         verify(iheTemplateService).sendTemplateToRecipientUrl(hl7Recipient.getRecipientUrl(), new String(bytes, StandardCharsets.UTF_8));
     }
+
+    @Test
+    public void shouldCallSendTemplateWithBasicAuthenticationMethod() throws IOException, SAXException, ParserConfigurationException, ClassNotFoundException {
+        Map<String, Object> params = new HashMap<>();
+        params.put(Constants.TEMPLATE_NAME_PARAM, "sampleTemplate3");
+        params.put(Constants.RECIPIENT_NAME_PARAM, "sampleRecipient3");
+
+        HL7Recipient sampleRecipient = new HL7Recipient("sampleName", "sampleUrl", "sampleUsername", "samplePassword");
+
+        byte[] bytes;
+        try (InputStream inputStream = getClass().getResourceAsStream("/empty_template.xml")) {
+            bytes = IOUtils.toByteArray(inputStream);
+        }
+        Byte[] byteObjects = ArrayUtils.toObject(bytes);
+
+        when(iheTemplateDataService.findByName("sampleTemplate3")).thenReturn(cdaTemplate);
+        when((Byte[]) iheTemplateDataService.getDetachedField(cdaTemplate, "templateData")).thenReturn(byteObjects);
+        when(hl7RecipientsService.getRecipientbyName("sampleRecipient3")).thenReturn(sampleRecipient);
+
+        iheActionHelper.handleAction(params);
+
+        verify(iheTemplateService).sendTemplateToRecipientUrlWithBasicAuthentication(sampleRecipient, new String(bytes, StandardCharsets.UTF_8));
+    }
 }

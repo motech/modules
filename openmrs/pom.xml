@@ -190,7 +190,9 @@
             </build>
         </profile>
         <profile>
-            <!-- To run this profile you must add openmrs.host, for example "mvn clean install -Dopenmrs.host=172.17.0.12:8080 -POPENMRSIT" -->
+            <!-- To run this profile you must add openmrs.host, for example "mvn clean install -Dopenmrs.host=172.17.0.12:8080 -POPENMRSIT"
+                    By default it runs with OpenMRS v1.9. To run this profile for OpenMRS v1.12 you must add openmrs.version,
+                    for example "mvn clean install -Dopenmrs.host=172.17.0.12:8080 -Dopenmrs.version=1_12 -POPENMRSIT"-->
             <id>OPENMRSIT</id>
             <build>
                 <plugins>
@@ -234,7 +236,7 @@
                                     <overwrite>true</overwrite>
                                     <resources>
                                         <resource>
-                                            <directory>src/test/resources</directory>
+                                            <directory>src/test/resources/config${openmrs.version}</directory>
                                             <filtering>true</filtering>
                                             <include>openmrs-configs.json</include>
                                         </resource>
@@ -254,7 +256,7 @@
                                 </goals>
                                 <configuration>
                                     <includes>
-                                        <include>**/**/*IntegrationTests.java</include>
+                                        <include>**/**/version${openmrs.version}/*IntegrationTests.java</include>
                                     </includes>
                                     <encoding>UTF-8</encoding>
                                     <summaryFile>target/failsafe-reports/failsafe-summary-it.xml</summaryFile>
