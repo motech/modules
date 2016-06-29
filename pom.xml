@@ -838,6 +838,7 @@
         <module>odk</module>
         <module>ihe-interop</module>
         <module>atom-client</module>
+        <module>rapidpro</module>
     </modules>
 
     <build>
