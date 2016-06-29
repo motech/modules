@@ -57,8 +57,8 @@
                                 },
                                 #foreach ( $question in $entry.getForm().getQuestions() )
                                 {
-                                   "displayName" : "$esc.java($question.getCorrectQuestionValue())",
-                                   "fieldKey" : "$esc.java($question.getCorrectQuestionValue())"
+                                   "displayName" : "$esc.java($question.getQuestionValue())",
+                                   "fieldKey" : "$esc.java($question.getQuestionValue())"
                                 },
                                 #end
                                 {
@@ -317,4 +317,3 @@
             #end
         ]
 }
-
