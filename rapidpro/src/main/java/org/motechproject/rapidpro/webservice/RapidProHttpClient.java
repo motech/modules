@@ -43,7 +43,7 @@ public class RapidProHttpClient {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String TOKEN = "Token ";
 
-    private static final String ERROR_URI = "Error building URI for request";
+    private static final String ERROR_URI = "Error building URI for request: ";
     private static final String UNSUPPORTED_MEDIA = "Unsupported Media Type: ";
     private static final String REDIRECTION = "Redirection: ";
     private static final String CLIENT_ERROR = "Client Error: ";
@@ -123,7 +123,8 @@ public class RapidProHttpClient {
             }
             return builder.build();
         } catch (RapidProClientException | URISyntaxException e) {
-            throw new RapidProClientException(ERROR_URI, e);
+            LOGGER.error(ERROR_URI + e.getMessage());
+            throw new RapidProClientException(ERROR_URI + e.getMessage(), e);
         }
     }
 
@@ -136,6 +137,7 @@ public class RapidProHttpClient {
                 request.setHeader(HTTP.CONTENT_TYPE, MediaFormat.XML.getContentType());
                 break;
             default:
+                LOGGER.error(UNSUPPORTED_MEDIA + contentType.getContentType());
                 throw new RapidProClientException(UNSUPPORTED_MEDIA + contentType.getContentType());
         }
     }
@@ -166,6 +168,7 @@ public class RapidProHttpClient {
         try {
             return executeRequest(request).getEntity().getContent();
         } catch (IOException e) {
+            LOGGER.error(e.getMessage());
             throw new RapidProClientException(ERROR_RESPONSE_ENTITY, e);
         }
     }

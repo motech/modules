@@ -57,16 +57,6 @@
           "displayName": "rapidpro.dataprovider.contact.modifiedon",
           "fieldKey": "modifiedOn",
           "type": "TIME"
-        },
-        {
-          "displayName": "rapidpro.dataprovider.contact.phone",
-          "fieldKey": "phone",
-          "type": "UNICODE"
-        },
-        {
-          "displayName": "rapidpro.dataprovider.contact.groups",
-          "fieldKey": "groups",
-          "type": "LIST"
         }
       ]
     }

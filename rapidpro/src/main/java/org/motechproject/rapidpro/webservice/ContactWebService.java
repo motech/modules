@@ -6,7 +6,7 @@ import org.motechproject.rapidpro.webservice.dto.Contact;
 import java.util.UUID;
 
 /*
- * Webservice interface for RapidPro REST API
+ * Webservice interface for RapidPro REST API for Contacts.
  */
 public interface ContactWebService {
 

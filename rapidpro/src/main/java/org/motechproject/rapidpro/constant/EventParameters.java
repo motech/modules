@@ -16,5 +16,8 @@ public final class EventParameters {
     public static final String FIELDS = "fields";
     public static final String BLOCKED = "blocked";
     public static final String FAILED = "failed";
+
+    /*Group Parameters*/
+    public static final String GROUP_NAME = "groupName";
 }
 
