@@ -1,0 +1,74 @@
+{
+  "name": "Rapidpro",
+  "objects": [
+    {
+      "displayName": "rapidpro.dataprovider.contact.type",
+      "type": "Contact",
+      "lookupFields": [
+        {
+          "displayName": "rapidpro.dataprovider.contact.externalId",
+          "fields": [
+            "externalId"
+          ]
+        }
+      ],
+      "fields": [
+        {
+          "displayName": "rapidpro.dataprovider.contact.uuid",
+          "fieldKey": "uuid",
+          "type": "UNICODE"
+        },
+        {
+          "displayName": "rapidpro.dataprovider.contact.name",
+          "fieldKey": "name",
+          "type": "UNICODE"
+        },
+        {
+          "displayName": "rapidpro.dataprovider.contact.language",
+          "fieldKey": "language",
+          "type": "UNICODE"
+        },
+        {
+          "displayName": "rapidpro.dataprovider.contact.urns",
+          "fieldKey": "urns",
+          "type": "LIST"
+        },
+        {
+          "displayName": "rapidpro.dataprovider.contact.groupuuids",
+          "fieldKey": "groupUUIDs",
+          "type": "LIST"
+        },
+        {
+          "displayName": "rapidpro.dataprovider.contact.fields",
+          "fieldKey": "fields",
+          "type": "MAP"
+        },
+        {
+          "displayName": "rapidpro.dataprovider.contact.blocked",
+          "fieldKey": "blocked",
+          "type": "BOOLEAN"
+        },
+        {
+          "displayName": "rapidpro.dataprovider.contact.failed",
+          "fieldKey": "failed",
+          "type": "BOOLEAN"
+        },
+        {
+          "displayName": "rapidpro.dataprovider.contact.modifiedon",
+          "fieldKey": "modifiedOn",
+          "type": "TIME"
+        },
+        {
+          "displayName": "rapidpro.dataprovider.contact.phone",
+          "fieldKey": "phone",
+          "type": "UNICODE"
+        },
+        {
+          "displayName": "rapidpro.dataprovider.contact.groups",
+          "fieldKey": "groups",
+          "type": "LIST"
+        }
+      ]
+    }
+  ]
+}
