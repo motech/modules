@@ -83,7 +83,7 @@ public class ActionBuilder {
                 .setDisplayName(getDisplayName(CREATE_ENCOUNTER, configName))
                 .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
                 .setServiceMethod(serviceMethod)
-                .setSubject(getSubject(serviceMethod,configName))
+                .setSubject(getSubject(serviceMethod, configName))
                 .setActionParameters(actionParameters)
                 .createActionEventRequest();
     }
@@ -105,7 +105,7 @@ public class ActionBuilder {
                 .setDisplayName(getDisplayName(CREATE_PATIENT, configName))
                 .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
                 .setServiceMethod(serviceMethod)
-                .setSubject(getSubject(serviceMethod,configName))
+                .setSubject(getSubject(serviceMethod, configName))
                 .setActionParameters(parameters)
                 .createActionEventRequest();
     }
@@ -123,7 +123,7 @@ public class ActionBuilder {
                 .setDisplayName(getDisplayName(UPDATE_PERSON, configName))
                 .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
                 .setServiceMethod(serviceMethod)
-                .setSubject(getSubject(serviceMethod,configName))
+                .setSubject(getSubject(serviceMethod, configName))
                 .setActionParameters(parameters)
                 .createActionEventRequest();
     }
@@ -144,7 +144,7 @@ public class ActionBuilder {
                 .setDisplayName(getDisplayName(CREATE_PROGRAM_ENROLLMENT, configName))
                 .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
                 .setServiceMethod(serviceMethod)
-                .setSubject(getSubject(serviceMethod,configName))
+                .setSubject(getSubject(serviceMethod, configName))
                 .setActionParameters(parameters)
                 .createActionEventRequest();
     }
@@ -164,7 +164,7 @@ public class ActionBuilder {
                 .setDisplayName(getDisplayName(CHANGE_PROGRAM_ENROLLMENT_STATE, configName))
                 .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
                 .setServiceMethod(serviceMethod)
-                .setSubject(getSubject(serviceMethod,configName))
+                .setSubject(getSubject(serviceMethod, configName))
                 .setActionParameters(parameters)
                 .createActionEventRequest();
     }
@@ -182,7 +182,7 @@ public class ActionBuilder {
                 .setDisplayName(getDisplayName(UPDATE_PATIENT_IDENTIFIERS, configName))
                 .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
                 .setServiceMethod(serviceMethod)
-                .setSubject(getSubject(serviceMethod,configName))
+                .setSubject(getSubject(serviceMethod, configName))
                 .setActionParameters(parameters)
                 .createActionEventRequest();
     }
@@ -253,6 +253,6 @@ public class ActionBuilder {
         return String.format("%s [%s]", actionName, configName);
     }
     private String getSubject(String serviceMethod, String configName) {
-        return String.format("%s.%s", serviceMethod, configName);
+        return String.format("%s%s%s", serviceMethod, ".", configName);
     }
 }
