@@ -222,13 +222,11 @@ public class HttpClientEventListenerTest {
 
         request = new HttpEntity<String>(data);
 
-        ResponseEntity<?> expectedResponseEntity = restTemplateMock.exchange((String) motechEvent.getParameters().get(SendRequestConstants.URL),
-                HttpMethod.POST, request, String.class);
-
         httpClientEventListener = new HttpClientEventListener(restTemplateMock, settings, httpActionService);
 
-        ResponseEntity<?> responseEntity = httpClientEventListener.handleWithUserPasswordAndReturnType(motechEvent);
+        httpClientEventListener.handleWithUserPasswordAndReturnType(motechEvent);
 
-        assertEquals(responseEntity, expectedResponseEntity);
+        verify(restTemplateMock).exchange(eq((String) motechEvent.getParameters().get(SendRequestConstants.URL)),
+                eq(HttpMethod.POST), eq(request), eq(String.class));
     }
 }
