@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -42,8 +43,8 @@ public class ContactWebServiceTest {
     @Test
     public void shouldReturnContact() throws Exception {
         Map<String, String> params = new HashMap<>();
-        String uuid = "contactUUID";
-        params.put("uuid", uuid);
+        UUID uuid = UUID.randomUUID();
+        params.put("uuid", uuid.toString());
         Contact contact = new Contact();
         contact.setName("Name");
         contact.setUuid(uuid);
@@ -71,8 +72,8 @@ public class ContactWebServiceTest {
     @Test
     public void shouldReturnNull() throws Exception {
         Map<String, String> params = new HashMap<>();
-        String uuid = "contactUUID";
-        params.put("uuid", uuid);
+        UUID uuid = UUID.randomUUID();
+        params.put("uuid", uuid.toString());
         List<Contact> results = new ArrayList<>();
         PaginatedResponse<Contact> paginatedResponse = new PaginatedResponse<>();
         paginatedResponse.setCount("0");
@@ -89,8 +90,8 @@ public class ContactWebServiceTest {
     @Test(expected = WebServiceException.class)
     public void shouldThrowExceptionMoreThanOneContact() throws Exception {
         Map<String, String> params = new HashMap<>();
-        String uuid = "contactUUID";
-        params.put("uuid", uuid);
+        UUID uuid = UUID.randomUUID();
+        params.put("uuid", uuid.toString());
         Contact contact = new Contact();
         contact.setName("Name");
         contact.setUuid(uuid);
@@ -114,7 +115,7 @@ public class ContactWebServiceTest {
 
     @Test(expected = WebServiceException.class)
     public void shouldThrowExceptionHttpClient() throws Exception {
-        String uuid = "contactUUID";
+        UUID uuid = UUID.randomUUID();
         when(rapidProHttpClient.executeGet("/contacts", MediaFormat.JSON, null)).thenThrow(new RapidProClientException("Exception"));
         Contact fromWebservice = contactWebService.getContactByUUID(uuid);
     }
@@ -122,8 +123,8 @@ public class ContactWebServiceTest {
     @Test(expected = WebServiceException.class)
     public void shouldThrowExceptionJsonUtils() throws Exception {
         Map<String, String> params = new HashMap<>();
-        String uuid = "contactUUID";
-        params.put("uuid", uuid);
+        UUID uuid = UUID.randomUUID();
+        params.put("uuid", uuid.toString());
 
         String json = "not json";
         InputStream inputStream = new ByteArrayInputStream(json.getBytes());

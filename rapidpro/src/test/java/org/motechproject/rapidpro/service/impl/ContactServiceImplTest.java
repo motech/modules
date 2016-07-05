@@ -14,6 +14,7 @@ import org.motechproject.rapidpro.webservice.dto.Contact;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -52,7 +53,7 @@ public class ContactServiceImplTest {
     public void shouldCreateContact() throws Exception {
         String externalID = "externalID";
         String phoneNumber = "1234567890";
-        String uuid = "contactUUID";
+        UUID uuid = UUID.randomUUID();
         String name = "Name";
         List<String> urns = new ArrayList<>();
         urns.add("tel:+" + phoneNumber);
@@ -136,7 +137,7 @@ public class ContactServiceImplTest {
     public void shouldUpdateContact() throws Exception{
         String externalID = "externalID";
         String phoneNumber = "1234567890";
-        String uuid = "contactUUID";
+        UUID uuid = UUID.randomUUID();
         String name = "Name";
         List<String> urns = new ArrayList<>();
         urns.add("tel:+" + phoneNumber);
@@ -182,7 +183,7 @@ public class ContactServiceImplTest {
     public void shouldSendWebserviceFailMessageUpdate() throws Exception{
         String externalID = "externalID";
         String phoneNumber = "1234567890";
-        String uuid = "contactUUID";
+        UUID uuid = UUID.randomUUID();
         String name = "Name";
         List<String> urns = new ArrayList<>();
         urns.add("tel:+" + phoneNumber);
@@ -207,7 +208,7 @@ public class ContactServiceImplTest {
     @Test
     public void shouldDeleteContact() throws Exception {
         String externalID = "externalID";
-        String uuid = "contactUUID";
+        UUID uuid = UUID.randomUUID();
         when(contactMapperService.getRapidproUUIDFromExternalId(externalID)).thenReturn(uuid);
         contactService.delete(externalID);
         verify(contactWebService).deleteContactByUUID(uuid);
@@ -224,7 +225,7 @@ public class ContactServiceImplTest {
     @Test
     public void shouldSendWebserviceFailMessageDelete() throws Exception {
         String externalID = "externalID";
-        String uuid = "contactUUID";
+        UUID uuid = UUID.randomUUID();
         when(contactMapperService.getRapidproUUIDFromExternalId(externalID)).thenReturn(uuid);
         doThrow(new WebServiceException("message")).when(contactWebService).deleteContactByUUID(uuid);
         contactService.delete(externalID);
@@ -235,7 +236,7 @@ public class ContactServiceImplTest {
     public void shouldFindContactByExternalId() throws Exception {
         String externalID = "externalID";
         String phoneNumber = "1234567890";
-        String uuid = "contactUUID";
+        UUID uuid = UUID.randomUUID();
         String name = "Name";
         List<String> urns = new ArrayList<>();
         urns.add("tel:+" + phoneNumber);
@@ -262,7 +263,7 @@ public class ContactServiceImplTest {
     @Test
     public void shouldSendWebserviceFailMessageFind() throws Exception {
         String externalID = "externalID";
-        String uuid = "contactUUID";
+        UUID uuid = UUID.randomUUID();
         when(contactMapperService.getRapidproUUIDFromExternalId(externalID)).thenReturn(uuid);
         when(contactWebService.getContactByUUID(uuid)).thenThrow(new WebServiceException("message"));
         contactService.findByExternalId(externalID);
