@@ -200,16 +200,35 @@ public class HttpClientEventListenerTest {
     }
 
     @Test
-    public void shouldParseUsernameAsNull() {
+    public void shouldUseBasicRestTemplate() {
 
         MotechEvent motechEvent = new MotechEvent(SendRequestConstants.SEND_REQUEST_SUBJECT, new HashMap<String, Object>() {{
+            put(SendRequestConstants.URL, url);
+            put(SendRequestConstants.BODY_PARAMETERS, data);
             put(SendRequestConstants.USERNAME, null);
+            put(SendRequestConstants.PASSWORD, null);
+            put(SendRequestConstants.FOLLOW_REDIRECTS, false);
         }});
 
-        String someUsername = (String)motechEvent.getParameters().get(SendRequestConstants.USERNAME);
-        String someAnotherUsername = String.valueOf(motechEvent.getParameters().get(SendRequestConstants.USERNAME));
+        RestTemplate restTemplateMock = mock(RestTemplate.class);
+        SettingsFacade settings = mock(SettingsFacade.class);
+        HTTPActionService httpActionService = mock(HTTPActionService.class);
+        HttpComponentsClientHttpRequestFactory httpComponentsClientHttpRequestFactory = mock(HttpComponentsClientHttpRequestFactory.class);
 
-        assertNull(someUsername);
-        assertEquals("null", someAnotherUsername);
+
+        when(settings.getProperty(HttpClientEventListener.HTTP_CONNECT_TIMEOUT)).thenReturn("0");
+        when(settings.getProperty(HttpClientEventListener.HTTP_READ_TIMEOUT)).thenReturn("0");
+        when(restTemplateMock.getRequestFactory()).thenReturn(httpComponentsClientHttpRequestFactory);
+
+        request = new HttpEntity<String>(data);
+
+        ResponseEntity<?> expectedResponseEntity = restTemplateMock.exchange((String) motechEvent.getParameters().get(SendRequestConstants.URL),
+                HttpMethod.POST, request, String.class);
+
+        httpClientEventListener = new HttpClientEventListener(restTemplateMock, settings, httpActionService);
+
+        ResponseEntity<?> responseEntity = httpClientEventListener.handleWithUserPasswordAndReturnType(motechEvent);
+
+        assertEquals(responseEntity, expectedResponseEntity);
     }
 }
