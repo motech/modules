@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
@@ -196,5 +197,19 @@ public class HttpClientEventListenerTest {
 
         ResponseEntity<?> responseEntity = httpClientEventListener.handleWithUserPasswordAndReturnType(motechEvent);
         assertEquals(responseEntity, exceptedResponseEntity);
+    }
+
+    @Test
+    public void shouldParseUsernameAsNull() {
+
+        MotechEvent motechEvent = new MotechEvent(SendRequestConstants.SEND_REQUEST_SUBJECT, new HashMap<String, Object>() {{
+            put(SendRequestConstants.USERNAME, null);
+        }});
+
+        String someUsername = (String)motechEvent.getParameters().get(SendRequestConstants.USERNAME);
+        String someAnotherUsername = String.valueOf(motechEvent.getParameters().get(SendRequestConstants.USERNAME));
+
+        assertNull(someUsername);
+        assertEquals("null", someAnotherUsername);
     }
 }

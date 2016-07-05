@@ -139,7 +139,7 @@ public class HttpClientEventListener {
     @MotechListener (subjects = { SendRequestConstants.SEND_REQUEST_SUBJECT })
     public ResponseEntity<?> handleWithUserPasswordAndReturnType(MotechEvent motechEvent) {
         Map<String, Object> parameters = motechEvent.getParameters();
-        final String url = String.valueOf(parameters.get(SendRequestConstants.URL));
+        final String url = (String)parameters.get(SendRequestConstants.URL);
         Object requestData = parameters.get(SendRequestConstants.BODY_PARAMETERS);
         String username = (String)parameters.get(SendRequestConstants.USERNAME);
         String password = (String)parameters.get(SendRequestConstants.PASSWORD);
