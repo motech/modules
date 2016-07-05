@@ -141,8 +141,8 @@ public class HttpClientEventListener {
         Map<String, Object> parameters = motechEvent.getParameters();
         final String url = String.valueOf(parameters.get(SendRequestConstants.URL));
         Object requestData = parameters.get(SendRequestConstants.BODY_PARAMETERS);
-        String username = String.valueOf(parameters.get(SendRequestConstants.USERNAME));
-        String password = String.valueOf(parameters.get(SendRequestConstants.PASSWORD));
+        String username = (String)parameters.get(SendRequestConstants.USERNAME);
+        String password = (String)parameters.get(SendRequestConstants.PASSWORD);
         boolean followRedirects = (boolean) parameters.get(SendRequestConstants.FOLLOW_REDIRECTS);
         LOGGER.info(String.format("Posting Http request -- Url: %s, Data: %s",
                 url, String.valueOf(requestData)));
