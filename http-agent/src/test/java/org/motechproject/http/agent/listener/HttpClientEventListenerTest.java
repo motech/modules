@@ -47,7 +47,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 public class HttpClientEventListenerTest {
 
     @Mock
-    RestTemplate restTempate;
+    RestTemplate restTemplate;
     @Mock
     HttpComponentsClientHttpRequestFactory httpComponentsClientHttpRequestFactory;
     @Mock
@@ -74,9 +74,9 @@ public class HttpClientEventListenerTest {
     public void setup() {
         when(settings.getProperty(HttpClientEventListener.HTTP_CONNECT_TIMEOUT)).thenReturn("0");
         when(settings.getProperty(HttpClientEventListener.HTTP_READ_TIMEOUT)).thenReturn("0");
-        when(restTempate.getRequestFactory()).thenReturn(httpComponentsClientHttpRequestFactory);
+        when(restTemplate.getRequestFactory()).thenReturn(httpComponentsClientHttpRequestFactory);
 
-        httpClientEventListener = new HttpClientEventListener(restTempate, settings, httpActionService);
+        httpClientEventListener = new HttpClientEventListener(restTemplate, settings, httpActionService);
 
         url = "http://commcare";
         data = "aragorn";
@@ -101,9 +101,9 @@ public class HttpClientEventListenerTest {
         httpHeaders.add("key2", "value2");
         request = new HttpEntity<String>(data,httpHeaders);
         responseEntity = new ResponseEntity<String>(body, HttpStatus.OK);
-        when(restTempate.exchange(eq(url),eq(HttpMethod.POST),eq(request), eq(String.class))).thenReturn((ResponseEntity<String>) responseEntity);;
+        when(restTemplate.exchange(eq(url),eq(HttpMethod.POST),eq(request), eq(String.class))).thenReturn((ResponseEntity<String>) responseEntity);;
         httpClientEventListener.handle(motechEvent);
-        verify(restTempate).exchange(eq(url),eq(HttpMethod.POST),eq(request), eq(String.class));
+        verify(restTemplate).exchange(eq(url),eq(HttpMethod.POST),eq(request), eq(String.class));
     }
 
     @Test
@@ -120,9 +120,9 @@ public class HttpClientEventListenerTest {
 
         request = new HttpEntity<String>(data,httpHeaders);
         responseEntity = new ResponseEntity<String>(body,HttpStatus.OK);
-        when(restTempate.exchange(eq(url),eq(HttpMethod.PUT),eq(request), eq(String.class))).thenReturn((ResponseEntity<String>) responseEntity);
+        when(restTemplate.exchange(eq(url),eq(HttpMethod.PUT),eq(request), eq(String.class))).thenReturn((ResponseEntity<String>) responseEntity);
         httpClientEventListener.handle(motechEvent);
-        verify(restTempate).exchange(eq(url),eq(HttpMethod.PUT),eq(request), eq(String.class));
+        verify(restTemplate).exchange(eq(url),eq(HttpMethod.PUT),eq(request), eq(String.class));
     }
 
     @Test
@@ -138,9 +138,9 @@ public class HttpClientEventListenerTest {
         httpHeaders.add("key2", "value2");
         request = new HttpEntity<String>(data,httpHeaders);
         responseEntity = new ResponseEntity<String>(body,HttpStatus.OK);
-        when(restTempate.exchange(eq(url),eq(HttpMethod.DELETE),eq(request), eq(String.class))).thenReturn((ResponseEntity<String>) responseEntity);
+        when(restTemplate.exchange(eq(url),eq(HttpMethod.DELETE),eq(request), eq(String.class))).thenReturn((ResponseEntity<String>) responseEntity);
         httpClientEventListener.handle(motechEvent);
-        verify(restTempate).exchange(eq(url),eq(HttpMethod.DELETE),eq(request), eq(String.class));
+        verify(restTemplate).exchange(eq(url),eq(HttpMethod.DELETE),eq(request), eq(String.class));
     }
 
     @Test
@@ -156,7 +156,7 @@ public class HttpClientEventListenerTest {
         httpHeaders.add("key2", "value2");
         request = new HttpEntity<String>(data,httpHeaders);
         responseEntity = new ResponseEntity<String>(body,HttpStatus.OK);
-        when(restTempate.exchange(eq(url),eq(HttpMethod.DELETE),eq(request), eq(String.class))).thenReturn((ResponseEntity<String>) responseEntity);
+        when(restTemplate.exchange(eq(url),eq(HttpMethod.DELETE),eq(request), eq(String.class))).thenReturn((ResponseEntity<String>) responseEntity);
 
         httpClientEventListener.handle(motechEvent);
 
