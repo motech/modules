@@ -23,6 +23,10 @@ public class ContactEventHandler {
 
     private static final String HANDLE_CREATE_EVENT = "Handling create contact event: ";
     private static final String HANDLE_UPDATE_EVENT = "Handling update contact event: ";
+    private static final String HANDLE_DELETE_EVENT = "Handling delete contact event";
+    private static final String HANDLE_ADD_TO_GROUP_EVENT = "Handling add contact to group event";
+    private static final String HANDLE_REMOVE_FROM_GROUP = "Handling remove from group event";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ContactEventHandler.class);
 
     @Autowired
@@ -64,7 +68,35 @@ public class ContactEventHandler {
      */
     @MotechListener(subjects = EventSubjects.DELETE_CONTACT)
     public void handleDelete(MotechEvent event) {
+        LOGGER.info(HANDLE_DELETE_EVENT);
         String externalId = (String) event.getParameters().get(EventParameters.EXTERNAL_ID);
         contactService.delete(externalId);
     }
+
+    /**
+     * Handles events with the add to group event subject.
+     * @param event {@link MotechEvent}
+     */
+    @MotechListener(subjects = EventSubjects.ADD_TO_GROUP)
+    public void handleAddToGroup(MotechEvent event) {
+        LOGGER.info(HANDLE_ADD_TO_GROUP_EVENT);
+        Map<String, Object> params = event.getParameters();
+        String externalId = (String) params.get(EventParameters.EXTERNAL_ID);
+        String groupName = (String) params.get(EventParameters.GROUP_NAME);
+        contactService.addToGroup(externalId, groupName);
+    }
+
+    /**
+     * Handles events with the remove from group event subject.
+     * @param event {@link MotechEvent}
+     */
+    @MotechListener(subjects = EventSubjects.REMOVE_FROM_GROUP)
+    public void handleRemoveFromGroup(MotechEvent event) {
+        LOGGER.info(HANDLE_REMOVE_FROM_GROUP);
+        Map<String, Object> params = event.getParameters();
+        String externalId = (String) params.get(EventParameters.EXTERNAL_ID);
+        String groupName = (String) params.get(EventParameters.GROUP_NAME);
+        contactService.removeFromGroup(externalId, groupName);
+    }
+
 }

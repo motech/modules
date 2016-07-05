@@ -110,6 +110,42 @@
           "required": true
         }
       ]
+    },
+    {
+      "subject": "org.motechproject.rapidpro.add-contact-to-group",
+      "displayName": "rapidpro.tasks.addToGroup",
+      "actionParameters": [
+        {
+          "key": "externalId",
+          "displayName": "rapidpro.tasks.externalId",
+          "type": "UNICODE",
+          "required": true
+        },
+        {
+          "key": "groupName",
+          "displayName": "rapidpro.tasks.groupName",
+          "type": "UNICODE",
+          "required": true
+        }
+      ]
+    },
+    {
+      "subject": "org.motechproject.rapidpro.remove-contact-from-group",
+      "displayName": "rapidpro.tasks.removeFromGroup",
+      "actionParameters": [
+        {
+          "key": "externalId",
+          "displayName": "rapidpro.tasks.externalId",
+          "type": "UNICODE",
+          "required": true
+        },
+        {
+          "key": "groupName",
+          "displayName": "rapidpro.tasks.groupName",
+          "type": "UNICODE",
+          "required": true
+        }
+      ]
     }
   ]
 }
