@@ -200,7 +200,7 @@ public class HttpClientEventListenerTest {
     }
 
     @Test
-    public void shouldUseBasicRestTemplate() {
+    public void shouldUseBasicRestTemplateWhenCredentialsNotProvided() {
 
         MotechEvent motechEvent = new MotechEvent(SendRequestConstants.SEND_REQUEST_SUBJECT, new HashMap<String, Object>() {{
             put(SendRequestConstants.URL, url);
@@ -226,7 +226,6 @@ public class HttpClientEventListenerTest {
 
         httpClientEventListener.handleWithUserPasswordAndReturnType(motechEvent);
 
-        verify(restTemplateMock).exchange(eq((String) motechEvent.getParameters().get(SendRequestConstants.URL)),
-                eq(HttpMethod.POST), eq(request), eq(String.class));
+        verify(restTemplateMock).exchange(eq(url), eq(HttpMethod.POST), eq(request), eq(String.class));
     }
 }
