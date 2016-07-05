@@ -4,7 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 /**
- * Runs all module integration tests.
+ * Created by scottkimball on 6/8/16.
  */
 
 @RunWith(Suite.class)

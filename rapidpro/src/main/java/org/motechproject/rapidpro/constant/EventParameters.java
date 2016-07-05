@@ -19,5 +19,6 @@ public final class EventParameters {
 
     /*Group Parameters*/
     public static final String GROUP_NAME = "groupName";
+
 }
 

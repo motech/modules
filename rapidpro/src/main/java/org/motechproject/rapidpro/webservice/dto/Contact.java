@@ -13,10 +13,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-
 /**
  * Representation of a Rapidpro Contact.
  */
+
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Contact implements Serializable {
@@ -33,6 +33,7 @@ public class Contact implements Serializable {
     private boolean failed;
     @JsonProperty("modified_on")
     private DateTime modifiedOn;
+    @JsonIgnore
     private String phone;
 
     public Contact() {
@@ -129,7 +130,6 @@ public class Contact implements Serializable {
         return phone;
     }
 
-    @JsonIgnore
     public void setPhone(String phone) {
         this.phone = phone;
     }

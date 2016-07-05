@@ -22,10 +22,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+
 /**
  * Implementation of {@link ContactWebService}
  */
-
 @Service("rapidproContactWebService")
 public class ContactWebServiceImpl extends AbstractWebService<Contact> implements ContactWebService {
 
@@ -66,14 +66,13 @@ public class ContactWebServiceImpl extends AbstractWebService<Contact> implement
         }
     }
 
-    @Override
+
     public void deleteContactByUUID(UUID uuid) throws WebServiceException {
         try {
             LOGGER.debug(DELETING + uuid);
             Map<String, String> params = new HashMap<>();
             params.put(UUID, uuid.toString());
             getClient().executeDelete(CONTACTS_ENDPOINT, MediaFormat.JSON, params);
-
         } catch (RapidProClientException e) {
             throw new WebServiceException(ERROR_DELETING + uuid, e);
         }
@@ -84,7 +83,6 @@ public class ContactWebServiceImpl extends AbstractWebService<Contact> implement
         try {
             LOGGER.debug(FINDING + uuid);
             return getOneWithParams(UUID, uuid.toString(), CONTACTS_ENDPOINT, PAGED_RESPONSE_CONTACT_TYPE_REF);
-
         } catch (RapidProClientException | JsonUtilException e) {
             throw new WebServiceException(ERROR_RETRIEVING_UUID + uuid, e);
         }
@@ -102,7 +100,9 @@ public class ContactWebServiceImpl extends AbstractWebService<Contact> implement
 
     private void closeInputStream(InputStream is) {
         try {
-            is.close();
+            if (is != null) {
+                is.close();
+            }
         } catch (IOException e) { }
     }
 }

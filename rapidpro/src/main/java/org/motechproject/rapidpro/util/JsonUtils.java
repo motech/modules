@@ -1,6 +1,7 @@
 package org.motechproject.rapidpro.util;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.type.TypeReference;
 import org.motechproject.rapidpro.exception.JsonUtilException;
 
@@ -14,9 +15,14 @@ import java.io.OutputStream;
  */
 public final class JsonUtils {
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final String ERROR_SERIALIZING = "Error serializing object of type: ";
     private static final String ERROR_DESERIALIZING = "Error deserializing object of type: ";
+
+    private static ObjectMapper mapper = new ObjectMapper();
+
+    static {
+        mapper.configure(SerializationConfig.Feature.WRITE_NULL_MAP_VALUES, false);
+    }
 
     private JsonUtils() {
     }
@@ -31,7 +37,7 @@ public final class JsonUtils {
      */
     public static Object toObject(InputStream inputStream, TypeReference typeReference) throws JsonUtilException {
         try {
-            return MAPPER.readValue(inputStream, typeReference);
+            return mapper.readValue(inputStream, typeReference);
         } catch (IOException e) {
             throw new JsonUtilException(ERROR_DESERIALIZING + typeReference.getType(), e);
         }
@@ -48,7 +54,7 @@ public final class JsonUtils {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         try {
             buffer = new ByteArrayOutputStream();
-            MAPPER.writeValue(buffer, o);
+            mapper.writeValue(buffer, o);
             return buffer.toByteArray();
 
         } catch (IOException e) {
@@ -74,7 +80,7 @@ public final class JsonUtils {
      */
     public static String toString(Object o) throws JsonUtilException {
         try {
-            return MAPPER.writeValueAsString(o);
+            return mapper.writeValueAsString(o);
         } catch (IOException e) {
             throw new JsonUtilException(ERROR_DESERIALIZING + o.getClass().getSimpleName(), e);
         }

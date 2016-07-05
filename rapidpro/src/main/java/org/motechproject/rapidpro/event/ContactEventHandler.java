@@ -98,5 +98,4 @@ public class ContactEventHandler {
         String groupName = (String) params.get(EventParameters.GROUP_NAME);
         contactService.removeFromGroup(externalId, groupName);
     }
-
 }

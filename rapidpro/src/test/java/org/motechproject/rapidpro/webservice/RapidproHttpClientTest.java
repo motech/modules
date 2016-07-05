@@ -97,7 +97,7 @@ public class RapidproHttpClientTest {
     public void shouldThrowNoSettings() throws Exception {
         when(settingsService.getSettings()).thenReturn(null);
         expected.expect(RapidProClientException.class);
-        expected.expectMessage("No settings");
+        expected.expectMessage("Error building URI for request");
         rapidProHttpClient.executeGet(ENDPOINT, MediaFormat.JSON, null);
     }
 
@@ -113,7 +113,7 @@ public class RapidproHttpClientTest {
     public void shouldThrowNoVersion() throws Exception {
         when(settingsService.getSettings()).thenReturn(new Settings("apiKey", null));
         expected.expect(RapidProClientException.class);
-        expected.expectMessage("No API version");
+        expected.expectMessage("Error building URI for request");
         rapidProHttpClient.executeGet(ENDPOINT, MediaFormat.JSON, null);
     }
 

@@ -16,6 +16,4 @@
     <osgi:service ref="rapidproContactService" interface="org.motechproject.rapidpro.service.ContactService"/>
 
 
-
-
 </beans>
