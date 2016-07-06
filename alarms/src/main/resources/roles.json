@@ -1,0 +1,8 @@
+[
+  {
+    "roleName": "Alarms Manager",
+    "permissionNames": [
+      "manageAlarms"
+    ]
+  }
+]

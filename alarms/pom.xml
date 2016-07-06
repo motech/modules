@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <artifactId>modules</artifactId>
+        <groupId>org.motechproject</groupId>
+        <version>0.27.7-SNAPSHOT</version>
+        <relativePath>../</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <version>0.27.7-SNAPSHOT</version>
+    <description>Alarms Module</description>
+    <artifactId>alarms</artifactId>
+    <name>Alarms Module</name>
+    <packaging>bundle</packaging>
+
+    <properties>
+        <modules.root.dir>${basedir}/..</modules.root.dir>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>${motech.groupId}</groupId>
+            <artifactId>motech-platform-dataservices</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${motech.groupId}</groupId>
+            <artifactId>motech-scheduler</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.7</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Blueprint-Enabled>true</Blueprint-Enabled>
+                        <Context-Path>alarms</Context-Path>
+                        <Resource-Path>alarms/resources</Resource-Path>
+                        <Import-Package>
+                            net.sf.cglib.core,
+                            net.sf.cglib.proxy,
+                            net.sf.cglib.reflect,
+                            org.springframework.aop,
+                            org.springframework.aop.framework,
+                            org.aopalliance.aop,
+                            org.motechproject.mds.service,
+                            org.motechproject.osgi.web,
+                            org.motechproject.server.config,
+                            *
+                        </Import-Package>
+                        <Export-Package>
+                            org.motechproject.alarms.client;version=${project.version},
+                            org.motechproject.alarms.constants;version=${project.version},
+                            org.motechproject.alarms.domain;version=${project.version},
+                            org.motechproject.alarms.repository;version=${project.version},
+                            org.motechproject.alarms.service;version=${project.version},
+                            org.motechproject.alarms.web;version=${project.version}
+                        </Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-bundles</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${user.home}/.motech/bundles</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>target</directory>
+                                    <includes>
+                                        <include>*.jar</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>

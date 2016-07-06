@@ -1,0 +1,91 @@
+<div class="row">
+    <h4 class="frame-title">{{msg('alarms.web.title')}}</h4>
+
+    <div class="alert alert-danger alert-block" ng-show="alarms.length <= 0">
+        {{msg('alarms.web.alarms.noAlarmsError')}}
+    </div>
+
+    <div class="toolbox">
+        <div class="form-group">
+            <button type="button" class="btn btn-success" ng-click="addAlarm()"><i class="fa fa-plus"></i>
+                {{msg('alarms.web.alarms.addAlarm')}}
+            </button>
+        </div>
+    </div>
+
+    <div class="clearfix">
+        <form name="form" class="form-horizontal" novalidate>
+            <div class="panel-group">
+                <div class="panel panel-default" ng-repeat="alarm in alarms">
+                    <div class="panel-heading" ng-class="{true:'', false:'alarm-disabled'}[alarm.status === 'ACTIVE']" ng-click="accordions[$index] = !accordions[$index]">
+                        <i ng-class="{'fa-caret-down': accordions[$index], 'fa-caret-right': !accordions[$index]}" class="fa fa-fw fa-lg pointer"></i>
+                        {{alarm.name}}
+                    </div>
+                    <div id="panel{{$index}}" class="panel-collapse collapse" ng-class="{true:'in', false:''}[accordions[$index]]">
+                        <ng-form name="alarmForm">
+                            <div class="panel-body">
+                                <div class="form-group" ng-class="{'has-error': !alarm.name}">
+                                    <label class="col-md-3 control-label" for="alarmName{{$index}}">{{msg('alarms.web.alarms.alarmName')}}</label>
+                                    <div class="col-md-8" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('alarms.web.alarms.alarmName.tooltip')}}">
+                                        <input id="alarmName{{$index}}" type="text" class="form-control" ng-model="alarm.name" required ng-focus="accordions[$index]">
+                                        <span ng-show="!alarm.name" class="form-hint form-hint-bottom">{{msg('alarms.web.required_field')}}</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label">{{msg('alarms.web.alarms.recipients')}}</label>
+                                    <div class="col-md-6" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('alarms.web.alarms.recipients.tooltip')}}">
+                                        <select id="recipients{{$index}}" class="form-control" ui-select2 multiple ng-model="alarm.recipients"
+                                                ng-options="recipient as (recipient.name ? recipient.name : recipient.emailAddress) for recipient in recipients track by recipient.emailAddress">
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-success col-md-12" ng-click="addRecipientModalShow()"><i class="fa fa-plus"></i>
+                                            {{msg('alarms.web.alarms.addRecipient')}}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="subject{{$index}}">{{msg('alarms.web.alarms.subject')}}</label>
+                                    <div class="col-md-8" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('alarms.web.alarms.subject.tooltip')}}">
+                                        <input type="text" class="form-control" id="subject{{$index}}" ng-model="alarm.subject"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="messageContent{{$index}}">{{msg('alarms.web.alarms.messageContent')}}</label>
+                                    <div class="col-md-8" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('alarms.web.alarms.messageContent.tooltip')}}">
+                                        <textarea spellcheck="false" class="form-control" id="messageContent{{$index}}" type="text" ng-model="alarm.messageContent" rows="6"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="schedulePeriod{{$index}}">{{msg('alarms.web.schedulePeriod.subject')}}</label>
+                                    <div class="col-md-2" data-toggle="tooltip" data-placement="top" data-trigger="hover" bs-popover="{{msg('alarms.web.alarms.schedulePeriod.tooltip')}}">
+                                        <input type="number" class="form-control" id="schedulePeriod{{$index}}" ng-model="alarm.schedulePeriod" required/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-md-offset-3 col-md-9">
+                                        <div class="form-inline">
+                                            <button class="btn btn-sm btn-success" ng-show="alarm.status !== 'ACTIVE'" ng-click="enableAlarm($index)">{{msg('alarms.web.alarms.enable')}}</button>
+                                            <button class="btn btn-sm btn-danger" ng-show="alarm.status === 'ACTIVE'" ng-click="disableAlarm($index)">{{msg('alarms.web.alarms.disable')}}</button>
+                                            <button class="btn btn-sm btn-danger" ng-click="deleteAlarm($index)"> <i class="fa fa-fw fa-trash-o"></i> {{msg('alarms.web.alarms.delete')}} </button>
+                                            <button class="btn btn-sm btn-primary" ng-show="isDirty($index)" ng-disabled="!alarmForm.$valid" ng-click="saveAlarm($index)">{{msg('alarms.web.alarms.save')}}</button>
+                                            <button class="btn btn-sm btn-default" ng-show="isDirty($index)" ng-click="reset($index)">{{msg('alarms.web.alarms.cancel')}}</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-form>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div ng-include="'../alarms/resources/partials/modals/add-recipient.html'"></div>
+</div>

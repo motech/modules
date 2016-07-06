@@ -1,0 +1,10 @@
+.alarm-disabled {
+    background: #EDF2F4 !important;
+    background: -moz-linear-gradient(top,  #EDF2F4 0%, #CCD7DE 100%) !important;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#EDF2F4), color-stop(100%,#CCD7DE)) !important;
+    background: -webkit-linear-gradient(top,  #EDF2F4 0%,#CCD7DE 100%) !important;
+    background: -o-linear-gradient(top,  #EDF2F4 0%,#CCD7DE 100%) !important;
+    background: -ms-linear-gradient(top,  #EDF2F4 0%,#CCD7DE 100%) !important;
+    background: linear-gradient(to bottom,  #EDF2F4 0%,#CCD7DE 100%) !important;
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#EDF2F4', endColorstr='#CCD7DE',GradientType=0 );
+}
