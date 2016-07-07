@@ -200,6 +200,13 @@ public class HttpClientEventListener {
         try {
             retValue = r.call();
         } catch (Exception e) { // Http request failed for all retries
+            if (e instanceof HttpException && !(e.getCause().toString().contains("I/O error"))) {
+                String cause = e.getCause().toString();
+                cause = cause.substring(cause.indexOf(":") + 2, cause.indexOf(":") + 5);
+                HTTPActionAudit httpActionAudit = new HTTPActionAudit(url, requestData.toString(), e.getMessage(), cause);
+                httpActionService.create(httpActionAudit);
+            }
+
             LOGGER.error("Posting Http request -- Url: {}, Data: {} failed after {} retries at interval of {} ms.",
                     url, String.valueOf(requestData), String.valueOf(retryCount), String.valueOf(retryInterval),
                     e);
