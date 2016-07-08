@@ -24,7 +24,7 @@ public class Question extends MdsEntity {
     private String question;
 
     /**
-     * Answer resource identifier in the external system
+     * List of Answer objects that contain identifier in the external system
      */
     @Field
     private List<Answer> answers;

@@ -13,6 +13,9 @@ import java.util.Objects;
 @Access(value = SecurityMode.PERMISSIONS, members = { Constants.MANAGE_MTRAINING })
 public class Answer extends MdsEntity {
 
+    /**
+     * Answer resource identifier in the external system
+     */
     @Field
     private String answer;
 
