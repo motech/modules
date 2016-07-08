@@ -186,7 +186,21 @@ public class HttpClientEventListener {
 
                 LOGGER.info("Posting Http request -- Url: {}, Data: {}",
                         url, String.valueOf(requestData));
-                ResponseEntity<?> response = doExecuteForReturnType(url, requestData, method, restTemplate);
+                ResponseEntity<?> response = null;
+                String errorMessage = null;
+                try {
+                    response = doExecuteForReturnType(url, requestData, method, restTemplate);
+                } catch (Exception e) {
+                    errorMessage = e.getMessage();
+                    throw (e instanceof HttpException) ?
+                            (HttpException) e : new HttpException("HTTP error when executing task", e);
+                } finally {
+                    if (response != null) {
+                        sendAuditLog(url, requestData, response.getBody().toString(), response.getStatusCode().toString());
+                    } else {
+                        sendAuditLog(url, requestData, errorMessage.substring(4), errorMessage.substring(0, 4));
+                    }
+                }
                 if (response.getStatusCode().value() / HUNDRED == 2) {
                     return response;
                 } else {
@@ -218,18 +232,24 @@ public class HttpClientEventListener {
         } else {
             restTemplate = basicRestTemplate;
         }
-        return doExecuteForReturnType(url, requestData, method, restTemplate);
+        ResponseEntity<?> response = doExecuteForReturnType(url, requestData, method, restTemplate);
+        sendAuditLog(url, requestData, response.getBody().toString(), response.getStatusCode().toString());
+        return response;
     }
 
     private ResponseEntity<?> doExecuteForReturnType(String url, Object requestData, Method method,
                                                      RestTemplate restTemplate) {
 
         ResponseEntity<?> response = method.execute(restTemplate, url, requestData);
-        HTTPActionAudit httpActionAudit = new HTTPActionAudit(url, requestData.toString(), response.getBody().toString(),
-                response.getStatusCode().toString());
-        httpActionService.create(httpActionAudit);
+
 
         return response;
+    }
+
+    private void sendAuditLog(String url, Object requestData, String body, String statusCode)
+    {
+        HTTPActionAudit httpActionAudit =  new HTTPActionAudit(url, requestData.toString(), body, statusCode);
+        httpActionService.create(httpActionAudit);
     }
 
     private HttpComponentsClientHttpRequestFactoryWithAuth usernamePasswordRequestFactory(
