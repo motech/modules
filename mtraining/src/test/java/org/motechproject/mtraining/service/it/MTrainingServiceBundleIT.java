@@ -3,6 +3,7 @@ package org.motechproject.mtraining.service.it;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.mtraining.domain.Answer;
 import org.motechproject.mtraining.domain.Chapter;
 import org.motechproject.mtraining.domain.Course;
 import org.motechproject.mtraining.domain.CourseUnitState;
@@ -525,10 +526,19 @@ public class MTrainingServiceBundleIT extends BasePaxIT {
         Lesson lesson2 = new Lesson(namePrefix + "lesson2", CourseUnitState.Active, "motech.com/lesson2Intro", "English lesson", getProperties2());
         Lesson lesson3 = new Lesson(namePrefix + "lesson3", CourseUnitState.Active, "motech.com/lesson3Intro", "Geography lesson", getProperties3());
 
-        Question q1 = new Question("Why do we exist?", "42");
-        Question q2 = new Question("Who can never be sick?", "Chuck Norris");
-        Question q3 = new Question("motech.com/question3.wav", "b");
-        Question q4 = new Question("motech.com/question4.mp4", "a");
+        Answer ans1 = new Answer("42");
+        Answer ans2 = new Answer("Chuck Norris");
+        Answer ans3 = new Answer("a");
+        Answer ans4 = new Answer("b");
+        Answer ans5 = new Answer("c");
+        Answer ans6 = new Answer("d");
+        Answer ans7 = new Answer("e");
+        Answer ans8 = new Answer("f");
+
+        Question q1 = new Question("Why do we exist?", new ArrayList<>(asList(ans1,ans5)));
+        Question q2 = new Question("Who can never be sick?", new ArrayList<>(asList(ans2,ans6)));
+        Question q3 = new Question("motech.com/question3.wav", new ArrayList<>(asList(ans3,ans7)));
+        Question q4 = new Question("motech.com/question4.mp4", new ArrayList<>(asList(ans4,ans8)));
 
         Quiz quiz1 = new Quiz(namePrefix + "quiz1", CourseUnitState.Active, "RandomResourceLink", "Great Quiz", getProperties1(),
                 new ArrayList<>(asList(q1, q2, q3, q4)), 90.9);
