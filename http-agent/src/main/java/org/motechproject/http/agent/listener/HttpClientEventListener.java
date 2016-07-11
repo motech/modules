@@ -192,8 +192,7 @@ public class HttpClientEventListener {
                     response = doExecuteForReturnType(url, requestData, method, restTemplate);
                 } catch (Exception e) {
                     errorMessage = e.getMessage();
-                    throw (e instanceof HttpException) ?
-                            (HttpException) e : new HttpException("HTTP error when executing task", e);
+                    throw e;
                 } finally {
                     if (response != null) {
                         sendAuditLog(url, requestData, response.getBody().toString(), response.getStatusCode().toString());
@@ -246,8 +245,7 @@ public class HttpClientEventListener {
         return response;
     }
 
-    private void sendAuditLog(String url, Object requestData, String body, String statusCode)
-    {
+    private void sendAuditLog(String url, Object requestData, String body, String statusCode){
         HTTPActionAudit httpActionAudit =  new HTTPActionAudit(url, requestData.toString(), body, statusCode);
         httpActionService.create(httpActionAudit);
     }
