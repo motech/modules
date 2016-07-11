@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.admin.service.StatusMessageService;
+import org.motechproject.rapidpro.event.publisher.EventPublisher;
 import org.motechproject.rapidpro.exception.NoMappingException;
 import org.motechproject.rapidpro.exception.WebServiceException;
 import org.motechproject.rapidpro.service.ContactMapperService;
@@ -42,11 +43,14 @@ public class ContactServiceImplTest {
     @Mock
     GroupWebService groupWebService;
 
+    @Mock
+    EventPublisher eventPublisher;
+
 
     @Before
     public void setup() {
         initMocks(this);
-        contactService = new ContactServiceImpl(contactMapperService, contactWebService, statusMessageService, groupWebService);
+        contactService = new ContactServiceImpl(contactMapperService, contactWebService, statusMessageService, groupWebService, eventPublisher);
     }
 
     @Test

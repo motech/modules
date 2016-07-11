@@ -23,7 +23,7 @@ public final class ContactUtils {
      * @return {@link Contact}
      */
     public static Contact toContactFromParams(Map<String, Object> params) {
-        String name = (String) params.get(EventParameters.NAME);
+        String name = (String) params.get(EventParameters.CONTACT_NAME);
         String language = (String) params.get(EventParameters.LANGUAGE);
         String phone = (String) params.get(EventParameters.PHONE);
         Map<String, String> fields = (Map<String, String>) params.get(EventParameters.FIELDS);

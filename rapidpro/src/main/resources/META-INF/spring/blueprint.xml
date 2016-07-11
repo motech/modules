@@ -9,11 +9,11 @@
     <osgi:reference id="httpClientBuilderFactory" interface="org.apache.http.osgi.services.HttpClientBuilderFactory"/>
     <osgi:reference id="statusMessageService" interface="org.motechproject.admin.service.StatusMessageService"/>
     <osgi:reference id="contactMapperDataService" interface="org.motechproject.rapidpro.repository.ContactMapperDataService"/>
+    <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>
 
     <osgi:service ref="rapidproSettingsService" interface="org.motechproject.rapidpro.service.SettingsService"/>
     <osgi:service ref="rapidproDataProvider" interface="org.motechproject.commons.api.DataProvider"/>
     <osgi:service ref="rapidproGroupWebService" interface="org.motechproject.rapidpro.webservice.GroupWebService"/>
     <osgi:service ref="rapidproContactService" interface="org.motechproject.rapidpro.service.ContactService"/>
-
 
 </beans>

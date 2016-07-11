@@ -1,6 +1,7 @@
 package org.motechproject.rapidpro.service.impl;
 
 import org.motechproject.admin.service.StatusMessageService;
+import org.motechproject.rapidpro.event.publisher.EventPublisher;
 import org.motechproject.rapidpro.exception.NoMappingException;
 import org.motechproject.rapidpro.exception.WebServiceException;
 import org.motechproject.rapidpro.service.ContactMapperService;
@@ -50,14 +51,16 @@ public class ContactServiceImpl implements ContactService {
     private ContactWebService contactWebService;
     private StatusMessageService statusMessageService;
     private GroupWebService groupWebService;
+    private EventPublisher eventPublisher;
 
     @Autowired
     public ContactServiceImpl(ContactMapperService contactMapperService, ContactWebService contactWebService,
-                              StatusMessageService statusMessageService, GroupWebService groupWebService) {
+                              StatusMessageService statusMessageService, GroupWebService groupWebService, EventPublisher eventPublisher) {
         this.contactMapperService = contactMapperService;
         this.contactWebService = contactWebService;
         this.statusMessageService = statusMessageService;
         this.groupWebService = groupWebService;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -152,7 +155,8 @@ public class ContactServiceImpl implements ContactService {
 
                 if (contact != null) {
                     contact.getGroupUUIDs().add(group.getUuid());
-                    contactWebService.createOrUpdateContact(contact);
+                    Contact updated = contactWebService.createOrUpdateContact(contact);
+                    eventPublisher.publishContactAddedToGroup(externalId, updated, group);
 
                 } else {
                     sendContactDoesNotExistMessage(externalId);
@@ -179,7 +183,8 @@ public class ContactServiceImpl implements ContactService {
 
                 if (contact != null) {
                     contact.getGroupUUIDs().remove(group.getUuid());
-                    contactWebService.createOrUpdateContact(contact);
+                    Contact updated = contactWebService.createOrUpdateContact(contact);
+                    eventPublisher.publishContactRemovedFromGroup(externalId, updated, group);
 
                 } else {
                     sendContactDoesNotExistMessage(externalId);
