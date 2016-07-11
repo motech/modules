@@ -9,6 +9,7 @@ import org.motechproject.config.mds.SettingsDataService;
 import org.motechproject.mds.query.QueryParams;
 import org.motechproject.mds.util.Order;
 import org.motechproject.openmrs.domain.*;
+import org.motechproject.openmrs.exception.PatientNotFoundException;
 import org.motechproject.openmrs.service.*;
 import org.motechproject.openmrs.tasks.OpenMRSTasksNotifier;
 import org.motechproject.openmrs.tasks.constants.Keys;
@@ -50,25 +51,10 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
     private OpenMRSPatientService patientService;
 
     @Inject
-    private OpenMRSEncounterService encounterService;
-
-    @Inject
     private OpenMRSLocationService locationService;
 
     @Inject
-    private OpenMRSProviderService providerService;
-
-    @Inject
     private SettingsDataService settingsDataService;
-
-    @Inject
-    private OpenMRSPersonService personService;
-
-    @Inject
-    private OpenMRSObservationService observationService;
-
-    @Inject
-    private OpenMRSConceptService conceptService;
 
     @Inject
     private TaskActivitiesDataService taskActivitiesDataService;
@@ -118,7 +104,7 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
     }
 
     @Test
-    public void testOpenMRSProgramEnrollmentDataSourceAndCreateProgramEnrollmentAction() throws InterruptedException, IOException {
+    public void testOpenMRSProgramEnrollmentDataSourceAndCreateProgramEnrollmentAction() throws InterruptedException, IOException, PatientNotFoundException {
         createProgramEnrollmentTestData();
         Long taskID = createProgramEnrollmentTestTask();
 
@@ -128,6 +114,8 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
         assertTrue(waitForTaskExecution(taskID));
 
         deleteTask(taskID);
+
+        clearProgramEnrollmentData();
 
         assertTrue(checkIfProgramEnrollmentWasCreatedProperly());
     }
@@ -191,6 +179,10 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
         createdProgramEnrollment = programEnrollmentService.createProgramEnrollment(DEFAULT_CONFIG_NAME, programEnrollment);
     }
 
+    private void clearProgramEnrollmentData() throws PatientNotFoundException {
+        patientService.deletePatient(DEFAULT_CONFIG_NAME, createdPatient.getUuid());
+    }
+
     private Patient preparePatient() {
         Person person = new Person();
 
@@ -211,26 +203,6 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
         assertNotNull(location);
 
         return new Patient(person, MOTECH_ID, location);
-    }
-
-    private Provider prepareProvider() {
-
-        Person person = new Person();
-
-        Person.Name name = new Person.Name();
-        name.setGivenName("John");
-        name.setFamilyName("Snow");
-        person.setNames(Collections.singletonList(name));
-
-        person.setGender("M");
-
-        person = personService.createPerson(DEFAULT_CONFIG_NAME, person);
-
-        Provider provider = new Provider();
-        provider.setIdentifier("KingOfTheNorth");
-        provider.setPerson(person);
-
-        return provider;
     }
 
     private boolean waitForTaskExecution(Long taskID) throws InterruptedException {
