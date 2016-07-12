@@ -7,14 +7,16 @@ import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.http.client.ClientHttpResponse;
 import org.motechproject.http.agent.utility.RestUtility;
 
+/**
+ * Error handler allowing to deal with http errors without throwing exceptions from RestTemplate
+ */
 public class HttpResponseErrorHandler implements ResponseErrorHandler{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpResponseErrorHandler.class);
 
-
     @Override
     public void handleError(ClientHttpResponse response) throws IOException {
-        LOGGER.error("Http response error: {} {}", response.getStatusCode(), response.getStatusText());
+        LOGGER.error("HTTP response error: {} {}", response.getStatusCode(), response.getStatusText());
     }
 
     @Override

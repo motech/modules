@@ -2,6 +2,10 @@ package org.motechproject.http.agent.utility;
 
 import org.springframework.http.HttpStatus;
 
+/**
+ * Utility class to check if given HTTP status has an error code.
+ */
+
 public final class RestUtility {
 
     private RestUtility(){
