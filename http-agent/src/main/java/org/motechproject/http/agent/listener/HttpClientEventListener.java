@@ -11,8 +11,10 @@ import org.motechproject.http.agent.domain.EventDataKeys;
 import org.motechproject.http.agent.domain.EventSubjects;
 import org.motechproject.http.agent.domain.HTTPActionAudit;
 import org.motechproject.http.agent.factory.HttpComponentsClientHttpRequestFactoryWithAuth;
+import org.motechproject.http.agent.handler.HttpResponseErrorHandler;
 import org.motechproject.http.agent.service.HTTPActionService;
 import org.motechproject.http.agent.service.Method;
+import org.motechproject.http.agent.utility.RestUtility;
 import org.motechproject.config.SettingsFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -165,6 +167,8 @@ public class HttpClientEventListener {
             restTemplate.setRequestFactory(factory);
         }
 
+        restTemplate.setErrorHandler(new HttpResponseErrorHandler());
+
         int retryCount = 1; // default retry count = 1
         long retryInterval = 0; // by default, no waiting time between two
         // retries
@@ -188,20 +192,9 @@ public class HttpClientEventListener {
                         url, String.valueOf(requestData));
                 ResponseEntity<?> response = null;
                 String errorMessage = null;
-                try {
-                    response = doExecuteForReturnType(url, requestData, method, restTemplate);
-                } catch (Exception e) {
-                    errorMessage = e.getMessage();
-                    throw (e instanceof HttpException) ?
-                            (HttpException) e : new HttpException("HTTP error when executing task", e);
-                } finally {
-                    if (response != null) {
-                        sendAuditLog(url, requestData, response.getBody().toString(), response.getStatusCode().toString());
-                    } else {
-                        sendAuditLog(url, requestData, errorMessage.substring(4), errorMessage.substring(0, 4));
-                    }
-                }
-                if (response.getStatusCode().value() / HUNDRED == 2) {
+                
+                response = doExecuteForReturnType(url, requestData, method, restTemplate);
+                if(response != null) {
                     return response;
                 } else {
                     throw new HttpException();
@@ -232,18 +225,19 @@ public class HttpClientEventListener {
         } else {
             restTemplate = basicRestTemplate;
         }
-        ResponseEntity<?> response = doExecuteForReturnType(url, requestData, method, restTemplate);
-        sendAuditLog(url, requestData, response.getBody().toString(), response.getStatusCode().toString());
-        return response;
+        restTemplate.setErrorHandler(new HttpResponseErrorHandler());
+        return doExecuteForReturnType(url, requestData, method, restTemplate);
     }
 
     private ResponseEntity<?> doExecuteForReturnType(String url, Object requestData, Method method,
                                                      RestTemplate restTemplate) {
-
         ResponseEntity<?> response = method.execute(restTemplate, url, requestData);
-
-
-        return response;
+        sendAuditLog(url, requestData, response.getBody().toString(), response.getStatusCode().toString());
+        if (RestUtility.isError(response.getStatusCode())) {
+            return null;
+        } else {
+            return response;
+        }
     }
 
     private void sendAuditLog(String url, Object requestData, String body, String statusCode)
