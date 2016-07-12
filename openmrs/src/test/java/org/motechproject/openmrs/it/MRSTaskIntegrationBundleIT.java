@@ -1,4 +1,4 @@
-package org.motechproject.openmrs.it.version1_12;
+package org.motechproject.openmrs.it;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -99,6 +99,8 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
         Channel channel = findChannel(OPENMRS_CHANNEL_NAME);
         waitForChannel(MDS_CHANNEL_NAME);
         Channel mdsChannel = findChannel(MDS_CHANNEL_NAME);
+
+        createdPatient = patientService.createPatient(DEFAULT_CONFIG_NAME, preparePatient());
     }
 
     @Test
@@ -125,7 +127,7 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
         TaskActionInformation actionInformation = new TaskActionInformation("Create Program Enrollment [" + DEFAULT_CONFIG_NAME + "]", OPENMRS_CHANNEL_NAME,
                 OPENMRS_CHANNEL_NAME, VERSION, TEST_INTERFACE, "createProgramEnrollment");
 
-        actionInformation.setSubject(String.format("createProgramEnrollment.%s", DEFAULT_CONFIG_NAME));
+        actionInformation.setSubject("validate");
 
         SortedSet<TaskConfigStep> taskConfigStepSortedSet = new TreeSet<>();
         taskConfigStepSortedSet.add(createProgramEnrollmentDataSource());
@@ -141,7 +143,7 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
         values.put(Keys.CONFIG_NAME, DEFAULT_CONFIG_NAME);
         actionInformation.setValues(values);
 
-        Task task = new Task("OpenMRSProgramEnrollmentTestTask", triggerInformation, Arrays.asList(actionInformation), taskConfig, true, true);
+        Task task = new Task("OpenMRSProgramEnrollmentTestTask1111", triggerInformation, Arrays.asList(actionInformation), taskConfig, true, true);
         getTaskService().save(task);
 
         getTriggerHandler().registerHandlerFor(task.getTrigger().getEffectiveListenerSubject());
@@ -150,8 +152,6 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
     }
 
     private void createProgramEnrollmentTestData() {
-        createdPatient = patientService.createPatient(DEFAULT_CONFIG_NAME, preparePatient());
-
         Program program = new Program();
         program.setUuid("187af646-373b-4459-8114-4724d7e07fd5");
 
