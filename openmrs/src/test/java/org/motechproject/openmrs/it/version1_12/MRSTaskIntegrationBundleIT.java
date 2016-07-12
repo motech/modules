@@ -90,7 +90,7 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
     private static final String OPENMRS_CHANNEL_NAME = "org.motechproject.openmrs";
     private static final String OPENMRS_MODULE_NAME = "openMRS";
     private static final String MDS_CHANNEL_NAME = "org.motechproject.motech-platform-dataservices-entities";
-    private static final String VERSION = "0.29W";
+    private static final String VERSION = "0.29";
     private static final String TEST_INTERFACE = "org.motechproject.openmrs.tasks.OpenMRSActionProxyService";
     private static final String TRIGGER_SUBJECT = "mds.crud.serverconfig.SettingsRecord.CREATE";
     private static final String MOTECH_ID = "654";
