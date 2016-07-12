@@ -2,7 +2,7 @@
   "configs" :
   [
     {
-      "name": "Test OpenMRS Server",
+      "name": "TestOpenMRSServer",
       "openMrsVersion":"1.10+",
       "openMrsUrl": "http://${openmrs.host}/openmrs",
       "username": "admin",
@@ -15,5 +15,5 @@
       ]
     }
   ],
-  "defaultConfigName" : "Test OpenMRS Server"
+  "defaultConfigName" : "TestOpenMRSServer"
 }

@@ -49,6 +49,12 @@
             <version>${motech.version}</version>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-tasks-test-utils</artifactId>
+            <version>0.29-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <resources>
