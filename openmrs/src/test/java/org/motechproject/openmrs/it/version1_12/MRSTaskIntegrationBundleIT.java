@@ -1,6 +1,7 @@
 package org.motechproject.openmrs.it.version1_12;
 
 import org.joda.time.DateTime;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -89,13 +90,15 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
     private static final String OPENMRS_CHANNEL_NAME = "org.motechproject.openmrs";
     private static final String OPENMRS_MODULE_NAME = "openMRS";
     private static final String MDS_CHANNEL_NAME = "org.motechproject.motech-platform-dataservices-entities";
-    private static final String VERSION = "0.29.0.SNAPSHOT";
+    private static final String VERSION = "0.29W";
     private static final String TEST_INTERFACE = "org.motechproject.openmrs.tasks.OpenMRSActionProxyService";
     private static final String TRIGGER_SUBJECT = "mds.crud.serverconfig.SettingsRecord.CREATE";
     private static final String MOTECH_ID = "654";
 
     private static final Integer MAX_RETRIES_BEFORE_FAIL = 20;
     private static final Integer WAIT_TIME = 2000;
+
+    private Long taskID;
 
     @Override
     protected Collection<String> getAdditionalTestDependencies() {
@@ -125,10 +128,22 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
         Channel mdsChannel = findChannel(MDS_CHANNEL_NAME);
     }
 
+    @After
+    public void clear() throws PatientNotFoundException {
+        if (taskID != null)
+            deleteTask(taskID);
+
+        List<ProgramEnrollment> programEnrollmentList = programEnrollmentService.getProgramEnrollmentByPatientUuid(DEFAULT_CONFIG_NAME, createdProgramEnrollment.getPatient().getUuid());
+        for (ProgramEnrollment programEnrollment : programEnrollmentList) {
+            programEnrollmentService.deleteProgramEnrollment(DEFAULT_CONFIG_NAME, programEnrollment.getUuid());
+        }
+        patientService.deletePatient(DEFAULT_CONFIG_NAME, createdPatient.getUuid());
+    }
+
     @Test
     public void testOpenMRSProgramEnrollmentDataSourceAndCreateProgramEnrollmentAction() throws InterruptedException, IOException, PatientNotFoundException {
         createProgramEnrollmentTestData();
-        Long taskID = createProgramEnrollmentTestTask();
+        taskID = createProgramEnrollmentTestTask();
 
         activateTrigger();
 
@@ -136,8 +151,6 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
         assertTrue(waitForTaskExecution(taskID));
 
         deleteTask(taskID);
-
-        clearProgramEnrollmentData();
 
         assertTrue(checkIfProgramEnrollmentWasCreatedProperly());
     }
@@ -203,10 +216,6 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
         createdProgramEnrollment = programEnrollmentService.createProgramEnrollment(DEFAULT_CONFIG_NAME, programEnrollment);
     }
 
-    private void clearProgramEnrollmentData() throws PatientNotFoundException {
-        patientService.deletePatient(DEFAULT_CONFIG_NAME, createdPatient.getUuid());
-    }
-
     private Patient preparePatient() {
         Person person = new Person();
 
@@ -264,14 +273,19 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
     }
 
     private boolean checkIfProgramEnrollmentWasCreatedProperly() {
-        int programEnrollmentCount = 0;
         List<ProgramEnrollment> programEnrollmentList = programEnrollmentService.getProgramEnrollmentByPatientUuid(DEFAULT_CONFIG_NAME, createdProgramEnrollment.getPatient().getUuid());
-        for (ProgramEnrollment programEnrollment : programEnrollmentList) {
-            if (programEnrollment.getPatient().getUuid().equals(createdProgramEnrollment.getPatient().getUuid()) && programEnrollment.getProgram().getUuid().equals(createdProgramEnrollment.getProgram().getUuid())) {
-                programEnrollmentCount++;
+        if (programEnrollmentList.size() == 2) {
+            for (ProgramEnrollment programEnrollment : programEnrollmentList) {
+                if (!programEnrollment.getUuid().equals(createdPatient.getUuid()) && // check only for task created program enrollment, not for service created one
+                        programEnrollment.getPatient().getUuid().equals(createdProgramEnrollment.getPatient().getUuid()) &&
+                        programEnrollment.getProgram().getUuid().equals(createdProgramEnrollment.getProgram().getUuid()) &&
+                        programEnrollment.getDateCompleted().equals(createdProgramEnrollment.getDateCompleted()) &&
+                        programEnrollment.getDateEnrolled().equals(createdProgramEnrollment.getDateEnrolled())) {
+                    return true;
+                }
             }
         }
-        return programEnrollmentCount == 2;
+        return false;
     }
 
     private void activateTrigger() {
