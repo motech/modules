@@ -12,7 +12,7 @@ import org.motechproject.openmrs.it.MRSProviderServiceIT;
 import org.motechproject.openmrs.it.MRSUserServiceIT;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({MRSConceptServiceIT.class, MRSEncounterServiceIT.class, MRSLocationServiceIT.class,
+@Suite.SuiteClasses({MRSTaskIntegrationBundleIT.class, MRSConceptServiceIT.class, MRSEncounterServiceIT.class, MRSLocationServiceIT.class,
         MRSObservationServiceIT.class, MRSPatientServiceIT.class, MRSPersonServiceIT.class, MRSProviderServiceIT.class,
         MRSUserServiceIT.class, MRSProgramEnrollmentIT.class})
 public class MRSIntegrationTests {
