@@ -8,13 +8,27 @@ import org.motechproject.config.domain.SettingsRecord;
 import org.motechproject.config.mds.SettingsDataService;
 import org.motechproject.mds.query.QueryParams;
 import org.motechproject.mds.util.Order;
-import org.motechproject.openmrs.domain.*;
+import org.motechproject.openmrs.domain.Location;
+import org.motechproject.openmrs.domain.Patient;
+import org.motechproject.openmrs.domain.Person;
+import org.motechproject.openmrs.domain.Program;
+import org.motechproject.openmrs.domain.ProgramEnrollment;
 import org.motechproject.openmrs.exception.PatientNotFoundException;
-import org.motechproject.openmrs.service.*;
+import org.motechproject.openmrs.service.OpenMRSLocationService;
+import org.motechproject.openmrs.service.OpenMRSPatientService;
+import org.motechproject.openmrs.service.OpenMRSProgramEnrollmentService;
 import org.motechproject.openmrs.tasks.OpenMRSTasksNotifier;
 import org.motechproject.openmrs.tasks.constants.Keys;
 import org.motechproject.tasks.domain.mds.channel.Channel;
-import org.motechproject.tasks.domain.mds.task.*;
+import org.motechproject.tasks.domain.mds.task.DataSource;
+import org.motechproject.tasks.domain.mds.task.Lookup;
+import org.motechproject.tasks.domain.mds.task.Task;
+import org.motechproject.tasks.domain.mds.task.TaskActionInformation;
+import org.motechproject.tasks.domain.mds.task.TaskActivity;
+import org.motechproject.tasks.domain.mds.task.TaskActivityType;
+import org.motechproject.tasks.domain.mds.task.TaskConfig;
+import org.motechproject.tasks.domain.mds.task.TaskConfigStep;
+import org.motechproject.tasks.domain.mds.task.TaskTriggerInformation;
 import org.motechproject.tasks.osgi.test.AbstractTaskBundleIT;
 import org.motechproject.tasks.repository.TaskActivitiesDataService;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -27,7 +41,17 @@ import org.osgi.framework.BundleContext;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -70,7 +94,7 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
     private static final String TRIGGER_SUBJECT = "mds.crud.serverconfig.SettingsRecord.CREATE";
     private static final String MOTECH_ID = "654";
 
-    private static final Integer MAX_RETRIES_BEFORE_FAIL = 200;
+    private static final Integer MAX_RETRIES_BEFORE_FAIL = 20;
     private static final Integer WAIT_TIME = 2000;
 
     @Override
@@ -227,7 +251,7 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
         QueryParams queryParams = new QueryParams((Order) null);
         List<TaskActivity> taskActivities = taskActivitiesDataService.byTaskAndActivityTypes(taskID, activityTypes, queryParams);
 
-        return taskActivities.size() == 1 ? true : false;
+        return taskActivities.size() == 1;
     }
 
     private DataSource createProgramEnrollmentDataSource() {
@@ -247,7 +271,7 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
                 programEnrollmentCount++;
             }
         }
-        return programEnrollmentCount == 2 ? true : false;
+        return programEnrollmentCount == 2;
     }
 
     private void activateTrigger() {
