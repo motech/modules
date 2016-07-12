@@ -150,8 +150,6 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
         // Give Tasks some time to process
         assertTrue(waitForTaskExecution(taskID));
 
-        deleteTask(taskID);
-
         assertTrue(checkIfProgramEnrollmentWasCreatedProperly());
     }
 
