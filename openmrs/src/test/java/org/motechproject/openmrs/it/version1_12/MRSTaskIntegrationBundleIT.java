@@ -178,7 +178,7 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
         values.put(Keys.CONFIG_NAME, DEFAULT_CONFIG_NAME);
         actionInformation.setValues(values);
 
-        Task task = new Task("OpenMRSProgramEnrollmentTestTask", triggerInformation, Arrays.asList(actionInformation), taskConfig, true, true);
+        Task task = new Task("OpenMRSProgramEnrollmentTestTask", triggerInformation, Collections.singletonList(actionInformation), taskConfig, true, true);
         getTaskService().save(task);
 
         getTriggerHandler().registerHandlerFor(task.getTrigger().getEffectiveListenerSubject());
