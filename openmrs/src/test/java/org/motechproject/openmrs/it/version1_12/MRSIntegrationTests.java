@@ -9,12 +9,12 @@ import org.motechproject.openmrs.it.MRSObservationServiceIT;
 import org.motechproject.openmrs.it.MRSPatientServiceIT;
 import org.motechproject.openmrs.it.MRSPersonServiceIT;
 import org.motechproject.openmrs.it.MRSProviderServiceIT;
-import org.motechproject.openmrs.it.MRSTaskIntegrationBundleIT;
+import org.motechproject.openmrs.it.MRSTasksIntegrationBundleIT;
 import org.motechproject.openmrs.it.MRSUserServiceIT;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({MRSTaskIntegrationBundleIT.class, MRSConceptServiceIT.class, MRSEncounterServiceIT.class, MRSLocationServiceIT.class,
-        MRSObservationServiceIT.class, MRSPatientServiceIT.class, MRSPersonServiceIT.class, MRSProviderServiceIT.class,
-        MRSUserServiceIT.class, MRSProgramEnrollmentIT.class})
+@Suite.SuiteClasses({MRSTaskIntegrationBundleIT.class, MRSTasksIntegrationBundleIT.class, MRSConceptServiceIT.class,
+        MRSEncounterServiceIT.class, MRSLocationServiceIT.class, MRSObservationServiceIT.class, MRSPatientServiceIT.class,
+        MRSPersonServiceIT.class, MRSProviderServiceIT.class, MRSUserServiceIT.class, MRSProgramEnrollmentIT.class})
 public class MRSIntegrationTests {
 }
