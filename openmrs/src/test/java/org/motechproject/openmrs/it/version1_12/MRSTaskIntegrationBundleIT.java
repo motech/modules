@@ -98,8 +98,6 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
     private static final Integer MAX_RETRIES_BEFORE_FAIL = 20;
     private static final Integer WAIT_TIME = 2000;
 
-    private Long taskID;
-
     @Override
     protected Collection<String> getAdditionalTestDependencies() {
         return Arrays.asList(
@@ -130,9 +128,6 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
 
     @After
     public void clear() throws PatientNotFoundException {
-        if (taskID != null)
-            deleteTask(taskID);
-
         List<ProgramEnrollment> programEnrollmentList = programEnrollmentService.getProgramEnrollmentByPatientUuid(DEFAULT_CONFIG_NAME, createdProgramEnrollment.getPatient().getUuid());
         for (ProgramEnrollment programEnrollment : programEnrollmentList) {
             programEnrollmentService.deleteProgramEnrollment(DEFAULT_CONFIG_NAME, programEnrollment.getUuid());
@@ -143,7 +138,7 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
     @Test
     public void testOpenMRSProgramEnrollmentDataSourceAndCreateProgramEnrollmentAction() throws InterruptedException, IOException, PatientNotFoundException {
         createProgramEnrollmentTestData();
-        taskID = createProgramEnrollmentTestTask();
+        Long taskID = createProgramEnrollmentTestTask();
 
         activateTrigger();
 
@@ -288,10 +283,6 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
 
     private void activateTrigger() {
         settingsDataService.create(new SettingsRecord());
-    }
-
-    private void deleteTask(Long taskID) {
-        getTaskService().deleteTask(taskID);
     }
 }
 
