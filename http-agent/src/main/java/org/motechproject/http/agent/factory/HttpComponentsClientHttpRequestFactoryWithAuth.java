@@ -1,9 +1,12 @@
 package org.motechproject.http.agent.factory;
 
+import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
@@ -31,14 +34,19 @@ public class HttpComponentsClientHttpRequestFactoryWithAuth extends HttpComponen
      */
     @Override
     protected HttpContext createHttpContext(HttpMethod httpMethod, URI uri) {
-        return createHttpContext();
+        HttpHost targetHost = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
+        BasicScheme basicScheme = new BasicScheme();
+        BasicAuthCache authCache = new BasicAuthCache();
+        authCache.put(targetHost, basicScheme);
+        BasicHttpContext localContext = new BasicHttpContext();
+        localContext.setAttribute(ClientContext.AUTH_CACHE, authCache);
+        return createHttpContext(localContext);
     }
 
-    private HttpContext createHttpContext() {
+    private HttpContext createHttpContext(BasicHttpContext localContext) {
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
 
-        BasicHttpContext localContext = new BasicHttpContext();
         localContext.setAttribute(ClientContext.CREDS_PROVIDER, credentialsProvider);
 
         return localContext;
