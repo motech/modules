@@ -10,14 +10,32 @@ import org.motechproject.config.domain.SettingsRecord;
 import org.motechproject.config.mds.SettingsDataService;
 import org.motechproject.mds.query.QueryParams;
 import org.motechproject.mds.util.Order;
-import org.motechproject.openmrs.domain.*;
+import org.motechproject.openmrs.domain.Encounter;
+import org.motechproject.openmrs.domain.EncounterType;
+import org.motechproject.openmrs.domain.Location;
+import org.motechproject.openmrs.domain.Patient;
+import org.motechproject.openmrs.domain.Person;
+import org.motechproject.openmrs.domain.Provider;
 import org.motechproject.openmrs.exception.ConceptNameAlreadyInUseException;
 import org.motechproject.openmrs.exception.PatientNotFoundException;
-import org.motechproject.openmrs.service.*;
+import org.motechproject.openmrs.service.OpenMRSConceptService;
+import org.motechproject.openmrs.service.OpenMRSEncounterService;
+import org.motechproject.openmrs.service.OpenMRSLocationService;
+import org.motechproject.openmrs.service.OpenMRSObservationService;
+import org.motechproject.openmrs.service.OpenMRSPatientService;
+import org.motechproject.openmrs.service.OpenMRSPersonService;
+import org.motechproject.openmrs.service.OpenMRSProviderService;
 import org.motechproject.openmrs.tasks.OpenMRSTasksNotifier;
 import org.motechproject.openmrs.tasks.constants.Keys;
-import org.motechproject.tasks.domain.mds.channel.Channel;
-import org.motechproject.tasks.domain.mds.task.*;
+import org.motechproject.tasks.domain.mds.task.DataSource;
+import org.motechproject.tasks.domain.mds.task.Lookup;
+import org.motechproject.tasks.domain.mds.task.Task;
+import org.motechproject.tasks.domain.mds.task.TaskActionInformation;
+import org.motechproject.tasks.domain.mds.task.TaskActivity;
+import org.motechproject.tasks.domain.mds.task.TaskActivityType;
+import org.motechproject.tasks.domain.mds.task.TaskConfig;
+import org.motechproject.tasks.domain.mds.task.TaskConfigStep;
+import org.motechproject.tasks.domain.mds.task.TaskTriggerInformation;
 import org.motechproject.tasks.osgi.test.AbstractTaskBundleIT;
 import org.motechproject.tasks.repository.TaskActivitiesDataService;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -31,8 +49,18 @@ import org.osgi.framework.BundleContext;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -89,6 +117,7 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
     private static final String TEST_INTERFACE = "org.motechproject.openmrs.tasks.OpenMRSActionProxyService";
     private static final String TRIGGER_SUBJECT = "mds.crud.serverconfig.SettingsRecord.CREATE";
     private static final String MOTECH_ID = "654";
+    private static final String TEST_MOTECH_ID = "333";
 
     private static final Integer MAX_RETRIES_BEFORE_FAIL = 20;
     private static final Integer WAIT_TIME = 2000;
@@ -157,6 +186,20 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
         checkIfEncounterWasCreatedProperly();
     }
 
+    @Test
+    public void testOpenMRSProviderDataSourceAndCreateEncounterAction() throws InterruptedException, IOException, ParseException, ConceptNameAlreadyInUseException {
+        Long taskID = createProviderTestTask();
+
+        activateTrigger();
+
+        // Give Tasks some time to process
+        waitForTaskExecution(taskID);
+
+        deleteTask(taskID);
+
+        checkIfProviderWasCreatedProperly();
+    }
+
     @After
     public void destroy() throws PatientNotFoundException {
         List<Encounter> encounters = encounterService.getEncountersByEncounterType(DEFAULT_CONFIG_NAME, MOTECH_ID, createdEncounterType.getName());
@@ -172,7 +215,11 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
         patientService.deletePatient(DEFAULT_CONFIG_NAME, createdPatient.getUuid());
 
         Patient patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, String.format("%staskCreated", MOTECH_ID));
+        if (patient != null) {
+            patientService.deletePatient(DEFAULT_CONFIG_NAME, patient.getUuid());
+        }
 
+        patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, TEST_MOTECH_ID);
         if (patient != null) {
             patientService.deletePatient(DEFAULT_CONFIG_NAME, patient.getUuid());
         }
@@ -234,6 +281,39 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
         actionInformation.setValues(values);
 
         Task task = new Task("OpenMRSEncounterTestTask", triggerInformation, Arrays.asList(actionInformation), taskConfig, true, true);
+        getTaskService().save(task);
+
+        getTriggerHandler().registerHandlerFor(task.getTrigger().getEffectiveListenerSubject());
+
+        return task.getId();
+    }
+
+    private Long createProviderTestTask() {
+        TaskTriggerInformation triggerInformation = new TaskTriggerInformation("CREATE SettingsRecord", "data-services", MDS_CHANNEL_NAME,
+                VERSION, TRIGGER_SUBJECT, TRIGGER_SUBJECT);
+
+        TaskActionInformation actionInformation = new TaskActionInformation("Create Patient [" + DEFAULT_CONFIG_NAME + "]", OPENMRS_CHANNEL_NAME,
+                OPENMRS_CHANNEL_NAME, VERSION, TEST_INTERFACE, "createPatient");
+
+        actionInformation.setSubject("validate");
+
+        SortedSet<TaskConfigStep> taskConfigStepSortedSet = new TreeSet<>();
+        taskConfigStepSortedSet.add(createProviderDataSource());
+        TaskConfig taskConfig = new TaskConfig();
+        taskConfig.addAll(taskConfigStepSortedSet);
+
+        Map<String, String> values = new HashMap<>();
+        values.put(Keys.GIVEN_NAME, "GivenName");
+        values.put(Keys.FAMILY_NAME, "FamilyName");
+        values.put(Keys.ADDRESS_1, "{{ad.openMRS.Provider-" + DEFAULT_CONFIG_NAME + "#0.uuid}}");
+        values.put(Keys.ADDRESS_2, "{{ad.openMRS.Provider-" + DEFAULT_CONFIG_NAME + "#0.identifier}}");
+        values.put(Keys.ADDRESS_3, "{{ad.openMRS.Provider-" + DEFAULT_CONFIG_NAME + "#0.person.uuid}}");
+        values.put(Keys.GENDER, "M");
+        values.put(Keys.MOTECH_ID, TEST_MOTECH_ID);
+        values.put(Keys.CONFIG_NAME, DEFAULT_CONFIG_NAME);
+        actionInformation.setValues(values);
+
+        Task task = new Task("OpenMRSProviderTestTask", triggerInformation, Arrays.asList(actionInformation), taskConfig, true, true);
         getTaskService().save(task);
 
         getTriggerHandler().registerHandlerFor(task.getTrigger().getEffectiveListenerSubject());
@@ -349,6 +429,14 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
         return dataSource;
     }
 
+    private DataSource createProviderDataSource() {
+        List<Lookup> lookupList = new ArrayList<>();
+        lookupList.add(new Lookup("openMRS.uuid", createdProvider.getUuid()));
+        DataSource dataSource = new DataSource(OPENMRS_MODULE_NAME, new Long(4), new Long(0), "Provider-" + DEFAULT_CONFIG_NAME, "openMRS.lookup.uuid", lookupList, false);
+        dataSource.setOrder(0);
+        return dataSource;
+    }
+
     private void checkIfPatientWasCreatedProperly() {
         Patient patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, String.format("%staskCreated", MOTECH_ID));
 
@@ -370,6 +458,16 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
                 assertEquals(new DateTime("1999-01-16T00:00:00Z").toDate(), encounter.getEncounterDatetime());
             }
         }
+    }
+
+    private void checkIfProviderWasCreatedProperly() {
+        Patient patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, TEST_MOTECH_ID);
+
+        Person.Address address = patient.getPerson().getPreferredAddress();
+
+        assertEquals(createdProvider.getUuid(), address.getAddress1());
+        assertEquals(createdProvider.getIdentifier(), address.getAddress2());
+        assertEquals(createdProvider.getPerson().getUuid(), address.getAddress3());
     }
 
     private void activateTrigger() {
