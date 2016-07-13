@@ -3,6 +3,7 @@ package org.motechproject.openmrs.it;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.config.domain.SettingsRecord;
@@ -33,6 +34,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.motechproject.openmrs.tasks.OpenMRSActionProxyService.DEFAULT_LOCATION_NAME;
@@ -78,10 +80,7 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
     private Patient createdPatient;
     private Encounter createdEncounter;
     private Provider createdProvider;
-    private Date providerDate;
     private EncounterType createdEncounterType;
-    private Observation createdObservation;
-    private Concept createdConcept;
 
     private static final String OPENMRS_CHANNEL_NAME = "org.motechproject.openmrs";
     private static final String OPENMRS_MODULE_NAME = "openMRS";
@@ -91,7 +90,7 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
     private static final String TRIGGER_SUBJECT = "mds.crud.serverconfig.SettingsRecord.CREATE";
     private static final String MOTECH_ID = "654";
 
-    private static final Integer MAX_RETRIES_BEFORE_FAIL = 200;
+    private static final Integer MAX_RETRIES_BEFORE_FAIL = 20;
     private static final Integer WAIT_TIME = 2000;
 
     @Override
@@ -109,25 +108,29 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
         );
     }
 
-    @Before
-    public void setUp() throws IOException, InterruptedException {
+    @BeforeClass
+    public static void initialize() throws IOException, InterruptedException {
         createAdminUser();
         login();
-        openMRSTasksNotifier = (OpenMRSTasksNotifier) ServiceRetriever.getWebAppContext(bundleContext, OPENMRS_CHANNEL_NAME).getBean("openMrsTasksNotifier");
+    }
+
+    @Before
+    public void setUp() throws IOException, InterruptedException, ParseException, ConceptNameAlreadyInUseException {
+        openMRSTasksNotifier = (OpenMRSTasksNotifier) ServiceRetriever
+                .getWebAppContext(bundleContext, OPENMRS_CHANNEL_NAME)
+                .getBean("openMrsTasksNotifier");
+
         setUpSecurityContext("motech", "motech", "manageTasks", "manageOpenMRS");
 
         waitForChannel(OPENMRS_CHANNEL_NAME);
-        Channel channel = findChannel(OPENMRS_CHANNEL_NAME);
         waitForChannel(MDS_CHANNEL_NAME);
-        Channel mdsChannel = findChannel(MDS_CHANNEL_NAME);
 
-        createdPatient = patientService.createPatient(DEFAULT_CONFIG_NAME, preparePatient());
+        createPatientTestData();
+        createEncounterTestData();
     }
 
     @Test
     public void testOpenMRSPatientDataSourceAndCreatePatientAction() throws InterruptedException, IOException, PatientNotFoundException {
-        createPatientTestData();
-
         Long taskID = createPatientTestTask();
 
         activateTrigger();
@@ -137,15 +140,11 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
 
         deleteTask(taskID);
 
-        assertTrue(checkIfPatientWasCreatedProperly());
-
-        clearPatientData();
+        checkIfPatientWasCreatedProperly();
     }
 
     @Test
     public void testOpenMRSEncounterDataSourceAndCreateEncounterAction() throws InterruptedException, IOException, ParseException, ConceptNameAlreadyInUseException {
-        createEncounterTestData();
-
         Long taskID = createEncounterTestTask();
 
         activateTrigger();
@@ -155,13 +154,31 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
 
         deleteTask(taskID);
 
-        assertTrue(checkIfEncounterWasCreatedProperly());
+        checkIfEncounterWasCreatedProperly();
+    }
 
-        clearEncounterData();
+    @After
+    public void destroy() throws PatientNotFoundException {
+        List<Encounter> encounters = encounterService.getEncountersByEncounterType(DEFAULT_CONFIG_NAME, MOTECH_ID, createdEncounterType.getName());
+
+        for (Encounter encounter : encounters) {
+            encounterService.deleteEncounter(DEFAULT_CONFIG_NAME, encounter.getUuid());
+        }
+
+        encounterService.deleteEncounterType(DEFAULT_CONFIG_NAME, createdEncounterType.getUuid());
+
+        providerService.deleteProvider(DEFAULT_CONFIG_NAME, createdProvider.getUuid());
+
+        patientService.deletePatient(DEFAULT_CONFIG_NAME, createdPatient.getUuid());
+
+        Patient patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, String.format("%staskCreated", MOTECH_ID));
+
+        if (patient != null) {
+            patientService.deletePatient(DEFAULT_CONFIG_NAME, patient.getUuid());
+        }
     }
 
     private Long createPatientTestTask() {
-
         TaskTriggerInformation triggerInformation = new TaskTriggerInformation("CREATE SettingsRecord", "data-services", MDS_CHANNEL_NAME,
                 VERSION, TRIGGER_SUBJECT, TRIGGER_SUBJECT);
 
@@ -176,7 +193,8 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
         taskConfig.addAll(taskConfigStepSortedSet);
 
         Map<String, String> values = new HashMap<>();
-        values.put(Keys.BIRTH_DATE, "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.person.birthdate}}");
+        values.put(Keys.ADDRESS_1, "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.person.birthdate}}");
+        values.put(Keys.ADDRESS_2, "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.uuid}}");
         values.put(Keys.FAMILY_NAME, "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.person.display}}");
         values.put(Keys.GENDER, "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.person.gender}}");
         values.put(Keys.GIVEN_NAME, "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.person.display}}");
@@ -210,12 +228,12 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
         values.put(Keys.PROVIDER_UUID, createdProvider.getUuid());
         values.put(Keys.PATIENT_UUID, "{{ad.openMRS.Encounter-" + DEFAULT_CONFIG_NAME + "#0.patient.uuid}}");
         values.put(Keys.ENCOUNTER_TYPE, "{{ad.openMRS.Encounter-" + DEFAULT_CONFIG_NAME + "#0.encounterType.name}}");
-        values.put(Keys.ENCOUNTER_DATE, "{{ad.openMRS.Encounter-" + DEFAULT_CONFIG_NAME + "#0.encounterDatetime}}");
+        values.put(Keys.ENCOUNTER_DATE, new DateTime("1999-01-16T00:00:00Z").toString());
         values.put(Keys.LOCATION_NAME, "{{ad.openMRS.Encounter-" + DEFAULT_CONFIG_NAME + "#0.location.display}}");
         values.put(Keys.CONFIG_NAME, DEFAULT_CONFIG_NAME);
         actionInformation.setValues(values);
 
-        Task task = new Task("OpenMRSEncounterTestTaskasdasdasd992", triggerInformation, Arrays.asList(actionInformation), taskConfig, true, true);
+        Task task = new Task("OpenMRSEncounterTestTask", triggerInformation, Arrays.asList(actionInformation), taskConfig, true, true);
         getTaskService().save(task);
 
         getTriggerHandler().registerHandlerFor(task.getTrigger().getEffectiveListenerSubject());
@@ -223,32 +241,17 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
         return task.getId();
     }
 
-    private void clearPatientData() throws PatientNotFoundException {
-
-        Patient patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, String.format("%staskCreated", MOTECH_ID));
-        patientService.deletePatient(DEFAULT_CONFIG_NAME, patient.getUuid());
-    }
-
-    private void clearEncounterData() {
-        Encounter encounter = encounterService.getLatestEncounterByPatientMotechId(DEFAULT_CONFIG_NAME, MOTECH_ID, createdEncounterType.getName());
-        encounterService.deleteEncounter(DEFAULT_CONFIG_NAME, encounter.getUuid());
-        encounterService.deleteEncounter(DEFAULT_CONFIG_NAME, createdEncounter.getUuid());
-    }
-
     private void createPatientTestData() {
         createdPatient = patientService.createPatient(DEFAULT_CONFIG_NAME, preparePatient());
     }
 
     private void createEncounterTestData() throws ParseException, ConceptNameAlreadyInUseException {
-
         createdProvider = prepareProvider();
         createdEncounterType = prepareEncounterType();
 
-        createdObservation = prepareObservations();
-
         Location location = locationService.getLocations(DEFAULT_CONFIG_NAME, DEFAULT_LOCATION_NAME).get(0);
-        Encounter encounter = new Encounter(location, createdEncounterType, providerDate, createdPatient, Collections.singletonList(createdProvider.getPerson()),
-                Collections.singletonList(createdObservation));
+        Encounter encounter = new Encounter(location, createdEncounterType, new DateTime("2001-01-16T00:00:00Z").toDate(),
+                createdPatient, Collections.singletonList(createdProvider.getPerson()), null);
 
         createdEncounter = encounterService.createEncounter(DEFAULT_CONFIG_NAME, encounter);
     }
@@ -297,40 +300,12 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
         return providerService.getProviderByUuid(DEFAULT_CONFIG_NAME, providerUUID);
     }
 
-    private Observation prepareObservations() throws ParseException, ConceptNameAlreadyInUseException {
-        Observation tempObservation = new Observation();
-
-        providerDate = prepareProviderDate();
-        createdConcept = prepareConcept();
-
-        tempObservation.setObsDatetime(providerDate);
-        tempObservation.setConcept(createdConcept);
-        tempObservation.setValue(new Observation.ObservationValue("true"));
-        tempObservation.setPerson(createdPatient.getPerson());
-
-        String observationUuid = observationService.createObservation(DEFAULT_CONFIG_NAME, tempObservation).getUuid();
-        return observationService.getObservationByUuid(DEFAULT_CONFIG_NAME, observationUuid);
-    }
-
     private EncounterType prepareEncounterType() {
         EncounterType tempEncounterType = new EncounterType("TestEncounterType");
         tempEncounterType.setDescription("TestDescription");
 
         String encounterUuid = encounterService.createEncounterType(DEFAULT_CONFIG_NAME, tempEncounterType).getUuid();
         return encounterService.getEncounterTypeByUuid(DEFAULT_CONFIG_NAME, encounterUuid);
-    }
-
-    private Concept prepareConcept() throws ConceptNameAlreadyInUseException {
-        Concept tempConcept = new Concept();
-        tempConcept.setNames(Arrays.asList(new ConceptName("FooConcept")));
-        tempConcept.setDatatype(new Concept.DataType("Boolean"));
-        tempConcept.setConceptClass(new Concept.ConceptClass("Test"));
-        return conceptService.createConcept(DEFAULT_CONFIG_NAME, tempConcept);
-    }
-
-    private Date prepareProviderDate() throws ParseException {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        return format.parse("2011-01-16T00:00:00Z");
     }
 
     private boolean waitForTaskExecution(Long taskID) throws InterruptedException {
@@ -374,27 +349,27 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
         return dataSource;
     }
 
-    private boolean checkIfPatientWasCreatedProperly() {
+    private void checkIfPatientWasCreatedProperly() {
         Patient patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, String.format("%staskCreated", MOTECH_ID));
-        if (patient.getPerson().getBirthdate().equals(createdPatient.getPerson().getBirthdate()) &&
-                patient.getMotechId().equals(String.format("%staskCreated", MOTECH_ID)) &&
-                patient.getPerson().getGender().equals(createdPatient.getPerson().getGender())) {
-            return true;
-        }
-        return false;
+
+        assertEquals(createdPatient.getUuid(), patient.getPerson().getPreferredAddress().getAddress2());
+        assertEquals(createdPatient.getPerson().getBirthdate().toString(), patient.getPerson().getPreferredAddress().getAddress1());
+        assertEquals(String.format("%staskCreated", MOTECH_ID), patient.getMotechId());
+        assertEquals(createdPatient.getPerson().getGender(), patient.getPerson().getGender());
     }
 
-    private boolean checkIfEncounterWasCreatedProperly() {
-        boolean found = false;
+    private void checkIfEncounterWasCreatedProperly() {
         List<Encounter> encounterList = encounterService.getEncountersByEncounterType(DEFAULT_CONFIG_NAME, MOTECH_ID, createdEncounterType.getName());
+
+        assertEquals(2, encounterList.size());
+
         for (Encounter encounter : encounterList) {
-            if (encounter.getUuid() != createdEncounter.getUuid() &&
-                    encounter.getPatient().getUuid().equals(createdEncounter.getPatient().getUuid()) &&
-                    encounter.getEncounterType().getUuid().equals(createdEncounter.getEncounterType().getUuid())) {
-                found = true;
+            if (!Objects.equals(encounter.getUuid(), createdEncounter.getUuid())) {
+                assertEquals(createdEncounter.getPatient().getUuid(), encounter.getPatient().getUuid());
+                assertEquals(createdEncounter.getEncounterType().getUuid(), encounter.getEncounterType().getUuid());
+                assertEquals(new DateTime("1999-01-16T00:00:00Z").toDate(), encounter.getEncounterDatetime());
             }
         }
-        return encounterList.size() == 2 && found ? true : false;
     }
 
     private void activateTrigger() {
