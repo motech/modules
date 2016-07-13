@@ -74,19 +74,16 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
         this.eventRelay = eventRelay;
         this.forwardingEndpointService = forwardingEndpointService;
         loadConfigs();
-        template = createTemplate();
     }
 
     @Override
     public Config updateConfig(Config config, String oldName) throws CommcareConnectionFailureException {
 
         if (configs.nameInUse(oldName)) {
-            if (!isSameServer(config.getAccountConfig(), configs.getByName(oldName).getAccountConfig()) || !isSameUserData(config.getAccountConfig(), configs.getByName(oldName).getAccountConfig())) {
-                eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_UPDATED, prepareParams(oldName)));
-            }
+            eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_DELETED, prepareParams(oldName)));
             configs.updateConfig(config, oldName);
-            if(!verifyConfig(config)) {
-                eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_DELETED, prepareParams(oldName)));
+            if(verifyConfig(config)) {
+                eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_UPDATED, prepareParams(oldName)));
             }
         } else {
             validateConfig(config);
@@ -272,14 +269,6 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
         updateFormsForwarding(config, endpoints);
         updateStubsForwading(config, endpoints);
         updateSchemaForwarding(config, endpoints);
-    }
-
-    private boolean isSameServer(AccountConfig one, AccountConfig two) {
-        return one.getBaseUrl().equals(two.getBaseUrl()) && one.getDomain().equals(two.getDomain());
-    }
-
-    private boolean isSameUserData(AccountConfig one, AccountConfig two) {
-        return one.getUsername().equals(two.getUsername()) && one.getPassword().equals(two.getPassword());
     }
 
     private void updateCasesForwarding(Config config, List<String> endpoints) {
