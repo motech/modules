@@ -110,14 +110,14 @@ public class ContactWebServiceTest {
         InputStream inputStream = new ByteArrayInputStream(json.getBytes());
         when(rapidProHttpClient.executeGet("/contacts", MediaFormat.JSON, params)).thenReturn(inputStream);
 
-        Contact fromWebservice = contactWebService.getContactByUUID(uuid);
+        contactWebService.getContactByUUID(uuid);
     }
 
     @Test(expected = WebServiceException.class)
     public void shouldThrowExceptionHttpClient() throws Exception {
         UUID uuid = UUID.randomUUID();
         when(rapidProHttpClient.executeGet("/contacts", MediaFormat.JSON, null)).thenThrow(new RapidProClientException("Exception"));
-        Contact fromWebservice = contactWebService.getContactByUUID(uuid);
+        contactWebService.getContactByUUID(uuid);
     }
 
     @Test(expected = WebServiceException.class)
@@ -129,6 +129,6 @@ public class ContactWebServiceTest {
         String json = "not json";
         InputStream inputStream = new ByteArrayInputStream(json.getBytes());
         when(rapidProHttpClient.executeGet("/contacts", MediaFormat.JSON, params)).thenReturn(inputStream);
-        Contact fromWebservice = contactWebService.getContactByUUID(uuid);
+        contactWebService.getContactByUUID(uuid);
     }
 }

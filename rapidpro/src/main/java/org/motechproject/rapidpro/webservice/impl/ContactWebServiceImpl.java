@@ -1,5 +1,6 @@
 package org.motechproject.rapidpro.webservice.impl;
 
+import org.apache.bval.jsr303.util.IOUtils;
 import org.codehaus.jackson.type.TypeReference;
 import org.motechproject.rapidpro.exception.JsonUtilException;
 import org.motechproject.rapidpro.exception.RapidProClientException;
@@ -16,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,11 +62,11 @@ public class ContactWebServiceImpl extends AbstractWebService<Contact> implement
             throw new WebServiceException(ERROR_CREATING_OR_UPDATING + contact.getName(), e);
 
         } finally {
-            closeInputStream(response);
+            IOUtils.closeQuietly(response);
         }
     }
 
-
+    @Override
     public void deleteContactByUUID(UUID uuid) throws WebServiceException {
         try {
             LOGGER.debug(DELETING + uuid);
@@ -96,13 +96,5 @@ public class ContactWebServiceImpl extends AbstractWebService<Contact> implement
         } catch (RapidProClientException | JsonUtilException e) {
             throw new WebServiceException(ERROR_RETREIVING_PHONE + phoneNumber, e);
         }
-    }
-
-    private void closeInputStream(InputStream is) {
-        try {
-            if (is != null) {
-                is.close();
-            }
-        } catch (IOException e) { }
     }
 }

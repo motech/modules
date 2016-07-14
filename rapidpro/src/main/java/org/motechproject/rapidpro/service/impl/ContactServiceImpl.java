@@ -66,7 +66,7 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public void create(String externalId, String phone, Contact contact) {
         LOGGER.debug(CREATING_CONTACT + externalId);
-        if (!externalIdNull(externalId)) {
+        if (externalId != null) {
 
             if (contactMapperService.exists(externalId)) {
                 LOGGER.warn(MAPPING_EXISTS + externalId);
@@ -84,7 +84,7 @@ public class ContactServiceImpl implements ContactService {
     public void update(String externalId, Contact contact) {
         LOGGER.debug(UPDATING_CONTACT + externalId);
         try {
-            if (!externalIdNull(externalId)) {
+            if (externalId != null) {
                 UUID uuid = contactMapperService.getRapidproUUIDFromExternalId(externalId);
                 Contact fromRapidpro = contactWebService.getContactByUUID(uuid);
                 ContactUtils.mergeContactFields(contact, fromRapidpro);
@@ -104,7 +104,7 @@ public class ContactServiceImpl implements ContactService {
     public void delete(String externalId) {
         LOGGER.debug(DELETING_CONTACT + externalId);
         try {
-            if (!externalIdNull(externalId)) {
+            if (externalId != null) {
                 UUID uuid = contactMapperService.getRapidproUUIDFromExternalId(externalId);
                 contactWebService.deleteContactByUUID(uuid);
                 contactMapperService.delete(externalId);
@@ -120,13 +120,14 @@ public class ContactServiceImpl implements ContactService {
             sendNoMappingMessage(externalId);
         }
     }
+
     @Override
     public Contact findByExternalId(String externalId) {
         LOGGER.debug(FINDING_EXTERNAL_ID + externalId);
         Contact contact = null;
 
         try {
-            if (!externalIdNull(externalId)) {
+            if (externalId != null) {
                 UUID uuid = contactMapperService.getRapidproUUIDFromExternalId(externalId);
                 contact = contactWebService.getContactByUUID(uuid);
 
@@ -167,7 +168,6 @@ public class ContactServiceImpl implements ContactService {
             }
 
         } catch (WebServiceException e) {
-            LOGGER.error(e.getMessage());
             sendWebserviceFailAddGroupMessage(e, externalId, groupName);
         }
     }
@@ -206,23 +206,19 @@ public class ContactServiceImpl implements ContactService {
                 LOGGER.warn(PHONE_EXISTS + phone);
                 statusMessageService.warn(PHONE_EXISTS + phone, MODULE_NAME);
 
-        } else {
-            Contact created = contactWebService.createOrUpdateContact(contact);
-            contactMapperService.create(externalId, created.getUuid());
-        }
+            } else {
+                Contact created = contactWebService.createOrUpdateContact(contact);
+                contactMapperService.create(externalId, created.getUuid());
+            }
         } catch (WebServiceException e) {
-        sendWebserviceFailUpdateMessage(e);
+            sendWebserviceFailUpdateMessage(e);
         }
-    }
-
-    private boolean externalIdNull(String externalId) {
-        return externalId == null;
     }
 
     private void sendWebserviceFailUpdateMessage(WebServiceException e) {
         statusMessageService.warn(WEB_SERVICE_CREATE_UPDATE_FAIL + e.getMessage(), MODULE_NAME);
         LOGGER.warn(WEB_SERVICE_CREATE_UPDATE_FAIL + e.getMessage(), e);
-        }
+    }
 
     private void sendWebServiceFailDeleteMessage(WebServiceException e) {
         statusMessageService.warn(WEB_SERVICE_DELETE_FAIL + e.getMessage(), MODULE_NAME);

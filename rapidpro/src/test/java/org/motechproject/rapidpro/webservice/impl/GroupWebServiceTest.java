@@ -93,7 +93,7 @@ public class GroupWebServiceTest {
     public void shouldThrowExceptionHttpClient() throws Exception {
         String name = "name";
         when(rapidProHttpClient.executeGet("/groups", MediaFormat.JSON, null)).thenThrow(new RapidProClientException("Exception"));
-        Group fromWebservice = groupWebService.getGroupByName(name);
+        groupWebService.getGroupByName(name);
     }
 
     @Test(expected = WebServiceException.class)
@@ -105,6 +105,6 @@ public class GroupWebServiceTest {
         String json = "not json";
         InputStream inputStream = new ByteArrayInputStream(json.getBytes());
         when(rapidProHttpClient.executeGet("/groups", MediaFormat.JSON, params)).thenReturn(inputStream);
-        Group fromWebservice = groupWebService.getGroupByName(name);
+        groupWebService.getGroupByName(name);
     }
 }
