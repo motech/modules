@@ -37,14 +37,15 @@ public class ConfigurationManager {
         reloadConfig(configName);
     }
 
+    @Transactional
     public void configUpdated(String configName) {
         configUpdated(configName, true);
     }
 
     @Transactional
-    public void configUpdated(String configName, boolean downloadApplication) {
+    public void configUpdated(String configName, boolean downloadApplications) {
         LOGGER.info("Configuration [{}] updated, fetching Commcare schema, {}", configName);
-        if (downloadApplication) {
+        if (downloadApplications) {
             reloadConfig(configName);
         } else {
             clearApps(configName);

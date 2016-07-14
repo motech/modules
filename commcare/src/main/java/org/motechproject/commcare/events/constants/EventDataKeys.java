@@ -50,7 +50,7 @@ public final class EventDataKeys {
 
     //ConfigurationEvent
     public static final String CONFIG_NAME = "configName";
-    public static final String VERIFY_CONFIG = "verifyConfig";
+    public static final String CONFIG_VERIFIED = "configVerified";
     public static final String CONFIG_DOMAIN = "configDomain";
     public static final String CONFIG_BASE_URL = "configBaseUrl";
 

@@ -44,7 +44,7 @@ public class ConfigurationEventHandler {
     @MotechListener(subjects = CONFIG_UPDATED)
     public synchronized void configUpdated(MotechEvent event) {
         String configName = (String) event.getParameters().get(EventDataKeys.CONFIG_NAME);
-        boolean isConfigVerified = (boolean) event.getParameters().get(EventDataKeys.VERIFY_CONFIG);
+        boolean isConfigVerified = (boolean) event.getParameters().get(EventDataKeys.CONFIG_VERIFIED);
         configurationManager.configUpdated(configName, isConfigVerified);
     }
 
