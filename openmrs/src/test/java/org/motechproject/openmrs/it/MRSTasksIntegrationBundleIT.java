@@ -25,7 +25,6 @@ import org.motechproject.openmrs.service.OpenMRSObservationService;
 import org.motechproject.openmrs.service.OpenMRSPatientService;
 import org.motechproject.openmrs.service.OpenMRSPersonService;
 import org.motechproject.openmrs.service.OpenMRSProviderService;
-import org.motechproject.openmrs.tasks.OpenMRSTasksNotifier;
 import org.motechproject.openmrs.tasks.constants.Keys;
 import org.motechproject.tasks.domain.mds.task.DataSource;
 import org.motechproject.tasks.domain.mds.task.Lookup;
@@ -39,12 +38,10 @@ import org.motechproject.tasks.domain.mds.task.TaskTriggerInformation;
 import org.motechproject.tasks.osgi.test.AbstractTaskBundleIT;
 import org.motechproject.tasks.repository.TaskActivitiesDataService;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
-import org.motechproject.testing.osgi.helper.ServiceRetriever;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
-import org.osgi.framework.BundleContext;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -72,11 +69,6 @@ import static org.motechproject.openmrs.util.TestConstants.DEFAULT_CONFIG_NAME;
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
-
-    private OpenMRSTasksNotifier openMRSTasksNotifier;
-
-    @Inject
-    private BundleContext bundleContext;
 
     @Inject
     private OpenMRSPatientService patientService;
@@ -145,10 +137,6 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
     @Before
     public void setUp() throws IOException, InterruptedException, ParseException, ConceptNameAlreadyInUseException {
-        openMRSTasksNotifier = (OpenMRSTasksNotifier) ServiceRetriever
-                .getWebAppContext(bundleContext, OPENMRS_CHANNEL_NAME)
-                .getBean("openMrsTasksNotifier");
-
         setUpSecurityContext("motech", "motech", "manageTasks", "manageOpenMRS");
 
         waitForChannel(OPENMRS_CHANNEL_NAME);
@@ -156,6 +144,31 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         createPatientTestData();
         createEncounterTestData();
+    }
+
+    @After
+    public void tearDown() throws PatientNotFoundException {
+        List<Encounter> encounters = encounterService.getEncountersByEncounterType(DEFAULT_CONFIG_NAME, MOTECH_ID, createdEncounterType.getName());
+
+        for (Encounter encounter : encounters) {
+            encounterService.deleteEncounter(DEFAULT_CONFIG_NAME, encounter.getUuid());
+        }
+
+        encounterService.deleteEncounterType(DEFAULT_CONFIG_NAME, createdEncounterType.getUuid());
+
+        providerService.deleteProvider(DEFAULT_CONFIG_NAME, createdProvider.getUuid());
+
+        patientService.deletePatient(DEFAULT_CONFIG_NAME, createdPatient.getUuid());
+
+        Patient patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, String.format("%staskCreated", MOTECH_ID));
+        if (patient != null) {
+            patientService.deletePatient(DEFAULT_CONFIG_NAME, patient.getUuid());
+        }
+
+        patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, TEST_MOTECH_ID);
+        if (patient != null) {
+            patientService.deletePatient(DEFAULT_CONFIG_NAME, patient.getUuid());
+        }
     }
 
     @Test
@@ -189,34 +202,9 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         activateTrigger();
 
         // Give Tasks some time to process
-        waitForTaskExecution(taskID);
+        assertTrue(waitForTaskExecution(taskID));
 
         checkIfProviderWasCreatedProperly();
-    }
-
-    @After
-    public void destroy() throws PatientNotFoundException {
-        List<Encounter> encounters = encounterService.getEncountersByEncounterType(DEFAULT_CONFIG_NAME, MOTECH_ID, createdEncounterType.getName());
-
-        for (Encounter encounter : encounters) {
-            encounterService.deleteEncounter(DEFAULT_CONFIG_NAME, encounter.getUuid());
-        }
-
-        encounterService.deleteEncounterType(DEFAULT_CONFIG_NAME, createdEncounterType.getUuid());
-
-        providerService.deleteProvider(DEFAULT_CONFIG_NAME, createdProvider.getUuid());
-
-        patientService.deletePatient(DEFAULT_CONFIG_NAME, createdPatient.getUuid());
-
-        Patient patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, String.format("%staskCreated", MOTECH_ID));
-        if (patient != null) {
-            patientService.deletePatient(DEFAULT_CONFIG_NAME, patient.getUuid());
-        }
-
-        patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, TEST_MOTECH_ID);
-        if (patient != null) {
-            patientService.deletePatient(DEFAULT_CONFIG_NAME, patient.getUuid());
-        }
     }
 
     private Long createPatientTestTask() {
@@ -243,7 +231,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         values.put(Keys.CONFIG_NAME, DEFAULT_CONFIG_NAME);
         actionInformation.setValues(values);
 
-        Task task = new Task("OpenMRSPatientTestTask", triggerInformation, Arrays.asList(actionInformation), taskConfig, true, true);
+        Task task = new Task("OpenMRSPatientTestTask", triggerInformation, Collections.singletonList(actionInformation), taskConfig, true, true);
         getTaskService().save(task);
 
         getTriggerHandler().registerHandlerFor(task.getTrigger().getEffectiveListenerSubject());
@@ -274,7 +262,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         values.put(Keys.CONFIG_NAME, DEFAULT_CONFIG_NAME);
         actionInformation.setValues(values);
 
-        Task task = new Task("OpenMRSEncounterTestTask", triggerInformation, Arrays.asList(actionInformation), taskConfig, true, true);
+        Task task = new Task("OpenMRSEncounterTestTask", triggerInformation, Collections.singletonList(actionInformation), taskConfig, true, true);
         getTaskService().save(task);
 
         getTriggerHandler().registerHandlerFor(task.getTrigger().getEffectiveListenerSubject());
@@ -307,7 +295,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         values.put(Keys.CONFIG_NAME, DEFAULT_CONFIG_NAME);
         actionInformation.setValues(values);
 
-        Task task = new Task("OpenMRSProviderTestTask", triggerInformation, Arrays.asList(actionInformation), taskConfig, true, true);
+        Task task = new Task("OpenMRSProviderTestTask", triggerInformation, Collections.singletonList(actionInformation), taskConfig, true, true);
         getTaskService().save(task);
 
         getTriggerHandler().registerHandlerFor(task.getTrigger().getEffectiveListenerSubject());
@@ -404,13 +392,13 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         QueryParams queryParams = new QueryParams((Order) null);
         List<TaskActivity> taskActivities = taskActivitiesDataService.byTaskAndActivityTypes(taskID, activityTypes, queryParams);
 
-        return taskActivities.size() == 1 ? true : false;
+        return taskActivities.size() == 1;
     }
 
     private DataSource createPatientDataSource() {
         List<Lookup> lookupList = new ArrayList<>();
         lookupList.add(new Lookup("openMRS.uuid", createdPatient.getUuid()));
-        DataSource dataSource = new DataSource(OPENMRS_MODULE_NAME, new Long(4), new Long(0), "Patient-" + DEFAULT_CONFIG_NAME, "openMRS.lookup.uuid", lookupList, false);
+        DataSource dataSource = new DataSource(OPENMRS_MODULE_NAME, 4L, 0L, "Patient-" + DEFAULT_CONFIG_NAME, "openMRS.lookup.uuid", lookupList, false);
         dataSource.setOrder(0);
         return dataSource;
     }
@@ -418,7 +406,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     private DataSource createEncounterDataSource() {
         List<Lookup> lookupList = new ArrayList<>();
         lookupList.add(new Lookup("openMRS.uuid", createdEncounter.getUuid()));
-        DataSource dataSource = new DataSource(OPENMRS_MODULE_NAME, new Long(4), new Long(0), "Encounter-" + DEFAULT_CONFIG_NAME, "openMRS.lookup.uuid", lookupList, false);
+        DataSource dataSource = new DataSource(OPENMRS_MODULE_NAME, 4L, 0L, "Encounter-" + DEFAULT_CONFIG_NAME, "openMRS.lookup.uuid", lookupList, false);
         dataSource.setOrder(0);
         return dataSource;
     }
@@ -426,7 +414,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     private DataSource createProviderDataSource() {
         List<Lookup> lookupList = new ArrayList<>();
         lookupList.add(new Lookup("openMRS.uuid", createdProvider.getUuid()));
-        DataSource dataSource = new DataSource(OPENMRS_MODULE_NAME, new Long(4), new Long(0), "Provider-" + DEFAULT_CONFIG_NAME, "openMRS.lookup.uuid", lookupList, false);
+        DataSource dataSource = new DataSource(OPENMRS_MODULE_NAME, 4L, 0L, "Provider-" + DEFAULT_CONFIG_NAME, "openMRS.lookup.uuid", lookupList, false);
         dataSource.setOrder(0);
         return dataSource;
     }
@@ -438,6 +426,11 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         assertEquals(createdPatient.getPerson().getBirthdate().toString(), patient.getPerson().getPreferredAddress().getAddress1());
         assertEquals(String.format("%staskCreated", MOTECH_ID), patient.getMotechId());
         assertEquals(createdPatient.getPerson().getGender(), patient.getPerson().getGender());
+
+        Person.Name actualName = patient.getPerson().getPreferredName();
+
+        assertEquals(createdPatient.getPerson().getDisplay(), actualName.getFamilyName());
+        assertEquals(createdPatient.getPerson().getDisplay(), actualName.getGivenName());
     }
 
     private void checkIfEncounterWasCreatedProperly() {
