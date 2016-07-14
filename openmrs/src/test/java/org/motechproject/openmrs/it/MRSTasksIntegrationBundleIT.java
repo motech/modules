@@ -191,8 +191,6 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         // Give Tasks some time to process
         waitForTaskExecution(taskID);
 
-        deleteTask(taskID);
-
         checkIfProviderWasCreatedProperly();
     }
 
@@ -468,10 +466,6 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
     private void activateTrigger() {
         settingsDataService.create(new SettingsRecord());
-    }
-
-    private void deleteTask(Long taskID) {
-        getTaskService().deleteTask(taskID);
     }
 }
 
