@@ -167,8 +167,6 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         // Give Tasks some time to process
         assertTrue(waitForTaskExecution(taskID));
 
-        deleteTask(taskID);
-
         checkIfPatientWasCreatedProperly();
     }
 
@@ -180,8 +178,6 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         // Give Tasks some time to process
         assertTrue(waitForTaskExecution(taskID));
-
-        deleteTask(taskID);
 
         checkIfEncounterWasCreatedProperly();
     }
