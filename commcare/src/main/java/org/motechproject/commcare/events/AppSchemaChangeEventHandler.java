@@ -32,6 +32,6 @@ public class AppSchemaChangeEventHandler {
     @MotechListener(subjects = SCHEMA_CHANGE_EVENT)
     public synchronized void schemaChange(MotechEvent event) {
         String configName = (String) event.getParameters().get(EventDataKeys.CONFIG_NAME);
-        configurationManager.configUpdated(configName, true);
+        configurationManager.configUpdated(configName);
     }
 }

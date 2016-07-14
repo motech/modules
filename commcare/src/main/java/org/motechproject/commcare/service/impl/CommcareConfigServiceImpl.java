@@ -79,22 +79,17 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
 
     @Override
     public Config updateConfig(Config config, String oldName) throws CommcareConnectionFailureException {
-        boolean isVerifyConfig;
-        if (verifyConfig(config)) {
-            isVerifyConfig = true;
-        } else {
-            isVerifyConfig = false;
-        }
+        boolean isConfigVerified = verifyConfig(config);
         if (configs.nameInUse(oldName)) {
-            eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_UPDATED, prepareParams(oldName, isVerifyConfig)));
+            eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_UPDATED, prepareParams(oldName, isConfigVerified)));
             configs.updateConfig(config, oldName);
         } else {
             validateConfig(config);
             configs.saveConfig(config);
-            eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_CREATED, prepareParams(config.getName(), isVerifyConfig)));
+            eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_CREATED, prepareParams(config.getName(), isConfigVerified)));
         }
 
-        if (isVerifyConfig) {
+        if (isConfigVerified) {
             updateForwardingRules(config);
         } else {
             LOGGER.info(String.format("Configuration \"%s\" couldn't be verified. Forwarding rules are not updated!", config.getName()));
@@ -225,10 +220,10 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
         return params;
     }
 
-    private Map<String, Object> prepareParams(String name, boolean isVerifyConfig) {
+    private Map<String, Object> prepareParams(String name, boolean isConfigVerified) {
         Map<String, Object> params = new HashMap<>();
         params.put(EventDataKeys.CONFIG_NAME, name);
-        params.put(EventDataKeys.VERIFY_CONFIG, isVerifyConfig);
+        params.put(EventDataKeys.VERIFY_CONFIG, isConfigVerified);
         return params;
     }
 
