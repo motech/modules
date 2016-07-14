@@ -74,6 +74,7 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
         this.eventRelay = eventRelay;
         this.forwardingEndpointService = forwardingEndpointService;
         loadConfigs();
+        template = createTemplate();
     }
 
     @Override
@@ -82,7 +83,7 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
         if (configs.nameInUse(oldName)) {
             eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_DELETED, prepareParams(oldName)));
             configs.updateConfig(config, oldName);
-            if(verifyConfig(config)) {
+            if (verifyConfig(config)) {
                 eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_UPDATED, prepareParams(oldName)));
             }
         } else {
