@@ -62,7 +62,7 @@ import static org.motechproject.openmrs.util.TestConstants.DEFAULT_CONFIG_NAME;
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
-public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
+public class MRSTaskIntegrationBundle1_12IT extends AbstractTaskBundleIT {
 
     private OpenMRSTasksNotifier openMRSTasksNotifier;
 
