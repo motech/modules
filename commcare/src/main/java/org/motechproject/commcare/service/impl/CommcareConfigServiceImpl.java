@@ -79,20 +79,22 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
 
     @Override
     public Config updateConfig(Config config, String oldName) throws CommcareConnectionFailureException {
-
+        boolean isVerifyConfig;
+        if (verifyConfig(config)) {
+            isVerifyConfig = true;
+        } else {
+            isVerifyConfig = false;
+        }
         if (configs.nameInUse(oldName)) {
-            eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_DELETED, prepareParams(oldName)));
+            eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_UPDATED, prepareParams(oldName, isVerifyConfig)));
             configs.updateConfig(config, oldName);
-            if (verifyConfig(config)) {
-                eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_UPDATED, prepareParams(oldName)));
-            }
         } else {
             validateConfig(config);
             configs.saveConfig(config);
-            eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_CREATED, prepareParams(config.getName())));
+            eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_CREATED, prepareParams(config.getName(), isVerifyConfig)));
         }
 
-        if (verifyConfig(config)) {
+        if (isVerifyConfig) {
             updateForwardingRules(config);
         } else {
             LOGGER.info(String.format("Configuration \"%s\" couldn't be verified. Forwarding rules are not updated!", config.getName()));
@@ -218,10 +220,15 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
     }
 
     private Map<String, Object> prepareParams(String name) {
-
         Map<String, Object> params = new HashMap<>();
         params.put(EventDataKeys.CONFIG_NAME, name);
+        return params;
+    }
 
+    private Map<String, Object> prepareParams(String name, boolean isVerifyConfig) {
+        Map<String, Object> params = new HashMap<>();
+        params.put(EventDataKeys.CONFIG_NAME, name);
+        params.put(EventDataKeys.VERIFY_CONFIG, isVerifyConfig);
         return params;
     }
 
