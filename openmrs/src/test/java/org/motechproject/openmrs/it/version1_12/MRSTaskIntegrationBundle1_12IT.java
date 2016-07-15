@@ -3,6 +3,7 @@ package org.motechproject.openmrs.it.version1_12;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.config.domain.SettingsRecord;
@@ -18,9 +19,7 @@ import org.motechproject.openmrs.exception.PatientNotFoundException;
 import org.motechproject.openmrs.service.OpenMRSLocationService;
 import org.motechproject.openmrs.service.OpenMRSPatientService;
 import org.motechproject.openmrs.service.OpenMRSProgramEnrollmentService;
-import org.motechproject.openmrs.tasks.OpenMRSTasksNotifier;
 import org.motechproject.openmrs.tasks.constants.Keys;
-import org.motechproject.tasks.domain.mds.channel.Channel;
 import org.motechproject.tasks.domain.mds.task.DataSource;
 import org.motechproject.tasks.domain.mds.task.Lookup;
 import org.motechproject.tasks.domain.mds.task.Task;
@@ -33,12 +32,10 @@ import org.motechproject.tasks.domain.mds.task.TaskTriggerInformation;
 import org.motechproject.tasks.osgi.test.AbstractTaskBundleIT;
 import org.motechproject.tasks.repository.TaskActivitiesDataService;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
-import org.motechproject.testing.osgi.helper.ServiceRetriever;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
-import org.osgi.framework.BundleContext;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -54,6 +51,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.motechproject.openmrs.tasks.OpenMRSActionProxyService.DEFAULT_LOCATION_NAME;
@@ -63,11 +61,6 @@ import static org.motechproject.openmrs.util.TestConstants.DEFAULT_CONFIG_NAME;
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class MRSTaskIntegrationBundle1_12IT extends AbstractTaskBundleIT {
-
-    private OpenMRSTasksNotifier openMRSTasksNotifier;
-
-    @Inject
-    private BundleContext bundleContext;
 
     @Inject
     private OpenMRSProgramEnrollmentService programEnrollmentService;
@@ -94,11 +87,10 @@ public class MRSTaskIntegrationBundle1_12IT extends AbstractTaskBundleIT {
     private static final String TEST_INTERFACE = "org.motechproject.openmrs.tasks.OpenMRSActionProxyService";
     private static final String TRIGGER_SUBJECT = "mds.crud.serverconfig.SettingsRecord.CREATE";
     private static final String MOTECH_ID = "654";
+    private static final String STATE_UUID = "4b812ac8-421c-470f-b4b7-88187cdbd2a5";
 
     private static final Integer MAX_RETRIES_BEFORE_FAIL = 20;
     private static final Integer WAIT_TIME = 2000;
-
-    private Long taskID;
 
     @Override
     protected Collection<String> getAdditionalTestDependencies() {
@@ -115,24 +107,22 @@ public class MRSTaskIntegrationBundle1_12IT extends AbstractTaskBundleIT {
         );
     }
 
-    @Before
-    public void setUp() throws IOException, InterruptedException {
+    @BeforeClass
+    public static void initialize() throws IOException, InterruptedException {
         createAdminUser();
         login();
-        openMRSTasksNotifier = (OpenMRSTasksNotifier) ServiceRetriever.getWebAppContext(bundleContext, OPENMRS_CHANNEL_NAME).getBean("openMrsTasksNotifier");
-        setUpSecurityContext("motech", "motech", "manageTasks", "manageOpenMRS");
+    }
 
+    @Before
+    public void setUp() throws InterruptedException {
         waitForChannel(OPENMRS_CHANNEL_NAME);
-        Channel channel = findChannel(OPENMRS_CHANNEL_NAME);
         waitForChannel(MDS_CHANNEL_NAME);
-        Channel mdsChannel = findChannel(MDS_CHANNEL_NAME);
+
+        createProgramEnrollmentTestData();
     }
 
     @After
     public void clear() throws PatientNotFoundException {
-        if (taskID != null)
-            deleteTask(taskID);
-
         List<ProgramEnrollment> programEnrollmentList = programEnrollmentService.getProgramEnrollmentByPatientUuid(DEFAULT_CONFIG_NAME, createdProgramEnrollment.getPatient().getUuid());
         for (ProgramEnrollment programEnrollment : programEnrollmentList) {
             programEnrollmentService.deleteProgramEnrollment(DEFAULT_CONFIG_NAME, programEnrollment.getUuid());
@@ -142,15 +132,26 @@ public class MRSTaskIntegrationBundle1_12IT extends AbstractTaskBundleIT {
 
     @Test
     public void testOpenMRSProgramEnrollmentDataSourceAndCreateProgramEnrollmentAction() throws InterruptedException, IOException, PatientNotFoundException {
-        createProgramEnrollmentTestData();
-        taskID = createProgramEnrollmentTestTask();
+        Long taskID = createProgramEnrollmentTestTask();
 
         activateTrigger();
 
         // Give Tasks some time to process
         assertTrue(waitForTaskExecution(taskID));
 
-        assertTrue(checkIfProgramEnrollmentWasCreatedProperly());
+        checkIfProgramEnrollmentWasCreatedProperly();
+    }
+
+    @Test
+    public void testOpenMRSUpdateProgramEnrollmentAction() throws InterruptedException {
+        Long taskID = updateProgramEnrollmentTestTask();
+
+        activateTrigger();
+
+        //Give Tasks some time to process
+        assertTrue(waitForTaskExecution(taskID));
+
+        checkIfProgramEnrollmentWasUpdatedProperly();
     }
 
     private Long createProgramEnrollmentTestTask() {
@@ -177,6 +178,30 @@ public class MRSTaskIntegrationBundle1_12IT extends AbstractTaskBundleIT {
         actionInformation.setValues(values);
 
         Task task = new Task("OpenMRSProgramEnrollmentTestTask", triggerInformation, Collections.singletonList(actionInformation), taskConfig, true, true);
+        getTaskService().save(task);
+
+        getTriggerHandler().registerHandlerFor(task.getTrigger().getEffectiveListenerSubject());
+
+        return task.getId();
+    }
+
+    private Long updateProgramEnrollmentTestTask() {
+        TaskTriggerInformation triggerInformation = new TaskTriggerInformation("CREATE SettingsRecord", "data-services", MDS_CHANNEL_NAME,
+                VERSION, TRIGGER_SUBJECT, TRIGGER_SUBJECT);
+
+        TaskActionInformation actionInformation = new TaskActionInformation("Update Program Enrollment [" + DEFAULT_CONFIG_NAME + "]", OPENMRS_CHANNEL_NAME,
+                OPENMRS_CHANNEL_NAME, VERSION, TEST_INTERFACE, "changeStateOfProgramEnrollment");
+
+        actionInformation.setSubject(String.format("changeStateOfProgramEnrollment.%s", DEFAULT_CONFIG_NAME));
+
+        Map<String, String> values = new HashMap<>();
+        values.put(Keys.PROGRAM_ENROLLMENT_UUID, createdProgramEnrollment.getUuid());
+        values.put(Keys.STATE_UUID, STATE_UUID);
+        values.put(Keys.STATE_START_DATE, new DateTime("2015-01-16T00:00:00Z").toString());
+        values.put(Keys.CONFIG_NAME, DEFAULT_CONFIG_NAME);
+        actionInformation.setValues(values);
+
+        Task task = new Task("OpenMRSUpdateProgramEnrollmentTestTask", triggerInformation, Collections.singletonList(actionInformation), null, true, true);
         getTaskService().save(task);
 
         getTriggerHandler().registerHandlerFor(task.getTrigger().getEffectiveListenerSubject());
@@ -265,33 +290,45 @@ public class MRSTaskIntegrationBundle1_12IT extends AbstractTaskBundleIT {
         List<Lookup> lookupList = new ArrayList<>();
         lookupList.add(new Lookup("openMRS.patient.motechId", MOTECH_ID));
         lookupList.add(new Lookup("openMRS.programName", createdProgramEnrollment.getProgram().getName()));
-        DataSource dataSource = new DataSource(OPENMRS_MODULE_NAME, new Long(4), new Long(0), "ProgramEnrollment-" + DEFAULT_CONFIG_NAME, "openMRS.lookup.motechIdAndProgramName", lookupList, false);
+        DataSource dataSource = new DataSource(OPENMRS_MODULE_NAME, 4L, 0L, "ProgramEnrollment-" + DEFAULT_CONFIG_NAME, "openMRS.lookup.motechIdAndProgramName", lookupList, false);
         dataSource.setOrder(0);
         return dataSource;
     }
 
-    private boolean checkIfProgramEnrollmentWasCreatedProperly() {
-        List<ProgramEnrollment> programEnrollmentList = programEnrollmentService.getProgramEnrollmentByPatientUuid(DEFAULT_CONFIG_NAME, createdProgramEnrollment.getPatient().getUuid());
-        if (programEnrollmentList.size() == 2) {
-            for (ProgramEnrollment programEnrollment : programEnrollmentList) {
-                if (!programEnrollment.getUuid().equals(createdPatient.getUuid()) && // check only for task created program enrollment, not for service created one
-                        programEnrollment.getPatient().getUuid().equals(createdProgramEnrollment.getPatient().getUuid()) &&
-                        programEnrollment.getProgram().getUuid().equals(createdProgramEnrollment.getProgram().getUuid()) &&
-                        programEnrollment.getDateCompleted().equals(createdProgramEnrollment.getDateCompleted()) &&
-                        programEnrollment.getDateEnrolled().equals(createdProgramEnrollment.getDateEnrolled())) {
-                    return true;
-                }
+    private void checkIfProgramEnrollmentWasCreatedProperly() {
+        List<ProgramEnrollment> programEnrollmentList = programEnrollmentService
+                .getProgramEnrollmentByPatientUuid(DEFAULT_CONFIG_NAME, createdProgramEnrollment.getPatient().getUuid());
+
+        assertEquals(2, programEnrollmentList.size());
+
+        for (ProgramEnrollment programEnrollment : programEnrollmentList) {
+            if (!createdProgramEnrollment.getUuid().equals(programEnrollment.getUuid())) {
+                assertEquals(createdProgramEnrollment.getPatient().getUuid(), programEnrollment.getPatient().getUuid());
+                assertEquals(createdProgramEnrollment.getProgram().getUuid(), programEnrollment.getProgram().getUuid());
+                assertEquals(createdProgramEnrollment.getDateEnrolled(), programEnrollment.getDateEnrolled());
+                assertEquals(createdProgramEnrollment.getDateCompleted(), programEnrollment.getDateCompleted());
             }
         }
-        return false;
+    }
+
+    private void checkIfProgramEnrollmentWasUpdatedProperly() {
+        List<ProgramEnrollment> programEnrollmentList = programEnrollmentService
+                .getProgramEnrollmentByPatientUuid(DEFAULT_CONFIG_NAME, createdProgramEnrollment.getPatient().getUuid());
+
+        assertEquals(1, programEnrollmentList.size());
+
+        ProgramEnrollment programEnrollment = programEnrollmentList.get(0);
+
+        assertEquals(createdProgramEnrollment.getUuid(), programEnrollment.getUuid());
+
+        ProgramEnrollment.StateStatus stateStatus = programEnrollment.getCurrentState();
+
+        assertEquals(STATE_UUID, stateStatus.getState().getUuid());
+        assertEquals(new DateTime("2015-01-16T00:00:00Z").toDate(), stateStatus.getStartDate());
     }
 
     private void activateTrigger() {
         settingsDataService.create(new SettingsRecord());
-    }
-
-    private void deleteTask(Long taskID) {
-        getTaskService().deleteTask(taskID);
     }
 }
 
