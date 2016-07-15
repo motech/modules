@@ -60,7 +60,7 @@ import static org.motechproject.openmrs.util.TestConstants.DEFAULT_CONFIG_NAME;
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
-public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
+public class MRSTaskIntegrationBundle1_12IT extends AbstractTaskBundleIT {
 
     @Inject
     private OpenMRSProgramEnrollmentService programEnrollmentService;
@@ -91,8 +91,6 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
 
     private static final Integer MAX_RETRIES_BEFORE_FAIL = 20;
     private static final Integer WAIT_TIME = 2000;
-
-    private Long taskID;
 
     @Override
     protected Collection<String> getAdditionalTestDependencies() {
@@ -125,9 +123,6 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
 
     @After
     public void clear() throws PatientNotFoundException {
-        if (taskID != null)
-            deleteTask(taskID);
-
         List<ProgramEnrollment> programEnrollmentList = programEnrollmentService.getProgramEnrollmentByPatientUuid(DEFAULT_CONFIG_NAME, createdProgramEnrollment.getPatient().getUuid());
         for (ProgramEnrollment programEnrollment : programEnrollmentList) {
             programEnrollmentService.deleteProgramEnrollment(DEFAULT_CONFIG_NAME, programEnrollment.getUuid());
@@ -137,7 +132,7 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
 
     @Test
     public void testOpenMRSProgramEnrollmentDataSourceAndCreateProgramEnrollmentAction() throws InterruptedException, IOException, PatientNotFoundException {
-        taskID = createProgramEnrollmentTestTask();
+        Long taskID = createProgramEnrollmentTestTask();
 
         activateTrigger();
 
@@ -149,7 +144,7 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
 
     @Test
     public void testOpenMRSUpdateProgramEnrollmentAction() throws InterruptedException {
-        taskID = updateProgramEnrollmentTestTask();
+        Long taskID = updateProgramEnrollmentTestTask();
 
         activateTrigger();
 
@@ -206,7 +201,7 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
         values.put(Keys.CONFIG_NAME, DEFAULT_CONFIG_NAME);
         actionInformation.setValues(values);
 
-        Task task = new Task("OpenMRSUpdateProgramEnrollmentTestTask", triggerInformation, Arrays.asList(actionInformation), null, true, true);
+        Task task = new Task("OpenMRSUpdateProgramEnrollmentTestTask", triggerInformation, Collections.singletonList(actionInformation), null, true, true);
         getTaskService().save(task);
 
         getTriggerHandler().registerHandlerFor(task.getTrigger().getEffectiveListenerSubject());
@@ -295,7 +290,7 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
         List<Lookup> lookupList = new ArrayList<>();
         lookupList.add(new Lookup("openMRS.patient.motechId", MOTECH_ID));
         lookupList.add(new Lookup("openMRS.programName", createdProgramEnrollment.getProgram().getName()));
-        DataSource dataSource = new DataSource(OPENMRS_MODULE_NAME, new Long(4), new Long(0), "ProgramEnrollment-" + DEFAULT_CONFIG_NAME, "openMRS.lookup.motechIdAndProgramName", lookupList, false);
+        DataSource dataSource = new DataSource(OPENMRS_MODULE_NAME, 4L, 0L, "ProgramEnrollment-" + DEFAULT_CONFIG_NAME, "openMRS.lookup.motechIdAndProgramName", lookupList, false);
         dataSource.setOrder(0);
         return dataSource;
     }
@@ -334,10 +329,6 @@ public class MRSTaskIntegrationBundleIT extends AbstractTaskBundleIT {
 
     private void activateTrigger() {
         settingsDataService.create(new SettingsRecord());
-    }
-
-    private void deleteTask(Long taskID) {
-        getTaskService().deleteTask(taskID);
     }
 }
 
