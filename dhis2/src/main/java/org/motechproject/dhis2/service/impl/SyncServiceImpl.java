@@ -140,7 +140,12 @@ public class SyncServiceImpl implements SyncService {
         List<ProgramDto> partialDtos = dhisWebService.getPrograms();
 
         for (ProgramDto partialDto : partialDtos) {
-            ProgramDto fullDto = dhisWebService.getProgramByHref(partialDto.getHref());
+            ProgramDto fullDto;
+            if (partialDto.getHref() == null) {
+                fullDto = dhisWebService.getProgramById(partialDto.getId());
+            } else {
+                fullDto = dhisWebService.getProgramByHref(partialDto.getHref());
+            }
             Program program = programService.createFromDetails(fullDto);
 
             /**
@@ -169,7 +174,12 @@ public class SyncServiceImpl implements SyncService {
     private TrackedEntity getProgramTrackedEntityFromDto(TrackedEntityDto partialDto) {
         TrackedEntity trackedEntity = trackedEntityService.findById(partialDto.getId());
         if (trackedEntity == null) {
-            TrackedEntityDto fullDto = dhisWebService.getTrackedEntityByHref(partialDto.getHref());
+            TrackedEntityDto fullDto;
+            if (partialDto.getHref() == null) {
+                fullDto = dhisWebService.getTrackedEntityById(partialDto.getId());
+            } else {
+                fullDto = dhisWebService.getTrackedEntityByHref(partialDto.getHref());
+            }
             trackedEntity = trackedEntityService.createFromDetails(fullDto);
         }
         return trackedEntity;
@@ -187,7 +197,12 @@ public class SyncServiceImpl implements SyncService {
             Stage stage = stageService.findById(partialStageDto.getId());
 
             if (stage == null) {
-                ProgramStageDto fullDto = dhisWebService.getProgramStageByHref(partialStageDto.getHref());
+                ProgramStageDto fullDto;
+                if (partialStageDto.getHref() == null) {
+                    fullDto = dhisWebService.getProgramStageById(partialStageDto.getId());
+                } else {
+                    fullDto = dhisWebService.getProgramStageByHref(partialStageDto.getHref());
+                }
                 stage = stageService.createFromDetails(fullDto, programId, hasRegistration);
                 stage.setDataElements(getStageDataElementsFromDtos(fullDto.getProgramStageDataElements()));
             }
@@ -205,7 +220,14 @@ public class SyncServiceImpl implements SyncService {
         List<DataElement> dataElements = new ArrayList<DataElement>();
 
         for (ProgramStageDataElementDto programStageDataElementDto : programStageDataElementDtos) {
+            if (programStageDataElementDto.getDataElement() == null && programStageDataElementDto.getId() != null) {
+                programStageDataElementDto = dhisWebService.getProgramStageDataElementById(programStageDataElementDto.getId());
+            }
+
             DataElementDto dataElementDto = programStageDataElementDto.getDataElement();
+            if (dataElementDto.getId() != null) {
+                dataElementDto = dhisWebService.getDataElementById(dataElementDto.getId());
+            }
             if (dataElementDto != null) {
                 DataElement dataElement = dataElementService.findById(dataElementDto.getId());
                 if (dataElement == null) {
@@ -226,9 +248,15 @@ public class SyncServiceImpl implements SyncService {
         List<TrackedEntityAttribute> trackedEntityAttributes = new ArrayList<TrackedEntityAttribute>();
 
         for (ProgramTrackedEntityAttributeDto programTrackedEntityAttributeDto : programTrackedEntityAttributeDtos) {
+            if (programTrackedEntityAttributeDto.getTrackedEntityAttribute() == null && programTrackedEntityAttributeDto.getId() != null) {
+                programTrackedEntityAttributeDto = dhisWebService.getProgramTrackedEntityAttributeById(programTrackedEntityAttributeDto.getId());
+            }
             TrackedEntityAttributeDto trackedEntityAttributeDto = programTrackedEntityAttributeDto.getTrackedEntityAttribute();
             TrackedEntityAttribute trackedEntityAttribute = trackedEntityAttributeService.findById(trackedEntityAttributeDto.getId());
             if (trackedEntityAttribute == null) {
+                if (programTrackedEntityAttributeDto.getId() != null) {
+                    trackedEntityAttributeDto = dhisWebService.getTrackedEntityAttributeById(programTrackedEntityAttributeDto.getId());
+                }
                 trackedEntityAttribute = trackedEntityAttributeService.createFromDetails(trackedEntityAttributeDto);
             }
             trackedEntityAttributes.add(trackedEntityAttribute);
