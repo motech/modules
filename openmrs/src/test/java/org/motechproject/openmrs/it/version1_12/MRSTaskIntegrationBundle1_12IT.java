@@ -315,16 +315,16 @@ public class MRSTaskIntegrationBundle1_12IT extends AbstractTaskBundleIT {
         List<ProgramEnrollment> programEnrollmentList = programEnrollmentService
                 .getProgramEnrollmentByPatientUuid(DEFAULT_CONFIG_NAME, createdProgramEnrollment.getPatient().getUuid());
 
-        assertEquals(1, programEnrollmentList.size());
+        for (ProgramEnrollment programEnrollment : programEnrollmentList) {
+            if (createdProgramEnrollment.getUuid().equals(programEnrollment.getUuid())) {
+                assertEquals(createdProgramEnrollment.getUuid(), programEnrollment.getUuid());
 
-        ProgramEnrollment programEnrollment = programEnrollmentList.get(0);
+                ProgramEnrollment.StateStatus stateStatus = programEnrollment.getCurrentState();
 
-        assertEquals(createdProgramEnrollment.getUuid(), programEnrollment.getUuid());
-
-        ProgramEnrollment.StateStatus stateStatus = programEnrollment.getCurrentState();
-
-        assertEquals(STATE_UUID, stateStatus.getState().getUuid());
-        assertEquals(new DateTime("2015-01-16T00:00:00Z").toDate(), stateStatus.getStartDate());
+                assertEquals(STATE_UUID, stateStatus.getState().getUuid());
+                assertEquals(new DateTime("2015-01-16T00:00:00Z").toDate(), stateStatus.getStartDate());
+            }
+        }
     }
 
     private void activateTrigger() {
