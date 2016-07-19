@@ -80,7 +80,7 @@ Question
 Answer
 ######
 
-``Answer`` is a resource identifier in the external system, for example audio file. It can also store the correct answer.
+``Answer`` can store explicit value or reference to resource in the external system, for example audio file.
 
 Bookmark
 ########
