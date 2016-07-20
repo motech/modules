@@ -44,10 +44,11 @@ public class ConfigurationManager {
 
     @Transactional
     public void configUpdated(String configName, boolean downloadApplications) {
-        LOGGER.info("Configuration [{}] updated, fetching Commcare schema, {}", configName);
         if (downloadApplications) {
+            LOGGER.info("Configuration [{}] updated, fetching Commcare schema, {}", configName);
             reloadConfig(configName);
         } else {
+            LOGGER.info("Configuration [{}] updated, not fetching new Commcare schema, {}", configName);
             clearApps(configName);
         }
     }
