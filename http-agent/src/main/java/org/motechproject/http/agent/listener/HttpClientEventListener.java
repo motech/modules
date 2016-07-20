@@ -11,8 +11,10 @@ import org.motechproject.http.agent.domain.EventDataKeys;
 import org.motechproject.http.agent.domain.EventSubjects;
 import org.motechproject.http.agent.domain.HTTPActionAudit;
 import org.motechproject.http.agent.factory.HttpComponentsClientHttpRequestFactoryWithAuth;
+import org.motechproject.http.agent.handler.HttpResponseErrorHandler;
 import org.motechproject.http.agent.service.HTTPActionService;
 import org.motechproject.http.agent.service.Method;
+import org.motechproject.http.agent.utility.RestUtility;
 import org.motechproject.config.SettingsFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -139,10 +141,10 @@ public class HttpClientEventListener {
     @MotechListener (subjects = { SendRequestConstants.SEND_REQUEST_SUBJECT })
     public ResponseEntity<?> handleWithUserPasswordAndReturnType(MotechEvent motechEvent) {
         Map<String, Object> parameters = motechEvent.getParameters();
-        final String url = String.valueOf(parameters.get(SendRequestConstants.URL));
+        final String url = (String) parameters.get(SendRequestConstants.URL);
         Object requestData = parameters.get(SendRequestConstants.BODY_PARAMETERS);
-        String username = String.valueOf(parameters.get(SendRequestConstants.USERNAME));
-        String password = String.valueOf(parameters.get(SendRequestConstants.PASSWORD));
+        String username = (String) parameters.get(SendRequestConstants.USERNAME);
+        String password = (String) parameters.get(SendRequestConstants.PASSWORD);
         boolean followRedirects = (boolean) parameters.get(SendRequestConstants.FOLLOW_REDIRECTS);
         LOGGER.info(String.format("Posting Http request -- Url: %s, Data: %s",
                 url, String.valueOf(requestData)));
@@ -165,6 +167,8 @@ public class HttpClientEventListener {
             restTemplate.setRequestFactory(factory);
         }
 
+        restTemplate.setErrorHandler(new HttpResponseErrorHandler());
+
         int retryCount = 1; // default retry count = 1
         long retryInterval = 0; // by default, no waiting time between two
         // retries
@@ -186,8 +190,11 @@ public class HttpClientEventListener {
 
                 LOGGER.info("Posting Http request -- Url: {}, Data: {}",
                         url, String.valueOf(requestData));
-                ResponseEntity<?> response = doExecuteForReturnType(url, requestData, method, restTemplate);
-                if (response.getStatusCode().value() / HUNDRED == 2) {
+                ResponseEntity<?> response = null;
+                String errorMessage = null;
+
+                response = doExecuteForReturnType(url, requestData, method, restTemplate);
+                if(response != null) {
                     return response;
                 } else {
                     throw new HttpException();
@@ -218,18 +225,25 @@ public class HttpClientEventListener {
         } else {
             restTemplate = basicRestTemplate;
         }
+        restTemplate.setErrorHandler(new HttpResponseErrorHandler());
         return doExecuteForReturnType(url, requestData, method, restTemplate);
     }
 
     private ResponseEntity<?> doExecuteForReturnType(String url, Object requestData, Method method,
                                                      RestTemplate restTemplate) {
-
         ResponseEntity<?> response = method.execute(restTemplate, url, requestData);
-        HTTPActionAudit httpActionAudit = new HTTPActionAudit(url, requestData.toString(), response.getBody().toString(),
-                response.getStatusCode().toString());
-        httpActionService.create(httpActionAudit);
+        String body = response.getBody() == null ? StringUtils.EMPTY : response.getBody().toString();
+        sendAuditLog(url, requestData, body, response.getStatusCode().toString());
+        if (RestUtility.isError(response.getStatusCode())) {
+            return null;
+        } else {
+            return response;
+        }
+    }
 
-        return response;
+    private void sendAuditLog(String url, Object requestData, String body, String statusCode){
+        HTTPActionAudit httpActionAudit =  new HTTPActionAudit(url, requestData.toString(), body, statusCode);
+        httpActionService.create(httpActionAudit);
     }
 
     private HttpComponentsClientHttpRequestFactoryWithAuth usernamePasswordRequestFactory(
