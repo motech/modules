@@ -232,7 +232,8 @@ public class HttpClientEventListener {
     private ResponseEntity<?> doExecuteForReturnType(String url, Object requestData, Method method,
                                                      RestTemplate restTemplate) {
         ResponseEntity<?> response = method.execute(restTemplate, url, requestData);
-        sendAuditLog(url, requestData, response.getBody().toString(), response.getStatusCode().toString());
+        String body = response.getBody() == null ? StringUtils.EMPTY : response.getBody().toString();
+        sendAuditLog(url, requestData, body, response.getStatusCode().toString());
         if (RestUtility.isError(response.getStatusCode())) {
             return null;
         } else {
