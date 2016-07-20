@@ -39,7 +39,7 @@ public class HttpComponentsClientHttpRequestFactoryWithAuth extends HttpComponen
     @Override
     protected HttpContext createHttpContext(HttpMethod httpMethod, URI uri) {
         BasicHttpContext localContext = new BasicHttpContext();
-        if (!Boolean.valueOf(settings.getProperty(HTTP_AUTH_PREEMPTIVE))) {
+        if (Boolean.valueOf(settings.getProperty(HTTP_AUTH_PREEMPTIVE))) {
             HttpHost targetHost = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
             BasicScheme basicScheme = new BasicScheme();
             BasicAuthCache authCache = new BasicAuthCache();
