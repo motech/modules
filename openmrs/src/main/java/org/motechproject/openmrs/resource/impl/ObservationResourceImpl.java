@@ -2,6 +2,7 @@ package org.motechproject.openmrs.resource.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.Concept;
@@ -18,8 +19,8 @@ import org.springframework.web.client.RestOperations;
 public class ObservationResourceImpl extends BaseResource implements ObservationResource {
 
     @Autowired
-    public ObservationResourceImpl(RestOperations restOperations) {
-        super(restOperations);
+    public ObservationResourceImpl(RestOperations restOperations, HttpClient httpClient) {
+        super(restOperations, httpClient);
     }
 
     @Override

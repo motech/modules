@@ -1,6 +1,7 @@
 package org.motechproject.openmrs.resource.impl;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.httpclient.HttpClient;
 import org.motechproject.openmrs.config.Config;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,9 +20,11 @@ import java.util.Arrays;
 public abstract class BaseResource {
 
     private RestOperations restOperations;
+    private HttpClient httpClient;
 
-    protected BaseResource(RestOperations restOperations) {
+    protected BaseResource(RestOperations restOperations, HttpClient httpClient) {
         this.restOperations = restOperations;
+        this.httpClient = httpClient;
     }
 
     /**
@@ -85,6 +88,9 @@ public abstract class BaseResource {
 
     private ResponseEntity<String> exchange(Config config, URI url, HttpMethod method, String body, HttpHeaders headers) {
         headers.add("Authorization", "Basic " + prepareCredentials(config));
+
+        httpClient.getState().clearCookies();
+
         return restOperations.exchange(url, method, new HttpEntity<>(body, headers), String.class);
     }
 

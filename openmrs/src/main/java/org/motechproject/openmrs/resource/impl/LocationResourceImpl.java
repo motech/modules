@@ -2,6 +2,7 @@ package org.motechproject.openmrs.resource.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.lang.Validate;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.Location;
@@ -18,8 +19,8 @@ public class LocationResourceImpl extends BaseResource implements LocationResour
     private static final String GET_LOCATIONS_PATH = "/location?v=full&limit={pageSize}&startIndex={startIndex}";
 
     @Autowired
-    public LocationResourceImpl(RestOperations restOperations) {
-        super(restOperations);
+    public LocationResourceImpl(RestOperations restOperations, HttpClient httpClient) {
+        super(restOperations, httpClient);
     }
 
     @Override
