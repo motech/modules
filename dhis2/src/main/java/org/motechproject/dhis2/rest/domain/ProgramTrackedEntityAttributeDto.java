@@ -8,7 +8,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ProgramTrackedEntityAttributeDto {
+public class ProgramTrackedEntityAttributeDto extends BaseDto{
 
     private TrackedEntityAttributeDto trackedEntityAttribute;
 
