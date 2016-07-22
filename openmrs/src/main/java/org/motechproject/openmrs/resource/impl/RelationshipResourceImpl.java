@@ -1,5 +1,6 @@
 package org.motechproject.openmrs.resource.impl;
 
+import org.apache.commons.httpclient.HttpClient;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.RelationshipListResult;
 import org.motechproject.openmrs.resource.RelationshipResource;
@@ -12,8 +13,8 @@ import org.springframework.web.client.RestOperations;
 public class RelationshipResourceImpl extends BaseResource implements RelationshipResource {
 
     @Autowired
-    public RelationshipResourceImpl(RestOperations restOperations) {
-        super(restOperations);
+    public RelationshipResourceImpl(RestOperations restOperations, HttpClient httpClient) {
+        super(restOperations, httpClient);
     }
 
     @Override
