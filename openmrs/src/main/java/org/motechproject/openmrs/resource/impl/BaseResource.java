@@ -89,6 +89,7 @@ public abstract class BaseResource {
     private ResponseEntity<String> exchange(Config config, URI url, HttpMethod method, String body, HttpHeaders headers) {
         headers.add("Authorization", "Basic " + prepareCredentials(config));
 
+        //Clear cookies to avoid SESSIONID mismatch
         httpClient.getState().clearCookies();
 
         return restOperations.exchange(url, method, new HttpEntity<>(body, headers), String.class);
