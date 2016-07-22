@@ -249,7 +249,7 @@ public class HttpClientEventListener {
     private HttpComponentsClientHttpRequestFactoryWithAuth usernamePasswordRequestFactory(
             String username, String password) {
         HttpComponentsClientHttpRequestFactoryWithAuth requestFactory = new HttpComponentsClientHttpRequestFactoryWithAuth(
-                username, password);
+                username, password, settings);
 
         requestFactory.setConnectTimeout(Integer.parseInt(settings
                 .getProperty(HTTP_CONNECT_TIMEOUT)));
