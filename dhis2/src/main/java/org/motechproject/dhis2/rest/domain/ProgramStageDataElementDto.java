@@ -10,7 +10,7 @@ import java.util.Objects;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ProgramStageDataElementDto {
+public class ProgramStageDataElementDto extends BaseDto {
 
     private ProgramStageDto programStage;
     private DataElementDto dataElement;

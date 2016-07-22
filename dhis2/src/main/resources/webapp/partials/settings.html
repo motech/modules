@@ -52,8 +52,8 @@
                 {{msg('dhis2.sync')}}
             </button>
             <div ng-show="blocked" class ="alert alert-info">{{msg('dhis2.sync.wait')}}</div>
-            <div ng-show="success == 'true' " class ="alert alert-success">{{msg('dhis2.sync.success')}}</div>
-            <div ng-show="success == 'false' " class ="alert alert-danger">{{msg('dhis2.sync.fail')}}</div>
+            <div ng-show="success == true" class ="alert alert-success">{{msg('dhis2.sync.success')}}</div>
+            <div ng-show="success == false" class ="alert alert-danger">{{msg('dhis2.sync.fail')}}</div>
         </div>
     </div>
 </div>
