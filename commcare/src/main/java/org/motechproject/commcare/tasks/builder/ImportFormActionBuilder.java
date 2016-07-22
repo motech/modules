@@ -5,6 +5,7 @@ import org.motechproject.commcare.events.constants.DisplayNames;
 import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.commcare.events.constants.EventSubjects;
 import org.motechproject.commcare.service.CommcareConfigService;
+import org.motechproject.commcare.util.ActionParameterHelper;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
@@ -22,6 +23,8 @@ import static org.motechproject.tasks.domain.mds.ParameterType.DATE;
  * the task module.
  */
 public class ImportFormActionBuilder implements ActionBuilder {
+
+    private static final String IMPORT_FORM_ACTION_SERVICE = "org.motechproject.commcare.events.imports.ImportFormActionService";
 
     private CommcareConfigService configService;
 
@@ -41,15 +44,21 @@ public class ImportFormActionBuilder implements ActionBuilder {
 
         for (Config config : configService.getConfigs().getConfigs()) {
 
+            String configName = config.getName();
             SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
             ActionParameterRequestBuilder builder;
+            String serviceMethod = "importForms";
+            int order = 0;
+
+            parameters.add(ActionParameterHelper.createConfigNameParameter(configName, order));
+            order++;
 
             builder = new ActionParameterRequestBuilder()
                     .setDisplayName(DisplayNames.START_DATE)
                     .setKey(EventDataKeys.START_DATE)
                     .setType(DATE.getValue())
                     .setRequired(true)
-                    .setOrder(0);
+                    .setOrder(order++);
             parameters.add(builder.createActionParameterRequest());
 
             builder = new ActionParameterRequestBuilder()
@@ -57,14 +66,16 @@ public class ImportFormActionBuilder implements ActionBuilder {
                     .setKey(EventDataKeys.END_DATE)
                     .setType(DATE.getValue())
                     .setRequired(true)
-                    .setOrder(1);
+                    .setOrder(order++);
             parameters.add(builder.createActionParameterRequest());
 
-            String displayName = DisplayNameHelper.buildDisplayName(DisplayNames.IMPORT_FORMS, config.getName());
+            String displayName = DisplayNameHelper.buildDisplayName(DisplayNames.IMPORT_FORMS, configName);
 
             ActionEventRequestBuilder actionBuilder = new ActionEventRequestBuilder()
                     .setDisplayName(displayName)
-                    .setSubject(EventSubjects.IMPORT_FORMS + "." + config.getName())
+                    .setServiceInterface(IMPORT_FORM_ACTION_SERVICE)
+                    .setServiceMethod(serviceMethod)
+                    .setSubject(EventSubjects.IMPORT_FORMS + "." + configName)
                     .setActionParameters(parameters);
             actions.add(actionBuilder.createActionEventRequest());
         }

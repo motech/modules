@@ -5,9 +5,10 @@ import org.motechproject.commcare.events.constants.DisplayNames;
 import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.commcare.events.constants.EventSubjects;
 import org.motechproject.commcare.service.CommcareConfigService;
+import org.motechproject.commcare.util.ActionParameterHelper;
 import org.motechproject.tasks.contract.ActionEventRequest;
-import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
+import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
 
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ import static org.motechproject.tasks.domain.mds.ParameterType.UNICODE;
  */
 public class CaseActionBuilder implements ActionBuilder {
 
+    private static final String ACTION_CASE_SERVICE = "org.motechproject.commcare.events.CaseActionService";
+
     private CommcareConfigService configService;
 
     public CaseActionBuilder(CommcareConfigService configService) {
@@ -38,11 +41,18 @@ public class CaseActionBuilder implements ActionBuilder {
         List<ActionEventRequest> actions = new ArrayList<>();
 
         for (Config config : configService.getConfigs().getConfigs()) {
+            String configName = config.getName();
             SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
+            SortedSet<ActionParameterRequest> postActionParameters = new TreeSet<>();
             ActionParameterRequestBuilder builder;
             int order = 0;
 
             //  Builds CREATE CASE task action
+            String serviceMethod = "createCase";
+
+            parameters.add(ActionParameterHelper.createConfigNameParameter(configName, order));
+            order++;
+
             builder = new ActionParameterRequestBuilder()
                     .setDisplayName(DisplayNames.CASE_TYPE)
                     .setKey(EventDataKeys.CASE_TYPE)
@@ -75,16 +85,32 @@ public class CaseActionBuilder implements ActionBuilder {
                     .setOrder(order++);
             parameters.add(builder.createActionParameterRequest());
 
-            String displayName = DisplayNameHelper.buildDisplayName(DisplayNames.CREATE_CASE, config.getName());
+            order = 0;
+            builder = new ActionParameterRequestBuilder()
+                    .setDisplayName(DisplayNames.CASE_ID)
+                    .setKey(EventDataKeys.CASE_ID)
+                    .setRequired(false)
+                    .setOrder(order++);
+            postActionParameters.add(builder.createActionParameterRequest());
+
+            String displayName = DisplayNameHelper.buildDisplayName(DisplayNames.CREATE_CASE, configName);
             ActionEventRequestBuilder actionBuilder = new ActionEventRequestBuilder()
                     .setDisplayName(displayName)
-                    .setSubject(EventSubjects.CREATE_CASE + "." + config.getName())
-                    .setActionParameters(parameters);
+                    .setServiceInterface(ACTION_CASE_SERVICE)
+                    .setServiceMethod(serviceMethod)
+                    .setSubject(EventSubjects.CREATE_CASE + "." + configName)
+                    .setActionParameters(parameters)
+                    .setPostActionParameters(postActionParameters);
             actions.add(actionBuilder.createActionEventRequest());
 
             // Builds UPDATE CASE task action
             parameters = new TreeSet<>();
+            serviceMethod = "updateCase";
             order = 0;
+
+            parameters.add(ActionParameterHelper.createConfigNameParameter(configName, order));
+            order++;
+
             builder = new ActionParameterRequestBuilder()
                     .setDisplayName(DisplayNames.CASE_ID)
                     .setKey(EventDataKeys.CASE_ID)
@@ -117,10 +143,12 @@ public class CaseActionBuilder implements ActionBuilder {
                     .setOrder(order++);
             parameters.add(builder.createActionParameterRequest());
 
-            displayName = DisplayNameHelper.buildDisplayName(DisplayNames.UPDATE_CASE, config.getName());
+            displayName = DisplayNameHelper.buildDisplayName(DisplayNames.UPDATE_CASE, configName);
             actionBuilder = new ActionEventRequestBuilder()
                     .setDisplayName(displayName)
-                    .setSubject(EventSubjects.UPDATE_CASE + "." + config.getName())
+                    .setServiceInterface(ACTION_CASE_SERVICE)
+                    .setServiceMethod(serviceMethod)
+                    .setSubject(EventSubjects.UPDATE_CASE + "." + configName)
                     .setActionParameters(parameters);
             actions.add(actionBuilder.createActionEventRequest());
         }

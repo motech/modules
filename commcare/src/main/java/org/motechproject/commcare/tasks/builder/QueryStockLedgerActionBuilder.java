@@ -5,9 +5,10 @@ import org.motechproject.commcare.events.constants.DisplayNames;
 import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.commcare.events.constants.EventSubjects;
 import org.motechproject.commcare.service.CommcareConfigService;
+import org.motechproject.commcare.util.ActionParameterHelper;
 import org.motechproject.tasks.contract.ActionEventRequest;
-import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
+import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
 
 import java.util.ArrayList;
@@ -24,6 +25,8 @@ import static org.motechproject.tasks.domain.mds.ParameterType.UNICODE;
  * the task module.
  */
 public class QueryStockLedgerActionBuilder implements ActionBuilder {
+
+    private static final String QUERY_STOCK_LEDGER_ACTION_SERVICE = "org.motechproject.commcare.events.QueryStockLedgerActionService";
 
     private CommcareConfigService configService;
 
@@ -42,9 +45,14 @@ public class QueryStockLedgerActionBuilder implements ActionBuilder {
         List<ActionEventRequest> actions = new ArrayList<>();
 
         for (Config config : configService.getConfigs().getConfigs()) {
+            String configName = config.getName();
+            String serviceMethod = "queryStockLedger";
             SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
             ActionParameterRequestBuilder builder;
             int order = 0;
+
+            parameters.add(ActionParameterHelper.createConfigNameParameter(configName, order));
+            order++;
 
             builder = new ActionParameterRequestBuilder()
                     .setDisplayName(DisplayNames.CASE_ID)
@@ -86,11 +94,13 @@ public class QueryStockLedgerActionBuilder implements ActionBuilder {
                     .setOrder(order);
             parameters.add(builder.createActionParameterRequest());
 
-            String displayName = DisplayNameHelper.buildDisplayName(DisplayNames.QUERY_STOCK_LEDGER, config.getName());
+            String displayName = DisplayNameHelper.buildDisplayName(DisplayNames.QUERY_STOCK_LEDGER, configName);
 
             ActionEventRequestBuilder actionBuilder = new ActionEventRequestBuilder()
                     .setDisplayName(displayName)
-                    .setSubject(EventSubjects.QUERY_STOCK_LEDGER + "." + config.getName())
+                    .setServiceInterface(QUERY_STOCK_LEDGER_ACTION_SERVICE)
+                    .setServiceMethod(serviceMethod)
+                    .setSubject(EventSubjects.QUERY_STOCK_LEDGER + "." + configName)
                     .setActionParameters(parameters);
             actions.add(actionBuilder.createActionEventRequest());
         }

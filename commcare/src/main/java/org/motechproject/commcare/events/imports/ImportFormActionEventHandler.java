@@ -2,15 +2,12 @@ package org.motechproject.commcare.events.imports;
 
 import org.joda.time.DateTime;
 import org.motechproject.commcare.events.constants.EventSubjects;
-import org.motechproject.commcare.pull.CommcareFormImporterImpl;
-import org.motechproject.commcare.pull.CommcareTasksFormImporterFactory;
-import org.motechproject.commons.api.Range;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 import static org.motechproject.commcare.events.constants.EventDataKeys.END_DATE;
 import static org.motechproject.commcare.events.constants.EventDataKeys.START_DATE;
@@ -21,10 +18,8 @@ import static org.motechproject.commcare.events.constants.EventDataKeys.START_DA
 @Component
 public class ImportFormActionEventHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ImportFormActionEventHandler.class);
-
     @Autowired
-    private CommcareTasksFormImporterFactory importerFactory;
+    private ImportFormActionService importFormActionService;
 
     /**
      * Handles the {@code EventSubjects.IMPORT_FORMS} events. This will import commcare forms for specific configuration
@@ -33,18 +28,12 @@ public class ImportFormActionEventHandler {
      */
     @MotechListener(subjects = EventSubjects.IMPORT_FORMS + ".*")
     public void handleEvent(MotechEvent event) {
-        CommcareFormImporterImpl importer = importerFactory.getCommcareFormImporter();
-
         String configName = EventSubjects.getConfigName(event.getSubject());
-        DateTime startDate = (DateTime) event.getParameters().get(START_DATE);
-        DateTime endDate = (DateTime) event.getParameters().get(END_DATE);
-        Range<DateTime> dateRange = new Range<>(startDate, endDate);
+        Map<String, Object> parameters = event.getParameters();
 
-        int formsToImport = importer.countForImport(dateRange, configName);
+        DateTime startDate = (DateTime) parameters.get(START_DATE);
+        DateTime endDate = (DateTime) parameters.get(END_DATE);
 
-        LOGGER.info("{} commcare forms to be imported.", formsToImport);
-
-        importer.startImport(dateRange, configName);
+        importFormActionService.importForms(configName, startDate, endDate);
     }
-
 }

@@ -1,9 +1,5 @@
 package org.motechproject.commcare.events;
 
-import org.motechproject.commcare.domain.CaseTask;
-import org.motechproject.commcare.domain.CloseTask;
-import org.motechproject.commcare.domain.CreateTask;
-import org.motechproject.commcare.domain.UpdateTask;
 import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.commcare.events.constants.EventSubjects;
 import org.motechproject.commcare.service.CommcareCaseService;
@@ -13,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * This class serves as the event handler for the task actions, exposed by the Commcare module.
@@ -24,31 +19,19 @@ import java.util.UUID;
 public class CaseEventHandler {
 
     @Autowired
-    private CommcareCaseService caseService;
+    private CaseActionService caseActionService;
 
     @MotechListener(subjects = EventSubjects.CREATE_CASE + ".*")
     public void createCase(MotechEvent event) {
         String configName = EventSubjects.getConfigName(event.getSubject());
         Map<String, Object> parameters = event.getParameters();
 
-        CaseTask caseTask = new CaseTask();
-        // We generate a random UUID for case
-        caseTask.setCaseId(UUID.randomUUID().toString());
+        String caseType = (String) parameters.get(EventDataKeys.CASE_TYPE);
+        String caseName = (String) parameters.get(EventDataKeys.CASE_NAME);
+        String ownerId = (String) parameters.get(EventDataKeys.OWNER_ID);
+        Map<String, Object> fieldValues = (Map<String, Object>) parameters.get(EventDataKeys.FIELD_VALUES);
 
-        // <create> tag
-        CreateTask createTask = new CreateTask();
-        createTask.setCaseType((String) parameters.get(EventDataKeys.CASE_TYPE));
-        createTask.setCaseName((String) parameters.get(EventDataKeys.CASE_NAME));
-        createTask.setOwnerId((String) parameters.get(EventDataKeys.OWNER_ID));
-
-        // <update> tag
-        UpdateTask updateTask = new UpdateTask();
-        updateTask.setFieldValues((Map<String, Object>) parameters.get(EventDataKeys.FIELD_VALUES));
-
-        caseTask.setCreateTask(createTask);
-        caseTask.setUpdateTask(updateTask);
-
-        caseService.uploadCase(caseTask, configName);
+        caseActionService.createCase(configName, caseType, ownerId, caseName, fieldValues);
     }
 
     @MotechListener(subjects = EventSubjects.UPDATE_CASE + ".*")
@@ -56,23 +39,11 @@ public class CaseEventHandler {
         String configName = EventSubjects.getConfigName(event.getSubject());
         Map<String, Object> parameters = event.getParameters();
 
-        CaseTask caseTask = new CaseTask();
+        String caseId = (String) parameters.get(EventDataKeys.CASE_ID);
+        String ownerId = (String) parameters.get(EventDataKeys.OWNER_ID);
+        Map<String, Object> fieldValues = (Map<String, Object>) parameters.get(EventDataKeys.FIELD_VALUES);
+        Boolean closeCase = (Boolean) parameters.get(EventDataKeys.CLOSE_CASE);
 
-        caseTask.setCaseId((String) parameters.get(EventDataKeys.CASE_ID));
-
-        // <update> tag
-        UpdateTask updateTask = new UpdateTask();
-        updateTask.setOwnerId((String) parameters.get(EventDataKeys.OWNER_ID));
-        updateTask.setFieldValues((Map<String, Object>) parameters.get(EventDataKeys.FIELD_VALUES));
-
-        // optional <close> tag
-        if (parameters.get(EventDataKeys.CLOSE_CASE) != null && (Boolean) parameters.get(EventDataKeys.CLOSE_CASE)) {
-            CloseTask closeTask = new CloseTask(true);
-            caseTask.setCloseTask(closeTask);
-        }
-
-        caseTask.setUpdateTask(updateTask);
-
-        caseService.uploadCase(caseTask, configName);
+        caseActionService.updateCase(configName, caseId, ownerId, closeCase, fieldValues);
     }
 }

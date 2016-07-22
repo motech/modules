@@ -211,6 +211,7 @@
                             org.motechproject.commcare.domain;version=${project.version},
                             org.motechproject.commcare.events;version=${project.version},
                             org.motechproject.commcare.events.constants;version=${project.version},
+                            org.motechproject.commcare.events.imports;version=${project.version},
                             org.motechproject.commcare.exception;version=${project.version},
                             org.motechproject.commcare.parser;version=${project.version},
                             org.motechproject.commcare.request;version=${project.version},

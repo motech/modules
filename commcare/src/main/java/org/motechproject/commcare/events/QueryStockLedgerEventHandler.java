@@ -1,32 +1,19 @@
 package org.motechproject.commcare.events;
 
-import org.motechproject.commcare.domain.CommcareStockTransaction;
-import org.motechproject.commcare.domain.CommcareStockTransactionList;
+import org.joda.time.DateTime;
 import org.motechproject.commcare.events.constants.EventSubjects;
-import org.motechproject.commcare.request.StockTransactionRequest;
-import org.motechproject.commcare.service.CommcareStockTransactionService;
-import org.motechproject.commcare.util.CommcareParamHelper;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.event.listener.EventRelay;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static org.motechproject.commcare.events.constants.EventDataKeys.CASE_ID;
 import static org.motechproject.commcare.events.constants.EventDataKeys.END_DATE;
 import static org.motechproject.commcare.events.constants.EventDataKeys.EXTRA_DATA;
-import static org.motechproject.commcare.events.constants.EventDataKeys.PRODUCT_ID;
-import static org.motechproject.commcare.events.constants.EventDataKeys.PRODUCT_NAME;
-import static org.motechproject.commcare.events.constants.EventDataKeys.QUANTITY;
 import static org.motechproject.commcare.events.constants.EventDataKeys.SECTION_ID;
 import static org.motechproject.commcare.events.constants.EventDataKeys.START_DATE;
-import static org.motechproject.commcare.events.constants.EventDataKeys.STOCK_ON_HAND;
-import static org.motechproject.commcare.events.constants.EventDataKeys.TRANSACTION_DATE;
-import static org.motechproject.commcare.events.constants.EventDataKeys.TYPE;
-import static org.motechproject.commcare.events.constants.EventSubjects.RECEIVED_STOCK_TRANSACTION;
 
 /**
  * Class responsible for handling "Query Stock Ledger" events. The service will query the CommCare stock transaction
@@ -35,8 +22,8 @@ import static org.motechproject.commcare.events.constants.EventSubjects.RECEIVED
 @Component
 public class QueryStockLedgerEventHandler {
 
-    private CommcareStockTransactionService stockTransactionService;
-    private EventRelay eventRelay;
+    @Autowired
+    private QueryStockLedgerActionService queryStockLedgerActionService;
 
     /**
      * Handles the {@code EventSubjects.QUERY_STOCK_LEDGER} events. This will result in fetching stock transactions from
@@ -47,52 +34,15 @@ public class QueryStockLedgerEventHandler {
      */
     @MotechListener(subjects = EventSubjects.QUERY_STOCK_LEDGER + ".*")
     public void handleEvent(MotechEvent event) {
-
         String configName = EventSubjects.getConfigName(event.getSubject());
-        Map<String, String> extraData = (Map<String, String>) event.getParameters().get(EXTRA_DATA);
+        Map<String, Object> parameters = event.getParameters();
 
-        StockTransactionRequest request = parseEventToRequest(event);
+        String caseId = (String) parameters.get(CASE_ID);
+        String sectionId = (String) parameters.get(SECTION_ID);
+        DateTime startDate = (DateTime) parameters.get(START_DATE);
+        DateTime endDate = (DateTime) parameters.get(END_DATE);
+        Map<String, Object> extraData = (Map<String, Object>) parameters.get(EXTRA_DATA);
 
-        CommcareStockTransactionList transactions = stockTransactionService.getStockTransactions(request, configName);
-
-        for (CommcareStockTransaction transaction : transactions.getObjects()) {
-            sendStockTransactionAsEvent(transaction, configName, extraData);
-        }
-    }
-
-    private void sendStockTransactionAsEvent(CommcareStockTransaction transaction, String configName,
-                                             Map<String, String> extraData) {
-
-        Map<String, Object> eventParams = new LinkedHashMap<>();
-
-        if (extraData != null) {
-            eventParams.putAll(extraData);
-        }
-
-        eventParams.put(PRODUCT_ID, transaction.getProductId());
-        eventParams.put(PRODUCT_NAME, transaction.getProductName());
-        eventParams.put(QUANTITY, transaction.getQuantity());
-        eventParams.put(SECTION_ID, transaction.getSectionId());
-        eventParams.put(STOCK_ON_HAND, transaction.getStockOnHand());
-        eventParams.put(TRANSACTION_DATE, transaction.getTransactionDate());
-        eventParams.put(TYPE, transaction.getType());
-
-        eventRelay.sendEventMessage(new MotechEvent(RECEIVED_STOCK_TRANSACTION + "." + configName,
-                eventParams));
-    }
-
-    private StockTransactionRequest parseEventToRequest(MotechEvent event) {
-        StockTransactionRequest request = new StockTransactionRequest();
-        request.setCaseId((String) event.getParameters().get(CASE_ID));
-        request.setSectionId((String) event.getParameters().get(SECTION_ID));
-        request.setStartDate(CommcareParamHelper.printObjectAsDateTime(event.getParameters().get(START_DATE)));
-        request.setEndDate(CommcareParamHelper.printObjectAsDateTime(event.getParameters().get(END_DATE)));
-        return request;
-    }
-
-    @Autowired
-    public QueryStockLedgerEventHandler(CommcareStockTransactionService stockTransactionService, EventRelay eventRelay) {
-        this.stockTransactionService = stockTransactionService;
-        this.eventRelay = eventRelay;
+        queryStockLedgerActionService.queryStockLedger(configName, caseId, sectionId, startDate, endDate, extraData);
     }
 }
