@@ -5,9 +5,6 @@ import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
 
-/**
- * Created by root on 22.07.16.
- */
 public final class ActionParameterHelper {
 
     public static ActionParameterRequest createConfigNameParameter(String configName, int order) {
