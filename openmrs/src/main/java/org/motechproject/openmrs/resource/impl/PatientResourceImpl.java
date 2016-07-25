@@ -4,6 +4,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.Identifier;
@@ -29,8 +30,8 @@ public class PatientResourceImpl extends BaseResource implements PatientResource
     private BiMap<String, String> identifierTypeUuidByName = HashBiMap.create();
 
     @Autowired
-    public PatientResourceImpl(RestOperations restOperations) {
-        super(restOperations);
+    public PatientResourceImpl(RestOperations restOperations, HttpClient httpClient) {
+        super(restOperations, httpClient);
     }
 
     @Override
