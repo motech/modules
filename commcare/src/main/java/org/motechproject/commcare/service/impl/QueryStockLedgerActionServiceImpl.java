@@ -24,9 +24,6 @@ import static org.motechproject.commcare.events.constants.EventDataKeys.TRANSACT
 import static org.motechproject.commcare.events.constants.EventDataKeys.TYPE;
 import static org.motechproject.commcare.events.constants.EventSubjects.RECEIVED_STOCK_TRANSACTION;
 
-/**
- * This service is responsible for handling "Query Stock Ledger" action in tasks.
- */
 @Service("queryStockLedgerActionService")
 public class QueryStockLedgerActionServiceImpl implements QueryStockLedgerActionService {
 
