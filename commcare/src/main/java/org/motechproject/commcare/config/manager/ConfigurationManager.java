@@ -39,8 +39,18 @@ public class ConfigurationManager {
 
     @Transactional
     public void configUpdated(String configName) {
-        LOGGER.info("Configuration [{}] updated, fetching Commcare schema, {}", configName);
-        reloadConfig(configName);
+        configUpdated(configName, true);
+    }
+
+    @Transactional
+    public void configUpdated(String configName, boolean downloadApplications) {
+        if (downloadApplications) {
+            LOGGER.info("Configuration [{}] updated, fetching Commcare schema, {}", configName);
+            reloadConfig(configName);
+        } else {
+            LOGGER.info("Configuration [{}] updated, not fetching new Commcare schema, {}", configName);
+            clearApps(configName);
+        }
     }
 
     @Transactional
