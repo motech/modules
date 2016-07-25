@@ -26,7 +26,7 @@ import static org.motechproject.tasks.domain.mds.ParameterType.UNICODE;
  */
 public class QueryStockLedgerActionBuilder implements ActionBuilder {
 
-    private static final String QUERY_STOCK_LEDGER_ACTION_SERVICE = "org.motechproject.commcare.events.QueryStockLedgerActionService";
+    private static final String QUERY_STOCK_LEDGER_ACTION_SERVICE = "org.motechproject.commcare.service.QueryStockLedgerActionService";
 
     private CommcareConfigService configService;
 

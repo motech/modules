@@ -27,7 +27,7 @@ import static org.motechproject.tasks.domain.mds.ParameterType.UNICODE;
  */
 public class CaseActionBuilder implements ActionBuilder {
 
-    private static final String ACTION_CASE_SERVICE = "org.motechproject.commcare.events.CaseActionService";
+    private static final String ACTION_CASE_SERVICE = "org.motechproject.commcare.service.CaseActionService";
 
     private CommcareConfigService configService;
 

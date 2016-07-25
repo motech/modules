@@ -2,7 +2,7 @@ package org.motechproject.commcare.events;
 
 import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.commcare.events.constants.EventSubjects;
-import org.motechproject.commcare.service.CommcareCaseService;
+import org.motechproject.commcare.service.CaseActionService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,8 @@ import java.util.Map;
 /**
  * This class serves as the event handler for the task actions, exposed by the Commcare module.
  * Respective methods extract the necessary data from the {@link MotechEvent} instance and
- * pass them to the {@link CommcareCaseService} that handles all the operations on Commcare cases.
+ * forward them to the {@link CaseActionService} service that passes the data to the
+ * {@link org.motechproject.commcare.service.CommcareCaseService} that handles all the operations on Commcare cases.
  */
 @Component
 public class CaseEventHandler {

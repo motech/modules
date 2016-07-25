@@ -66,13 +66,13 @@
                   interface="javax.servlet.http.HttpSessionListener" />
 
     <osgi:service ref="caseActionService"
-                  interface="org.motechproject.commcare.events.CaseActionService" />
+                  interface="org.motechproject.commcare.service.CaseActionService" />
 
     <osgi:service ref="queryStockLedgerActionService"
-                  interface="org.motechproject.commcare.events.QueryStockLedgerActionService" />
+                  interface="org.motechproject.commcare.service.QueryStockLedgerActionService" />
 
     <osgi:service ref="importFormActionService"
-                  interface="org.motechproject.commcare.events.imports.ImportFormActionService" />
+                  interface="org.motechproject.commcare.service.imports.ImportFormActionService" />
 
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>
 
