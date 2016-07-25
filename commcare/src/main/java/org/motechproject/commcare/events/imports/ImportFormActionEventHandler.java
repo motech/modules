@@ -2,6 +2,7 @@ package org.motechproject.commcare.events.imports;
 
 import org.joda.time.DateTime;
 import org.motechproject.commcare.events.constants.EventSubjects;
+import org.motechproject.commcare.service.imports.ImportFormActionService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,8 @@ import static org.motechproject.commcare.events.constants.EventDataKeys.END_DATE
 import static org.motechproject.commcare.events.constants.EventDataKeys.START_DATE;
 
 /**
- * Class responsible for handling "Import Forms" action in tasks.
+ * Class responsible for handling "Import Forms" action events and forwarding them
+ * to {@link ImportFormActionService} service.
  */
 @Component
 public class ImportFormActionEventHandler {

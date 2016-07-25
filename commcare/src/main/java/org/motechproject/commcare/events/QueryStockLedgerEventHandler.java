@@ -1,7 +1,7 @@
 package org.motechproject.commcare.events;
 
-import org.joda.time.DateTime;
 import org.motechproject.commcare.events.constants.EventSubjects;
+import org.motechproject.commcare.service.QueryStockLedgerActionService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +16,9 @@ import static org.motechproject.commcare.events.constants.EventDataKeys.SECTION_
 import static org.motechproject.commcare.events.constants.EventDataKeys.START_DATE;
 
 /**
- * Class responsible for handling "Query Stock Ledger" events. The service will query the CommCare stock transaction
- * API and then send a motech event for every parsed stock transaction.
+ * Class responsible for handling "Query Stock Ledger" events. The service will extract the necessary data
+ * from the {@link MotechEvent} and pass them to the {@link QueryStockLedgerActionService} service that will
+ * query the CommCare stock transaction API and then send a motech event for every parsed stock transaction.
  */
 @Component
 public class QueryStockLedgerEventHandler {
@@ -39,8 +40,8 @@ public class QueryStockLedgerEventHandler {
 
         String caseId = (String) parameters.get(CASE_ID);
         String sectionId = (String) parameters.get(SECTION_ID);
-        DateTime startDate = (DateTime) parameters.get(START_DATE);
-        DateTime endDate = (DateTime) parameters.get(END_DATE);
+        String startDate = (String) parameters.get(START_DATE);
+        String endDate = (String) parameters.get(END_DATE);
         Map<String, Object> extraData = (Map<String, Object>) parameters.get(EXTRA_DATA);
 
         queryStockLedgerActionService.queryStockLedger(configName, caseId, sectionId, startDate, endDate, extraData);

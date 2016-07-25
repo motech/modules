@@ -1,9 +1,10 @@
-package org.motechproject.commcare.events;
+package org.motechproject.commcare.service.impl;
 
 import org.motechproject.commcare.domain.CaseTask;
 import org.motechproject.commcare.domain.CloseTask;
 import org.motechproject.commcare.domain.CreateTask;
 import org.motechproject.commcare.domain.UpdateTask;
+import org.motechproject.commcare.service.CaseActionService;
 import org.motechproject.commcare.service.CommcareCaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,13 +12,9 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.UUID;
 
-/**
- * Created by root on 19.07.16.
- */
 @Service("caseActionService")
 public class CaseActionServiceImpl implements CaseActionService {
 
-    @Autowired
     private CommcareCaseService caseService;
 
     @Override
@@ -64,5 +61,10 @@ public class CaseActionServiceImpl implements CaseActionService {
         caseTask.setUpdateTask(updateTask);
 
         caseService.uploadCase(caseTask, configName);
+    }
+
+    @Autowired
+    public CaseActionServiceImpl(CommcareCaseService caseService) {
+        this.caseService = caseService;
     }
 }

@@ -1,9 +1,9 @@
-package org.motechproject.commcare.events.imports;
+package org.motechproject.commcare.service.imports;
 
 import org.joda.time.DateTime;
 
 /**
- * Created by root on 22.07.16.
+ * This service is responsible for handling "Import Forms" action in tasks.
  */
 public interface ImportFormActionService {
     void importForms(String configName, DateTime startDate, DateTime endDate);

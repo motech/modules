@@ -1,10 +1,11 @@
-package org.motechproject.commcare.events;
+package org.motechproject.commcare.service.impl;
 
 import org.joda.time.DateTime;
 import org.motechproject.commcare.domain.CommcareStockTransaction;
 import org.motechproject.commcare.domain.CommcareStockTransactionList;
 import org.motechproject.commcare.request.StockTransactionRequest;
 import org.motechproject.commcare.service.CommcareStockTransactionService;
+import org.motechproject.commcare.service.QueryStockLedgerActionService;
 import org.motechproject.commcare.util.CommcareParamHelper;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
@@ -23,9 +24,8 @@ import static org.motechproject.commcare.events.constants.EventDataKeys.TRANSACT
 import static org.motechproject.commcare.events.constants.EventDataKeys.TYPE;
 import static org.motechproject.commcare.events.constants.EventSubjects.RECEIVED_STOCK_TRANSACTION;
 
-
 /**
- * Created by root on 21.07.16.
+ * This service is responsible for handling "Query Stock Ledger" action in tasks.
  */
 @Service("queryStockLedgerActionService")
 public class QueryStockLedgerActionServiceImpl implements QueryStockLedgerActionService {
@@ -40,13 +40,13 @@ public class QueryStockLedgerActionServiceImpl implements QueryStockLedgerAction
     }
 
     @Override
-    public void queryStockLedger(String configName, String caseId, String sectionId, DateTime startDate, DateTime endDate, Map<String, Object> extraData) {
+    public void queryStockLedger(String configName, String caseId, String sectionId, String startDate, String endDate, Map<String, Object> extraData) {
 
         StockTransactionRequest request = new StockTransactionRequest();
         request.setCaseId(caseId);
         request.setSectionId(sectionId);
-        request.setStartDate(CommcareParamHelper.printObjectAsDateTime(startDate));
-        request.setEndDate(CommcareParamHelper.printObjectAsDateTime(endDate));
+        request.setStartDate(startDate);
+        request.setEndDate(endDate);
 
         CommcareStockTransactionList transactions = stockTransactionService.getStockTransactions(request, configName);
 
@@ -76,4 +76,9 @@ public class QueryStockLedgerActionServiceImpl implements QueryStockLedgerAction
                 eventParams));
     }
 
+    @Override
+    public void queryStockLedger(String configName, String caseId, String sectionId, DateTime startDate, DateTime endDate, Map<String, Object> extraData) {
+        queryStockLedger(configName, caseId, sectionId, CommcareParamHelper.printObjectAsDateTime(startDate),
+                CommcareParamHelper.printObjectAsDateTime(endDate), extraData);
+    }
 }

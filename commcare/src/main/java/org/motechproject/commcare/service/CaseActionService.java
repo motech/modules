@@ -1,11 +1,11 @@
-package org.motechproject.commcare.events;
+package org.motechproject.commcare.service;
 
 import org.motechproject.commcare.domain.CaseTask;
 
 import java.util.Map;
 
 /**
- * Created by root on 19.07.16.
+ * This service is responsible for handling "Create Case" and "Update Case" actions in tasks.
  */
 public interface CaseActionService {
     CaseTask createCase(String configName, String caseType, String ownerId, String caseName, Map<String, Object> fieldValues);
