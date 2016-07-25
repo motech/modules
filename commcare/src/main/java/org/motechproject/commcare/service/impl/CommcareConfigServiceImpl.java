@@ -79,19 +79,17 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
 
     @Override
     public Config updateConfig(Config config, String oldName) throws CommcareConnectionFailureException {
-
+        boolean isConfigVerified = verifyConfig(config);
         if (configs.nameInUse(oldName)) {
-            if (!isSameServer(config.getAccountConfig(), configs.getByName(oldName).getAccountConfig())) {
-                eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_UPDATED, prepareParams(oldName)));
-            }
+            eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_UPDATED, prepareParams(oldName, isConfigVerified)));
             configs.updateConfig(config, oldName);
         } else {
             validateConfig(config);
             configs.saveConfig(config);
-            eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_CREATED, prepareParams(config.getName())));
+            eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_CREATED, prepareParams(config.getName(), isConfigVerified)));
         }
 
-        if (verifyConfig(config)) {
+        if (isConfigVerified) {
             updateForwardingRules(config);
         } else {
             LOGGER.info(String.format("Configuration \"%s\" couldn't be verified. Forwarding rules are not updated!", config.getName()));
@@ -217,10 +215,15 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
     }
 
     private Map<String, Object> prepareParams(String name) {
-
         Map<String, Object> params = new HashMap<>();
         params.put(EventDataKeys.CONFIG_NAME, name);
+        return params;
+    }
 
+    private Map<String, Object> prepareParams(String name, boolean isConfigVerified) {
+        Map<String, Object> params = new HashMap<>();
+        params.put(EventDataKeys.CONFIG_NAME, name);
+        params.put(EventDataKeys.CONFIG_VERIFIED, isConfigVerified);
         return params;
     }
 
@@ -269,10 +272,6 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
         updateFormsForwarding(config, endpoints);
         updateStubsForwading(config, endpoints);
         updateSchemaForwarding(config, endpoints);
-    }
-
-    private boolean isSameServer(AccountConfig one, AccountConfig two) {
-        return one.getBaseUrl().equals(two.getBaseUrl()) && one.getDomain().equals(two.getDomain());
     }
 
     private void updateCasesForwarding(Config config, List<String> endpoints) {

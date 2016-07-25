@@ -2,6 +2,7 @@ package org.motechproject.openmrs.resource.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.httpclient.HttpClient;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.Person;
 import org.motechproject.openmrs.domain.Provider;
@@ -15,8 +16,8 @@ import org.springframework.web.client.RestOperations;
 public class ProviderResourceImpl extends BaseResource implements ProviderResource {
 
     @Autowired
-    public ProviderResourceImpl(RestOperations restOperations) {
-        super(restOperations);
+    public ProviderResourceImpl(RestOperations restOperations, HttpClient httpClient) {
+        super(restOperations, httpClient);
     }
 
     @Override

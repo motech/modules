@@ -2,6 +2,7 @@ package org.motechproject.openmrs.resource.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.httpclient.HttpClient;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.ProgramEnrollmentListResult;
 import org.motechproject.openmrs.domain.Location;
@@ -20,8 +21,8 @@ import java.util.List;
 public class ProgramEnrollmentResourceImpl extends BaseResource implements ProgramEnrollmentResource {
 
     @Autowired
-    protected ProgramEnrollmentResourceImpl(RestOperations restOperations) {
-        super(restOperations);
+    protected ProgramEnrollmentResourceImpl(RestOperations restOperations, HttpClient httpClient) {
+        super(restOperations, httpClient);
     }
 
     @Override
