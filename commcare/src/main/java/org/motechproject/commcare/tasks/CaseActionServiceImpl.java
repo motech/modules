@@ -1,10 +1,9 @@
-package org.motechproject.commcare.service.impl;
+package org.motechproject.commcare.tasks;
 
 import org.motechproject.commcare.domain.CaseTask;
 import org.motechproject.commcare.domain.CloseTask;
 import org.motechproject.commcare.domain.CreateTask;
 import org.motechproject.commcare.domain.UpdateTask;
-import org.motechproject.commcare.service.CaseActionService;
 import org.motechproject.commcare.service.CommcareCaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -2,7 +2,7 @@ package org.motechproject.commcare.events;
 
 import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.commcare.events.constants.EventSubjects;
-import org.motechproject.commcare.service.CaseActionService;
+import org.motechproject.commcare.tasks.CaseActionService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.springframework.beans.factory.annotation.Autowired;

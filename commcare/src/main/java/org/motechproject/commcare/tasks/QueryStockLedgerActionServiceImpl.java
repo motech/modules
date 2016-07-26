@@ -1,11 +1,10 @@
-package org.motechproject.commcare.service.impl;
+package org.motechproject.commcare.tasks;
 
 import org.joda.time.DateTime;
 import org.motechproject.commcare.domain.CommcareStockTransaction;
 import org.motechproject.commcare.domain.CommcareStockTransactionList;
 import org.motechproject.commcare.request.StockTransactionRequest;
 import org.motechproject.commcare.service.CommcareStockTransactionService;
-import org.motechproject.commcare.service.QueryStockLedgerActionService;
 import org.motechproject.commcare.util.CommcareParamHelper;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;

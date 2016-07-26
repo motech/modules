@@ -1,7 +1,7 @@
 package org.motechproject.commcare.events;
 
 import org.motechproject.commcare.events.constants.EventSubjects;
-import org.motechproject.commcare.service.QueryStockLedgerActionService;
+import org.motechproject.commcare.tasks.QueryStockLedgerActionService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.springframework.beans.factory.annotation.Autowired;

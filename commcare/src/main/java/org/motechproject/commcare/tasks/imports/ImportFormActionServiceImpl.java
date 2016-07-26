@@ -1,9 +1,8 @@
-package org.motechproject.commcare.service.impl.imports;
+package org.motechproject.commcare.tasks.imports;
 
 import org.joda.time.DateTime;
 import org.motechproject.commcare.pull.CommcareFormImporterImpl;
 import org.motechproject.commcare.pull.CommcareTasksFormImporterFactory;
-import org.motechproject.commcare.service.imports.ImportFormActionService;
 import org.motechproject.commons.api.Range;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
