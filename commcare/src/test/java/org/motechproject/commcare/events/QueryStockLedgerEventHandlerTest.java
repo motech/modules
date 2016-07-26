@@ -30,7 +30,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.motechproject.commcare.util.CommcareStockTransactionTestUtils.prepareStockTransactionsList;
 import static org.motechproject.commcare.testutil.RequestTestUtils.prepareRequest;
 
-public class QueryStockLedgerActionServiceImplTest {
+public class QueryStockLedgerEventHandlerTest {
 
     private static final String CONFIG_NAME = "FooConfig";
 
@@ -44,10 +44,13 @@ public class QueryStockLedgerActionServiceImplTest {
 
     private QueryStockLedgerActionServiceImpl queryStockLedgerActionService;
 
+    private QueryStockLedgerEventHandler eventHandler;
+
     @Before
     public void setUp() {
         initMocks(this);
         queryStockLedgerActionService = new QueryStockLedgerActionServiceImpl(stockTransactionService, eventRelay);
+        eventHandler = new QueryStockLedgerEventHandler(queryStockLedgerActionService);
         request = prepareRequest();
     }
 
@@ -68,7 +71,8 @@ public class QueryStockLedgerActionServiceImplTest {
                 .thenThrow(new JsonParseException("Failure"));
 
         try {
-            invokeQueryStockLedgerMethod(false);
+            MotechEvent event = prepareEvent(false);
+            eventHandler.handleEvent(event);
         } finally {
             verify(eventRelay, never()).sendEventMessage(any(MotechEvent.class));
         }
@@ -82,7 +86,8 @@ public class QueryStockLedgerActionServiceImplTest {
         when(stockTransactionService.getStockTransactions(eq(request), eq(CONFIG_NAME)))
                 .thenReturn(prepareStockTransactionsList());
 
-        invokeQueryStockLedgerMethod(withExtraData);
+        MotechEvent event = prepareEvent(withExtraData);
+        eventHandler.handleEvent(event);
 
         verify(eventRelay, times(2)).sendEventMessage(eventCaptor.capture());
 
@@ -92,17 +97,26 @@ public class QueryStockLedgerActionServiceImplTest {
         assertEquals(expectedEventTwo, capturedEvents.get(1));
     }
 
-    private void invokeQueryStockLedgerMethod(boolean withExtraData) {
-        Map<String, Object> extraData = null;
+    private MotechEvent prepareEvent(boolean withExtraData) {
+
+        String subject = EventSubjects.QUERY_STOCK_LEDGER + "." + CONFIG_NAME;
+
+        Map<String, Object> params = new LinkedHashMap<>();
+        params.put(EventDataKeys.CASE_ID, RequestTestUtils.CASE_ID);
+        params.put(EventDataKeys.SECTION_ID, RequestTestUtils.SECTION_ID);
+        params.put(EventDataKeys.START_DATE, RequestTestUtils.START_DATE);
+        params.put(EventDataKeys.END_DATE, RequestTestUtils.END_DATE);
+
         if (withExtraData) {
-            extraData = new HashMap<>();
+            Map<String, String> extraData = new HashMap<>();
 
             extraData.put("key1", "val1");
             extraData.put("key2", "val2");
+
+            params.put(EventDataKeys.EXTRA_DATA, extraData);
         }
 
-        queryStockLedgerActionService.queryStockLedger(CONFIG_NAME, RequestTestUtils.CASE_ID,
-                RequestTestUtils.SECTION_ID, RequestTestUtils.START_DATE, RequestTestUtils.END_DATE, extraData);
+        return new MotechEvent(subject, params);
     }
 
     private MotechEvent prepareExpectedEventOne(boolean withExtraData) {

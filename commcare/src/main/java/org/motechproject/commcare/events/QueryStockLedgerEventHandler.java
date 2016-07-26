@@ -23,7 +23,6 @@ import static org.motechproject.commcare.events.constants.EventDataKeys.START_DA
 @Component
 public class QueryStockLedgerEventHandler {
 
-    @Autowired
     private QueryStockLedgerActionService queryStockLedgerActionService;
 
     /**
@@ -45,5 +44,10 @@ public class QueryStockLedgerEventHandler {
         Map<String, Object> extraData = (Map<String, Object>) parameters.get(EXTRA_DATA);
 
         queryStockLedgerActionService.queryStockLedger(configName, caseId, sectionId, startDate, endDate, extraData);
+    }
+
+    @Autowired
+    public QueryStockLedgerEventHandler(QueryStockLedgerActionService queryStockLedgerActionService) {
+        this.queryStockLedgerActionService = queryStockLedgerActionService;
     }
 }
