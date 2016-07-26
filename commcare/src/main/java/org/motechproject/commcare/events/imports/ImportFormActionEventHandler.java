@@ -2,7 +2,7 @@ package org.motechproject.commcare.events.imports;
 
 import org.joda.time.DateTime;
 import org.motechproject.commcare.events.constants.EventSubjects;
-import org.motechproject.commcare.service.imports.ImportFormActionService;
+import org.motechproject.commcare.tasks.imports.ImportFormActionService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.springframework.beans.factory.annotation.Autowired;

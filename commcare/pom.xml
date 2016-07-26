@@ -216,8 +216,8 @@
                             org.motechproject.commcare.request;version=${project.version},
                             org.motechproject.commcare.response;version=${project.version},
                             org.motechproject.commcare.service;version=${project.version},
-                            org.motechproject.commcare.service.imports;version=${project.version},
-                            org.motechproject.commcare.tasks;version=${project.version}
+                            org.motechproject.commcare.tasks;version=${project.version},
+                            org.motechproject.commcare.tasks.imports;version=${project.version}
                         </Export-Package>
                         <Import-Package>
                             org.aopalliance.aop,

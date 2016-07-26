@@ -24,7 +24,7 @@ import static org.motechproject.tasks.domain.mds.ParameterType.DATE;
  */
 public class ImportFormActionBuilder implements ActionBuilder {
 
-    private static final String IMPORT_FORM_ACTION_SERVICE = "org.motechproject.commcare.service.imports.ImportFormActionService";
+    private static final String IMPORT_FORM_ACTION_SERVICE = "org.motechproject.commcare.tasks.imports.ImportFormActionService";
 
     private CommcareConfigService configService;
 

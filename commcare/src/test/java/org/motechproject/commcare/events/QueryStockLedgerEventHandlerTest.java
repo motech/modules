@@ -9,7 +9,7 @@ import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.commcare.events.constants.EventSubjects;
 import org.motechproject.commcare.request.StockTransactionRequest;
 import org.motechproject.commcare.service.CommcareStockTransactionService;
-import org.motechproject.commcare.service.impl.QueryStockLedgerActionServiceImpl;
+import org.motechproject.commcare.tasks.QueryStockLedgerActionServiceImpl;
 import org.motechproject.commcare.testutil.RequestTestUtils;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;

@@ -1,4 +1,4 @@
-package org.motechproject.commcare.service.imports;
+package org.motechproject.commcare.tasks.imports;
 
 import org.joda.time.DateTime;
 

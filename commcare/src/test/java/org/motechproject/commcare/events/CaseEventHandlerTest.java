@@ -4,14 +4,13 @@ import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.motechproject.commcare.domain.CaseTask;
 import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.commcare.events.constants.EventSubjects;
 import org.motechproject.commcare.service.CommcareCaseService;
-import org.motechproject.commcare.service.impl.CaseActionServiceImpl;
+import org.motechproject.commcare.tasks.CaseActionServiceImpl;
 import org.motechproject.event.MotechEvent;
 
 import java.util.HashMap;
