@@ -351,9 +351,21 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     }
 
     private ActionEvent prepareStockLedgerAction() {
+        String serviceInterface = "org.motechproject.commcare.tasks.QueryStockLedgerActionService";
+        String serviceMethod = "queryStockLedger";
+
         SortedSet<ActionParameter> parameters = new TreeSet<>();
         ActionParameterBuilder builder;
         int order = 0;
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName(DisplayNames.CONFIG_NAME)
+                .setKey(EventDataKeys.CONFIG_NAME)
+                .setValue(ConfigsUtils.prepareConfigOne().getName())
+                .setRequired(true)
+                .setHidden(true)
+                .setOrder(order++);
+        parameters.add(builder.build());
 
         builder = new ActionParameterBuilder()
                 .setDisplayName(DisplayNames.CASE_ID)
@@ -399,15 +411,29 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         ActionEventBuilder actionBuilder = new ActionEventBuilder()
                 .setDisplayName(displayName)
+                .setServiceInterface(serviceInterface)
+                .setServiceMethod(serviceMethod)
                 .setSubject(EventSubjects.QUERY_STOCK_LEDGER + "." + config.getName())
                 .setActionParameters(parameters);
         return actionBuilder.build();
     }
 
     private ActionEvent prepareCreateCaseAction() {
+        String serviceInterface = "org.motechproject.commcare.tasks.CaseActionService";
+        String serviceMethod = "createCase";
+
         SortedSet<ActionParameter> parameters = new TreeSet<>();
         ActionParameterBuilder builder;
         int order = 0;
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName(DisplayNames.CONFIG_NAME)
+                .setKey(EventDataKeys.CONFIG_NAME)
+                .setValue(ConfigsUtils.prepareConfigOne().getName())
+                .setRequired(true)
+                .setHidden(true)
+                .setOrder(order++);
+        parameters.add(builder.build());
 
         builder = new ActionParameterBuilder()
                 .setDisplayName(DisplayNames.CASE_TYPE)
@@ -445,15 +471,29 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         ActionEventBuilder actionBuilder = new ActionEventBuilder()
                 .setDisplayName(displayName)
+                .setServiceInterface(serviceInterface)
+                .setServiceMethod(serviceMethod)
                 .setSubject(EventSubjects.CREATE_CASE + "." + config.getName())
                 .setActionParameters(parameters);
         return actionBuilder.build();
     }
 
     private ActionEvent prepareUpdateCaseAction() {
+        String serviceInterface = "org.motechproject.commcare.tasks.CaseActionService";
+        String serviceMethod = "updateCase";
+
         SortedSet<ActionParameter> parameters = new TreeSet<>();
         ActionParameterBuilder builder;
         int order = 0;
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName(DisplayNames.CONFIG_NAME)
+                .setKey(EventDataKeys.CONFIG_NAME)
+                .setValue(ConfigsUtils.prepareConfigOne().getName())
+                .setRequired(true)
+                .setHidden(true)
+                .setOrder(order++);
+        parameters.add(builder.build());
 
         builder = new ActionParameterBuilder()
                 .setDisplayName(DisplayNames.CASE_ID)
@@ -491,6 +531,8 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         ActionEventBuilder actionBuilder = new ActionEventBuilder()
                 .setDisplayName(displayName)
+                .setServiceInterface(serviceInterface)
+                .setServiceMethod(serviceMethod)
                 .setSubject(EventSubjects.UPDATE_CASE + "." + config.getName())
                 .setActionParameters(parameters);
         return actionBuilder.build();
