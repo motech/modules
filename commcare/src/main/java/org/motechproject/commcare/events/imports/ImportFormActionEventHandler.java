@@ -20,7 +20,6 @@ import static org.motechproject.commcare.events.constants.EventDataKeys.START_DA
 @Component
 public class ImportFormActionEventHandler {
 
-    @Autowired
     private ImportFormActionService importFormActionService;
 
     /**
@@ -37,5 +36,10 @@ public class ImportFormActionEventHandler {
         DateTime endDate = (DateTime) parameters.get(END_DATE);
 
         importFormActionService.importForms(configName, startDate, endDate);
+    }
+
+    @Autowired
+    public ImportFormActionEventHandler(ImportFormActionService importFormActionService) {
+        this.importFormActionService = importFormActionService;
     }
 }
