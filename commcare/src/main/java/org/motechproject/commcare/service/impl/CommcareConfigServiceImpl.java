@@ -168,7 +168,8 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
 
     @Override
     public void syncConfig(String name) {
-        eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_UPDATED, prepareParams(name)));
+        boolean isConfigVerified = verifyConfig(getByName(name));
+        eventRelay.sendEventMessage(new MotechEvent(EventSubjects.CONFIG_UPDATED, prepareParams(name, isConfigVerified)));
     }
 
     @Override
@@ -212,11 +213,6 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
         ByteArrayResource resource = new ByteArrayResource(jsonText.getBytes());
         settingsFacade.saveRawConfig(COMMCARE_CONFIGS_FILE_NAME, resource);
         loadConfigs();
-    }
-
-    private Map<String, Object> prepareParams(String name) {
-        boolean isConfigVerified = verifyConfig(configs.getByName(name));
-        return prepareParams(name, isConfigVerified);
     }
 
     private Map<String, Object> prepareParams(String name, boolean isConfigVerified) {
