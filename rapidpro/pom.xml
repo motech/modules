@@ -73,7 +73,8 @@
                         <Export-Package>
                             org.motechproject.rapidpro.service;version=${project.version},
                             org.motechproject.rapidpro.repository;version=${project.version},
-                            org.motechproject.rapidpro.domain;version=${project.version}
+                            org.motechproject.rapidpro.domain;version=${project.version},
+                            org.motechproject.rapidpro.webservice;version=${project.version},
                         </Export-Package>
                         <Import-Package>
                             org.springframework.cglib.core,

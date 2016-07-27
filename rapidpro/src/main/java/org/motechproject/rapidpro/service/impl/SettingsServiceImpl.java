@@ -15,7 +15,6 @@ import java.io.InputStream;
 /**
  * Implementation of {@link SettingsService}.
  */
-
 @Component("rapidproSettingsService")
 public class SettingsServiceImpl implements SettingsService {
     private static final String SETTINGS = "settings.json";
