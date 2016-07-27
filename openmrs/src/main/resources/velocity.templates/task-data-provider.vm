@@ -85,6 +85,11 @@
               "type": "MAP"
             },
             {
+              "displayName": "openMRS.patient.personAttributes",
+              "fieldKey": "person.attributesMap",
+              "type": "MAP"
+            },
+            {
               "displayName": "openMRS.motechId",
               "fieldKey": "motechId"
             },

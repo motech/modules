@@ -11,7 +11,9 @@ import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -593,6 +595,14 @@ public class Person {
 
     public void setAuditInfo(AuditInfo auditInfo) {
         this.auditInfo = auditInfo;
+    }
+
+    public Map<String, String> getAttributesMap() {
+        Map<String, String> personAttributes = new HashMap<>();
+        for (Attribute attribute : attributes) {
+            personAttributes.put(attribute.getAttributeType().getDisplay(), attribute.getValue());
+        }
+        return personAttributes;
     }
 
     @Override
