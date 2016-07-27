@@ -9,6 +9,7 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.openmrs.domain.Encounter;
 import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.ProgramEnrollment;
+import org.motechproject.openmrs.domain.ProgramEnrollmentListResult;
 import org.motechproject.openmrs.domain.Provider;
 import org.motechproject.openmrs.domain.Relationship;
 import org.motechproject.openmrs.service.OpenMRSEncounterService;
@@ -25,11 +26,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.ACTIVE_PROGRAM;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_MOTECH_ID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_MOTECH_ID_AND_PROGRAM_NAME;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_UUID;
@@ -43,6 +45,7 @@ import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PATIENT_MOTE
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PATIENT_UUID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PERSON_UUID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PROGRAM_ENROLLMENT;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PROGRAM_ENROLLMENT_UUID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PROGRAM_NAME;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PROVIDER;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.RELATIONSHIP;
@@ -135,7 +138,10 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
                     break;
                 case RELATIONSHIP: obj = getRelationship(lookupFields, configName);
                     break;
-                case PROGRAM_ENROLLMENT: obj = getProgramEnrollment(lookupName, lookupFields, configName);
+                case PROGRAM_ENROLLMENT:
+                    obj = getProgramEnrollments(lookupName, lookupFields, configName);
+
+
             }
         }
 
@@ -196,7 +202,7 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         return relationships.isEmpty() ? null : relationships.get(0);
     }
 
-    private ProgramEnrollment getProgramEnrollment(String lookupName, Map<String, String> lookupFields, String configName) {
+    private ProgramEnrollmentListResult getProgramEnrollments(String lookupName, Map<String, String> lookupFields, String configName) {
         List<ProgramEnrollment> programEnrollments = null;
 
         switch (lookupName) {
@@ -214,24 +220,79 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
             }
         }
 
-        return filterByProgramName(programEnrollments, lookupFields.get(PROGRAM_NAME));
+        ProgramEnrollmentListResult filteredProgramEnrollments = prepareProgramEnrollmentListResult(programEnrollments, lookupFields, lookupFields.get(PROGRAM_NAME), lookupFields.get(ACTIVE_PROGRAM));
+
+        return filteredProgramEnrollments;
     }
 
-    private ProgramEnrollment filterByProgramName(List<ProgramEnrollment> programEnrollments, String programName) {
-        ProgramEnrollment result = null;
+    private ProgramEnrollmentListResult prepareProgramEnrollmentListResult(List<ProgramEnrollment> programEnrollments, Map<String, String> lookupFields, String programName, String activeProgram) {
+        ProgramEnrollmentListResult result = new ProgramEnrollmentListResult();
+        String programEnrollmentUuid = lookupFields.get(PROGRAM_ENROLLMENT_UUID);
+        String personUuid = lookupFields.get(PERSON_UUID);
+
+        result.setResults(filterPrograms(programEnrollments, programName, activeProgram));
+        result.setNumberOfPrograms(result.getResults().size());
+
+        if (result.getNumberOfPrograms() > 1) {
+            LOGGER.warn(String.format("Multiple program enrollment found with the \"%s\" UUID and the person" +
+                    "with the \"%s\" UUID.", programEnrollmentUuid, personUuid));
+        }
+        return result;
+    }
+
+    private List<ProgramEnrollment> filterPrograms(List<ProgramEnrollment> programEnrollments, String programName, String activeProgram) {
+        List<ProgramEnrollment> programEnrollmentsList;
+        List<ProgramEnrollment> result;
+
+        programEnrollmentsList = filterByProgramName(programEnrollments, programName);
+
+        result = isActiveProgram(activeProgram) ? filterByActiveProgramOnly(programEnrollmentsList) : programEnrollmentsList;
+
+        if (result.size() == 0) {
+            ProgramEnrollment programEnrollment  = new ProgramEnrollment();
+            programEnrollment.setEnrolled(false);
+
+            result.add(programEnrollment);
+        }
+
+        return result;
+    }
+
+    private boolean isActiveProgram(String activeProgram) {
+        boolean result = false;
+
+        if (StringUtils.equals("true", activeProgram)) {
+            result = true;
+        } else if (!StringUtils.equals("false", activeProgram)) {
+            LOGGER.warn("Active Program Only field should be 'true' or 'false', actually is \"%s\".", activeProgram);
+        }
+
+        return result;
+    }
+
+    private List<ProgramEnrollment> filterByProgramName(List<ProgramEnrollment> programEnrollments, String programName) {
+        List<ProgramEnrollment> result = new ArrayList<>();
 
         if(CollectionUtils.isNotEmpty(programEnrollments)) {
             for (ProgramEnrollment programEnrollment : programEnrollments) {
                 if (programEnrollment.getProgram().getName().equals(programName)) {
-                    result = programEnrollment;
-                    break;
+                    result.add(programEnrollment);
                 }
             }
         }
 
-        if (Objects.isNull(result)) {
-            result = new ProgramEnrollment();
-            result.setEnrolled(false);
+        return result;
+    }
+
+    private List<ProgramEnrollment> filterByActiveProgramOnly(List<ProgramEnrollment> programEnrollments) {
+        List<ProgramEnrollment> result = new ArrayList<>();
+
+        if(CollectionUtils.isNotEmpty(programEnrollments)) {
+            for (ProgramEnrollment programEnrollment : programEnrollments) {
+                if (programEnrollment.getDateCompleted() == null) {
+                    result.add(programEnrollment);
+                }
+            }
         }
 
         return result;

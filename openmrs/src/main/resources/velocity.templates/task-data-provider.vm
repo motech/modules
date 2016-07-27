@@ -219,51 +219,57 @@
               "displayName": "openMRS.lookup.motechIdAndProgramName",
               "fields": [
                 "openMRS.patient.motechId",
-                "openMRS.programName"
+                "openMRS.programName",
+                "openMRS.activeProgramOnly"
               ]
             },
             {
               "displayName": "openMRS.lookup.uuidAndProgramName",
               "fields": [
                 "openMRS.patient.uuid",
-                "openMRS.programName"
+                "openMRS.programName",
+                "openMRS.activeProgramOnly"
               ]
             }
           ],
           "fields": [
             {
               "displayName": "openMRS.programEnrollment.uuid",
-              "fieldKey": "uuid"
+              "fieldKey": "results.0.uuid"
             },
             {
               "displayName": "openMRS.patient.uuid",
-              "fieldKey": "patient.uuid"
+              "fieldKey": "results.0.patient.uuid"
             },
             {
               "displayName": "openMRS.program.uuid",
-              "fieldKey": "program.uuid"
+              "fieldKey": "results.0.program.uuid"
             },
             {
               "displayName": "openMRS.programEnrollment.dateEnrolled",
-              "fieldKey": "dateEnrolled",
+              "fieldKey": "results.0.dateEnrolled",
               "type": "DATE"
             },
             {
               "displayName": "openMRS.programEnrollment.dateCompleted",
-              "fieldKey": "dateCompleted",
+              "fieldKey": "results.0.dateCompleted",
               "type": "DATE"
             },
             {
               "displayName": "openMRS.location.name",
-              "fieldKey": "location.name"
+              "fieldKey": "results.0.location.name"
             },
             {
               "displayName": "openMRS.programEnrollment.enrolled",
-              "fieldKey": "enrolledString"
+              "fieldKey": "results.0.enrolledString"
             },
             {
               "displayName": "openMRS.programEnrollment.currentState.uuid",
-              "fieldKey": "currentState.state.uuid"
+              "fieldKey": "results.0.currentState.state.uuid"
+            },
+            {
+              "displayName": "openMRS.programEnrollment.moreThanOneProgram",
+              "fieldKey": "numberOfPrograms"
             }
           ]
         }
