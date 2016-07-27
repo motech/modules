@@ -23,7 +23,7 @@ public final class ContactUtils {
      * @return {@link Contact}
      */
     public static Contact toContactFromParams(Map<String, Object> params) {
-        String name = (String) params.get(EventParameters.NAME);
+        String name = (String) params.get(EventParameters.CONTACT_NAME);
         String language = (String) params.get(EventParameters.LANGUAGE);
         String phone = (String) params.get(EventParameters.PHONE);
         Map<String, String> fields = (Map<String, String>) params.get(EventParameters.FIELDS);
@@ -46,7 +46,8 @@ public final class ContactUtils {
 
     /**
      * Merges the fields from a Contact returned from Rapidpro to a {@link Contact} representing a Contact with
-     * updated fields.
+     * updated fields. Sets the UUID of updated to the UUID of the contact object from rapidpro. Sets the group UUIDs field to
+     * the group UUIDs field of the contact object from rapidpro updated fields.
      *
      * @param updated      The {@link Contact} with updated fields.
      * @param fromRapidpro The {@link Contact} from Rapidpro.
