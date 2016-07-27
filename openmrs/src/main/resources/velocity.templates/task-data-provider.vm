@@ -86,7 +86,7 @@
             },
             {
               "displayName": "openMRS.patient.personAttributes",
-              "fieldKey": "person.attributesMap",
+              "fieldKey": "person.personAttributes",
               "type": "MAP"
             },
             {

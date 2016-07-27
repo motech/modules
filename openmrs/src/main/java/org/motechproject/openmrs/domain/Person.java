@@ -597,7 +597,7 @@ public class Person {
         this.auditInfo = auditInfo;
     }
 
-    public Map<String, String> getAttributesMap() {
+    public Map<String, String> getPersonAttributes() {
         Map<String, String> personAttributes = new HashMap<>();
         for (Attribute attribute : attributes) {
             personAttributes.put(attribute.getAttributeType().getDisplay(), attribute.getValue());

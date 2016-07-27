@@ -10,6 +10,7 @@ import org.motechproject.config.domain.SettingsRecord;
 import org.motechproject.config.mds.SettingsDataService;
 import org.motechproject.mds.query.QueryParams;
 import org.motechproject.mds.util.Order;
+import org.motechproject.openmrs.domain.Attribute;
 import org.motechproject.openmrs.domain.Encounter;
 import org.motechproject.openmrs.domain.EncounterType;
 import org.motechproject.openmrs.domain.Location;
@@ -173,6 +174,8 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
     @Test
     public void testOpenMRSPatientDataSourceAndCreatePatientAction() throws InterruptedException, IOException, PatientNotFoundException {
+        updatePatient();
+
         Long taskID = createPatientTestTask();
 
         activateTrigger();
@@ -224,6 +227,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         Map<String, String> values = new HashMap<>();
         values.put(Keys.ADDRESS_1, "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.person.birthdate}}");
         values.put(Keys.ADDRESS_2, "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.uuid}}");
+        values.put(Keys.ADDRESS_3, "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.person.personAttributes.Birthplace}}");
         values.put(Keys.FAMILY_NAME, "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.person.display}}");
         values.put(Keys.GENDER, "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.person.gender}}");
         values.put(Keys.GIVEN_NAME, "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.person.display}}");
@@ -341,6 +345,16 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         return new Patient(person, MOTECH_ID, location);
     }
 
+    private void updatePatient() {
+        Attribute.AttributeType attributeType = new Attribute.AttributeType();
+        attributeType.setUuid("8d8718c2-c2cc-11de-8d13-0010c6dffd0f");
+        Attribute personAttribute = new Attribute();
+        personAttribute.setAttributeType(attributeType);
+        personAttribute.setValue("New York");
+        createdPatient.getPerson().getAttributes().add(personAttribute);
+        patientService.updatePatient(DEFAULT_CONFIG_NAME, createdPatient);
+    }
+
     private Provider prepareProvider() {
 
         Person person = new Person();
@@ -424,6 +438,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         assertEquals(createdPatient.getUuid(), patient.getPerson().getPreferredAddress().getAddress2());
         assertEquals(createdPatient.getPerson().getBirthdate().toString(), patient.getPerson().getPreferredAddress().getAddress1());
+        assertEquals(createdPatient.getPerson().getAttributes().get(0).getValue(), patient.getPerson().getPreferredAddress().getAddress3());
         assertEquals(String.format("%staskCreated", MOTECH_ID), patient.getMotechId());
         assertEquals(createdPatient.getPerson().getGender(), patient.getPerson().getGender());
 

@@ -72,8 +72,8 @@ public class Attribute {
             return display;
         }
 
-        public void setDisplay() {
-
+        public void setDisplay(String display) {
+            this.display = display;
         }
 
         public String getUuid() {
