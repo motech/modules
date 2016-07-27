@@ -4,6 +4,7 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Unique;
+
 import java.util.UUID;
 
 /**
@@ -20,6 +21,7 @@ public class ContactMapping {
     @Unique
     private UUID rapidproUUID;
 
+
     public ContactMapping(String externalId, UUID rapidproUUID) {
         this.externalId = externalId;
         this.rapidproUUID = rapidproUUID;
@@ -28,6 +30,7 @@ public class ContactMapping {
     public String getExternalId() {
         return externalId;
     }
+
 
     public UUID getRapidproUUID() {
         return rapidproUUID;
