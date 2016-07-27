@@ -215,9 +215,8 @@ public class CommcareConfigServiceImpl implements CommcareConfigService {
     }
 
     private Map<String, Object> prepareParams(String name) {
-        Map<String, Object> params = new HashMap<>();
-        params.put(EventDataKeys.CONFIG_NAME, name);
-        return params;
+        boolean isConfigVerified = verifyConfig(configs.getByName(name));
+        return prepareParams(name, isConfigVerified);
     }
 
     private Map<String, Object> prepareParams(String name, boolean isConfigVerified) {
