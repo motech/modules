@@ -8,8 +8,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.commcare.client.CommCareAPIHttpClient;
 import org.motechproject.commcare.config.Config;
 import org.motechproject.commcare.config.Configs;
-import org.motechproject.commcare.events.constants.EventDataKeys;
-import org.motechproject.commcare.events.constants.EventSubjects;
 import org.motechproject.commcare.exception.CommcareConnectionFailureException;
 import org.motechproject.commcare.service.CommcareDataForwardingEndpointService;
 import org.motechproject.commcare.util.ConfigsUtils;
@@ -28,6 +26,9 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.motechproject.commcare.events.constants.EventDataKeys.CONFIG_NAME;
+import static org.motechproject.commcare.events.constants.EventDataKeys.CONFIG_VERIFIED;
+import static org.motechproject.commcare.events.constants.EventSubjects.CONFIG_UPDATED;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CommcareConfigServiceImplTest {
@@ -131,9 +132,9 @@ public class CommcareConfigServiceImplTest {
 
     private MotechEvent prepareConfigUpdateEvent(String name, boolean isConfigVerified) {
         Map<String, Object> params = new HashMap<>();
-        params.put(EventDataKeys.CONFIG_NAME, name);
-        params.put(EventDataKeys.CONFIG_VERIFIED, isConfigVerified);
+        params.put(CONFIG_NAME, name);
+        params.put(CONFIG_VERIFIED, isConfigVerified);
 
-        return new MotechEvent(EventSubjects.CONFIG_UPDATED, params);
+        return new MotechEvent(CONFIG_UPDATED, params);
     }
 }
