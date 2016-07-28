@@ -326,6 +326,11 @@ public class OpenMRSActionProxyServiceTest {
         assertEquals(programEnrollment, programEnrollmentCaptor.getValue());
     }
 
+    @Test
+    public void shouldGetUuidFromPostActionParameters(){
+
+    }
+
     private Person createTestPerson() {
         Person person = new Person();
 
