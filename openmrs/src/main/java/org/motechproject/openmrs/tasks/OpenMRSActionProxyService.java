@@ -1,6 +1,7 @@
 package org.motechproject.openmrs.tasks;
 
 import org.joda.time.DateTime;
+import org.motechproject.openmrs.domain.Patient;
 
 import java.util.Map;
 
@@ -63,13 +64,13 @@ public interface OpenMRSActionProxyService {
      * @param locationForMotechId  the location name for identifiers
      * @param identifiers  the additional identifiers to be stored to patient
      */
-    void createPatient(String configName, String givenName, String middleName, String familyName, String address1,
-                       String address2, String address3, String address4, String address5, String address6,
-                       String cityVillage, String stateProvince, String country, String postalCode,
-                       String countyDistrict, String latitude, String longitude, DateTime startDate, DateTime endDate,
-                       DateTime birthDate, Boolean birthDateEstimated, String gender, Boolean dead,
-                       String causeOfDeathUUID, String motechId, String locationForMotechId,
-                       Map<String, String> identifiers);
+    Patient createPatient(String configName, String givenName, String middleName, String familyName, String address1,
+                          String address2, String address3, String address4, String address5, String address6,
+                          String cityVillage, String stateProvince, String country, String postalCode,
+                          String countyDistrict, String latitude, String longitude, DateTime startDate, DateTime endDate,
+                          DateTime birthDate, Boolean birthDateEstimated, String gender, Boolean dead,
+                          String causeOfDeathUUID, String motechId, String locationForMotechId,
+                          Map<String, String> identifiers);
 
     /**
       * Updates a patient with the given {@patientUuid}. Configuration with the given {@code configName} will be used

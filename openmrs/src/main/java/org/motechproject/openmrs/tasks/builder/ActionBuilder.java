@@ -90,6 +90,7 @@ public class ActionBuilder {
 
     private ActionEventRequest buildCreatePatientAction(String configName) {
         SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
+        SortedSet<ActionParameterRequest> postActionParameters = new TreeSet<>();
         int order = 0;
         String serviceMethod = "createPatient";
 
@@ -101,12 +102,15 @@ public class ActionBuilder {
                 order++));
         parameters.add(prepareParameter(Keys.IDENTIFIERS, DisplayNames.IDENTIFIERS, MAP, false, order));
 
+        postActionParameters.add(prepareParameter(Keys.UUID, DisplayNames.UUID, false, 0));
+
         return new ActionEventRequestBuilder()
                 .setDisplayName(getDisplayName(CREATE_PATIENT, configName))
                 .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
                 .setServiceMethod(serviceMethod)
                 .setSubject(getSubject(serviceMethod, configName))
                 .setActionParameters(parameters)
+                .setPostActionParameters(postActionParameters)
                 .createActionEventRequest();
     }
 
