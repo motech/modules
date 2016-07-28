@@ -172,11 +172,6 @@ public class ProgramEnrollment {
         this.enrolled = enrolled;
     }
 
-    //todo: MOTECH-2203
-    public String getEnrolledString() {
-        return enrolled ? ENROLLED : NOT_ENROLLED;
-    }
-
     public StateStatus getCurrentState() {
         StateStatus result = null;
 

@@ -45,7 +45,6 @@ import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PATIENT_MOTE
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PATIENT_UUID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PERSON_UUID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PROGRAM_ENROLLMENT;
-import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PROGRAM_ENROLLMENT_UUID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PROGRAM_NAME;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PROVIDER;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.RELATIONSHIP;
@@ -220,22 +219,21 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
             }
         }
 
-        ProgramEnrollmentListResult filteredProgramEnrollments = prepareProgramEnrollmentListResult(programEnrollments, lookupFields, lookupFields.get(PROGRAM_NAME), lookupFields.get(ACTIVE_PROGRAM));
+        ProgramEnrollmentListResult filteredProgramEnrollments = prepareProgramEnrollmentListResult(programEnrollments, lookupFields);
 
         return filteredProgramEnrollments;
     }
 
-    private ProgramEnrollmentListResult prepareProgramEnrollmentListResult(List<ProgramEnrollment> programEnrollments, Map<String, String> lookupFields, String programName, String activeProgram) {
+    private ProgramEnrollmentListResult prepareProgramEnrollmentListResult(List<ProgramEnrollment> programEnrollments, Map<String, String> lookupFields) {
         ProgramEnrollmentListResult result = new ProgramEnrollmentListResult();
-        String programEnrollmentUuid = lookupFields.get(PROGRAM_ENROLLMENT_UUID);
-        String personUuid = lookupFields.get(PERSON_UUID);
+        String programName = lookupFields.get(PROGRAM_NAME);
+        String patientUuid = lookupFields.get(PATIENT_UUID);
 
-        result.setResults(filterPrograms(programEnrollments, programName, activeProgram));
-        result.setNumberOfPrograms(result.getResults().size());
+        result.setResults(filterPrograms(programEnrollments, programName, lookupFields.get(ACTIVE_PROGRAM)));
 
         if (result.getNumberOfPrograms() > 1) {
-            LOGGER.warn(String.format("Multiple program enrollment found with the \"%s\" UUID and the person" +
-                    "with the \"%s\" UUID.", programEnrollmentUuid, personUuid));
+            LOGGER.warn(String.format("Multiple program enrollment found with the patient UUID \"%s\" and program name" +
+                    " \"%s\".", patientUuid, programName));
         }
         return result;
     }
@@ -247,13 +245,6 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         programEnrollmentsList = filterByProgramName(programEnrollments, programName);
 
         result = isActiveProgram(activeProgram) ? filterByActiveProgramOnly(programEnrollmentsList) : programEnrollmentsList;
-
-        if (result.size() == 0) {
-            ProgramEnrollment programEnrollment  = new ProgramEnrollment();
-            programEnrollment.setEnrolled(false);
-
-            result.add(programEnrollment);
-        }
 
         return result;
     }

@@ -10,22 +10,18 @@ public class ProgramEnrollmentListResult {
 
     private List<ProgramEnrollment> results;
 
-    private Integer numberOfPrograms;
-
     public List<ProgramEnrollment> getResults() {
         return results;
     }
 
+    public ProgramEnrollment getFirstObject() { return results.get(0); }
+
     public Integer getNumberOfPrograms() {
-        return numberOfPrograms;
+        return results.size();
     }
 
     public void setResults(List<ProgramEnrollment> results) {
         this.results = results;
-    }
-
-    public void setNumberOfPrograms(Integer size) {
-        numberOfPrograms = size;
     }
 
     @Override
