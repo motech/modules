@@ -219,22 +219,33 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
             }
         }
 
-        ProgramEnrollmentListResult filteredProgramEnrollments = prepareProgramEnrollmentListResult(programEnrollments, lookupFields);
+        ProgramEnrollmentListResult filteredProgramEnrollments = prepareProgramEnrollmentListResult(programEnrollments, lookupFields, lookupName);
 
         return filteredProgramEnrollments;
     }
 
-    private ProgramEnrollmentListResult prepareProgramEnrollmentListResult(List<ProgramEnrollment> programEnrollments, Map<String, String> lookupFields) {
+    private ProgramEnrollmentListResult prepareProgramEnrollmentListResult(List<ProgramEnrollment> programEnrollments, Map<String, String> lookupFields, String lookupName) {
         ProgramEnrollmentListResult result = new ProgramEnrollmentListResult();
         String programName = lookupFields.get(PROGRAM_NAME);
-        String patientUuid = lookupFields.get(PATIENT_UUID);
 
         result.setResults(filterPrograms(programEnrollments, programName, lookupFields.get(ACTIVE_PROGRAM)));
 
         if (result.getNumberOfPrograms() > 1) {
-            LOGGER.warn(String.format("Multiple program enrollment found with the patient UUID \"%s\" and program name" +
-                    " \"%s\".", patientUuid, programName));
+            switch(lookupName) {
+                case BY_MOTECH_ID_AND_PROGRAM_NAME: {
+                    String motechId = lookupFields.get(PATIENT_MOTECH_ID);
+                    LOGGER.warn(String.format("Multiple program enrollment found with the patient MOTECH Id \"%s\" and program name" + " \"%s\".", motechId, programName));
+                    break;
+                }
+                case BY_UUID_AMD_PROGRAM_NAME: {
+                    String patientUuid = lookupFields.get(PATIENT_UUID);
+                    LOGGER.warn(String.format("Multiple program enrollment found with the patient UUID \"%s\" and program name" + " \"%s\".", patientUuid, programName));
+                    break;
+                }
+                default:
+            }
         }
+
         return result;
     }
 
