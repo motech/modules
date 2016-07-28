@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.commcare.events.constants.EventSubjects;
-import org.motechproject.commcare.tasks.imports.ImportFormActionServiceImpl;
+import org.motechproject.commcare.service.imports.ImportFormActionService;
 import org.motechproject.event.MotechEvent;
 
 import java.util.Arrays;
@@ -28,7 +28,7 @@ public class ImportFormActionEventHandlerTest {
     private static final String CONFIG_NAME = "ConfigOne";
 
     @Mock
-    private ImportFormActionServiceImpl importFormActionService;
+    private ImportFormActionService importFormActionService;
 
     private ImportFormActionEventHandler eventHandler;
 

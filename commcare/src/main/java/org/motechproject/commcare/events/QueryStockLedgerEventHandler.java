@@ -1,7 +1,8 @@
 package org.motechproject.commcare.events;
 
+import org.joda.time.DateTime;
 import org.motechproject.commcare.events.constants.EventSubjects;
-import org.motechproject.commcare.tasks.QueryStockLedgerActionService;
+import org.motechproject.commcare.service.QueryStockLedgerActionService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +45,8 @@ public class QueryStockLedgerEventHandler {
 
         String caseId = (String) parameters.get(CASE_ID);
         String sectionId = (String) parameters.get(SECTION_ID);
-        String startDate = (String) parameters.get(START_DATE);
-        String endDate = (String) parameters.get(END_DATE);
+        DateTime startDate = (DateTime) parameters.get(START_DATE);
+        DateTime endDate = (DateTime) parameters.get(END_DATE);
         Map<String, Object> extraData = (Map<String, Object>) parameters.get(EXTRA_DATA);
 
         queryStockLedgerActionService.queryStockLedger(configName, caseId, sectionId, startDate, endDate, extraData);

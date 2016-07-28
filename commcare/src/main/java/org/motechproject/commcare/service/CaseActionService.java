@@ -1,4 +1,4 @@
-package org.motechproject.commcare.tasks;
+package org.motechproject.commcare.service;
 
 import org.motechproject.commcare.domain.CaseTask;
 

@@ -24,7 +24,7 @@ import static org.motechproject.tasks.domain.mds.ParameterType.DATE;
  */
 public class ImportFormActionBuilder implements ActionBuilder {
 
-    private static final String IMPORT_FORM_ACTION_SERVICE = "org.motechproject.commcare.tasks.imports.ImportFormActionService";
+    private static final String COMMCARE_ACTION_PROXY_SERVICE = "org.motechproject.commcare.tasks.CommcareActionProxyService";
 
     private CommcareConfigService configService;
 
@@ -73,7 +73,7 @@ public class ImportFormActionBuilder implements ActionBuilder {
 
             ActionEventRequestBuilder actionBuilder = new ActionEventRequestBuilder()
                     .setDisplayName(displayName)
-                    .setServiceInterface(IMPORT_FORM_ACTION_SERVICE)
+                    .setServiceInterface(COMMCARE_ACTION_PROXY_SERVICE)
                     .setServiceMethod(serviceMethod)
                     .setSubject(EventSubjects.IMPORT_FORMS + "." + configName)
                     .setActionParameters(parameters);

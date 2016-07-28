@@ -1,4 +1,4 @@
-package org.motechproject.commcare.tasks;
+package org.motechproject.commcare.service;
 
 import org.joda.time.DateTime;
 
@@ -20,12 +20,6 @@ public interface QueryStockLedgerActionService {
      * @param startDate  the beginning of the allowed period for transaction dates
      * @param endDate  the finish of the allowed period for transaction dates
      * @param extraData   the extra data that will be sent with stock transaction as an event
-     */
-    void queryStockLedger(String configName, String caseId, String sectionId, String startDate, String endDate, Map<String, Object> extraData);
-
-    /**
-     * Same as {@link #queryStockLedger(String, String, String, String, String, Map)} queryStockLedger} but
-     * handles dates in {@link DateTime} type.
      */
     void queryStockLedger(String configName, String caseId, String sectionId, DateTime startDate, DateTime endDate, Map<String, Object> extraData);
 }

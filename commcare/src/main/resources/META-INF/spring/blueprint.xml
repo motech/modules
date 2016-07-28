@@ -65,14 +65,8 @@
     <osgi:service id="commcareFormImporterFactoryOsgi" ref="commcareFormImporterFactory"
                   interface="javax.servlet.http.HttpSessionListener" />
 
-    <osgi:service ref="caseActionService"
-                  interface="org.motechproject.commcare.tasks.CaseActionService" />
-
-    <osgi:service ref="queryStockLedgerActionService"
-                  interface="org.motechproject.commcare.tasks.QueryStockLedgerActionService" />
-
-    <osgi:service ref="importFormActionService"
-                  interface="org.motechproject.commcare.tasks.imports.ImportFormActionService" />
+    <osgi:service ref="commcareActionProxyService"
+                  interface="org.motechproject.commcare.tasks.CommcareActionProxyService" />
 
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>
 
