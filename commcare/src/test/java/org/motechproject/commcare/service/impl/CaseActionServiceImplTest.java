@@ -1,4 +1,4 @@
-package org.motechproject.commcare.tasks;
+package org.motechproject.commcare.service.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
