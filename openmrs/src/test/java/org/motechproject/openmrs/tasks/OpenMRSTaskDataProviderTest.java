@@ -365,7 +365,7 @@ public class OpenMRSTaskDataProviderTest {
 
         ProgramEnrollmentListResult actual = (ProgramEnrollmentListResult) object;
 
-        assertEquals(0, actual.getResults().size());
+        assertTrue(actual.getResults().isEmpty());
 
         verifyZeroInteractions(programEnrollmentService);
     }
@@ -468,7 +468,7 @@ public class OpenMRSTaskDataProviderTest {
 
         ProgramEnrollmentListResult actual = (ProgramEnrollmentListResult) object;
 
-        assertEquals(0, actual.getResults().size());
+        assertTrue(actual.getResults().isEmpty());
     }
 
     @Test
@@ -490,7 +490,7 @@ public class OpenMRSTaskDataProviderTest {
 
         ProgramEnrollmentListResult actual = (ProgramEnrollmentListResult) object;
 
-        assertEquals(0, actual.getResults().size());
+        assertTrue(actual.getResults().isEmpty());
     }
 
     private List<Relationship> prepareRelationship() {
