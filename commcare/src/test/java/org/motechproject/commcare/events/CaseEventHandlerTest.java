@@ -1,15 +1,12 @@
 package org.motechproject.commcare.events;
 
-import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.motechproject.commcare.domain.CaseTask;
 import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.commcare.events.constants.EventSubjects;
-import org.motechproject.commcare.service.CommcareCaseService;
 import org.motechproject.commcare.tasks.CaseActionServiceImpl;
 import org.motechproject.event.MotechEvent;
 
@@ -17,25 +14,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
 public class CaseEventHandlerTest {
 
-    @Mock
-    private CommcareCaseService commcareCaseService;
-
     private MotechEvent createCaseEvent;
     private MotechEvent updateCaseEvent;
 
+    private static final String CONFIG_NAME = "config1";
     private static final String CASE_ID = "123";
     private static final String CASE_TYPE = "pregnancy";
     private static final String OWNER_ID = "111";
     private static final String CASE_NAME = "Register Pregnancy";
 
+    private static final Class<Map<String, Object>> MAP_CLASS = (Class<Map<String, Object>>)(Class)Map.class;
+    private static final ArgumentCaptor<Map<String, Object>> CAPTOR = ArgumentCaptor.forClass(MAP_CLASS);
+
+    @Mock
     private CaseActionServiceImpl caseActionService;
 
     private CaseEventHandler eventHandler;
@@ -44,7 +40,6 @@ public class CaseEventHandlerTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        caseActionService = new CaseActionServiceImpl(commcareCaseService);
         eventHandler = new CaseEventHandler(caseActionService);
 
         Map<String, String> caseProperties = new HashMap<>();
@@ -57,67 +52,66 @@ public class CaseEventHandlerTest {
         createCaseParams.put(EventDataKeys.CASE_NAME, CASE_NAME);
         createCaseParams.put(EventDataKeys.FIELD_VALUES, caseProperties);
 
-        createCaseEvent = new MotechEvent(EventSubjects.CREATE_CASE + ".config1", createCaseParams);
+        createCaseEvent = new MotechEvent(EventSubjects.CREATE_CASE + '.' + CONFIG_NAME, createCaseParams);
 
         Map<String, Object> updateCaseParams = new HashMap<>();
         updateCaseParams.put(EventDataKeys.CASE_ID, CASE_ID);
         updateCaseParams.put(EventDataKeys.OWNER_ID, OWNER_ID);
         updateCaseParams.put(EventDataKeys.FIELD_VALUES, caseProperties);
 
-        updateCaseEvent = new MotechEvent(EventSubjects.UPDATE_CASE + ".config1", updateCaseParams);
+        updateCaseEvent = new MotechEvent(EventSubjects.UPDATE_CASE + '.' + CONFIG_NAME, updateCaseParams);
     }
 
     @Test
-    public void shouldHandleCreateCaseEvent() {
+    public void shouldCallCreateCaseEvent() {
         eventHandler.createCase(createCaseEvent);
 
-        ArgumentCaptor<CaseTask> captor = ArgumentCaptor.forClass(CaseTask.class);
+        verify(caseActionService).createCase(
+                eq(CONFIG_NAME),
+                eq(CASE_TYPE),
+                eq(OWNER_ID),
+                eq(CASE_NAME),
+                CAPTOR.capture()
+        );
 
-        verify(commcareCaseService).uploadCase(captor.capture(), eq("config1"));
-        CaseTask actual = captor.getValue();
+        Map<String, Object> actual = CAPTOR.getValue();
 
-        assertNotNull(actual.getCaseId());
-        assertTrue(StringUtils.isNotBlank(actual.getCaseId()));
-        assertEquals(CASE_TYPE, actual.getCreateTask().getCaseType());
-        assertEquals(CASE_NAME, actual.getCreateTask().getCaseName());
-        assertEquals(OWNER_ID, actual.getCreateTask().getOwnerId());
-        assertEquals(2, actual.getUpdateTask().getFieldValues().size());
+        assertEquals(2, actual.size());
     }
 
     @Test
-    public void shouldHandleUpdateCaseEventWithoutClosingCase() {
+    public void shouldCallUpdateCaseEventWithoutClosingCase() {
         eventHandler.updateCase(updateCaseEvent);
 
-        ArgumentCaptor<CaseTask> captor = ArgumentCaptor.forClass(CaseTask.class);
+        verify(caseActionService).updateCase(
+                eq(CONFIG_NAME),
+                eq(CASE_ID),
+                eq(OWNER_ID),
+                eq(null),
+                CAPTOR.capture()
+        );
 
-        verify(commcareCaseService).uploadCase(captor.capture(), eq("config1"));
-        CaseTask actual = captor.getValue();
+        Map<String, Object> actual = CAPTOR.getValue();
 
-        assertNotNull(actual.getCaseId());
-        assertTrue(StringUtils.isNotBlank(actual.getCaseId()));
-        assertEquals(CASE_ID, actual.getCaseId());
-        assertEquals(OWNER_ID, actual.getUpdateTask().getOwnerId());
-        assertNull(actual.getCloseTask());
-        assertEquals(2, actual.getUpdateTask().getFieldValues().size());
+        assertEquals(2, actual.size());
     }
 
     @Test
-    public void shouldHandleUpdateCaseEventWithClosingCase() {
+    public void shouldCallUpdateCaseEventWithClosingCase() {
         updateCaseEvent.getParameters().put(EventDataKeys.CLOSE_CASE, true);
-
         eventHandler.updateCase(updateCaseEvent);
 
-        ArgumentCaptor<CaseTask> captor = ArgumentCaptor.forClass(CaseTask.class);
+        verify(caseActionService).updateCase(
+                eq(CONFIG_NAME),
+                eq(CASE_ID),
+                eq(OWNER_ID),
+                eq(true),
+                CAPTOR.capture()
+        );
 
-        verify(commcareCaseService).uploadCase(captor.capture(), eq("config1"));
-        CaseTask actual = captor.getValue();
+        Map<String, Object> actual = CAPTOR.getValue();
 
-        assertNotNull(actual.getCaseId());
-        assertTrue(StringUtils.isNotBlank(actual.getCaseId()));
-        assertEquals(CASE_ID, actual.getCaseId());
-        assertEquals(OWNER_ID, actual.getUpdateTask().getOwnerId());
-        assertTrue(actual.getCloseTask().isClose());
-        assertEquals(2, actual.getUpdateTask().getFieldValues().size());
+        assertEquals(2, actual.size());
     }
 
 }

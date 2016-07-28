@@ -16,6 +16,11 @@ public class CaseActionServiceImpl implements CaseActionService {
 
     private CommcareCaseService caseService;
 
+    @Autowired
+    public CaseActionServiceImpl(CommcareCaseService caseService) {
+        this.caseService = caseService;
+    }
+
     @Override
     public CaseTask createCase(String configName, String caseType, String ownerId, String caseName, Map<String, Object> fieldValues) {
         CaseTask caseTask = new CaseTask();
@@ -60,10 +65,5 @@ public class CaseActionServiceImpl implements CaseActionService {
         caseTask.setUpdateTask(updateTask);
 
         caseService.uploadCase(caseTask, configName);
-    }
-
-    @Autowired
-    public CaseActionServiceImpl(CommcareCaseService caseService) {
-        this.caseService = caseService;
     }
 }
