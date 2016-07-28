@@ -169,8 +169,8 @@ public class MRSTaskIntegrationBundle1_12IT extends AbstractTaskBundleIT {
         taskConfig.addAll(taskConfigStepSortedSet);
 
         Map<String, String> values = new HashMap<>();
-        values.put(Keys.PATIENT_UUID, "{{ad.openMRS.ProgramEnrollment-" + DEFAULT_CONFIG_NAME + "#0.results.0.patient.uuid}}");
-        values.put(Keys.PROGRAM_UUID, "{{ad.openMRS.ProgramEnrollment-" + DEFAULT_CONFIG_NAME + "#0.results.0.program.uuid}}");
+        values.put(Keys.PATIENT_UUID, "{{ad.openMRS.ProgramEnrollment-" + DEFAULT_CONFIG_NAME + "#0.firstObject.patient.uuid}}");
+        values.put(Keys.PROGRAM_UUID, "{{ad.openMRS.ProgramEnrollment-" + DEFAULT_CONFIG_NAME + "#0.firstObject.program.uuid}}");
         values.put(Keys.DATE_ENROLLED, new DateTime("2010-01-16T00:00:00Z").toString());
         values.put(Keys.DATE_COMPLETED, new DateTime("2016-01-16T00:00:00Z").toString());
         values.put(Keys.LOCATION_NAME, locationService.getLocations(DEFAULT_CONFIG_NAME, DEFAULT_LOCATION_NAME).get(0).toString());
@@ -290,6 +290,7 @@ public class MRSTaskIntegrationBundle1_12IT extends AbstractTaskBundleIT {
         List<Lookup> lookupList = new ArrayList<>();
         lookupList.add(new Lookup("openMRS.patient.motechId", MOTECH_ID));
         lookupList.add(new Lookup("openMRS.programName", createdProgramEnrollment.getProgram().getName()));
+        lookupList.add(new Lookup("openMRS.activeProgramOnly", "false"));
         DataSource dataSource = new DataSource(OPENMRS_MODULE_NAME, 4L, 0L, "ProgramEnrollment-" + DEFAULT_CONFIG_NAME, "openMRS.lookup.motechIdAndProgramName", lookupList, false);
         dataSource.setOrder(0);
         return dataSource;

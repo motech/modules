@@ -352,7 +352,7 @@ public class OpenMRSTaskDataProviderTest {
     }
 
     @Test
-    public void shouldReturnNotEnrolledWhenWrongLookupNameForProgramEnrollment() {
+    public void shouldReturnEmptyListWhenWrongLookupNameForProgramEnrollment() {
         String className = ProgramEnrollment.class.getSimpleName();
 
         Map<String, String> lookupFields = new HashMap<>();
@@ -365,9 +365,7 @@ public class OpenMRSTaskDataProviderTest {
 
         ProgramEnrollmentListResult actual = (ProgramEnrollmentListResult) object;
 
-        assertFalse(actual.getResults().get(0).isEnrolled());
-        assertEquals(ProgramEnrollment.NOT_ENROLLED, actual.getResults().get(0).getEnrolledString());
-        assertNull(actual.getResults().get(0).getCurrentState());
+        assertEquals(0, actual.getResults().size());
 
         verifyZeroInteractions(programEnrollmentService);
     }
@@ -452,7 +450,7 @@ public class OpenMRSTaskDataProviderTest {
     }
 
     @Test
-    public void shouldReturnNotEnrolledWhenProgramEnrollmentNotFoundForLookupByUuidAndProgramName() {
+    public void shouldReturnEmptyListWhenProgramEnrollmentNotFoundForLookupByUuidAndProgramName() {
         String className = ProgramEnrollment.class.getSimpleName();
 
         Map<String, String> lookupFields = new HashMap<>();
@@ -470,13 +468,11 @@ public class OpenMRSTaskDataProviderTest {
 
         ProgramEnrollmentListResult actual = (ProgramEnrollmentListResult) object;
 
-        assertFalse(actual.getResults().get(0).isEnrolled());
-        assertEquals(ProgramEnrollment.NOT_ENROLLED, actual.getResults().get(0).getEnrolledString());
-        assertNull(actual.getResults().get(0).getCurrentState());
+        assertEquals(0, actual.getResults().size());
     }
 
     @Test
-    public void shouldReturnNotEnrolledWhenProgramEnrollmentNotFoundForLookupByMotechIdAndProgramName() {
+    public void shouldReturnEmptyListWhenProgramEnrollmentNotFoundForLookupByMotechIdAndProgramName() {
         String className = ProgramEnrollment.class.getSimpleName();
 
         Map<String, String> lookupFields = new HashMap<>();
@@ -494,9 +490,7 @@ public class OpenMRSTaskDataProviderTest {
 
         ProgramEnrollmentListResult actual = (ProgramEnrollmentListResult) object;
 
-        assertFalse(actual.getResults().get(0).isEnrolled());
-        assertEquals(ProgramEnrollment.NOT_ENROLLED, actual.getResults().get(0).getEnrolledString());
-        assertNull(actual.getResults().get(0).getCurrentState());
+        assertEquals(0, actual.getResults().size());
     }
 
     private List<Relationship> prepareRelationship() {
