@@ -8,18 +8,25 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.commcare.client.CommCareAPIHttpClient;
 import org.motechproject.commcare.config.Config;
 import org.motechproject.commcare.config.Configs;
+import org.motechproject.commcare.events.constants.EventDataKeys;
+import org.motechproject.commcare.events.constants.EventSubjects;
 import org.motechproject.commcare.exception.CommcareConnectionFailureException;
 import org.motechproject.commcare.service.CommcareDataForwardingEndpointService;
 import org.motechproject.commcare.util.ConfigsUtils;
-import org.motechproject.event.listener.EventRelay;
 import org.motechproject.config.SettingsFacade;
 import org.motechproject.config.domain.MotechSettings;
+import org.motechproject.event.MotechEvent;
+import org.motechproject.event.listener.EventRelay;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -71,6 +78,26 @@ public class CommcareConfigServiceImplTest {
     }
 
     @Test
+    public void shouldSyncNewConfiguration() {
+        String configName = "newName";
+
+        Config config = configService.create();
+        config.setName(configName);
+
+        List<Config> configList = new ArrayList<>();
+        configList.add(config);
+        Configs configs = new Configs(configList);
+
+        configService.setConfigs(configs);
+
+        when(configService.verifyConfig(config)).thenReturn(true);
+
+        configService.syncConfig(configName);
+
+        verify(eventRelay).sendEventMessage(eq(prepareConfigUpdateEvent(configName, true)));
+    }
+
+    @Test
     public void shouldSaveNewConfiguration() throws CommcareConnectionFailureException {
 
         Config config = configService.create();
@@ -100,5 +127,13 @@ public class CommcareConfigServiceImplTest {
         Config savedConfig = configService.updateConfig(updatedConfig, oldName);
 
         assertEquals("UpdatedOne", savedConfig.getName());
+    }
+
+    private MotechEvent prepareConfigUpdateEvent(String name, boolean isConfigVerified) {
+        Map<String, Object> params = new HashMap<>();
+        params.put(EventDataKeys.CONFIG_NAME, name);
+        params.put(EventDataKeys.CONFIG_VERIFIED, isConfigVerified);
+
+        return new MotechEvent(EventSubjects.CONFIG_UPDATED, params);
     }
 }
