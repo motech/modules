@@ -174,7 +174,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
     @Test
     public void testOpenMRSPatientDataSourceAndCreatePatientAction() throws InterruptedException, IOException, PatientNotFoundException {
-        updatePatient();
+        updatePatientWithNewAttribute();
 
         Long taskID = createPatientTestTask();
 
@@ -345,13 +345,17 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         return new Patient(person, MOTECH_ID, location);
     }
 
-    private void updatePatient() {
+    private void updatePatientWithNewAttribute() {
+
         Attribute.AttributeType attributeType = new Attribute.AttributeType();
-        attributeType.setUuid("8d8718c2-c2cc-11de-8d13-0010c6dffd0f");
+        attributeType.setUuid("8d8718c2-c2cc-11de-8d13-0010c6dffd0f"); // this UUID indicates BirthPlace person Attribute on OpenMRS server
+
         Attribute personAttribute = new Attribute();
         personAttribute.setAttributeType(attributeType);
         personAttribute.setValue("New York");
+
         createdPatient.getPerson().getAttributes().add(personAttribute);
+
         patientService.updatePatient(DEFAULT_CONFIG_NAME, createdPatient);
     }
 
