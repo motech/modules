@@ -366,6 +366,7 @@ public class OpenMRSTaskDataProviderTest {
         ProgramEnrollmentListResult actual = (ProgramEnrollmentListResult) object;
 
         assertTrue(actual.getResults().isEmpty());
+        assertEquals(0, actual.getNumberOfPrograms());
 
         verifyZeroInteractions(programEnrollmentService);
     }
@@ -400,7 +401,7 @@ public class OpenMRSTaskDataProviderTest {
     @Test
     public void shouldReturnOnlyActiveProgramEnrollmentForPatientUuidAndProgramName() {
         String className = ProgramEnrollment.class.getSimpleName();
-        Integer expectedNumberOfPrograms = 1;
+
         Map<String, String> lookupFields = new HashMap<>();
         lookupFields.put(PATIENT_UUID, DEFAULT_UUID);
         lookupFields.put(PROGRAM_NAME, PROGRAM_DEFAULT_NAME);
@@ -420,7 +421,7 @@ public class OpenMRSTaskDataProviderTest {
         ProgramEnrollmentListResult actual = (ProgramEnrollmentListResult) object;
 
         assertEquals(expected.get(0), actual.getResults().get(0));
-        assertEquals(expectedNumberOfPrograms, actual.getNumberOfPrograms());
+        assertEquals(1, actual.getNumberOfPrograms());
     }
 
     @Test
@@ -469,6 +470,7 @@ public class OpenMRSTaskDataProviderTest {
         ProgramEnrollmentListResult actual = (ProgramEnrollmentListResult) object;
 
         assertTrue(actual.getResults().isEmpty());
+        assertEquals(0, actual.getNumberOfPrograms());
     }
 
     @Test
@@ -491,6 +493,7 @@ public class OpenMRSTaskDataProviderTest {
         ProgramEnrollmentListResult actual = (ProgramEnrollmentListResult) object;
 
         assertTrue(actual.getResults().isEmpty());
+        assertEquals(0, actual.getNumberOfPrograms());
     }
 
     private List<Relationship> prepareRelationship() {
