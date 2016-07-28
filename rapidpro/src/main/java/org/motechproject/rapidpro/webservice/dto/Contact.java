@@ -1,21 +1,25 @@
 package org.motechproject.rapidpro.webservice.dto;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.joda.time.DateTime;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-
 /**
  * Representation of a Rapidpro Contact.
  */
+
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class Contact {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Contact implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private UUID uuid;
@@ -29,8 +33,8 @@ public class Contact {
     private boolean failed;
     @JsonProperty("modified_on")
     private DateTime modifiedOn;
+    @JsonIgnore
     private String phone;
-    private List<String> groups;
 
     public Contact() {
         this.urns = new ArrayList<>();
@@ -130,14 +134,6 @@ public class Contact {
         this.phone = phone;
     }
 
-    public List<String> getGroups() {
-        return groups;
-    }
-
-    public void setGroups(List<String> groups) {
-        this.groups = groups;
-    }
-
     @Override
     public String toString() {
         return "Contact{" +
@@ -151,7 +147,6 @@ public class Contact {
                 ", failed=" + failed +
                 ", modifiedOn=" + modifiedOn +
                 ", phone='" + phone + '\'' +
-                ", groups=" + groups +
                 '}';
     }
 }
