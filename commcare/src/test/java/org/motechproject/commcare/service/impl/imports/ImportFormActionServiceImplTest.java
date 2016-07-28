@@ -1,4 +1,4 @@
-package org.motechproject.commcare.tasks.imports;
+package org.motechproject.commcare.service.impl.imports;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -7,11 +7,9 @@ import org.mockito.Mock;
 import org.motechproject.commcare.pull.CommcareFormImporterImpl;
 import org.motechproject.commcare.pull.CommcareTasksFormImporterFactory;
 import org.motechproject.commcare.service.CommcareFormService;
+import org.motechproject.commcare.testutil.RequestTestUtils;
 import org.motechproject.commons.api.Range;
 import org.motechproject.event.listener.EventRelay;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -20,11 +18,6 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ImportFormActionServiceImplTest {
-
-    private static final List<DateTime> DATES = Arrays.asList(
-            new DateTime(2012, 11, 1, 10, 20, 33),
-            new DateTime(2012, 12, 24, 1, 1, 59)
-    );
 
     private static final String CONFIG_NAME = "ConfigOne";
 
@@ -51,7 +44,7 @@ public class ImportFormActionServiceImplTest {
 
     @Test
     public void shouldCallImporterMethodsWithCorrectArguments() {
-        Range<DateTime> range = new Range<>(DATES.get(0), DATES.get(1));
+        Range<DateTime> range = new Range<>(RequestTestUtils.START_DATE, RequestTestUtils.END_DATE);
 
         when(importerFactory.getCommcareFormImporter()).thenReturn(importer);
 
@@ -59,7 +52,7 @@ public class ImportFormActionServiceImplTest {
         doNothing().when(importer).startImport(range, CONFIG_NAME);
 
 
-        importFormActionService.importForms(CONFIG_NAME, DATES.get(0), DATES.get(1));
+        importFormActionService.importForms(CONFIG_NAME, RequestTestUtils.START_DATE, RequestTestUtils.END_DATE);
 
         verify(importer).countForImport(eq(range), eq(CONFIG_NAME));
         verify(importer).startImport(eq(range), eq(CONFIG_NAME));
@@ -68,7 +61,7 @@ public class ImportFormActionServiceImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void shouldNotImportFormsWithIncorrectDateRange() {
         when(importerFactory.getCommcareFormImporter()).thenReturn(new CommcareFormImporterImpl(eventRelay, formService));
-        importFormActionService.importForms(CONFIG_NAME, DATES.get(1), DATES.get(0));
+        importFormActionService.importForms(CONFIG_NAME, RequestTestUtils.END_DATE, RequestTestUtils.START_DATE);
     }
 
 }
