@@ -20,13 +20,13 @@ public class ContactMapperServiceImpl implements ContactMapperService {
 
     @Override
     public UUID getRapidproUUIDFromExternalId(String externalId) throws NoMappingException {
-        return getMapper(externalId).getRapidproUUID();
+        return getMapping(externalId).getRapidproUUID();
     }
 
     @Override
     public void delete(String externalId) throws NoMappingException {
-        ContactMapping mapper = getMapper(externalId);
-        contactMapperDataService.delete(mapper);
+        ContactMapping mapping = getMapping(externalId);
+        contactMapperDataService.delete(mapping);
     }
 
     @Override
@@ -37,19 +37,19 @@ public class ContactMapperServiceImpl implements ContactMapperService {
     @Override
     public boolean exists(String externalId) {
         try {
-            getMapper(externalId);
+            getMapping(externalId);
             return true;
         } catch (NoMappingException e) {
             return false;
         }
     }
 
-    private ContactMapping getMapper(String externalId) throws NoMappingException {
-        ContactMapping mapper = contactMapperDataService.findByExternalId(externalId);
-        if (mapper == null) {
+    private ContactMapping getMapping(String externalId) throws NoMappingException {
+        ContactMapping mapping = contactMapperDataService.findByExternalId(externalId);
+        if (mapping == null) {
             throw new NoMappingException(externalId);
         } else {
-            return mapper;
+            return mapping;
         }
     }
 }

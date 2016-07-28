@@ -1,22 +1,28 @@
 package org.motechproject.rapidpro.util;
 
+import org.apache.bval.jsr303.util.IOUtils;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.type.TypeReference;
 import org.motechproject.rapidpro.exception.JsonUtilException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  * Utility class for serializing and deserializing objects to or from JSON
  */
 public final class JsonUtils {
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final String ERROR_SERIALIZING = "Error serializing object of type: ";
     private static final String ERROR_DESERIALIZING = "Error deserializing object of type: ";
+
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    static {
+        MAPPER.configure(SerializationConfig.Feature.WRITE_NULL_MAP_VALUES, false);
+    }
 
     private JsonUtils() {
     }
@@ -55,14 +61,8 @@ public final class JsonUtils {
             throw new JsonUtilException(ERROR_SERIALIZING + o.getClass().getSimpleName(), e);
 
         } finally {
-            closeOutputStream(buffer);
+            IOUtils.closeQuietly(buffer);
         }
-    }
-
-    private static void closeOutputStream(OutputStream os) {
-        try {
-            os.close();
-        } catch (IOException e) { }
     }
 
     /**
