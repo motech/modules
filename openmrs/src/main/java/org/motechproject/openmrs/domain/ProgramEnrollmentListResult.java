@@ -16,7 +16,7 @@ public class ProgramEnrollmentListResult {
 
     public ProgramEnrollment getFirstObject() { return results.get(0); }
 
-    public Integer getNumberOfPrograms() {
+    public int getNumberOfPrograms() {
         return results.size();
     }
 
