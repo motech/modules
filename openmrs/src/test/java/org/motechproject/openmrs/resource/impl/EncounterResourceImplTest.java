@@ -97,7 +97,7 @@ public class EncounterResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePath("/encounter?v=full");
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(responseJson));
+                .thenReturn(getResponseFromFile(responseJson));
 
         Encounter created = encounterResource.createEncounter(config, encounter);
 
@@ -116,7 +116,7 @@ public class EncounterResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/encounter?patient={id}&v=full", patientId);
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(responseJson));
+                .thenReturn(getResponseFromFile(responseJson));
 
         EncounterListResult result = encounterResource.queryForAllEncountersByPatientId(config, patientId);
 

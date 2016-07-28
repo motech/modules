@@ -7,12 +7,14 @@ import org.motechproject.commons.api.DataProvider;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.openmrs.domain.Encounter;
+import org.motechproject.openmrs.domain.GeneratedIdentifier;
 import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.ProgramEnrollment;
 import org.motechproject.openmrs.domain.ProgramEnrollmentListResult;
 import org.motechproject.openmrs.domain.Provider;
 import org.motechproject.openmrs.domain.Relationship;
 import org.motechproject.openmrs.service.OpenMRSEncounterService;
+import org.motechproject.openmrs.service.OpenMRSGeneratedIdentifierService;
 import org.motechproject.openmrs.service.OpenMRSPatientService;
 import org.motechproject.openmrs.service.OpenMRSProgramEnrollmentService;
 import org.motechproject.openmrs.service.OpenMRSProviderService;
@@ -37,6 +39,8 @@ import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_MOTECH_ID
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_UUID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_UUID_AMD_PROGRAM_NAME;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.ENCOUNTER;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.IDENTIFIER;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.IDENTIFIER_SOURCE_NAME;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.MOTECH_ID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.NAME;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PACKAGE_ROOT;
@@ -58,7 +62,8 @@ import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.UUID;
 @Service("openMRSTaskDataProvider")
 public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSTaskDataProvider.class);
-    private static final List<Class<?>> SUPPORTED_CLASSES = Arrays.asList(Patient.class, Provider.class, Encounter.class, Relationship.class, ProgramEnrollment.class);
+    private static final List<Class<?>> SUPPORTED_CLASSES = Arrays.asList(Patient.class, Provider.class, Encounter.class,
+            Relationship.class, ProgramEnrollment.class, GeneratedIdentifier.class);
 
     private OpenMRSEncounterService encounterService;
     private OpenMRSPatientService patientService;
@@ -66,20 +71,22 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     private OpenMRSTaskDataProviderBuilder dataProviderBuilder;
     private OpenMRSRelationshipService relationshipService;
     private OpenMRSProgramEnrollmentService programEnrollmentService;
+    private OpenMRSGeneratedIdentifierService generatedIdentifierService;
     private BundleContext bundleContext;
     private ServiceRegistration serviceRegistration;
 
     @Autowired
-    public OpenMRSTaskDataProvider(OpenMRSTaskDataProviderBuilder taskDataProviderBuilder,
-                                   OpenMRSEncounterService encounterService, OpenMRSPatientService patientService,
-                                   OpenMRSProviderService providerService, OpenMRSRelationshipService relationshipService,
-                                   OpenMRSProgramEnrollmentService programEnrollmentService, BundleContext bundleContext) {
+    public OpenMRSTaskDataProvider(OpenMRSTaskDataProviderBuilder taskDataProviderBuilder, OpenMRSEncounterService encounterService,
+                                   OpenMRSPatientService patientService, OpenMRSProviderService providerService,
+                                   OpenMRSRelationshipService relationshipService, OpenMRSProgramEnrollmentService programEnrollmentService,
+                                   OpenMRSGeneratedIdentifierService generatedIdentifierService, BundleContext bundleContext) {
         this.encounterService = encounterService;
         this.patientService = patientService;
         this.providerService = providerService;
         this.dataProviderBuilder = taskDataProviderBuilder;
         this.relationshipService = relationshipService;
         this.programEnrollmentService = programEnrollmentService;
+        this.generatedIdentifierService = generatedIdentifierService;
         this.bundleContext = bundleContext;
 
         generateProvider(null);
@@ -137,8 +144,9 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
                     break;
                 case RELATIONSHIP: obj = getRelationship(lookupFields, configName);
                     break;
-                case PROGRAM_ENROLLMENT:
-                    obj = getProgramEnrollments(lookupName, lookupFields, configName);
+                case PROGRAM_ENROLLMENT: obj = getProgramEnrollments(lookupName, lookupFields, configName);
+                    break;
+                case IDENTIFIER: obj = getIdentifier(lookupFields, configName);
             }
         }
 
@@ -221,6 +229,10 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         checkNumberOfPrograms(filteredProgramEnrollments, lookupFields, lookupName);
 
         return filteredProgramEnrollments;
+    }
+
+    private GeneratedIdentifier getIdentifier(Map<String, String> lookupFields, String configName) {
+        return generatedIdentifierService.getLatestIdentifier(configName, lookupFields.get(IDENTIFIER_SOURCE_NAME));
     }
 
     private ProgramEnrollmentListResult prepareProgramEnrollmentListResult(List<ProgramEnrollment> programEnrollments, Map<String, String> lookupFields) {
