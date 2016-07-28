@@ -27,7 +27,7 @@ import static org.motechproject.tasks.domain.mds.ParameterType.UNICODE;
  */
 public class CaseActionBuilder implements ActionBuilder {
 
-    private static final String ACTION_CASE_SERVICE = "org.motechproject.commcare.tasks.CaseActionService";
+    private static final String COMMCARE_ACTION_PROXY_SERVICE = "org.motechproject.commcare.tasks.CommcareActionProxyService";
 
     private CommcareConfigService configService;
 
@@ -96,7 +96,7 @@ public class CaseActionBuilder implements ActionBuilder {
             String displayName = DisplayNameHelper.buildDisplayName(DisplayNames.CREATE_CASE, configName);
             ActionEventRequestBuilder actionBuilder = new ActionEventRequestBuilder()
                     .setDisplayName(displayName)
-                    .setServiceInterface(ACTION_CASE_SERVICE)
+                    .setServiceInterface(COMMCARE_ACTION_PROXY_SERVICE)
                     .setServiceMethod(serviceMethod)
                     .setSubject(EventSubjects.CREATE_CASE + "." + configName)
                     .setActionParameters(parameters)
@@ -146,7 +146,7 @@ public class CaseActionBuilder implements ActionBuilder {
             displayName = DisplayNameHelper.buildDisplayName(DisplayNames.UPDATE_CASE, configName);
             actionBuilder = new ActionEventRequestBuilder()
                     .setDisplayName(displayName)
-                    .setServiceInterface(ACTION_CASE_SERVICE)
+                    .setServiceInterface(COMMCARE_ACTION_PROXY_SERVICE)
                     .setServiceMethod(serviceMethod)
                     .setSubject(EventSubjects.UPDATE_CASE + "." + configName)
                     .setActionParameters(parameters);

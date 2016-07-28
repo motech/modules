@@ -84,6 +84,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     private static final String COMMCARE_CHANNEL_NAME = "org.motechproject.commcare";
     private static final String TEST_INTERFACE = "org.motechproject.commcare.tasks.action.CommcareValidatingChannel";
     private static final String VERSION = "0.25";
+    private static final String COMMCARE_ACTION_PROXY_SERVICE = "org.motechproject.commcare.tasks.CommcareActionProxyService";
 
     private static final Integer MAX_RETRIES_BEFORE_FAIL = 20;
     private static final Integer WAIT_TIME = 2000;
@@ -351,7 +352,6 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     }
 
     private ActionEvent prepareStockLedgerAction() {
-        String serviceInterface = "org.motechproject.commcare.tasks.QueryStockLedgerActionService";
         String serviceMethod = "queryStockLedger";
 
         SortedSet<ActionParameter> parameters = new TreeSet<>();
@@ -411,7 +411,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         ActionEventBuilder actionBuilder = new ActionEventBuilder()
                 .setDisplayName(displayName)
-                .setServiceInterface(serviceInterface)
+                .setServiceInterface(COMMCARE_ACTION_PROXY_SERVICE)
                 .setServiceMethod(serviceMethod)
                 .setSubject(EventSubjects.QUERY_STOCK_LEDGER + "." + config.getName())
                 .setActionParameters(parameters);
@@ -419,7 +419,6 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     }
 
     private ActionEvent prepareCreateCaseAction() {
-        String serviceInterface = "org.motechproject.commcare.tasks.CaseActionService";
         String serviceMethod = "createCase";
 
         SortedSet<ActionParameter> parameters = new TreeSet<>();
@@ -471,7 +470,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         ActionEventBuilder actionBuilder = new ActionEventBuilder()
                 .setDisplayName(displayName)
-                .setServiceInterface(serviceInterface)
+                .setServiceInterface(COMMCARE_ACTION_PROXY_SERVICE)
                 .setServiceMethod(serviceMethod)
                 .setSubject(EventSubjects.CREATE_CASE + "." + config.getName())
                 .setActionParameters(parameters);
@@ -479,7 +478,6 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     }
 
     private ActionEvent prepareUpdateCaseAction() {
-        String serviceInterface = "org.motechproject.commcare.tasks.CaseActionService";
         String serviceMethod = "updateCase";
 
         SortedSet<ActionParameter> parameters = new TreeSet<>();
@@ -531,7 +529,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         ActionEventBuilder actionBuilder = new ActionEventBuilder()
                 .setDisplayName(displayName)
-                .setServiceInterface(serviceInterface)
+                .setServiceInterface(COMMCARE_ACTION_PROXY_SERVICE)
                 .setServiceMethod(serviceMethod)
                 .setSubject(EventSubjects.UPDATE_CASE + "." + config.getName())
                 .setActionParameters(parameters);
