@@ -169,8 +169,8 @@ public class MRSTaskIntegrationBundle1_12IT extends AbstractTaskBundleIT {
         taskConfig.addAll(taskConfigStepSortedSet);
 
         Map<String, String> values = new HashMap<>();
-        values.put(Keys.PATIENT_UUID, "{{ad.openMRS.ProgramEnrollment-" + DEFAULT_CONFIG_NAME + "#0.patient.uuid}}");
-        values.put(Keys.PROGRAM_UUID, "{{ad.openMRS.ProgramEnrollment-" + DEFAULT_CONFIG_NAME + "#0.program.uuid}}");
+        values.put(Keys.PATIENT_UUID, "{{ad.openMRS.ProgramEnrollment-" + DEFAULT_CONFIG_NAME + "#0.firstObject.patient.uuid}}");
+        values.put(Keys.PROGRAM_UUID, "{{ad.openMRS.ProgramEnrollment-" + DEFAULT_CONFIG_NAME + "#0.firstObject.program.uuid}}");
         values.put(Keys.DATE_ENROLLED, new DateTime("2010-01-16T00:00:00Z").toString());
         values.put(Keys.DATE_COMPLETED, new DateTime("2016-01-16T00:00:00Z").toString());
         values.put(Keys.LOCATION_NAME, locationService.getLocations(DEFAULT_CONFIG_NAME, DEFAULT_LOCATION_NAME).get(0).toString());
@@ -212,11 +212,15 @@ public class MRSTaskIntegrationBundle1_12IT extends AbstractTaskBundleIT {
     private void createProgramEnrollmentTestData() {
         createdPatient = patientService.createPatient(DEFAULT_CONFIG_NAME, preparePatient());
 
+        createProgramEnrollment(new DateTime("2010-01-18T00:00:00Z"), null);
+        createProgramEnrollment(new DateTime("2010-01-16T00:00:00Z"), new DateTime("2016-01-16T00:00:00Z"));
+
+    }
+
+    private void createProgramEnrollment(DateTime dateEnrolled, DateTime dateCompleted) {
         Program program = new Program();
         program.setUuid("187af646-373b-4459-8114-4724d7e07fd5");
 
-        DateTime dateEnrolled = new DateTime("2010-01-16T00:00:00Z");
-        DateTime dateCompleted = new DateTime("2016-01-16T00:00:00Z");
         DateTime stateStartDate = new DateTime("2011-01-16T00:00:00Z");
 
         Location location = locationService.getLocations(DEFAULT_CONFIG_NAME, DEFAULT_LOCATION_NAME).get(0);
@@ -231,8 +235,14 @@ public class MRSTaskIntegrationBundle1_12IT extends AbstractTaskBundleIT {
         ProgramEnrollment programEnrollment = new ProgramEnrollment();
         programEnrollment.setProgram(program);
         programEnrollment.setPatient(createdPatient);
-        programEnrollment.setDateEnrolled(dateEnrolled.toDate());
-        programEnrollment.setDateCompleted(dateCompleted.toDate());
+
+        if (dateEnrolled != null) {
+            programEnrollment.setDateEnrolled(dateEnrolled.toDate());
+        }
+        if (dateCompleted != null) {
+            programEnrollment.setDateCompleted(dateCompleted.toDate());
+        }
+
         programEnrollment.setLocation(location);
         programEnrollment.setStates(Collections.singletonList(stateStatus));
 
@@ -290,6 +300,7 @@ public class MRSTaskIntegrationBundle1_12IT extends AbstractTaskBundleIT {
         List<Lookup> lookupList = new ArrayList<>();
         lookupList.add(new Lookup("openMRS.patient.motechId", MOTECH_ID));
         lookupList.add(new Lookup("openMRS.programName", createdProgramEnrollment.getProgram().getName()));
+        lookupList.add(new Lookup("openMRS.activeProgramOnly", "true"));
         DataSource dataSource = new DataSource(OPENMRS_MODULE_NAME, 4L, 0L, "ProgramEnrollment-" + DEFAULT_CONFIG_NAME, "openMRS.lookup.motechIdAndProgramName", lookupList, false);
         dataSource.setOrder(0);
         return dataSource;
@@ -299,16 +310,26 @@ public class MRSTaskIntegrationBundle1_12IT extends AbstractTaskBundleIT {
         List<ProgramEnrollment> programEnrollmentList = programEnrollmentService
                 .getProgramEnrollmentByPatientUuid(DEFAULT_CONFIG_NAME, createdProgramEnrollment.getPatient().getUuid());
 
-        assertEquals(2, programEnrollmentList.size());
+        assertEquals(3, programEnrollmentList.size());
 
         for (ProgramEnrollment programEnrollment : programEnrollmentList) {
-            if (!createdProgramEnrollment.getUuid().equals(programEnrollment.getUuid())) {
+            if (!createdProgramEnrollment.getUuid().equals(programEnrollment.getUuid()) && !isProgramActive(programEnrollment)) {
                 assertEquals(createdProgramEnrollment.getPatient().getUuid(), programEnrollment.getPatient().getUuid());
                 assertEquals(createdProgramEnrollment.getProgram().getUuid(), programEnrollment.getProgram().getUuid());
                 assertEquals(createdProgramEnrollment.getDateEnrolled(), programEnrollment.getDateEnrolled());
                 assertEquals(createdProgramEnrollment.getDateCompleted(), programEnrollment.getDateCompleted());
             }
         }
+    }
+
+    private boolean isProgramActive(ProgramEnrollment programEnrollment) {
+        boolean result = false;
+
+        if(programEnrollment.getDateCompleted() == null) {
+            result = true;
+        }
+
+        return result;
     }
 
     private void checkIfProgramEnrollmentWasUpdatedProperly() {
