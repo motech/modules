@@ -1,47 +1,33 @@
 package org.motechproject.commcare.events;
 
-import com.google.gson.JsonParseException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.commcare.events.constants.EventSubjects;
-import org.motechproject.commcare.request.StockTransactionRequest;
-import org.motechproject.commcare.service.CommcareStockTransactionService;
 import org.motechproject.commcare.tasks.QueryStockLedgerActionServiceImpl;
 import org.motechproject.commcare.testutil.RequestTestUtils;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.event.listener.EventRelay;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.motechproject.commcare.util.CommcareStockTransactionTestUtils.prepareStockTransactionsList;
-import static org.motechproject.commcare.testutil.RequestTestUtils.prepareRequest;
+import static org.motechproject.commcare.testutil.RequestTestUtils.CASE_ID;
+import static org.motechproject.commcare.testutil.RequestTestUtils.END_DATE;
+import static org.motechproject.commcare.testutil.RequestTestUtils.SECTION_ID;
+import static org.motechproject.commcare.testutil.RequestTestUtils.START_DATE;
 
 public class QueryStockLedgerEventHandlerTest {
 
     private static final String CONFIG_NAME = "FooConfig";
 
     @Mock
-    private CommcareStockTransactionService stockTransactionService;
-
-    @Mock
-    private EventRelay eventRelay;
-
-    private StockTransactionRequest request;
-
     private QueryStockLedgerActionServiceImpl queryStockLedgerActionService;
 
     private QueryStockLedgerEventHandler eventHandler;
@@ -49,52 +35,41 @@ public class QueryStockLedgerEventHandlerTest {
     @Before
     public void setUp() {
         initMocks(this);
-        queryStockLedgerActionService = new QueryStockLedgerActionServiceImpl(stockTransactionService, eventRelay);
+
         eventHandler = new QueryStockLedgerEventHandler(queryStockLedgerActionService);
-        request = prepareRequest();
     }
 
     @Test
-    public void shouldHandleEventWithoutExtraDataProperly() {
-        testEventHandling(false);
+    public void shouldCallQueryStockLedgerWithoutExtraDataProperly() {
+        testQueryStockLedger(false);
     }
 
     @Test
-    public void shouldHandleEventWithExtraDataProperly() {
-        testEventHandling(true);
+    public void shouldCallQueryStockLedgerWithExtraDataProperly() {
+        testQueryStockLedger(true);
     }
 
-    @Test(expected = JsonParseException.class)
-    public void shouldFailToHandleEventIfResponseIsMalformed() throws Exception {
-
-        when(stockTransactionService.getStockTransactions(eq(request), eq(CONFIG_NAME)))
-                .thenThrow(new JsonParseException("Failure"));
-
-        try {
-            MotechEvent event = prepareEvent(false);
-            eventHandler.handleEvent(event);
-        } finally {
-            verify(eventRelay, never()).sendEventMessage(any(MotechEvent.class));
-        }
-    }
-
-    private void testEventHandling(boolean withExtraData) {
-        ArgumentCaptor<MotechEvent> eventCaptor = ArgumentCaptor.forClass(MotechEvent.class);
-        MotechEvent expectedEventOne = prepareExpectedEventOne(withExtraData);
-        MotechEvent expectedEventTwo = prepareExpectedEventTwo(withExtraData);
-
-        when(stockTransactionService.getStockTransactions(eq(request), eq(CONFIG_NAME)))
-                .thenReturn(prepareStockTransactionsList());
+    private void testQueryStockLedger(boolean withExtraData) {
+        Class<Map<String, Object>> mapClass = (Class<Map<String, Object>>)(Class)Map.class;
+        ArgumentCaptor<Map<String, Object>> captor = ArgumentCaptor.forClass(mapClass);
 
         MotechEvent event = prepareEvent(withExtraData);
         eventHandler.handleEvent(event);
 
-        verify(eventRelay, times(2)).sendEventMessage(eventCaptor.capture());
+        verify(queryStockLedgerActionService).queryStockLedger(
+                eq(CONFIG_NAME),
+                eq(CASE_ID),
+                eq(SECTION_ID),
+                eq(START_DATE),
+                eq(END_DATE),
+                captor.capture()
+        );
 
-        List<MotechEvent> capturedEvents = eventCaptor.getAllValues();
+        Map<String, Object> actual = captor.getValue();
 
-        assertEquals(expectedEventOne, capturedEvents.get(0));
-        assertEquals(expectedEventTwo, capturedEvents.get(1));
+        if (withExtraData) {
+            assertEquals(2, actual.size());
+        }
     }
 
     private MotechEvent prepareEvent(boolean withExtraData) {
@@ -108,7 +83,7 @@ public class QueryStockLedgerEventHandlerTest {
         params.put(EventDataKeys.END_DATE, RequestTestUtils.END_DATE);
 
         if (withExtraData) {
-            Map<String, String> extraData = new HashMap<>();
+            Map<String, Object> extraData = new HashMap<>();
 
             extraData.put("key1", "val1");
             extraData.put("key2", "val2");
@@ -117,45 +92,5 @@ public class QueryStockLedgerEventHandlerTest {
         }
 
         return new MotechEvent(subject, params);
-    }
-
-    private MotechEvent prepareExpectedEventOne(boolean withExtraData) {
-
-        Map<String, Object> params = new LinkedHashMap<>();
-
-        params.put(EventDataKeys.PRODUCT_ID, "p1");
-        params.put(EventDataKeys.PRODUCT_NAME, null);
-        params.put(EventDataKeys.QUANTITY, 0.0);
-        params.put(EventDataKeys.SECTION_ID, "s1");
-        params.put(EventDataKeys.STOCK_ON_HAND, 13.0);
-        params.put(EventDataKeys.TRANSACTION_DATE, "2015-08-10T14:59:55.029219");
-        params.put(EventDataKeys.TYPE, "soh");
-
-        if (withExtraData) {
-            params.put("key1", "val1");
-            params.put("key2", "val2");
-        }
-
-        return new MotechEvent(EventSubjects.RECEIVED_STOCK_TRANSACTION + "." + CONFIG_NAME, params);
-    }
-
-    private MotechEvent prepareExpectedEventTwo(boolean withExtraData) {
-
-        Map<String, Object> params = new LinkedHashMap<>();
-
-        params.put(EventDataKeys.PRODUCT_ID, "p3");
-        params.put(EventDataKeys.PRODUCT_NAME, null);
-        params.put(EventDataKeys.QUANTITY, 0.0);
-        params.put(EventDataKeys.SECTION_ID, "s1");
-        params.put(EventDataKeys.STOCK_ON_HAND, 17.0);
-        params.put(EventDataKeys.TRANSACTION_DATE, "2015-08-10T14:59:55.029219");
-        params.put(EventDataKeys.TYPE, "soh");
-
-        if (withExtraData) {
-            params.put("key1", "val1");
-            params.put("key2", "val2");
-        }
-
-        return new MotechEvent(EventSubjects.RECEIVED_STOCK_TRANSACTION + "." + CONFIG_NAME, params);
     }
 }

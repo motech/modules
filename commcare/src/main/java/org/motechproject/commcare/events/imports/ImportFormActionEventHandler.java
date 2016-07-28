@@ -22,6 +22,11 @@ public class ImportFormActionEventHandler {
 
     private ImportFormActionService importFormActionService;
 
+    @Autowired
+    public ImportFormActionEventHandler(ImportFormActionService importFormActionService) {
+        this.importFormActionService = importFormActionService;
+    }
+
     /**
      * Handles the {@code EventSubjects.IMPORT_FORMS} events. This will import commcare forms for specific configuration
      *
@@ -36,10 +41,5 @@ public class ImportFormActionEventHandler {
         DateTime endDate = (DateTime) parameters.get(END_DATE);
 
         importFormActionService.importForms(configName, startDate, endDate);
-    }
-
-    @Autowired
-    public ImportFormActionEventHandler(ImportFormActionService importFormActionService) {
-        this.importFormActionService = importFormActionService;
     }
 }

@@ -16,6 +16,11 @@ public class ImportFormActionServiceImpl implements ImportFormActionService {
 
     private CommcareTasksFormImporterFactory importerFactory;
 
+    @Autowired
+    public ImportFormActionServiceImpl(CommcareTasksFormImporterFactory importerFactory) {
+        this.importerFactory = importerFactory;
+    }
+
     @Override
     public void importForms(String configName, DateTime startDate, DateTime endDate) {
         CommcareFormImporterImpl importer = importerFactory.getCommcareFormImporter();
@@ -27,10 +32,5 @@ public class ImportFormActionServiceImpl implements ImportFormActionService {
         LOGGER.info("{} commcare forms to be imported.", formsToImport);
 
         importer.startImport(dateRange, configName);
-    }
-
-    @Autowired
-    public ImportFormActionServiceImpl(CommcareTasksFormImporterFactory importerFactory) {
-        this.importerFactory = importerFactory;
     }
 }

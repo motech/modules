@@ -21,6 +21,11 @@ public class CaseEventHandler {
 
     private CaseActionService caseActionService;
 
+    @Autowired
+    public CaseEventHandler(CaseActionService caseActionService) {
+        this.caseActionService = caseActionService;
+    }
+
     @MotechListener(subjects = EventSubjects.CREATE_CASE + ".*")
     public void createCase(MotechEvent event) {
         String configName = EventSubjects.getConfigName(event.getSubject());
@@ -45,10 +50,5 @@ public class CaseEventHandler {
         Boolean closeCase = (Boolean) parameters.get(EventDataKeys.CLOSE_CASE);
 
         caseActionService.updateCase(configName, caseId, ownerId, closeCase, fieldValues);
-    }
-
-    @Autowired
-    public CaseEventHandler(CaseActionService caseActionService) {
-        this.caseActionService = caseActionService;
     }
 }

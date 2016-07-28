@@ -25,6 +25,11 @@ public class QueryStockLedgerEventHandler {
 
     private QueryStockLedgerActionService queryStockLedgerActionService;
 
+    @Autowired
+    public QueryStockLedgerEventHandler(QueryStockLedgerActionService queryStockLedgerActionService) {
+        this.queryStockLedgerActionService = queryStockLedgerActionService;
+    }
+
     /**
      * Handles the {@code EventSubjects.QUERY_STOCK_LEDGER} events. This will result in fetching stock transactions from
      * the CommCareHQ server(based on the event parameters) and then sending motech event for every parsed stock
@@ -44,10 +49,5 @@ public class QueryStockLedgerEventHandler {
         Map<String, Object> extraData = (Map<String, Object>) parameters.get(EXTRA_DATA);
 
         queryStockLedgerActionService.queryStockLedger(configName, caseId, sectionId, startDate, endDate, extraData);
-    }
-
-    @Autowired
-    public QueryStockLedgerEventHandler(QueryStockLedgerActionService queryStockLedgerActionService) {
-        this.queryStockLedgerActionService = queryStockLedgerActionService;
     }
 }
