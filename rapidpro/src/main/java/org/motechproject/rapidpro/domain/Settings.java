@@ -8,6 +8,14 @@ public class Settings {
     private String apiKey;
     private String version;
 
+    public Settings() {
+    }
+
+    public Settings(String apiKey, String version) {
+        this.apiKey = apiKey;
+        this.version = version;
+    }
+
     public String getApiKey() {
         return apiKey;
     }
