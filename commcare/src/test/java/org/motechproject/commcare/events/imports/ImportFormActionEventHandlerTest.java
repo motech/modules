@@ -1,17 +1,15 @@
 package org.motechproject.commcare.events.imports;
 
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.commcare.events.constants.EventSubjects;
 import org.motechproject.commcare.service.imports.ImportFormActionService;
+import org.motechproject.commcare.testutil.RequestTestUtils;
 import org.motechproject.event.MotechEvent;
 
-import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.mockito.Matchers.eq;
@@ -19,11 +17,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ImportFormActionEventHandlerTest {
-
-    private static final List<DateTime> DATES = Arrays.asList(
-            new DateTime(2012, 11, 1, 10, 20, 33),
-            new DateTime(2012, 12, 24, 1, 1, 59)
-    );
 
     private static final String CONFIG_NAME = "ConfigOne";
 
@@ -46,8 +39,8 @@ public class ImportFormActionEventHandlerTest {
 
         verify(importFormActionService).importForms(
                 eq(CONFIG_NAME),
-                eq(DATES.get(0)),
-                eq(DATES.get(1))
+                eq(RequestTestUtils.START_DATE),
+                eq(RequestTestUtils.END_DATE)
         );
     }
 
@@ -58,8 +51,8 @@ public class ImportFormActionEventHandlerTest {
 
         verify(importFormActionService).importForms(
                 eq(CONFIG_NAME),
-                eq(DATES.get(1)),
-                eq(DATES.get(0))
+                eq(RequestTestUtils.END_DATE),
+                eq(RequestTestUtils.START_DATE)
         );
     }
 
@@ -68,11 +61,11 @@ public class ImportFormActionEventHandlerTest {
 
         Map<String, Object> params = new LinkedHashMap<>();
         if (correctDataRange) {
-            params.put(EventDataKeys.START_DATE, DATES.get(0));
-            params.put(EventDataKeys.END_DATE, DATES.get(1));
+            params.put(EventDataKeys.START_DATE, RequestTestUtils.START_DATE);
+            params.put(EventDataKeys.END_DATE, RequestTestUtils.END_DATE);
         } else {
-            params.put(EventDataKeys.START_DATE, DATES.get(1));
-            params.put(EventDataKeys.END_DATE, DATES.get(0));
+            params.put(EventDataKeys.START_DATE, RequestTestUtils.END_DATE);
+            params.put(EventDataKeys.END_DATE, RequestTestUtils.START_DATE);
         }
 
         return new MotechEvent(subject, params);
