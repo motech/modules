@@ -264,7 +264,7 @@
               "fieldKey": "firstObject.currentState.state.uuid"
             },
             {
-              "displayName": "openMRS.programEnrollment.moreThanOneProgram",
+              "displayName": "openMRS.programEnrollment.numberOfPrograms",
               "fieldKey": "numberOfPrograms"
             }
           ]

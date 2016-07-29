@@ -139,8 +139,6 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
                     break;
                 case PROGRAM_ENROLLMENT:
                     obj = getProgramEnrollments(lookupName, lookupFields, configName);
-
-
             }
         }
 
@@ -254,10 +252,8 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     }
 
     private List<ProgramEnrollment> filterPrograms(List<ProgramEnrollment> programEnrollments, String programName, String activeProgram) {
-        List<ProgramEnrollment> programEnrollmentsList;
+        List<ProgramEnrollment> programEnrollmentsList = filterByProgramName(programEnrollments, programName);
         List<ProgramEnrollment> result;
-
-        programEnrollmentsList = filterByProgramName(programEnrollments, programName);
 
         result = isActiveProgram(activeProgram) ? filterByActiveProgramOnly(programEnrollmentsList) : programEnrollmentsList;
 
