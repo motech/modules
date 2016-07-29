@@ -3,6 +3,7 @@ package org.motechproject.http.agent.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.http.HttpException;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.http.agent.components.AsynchronousCall;
 import org.motechproject.http.agent.components.SynchronousCall;
@@ -82,7 +83,7 @@ public class HttpAgentImpl implements HttpAgent {
 
     @Override
     public ResponseEntity<?> executeWithReturnTypeSync(String url, Object data,
-            Method method) {
+            Method method) throws HttpException {
         Map<String, Object> parameters = constructParametersForReturnType(url, data,
                 method, null, null);
         return sendMessageWithReturnTypeSync(parameters);
@@ -90,7 +91,7 @@ public class HttpAgentImpl implements HttpAgent {
 
     @Override
     public ResponseEntity<?> executeWithReturnTypeSync(String url, Object data,
-            Method method, Integer retryCount) {
+            Method method, Integer retryCount) throws HttpException {
         Map<String, Object> parameters = constructParametersForReturnType(url, data,
                 method, retryCount, null);
         return sendMessageWithReturnTypeSync(parameters);
@@ -98,7 +99,7 @@ public class HttpAgentImpl implements HttpAgent {
 
     @Override
     public ResponseEntity<?> executeWithReturnTypeSync(String url, Object data,
-            Method method, Integer retryCount, Long retryInterval) {
+            Method method, Integer retryCount, Long retryInterval) throws HttpException {
         Map<String, Object> parameters = constructParametersForReturnType(url, data,
                 method, retryCount, retryInterval);
         return sendMessageWithReturnTypeSync(parameters);
@@ -148,8 +149,8 @@ public class HttpAgentImpl implements HttpAgent {
         synchronousCall.send(motechEvent);
     }
 
-    private ResponseEntity<?> sendMessageWithReturnTypeSync(
-            Map<String, Object> parameters) {
+    private ResponseEntity<?> sendMessageWithReturnTypeSync (
+            Map<String, Object> parameters) throws HttpException {
         MotechEvent motechEvent = new MotechEvent(
                 EventSubjects.SYNC_HTTP_REQUEST_RET_TYPE, parameters);
         return synchronousCall.sendWithReturnType(motechEvent);
