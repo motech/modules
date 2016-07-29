@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -91,10 +92,11 @@ public class CommcareConfigServiceImplTest {
 
         configService.setConfigs(configs);
 
-        when(configService.verifyConfig(config)).thenReturn(true);
+        when(commCareAPIHttpClient.verifyConnection(any())).thenReturn(true);
 
         configService.syncConfig(configName);
 
+        verify(commCareAPIHttpClient).verifyConnection(any());
         verify(eventRelay).sendEventMessage(eq(prepareConfigUpdateEvent(configName, true)));
     }
 
