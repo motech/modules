@@ -1,5 +1,6 @@
 package org.motechproject.http.agent.components;
 
+import org.apache.http.HttpException;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.http.agent.listener.HttpClientEventListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class SynchronousCall implements CommunicationType {
     }
 
     @Override
-    public ResponseEntity<?> sendWithReturnType(MotechEvent motechEvent) {
+    public ResponseEntity<?> sendWithReturnType(MotechEvent motechEvent) throws HttpException {
         return httpClientEventListener.handleWithReturnType(motechEvent);
     }
 }

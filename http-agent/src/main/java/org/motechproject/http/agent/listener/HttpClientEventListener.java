@@ -107,7 +107,7 @@ public class HttpClientEventListener {
      * @return response from the posted request
      */
     @MotechListener(subjects = EventSubjects.SYNC_HTTP_REQUEST_RET_TYPE)
-    public ResponseEntity<?> handleWithReturnType(MotechEvent motechEvent) {
+    public ResponseEntity<?> handleWithReturnType(MotechEvent motechEvent) throws HttpException {
         Map<String, Object> parameters = motechEvent.getParameters();
         final String url = String.valueOf(parameters.get(EventDataKeys.URL));
         final Object requestData = parameters.get(EventDataKeys.DATA);
@@ -139,7 +139,7 @@ public class HttpClientEventListener {
      * @return response from the posted request
      */
     @MotechListener (subjects = { SendRequestConstants.SEND_REQUEST_SUBJECT })
-    public ResponseEntity<?> handleWithUserPasswordAndReturnType(MotechEvent motechEvent) {
+    public ResponseEntity<?> handleWithUserPasswordAndReturnType(MotechEvent motechEvent) throws HttpException {
         Map<String, Object> parameters = motechEvent.getParameters();
         final String url = (String) parameters.get(SendRequestConstants.URL);
         Object requestData = parameters.get(SendRequestConstants.BODY_PARAMETERS);
@@ -182,7 +182,7 @@ public class HttpClientEventListener {
         return sendRequest(url, entity, Method.POST, restTemplate, retryCount, retryInterval);
     }
 
-    private ResponseEntity<?> sendRequest(String url, Object requestData, Method method, RestTemplate restTemplate, int retryCount, long retryInterval)
+    private ResponseEntity<?> sendRequest(String url, Object requestData, Method method, RestTemplate restTemplate, int retryCount, long retryInterval) throws HttpException
     {
         ResponseEntity<?> retValue = null;
         Callable<ResponseEntity<?>> task = new Callable<ResponseEntity<?>>() {
@@ -210,6 +210,7 @@ public class HttpClientEventListener {
             LOGGER.error("Posting Http request -- Url: {}, Data: {} failed after {} retries at interval of {} ms.",
                     url, String.valueOf(requestData), String.valueOf(retryCount), String.valueOf(retryInterval),
                     e);
+            throw (HttpException) e;
         }
         return retValue;
     }
