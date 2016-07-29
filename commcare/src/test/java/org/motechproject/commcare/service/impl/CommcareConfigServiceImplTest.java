@@ -25,6 +25,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.motechproject.commcare.events.constants.EventDataKeys.CONFIG_NAME;
@@ -86,16 +87,16 @@ public class CommcareConfigServiceImplTest {
         Config config = configService.create();
         config.setName(configName);
 
-        List<Config> configList = new ArrayList<>();
-        configList.add(config);
-        Configs configs = new Configs(configList);
+        Configs mockedConfigs = mock(Configs.class);
+        when(mockedConfigs.getByName(configName)).thenReturn(config);
 
-        configService.setConfigs(configs);
+        configService.setConfigs(mockedConfigs);
 
         when(commCareAPIHttpClient.verifyConnection(any())).thenReturn(true);
 
         configService.syncConfig(configName);
 
+        verify(mockedConfigs).getByName(configName);
         verify(commCareAPIHttpClient).verifyConnection(any());
         verify(eventRelay).sendEventMessage(eq(prepareConfigUpdateEvent(configName, true)));
     }
