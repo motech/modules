@@ -1,6 +1,8 @@
 package org.motechproject.openmrs.resource.impl;
 
 import com.google.gson.JsonObject;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpState;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -39,6 +41,9 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
     @Mock
     private RestOperations restOperations;
 
+    @Mock
+    private HttpClient httpClient;
+
     @Captor
     private ArgumentCaptor<HttpEntity<String>> requestCaptor;
 
@@ -49,7 +54,9 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
     @Before
     public void setUp() {
         initMocks(this);
-        personResource = new PersonResourceImpl(restOperations);
+        when(httpClient.getState()).thenReturn(new HttpState());
+
+        personResource = new PersonResourceImpl(restOperations, httpClient);
         config = ConfigDummyData.prepareConfig("one");
     }
 

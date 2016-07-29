@@ -5,7 +5,6 @@ import org.motechproject.rapidpro.exception.NoMappingException;
 
 import java.util.UUID;
 
-
 /**
  * Service interface for CRUD operations on {@link ContactMapping}
  */

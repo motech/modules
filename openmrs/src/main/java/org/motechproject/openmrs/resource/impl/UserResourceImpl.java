@@ -2,6 +2,7 @@ package org.motechproject.openmrs.resource.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.httpclient.HttpClient;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.Person;
 import org.motechproject.openmrs.domain.Role;
@@ -18,8 +19,8 @@ import org.springframework.web.client.RestOperations;
 public class UserResourceImpl extends BaseResource implements UserResource {
 
     @Autowired
-    public UserResourceImpl(RestOperations restOperations) {
-        super(restOperations);
+    public UserResourceImpl(RestOperations restOperations, HttpClient httpClient) {
+        super(restOperations, httpClient);
     }
 
     @Override
