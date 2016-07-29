@@ -34,7 +34,7 @@ public interface OpenMRSActionProxyService {
     /**
      * Creates a patient with the given params. The required fields are : {@code givenName}, {@code familyName},
      * {@code gender}, {@code motechId}. If the locationName is not provided, the default location will be used.
-     * Configuration with the given {@code configName} will be used while performing this action.
+     * Configuration with the given {@code configName} will be used while performing this action. Returns created Paitent.
      *
      * @param configName  the name of the configuration
      * @param givenName  the given name of person
@@ -63,6 +63,7 @@ public interface OpenMRSActionProxyService {
      * @param motechId  the patient motechId
      * @param locationForMotechId  the location name for identifiers
      * @param identifiers  the additional identifiers to be stored to patient
+     * @return  created Patient
      */
     Patient createPatient(String configName, String givenName, String middleName, String familyName, String address1,
                           String address2, String address3, String address4, String address5, String address6,

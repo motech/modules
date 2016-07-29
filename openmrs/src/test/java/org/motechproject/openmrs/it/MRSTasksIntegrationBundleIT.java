@@ -210,11 +210,6 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         checkIfProviderWasCreatedProperly();
     }
 
-    @Test
-    public void testPostActionParameter(){
-
-    }
-
     private Long createPatientTestTask() {
         TaskTriggerInformation triggerInformation = new TaskTriggerInformation("CREATE SettingsRecord", "data-services", MDS_CHANNEL_NAME,
                 VERSION, TRIGGER_SUBJECT, TRIGGER_SUBJECT);
