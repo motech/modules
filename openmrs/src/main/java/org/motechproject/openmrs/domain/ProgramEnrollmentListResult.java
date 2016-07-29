@@ -14,15 +14,20 @@ public class ProgramEnrollmentListResult {
         return results;
     }
 
-    public ProgramEnrollment getFirstObject() { return results.get(0); }
+    public ProgramEnrollment getFirstObject() {
+
+        if (results.size() > 0) {
+            return results.get(0);
+        } else {
+            return null;
+        }
+    }
 
     public int getNumberOfPrograms() {
         return results.size();
     }
 
-    public void setResults(List<ProgramEnrollment> results) {
-        this.results = results;
-    }
+    public void setResults(List<ProgramEnrollment> results) { this.results = results; }
 
     @Override
     public int hashCode() {
