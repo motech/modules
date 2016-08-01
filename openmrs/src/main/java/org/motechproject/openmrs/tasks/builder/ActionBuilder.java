@@ -102,7 +102,7 @@ public class ActionBuilder {
                 order++));
         parameters.add(prepareParameter(Keys.IDENTIFIERS, DisplayNames.IDENTIFIERS, MAP, false, order));
 
-        postActionParameters.add(prepareParameter(Keys.UUID, DisplayNames.UUID, false, 0));
+        postActionParameters.add(prepareParameter(Keys.UUID, DisplayNames.PATIENT_UUID, false, 0));
 
         return new ActionEventRequestBuilder()
                 .setDisplayName(getDisplayName(CREATE_PATIENT, configName))
