@@ -64,7 +64,17 @@ public class Attribute {
      */
     public static class AttributeType {
 
+        private String display;
+
         private String uuid;
+
+        public String getDisplay() {
+            return display;
+        }
+
+        public void setDisplay(String display) {
+            this.display = display;
+        }
 
         public String getUuid() {
             return uuid;
