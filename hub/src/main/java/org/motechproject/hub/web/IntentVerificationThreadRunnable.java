@@ -1,5 +1,6 @@
 package org.motechproject.hub.web;
 
+import org.apache.http.HttpException;
 import org.motechproject.http.agent.service.HttpAgent;
 import org.motechproject.http.agent.service.Method;
 import org.motechproject.hub.mds.HubSubscription;
@@ -221,6 +222,9 @@ public class IntentVerificationThreadRunnable implements Runnable {
                 statusLookup = SubscriptionStatusLookup.INTENT_VERIFIED;
             }
         } catch (RuntimeException e) {
+            LOGGER.error("An error occurred during intent verification", e);
+            statusLookup = SubscriptionStatusLookup.INTENT_FAILED;
+        } catch (HttpException e ) {
             LOGGER.error("An error occurred during intent verification", e);
             statusLookup = SubscriptionStatusLookup.INTENT_FAILED;
         }
