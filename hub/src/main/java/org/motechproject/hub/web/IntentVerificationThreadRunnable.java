@@ -221,10 +221,7 @@ public class IntentVerificationThreadRunnable implements Runnable {
             } else {
                 statusLookup = SubscriptionStatusLookup.INTENT_VERIFIED;
             }
-        } catch (RuntimeException e) {
-            LOGGER.error("An error occurred during intent verification", e);
-            statusLookup = SubscriptionStatusLookup.INTENT_FAILED;
-        } catch (HttpException e ) {
+        } catch (RuntimeException | HttpException e) {
             LOGGER.error("An error occurred during intent verification", e);
             statusLookup = SubscriptionStatusLookup.INTENT_FAILED;
         }
