@@ -234,11 +234,11 @@
 
         $scope.copyConfig = function(config) {
             if (!config) {
-                $scope.saved = false;
+                $scope.configSaved = false;
                 return;
             }
 
-            $scope.saved = true;
+            $scope.configSaved = true;
             var oldName, copy = {};
 
             copy.name = config.name;
@@ -321,7 +321,7 @@
         $scope.draftChanged = function() {
             $scope.configOutdated = true;
             $scope.clearMessages();
-            $scope.saved=false;
+            $scope.configSaved = false;
         };
 
 
@@ -335,7 +335,7 @@
 
         $scope.addConfig = function() {
             LoadingModal.open();
-            $scope.saved=false;
+            $scope.configSaved = false;
             Configurations.create(
                 function success(data) {
                     $scope.$parent.configurations.configs.push(data);
@@ -383,7 +383,7 @@
             return $scope.validateConfig()
                 && $scope.validateConfigName()
                 && $scope.validateUrlAndDomain()
-                && $scope.saved===false;
+                && $scope.configSaved === false;
         };
 
         $scope.syncConfig = function() {
@@ -584,7 +584,7 @@
             } else {
                 $scope.saveNewConfig(element);
             }
-            $scope.saved=true;
+            $scope.configSaved = true;
         };
 
         $scope.updateConfig = function (config) {
