@@ -43,6 +43,7 @@ public final class DisplayNames {
     public static final String MOTECH_ID = "openMRS.motechId";
     public static final String LOCATION_FOR_MOTECH_ID = "openMRS.location.name";
     public static final String IDENTIFIERS = "openMRS.patient.identifiers";
+    public static final String PERSON_ATTRIBUTES = "openMRS.person.attributes";
 
     //Program Enrollment action
     public static final String PROGRAM_UUID = "openMRS.program.uuid";

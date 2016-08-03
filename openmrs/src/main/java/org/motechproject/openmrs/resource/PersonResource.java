@@ -50,6 +50,16 @@ public interface PersonResource {
     AttributeTypeListResult queryPersonAttributeTypeByName(Config config, String name);
 
     /**
+     * Returns {@code Attribute.AttributeType} of the attribute matching given uuid. The given {@code config} will
+     * be used while performing this action.
+     *
+     * @param config  the configuration to be used while performing this action
+     * @param uuid the uuid of the AttributeType
+     * @return
+     */
+    Attribute.AttributeType queryPersonAttributeTypeByUuid (Config config, String uuid);
+
+    /**
      * Deletes the given attribute for person with given UUID. The given {@code config} will be used while performing
      * this action.
      *
@@ -89,6 +99,16 @@ public interface PersonResource {
     void updatePersonAddress(Config config, String uuid, Person.Address address);
 
     /**
+     * Update the preferred attributes of the person with given UUID. The given {@code config} will be used while performing
+     * this action.
+     *
+     * @param config  the configuration to be used while performing this action
+     * @param uuid  the UUID of the person
+     * @param attribute  the new preferred attribute
+     */
+    void updatePersonAttribute(Config config, String uuid, Attribute attribute);
+
+    /**
      * Deletes the person with the given UUID from the OpenMRs server. The given {@code config} will be used while
      * performing this action.
      *
@@ -96,4 +116,15 @@ public interface PersonResource {
      * @param personUuid  the UUID of the person
      */
     void deletePerson(Config config, String personUuid);
+
+    /**
+     * Checking Person's AttributeType format. If format given by OpenMRS server is other than standard Java types
+     * (format is internal openMRS object), that means attributes JSON must have hydratedObject field, not value.
+     * Person Attribute type can be java.lang.String/Boolean/Integer/Float or Character. Internal OpenMRS formats
+     * are e.g. org.openmrs.Concept or org.openmrs.Person
+     *
+     * @param config  the configuration to be used while performing this action
+     * @param person Person that will be created in OpenMRS.
+     */
+    void checkPersonAttributeTypes(Config config, Person person);
 }
