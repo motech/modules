@@ -1,5 +1,6 @@
 package org.motechproject.hub.service.impl;
 
+import org.apache.http.HttpException;
 import org.motechproject.http.agent.service.HttpAgent;
 import org.motechproject.http.agent.service.Method;
 import org.motechproject.hub.exception.ApplicationErrors;
@@ -229,10 +230,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         String modeString = mode.getMode();
         intentVerificationUrl = replaceParameters(intentVerificationUrl,
                 modeString, topic, uuid);
-        ResponseEntity<String> response = (ResponseEntity<String>) httpAgentImpl
-                .executeWithReturnTypeSync(intentVerificationUrl, entity,
-                        Method.GET, Integer.valueOf(retryCount),
-                        Long.valueOf(retryInterval));
+        ResponseEntity<String> response;
+        try {
+            response = (ResponseEntity<String>) httpAgentImpl
+                    .executeWithReturnTypeSync(intentVerificationUrl, entity,
+                            Method.GET, Integer.valueOf(retryCount),
+                            Long.valueOf(retryInterval));
+        } catch (HttpException e) {
+            response = null;
+        }
 
         // Any status code other than 2xx is invalid response. Also, the
         // response body should match the uuid string passed in the GET call

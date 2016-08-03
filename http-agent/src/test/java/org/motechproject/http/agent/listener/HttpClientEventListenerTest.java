@@ -1,6 +1,7 @@
 package org.motechproject.http.agent.listener;
 
 
+import org.apache.http.HttpException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -200,7 +201,7 @@ public class HttpClientEventListenerTest {
     }
 
     @Test
-    public void shouldUseBasicRestTemplateWhenCredentialsNotProvided() {
+    public void shouldUseBasicRestTemplateWhenCredentialsNotProvided() throws HttpException {
 
         MotechEvent motechEvent = new MotechEvent(SendRequestConstants.SEND_REQUEST_SUBJECT, new HashMap<String, Object>() {{
             put(SendRequestConstants.URL, url);
@@ -215,12 +216,16 @@ public class HttpClientEventListenerTest {
         HTTPActionService httpActionService = mock(HTTPActionService.class);
         HttpComponentsClientHttpRequestFactory httpComponentsClientHttpRequestFactory = mock(HttpComponentsClientHttpRequestFactory.class);
 
+        ResponseEntity<?> exceptedResponseEntity = new ResponseEntity<String>(body, HttpStatus.OK);
 
         when(settings.getProperty(HttpClientEventListener.HTTP_CONNECT_TIMEOUT)).thenReturn("0");
         when(settings.getProperty(HttpClientEventListener.HTTP_READ_TIMEOUT)).thenReturn("0");
         when(restTemplateMock.getRequestFactory()).thenReturn(httpComponentsClientHttpRequestFactory);
 
         request = new HttpEntity<String>(data);
+
+        when(restTemplateMock.exchange(eq(url),eq(HttpMethod.POST),eq(request), eq(String.class))).
+                thenReturn((ResponseEntity<String>) exceptedResponseEntity);
 
         httpClientEventListener = new HttpClientEventListener(restTemplateMock, settings, httpActionService);
 
