@@ -63,7 +63,7 @@ public class DistributionServiceDelegateImplTest {
         hubBaseUrl = "hub/base/url/";
         retryCount = "3";
         retryInterval = "1000";
-        topicUrl = "http://";
+        topicUrl = "topic_url";
         callbackUrl = "callback_url";
         content = "content";
         contentType = MediaType.APPLICATION_XML;
