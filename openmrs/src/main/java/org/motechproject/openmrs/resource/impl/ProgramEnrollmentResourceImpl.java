@@ -51,6 +51,20 @@ public class ProgramEnrollmentResourceImpl extends BaseResource implements Progr
         delete(config, "/programenrollment/{uuid}?purge", uuid);
     }
 
+    @Override
+    public ProgramEnrollment updateBahmniProgramEnrollment(Config config, ProgramEnrollment programEnrollment) {
+        String requestJson = buildGsonWithAdapters().toJson(programEnrollment);
+        String responseJson = postForJson(config, requestJson, "/bahmniprogramenrollment/{uuid}", programEnrollment.getUuid());
+        return (ProgramEnrollment) JsonUtils.readJson(responseJson, ProgramEnrollment.class);
+    }
+
+    @Override
+    public List<ProgramEnrollment> getBahmniProgramEnrollmentByPatientUuid(Config config, String patientUuid) {
+        String responseJson = getJson(config, "/bahmniprogramenrollment?patient={uuid}&v=full", patientUuid);
+        ProgramEnrollmentListResult programEnrollmentListResult = (ProgramEnrollmentListResult) JsonUtils.readJson(responseJson, ProgramEnrollmentListResult.class);
+        return programEnrollmentListResult.getResults();
+    }
+
     private Gson buildGsonWithAdapters() {
         return new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
