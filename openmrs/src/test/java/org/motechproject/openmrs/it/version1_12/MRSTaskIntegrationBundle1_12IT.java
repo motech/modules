@@ -301,6 +301,7 @@ public class MRSTaskIntegrationBundle1_12IT extends AbstractTaskBundleIT {
         lookupList.add(new Lookup("openMRS.patient.motechId", MOTECH_ID));
         lookupList.add(new Lookup("openMRS.programName", createdProgramEnrollment.getProgram().getName()));
         lookupList.add(new Lookup("openMRS.activeProgramOnly", "true"));
+        
         DataSource dataSource = new DataSource(OPENMRS_MODULE_NAME, 4L, 0L, "ProgramEnrollment-" + DEFAULT_CONFIG_NAME, "openMRS.lookup.motechIdAndProgramName", lookupList, false);
         dataSource.setOrder(0);
         return dataSource;
