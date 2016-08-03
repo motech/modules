@@ -43,6 +43,7 @@ public final class Keys {
     public static final String MOTECH_ID = "motechId";
     public static final String LOCATION_FOR_MOTECH_ID = "locationForMotechId";
     public static final String IDENTIFIERS = "identifiers";
+    public static final String UUID = "uuid";
 
     //Program Enrollment action
     public static final String PROGRAM_UUID = "programUuid";
