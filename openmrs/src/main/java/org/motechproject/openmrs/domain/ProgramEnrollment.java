@@ -35,6 +35,8 @@ public class ProgramEnrollment {
     @Expose
     private List<StateStatus> states;
 
+    private List<Attribute> attributes;
+
     private boolean enrolled;
 
     public ProgramEnrollment() {
@@ -162,6 +164,14 @@ public class ProgramEnrollment {
 
     public void setStates(List<StateStatus> states) {
         this.states = states;
+    }
+
+    public List<Attribute> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(List<Attribute> attributes) {
+        this.attributes = attributes;
     }
 
     public boolean isEnrolled() {
