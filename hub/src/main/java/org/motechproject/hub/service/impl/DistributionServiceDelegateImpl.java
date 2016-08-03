@@ -1,5 +1,6 @@
 package org.motechproject.hub.service.impl;
 
+import org.apache.http.HttpException;
 import org.motechproject.http.agent.service.HttpAgent;
 import org.motechproject.http.agent.service.Method;
 import org.motechproject.hub.service.DistributionServiceDelegate;
@@ -92,10 +93,14 @@ public class DistributionServiceDelegateImpl implements
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<String> entity = new HttpEntity<String>("parameters",
                 headers);
-        return (ResponseEntity<String>) httpAgentImpl
-                .executeWithReturnTypeSync(topicUrl, entity, Method.POST,
-                        Integer.valueOf(retryCount),
-                        Long.valueOf(retryInterval));
+        try {
+            return (ResponseEntity<String>) httpAgentImpl
+                    .executeWithReturnTypeSync(topicUrl, entity, Method.POST,
+                            Integer.valueOf(retryCount),
+                            Long.valueOf(retryInterval));
+        } catch (HttpException e) {
+            return null;
+        }
     }
 
     @Override

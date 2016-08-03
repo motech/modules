@@ -9,6 +9,7 @@ import static org.mockito.Matchers.anyMap;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.apache.http.HttpException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,7 +63,7 @@ public class DistributionServiceDelegateImplTest {
         hubBaseUrl = "hub/base/url/";
         retryCount = "3";
         retryInterval = "1000";
-        topicUrl = "topic_url";
+        topicUrl = "http://";
         callbackUrl = "callback_url";
         content = "content";
         contentType = MediaType.APPLICATION_XML;
@@ -79,7 +80,7 @@ public class DistributionServiceDelegateImplTest {
      * Test the method to get the content of an updated topic
      */
     @Test
-    public void testGetContent() {
+    public void testGetContent() throws HttpException {
         when(
                 httpAgent.executeWithReturnTypeSync(anyString(),
                         (HttpEntity<String>) anyObject(), (Method) any(),
