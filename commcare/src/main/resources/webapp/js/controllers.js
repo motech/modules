@@ -396,7 +396,7 @@
                     LoadingModal.close();
                 },
                 function failure(response) {
-                    $scope.syncErrorMessage = response.data;
+                    $scope.syncErrorMessage = response.data.message;
                     $scope.syncSuccess = false;
                     $scope.syncedConfig = $scope.selectedConfig.name;
                     LoadingModal.close();
@@ -546,7 +546,7 @@
                 },
                 function failure(response) {
                     $scope.verifySuccessMessage = '';
-                    $scope.verifyErrorMessage =  response.data;
+                    $scope.verifyErrorMessage =  response.data.message;
                     $scope.connectionVerified = false;
                     LoadingModal.close();
                 });
@@ -571,7 +571,7 @@
                 },
                 function failure(response) {
                     $scope.verifySuccessMessage = '';
-                    $scope.verifyErrorMessage =  response.data;
+                    $scope.verifyErrorMessage =  response.data.message;
                     $scope.connectionVerified = false;
                     LoadingModal.close();
                 });
