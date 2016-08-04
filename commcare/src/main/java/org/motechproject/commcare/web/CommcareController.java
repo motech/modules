@@ -1,5 +1,7 @@
 package org.motechproject.commcare.web;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.motechproject.commcare.exception.CommcareAuthenticationException;
 import org.motechproject.commcare.exception.CommcareConnectionFailureException;
 import org.motechproject.commcare.exception.ConfigurationNotFoundException;
@@ -56,7 +58,12 @@ public abstract class CommcareController {
 
     private String handleException(Exception e) {
         logger.error(e.getMessage(), e);
-        return e.getMessage();
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("message", e.getMessage());
+
+        Gson gson = new Gson();
+        return gson.toJson(jsonObject);
     }
 
 }

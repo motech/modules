@@ -428,7 +428,7 @@
                     LoadingModal.close();
                 },
                 function failure(response) {
-                    $scope.verifyErrorMessage = response.data;
+                    $scope.verifyErrorMessage = response.data.message;
                     $scope.verifySuccessMessage = '';
                     $scope.connectionVerified = false;
                     LoadingModal.close();
