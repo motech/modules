@@ -54,8 +54,8 @@ public interface PersonResource {
      * be used while performing this action.
      *
      * @param config  the configuration to be used while performing this action
-     * @param uuid the uuid of the AttributeType
-     * @return
+     * @param uuid  the uuid of the AttributeType
+     * @return  the attribute type
      */
     Attribute.AttributeType queryPersonAttributeTypeByUuid (Config config, String uuid);
 
@@ -124,7 +124,7 @@ public interface PersonResource {
      * are e.g. org.openmrs.Concept or org.openmrs.Person
      *
      * @param config  the configuration to be used while performing this action
-     * @param person Person that will be created in OpenMRS.
+     * @param person  person that will be created in OpenMRS.
      */
     void checkPersonAttributeTypes(Config config, Person person);
 }
