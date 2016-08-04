@@ -214,6 +214,24 @@
               "fieldKey": "endDate"
             }
           ]
+        },
+        {
+          "displayName": "Generate Identifier [$config.getName()]",
+          "type": "GeneratedIdentifier-$config.getName()",
+          "lookupFields": [
+            {
+              "displayName": "openMRS.lookup.sourceName",
+              "fields": [
+                "openMRS.identifier.sourceName"
+              ]
+            }
+          ],
+          "fields": [
+            {
+              "displayName": "openMRS.identifier.generated",
+              "fieldKey": "value"
+            }
+          ]
         }
         #if( "1.9" != $config.getOpenMrsVersion() ),
         {
