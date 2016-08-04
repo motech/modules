@@ -31,6 +31,8 @@ public final class OpenMRSTasksConstants {
     public static final String RELATIONSHIP_TYPE_UUID = "openMRS.relationshipType.uuid";
     public static final String PROGRAM_NAME = "openMRS.programName";
     public static final String IDENTIFIER_SOURCE_NAME = "openMRS.identifier.sourceName";
+    public static final String PROGRAM_ENROLLMENT_UUID = "openMRS.programEnrollment.uuid";
+    public static final String ACTIVE_PROGRAM = "openMRS.activeProgramOnly";
 
     private OpenMRSTasksConstants() {
 

@@ -14,6 +14,7 @@ import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.Person;
 import org.motechproject.openmrs.domain.Program;
 import org.motechproject.openmrs.domain.ProgramEnrollment;
+import org.motechproject.openmrs.domain.ProgramEnrollmentListResult;
 import org.motechproject.openmrs.domain.Provider;
 import org.motechproject.openmrs.domain.Relationship;
 import org.motechproject.openmrs.domain.RelationshipType;
@@ -28,6 +29,7 @@ import org.motechproject.openmrs.tasks.builder.OpenMRSTaskDataProviderBuilder;
 import org.osgi.framework.BundleContext;
 import org.springframework.core.io.ResourceLoader;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,6 +44,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.ACTIVE_PROGRAM;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_MOTECH_ID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_MOTECH_ID_AND_PROGRAM_NAME;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_PERSON_UUID;
@@ -353,7 +356,7 @@ public class OpenMRSTaskDataProviderTest {
     }
 
     @Test
-    public void shouldReturnNotEnrolledWhenWrongLookupNameForProgramEnrollment() {
+    public void shouldReturnEmptyListWhenWrongLookupNameForProgramEnrollment() {
         String className = ProgramEnrollment.class.getSimpleName();
 
         Map<String, String> lookupFields = new HashMap<>();
@@ -362,13 +365,12 @@ public class OpenMRSTaskDataProviderTest {
 
         Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, "wrongLookupName", lookupFields);
 
-        assertTrue(object instanceof ProgramEnrollment);
+        assertTrue(object instanceof ProgramEnrollmentListResult);
 
-        ProgramEnrollment actual = (ProgramEnrollment) object;
+        ProgramEnrollmentListResult actual = (ProgramEnrollmentListResult) object;
 
-        assertFalse(actual.isEnrolled());
-        assertEquals(ProgramEnrollment.NOT_ENROLLED, actual.getEnrolledString());
-        assertNull(actual.getCurrentState());
+        assertTrue(actual.getResults().isEmpty());
+        assertEquals(0, actual.getNumberOfPrograms());
 
         verifyZeroInteractions(programEnrollmentService);
     }
@@ -381,6 +383,7 @@ public class OpenMRSTaskDataProviderTest {
         lookupFields.put(PATIENT_UUID, DEFAULT_UUID);
         lookupFields.put(PROGRAM_NAME, PROGRAM_DEFAULT_NAME);
 
+
         List<ProgramEnrollment> expected = prepareProgramEnrollments();
         when(programEnrollmentService.getProgramEnrollmentByPatientUuid(eq(CONFIG_NAME), eq(DEFAULT_UUID)))
                 .thenReturn(expected);
@@ -389,14 +392,40 @@ public class OpenMRSTaskDataProviderTest {
 
         verify(programEnrollmentService).getProgramEnrollmentByPatientUuid(eq(CONFIG_NAME), eq(DEFAULT_UUID));
 
-        assertTrue(object instanceof ProgramEnrollment);
+        assertTrue(object instanceof ProgramEnrollmentListResult);
 
-        ProgramEnrollment actual = (ProgramEnrollment) object;
+        ProgramEnrollmentListResult actual = (ProgramEnrollmentListResult) object;
 
-        assertEquals(expected.get(0), actual);
+        assertEquals(expected.get(0), actual.getResults().get(0));
 
         //Get state without endDate - this is what getCurrentState() should return
-        assertEquals(expected.get(0).getStates().get(1), actual.getCurrentState());
+        assertEquals(expected.get(0).getStates().get(1), actual.getResults().get(0).getCurrentState());
+    }
+
+    @Test
+    public void shouldReturnOnlyActiveProgramEnrollmentForPatientUuidAndProgramName() {
+        String className = ProgramEnrollment.class.getSimpleName();
+
+        Map<String, String> lookupFields = new HashMap<>();
+        lookupFields.put(PATIENT_UUID, DEFAULT_UUID);
+        lookupFields.put(PROGRAM_NAME, PROGRAM_DEFAULT_NAME);
+        lookupFields.put(ACTIVE_PROGRAM, "true");
+
+
+        List<ProgramEnrollment> expected = prepareProgramEnrollments();
+        when(programEnrollmentService.getProgramEnrollmentByPatientUuid(eq(CONFIG_NAME), eq(DEFAULT_UUID)))
+                .thenReturn(expected);
+
+        Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, BY_UUID_AMD_PROGRAM_NAME, lookupFields);
+
+        verify(programEnrollmentService).getProgramEnrollmentByPatientUuid(eq(CONFIG_NAME), eq(DEFAULT_UUID));
+
+        assertTrue(object instanceof ProgramEnrollmentListResult);
+
+        ProgramEnrollmentListResult actual = (ProgramEnrollmentListResult) object;
+
+        assertEquals(expected.get(0), actual.getResults().get(0));
+        assertEquals(1, actual.getNumberOfPrograms());
     }
 
     @Test
@@ -415,18 +444,18 @@ public class OpenMRSTaskDataProviderTest {
 
         verify(programEnrollmentService).getProgramEnrollmentByPatientMotechId(eq(CONFIG_NAME), eq(DEFAULT_MOTECH_ID));
 
-        assertTrue(object instanceof ProgramEnrollment);
+        assertTrue(object instanceof ProgramEnrollmentListResult);
 
-        ProgramEnrollment actual = (ProgramEnrollment) object;
+        ProgramEnrollmentListResult actual = (ProgramEnrollmentListResult) object;
 
-        assertEquals(expected.get(0), actual);
-        
+        assertEquals(expected.get(0), actual.getResults().get(0));
+
         //Get state without endDate - this is what getCurrentState() should return
-        assertEquals(expected.get(0).getStates().get(1), actual.getCurrentState());
+        assertEquals(expected.get(0).getStates().get(1), actual.getResults().get(0).getCurrentState());
     }
 
     @Test
-    public void shouldReturnNotEnrolledWhenProgramEnrollmentNotFoundForLookupByUuidAndProgramName() {
+    public void shouldReturnEmptyListWhenProgramEnrollmentNotFoundForLookupByUuidAndProgramName() {
         String className = ProgramEnrollment.class.getSimpleName();
 
         Map<String, String> lookupFields = new HashMap<>();
@@ -440,17 +469,16 @@ public class OpenMRSTaskDataProviderTest {
 
         verify(programEnrollmentService).getProgramEnrollmentByPatientUuid(eq(CONFIG_NAME), eq(DEFAULT_UUID));
 
-        assertTrue(object instanceof ProgramEnrollment);
+        assertTrue(object instanceof ProgramEnrollmentListResult);
 
-        ProgramEnrollment actual = (ProgramEnrollment) object;
+        ProgramEnrollmentListResult actual = (ProgramEnrollmentListResult) object;
 
-        assertFalse(actual.isEnrolled());
-        assertEquals(ProgramEnrollment.NOT_ENROLLED, actual.getEnrolledString());
-        assertNull(actual.getCurrentState());
+        assertTrue(actual.getResults().isEmpty());
+        assertEquals(0, actual.getNumberOfPrograms());
     }
 
     @Test
-    public void shouldReturnNotEnrolledWhenProgramEnrollmentNotFoundForLookupByMotechIdAndProgramName() {
+    public void shouldReturnEmptyListWhenProgramEnrollmentNotFoundForLookupByMotechIdAndProgramName() {
         String className = ProgramEnrollment.class.getSimpleName();
 
         Map<String, String> lookupFields = new HashMap<>();
@@ -464,13 +492,12 @@ public class OpenMRSTaskDataProviderTest {
 
         verify(programEnrollmentService).getProgramEnrollmentByPatientMotechId(eq(CONFIG_NAME), eq(DEFAULT_MOTECH_ID));
 
-        assertTrue(object instanceof ProgramEnrollment);
+        assertTrue(object instanceof ProgramEnrollmentListResult);
 
-        ProgramEnrollment actual = (ProgramEnrollment) object;
+        ProgramEnrollmentListResult actual = (ProgramEnrollmentListResult) object;
 
-        assertFalse(actual.isEnrolled());
-        assertEquals(ProgramEnrollment.NOT_ENROLLED, actual.getEnrolledString());
-        assertNull(actual.getCurrentState());
+        assertTrue(actual.getResults().isEmpty());
+        assertEquals(0, actual.getNumberOfPrograms());
     }
 
     private List<Relationship> prepareRelationship() {
@@ -496,6 +523,8 @@ public class OpenMRSTaskDataProviderTest {
     }
 
     private List<ProgramEnrollment> prepareProgramEnrollments() {
+        List<ProgramEnrollment> result = new ArrayList<>();
+
         Program program = new Program();
         program.setName(PROGRAM_DEFAULT_NAME);
 
@@ -509,10 +538,17 @@ public class OpenMRSTaskDataProviderTest {
         ProgramEnrollment.StateStatus lastState = new ProgramEnrollment.StateStatus();
         lastState.setStartDate(endDate.toDate());
 
-        ProgramEnrollment programEnrollment = new ProgramEnrollment();
-        programEnrollment.setProgram(program);
-        programEnrollment.setStates(Arrays.asList(firstState, lastState));
+        ProgramEnrollment programEnrollmentActive = new ProgramEnrollment();
+        programEnrollmentActive.setProgram(program);
+        programEnrollmentActive.setStates(Arrays.asList(firstState, lastState));
 
-        return Collections.singletonList(programEnrollment);
+        ProgramEnrollment programEnrollmentNotActive = new ProgramEnrollment();
+        programEnrollmentNotActive.setProgram(program);
+        programEnrollmentNotActive.setDateCompleted(endDate.toDate());
+
+        result.add(programEnrollmentActive);
+        result.add(programEnrollmentNotActive);
+
+        return result;
     }
 }
