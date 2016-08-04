@@ -4,42 +4,41 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpState;
 import org.junit.Before;
 import org.junit.Test;
-import org.motechproject.openmrs.domain.ObservationListResult;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.config.ConfigDummyData;
-import org.motechproject.openmrs.resource.ObservationResource;
+import org.motechproject.openmrs.domain.GeneratedIdentifier;
+import org.motechproject.openmrs.resource.GeneratedIdentifierResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestOperations;
 
 import java.net.URI;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class ObservationResourceImplTest extends AbstractResourceImplTest {
+public class GeneratedIdentifierResourceImplTest extends AbstractResourceImplTest {
 
-    private static final String OBSERVATION_LIST_RESPONSE_JSON = "json/observation/observation-list-response.json";
+    private static final String SOURCE_NAME = "source_name";
+    private static final String GENERATED_IDENTIFIER = "identifier";
 
     @Mock
     private RestOperations restOperations;
+
     @Mock
     private HttpClient httpClient;
-
 
     @Captor
     private ArgumentCaptor<HttpEntity<String>> requestCaptor;
 
-    private ObservationResource observationResource;
+    private GeneratedIdentifierResource generatedIdentifierResource;
 
     private Config config;
 
@@ -48,25 +47,23 @@ public class ObservationResourceImplTest extends AbstractResourceImplTest {
         initMocks(this);
         when(httpClient.getState()).thenReturn(new HttpState());
 
-        observationResource = new ObservationResourceImpl(restOperations, httpClient);
+        generatedIdentifierResource = new GeneratedIdentifierResourceImpl(restOperations, httpClient);
+
         config = ConfigDummyData.prepareConfig("one");
     }
 
     @Test
-    public void shouldQueryForObservationByPatientId() throws Exception {
-        String patientId = "OOO";
-        URI url = config.toInstancePathWithParams("/obs?patient={uuid}&v=full", patientId);
+    public void shouldReturnIdentifier() {
+        URI url = config.toInstancePathWithParams("/idgen/latestidentifier?sourceName={name}", SOURCE_NAME);
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponseFromFile(OBSERVATION_LIST_RESPONSE_JSON));
+                .thenReturn(getResponse(GENERATED_IDENTIFIER));
 
-        ObservationListResult result = observationResource.queryForObservationsByPatientId(config, patientId);
+        GeneratedIdentifier generatedIdentifier = generatedIdentifierResource.getGeneratedIdentifier(config, SOURCE_NAME);
 
         verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
 
-        assertThat(result, equalTo(readFromFile(OBSERVATION_LIST_RESPONSE_JSON, ObservationListResult.class)));
-        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
-        assertThat(requestCaptor.getValue().getBody(), nullValue());
+        assertEquals(getHeadersForGet(config), requestCaptor.getValue().getHeaders());
+        assertEquals(GENERATED_IDENTIFIER, generatedIdentifier.getValue());
     }
-
 }
