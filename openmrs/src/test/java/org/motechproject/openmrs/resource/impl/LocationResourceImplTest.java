@@ -62,7 +62,7 @@ public class LocationResourceImplTest extends AbstractResourceImplTest {
         URI uri = config.toInstancePath("/location");
 
         when(restOperations.exchange(eq(uri), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(LOCATION_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(LOCATION_RESPONSE_JSON));
 
         Location created = locationResource.createLocation(config, location);
 
@@ -80,7 +80,7 @@ public class LocationResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/location/{uuid}", location.getUuid());
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(LOCATION_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(LOCATION_RESPONSE_JSON));
 
         Location updated = locationResource.updateLocation(config, location);
 
@@ -97,7 +97,7 @@ public class LocationResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePath("/location?v=full");
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(LOCATION_LIST_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(LOCATION_LIST_RESPONSE_JSON));
 
         LocationListResult result = locationResource.getAllLocations(config);
 
@@ -114,7 +114,7 @@ public class LocationResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/location/{uuid}", locationId);
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(LOCATION_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(LOCATION_RESPONSE_JSON));
 
         Location location = locationResource.getLocationById(config, locationId);
 
@@ -131,7 +131,7 @@ public class LocationResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/location?q={name}&v=full", query);
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(LOCATION_LIST_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(LOCATION_LIST_RESPONSE_JSON));
 
         LocationListResult result = locationResource.queryForLocationByName(config, query);
 

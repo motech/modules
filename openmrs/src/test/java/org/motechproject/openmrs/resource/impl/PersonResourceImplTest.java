@@ -67,7 +67,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePath("/person");
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(PERSON_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(PERSON_RESPONSE_JSON));
 
         Person created = personResource.createPerson(config, person);
 
@@ -85,7 +85,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/person/{uuid}?v=full", person.getUuid());
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(PERSON_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(PERSON_RESPONSE_JSON));
 
         Person updated = personResource.updatePerson(config, person);
 
@@ -103,7 +103,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/person/{uuid}?v=full", personId);
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(PERSON_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(PERSON_RESPONSE_JSON));
 
         Person person = personResource.getPersonById(config, personId);
 
@@ -135,7 +135,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/personattributetype?q={name}", attributeTypeName);
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(PERSON_ATTRIBUTE_TYPE_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(PERSON_ATTRIBUTE_TYPE_RESPONSE_JSON));
 
         AttributeTypeListResult result = personResource.queryPersonAttributeTypeByName(config, attributeTypeName);
 

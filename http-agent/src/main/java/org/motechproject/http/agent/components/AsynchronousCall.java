@@ -1,5 +1,6 @@
 package org.motechproject.http.agent.components;
 
+import org.apache.http.HttpException;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class AsynchronousCall implements CommunicationType {
      * @return null
      */
     @Override
-    public ResponseEntity<?> sendWithReturnType(MotechEvent motechEvent) {
+    public ResponseEntity<?> sendWithReturnType(MotechEvent motechEvent) throws HttpException {
         eventRelay.sendEventMessage(motechEvent);
         return null;
     }

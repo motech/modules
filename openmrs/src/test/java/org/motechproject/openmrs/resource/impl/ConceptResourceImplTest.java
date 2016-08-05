@@ -62,7 +62,7 @@ public class ConceptResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePath("/concept");
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(CONCEPT_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(CONCEPT_RESPONSE_JSON));
 
         Concept created = conceptResource.createConcept(config, concept);
 
@@ -80,7 +80,7 @@ public class ConceptResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/concept/{uuid}", concept.getUuid());
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(CONCEPT_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(CONCEPT_RESPONSE_JSON));
 
         Concept updated = conceptResource.updateConcept(config, concept);
 
@@ -97,7 +97,7 @@ public class ConceptResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePath("/concept?v=full");
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(CONCEPT_LIST_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(CONCEPT_LIST_RESPONSE_JSON));
 
         ConceptListResult result = conceptResource.getAllConcepts(config);
 
@@ -114,7 +114,7 @@ public class ConceptResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/concept/{uuid}", conceptId);
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(CONCEPT_CREATE_JSON));
+                .thenReturn(getResponseFromFile(CONCEPT_CREATE_JSON));
 
         Concept concept = conceptResource.getConceptById(config, conceptId);
 
@@ -131,7 +131,7 @@ public class ConceptResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/concept?v=full&q={conceptName}", query);
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(CONCEPT_LIST_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(CONCEPT_LIST_RESPONSE_JSON));
 
         ConceptListResult result = conceptResource.queryForConceptsByName(config, query);
 

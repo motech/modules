@@ -64,7 +64,7 @@ public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest 
         URI url = config.toInstancePath("/programenrollment");
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(PROGRAM_ENROLLMENT_RESPONSE));
+                .thenReturn(getResponseFromFile(PROGRAM_ENROLLMENT_RESPONSE));
 
         ProgramEnrollment created = programEnrollmentResource.createProgramEnrollment(config, programEnrollment);
 
@@ -83,7 +83,7 @@ public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest 
         URI url = config.toInstancePathWithParams("/programenrollment/{uuid}", programEnrollment.getUuid());
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(PROGRAM_ENROLLMENT_RESPONSE));
+                .thenReturn(getResponseFromFile(PROGRAM_ENROLLMENT_RESPONSE));
 
         ProgramEnrollment updated = programEnrollmentResource.updateProgramEnrollment(config, programEnrollment);
 
@@ -102,7 +102,7 @@ public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest 
         URI url = config.toInstancePathWithParams("/programenrollment?patient={uuid}&v=full", programEnrollment.getPatient().getUuid());
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(PROGRAM_ENROLLMENT_TABLE));
+                .thenReturn(getResponseFromFile(PROGRAM_ENROLLMENT_TABLE));
 
         List<ProgramEnrollment> fetched = programEnrollmentResource.getProgramEnrollmentByPatientUuid(config, programEnrollment.getPatient().getUuid());
 
