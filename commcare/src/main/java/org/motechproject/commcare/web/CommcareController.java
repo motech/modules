@@ -1,11 +1,10 @@
 package org.motechproject.commcare.web;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import org.motechproject.commcare.exception.CommcareAuthenticationException;
 import org.motechproject.commcare.exception.CommcareConnectionFailureException;
 import org.motechproject.commcare.exception.ConfigurationNotFoundException;
 import org.motechproject.commcare.exception.EndpointNotSupported;
+import org.motechproject.commons.api.json.MotechMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -24,46 +23,36 @@ public abstract class CommcareController {
     @ExceptionHandler({ConfigurationNotFoundException.class, CommcareConnectionFailureException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
-    public String handleNotFound(Exception e) {
-        return handleException(e);
+    public MotechMessage handleNotFound(Exception e) {
+        return new MotechMessage(e.getMessage());
     }
 
     @ExceptionHandler(EndpointNotSupported.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public String handleBadRequest(Exception e) {
-        return handleException(e);
+    public MotechMessage handleBadRequest(Exception e) {
+        return new MotechMessage(e.getMessage());
     }
 
     @ExceptionHandler(CommcareAuthenticationException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     @ResponseBody
-    public String handleCommcareAuthenticationException(CommcareAuthenticationException e) {
-        return handleException(e);
+    public MotechMessage handleCommcareAuthenticationException(CommcareAuthenticationException e) {
+        return new MotechMessage(e.getMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(value = HttpStatus.CONFLICT)
     @ResponseBody
-    public String handleIllegalArgumentException(IllegalArgumentException e) {
-        return handleException(e);
+    public MotechMessage handleIllegalArgumentException(IllegalArgumentException e) {
+        return new MotechMessage(e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
-    public String handleMiscException(Exception e) {
-        return handleException(e);
-    }
-
-    private String handleException(Exception e) {
-        logger.error(e.getMessage(), e);
-
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("message", e.getMessage());
-
-        Gson gson = new Gson();
-        return gson.toJson(jsonObject);
+    public MotechMessage handleMiscException(Exception e) {
+        return new MotechMessage(e.getMessage());
     }
 
 }
