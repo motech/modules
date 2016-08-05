@@ -155,7 +155,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/personattributetype/{uuid}", attributeTypeUuid);
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(PERSON_ATTRIBUTE_TYPE_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(PERSON_ATTRIBUTE_TYPE_RESPONSE_JSON));
 
         Attribute.AttributeType result = personResource.queryPersonAttributeTypeByUuid(config, attributeTypeUuid);
 
