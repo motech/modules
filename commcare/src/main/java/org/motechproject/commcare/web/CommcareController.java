@@ -24,35 +24,38 @@ public abstract class CommcareController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public MotechMessage handleNotFound(Exception e) {
-        return new MotechMessage(e.getMessage());
+        return handleException(e);
     }
 
     @ExceptionHandler(EndpointNotSupported.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public MotechMessage handleBadRequest(Exception e) {
-        return new MotechMessage(e.getMessage());
+        return handleException(e);
     }
 
     @ExceptionHandler(CommcareAuthenticationException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     @ResponseBody
     public MotechMessage handleCommcareAuthenticationException(CommcareAuthenticationException e) {
-        return new MotechMessage(e.getMessage());
+        return handleException(e);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(value = HttpStatus.CONFLICT)
     @ResponseBody
     public MotechMessage handleIllegalArgumentException(IllegalArgumentException e) {
-        return new MotechMessage(e.getMessage());
+        return handleException(e);
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public MotechMessage handleMiscException(Exception e) {
-        return new MotechMessage(e.getMessage());
+        return handleException(e);
     }
 
+    private MotechMessage handleException(Exception e) {
+        return handleException(e);
+    }
 }
