@@ -1,4 +1,4 @@
-package org.motechproject.rapidpro.event;
+package org.motechproject.rapidpro.event.handler;
 
 
 import org.motechproject.event.MotechEvent;

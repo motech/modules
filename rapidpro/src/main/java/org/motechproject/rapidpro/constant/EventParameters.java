@@ -25,5 +25,19 @@ public final class EventParameters {
     public static final String GROUP_NAME = "groupName";
     public static final String GROUP_UUID = "groupUUID";
 
+    /*Flow parameters*/
+    public static final String FLOW_NAME = "flowName";
+    public static final String RESTART_PARTICIPANTS = "restartParticipants";
+    public static final String EXTRA = "extra";
+    public static final String FLOW_UUID = "flowUUID";
+    public static final String FLOW = "flow";
+    public static final String RUN = "run";
+    public static final String FLOW_CREATED_ON = "createdOn";
+    public static final String FLOW_EXPIRES_ON = "expiresOn";
+    public static final String FLOW_EXPIRED_ON = "expiredOn";
+    public static final String ERROR_MESSAGE = "errorMessage";
+    public static final String CONTACT_UUIDS = "contactUUIDs";
+
+
 }
 

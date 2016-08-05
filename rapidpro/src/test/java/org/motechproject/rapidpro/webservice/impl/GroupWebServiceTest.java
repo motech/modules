@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -44,7 +45,7 @@ public class GroupWebServiceTest {
     @Test
     public void shouldReturnGroup() throws Exception {
         String name = "name";
-        String uuid = "uuid";
+        UUID uuid = UUID.randomUUID();
         Group group = new Group();
         group.setName(name);
         group.setUuid(uuid);

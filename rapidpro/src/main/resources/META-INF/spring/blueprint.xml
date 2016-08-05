@@ -15,5 +15,10 @@
     <osgi:service ref="rapidproDataProvider" interface="org.motechproject.commons.api.DataProvider"/>
     <osgi:service ref="rapidproGroupWebService" interface="org.motechproject.rapidpro.webservice.GroupWebService"/>
     <osgi:service ref="rapidproContactService" interface="org.motechproject.rapidpro.service.ContactService"/>
+    <osgi:service ref="rapidproFlowService" interface="org.motechproject.rapidpro.service.FlowService"/>
+    <osgi:service ref="rapidproFlowRunWebService" interface="org.motechproject.rapidpro.webservice.FlowRunWebService"/>
+    <osgi:service ref="rapidproFlowWebService" interface="org.motechproject.rapidpro.webservice.FlowWebService"/>
+
+
 
 </beans>

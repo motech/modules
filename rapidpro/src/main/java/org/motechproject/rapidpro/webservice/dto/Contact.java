@@ -27,7 +27,7 @@ public class Contact implements Serializable {
     private String language;
     private List<String> urns;
     @JsonProperty("group_uuids")
-    private List<String> groupUUIDs;
+    private List<UUID> groupUUIDs;
     private Map<String, String> fields;
     private boolean blocked;
     private boolean failed;
@@ -70,11 +70,11 @@ public class Contact implements Serializable {
         }
     }
 
-    public List<String> getGroupUUIDs() {
+    public List<UUID> getGroupUUIDs() {
         return this.groupUUIDs;
     }
 
-    public void setGroupUUIDs(List<String> groupUUIDs) {
+    public void setGroupUUIDs(List<UUID> groupUUIDs) {
         if (groupUUIDs == null) {
             this.groupUUIDs = new ArrayList<>();
         } else {

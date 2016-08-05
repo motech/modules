@@ -1,15 +1,16 @@
 package org.motechproject.rapidpro.webservice.dto;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 /**
- * Representation of a Rapidpro Group
+ * Representation of a RapidPro Group
  */
 public class Group implements Serializable {
     private static final long serialVersionUID = 1L;
     private String group;
     private String name;
-    private String uuid;
+    private UUID uuid;
     private int size;
 
     public String getGroup() {
@@ -28,11 +29,11 @@ public class Group implements Serializable {
         this.name = name;
     }
 
-    public String getUuid() {
+    public UUID getUuid() {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
 
