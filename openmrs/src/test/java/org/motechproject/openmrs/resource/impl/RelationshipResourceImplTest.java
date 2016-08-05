@@ -57,7 +57,7 @@ public class RelationshipResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/relationship?person={personUuid}&v=full", personBUuid);
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(CONCEPT_LIST_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(CONCEPT_LIST_RESPONSE_JSON));
 
         RelationshipListResult result = relationshipResource.getByPersonUuid(config, personBUuid);
 

@@ -2,6 +2,7 @@ package org.motechproject.http.agent.service;
 
 import java.util.Map;
 
+import org.apache.http.HttpException;
 import org.motechproject.http.agent.domain.Credentials;
 import org.springframework.http.ResponseEntity;
 
@@ -99,7 +100,7 @@ public interface HttpAgent {
      * @return response from posted request
      */
     ResponseEntity<?> executeWithReturnTypeSync(String url, Object data,
-            Method method);
+            Method method) throws HttpException;
 
     /**
      * Executes the http request synchronously and returns the response, takes additional parameter for number of retries.
@@ -110,7 +111,7 @@ public interface HttpAgent {
      * @return response from posted request
      */
     ResponseEntity<?> executeWithReturnTypeSync(String url, Object data,
-            Method method, Integer retryCount);
+            Method method, Integer retryCount) throws HttpException;
 
     /**
      * Executes the http request synchronously and returns the response, takes additional parameters for number of retries
@@ -123,6 +124,6 @@ public interface HttpAgent {
      * @return response from posted request
      */
     ResponseEntity<?> executeWithReturnTypeSync(String url, Object data,
-            Method method, Integer retryCount, Long retryInterval);
+            Method method, Integer retryCount, Long retryInterval) throws HttpException;
 
 }
