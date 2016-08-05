@@ -56,6 +56,7 @@ public abstract class CommcareController {
     }
 
     private MotechMessage handleException(Exception e) {
-        return handleException(e);
+        logger.error(e.getMessage(), e);
+        return new MotechMessage(e.getMessage());
     }
 }
