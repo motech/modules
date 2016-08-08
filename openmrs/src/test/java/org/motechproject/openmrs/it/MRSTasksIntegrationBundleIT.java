@@ -166,11 +166,23 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
             patientService.deletePatient(DEFAULT_CONFIG_NAME, patient.getUuid());
         }
 
+        patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, "Robert Kowalski");
+        if (patient != null) {
+            patientService.deletePatient(DEFAULT_CONFIG_NAME, patient.getUuid());
+        }
+
+        patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, "Jan Nowak");
+        if (patient != null) {
+            patientService.deletePatient(DEFAULT_CONFIG_NAME, patient.getUuid());
+        }
+
         patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, TEST_MOTECH_ID);
         if (patient != null) {
             patientService.deletePatient(DEFAULT_CONFIG_NAME, patient.getUuid());
         }
     }
+
+
 
     @Test
     public void testOpenMRSPatientDataSourceAndCreatePatientAction() throws InterruptedException, IOException, PatientNotFoundException {
@@ -209,6 +221,40 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         checkIfProviderWasCreatedProperly();
     }
+
+    @Test
+    public void testCreatePatientPostActionParameter() throws InterruptedException {
+        TaskTriggerInformation triggerInformation = new TaskTriggerInformation("CREATE SettingsRecord", "data-services", MDS_CHANNEL_NAME,
+                VERSION, TRIGGER_SUBJECT, TRIGGER_SUBJECT);
+
+        SortedSet<TaskConfigStep> taskConfigStepSortedSet = new TreeSet<>();
+        taskConfigStepSortedSet.add(createPatientDataSource());
+        TaskConfig taskConfig = new TaskConfig();
+        taskConfig.addAll(taskConfigStepSortedSet);
+
+        ArrayList<TaskActionInformation> taskActions = new ArrayList();
+        taskActions.add(prepareCreatePatientActionInformation("Slowackiego 15/2", "Jan Nowak"));
+        taskActions.add(prepareCreatePatientActionInformation("{{pa.0.uuid}}", "Robert Kowalski"));
+
+        Task task = new Task("OpenMRSPatientPostActionParameterTestTask", triggerInformation, taskActions, taskConfig, true, true);
+        getTaskService().save(task);
+
+        getTriggerHandler().registerHandlerFor(task.getTrigger().getEffectiveListenerSubject());
+
+        activateTrigger();
+
+        // Give Tasks some time to process
+        assertTrue(waitForTaskExecution(task.getId()));
+
+        Patient patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, "Jan Nowak");
+        String firstPatientUuid = patient.getUuid();
+
+        patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, "Robert Kowalski");
+        Person.Address address = patient.getPerson().getPreferredAddress();
+
+        assertEquals(firstPatientUuid, address.getAddress1());
+    }
+
 
     private Long createPatientTestTask() {
         TaskTriggerInformation triggerInformation = new TaskTriggerInformation("CREATE SettingsRecord", "data-services", MDS_CHANNEL_NAME,
@@ -320,6 +366,23 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 createdPatient, Collections.singletonList(createdProvider.getPerson()), null);
 
         createdEncounter = encounterService.createEncounter(DEFAULT_CONFIG_NAME, encounter);
+    }
+
+    private TaskActionInformation prepareCreatePatientActionInformation(String adress1, String motechId){
+        TaskActionInformation actionInformation = new TaskActionInformation("Create Patient [" + DEFAULT_CONFIG_NAME + "]", OPENMRS_CHANNEL_NAME,
+                OPENMRS_CHANNEL_NAME, VERSION, TEST_INTERFACE, "createPatient");
+        actionInformation.setSubject(String.format("createPatient.%s", DEFAULT_CONFIG_NAME));
+
+        Map<String, String> values = new HashMap<>();
+        values.put(Keys.ADDRESS_1, adress1);
+        values.put(Keys.FAMILY_NAME, "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.person.display}}");
+        values.put(Keys.GENDER, "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.person.gender}}");
+        values.put(Keys.GIVEN_NAME, "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.person.display}}");
+        values.put(Keys.MOTECH_ID, motechId);
+        values.put(Keys.CONFIG_NAME, DEFAULT_CONFIG_NAME);
+        actionInformation.setValues(values);
+
+        return actionInformation;
     }
 
     private Patient preparePatient() {
