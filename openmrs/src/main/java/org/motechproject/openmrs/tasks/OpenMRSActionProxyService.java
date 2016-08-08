@@ -34,7 +34,7 @@ public interface OpenMRSActionProxyService {
     /**
      * Creates a patient with the given params. The required fields are : {@code givenName}, {@code familyName},
      * {@code gender}, {@code motechId}. If the locationName is not provided, the default location will be used.
-     * Configuration with the given {@code configName} will be used while performing this action. Returns created Paitent.
+     * Configuration with the given {@code configName} will be used while performing this action. Returns created patient.
      *
      * @param configName  the name of the configuration
      * @param givenName  the given name of person
@@ -63,15 +63,16 @@ public interface OpenMRSActionProxyService {
      * @param motechId  the patient motechId
      * @param locationForMotechId  the location name for identifiers
      * @param identifiers  the additional identifiers to be stored to patient
+     * @param personAttributes  the additional attributes of person
      * @return  created Patient
      */
     Patient createPatient(String configName, String givenName, String middleName, String familyName, String address1,
-                          String address2, String address3, String address4, String address5, String address6,
-                          String cityVillage, String stateProvince, String country, String postalCode,
-                          String countyDistrict, String latitude, String longitude, DateTime startDate, DateTime endDate,
-                          DateTime birthDate, Boolean birthDateEstimated, String gender, Boolean dead,
-                          String causeOfDeathUUID, String motechId, String locationForMotechId,
-                          Map<String, String> identifiers);
+                       String address2, String address3, String address4, String address5, String address6,
+                       String cityVillage, String stateProvince, String country, String postalCode,
+                       String countyDistrict, String latitude, String longitude, DateTime startDate, DateTime endDate,
+                       DateTime birthDate, Boolean birthDateEstimated, String gender, Boolean dead,
+                       String causeOfDeathUUID, String motechId, String locationForMotechId,
+                       Map<String, String> identifiers, Map<String, String> personAttributes);
 
     /**
       * Updates a patient with the given {@patientUuid}. Configuration with the given {@code configName} will be used
@@ -112,6 +113,7 @@ public interface OpenMRSActionProxyService {
      * @param gender  the person gender
      * @param dead  the person dead flag
      * @param causeOfDeathUUID  the cause of the death
+     * @param personAttributes  the additional attributes of person
      *
      */
     void updatePerson(String configName, String personUuid, String givenName, String middleName, String familyName,
@@ -119,18 +121,18 @@ public interface OpenMRSActionProxyService {
                       String address6, String cityVillage, String stateProvince, String country, String postalCode,
                       String countyDistrict, String latitude, String longitude, DateTime startDate, DateTime endDate,
                       DateTime birthDate, Boolean birthDateEstimated, String gender, Boolean dead,
-                      String causeOfDeathUUID);
+                      String causeOfDeathUUID, Map<String, String> personAttributes);
 
     /**
      * Creates a program enrollment with the given params.
      * The required fields are: {@code patientUuid}, {@code programUuid}, {@code dateEnrolled}.
      *
      * @param configName  the name of the configuration
-     * @param patientUuid the patient uuid
-     * @param programUuid the program uuid
-     * @param dateEnrolled the program enrollment date
-     * @param dateCompleted the program completed date
-     * @param locationName the name of location
+     * @param patientUuid  the patient uuid
+     * @param programUuid  the program uuid
+     * @param dateEnrolled  the program enrollment date
+     * @param dateCompleted  the program completed date
+     * @param locationName  the name of location
      */
     void createProgramEnrollment(String configName, String patientUuid, String programUuid,
                                  DateTime dateEnrolled, DateTime dateCompleted, String locationName);
@@ -138,11 +140,11 @@ public interface OpenMRSActionProxyService {
     /**
      * Changes state of program enrollment. Program enrollment is identified by UUID.
      *
-     * @param configName the name of the configuration
-     * @param programEnrollmentUuid the program enrollment uuid
-     * @param programCompletedDate the program enrollment completed date
-     * @param stateUuid the state uuid
-     * @param startDate the state start date
+     * @param configName  the name of the configuration
+     * @param programEnrollmentUuid  the program enrollment uuid
+     * @param programCompletedDate  the program enrollment completed date
+     * @param stateUuid  the state uuid
+     * @param startDate  the state start date
      */
     void changeStateOfProgramEnrollment(String configName, String programEnrollmentUuid, DateTime programCompletedDate,
                                         String stateUuid, DateTime startDate);

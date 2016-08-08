@@ -108,6 +108,11 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
             person.getPreferredName().setUuid(nameForUpdate.getUuid());
             personResource.updatePersonName(config, person.getUuid(), person.getPreferredName());
 
+            personResource.checkPersonAttributeTypes(config, person);
+            for (Attribute attribute : person.getAttributes()) {
+                personResource.updatePersonAttribute(config, person.getUuid(), attribute);
+            }
+
             Person updated = personResource.updatePerson(config, person);
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.UPDATED_PERSON_SUBJECT, EventHelper.personParameters(updated)));
 
