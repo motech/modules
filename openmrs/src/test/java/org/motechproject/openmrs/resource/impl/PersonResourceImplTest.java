@@ -18,7 +18,10 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestOperations;
 
+import java.lang.reflect.Type;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -147,6 +150,23 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
     }
 
     @Test
+    public void shouldQueryPersonAttributeTypeByUuid() throws Exception {
+        String attributeTypeUuid = "CCC";
+        URI url = config.toInstancePathWithParams("/personattributetype/{uuid}", attributeTypeUuid);
+
+        when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponseFromFile(PERSON_ATTRIBUTE_TYPE_RESPONSE_JSON));
+
+        Attribute.AttributeType result = personResource.queryPersonAttributeTypeByUuid(config, attributeTypeUuid);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
+
+        assertThat(result, equalTo(readFromFile(PERSON_ATTRIBUTE_TYPE_RESPONSE_JSON, Attribute.AttributeType.class)));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
+        assertThat(requestCaptor.getValue().getBody(), nullValue());
+    }
+
+    @Test
     public void shouldUpdatePersonName() throws Exception {
         String personId = "CCC";
         Person.Name name = prepareName();
@@ -177,8 +197,26 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
                 equalTo(readFromFile(UPDATE_PERSON_ADDRESS_JSON, JsonObject.class)));
     }
 
+    @Test
+    public void shouldUpdatePersonAttribute() throws Exception {
+        String personId = "CCC";
+        Attribute attribute = prepareAttribute();
+        URI url = config.toInstancePathWithParams("/person/{parentUuid}/attribute/{attributeUuid}", personId,
+                attribute.getAttributeType().getUuid());
+
+        personResource.updatePersonAttribute(config, personId, attribute);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
+
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPostWithoutResponse(config)));
+        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
+                equalTo(readFromFile(UPDATE_PERSON_ADDRESS_JSON, JsonObject.class)));
+    }
+
     private Person preparePerson() throws Exception {
-        return (Person) readFromFile(PERSON_RESPONSE_JSON, Person.class);
+        Map<Type, Object> adapter = new HashMap<>();
+        adapter.put(Attribute.class, new Attribute.AttributeSerializer());
+        return (Person) readFromFile(PERSON_RESPONSE_JSON, Person.class, adapter);
     }
 
     private Attribute prepareAttribute() {

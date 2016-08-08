@@ -147,6 +147,11 @@
               "displayName": "openMRS.person.dead",
               "fieldKey": "person.dead",
               "type": "BOOLEAN"
+            },
+            {
+              "displayName": "openMRS.person.attributes",
+              "fieldKey": "attributesMap",
+              "type": "MAP"
             }
           ]
         },
