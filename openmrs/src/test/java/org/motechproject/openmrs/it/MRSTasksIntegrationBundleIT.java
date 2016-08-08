@@ -182,8 +182,6 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         }
     }
 
-
-
     @Test
     public void testOpenMRSPatientDataSourceAndCreatePatientAction() throws InterruptedException, IOException, PatientNotFoundException {
         updatePatientWithNewAttribute();
@@ -254,8 +252,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         assertEquals(firstPatientUuid, address.getAddress1());
     }
-
-
+    
     private Long createPatientTestTask() {
         TaskTriggerInformation triggerInformation = new TaskTriggerInformation("CREATE SettingsRecord", "data-services", MDS_CHANNEL_NAME,
                 VERSION, TRIGGER_SUBJECT, TRIGGER_SUBJECT);
