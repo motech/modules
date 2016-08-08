@@ -218,7 +218,7 @@
         });
     });
 
-    controllers.controller('CommcareSettingsCtrl', function ($scope, Configurations, ModalFactory, LoadingModal) {
+    controllers.controller('CommcareSettingsCtrl', function ($scope, Configurations, ModalFactory, LoadingModal, $timeout) {
 
         $scope.eventStrategyOptions = [ 'minimal', 'partial', 'full' ];
 
@@ -322,6 +322,7 @@
             $scope.configOutdated = true;
             $scope.clearMessages();
             $scope.configSaved = false;
+            $scope.verified = false;
         };
 
 
@@ -383,7 +384,8 @@
             return $scope.validateConfig()
                 && $scope.validateConfigName()
                 && $scope.validateUrlAndDomain()
-                && $scope.configSaved === false;
+                && $scope.configSaved === false
+                && $scope.verification();
         };
 
         $scope.syncConfig = function() {
@@ -433,6 +435,19 @@
                     $scope.connectionVerified = false;
                     LoadingModal.close();
                 });
+                $scope.verified = true;
+        };
+
+        $scope.verification = function() {
+            if ($scope.validateConfig() && !$scope.verified) {
+                $timeout(function() {
+                    $scope.verify();
+                }, 1000);
+                if ($scope.verify.success.connectionVerified) {
+                    return true;
+                }
+            }
+            return false;
         };
 
         $scope.validateConfig = function() {
