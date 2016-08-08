@@ -1,5 +1,6 @@
 package org.motechproject.http.agent.components;
 
+import org.apache.http.HttpException;
 import org.motechproject.event.MotechEvent;
 import org.springframework.http.ResponseEntity;
 
@@ -27,5 +28,5 @@ public interface CommunicationType {
      * @param motechEvent the event which contains data for the request
      * @return response from the posted request
      */
-    ResponseEntity<?> sendWithReturnType(MotechEvent motechEvent);
+    ResponseEntity<?> sendWithReturnType(MotechEvent motechEvent) throws HttpException;
 }

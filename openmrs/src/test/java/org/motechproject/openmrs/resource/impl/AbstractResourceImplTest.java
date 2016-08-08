@@ -26,7 +26,11 @@ public abstract class AbstractResourceImplTest {
         return json;
     }
 
-    protected ResponseEntity<String> getResponse(String file) throws Exception {
+    protected ResponseEntity<String> getResponse(String response) {
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    protected ResponseEntity<String> getResponseFromFile(String file) throws Exception {
         return new ResponseEntity<>(readJsonFromFile(file), HttpStatus.OK);
     }
 
