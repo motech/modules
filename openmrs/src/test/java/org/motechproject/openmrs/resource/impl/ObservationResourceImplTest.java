@@ -58,7 +58,7 @@ public class ObservationResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/obs?patient={uuid}&v=full", patientId);
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(OBSERVATION_LIST_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(OBSERVATION_LIST_RESPONSE_JSON));
 
         ObservationListResult result = observationResource.queryForObservationsByPatientId(config, patientId);
 

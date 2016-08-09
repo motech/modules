@@ -59,7 +59,7 @@ public class ActionBuilder {
 
     private void buildActionsForVersionGreaterThan19(Config config, String configName, List<ActionEventRequest> actions) {
 
-        if(!OPENMRS_V1_9.equals(config.getOpenMrsVersion())) {
+        if (!OPENMRS_V1_9.equals(config.getOpenMrsVersion())) {
             actions.add(buildCreateProgramEnrollmentAction(configName));
             actions.add(buildChangeStateOfProgramEnrollmentAction(configName));
         }
@@ -90,6 +90,7 @@ public class ActionBuilder {
 
     private ActionEventRequest buildCreatePatientAction(String configName) {
         SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
+        SortedSet<ActionParameterRequest> postActionParameters = new TreeSet<>();
         int order = 0;
         String serviceMethod = "createPatient";
 
@@ -99,7 +100,10 @@ public class ActionBuilder {
         parameters.add(prepareParameter(Keys.MOTECH_ID, DisplayNames.MOTECH_ID, true, order++));
         parameters.add(prepareParameter(Keys.LOCATION_FOR_MOTECH_ID, DisplayNames.LOCATION_FOR_MOTECH_ID, false,
                 order++));
-        parameters.add(prepareParameter(Keys.IDENTIFIERS, DisplayNames.IDENTIFIERS, MAP, false, order));
+        parameters.add(prepareParameter(Keys.IDENTIFIERS, DisplayNames.IDENTIFIERS, MAP, false, order++));
+        parameters.add(prepareParameter(Keys.PERSON_ATTRIBUTES, DisplayNames.PERSON_ATTRIBUTES, MAP, false, order));
+
+        postActionParameters.add(prepareParameter(Keys.UUID, DisplayNames.PATIENT_UUID, false, 0));
 
         return new ActionEventRequestBuilder()
                 .setDisplayName(getDisplayName(CREATE_PATIENT, configName))
@@ -107,6 +111,7 @@ public class ActionBuilder {
                 .setServiceMethod(serviceMethod)
                 .setSubject(getSubject(serviceMethod, configName))
                 .setActionParameters(parameters)
+                .setPostActionParameters(postActionParameters)
                 .createActionEventRequest();
     }
 
@@ -118,6 +123,8 @@ public class ActionBuilder {
         parameters.add(prepareParameter(Keys.CONFIG_NAME, DisplayNames.CONFIG_NAME, configName, false, true, order++));
         parameters.add(prepareParameter(Keys.PERSON_UUID, DisplayNames.PERSON_UUID, true, order++));
         parameters.addAll(prepareCommonParameters(order));
+        order = parameters.size();
+        parameters.add(prepareParameter(Keys.PERSON_ATTRIBUTES, DisplayNames.PERSON_ATTRIBUTES, MAP, false, order));
 
         return new ActionEventRequestBuilder()
                 .setDisplayName(getDisplayName(UPDATE_PERSON, configName))
