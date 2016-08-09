@@ -50,6 +50,16 @@ public interface ProgramEnrollmentResource {
     void deleteProgramEnrollment(Config config, String uuid);
 
     /**
+     * Creates the given program enrollment on the OpenMRS server. The given {@code config} will be used
+     * while performing this action. This method should be used only with Bahmni implementation.
+     *
+     * @param config the configuration to be used while performing this action
+     * @param programEnrollment the program enrollment to be created
+     * @return the saved program enrollment
+     */
+    ProgramEnrollment createBahmniProgramEnrollment(Config config, ProgramEnrollment programEnrollment);
+
+    /**
      * Updates the given program enrollment on the OpenMRS server. The given {@code config} will be used
      * while performing this action. This method should be used only with Bahmni implementation.
      *
