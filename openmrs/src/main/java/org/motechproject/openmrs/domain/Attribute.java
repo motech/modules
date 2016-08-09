@@ -19,6 +19,8 @@ import java.util.Objects;
  */
 public class Attribute {
 
+    private static final String VALUE_KEY = "value";
+
     private String uuid;
     private String display;
     private String value;
@@ -140,7 +142,7 @@ public class Attribute {
     public static class AttributeSerializer implements JsonSerializer<Attribute>, JsonDeserializer<Attribute> {
 
         @Override
-        public JsonElement serialize (Attribute src, Type typeOfSrc, JsonSerializationContext context) {
+        public JsonElement serialize(Attribute src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject attribute = new JsonObject();
 
             if (src.getAttributeType() != null && src.getAttributeType().getUuid() != null) {
@@ -148,7 +150,7 @@ public class Attribute {
             }
 
             if (src.getValue() != null) {
-                attribute.addProperty("value", src.getValue());
+                attribute.addProperty(VALUE_KEY, src.getValue());
             } else if (src.getHydratedObject() != null) {
                 attribute.addProperty("hydratedObject", src.getHydratedObject());
             }
@@ -157,17 +159,43 @@ public class Attribute {
         }
 
         @Override
-        public Attribute deserialize (JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        public Attribute deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject attribute = json.getAsJsonObject();
 
-            JsonElement value = attribute.get("value");
+            JsonElement value = attribute.get(VALUE_KEY);
             if (value != null && value.isJsonObject()) {
                 JsonObject valueObject = value.getAsJsonObject();
                 String attributeValue = valueObject.get("uuid").toString().replaceAll("\"", "");
-                attribute.addProperty("value", attributeValue);
+                attribute.addProperty(VALUE_KEY, attributeValue);
             }
 
             return (Attribute) JsonUtils.readJson(attribute.toString(), Attribute.class);
+        }
+    }
+
+    /**
+     * Implementation of the {@link JsonSerializer} interface for the {@link Attribute} class for
+     * Bahmni's Program Enrollment task actions.
+     */
+    public static class BahmniProgramEnrollmentAttributeSerializer implements JsonSerializer<Attribute> {
+
+        @Override
+        public JsonElement serialize(Attribute src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject attribute = new JsonObject();
+
+            if (src.getAttributeType() != null && src.getAttributeType().getUuid() != null) {
+                JsonObject attributeType = new JsonObject();
+                attributeType.addProperty("uuid", src.getAttributeType().getUuid());
+                attribute.add("attributeType", attributeType);
+            }
+
+            if (src.getValue() != null) {
+                attribute.addProperty(VALUE_KEY, src.getValue());
+            } else if (src.getHydratedObject() != null) {
+                attribute.addProperty("hydratedObject", src.getHydratedObject());
+            }
+
+            return attribute;
         }
     }
 

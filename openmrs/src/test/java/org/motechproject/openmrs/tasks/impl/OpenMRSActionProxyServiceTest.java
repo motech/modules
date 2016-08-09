@@ -282,6 +282,19 @@ public class OpenMRSActionProxyServiceTest {
         DateTime dateEnrolled = new DateTime("2000-08-16T07:22:05Z");
         DateTime dateCompleted = new DateTime("2100-08-16T07:22:05Z");
 
+        Map<String, String> programEnrollmentAttributes = new HashMap<>();
+        programEnrollmentAttributes.put("8d8718c2-c2cc-11de-8d13-0010c6dffd0f", "testValue");
+
+        List<Attribute> attributes = new ArrayList<>();
+        Attribute attribute = new Attribute();
+        Attribute.AttributeType attributeType = new Attribute.AttributeType();
+
+        attributeType.setUuid("8d8718c2-c2cc-11de-8d13-0010c6dffd0f");
+        attribute.setValue("testValue");
+        attribute.setAttributeType(attributeType);
+
+        attributes.add(attribute);
+
         ProgramEnrollment programEnrollment = new ProgramEnrollment();
 
         programEnrollment.setPatient(patient);
@@ -289,11 +302,12 @@ public class OpenMRSActionProxyServiceTest {
         programEnrollment.setDateEnrolled(dateEnrolled.toDate());
         programEnrollment.setDateCompleted(dateCompleted.toDate());
         programEnrollment.setLocation(location);
+        programEnrollment.setAttributes(attributes);
 
         doReturn(Collections.singletonList(location)).when(locationService).getLocations(eq(CONFIG_NAME), eq(location.getName()));
 
         openMRSActionProxyService.createProgramEnrollment(CONFIG_NAME, patient.getUuid(), program.getUuid(),
-                dateEnrolled, dateCompleted, location.getName());
+                dateEnrolled, dateCompleted, location.getName(), programEnrollmentAttributes);
 
         verify(programEnrollmentService).createProgramEnrollment(eq(CONFIG_NAME), programEnrollmentCaptor.capture());
         assertEquals(programEnrollment, programEnrollmentCaptor.getValue());
