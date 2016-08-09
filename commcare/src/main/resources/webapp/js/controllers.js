@@ -233,6 +233,8 @@
         $scope.oldName = "";
 
         $scope.copyConfig = function(config) {
+
+            $scope.verified = false;
             if (!config) {
                 $scope.configSaved = false;
                 return;
@@ -322,7 +324,6 @@
             $scope.configOutdated = true;
             $scope.clearMessages();
             $scope.configSaved = false;
-            $scope.verified = false;
         };
 
 
@@ -337,6 +338,7 @@
         $scope.addConfig = function() {
             LoadingModal.open();
             $scope.configSaved = false;
+            $scope.verified = false;
             Configurations.create(
                 function success(data) {
                     $scope.$parent.configurations.configs.push(data);
@@ -385,7 +387,7 @@
                 && $scope.validateConfigName()
                 && $scope.validateUrlAndDomain()
                 && $scope.configSaved === false
-                && $scope.verification();
+                && $scope.verified === true;
         };
 
         $scope.syncConfig = function() {
@@ -427,27 +429,16 @@
                     $scope.verifySuccessMessage = $scope.msg('commcare.verify.success');
                     $scope.verifyErrorMessage = '';
                     $scope.connectionVerified = true;
+                    $scope.verified = true;
                     LoadingModal.close();
                 },
                 function failure(response) {
                     $scope.verifyErrorMessage = response.data;
                     $scope.verifySuccessMessage = '';
                     $scope.connectionVerified = false;
+                    $scope.verified = false;
                     LoadingModal.close();
                 });
-                $scope.verified = true;
-        };
-
-        $scope.verification = function() {
-            if ($scope.validateConfig() && !$scope.verified) {
-                $timeout(function() {
-                    $scope.verify();
-                }, 1000);
-                if ($scope.verify.success.connectionVerified) {
-                    return true;
-                }
-            }
-            return false;
         };
 
         $scope.validateConfig = function() {
