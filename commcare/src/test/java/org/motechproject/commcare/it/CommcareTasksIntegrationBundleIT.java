@@ -84,6 +84,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     private static final String COMMCARE_CHANNEL_NAME = "org.motechproject.commcare";
     private static final String TEST_INTERFACE = "org.motechproject.commcare.tasks.action.CommcareValidatingChannel";
     private static final String VERSION = "0.25";
+    private static final String COMMCARE_ACTION_PROXY_SERVICE = "org.motechproject.commcare.tasks.CommcareActionProxyService";
 
     private static final Integer MAX_RETRIES_BEFORE_FAIL = 20;
     private static final Integer WAIT_TIME = 2000;
@@ -351,9 +352,20 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     }
 
     private ActionEvent prepareStockLedgerAction() {
+        String serviceMethod = "queryStockLedger";
+
         SortedSet<ActionParameter> parameters = new TreeSet<>();
         ActionParameterBuilder builder;
         int order = 0;
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName(DisplayNames.CONFIG_NAME)
+                .setKey(EventDataKeys.CONFIG_NAME)
+                .setValue(ConfigsUtils.prepareConfigOne().getName())
+                .setRequired(true)
+                .setHidden(true)
+                .setOrder(order++);
+        parameters.add(builder.build());
 
         builder = new ActionParameterBuilder()
                 .setDisplayName(DisplayNames.CASE_ID)
@@ -399,15 +411,28 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         ActionEventBuilder actionBuilder = new ActionEventBuilder()
                 .setDisplayName(displayName)
+                .setServiceInterface(COMMCARE_ACTION_PROXY_SERVICE)
+                .setServiceMethod(serviceMethod)
                 .setSubject(EventSubjects.QUERY_STOCK_LEDGER + "." + config.getName())
                 .setActionParameters(parameters);
         return actionBuilder.build();
     }
 
     private ActionEvent prepareCreateCaseAction() {
+        String serviceMethod = "createCase";
+
         SortedSet<ActionParameter> parameters = new TreeSet<>();
         ActionParameterBuilder builder;
         int order = 0;
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName(DisplayNames.CONFIG_NAME)
+                .setKey(EventDataKeys.CONFIG_NAME)
+                .setValue(ConfigsUtils.prepareConfigOne().getName())
+                .setRequired(true)
+                .setHidden(true)
+                .setOrder(order++);
+        parameters.add(builder.build());
 
         builder = new ActionParameterBuilder()
                 .setDisplayName(DisplayNames.CASE_TYPE)
@@ -445,15 +470,28 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         ActionEventBuilder actionBuilder = new ActionEventBuilder()
                 .setDisplayName(displayName)
+                .setServiceInterface(COMMCARE_ACTION_PROXY_SERVICE)
+                .setServiceMethod(serviceMethod)
                 .setSubject(EventSubjects.CREATE_CASE + "." + config.getName())
                 .setActionParameters(parameters);
         return actionBuilder.build();
     }
 
     private ActionEvent prepareUpdateCaseAction() {
+        String serviceMethod = "updateCase";
+
         SortedSet<ActionParameter> parameters = new TreeSet<>();
         ActionParameterBuilder builder;
         int order = 0;
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName(DisplayNames.CONFIG_NAME)
+                .setKey(EventDataKeys.CONFIG_NAME)
+                .setValue(ConfigsUtils.prepareConfigOne().getName())
+                .setRequired(true)
+                .setHidden(true)
+                .setOrder(order++);
+        parameters.add(builder.build());
 
         builder = new ActionParameterBuilder()
                 .setDisplayName(DisplayNames.CASE_ID)
@@ -491,6 +529,8 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         ActionEventBuilder actionBuilder = new ActionEventBuilder()
                 .setDisplayName(displayName)
+                .setServiceInterface(COMMCARE_ACTION_PROXY_SERVICE)
+                .setServiceMethod(serviceMethod)
                 .setSubject(EventSubjects.UPDATE_CASE + "." + config.getName())
                 .setActionParameters(parameters);
         return actionBuilder.build();
