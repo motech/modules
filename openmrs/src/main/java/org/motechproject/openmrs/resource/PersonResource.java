@@ -61,7 +61,7 @@ public interface PersonResource {
     Attribute.AttributeType queryPersonAttributeTypeByUuid(Config config, String uuid);
 
     /**
-     * Returns {@code Attribute.AttributeType} of the attribute matching given uuid. The given {@code config} will
+     * Returns {@code AttributeListResult} of the attributes matching given person uuid. The given {@code config} will
      * be used while performing this action.
      *
      * @param config  the configuration to be used while performing this action
