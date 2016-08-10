@@ -6,6 +6,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.Attribute;
+import org.motechproject.openmrs.domain.AttributeListResult;
 import org.motechproject.openmrs.domain.Person;
 import org.motechproject.openmrs.exception.OpenMRSException;
 import org.motechproject.openmrs.helper.EventHelper;
@@ -97,6 +98,8 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
 
             Person fetchedPerson = personResource.getPersonById(config, person.getUuid());
 
+            AttributeListResult possibleAttributes = personResource.queryPersonAttributeByPersonUuid(config, person.getUuid());
+
             //Updating address and name of person must be done separately.
             Person.Address addressForUpdate = fetchedPerson.getPreferredAddress();
             if (addressForUpdate != null) {
@@ -110,6 +113,9 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
 
             personResource.checkPersonAttributeTypes(config, person);
             for (Attribute attribute : person.getAttributes()) {
+                String attributeUuid = findAttributeUuidByAttributeTypeUuid(possibleAttributes,
+                        attribute.getAttributeType().getUuid());
+                attribute.setUuid(attributeUuid);
                 personResource.updatePersonAttribute(config, person.getUuid(), attribute);
             }
 
@@ -141,5 +147,23 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
                 LOGGER.warn("Unable to add attribute to person with id: " + person.getUuid());
             }
         }
+    }
+
+    private String findAttributeUuidByAttributeTypeUuid(AttributeListResult attributesList, String attributeTypeUuid) {
+        List<Attribute> attributes = attributesList.getResults();
+        String attributeUuid = null;
+
+        if (attributes != null && !attributes.isEmpty()) {
+            for (Attribute attribute : attributes) {
+
+                if (attribute.getAttributeType() != null && attribute.getAttributeType().getUuid() != null
+                        && attribute.getAttributeType().getUuid().equals(attributeTypeUuid)) {
+
+                    attributeUuid = attribute.getUuid();
+                    break;
+                }
+            }
+        }
+        return attributeUuid;
     }
 }
