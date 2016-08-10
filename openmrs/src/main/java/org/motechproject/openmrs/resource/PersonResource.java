@@ -1,6 +1,7 @@
 package org.motechproject.openmrs.resource;
 
 import org.motechproject.openmrs.domain.Attribute;
+import org.motechproject.openmrs.domain.AttributeListResult;
 import org.motechproject.openmrs.domain.AttributeTypeListResult;
 import org.motechproject.openmrs.domain.Person;
 import org.motechproject.openmrs.config.Config;
@@ -57,7 +58,17 @@ public interface PersonResource {
      * @param uuid  the uuid of the AttributeType
      * @return  the attribute type
      */
-    Attribute.AttributeType queryPersonAttributeTypeByUuid (Config config, String uuid);
+    Attribute.AttributeType queryPersonAttributeTypeByUuid(Config config, String uuid);
+
+    /**
+     * Returns {@code Attribute.AttributeType} of the attribute matching given uuid. The given {@code config} will
+     * be used while performing this action.
+     *
+     * @param config  the configuration to be used while performing this action
+     * @param uuid  the uuid of the AttributeType
+     * @return  the attribute
+     */
+    AttributeListResult queryPersonAttributeByPersonUuid(Config config, String uuid);
 
     /**
      * Deletes the given attribute for person with given UUID. The given {@code config} will be used while performing
