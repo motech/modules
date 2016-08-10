@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.config.ConfigDummyData;
 import org.motechproject.openmrs.domain.Attribute;
+import org.motechproject.openmrs.domain.AttributeListResult;
 import org.motechproject.openmrs.domain.AttributeTypeListResult;
 import org.motechproject.openmrs.domain.Person;
 import org.motechproject.openmrs.util.JsonUtils;
@@ -40,6 +41,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
     private static final String PERSON_RESPONSE_JSON = "json/person/person-response.json";
     private static final String CREATE_PERSON_JSON = "json/person/person-create.json";
     private static final String UPDATE_PERSON_ADDRESS_JSON = "json/person/person-address-update.json";
+    private static final String PERSON_ATTRIBUTE_RESPONSE_JSON = "json/person/person-attribute-response.json";
 
     @Mock
     private RestOperations restOperations;
@@ -150,6 +152,23 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
     }
 
     @Test
+    public void shouldQueryPersonAttributesByPersonUuid() throws Exception {
+        String personId = "PPP";
+        URI url = config.toInstancePathWithParams("/person/{uuid}/attribute", personId);
+
+        when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponseFromFile(PERSON_ATTRIBUTE_RESPONSE_JSON));
+
+        AttributeListResult result = personResource.queryPersonAttributeByPersonUuid(config, personId);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
+
+        assertThat(result, equalTo(readFromFile(PERSON_ATTRIBUTE_RESPONSE_JSON, AttributeListResult.class)));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
+        assertThat(requestCaptor.getValue().getBody(), nullValue());
+    }
+
+    @Test
     public void shouldQueryPersonAttributeTypeByUuid() throws Exception {
         String attributeTypeUuid = "CCC";
         URI url = config.toInstancePathWithParams("/personattributetype/{uuid}", attributeTypeUuid);
@@ -202,7 +221,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
         String personId = "CCC";
         Attribute attribute = prepareAttribute();
         URI url = config.toInstancePathWithParams("/person/{parentUuid}/attribute/{attributeUuid}", personId,
-                attribute.getAttributeType().getUuid());
+                attribute.getUuid());
 
         personResource.updatePersonAttribute(config, personId, attribute);
 

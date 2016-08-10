@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import org.apache.commons.httpclient.HttpClient;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.Attribute;
+import org.motechproject.openmrs.domain.AttributeListResult;
 import org.motechproject.openmrs.domain.AttributeTypeListResult;
 import org.motechproject.openmrs.domain.Concept;
 import org.motechproject.openmrs.domain.Person;
@@ -54,6 +55,12 @@ public class PersonResourceImpl extends BaseResource implements PersonResource {
     }
 
     @Override
+    public AttributeListResult queryPersonAttributeByPersonUuid (Config config, String uuid) {
+        String responseJson = getJson(config, "/person/{uuid}/attribute", uuid);
+        return (AttributeListResult) JsonUtils.readJsonWithAdapters(responseJson, AttributeListResult.class, createAttributeAdapter());
+    }
+
+    @Override
     public Attribute.AttributeType queryPersonAttributeTypeByUuid(Config config, String uuid) {
         String responseJson = getJson(config, "/personattributetype/{uuid}", uuid);
         return (Attribute.AttributeType) JsonUtils.readJson(responseJson, Attribute.AttributeType.class);
@@ -87,7 +94,7 @@ public class PersonResourceImpl extends BaseResource implements PersonResource {
     public void updatePersonAttribute(Config config, String uuid, Attribute attribute) {
         String requestJson = buildGsonWithAttributeTypeAdapter().toJson(attribute);
         postWithEmptyResponseBody(config, requestJson, "/person/{parentUuid}/attribute/{attributeUuid}", uuid,
-                attribute.getAttributeType().getUuid());
+                attribute.getUuid());
     }
 
     @Override
