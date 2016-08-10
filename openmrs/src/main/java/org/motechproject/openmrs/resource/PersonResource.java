@@ -65,7 +65,7 @@ public interface PersonResource {
      * be used while performing this action.
      *
      * @param config  the configuration to be used while performing this action
-     * @param uuid  the uuid of the AttributeType
+     * @param uuid  the uuid of the person
      * @return  the attribute
      */
     AttributeListResult queryPersonAttributeByPersonUuid(Config config, String uuid);
