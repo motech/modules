@@ -47,7 +47,14 @@ public class OpenMRSProgramEnrollmentServiceImpl implements OpenMRSProgramEnroll
 
         try {
             Config config = configService.getConfigByName(configName);
-            ProgramEnrollment created = programEnrollmentResource.createBahmniProgramEnrollment(config, programEnrollment);
+
+            ProgramEnrollment created;
+            if (programEnrollment.getAttributes() == null) {
+                created = programEnrollmentResource.createProgramEnrollment(config, programEnrollment);
+            } else {
+                created = programEnrollmentResource.createBahmniProgramEnrollment(config, programEnrollment);
+            }
+
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_PROGRAM_ENROLLMENT, EventHelper.programEnrollmentParameters(created)));
             return created;
         } catch (HttpClientErrorException e) {

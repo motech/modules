@@ -144,7 +144,8 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         programEnrollment.setDateEnrolled(dateEnrolled.toDate());
         programEnrollment.setDateCompleted(Objects.nonNull(dateCompleted) ? dateCompleted.toDate() : null);
         programEnrollment.setLocation(location);
-        programEnrollment.setAttributes(convertAttributeMapToList(programEnrollmentAttributes));
+        programEnrollment.setAttributes(programEnrollmentAttributes.size() == 0 ? null :
+                convertAttributeMapToList(programEnrollmentAttributes));
 
         programEnrollmentService.createProgramEnrollment(configName, programEnrollment);
     }
