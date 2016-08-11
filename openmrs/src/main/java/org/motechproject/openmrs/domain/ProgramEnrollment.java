@@ -35,6 +35,7 @@ public class ProgramEnrollment {
     @Expose
     private List<StateStatus> states;
 
+    @Expose
     private List<Attribute> attributes;
 
     private boolean enrolled;

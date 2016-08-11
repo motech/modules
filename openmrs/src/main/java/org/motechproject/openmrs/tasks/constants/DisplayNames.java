@@ -52,6 +52,7 @@ public final class DisplayNames {
     public static final String DATE_COMPLETED = "openMRS.programEnrollment.dateCompleted";
     public static final String STATE_UUID = "openMRS.program.state.uuid";
     public static final String STATE_START_DATE = "openMRS.program.state.startDate";
+    public static final String PROGRAM_ATTRIBUTES = "openMRS.programEnrollment.programAttributes";
 
     /**
      * Utility class, should not be initiated.

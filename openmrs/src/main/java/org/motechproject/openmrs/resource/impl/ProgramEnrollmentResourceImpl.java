@@ -4,11 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.httpclient.HttpClient;
 import org.motechproject.openmrs.config.Config;
-import org.motechproject.openmrs.domain.ProgramEnrollmentListResult;
+import org.motechproject.openmrs.domain.Attribute;
 import org.motechproject.openmrs.domain.Location;
 import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.Program;
 import org.motechproject.openmrs.domain.ProgramEnrollment;
+import org.motechproject.openmrs.domain.ProgramEnrollmentListResult;
 import org.motechproject.openmrs.resource.ProgramEnrollmentResource;
 import org.motechproject.openmrs.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +74,7 @@ public class ProgramEnrollmentResourceImpl extends BaseResource implements Progr
                 .registerTypeAdapter(Program.class, new Program.ProgramSerializer())
                 .registerTypeAdapter(Program.State.class, new Program.State.ProgramSerializer())
                 .registerTypeAdapter(Location.class, new Location.LocationSerializer())
+                .registerTypeAdapter(Attribute.class, new Attribute.AttributeSerializer())
                 .create();
     }
 }

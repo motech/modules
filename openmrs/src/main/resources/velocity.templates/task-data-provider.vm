@@ -294,6 +294,11 @@
             {
               "displayName": "openMRS.programEnrollment.numberOfPrograms",
               "fieldKey": "numberOfPrograms"
+            },
+            {
+              "displayName": "openMRS.programEnrollment.programAttributes",
+              "fieldKey": "attributesMap",
+              "type": "MAP"
             }
           ]
         }

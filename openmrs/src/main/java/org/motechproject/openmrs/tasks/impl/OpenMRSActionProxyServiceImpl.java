@@ -148,6 +148,38 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     }
 
     @Override
+    public void updateProgramEnrollment (String configName, String programEnrollmentUuid, DateTime programCompletedDate,
+                                               String stateUuid, DateTime startDate, Map<String, String> attributes) {
+
+        ProgramEnrollment updatedProgram = new ProgramEnrollment();
+        List<Attribute> attributesList;
+
+        updatedProgram.setUuid(programEnrollmentUuid);
+
+        if (programCompletedDate != null) {
+            updatedProgram.setDateCompleted(programCompletedDate.toDate());
+        }
+
+        if (stateUuid != null) {
+            List<ProgramEnrollment.StateStatus> statusList = new ArrayList<>();
+            ProgramEnrollment.StateStatus status = new ProgramEnrollment.StateStatus();
+
+            status.setUuid(stateUuid);
+            statusList.add(status);
+            updatedProgram.setStates(statusList);
+        }
+
+        if (startDate != null) {
+            updatedProgram.setDateEnrolled(startDate.toDate());
+        }
+
+        attributesList = convertAttributeMapToList(attributes);
+        updatedProgram.setAttributes(!attributesList.isEmpty() ? attributesList : null);
+
+        programEnrollmentService.updateProgramEnrollment(configName, updatedProgram);
+    }
+
+    @Override
     public void changeStateOfProgramEnrollment(String configName, String programEnrollmentUuid, DateTime programCompletedDate,
                                                String stateUuid, DateTime startDate) {
         ProgramEnrollment programEnrollment = new ProgramEnrollment();

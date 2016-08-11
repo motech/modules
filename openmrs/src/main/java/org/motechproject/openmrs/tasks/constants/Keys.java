@@ -53,6 +53,7 @@ public final class Keys {
     public static final String DATE_COMPLETED = "dateCompleted";
     public static final String STATE_UUID = "stateUuid";
     public static final String STATE_START_DATE = "startDate";
+    public static final String PROGRAM_ATTRIBUTES = "programAttributes";
 
     /**
      * Utility class, should not be initiated.
