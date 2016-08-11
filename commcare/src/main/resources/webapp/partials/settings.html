@@ -28,12 +28,12 @@
              <a ng-click="addConfig()" type="button" class="form-group btn btn-success">
                  <i class="fa fa-plus"></i> {{msg('commcare.addConfig')}}
              </a>
-             <br />
-             <span class="form-hint-error-bottom" ng-if="!$scope.verified">{{msg('commcare.verifyToSave')}}</span>
          </div>
      </div>
 
-    <br />
+    <div class="message">
+        <div class="form-hint-error-bottom" ng-if="!$scope.verified && selectedConfig">{{msg('commcare.verifyToSave')}}</div>
+    </div>
 
     <form ng-if="selectedConfig" class="commcare inside form-horizontal" novalidate>
 
