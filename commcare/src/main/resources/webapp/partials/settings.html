@@ -31,8 +31,8 @@
          </div>
      </div>
 
-    <div class="message">
-        <div class="form-hint-error-bottom" ng-if="!$scope.verified && selectedConfig">{{msg('commcare.verifyToSave')}}</div>
+    <div class="message" ng-if="!$scope.verified && selectedConfig">
+        <div class="form-hint-error-bottom"> {{msg('commcare.verifyToSave')}}</div>
     </div>
 
     <form ng-if="selectedConfig" class="commcare inside form-horizontal" novalidate>
