@@ -173,32 +173,6 @@ public class Attribute {
         }
     }
 
-    /**
-     * Implementation of the {@link JsonSerializer} interface for the {@link Attribute} class for
-     * Bahmni's Program Enrollment task actions.
-     */
-    public static class BahmniProgramEnrollmentAttributeSerializer implements JsonSerializer<Attribute> {
-
-        @Override
-        public JsonElement serialize(Attribute src, Type typeOfSrc, JsonSerializationContext context) {
-            JsonObject attribute = new JsonObject();
-
-            if (src.getAttributeType() != null && src.getAttributeType().getUuid() != null) {
-                JsonObject attributeType = new JsonObject();
-                attributeType.addProperty("uuid", src.getAttributeType().getUuid());
-                attribute.add("attributeType", attributeType);
-            }
-
-            if (src.getValue() != null) {
-                attribute.addProperty(VALUE_KEY, src.getValue());
-            } else if (src.getHydratedObject() != null) {
-                attribute.addProperty("hydratedObject", src.getHydratedObject());
-            }
-
-            return attribute;
-        }
-    }
-
     public String getUuid() {
         return uuid;
     }

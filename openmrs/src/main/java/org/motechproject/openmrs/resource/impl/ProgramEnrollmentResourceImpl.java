@@ -81,7 +81,7 @@ public class ProgramEnrollmentResourceImpl extends BaseResource implements Progr
                 .registerTypeAdapter(Program.class, new Program.ProgramSerializer())
                 .registerTypeAdapter(Program.State.class, new Program.State.ProgramSerializer())
                 .registerTypeAdapter(Location.class, new Location.LocationSerializer())
-                .registerTypeAdapter(Attribute.class, new Attribute.BahmniProgramEnrollmentAttributeSerializer())
+                .registerTypeAdapter(Attribute.class, new Attribute.AttributeSerializer())
                 .create();
     }
 }
