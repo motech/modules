@@ -53,6 +53,10 @@ public final class DisplayNames {
     public static final String STATE_UUID = "openMRS.program.state.uuid";
     public static final String STATE_START_DATE = "openMRS.program.state.startDate";
 
+    //CohortQuery Report action
+    public static final String COHORT_QUERY_UUID = "cohortQuery.uuid";
+    public static final String COHORT_QUERY_PARAMETERS = "cohortQuery.parameters";
+
     /**
      * Utility class, should not be initiated.
      */
