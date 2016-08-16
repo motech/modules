@@ -1,5 +1,6 @@
 package org.motechproject.openmrs.service.impl;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.Validate;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
@@ -64,7 +65,7 @@ public class OpenMRSProgramEnrollmentServiceImpl implements OpenMRSProgramEnroll
         try {
             Config config = configService.getConfigByName(configName);
 
-            if (programEnrollment.getAttributes() != null && !programEnrollment.getAttributes().isEmpty()) {
+            if (CollectionUtils.isNotEmpty(programEnrollment.getAttributes())) {
                 updatedProgramEnrollment = programEnrollmentResource.updateBahmniProgramEnrollment(config, programEnrollment);
             } else {
                 updatedProgramEnrollment = programEnrollmentResource.updateProgramEnrollment(config, programEnrollment);

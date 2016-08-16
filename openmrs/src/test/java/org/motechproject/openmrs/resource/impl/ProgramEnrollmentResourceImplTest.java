@@ -33,6 +33,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest {
 
+    private static final String BAHMNI_PROGRAM_ENROLLMENT_RESPONSE = "json/programEnrollment/bahmni-program-enrollment-response.json";
     private static final String PROGRAM_ENROLLMENT_CREATE = "json/programEnrollment/program-enrollment-create.json";
     private static final String PROGRAM_ENROLLMENT_RESPONSE = "json/programEnrollment/program-enrollment-response.json";
     private static final String PROGRAM_ENROLLMENT_TABLE = "json/programEnrollment/program-enrollment-table.json";
@@ -104,7 +105,7 @@ public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest 
         URI url = config.toInstancePathWithParams("/bahmniprogramenrollment/{uuid}", programEnrollment.getUuid());
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponseFromFile(PROGRAM_ENROLLMENT_RESPONSE));
+                .thenReturn(getResponseFromFile(BAHMNI_PROGRAM_ENROLLMENT_RESPONSE));
 
         ProgramEnrollment updated = programEnrollmentResource.updateBahmniProgramEnrollment(config, programEnrollment);
 

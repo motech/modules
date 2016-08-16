@@ -164,9 +164,7 @@ public class ActionBuilder {
         String serviceMethod = "updateProgramEnrollment";
 
         parameters.add(prepareParameter(Keys.CONFIG_NAME, DisplayNames.CONFIG_NAME, configName, false, true, order++));
-        parameters.addAll(prepareProgramEnrollmentParameters(order));
-        order = parameters.size();
-        parameters.add(prepareParameter(Keys.PROGRAM_ATTRIBUTES, DisplayNames.PROGRAM_ATTRIBUTES, MAP, false, order));
+        parameters.addAll(prepareProgramEnrollmentParameters(order, true));
 
         return new ActionEventRequestBuilder()
                 .setDisplayName(getDisplayName(UPDATE_PROGRAM_ENROLLMENT, configName))
@@ -183,7 +181,7 @@ public class ActionBuilder {
         String serviceMethod = "changeStateOfProgramEnrollment";
 
         parameters.add(prepareParameter(Keys.CONFIG_NAME, DisplayNames.CONFIG_NAME, configName, false, true, order++));
-        parameters.addAll(prepareProgramEnrollmentParameters(order));
+        parameters.addAll(prepareProgramEnrollmentParameters(order, false));
 
         return new ActionEventRequestBuilder()
                 .setDisplayName(getDisplayName(CHANGE_PROGRAM_ENROLLMENT_STATE, configName))
@@ -212,14 +210,18 @@ public class ActionBuilder {
                 .createActionEventRequest();
     }
 
-    private SortedSet<ActionParameterRequest> prepareProgramEnrollmentParameters(int startOrder) {
+    private SortedSet<ActionParameterRequest> prepareProgramEnrollmentParameters(int startOrder, boolean addAttributeMap) {
         SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
         int order = startOrder;
 
         parameters.add(prepareParameter(Keys.PROGRAM_ENROLLMENT_UUID, DisplayNames.PROGRAM_ENROLLMENT_UUID, true, order++));
         parameters.add(prepareParameter(Keys.DATE_COMPLETED, DisplayNames.DATE_COMPLETED, DATE, false, order++));
         parameters.add(prepareParameter(Keys.STATE_UUID, DisplayNames.STATE_UUID, false, order++));
-        parameters.add(prepareParameter(Keys.STATE_START_DATE, DisplayNames.STATE_START_DATE, DATE, false, order));
+        parameters.add(prepareParameter(Keys.STATE_START_DATE, DisplayNames.STATE_START_DATE, DATE, false, order++));
+
+        if (addAttributeMap) {
+            parameters.add(prepareParameter(Keys.PROGRAM_ATTRIBUTES, DisplayNames.PROGRAM_ATTRIBUTES, MAP, false, order));
+        }
 
         return parameters;
     }
