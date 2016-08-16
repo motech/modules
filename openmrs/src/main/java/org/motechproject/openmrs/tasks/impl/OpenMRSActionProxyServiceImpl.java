@@ -125,7 +125,8 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
 
     @Override
     public void createProgramEnrollment(String configName, String patientUuid, String programUuid,
-                                        DateTime dateEnrolled, DateTime dateCompleted, String locationName) {
+                                        DateTime dateEnrolled, DateTime dateCompleted, String locationName,
+                                        Map<String, String> programEnrollmentAttributes) {
         Patient patient = new Patient();
         patient.setUuid(patientUuid);
 
@@ -143,6 +144,8 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         programEnrollment.setDateEnrolled(dateEnrolled.toDate());
         programEnrollment.setDateCompleted(Objects.nonNull(dateCompleted) ? dateCompleted.toDate() : null);
         programEnrollment.setLocation(location);
+        programEnrollment.setAttributes(MapUtils.isEmpty(programEnrollmentAttributes) ? null :
+                convertAttributeMapToList(programEnrollmentAttributes));
 
         programEnrollmentService.createProgramEnrollment(configName, programEnrollment);
     }

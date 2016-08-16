@@ -44,7 +44,7 @@ public final class Keys {
     public static final String LOCATION_FOR_MOTECH_ID = "locationForMotechId";
     public static final String IDENTIFIERS = "identifiers";
     public static final String UUID = "uuid";
-    public static final String PERSON_ATTRIBUTES = "attributes";
+    public static final String PERSON_ATTRIBUTES = "person.personAttributes";
 
     //Program Enrollment action
     public static final String PROGRAM_UUID = "program.uuid";
@@ -53,7 +53,11 @@ public final class Keys {
     public static final String DATE_COMPLETED = "dateCompleted";
     public static final String STATE_UUID = "stateUuid";
     public static final String STATE_START_DATE = "startDate";
+<<<<<<< HEAD
     public static final String PROGRAM_ATTRIBUTES = "programAttributes";
+=======
+    public static final String PROGRAM_ENROLLMENT_ATTRIBUTES = "programEnrollmentAttributes";
+>>>>>>> upstream/master
 
     /**
      * Utility class, should not be initiated.

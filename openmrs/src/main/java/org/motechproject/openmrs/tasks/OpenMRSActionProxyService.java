@@ -135,7 +135,8 @@ public interface OpenMRSActionProxyService {
      * @param locationName  the name of location
      */
     void createProgramEnrollment(String configName, String patientUuid, String programUuid,
-                                 DateTime dateEnrolled, DateTime dateCompleted, String locationName);
+                                 DateTime dateEnrolled, DateTime dateCompleted,
+                                 String locationName, Map<String, String> programEnrollmentAttributes);
 
     /**
      * Updates a Bahmni program enrollment with the given params.

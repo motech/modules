@@ -5,6 +5,10 @@ import com.google.gson.GsonBuilder;
 import org.apache.commons.httpclient.HttpClient;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.Attribute;
+<<<<<<< HEAD
+=======
+import org.motechproject.openmrs.domain.ProgramEnrollmentListResult;
+>>>>>>> upstream/master
 import org.motechproject.openmrs.domain.Location;
 import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.Program;
@@ -50,6 +54,13 @@ public class ProgramEnrollmentResourceImpl extends BaseResource implements Progr
     @Override
     public void deleteProgramEnrollment(Config config, String uuid) {
         delete(config, "/programenrollment/{uuid}?purge", uuid);
+    }
+
+    @Override
+    public ProgramEnrollment createBahmniProgramEnrollment(Config config, ProgramEnrollment programEnrollment) {
+        String requestJson = buildGsonWithAdapters().toJson(programEnrollment);
+        String responseJson = postForJson(config, requestJson, "/bahmniprogramenrollment");
+        return (ProgramEnrollment) JsonUtils.readJson(responseJson, ProgramEnrollment.class);
     }
 
     @Override

@@ -27,6 +27,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -37,6 +38,9 @@ public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest 
     private static final String PROGRAM_ENROLLMENT_CREATE = "json/programEnrollment/program-enrollment-create.json";
     private static final String PROGRAM_ENROLLMENT_RESPONSE = "json/programEnrollment/program-enrollment-response.json";
     private static final String PROGRAM_ENROLLMENT_TABLE = "json/programEnrollment/program-enrollment-table.json";
+
+    private static final String BAHMNI_PROGRAM_ENROLLMENT_CREATE = "json/programEnrollment/bahmni-program-enrollment-create.json";
+    private static final String BAHMNI_PROGRAM_ENROLLMENT_RESPONSE = "json/programEnrollment/bahmni-program-enrollment-response.json";
 
     @Mock
     private RestOperations restOperations;
@@ -77,6 +81,25 @@ public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest 
         assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPost(config)));
         assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
                 equalTo(readFromFile(PROGRAM_ENROLLMENT_CREATE, JsonObject.class)));
+    }
+
+    @Test
+    public void shouldCreateProgramEnrollmentWithAttributes() throws Exception {
+        ProgramEnrollment programEnrollment = prepareBahmniProgramEnrollment();
+
+        URI url = config.toInstancePath("/bahmniprogramenrollment");
+
+        doReturn(getResponseFromFile(BAHMNI_PROGRAM_ENROLLMENT_RESPONSE)).when(restOperations)
+                .exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class));
+
+        ProgramEnrollment created = programEnrollmentResource.createBahmniProgramEnrollment(config, programEnrollment);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
+
+        assertThat(created, equalTo(programEnrollment));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPost(config)));
+        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
+                equalTo(readFromFile(BAHMNI_PROGRAM_ENROLLMENT_CREATE, JsonObject.class)));
     }
 
     @Test
@@ -140,6 +163,7 @@ public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest 
         return (ProgramEnrollment) readFromFile(PROGRAM_ENROLLMENT_RESPONSE, ProgramEnrollment.class);
     }
 
+<<<<<<< HEAD
     private ProgramEnrollment prepareProgramEnrollmentWithAttributes() throws Exception {
         ProgramEnrollment programEnrollment = (ProgramEnrollment) readFromFile(PROGRAM_ENROLLMENT_RESPONSE, ProgramEnrollment.class);
         List<Attribute> attributes = new ArrayList<>();
@@ -151,5 +175,9 @@ public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest 
         programEnrollment.setAttributes(attributes);
 
         return programEnrollment;
+=======
+    private ProgramEnrollment prepareBahmniProgramEnrollment() throws Exception {
+        return (ProgramEnrollment) readFromFile(BAHMNI_PROGRAM_ENROLLMENT_RESPONSE, ProgramEnrollment.class);
+>>>>>>> upstream/master
     }
 }
