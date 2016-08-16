@@ -59,7 +59,7 @@ public class ActionBuilder {
 
     private void buildActionsForVersionGreaterThan19(Config config, String configName, List<ActionEventRequest> actions) {
 
-        if(!OPENMRS_V1_9.equals(config.getOpenMrsVersion())) {
+        if (!OPENMRS_V1_9.equals(config.getOpenMrsVersion())) {
             actions.add(buildCreateProgramEnrollmentAction(configName));
             actions.add(buildChangeStateOfProgramEnrollmentAction(configName));
         }
@@ -100,7 +100,8 @@ public class ActionBuilder {
         parameters.add(prepareParameter(Keys.MOTECH_ID, DisplayNames.MOTECH_ID, true, order++));
         parameters.add(prepareParameter(Keys.LOCATION_FOR_MOTECH_ID, DisplayNames.LOCATION_FOR_MOTECH_ID, false,
                 order++));
-        parameters.add(prepareParameter(Keys.IDENTIFIERS, DisplayNames.IDENTIFIERS, MAP, false, order));
+        parameters.add(prepareParameter(Keys.IDENTIFIERS, DisplayNames.IDENTIFIERS, MAP, false, order++));
+        parameters.add(prepareParameter(Keys.PERSON_ATTRIBUTES, DisplayNames.PERSON_ATTRIBUTES, MAP, false, order));
 
         postActionParameters.add(prepareParameter(Keys.UUID, DisplayNames.PATIENT_UUID, false, 0));
 
@@ -122,6 +123,8 @@ public class ActionBuilder {
         parameters.add(prepareParameter(Keys.CONFIG_NAME, DisplayNames.CONFIG_NAME, configName, false, true, order++));
         parameters.add(prepareParameter(Keys.PERSON_UUID, DisplayNames.PERSON_UUID, true, order++));
         parameters.addAll(prepareCommonParameters(order));
+        order = parameters.size();
+        parameters.add(prepareParameter(Keys.PERSON_ATTRIBUTES, DisplayNames.PERSON_ATTRIBUTES, MAP, false, order));
 
         return new ActionEventRequestBuilder()
                 .setDisplayName(getDisplayName(UPDATE_PERSON, configName))
@@ -142,7 +145,9 @@ public class ActionBuilder {
         parameters.add(prepareParameter(Keys.PROGRAM_UUID, DisplayNames.PROGRAM_UUID, true, order++));
         parameters.add(prepareParameter(Keys.DATE_ENROLLED, DisplayNames.DATE_ENROLLED, DATE, true, order++));
         parameters.add(prepareParameter(Keys.DATE_COMPLETED, DisplayNames.DATE_COMPLETED, DATE, false, order++));
-        parameters.add(prepareParameter(Keys.LOCATION_NAME, DisplayNames.LOCATION_NAME, false, order));
+        parameters.add(prepareParameter(Keys.LOCATION_NAME, DisplayNames.LOCATION_NAME, false, order++));
+        parameters.add(prepareParameter(Keys.PROGRAM_ENROLLMENT_ATTRIBUTES, DisplayNames.PROGRAM_ENROLLMENT_ATTRIBUTES,
+                MAP, false, order));
 
         return new ActionEventRequestBuilder()
                 .setDisplayName(getDisplayName(CREATE_PROGRAM_ENROLLMENT, configName))

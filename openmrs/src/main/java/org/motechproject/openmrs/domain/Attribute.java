@@ -1,9 +1,14 @@
 package org.motechproject.openmrs.domain;
 
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import org.motechproject.openmrs.util.JsonUtils;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -14,6 +19,8 @@ import java.util.Objects;
  */
 public class Attribute {
 
+    private static final String VALUE_KEY = "value";
+
     private String uuid;
     private String display;
     private String value;
@@ -22,6 +29,7 @@ public class Attribute {
     private String format;
     private AttributeType attributeType;
     private List<Link> links;
+    private String hydratedObject;
 
     /**
      * Represents a single link.
@@ -68,6 +76,8 @@ public class Attribute {
 
         private String uuid;
 
+        private String format;
+
         public String getDisplay() {
             return display;
         }
@@ -82,6 +92,14 @@ public class Attribute {
 
         public void setUuid(String uuid) {
             this.uuid = uuid;
+        }
+
+        public String getFormat() {
+            return format;
+        }
+
+        public void setFormat(String format) {
+            this.format = format;
         }
 
         @Override
@@ -114,6 +132,44 @@ public class Attribute {
         @Override
         public JsonElement serialize(AttributeType src, Type typeOfSrc, JsonSerializationContext context) {
             return new JsonPrimitive(src.getUuid());
+        }
+    }
+
+    /**
+     * Implementation of the {@link JsonSerializer} and {@link JsonDeserializer} interfaces for the
+     * {@link Attribute} class.
+     */
+    public static class AttributeSerializer implements JsonSerializer<Attribute>, JsonDeserializer<Attribute> {
+
+        @Override
+        public JsonElement serialize(Attribute src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject attribute = new JsonObject();
+
+            if (src.getAttributeType() != null && src.getAttributeType().getUuid() != null) {
+                attribute.addProperty("attributeType", src.getAttributeType().getUuid());
+            }
+
+            if (src.getValue() != null) {
+                attribute.addProperty(VALUE_KEY, src.getValue());
+            } else if (src.getHydratedObject() != null) {
+                attribute.addProperty("hydratedObject", src.getHydratedObject());
+            }
+
+            return attribute;
+        }
+
+        @Override
+        public Attribute deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject attribute = json.getAsJsonObject();
+
+            JsonElement value = attribute.get(VALUE_KEY);
+            if (value != null && value.isJsonObject()) {
+                JsonObject valueObject = value.getAsJsonObject();
+                String attributeValue = valueObject.get("uuid").toString().replaceAll("\"", "");
+                attribute.addProperty(VALUE_KEY, attributeValue);
+            }
+
+            return (Attribute) JsonUtils.readJson(attribute.toString(), Attribute.class);
         }
     }
 
@@ -181,9 +237,17 @@ public class Attribute {
         this.links = links;
     }
 
+    public String getHydratedObject() {
+        return hydratedObject;
+    }
+
+    public void setHydratedObject(String hydratedObject) {
+        this.hydratedObject = hydratedObject;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, display, value, name, description, format, attributeType, links);
+        return Objects.hash(uuid, display, value, name, description, format, attributeType, links, hydratedObject);
     }
 
     @Override

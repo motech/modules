@@ -12,7 +12,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.Map;
 
 public abstract class AbstractResourceImplTest {
 
@@ -36,6 +38,10 @@ public abstract class AbstractResourceImplTest {
 
     protected Object readFromFile(String filename, Class type) throws Exception {
         return JsonUtils.readJson(readJsonFromFile(filename), type);
+    }
+
+    protected Object readFromFile(String filename, Class type, Map<Type, Object> adapters) throws Exception {
+        return JsonUtils.readJsonWithAdapters(readJsonFromFile(filename), type, adapters);
     }
 
     protected HttpHeaders getHeadersForPost(Config config) {
