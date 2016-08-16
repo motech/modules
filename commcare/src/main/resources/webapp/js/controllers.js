@@ -234,12 +234,13 @@
 
         $scope.copyConfig = function(config) {
 
-            $scope.verified = false;
             if (!config) {
                 $scope.configSaved = false;
+                $scope.verified = false;
                 return;
             }
 
+            $scope.verified = true;
             $scope.configSaved = true;
             var oldName, copy = {};
 
@@ -324,6 +325,7 @@
             $scope.configOutdated = true;
             $scope.clearMessages();
             $scope.configSaved = false;
+            $scope.verified = false;
         };
 
 
