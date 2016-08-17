@@ -55,7 +55,7 @@ public final class DisplayNames {
     public static final String STATE_START_DATE = "openMRS.program.state.startDate";
 
     //CohortQuery triggers
-    public static final String COHORTQUERY_UUID="openMRS.cohortQuery.uuid";
+    public static final String COHORTQUERY_UUID = "openMRS.cohortQuery.uuid";
     public static final String PATIENT_DISPLAY = "openMRS.patient.display";
     /**
      * Utility class, should not be initiated.
