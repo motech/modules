@@ -54,10 +54,13 @@ public final class DisplayNames {
     public static final String STATE_START_DATE = "openMRS.program.state.startDate";
     public static final String PROGRAM_ENROLLMENT_ATTRIBUTES = "openMRS.programEnrollment.attributes";
 
+    //CohortQuery triggers
+    public static final String COHORTQUERY_UUID = "openMRS.cohortQuery.uuid";
+    public static final String PATIENT_DISPLAY = "openMRS.patient.display";
+    public static final String COHORT_GOTMEMBER = "Got member from cohortquery";
     /**
      * Utility class, should not be initiated.
      */
     private DisplayNames() {
     }
-
 }
