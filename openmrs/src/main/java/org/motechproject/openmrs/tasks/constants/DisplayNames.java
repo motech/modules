@@ -43,7 +43,7 @@ public final class DisplayNames {
     public static final String MOTECH_ID = "openMRS.motechId";
     public static final String LOCATION_FOR_MOTECH_ID = "openMRS.location.name";
     public static final String IDENTIFIERS = "openMRS.patient.identifiers";
-    public static final String PERSON_ATTRIBUTES = "openMRS.person.attributes";
+    public static final String PERSON_ATTRIBUTES = "openMRS.patient.personAttributes";
 
     //Program Enrollment action
     public static final String PROGRAM_UUID = "openMRS.program.uuid";
@@ -52,6 +52,7 @@ public final class DisplayNames {
     public static final String DATE_COMPLETED = "openMRS.programEnrollment.dateCompleted";
     public static final String STATE_UUID = "openMRS.program.state.uuid";
     public static final String STATE_START_DATE = "openMRS.program.state.startDate";
+    public static final String PROGRAM_ENROLLMENT_ATTRIBUTES = "openMRS.programEnrollment.attributes";
 
     //CohortQuery Report action
     public static final String COHORT_QUERY_UUID = "cohortQuery.uuid";

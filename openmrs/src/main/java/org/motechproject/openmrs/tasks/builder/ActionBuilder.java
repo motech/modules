@@ -28,6 +28,7 @@ public class ActionBuilder {
     private static final String UPDATE_PATIENT_IDENTIFIERS = "Update Patient Identifiers";
     private static final String UPDATE_PERSON = "Update Person";
     private static final String CREATE_PROGRAM_ENROLLMENT = "Create Program Enrollment";
+    private static final String UPDATE_PROGRAM_ENROLLMENT = "Update Program Enrollment";
     private static final String CHANGE_PROGRAM_ENROLLMENT_STATE = "Change Program Enrollment State";
     private static final String GET_COHORT_QUERY_REPORT = "Get CohortQuery Report";
     private static final String OPENMRS_ACTION_PROXY_SERVICE = "org.motechproject.openmrs.tasks.OpenMRSActionProxyService";
@@ -66,6 +67,7 @@ public class ActionBuilder {
 
         if (!OPENMRS_V1_9.equals(config.getOpenMrsVersion())) {
             actions.add(buildCreateProgramEnrollmentAction(configName));
+            actions.add(buildUpdateProgramEnrollmentAction(configName));
             actions.add(buildChangeStateOfProgramEnrollmentAction(configName));
         }
     }
@@ -150,10 +152,29 @@ public class ActionBuilder {
         parameters.add(prepareParameter(Keys.PROGRAM_UUID, DisplayNames.PROGRAM_UUID, true, order++));
         parameters.add(prepareParameter(Keys.DATE_ENROLLED, DisplayNames.DATE_ENROLLED, DATE, true, order++));
         parameters.add(prepareParameter(Keys.DATE_COMPLETED, DisplayNames.DATE_COMPLETED, DATE, false, order++));
-        parameters.add(prepareParameter(Keys.LOCATION_NAME, DisplayNames.LOCATION_NAME, false, order));
+        parameters.add(prepareParameter(Keys.LOCATION_NAME, DisplayNames.LOCATION_NAME, false, order++));
+        parameters.add(prepareParameter(Keys.PROGRAM_ENROLLMENT_ATTRIBUTES, DisplayNames.PROGRAM_ENROLLMENT_ATTRIBUTES,
+                MAP, false, order));
 
         return new ActionEventRequestBuilder()
                 .setDisplayName(getDisplayName(CREATE_PROGRAM_ENROLLMENT, configName))
+                .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
+                .setServiceMethod(serviceMethod)
+                .setSubject(getSubject(serviceMethod, configName))
+                .setActionParameters(parameters)
+                .createActionEventRequest();
+    }
+
+    private ActionEventRequest buildUpdateProgramEnrollmentAction(String configName) {
+        SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
+        int order = 0;
+        String serviceMethod = "updateProgramEnrollment";
+
+        parameters.add(prepareParameter(Keys.CONFIG_NAME, DisplayNames.CONFIG_NAME, configName, false, true, order++));
+        parameters.addAll(prepareProgramEnrollmentParameters(order, true));
+
+        return new ActionEventRequestBuilder()
+                .setDisplayName(getDisplayName(UPDATE_PROGRAM_ENROLLMENT, configName))
                 .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
                 .setServiceMethod(serviceMethod)
                 .setSubject(getSubject(serviceMethod, configName))
@@ -167,10 +188,7 @@ public class ActionBuilder {
         String serviceMethod = "changeStateOfProgramEnrollment";
 
         parameters.add(prepareParameter(Keys.CONFIG_NAME, DisplayNames.CONFIG_NAME, configName, false, true, order++));
-        parameters.add(prepareParameter(Keys.PROGRAM_ENROLLMENT_UUID, DisplayNames.PROGRAM_ENROLLMENT_UUID, true, order++));
-        parameters.add(prepareParameter(Keys.DATE_COMPLETED, DisplayNames.DATE_COMPLETED, DATE, false, order++));
-        parameters.add(prepareParameter(Keys.STATE_UUID, DisplayNames.STATE_UUID, false, order++));
-        parameters.add(prepareParameter(Keys.STATE_START_DATE, DisplayNames.STATE_START_DATE, DATE, false, order));
+        parameters.addAll(prepareProgramEnrollmentParameters(order, false));
 
         return new ActionEventRequestBuilder()
                 .setDisplayName(getDisplayName(CHANGE_PROGRAM_ENROLLMENT_STATE, configName))
@@ -198,7 +216,7 @@ public class ActionBuilder {
                 .setActionParameters(parameters)
                 .createActionEventRequest();
     }
-
+    
     private ActionEventRequest buildGetCohortQueryReport(String configName) {
         SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
         int order = 0;
@@ -215,6 +233,22 @@ public class ActionBuilder {
                 .setSubject(getSubject(serviceMethod, configName))
                 .setActionParameters(parameters)
                 .createActionEventRequest();
+    }
+
+    private SortedSet<ActionParameterRequest> prepareProgramEnrollmentParameters(int startOrder, boolean addAttributeMap) {
+        SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
+        int order = startOrder;
+
+        parameters.add(prepareParameter(Keys.PROGRAM_ENROLLMENT_UUID, DisplayNames.PROGRAM_ENROLLMENT_UUID, true, order++));
+        parameters.add(prepareParameter(Keys.DATE_COMPLETED, DisplayNames.DATE_COMPLETED, DATE, false, order++));
+        parameters.add(prepareParameter(Keys.STATE_UUID, DisplayNames.STATE_UUID, false, order++));
+        parameters.add(prepareParameter(Keys.STATE_START_DATE, DisplayNames.STATE_START_DATE, DATE, false, order++));
+
+        if (addAttributeMap) {
+            parameters.add(prepareParameter(Keys.PROGRAM_ENROLLMENT_ATTRIBUTES, DisplayNames.PROGRAM_ENROLLMENT_ATTRIBUTES, MAP, false, order));
+        }
+
+        return parameters;
     }
 
     private SortedSet<ActionParameterRequest> prepareCommonParameters(int startOrder) {
