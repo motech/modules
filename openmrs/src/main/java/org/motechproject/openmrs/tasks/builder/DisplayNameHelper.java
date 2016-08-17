@@ -20,7 +20,7 @@ public final class DisplayNameHelper {
         if (StringUtils.isBlank(name)) {
             displayName = String.format("%s [%s]", subject, configName);
         } else {
-            displayName = String.format("%s: %s [%s: %s]", subject, name, configName);
+            displayName = String.format("%s: %s [%s]", subject, name, configName);
         }
         return displayName;
     }
