@@ -164,6 +164,13 @@ public interface OpenMRSActionProxyService {
     void changeStateOfProgramEnrollment(String configName, String programEnrollmentUuid, DateTime programCompletedDate,
                                         String stateUuid, DateTime startDate);
 
-    //MOTECH-2801: javadoc
+    /**
+     * Gets the Cohort Query report. The Cohort Query is identified by UUID.
+     * The required fields are: {@code cohortQueryUuid}.
+     *
+     * @param configName  the name of the configuration
+     * @param cohortQueryUuid  the cohort query uuid
+     * @param parameters  the additional parameters
+     */
     void getCohortQueryReport(String configName, String cohortQueryUuid, Map<String, String> parameters);
 }

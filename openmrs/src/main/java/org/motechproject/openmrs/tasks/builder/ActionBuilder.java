@@ -53,8 +53,6 @@ public class ActionBuilder {
             actions.add(buildCreatePatientAction(configName));
             actions.add(buildUpdatePatientAction(configName));
             actions.add(buildUpdatePatientIdentifiersAction(configName));
-
-            // MOTECH-2801: Tutaj czy akcja dla 1.12?
             actions.add(buildGetCohortQueryReport(configName));
 
             buildActionsForVersionGreaterThan19(config, configName, actions);
