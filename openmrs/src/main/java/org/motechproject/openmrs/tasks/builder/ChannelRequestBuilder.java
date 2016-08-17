@@ -6,7 +6,6 @@ import org.motechproject.tasks.contract.ChannelRequest;
 import org.motechproject.tasks.contract.TriggerEventRequest;
 import org.osgi.framework.BundleContext;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,10 +18,12 @@ public class ChannelRequestBuilder {
 
     private BundleContext bundleContext;
     private ActionBuilder actionsBuilder;
+    private TriggerBuilder triggersBuilder;
 
     public ChannelRequestBuilder(BundleContext bundleContext, OpenMRSConfigService configService) {
         this.bundleContext = bundleContext;
         this.actionsBuilder = new ActionBuilder(configService);
+        this.triggersBuilder = new TriggerBuilder(configService);
     }
 
     /**
@@ -33,7 +34,7 @@ public class ChannelRequestBuilder {
     public ChannelRequest build() {
         String moduleSymbolicName = getModuleSymbolicName();
         String moduleVersion = bundleContext.getBundle().getVersion().toString();
-        List<TriggerEventRequest> triggers = new ArrayList<>();
+        List<TriggerEventRequest> triggers = triggersBuilder.buildTriggers();
         List<ActionEventRequest> actions = actionsBuilder.buildActions();
         return new ChannelRequest(DISPLAY_NAME, moduleSymbolicName, moduleVersion, DESCRIPTION, triggers, actions);
     }
