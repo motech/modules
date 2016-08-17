@@ -1,5 +1,6 @@
 package org.motechproject.openmrs.service.impl;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.Validate;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
@@ -65,11 +66,18 @@ public class OpenMRSProgramEnrollmentServiceImpl implements OpenMRSProgramEnroll
 
     @Override
     public ProgramEnrollment updateProgramEnrollment(String configName, ProgramEnrollment programEnrollment) {
+        ProgramEnrollment updatedProgramEnrollment = null;
         validateProgramEnrollmentToUpdate(programEnrollment);
 
         try {
             Config config = configService.getConfigByName(configName);
-            return programEnrollmentResource.updateProgramEnrollment(config, programEnrollment);
+
+            if (CollectionUtils.isNotEmpty(programEnrollment.getAttributes())) {
+                updatedProgramEnrollment = programEnrollmentResource.updateBahmniProgramEnrollment(config, programEnrollment);
+            } else {
+                updatedProgramEnrollment = programEnrollmentResource.updateProgramEnrollment(config, programEnrollment);
+            }
+            return updatedProgramEnrollment;
         } catch (HttpClientErrorException e) {
             throw new OpenMRSException("Could not update program enrollment with uuid: " + programEnrollment.getUuid(), e);
         }
