@@ -8,7 +8,21 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.motechproject.openmrs.domain.*;
+import org.motechproject.openmrs.domain.Attribute;
+import org.motechproject.openmrs.domain.Concept;
+import org.motechproject.openmrs.domain.ConceptName;
+import org.motechproject.openmrs.domain.Encounter;
+import org.motechproject.openmrs.domain.EncounterType;
+import org.motechproject.openmrs.domain.Identifier;
+import org.motechproject.openmrs.domain.IdentifierType;
+import org.motechproject.openmrs.domain.Location;
+import org.motechproject.openmrs.domain.Observation;
+import org.motechproject.openmrs.domain.Patient;
+import org.motechproject.openmrs.domain.Person;
+import org.motechproject.openmrs.domain.Program;
+import org.motechproject.openmrs.domain.ProgramEnrollment;
+import org.motechproject.openmrs.domain.Provider;
+import org.motechproject.openmrs.service.OpenMRSCohortService;
 import org.motechproject.openmrs.service.OpenMRSConceptService;
 import org.motechproject.openmrs.service.OpenMRSEncounterService;
 import org.motechproject.openmrs.service.OpenMRSLocationService;
@@ -18,7 +32,11 @@ import org.motechproject.openmrs.service.OpenMRSProgramEnrollmentService;
 import org.motechproject.openmrs.service.OpenMRSProviderService;
 import org.motechproject.openmrs.tasks.OpenMRSActionProxyService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
@@ -50,6 +68,9 @@ public class OpenMRSActionProxyServiceTest {
 
     @Mock
     private OpenMRSProgramEnrollmentService programEnrollmentService;
+
+    @Mock
+    private OpenMRSCohortService cohortService;
 
     @Captor
     private ArgumentCaptor<Encounter> encounterCaptor;
@@ -373,6 +394,37 @@ public class OpenMRSActionProxyServiceTest {
 
         verify(programEnrollmentService).updateProgramEnrollment(eq(CONFIG_NAME), programEnrollmentCaptor.capture());
         assertEquals(programEnrollment, programEnrollmentCaptor.getValue());
+    }
+
+    @Test
+    public void shouldGetCohortQueryReport() {
+        String cohortQueryUuid = "QQQ";
+
+        ArgumentCaptor<String> uuidCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Map> parametersCaptor = ArgumentCaptor.forClass(Map.class);
+
+        openMRSActionProxyService.getCohortQueryReport(CONFIG_NAME, cohortQueryUuid, null);
+
+        verify(cohortService).getCohortQueryReport(eq(CONFIG_NAME), uuidCaptor.capture(), parametersCaptor.capture());
+        assertEquals(cohortQueryUuid, uuidCaptor.getValue());
+        assertEquals(null, parametersCaptor.getValue());
+    }
+
+    @Test
+    public void shouldGetCohortQueryReportWithGivenParameters() {
+        String cohortQueryUuid = "QQQ";
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("param1", "value");
+        parameters.put("param2", "value");
+
+        ArgumentCaptor<String> uuidCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Map> parametersCaptor = ArgumentCaptor.forClass(Map.class);
+
+        openMRSActionProxyService.getCohortQueryReport(CONFIG_NAME, cohortQueryUuid, parameters);
+
+        verify(cohortService).getCohortQueryReport(eq(CONFIG_NAME), uuidCaptor.capture(), parametersCaptor.capture());
+        assertEquals(cohortQueryUuid, uuidCaptor.getValue());
+        assertEquals(parameters, parametersCaptor.getValue());
     }
 
     private Person createTestPerson() {
