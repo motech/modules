@@ -6,7 +6,6 @@ package org.motechproject.openmrs.tasks.constants;
 public final class DisplayNames {
 
     public static final String CONFIG_NAME = "openMRS.configuration.name";
-    public static final String COHORT_GOTMEMBER = "Got member from cohortquery";
 
     //Encounter action
     public static final String ENCOUNTER_DATE = "openMRS.encounter.date";
@@ -58,6 +57,7 @@ public final class DisplayNames {
     //CohortQuery triggers
     public static final String COHORTQUERY_UUID = "openMRS.cohortQuery.uuid";
     public static final String PATIENT_DISPLAY = "openMRS.patient.display";
+    public static final String COHORT_GOTMEMBER = "Got member from cohortquery";
     /**
      * Utility class, should not be initiated.
      */

@@ -18,12 +18,12 @@ public class ChannelRequestBuilder {
 
     private BundleContext bundleContext;
     private ActionBuilder actionsBuilder;
-    private TriggerBuilder triggersBuilder;
+    private OpenMRSTriggerBuilder triggersBuilder;
 
     public ChannelRequestBuilder(BundleContext bundleContext, OpenMRSConfigService configService) {
         this.bundleContext = bundleContext;
         this.actionsBuilder = new ActionBuilder(configService);
-        this.triggersBuilder = new TriggerBuilder(configService);
+        this.triggersBuilder = new OpenMRSTriggerBuilder(configService);
     }
 
     /**

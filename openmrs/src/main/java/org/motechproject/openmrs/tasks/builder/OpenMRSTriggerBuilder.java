@@ -11,10 +11,10 @@ import org.motechproject.tasks.contract.TriggerEventRequest;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TriggerBuilder {
+public class OpenMRSTriggerBuilder {
     private OpenMRSConfigService configService;
 
-    public TriggerBuilder(OpenMRSConfigService configService) {
+    public OpenMRSTriggerBuilder(OpenMRSConfigService configService) {
         this.configService = configService;
     }
 
