@@ -61,7 +61,7 @@ public final class DisplayNames {
     //CohortQuery triggers
     public static final String COHORTQUERY_UUID = "openMRS.cohortQuery.uuid";
     public static final String PATIENT_DISPLAY = "openMRS.patient.display";
-    public static final String COHORT_GOTMEMBER = "Got member from cohortquery";
+    public static final String COHORT_GOTMEMBER = "openMRS.cohortQuery.gotMember";
     /**
      * Utility class, should not be initiated.
      */
