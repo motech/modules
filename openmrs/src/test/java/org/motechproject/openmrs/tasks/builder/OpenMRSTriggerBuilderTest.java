@@ -18,6 +18,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class OpenMRSTriggerBuilderTest {
+    
     @Mock
     private OpenMRSConfigService configService;
 
@@ -63,6 +64,4 @@ public class OpenMRSTriggerBuilderTest {
 
         return configs;
     }
-
-
 }
