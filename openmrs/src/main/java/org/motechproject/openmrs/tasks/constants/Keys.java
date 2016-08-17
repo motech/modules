@@ -60,6 +60,11 @@ public final class Keys {
     public static final String COHORT_QUERY_PARAMETERS = "cohortQueryParameters";
     public static final String PATIENT_DISPLAY = "patientDisplay";
 
+    //Cohortquery triggers
+    public static final String PATIENT_ID = "PatientId";
+    public static final String PATIENT_DISPLAY = "PatientDisplay";
+    public static final String COHORT_QUERY_ID = "CohortQueryId";
+
     /**
      * Utility class, should not be initiated.
      */
