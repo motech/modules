@@ -34,7 +34,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest {
 
-    private static final String BAHMNI_PROGRAM_ENROLLMENT_RESPONSE = "json/programEnrollment/bahmni-program-enrollment-response.json";
     private static final String PROGRAM_ENROLLMENT_CREATE = "json/programEnrollment/program-enrollment-create.json";
     private static final String PROGRAM_ENROLLMENT_RESPONSE = "json/programEnrollment/program-enrollment-response.json";
     private static final String PROGRAM_ENROLLMENT_TABLE = "json/programEnrollment/program-enrollment-table.json";
@@ -163,21 +162,26 @@ public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest 
         return (ProgramEnrollment) readFromFile(PROGRAM_ENROLLMENT_RESPONSE, ProgramEnrollment.class);
     }
 
-<<<<<<< HEAD
     private ProgramEnrollment prepareProgramEnrollmentWithAttributes() throws Exception {
         ProgramEnrollment programEnrollment = (ProgramEnrollment) readFromFile(PROGRAM_ENROLLMENT_RESPONSE, ProgramEnrollment.class);
         List<Attribute> attributes = new ArrayList<>();
-        Attribute attribute = new Attribute();
+        Attribute attribute1 = new Attribute();
+        Attribute attribute2 = new Attribute();
 
-        attribute.setUuid("AAA");
-        attribute.setValue("Sample value");
-        attributes.add(attribute);
+        attribute1.setUuid("614eb218-68aa-46fe-8b93-f023e5d6d825");
+        attribute1.setValue("Registration Number: ASD");
+
+        attribute2.setUuid("cb103d80-8c24-4173-a2b5-91d8b52ed69c");
+        attribute2.setValue("Registration Facility: 1853");
+
+        attributes.add(attribute1);
+        attributes.add(attribute2);
         programEnrollment.setAttributes(attributes);
 
         return programEnrollment;
-=======
+    }
+
     private ProgramEnrollment prepareBahmniProgramEnrollment() throws Exception {
         return (ProgramEnrollment) readFromFile(BAHMNI_PROGRAM_ENROLLMENT_RESPONSE, ProgramEnrollment.class);
->>>>>>> upstream/master
     }
 }

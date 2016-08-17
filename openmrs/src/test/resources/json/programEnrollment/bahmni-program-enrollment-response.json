@@ -11,28 +11,13 @@
     "uuid": "433f6e08-8c8c-4c64-8cac-1ee96df2d5cc"
   },
   "states": [],
-<<<<<<< HEAD
-  "attributes":[{
-    "uuid": "AAA",
-    "value": "Sample value"
-  }]
-=======
   "attributes": [
     {
       "uuid": "614eb218-68aa-46fe-8b93-f023e5d6d825",
-      "display": "Registration Number: ASD",
-      "links": [{
-        "rel": "self",
-        "uri": "/openmrs/ws/rest/v1/bahmniprogramenrollment/8bed8bd4-7ec4-47d6-a8b9-c5141bf4b6a3/attribute/614eb218-68aa-46fe-8b93-f023e5d6d825"
-      }]
+      "value": "Registration Number: ASD"
     },
     {
       "uuid": "cb103d80-8c24-4173-a2b5-91d8b52ed69c",
-      "display": "Registration Facility: 1853",
-      "links": [{
-        "rel": "self",
-        "uri": "/openmrs/ws/rest/v1/bahmniprogramenrollment/53e799b8-998b-4061-8d80-7d98149a5b99/attribute/cb103d80-8c24-4173-a2b5-91d8b52ed69c"
-      }]
+      "value": "Registration Facility: 1853"
     }]
->>>>>>> upstream/master
 }

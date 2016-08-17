@@ -222,7 +222,7 @@ public class ActionBuilder {
         parameters.add(prepareParameter(Keys.STATE_START_DATE, DisplayNames.STATE_START_DATE, DATE, false, order++));
 
         if (addAttributeMap) {
-            parameters.add(prepareParameter(Keys.PROGRAM_ATTRIBUTES, DisplayNames.PROGRAM_ATTRIBUTES, MAP, false, order));
+            parameters.add(prepareParameter(Keys.PROGRAM_ENROLLMENT_ATTRIBUTES, DisplayNames.PROGRAM_ENROLLMENT_ATTRIBUTES, MAP, false, order));
         }
 
         return parameters;

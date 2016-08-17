@@ -5,10 +5,6 @@ import com.google.gson.GsonBuilder;
 import org.apache.commons.httpclient.HttpClient;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.Attribute;
-<<<<<<< HEAD
-=======
-import org.motechproject.openmrs.domain.ProgramEnrollmentListResult;
->>>>>>> upstream/master
 import org.motechproject.openmrs.domain.Location;
 import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.Program;

@@ -53,11 +53,7 @@ public final class Keys {
     public static final String DATE_COMPLETED = "dateCompleted";
     public static final String STATE_UUID = "stateUuid";
     public static final String STATE_START_DATE = "startDate";
-<<<<<<< HEAD
-    public static final String PROGRAM_ATTRIBUTES = "programAttributes";
-=======
     public static final String PROGRAM_ENROLLMENT_ATTRIBUTES = "programEnrollmentAttributes";
->>>>>>> upstream/master
 
     /**
      * Utility class, should not be initiated.
