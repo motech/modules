@@ -10,6 +10,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.config.ConfigDummyData;
+import org.motechproject.openmrs.domain.Attribute;
 import org.motechproject.openmrs.domain.ProgramEnrollment;
 import org.motechproject.openmrs.util.JsonUtils;
 import org.springframework.http.HttpEntity;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestOperations;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -109,6 +111,25 @@ public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest 
                 .thenReturn(getResponseFromFile(PROGRAM_ENROLLMENT_RESPONSE));
 
         ProgramEnrollment updated = programEnrollmentResource.updateProgramEnrollment(config, programEnrollment);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
+
+        assertThat(updated, equalTo(programEnrollment));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPost(config)));
+        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
+                equalTo(readFromFile(PROGRAM_ENROLLMENT_CREATE, JsonObject.class)));
+    }
+
+    @Test
+    public void shouldUpdateBahmniProgramEnrollment() throws Exception {
+        ProgramEnrollment programEnrollment = prepareBahmniProgramEnrollment();
+
+        URI url = config.toInstancePathWithParams("/bahmniprogramenrollment/{uuid}", programEnrollment.getUuid());
+
+        when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponseFromFile(BAHMNI_PROGRAM_ENROLLMENT_RESPONSE));
+
+        ProgramEnrollment updated = programEnrollmentResource.updateBahmniProgramEnrollment(config, programEnrollment);
 
         verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
 
