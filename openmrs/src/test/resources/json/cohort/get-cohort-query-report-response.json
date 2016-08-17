@@ -1,0 +1,17 @@
+{
+  "uuid":"d8623950-383c-408f-9764-4d9673940c2b",
+  "members":[
+    {
+      "uuid":"e65350f3-3a54-4196-ad75-9b5a0f405d90",
+      "display":"10000X - Paul Walker"
+    },
+    {
+      "uuid":"a4ea2d4a-4a4f-4215-8fdf-ee4d26d4d82d",
+      "display":"10001V - Mary Thomas"
+    },
+    {
+      "uuid":"7ed87389-b802-44c5-b816-531320893a5e",
+      "display":"10002T - Lisa Hall"
+    }
+  ]
+}
