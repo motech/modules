@@ -122,7 +122,7 @@ public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest 
 
     @Test
     public void shouldUpdateBahmniProgramEnrollment() throws Exception {
-        ProgramEnrollment programEnrollment = prepareProgramEnrollmentWithAttributes();
+        ProgramEnrollment programEnrollment = prepareBahmniProgramEnrollment();
 
         URI url = config.toInstancePathWithParams("/bahmniprogramenrollment/{uuid}", programEnrollment.getUuid());
 
@@ -160,25 +160,6 @@ public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest 
 
     private ProgramEnrollment prepareProgramEnrollment() throws Exception {
         return (ProgramEnrollment) readFromFile(PROGRAM_ENROLLMENT_RESPONSE, ProgramEnrollment.class);
-    }
-
-    private ProgramEnrollment prepareProgramEnrollmentWithAttributes() throws Exception {
-        ProgramEnrollment programEnrollment = (ProgramEnrollment) readFromFile(PROGRAM_ENROLLMENT_RESPONSE, ProgramEnrollment.class);
-        List<Attribute> attributes = new ArrayList<>();
-        Attribute attribute1 = new Attribute();
-        Attribute attribute2 = new Attribute();
-
-        attribute1.setUuid("614eb218-68aa-46fe-8b93-f023e5d6d825");
-        attribute1.setValue("Registration Number: ASD");
-
-        attribute2.setUuid("cb103d80-8c24-4173-a2b5-91d8b52ed69c");
-        attribute2.setValue("Registration Facility: 1853");
-
-        attributes.add(attribute1);
-        attributes.add(attribute2);
-        programEnrollment.setAttributes(attributes);
-
-        return programEnrollment;
     }
 
     private ProgramEnrollment prepareBahmniProgramEnrollment() throws Exception {
