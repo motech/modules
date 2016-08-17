@@ -11,6 +11,9 @@ import org.motechproject.tasks.contract.TriggerEventRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The <code>OpenMRSTriggerBuilder</code> class builds case triggers for OpenMRS module.
+ */
 public class OpenMRSTriggerBuilder {
     private OpenMRSConfigService configService;
 
