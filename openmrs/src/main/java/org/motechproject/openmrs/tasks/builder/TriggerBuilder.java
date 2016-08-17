@@ -11,9 +11,6 @@ import org.motechproject.tasks.contract.TriggerEventRequest;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by user on 12.08.16.
- */
 public class TriggerBuilder {
     private OpenMRSConfigService configService;
 
