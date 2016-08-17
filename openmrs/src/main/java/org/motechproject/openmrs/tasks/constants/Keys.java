@@ -63,7 +63,7 @@ public final class Keys {
     //Cohortquery triggers
     public static final String PATIENT_ID = "PatientId";
     public static final String PATIENT_DISPLAY = "PatientDisplay";
-    public static final String COHORT_QUERY_ID = "CohortQueryId";
+    public static final String COHORT_QUERY_ID = "CohortQueryUUID";
 
     /**
      * Utility class, should not be initiated.
