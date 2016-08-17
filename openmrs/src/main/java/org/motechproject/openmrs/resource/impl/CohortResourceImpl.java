@@ -1,6 +1,7 @@
 package org.motechproject.openmrs.resource.impl;
 
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.httpclient.HttpClient;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.CohortQueryReport;
@@ -38,7 +39,7 @@ public class CohortResourceImpl extends BaseResource implements CohortResource {
     private String prepareCohortQueryPath(String path, Map<String, String> parameters) {
         StringBuilder pathBuilder = new StringBuilder("/reportingrest/cohort/" + path);
 
-        if (parameters != null && parameters.size() != 0) {
+        if (MapUtils.isNotEmpty(parameters)) {
             pathBuilder.append("?");
 
             for (Map.Entry<String, String> parameter : parameters.entrySet()) {
