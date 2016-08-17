@@ -6,7 +6,6 @@ import org.motechproject.tasks.contract.ChannelRequest;
 import org.motechproject.tasks.contract.TriggerEventRequest;
 import org.osgi.framework.BundleContext;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

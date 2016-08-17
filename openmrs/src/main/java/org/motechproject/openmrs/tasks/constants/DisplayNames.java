@@ -60,7 +60,7 @@ public final class DisplayNames {
     public static final String COHORT_QUERY_PARAMETERS = "cohortQuery.parameters";
 
     //CohortQuery triggers
-    public static final String COHORTQUERY_UUID="openMRS.cohortQuery.uuid";
+    public static final String COHORTQUERY_UUID = "openMRS.cohortQuery.uuid";
     public static final String PATIENT_DISPLAY = "openMRS.patient.display";
     /**
      * Utility class, should not be initiated.
