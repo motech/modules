@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
@@ -407,7 +408,7 @@ public class OpenMRSActionProxyServiceTest {
 
         verify(cohortService).getCohortQueryReport(eq(CONFIG_NAME), uuidCaptor.capture(), parametersCaptor.capture());
         assertEquals(cohortQueryUuid, uuidCaptor.getValue());
-        assertEquals(null, parametersCaptor.getValue());
+        assertNull(parametersCaptor.getValue());
     }
 
     @Test
