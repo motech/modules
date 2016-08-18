@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The <code>OpenMRSTriggerBuilder</code> class builds case triggers for OpenMRS module.
+ * The <code>OpenMRSTriggerBuilder</code> class builds triggers for OpenMRS module.
  */
 public class OpenMRSTriggerBuilder {
     private OpenMRSConfigService configService;
@@ -39,13 +39,13 @@ public class OpenMRSTriggerBuilder {
         List<TriggerEventRequest> triggers = new ArrayList<>();
 
         List<EventParameterRequest> parameterRequests = new ArrayList<>();
-        parameterRequests.add(new EventParameterRequest(DisplayNames.PERSON_UUID, Keys.PATIENT_ID));
+        parameterRequests.add(new EventParameterRequest(DisplayNames.PERSON_UUID, Keys.PATIENT_UUID));
         parameterRequests.add(new EventParameterRequest(DisplayNames.PATIENT_DISPLAY, Keys.PATIENT_DISPLAY));
-        parameterRequests.add(new EventParameterRequest(DisplayNames.COHORTQUERY_UUID, Keys.COHORT_QUERY_ID));
+        parameterRequests.add(new EventParameterRequest(DisplayNames.COHORTQUERY_UUID, Keys.COHORT_QUERY_UUID));
 
-        String displayName = DisplayNameHelper.buildDisplayName(DisplayNames.COHORT_GOTMEMBER, configName);
+        String displayName = DisplayNameHelper.buildDisplayName(DisplayNames.COHORT_REPORTMEMBER, configName);
 
-        triggers.add(new TriggerEventRequest(displayName, EventKeys.BASE_SUBJECT + "Cohort.GotMember", null, parameterRequests));
+        triggers.add(new TriggerEventRequest(displayName, EventKeys.BASE_SUBJECT + "Cohort.ReportMember", null, parameterRequests));
 
         return triggers;
     }

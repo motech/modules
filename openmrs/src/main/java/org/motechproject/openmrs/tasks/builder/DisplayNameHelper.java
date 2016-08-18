@@ -11,7 +11,7 @@ public final class DisplayNameHelper {
      * Builds a display name in the form of "subject: name [config-name]". Example - Received Form: Birth [myConfig].
      * If the name is blank, this will be formatted as "name [config-name]".
      * @param subject the subject with which the display name should start
-     * @param name the name of the element (form, case, etc.), if blank will be omitted
+     * @param name the name of the element, if blank will be omitted
      * @param configName the name of the configuration
      * @return the display name
      */
