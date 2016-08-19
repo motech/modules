@@ -6,9 +6,14 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.motechproject.event.MotechEvent;
+import org.motechproject.event.listener.EventRelay;
 import org.motechproject.openmrs.domain.Attribute;
+import org.motechproject.openmrs.domain.CohortQueryReport;
+import org.motechproject.openmrs.domain.CohortQueryReport.CohortQueryReportMember;
 import org.motechproject.openmrs.domain.Concept;
 import org.motechproject.openmrs.domain.ConceptName;
 import org.motechproject.openmrs.domain.Encounter;
@@ -33,6 +38,7 @@ import org.motechproject.openmrs.service.OpenMRSProviderService;
 import org.motechproject.openmrs.tasks.OpenMRSActionProxyService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +48,8 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -72,6 +80,9 @@ public class OpenMRSActionProxyServiceTest {
 
     @Mock
     private OpenMRSCohortService cohortService;
+
+    @Mock
+    private EventRelay eventRelay;
 
     @Captor
     private ArgumentCaptor<Encounter> encounterCaptor;
@@ -400,15 +411,37 @@ public class OpenMRSActionProxyServiceTest {
     }
 
     @Test
+    public void shouldGetEmptyCohortQueryReport() {
+        String cohortQueryUuid = "QQQ";
+
+        ArgumentCaptor<String> uuidCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Map> parametersCaptor = ArgumentCaptor.forClass(Map.class);
+
+        doReturn(prepareEmptyCohortQueryReport()).when(cohortService)
+                .getCohortQueryReport(eq(CONFIG_NAME), eq(cohortQueryUuid), eq(null));
+
+        openMRSActionProxyService.getCohortQueryReport(CONFIG_NAME, cohortQueryUuid, null);
+
+        verify(cohortService).getCohortQueryReport(eq(CONFIG_NAME), uuidCaptor.capture(), parametersCaptor.capture());
+        verify(eventRelay, never()).sendEventMessage(Matchers.<MotechEvent>any());
+        assertEquals(cohortQueryUuid, uuidCaptor.getValue());
+        assertNull(parametersCaptor.getValue());
+    }
+
+    @Test
     public void shouldGetCohortQueryReport() {
         String cohortQueryUuid = "QQQ";
 
         ArgumentCaptor<String> uuidCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<Map> parametersCaptor = ArgumentCaptor.forClass(Map.class);
 
+        doReturn(prepareCohortQueryReportWithMembers()).when(cohortService)
+                .getCohortQueryReport(eq(CONFIG_NAME), eq(cohortQueryUuid), eq(null));
+
         openMRSActionProxyService.getCohortQueryReport(CONFIG_NAME, cohortQueryUuid, null);
 
         verify(cohortService).getCohortQueryReport(eq(CONFIG_NAME), uuidCaptor.capture(), parametersCaptor.capture());
+        verify(eventRelay, times(3)).sendEventMessage(Matchers.<MotechEvent>any());
         assertEquals(cohortQueryUuid, uuidCaptor.getValue());
         assertNull(parametersCaptor.getValue());
     }
@@ -422,6 +455,9 @@ public class OpenMRSActionProxyServiceTest {
 
         ArgumentCaptor<String> uuidCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<Map> parametersCaptor = ArgumentCaptor.forClass(Map.class);
+
+        doReturn(prepareCohortQueryReportWithMembers()).when(cohortService)
+                .getCohortQueryReport(eq(CONFIG_NAME), eq(cohortQueryUuid), eq(parameters));
 
         openMRSActionProxyService.getCohortQueryReport(CONFIG_NAME, cohortQueryUuid, parameters);
 
@@ -492,5 +528,27 @@ public class OpenMRSActionProxyServiceTest {
         observation.setObsDatetime(new DateTime("2000-08-16T07:22:05Z").toDate());
 
         return Collections.singletonList(observation);
+    }
+
+    private CohortQueryReport prepareEmptyCohortQueryReport() {
+        CohortQueryReport cohortQueryReport = new CohortQueryReport();
+        cohortQueryReport.setMembers(new ArrayList<>());
+
+        return cohortQueryReport;
+    }
+
+    private CohortQueryReport prepareCohortQueryReportWithMembers() {
+        CohortQueryReport cohortQueryReport = new CohortQueryReport();
+
+        List<CohortQueryReportMember> members = Arrays.asList(
+                new CohortQueryReportMember[]{
+                        new CohortQueryReportMember(),
+                        new CohortQueryReportMember(),
+                        new CohortQueryReportMember()
+                }
+        );
+        cohortQueryReport.setMembers(members);
+
+        return cohortQueryReport;
     }
 }
