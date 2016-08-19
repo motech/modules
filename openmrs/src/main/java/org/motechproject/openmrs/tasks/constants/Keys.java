@@ -55,6 +55,11 @@ public final class Keys {
     public static final String STATE_START_DATE = "startDate";
     public static final String PROGRAM_ENROLLMENT_ATTRIBUTES = "programEnrollmentAttributes";
 
+    //CohortQuery Report action
+    public static final String COHORT_QUERY_UUID = "cohortQueryUuid";
+    public static final String COHORT_QUERY_PARAMETERS = "cohortQueryParameters";
+    public static final String PATIENT_DISPLAY = "patientDisplay";
+
     /**
      * Utility class, should not be initiated.
      */

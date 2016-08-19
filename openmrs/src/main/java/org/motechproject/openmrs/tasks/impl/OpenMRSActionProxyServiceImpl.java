@@ -3,7 +3,10 @@ package org.motechproject.openmrs.tasks.impl;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.motechproject.event.MotechEvent;
+import org.motechproject.event.listener.EventRelay;
 import org.motechproject.openmrs.domain.Attribute;
+import org.motechproject.openmrs.domain.CohortQueryReport;
 import org.motechproject.openmrs.domain.Concept;
 import org.motechproject.openmrs.domain.ConceptName;
 import org.motechproject.openmrs.domain.Encounter;
@@ -17,6 +20,8 @@ import org.motechproject.openmrs.domain.Person;
 import org.motechproject.openmrs.domain.Program;
 import org.motechproject.openmrs.domain.ProgramEnrollment;
 import org.motechproject.openmrs.domain.Provider;
+import org.motechproject.openmrs.helper.EventHelper;
+import org.motechproject.openmrs.service.OpenMRSCohortService;
 import org.motechproject.openmrs.service.OpenMRSConceptService;
 import org.motechproject.openmrs.service.OpenMRSEncounterService;
 import org.motechproject.openmrs.service.OpenMRSLocationService;
@@ -25,6 +30,7 @@ import org.motechproject.openmrs.service.OpenMRSPersonService;
 import org.motechproject.openmrs.service.OpenMRSProgramEnrollmentService;
 import org.motechproject.openmrs.service.OpenMRSProviderService;
 import org.motechproject.openmrs.tasks.OpenMRSActionProxyService;
+import org.motechproject.openmrs.tasks.constants.EventSubjects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +57,9 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     private OpenMRSProviderService providerService;
     private OpenMRSProgramEnrollmentService programEnrollmentService;
     private OpenMRSPersonService personService;
+    private OpenMRSCohortService cohortService;
+
+    private EventRelay eventRelay;
 
     @Override
     public void createEncounter(String configName, DateTime encounterDatetime, String encounterType,
@@ -203,6 +212,16 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         programEnrollmentService.updateProgramEnrollment(configName, programEnrollment);
     }
 
+    @Override
+    public void getCohortQueryReport(String configName, String cohortQueryUuid, Map<String, String> parameters) {
+        CohortQueryReport cohortQueryReport = cohortService.getCohortQueryReport(configName, cohortQueryUuid, parameters);
+
+        for (CohortQueryReport.CohortQueryReportMember member : cohortQueryReport.getMembers()) {
+            eventRelay.sendEventMessage(new MotechEvent(EventSubjects.GET_COHORT_QUERY_MEMBER_EVENT,
+                    EventHelper.cohortMemberParameters(cohortQueryUuid, member)));
+        }
+    }
+
     private Location getDefaultLocation(String configName) {
         return getLocationByName(configName, DEFAULT_LOCATION_NAME);
     }
@@ -341,5 +360,15 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     @Autowired
     public void setProgramEnrollmentService(OpenMRSProgramEnrollmentService programEnrollmentService) {
         this.programEnrollmentService = programEnrollmentService;
+    }
+
+    @Autowired
+    public void setCohortService(OpenMRSCohortService cohortService) {
+        this.cohortService = cohortService;
+    }
+
+    @Autowired
+    public void setEventRelay(EventRelay eventRelay) {
+        this.eventRelay = eventRelay;
     }
 }
