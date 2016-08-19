@@ -12,14 +12,10 @@ public class CohortQueryReport {
     private String uuid;
     private List<CohortQueryReportMember> members;
 
-    public CohortQueryReport() {}
-
-    public class CohortQueryReportMember {
+    public static class CohortQueryReportMember {
 
         private String uuid;
         private String display;
-
-        public CohortQueryReportMember() {}
 
         public String getUuid() {
             return uuid;
