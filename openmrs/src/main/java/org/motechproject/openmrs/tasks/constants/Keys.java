@@ -11,7 +11,7 @@ public final class Keys {
     public static final String ENCOUNTER_DATE = "encounterDatetime";
     public static final String ENCOUNTER_TYPE = "encounterType";
     public static final String LOCATION_NAME = "locationName";
-    public static final String PATIENT_UUID = "patient.uuid";
+    public static final String PATIENT_UUID = "patientUuid";
     public static final String PROVIDER_UUID = "providerUuid";
     public static final String OBSERVATION = "observation";
 
@@ -55,9 +55,10 @@ public final class Keys {
     public static final String STATE_START_DATE = "startDate";
     public static final String PROGRAM_ENROLLMENT_ATTRIBUTES = "programEnrollmentAttributes";
 
-    //Cohortquery triggers
-    public static final String PATIENT_DISPLAY = "PatientDisplay";
-    public static final String COHORT_QUERY_UUID = "CohortQueryUuid";
+    //CohortQuery Report action
+    public static final String COHORT_QUERY_UUID = "cohortQueryUuid";
+    public static final String COHORT_QUERY_PARAMETERS = "cohortQueryParameters";
+    public static final String PATIENT_DISPLAY = "patientDisplay";
 
     /**
      * Utility class, should not be initiated.
