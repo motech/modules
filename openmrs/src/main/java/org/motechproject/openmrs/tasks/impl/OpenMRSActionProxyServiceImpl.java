@@ -145,7 +145,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         programEnrollment.setDateCompleted(Objects.nonNull(dateCompleted) ? dateCompleted.toDate() : null);
         programEnrollment.setLocation(location);
         programEnrollment.setAttributes(MapUtils.isEmpty(programEnrollmentAttributes) ? null :
-                convertAttributeMapToList(programEnrollmentAttributes));
+                convertAttributeMapToList(programEnrollmentAttributes, false));
 
         programEnrollmentService.createProgramEnrollment(configName, programEnrollment);
     }
@@ -176,7 +176,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
             updatedProgram.setDateEnrolled(startDate.toDate());
         }
 
-        attributesList = convertAttributeMapToList(attributes);
+        attributesList = convertAttributeMapToList(attributes, true);
         updatedProgram.setAttributes(!attributesList.isEmpty() ? attributesList : null);
 
         programEnrollmentService.updateProgramEnrollment(configName, updatedProgram);
@@ -261,17 +261,21 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         return observationList;
     }
 
-    private List<Attribute> convertAttributeMapToList(Map<String, String> attributes) {
+    private List<Attribute> convertAttributeMapToList(Map<String, String> attributes, boolean isProgramEnrollmentUpdate) {
         List<Attribute> attributesList = new ArrayList<>();
 
         for (String attributeName : attributes.keySet()) {
             Attribute attribute = new Attribute();
             attribute.setValue(attributes.get(attributeName));
 
-            Attribute.AttributeType attributeType = new Attribute.AttributeType();
-            attributeType.setUuid(attributeName);
+            if (isProgramEnrollmentUpdate) {
+                attribute.setUuid(attributeName);
+            } else {
+                Attribute.AttributeType attributeType = new Attribute.AttributeType();
+                attributeType.setUuid(attributeName);
 
-            attribute.setAttributeType(attributeType);
+                attribute.setAttributeType(attributeType);
+            }
 
             attributesList.add(attribute);
         }
@@ -298,7 +302,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         person.setPreferredAddress(personAddress);
         person.setAddresses(Collections.singletonList(personAddress));
 
-        List<Attribute> attributesList = convertAttributeMapToList(attributes);
+        List<Attribute> attributesList = convertAttributeMapToList(attributes, false);
 
         person.setBirthdate(Objects.nonNull(birthDate) ? birthDate.toDate() : null);
         person.setBirthdateEstimated(birthDateEstimated);
