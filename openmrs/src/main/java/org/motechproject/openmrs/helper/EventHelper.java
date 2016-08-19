@@ -1,5 +1,6 @@
 package org.motechproject.openmrs.helper;
 
+import org.motechproject.openmrs.domain.CohortQueryReport.CohortQueryReportMember;
 import org.motechproject.openmrs.domain.Concept;
 import org.motechproject.openmrs.domain.Encounter;
 import org.motechproject.openmrs.domain.Location;
@@ -192,6 +193,16 @@ public final class EventHelper {
         parameters.put(EventKeys.PROGRAM_ENROLLMENT_ID, programEnrollment.getUuid());
         parameters.put(EventKeys.PROGRAM_ID, programEnrollment.getProgram().getUuid());
         parameters.put(EventKeys.PATIENT_ID, programEnrollment.getPatient().getUuid());
+
+        return parameters;
+    }
+
+    public static Map<String, Object> cohortMemberParameters(String cohortQueryUuid, CohortQueryReportMember member) {
+        Map<String, Object> parameters = new HashMap<>();
+
+        parameters.put(EventKeys.COHORT_QUERY_ID, cohortQueryUuid);
+        parameters.put(EventKeys.PATIENT_ID, member.getUuid());
+        parameters.put(EventKeys.PATIENT_DISPLAY, member.getDisplay());
 
         return parameters;
     }

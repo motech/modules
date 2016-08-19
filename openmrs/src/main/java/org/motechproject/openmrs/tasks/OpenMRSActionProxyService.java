@@ -163,4 +163,7 @@ public interface OpenMRSActionProxyService {
      */
     void changeStateOfProgramEnrollment(String configName, String programEnrollmentUuid, DateTime programCompletedDate,
                                         String stateUuid, DateTime startDate);
+
+    //MOTECH-2801: javadoc
+    void getCohortQueryReport(String configName, String cohortQueryUuid, Map<String, String> parameters);
 }

@@ -30,6 +30,7 @@ public class ActionBuilder {
     private static final String CREATE_PROGRAM_ENROLLMENT = "Create Program Enrollment";
     private static final String UPDATE_PROGRAM_ENROLLMENT = "Update Program Enrollment";
     private static final String CHANGE_PROGRAM_ENROLLMENT_STATE = "Change Program Enrollment State";
+    private static final String GET_COHORT_QUERY_REPORT = "Get CohortQuery Report";
     private static final String OPENMRS_ACTION_PROXY_SERVICE = "org.motechproject.openmrs.tasks.OpenMRSActionProxyService";
     private static final String OPENMRS_V1_9 = "1.9";
 
@@ -52,6 +53,10 @@ public class ActionBuilder {
             actions.add(buildCreatePatientAction(configName));
             actions.add(buildUpdatePatientAction(configName));
             actions.add(buildUpdatePatientIdentifiersAction(configName));
+
+            // MOTECH-2801: Tutaj czy akcja dla 1.12?
+            actions.add(buildGetCohortQueryReport(configName));
+
             buildActionsForVersionGreaterThan19(config, configName, actions);
 
         }
@@ -226,6 +231,24 @@ public class ActionBuilder {
         }
 
         return parameters;
+    }
+
+    private ActionEventRequest buildGetCohortQueryReport(String configName) {
+        SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
+        int order = 0;
+        String serviceMethod = "getCohortQueryReport";
+
+        parameters.add(prepareParameter(Keys.CONFIG_NAME, DisplayNames.CONFIG_NAME, configName, false, true, order++));
+        parameters.add(prepareParameter(Keys.COHORT_QUERY_UUID, DisplayNames.COHORT_QUERY_UUID, true, order++));
+        parameters.add(prepareParameter(Keys.COHORT_QUERY_PARAMETERS, DisplayNames.COHORT_QUERY_PARAMETERS, MAP, false, order));
+
+        return new ActionEventRequestBuilder()
+                .setDisplayName(getDisplayName(GET_COHORT_QUERY_REPORT, configName))
+                .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
+                .setServiceMethod(serviceMethod)
+                .setSubject(getSubject(serviceMethod, configName))
+                .setActionParameters(parameters)
+                .createActionEventRequest();
     }
 
     private SortedSet<ActionParameterRequest> prepareCommonParameters(int startOrder) {

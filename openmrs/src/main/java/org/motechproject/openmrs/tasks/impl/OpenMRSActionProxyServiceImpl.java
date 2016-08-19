@@ -17,6 +17,7 @@ import org.motechproject.openmrs.domain.Person;
 import org.motechproject.openmrs.domain.Program;
 import org.motechproject.openmrs.domain.ProgramEnrollment;
 import org.motechproject.openmrs.domain.Provider;
+import org.motechproject.openmrs.service.OpenMRSCohortService;
 import org.motechproject.openmrs.service.OpenMRSConceptService;
 import org.motechproject.openmrs.service.OpenMRSEncounterService;
 import org.motechproject.openmrs.service.OpenMRSLocationService;
@@ -51,6 +52,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     private OpenMRSProviderService providerService;
     private OpenMRSProgramEnrollmentService programEnrollmentService;
     private OpenMRSPersonService personService;
+    private OpenMRSCohortService cohortService;
 
     @Override
     public void createEncounter(String configName, DateTime encounterDatetime, String encounterType,
@@ -203,6 +205,11 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         programEnrollmentService.updateProgramEnrollment(configName, programEnrollment);
     }
 
+    @Override
+    public void getCohortQueryReport(String configName, String cohortQueryUuid, Map<String, String> parameters) {
+        cohortService.getCohortQueryReport(configName, cohortQueryUuid, parameters);
+    }
+
     private Location getDefaultLocation(String configName) {
         return getLocationByName(configName, DEFAULT_LOCATION_NAME);
     }
@@ -345,5 +352,10 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     @Autowired
     public void setProgramEnrollmentService(OpenMRSProgramEnrollmentService programEnrollmentService) {
         this.programEnrollmentService = programEnrollmentService;
+    }
+
+    @Autowired
+    public void setCohortService(OpenMRSCohortService cohortService) {
+        this.cohortService = cohortService;
     }
 }

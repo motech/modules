@@ -59,6 +59,10 @@ public final class Keys {
     public static final String PATIENT_DISPLAY = "PatientDisplay";
     public static final String COHORT_QUERY_UUID = "CohortQueryUuid";
 
+    //CohortQuery Report action
+    public static final String COHORT_QUERY_UUID = "cohortQueryUuid";
+    public static final String COHORT_QUERY_PARAMETERS = "cohortQueryParameters";
+
     /**
      * Utility class, should not be initiated.
      */
