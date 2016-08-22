@@ -34,7 +34,7 @@ public class FlowWebServiceTest {
     private RapidProHttpClient rapidProHttpClient;
 
     @Before
-    public void setup () {
+    public void setup() {
         initMocks(this);
         flowWebService = new FlowWebServiceImpl(rapidProHttpClient);
     }

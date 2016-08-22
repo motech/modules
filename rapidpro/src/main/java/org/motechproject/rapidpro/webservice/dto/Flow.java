@@ -26,7 +26,7 @@ public class Flow implements Serializable {
     @JsonProperty("completed_runs")
     private int completedRuns;
     @JsonProperty("rulesets")
-    private List<RuleSet>ruleSets;
+    private List<RuleSet> ruleSets;
 
     public UUID getUuid() {
         return uuid;

@@ -37,7 +37,7 @@ public class GroupWebServiceTest {
     private RapidProHttpClient rapidProHttpClient;
 
     @Before
-    public void setup () {
+    public void setup() {
         initMocks(this);
         groupWebService = new GroupWebServiceImpl(rapidProHttpClient);
     }

@@ -62,7 +62,7 @@ public class EventPublisherImpl implements EventPublisher {
 
     @Override
     public void publishFlowFailContact(String error, String contactExtId, String flowName, boolean restart, Map<String, String> extra) {
-        Map<String, Object> params = createFlowFailContactParams(error,contactExtId,restart, extra);
+        Map<String, Object> params = createFlowFailContactParams(error, contactExtId, restart, extra);
         params.put(EventParameters.FLOW_NAME, flowName);
         MotechEvent event = new MotechEvent(EventSubjects.FLOW_FAIL_CONTACT_NAME, params);
         eventRelay.sendEventMessage(event);
@@ -70,17 +70,19 @@ public class EventPublisherImpl implements EventPublisher {
 
     @Override
     public void publishFlowFailContact(String error, String contactExtId, UUID flowUUID, boolean restart, Map<String, String> extra) {
-        Map<String, Object> params = createFlowFailContactParams(error,contactExtId,restart, extra);
+        Map<String, Object> params = createFlowFailContactParams(error, contactExtId, restart, extra);
         params.put(EventParameters.FLOW_UUID, flowUUID);
         MotechEvent event = new MotechEvent(EventSubjects.FLOW_FAIL_CONTACT_UUID, params);
         eventRelay.sendEventMessage(event);
     }
 
     @Override
-    public void publishFlowStartedGroup(String flowName, Group group, FlowRunRequest flowRunRequest, List<FlowRunResponse> flowRunResponses) {
+    public void publishFlowStartedGroup(String flowName, Group group, FlowRunRequest flowRunRequest, List<FlowRunResponse> flowRunResponses)  {
         Map<String, Object> params = new HashMap<>();
         List<UUID> contactUUIDs = new ArrayList<>();
-        flowRunResponses.forEach(flowRunResponse -> contactUUIDs.add(flowRunResponse.getContact()));
+        for (FlowRunResponse flowRunResponse : flowRunResponses) {
+            contactUUIDs.add(flowRunResponse.getContact());
+        }
         params.put(EventParameters.FLOW_NAME, flowName);
         params.put(EventParameters.FLOW_UUID, flowRunRequest.getFlowUUID());
         params.put(EventParameters.GROUP_NAME, group.getName());

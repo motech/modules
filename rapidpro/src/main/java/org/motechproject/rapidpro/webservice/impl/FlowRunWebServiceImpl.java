@@ -30,7 +30,8 @@ public class FlowRunWebServiceImpl extends AbstractWebService<FlowRunResponse> i
     private static final String ERROR_EXECUTING_FLOW_RUN = "Error executing flow run: ";
     private static final String EXECUTING_FLOW_RUN_REQUEST = "Executing flow run request: ";
 
-    private static final TypeReference LIST_FLOW_RUN_RESPONSE = new TypeReference<List<FlowRunResponse>>() { };
+    private static final TypeReference LIST_FLOW_RUN_RESPONSE = new TypeReference<List<FlowRunResponse>>() {
+    };
     private static final Logger LOGGER = LoggerFactory.getLogger(FlowRunWebServiceImpl.class);
 
     @Autowired
@@ -47,7 +48,7 @@ public class FlowRunWebServiceImpl extends AbstractWebService<FlowRunResponse> i
             response = getClient().executePost(RUNS_ENDPOINT, body, MediaFormat.JSON, MediaFormat.JSON);
             return (List<FlowRunResponse>) JsonUtils.toObject(response, LIST_FLOW_RUN_RESPONSE);
         } catch (JsonUtilException | RapidProClientException e) {
-            throw new WebServiceException(ERROR_EXECUTING_FLOW_RUN + e.getMessage());
+            throw new WebServiceException(ERROR_EXECUTING_FLOW_RUN + e.getMessage(), e);
         } finally {
             IOUtils.closeQuietly(response);
         }

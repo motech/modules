@@ -34,7 +34,7 @@ public class FlowRunWebServiceTest {
     private RapidProHttpClient rapidProHttpClient;
 
     @Before
-    public void setup () {
+    public void setup() {
         initMocks(this);
         this.flowRunWebService = new FlowRunWebServiceImpl(rapidProHttpClient);
     }
@@ -59,7 +59,7 @@ public class FlowRunWebServiceTest {
         String json = new ObjectMapper().writeValueAsString(responses);
         InputStream inputStream = new ByteArrayInputStream(json.getBytes());
 
-        when(rapidProHttpClient.executePost("/runs",body , MediaFormat.JSON, MediaFormat.JSON)).thenReturn(inputStream);
+        when(rapidProHttpClient.executePost("/runs", body, MediaFormat.JSON, MediaFormat.JSON)).thenReturn(inputStream);
         List<FlowRunResponse> fromWebService = flowRunWebService.startFlowRuns(runRequest);
         assertEquals(fromWebService.size(), 1);
         assertEquals(fromWebService.get(0).getContact(), contactUUID);
@@ -74,7 +74,7 @@ public class FlowRunWebServiceTest {
         FlowRunRequest runRequest = builder.build();
         byte[] body = JsonUtils.toByteArray(runRequest);
 
-        when(rapidProHttpClient.executePost("/runs",body , MediaFormat.JSON, MediaFormat.JSON)).thenThrow(new RapidProClientException("Exception"));
+        when(rapidProHttpClient.executePost("/runs", body, MediaFormat.JSON, MediaFormat.JSON)).thenThrow(new RapidProClientException("Exception"));
         flowRunWebService.startFlowRuns(runRequest);
     }
 

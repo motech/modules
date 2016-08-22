@@ -8,7 +8,8 @@
 
     <osgi:reference id="httpClientBuilderFactory" interface="org.apache.http.osgi.services.HttpClientBuilderFactory"/>
     <osgi:reference id="statusMessageService" interface="org.motechproject.admin.service.StatusMessageService"/>
-    <osgi:reference id="contactMapperDataService" interface="org.motechproject.rapidpro.repository.ContactMapperDataService"/>
+    <osgi:reference id="contactMapperDataService"
+                    interface="org.motechproject.rapidpro.repository.ContactMapperDataService"/>
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>
 
     <osgi:service ref="rapidproSettingsService" interface="org.motechproject.rapidpro.service.SettingsService"/>
@@ -18,7 +19,6 @@
     <osgi:service ref="rapidproFlowService" interface="org.motechproject.rapidpro.service.FlowService"/>
     <osgi:service ref="rapidproFlowRunWebService" interface="org.motechproject.rapidpro.webservice.FlowRunWebService"/>
     <osgi:service ref="rapidproFlowWebService" interface="org.motechproject.rapidpro.webservice.FlowWebService"/>
-
 
 
 </beans>
