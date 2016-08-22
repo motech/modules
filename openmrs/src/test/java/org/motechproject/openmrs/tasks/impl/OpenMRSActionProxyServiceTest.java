@@ -462,6 +462,7 @@ public class OpenMRSActionProxyServiceTest {
         openMRSActionProxyService.getCohortQueryReport(CONFIG_NAME, cohortQueryUuid, parameters);
 
         verify(cohortService).getCohortQueryReport(eq(CONFIG_NAME), uuidCaptor.capture(), parametersCaptor.capture());
+        verify(eventRelay, times(3)).sendEventMessage(Matchers.<MotechEvent>any());
         assertEquals(cohortQueryUuid, uuidCaptor.getValue());
         assertEquals(parameters, parametersCaptor.getValue());
     }
