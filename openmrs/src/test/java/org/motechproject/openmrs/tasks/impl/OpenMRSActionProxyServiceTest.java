@@ -363,11 +363,9 @@ public class OpenMRSActionProxyServiceTest {
 
         List<Attribute> attributes = new ArrayList<>();
         Attribute attribute = new Attribute();
-        Attribute.AttributeType attributeType = new Attribute.AttributeType();
 
-        attributeType.setUuid("8d8718c2-c2cc-11de-8d13-0010c6dffd0f");
+        attribute.setUuid("8d8718c2-c2cc-11de-8d13-0010c6dffd0f");
         attribute.setValue("testValue");
-        attribute.setAttributeType(attributeType);
 
         attributes.add(attribute);
 

@@ -155,6 +155,10 @@ public class Attribute {
                 attribute.addProperty("hydratedObject", src.getHydratedObject());
             }
 
+            if (src.getUuid() != null) {
+                attribute.addProperty("uuid", src.getUuid());
+            }
+
             return attribute;
         }
 
