@@ -5,6 +5,7 @@ import org.motechproject.event.listener.EventRelay;
 import org.motechproject.rapidpro.constant.EventParameters;
 import org.motechproject.rapidpro.constant.EventSubjects;
 import org.motechproject.rapidpro.event.publisher.EventPublisher;
+import org.motechproject.rapidpro.util.WebHookParser;
 import org.motechproject.rapidpro.webservice.dto.Contact;
 import org.motechproject.rapidpro.webservice.dto.FlowRunRequest;
 import org.motechproject.rapidpro.webservice.dto.FlowRunResponse;
@@ -104,6 +105,12 @@ public class EventPublisherImpl implements EventPublisher {
         Map<String, Object> params = createFlowFailGroupParams(error, groupName, restart, extra);
         params.put(EventParameters.FLOW_UUID, flowUUID);
         MotechEvent event = new MotechEvent(EventSubjects.FLOW_STARTED_GROUP, params);
+        eventRelay.sendEventMessage(event);
+    }
+
+    @Override
+    public void publishWebHookEvent(Map<String, String[]> requestParams) {
+        MotechEvent event = WebHookParser.parse(requestParams);
         eventRelay.sendEventMessage(event);
     }
 

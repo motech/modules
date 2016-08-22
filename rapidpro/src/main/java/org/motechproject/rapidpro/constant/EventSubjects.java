@@ -6,6 +6,7 @@ package org.motechproject.rapidpro.constant;
 public final class EventSubjects {
 
     private static final String BASE = "org.motechproject.rapidpro.";
+    private static final String WEB_HOOK = BASE + "web-hook.";
 
     /*Contact related event subjects*/
     public static final String CREATE_CONTACT = BASE + "create-contact";
@@ -27,6 +28,17 @@ public final class EventSubjects {
     public static final String FLOW_STARTED_GROUP = BASE + "flow-started-for-group";
     public static final String FLOW_FAIL_CONTACT_NAME = BASE + "flow-fail-contact-name";
     public static final String FLOW_FAIL_CONTACT_UUID = BASE + "flow-fail-contact-uuid";
+
+    /*Web hook related event subjects*/
+    public static final String WEB_HOOK_RECEIVED_SMS = WEB_HOOK + "received-SMS";
+    public static final String WEB_HOOK_SENT_SMS = WEB_HOOK + "sent-SMS";
+    public static final String WEB_HOOK_SMS_DELIVERED = WEB_HOOK + "SMS-delivered";
+    public static final String WEB_HOOK_INCOMING_CALL = WEB_HOOK + "incoming-call";
+    public static final String WEB_HOOK_MISSED_CALL = WEB_HOOK + "missed-call";
+    public static final String WEB_HOOK_CALL_CONNECTED = WEB_HOOK + "call-connected";
+    public static final String WEB_HOOK_CALL_NOT_CONNECTED = WEB_HOOK + "call-not-connected";
+    public static final String WEB_HOOK_ALARM = WEB_HOOK + "alarm";
+    public static final String WEB_HOOK_FLOW = WEB_HOOK + "flow";
 
     private EventSubjects() {
     }

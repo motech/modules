@@ -96,6 +96,6 @@ public interface EventPublisher {
      */
     void publishFlowFailContact(String error, String contactExtId, UUID flowUUID, boolean restart, Map<String, String> extra);
 
-
+    void publishWebHookEvent(Map<String, String[]> requestParams);
 
 }
