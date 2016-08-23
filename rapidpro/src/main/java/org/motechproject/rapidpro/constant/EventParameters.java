@@ -56,6 +56,7 @@ public final class EventParameters {
     public static final String STEP = "step";
     public static final String VALUES = "values";
     public static final String REQUEST_VALUES = "requestValues";
+    public static final String CUSTOM_WEB_HOOK_MAP = "customWebHookMap";
 
     private EventParameters() { }
 }

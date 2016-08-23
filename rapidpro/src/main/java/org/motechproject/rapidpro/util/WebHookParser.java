@@ -81,8 +81,9 @@ public final class WebHookParser {
                     return flow(decoded);
 
                 default:
-                    return null;
+                    return customWebHook(decoded);
             }
+
         } catch (WebHookParserException e) {
             return webHookFail(e, requestParams);
         }
@@ -136,12 +137,16 @@ public final class WebHookParser {
         return new MotechEvent(EventSubjects.WEB_HOOK_CALL_NOT_CONNECTED, eventParams);
     }
 
-    private static MotechEvent flow(Map<String, String> requestParams) {
+    private static MotechEvent flow(Map<String, String> requestParams) throws WebHookParserException {
         Map<String, Object> eventParams = new HashMap<> ();
-        eventParams.put(EventParameters.RELAYER, requestParams.get(RP_RELAYER));
+        int relayer = toInt(requestParams.get(RP_RELAYER));
+        int flow = toInt(requestParams.get(RP_FLOW));
+
+        eventParams.put(EventParameters.RELAYER, relayer);
         eventParams.put(EventParameters.RELAYER_PHONE, requestParams.get(RP_RELAYER_PHONE));
         eventParams.put(EventParameters.PHONE, requestParams.get(RP_PHONE));
-        eventParams.put(EventParameters.FLOW, requestParams.get(RP_FLOW));
+        eventParams.put(EventParameters.FLOW, flow);
+        //TODO test if flow name is part of live API
         eventParams.put(EventParameters.FLOW_NAME, requestParams.get(RP_FLOW_NAME));
         eventParams.put(EventParameters.STEP, requestParams.get(RP_STEP));
         eventParams.put(EventParameters.VALUES, requestParams.get(RP_VALUES));
@@ -150,45 +155,56 @@ public final class WebHookParser {
 
     private static MotechEvent alarm(Map<String, String> requestParams) throws WebHookParserException {
         Map<String, Object> eventParams = new HashMap<>();
+        int pendingMessages = toInt(requestParams.get(RP_PENDING_MESSAGE_COUNT));
+        int retryMessages = toInt(requestParams.get(RP_RETRY_MESSAGE_COUNT));
+        DateTime lastSeen = toDateTime(requestParams.get(RP_LAST_SEEN));
+
         eventParams.put(EventParameters.RELAYER, requestParams.get(RP_RELAYER));
         eventParams.put(EventParameters.RELAYER_PHONE, requestParams.get(RP_RELAYER_PHONE));
         eventParams.put(EventParameters.POWER_LEVEL, requestParams.get(RP_POWER_LEVEL));
         eventParams.put(EventParameters.POWER_STATUS, requestParams.get(RP_POWER_STATUS));
         eventParams.put(EventParameters.POWER_SOURCE, requestParams.get(RP_POWER_SOURCE));
         eventParams.put(EventParameters.NETWORK_TYPE, requestParams.get(RP_NETWORK_TYPE));
-        int pendingMessages = toInt(requestParams.get(RP_PENDING_MESSAGE_COUNT));
-        int retryMessages = toInt(requestParams.get(RP_RETRY_MESSAGE_COUNT));
-        DateTime lastSeen = toDateTime(requestParams.get(RP_LAST_SEEN));
         eventParams.put(EventParameters.PENDING_MESSAGE_COUNT, pendingMessages);
         eventParams.put(EventParameters.RETRY_MESSAGE_COUNT, retryMessages);
         eventParams.put(EventParameters.LAST_SEEN, lastSeen);
         return new MotechEvent(EventSubjects.WEB_HOOK_ALARM, eventParams);
     }
 
+    private static MotechEvent customWebHook(Map<String, String> requestParams) {
+        Map<String, Object> eventParams = new HashMap<>();
+        eventParams.put(EventParameters.CUSTOM_WEB_HOOK_MAP, requestParams);
+        return new MotechEvent(EventSubjects.WEB_HOOK_CUSTOM, eventParams);
+    }
+
     private static Map<String, Object> buildSMSParameters(Map<String, String> requestParams) throws WebHookParserException {
         Map<String, Object> eventParams = new HashMap<>();
-        eventParams.put(EventParameters.RELAYER, requestParams.get(RP_RELAYER));
+        int relayer = toInt(requestParams.get(RP_RELAYER));
+        int sms = toInt(requestParams.get(RP_SMS));
+        DateTime dateTime = toDateTime(requestParams.get(RP_TIME));
+
+        eventParams.put(EventParameters.TIME, dateTime);
+        eventParams.put(EventParameters.RELAYER, relayer);
+        eventParams.put(EventParameters.SMS, sms);
         eventParams.put(EventParameters.RELAYER_PHONE, requestParams.get(RP_RELAYER_PHONE));
-        eventParams.put(EventParameters.SMS, requestParams.get(RP_SMS));
         eventParams.put(EventParameters.PHONE, requestParams.get(RP_PHONE));
         eventParams.put(EventParameters.TEXT, requestParams.get(RP_TEXT));
         eventParams.put(EventParameters.STATUS, requestParams.get(RP_STATUS));
         eventParams.put(EventParameters.DIRECTION, requestParams.get(RP_DIRECTION));
-
-        DateTime dateTime = toDateTime(requestParams.get(RP_TIME));
-        eventParams.put(EventParameters.TIME, dateTime);
         return eventParams;
     }
 
     private static Map<String, Object> buildCallParameters(Map<String, String> requestParams) throws WebHookParserException {
         Map<String, Object> eventParams = new HashMap<>();
-        eventParams.put(EventParameters.RELAYER, requestParams.get(RP_RELAYER));
-        eventParams.put(EventParameters.RELAYER_PHONE, requestParams.get(RP_RELAYER_PHONE));
-        eventParams.put(EventParameters.CALL, requestParams.get(RP_CALL));
-        eventParams.put(EventParameters.PHONE, requestParams.get(RP_PHONE));
-
         DateTime time = toDateTime(requestParams.get(RP_TIME));
         int duration = toInt(requestParams.get(RP_DURATION));
+        int call = toInt(requestParams.get(RP_CALL));
+        int relayer = toInt(requestParams.get(RP_RELAYER));
+
+        eventParams.put(EventParameters.RELAYER, relayer);
+        eventParams.put(EventParameters.RELAYER_PHONE, requestParams.get(RP_RELAYER_PHONE));
+        eventParams.put(EventParameters.CALL, call);
+        eventParams.put(EventParameters.PHONE, requestParams.get(RP_PHONE));
         eventParams.put(EventParameters.TIME, time);
         eventParams.put(EventParameters.DURATION, duration);
         return eventParams;

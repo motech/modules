@@ -40,6 +40,7 @@ public final class EventSubjects {
     public static final String WEB_HOOK_ALARM = WEB_HOOK + "alarm";
     public static final String WEB_HOOK_FLOW = WEB_HOOK + "flow";
     public static final String WEB_HOOK_FAIL = WEB_HOOK + "fail";
+    public static final String WEB_HOOK_CUSTOM = WEB_HOOK + "custom";
 
     private EventSubjects() {
     }
