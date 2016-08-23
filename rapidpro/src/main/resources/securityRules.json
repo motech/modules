@@ -22,7 +22,7 @@
   },
   {
     "active": true,
-    "pattern": "/**/rapidpro/hook",
+    "pattern": "/**/rapidpro/web-hook",
     "supportedSchemes": [
       "NO_SECURITY"
     ],

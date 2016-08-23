@@ -55,6 +55,7 @@ public final class EventParameters {
     public static final String LAST_SEEN = "lastSeen";
     public static final String STEP = "step";
     public static final String VALUES = "values";
+    public static final String REQUEST_VALUES = "requestValues";
 
     private EventParameters() { }
 }

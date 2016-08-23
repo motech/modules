@@ -39,6 +39,7 @@ public final class EventSubjects {
     public static final String WEB_HOOK_CALL_NOT_CONNECTED = WEB_HOOK + "call-not-connected";
     public static final String WEB_HOOK_ALARM = WEB_HOOK + "alarm";
     public static final String WEB_HOOK_FLOW = WEB_HOOK + "flow";
+    public static final String WEB_HOOK_FAIL = WEB_HOOK + "fail";
 
     private EventSubjects() {
     }

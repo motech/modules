@@ -8,6 +8,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.rapidpro.constant.EventParameters;
 import org.motechproject.rapidpro.constant.EventSubjects;
 import org.motechproject.rapidpro.constant.WebHookTypes;
+import org.motechproject.rapidpro.exception.WebHookParserException;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -40,90 +41,97 @@ public final class WebHookParser {
     private static final String RP_STEP = "step";
     private static final String RP_VALUES = "values";
 
-
+    private static final String NOT_INTEGER = "Value cannot be converted to an integer: ";
+    private static final String NOT_DATE = "Improperly formatted date time value: ";
+    private static final String ERROR_DECODE = "Error decoding web hook request: ";
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
     public static MotechEvent parse(Map<String, String[]> requestParams) {
-        Map<String, String> decoded = decodeParams(requestParams);
+        try {
+            Map<String, String> decoded = decodeParams(requestParams);
 
-        switch (decoded.get(RP_EVENT)) {
+            switch (decoded.get(RP_EVENT)) {
 
-            case WebHookTypes.WEB_HOOK_MO_SMS:
-                return receivedSMS(decoded);
+                case WebHookTypes.WEB_HOOK_MO_SMS:
+                    return receivedSMS(decoded);
 
-            case WebHookTypes.WEB_HOOK_MT_SENT:
-                return sentSMS(decoded);
+                case WebHookTypes.WEB_HOOK_MT_SENT:
+                    return sentSMS(decoded);
 
-            case WebHookTypes.WEB_HOOK_MT_DLVD:
-                return deliverySMS(decoded);
+                case WebHookTypes.WEB_HOOK_MT_DLVD:
+                    return deliverySMS(decoded);
 
-            case WebHookTypes.WEB_HOOK_MO_CALL:
-                return incomingCall(decoded);
+                case WebHookTypes.WEB_HOOK_MO_CALL:
+                    return incomingCall(decoded);
 
-            case WebHookTypes.WEB_HOOK_MO_MISS:
-                return missedCall(decoded);
+                case WebHookTypes.WEB_HOOK_MO_MISS:
+                    return missedCall(decoded);
 
-            case WebHookTypes.WEB_HOOK_MT_CALL:
-                return callConnected(decoded);
+                case WebHookTypes.WEB_HOOK_MT_CALL:
+                    return callConnected(decoded);
 
-            case WebHookTypes.WEB_HOOK_MT_MISS:
-                return callNotConnected(decoded);
+                case WebHookTypes.WEB_HOOK_MT_MISS:
+                    return callNotConnected(decoded);
 
-            case WebHookTypes.WEB_HOOK_ALARM:
-                return alarm(decoded);
+                case WebHookTypes.WEB_HOOK_ALARM:
+                    return alarm(decoded);
 
-            case WebHookTypes.WEB_HOOK_FLOW:
-                return flow(decoded);
+                case WebHookTypes.WEB_HOOK_FLOW:
+                    return flow(decoded);
 
-            default:
-                return null;
+                default:
+                    return null;
+            }
+        } catch (WebHookParserException e) {
+            return webHookFail(e, requestParams);
         }
     }
 
-    private static Map<String, String> decodeParams(Map<String, String[]> requestParams) {
+    private static Map<String, String> decodeParams(Map<String, String[]> requestParams) throws WebHookParserException {
         Map<String, String> decoded = new HashMap<>();
-        requestParams.forEach((key, value) -> {
-            try {
-                decoded.put(key, URLDecoder.decode(value[0], ENCODING));
-            } catch (UnsupportedEncodingException e) {
-                //TODO do something
+        try {
+            for (Map.Entry<String, String[]> entry : requestParams.entrySet()) {
+                decoded.put(entry.getKey(), URLDecoder.decode(entry.getValue()[0], ENCODING));
             }
-        });
-        return decoded;
+            return decoded;
+
+        } catch (UnsupportedEncodingException e) {
+            throw new WebHookParserException(ERROR_DECODE + e.getMessage(), e);
+        }
     }
 
-    private static MotechEvent receivedSMS (Map<String, String> requestParams) {
+    private static MotechEvent receivedSMS (Map<String, String> requestParams) throws WebHookParserException {
         Map<String, Object> eventParams = buildSMSParameters(requestParams);
         return new MotechEvent(EventSubjects.WEB_HOOK_RECEIVED_SMS, eventParams);
     }
 
-    private static MotechEvent sentSMS (Map<String, String> requestParams) {
+    private static MotechEvent sentSMS (Map<String, String> requestParams) throws WebHookParserException {
         Map<String, Object> eventParams = buildSMSParameters(requestParams);
         return new MotechEvent(EventSubjects.WEB_HOOK_SENT_SMS, eventParams);
     }
 
-    private static MotechEvent deliverySMS (Map<String, String> requestParams) {
+    private static MotechEvent deliverySMS (Map<String, String> requestParams) throws WebHookParserException {
         Map<String, Object> eventParams = buildSMSParameters(requestParams);
         return new MotechEvent(EventSubjects.WEB_HOOK_SMS_DELIVERED, eventParams);
     }
 
-    private static MotechEvent incomingCall (Map<String, String> requestParams) {
+    private static MotechEvent incomingCall (Map<String, String> requestParams) throws WebHookParserException {
         Map<String, Object> eventParams = buildCallParameters(requestParams);
         return new MotechEvent(EventSubjects.WEB_HOOK_INCOMING_CALL, eventParams);
     }
 
-    private static MotechEvent missedCall (Map<String, String> requestParams) {
+    private static MotechEvent missedCall (Map<String, String> requestParams) throws WebHookParserException {
         Map<String, Object> eventParams = buildCallParameters(requestParams);
         return new MotechEvent(EventSubjects.WEB_HOOK_MISSED_CALL, eventParams);
     }
 
-    private static MotechEvent callConnected (Map<String, String> requestParams) {
+    private static MotechEvent callConnected (Map<String, String> requestParams) throws WebHookParserException {
         Map<String, Object> eventParams = buildCallParameters(requestParams);
         return new MotechEvent(EventSubjects.WEB_HOOK_CALL_CONNECTED, eventParams);
     }
 
-    private static MotechEvent callNotConnected (Map<String, String> requestParams) {
+    private static MotechEvent callNotConnected (Map<String, String> requestParams) throws WebHookParserException {
         Map<String, Object> eventParams = buildCallParameters(requestParams);
         return new MotechEvent(EventSubjects.WEB_HOOK_CALL_NOT_CONNECTED, eventParams);
     }
@@ -140,7 +148,7 @@ public final class WebHookParser {
         return new MotechEvent(EventSubjects.WEB_HOOK_FLOW, eventParams);
     }
 
-    private static MotechEvent alarm(Map<String, String> requestParams) {
+    private static MotechEvent alarm(Map<String, String> requestParams) throws WebHookParserException {
         Map<String, Object> eventParams = new HashMap<>();
         eventParams.put(EventParameters.RELAYER, requestParams.get(RP_RELAYER));
         eventParams.put(EventParameters.RELAYER_PHONE, requestParams.get(RP_RELAYER_PHONE));
@@ -157,7 +165,7 @@ public final class WebHookParser {
         return new MotechEvent(EventSubjects.WEB_HOOK_ALARM, eventParams);
     }
 
-    private static Map<String, Object> buildSMSParameters(Map<String, String> requestParams) {
+    private static Map<String, Object> buildSMSParameters(Map<String, String> requestParams) throws WebHookParserException {
         Map<String, Object> eventParams = new HashMap<>();
         eventParams.put(EventParameters.RELAYER, requestParams.get(RP_RELAYER));
         eventParams.put(EventParameters.RELAYER_PHONE, requestParams.get(RP_RELAYER_PHONE));
@@ -172,7 +180,7 @@ public final class WebHookParser {
         return eventParams;
     }
 
-    private static Map<String, Object> buildCallParameters(Map<String, String> requestParams) {
+    private static Map<String, Object> buildCallParameters(Map<String, String> requestParams) throws WebHookParserException {
         Map<String, Object> eventParams = new HashMap<>();
         eventParams.put(EventParameters.RELAYER, requestParams.get(RP_RELAYER));
         eventParams.put(EventParameters.RELAYER_PHONE, requestParams.get(RP_RELAYER_PHONE));
@@ -186,7 +194,19 @@ public final class WebHookParser {
         return eventParams;
     }
 
-    private static DateTime toDateTime(String s) {
+    private static MotechEvent webHookFail(WebHookParserException e, Map<String, String[]> requestParams) {
+        Map<String, Object> eventParams = new HashMap<>();
+        Map<String, String> stringValues = new HashMap<>();
+        for (Map.Entry<String, String[]> entry : requestParams.entrySet()) {
+            stringValues.put(entry.getKey(), entry.getValue()[0]);
+        }
+        eventParams.put(EventParameters.ERROR_MESSAGE, e.getMessage());
+        eventParams.put(EventParameters.EVENT, stringValues.get(RP_EVENT));
+        eventParams.put(EventParameters.REQUEST_VALUES, stringValues);
+        return new MotechEvent(EventSubjects.WEB_HOOK_FAIL, eventParams);
+    }
+
+    private static DateTime toDateTime(String s) throws WebHookParserException {
         try {
             DateTime dateTime = null;
             if (s != null) {
@@ -195,11 +215,11 @@ public final class WebHookParser {
             return dateTime;
 
         } catch (UnsupportedOperationException | IllegalArgumentException e) {
-            return null;
+            throw new WebHookParserException(NOT_DATE + s, e);
         }
     }
 
-    private static int toInt (String s) {
+    private static int toInt (String s) throws WebHookParserException {
         try {
             int i = 0;
             if (s != null) {
@@ -207,8 +227,7 @@ public final class WebHookParser {
             }
             return i;
         } catch (NumberFormatException e) {
-            return 0;
+            throw new WebHookParserException(NOT_INTEGER + s, e);
         }
     }
 }
-
