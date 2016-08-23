@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import org.apache.commons.httpclient.HttpClient;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.Attribute;
+import org.motechproject.openmrs.domain.AttributeListResult;
 import org.motechproject.openmrs.domain.AttributeTypeListResult;
 import org.motechproject.openmrs.domain.Concept;
 import org.motechproject.openmrs.domain.Person;
@@ -13,6 +14,12 @@ import org.motechproject.openmrs.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestOperations;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class PersonResourceImpl extends BaseResource implements PersonResource {
@@ -25,14 +32,14 @@ public class PersonResourceImpl extends BaseResource implements PersonResource {
     @Override
     public Person getPersonById(Config config, String uuid) {
         String responseJson = getJson(config, "/person/{uuid}?v=full", uuid);
-        return (Person) JsonUtils.readJson(responseJson, Person.class);
+        return (Person) JsonUtils.readJsonWithAdapters(responseJson, Person.class, createAttributeAdapter());
     }
 
     @Override
     public Person createPerson(Config config, Person person) {
-        String requestJson = buildGsonWithConceptAdapter().toJson(person);
+        String requestJson = buildGsonWithConceptAndAttributeAdapter().toJson(person);
         String responseJson = postForJson(config, requestJson, "/person");
-        return (Person) JsonUtils.readJson(responseJson, Person.class);
+        return (Person) JsonUtils.readJsonWithAdapters(responseJson, Person.class, createAttributeAdapter());
     }
 
     @Override
@@ -48,6 +55,18 @@ public class PersonResourceImpl extends BaseResource implements PersonResource {
     }
 
     @Override
+    public AttributeListResult queryPersonAttributeByPersonUuid (Config config, String uuid) {
+        String responseJson = getJson(config, "/person/{uuid}/attribute", uuid);
+        return (AttributeListResult) JsonUtils.readJsonWithAdapters(responseJson, AttributeListResult.class, createAttributeAdapter());
+    }
+
+    @Override
+    public Attribute.AttributeType queryPersonAttributeTypeByUuid(Config config, String uuid) {
+        String responseJson = getJson(config, "/personattributetype/{uuid}", uuid);
+        return (Attribute.AttributeType) JsonUtils.readJson(responseJson, Attribute.AttributeType.class);
+    }
+
+    @Override
     public void deleteAttribute(Config config, String uuid, Attribute attribute) {
         delete(config, "/person/{parentUuid}/attribute/{uuid}?purge", uuid, attribute.getUuid());
     }
@@ -56,7 +75,7 @@ public class PersonResourceImpl extends BaseResource implements PersonResource {
     public Person updatePerson(Config config, Person person) {
         String requestJson = buildGsonWithUpdatePersonAdapter().toJson(person);
         String responseJson = postForJson(config, requestJson, "/person/{uuid}?v=full", person.getUuid());
-        return (Person) JsonUtils.readJson(responseJson, Person.class);
+        return (Person) JsonUtils.readJsonWithAdapters(responseJson, Person.class, createAttributeAdapter());
     }
 
     @Override
@@ -72,15 +91,45 @@ public class PersonResourceImpl extends BaseResource implements PersonResource {
     }
 
     @Override
+    public void updatePersonAttribute(Config config, String uuid, Attribute attribute) {
+        String requestJson = buildGsonWithAttributeTypeAdapter().toJson(attribute);
+        postWithEmptyResponseBody(config, requestJson, "/person/{parentUuid}/attribute/{attributeUuid}", uuid,
+                attribute.getUuid());
+    }
+
+    @Override
     public void deletePerson(Config config, String personUuid) {
         delete(config, "/person/{uuid}?purge", personUuid);
     }
 
-    private Gson buildGsonWithConceptAdapter() {
+    @Override
+    public void checkPersonAttributeTypes(Config config, Person person) {
+        List<Attribute> checkedAttributes = new ArrayList<>();
+
+        if (!person.getAttributes().isEmpty()) {
+            for (Attribute attribute : person.getAttributes()) {
+                Attribute.AttributeType attributeType = queryPersonAttributeTypeByUuid(config,
+                        attribute.getAttributeType().getUuid());
+                if (!attributeType.getFormat().contains("java.lang")) {
+                    Attribute changedAttribute = new Attribute();
+                    changedAttribute.setHydratedObject(attribute.getValue());
+                    changedAttribute.setAttributeType(attribute.getAttributeType());
+
+                    checkedAttributes.add(changedAttribute);
+                } else {
+                    checkedAttributes.add(attribute);
+                }
+            }
+            person.setAttributes(checkedAttributes);
+        }
+    }
+
+    private Gson buildGsonWithConceptAndAttributeAdapter() {
         return new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
                 .registerTypeAdapter(Concept.class, new Concept.ConceptSerializer())
+                .registerTypeAdapter(Attribute.class, new Attribute.AttributeSerializer())
                 .create();
     }
 
@@ -101,5 +150,12 @@ public class PersonResourceImpl extends BaseResource implements PersonResource {
                 .excludeFieldsWithoutExposeAnnotation()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
                 .create();
+    }
+
+    private Map<Type, Object> createAttributeAdapter() {
+        Map<Type, Object> attributeAdapter = new HashMap<>();
+        attributeAdapter.put(Attribute.class, new Attribute.AttributeSerializer());
+
+        return attributeAdapter;
     }
 }

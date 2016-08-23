@@ -10,6 +10,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.config.ConfigDummyData;
+import org.motechproject.openmrs.domain.Attribute;
 import org.motechproject.openmrs.domain.ProgramEnrollment;
 import org.motechproject.openmrs.util.JsonUtils;
 import org.springframework.http.HttpEntity;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestOperations;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -25,6 +27,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -34,6 +37,9 @@ public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest 
     private static final String PROGRAM_ENROLLMENT_CREATE = "json/programEnrollment/program-enrollment-create.json";
     private static final String PROGRAM_ENROLLMENT_RESPONSE = "json/programEnrollment/program-enrollment-response.json";
     private static final String PROGRAM_ENROLLMENT_TABLE = "json/programEnrollment/program-enrollment-table.json";
+
+    private static final String BAHMNI_PROGRAM_ENROLLMENT_CREATE = "json/programEnrollment/bahmni-program-enrollment-create.json";
+    private static final String BAHMNI_PROGRAM_ENROLLMENT_RESPONSE = "json/programEnrollment/bahmni-program-enrollment-response.json";
 
     @Mock
     private RestOperations restOperations;
@@ -64,7 +70,7 @@ public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest 
         URI url = config.toInstancePath("/programenrollment");
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(PROGRAM_ENROLLMENT_RESPONSE));
+                .thenReturn(getResponseFromFile(PROGRAM_ENROLLMENT_RESPONSE));
 
         ProgramEnrollment created = programEnrollmentResource.createProgramEnrollment(config, programEnrollment);
 
@@ -77,15 +83,53 @@ public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest 
     }
 
     @Test
+    public void shouldCreateProgramEnrollmentWithAttributes() throws Exception {
+        ProgramEnrollment programEnrollment = prepareBahmniProgramEnrollment();
+
+        URI url = config.toInstancePath("/bahmniprogramenrollment");
+
+        doReturn(getResponseFromFile(BAHMNI_PROGRAM_ENROLLMENT_RESPONSE)).when(restOperations)
+                .exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class));
+
+        ProgramEnrollment created = programEnrollmentResource.createBahmniProgramEnrollment(config, programEnrollment);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
+
+        assertThat(created, equalTo(programEnrollment));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPost(config)));
+        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
+                equalTo(readFromFile(BAHMNI_PROGRAM_ENROLLMENT_CREATE, JsonObject.class)));
+    }
+
+    @Test
     public void shouldUpdateProgramEnrollment() throws Exception {
         ProgramEnrollment programEnrollment = prepareProgramEnrollment();
 
         URI url = config.toInstancePathWithParams("/programenrollment/{uuid}", programEnrollment.getUuid());
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(PROGRAM_ENROLLMENT_RESPONSE));
+                .thenReturn(getResponseFromFile(PROGRAM_ENROLLMENT_RESPONSE));
 
         ProgramEnrollment updated = programEnrollmentResource.updateProgramEnrollment(config, programEnrollment);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
+
+        assertThat(updated, equalTo(programEnrollment));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPost(config)));
+        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
+                equalTo(readFromFile(PROGRAM_ENROLLMENT_CREATE, JsonObject.class)));
+    }
+
+    @Test
+    public void shouldUpdateBahmniProgramEnrollment() throws Exception {
+        ProgramEnrollment programEnrollment = prepareBahmniProgramEnrollment();
+
+        URI url = config.toInstancePathWithParams("/bahmniprogramenrollment/{uuid}", programEnrollment.getUuid());
+
+        when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponseFromFile(BAHMNI_PROGRAM_ENROLLMENT_RESPONSE));
+
+        ProgramEnrollment updated = programEnrollmentResource.updateBahmniProgramEnrollment(config, programEnrollment);
 
         verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
 
@@ -102,7 +146,7 @@ public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest 
         URI url = config.toInstancePathWithParams("/programenrollment?patient={uuid}&v=full", programEnrollment.getPatient().getUuid());
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(PROGRAM_ENROLLMENT_TABLE));
+                .thenReturn(getResponseFromFile(PROGRAM_ENROLLMENT_TABLE));
 
         List<ProgramEnrollment> fetched = programEnrollmentResource.getProgramEnrollmentByPatientUuid(config, programEnrollment.getPatient().getUuid());
 
@@ -116,5 +160,9 @@ public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest 
 
     private ProgramEnrollment prepareProgramEnrollment() throws Exception {
         return (ProgramEnrollment) readFromFile(PROGRAM_ENROLLMENT_RESPONSE, ProgramEnrollment.class);
+    }
+
+    private ProgramEnrollment prepareBahmniProgramEnrollment() throws Exception {
+        return (ProgramEnrollment) readFromFile(BAHMNI_PROGRAM_ENROLLMENT_RESPONSE, ProgramEnrollment.class);
     }
 }

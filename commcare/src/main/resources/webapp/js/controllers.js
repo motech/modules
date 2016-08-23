@@ -218,7 +218,7 @@
         });
     });
 
-    controllers.controller('CommcareSettingsCtrl', function ($scope, Configurations, ModalFactory, LoadingModal) {
+    controllers.controller('CommcareSettingsCtrl', function ($scope, Configurations, ModalFactory, LoadingModal, $timeout) {
 
         $scope.eventStrategyOptions = [ 'minimal', 'partial', 'full' ];
 
@@ -233,9 +233,15 @@
         $scope.oldName = "";
 
         $scope.copyConfig = function(config) {
+
             if (!config) {
+                $scope.configSaved = false;
+                $scope.verified = false;
                 return;
             }
+
+            $scope.verified = true;
+            $scope.configSaved = true;
             var oldName, copy = {};
 
             copy.name = config.name;
@@ -318,6 +324,8 @@
         $scope.draftChanged = function() {
             $scope.configOutdated = true;
             $scope.clearMessages();
+            $scope.configSaved = false;
+            $scope.verified = false;
         };
 
 
@@ -331,6 +339,8 @@
 
         $scope.addConfig = function() {
             LoadingModal.open();
+            $scope.configSaved = false;
+            $scope.verified = false;
             Configurations.create(
                 function success(data) {
                     $scope.$parent.configurations.configs.push(data);
@@ -377,7 +387,9 @@
         $scope.saveAllowed = function() {
             return $scope.validateConfig()
                 && $scope.validateConfigName()
-                && $scope.validateUrlAndDomain();
+                && $scope.validateUrlAndDomain()
+                && $scope.configSaved === false
+                && $scope.verified === true;
         };
 
         $scope.syncConfig = function() {
@@ -390,7 +402,7 @@
                     LoadingModal.close();
                 },
                 function failure(response) {
-                    $scope.syncErrorMessage = response.data;
+                    $scope.syncErrorMessage = response.data.message;
                     $scope.syncSuccess = false;
                     $scope.syncedConfig = $scope.selectedConfig.name;
                     LoadingModal.close();
@@ -419,12 +431,14 @@
                     $scope.verifySuccessMessage = $scope.msg('commcare.verify.success');
                     $scope.verifyErrorMessage = '';
                     $scope.connectionVerified = true;
+                    $scope.verified = true;
                     LoadingModal.close();
                 },
                 function failure(response) {
-                    $scope.verifyErrorMessage = response.data;
+                    $scope.verifyErrorMessage = response.data.message;
                     $scope.verifySuccessMessage = '';
                     $scope.connectionVerified = false;
+                    $scope.verified = false;
                     LoadingModal.close();
                 });
         };
@@ -540,7 +554,7 @@
                 },
                 function failure(response) {
                     $scope.verifySuccessMessage = '';
-                    $scope.verifyErrorMessage =  response.data;
+                    $scope.verifyErrorMessage =  response.data.message;
                     $scope.connectionVerified = false;
                     LoadingModal.close();
                 });
@@ -565,7 +579,7 @@
                 },
                 function failure(response) {
                     $scope.verifySuccessMessage = '';
-                    $scope.verifyErrorMessage =  response.data;
+                    $scope.verifyErrorMessage =  response.data.message;
                     $scope.connectionVerified = false;
                     LoadingModal.close();
                 });
@@ -578,6 +592,7 @@
             } else {
                 $scope.saveNewConfig(element);
             }
+            $scope.configSaved = true;
         };
 
         $scope.updateConfig = function (config) {

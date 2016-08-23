@@ -35,6 +35,9 @@ public class ProgramEnrollment {
     @Expose
     private List<StateStatus> states;
 
+    @Expose
+    private List<Attribute> attributes;
+
     private boolean enrolled;
 
     public ProgramEnrollment() {
@@ -164,17 +167,20 @@ public class ProgramEnrollment {
         this.states = states;
     }
 
+    public List<Attribute> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(List<Attribute> attributes) {
+        this.attributes = attributes;
+    }
+
     public boolean isEnrolled() {
         return enrolled;
     }
 
     public void setEnrolled(boolean enrolled) {
         this.enrolled = enrolled;
-    }
-
-    //todo: MOTECH-2203
-    public String getEnrolledString() {
-        return enrolled ? ENROLLED : NOT_ENROLLED;
     }
 
     public StateStatus getCurrentState() {
@@ -197,7 +203,7 @@ public class ProgramEnrollment {
         return Objects.hash(uuid, program, patient, dateEnrolled, dateCompleted, location, states);
     }
 
-    @Override
+    @Override //NO CHECKSTYLE CyclomaticComplexity
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
@@ -212,6 +218,6 @@ public class ProgramEnrollment {
         return Objects.equals(this.uuid, other.uuid) && Objects.equals(this.program, other.program) &&
                 Objects.equals(this.patient, other.patient) && Objects.equals(this.dateEnrolled, other.dateEnrolled) &&
                 Objects.equals(this.dateCompleted, other.dateCompleted) && Objects.equals(this.location, other.location) &&
-                Objects.equals(this.states, other.states);
+                Objects.equals(this.states, other.states) && Objects.equals(this.attributes, other.attributes);
     }
 }
