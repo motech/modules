@@ -1,6 +1,5 @@
 package org.motechproject.openmrs.resource.impl;
 
-import com.google.gson.JsonObject;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.http.client.utils.URIBuilder;
@@ -12,7 +11,6 @@ import org.mockito.Mock;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.config.ConfigDummyData;
 import org.motechproject.openmrs.domain.CohortQueryReport;
-import org.motechproject.openmrs.util.JsonUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestOperations;
@@ -21,12 +19,9 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -58,43 +53,36 @@ public class CohortResourceImplTest extends AbstractResourceImplTest {
     }
 
     @Test
-    public void shouldGetCohortQueryReport() throws Exception {
-        CohortQueryReport cohortQueryReport = buildCohortQueryReport();
-        URI url = config.toInstancePathWithParams("/reportingrest/cohort/{uuid}", cohortQueryReport.getUuid());
-
-        when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponseFromFile(GET_COHORT_QUERY_REPORT_RESPONSE_JSON));
-
-        CohortQueryReport created = cohortResource.getCohortQueryReport(config, cohortQueryReport.getUuid(), null);
-
-        verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
-
-        assertThat(created, equalTo(cohortQueryReport));
-        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
-        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class), nullValue());
+    public void shouldGetCohortQueryReportWithoutParameters() throws Exception {
+        getCohortQueryReport(false);
     }
 
     @Test
     public void shouldGetCohortQueryReportWithGivenParameters() throws Exception {
+        getCohortQueryReport(true);
+    }
+
+    public void getCohortQueryReport(boolean withParameters) throws Exception {
         CohortQueryReport cohortQueryReport = buildCohortQueryReport();
         URI url = config.toInstancePathWithParams("/reportingrest/cohort/{uuid}", cohortQueryReport.getUuid());
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("param1", "value");
-        parameters.put("param2", "value");
+        if (withParameters) {
+            parameters.put("param1", "value");
+            parameters.put("param2", "value");
 
-        url = addParametersToPath(url, parameters);
+            url = addParametersToPath(url, parameters);
+        }
 
-        doReturn(getResponseFromFile(GET_COHORT_QUERY_REPORT_RESPONSE_JSON))
-                .when(restOperations).exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class));
+        when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponseFromFile(GET_COHORT_QUERY_REPORT_RESPONSE_JSON));
 
         CohortQueryReport created = cohortResource.getCohortQueryReport(config, cohortQueryReport.getUuid(), parameters);
 
         verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
 
-        assertThat(created, equalTo(cohortQueryReport));
-        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
-        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class), nullValue());
+        assertEquals(cohortQueryReport, created);
+        assertEquals(getHeadersForGet(config), requestCaptor.getValue().getHeaders());
     }
 
     private CohortQueryReport buildCohortQueryReport() throws Exception {
