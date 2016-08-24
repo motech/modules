@@ -196,10 +196,10 @@ public class CaseTaskXmlConverter {
     private CommcareRequestData createRequestWithEnvelope(
             CaseRequest caseRequest) {
         MetaElement metaElement = new MetaElement(
-                "http://openrosa.org/jr/xforms", UUID.randomUUID().toString(),
+                null, UUID.randomUUID().toString(),
                 caseRequest.getDateModified(), caseRequest.getDateModified(),
                 caseRequest.getUserId());
-        return new CommcareRequestData(caseRequest.getDataXmlns(), metaElement,
-                caseRequest);
+        return new CommcareRequestData(caseRequest.getDataXmlns() != null ? caseRequest.getDataXmlns() :
+                "http://openrosa.org/jr/xforms", metaElement, caseRequest);
     }
 }
