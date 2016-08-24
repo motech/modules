@@ -135,7 +135,22 @@ public interface OpenMRSActionProxyService {
      * @param locationName  the name of location
      */
     void createProgramEnrollment(String configName, String patientUuid, String programUuid,
-                                 DateTime dateEnrolled, DateTime dateCompleted, String locationName);
+                                 DateTime dateEnrolled, DateTime dateCompleted,
+                                 String locationName, Map<String, String> programEnrollmentAttributes);
+
+    /**
+     * Updates a Bahmni program enrollment with the given params.
+     * The required fields are: {@code programEnrollmentUuid}.
+     *
+     * @param configName  the name of the configuration
+     * @param programEnrollmentUuid  the program enrollment uuid
+     * @param programCompletedDate  the program enrollment completed date
+     * @param stateUuid  the state uuid
+     * @param startDate  the state start date
+     * @param attributes  the additional attributes
+     */
+    void updateProgramEnrollment (String configName, String programEnrollmentUuid, DateTime programCompletedDate,
+                                        String stateUuid, DateTime startDate, Map<String, String> attributes);
 
     /**
      * Changes state of program enrollment. Program enrollment is identified by UUID.
@@ -148,4 +163,14 @@ public interface OpenMRSActionProxyService {
      */
     void changeStateOfProgramEnrollment(String configName, String programEnrollmentUuid, DateTime programCompletedDate,
                                         String stateUuid, DateTime startDate);
+
+    /**
+     * Gets the Cohort Query report. The Cohort Query is identified by UUID.
+     * The required fields are: {@code cohortQueryUuid}.
+     *
+     * @param configName  the name of the configuration
+     * @param cohortQueryUuid  the cohort query uuid
+     * @param parameters  the additional parameters
+     */
+    void getCohortQueryReport(String configName, String cohortQueryUuid, Map<String, String> parameters);
 }

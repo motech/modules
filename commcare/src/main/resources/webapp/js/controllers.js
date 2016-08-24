@@ -233,11 +233,14 @@
         $scope.oldName = "";
 
         $scope.copyConfig = function(config) {
+
             if (!config) {
                 $scope.configSaved = false;
+                $scope.verified = false;
                 return;
             }
 
+            $scope.verified = true;
             $scope.configSaved = true;
             var oldName, copy = {};
 
@@ -337,6 +340,7 @@
         $scope.addConfig = function() {
             LoadingModal.open();
             $scope.configSaved = false;
+            $scope.verified = false;
             Configurations.create(
                 function success(data) {
                     $scope.$parent.configurations.configs.push(data);
@@ -385,7 +389,7 @@
                 && $scope.validateConfigName()
                 && $scope.validateUrlAndDomain()
                 && $scope.configSaved === false
-                && $scope.verification();
+                && $scope.verified === true;
         };
 
         $scope.syncConfig = function() {
@@ -398,7 +402,7 @@
                     LoadingModal.close();
                 },
                 function failure(response) {
-                    $scope.syncErrorMessage = response.data;
+                    $scope.syncErrorMessage = response.data.message;
                     $scope.syncSuccess = false;
                     $scope.syncedConfig = $scope.selectedConfig.name;
                     LoadingModal.close();
@@ -427,27 +431,16 @@
                     $scope.verifySuccessMessage = $scope.msg('commcare.verify.success');
                     $scope.verifyErrorMessage = '';
                     $scope.connectionVerified = true;
+                    $scope.verified = true;
                     LoadingModal.close();
                 },
                 function failure(response) {
-                    $scope.verifyErrorMessage = response.data;
+                    $scope.verifyErrorMessage = response.data.message;
                     $scope.verifySuccessMessage = '';
                     $scope.connectionVerified = false;
+                    $scope.verified = false;
                     LoadingModal.close();
                 });
-                $scope.verified = true;
-        };
-
-        $scope.verification = function() {
-            if ($scope.validateConfig() && !$scope.verified) {
-                $timeout(function() {
-                    $scope.verify();
-                }, 1000);
-                if ($scope.verify.success.connectionVerified) {
-                    return true;
-                }
-            }
-            return false;
         };
 
         $scope.validateConfig = function() {
@@ -561,7 +554,7 @@
                 },
                 function failure(response) {
                     $scope.verifySuccessMessage = '';
-                    $scope.verifyErrorMessage =  response.data;
+                    $scope.verifyErrorMessage =  response.data.message;
                     $scope.connectionVerified = false;
                     LoadingModal.close();
                 });
@@ -586,7 +579,7 @@
                 },
                 function failure(response) {
                     $scope.verifySuccessMessage = '';
-                    $scope.verifyErrorMessage =  response.data;
+                    $scope.verifyErrorMessage =  response.data.message;
                     $scope.connectionVerified = false;
                     LoadingModal.close();
                 });
