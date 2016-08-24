@@ -33,5 +33,11 @@
   "attributes":[{
     "display" : "Civil Status = 5555",
     "value" : "5555"
+  }, {
+    "display" : "Civil Status = 6666",
+    "value" : {
+      "uuid" : "AAA",
+      "display" : "MARRIED"
+    }
   }]
 }

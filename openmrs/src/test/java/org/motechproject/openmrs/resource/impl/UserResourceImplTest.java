@@ -66,7 +66,7 @@ public class UserResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePath("/user");
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(USER_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(USER_RESPONSE_JSON));
 
         User created = userResource.createUser(config, user);
 
@@ -84,7 +84,7 @@ public class UserResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/user/{uuid}", user.getUuid());
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(USER_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(USER_RESPONSE_JSON));
 
         User updated = userResource.updateUser(config, user);
 
@@ -101,7 +101,7 @@ public class UserResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePath("/user?v=full");
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(USER_LIST_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(USER_LIST_RESPONSE_JSON));
 
         UserListResult result = userResource.getAllUsers(config);
 
@@ -118,7 +118,7 @@ public class UserResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/user?q={username}&v=full", query);
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(USER_BY_USERNAME_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(USER_BY_USERNAME_RESPONSE_JSON));
 
         UserListResult result = userResource.queryForUsersByUsername(config, query);
 
@@ -134,7 +134,7 @@ public class UserResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePath("/role?v=full");
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(ROLE_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(ROLE_RESPONSE_JSON));
 
         RoleListResult result = userResource.getAllRoles(config);
 

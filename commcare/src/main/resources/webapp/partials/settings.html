@@ -31,7 +31,12 @@
          </div>
      </div>
 
+    <div class="message" ng-if="!verified && selectedConfig">
+        <div class="form-hint-error-bottom"> {{msg('commcare.verifyToSave')}}</div>
+    </div>
+
     <form ng-if="selectedConfig" class="commcare inside form-horizontal" novalidate>
+
         <div ng-if="isVerifyError()" class="connection-status connection-error alert alert-danger">
             <span class="fa fw fa-warning"></span>
             <span class="margin-left1">{{verifyErrorMessage}}</span>

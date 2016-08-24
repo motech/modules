@@ -64,6 +64,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         Config config = configService.getConfigByName(configName);
 
         if (patient.getPerson().getUuid() == null) {
+            personResource.checkPersonAttributeTypes(config, patient.getPerson());
             patient.setPerson(personResource.createPerson(config, patient.getPerson()));
         }
 
