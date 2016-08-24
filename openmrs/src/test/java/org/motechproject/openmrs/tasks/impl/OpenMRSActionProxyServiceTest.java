@@ -36,16 +36,16 @@ import org.motechproject.openmrs.service.OpenMRSPersonService;
 import org.motechproject.openmrs.service.OpenMRSProgramEnrollmentService;
 import org.motechproject.openmrs.service.OpenMRSProviderService;
 import org.motechproject.openmrs.tasks.OpenMRSActionProxyService;
+import org.motechproject.openmrs.tasks.constants.EventSubjects;
+import org.motechproject.openmrs.tasks.constants.Keys;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
@@ -409,39 +409,21 @@ public class OpenMRSActionProxyServiceTest {
     }
 
     @Test
-    public void shouldGetEmptyCohortQueryReport() {
+    public void shouldGetCohortQueryReportWithoutMembersAndWithNoGivenParameters() {
         String cohortQueryUuid = "QQQ";
 
         ArgumentCaptor<String> uuidCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<Map> parametersCaptor = ArgumentCaptor.forClass(Map.class);
 
-        doReturn(prepareEmptyCohortQueryReport()).when(cohortService)
-                .getCohortQueryReport(eq(CONFIG_NAME), eq(cohortQueryUuid), eq(null));
+        doReturn(prepareCohortQueryReport(false)).when(cohortService)
+                .getCohortQueryReport(eq(CONFIG_NAME), eq(cohortQueryUuid), eq(Collections.EMPTY_MAP));
 
-        openMRSActionProxyService.getCohortQueryReport(CONFIG_NAME, cohortQueryUuid, null);
+        openMRSActionProxyService.getCohortQueryReport(CONFIG_NAME, cohortQueryUuid, Collections.EMPTY_MAP);
 
         verify(cohortService).getCohortQueryReport(eq(CONFIG_NAME), uuidCaptor.capture(), parametersCaptor.capture());
         verify(eventRelay, never()).sendEventMessage(Matchers.<MotechEvent>any());
         assertEquals(cohortQueryUuid, uuidCaptor.getValue());
-        assertNull(parametersCaptor.getValue());
-    }
-
-    @Test
-    public void shouldGetCohortQueryReport() {
-        String cohortQueryUuid = "QQQ";
-
-        ArgumentCaptor<String> uuidCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<Map> parametersCaptor = ArgumentCaptor.forClass(Map.class);
-
-        doReturn(prepareCohortQueryReportWithMembers()).when(cohortService)
-                .getCohortQueryReport(eq(CONFIG_NAME), eq(cohortQueryUuid), eq(null));
-
-        openMRSActionProxyService.getCohortQueryReport(CONFIG_NAME, cohortQueryUuid, null);
-
-        verify(cohortService).getCohortQueryReport(eq(CONFIG_NAME), uuidCaptor.capture(), parametersCaptor.capture());
-        verify(eventRelay, times(3)).sendEventMessage(Matchers.<MotechEvent>any());
-        assertEquals(cohortQueryUuid, uuidCaptor.getValue());
-        assertNull(parametersCaptor.getValue());
+        assertEquals(Collections.EMPTY_MAP, parametersCaptor.getValue());
     }
 
     @Test
@@ -453,16 +435,21 @@ public class OpenMRSActionProxyServiceTest {
 
         ArgumentCaptor<String> uuidCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<Map> parametersCaptor = ArgumentCaptor.forClass(Map.class);
+        ArgumentCaptor<MotechEvent> eventCaptor = ArgumentCaptor.forClass(MotechEvent.class);
 
-        doReturn(prepareCohortQueryReportWithMembers()).when(cohortService)
+        doReturn(prepareCohortQueryReport(true)).when(cohortService)
                 .getCohortQueryReport(eq(CONFIG_NAME), eq(cohortQueryUuid), eq(parameters));
 
         openMRSActionProxyService.getCohortQueryReport(CONFIG_NAME, cohortQueryUuid, parameters);
 
         verify(cohortService).getCohortQueryReport(eq(CONFIG_NAME), uuidCaptor.capture(), parametersCaptor.capture());
-        verify(eventRelay, times(3)).sendEventMessage(Matchers.<MotechEvent>any());
+        verify(eventRelay, times(2)).sendEventMessage(eventCaptor.capture());
         assertEquals(cohortQueryUuid, uuidCaptor.getValue());
         assertEquals(parameters, parametersCaptor.getValue());
+
+        List<MotechEvent> capturedEvents = eventCaptor.getAllValues();
+        assertEquals(createEventForMember(cohortQueryUuid, prepareCohortQueryReportMember("1")), capturedEvents.get(0));
+        assertEquals(createEventForMember(cohortQueryUuid, prepareCohortQueryReportMember("2")), capturedEvents.get(1));
     }
 
     private Person createTestPerson() {
@@ -529,25 +516,36 @@ public class OpenMRSActionProxyServiceTest {
         return Collections.singletonList(observation);
     }
 
-    private CohortQueryReport prepareEmptyCohortQueryReport() {
+    private CohortQueryReport prepareCohortQueryReport(boolean withMembers) {
         CohortQueryReport cohortQueryReport = new CohortQueryReport();
-        cohortQueryReport.setMembers(new ArrayList<>());
+
+        List<CohortQueryReportMember> members = new ArrayList<>();
+        if (withMembers) {
+            members.add(prepareCohortQueryReportMember("1"));
+            members.add(prepareCohortQueryReportMember("2"));
+        }
+
+        cohortQueryReport.setMembers(members);
 
         return cohortQueryReport;
     }
 
-    private CohortQueryReport prepareCohortQueryReportWithMembers() {
-        CohortQueryReport cohortQueryReport = new CohortQueryReport();
+    private CohortQueryReportMember prepareCohortQueryReportMember(String suffix) {
+        CohortQueryReportMember cohortQueryReportMember = new CohortQueryReportMember();
 
-        List<CohortQueryReportMember> members = Arrays.asList(
-                new CohortQueryReportMember[]{
-                        new CohortQueryReportMember(),
-                        new CohortQueryReportMember(),
-                        new CohortQueryReportMember()
-                }
-        );
-        cohortQueryReport.setMembers(members);
+        cohortQueryReportMember.setUuid("testUuid" + suffix);
+        cohortQueryReportMember.setDisplay("testDisplay" + suffix);
 
-        return cohortQueryReport;
+        return cohortQueryReportMember;
+    }
+
+    private MotechEvent createEventForMember(String cohortQueryUuid, CohortQueryReportMember member) {
+        Map<String, Object> parameters = new HashMap<>();
+
+        parameters.put(Keys.COHORT_QUERY_UUID, cohortQueryUuid);
+        parameters.put(Keys.PATIENT_UUID, member.getUuid());
+        parameters.put(Keys.PATIENT_DISPLAY, member.getDisplay());
+
+        return new MotechEvent(EventSubjects.GET_COHORT_QUERY_MEMBER_EVENT, parameters);
     }
 }
