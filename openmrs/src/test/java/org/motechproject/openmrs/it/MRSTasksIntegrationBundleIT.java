@@ -166,12 +166,12 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
             patientService.deletePatient(DEFAULT_CONFIG_NAME, patient.getUuid());
         }
 
-        patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, "Robert Kowalski");
+        patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, "John Smith");
         if (patient != null) {
             patientService.deletePatient(DEFAULT_CONFIG_NAME, patient.getUuid());
         }
 
-        patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, "Jan Nowak");
+        patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, "Jacob Lee");
         if (patient != null) {
             patientService.deletePatient(DEFAULT_CONFIG_NAME, patient.getUuid());
         }
