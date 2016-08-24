@@ -39,7 +39,7 @@ public class OpenMRSTriggerBuilder {
         List<TriggerEventRequest> triggers = new ArrayList<>();
 
         List<EventParameterRequest> parameterRequests = new ArrayList<>();
-        parameterRequests.add(new EventParameterRequest(DisplayNames.PERSON_UUID, Keys.PATIENT_UUID));
+        parameterRequests.add(new EventParameterRequest(DisplayNames.PATIENT_UUID, Keys.PATIENT_UUID));
         parameterRequests.add(new EventParameterRequest(DisplayNames.PATIENT_DISPLAY, Keys.PATIENT_DISPLAY));
         parameterRequests.add(new EventParameterRequest(DisplayNames.COHORT_QUERY_UUID, Keys.COHORT_QUERY_UUID));
 
