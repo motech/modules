@@ -222,20 +222,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
     @Test
     public void testCreatePatientPostActionParameter() throws InterruptedException {
-        TaskTriggerInformation triggerInformation = new TaskTriggerInformation("CREATE SettingsRecord", "data-services", MDS_CHANNEL_NAME,
-                VERSION, TRIGGER_SUBJECT, TRIGGER_SUBJECT);
-
-        SortedSet<TaskConfigStep> taskConfigStepSortedSet = new TreeSet<>();
-        taskConfigStepSortedSet.add(createPatientDataSource());
-        TaskConfig taskConfig = new TaskConfig();
-        taskConfig.addAll(taskConfigStepSortedSet);
-
-        ArrayList<TaskActionInformation> taskActions = new ArrayList();
-        taskActions.add(prepareCreatePatientActionInformation("Slowackiego 15/2", "Jan Nowak"));
-        taskActions.add(prepareCreatePatientActionInformation("{{pa.0.uuid}}", "Robert Kowalski"));
-
-        Task task = new Task("OpenMRSPatientPostActionParameterTestTask", triggerInformation, taskActions, taskConfig, true, true);
-        getTaskService().save(task);
+        Task task = prepareCreatePatientPostActionParameterTask();
 
         getTriggerHandler().registerHandlerFor(task.getTrigger().getEffectiveListenerSubject());
 
@@ -244,10 +231,10 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         // Give Tasks some time to process
         assertTrue(waitForTaskExecution(task.getId()));
 
-        Patient patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, "Jan Nowak");
+        Patient patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, "John Smith");
         String firstPatientUuid = patient.getUuid();
 
-        patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, "Robert Kowalski");
+        patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, "Jacob Lee");
         Person.Address address = patient.getPerson().getPreferredAddress();
 
         assertEquals(firstPatientUuid, address.getAddress1());
@@ -363,6 +350,25 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 createdPatient, Collections.singletonList(createdProvider.getPerson()), null);
 
         createdEncounter = encounterService.createEncounter(DEFAULT_CONFIG_NAME, encounter);
+    }
+
+    private Task prepareCreatePatientPostActionParameterTask(){
+        TaskTriggerInformation triggerInformation = new TaskTriggerInformation("CREATE SettingsRecord", "data-services", MDS_CHANNEL_NAME,
+                VERSION, TRIGGER_SUBJECT, TRIGGER_SUBJECT);
+
+        SortedSet<TaskConfigStep> taskConfigStepSortedSet = new TreeSet<>();
+        taskConfigStepSortedSet.add(createPatientDataSource());
+        TaskConfig taskConfig = new TaskConfig();
+        taskConfig.addAll(taskConfigStepSortedSet);
+
+        ArrayList<TaskActionInformation> taskActions = new ArrayList();
+        taskActions.add(prepareCreatePatientActionInformation("Wallstreet 15/2", "John Smith"));
+        taskActions.add(prepareCreatePatientActionInformation("{{pa.0.uuid}}", "Jacob Lee"));
+
+        Task task = new Task("OpenMRSPatientPostActionParameterTestTask", triggerInformation, taskActions, taskConfig, true, true);
+        getTaskService().save(task);
+
+        return task;
     }
 
     private TaskActionInformation prepareCreatePatientActionInformation(String adress1, String motechId){
