@@ -8,6 +8,8 @@ import org.motechproject.openmrs.config.Configs;
 import org.motechproject.openmrs.service.EventKeys;
 import org.motechproject.openmrs.service.OpenMRSConfigService;
 import org.motechproject.openmrs.tasks.constants.DisplayNames;
+import org.motechproject.openmrs.tasks.constants.EventSubjects;
+import org.motechproject.openmrs.tasks.constants.Keys;
 import org.motechproject.tasks.contract.TriggerEventRequest;
 
 import java.util.List;
@@ -42,11 +44,14 @@ public class OpenMRSTriggerBuilderTest {
         assertFalse(triggerEventRequests.isEmpty());
 
         assertEquals(3, triggerEventRequests.get(0).getEventParameters().size());
+        assertEquals(Keys.PATIENT_UUID, triggerEventRequests.get(0).getEventParameters().get(0).getEventKey());
+        assertEquals(Keys.PATIENT_DISPLAY, triggerEventRequests.get(0).getEventParameters().get(1).getEventKey());
+        assertEquals(Keys.COHORT_QUERY_UUID, triggerEventRequests.get(0).getEventParameters().get(2).getEventKey());
 
-        assertEquals(DisplayNameHelper.buildDisplayName(DisplayNames.COHORT_GOTMEMBER, CONFIG_NAME),
+        assertEquals(DisplayNameHelper.buildDisplayName(DisplayNames.COHORT_QUERY_REPORTMEMBER, CONFIG_NAME),
                 triggerEventRequests.get(0).getDisplayName());
 
-        assertEquals(EventKeys.BASE_SUBJECT + "Cohort.GotMember", triggerEventRequests.get(0).getSubject());
+        assertEquals(EventSubjects.GET_COHORT_QUERY_MEMBER_EVENT, triggerEventRequests.get(0).getSubject());
     }
 
     private Configs prepareConfigs(){
