@@ -622,6 +622,52 @@
           "displayName" : "rapidpro.tasks.extra"
         }
       ]
+    },
+    {
+      "subject" : "org.motechproject.rapidpro.web-hook.received-SMS",
+      "displayName" : "rapidpro.tasks.receivedSMS",
+      "eventParameters" : [
+        {
+          "eventKey" : "time",
+          "type" : "DATE",
+          "displayName" : "rapidpro.tasks.time"
+        },
+        {
+          "eventKey" : "relayer",
+          "type" : "INTEGER",
+          "displayName" : "rapidpro.tasks.relayer"
+        },
+        {
+          "eventKey" : "sms",
+          "type" : "UNICODE",
+          "displayName" : "rapidpro.tasks.sms"
+        },
+        {
+          "eventKey" : "relayerPhone",
+          "type" : "UNICODE",
+          "displayName" : "rapidpro.tasks.relayerPhone"
+        },
+        {
+          "eventKey" : "phone",
+          "type" : "UNICODE",
+          "displayName" : "rapidpro.tasks.phone"
+        },
+        {
+          "eventKey" : "text",
+          "type" : "UNICODE",
+          "displayName" : "rapidpro.tasks.text"
+        },
+        {
+          "eventKey" : "status",
+          "type" : "UNICODE",
+          "displayName" : "rapidpro.tasks.status"
+        },
+        {
+          "eventKey" : "direction",
+          "type" : "UNICODE",
+          "displayName" : "rapidpro.tasks.direction"
+        }
+      ]
     }
   ]
 }
