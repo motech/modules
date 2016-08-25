@@ -235,6 +235,69 @@
         }
         #if( "1.9" != $config.getOpenMrsVersion() ),
         {
+          "displayName": "Bahmni Program Enrollment [$config.getName()]",
+          "type": "BahmniProgramEnrollment-$config.getName()",
+          "lookupFields": [
+            {
+              "displayName": "openMRS.lookup.motechIdAndProgramName",
+              "fields": [
+                "openMRS.patient.motechId",
+                "openMRS.programName",
+                "openMRS.activeProgramOnly"
+              ]
+            },
+            {
+              "displayName": "openMRS.lookup.uuidAndProgramName",
+              "fields": [
+                "openMRS.patient.uuid",
+                "openMRS.programName",
+                "openMRS.activeProgramOnly"
+              ]
+            }
+          ],
+          "fields": [
+            {
+              "displayName": "openMRS.programEnrollment.uuid",
+              "fieldKey": "firstObject.uuid"
+            },
+            {
+              "displayName": "openMRS.patient.uuid",
+              "fieldKey": "firstObject.patient.uuid"
+            },
+            {
+              "displayName": "openMRS.program.uuid",
+              "fieldKey": "firstObject.program.uuid"
+            },
+            {
+              "displayName": "openMRS.programEnrollment.dateEnrolled",
+              "fieldKey": "firstObject.dateEnrolled",
+              "type": "DATE"
+            },
+            {
+              "displayName": "openMRS.programEnrollment.dateCompleted",
+              "fieldKey": "firstObject.dateCompleted",
+              "type": "DATE"
+            },
+            {
+              "displayName": "openMRS.location.name",
+              "fieldKey": "firstObject.location.name"
+            },
+            {
+              "displayName": "openMRS.programEnrollment.currentState.uuid",
+              "fieldKey": "firstObject.currentState.state.uuid"
+            },
+            {
+              "displayName": "openMRS.programEnrollment.numberOfPrograms",
+              "fieldKey": "numberOfPrograms"
+            },
+            {
+              "displayName": "openMRS.programEnrollment.attributes",
+              "fieldKey": "firstObject.programAttributes",
+              "type": "MAP"
+            }
+          ]
+        },
+        {
           "displayName": "Program Enrollment [$config.getName()]",
           "type": "ProgramEnrollment-$config.getName()",
           "lookupFields": [
