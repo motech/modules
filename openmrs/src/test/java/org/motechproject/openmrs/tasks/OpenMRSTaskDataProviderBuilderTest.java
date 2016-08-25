@@ -48,12 +48,12 @@ public class OpenMRSTaskDataProviderBuilderTest {
 
     @Test
     public void generatedProviderShouldReturnJSONForOneConfiguration() throws IOException {
-        assertEquals(6, getGeneratedJSONObjectsCount(1));
+        assertEquals(7, getGeneratedJSONObjectsCount(1));
     }
 
     @Test
     public void generatedProviderShouldReturnJSONForTwoConfigurations() throws IOException {
-        assertEquals(12, getGeneratedJSONObjectsCount(2));
+        assertEquals(14, getGeneratedJSONObjectsCount(2));
     }
 
     private int getGeneratedJSONObjectsCount(int amountOfConfigs) throws IOException {
