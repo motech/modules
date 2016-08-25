@@ -20,6 +20,7 @@ public final class OpenMRSTasksConstants {
     public static final String PROVIDER = "Provider";
     public static final String RELATIONSHIP = "Relationship";
     public static final String PROGRAM_ENROLLMENT = "ProgramEnrollment";
+    public static final String BAHMNI_PROGRAM_ENROLLMENT = "BahmniProgramEnrollment";
     public static final String IDENTIFIER = "GeneratedIdentifier";
 
     // Field names
