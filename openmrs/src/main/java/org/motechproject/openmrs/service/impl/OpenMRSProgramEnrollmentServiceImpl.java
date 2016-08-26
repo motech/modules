@@ -84,6 +84,18 @@ public class OpenMRSProgramEnrollmentServiceImpl implements OpenMRSProgramEnroll
     }
 
     @Override
+    public List<ProgramEnrollment> getBahmniProgramEnrollmentByPatientUuid(String configName, String patientUuid)  {
+        return programEnrollmentResource.getBahmniProgramEnrollmentByPatientUuid(configService.getConfigByName(configName), patientUuid);
+    }
+
+    @Override
+    public List<ProgramEnrollment> getBahmniProgramEnrollmentByPatientMotechId(String configName, String patientMotechId) {
+        Patient patient = patientService.getPatientByMotechId(configName, patientMotechId);
+
+        return Objects.nonNull(patient) ? getBahmniProgramEnrollmentByPatientUuid(configName, patient.getUuid()) : new ArrayList<>();
+    }
+
+    @Override
     public List<ProgramEnrollment> getProgramEnrollmentByPatientUuid(String configName, String patientUuid) {
         return programEnrollmentResource.getProgramEnrollmentByPatientUuid(configService.getConfigByName(configName), patientUuid);
     }
