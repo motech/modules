@@ -2,6 +2,7 @@ package org.motechproject.openmrs.it.version1_12;
 
 import org.joda.time.DateTime;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -131,15 +132,27 @@ public class MRSTaskIntegrationBundle1_12IT extends AbstractTaskBundleIT {
     }
 
     @Test
-    public void testOpenMRSProgramEnrollmentDataSourceAndCreateProgramEnrollmentAction() throws InterruptedException, IOException, PatientNotFoundException {
-        Long taskID = createProgramEnrollmentTestTask();
+    public void testOpenMRSProgramEnrollmentDataSourceAndCreateProgramEnrollmentActionWithActiveProgram() throws InterruptedException, IOException, PatientNotFoundException {
+        Long taskID = createProgramEnrollmentTestTask("OpenMRSProgramEnrollmentTestTaskWithActiveProgram", true);
 
         activateTrigger();
 
         // Give Tasks some time to process
         assertTrue(waitForTaskExecution(taskID));
 
-        checkIfProgramEnrollmentWasCreatedProperly();
+        checkIfProgramEnrollmentWasCreatedProperly(true);
+    }
+
+    @Test
+    public void testOpenMRSProgramEnrollmentDataSourceAndCreateProgramEnrollmentActionWithNotActiveProgram() throws InterruptedException, IOException, PatientNotFoundException {
+        Long taskID = createProgramEnrollmentTestTask("OpenMRSProgramEnrollmentTestTaskWithNotActiveProgram", false);
+
+        activateTrigger();
+
+        // Give Tasks some time to process
+        assertTrue(waitForTaskExecution(taskID));
+
+        checkIfProgramEnrollmentWasCreatedProperly(false);
     }
 
     @Test
@@ -154,7 +167,7 @@ public class MRSTaskIntegrationBundle1_12IT extends AbstractTaskBundleIT {
         checkIfProgramEnrollmentWasUpdatedProperly();
     }
 
-    private Long createProgramEnrollmentTestTask() {
+    private Long createProgramEnrollmentTestTask(String taskName, boolean isActiveProgram) {
         TaskTriggerInformation triggerInformation = new TaskTriggerInformation("CREATE SettingsRecord", "data-services", MDS_CHANNEL_NAME,
                 VERSION, TRIGGER_SUBJECT, TRIGGER_SUBJECT);
 
@@ -164,7 +177,7 @@ public class MRSTaskIntegrationBundle1_12IT extends AbstractTaskBundleIT {
         actionInformation.setSubject(String.format("createProgramEnrollment.%s", DEFAULT_CONFIG_NAME));
 
         SortedSet<TaskConfigStep> taskConfigStepSortedSet = new TreeSet<>();
-        taskConfigStepSortedSet.add(createProgramEnrollmentDataSource());
+        taskConfigStepSortedSet.add(createProgramEnrollmentDataSource(isActiveProgram));
         TaskConfig taskConfig = new TaskConfig();
         taskConfig.addAll(taskConfigStepSortedSet);
 
@@ -172,12 +185,14 @@ public class MRSTaskIntegrationBundle1_12IT extends AbstractTaskBundleIT {
         values.put(Keys.PATIENT_UUID, "{{ad.openMRS.ProgramEnrollment-" + DEFAULT_CONFIG_NAME + "#0.firstObject.patient.uuid}}");
         values.put(Keys.PROGRAM_UUID, "{{ad.openMRS.ProgramEnrollment-" + DEFAULT_CONFIG_NAME + "#0.firstObject.program.uuid}}");
         values.put(Keys.DATE_ENROLLED, new DateTime("2010-01-16T00:00:00Z").toString());
-        values.put(Keys.DATE_COMPLETED, new DateTime("2016-01-16T00:00:00Z").toString());
+        if(!isActiveProgram) {
+            values.put(Keys.DATE_COMPLETED, new DateTime("2016-01-16T00:00:00Z").toString());
+        }
         values.put(Keys.LOCATION_NAME, locationService.getLocations(DEFAULT_CONFIG_NAME, DEFAULT_LOCATION_NAME).get(0).toString());
         values.put(Keys.CONFIG_NAME, DEFAULT_CONFIG_NAME);
         actionInformation.setValues(values);
 
-        Task task = new Task("OpenMRSProgramEnrollmentTestTask", triggerInformation, Collections.singletonList(actionInformation), taskConfig, true, true);
+        Task task = new Task(taskName, triggerInformation, Collections.singletonList(actionInformation), taskConfig, true, true);
         getTaskService().save(task);
 
         getTriggerHandler().registerHandlerFor(task.getTrigger().getEffectiveListenerSubject());
@@ -210,13 +225,17 @@ public class MRSTaskIntegrationBundle1_12IT extends AbstractTaskBundleIT {
     }
 
     private void createProgramEnrollmentTestData() {
-        createdPatient = patientService.createPatient(DEFAULT_CONFIG_NAME, preparePatient());
+        createdPatient = patientService.createPatient(DEFAULT_CONFIG_NAME, preparePatient(MOTECH_ID));
 
+        createProgramEnrollment(createdPatient, new DateTime("2010-01-16T00:00:00Z"), null);
+        createProgramEnrollment(createdPatient, new DateTime("2010-01-16T00:00:00Z"), new DateTime("2016-01-16T00:00:00Z"));
+
+    }
+
+    private void createProgramEnrollment(Patient patient, DateTime dateEnrolled, DateTime dateCompleted) {
         Program program = new Program();
         program.setUuid("187af646-373b-4459-8114-4724d7e07fd5");
 
-        DateTime dateEnrolled = new DateTime("2010-01-16T00:00:00Z");
-        DateTime dateCompleted = new DateTime("2016-01-16T00:00:00Z");
         DateTime stateStartDate = new DateTime("2011-01-16T00:00:00Z");
 
         Location location = locationService.getLocations(DEFAULT_CONFIG_NAME, DEFAULT_LOCATION_NAME).get(0);
@@ -230,16 +249,22 @@ public class MRSTaskIntegrationBundle1_12IT extends AbstractTaskBundleIT {
 
         ProgramEnrollment programEnrollment = new ProgramEnrollment();
         programEnrollment.setProgram(program);
-        programEnrollment.setPatient(createdPatient);
-        programEnrollment.setDateEnrolled(dateEnrolled.toDate());
-        programEnrollment.setDateCompleted(dateCompleted.toDate());
+        programEnrollment.setPatient(patient);
+
+        if (dateEnrolled != null) {
+            programEnrollment.setDateEnrolled(dateEnrolled.toDate());
+        }
+        if (dateCompleted != null) {
+            programEnrollment.setDateCompleted(dateCompleted.toDate());
+        }
+
         programEnrollment.setLocation(location);
         programEnrollment.setStates(Collections.singletonList(stateStatus));
 
         createdProgramEnrollment = programEnrollmentService.createProgramEnrollment(DEFAULT_CONFIG_NAME, programEnrollment);
     }
 
-    private Patient preparePatient() {
+    private Patient preparePatient(String motechId) {
         Person person = new Person();
 
         Person.Name name = new Person.Name();
@@ -258,7 +283,7 @@ public class MRSTaskIntegrationBundle1_12IT extends AbstractTaskBundleIT {
 
         assertNotNull(location);
 
-        return new Patient(person, MOTECH_ID, location);
+        return new Patient(person, motechId, location);
     }
 
     private boolean waitForTaskExecution(Long taskID) throws InterruptedException {
@@ -286,30 +311,60 @@ public class MRSTaskIntegrationBundle1_12IT extends AbstractTaskBundleIT {
         return taskActivities.size() == 1;
     }
 
-    private DataSource createProgramEnrollmentDataSource() {
+    private DataSource createProgramEnrollmentDataSource(boolean isActive) {
         List<Lookup> lookupList = new ArrayList<>();
         lookupList.add(new Lookup("openMRS.patient.motechId", MOTECH_ID));
         lookupList.add(new Lookup("openMRS.programName", createdProgramEnrollment.getProgram().getName()));
-        lookupList.add(new Lookup("openMRS.activeProgramOnly", "false"));
+
+        if(isActive) {
+            lookupList.add(new Lookup("openMRS.activeProgramOnly", "true"));
+        } else {
+            lookupList.add(new Lookup("openMRS.activeProgramOnly", "false"));
+        }
+        
         DataSource dataSource = new DataSource(OPENMRS_MODULE_NAME, 4L, 0L, "ProgramEnrollment-" + DEFAULT_CONFIG_NAME, "openMRS.lookup.motechIdAndProgramName", lookupList, false);
         dataSource.setOrder(0);
         return dataSource;
     }
 
-    private void checkIfProgramEnrollmentWasCreatedProperly() {
+    private void checkIfProgramEnrollmentWasCreatedProperly(boolean isActive) {
         List<ProgramEnrollment> programEnrollmentList = programEnrollmentService
                 .getProgramEnrollmentByPatientUuid(DEFAULT_CONFIG_NAME, createdProgramEnrollment.getPatient().getUuid());
 
-        assertEquals(2, programEnrollmentList.size());
+        if (isActive) {
+            assertEquals(3, programEnrollmentList.size());
+        } else {
+            assertEquals(4, programEnrollmentList.size());
+        }
 
         for (ProgramEnrollment programEnrollment : programEnrollmentList) {
-            if (!createdProgramEnrollment.getUuid().equals(programEnrollment.getUuid())) {
-                assertEquals(createdProgramEnrollment.getPatient().getUuid(), programEnrollment.getPatient().getUuid());
-                assertEquals(createdProgramEnrollment.getProgram().getUuid(), programEnrollment.getProgram().getUuid());
-                assertEquals(createdProgramEnrollment.getDateEnrolled(), programEnrollment.getDateEnrolled());
-                assertEquals(createdProgramEnrollment.getDateCompleted(), programEnrollment.getDateCompleted());
+            if (isActive) {
+                if (!createdProgramEnrollment.getUuid().equals(programEnrollment.getUuid()) && isProgramActive(programEnrollment)) {
+                    assertEqualsProgramEnrollments(createdProgramEnrollment, programEnrollment);
+                    Assert.assertNull(programEnrollment.getDateCompleted());
+                }
+            } else {
+                if (!createdProgramEnrollment.getUuid().equals(programEnrollment.getUuid()) && !isProgramActive(programEnrollment)) {
+                    assertEqualsProgramEnrollments(createdProgramEnrollment, programEnrollment);
+                    assertEquals(createdProgramEnrollment.getDateCompleted(), programEnrollment.getDateCompleted());
+                }
             }
         }
+    }
+
+    private void assertEqualsProgramEnrollments(ProgramEnrollment createdProgramEnrollment, ProgramEnrollment programEnrollment ) {
+        assertEquals(createdProgramEnrollment.getPatient().getUuid(), programEnrollment.getPatient().getUuid());
+        assertEquals(createdProgramEnrollment.getProgram().getUuid(), programEnrollment.getProgram().getUuid());
+        assertEquals(createdProgramEnrollment.getDateEnrolled(), programEnrollment.getDateEnrolled());
+    }
+    private boolean isProgramActive(ProgramEnrollment programEnrollment) {
+        boolean result = false;
+
+        if(programEnrollment.getDateCompleted() == null) {
+            result = true;
+        }
+
+        return result;
     }
 
     private void checkIfProgramEnrollmentWasUpdatedProperly() {
