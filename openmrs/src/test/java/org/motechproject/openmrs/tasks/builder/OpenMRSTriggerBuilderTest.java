@@ -51,7 +51,7 @@ public class OpenMRSTriggerBuilderTest {
         assertEquals(DisplayNameHelper.buildDisplayName(DisplayNames.COHORT_QUERY_REPORTMEMBER, CONFIG_NAME),
                 triggerEventRequests.get(0).getDisplayName());
 
-        assertEquals(EventSubjects.GET_COHORT_QUERY_MEMBER_EVENT.concat(".").concat(CONFIG_NAME),
+        assertEquals(EventSubjects.GET_COHORT_QUERY_MEMBER_EVENT.concat(CONFIG_NAME),
                 triggerEventRequests.get(0).getSubject());
     }
 

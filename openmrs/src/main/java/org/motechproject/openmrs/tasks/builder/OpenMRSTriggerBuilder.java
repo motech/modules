@@ -45,7 +45,7 @@ public class OpenMRSTriggerBuilder {
 
         String displayName = DisplayNameHelper.buildDisplayName(DisplayNames.COHORT_QUERY_REPORTMEMBER, configName);
 
-        triggers.add(new TriggerEventRequest(displayName, EventSubjects.GET_COHORT_QUERY_MEMBER_EVENT.concat(".").concat(configName),
+        triggers.add(new TriggerEventRequest(displayName, EventSubjects.GET_COHORT_QUERY_MEMBER_EVENT.concat(configName),
                 null, parameterRequests));
 
         return triggers;
