@@ -217,7 +217,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         CohortQueryReport cohortQueryReport = cohortService.getCohortQueryReport(configName, cohortQueryUuid, parameters);
 
         for (CohortQueryReport.CohortQueryReportMember member : cohortQueryReport.getMembers()) {
-            eventRelay.sendEventMessage(new MotechEvent(EventSubjects.GET_COHORT_QUERY_MEMBER_EVENT,
+            eventRelay.sendEventMessage(new MotechEvent(EventSubjects.GET_COHORT_QUERY_MEMBER_EVENT.concat(configName),
                     EventHelper.cohortMemberParameters(cohortQueryUuid, member)));
         }
     }
