@@ -546,6 +546,6 @@ public class OpenMRSActionProxyServiceTest {
         parameters.put(Keys.PATIENT_UUID, member.getUuid());
         parameters.put(Keys.PATIENT_DISPLAY, member.getDisplay());
 
-        return new MotechEvent(EventSubjects.GET_COHORT_QUERY_MEMBER_EVENT, parameters);
+        return new MotechEvent(EventSubjects.GET_COHORT_QUERY_MEMBER_EVENT.concat(CONFIG_NAME), parameters);
     }
 }
