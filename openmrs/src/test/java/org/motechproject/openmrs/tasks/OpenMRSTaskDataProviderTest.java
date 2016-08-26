@@ -57,6 +57,7 @@ import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PERSON_UUID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PROGRAM_NAME;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.RELATIONSHIP_TYPE_UUID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.UUID;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BAHMNI_PROGRAM_ENROLLMENT;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OpenMRSTaskDataProviderTest {
@@ -498,6 +499,31 @@ public class OpenMRSTaskDataProviderTest {
 
         assertTrue(actual.getResults().isEmpty());
         assertEquals(0, actual.getNumberOfPrograms());
+    }
+
+    @Test
+    public void shouldReturnBahmniProgramEnrollmentForPatientMotechIdAndProgramName() {
+        String className = BAHMNI_PROGRAM_ENROLLMENT;
+
+        Map<String, String> lookupFields = new HashMap<>();
+        lookupFields.put(PATIENT_MOTECH_ID, DEFAULT_MOTECH_ID);
+        lookupFields.put(PROGRAM_NAME, PROGRAM_DEFAULT_NAME);
+
+        List<ProgramEnrollment> expected = prepareProgramEnrollments();
+        when(programEnrollmentService.getBahmniProgramEnrollmentByPatientMotechId(eq(CONFIG_NAME), eq(DEFAULT_MOTECH_ID)))
+                .thenReturn(prepareProgramEnrollments());
+
+        Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, BY_MOTECH_ID_AND_PROGRAM_NAME, lookupFields);
+
+        verify(programEnrollmentService).getBahmniProgramEnrollmentByPatientMotechId(eq(CONFIG_NAME), eq(DEFAULT_MOTECH_ID));
+
+        assertTrue(object instanceof ProgramEnrollmentListResult);
+
+        ProgramEnrollmentListResult actual = (ProgramEnrollmentListResult) object;
+
+        assertEquals(expected.get(0), actual.getResults().get(0));
+
+        assertEquals(expected.get(0).getStates().get(1), actual.getResults().get(0).getCurrentState());
     }
 
     private List<Relationship> prepareRelationship() {
