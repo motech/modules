@@ -507,12 +507,13 @@ public class OpenMRSTaskDataProviderTest {
     }
 
     @Test
-    public void shouldReturnBahmniProgramEnrollmentForPatientMotechIdAndProgramName() {
+    public void shouldReturnOnlyActiveBahmniProgramEnrollmentForPatientMotechIdAndProgramName() {
         String className = BAHMNI_PROGRAM_ENROLLMENT;
 
         Map<String, String> lookupFields = new HashMap<>();
         lookupFields.put(PATIENT_MOTECH_ID, DEFAULT_MOTECH_ID);
         lookupFields.put(PROGRAM_NAME, PROGRAM_DEFAULT_NAME);
+        lookupFields.put(ACTIVE_PROGRAM, "true");
 
         List<ProgramEnrollment> expected = prepareProgramEnrollments(true);
         when(programEnrollmentService.getBahmniProgramEnrollmentByPatientMotechId(eq(CONFIG_NAME), eq(DEFAULT_MOTECH_ID)))
@@ -527,10 +528,7 @@ public class OpenMRSTaskDataProviderTest {
         ProgramEnrollmentListResult actual = (ProgramEnrollmentListResult) object;
 
         assertEquals(expected.get(0), actual.getResults().get(0));
-
-        assertEquals(expected.get(0).getStates().get(1), actual.getResults().get(0).getCurrentState());
-
-        assertEquals(expected.get(0).getAttributes(), actual.getResults().get(0).getAttributes());
+        assertEquals(1, actual.getNumberOfPrograms());
     }
 
     private List<Relationship> prepareRelationship() {
