@@ -122,7 +122,7 @@ public class ResourceControllerTest {
         when(cmsLiteService.getAllContents()).thenReturn(asList(streamContent, stringContent));
 
         controller.perform(
-                get("/resource?name={name}&string={string}&stream={stream}&languages={languages}&rows={rows}&page={page}&sidx={sidx}&sord={sord}",
+                get("/resource?name={name}&string={string}&stream={stream}&languages={languages}&rows={rows}&page={page}&sortColumn={sortColumn}&sortDirection={sortDirection}",
                         "", true, true, "", 5, 1, "", "asc")
         ).andExpect(
                 status().is(HttpStatus.OK.value())
@@ -419,8 +419,8 @@ public class ResourceControllerTest {
 
         settings.setPage(page);
         settings.setRows(rows);
-        settings.setSidx(sortColumn);
-        settings.setSord(sortDirection);
+        settings.setSortColumn(sortColumn);
+        settings.setSortDirection(sortDirection);
 
         return settings;
     }
