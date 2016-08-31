@@ -192,11 +192,14 @@ public class SyncServiceImpl implements SyncService {
 
         for (ProgramStageDataElementDto programStageDataElementDto : programStageDataElementDtos) {
             DataElementDto dataElementDto = programStageDataElementDto.getDataElement();
-            DataElement dataElement = dataElementService.findById(dataElementDto.getId());
-            if (dataElement == null) {
-                dataElement = dataElementService.createFromDetails(dataElementDto);
+            // These changes were made to avoid NPE during sync (already fixed in MOTECH-2030)
+            if (dataElementDto != null) {
+                DataElement dataElement = dataElementService.findById(dataElementDto.getId());
+                if (dataElement == null) {
+                    dataElement = dataElementService.createFromDetails(dataElementDto);
+                }
+                dataElements.add(dataElement);
             }
-            dataElements.add(dataElement);
         }
         return dataElements;
     }
