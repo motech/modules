@@ -175,7 +175,6 @@ public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest 
         assertThat(fetched, hasItem(programEnrollment));
         assertThat(fetched.size(), equalTo(1));
         assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
-        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class), nullValue());
     }
 
     private ProgramEnrollment prepareProgramEnrollment() throws Exception {
