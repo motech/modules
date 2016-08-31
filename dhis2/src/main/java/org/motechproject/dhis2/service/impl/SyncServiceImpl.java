@@ -225,9 +225,13 @@ public class SyncServiceImpl implements SyncService {
             }
 
             DataElementDto dataElementDto = programStageDataElementDto.getDataElement();
+<<<<<<< HEAD
             if (dataElementDto.getId() != null) {
                 dataElementDto = dhisWebService.getDataElementById(dataElementDto.getId());
             }
+=======
+            // These changes were made to avoid NPE during sync (already fixed in MOTECH-2030)
+>>>>>>> 4559188... MOTECH-2857 Dhis2 module connection leak - work I have done until now
             if (dataElementDto != null) {
                 DataElement dataElement = dataElementService.findById(dataElementDto.getId());
                 if (dataElement == null) {
