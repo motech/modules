@@ -2,20 +2,26 @@ package org.motechproject.dhis2.rest.service.impl;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
 import org.apache.http.Header;
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
 import org.apache.http.auth.AuthenticationException;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.config.SocketConfig;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.osgi.services.HttpClientBuilderFactory;
+import org.apache.http.util.EntityUtils;
 import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.dhis2.rest.domain.BaseDto;
 import org.motechproject.dhis2.rest.domain.DataElementDto;
@@ -42,7 +48,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -68,9 +77,15 @@ public class DhisWebServiceImpl implements DhisWebService {
     private static final String TRACKED_ENTITIES = "trackedEntities";
     private static final String TRACKED_ENITTY_ATTRIBUTES = "trackedEntityAttributes";
 
+    private static final int SO_TIMEOUT = 10000;
+    private static final int MAX_CONNECTIONS = 200;
+    private static final int MAX_PER_ROUTE = 20;
+
     private SettingsService settingsService;
     private StatusMessageService statusMessageService;
-    private HttpClient client;
+    private CloseableHttpClient client;
+
+    private SimpleHttpServer simpleHttpServer;
 
     public static final List<Integer> ACCEPTABLE_DHIS_RESPONSE_STATUSES = Arrays.asList(HttpStatus.SC_OK,
             HttpStatus.SC_ACCEPTED, HttpStatus.SC_CREATED);
@@ -81,7 +96,27 @@ public class DhisWebServiceImpl implements DhisWebService {
                               HttpClientBuilderFactory httpClientBuilderFactory) {
         this.settingsService = settingsService;
         this.statusMessageService = statusMessageService;
-        this.client = httpClientBuilderFactory.newBuilder().build();
+
+        /*RequestConfig.Builder requestBuilder = RequestConfig.custom();
+        requestBuilder = requestBuilder.setConnectTimeout(SO_TIMEOUT);
+        requestBuilder = requestBuilder.setSocketTimeout(SO_TIMEOUT);
+        requestBuilder = requestBuilder.setConnectionRequestTimeout(SO_TIMEOUT);*/
+
+        SocketConfig socketConfig = SocketConfig.custom()
+                .setSoTimeout(SO_TIMEOUT)
+                .build();
+
+        PoolingHttpClientConnectionManager poolingHttpClientConnectionManager = new PoolingHttpClientConnectionManager();
+        poolingHttpClientConnectionManager.setMaxTotal(MAX_CONNECTIONS);
+        poolingHttpClientConnectionManager.setDefaultMaxPerRoute(MAX_PER_ROUTE);
+        poolingHttpClientConnectionManager.setDefaultSocketConfig(socketConfig);
+        //poolingHttpClientConnectionManager.closeIdleConnections(SO_TIMEOUT, TimeUnit.MILLISECONDS);
+        //poolingHttpClientConnectionManager.closeExpiredConnections();
+
+        this.client = httpClientBuilderFactory.newBuilder()
+                //.setDefaultRequestConfig(requestBuilder.build())
+                .setConnectionManager(poolingHttpClientConnectionManager)
+                .build();
     }
 
     @Override
@@ -165,6 +200,17 @@ public class DhisWebServiceImpl implements DhisWebService {
         String json = parseToJson(trackedEntity);
         Settings settings = settingsService.getSettings();
 
+        // This way we mock dhis server, so the request would be handler by SimpleHttpServer class
+        /*final String responseBody = "{\"status\":\"SUCCESS\",\"importCount\":{\"imported\":1,\"updated\":0,\"ignored\"" +
+                ":0,\"deleted\":0},\"reference\":\"IbqmvQFz0zW\"}{\"status\":\"SUCCESS\",\"importCount\":{\"imported\"" +
+                ":1,\"updated\":0,\"ignored\":0,\"deleted\":0},\"reference\":\"GmHEBGJtymq\"}";
+
+        simpleHttpServer = SimpleHttpServer.getInstance();
+        String mockedUri = simpleHttpServer.start("somepath", 201, responseBody);
+        settings.setServerURI(mockedUri);
+
+        return createEntity(settings, settings.getServerURI(), json);*/
+
         return createEntity(settings, settings.getServerURI() + API_ENDPOINT + TRACKED_ENTITY_INSTANCES_PATH, json);
     }
 
@@ -183,7 +229,7 @@ public class DhisWebServiceImpl implements DhisWebService {
 
         LOGGER.debug(String.format("Initiating request for resource at uri %s, request: %s", uri, request.toString()));
 
-        HttpResponse response = getResponseForRequest(request);
+        CloseableHttpResponse response = getResponseForRequest(request);
 
         LOGGER.debug(String.format("Received response for request: %s, response: %s", request.toString(), response.toString()));
 
@@ -193,6 +239,8 @@ public class DhisWebServiceImpl implements DhisWebService {
             String msg = String.format("Error parsing resource at uri: %s, exception: %s", uri, e.toString());
             statusMessageService.warn(msg, MODULE_NAME);
             throw new DhisWebException(msg, e);
+        } finally {
+            closeResponse(response);
         }
     }
 
@@ -203,7 +251,7 @@ public class DhisWebServiceImpl implements DhisWebService {
 
         LOGGER.debug(String.format("Initiating request for resource: %s, request: %s", resourceName, request.toString()));
 
-        HttpResponse response = getResponseForRequest(request);
+        CloseableHttpResponse response = getResponseForRequest(request);
 
         LOGGER.debug(String.format("Received response for request: %s, response: %s", request.toString(), response.toString()));
 
@@ -230,6 +278,8 @@ public class DhisWebServiceImpl implements DhisWebService {
             String msg = String.format("Error parsing %s resources, exception: %s", resourceName, e.toString());
             statusMessageService.warn(msg, MODULE_NAME);
             throw new DhisWebException(msg, e);
+        } finally {
+            closeResponse(response);
         }
 
         return resources;
@@ -241,7 +291,7 @@ public class DhisWebServiceImpl implements DhisWebService {
 
         LOGGER.debug(String.format("Initiating request to create resource: %s, request: %s", json, request.toString()));
 
-        HttpResponse response = getResponseForRequest(request);
+        CloseableHttpResponse response = getResponseForRequest(request);
 
         LOGGER.debug(String.format("Received response to create resource: %s, request: %s", json, response));
 
@@ -253,6 +303,8 @@ public class DhisWebServiceImpl implements DhisWebService {
             String msg = String.format("Error parsing response from uri: %s, exception: %s", uri, e.toString());
             statusMessageService.warn(msg, MODULE_NAME);
             throw new DhisWebException(msg, e);
+        } finally {
+            closeResponse(response);
         }
 
         return status;
@@ -293,14 +345,15 @@ public class DhisWebServiceImpl implements DhisWebService {
     }
 
     /*Attempts an HTTP request. Returns the response*/
-    private HttpResponse getResponseForRequest(HttpUriRequest request) {
-        HttpResponse response;
+    private CloseableHttpResponse getResponseForRequest(HttpUriRequest request) {
+        CloseableHttpResponse response = null;
 
         try {
             response = client.execute(request);
         } catch (Exception e) {
             String msg = String.format("Error receiving response for request: %s", request.toString());
             statusMessageService.warn(msg, MODULE_NAME);
+            closeResponse(response);
             throw new DhisWebException(msg, e);
         }
 
@@ -316,12 +369,13 @@ public class DhisWebServiceImpl implements DhisWebService {
     }
 
     /*Gets an input stream from the HTTP response*/
-    private InputStream getContentForResponse(HttpResponse response) {
+    private InputStream getContentForResponse(CloseableHttpResponse response) {
         try {
             return response.getEntity().getContent();
         } catch (Exception e) {
             String msg = String.format("Error accessing content for response: %s", response.toString());
             statusMessageService.warn(msg, MODULE_NAME);
+            closeResponse(response);
             throw new DhisWebException(msg, e);
         }
     }
@@ -350,7 +404,7 @@ public class DhisWebServiceImpl implements DhisWebService {
     private DhisDataValueStatusResponse importDataValues(Settings settings, String uri, String json) {
         HttpUriRequest request = generatePostRequest(settings, uri, json);
         LOGGER.debug(String.format("Initiating request to create resource: %s, request: %s", json, request.toString()));
-        HttpResponse response = getResponseForRequest(request);
+        CloseableHttpResponse response = getResponseForRequest(request);
         LOGGER.debug(String.format("Received response to create resource: %s, request: %s", json, response));
 
         try (InputStream content = getContentForResponse(response)) {
@@ -359,6 +413,110 @@ public class DhisWebServiceImpl implements DhisWebService {
             String msg = String.format("Error parsing response from uri: %s, exception: %s", uri, e.toString());
             statusMessageService.warn(msg, MODULE_NAME);
             throw new DhisWebException(msg, e);
+        } finally {
+            closeResponse(response);
+        }
+    }
+
+    private void closeResponse(CloseableHttpResponse response) {
+        try {
+            if (response != null) {
+                EntityUtils.consume(response.getEntity());
+                response.close();
+            }
+        } catch (IOException e) {
+            LOGGER.error("Error trying to close response: " + e.getMessage());
+        }
+    }
+
+    // Class used to mock dhis server that goes into infinite loop and does not release connection
+    private static final class SimpleHttpServer {
+
+        private static final int MIN_PORT = 8080;
+        private static final int MAX_PORT = 9080;
+
+        private int port = MIN_PORT;
+        private static SimpleHttpServer simpleHttpServer = new SimpleHttpServer();
+
+        private SimpleHttpServer() {  }
+
+        public static SimpleHttpServer getInstance() {
+            return simpleHttpServer;
+        }
+
+        /**
+         * Signals that we were unable to start the Simple HTTP server.
+         */
+        public class SimpleHttpServerStartException extends RuntimeException {
+            SimpleHttpServerStartException(String message) {
+                super(message);
+            }
+
+            SimpleHttpServerStartException(String message, Throwable cause) {
+                super(message, cause);
+            }
+        }
+
+        /**
+         * Starts the HTTP server and uses it to expose the provided resource. The server will start at the first
+         * available port between 8080 and 9090.
+         * @param resource the path to the resource that will get exposed through the server
+         * @param responseCode the response code that will be returned at the path specified by the resource parameter
+         * @param responseBody the body that will be served under the path specified by the resource param
+         * @return the URL to the resource
+         */
+        public String start(String resource, int responseCode, String responseBody) {
+
+            HttpServer server = null;
+            // Ghetto low tech: loop to find an open port
+            do {
+                try {
+                    server = HttpServer.create(new InetSocketAddress(port), 0);
+                } catch (IOException e) {
+                    port++;
+                }
+            } while (null == server && port < MAX_PORT);
+
+            if (server != null && port < MAX_PORT) {
+                try {
+                    server.createContext(String.format("/%s", resource), new SimpleHttpHandler(responseCode, responseBody));
+                    server.setExecutor(null);
+                    server.start();
+                    String uri = String.format("http://localhost:%d/%s", port, resource);
+                    // Increase port number for the next guy...
+                    port++;
+                    return uri;
+                } catch (RuntimeException e) {
+                    throw new SimpleHttpServerStartException("Unable to start server", e);
+                }
+            }
+
+            throw new SimpleHttpServerStartException("Unable to find an open port");
+        }
+
+        private class SimpleHttpHandler implements HttpHandler {
+            private int responseCode;
+            private String responseBody;
+
+            public SimpleHttpHandler(int responseCode, String responseBody) {
+                this.responseCode = responseCode;
+                this.responseBody = responseBody;
+            }
+
+            @Override
+            public void handle(HttpExchange httpExchange) throws IOException {
+                LOGGER.error("I am in mocked handler");
+                OutputStream os = httpExchange.getResponseBody();
+
+                byte x = 1;
+                do {
+                    x = 0;
+                } while(x == 0);
+
+                httpExchange.sendResponseHeaders(responseCode, responseBody.length());
+                os.write(responseBody.getBytes());
+                os.close();
+            }
         }
     }
 }
