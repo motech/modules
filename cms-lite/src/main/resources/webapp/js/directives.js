@@ -119,6 +119,10 @@
                     jsonReader:{
                         repeatitems:false
                     },
+                    prmNames: {
+                       sort: 'sortColumn',
+                       order: 'sortDirection'
+                    },
                     rownumbers: true,
                     colModel: [{
                         name: 'name',

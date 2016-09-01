@@ -40,6 +40,7 @@ public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest 
 
     private static final String BAHMNI_PROGRAM_ENROLLMENT_CREATE = "json/programEnrollment/bahmni-program-enrollment-create.json";
     private static final String BAHMNI_PROGRAM_ENROLLMENT_RESPONSE = "json/programEnrollment/bahmni-program-enrollment-response.json";
+    private static final String BAHMNI_PROGRAM_ENROLLMENT_TABLE = "json/programEnrollment/bahmni-program-enrollment-table.json";
 
     @Mock
     private RestOperations restOperations;
@@ -156,6 +157,24 @@ public class ProgramEnrollmentResourceImplTest extends AbstractResourceImplTest 
         assertThat(fetched.size(), equalTo(1));
         assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
         assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class), nullValue());
+    }
+
+    @Test
+    public void shouldGetBahmniProgramEnrollmentByPatientUuid() throws Exception {
+        ProgramEnrollment programEnrollment = prepareBahmniProgramEnrollment();
+
+        URI url = config.toInstancePathWithParams("/bahmniprogramenrollment?patient={uuid}&v=full", programEnrollment.getPatient().getUuid());
+
+        when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponseFromFile(BAHMNI_PROGRAM_ENROLLMENT_TABLE));
+
+        List<ProgramEnrollment> fetched = programEnrollmentResource.getBahmniProgramEnrollmentByPatientUuid(config, programEnrollment.getPatient().getUuid());
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
+
+        assertThat(fetched, hasItem(programEnrollment));
+        assertThat(fetched.size(), equalTo(1));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
     }
 
     private ProgramEnrollment prepareProgramEnrollment() throws Exception {

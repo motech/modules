@@ -16,7 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestOperations;
 
+import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class ProgramEnrollmentResourceImpl extends BaseResource implements ProgramEnrollmentResource {
@@ -69,7 +72,9 @@ public class ProgramEnrollmentResourceImpl extends BaseResource implements Progr
     @Override
     public List<ProgramEnrollment> getBahmniProgramEnrollmentByPatientUuid(Config config, String patientUuid) {
         String responseJson = getJson(config, "/bahmniprogramenrollment?patient={uuid}&v=full", patientUuid);
-        ProgramEnrollmentListResult programEnrollmentListResult = (ProgramEnrollmentListResult) JsonUtils.readJson(responseJson, ProgramEnrollmentListResult.class);
+        Map<Type, Object> attributeAdapter = new HashMap<Type, Object>();
+        attributeAdapter.put(Attribute.class, new Attribute.AttributeSerializer());
+        ProgramEnrollmentListResult programEnrollmentListResult = (ProgramEnrollmentListResult) JsonUtils.readJsonWithAdapters(responseJson, ProgramEnrollmentListResult.class, attributeAdapter);
         return programEnrollmentListResult.getResults();
     }
 
