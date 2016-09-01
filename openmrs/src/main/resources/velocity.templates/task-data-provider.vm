@@ -147,6 +147,78 @@
               "displayName": "openMRS.person.dead",
               "fieldKey": "person.dead",
               "type": "BOOLEAN"
+            },
+            {
+              "displayName": "openMRS.person.givenName",
+              "fieldKey": "person.preferredName.givenName"
+            },
+            {
+              "displayName": "openMRS.person.middleName",
+              "fieldKey": "person.preferredName.middleName"
+            },
+            {
+              "displayName": "openMRS.person.familyName",
+              "fieldKey": "person.preferredName.familyName"
+            },
+            {
+              "displayName": "openMRS.address.address1",
+              "fieldKey": "person.preferredAddress.address1"
+            },
+            {
+              "displayName": "openMRS.address.address2",
+              "fieldKey": "person.preferredAddress.address2"
+            },
+            {
+              "displayName": "openMRS.address.address3",
+              "fieldKey": "person.preferredAddress.address3"
+            },
+            {
+              "displayName": "openMRS.address.address4",
+              "fieldKey": "person.preferredAddress.address4"
+            },
+            {
+              "displayName": "openMRS.address.address5",
+              "fieldKey": "person.preferredAddress.address5"
+            },
+            {
+              "displayName": "openMRS.address.address6",
+              "fieldKey": "person.preferredAddress.address6"
+            },
+            {
+              "displayName": "openMRS.address.cityVillage",
+              "fieldKey": "person.preferredAddress.cityVillage"
+            },
+            {
+              "displayName": "openMRS.address.stateProvince",
+              "fieldKey": "person.preferredAddress.stateProvince"
+            },
+            {
+              "displayName": "openMRS.address.countyDistrict",
+              "fieldKey": "person.preferredAddress.countyDistrict"
+            },
+            {
+              "displayName": "openMRS.address.country",
+              "fieldKey": "person.preferredAddress.country"
+            },
+            {
+              "displayName": "openMRS.address.postalCode",
+              "fieldKey": "person.preferredAddress.postalCode"
+            },
+            {
+              "displayName": "openMRS.address.latitude",
+              "fieldKey": "person.preferredAddress.latitude"
+            },
+            {
+              "displayName": "openMRS.address.longitude",
+              "fieldKey": "person.preferredAddress.longitude"
+            },
+            {
+              "displayName": "openMRS.address.startDate",
+              "fieldKey": "person.preferredAddress.startDate"
+            },
+            {
+              "displayName": "openMRS.address.endDate",
+              "fieldKey": "person.preferredAddress.endDate"
             }
           ]
         },
