@@ -35,7 +35,7 @@ public class ContactWebServiceTest {
     private RapidProHttpClient rapidProHttpClient;
 
     @Before
-    public void setup () {
+    public void setup() {
         initMocks(this);
         contactWebService = new ContactWebServiceImpl(rapidProHttpClient);
     }
