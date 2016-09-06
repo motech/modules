@@ -1,9 +1,6 @@
 package org.motechproject.dhis2.rest.service.impl;
 
 import org.apache.commons.lang.StringUtils;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
 import org.apache.http.Header;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
@@ -15,14 +12,15 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.config.SocketConfig;
+import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.osgi.services.HttpClientBuilderFactory;
+import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.JavaType;
-import org.apache.http.util.EntityUtils;
 import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.dhis2.event.EventSubjects;
 import org.motechproject.dhis2.rest.domain.BaseDto;
@@ -58,13 +56,13 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Implementation of {@link org.motechproject.dhis2.rest.service.DhisWebService}
@@ -94,22 +92,21 @@ public class DhisWebServiceImpl implements DhisWebService {
     private static final int SO_TIMEOUT = 10000;
     private static final int MAX_CONNECTIONS = 200;
     private static final int MAX_PER_ROUTE = 20;
-
+    private static final int JOIN_TIMEOUT = 1000;
+    private static final int IDLE_TIMEOUT = 1000;
+    private static final List<Integer> ACCEPTABLE_DHIS_RESPONSE_STATUSES = Arrays.asList(HttpStatus.SC_OK,
+            HttpStatus.SC_ACCEPTED, HttpStatus.SC_CREATED);
+    
     private SettingsService settingsService;
     private StatusMessageService statusMessageService;
     private CloseableHttpClient client;
-
-    private SimpleHttpServer simpleHttpServer;
-
+    private PoolingHttpClientConnectionManager poolingHttpClientConnectionManager;
     private ServerVersion serverVersion = new ServerVersion(ServerVersion.UNKNOWN);
-
-    public static final List<Integer> ACCEPTABLE_DHIS_RESPONSE_STATUSES = Arrays.asList(HttpStatus.SC_OK,
-            HttpStatus.SC_ACCEPTED, HttpStatus.SC_CREATED);
 
     @Autowired
     public DhisWebServiceImpl(@Qualifier("dhisSettingsService") SettingsService settingsService,
                               StatusMessageService statusMessageService,
-                              HttpClientBuilderFactory httpClientBuilderFactory) {
+                              HttpClientBuilderFactory httpClientBuilderFactory) throws InterruptedException {
         this.settingsService = settingsService;
         this.statusMessageService = statusMessageService;
 
@@ -117,7 +114,7 @@ public class DhisWebServiceImpl implements DhisWebService {
                 .setSoTimeout(SO_TIMEOUT)
                 .build();
 
-        PoolingHttpClientConnectionManager poolingHttpClientConnectionManager = new PoolingHttpClientConnectionManager();
+        poolingHttpClientConnectionManager = new PoolingHttpClientConnectionManager();
         poolingHttpClientConnectionManager.setMaxTotal(MAX_CONNECTIONS);
         poolingHttpClientConnectionManager.setDefaultMaxPerRoute(MAX_PER_ROUTE);
         poolingHttpClientConnectionManager.setDefaultSocketConfig(socketConfig);
@@ -125,6 +122,10 @@ public class DhisWebServiceImpl implements DhisWebService {
         this.client = httpClientBuilderFactory.newBuilder()
                 .setConnectionManager(poolingHttpClientConnectionManager)
                 .build();
+
+        IdleConnectionMonitorThread staleMonitor = new IdleConnectionMonitorThread(poolingHttpClientConnectionManager);
+        staleMonitor.start();
+        staleMonitor.join(JOIN_TIMEOUT);
     }
 
     @PostConstruct
@@ -315,8 +316,7 @@ public class DhisWebServiceImpl implements DhisWebService {
             String msg = String.format("Error parsing resource at uri: %s, exception: %s", url, e.toString());
             statusMessageService.warn(msg, MODULE_NAME);
             throw new DhisWebException(msg, e);
-        }
-        finally {
+        } finally {
             closeResponse(response);
         }
     }
@@ -327,7 +327,7 @@ public class DhisWebServiceImpl implements DhisWebService {
     }
 
     /*Gets the resource in the form of a dto*/
-    private <T extends BaseDto> T getResource(String uri, Class<T>  clazz) {
+    private <T extends BaseDto> T getResource(String uri, Class<T> clazz) {
         Settings settings = settingsService.getSettings();
         HttpUriRequest request = generateHttpRequest(settings, uri);
 
@@ -564,93 +564,40 @@ public class DhisWebServiceImpl implements DhisWebService {
         }
     }
 
-    // Class used to mock dhis server that goes into infinite loop and does not release connection
-    private static final class SimpleHttpServer {
+    @PreDestroy
+    public void cleanUp() throws IOException {
+        client.close();
+        poolingHttpClientConnectionManager.close();
+    }
 
-        private static final int MIN_PORT = 8080;
-        private static final int MAX_PORT = 9080;
+    private final class IdleConnectionMonitorThread extends Thread {
+        private final HttpClientConnectionManager connMgr;
+        private volatile boolean shutdown;
 
-        private int port = MIN_PORT;
-        private static SimpleHttpServer simpleHttpServer = new SimpleHttpServer();
-
-        private SimpleHttpServer() {  }
-
-        public static SimpleHttpServer getInstance() {
-            return simpleHttpServer;
+        private IdleConnectionMonitorThread(PoolingHttpClientConnectionManager connMgr) {
+            super();
+            this.connMgr = connMgr;
         }
 
-        /**
-         * Signals that we were unable to start the Simple HTTP server.
-         */
-        public class SimpleHttpServerStartException extends RuntimeException {
-            SimpleHttpServerStartException(String message) {
-                super(message);
-            }
-
-            SimpleHttpServerStartException(String message, Throwable cause) {
-                super(message, cause);
-            }
-        }
-
-        /**
-         * Starts the HTTP server and uses it to expose the provided resource. The server will start at the first
-         * available port between 8080 and 9090.
-         * @param resource the path to the resource that will get exposed through the server
-         * @param responseCode the response code that will be returned at the path specified by the resource parameter
-         * @param responseBody the body that will be served under the path specified by the resource param
-         * @return the URL to the resource
-         */
-        public String start(String resource, int responseCode, String responseBody) {
-
-            HttpServer server = null;
-            // Ghetto low tech: loop to find an open port
-            do {
-                try {
-                    server = HttpServer.create(new InetSocketAddress(port), 0);
-                } catch (IOException e) {
-                    port++;
+        @Override
+        public void run() {
+            try {
+                while (!shutdown) {
+                    synchronized (this) {
+                        wait(IDLE_TIMEOUT);
+                        connMgr.closeExpiredConnections();
+                        connMgr.closeIdleConnections(SO_TIMEOUT, TimeUnit.MILLISECONDS);
+                    }
                 }
-            } while (null == server && port < MAX_PORT);
-
-            if (server != null && port < MAX_PORT) {
-                try {
-                    server.createContext(String.format("/%s", resource), new SimpleHttpHandler(responseCode, responseBody));
-                    server.setExecutor(null);
-                    server.start();
-                    String uri = String.format("http://localhost:%d/%s", port, resource);
-                    // Increase port number for the next guy...
-                    port++;
-                    return uri;
-                } catch (RuntimeException e) {
-                    throw new SimpleHttpServerStartException("Unable to start server", e);
-                }
+            } catch (InterruptedException ex) {
+                shutdown();
             }
-
-            throw new SimpleHttpServerStartException("Unable to find an open port");
         }
 
-        private class SimpleHttpHandler implements HttpHandler {
-            private int responseCode;
-            private String responseBody;
-
-            public SimpleHttpHandler(int responseCode, String responseBody) {
-                this.responseCode = responseCode;
-                this.responseBody = responseBody;
-            }
-
-            @Override
-            public void handle(HttpExchange httpExchange) throws IOException {
-                LOGGER.error("I am in mocked handler");
-                OutputStream os = httpExchange.getResponseBody();
-
-                byte x = 1;
-                do {
-                    x = 0;
-                } while(x == 0);
-
-                httpExchange.sendResponseHeaders(responseCode, responseBody.length());
-                os.write(responseBody.getBytes());
-                os.close();
+        private void shutdown() {
+            shutdown = true;
+            synchronized (this) {
+                notifyAll();
             }
         }
     }
