@@ -3,6 +3,10 @@ package org.motechproject.openmrs.tasks.impl;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.motechproject.event.MotechEvent;
+import org.motechproject.event.listener.EventRelay;
+import org.motechproject.openmrs.domain.Attribute;
+import org.motechproject.openmrs.domain.CohortQueryReport;
 import org.motechproject.openmrs.domain.Concept;
 import org.motechproject.openmrs.domain.ConceptName;
 import org.motechproject.openmrs.domain.Encounter;
@@ -16,6 +20,8 @@ import org.motechproject.openmrs.domain.Person;
 import org.motechproject.openmrs.domain.Program;
 import org.motechproject.openmrs.domain.ProgramEnrollment;
 import org.motechproject.openmrs.domain.Provider;
+import org.motechproject.openmrs.helper.EventHelper;
+import org.motechproject.openmrs.service.OpenMRSCohortService;
 import org.motechproject.openmrs.service.OpenMRSConceptService;
 import org.motechproject.openmrs.service.OpenMRSEncounterService;
 import org.motechproject.openmrs.service.OpenMRSLocationService;
@@ -24,6 +30,7 @@ import org.motechproject.openmrs.service.OpenMRSPersonService;
 import org.motechproject.openmrs.service.OpenMRSProgramEnrollmentService;
 import org.motechproject.openmrs.service.OpenMRSProviderService;
 import org.motechproject.openmrs.tasks.OpenMRSActionProxyService;
+import org.motechproject.openmrs.tasks.constants.EventSubjects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +57,9 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     private OpenMRSProviderService providerService;
     private OpenMRSProgramEnrollmentService programEnrollmentService;
     private OpenMRSPersonService personService;
+    private OpenMRSCohortService cohortService;
+
+    private EventRelay eventRelay;
 
     @Override
     public void createEncounter(String configName, DateTime encounterDatetime, String encounterType,
@@ -69,27 +79,27 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     }
 
     @Override
-    public void createPatient(String configName, String givenName, String middleName, String familyName,
+    public Patient createPatient(String configName, String givenName, String middleName, String familyName,
                               String address1, String address2, String address3, String address4, String address5,
                               String address6, String cityVillage, String stateProvince, String country,
                               String postalCode, String countyDistrict, String latitude, String longitude,
                               DateTime startDate, DateTime endDate, DateTime birthDate, Boolean birthDateEstimated,
                               String gender, Boolean dead, String causeOfDeathUUID, String motechId,
-                              String locationForMotechId, Map<String, String> identifiers) {
+                              String locationForMotechId, Map<String, String> identifiers, Map<String, String> personAttributes) {
         Concept causeOfDeath = StringUtils.isNotEmpty(causeOfDeathUUID) ? conceptService.getConceptByUuid(configName, causeOfDeathUUID) : null;
 
         Person person = preparePerson(givenName, middleName, familyName, address1, address2,
                 address3, address4, address5, address6, cityVillage, stateProvince,
                 country, postalCode, countyDistrict, latitude, longitude,
                 startDate, endDate, birthDate, birthDateEstimated,
-                gender, dead, causeOfDeath);
+                gender, dead, causeOfDeath, personAttributes);
 
         Location location = StringUtils.isNotEmpty(locationForMotechId) ? getLocationByName(configName, locationForMotechId) : getDefaultLocation(configName);
 
         List<Identifier> identifierList = convertIdentifierMapToList(identifiers);
 
         Patient patient = new Patient(identifierList, person, motechId, location);
-        patientService.createPatient(configName, patient);
+        return patientService.createPatient(configName, patient);
     }
 
     @Override
@@ -109,14 +119,14 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
                              String address5, String address6, String cityVillage, String stateProvince, String country,
                              String postalCode, String countyDistrict, String latitude, String longitude,
                              DateTime startDate, DateTime endDate, DateTime birthDate, Boolean birthDateEstimated,
-                             String gender, Boolean dead, String causeOfDeathUUID) {
+                             String gender, Boolean dead, String causeOfDeathUUID, Map<String, String> personAttributes) {
         Concept causeOfDeath = StringUtils.isNotEmpty(causeOfDeathUUID) ? conceptService.getConceptByUuid(configName, causeOfDeathUUID) : null;
 
         Person person = preparePerson(givenName, middleName, familyName, address1, address2,
                 address3, address4, address5, address6, cityVillage, stateProvince,
                 country, postalCode, countyDistrict, latitude, longitude,
                 startDate, endDate, birthDate, birthDateEstimated,
-                gender, dead, causeOfDeath);
+                gender, dead, causeOfDeath, personAttributes);
         person.setUuid(personUuid);
 
         personService.updatePerson(configName, person);
@@ -124,7 +134,8 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
 
     @Override
     public void createProgramEnrollment(String configName, String patientUuid, String programUuid,
-                                        DateTime dateEnrolled, DateTime dateCompleted, String locationName) {
+                                        DateTime dateEnrolled, DateTime dateCompleted, String locationName,
+                                        Map<String, String> programEnrollmentAttributes) {
         Patient patient = new Patient();
         patient.setUuid(patientUuid);
 
@@ -142,8 +153,42 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         programEnrollment.setDateEnrolled(dateEnrolled.toDate());
         programEnrollment.setDateCompleted(Objects.nonNull(dateCompleted) ? dateCompleted.toDate() : null);
         programEnrollment.setLocation(location);
+        programEnrollment.setAttributes(MapUtils.isEmpty(programEnrollmentAttributes) ? null :
+                convertAttributeMapToList(programEnrollmentAttributes, false));
 
         programEnrollmentService.createProgramEnrollment(configName, programEnrollment);
+    }
+
+    @Override
+    public void updateProgramEnrollment (String configName, String programEnrollmentUuid, DateTime programCompletedDate,
+                                               String stateUuid, DateTime startDate, Map<String, String> attributes) {
+
+        ProgramEnrollment updatedProgram = new ProgramEnrollment();
+        List<Attribute> attributesList;
+
+        updatedProgram.setUuid(programEnrollmentUuid);
+
+        if (programCompletedDate != null) {
+            updatedProgram.setDateCompleted(programCompletedDate.toDate());
+        }
+
+        if (stateUuid != null) {
+            List<ProgramEnrollment.StateStatus> statusList = new ArrayList<>();
+            ProgramEnrollment.StateStatus status = new ProgramEnrollment.StateStatus();
+
+            status.setUuid(stateUuid);
+            statusList.add(status);
+            updatedProgram.setStates(statusList);
+        }
+
+        if (startDate != null) {
+            updatedProgram.setDateEnrolled(startDate.toDate());
+        }
+
+        attributesList = convertAttributeMapToList(attributes, true);
+        updatedProgram.setAttributes(!attributesList.isEmpty() ? attributesList : null);
+
+        programEnrollmentService.updateProgramEnrollment(configName, updatedProgram);
     }
 
     @Override
@@ -165,6 +210,16 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         }
 
         programEnrollmentService.updateProgramEnrollment(configName, programEnrollment);
+    }
+
+    @Override
+    public void getCohortQueryReport(String configName, String cohortQueryUuid, Map<String, String> parameters) {
+        CohortQueryReport cohortQueryReport = cohortService.getCohortQueryReport(configName, cohortQueryUuid, parameters);
+
+        for (CohortQueryReport.CohortQueryReportMember member : cohortQueryReport.getMembers()) {
+            eventRelay.sendEventMessage(new MotechEvent(EventSubjects.GET_COHORT_QUERY_MEMBER_EVENT.concat(configName),
+                    EventHelper.cohortMemberParameters(cohortQueryUuid, member)));
+        }
     }
 
     private Location getDefaultLocation(String configName) {
@@ -225,11 +280,32 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         return observationList;
     }
 
+    private List<Attribute> convertAttributeMapToList(Map<String, String> attributes, boolean isProgramEnrollmentUpdate) {
+        List<Attribute> attributesList = new ArrayList<>();
+
+        for (String attributeName : attributes.keySet()) {
+            Attribute attribute = new Attribute();
+            attribute.setValue(attributes.get(attributeName));
+
+            if (isProgramEnrollmentUpdate) {
+                attribute.setUuid(attributeName);
+            } else {
+                Attribute.AttributeType attributeType = new Attribute.AttributeType();
+                attributeType.setUuid(attributeName);
+
+                attribute.setAttributeType(attributeType);
+            }
+
+            attributesList.add(attribute);
+        }
+        return attributesList;
+    }
+
     private Person preparePerson(String givenName, String middleName, String familyName, String address1, String address2,
                                  String address3, String address4, String address5, String address6, String cityVillage, String stateProvince,
                                  String country, String postalCode, String countyDistrict, String latitude, String longitude,
                                  DateTime startDate, DateTime endDate, DateTime birthDate, Boolean birthDateEstimated,
-                                 String gender, Boolean dead, Concept causeOfDeath)  {
+                                 String gender, Boolean dead, Concept causeOfDeath, Map<String, String> attributes)  {
         Person person = new Person();
 
         Person.Name personName = new Person.Name();
@@ -245,11 +321,14 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         person.setPreferredAddress(personAddress);
         person.setAddresses(Collections.singletonList(personAddress));
 
+        List<Attribute> attributesList = convertAttributeMapToList(attributes, false);
+
         person.setBirthdate(Objects.nonNull(birthDate) ? birthDate.toDate() : null);
         person.setBirthdateEstimated(birthDateEstimated);
         person.setDead(dead);
         person.setCauseOfDeath(causeOfDeath);
         person.setGender(gender);
+        person.setAttributes(attributesList);
 
         return person;
     }
@@ -285,5 +364,15 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     @Autowired
     public void setProgramEnrollmentService(OpenMRSProgramEnrollmentService programEnrollmentService) {
         this.programEnrollmentService = programEnrollmentService;
+    }
+
+    @Autowired
+    public void setCohortService(OpenMRSCohortService cohortService) {
+        this.cohortService = cohortService;
+    }
+
+    @Autowired
+    public void setEventRelay(EventRelay eventRelay) {
+        this.eventRelay = eventRelay;
     }
 }

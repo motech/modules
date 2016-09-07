@@ -20,6 +20,8 @@ public final class OpenMRSTasksConstants {
     public static final String PROVIDER = "Provider";
     public static final String RELATIONSHIP = "Relationship";
     public static final String PROGRAM_ENROLLMENT = "ProgramEnrollment";
+    public static final String BAHMNI_PROGRAM_ENROLLMENT = "BahmniProgramEnrollment";
+    public static final String IDENTIFIER = "GeneratedIdentifier";
 
     // Field names
     public static final String MOTECH_ID = "openMRS.motechId";
@@ -29,6 +31,9 @@ public final class OpenMRSTasksConstants {
     public static final String PERSON_UUID = "openMRS.person.uuid";
     public static final String RELATIONSHIP_TYPE_UUID = "openMRS.relationshipType.uuid";
     public static final String PROGRAM_NAME = "openMRS.programName";
+    public static final String IDENTIFIER_SOURCE_NAME = "openMRS.identifier.sourceName";
+    public static final String PROGRAM_ENROLLMENT_UUID = "openMRS.programEnrollment.uuid";
+    public static final String ACTIVE_PROGRAM = "openMRS.activeProgramOnly";
 
     private OpenMRSTasksConstants() {
 

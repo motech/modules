@@ -31,7 +31,9 @@ import org.motechproject.dhis2.rest.domain.EnrollmentDto;
 import org.motechproject.dhis2.rest.domain.OrganisationUnitDto;
 import org.motechproject.dhis2.rest.domain.PagedResourceDto;
 import org.motechproject.dhis2.rest.domain.ProgramDto;
+import org.motechproject.dhis2.rest.domain.ProgramStageDataElementDto;
 import org.motechproject.dhis2.rest.domain.ProgramStageDto;
+import org.motechproject.dhis2.rest.domain.ProgramTrackedEntityAttributeDto;
 import org.motechproject.dhis2.rest.domain.ServerVersion;
 import org.motechproject.dhis2.rest.domain.TrackedEntityAttributeDto;
 import org.motechproject.dhis2.rest.domain.TrackedEntityDto;
@@ -70,13 +72,16 @@ public class DhisWebServiceImpl implements DhisWebService {
     private static final String TRACKED_ENTITY_INSTANCES_PATH = "/trackedEntityInstances";
     private static final String DATA_VALUE_SETS_PATH = "/dataValueSets";
     private static final String SYSTEM_INFO_PATH = "/system/info.json";
+    private static final String GET_FULL_INFO_SUFIX_V_22 = "fields=:identifiable";
 
     private static final String DATA_ELEMENTS = "dataElements";
     private static final String ORG_UNITS = "organisationUnits";
     private static final String PROGRAMS = "programs";
     private static final String PROGRAM_STAGES = "programStages";
+    private static final String PROGRAM_STAGE_DATA_ELEMENTS = "programStageDataElements";
     private static final String TRACKED_ENTITIES = "trackedEntities";
     private static final String TRACKED_ENITTY_ATTRIBUTES = "trackedEntityAttributes";
+    private static final String PROGRAM_TRACKED_ENITTY_ATTRIBUTES = "programTrackedEntityAttributes";
 
     private SettingsService settingsService;
     private StatusMessageService statusMessageService;
@@ -132,6 +137,11 @@ public class DhisWebServiceImpl implements DhisWebService {
     }
 
     @Override
+    public DataElementDto getDataElementById(String id) {
+        return getResource(getURIForResource(settingsService.getSettings().getServerURI(), DATA_ELEMENTS, id), DataElementDto.class);
+    }
+
+    @Override
     public List<OrganisationUnitDto> getOrganisationUnits() {
         return getResources(ORG_UNITS, OrganisationUnitDto.class);
     }
@@ -139,6 +149,11 @@ public class DhisWebServiceImpl implements DhisWebService {
     @Override
     public OrganisationUnitDto getOrganisationUnitByHref(String href) {
         return getResource(href, OrganisationUnitDto.class);
+    }
+
+    @Override
+    public OrganisationUnitDto getOrganisationUnitById(String id) {
+        return getResource(getURIForResource(settingsService.getSettings().getServerURI(), ORG_UNITS, id), OrganisationUnitDto.class);
     }
 
     @Override
@@ -152,6 +167,11 @@ public class DhisWebServiceImpl implements DhisWebService {
     }
 
     @Override
+    public ProgramDto getProgramById(String id) {
+        return getResource(getURIForResource(settingsService.getSettings().getServerURI(), PROGRAMS, id), ProgramDto.class);
+    }
+
+    @Override
     public List<ProgramStageDto> getProgramStages() {
         return getResources(PROGRAM_STAGES, ProgramStageDto.class);
     }
@@ -159,6 +179,21 @@ public class DhisWebServiceImpl implements DhisWebService {
     @Override
     public ProgramStageDto getProgramStageByHref(String href) {
         return getResource(href, ProgramStageDto.class);
+    }
+
+    @Override
+    public ProgramStageDto getProgramStageById(String id) {
+        return getResource(getURIForResource(settingsService.getSettings().getServerURI(), PROGRAM_STAGES, id), ProgramStageDto.class);
+    }
+
+    @Override
+    public ProgramStageDataElementDto getProgramStageDataElementByHref(String href) {
+        return getResource(href, ProgramStageDataElementDto.class);
+    }
+
+    @Override
+    public ProgramStageDataElementDto getProgramStageDataElementById(String id) {
+        return getResource(getURIForResource(settingsService.getSettings().getServerURI(), PROGRAM_STAGE_DATA_ELEMENTS, id), ProgramStageDataElementDto.class);
     }
 
     @Override
@@ -172,6 +207,11 @@ public class DhisWebServiceImpl implements DhisWebService {
     }
 
     @Override
+    public TrackedEntityDto getTrackedEntityById(String id) {
+        return getResource(getURIForResource(settingsService.getSettings().getServerURI(), PROGRAM_STAGES, id), TrackedEntityDto.class);
+    }
+
+    @Override
     public List<TrackedEntityAttributeDto> getTrackedEntityAttributes() {
         return getResources(TRACKED_ENITTY_ATTRIBUTES, TrackedEntityAttributeDto.class);
     }
@@ -179,6 +219,21 @@ public class DhisWebServiceImpl implements DhisWebService {
     @Override
     public TrackedEntityAttributeDto getTrackedEntityAttributeByHref(String href) {
         return getResource(href, TrackedEntityAttributeDto.class);
+    }
+
+    @Override
+    public TrackedEntityAttributeDto getTrackedEntityAttributeById(String id) {
+        return getResource(getURIForResource(settingsService.getSettings().getServerURI(), TRACKED_ENITTY_ATTRIBUTES, id), TrackedEntityAttributeDto.class);
+    }
+
+    @Override
+    public ProgramTrackedEntityAttributeDto getProgramTrackedEntityAttributeByHref(String href) {
+        return getResource(href, ProgramTrackedEntityAttributeDto.class);
+    }
+
+    @Override
+    public ProgramTrackedEntityAttributeDto getProgramTrackedEntityAttributeById(String id) {
+        return getResource(getURIForResource(settingsService.getSettings().getServerURI(), PROGRAM_TRACKED_ENITTY_ATTRIBUTES, id), ProgramTrackedEntityAttributeDto.class);
     }
 
     @Override
@@ -289,7 +344,11 @@ public class DhisWebServiceImpl implements DhisWebService {
             resources.addAll(pagedResource.getResources());
 
             while (pagedResource.getPager().getNextPage() != null) {
-                request = generateHttpRequest(settings, pagedResource.getPager().getNextPage());
+                String url = pagedResource.getPager().getNextPage();
+                if (getServerVersion().isSameOrAfter(ServerVersion.V2_22)) {
+                    url += String.format("&%s", GET_FULL_INFO_SUFIX_V_22);
+                }
+                request = generateHttpRequest(settings, url);
                 response = getResponseForRequest(request);
 
                 try (InputStream nextPageContent = getContentForResponse(response)) {
@@ -406,7 +465,20 @@ public class DhisWebServiceImpl implements DhisWebService {
 
         if (getAllFields) {
             sb.append("?fields=:all");
+        } else if (serverVersion.isSameOrAfter(ServerVersion.V2_22)) {
+            sb.append(String.format("?%s", GET_FULL_INFO_SUFIX_V_22));
         }
+
+        return sb.toString();
+    }
+
+    private String getURIForResource(String baseURI, String resourceName, String id) {
+        StringBuilder sb = new StringBuilder(baseURI);
+
+        sb.append("/api/");
+        sb.append(resourceName);
+        sb.append("/");
+        sb.append(id);
 
         return sb.toString();
     }

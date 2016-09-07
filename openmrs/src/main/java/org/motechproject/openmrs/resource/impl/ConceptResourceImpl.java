@@ -2,6 +2,7 @@ package org.motechproject.openmrs.resource.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.lang.Validate;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.Concept;
@@ -20,8 +21,8 @@ public class ConceptResourceImpl extends BaseResource implements ConceptResource
     private static final String GET_CONCEPTS_PATH = "/concept?v=full&limit={pageSize}&startIndex={startIndex}";
 
     @Autowired
-    public ConceptResourceImpl(RestOperations restOperations) {
-        super(restOperations);
+    public ConceptResourceImpl(RestOperations restOperations, HttpClient httpClient) {
+        super(restOperations, httpClient);
     }
 
     @Override

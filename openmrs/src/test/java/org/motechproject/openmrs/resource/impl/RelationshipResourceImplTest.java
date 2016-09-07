@@ -1,5 +1,7 @@
 package org.motechproject.openmrs.resource.impl;
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpState;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -30,6 +32,9 @@ public class RelationshipResourceImplTest extends AbstractResourceImplTest {
     @Mock
     private RestOperations restOperations;
 
+    @Mock
+    private HttpClient httpClient;
+
     @Captor
     private ArgumentCaptor<HttpEntity<String>> requestCaptor;
 
@@ -40,7 +45,9 @@ public class RelationshipResourceImplTest extends AbstractResourceImplTest {
     @Before
     public void setUp() {
         initMocks(this);
-        relationshipResource = new RelationshipResourceImpl(restOperations);
+        when(httpClient.getState()).thenReturn(new HttpState());
+
+        relationshipResource = new RelationshipResourceImpl(restOperations, httpClient);
         config = ConfigDummyData.prepareConfig("one");
     }
 
@@ -50,7 +57,7 @@ public class RelationshipResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/relationship?person={personUuid}&v=full", personBUuid);
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(CONCEPT_LIST_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(CONCEPT_LIST_RESPONSE_JSON));
 
         RelationshipListResult result = relationshipResource.getByPersonUuid(config, personBUuid);
 

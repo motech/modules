@@ -1,6 +1,8 @@
 package org.motechproject.openmrs.resource.impl;
 
 import com.google.gson.JsonObject;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpState;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -39,6 +41,9 @@ public class UserResourceImplTest extends AbstractResourceImplTest {
     @Mock
     private RestOperations restOperations;
 
+    @Mock
+    private HttpClient httpClient;
+
     @Captor
     private ArgumentCaptor<HttpEntity<String>> requestCaptor;
 
@@ -49,7 +54,9 @@ public class UserResourceImplTest extends AbstractResourceImplTest {
     @Before
     public void setUp() {
         initMocks(this);
-        userResource = new UserResourceImpl(restOperations);
+        when(httpClient.getState()).thenReturn(new HttpState());
+        
+        userResource = new UserResourceImpl(restOperations, httpClient);
         config = ConfigDummyData.prepareConfig("one");
     }
 
@@ -59,7 +66,7 @@ public class UserResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePath("/user");
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(USER_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(USER_RESPONSE_JSON));
 
         User created = userResource.createUser(config, user);
 
@@ -77,7 +84,7 @@ public class UserResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/user/{uuid}", user.getUuid());
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(USER_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(USER_RESPONSE_JSON));
 
         User updated = userResource.updateUser(config, user);
 
@@ -94,7 +101,7 @@ public class UserResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePath("/user?v=full");
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(USER_LIST_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(USER_LIST_RESPONSE_JSON));
 
         UserListResult result = userResource.getAllUsers(config);
 
@@ -111,7 +118,7 @@ public class UserResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/user?q={username}&v=full", query);
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(USER_BY_USERNAME_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(USER_BY_USERNAME_RESPONSE_JSON));
 
         UserListResult result = userResource.queryForUsersByUsername(config, query);
 
@@ -127,7 +134,7 @@ public class UserResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePath("/role?v=full");
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(ROLE_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(ROLE_RESPONSE_JSON));
 
         RoleListResult result = userResource.getAllRoles(config);
 

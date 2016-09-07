@@ -1,6 +1,8 @@
 package org.motechproject.openmrs.resource.impl;
 
 import com.google.gson.JsonObject;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpState;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -45,6 +47,9 @@ public class EncounterResourceImplTest extends AbstractResourceImplTest {
     @Mock
     private RestOperations restOperations;
 
+    @Mock
+    private HttpClient httpClient;
+
     @Captor
     private ArgumentCaptor<HttpEntity<String>> requestCaptor;
 
@@ -55,7 +60,9 @@ public class EncounterResourceImplTest extends AbstractResourceImplTest {
     @Before
     public void setUp() {
         initMocks(this);
-        encounterResource = new EncounterResourceImpl(restOperations);
+        when(httpClient.getState()).thenReturn(new HttpState());
+
+        encounterResource = new EncounterResourceImpl(restOperations, httpClient);
         config = ConfigDummyData.prepareConfig("one");
     }
 
@@ -90,7 +97,7 @@ public class EncounterResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePath("/encounter?v=full");
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(responseJson));
+                .thenReturn(getResponseFromFile(responseJson));
 
         Encounter created = encounterResource.createEncounter(config, encounter);
 
@@ -109,7 +116,7 @@ public class EncounterResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/encounter?patient={id}&v=full", patientId);
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(responseJson));
+                .thenReturn(getResponseFromFile(responseJson));
 
         EncounterListResult result = encounterResource.queryForAllEncountersByPatientId(config, patientId);
 

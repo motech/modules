@@ -6,8 +6,14 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.motechproject.event.MotechEvent;
+import org.motechproject.event.listener.EventRelay;
+import org.motechproject.openmrs.domain.Attribute;
+import org.motechproject.openmrs.domain.CohortQueryReport;
+import org.motechproject.openmrs.domain.CohortQueryReport.CohortQueryReportMember;
 import org.motechproject.openmrs.domain.Concept;
 import org.motechproject.openmrs.domain.ConceptName;
 import org.motechproject.openmrs.domain.Encounter;
@@ -21,6 +27,7 @@ import org.motechproject.openmrs.domain.Person;
 import org.motechproject.openmrs.domain.Program;
 import org.motechproject.openmrs.domain.ProgramEnrollment;
 import org.motechproject.openmrs.domain.Provider;
+import org.motechproject.openmrs.service.OpenMRSCohortService;
 import org.motechproject.openmrs.service.OpenMRSConceptService;
 import org.motechproject.openmrs.service.OpenMRSEncounterService;
 import org.motechproject.openmrs.service.OpenMRSLocationService;
@@ -29,7 +36,10 @@ import org.motechproject.openmrs.service.OpenMRSPersonService;
 import org.motechproject.openmrs.service.OpenMRSProgramEnrollmentService;
 import org.motechproject.openmrs.service.OpenMRSProviderService;
 import org.motechproject.openmrs.tasks.OpenMRSActionProxyService;
+import org.motechproject.openmrs.tasks.constants.EventSubjects;
+import org.motechproject.openmrs.tasks.constants.Keys;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +48,8 @@ import java.util.Map;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -65,6 +77,12 @@ public class OpenMRSActionProxyServiceTest {
 
     @Mock
     private OpenMRSProgramEnrollmentService programEnrollmentService;
+
+    @Mock
+    private OpenMRSCohortService cohortService;
+
+    @Mock
+    private EventRelay eventRelay;
 
     @Captor
     private ArgumentCaptor<Encounter> encounterCaptor;
@@ -136,6 +154,9 @@ public class OpenMRSActionProxyServiceTest {
         Map<String, String> identifiersMap = new HashMap<>();
         identifiersMap.put("CommCare CaseID", "1000");
 
+        Map<String, String> personAttributes = new HashMap<>();
+        personAttributes.put("8d8718c2-c2cc-11de-8d13-0010c6dffd0f", "testValue");
+
         doReturn(causeOfDeath).when(conceptService).getConceptByUuid(eq(CONFIG_NAME), eq(causeOfDeath.getUuid()));
         doReturn(Collections.singletonList(location))
                 .when(locationService).getLocations(eq(CONFIG_NAME), eq(location.getName()));
@@ -151,7 +172,7 @@ public class OpenMRSActionProxyServiceTest {
                 personAddress.getLongitude(), new DateTime(personAddress.getStartDate()),
                 new DateTime(personAddress.getEndDate()), new DateTime(person.getBirthdate()),
                 person.getBirthdateEstimated(), person.getGender(), person.getDead(), causeOfDeath.getUuid(),
-                patient.getMotechId(), location.getName(), identifiersMap);
+                patient.getMotechId(), location.getName(), identifiersMap, personAttributes);
 
         verify(patientService).createPatient(eq(CONFIG_NAME), patientCaptor.capture());
 
@@ -172,6 +193,9 @@ public class OpenMRSActionProxyServiceTest {
         Map<String, String> identifiersMap = new HashMap<>();
         identifiersMap.put("CommCare CaseID", "1000");
 
+        Map<String, String> personAttributes = new HashMap<>();
+        personAttributes.put("8d8718c2-c2cc-11de-8d13-0010c6dffd0f", "testValue");
+
         doReturn(Collections.singletonList(location))
                 .when(locationService).getLocations(eq(CONFIG_NAME), eq(OpenMRSActionProxyService.DEFAULT_LOCATION_NAME));
 
@@ -186,7 +210,7 @@ public class OpenMRSActionProxyServiceTest {
                 personAddress.getLongitude(), new DateTime(personAddress.getStartDate()),
                 new DateTime(personAddress.getEndDate()), new DateTime(person.getBirthdate()),
                 person.getBirthdateEstimated(), person.getGender(), person.getDead(), "", patient.getMotechId(),
-                location.getName(), identifiersMap);
+                location.getName(), identifiersMap, personAttributes);
 
         verify(patientService).createPatient(eq(CONFIG_NAME), patientCaptor.capture());
 
@@ -207,6 +231,9 @@ public class OpenMRSActionProxyServiceTest {
         Map<String, String> identifiersMap = new HashMap<>();
         identifiersMap.put("CommCare CaseID", "1000");
 
+        Map<String, String> personAttributes = new HashMap<>();
+        personAttributes.put("8d8718c2-c2cc-11de-8d13-0010c6dffd0f", "testValue");
+
         doReturn(Collections.emptyList()).when(locationService).getLocations(eq(CONFIG_NAME), eq(location.getName()));
 
         Person.Address personAddress = person.getPreferredAddress();
@@ -220,7 +247,7 @@ public class OpenMRSActionProxyServiceTest {
                 personAddress.getLongitude(), new DateTime(personAddress.getStartDate()),
                 new DateTime(personAddress.getEndDate()), new DateTime(person.getBirthdate()),
                 person.getBirthdateEstimated(), person.getGender(), person.getDead(), "", patient.getMotechId(),
-                location.getName(), identifiersMap);
+                location.getName(), identifiersMap, personAttributes);
 
         verify(patientService).createPatient(eq(CONFIG_NAME), patientCaptor.capture());
 
@@ -238,6 +265,9 @@ public class OpenMRSActionProxyServiceTest {
 
         Person.Address personAddress = person.getPreferredAddress();
 
+        Map<String, String> personAttributes = new HashMap<>();
+        personAttributes.put("8d8718c2-c2cc-11de-8d13-0010c6dffd0f", "testValue");
+
         doReturn(causeOfDeath).when(conceptService).getConceptByUuid(eq(CONFIG_NAME), eq(causeOfDeath.getUuid()));
         openMRSActionProxyService.updatePerson(CONFIG_NAME, person.getUuid(), person.getPreferredName().getGivenName(),
                 person.getPreferredName().getMiddleName(), person.getPreferredName().getFamilyName(),
@@ -247,7 +277,7 @@ public class OpenMRSActionProxyServiceTest {
                 personAddress.getPostalCode(), personAddress.getCountyDistrict(), personAddress.getLatitude(),
                 personAddress.getLongitude(), new DateTime(personAddress.getStartDate()),
                 new DateTime(personAddress.getEndDate()), new DateTime(person.getBirthdate()),
-                person.getBirthdateEstimated(), person.getGender(), person.getDead(), causeOfDeath.getUuid());
+                person.getBirthdateEstimated(), person.getGender(), person.getDead(), causeOfDeath.getUuid(), personAttributes);
 
         verify(personService).updatePerson(eq(CONFIG_NAME), personCaptor.capture());
         assertEquals(person, personCaptor.getValue());
@@ -285,6 +315,19 @@ public class OpenMRSActionProxyServiceTest {
         DateTime dateEnrolled = new DateTime("2000-08-16T07:22:05Z");
         DateTime dateCompleted = new DateTime("2100-08-16T07:22:05Z");
 
+        Map<String, String> programEnrollmentAttributes = new HashMap<>();
+        programEnrollmentAttributes.put("8d8718c2-c2cc-11de-8d13-0010c6dffd0f", "testValue");
+
+        List<Attribute> attributes = new ArrayList<>();
+        Attribute attribute = new Attribute();
+        Attribute.AttributeType attributeType = new Attribute.AttributeType();
+
+        attributeType.setUuid("8d8718c2-c2cc-11de-8d13-0010c6dffd0f");
+        attribute.setValue("testValue");
+        attribute.setAttributeType(attributeType);
+
+        attributes.add(attribute);
+
         ProgramEnrollment programEnrollment = new ProgramEnrollment();
 
         programEnrollment.setPatient(patient);
@@ -292,13 +335,52 @@ public class OpenMRSActionProxyServiceTest {
         programEnrollment.setDateEnrolled(dateEnrolled.toDate());
         programEnrollment.setDateCompleted(dateCompleted.toDate());
         programEnrollment.setLocation(location);
+        programEnrollment.setAttributes(attributes);
 
         doReturn(Collections.singletonList(location)).when(locationService).getLocations(eq(CONFIG_NAME), eq(location.getName()));
 
         openMRSActionProxyService.createProgramEnrollment(CONFIG_NAME, patient.getUuid(), program.getUuid(),
-                dateEnrolled, dateCompleted, location.getName());
+                dateEnrolled, dateCompleted, location.getName(), programEnrollmentAttributes);
 
         verify(programEnrollmentService).createProgramEnrollment(eq(CONFIG_NAME), programEnrollmentCaptor.capture());
+        assertEquals(programEnrollment, programEnrollmentCaptor.getValue());
+    }
+
+    @Test
+    public void shouldUpdateProgramEnrollment() {
+
+        DateTime dateEnrolled = new DateTime("2000-08-16T07:22:05Z");
+        DateTime dateCompleted = new DateTime("2100-08-16T07:22:05Z");
+
+        ProgramEnrollment.StateStatus state = new ProgramEnrollment.StateStatus();
+        state.setUuid("4b812ac8-421c-470f-b4b7-88187cdbd2a5");
+
+        List<ProgramEnrollment.StateStatus> statuses = new ArrayList<>();
+        statuses.add(state);
+
+        Map<String, String> programEnrollmentAttributes = new HashMap<>();
+        programEnrollmentAttributes.put("8d8718c2-c2cc-11de-8d13-0010c6dffd0f", "testValue");
+
+        List<Attribute> attributes = new ArrayList<>();
+        Attribute attribute = new Attribute();
+
+        attribute.setUuid("8d8718c2-c2cc-11de-8d13-0010c6dffd0f");
+        attribute.setValue("testValue");
+
+        attributes.add(attribute);
+
+        ProgramEnrollment programEnrollment = new ProgramEnrollment();
+
+        programEnrollment.setUuid("aaef37f5-ffaa-4f94-af6e-54907b0c0fd4");
+        programEnrollment.setDateEnrolled(dateEnrolled.toDate());
+        programEnrollment.setDateCompleted(dateCompleted.toDate());
+        programEnrollment.setStates(statuses);
+        programEnrollment.setAttributes(attributes);
+
+        openMRSActionProxyService.updateProgramEnrollment(CONFIG_NAME, programEnrollment.getUuid(), dateCompleted,
+                state.getUuid(), dateEnrolled, programEnrollmentAttributes);
+
+        verify(programEnrollmentService).updateProgramEnrollment(eq(CONFIG_NAME), programEnrollmentCaptor.capture());
         assertEquals(programEnrollment, programEnrollmentCaptor.getValue());
     }
 
@@ -326,6 +408,50 @@ public class OpenMRSActionProxyServiceTest {
         assertEquals(programEnrollment, programEnrollmentCaptor.getValue());
     }
 
+    @Test
+    public void shouldGetCohortQueryReportWithoutMembersAndWithNoGivenParameters() {
+        String cohortQueryUuid = "QQQ";
+
+        ArgumentCaptor<String> uuidCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Map> parametersCaptor = ArgumentCaptor.forClass(Map.class);
+
+        doReturn(prepareCohortQueryReport(false)).when(cohortService)
+                .getCohortQueryReport(eq(CONFIG_NAME), eq(cohortQueryUuid), eq(Collections.EMPTY_MAP));
+
+        openMRSActionProxyService.getCohortQueryReport(CONFIG_NAME, cohortQueryUuid, Collections.EMPTY_MAP);
+
+        verify(cohortService).getCohortQueryReport(eq(CONFIG_NAME), uuidCaptor.capture(), parametersCaptor.capture());
+        verify(eventRelay, never()).sendEventMessage(Matchers.<MotechEvent>any());
+        assertEquals(cohortQueryUuid, uuidCaptor.getValue());
+        assertEquals(Collections.EMPTY_MAP, parametersCaptor.getValue());
+    }
+
+    @Test
+    public void shouldGetCohortQueryReportWithGivenParameters() {
+        String cohortQueryUuid = "QQQ";
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("param1", "value");
+        parameters.put("param2", "value");
+
+        ArgumentCaptor<String> uuidCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Map> parametersCaptor = ArgumentCaptor.forClass(Map.class);
+        ArgumentCaptor<MotechEvent> eventCaptor = ArgumentCaptor.forClass(MotechEvent.class);
+
+        doReturn(prepareCohortQueryReport(true)).when(cohortService)
+                .getCohortQueryReport(eq(CONFIG_NAME), eq(cohortQueryUuid), eq(parameters));
+
+        openMRSActionProxyService.getCohortQueryReport(CONFIG_NAME, cohortQueryUuid, parameters);
+
+        verify(cohortService).getCohortQueryReport(eq(CONFIG_NAME), uuidCaptor.capture(), parametersCaptor.capture());
+        verify(eventRelay, times(2)).sendEventMessage(eventCaptor.capture());
+        assertEquals(cohortQueryUuid, uuidCaptor.getValue());
+        assertEquals(parameters, parametersCaptor.getValue());
+
+        List<MotechEvent> capturedEvents = eventCaptor.getAllValues();
+        assertEquals(createEventForMember(cohortQueryUuid, prepareCohortQueryReportMember("1")), capturedEvents.get(0));
+        assertEquals(createEventForMember(cohortQueryUuid, prepareCohortQueryReportMember("2")), capturedEvents.get(1));
+    }
+
     private Person createTestPerson() {
         Person person = new Person();
 
@@ -335,6 +461,20 @@ public class OpenMRSActionProxyServiceTest {
         name.setFamilyName("Smith");
         person.setPreferredName(name);
         person.setNames(Collections.singletonList(name));
+
+        Map<String, String> personAttributes = new HashMap<>();
+        personAttributes.put("8d8718c2-c2cc-11de-8d13-0010c6dffd0f", "testValue");
+
+        List<Attribute> attributes = new ArrayList<>();
+        Attribute attribute = new Attribute();
+        Attribute.AttributeType attributeType = new Attribute.AttributeType();
+
+        attributeType.setUuid("8d8718c2-c2cc-11de-8d13-0010c6dffd0f");
+        attribute.setValue("testValue");
+        attribute.setAttributeType(attributeType);
+
+        attributes.add(attribute);
+        person.setAttributes(attributes);
 
         Person.Address address = new Person.Address("address 1", "address 2", "address 3", "address 4", "address 5",
                 "address 6", "City", "State", "Country", "000000", "County district", "30", "50",
@@ -374,5 +514,38 @@ public class OpenMRSActionProxyServiceTest {
         observation.setObsDatetime(new DateTime("2000-08-16T07:22:05Z").toDate());
 
         return Collections.singletonList(observation);
+    }
+
+    private CohortQueryReport prepareCohortQueryReport(boolean withMembers) {
+        CohortQueryReport cohortQueryReport = new CohortQueryReport();
+
+        List<CohortQueryReportMember> members = new ArrayList<>();
+        if (withMembers) {
+            members.add(prepareCohortQueryReportMember("1"));
+            members.add(prepareCohortQueryReportMember("2"));
+        }
+
+        cohortQueryReport.setMembers(members);
+
+        return cohortQueryReport;
+    }
+
+    private CohortQueryReportMember prepareCohortQueryReportMember(String suffix) {
+        CohortQueryReportMember cohortQueryReportMember = new CohortQueryReportMember();
+
+        cohortQueryReportMember.setUuid("testUuid" + suffix);
+        cohortQueryReportMember.setDisplay("testDisplay" + suffix);
+
+        return cohortQueryReportMember;
+    }
+
+    private MotechEvent createEventForMember(String cohortQueryUuid, CohortQueryReportMember member) {
+        Map<String, Object> parameters = new HashMap<>();
+
+        parameters.put(Keys.COHORT_QUERY_UUID, cohortQueryUuid);
+        parameters.put(Keys.PATIENT_UUID, member.getUuid());
+        parameters.put(Keys.PATIENT_DISPLAY, member.getDisplay());
+
+        return new MotechEvent(EventSubjects.GET_COHORT_QUERY_MEMBER_EVENT.concat(CONFIG_NAME), parameters);
     }
 }

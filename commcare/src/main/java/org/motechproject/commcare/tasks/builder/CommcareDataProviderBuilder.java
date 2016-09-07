@@ -45,11 +45,10 @@ public class CommcareDataProviderBuilder {
         NameTrimmer trimmer = new NameTrimmer();
 
         List<ConfigurationData> configurations = new ArrayList<>();
-
         for (Config config : configService.getConfigs().getConfigs()) {
             configurations.add(new ConfigurationData(config.getName(),
-                    schemaService.getAllFormSchemas(config.getName()),
-                    schemaService.getAllCaseTypes(config.getName())));
+                    schemaService.getFormsWithApplicationName(config.getName()),
+                    schemaService.getCaseTypesWithApplicationName(config.getName())));
         }
 
         if (configurations.isEmpty()) {
@@ -61,7 +60,6 @@ public class CommcareDataProviderBuilder {
         model.put("esc", escapeTool);
         model.put("trimmer", trimmer);
         model.put("DisplayNameHelper", DisplayNameHelper.class);
-
         StringWriter writer = new StringWriter();
 
         VelocityEngineUtils.mergeTemplate(velocityEngine, COMMCARE_TASK_DATA_PROVIDER, model, writer);

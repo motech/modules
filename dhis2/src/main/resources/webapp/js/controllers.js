@@ -127,7 +127,7 @@
         innerLayout({});
     });
 
-    controllers.controller('Dhis2TrackedEntitiesCtrl', function($scope, TrackedEntitie, LoadingModal) {
+    controllers.controller('Dhis2TrackedEntitiesCtrl', function($scope, TrackedEntities, LoadingModal) {
         LoadingModal.open();
         $scope.trackedEntities = TrackedEntities.query(function() {
             LoadingModal.close();

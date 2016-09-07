@@ -3,13 +3,13 @@
     <parent>
         <artifactId>modules</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.29-SNAPSHOT</version>
+        <version>0.30-SNAPSHOT</version>
         <relativePath>../</relativePath>
     </parent>
 
     <artifactId>openmrs</artifactId>
     <name>OpenMRS</name>
-    <version>0.29-SNAPSHOT</version>
+    <version>0.30-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
     <properties>
@@ -48,6 +48,12 @@
             <artifactId>motech-tasks</artifactId>
             <version>${motech.version}</version>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>${motech.groupId}</groupId>
+            <artifactId>motech-tasks-test-utils</artifactId>
+            <version>${motech.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>

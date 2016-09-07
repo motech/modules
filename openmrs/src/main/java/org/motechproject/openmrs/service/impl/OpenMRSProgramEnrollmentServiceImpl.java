@@ -1,5 +1,6 @@
 package org.motechproject.openmrs.service.impl;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.Validate;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
@@ -47,7 +48,14 @@ public class OpenMRSProgramEnrollmentServiceImpl implements OpenMRSProgramEnroll
 
         try {
             Config config = configService.getConfigByName(configName);
-            ProgramEnrollment created = programEnrollmentResource.createProgramEnrollment(config, programEnrollment);
+
+            ProgramEnrollment created;
+            if (programEnrollment.getAttributes() == null) {
+                created = programEnrollmentResource.createProgramEnrollment(config, programEnrollment);
+            } else {
+                created = programEnrollmentResource.createBahmniProgramEnrollment(config, programEnrollment);
+            }
+
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_PROGRAM_ENROLLMENT, EventHelper.programEnrollmentParameters(created)));
             return created;
         } catch (HttpClientErrorException e) {
@@ -58,14 +66,33 @@ public class OpenMRSProgramEnrollmentServiceImpl implements OpenMRSProgramEnroll
 
     @Override
     public ProgramEnrollment updateProgramEnrollment(String configName, ProgramEnrollment programEnrollment) {
+        ProgramEnrollment updatedProgramEnrollment = null;
         validateProgramEnrollmentToUpdate(programEnrollment);
 
         try {
             Config config = configService.getConfigByName(configName);
-            return programEnrollmentResource.updateProgramEnrollment(config, programEnrollment);
+
+            if (CollectionUtils.isNotEmpty(programEnrollment.getAttributes())) {
+                updatedProgramEnrollment = programEnrollmentResource.updateBahmniProgramEnrollment(config, programEnrollment);
+            } else {
+                updatedProgramEnrollment = programEnrollmentResource.updateProgramEnrollment(config, programEnrollment);
+            }
+            return updatedProgramEnrollment;
         } catch (HttpClientErrorException e) {
             throw new OpenMRSException("Could not update program enrollment with uuid: " + programEnrollment.getUuid(), e);
         }
+    }
+
+    @Override
+    public List<ProgramEnrollment> getBahmniProgramEnrollmentByPatientUuid(String configName, String patientUuid)  {
+        return programEnrollmentResource.getBahmniProgramEnrollmentByPatientUuid(configService.getConfigByName(configName), patientUuid);
+    }
+
+    @Override
+    public List<ProgramEnrollment> getBahmniProgramEnrollmentByPatientMotechId(String configName, String patientMotechId) {
+        Patient patient = patientService.getPatientByMotechId(configName, patientMotechId);
+
+        return Objects.nonNull(patient) ? getBahmniProgramEnrollmentByPatientUuid(configName, patient.getUuid()) : new ArrayList<>();
     }
 
     @Override

@@ -1,6 +1,8 @@
 package org.motechproject.openmrs.resource.impl;
 
 import com.google.gson.JsonObject;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpState;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -35,6 +37,9 @@ public class LocationResourceImplTest extends AbstractResourceImplTest {
     @Mock
     private RestOperations restOperations;
 
+    @Mock
+    private HttpClient httpClient;
+
     @Captor
     private ArgumentCaptor<HttpEntity<String>> requestCaptor;
 
@@ -45,7 +50,9 @@ public class LocationResourceImplTest extends AbstractResourceImplTest {
     @Before
     public void setUp() {
         initMocks(this);
-        locationResource = new LocationResourceImpl(restOperations);
+        when(httpClient.getState()).thenReturn(new HttpState());
+
+        locationResource = new LocationResourceImpl(restOperations, httpClient);
         config = ConfigDummyData.prepareConfig("one");
     }
 
@@ -55,7 +62,7 @@ public class LocationResourceImplTest extends AbstractResourceImplTest {
         URI uri = config.toInstancePath("/location");
 
         when(restOperations.exchange(eq(uri), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(LOCATION_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(LOCATION_RESPONSE_JSON));
 
         Location created = locationResource.createLocation(config, location);
 
@@ -73,7 +80,7 @@ public class LocationResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/location/{uuid}", location.getUuid());
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(LOCATION_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(LOCATION_RESPONSE_JSON));
 
         Location updated = locationResource.updateLocation(config, location);
 
@@ -90,7 +97,7 @@ public class LocationResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePath("/location?v=full");
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(LOCATION_LIST_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(LOCATION_LIST_RESPONSE_JSON));
 
         LocationListResult result = locationResource.getAllLocations(config);
 
@@ -107,7 +114,7 @@ public class LocationResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/location/{uuid}", locationId);
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(LOCATION_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(LOCATION_RESPONSE_JSON));
 
         Location location = locationResource.getLocationById(config, locationId);
 
@@ -124,7 +131,7 @@ public class LocationResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/location?q={name}&v=full", query);
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(LOCATION_LIST_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(LOCATION_LIST_RESPONSE_JSON));
 
         LocationListResult result = locationResource.queryForLocationByName(config, query);
 

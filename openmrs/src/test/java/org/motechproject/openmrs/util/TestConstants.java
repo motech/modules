@@ -5,7 +5,7 @@ package org.motechproject.openmrs.util;
  */
 public final class TestConstants {
 
-    public static final String DEFAULT_CONFIG_NAME = "Test OpenMRS Server";
+    public static final String DEFAULT_CONFIG_NAME = "TestOpenMRSServer";
 
     /**
      * Utility class, should not be initiated.

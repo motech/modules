@@ -85,6 +85,11 @@
               "type": "MAP"
             },
             {
+              "displayName": "openMRS.patient.personAttributes",
+              "fieldKey": "person.personAttributes",
+              "type": "MAP"
+            },
+            {
               "displayName": "openMRS.motechId",
               "fieldKey": "motechId"
             },
@@ -142,6 +147,78 @@
               "displayName": "openMRS.person.dead",
               "fieldKey": "person.dead",
               "type": "BOOLEAN"
+            },
+            {
+              "displayName": "openMRS.person.givenName",
+              "fieldKey": "person.preferredName.givenName"
+            },
+            {
+              "displayName": "openMRS.person.middleName",
+              "fieldKey": "person.preferredName.middleName"
+            },
+            {
+              "displayName": "openMRS.person.familyName",
+              "fieldKey": "person.preferredName.familyName"
+            },
+            {
+              "displayName": "openMRS.address.address1",
+              "fieldKey": "person.preferredAddress.address1"
+            },
+            {
+              "displayName": "openMRS.address.address2",
+              "fieldKey": "person.preferredAddress.address2"
+            },
+            {
+              "displayName": "openMRS.address.address3",
+              "fieldKey": "person.preferredAddress.address3"
+            },
+            {
+              "displayName": "openMRS.address.address4",
+              "fieldKey": "person.preferredAddress.address4"
+            },
+            {
+              "displayName": "openMRS.address.address5",
+              "fieldKey": "person.preferredAddress.address5"
+            },
+            {
+              "displayName": "openMRS.address.address6",
+              "fieldKey": "person.preferredAddress.address6"
+            },
+            {
+              "displayName": "openMRS.address.cityVillage",
+              "fieldKey": "person.preferredAddress.cityVillage"
+            },
+            {
+              "displayName": "openMRS.address.stateProvince",
+              "fieldKey": "person.preferredAddress.stateProvince"
+            },
+            {
+              "displayName": "openMRS.address.countyDistrict",
+              "fieldKey": "person.preferredAddress.countyDistrict"
+            },
+            {
+              "displayName": "openMRS.address.country",
+              "fieldKey": "person.preferredAddress.country"
+            },
+            {
+              "displayName": "openMRS.address.postalCode",
+              "fieldKey": "person.preferredAddress.postalCode"
+            },
+            {
+              "displayName": "openMRS.address.latitude",
+              "fieldKey": "person.preferredAddress.latitude"
+            },
+            {
+              "displayName": "openMRS.address.longitude",
+              "fieldKey": "person.preferredAddress.longitude"
+            },
+            {
+              "displayName": "openMRS.address.startDate",
+              "fieldKey": "person.preferredAddress.startDate"
+            },
+            {
+              "displayName": "openMRS.address.endDate",
+              "fieldKey": "person.preferredAddress.endDate"
             }
           ]
         },
@@ -209,8 +286,89 @@
               "fieldKey": "endDate"
             }
           ]
+        },
+        {
+          "displayName": "Generate Identifier [$config.getName()]",
+          "type": "GeneratedIdentifier-$config.getName()",
+          "lookupFields": [
+            {
+              "displayName": "openMRS.lookup.sourceName",
+              "fields": [
+                "openMRS.identifier.sourceName"
+              ]
+            }
+          ],
+          "fields": [
+            {
+              "displayName": "openMRS.identifier.generated",
+              "fieldKey": "value"
+            }
+          ]
         }
         #if( "1.9" != $config.getOpenMrsVersion() ),
+        {
+          "displayName": "Bahmni Program Enrollment [$config.getName()]",
+          "type": "BahmniProgramEnrollment-$config.getName()",
+          "lookupFields": [
+            {
+              "displayName": "openMRS.lookup.motechIdAndProgramName",
+              "fields": [
+                "openMRS.patient.motechId",
+                "openMRS.programName",
+                "openMRS.activeProgramOnly"
+              ]
+            },
+            {
+              "displayName": "openMRS.lookup.uuidAndProgramName",
+              "fields": [
+                "openMRS.patient.uuid",
+                "openMRS.programName",
+                "openMRS.activeProgramOnly"
+              ]
+            }
+          ],
+          "fields": [
+            {
+              "displayName": "openMRS.programEnrollment.uuid",
+              "fieldKey": "firstObject.uuid"
+            },
+            {
+              "displayName": "openMRS.patient.uuid",
+              "fieldKey": "firstObject.patient.uuid"
+            },
+            {
+              "displayName": "openMRS.program.uuid",
+              "fieldKey": "firstObject.program.uuid"
+            },
+            {
+              "displayName": "openMRS.programEnrollment.dateEnrolled",
+              "fieldKey": "firstObject.dateEnrolled",
+              "type": "DATE"
+            },
+            {
+              "displayName": "openMRS.programEnrollment.dateCompleted",
+              "fieldKey": "firstObject.dateCompleted",
+              "type": "DATE"
+            },
+            {
+              "displayName": "openMRS.location.name",
+              "fieldKey": "firstObject.location.name"
+            },
+            {
+              "displayName": "openMRS.programEnrollment.currentState.uuid",
+              "fieldKey": "firstObject.currentState.state.uuid"
+            },
+            {
+              "displayName": "openMRS.programEnrollment.numberOfPrograms",
+              "fieldKey": "numberOfPrograms"
+            },
+            {
+              "displayName": "openMRS.programEnrollment.attributes",
+              "fieldKey": "firstObject.programAttributes",
+              "type": "MAP"
+            }
+          ]
+        },
         {
           "displayName": "Program Enrollment [$config.getName()]",
           "type": "ProgramEnrollment-$config.getName()",
@@ -219,51 +377,53 @@
               "displayName": "openMRS.lookup.motechIdAndProgramName",
               "fields": [
                 "openMRS.patient.motechId",
-                "openMRS.programName"
+                "openMRS.programName",
+                "openMRS.activeProgramOnly"
               ]
             },
             {
               "displayName": "openMRS.lookup.uuidAndProgramName",
               "fields": [
                 "openMRS.patient.uuid",
-                "openMRS.programName"
+                "openMRS.programName",
+                "openMRS.activeProgramOnly"
               ]
             }
           ],
           "fields": [
             {
               "displayName": "openMRS.programEnrollment.uuid",
-              "fieldKey": "uuid"
+              "fieldKey": "firstObject.uuid"
             },
             {
               "displayName": "openMRS.patient.uuid",
-              "fieldKey": "patient.uuid"
+              "fieldKey": "firstObject.patient.uuid"
             },
             {
               "displayName": "openMRS.program.uuid",
-              "fieldKey": "program.uuid"
+              "fieldKey": "firstObject.program.uuid"
             },
             {
               "displayName": "openMRS.programEnrollment.dateEnrolled",
-              "fieldKey": "dateEnrolled",
+              "fieldKey": "firstObject.dateEnrolled",
               "type": "DATE"
             },
             {
               "displayName": "openMRS.programEnrollment.dateCompleted",
-              "fieldKey": "dateCompleted",
+              "fieldKey": "firstObject.dateCompleted",
               "type": "DATE"
             },
             {
               "displayName": "openMRS.location.name",
-              "fieldKey": "location.name"
-            },
-            {
-              "displayName": "openMRS.programEnrollment.enrolled",
-              "fieldKey": "enrolledString"
+              "fieldKey": "firstObject.location.name"
             },
             {
               "displayName": "openMRS.programEnrollment.currentState.uuid",
-              "fieldKey": "currentState.state.uuid"
+              "fieldKey": "firstObject.currentState.state.uuid"
+            },
+            {
+              "displayName": "openMRS.programEnrollment.numberOfPrograms",
+              "fieldKey": "numberOfPrograms"
             }
           ]
         }

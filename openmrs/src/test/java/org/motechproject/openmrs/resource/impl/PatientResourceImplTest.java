@@ -1,6 +1,8 @@
 package org.motechproject.openmrs.resource.impl;
 
 import com.google.gson.JsonObject;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpState;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -40,6 +42,9 @@ public class PatientResourceImplTest extends AbstractResourceImplTest {
     @Mock
     private RestOperations restOperations;
 
+    @Mock
+    private HttpClient httpClient;
+
     @Captor
     private ArgumentCaptor<HttpEntity<String>> requestCaptor;
 
@@ -50,7 +55,9 @@ public class PatientResourceImplTest extends AbstractResourceImplTest {
     @Before
     public void setUp() {
         initMocks(this);
-        patientResource = new PatientResourceImpl(restOperations);
+        when(httpClient.getState()).thenReturn(new HttpState());
+
+        patientResource = new PatientResourceImpl(restOperations, httpClient);
         config = ConfigDummyData.prepareConfig("one");
     }
 
@@ -60,7 +67,7 @@ public class PatientResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePath("/patient");
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(PATIENT_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(PATIENT_RESPONSE_JSON));
 
         Patient created = patientResource.createPatient(config, patient);
 
@@ -78,7 +85,7 @@ public class PatientResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/patient?q={motechId}", patientId);
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(PATIENT_LIST_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(PATIENT_LIST_RESPONSE_JSON));
 
         PatientListResult result = patientResource.queryForPatient(config, patientId);
 
@@ -95,7 +102,7 @@ public class PatientResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/patient/{uuid}?v=full", patientId);
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(PATIENT_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(PATIENT_RESPONSE_JSON));
 
         Patient patient = patientResource.getPatientById(config, patientId);
 
@@ -111,7 +118,7 @@ public class PatientResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePath("/patientidentifiertype?v=full");
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(PATIENT_IDENTIFIER_LIST_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(PATIENT_IDENTIFIER_LIST_RESPONSE_JSON));
 
         String uuid = patientResource.getMotechPatientIdentifierUuid(config);
 
@@ -130,7 +137,7 @@ public class PatientResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/patient/{uuid}/identifier/{identifierId}", patientId, identifierId);
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponse(PATIENT_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(PATIENT_RESPONSE_JSON));
 
         patient.getIdentifiers().get(0).setIdentifier("1000");
 

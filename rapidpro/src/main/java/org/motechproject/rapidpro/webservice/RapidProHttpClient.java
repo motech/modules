@@ -30,7 +30,7 @@ import java.util.Map;
 
 
 /**
- * Performs all HTTP operations for the Rapidpro Module
+ * Performs all HTTP operations for the RapidPro Module
  */
 @Component
 public class RapidProHttpClient {

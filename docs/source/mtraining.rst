@@ -67,16 +67,20 @@ Quiz
 Question
 ########
 
-``Question`` contains two fields which link with the content in external system.
+``Question`` contains fields which link with the content in external system.
 
 +----------+------------------------------------------------------------------------------------+--------------------+
 |Field     |Description                                                                         |Type                |
 +==========+====================================================================================+====================+
 |question  |The question resource identifier in the external system, for example audio file.    |String              |
 +----------+------------------------------------------------------------------------------------+--------------------+
-|answer    |The answer resource identifier in the external system, for example audio file.      |String              |
-|          |This field can also store the correct answer.                                       |                    |
+|answers   |The list of answers for the question                                                |List<Answer>        |
 +----------+------------------------------------------------------------------------------------+--------------------+
+
+Answer
+######
+
+``Answer`` can store explicit value or reference to resource in the external system, for example audio file.
 
 Bookmark
 ########

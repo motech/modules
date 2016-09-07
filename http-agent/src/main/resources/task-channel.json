@@ -12,11 +12,13 @@
           },
           {
             "key": "Username",
-            "displayName": "http-agent.username"
+            "displayName": "http-agent.username",
+            "required": "false"
           },
           {
             "key": "Password",
-            "displayName": "http-agent.password"
+            "displayName": "http-agent.password",
+            "required": "false"
           },
           {
             "key": "FollowRedirects",

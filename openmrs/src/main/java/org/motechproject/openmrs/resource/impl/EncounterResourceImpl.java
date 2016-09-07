@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.apache.commons.httpclient.HttpClient;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.Encounter;
 import org.motechproject.openmrs.domain.EncounterListResult;
@@ -26,8 +27,8 @@ public class EncounterResourceImpl extends BaseResource implements EncounterReso
     private static final String OPENMRS_V19 = "1.9";
 
     @Autowired
-    public EncounterResourceImpl(RestOperations restOperations) {
-        super(restOperations);
+    public EncounterResourceImpl(RestOperations restOperations, HttpClient httpClient) {
+        super(restOperations, httpClient);
     }
 
     @Override

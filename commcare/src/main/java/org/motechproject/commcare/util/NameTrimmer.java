@@ -12,6 +12,6 @@ public class NameTrimmer {
      * @return the trimmed expression
      */
     public String trim(String expression) {
-        return expression == null ? "" : expression.replaceAll("[^a-zA-Z0-9]", "");
+        return expression == null ? "" : expression.replaceAll("[^a-zA-Z0-9_]", "");
     }
 }

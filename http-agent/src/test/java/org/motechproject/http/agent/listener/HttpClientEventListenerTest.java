@@ -1,6 +1,7 @@
 package org.motechproject.http.agent.listener;
 
 
+import org.apache.http.HttpException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
@@ -46,7 +48,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 public class HttpClientEventListenerTest {
 
     @Mock
-    RestTemplate restTempate;
+    RestTemplate restTemplate;
     @Mock
     HttpComponentsClientHttpRequestFactory httpComponentsClientHttpRequestFactory;
     @Mock
@@ -73,9 +75,9 @@ public class HttpClientEventListenerTest {
     public void setup() {
         when(settings.getProperty(HttpClientEventListener.HTTP_CONNECT_TIMEOUT)).thenReturn("0");
         when(settings.getProperty(HttpClientEventListener.HTTP_READ_TIMEOUT)).thenReturn("0");
-        when(restTempate.getRequestFactory()).thenReturn(httpComponentsClientHttpRequestFactory);
+        when(restTemplate.getRequestFactory()).thenReturn(httpComponentsClientHttpRequestFactory);
 
-        httpClientEventListener = new HttpClientEventListener(restTempate, settings, httpActionService);
+        httpClientEventListener = new HttpClientEventListener(restTemplate, settings, httpActionService);
 
         url = "http://commcare";
         data = "aragorn";
@@ -100,9 +102,9 @@ public class HttpClientEventListenerTest {
         httpHeaders.add("key2", "value2");
         request = new HttpEntity<String>(data,httpHeaders);
         responseEntity = new ResponseEntity<String>(body, HttpStatus.OK);
-        when(restTempate.exchange(eq(url),eq(HttpMethod.POST),eq(request), eq(String.class))).thenReturn((ResponseEntity<String>) responseEntity);;
+        when(restTemplate.exchange(eq(url),eq(HttpMethod.POST),eq(request), eq(String.class))).thenReturn((ResponseEntity<String>) responseEntity);;
         httpClientEventListener.handle(motechEvent);
-        verify(restTempate).exchange(eq(url),eq(HttpMethod.POST),eq(request), eq(String.class));
+        verify(restTemplate).exchange(eq(url),eq(HttpMethod.POST),eq(request), eq(String.class));
     }
 
     @Test
@@ -119,9 +121,9 @@ public class HttpClientEventListenerTest {
 
         request = new HttpEntity<String>(data,httpHeaders);
         responseEntity = new ResponseEntity<String>(body,HttpStatus.OK);
-        when(restTempate.exchange(eq(url),eq(HttpMethod.PUT),eq(request), eq(String.class))).thenReturn((ResponseEntity<String>) responseEntity);
+        when(restTemplate.exchange(eq(url),eq(HttpMethod.PUT),eq(request), eq(String.class))).thenReturn((ResponseEntity<String>) responseEntity);
         httpClientEventListener.handle(motechEvent);
-        verify(restTempate).exchange(eq(url),eq(HttpMethod.PUT),eq(request), eq(String.class));
+        verify(restTemplate).exchange(eq(url),eq(HttpMethod.PUT),eq(request), eq(String.class));
     }
 
     @Test
@@ -137,9 +139,9 @@ public class HttpClientEventListenerTest {
         httpHeaders.add("key2", "value2");
         request = new HttpEntity<String>(data,httpHeaders);
         responseEntity = new ResponseEntity<String>(body,HttpStatus.OK);
-        when(restTempate.exchange(eq(url),eq(HttpMethod.DELETE),eq(request), eq(String.class))).thenReturn((ResponseEntity<String>) responseEntity);
+        when(restTemplate.exchange(eq(url),eq(HttpMethod.DELETE),eq(request), eq(String.class))).thenReturn((ResponseEntity<String>) responseEntity);
         httpClientEventListener.handle(motechEvent);
-        verify(restTempate).exchange(eq(url),eq(HttpMethod.DELETE),eq(request), eq(String.class));
+        verify(restTemplate).exchange(eq(url),eq(HttpMethod.DELETE),eq(request), eq(String.class));
     }
 
     @Test
@@ -155,7 +157,7 @@ public class HttpClientEventListenerTest {
         httpHeaders.add("key2", "value2");
         request = new HttpEntity<String>(data,httpHeaders);
         responseEntity = new ResponseEntity<String>(body,HttpStatus.OK);
-        when(restTempate.exchange(eq(url),eq(HttpMethod.DELETE),eq(request), eq(String.class))).thenReturn((ResponseEntity<String>) responseEntity);
+        when(restTemplate.exchange(eq(url),eq(HttpMethod.DELETE),eq(request), eq(String.class))).thenReturn((ResponseEntity<String>) responseEntity);
 
         httpClientEventListener.handle(motechEvent);
 
@@ -196,5 +198,39 @@ public class HttpClientEventListenerTest {
 
         ResponseEntity<?> responseEntity = httpClientEventListener.handleWithUserPasswordAndReturnType(motechEvent);
         assertEquals(responseEntity, exceptedResponseEntity);
+    }
+
+    @Test
+    public void shouldUseBasicRestTemplateWhenCredentialsNotProvided() throws HttpException {
+
+        MotechEvent motechEvent = new MotechEvent(SendRequestConstants.SEND_REQUEST_SUBJECT, new HashMap<String, Object>() {{
+            put(SendRequestConstants.URL, url);
+            put(SendRequestConstants.BODY_PARAMETERS, data);
+            put(SendRequestConstants.USERNAME, null);
+            put(SendRequestConstants.PASSWORD, null);
+            put(SendRequestConstants.FOLLOW_REDIRECTS, false);
+        }});
+
+        RestTemplate restTemplateMock = mock(RestTemplate.class);
+        SettingsFacade settings = mock(SettingsFacade.class);
+        HTTPActionService httpActionService = mock(HTTPActionService.class);
+        HttpComponentsClientHttpRequestFactory httpComponentsClientHttpRequestFactory = mock(HttpComponentsClientHttpRequestFactory.class);
+
+        ResponseEntity<?> exceptedResponseEntity = new ResponseEntity<String>(body, HttpStatus.OK);
+
+        when(settings.getProperty(HttpClientEventListener.HTTP_CONNECT_TIMEOUT)).thenReturn("0");
+        when(settings.getProperty(HttpClientEventListener.HTTP_READ_TIMEOUT)).thenReturn("0");
+        when(restTemplateMock.getRequestFactory()).thenReturn(httpComponentsClientHttpRequestFactory);
+
+        request = new HttpEntity<String>(data);
+
+        when(restTemplateMock.exchange(eq(url),eq(HttpMethod.POST),eq(request), eq(String.class))).
+                thenReturn((ResponseEntity<String>) exceptedResponseEntity);
+
+        httpClientEventListener = new HttpClientEventListener(restTemplateMock, settings, httpActionService);
+
+        httpClientEventListener.handleWithUserPasswordAndReturnType(motechEvent);
+
+        verify(restTemplateMock).exchange(eq(url), eq(HttpMethod.POST), eq(request), eq(String.class));
     }
 }

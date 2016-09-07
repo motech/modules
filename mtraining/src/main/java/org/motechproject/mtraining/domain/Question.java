@@ -7,6 +7,7 @@ import org.motechproject.mds.domain.MdsEntity;
 import org.motechproject.mds.util.SecurityMode;
 import org.motechproject.mtraining.util.Constants;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -23,18 +24,18 @@ public class Question extends MdsEntity {
     private String question;
 
     /**
-     * Answer resource identifier in the external system
+     * List of Answer objects that contain identifier in the external system
      */
     @Field
-    private String answer;
+    private List<Answer> answers;
 
     public Question() {
         this (null, null);
     }
 
-    public Question(String question, String answer) {
+    public Question(String question, List<Answer> answers) {
         this.question = question;
-        this.answer = answer;
+        this.answers = answers;
     }
 
     public String getQuestion() {
@@ -45,12 +46,12 @@ public class Question extends MdsEntity {
         this.question = question;
     }
 
-    public String getAnswer() {
-        return answer;
+    public List<Answer> getAnswers() {
+        return answers;
     }
 
-    public void setAnswer(String answer) {
-        this.answer = answer;
+    public void setAnswers(List<Answer> answers) {
+        this.answers = answers;
     }
 
     @Override
@@ -67,11 +68,11 @@ public class Question extends MdsEntity {
 
         return Objects.equals(this.getId(), other.getId())
                 && Objects.equals(this.getQuestion(), other.getQuestion())
-                && Objects.equals(this.getAnswer(), other.getAnswer());
+                && Objects.equals(this.getAnswers(), other.getAnswers());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getQuestion(), getAnswer());
+        return Objects.hash(getQuestion(), getAnswers());
     }
 }

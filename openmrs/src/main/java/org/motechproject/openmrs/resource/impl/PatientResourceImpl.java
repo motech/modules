@@ -4,8 +4,10 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.openmrs.config.Config;
+import org.motechproject.openmrs.domain.Attribute;
 import org.motechproject.openmrs.domain.Identifier;
 import org.motechproject.openmrs.domain.IdentifierListResult;
 import org.motechproject.openmrs.domain.IdentifierType;
@@ -20,7 +22,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestOperations;
 
+import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class PatientResourceImpl extends BaseResource implements PatientResource {
@@ -29,27 +34,27 @@ public class PatientResourceImpl extends BaseResource implements PatientResource
     private BiMap<String, String> identifierTypeUuidByName = HashBiMap.create();
 
     @Autowired
-    public PatientResourceImpl(RestOperations restOperations) {
-        super(restOperations);
+    public PatientResourceImpl(RestOperations restOperations, HttpClient httpClient) {
+        super(restOperations, httpClient);
     }
 
     @Override
     public Patient createPatient(Config config, Patient patient) {
         String requestJson = buildGsonWithAdapters(true).toJson(patient);
         String responseJson = postForJson(config, requestJson, "/patient");
-        return (Patient) JsonUtils.readJson(responseJson, Patient.class);
+        return (Patient) JsonUtils.readJsonWithAdapters(responseJson, Patient.class, createAttributeAdapter());
     }
 
     @Override
     public PatientListResult queryForPatient(Config config, String motechId) {
         String responseJson = getJson(config, "/patient?q={motechId}", motechId);
-        return (PatientListResult) JsonUtils.readJson(responseJson, PatientListResult.class);
+        return (PatientListResult) JsonUtils.readJsonWithAdapters(responseJson, PatientListResult.class, createAttributeAdapter());
     }
 
     @Override
     public Patient getPatientById(Config config, String patientId) {
         String responseJson = getJson(config, "/patient/{uuid}?v=full", patientId);
-        return (Patient) JsonUtils.readJson(responseJson, Patient.class);
+        return (Patient) JsonUtils.readJsonWithAdapters(responseJson, Patient.class, createAttributeAdapter());
     }
 
     @Override
@@ -178,5 +183,12 @@ public class PatientResourceImpl extends BaseResource implements PatientResource
 
     private Gson buildGson() {
         return new GsonBuilder().create();
+    }
+
+    private Map<Type, Object> createAttributeAdapter() {
+        Map<Type, Object> attributeAdapter = new HashMap<>();
+        attributeAdapter.put(Attribute.class, new Attribute.AttributeSerializer());
+
+        return attributeAdapter;
     }
 }

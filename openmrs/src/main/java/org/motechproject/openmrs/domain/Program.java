@@ -201,6 +201,14 @@ public class Program {
         this.concept = concept;
     }
 
+    public List<Workflow> getAllWorkflows() {
+        return allWorkflows;
+    }
+
+    public void setAllWorkflows(List<Workflow> allWorkflows) {
+        this.allWorkflows = allWorkflows;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(uuid, name, description, concept, allWorkflows);

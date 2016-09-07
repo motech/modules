@@ -9,6 +9,7 @@ public class ServerVersion {
     public static final String V2_18 = "2.18";
     public static final String V2_19 = "2.19";
     public static final String V2_21 = "2.21";
+    public static final String V2_22 = "2.22";
 
     private String version;
 

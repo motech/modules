@@ -9,6 +9,8 @@ import org.motechproject.mtraining.dto.CourseUnitDto;
 import org.motechproject.mtraining.util.Constants;
 
 import javax.jdo.annotations.Persistent;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -31,6 +33,8 @@ public class Quiz extends CourseUnitMetadata {
      * Pass percentage for the Quiz.
      */
     @Field
+    @Min(0)
+    @Max(100)
     private double passPercentage;
 
     /**

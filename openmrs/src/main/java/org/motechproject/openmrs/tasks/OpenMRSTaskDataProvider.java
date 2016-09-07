@@ -7,11 +7,14 @@ import org.motechproject.commons.api.DataProvider;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.openmrs.domain.Encounter;
+import org.motechproject.openmrs.domain.GeneratedIdentifier;
 import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.ProgramEnrollment;
+import org.motechproject.openmrs.domain.ProgramEnrollmentListResult;
 import org.motechproject.openmrs.domain.Provider;
 import org.motechproject.openmrs.domain.Relationship;
 import org.motechproject.openmrs.service.OpenMRSEncounterService;
+import org.motechproject.openmrs.service.OpenMRSGeneratedIdentifierService;
 import org.motechproject.openmrs.service.OpenMRSPatientService;
 import org.motechproject.openmrs.service.OpenMRSProgramEnrollmentService;
 import org.motechproject.openmrs.service.OpenMRSProviderService;
@@ -25,16 +28,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.ACTIVE_PROGRAM;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_MOTECH_ID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_MOTECH_ID_AND_PROGRAM_NAME;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_UUID;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BAHMNI_PROGRAM_ENROLLMENT;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_UUID_AMD_PROGRAM_NAME;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.ENCOUNTER;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.IDENTIFIER;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.IDENTIFIER_SOURCE_NAME;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.MOTECH_ID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.NAME;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PACKAGE_ROOT;
@@ -56,7 +63,8 @@ import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.UUID;
 @Service("openMRSTaskDataProvider")
 public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSTaskDataProvider.class);
-    private static final List<Class<?>> SUPPORTED_CLASSES = Arrays.asList(Patient.class, Provider.class, Encounter.class, Relationship.class, ProgramEnrollment.class);
+    private static final List<Class<?>> SUPPORTED_CLASSES = Arrays.asList(Patient.class, Provider.class, Encounter.class,
+            Relationship.class, ProgramEnrollment.class, GeneratedIdentifier.class);
 
     private OpenMRSEncounterService encounterService;
     private OpenMRSPatientService patientService;
@@ -64,20 +72,22 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     private OpenMRSTaskDataProviderBuilder dataProviderBuilder;
     private OpenMRSRelationshipService relationshipService;
     private OpenMRSProgramEnrollmentService programEnrollmentService;
+    private OpenMRSGeneratedIdentifierService generatedIdentifierService;
     private BundleContext bundleContext;
     private ServiceRegistration serviceRegistration;
 
     @Autowired
-    public OpenMRSTaskDataProvider(OpenMRSTaskDataProviderBuilder taskDataProviderBuilder,
-                                   OpenMRSEncounterService encounterService, OpenMRSPatientService patientService,
-                                   OpenMRSProviderService providerService, OpenMRSRelationshipService relationshipService,
-                                   OpenMRSProgramEnrollmentService programEnrollmentService, BundleContext bundleContext) {
+    public OpenMRSTaskDataProvider(OpenMRSTaskDataProviderBuilder taskDataProviderBuilder, OpenMRSEncounterService encounterService,
+                                   OpenMRSPatientService patientService, OpenMRSProviderService providerService,
+                                   OpenMRSRelationshipService relationshipService, OpenMRSProgramEnrollmentService programEnrollmentService,
+                                   OpenMRSGeneratedIdentifierService generatedIdentifierService, BundleContext bundleContext) {
         this.encounterService = encounterService;
         this.patientService = patientService;
         this.providerService = providerService;
         this.dataProviderBuilder = taskDataProviderBuilder;
         this.relationshipService = relationshipService;
         this.programEnrollmentService = programEnrollmentService;
+        this.generatedIdentifierService = generatedIdentifierService;
         this.bundleContext = bundleContext;
 
         generateProvider(null);
@@ -123,6 +133,12 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
 
         String objectType = type.substring(0, type.lastIndexOf('-'));
         String configName = type.substring(type.lastIndexOf('-') + 1);
+        boolean isBahmniProgramEnrollment = false;
+
+        if (StringUtils.equals(BAHMNI_PROGRAM_ENROLLMENT, objectType)) {
+            isBahmniProgramEnrollment = true;
+            objectType = PROGRAM_ENROLLMENT;
+        }
 
         //In case of any trouble with the type, 'supports' method logs an error
         if (supports(objectType)) {
@@ -135,7 +151,9 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
                     break;
                 case RELATIONSHIP: obj = getRelationship(lookupFields, configName);
                     break;
-                case PROGRAM_ENROLLMENT: obj = getProgramEnrollment(lookupName, lookupFields, configName);
+                case PROGRAM_ENROLLMENT: obj = getProgramEnrollments(lookupName, lookupFields, configName, isBahmniProgramEnrollment);
+                    break;
+                case IDENTIFIER: obj = getIdentifier(lookupFields, configName);
             }
         }
 
@@ -196,16 +214,24 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         return relationships.isEmpty() ? null : relationships.get(0);
     }
 
-    private ProgramEnrollment getProgramEnrollment(String lookupName, Map<String, String> lookupFields, String configName) {
+    private ProgramEnrollmentListResult getProgramEnrollments(String lookupName, Map<String, String> lookupFields, String configName, boolean isBahmniProgramEnrollment) {
         List<ProgramEnrollment> programEnrollments = null;
 
         switch (lookupName) {
             case BY_MOTECH_ID_AND_PROGRAM_NAME: {
-                programEnrollments = programEnrollmentService.getProgramEnrollmentByPatientMotechId(configName, lookupFields.get(PATIENT_MOTECH_ID));
+                if (isBahmniProgramEnrollment) {
+                    programEnrollments = programEnrollmentService.getBahmniProgramEnrollmentByPatientMotechId(configName, lookupFields.get(PATIENT_MOTECH_ID));
+                } else {
+                    programEnrollments = programEnrollmentService.getProgramEnrollmentByPatientMotechId(configName, lookupFields.get(PATIENT_MOTECH_ID));
+                }
                 break;
             }
             case BY_UUID_AMD_PROGRAM_NAME: {
-                programEnrollments = programEnrollmentService.getProgramEnrollmentByPatientUuid(configName, lookupFields.get(PATIENT_UUID));
+                if (isBahmniProgramEnrollment) {
+                    programEnrollments = programEnrollmentService.getBahmniProgramEnrollmentByPatientUuid(configName, lookupFields.get(PATIENT_UUID));
+                } else {
+                    programEnrollments = programEnrollmentService.getProgramEnrollmentByPatientUuid(configName, lookupFields.get(PATIENT_UUID));
+                }
                 break;
             }
             default: {
@@ -214,24 +240,88 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
             }
         }
 
-        return filterByProgramName(programEnrollments, lookupFields.get(PROGRAM_NAME));
+        ProgramEnrollmentListResult filteredProgramEnrollments = prepareProgramEnrollmentListResult(programEnrollments, lookupFields);
+        checkNumberOfPrograms(filteredProgramEnrollments, lookupFields, lookupName);
+
+        return filteredProgramEnrollments;
     }
 
-    private ProgramEnrollment filterByProgramName(List<ProgramEnrollment> programEnrollments, String programName) {
-        ProgramEnrollment result = null;
+    private ProgramEnrollmentListResult prepareProgramEnrollmentListResult(List<ProgramEnrollment> programEnrollments, Map<String, String> lookupFields) {
+        ProgramEnrollmentListResult result = new ProgramEnrollmentListResult();
+        String programName = lookupFields.get(PROGRAM_NAME);
 
-        if(CollectionUtils.isNotEmpty(programEnrollments)) {
-            for (ProgramEnrollment programEnrollment : programEnrollments) {
-                if (programEnrollment.getProgram().getName().equals(programName)) {
-                    result = programEnrollment;
+        result.setResults(filterPrograms(programEnrollments, programName, lookupFields.get(ACTIVE_PROGRAM)));
+
+        return result;
+    }
+
+    private void checkNumberOfPrograms(ProgramEnrollmentListResult programEnrollmentListResult, Map<String, String> lookupFields, String lookupName) {
+        String programName = lookupFields.get(PROGRAM_NAME);
+
+        if (programEnrollmentListResult.getNumberOfPrograms() > 1) {
+            switch(lookupName) {
+                case BY_MOTECH_ID_AND_PROGRAM_NAME: {
+                    String motechId = lookupFields.get(PATIENT_MOTECH_ID);
+                    LOGGER.warn(String.format("Multiple program enrollment found with the patient MOTECH Id \"%s\" and program name" + " \"%s\".", motechId, programName));
+                    break;
+                }
+                case BY_UUID_AMD_PROGRAM_NAME: {
+                    String patientUuid = lookupFields.get(PATIENT_UUID);
+                    LOGGER.warn(String.format("Multiple program enrollment found with the patient UUID \"%s\" and program name" + " \"%s\".", patientUuid, programName));
                     break;
                 }
             }
         }
+    }
 
-        if (Objects.isNull(result)) {
-            result = new ProgramEnrollment();
-            result.setEnrolled(false);
+    private GeneratedIdentifier getIdentifier(Map<String, String> lookupFields, String configName) {
+        return generatedIdentifierService.getLatestIdentifier(configName, lookupFields.get(IDENTIFIER_SOURCE_NAME));
+    }
+
+    private List<ProgramEnrollment> filterPrograms(List<ProgramEnrollment> programEnrollments, String programName, String activeProgram) {
+        List<ProgramEnrollment> programEnrollmentsList = filterByProgramName(programEnrollments, programName);
+        List<ProgramEnrollment> result;
+
+        result = isActiveProgram(activeProgram) ? filterByActiveProgramOnly(programEnrollmentsList) : programEnrollmentsList;
+
+        return result;
+    }
+
+    private boolean isActiveProgram(String activeProgram) {
+        boolean result = false;
+
+        if (StringUtils.equals("true", activeProgram)) {
+            result = true;
+        } else if (!StringUtils.equals("false", activeProgram)) {
+            LOGGER.warn("Active Program Only field should be 'true' or 'false', actually is \"%s\".", activeProgram);
+        }
+
+        return result;
+    }
+
+    private List<ProgramEnrollment> filterByProgramName(List<ProgramEnrollment> programEnrollments, String programName) {
+        List<ProgramEnrollment> result = new ArrayList<>();
+
+        if(CollectionUtils.isNotEmpty(programEnrollments)) {
+            for (ProgramEnrollment programEnrollment : programEnrollments) {
+                if (programEnrollment.getProgram().getName().equals(programName)) {
+                    result.add(programEnrollment);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private List<ProgramEnrollment> filterByActiveProgramOnly(List<ProgramEnrollment> programEnrollments) {
+        List<ProgramEnrollment> result = new ArrayList<>();
+
+        if(CollectionUtils.isNotEmpty(programEnrollments)) {
+            for (ProgramEnrollment programEnrollment : programEnrollments) {
+                if (programEnrollment.getDateCompleted() == null) {
+                    result.add(programEnrollment);
+                }
+            }
         }
 
         return result;
