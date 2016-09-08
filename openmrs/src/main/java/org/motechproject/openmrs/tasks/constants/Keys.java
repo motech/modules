@@ -46,6 +46,11 @@ public final class Keys {
     public static final String UUID = "uuid";
     public static final String PERSON_ATTRIBUTES = "person.personAttributes";
 
+    //Visit action
+    public static final String VISIT_START_DATETIME = "startDatetime";
+    public static final String VISIT_END_DATETIME = "endDatetime";
+    public static final String VISIT_TYPE = "visitType";
+
     //Program Enrollment action
     public static final String PROGRAM_UUID = "program.uuid";
     public static final String PROGRAM_ENROLLMENT_UUID = "programEnrollmentUuid";

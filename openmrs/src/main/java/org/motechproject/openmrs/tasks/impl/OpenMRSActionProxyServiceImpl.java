@@ -20,6 +20,8 @@ import org.motechproject.openmrs.domain.Person;
 import org.motechproject.openmrs.domain.Program;
 import org.motechproject.openmrs.domain.ProgramEnrollment;
 import org.motechproject.openmrs.domain.Provider;
+import org.motechproject.openmrs.domain.Visit;
+import org.motechproject.openmrs.domain.VisitType;
 import org.motechproject.openmrs.helper.EventHelper;
 import org.motechproject.openmrs.service.OpenMRSCohortService;
 import org.motechproject.openmrs.service.OpenMRSConceptService;
@@ -29,6 +31,7 @@ import org.motechproject.openmrs.service.OpenMRSPatientService;
 import org.motechproject.openmrs.service.OpenMRSPersonService;
 import org.motechproject.openmrs.service.OpenMRSProgramEnrollmentService;
 import org.motechproject.openmrs.service.OpenMRSProviderService;
+import org.motechproject.openmrs.service.OpenMRSVisitService;
 import org.motechproject.openmrs.tasks.OpenMRSActionProxyService;
 import org.motechproject.openmrs.tasks.constants.EventSubjects;
 import org.slf4j.Logger;
@@ -54,6 +57,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     private OpenMRSEncounterService encounterService;
     private OpenMRSLocationService locationService;
     private OpenMRSPatientService patientService;
+    private OpenMRSVisitService visitService;
     private OpenMRSProviderService providerService;
     private OpenMRSProgramEnrollmentService programEnrollmentService;
     private OpenMRSPersonService personService;
@@ -80,12 +84,12 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
 
     @Override
     public Patient createPatient(String configName, String givenName, String middleName, String familyName,
-                              String address1, String address2, String address3, String address4, String address5,
-                              String address6, String cityVillage, String stateProvince, String country,
-                              String postalCode, String countyDistrict, String latitude, String longitude,
-                              DateTime startDate, DateTime endDate, DateTime birthDate, Boolean birthDateEstimated,
-                              String gender, Boolean dead, String causeOfDeathUUID, String motechId,
-                              String locationForMotechId, Map<String, String> identifiers, Map<String, String> personAttributes) {
+                                 String address1, String address2, String address3, String address4, String address5,
+                                 String address6, String cityVillage, String stateProvince, String country,
+                                 String postalCode, String countyDistrict, String latitude, String longitude,
+                                 DateTime startDate, DateTime endDate, DateTime birthDate, Boolean birthDateEstimated,
+                                 String gender, Boolean dead, String causeOfDeathUUID, String motechId,
+                                 String locationForMotechId, Map<String, String> identifiers, Map<String, String> personAttributes) {
         Concept causeOfDeath = StringUtils.isNotEmpty(causeOfDeathUUID) ? conceptService.getConceptByUuid(configName, causeOfDeathUUID) : null;
 
         Person person = preparePerson(givenName, middleName, familyName, address1, address2,
@@ -133,6 +137,17 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     }
 
     @Override
+    public Visit createVisit(String configName, String patientUuid, DateTime startDatetime,
+                             DateTime endDatetime, String visitType, String locationName) {
+        Location location = getLocationByName(configName, locationName);
+        Patient patient = patientService.getPatientByUuid(configName, patientUuid);
+        VisitType type = new VisitType(visitType);
+        Visit visit = new Visit(startDatetime.toDate(), endDatetime.toDate(), patient, type, location);
+
+        return visitService.createVisit(configName, visit);
+    }
+
+    @Override
     public void createProgramEnrollment(String configName, String patientUuid, String programUuid,
                                         DateTime dateEnrolled, DateTime dateCompleted, String locationName,
                                         Map<String, String> programEnrollmentAttributes) {
@@ -160,8 +175,8 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     }
 
     @Override
-    public void updateProgramEnrollment (String configName, String programEnrollmentUuid, DateTime programCompletedDate,
-                                               String stateUuid, DateTime startDate, Map<String, String> attributes) {
+    public void updateProgramEnrollment(String configName, String programEnrollmentUuid, DateTime programCompletedDate,
+                                        String stateUuid, DateTime startDate, Map<String, String> attributes) {
 
         ProgramEnrollment updatedProgram = new ProgramEnrollment();
         List<Attribute> attributesList;
@@ -305,7 +320,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
                                  String address3, String address4, String address5, String address6, String cityVillage, String stateProvince,
                                  String country, String postalCode, String countyDistrict, String latitude, String longitude,
                                  DateTime startDate, DateTime endDate, DateTime birthDate, Boolean birthDateEstimated,
-                                 String gender, Boolean dead, Concept causeOfDeath, Map<String, String> attributes)  {
+                                 String gender, Boolean dead, Concept causeOfDeath, Map<String, String> attributes) {
         Person person = new Person();
 
         Person.Name personName = new Person.Name();
@@ -354,7 +369,9 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     }
 
     @Autowired
-    public void setPersonService(OpenMRSPersonService personService) { this.personService = personService; }
+    public void setPersonService(OpenMRSPersonService personService) {
+        this.personService = personService;
+    }
 
     @Autowired
     public void setProviderService(OpenMRSProviderService providerService) {
@@ -374,5 +391,10 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     @Autowired
     public void setEventRelay(EventRelay eventRelay) {
         this.eventRelay = eventRelay;
+    }
+
+    @Autowired
+    public void setVisitService(OpenMRSVisitService visitService) {
+        this.visitService = visitService;
     }
 }

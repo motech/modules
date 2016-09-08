@@ -9,6 +9,7 @@ import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.Person;
 import org.motechproject.openmrs.domain.ProgramEnrollment;
 import org.motechproject.openmrs.domain.Provider;
+import org.motechproject.openmrs.domain.Visit;
 import org.motechproject.openmrs.service.EventKeys;
 import org.motechproject.openmrs.tasks.constants.Keys;
 
@@ -116,6 +117,28 @@ public final class EventHelper {
         Map<String, Object> encounterParameters = new HashMap<>();
         encounterParameters.put(EventKeys.ENCOUNTER_ID, uuid);
         return encounterParameters;
+    }
+
+    /**
+     * Parses the given {@link Visit} to a map of parameters, which can then be attached to a
+     * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
+     *
+     * @param visit the visit to be parsed
+     * @return the map of the parameters
+     */
+    public static Map<String, Object> visitParameters(Visit visit) {
+        Map<String, Object> visitParameters = new HashMap<>();
+        visitParameters.put(EventKeys.VISIT_ID, visit.getUuid());
+        visitParameters.put(EventKeys.VISIT_START_DATETIME, visit.getStartDatetime());
+        visitParameters.put(EventKeys.VISIT_END_DATETIME, visit.getEndDatetime());
+        visitParameters.put(EventKeys.VISIT_TYPE, visit.getVisitType().getUuid());
+        visitParameters.put(EventKeys.VISIT_TYPE, null);
+        if (visit.getLocation() != null) {
+            visitParameters.put(EventKeys.LOCATION_ID, visit.getLocation().getUuid());
+        } else {
+            visitParameters.put(EventKeys.LOCATION_ID, null);
+        }
+        return visitParameters;
     }
 
     /**

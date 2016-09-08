@@ -1,8 +1,8 @@
 package org.motechproject.openmrs.resource;
 
+import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.Observation;
 import org.motechproject.openmrs.domain.ObservationListResult;
-import org.motechproject.openmrs.config.Config;
 
 /**
  * Interface for observations management.

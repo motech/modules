@@ -1,9 +1,9 @@
 package org.motechproject.openmrs.resource;
 
+import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.RoleListResult;
 import org.motechproject.openmrs.domain.User;
 import org.motechproject.openmrs.domain.UserListResult;
-import org.motechproject.openmrs.config.Config;
 
 /**
  * Interface for users management.

@@ -45,6 +45,12 @@ public final class DisplayNames {
     public static final String IDENTIFIERS = "openMRS.patient.identifiers";
     public static final String PERSON_ATTRIBUTES = "openMRS.patient.personAttributes";
 
+    //Visit action
+    public static final String VISIT_UUID = "openMRS.visit.uuid";
+    public static final String VISIT_START_DATETIME = "openMRS.visit.startDatetime";
+    public static final String VISIT_END_DATETIME = "openMRS.visit.endDatetime";
+    public static final String VISIT_TYPE = "openMRS.visit.type";
+
     //Program Enrollment action
     public static final String PROGRAM_UUID = "openMRS.program.uuid";
     public static final String PROGRAM_ENROLLMENT_UUID = "openMRS.programEnrollment.uuid";
@@ -59,6 +65,7 @@ public final class DisplayNames {
     public static final String COHORT_QUERY_PARAMETERS = "openMRS.cohortQuery.parameters";
     public static final String PATIENT_DISPLAY = "openMRS.patient.display";
     public static final String COHORT_QUERY_REPORTMEMBER = "openMRS.cohortQuery.reportMember";
+
     /**
      * Utility class, should not be initiated.
      */

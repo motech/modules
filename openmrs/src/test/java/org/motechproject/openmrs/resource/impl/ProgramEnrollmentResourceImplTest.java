@@ -10,7 +10,6 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.config.ConfigDummyData;
-import org.motechproject.openmrs.domain.Attribute;
 import org.motechproject.openmrs.domain.ProgramEnrollment;
 import org.motechproject.openmrs.util.JsonUtils;
 import org.springframework.http.HttpEntity;
@@ -18,7 +17,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestOperations;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
