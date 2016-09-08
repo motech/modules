@@ -62,7 +62,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     private EventRelay eventRelay;
 
     @Override
-    public void createEncounter(String configName, DateTime encounterDatetime, String encounterType,
+    public Encounter createEncounter(String configName, DateTime encounterDatetime, String encounterType,
                                 String locationName, String patientUuid, String providerUuid,
                                 Map<String, String> observations) {
         Location location = getLocationByName(configName, locationName);
@@ -75,7 +75,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         EncounterType type = new EncounterType(encounterType);
 
         Encounter encounter = new Encounter(location, type, encounterDatetime.toDate(), patient, Collections.singletonList(provider.getPerson()), observationList);
-        encounterService.createEncounter(configName, encounter);
+        return encounterService.createEncounter(configName, encounter);
     }
 
     @Override

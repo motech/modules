@@ -72,6 +72,7 @@ public class ActionBuilder {
 
     private ActionEventRequest buildCreateEncounterAction(String configName) {
         SortedSet<ActionParameterRequest> actionParameters = new TreeSet<>();
+        SortedSet<ActionParameterRequest> postActionParameters = new TreeSet<>();
         int order = 0;
         String serviceMethod = "createEncounter";
 
@@ -84,12 +85,15 @@ public class ActionBuilder {
         actionParameters.add(prepareParameter(Keys.PROVIDER_UUID, DisplayNames.PROVIDER_UUID, true, order++));
         actionParameters.add(prepareParameter(Keys.OBSERVATION, DisplayNames.OBSERVATION, MAP, false, order));
 
+        postActionParameters.add(prepareParameter(Keys.UUID, DisplayNames.ENCOUNTER_UUID, false, 0));
+
         return new ActionEventRequestBuilder()
                 .setDisplayName(getDisplayName(CREATE_ENCOUNTER, configName))
                 .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
                 .setServiceMethod(serviceMethod)
                 .setSubject(getSubject(serviceMethod, configName))
                 .setActionParameters(actionParameters)
+                .setPostActionParameters(postActionParameters)
                 .createActionEventRequest();
     }
 

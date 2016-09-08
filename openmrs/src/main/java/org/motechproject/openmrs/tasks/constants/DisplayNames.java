@@ -14,6 +14,7 @@ public final class DisplayNames {
     public static final String PATIENT_UUID = "openMRS.patient.uuid";
     public static final String PROVIDER_UUID = "openMRS.provider.uuid";
     public static final String OBSERVATION = "openMRS.encounter.observation";
+    public static final String ENCOUNTER_UUID = "openMRS.encounter.uuid";
 
     //Patient action
     public static final String PERSON_UUID = "openMRS.person.uuid";
