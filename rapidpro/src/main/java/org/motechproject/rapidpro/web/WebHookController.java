@@ -12,13 +12,21 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
+/**
+ * Controller for all HTTP requests for RapidPro Webhooks.
+ */
 @Controller
 @RequestMapping("/web-hook")
 public class WebHookController {
 
     @Autowired
-    EventPublisher eventPublisher;
+    private EventPublisher eventPublisher;
 
+    /**
+     * Handles all HTTP POST requests from Rapidpro that involve Webhooks.
+     *
+     * @param request The request from RapidPro.
+     */
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public void receiveWebHook(HttpServletRequest request) {

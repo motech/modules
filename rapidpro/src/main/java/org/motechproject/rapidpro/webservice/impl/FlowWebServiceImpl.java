@@ -18,9 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * Implementation of {@link org.motechproject.rapidpro.webservice.FlowWebService}
@@ -35,7 +35,8 @@ public class FlowWebServiceImpl extends AbstractWebService<Flow> implements Flow
     private static final String ERROR_RETRIEVING_FLOWS = "Error Retrieving flows from RapidPro: ";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FlowWebServiceImpl.class);
-    private static final TypeReference PAGED_RESPONSE_FLOW_TYPE_REF = new TypeReference<PaginatedResponse<Flow>>() { };
+    private static final TypeReference PAGED_RESPONSE_FLOW_TYPE_REF = new TypeReference<PaginatedResponse<Flow>>() {
+    };
 
     @Autowired
     public FlowWebServiceImpl(RapidProHttpClient client) {
@@ -46,15 +47,18 @@ public class FlowWebServiceImpl extends AbstractWebService<Flow> implements Flow
     public Flow getFlow(String name) throws WebServiceException {
         LOGGER.debug(FINDING_BY_NAME + name);
         try {
+
             PaginatedResponse<Flow> flows = getResponse();
-            List<Flow> filtered = flows.getResults()
-                    .stream()
-                    .filter(flow -> flow.getName().equals(name))
-                    .collect(Collectors.toList());
+            List<Flow> filtered = new ArrayList<>();
+            for (Flow flow : flows.getResults()) {
+                if (flow.getName().equals(name)) {
+                    filtered.add(flow);
+                }
+            }
             return getOne(filtered);
 
         } catch (RapidProClientException | JsonUtilException e) {
-            throw new WebServiceException(ERROR_RETRIEVING_FLOWS + e.getMessage());
+            throw new WebServiceException(ERROR_RETRIEVING_FLOWS + e.getMessage(), e);
         }
     }
 
@@ -63,21 +67,23 @@ public class FlowWebServiceImpl extends AbstractWebService<Flow> implements Flow
         LOGGER.debug(FINDING_BY_UUID + uuid);
         try {
             PaginatedResponse<Flow> flows = getResponse();
-            List<Flow> filtered = flows.getResults()
-                    .stream()
-                    .filter(flow -> flow.getUuid().equals(uuid))
-                    .collect(Collectors.toList());
+            List<Flow> filtered = new ArrayList<>();
+            for (Flow flow : flows.getResults()) {
+                if (flow.getUuid().equals(uuid)) {
+                    filtered.add(flow);
+                }
+            }
             return getOne(filtered);
 
         } catch (RapidProClientException | JsonUtilException e) {
-            throw new WebServiceException(ERROR_RETRIEVING_FLOWS + e.getMessage());
+            throw new WebServiceException(ERROR_RETRIEVING_FLOWS + e.getMessage(), e);
         }
     }
 
     private PaginatedResponse<Flow> getResponse() throws RapidProClientException, JsonUtilException {
         InputStream response = null;
 
-        try  {
+        try {
             response = getClient().executeGet(FLOWS_ENDPOINT, MediaFormat.JSON, null);
             return (PaginatedResponse<Flow>) JsonUtils.toObject(response, PAGED_RESPONSE_FLOW_TYPE_REF);
 

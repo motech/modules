@@ -1,5 +1,8 @@
 package org.motechproject.rapidpro.constant;
 
+/**
+ * Constant values for all RapidPro web hook event types.
+ */
 public final class WebHookTypes {
 
     /*An incoming message was received by the Android phone*/
@@ -29,5 +32,6 @@ public final class WebHookTypes {
     /*A user has reached an API action in one of your flows*/
     public static final String WEB_HOOK_FLOW = "flow";
 
-    private WebHookTypes() { }
+    private WebHookTypes() {
+    }
 }

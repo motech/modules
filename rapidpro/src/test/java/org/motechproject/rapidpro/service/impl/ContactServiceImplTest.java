@@ -138,7 +138,7 @@ public class ContactServiceImplTest {
     }
 
     @Test
-    public void shouldUpdateContact() throws Exception{
+    public void shouldUpdateContact() throws Exception {
         String externalID = "externalID";
         String phoneNumber = "1234567890";
         UUID uuid = UUID.randomUUID();
@@ -184,7 +184,7 @@ public class ContactServiceImplTest {
     }
 
     @Test
-    public void shouldSendWebserviceFailMessageUpdate() throws Exception{
+    public void shouldSendWebserviceFailMessageUpdate() throws Exception {
         String externalID = "externalID";
         String phoneNumber = "1234567890";
         UUID uuid = UUID.randomUUID();

@@ -21,18 +21,19 @@ import java.util.UUID;
 public class FlowEventHandler {
     private static final String HANDLING_CONTACT_FLOW = "Handling event for contact flow run";
     private static final String HANDLING_GROUP_FLOW = "Handling event for group flow run";
-    private static final String UNSUPPORTED_EVENT_SUBJECT= "Unsupported event subject: ";
+    private static final String UNSUPPORTED_EVENT_SUBJECT = "Unsupported event subject: ";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FlowEventHandler.class);
 
     @Autowired
-    FlowService flowService;
+    private FlowService flowService;
 
     /**
      * Handles flow run requests for individual contacts.
+     *
      * @param event {@link MotechEvent}
      */
-    @MotechListener(subjects = {EventSubjects.START_FLOW_CONTACT_UUID, EventSubjects.START_FLOW_CONTACT_NAME})
+    @MotechListener(subjects = {EventSubjects.START_FLOW_CONTACT_UUID, EventSubjects.START_FLOW_CONTACT_NAME })
     public void handleStartContactFlow(MotechEvent event) {
         LOGGER.info(HANDLING_CONTACT_FLOW);
         String contactExternalId = (String) event.getParameters().get(EventParameters.EXTERNAL_ID);
@@ -56,15 +57,16 @@ public class FlowEventHandler {
             default:
                 String message = UNSUPPORTED_EVENT_SUBJECT + event.getSubject();
                 LOGGER.error(message);
-                throw new RuntimeException(message);
+                throw new IllegalStateException(UNSUPPORTED_EVENT_SUBJECT + event.getSubject());
         }
     }
 
     /**
      * Handles flow run requests for groups.
+     *
      * @param event {@link MotechEvent}
      */
-    @MotechListener(subjects = {EventSubjects.START_FLOW_GROUP_NAME, EventSubjects.START_FLOW_GROUP_UUID})
+    @MotechListener(subjects = {EventSubjects.START_FLOW_GROUP_NAME, EventSubjects.START_FLOW_GROUP_UUID })
     public void handleStartGroupFlow(MotechEvent event) {
         LOGGER.info(HANDLING_GROUP_FLOW);
         Boolean restartParticipants = (Boolean) event.getParameters().get(EventParameters.RESTART_PARTICIPANTS);
@@ -88,7 +90,7 @@ public class FlowEventHandler {
             default:
                 String message = UNSUPPORTED_EVENT_SUBJECT + event.getSubject();
                 LOGGER.error(message);
-                throw new RuntimeException(message);
+                throw new IllegalStateException(UNSUPPORTED_EVENT_SUBJECT + event.getSubject());
         }
     }
 }

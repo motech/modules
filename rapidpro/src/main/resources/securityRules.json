@@ -18,7 +18,9 @@
       "POST",
       "DELETE"
     ],
-    "permissionAccess": ["configureRapidpro"]
+    "permissionAccess": [
+      "configureRapidpro"
+    ]
   },
   {
     "active": true,

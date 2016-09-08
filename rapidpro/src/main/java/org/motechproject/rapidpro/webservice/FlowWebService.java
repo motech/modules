@@ -12,6 +12,7 @@ public interface FlowWebService {
 
     /**
      * Finds a flow by its name, if it exists.
+     *
      * @param name The name of the flow
      * @return {@link Flow}
      * @throws WebServiceException If there is an error communicating with RapidPro,
@@ -20,6 +21,7 @@ public interface FlowWebService {
 
     /**
      * Finds a flow by its UUID, if it exists.
+     *
      * @param uuid The UUID of the flow
      * @return {@link Flow}
      * @throws WebServiceException If there is an error communicating with RapidPro,

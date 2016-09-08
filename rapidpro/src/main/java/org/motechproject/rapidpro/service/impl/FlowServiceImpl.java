@@ -113,7 +113,7 @@ public class FlowServiceImpl implements FlowService {
 
 
     @Override
-    public void startFlowForGroup(UUID flowUUID, String groupName, boolean restartParticipants, Map<String, String> extra)  {
+    public void startFlowForGroup(UUID flowUUID, String groupName, boolean restartParticipants, Map<String, String> extra) {
         LOGGER.debug(STARTING_FLOW_GROUP + groupName);
         try {
             Flow flow = flowWebService.getFlow(flowUUID);

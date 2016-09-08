@@ -267,405 +267,764 @@
         }
       ]
     }
-
   ],
-  "triggerTaskEvents" : [
+  "triggerTaskEvents": [
     {
-      "subject" : "org.motechproject.rapidpro.contact-added-to-group",
-      "displayName" : "rapidpro.tasks.addedToGroup",
-      "eventParameters" : [
+      "subject": "org.motechproject.rapidpro.contact-added-to-group",
+      "displayName": "rapidpro.tasks.addedToGroup",
+      "eventParameters": [
         {
-          "eventKey" : "externalId",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.externalId"
+          "eventKey": "externalId",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.externalId"
         },
         {
-          "eventKey" : "contactUUID",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.contactUUID"
+          "eventKey": "contactUUID",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.contactUUID"
         },
         {
-          "eventKey" : "name",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.contactName"
+          "eventKey": "name",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.contactName"
         },
         {
-          "eventKey" : "language",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.language"
+          "eventKey": "language",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.language"
         },
         {
-          "eventKey" : "urns",
-          "type" : "LIST",
-          "displayName" : "rapidpro.tasks.urns"
+          "eventKey": "urns",
+          "type": "LIST",
+          "displayName": "rapidpro.tasks.urns"
         },
         {
-          "eventKey" : "contactGroupUUIDs",
-          "type" : "LIST",
-          "displayName" : "rapidpro.tasks.groupUUIDs"
+          "eventKey": "contactGroupUUIDs",
+          "type": "LIST",
+          "displayName": "rapidpro.tasks.groupUUIDs"
         },
         {
-          "eventKey" : "blocked",
-          "type" : "BOOLEAN",
-          "displayName" : "rapidpro.tasks.blocked"
+          "eventKey": "blocked",
+          "type": "BOOLEAN",
+          "displayName": "rapidpro.tasks.blocked"
         },
         {
-          "eventKey" : "fields",
-          "type" : "MAP",
-          "displayName" : "rapidpro.tasks.fields"
+          "eventKey": "fields",
+          "type": "MAP",
+          "displayName": "rapidpro.tasks.fields"
         },
         {
-          "eventKey" : "failed",
-          "type" : "BOOLEAN",
-          "displayName" : "rapidpro.tasks.failed"
+          "eventKey": "failed",
+          "type": "BOOLEAN",
+          "displayName": "rapidpro.tasks.failed"
         },
         {
-          "eventKey" : "modifiedOn",
-          "type" : "DATE",
-          "displayName" : "rapidpro.tasks.modifiedOn"
+          "eventKey": "modifiedOn",
+          "type": "DATE",
+          "displayName": "rapidpro.tasks.modifiedOn"
         },
         {
-          "eventKey" : "groupName",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.groupName"
+          "eventKey": "groupName",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.groupName"
         },
         {
-          "eventKey" : "groupUUID",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.groupUUID"
+          "eventKey": "groupUUID",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.groupUUID"
         }
       ]
     },
     {
-      "subject" : "org.motechproject.rapidpro.contact-removed-from-group",
-      "displayName" : "rapidpro.tasks.removedFromGroup",
-      "eventParameters" : [
+      "subject": "org.motechproject.rapidpro.contact-removed-from-group",
+      "displayName": "rapidpro.tasks.removedFromGroup",
+      "eventParameters": [
         {
-          "eventKey" : "externalId",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.externalId"
+          "eventKey": "externalId",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.externalId"
         },
         {
-          "eventKey" : "contactUUID",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.contactUUID"
+          "eventKey": "contactUUID",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.contactUUID"
         },
         {
-          "eventKey" : "name",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.contactName"
+          "eventKey": "name",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.contactName"
         },
         {
-          "eventKey" : "language",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.language"
+          "eventKey": "language",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.language"
         },
         {
-          "eventKey" : "urns",
-          "type" : "LIST",
-          "displayName" : "rapidpro.tasks.urns"
+          "eventKey": "urns",
+          "type": "LIST",
+          "displayName": "rapidpro.tasks.urns"
         },
         {
-          "eventKey" : "contactGroupUUIDs",
-          "type" : "LIST",
-          "displayName" : "rapidpro.tasks.groupUUIDs"
+          "eventKey": "contactGroupUUIDs",
+          "type": "LIST",
+          "displayName": "rapidpro.tasks.groupUUIDs"
         },
         {
-          "eventKey" : "blocked",
-          "type" : "BOOLEAN",
-          "displayName" : "rapidpro.tasks.blocked"
+          "eventKey": "blocked",
+          "type": "BOOLEAN",
+          "displayName": "rapidpro.tasks.blocked"
         },
         {
-          "eventKey" : "fields",
-          "type" : "MAP",
-          "displayName" : "rapidpro.tasks.fields"
+          "eventKey": "fields",
+          "type": "MAP",
+          "displayName": "rapidpro.tasks.fields"
         },
         {
-          "eventKey" : "failed",
-          "type" : "BOOLEAN",
-          "displayName" : "rapidpro.tasks.failed"
+          "eventKey": "failed",
+          "type": "BOOLEAN",
+          "displayName": "rapidpro.tasks.failed"
         },
         {
-          "eventKey" : "modifiedOn",
-          "type" : "DATE",
-          "displayName" : "rapidpro.tasks.modifiedOn"
+          "eventKey": "modifiedOn",
+          "type": "DATE",
+          "displayName": "rapidpro.tasks.modifiedOn"
         },
         {
-          "eventKey" : "groupName",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.groupName"
+          "eventKey": "groupName",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.groupName"
         },
         {
-          "eventKey" : "groupUUID",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.groupUUID"
+          "eventKey": "groupUUID",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.groupUUID"
         }
       ]
     },
     {
-      "subject" : "org.motechproject.rapidpro.flow-started-for-contact",
-      "displayName" : "rapidpro.tasks.flowStartedContact",
-      "eventParameters" : [
+      "subject": "org.motechproject.rapidpro.flow-started-for-contact",
+      "displayName": "rapidpro.tasks.flowStartedContact",
+      "eventParameters": [
         {
-          "eventKey" : "externalId",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.externalId"
+          "eventKey": "externalId",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.externalId"
         },
         {
-          "eventKey" : "contactUUID",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.contactUUID"
+          "eventKey": "contactUUID",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.contactUUID"
         },
         {
-          "eventKey" : "name",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.contactName"
+          "eventKey": "name",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.contactName"
         },
         {
-          "eventKey" : "urns",
-          "type" : "LIST",
-          "displayName" : "rapidpro.tasks.urns"
+          "eventKey": "urns",
+          "type": "LIST",
+          "displayName": "rapidpro.tasks.urns"
         },
         {
-          "eventKey" : "flowUUID",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.flowUUID"
+          "eventKey": "flowUUID",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.flowUUID"
         },
         {
-          "eventKey" : "restartParticipants",
-          "type" : "BOOLEAN",
-          "displayName" : "rapidpro.tasks.restartParticipants"
+          "eventKey": "restartParticipants",
+          "type": "BOOLEAN",
+          "displayName": "rapidpro.tasks.restartParticipants"
         },
         {
-          "eventKey" : "flow",
-          "type" : "INTEGER",
-          "displayName" : "rapidpro.tasks.flow"
+          "eventKey": "flow",
+          "type": "INTEGER",
+          "displayName": "rapidpro.tasks.flow"
         },
         {
-          "eventKey" : "createdOn",
-          "type" : "DATE",
-          "displayName" : "rapidpro.tasks.createdOn"
+          "eventKey": "createdOn",
+          "type": "DATE",
+          "displayName": "rapidpro.tasks.createdOn"
         },
         {
-          "eventKey" : "expiredOn",
-          "type" : "DATE",
-          "displayName" : "rapidpro.tasks.expiredOn"
+          "eventKey": "expiredOn",
+          "type": "DATE",
+          "displayName": "rapidpro.tasks.expiredOn"
         },
         {
-          "eventKey" : "expiresOn",
-          "type" : "DATE",
-          "displayName" : "rapidpro.tasks.expiresOn"
+          "eventKey": "expiresOn",
+          "type": "DATE",
+          "displayName": "rapidpro.tasks.expiresOn"
         },
         {
-          "eventKey" : "run",
-          "type" : "INTEGER",
-          "displayName" : "rapidpro.tasks.run"
+          "eventKey": "run",
+          "type": "INTEGER",
+          "displayName": "rapidpro.tasks.run"
         }
       ]
     },
     {
-      "subject" : "org.motechproject.rapidpro.flow-started-for-group",
-      "displayName" : "rapidpro.tasks.flowStartedGroup",
-      "eventParameters" : [
+      "subject": "org.motechproject.rapidpro.flow-started-for-group",
+      "displayName": "rapidpro.tasks.flowStartedGroup",
+      "eventParameters": [
         {
-          "eventKey" : "flowUUID",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.flowUUID"
+          "eventKey": "flowUUID",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.flowUUID"
         },
         {
-          "eventKey" : "flowName",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.flowName"
+          "eventKey": "flowName",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.flowName"
         },
         {
-          "eventKey" : "groupName",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.groupName"
+          "eventKey": "groupName",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.groupName"
         },
         {
-          "eventKey" : "groupUUID",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.groupUUID"
+          "eventKey": "groupUUID",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.groupUUID"
         },
         {
-          "eventKey" : "restartParticipants",
-          "type" : "BOOLEAN",
-          "displayName" : "rapidpro.tasks.restartParticipants"
+          "eventKey": "restartParticipants",
+          "type": "BOOLEAN",
+          "displayName": "rapidpro.tasks.restartParticipants"
         },
         {
-          "eventKey" : "contactUUIDs",
-          "type" : "LIST",
-          "displayName" : "rapidpro.tasks.contactUUIDs"
+          "eventKey": "contactUUIDs",
+          "type": "LIST",
+          "displayName": "rapidpro.tasks.contactUUIDs"
         }
       ]
     },
     {
-      "subject" : "org.motechproject.rapidpro.flow-fail-contact-name",
-      "displayName" : "rapidpro.tasks.flowFailContactName",
-      "eventParameters" : [
+      "subject": "org.motechproject.rapidpro.flow-fail-contact-name",
+      "displayName": "rapidpro.tasks.flowFailContactName",
+      "eventParameters": [
         {
-          "eventKey" : "externalId",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.externalId"
+          "eventKey": "externalId",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.externalId"
         },
         {
-          "eventKey" : "flowName",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.flowName"
+          "eventKey": "flowName",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.flowName"
         },
         {
-          "eventKey" : "restartParticipants",
-          "type" : "BOOLEAN",
-          "displayName" : "rapidpro.tasks.restartParticipants"
+          "eventKey": "restartParticipants",
+          "type": "BOOLEAN",
+          "displayName": "rapidpro.tasks.restartParticipants"
         },
         {
-          "eventKey" : "errorMessage",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.errorMessage"
+          "eventKey": "errorMessage",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.errorMessage"
         },
         {
-          "eventKey" : "extra",
-          "type" : "MAP",
-          "displayName" : "rapidpro.tasks.extra"
+          "eventKey": "extra",
+          "type": "MAP",
+          "displayName": "rapidpro.tasks.extra"
         }
       ]
     },
     {
-      "subject" : "org.motechproject.rapidpro.flow-fail-contact-uuid",
-      "displayName" : "rapidpro.tasks.flowFailContactUUID",
-      "eventParameters" : [
+      "subject": "org.motechproject.rapidpro.flow-fail-contact-uuid",
+      "displayName": "rapidpro.tasks.flowFailContactUUID",
+      "eventParameters": [
         {
-          "eventKey" : "externalId",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.externalId"
+          "eventKey": "externalId",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.externalId"
         },
         {
-          "eventKey" : "flowUUID",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.flowUUID"
+          "eventKey": "flowUUID",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.flowUUID"
         },
         {
-          "eventKey" : "restartParticipants",
-          "type" : "BOOLEAN",
-          "displayName" : "rapidpro.tasks.restartParticipants"
+          "eventKey": "restartParticipants",
+          "type": "BOOLEAN",
+          "displayName": "rapidpro.tasks.restartParticipants"
         },
         {
-          "eventKey" : "errorMessage",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.errorMessage"
+          "eventKey": "errorMessage",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.errorMessage"
         },
         {
-          "eventKey" : "extra",
-          "type" : "MAP",
-          "displayName" : "rapidpro.tasks.extra"
+          "eventKey": "extra",
+          "type": "MAP",
+          "displayName": "rapidpro.tasks.extra"
         }
       ]
     },
     {
-      "subject" : "org.motechproject.rapidpro.flow-fail-group-name",
-      "displayName" : "rapidpro.tasks.flowFailGroupName",
-      "eventParameters" : [
+      "subject": "org.motechproject.rapidpro.flow-fail-group-name",
+      "displayName": "rapidpro.tasks.flowFailGroupName",
+      "eventParameters": [
         {
-          "eventKey" : "groupName",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.groupName"
+          "eventKey": "groupName",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.groupName"
         },
         {
-          "eventKey" : "flowName",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.flowName"
+          "eventKey": "flowName",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.flowName"
         },
         {
-          "eventKey" : "restartParticipants",
-          "type" : "BOOLEAN",
-          "displayName" : "rapidpro.tasks.restartParticipants"
+          "eventKey": "restartParticipants",
+          "type": "BOOLEAN",
+          "displayName": "rapidpro.tasks.restartParticipants"
         },
         {
-          "eventKey" : "errorMessage",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.errorMessage"
+          "eventKey": "errorMessage",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.errorMessage"
         },
         {
-          "eventKey" : "extra",
-          "type" : "MAP",
-          "displayName" : "rapidpro.tasks.extra"
+          "eventKey": "extra",
+          "type": "MAP",
+          "displayName": "rapidpro.tasks.extra"
         }
       ]
     },
     {
-      "subject" : "org.motechproject.rapidpro.flow-fail-group-uuid",
-      "displayName" : "rapidpro.tasks.flowFailGroupUUID",
-      "eventParameters" : [
+      "subject": "org.motechproject.rapidpro.flow-fail-group-uuid",
+      "displayName": "rapidpro.tasks.flowFailGroupUUID",
+      "eventParameters": [
         {
-          "eventKey" : "groupName",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.groupName"
+          "eventKey": "groupName",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.groupName"
         },
         {
-          "eventKey" : "flowUUID",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.flowUUID"
+          "eventKey": "flowUUID",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.flowUUID"
         },
         {
-          "eventKey" : "restartParticipants",
-          "type" : "BOOLEAN",
-          "displayName" : "rapidpro.tasks.restartParticipants"
+          "eventKey": "restartParticipants",
+          "type": "BOOLEAN",
+          "displayName": "rapidpro.tasks.restartParticipants"
         },
         {
-          "eventKey" : "errorMessage",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.errorMessage"
+          "eventKey": "errorMessage",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.errorMessage"
         },
         {
-          "eventKey" : "extra",
-          "type" : "MAP",
-          "displayName" : "rapidpro.tasks.extra"
+          "eventKey": "extra",
+          "type": "MAP",
+          "displayName": "rapidpro.tasks.extra"
         }
       ]
     },
     {
-      "subject" : "org.motechproject.rapidpro.web-hook.received-SMS",
-      "displayName" : "rapidpro.tasks.receivedSMS",
-      "eventParameters" : [
+      "subject": "org.motechproject.rapidpro.web-hook.received-SMS",
+      "displayName": "rapidpro.tasks.receivedSMS",
+      "eventParameters": [
         {
-          "eventKey" : "time",
-          "type" : "DATE",
-          "displayName" : "rapidpro.tasks.time"
+          "eventKey": "time",
+          "type": "DATE",
+          "displayName": "rapidpro.tasks.time"
         },
         {
-          "eventKey" : "relayer",
-          "type" : "INTEGER",
-          "displayName" : "rapidpro.tasks.relayer"
+          "eventKey": "relayer",
+          "type": "INTEGER",
+          "displayName": "rapidpro.tasks.relayer"
         },
         {
-          "eventKey" : "sms",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.sms"
+          "eventKey": "sms",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.sms"
         },
         {
-          "eventKey" : "relayerPhone",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.relayerPhone"
+          "eventKey": "relayerPhone",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.relayerPhone"
         },
         {
-          "eventKey" : "phone",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.phone"
+          "eventKey": "phone",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.phone"
         },
         {
-          "eventKey" : "text",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.text"
+          "eventKey": "text",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.text"
         },
         {
-          "eventKey" : "status",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.status"
+          "eventKey": "status",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.status"
         },
         {
-          "eventKey" : "direction",
-          "type" : "UNICODE",
-          "displayName" : "rapidpro.tasks.direction"
+          "eventKey": "direction",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.direction"
+        }
+      ]
+    },
+    {
+      "subject": "org.motechproject.rapidpro.web-hook.sent-SMS",
+      "displayName": "rapidpro.tasks.sentSMS",
+      "eventParameters": [
+        {
+          "eventKey": "time",
+          "type": "DATE",
+          "displayName": "rapidpro.tasks.time"
+        },
+        {
+          "eventKey": "relayer",
+          "type": "INTEGER",
+          "displayName": "rapidpro.tasks.relayer"
+        },
+        {
+          "eventKey": "sms",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.sms"
+        },
+        {
+          "eventKey": "relayerPhone",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.relayerPhone"
+        },
+        {
+          "eventKey": "phone",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.phone"
+        },
+        {
+          "eventKey": "text",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.text"
+        },
+        {
+          "eventKey": "status",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.status"
+        },
+        {
+          "eventKey": "direction",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.direction"
+        }
+      ]
+    },
+    {
+      "subject": "org.motechproject.rapidpro.web-hook.delivered-SMS",
+      "displayName": "rapidpro.tasks.deliveredSMS",
+      "eventParameters": [
+        {
+          "eventKey": "time",
+          "type": "DATE",
+          "displayName": "rapidpro.tasks.time"
+        },
+        {
+          "eventKey": "relayer",
+          "type": "INTEGER",
+          "displayName": "rapidpro.tasks.relayer"
+        },
+        {
+          "eventKey": "sms",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.sms"
+        },
+        {
+          "eventKey": "relayerPhone",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.relayerPhone"
+        },
+        {
+          "eventKey": "phone",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.phone"
+        },
+        {
+          "eventKey": "text",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.text"
+        },
+        {
+          "eventKey": "status",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.status"
+        },
+        {
+          "eventKey": "direction",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.direction"
+        }
+      ]
+    },
+    {
+      "subject": "org.motechproject.rapidpro.web-hook.incoming-call",
+      "displayName": "rapidpro.tasks.incomingCall",
+      "eventParameters": [
+        {
+          "eventKey": "time",
+          "type": "DATE",
+          "displayName": "rapidpro.tasks.time"
+        },
+        {
+          "eventKey": "relayer",
+          "type": "INTEGER",
+          "displayName": "rapidpro.tasks.relayer"
+        },
+        {
+          "eventKey": "relayerPhone",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.relayerPhone"
+        },
+        {
+          "eventKey": "phone",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.phone"
+        },
+        {
+          "eventKey": "call",
+          "type": "INTEGER",
+          "displayName": "rapidpro.tasks.call"
+        },
+        {
+          "eventKey": "duration",
+          "type": "INTEGER",
+          "displayName": "rapidpro.tasks.duration"
+        }
+      ]
+    },
+    {
+      "subject": "org.motechproject.rapidpro.web-hook.missed-call",
+      "displayName": "rapidpro.tasks.missedCall",
+      "eventParameters": [
+        {
+          "eventKey": "time",
+          "type": "DATE",
+          "displayName": "rapidpro.tasks.time"
+        },
+        {
+          "eventKey": "relayer",
+          "type": "INTEGER",
+          "displayName": "rapidpro.tasks.relayer"
+        },
+        {
+          "eventKey": "relayerPhone",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.relayerPhone"
+        },
+        {
+          "eventKey": "phone",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.phone"
+        },
+        {
+          "eventKey": "call",
+          "type": "INTEGER",
+          "displayName": "rapidpro.tasks.call"
+        },
+        {
+          "eventKey": "duration",
+          "type": "INTEGER",
+          "displayName": "rapidpro.tasks.duration"
+        }
+      ]
+    },
+    {
+      "subject": "org.motechproject.rapidpro.web-hook.call-connected",
+      "displayName": "rapidpro.tasks.callConnected",
+      "eventParameters": [
+        {
+          "eventKey": "time",
+          "type": "DATE",
+          "displayName": "rapidpro.tasks.time"
+        },
+        {
+          "eventKey": "relayer",
+          "type": "INTEGER",
+          "displayName": "rapidpro.tasks.relayer"
+        },
+        {
+          "eventKey": "relayerPhone",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.relayerPhone"
+        },
+        {
+          "eventKey": "phone",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.phone"
+        },
+        {
+          "eventKey": "call",
+          "type": "INTEGER",
+          "displayName": "rapidpro.tasks.call"
+        },
+        {
+          "eventKey": "duration",
+          "type": "INTEGER",
+          "displayName": "rapidpro.tasks.duration"
+        }
+      ]
+    },
+    {
+      "subject": "org.motechproject.rapidpro.web-hook.call-not-connected",
+      "displayName": "rapidpro.tasks.callNotConnected",
+      "eventParameters": [
+        {
+          "eventKey": "time",
+          "type": "DATE",
+          "displayName": "rapidpro.tasks.time"
+        },
+        {
+          "eventKey": "relayer",
+          "type": "INTEGER",
+          "displayName": "rapidpro.tasks.relayer"
+        },
+        {
+          "eventKey": "relayerPhone",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.relayerPhone"
+        },
+        {
+          "eventKey": "phone",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.phone"
+        },
+        {
+          "eventKey": "call",
+          "type": "INTEGER",
+          "displayName": "rapidpro.tasks.call"
+        },
+        {
+          "eventKey": "duration",
+          "type": "INTEGER",
+          "displayName": "rapidpro.tasks.duration"
+        }
+      ]
+    },
+    {
+      "subject": "org.motechproject.rapidpro.web-hook.alarm",
+      "displayName": "rapidpro.tasks.alarm",
+      "eventParameters": [
+        {
+          "eventKey": "relayer",
+          "type": "INTEGER",
+          "displayName": "rapidpro.tasks.relayer"
+        },
+        {
+          "eventKey": "relayerPhone",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.relayerPhone"
+        },
+        {
+          "eventKey": "powerLevel",
+          "type": "INTEGER",
+          "displayName": "rapidpro.tasks.powerLevel"
+        },
+        {
+          "eventKey": "powerStatus",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.powerStatus"
+        },
+        {
+          "eventKey": "powerSource",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.powerSource"
+        },
+        {
+          "eventKey": "networkType",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.networkType"
+        },
+        {
+          "eventKey": "pendingMessageCount",
+          "type": "INTEGER",
+          "displayName": "rapidpro.tasks.pendingMessageCount"
+        },
+        {
+          "eventKey": "retryMessageCount",
+          "type": "Integer",
+          "displayName": "rapidpro.tasks.retryMessageCount"
+        },
+        {
+          "eventKey": "lastSeen",
+          "type": "DATE",
+          "displayName": "rapidpro.tasks.lastSeen"
+        }
+      ]
+    },
+    {
+      "subject": "org.motechproject.rapidpro.web-hook.flow",
+      "displayName": "rapidpro.tasks.webHookFlow",
+      "eventParameters": [
+        {
+          "eventKey": "relayer",
+          "type": "INTEGER",
+          "displayName": "rapidpro.tasks.relayer"
+        },
+        {
+          "eventKey": "relayerPhone",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.relayerPhone"
+        },
+        {
+          "eventKey": "phone",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.phone"
+        },
+        {
+          "eventKey": "flow",
+          "type": "INTEGER",
+          "displayName": "rapidpro.tasks.flow"
+        },
+        {
+          "eventKey": "step",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.step"
+        },
+        {
+          "eventKey": "time",
+          "type": "DATE",
+          "displayName": "rapidpro.tasks.time"
+        },
+        {
+          "eventKey": "values",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.values"
+        }
+      ]
+    },
+    {
+      "subject": "org.motechproject.rapidpro.web-hook.fail",
+      "displayName": "rapidpro.tasks.fail",
+      "eventParameters": [
+        {
+          "eventKey": "errorMessage",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.errorMessage"
+        },
+        {
+          "eventKey": "event",
+          "type": "UNICODE",
+          "displayName": "rapidpro.tasks.event"
+        },
+        {
+          "eventKey": "requestValues",
+          "type": "MAP",
+          "displayName": "rapidpro.tasks.requestValues"
+        }
+      ]
+    },
+    {
+      "subject": "org.motechproject.rapidpro.web-hook.custom",
+      "displayName": "rapidpro.tasks.custom",
+      "eventParameters": [
+        {
+          "eventKey": "customWebHookMap",
+          "type": "MAP",
+          "displayName": "rapidpro.tasks.customWebHookMap"
         }
       ]
     }

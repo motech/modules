@@ -16,7 +16,7 @@ import java.util.UUID;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FlowRunRequest implements Serializable {
+public final class FlowRunRequest implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @JsonProperty("flow_uuid")
@@ -100,7 +100,7 @@ public class FlowRunRequest implements Serializable {
             this.extra = new HashMap<>();
         }
 
-        public FlowRunRequestBuilder setGroups (List<UUID> groups) {
+        public FlowRunRequestBuilder setGroups(List<UUID> groups) {
             this.groups = groups;
             return this;
         }
@@ -115,7 +115,7 @@ public class FlowRunRequest implements Serializable {
             return this;
         }
 
-        public FlowRunRequestBuilder setExtra (Map<String, String> extra) {
+        public FlowRunRequestBuilder setExtra(Map<String, String> extra) {
             this.extra = extra;
             return this;
         }
@@ -135,7 +135,7 @@ public class FlowRunRequest implements Serializable {
             return this;
         }
 
-        public FlowRunRequest build () {
+        public FlowRunRequest build() {
             return new FlowRunRequest(this);
         }
     }

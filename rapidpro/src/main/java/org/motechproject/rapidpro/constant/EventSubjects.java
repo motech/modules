@@ -32,7 +32,7 @@ public final class EventSubjects {
     /*Web hook related event subjects*/
     public static final String WEB_HOOK_RECEIVED_SMS = WEB_HOOK + "received-SMS";
     public static final String WEB_HOOK_SENT_SMS = WEB_HOOK + "sent-SMS";
-    public static final String WEB_HOOK_SMS_DELIVERED = WEB_HOOK + "SMS-delivered";
+    public static final String WEB_HOOK_DELIVERED_SMS = WEB_HOOK + "delivered-SMS";
     public static final String WEB_HOOK_INCOMING_CALL = WEB_HOOK + "incoming-call";
     public static final String WEB_HOOK_MISSED_CALL = WEB_HOOK + "missed-call";
     public static final String WEB_HOOK_CALL_CONNECTED = WEB_HOOK + "call-connected";

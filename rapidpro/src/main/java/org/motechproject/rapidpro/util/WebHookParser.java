@@ -15,6 +15,9 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Parses incoming web hooks from RapidPro.
+ */
 public final class WebHookParser {
 
     private static final String ENCODING = "UTF-8";
@@ -37,7 +40,6 @@ public final class WebHookParser {
     private static final String RP_RETRY_MESSAGE_COUNT = "retry_message_count";
     private static final String RP_LAST_SEEN = "last_seen";
     private static final String RP_FLOW = "flow";
-    private static final String RP_FLOW_NAME = "flow-name";
     private static final String RP_STEP = "step";
     private static final String RP_VALUES = "values";
 
@@ -47,11 +49,20 @@ public final class WebHookParser {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
-    public static MotechEvent parse(Map<String, String[]> requestParams) {
+    private WebHookParser () { }
+
+    /**
+     * Converts the incoming web hook from RapidPro into an {@link MotechEvent}
+     *
+     * @param requestParams The parameters from the incoming HTTP POST request.
+     * @return An {@link MotechEvent} with event parameters corresponding to the parameters on the HTTP request.
+     */
+    public static MotechEvent parse(Map<String, String[]> requestParams) {  //NO CHECKSTYLE Cyclomatic Complexity
         try {
             Map<String, String> decoded = decodeParams(requestParams);
+            String eventType = decoded.get(RP_EVENT) == null ? "" : decoded.get(RP_EVENT);
 
-            switch (decoded.get(RP_EVENT)) {
+            switch (eventType) {
 
                 case WebHookTypes.WEB_HOOK_MO_SMS:
                     return receivedSMS(decoded);
@@ -102,52 +113,52 @@ public final class WebHookParser {
         }
     }
 
-    private static MotechEvent receivedSMS (Map<String, String> requestParams) throws WebHookParserException {
+    private static MotechEvent receivedSMS(Map<String, String> requestParams) throws WebHookParserException {
         Map<String, Object> eventParams = buildSMSParameters(requestParams);
         return new MotechEvent(EventSubjects.WEB_HOOK_RECEIVED_SMS, eventParams);
     }
 
-    private static MotechEvent sentSMS (Map<String, String> requestParams) throws WebHookParserException {
+    private static MotechEvent sentSMS(Map<String, String> requestParams) throws WebHookParserException {
         Map<String, Object> eventParams = buildSMSParameters(requestParams);
         return new MotechEvent(EventSubjects.WEB_HOOK_SENT_SMS, eventParams);
     }
 
-    private static MotechEvent deliverySMS (Map<String, String> requestParams) throws WebHookParserException {
+    private static MotechEvent deliverySMS(Map<String, String> requestParams) throws WebHookParserException {
         Map<String, Object> eventParams = buildSMSParameters(requestParams);
-        return new MotechEvent(EventSubjects.WEB_HOOK_SMS_DELIVERED, eventParams);
+        return new MotechEvent(EventSubjects.WEB_HOOK_DELIVERED_SMS, eventParams);
     }
 
-    private static MotechEvent incomingCall (Map<String, String> requestParams) throws WebHookParserException {
+    private static MotechEvent incomingCall(Map<String, String> requestParams) throws WebHookParserException {
         Map<String, Object> eventParams = buildCallParameters(requestParams);
         return new MotechEvent(EventSubjects.WEB_HOOK_INCOMING_CALL, eventParams);
     }
 
-    private static MotechEvent missedCall (Map<String, String> requestParams) throws WebHookParserException {
+    private static MotechEvent missedCall(Map<String, String> requestParams) throws WebHookParserException {
         Map<String, Object> eventParams = buildCallParameters(requestParams);
         return new MotechEvent(EventSubjects.WEB_HOOK_MISSED_CALL, eventParams);
     }
 
-    private static MotechEvent callConnected (Map<String, String> requestParams) throws WebHookParserException {
+    private static MotechEvent callConnected(Map<String, String> requestParams) throws WebHookParserException {
         Map<String, Object> eventParams = buildCallParameters(requestParams);
         return new MotechEvent(EventSubjects.WEB_HOOK_CALL_CONNECTED, eventParams);
     }
 
-    private static MotechEvent callNotConnected (Map<String, String> requestParams) throws WebHookParserException {
+    private static MotechEvent callNotConnected(Map<String, String> requestParams) throws WebHookParserException {
         Map<String, Object> eventParams = buildCallParameters(requestParams);
         return new MotechEvent(EventSubjects.WEB_HOOK_CALL_NOT_CONNECTED, eventParams);
     }
 
     private static MotechEvent flow(Map<String, String> requestParams) throws WebHookParserException {
-        Map<String, Object> eventParams = new HashMap<> ();
+        Map<String, Object> eventParams = new HashMap<>();
         int relayer = toInt(requestParams.get(RP_RELAYER));
         int flow = toInt(requestParams.get(RP_FLOW));
+        DateTime time = toDateTime(requestParams.get(RP_TIME));
 
         eventParams.put(EventParameters.RELAYER, relayer);
+        eventParams.put(EventParameters.TIME, time);
+        eventParams.put(EventParameters.FLOW, flow);
         eventParams.put(EventParameters.RELAYER_PHONE, requestParams.get(RP_RELAYER_PHONE));
         eventParams.put(EventParameters.PHONE, requestParams.get(RP_PHONE));
-        eventParams.put(EventParameters.FLOW, flow);
-        //TODO test if flow name is part of live API
-        eventParams.put(EventParameters.FLOW_NAME, requestParams.get(RP_FLOW_NAME));
         eventParams.put(EventParameters.STEP, requestParams.get(RP_STEP));
         eventParams.put(EventParameters.VALUES, requestParams.get(RP_VALUES));
         return new MotechEvent(EventSubjects.WEB_HOOK_FLOW, eventParams);
@@ -155,11 +166,12 @@ public final class WebHookParser {
 
     private static MotechEvent alarm(Map<String, String> requestParams) throws WebHookParserException {
         Map<String, Object> eventParams = new HashMap<>();
+        int relayer = toInt(requestParams.get(RP_RELAYER));
         int pendingMessages = toInt(requestParams.get(RP_PENDING_MESSAGE_COUNT));
         int retryMessages = toInt(requestParams.get(RP_RETRY_MESSAGE_COUNT));
         DateTime lastSeen = toDateTime(requestParams.get(RP_LAST_SEEN));
 
-        eventParams.put(EventParameters.RELAYER, requestParams.get(RP_RELAYER));
+        eventParams.put(EventParameters.RELAYER, relayer);
         eventParams.put(EventParameters.RELAYER_PHONE, requestParams.get(RP_RELAYER_PHONE));
         eventParams.put(EventParameters.POWER_LEVEL, requestParams.get(RP_POWER_LEVEL));
         eventParams.put(EventParameters.POWER_STATUS, requestParams.get(RP_POWER_STATUS));
@@ -235,7 +247,7 @@ public final class WebHookParser {
         }
     }
 
-    private static int toInt (String s) throws WebHookParserException {
+    private static int toInt(String s) throws WebHookParserException {
         try {
             int i = 0;
             if (s != null) {

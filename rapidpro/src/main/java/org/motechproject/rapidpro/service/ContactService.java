@@ -43,15 +43,17 @@ public interface ContactService {
 
     /**
      * Adds a contact to a group
+     *
      * @param externalId The external ID mapping to a Rapidpro contact UUID.
-     * @param groupName The name of the Rapidpro group.
+     * @param groupName  The name of the Rapidpro group.
      */
     void addToGroup(String externalId, String groupName);
 
     /**
      * Removes a contact from a group.
+     *
      * @param externalId The external ID mapping to a Rapidpro contact UUID.
-     * @param groupName The name of the Rapidpro group.
+     * @param groupName  The name of the Rapidpro group.
      */
     void removeFromGroup(String externalId, String groupName);
 }
