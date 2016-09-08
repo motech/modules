@@ -18,6 +18,7 @@ import org.motechproject.openmrs.domain.ProgramEnrollmentListResult;
 import org.motechproject.openmrs.domain.Provider;
 import org.motechproject.openmrs.domain.Relationship;
 import org.motechproject.openmrs.domain.RelationshipType;
+import org.motechproject.openmrs.domain.Attribute;
 import org.motechproject.openmrs.service.OpenMRSConfigService;
 import org.motechproject.openmrs.service.OpenMRSEncounterService;
 import org.motechproject.openmrs.service.OpenMRSGeneratedIdentifierService;
@@ -57,6 +58,7 @@ import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PERSON_UUID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PROGRAM_NAME;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.RELATIONSHIP_TYPE_UUID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.UUID;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BAHMNI_PROGRAM_ENROLLMENT;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OpenMRSTaskDataProviderTest {
@@ -66,6 +68,10 @@ public class OpenMRSTaskDataProviderTest {
     private static final String PROGRAM_ANOTHER_NAME = "anotherName";
     private static final String DEFAULT_UUID = "495b10c4-56bd-11df-a35e-0027136865c4";
     private static final String DEFAULT_MOTECH_ID = "3";
+    private static final String ATTRIBUTE_UUID = "51f41ccf-dca8-48e3-bcf3-5e0981948b1e";
+    private static final String ATTRIBUTE_VALUE = "attributeValue";
+    private static final String ATTRIBUTE_TYPE_UUID = "2c41f832-f3ed-47f1-92e2-53143ee71626";
+    private static final String ATTRIBUTE_TYPE_DISPLAY = "displayName";
 
     @Mock
     private OpenMRSEncounterService encounterService;
@@ -384,7 +390,7 @@ public class OpenMRSTaskDataProviderTest {
         lookupFields.put(PROGRAM_NAME, PROGRAM_DEFAULT_NAME);
 
 
-        List<ProgramEnrollment> expected = prepareProgramEnrollments();
+        List<ProgramEnrollment> expected = prepareProgramEnrollments(false);
         when(programEnrollmentService.getProgramEnrollmentByPatientUuid(eq(CONFIG_NAME), eq(DEFAULT_UUID)))
                 .thenReturn(expected);
 
@@ -412,7 +418,7 @@ public class OpenMRSTaskDataProviderTest {
         lookupFields.put(ACTIVE_PROGRAM, "true");
 
 
-        List<ProgramEnrollment> expected = prepareProgramEnrollments();
+        List<ProgramEnrollment> expected = prepareProgramEnrollments(false);
         when(programEnrollmentService.getProgramEnrollmentByPatientUuid(eq(CONFIG_NAME), eq(DEFAULT_UUID)))
                 .thenReturn(expected);
 
@@ -436,7 +442,7 @@ public class OpenMRSTaskDataProviderTest {
         lookupFields.put(PATIENT_MOTECH_ID, DEFAULT_MOTECH_ID);
         lookupFields.put(PROGRAM_NAME, PROGRAM_DEFAULT_NAME);
 
-        List<ProgramEnrollment> expected = prepareProgramEnrollments();
+        List<ProgramEnrollment> expected = prepareProgramEnrollments(false);
         when(programEnrollmentService.getProgramEnrollmentByPatientMotechId(eq(CONFIG_NAME), eq(DEFAULT_MOTECH_ID)))
                 .thenReturn(expected);
 
@@ -463,7 +469,7 @@ public class OpenMRSTaskDataProviderTest {
         lookupFields.put(PROGRAM_NAME, PROGRAM_ANOTHER_NAME);
 
         when(programEnrollmentService.getProgramEnrollmentByPatientUuid(eq(CONFIG_NAME), eq(DEFAULT_UUID)))
-                .thenReturn(prepareProgramEnrollments());
+                .thenReturn(prepareProgramEnrollments(false));
 
         Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, BY_UUID_AMD_PROGRAM_NAME, lookupFields);
 
@@ -486,11 +492,159 @@ public class OpenMRSTaskDataProviderTest {
         lookupFields.put(PROGRAM_NAME, PROGRAM_ANOTHER_NAME);
 
         when(programEnrollmentService.getProgramEnrollmentByPatientMotechId(eq(CONFIG_NAME), eq(DEFAULT_MOTECH_ID)))
-                .thenReturn(prepareProgramEnrollments());
+                .thenReturn(prepareProgramEnrollments(false));
 
         Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, BY_MOTECH_ID_AND_PROGRAM_NAME, lookupFields);
 
         verify(programEnrollmentService).getProgramEnrollmentByPatientMotechId(eq(CONFIG_NAME), eq(DEFAULT_MOTECH_ID));
+
+        assertTrue(object instanceof ProgramEnrollmentListResult);
+
+        ProgramEnrollmentListResult actual = (ProgramEnrollmentListResult) object;
+
+        assertTrue(actual.getResults().isEmpty());
+        assertEquals(0, actual.getNumberOfPrograms());
+    }
+
+    @Test
+    public void shouldReturnOnlyActiveBahmniProgramEnrollmentForPatientMotechIdAndProgramName() {
+        String className = BAHMNI_PROGRAM_ENROLLMENT;
+
+        Map<String, String> lookupFields = new HashMap<>();
+        lookupFields.put(PATIENT_MOTECH_ID, DEFAULT_MOTECH_ID);
+        lookupFields.put(PROGRAM_NAME, PROGRAM_DEFAULT_NAME);
+        lookupFields.put(ACTIVE_PROGRAM, "true");
+
+        List<ProgramEnrollment> expected = prepareProgramEnrollments(true);
+        when(programEnrollmentService.getBahmniProgramEnrollmentByPatientMotechId(eq(CONFIG_NAME), eq(DEFAULT_MOTECH_ID)))
+                .thenReturn(prepareProgramEnrollments(true));
+
+        Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, BY_MOTECH_ID_AND_PROGRAM_NAME, lookupFields);
+
+        verify(programEnrollmentService).getBahmniProgramEnrollmentByPatientMotechId(eq(CONFIG_NAME), eq(DEFAULT_MOTECH_ID));
+
+        assertTrue(object instanceof ProgramEnrollmentListResult);
+
+        ProgramEnrollmentListResult actual = (ProgramEnrollmentListResult) object;
+
+        assertEquals(expected.get(0), actual.getResults().get(0));
+        assertEquals(1, actual.getNumberOfPrograms());
+    }
+
+    @Test
+    public void shouldReturnAllBahmniProgramEnrollmentForPatientMotechIdAndProgramName() {
+        String className = BAHMNI_PROGRAM_ENROLLMENT;
+
+        Map<String, String> lookupFields = new HashMap<>();
+        lookupFields.put(PATIENT_MOTECH_ID, DEFAULT_MOTECH_ID);
+        lookupFields.put(PROGRAM_NAME, PROGRAM_DEFAULT_NAME);
+        lookupFields.put(ACTIVE_PROGRAM, "false");
+
+        List<ProgramEnrollment> expected = prepareProgramEnrollments(true);
+        when(programEnrollmentService.getBahmniProgramEnrollmentByPatientMotechId(eq(CONFIG_NAME), eq(DEFAULT_MOTECH_ID)))
+                .thenReturn(prepareProgramEnrollments(true));
+
+        Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, BY_MOTECH_ID_AND_PROGRAM_NAME, lookupFields);
+
+        verify(programEnrollmentService).getBahmniProgramEnrollmentByPatientMotechId(eq(CONFIG_NAME), eq(DEFAULT_MOTECH_ID));
+
+        assertTrue(object instanceof ProgramEnrollmentListResult);
+
+        ProgramEnrollmentListResult actual = (ProgramEnrollmentListResult) object;
+
+        assertEquals(expected.get(0), actual.getResults().get(0));
+    }
+
+    @Test
+    public void shouldReturnEmptyListWhenBahmniProgramEnrollmentNotFoundForPatientMotechIdAndProgramName() {
+        String className = BAHMNI_PROGRAM_ENROLLMENT;
+
+        Map<String, String> lookupFields = new HashMap<>();
+        lookupFields.put(PATIENT_MOTECH_ID, DEFAULT_MOTECH_ID);
+        lookupFields.put(PROGRAM_NAME, PROGRAM_ANOTHER_NAME);
+        lookupFields.put(ACTIVE_PROGRAM, "false");
+
+        List<ProgramEnrollment> expected = prepareProgramEnrollments(true);
+        when(programEnrollmentService.getBahmniProgramEnrollmentByPatientMotechId(eq(CONFIG_NAME), eq(DEFAULT_MOTECH_ID)))
+                .thenReturn(prepareProgramEnrollments(true));
+
+        Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, BY_MOTECH_ID_AND_PROGRAM_NAME, lookupFields);
+
+        verify(programEnrollmentService).getBahmniProgramEnrollmentByPatientMotechId(eq(CONFIG_NAME), eq(DEFAULT_MOTECH_ID));
+
+        assertTrue(object instanceof ProgramEnrollmentListResult);
+
+        ProgramEnrollmentListResult actual = (ProgramEnrollmentListResult) object;
+
+        assertTrue(actual.getResults().isEmpty());
+        assertEquals(0, actual.getNumberOfPrograms());
+    }
+
+    @Test
+    public void shouldReturnOnlyActiveBahmniProgramEnrollmentForPatientUuidAndProgramName() {
+        String className = BAHMNI_PROGRAM_ENROLLMENT;
+
+        Map<String, String> lookupFields = new HashMap<>();
+        lookupFields.put(PATIENT_UUID, DEFAULT_UUID);
+        lookupFields.put(PROGRAM_NAME, PROGRAM_DEFAULT_NAME);
+        lookupFields.put(ACTIVE_PROGRAM, "true");
+
+        List<ProgramEnrollment> expected = prepareProgramEnrollments(true);
+        when(programEnrollmentService.getBahmniProgramEnrollmentByPatientUuid(eq(CONFIG_NAME), eq(DEFAULT_UUID)))
+                .thenReturn(prepareProgramEnrollments(true));
+
+        Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, BY_UUID_AMD_PROGRAM_NAME, lookupFields);
+
+        verify(programEnrollmentService).getBahmniProgramEnrollmentByPatientUuid(eq(CONFIG_NAME), eq(DEFAULT_UUID));
+
+        assertTrue(object instanceof ProgramEnrollmentListResult);
+
+        ProgramEnrollmentListResult actual = (ProgramEnrollmentListResult) object;
+
+        assertEquals(expected.get(0), actual.getResults().get(0));
+        assertEquals(1, actual.getNumberOfPrograms());
+    }
+
+    @Test
+    public void shouldReturnAllBahmniProgramEnrollmentForPatientUuidAndProgramName() {
+        String className = BAHMNI_PROGRAM_ENROLLMENT;
+
+        Map<String, String> lookupFields = new HashMap<>();
+        lookupFields.put(PATIENT_UUID, DEFAULT_UUID);
+        lookupFields.put(PROGRAM_NAME, PROGRAM_DEFAULT_NAME);
+        lookupFields.put(ACTIVE_PROGRAM, "false");
+
+        List<ProgramEnrollment> expected = prepareProgramEnrollments(true);
+        when(programEnrollmentService.getBahmniProgramEnrollmentByPatientUuid(eq(CONFIG_NAME), eq(DEFAULT_UUID)))
+                .thenReturn(prepareProgramEnrollments(true));
+
+        Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, BY_UUID_AMD_PROGRAM_NAME, lookupFields);
+
+        verify(programEnrollmentService).getBahmniProgramEnrollmentByPatientUuid(eq(CONFIG_NAME), eq(DEFAULT_UUID));
+
+        assertTrue(object instanceof ProgramEnrollmentListResult);
+
+        ProgramEnrollmentListResult actual = (ProgramEnrollmentListResult) object;
+
+        assertEquals(expected.get(0), actual.getResults().get(0));
+    }
+
+    @Test
+    public void shouldReturnEmptyListWhenBahmniProgramEnrollmentNotFoundForPatientUuidAndProgramName() {
+        String className = BAHMNI_PROGRAM_ENROLLMENT;
+
+        Map<String, String> lookupFields = new HashMap<>();
+        lookupFields.put(PATIENT_UUID, DEFAULT_UUID);
+        lookupFields.put(PROGRAM_NAME, PROGRAM_ANOTHER_NAME);
+        lookupFields.put(ACTIVE_PROGRAM, "false");
+
+        List<ProgramEnrollment> expected = prepareProgramEnrollments(true);
+        when(programEnrollmentService.getBahmniProgramEnrollmentByPatientUuid(eq(CONFIG_NAME), eq(DEFAULT_UUID)))
+                .thenReturn(prepareProgramEnrollments(true));
+
+        Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, BY_UUID_AMD_PROGRAM_NAME, lookupFields);
+
+        verify(programEnrollmentService).getBahmniProgramEnrollmentByPatientUuid(eq(CONFIG_NAME), eq(DEFAULT_UUID));
 
         assertTrue(object instanceof ProgramEnrollmentListResult);
 
@@ -522,7 +676,7 @@ public class OpenMRSTaskDataProviderTest {
         return Collections.singletonList(relationship);
     }
 
-    private List<ProgramEnrollment> prepareProgramEnrollments() {
+    private List<ProgramEnrollment> prepareProgramEnrollments(boolean forBahmni) {
         List<ProgramEnrollment> result = new ArrayList<>();
 
         Program program = new Program();
@@ -545,6 +699,24 @@ public class OpenMRSTaskDataProviderTest {
         ProgramEnrollment programEnrollmentNotActive = new ProgramEnrollment();
         programEnrollmentNotActive.setProgram(program);
         programEnrollmentNotActive.setDateCompleted(endDate.toDate());
+
+        if (forBahmni) {
+            Attribute.AttributeType attributeType = new Attribute.AttributeType();
+            attributeType.setUuid(ATTRIBUTE_TYPE_UUID);
+            attributeType.setDisplay(ATTRIBUTE_TYPE_DISPLAY);
+
+            Attribute attribute = new Attribute();
+            attribute.setUuid(ATTRIBUTE_UUID);
+            attribute.setValue(ATTRIBUTE_VALUE);
+            attribute.setAttributeType(attributeType);
+            attribute.setDisplay(attribute.getAttributeType().getDisplay() + ": " + attribute.getValue());
+
+            List<Attribute> attributes = new ArrayList<>();
+            attributes.add(attribute);
+
+            programEnrollmentActive.setAttributes(attributes);
+            programEnrollmentNotActive.setAttributes(attributes);
+        }
 
         result.add(programEnrollmentActive);
         result.add(programEnrollmentNotActive);
