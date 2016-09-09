@@ -347,7 +347,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         Location location = locationService.getLocations(DEFAULT_CONFIG_NAME, DEFAULT_LOCATION_NAME).get(0);
         Encounter encounter = new Encounter(location, createdEncounterType, new DateTime("2001-01-16T00:00:00Z").toDate(),
-                createdPatient, Collections.singletonList(createdProvider.getPerson()), null);
+                createdPatient, null, Collections.singletonList(createdProvider.getPerson()), null);
 
         createdEncounter = encounterService.createEncounter(DEFAULT_CONFIG_NAME, encounter);
     }

@@ -12,6 +12,7 @@ import org.motechproject.openmrs.service.OpenMRSConfigService;
 import org.motechproject.openmrs.service.OpenMRSVisitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Service("visitService")
 public class OpenMRSVisitServiceImpl implements OpenMRSVisitService {
@@ -36,6 +37,16 @@ public class OpenMRSVisitServiceImpl implements OpenMRSVisitService {
 
         eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_VISIT_SUBJECT, EventHelper.visitParameters(createdVisit)));
         return createdVisit;
+    }
+
+    @Override
+    public Visit getVisitByUuid(String configName, String uuid) {
+        try {
+            Config config = configService.getConfigByName(configName);
+            return visitResource.getVisitById(config, uuid);
+        } catch (HttpClientErrorException e) {
+            return null;
+        }
     }
 
     private void validateVisit(Visit visit) {

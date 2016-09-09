@@ -218,7 +218,7 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         prepareEncounterType();
         prepareObservations();
 
-        Encounter encounter = new Encounter(location, encounterType, format.parse(date), patient, Collections.singletonList(provider.getPerson()),
+        Encounter encounter = new Encounter(location, encounterType, format.parse(date), patient, null, Collections.singletonList(provider.getPerson()),
                 Collections.singletonList(observation));
 
         return encounter;
