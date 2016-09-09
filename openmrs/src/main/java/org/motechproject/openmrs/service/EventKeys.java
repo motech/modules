@@ -40,7 +40,7 @@ public final class EventKeys {
     public static final String VISIT_ID = "VisitID";
     public static final String VISIT_TYPE = "VisitType";
     public static final String VISIT_START_DATETIME = "VisitStartDateTime";
-    public static final String VISIT_END_DATETIME = "VisitEndDateTime";
+    public static final String VISIT_STOP_DATETIME = "VisitStopDateTime";
     public static final String PROVIDER_ID = "ProviderId";
     public static final String USER_ID = "UserId";
     public static final String PROGRAM_ID = "ProgramId";

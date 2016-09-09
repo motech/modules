@@ -130,7 +130,7 @@ public final class EventHelper {
         Map<String, Object> visitParameters = new HashMap<>();
         visitParameters.put(EventKeys.VISIT_ID, visit.getUuid());
         visitParameters.put(EventKeys.VISIT_START_DATETIME, visit.getStartDatetime());
-        visitParameters.put(EventKeys.VISIT_END_DATETIME, visit.getStopDatetime());
+        visitParameters.put(EventKeys.VISIT_STOP_DATETIME, visit.getStopDatetime());
         visitParameters.put(EventKeys.VISIT_TYPE, visit.getVisitType().getUuid());
         if (visit.getLocation() != null) {
             visitParameters.put(EventKeys.LOCATION_ID, visit.getLocation().getUuid());

@@ -48,7 +48,7 @@ public final class Keys {
 
     //Visit action
     public static final String VISIT_START_DATETIME = "startDatetime";
-    public static final String VISIT_END_DATETIME = "endDatetime";
+    public static final String VISIT_STOP_DATETIME = "stopDatetime";
     public static final String VISIT_TYPE_UUID = "visitTypeUuid";
 
     //Program Enrollment action
