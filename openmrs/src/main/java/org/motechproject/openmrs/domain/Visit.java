@@ -1,12 +1,5 @@
 package org.motechproject.openmrs.domain;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-
-import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -22,21 +15,15 @@ public class Visit {
     private Date endDatetime;
     private Patient patient;
 
-    /**
-     * Default constructor.
-     */
-    public Visit() {
+    public Visit(Date startDatetime, Date endDatetime, Patient patient, VisitType visitType) {
+        this(startDatetime, endDatetime, patient, visitType, null);
     }
 
-    public Visit(Date startDatetime, Date endDatetime, Patient patient, VisitType visitType) {
+    public Visit(Date startDatetime, Date endDatetime, Patient patient, VisitType visitType, Location location) {
         this.startDatetime = startDatetime;
         this.endDatetime = endDatetime;
         this.patient = patient;
         this.visitType = visitType;
-    }
-
-    public Visit(Date startDatetime, Date endDatetime, Patient patient, VisitType visitType, Location location) {
-        this(startDatetime, endDatetime, patient, visitType);
         this.location = location;
     }
 
@@ -109,37 +96,4 @@ public class Visit {
                 Objects.equals(endDatetime, visit.endDatetime) &&
                 Objects.equals(patient, visit.patient);
     }
-
-    /**
-     * Implementation of the {@link JsonSerializer} interface for the {@link Visit} class.
-     */
-    public static class VisitSerializer implements JsonSerializer<Visit> {
-
-        @Override
-        public JsonElement serialize(Visit src, Type typeOfSrc, JsonSerializationContext context) {
-            JsonObject encounter = new JsonObject();
-
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-            if (src.uuid != null) {
-                encounter.addProperty("uuid", src.getUuid());
-            }
-            if (src.location != null) {
-                encounter.addProperty("location", src.getLocation().getUuid());
-            }
-            if (src.visitType != null) {
-                encounter.addProperty("visitType", src.getVisitType().getDisplay());
-            }
-            if (src.startDatetime != null) {
-                encounter.addProperty("startDatetime", sdf.format(src.getStartDatetime()));
-            }
-            if (src.endDatetime != null) {
-                encounter.addProperty("stopDatetime", sdf.format(src.getEndDatetime()));
-            }
-            if (src.patient != null) {
-                encounter.addProperty("patient", src.getPatient().getUuid());
-            }
-            return encounter;
-        }
-    }
-
 }

@@ -4,7 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.httpclient.HttpClient;
 import org.motechproject.openmrs.config.Config;
-import org.motechproject.openmrs.domain.Observation;
+import org.motechproject.openmrs.domain.Location;
+import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.Visit;
 import org.motechproject.openmrs.domain.VisitType;
 import org.motechproject.openmrs.resource.VisitResource;
@@ -58,8 +59,9 @@ public class VisitResourceImpl extends BaseResource implements VisitResource {
     private Gson buildGsonWithAdaptersSerialize() {
         return new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
-                .registerTypeAdapter(Observation.class, new Observation.ObservationSerializer())
-                .registerTypeAdapter(Visit.class, new Visit.VisitSerializer())
+                .registerTypeAdapter(VisitType.class, new VisitType.VisitTypeSerializer())
+                .registerTypeAdapter(Patient.class, new Patient.PatientSerializer())
+                .registerTypeAdapter(Location.class, new Location.LocationSerializer())
                 .create();
     }
 }

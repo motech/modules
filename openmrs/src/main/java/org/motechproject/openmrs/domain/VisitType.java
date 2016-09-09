@@ -1,6 +1,12 @@
 package org.motechproject.openmrs.domain;
 
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+
+import java.lang.reflect.Type;
 import java.util.Objects;
 
 /**
@@ -13,6 +19,17 @@ public class VisitType {
 
     public VisitType(String display) {
         this.display = display;
+    }
+
+    /**
+     * Implementation of the {@link JsonSerializer} interface for the {@link VisitType} class. It represents the visit type
+     * as its ID.
+     */
+    public static class VisitTypeSerializer implements JsonSerializer<VisitType> {
+        @Override
+        public JsonElement serialize(VisitType src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src.getUuid());
+        }
     }
 
     public String getDisplay() {

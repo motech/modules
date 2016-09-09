@@ -31,9 +31,8 @@ public class OpenMRSVisitServiceImpl implements OpenMRSVisitService {
     public Visit createVisit(String configName, Visit visit) {
         validateVisit(visit);
 
-        Visit createdVisit;
         Config config = configService.getConfigByName(configName);
-        createdVisit = visitResource.createVisit(config, visit);
+        Visit createdVisit = visitResource.createVisit(config, visit);
 
         eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_VISIT_SUBJECT, EventHelper.visitParameters(createdVisit)));
         return createdVisit;
