@@ -54,7 +54,7 @@ public class RapidproHttpClientTest {
         String content = "content";
         when(factory.newBuilder()).thenReturn(builder);
         when(builder.build()).thenReturn(client);
-        rapidProHttpClient = new RapidProHttpClient(factory,settingsService);
+        rapidProHttpClient = new RapidProHttpClient(factory, settingsService);
 
         when(response.getStatusLine()).thenReturn(statusLine);
         when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes()));
@@ -64,7 +64,7 @@ public class RapidproHttpClientTest {
     }
 
     @Test
-    public void shouldExecuteNormally() throws Exception{
+    public void shouldExecuteNormally() throws Exception {
         when(statusLine.getStatusCode()).thenReturn(200);
         rapidProHttpClient.executeGet(ENDPOINT, MediaFormat.JSON, null);
     }

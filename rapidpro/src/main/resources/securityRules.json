@@ -1,0 +1,40 @@
+[
+  {
+    "active": true,
+    "pattern": "/**/rapidpro/settings",
+    "supportedSchemes": [
+      "NO_SECURITY",
+      "USERNAME_PASSWORD",
+      "BASIC",
+      "OPEN_ID"
+    ],
+    "protocol": "HTTP",
+    "priority": 2,
+    "rest": true,
+    "origin": "SYSTEM_MODULE_RAPIDPRO",
+    "version": "0.30",
+    "methodsRequired": [
+      "GET",
+      "POST",
+      "DELETE"
+    ],
+    "permissionAccess": [
+      "configureRapidpro"
+    ]
+  },
+  {
+    "active": true,
+    "pattern": "/**/rapidpro/web-hook",
+    "supportedSchemes": [
+      "NO_SECURITY"
+    ],
+    "protocol": "HTTP",
+    "priority": 2,
+    "rest": true,
+    "origin": "SYSTEM_MODULE_RAPIDPRO",
+    "version": "0.30",
+    "methodsRequired": [
+      "POST"
+    ]
+  }
+]
