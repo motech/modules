@@ -26,6 +26,7 @@ public class ActionBuilder {
     private static final String CREATE_ENCOUNTER = "Create Encounter";
     private static final String CREATE_PATIENT = "Create Patient";
     private static final String UPDATE_PATIENT_IDENTIFIERS = "Update Patient Identifiers";
+    private static final String CREATE_VISIT = "Create Visit";
     private static final String UPDATE_PERSON = "Update Person";
     private static final String CREATE_PROGRAM_ENROLLMENT = "Create Program Enrollment";
     private static final String UPDATE_PROGRAM_ENROLLMENT = "Update Program Enrollment";
@@ -52,6 +53,7 @@ public class ActionBuilder {
             actions.add(buildCreateEncounterAction(configName));
             actions.add(buildCreatePatientAction(configName));
             actions.add(buildUpdatePatientAction(configName));
+            actions.add(buildCreateVisitAction(configName));
             actions.add(buildUpdatePatientIdentifiersAction(configName));
             actions.add(buildGetCohortQueryReport(configName));
 
@@ -144,6 +146,32 @@ public class ActionBuilder {
                 .createActionEventRequest();
     }
 
+    private ActionEventRequest buildCreateVisitAction(String configName) {
+        SortedSet<ActionParameterRequest> actionParameters = new TreeSet<>();
+        SortedSet<ActionParameterRequest> postActionParameters = new TreeSet<>();
+        int order = 0;
+        String serviceMethod = "createVisit";
+
+        actionParameters.add(prepareParameter(Keys.CONFIG_NAME, DisplayNames.CONFIG_NAME, configName, true, true,
+                order++));
+        actionParameters.add(prepareParameter(Keys.PATIENT_UUID, DisplayNames.PATIENT_UUID, true, order++));
+        actionParameters.add(prepareParameter(Keys.VISIT_START_DATETIME, DisplayNames.VISIT_START_DATETIME, DATE, true, order++));
+        actionParameters.add(prepareParameter(Keys.VISIT_STOP_DATETIME, DisplayNames.VISIT_STOP_DATETIME, DATE, true, order++));
+        actionParameters.add(prepareParameter(Keys.VISIT_TYPE_UUID, DisplayNames.VISIT_TYPE_UUID, true, order++));
+        actionParameters.add(prepareParameter(Keys.LOCATION_NAME, DisplayNames.LOCATION_NAME, false, order));
+
+        postActionParameters.add(prepareParameter(Keys.UUID, DisplayNames.VISIT_UUID, false, 0));
+
+        return new ActionEventRequestBuilder()
+                .setDisplayName(getDisplayName(CREATE_VISIT, configName))
+                .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
+                .setServiceMethod(serviceMethod)
+                .setSubject(getSubject(serviceMethod, configName))
+                .setActionParameters(actionParameters)
+                .setPostActionParameters(postActionParameters)
+                .createActionEventRequest();
+    }
+
     private ActionEventRequest buildCreateProgramEnrollmentAction(String configName) {
         SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
         int order = 0;
@@ -218,7 +246,7 @@ public class ActionBuilder {
                 .setActionParameters(parameters)
                 .createActionEventRequest();
     }
-    
+
     private ActionEventRequest buildGetCohortQueryReport(String configName) {
         SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
         int order = 0;
@@ -318,6 +346,7 @@ public class ActionBuilder {
     private String getDisplayName(String actionName, String configName) {
         return String.format("%s [%s]", actionName, configName);
     }
+
     private String getSubject(String serviceMethod, String configName) {
         return String.format("%s%s%s", serviceMethod, ".", configName);
     }

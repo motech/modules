@@ -1,10 +1,10 @@
 package org.motechproject.openmrs.resource;
 
+import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.Attribute;
 import org.motechproject.openmrs.domain.AttributeListResult;
 import org.motechproject.openmrs.domain.AttributeTypeListResult;
 import org.motechproject.openmrs.domain.Person;
-import org.motechproject.openmrs.config.Config;
 
 /**
  * Interface for persons management.

@@ -27,6 +27,8 @@ import org.motechproject.openmrs.domain.Person;
 import org.motechproject.openmrs.domain.Program;
 import org.motechproject.openmrs.domain.ProgramEnrollment;
 import org.motechproject.openmrs.domain.Provider;
+import org.motechproject.openmrs.domain.Visit;
+import org.motechproject.openmrs.domain.VisitType;
 import org.motechproject.openmrs.service.OpenMRSCohortService;
 import org.motechproject.openmrs.service.OpenMRSConceptService;
 import org.motechproject.openmrs.service.OpenMRSEncounterService;
@@ -35,6 +37,7 @@ import org.motechproject.openmrs.service.OpenMRSPatientService;
 import org.motechproject.openmrs.service.OpenMRSPersonService;
 import org.motechproject.openmrs.service.OpenMRSProgramEnrollmentService;
 import org.motechproject.openmrs.service.OpenMRSProviderService;
+import org.motechproject.openmrs.service.OpenMRSVisitService;
 import org.motechproject.openmrs.tasks.OpenMRSActionProxyService;
 import org.motechproject.openmrs.tasks.constants.EventSubjects;
 import org.motechproject.openmrs.tasks.constants.Keys;
@@ -73,6 +76,9 @@ public class OpenMRSActionProxyServiceTest {
     private OpenMRSPersonService personService;
 
     @Mock
+    private OpenMRSVisitService visitService;
+
+    @Mock
     private OpenMRSProviderService providerService;
 
     @Mock
@@ -94,6 +100,9 @@ public class OpenMRSActionProxyServiceTest {
     private ArgumentCaptor<Person> personCaptor;
 
     @Captor
+    private ArgumentCaptor<Visit> visitCaptor;
+
+    @Captor
     private ArgumentCaptor<ProgramEnrollment> programEnrollmentCaptor;
 
     @InjectMocks
@@ -113,10 +122,10 @@ public class OpenMRSActionProxyServiceTest {
         Person person = new Person();
         person.setUuid("30");
         provider.setPerson(person);
-        
+
         DateTime encounterDatetime = new DateTime("2000-08-16T07:22:05Z");
         Map<String, String> observations = new HashMap<>();
-        observations.put("testConceptName","testObservationValueName");
+        observations.put("testConceptName", "testObservationValueName");
 
         List<Observation> obsList = createObservationList();
 
@@ -298,6 +307,51 @@ public class OpenMRSActionProxyServiceTest {
         assertEquals(patient.getUuid(), patientCaptor.getValue().getUuid());
         assertEquals("1000", patientCaptorIdentifier.getIdentifier());
         assertEquals("CommCare CaseID", patientCaptorIdentifier.getIdentifierType().getName());
+    }
+
+    @Test
+    public void shouldCreateVisitWithRequiredGivenParameters() {
+        Patient patient = new Patient();
+        patient.setUuid("10");
+
+        DateTime startDateTime = new DateTime("2010-01-10T07:22:05Z");
+        DateTime endDateTime = new DateTime("2012-08-01T07:22:05Z");
+
+        Visit visit = new Visit(startDateTime.toDate(), endDateTime.toDate(), patient,
+                new VisitType("ee1b6117-e40b-4082-8880-96aca7ea1472"));
+
+        doReturn(patient).when(patientService).getPatientByUuid(eq(CONFIG_NAME), eq(patient.getUuid()));
+
+        openMRSActionProxyService.createVisit(CONFIG_NAME, patient.getUuid(), new DateTime(visit.getStartDatetime()),
+                new DateTime(visit.getStopDatetime()), visit.getVisitType().getUuid(), null);
+
+        verify(visitService).createVisit(eq(CONFIG_NAME), visitCaptor.capture());
+        assertEquals(visit, visitCaptor.getValue());
+    }
+
+    @Test
+    public void shouldCreateVisitWithGivenParameters() {
+        Location location = new Location();
+        location.setName("testLocation");
+
+        Patient patient = new Patient();
+        patient.setUuid("10");
+
+        DateTime startDateTime = new DateTime("2010-01-10T07:22:05Z");
+        DateTime endDateTime = new DateTime("2012-08-01T07:22:05Z");
+
+        Visit visit = new Visit(startDateTime.toDate(), endDateTime.toDate(), patient,
+                new VisitType("ee1b6117-e40b-4082-8880-96aca7ea1472"), location);
+
+        doReturn(patient).when(patientService).getPatientByUuid(eq(CONFIG_NAME), eq(patient.getUuid()));
+        doReturn(Collections.singletonList(location))
+                .when(locationService).getLocations(eq(CONFIG_NAME), eq(location.getName()));
+
+        openMRSActionProxyService.createVisit(CONFIG_NAME, patient.getUuid(), new DateTime(visit.getStartDatetime()),
+                new DateTime(visit.getStopDatetime()), visit.getVisitType().getUuid(), location.getName());
+
+        verify(visitService).createVisit(eq(CONFIG_NAME), visitCaptor.capture());
+        assertEquals(visit, visitCaptor.getValue());
     }
 
     public void shouldCreateProgramEnrollment() {

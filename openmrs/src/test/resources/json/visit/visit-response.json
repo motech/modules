@@ -1,0 +1,14 @@
+{
+  "uuid": "f1aecf62-302e-4be6-b0b5-51a1b12fbe09",
+  "display": "testVisit ? - 06/09/2016 22:00",
+  "visitType": {
+    "uuid": "ee1b6117-e40b-4082-8880-96aca7ea1472",
+    "display": "testVisitType"
+  },
+  "patient": {
+    "uuid": "d4f36a2e-2821-4334-ab85-eef3cd8fea8c",
+    "display": "1 - testPatient"
+  },
+  "startDatetime": "2016-07-28T10:29:50.000+0000",
+  "stopDatetime": "2016-07-28T14:29:50.000+0000"
+}

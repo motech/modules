@@ -1,9 +1,9 @@
 package org.motechproject.openmrs.resource;
 
-import org.motechproject.openmrs.domain.EncounterType;
+import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.Encounter;
 import org.motechproject.openmrs.domain.EncounterListResult;
-import org.motechproject.openmrs.config.Config;
+import org.motechproject.openmrs.domain.EncounterType;
 
 /**
  * Interface for encounters management.

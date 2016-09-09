@@ -1,8 +1,8 @@
 package org.motechproject.openmrs.resource;
 
+import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.Concept;
 import org.motechproject.openmrs.domain.ConceptListResult;
-import org.motechproject.openmrs.config.Config;
 
 /**
  * Interface for concepts management.
