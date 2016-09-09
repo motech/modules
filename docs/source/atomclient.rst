@@ -102,3 +102,12 @@ API
 
 The :java:ref:`org.motechproject.atomclient.service.AtomClientService` interface exposes a `fetch()` method which will direct the module to fetch from the configured Atom feed(s).
 All other publicly exposed methods are used for configuration.
+
+Integration with Bahmni/OpenMRS
+===============================
+
+The atom client module allows MOTECH to receive updates from the Bahmni atom feed, which is available as a core feature in Bahmni, but requires installation in OpenMRS. The Bahmni atom feed exposes a URL endpoint that MOTECH consumes to get the most recent patient, program or encounter. You can view their documentation at `this link <https://bahmni.atlassian.net/wiki/display/BAH/Atom+Feed+Based+Synchronization+in+Bahmni>`_ The source code for this module can be found on the `ICT4H GitHub page <https://github.com/ICT4H/openmrs-atomfeed>`_. Note that the default atom feed module in Bahmni has a paging size of 5 records per page. We recommend that you increase this number to meet your needs because our atom client module does not currently support pagination across the atom feed. This chunking size can be found in the chunking_history table in the SQL database.
+
+Note on OpenMRS Module
+----------------------
+The atom feed module is built and maintained by the Bahmni team. This module is not fully supported on OpenMRS, but can be installed with modification. This module also relies heavily on the OpenMRS EMRAPI module, which may or may not suit your OpenMRS implementation. The OpenSRP project appears to also be using a fork of the atom feed module. If using generic OpenMRS, have a look at their `GitHub repository <https://github.com/OpenSRP/openmrs-atomfeed>`_ and you'll have to build the module to test it in your environment.
