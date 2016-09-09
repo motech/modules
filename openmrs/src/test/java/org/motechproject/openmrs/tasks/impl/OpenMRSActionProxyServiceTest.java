@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
@@ -124,6 +125,7 @@ public class OpenMRSActionProxyServiceTest {
 
         doReturn(patient).when(patientService).getPatientByUuid(eq(CONFIG_NAME), eq(patient.getUuid()));
         doReturn(provider).when(providerService).getProviderByUuid(eq(CONFIG_NAME), eq(provider.getUuid()));
+        doReturn(encounter).when(encounterService).createEncounter(eq(CONFIG_NAME), eq(encounter));
         doReturn(Collections.singletonList(location))
                 .when(locationService).getLocations(eq(CONFIG_NAME), eq(location.getName()));
 
@@ -134,6 +136,9 @@ public class OpenMRSActionProxyServiceTest {
         verify(encounterService).createEncounter(eq(CONFIG_NAME), encounterCaptor.capture());
 
         assertEquals(encounter, encounterCaptor.getValue());
+        assertEquals(encounter, openMRSActionProxyService.createEncounter(CONFIG_NAME, new DateTime(encounter.getEncounterDatetime()),
+                encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid(),
+                observations));
     }
 
     @Test
