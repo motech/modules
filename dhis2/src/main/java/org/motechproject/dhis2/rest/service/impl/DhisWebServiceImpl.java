@@ -62,6 +62,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -92,11 +94,10 @@ public class DhisWebServiceImpl implements DhisWebService {
     private static final int SO_TIMEOUT = 10000;
     private static final int MAX_CONNECTIONS = 200;
     private static final int MAX_PER_ROUTE = 20;
-    private static final int JOIN_TIMEOUT = 1000;
     private static final int IDLE_TIMEOUT = 1000;
     private static final List<Integer> ACCEPTABLE_DHIS_RESPONSE_STATUSES = Arrays.asList(HttpStatus.SC_OK,
             HttpStatus.SC_ACCEPTED, HttpStatus.SC_CREATED);
-    
+
     private SettingsService settingsService;
     private StatusMessageService statusMessageService;
     private CloseableHttpClient client;
@@ -123,9 +124,8 @@ public class DhisWebServiceImpl implements DhisWebService {
                 .setConnectionManager(poolingHttpClientConnectionManager)
                 .build();
 
-        IdleConnectionMonitorThread staleMonitor = new IdleConnectionMonitorThread(poolingHttpClientConnectionManager);
-        staleMonitor.start();
-        staleMonitor.join(JOIN_TIMEOUT);
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        executorService.execute(new IdleConnectionMonitorRunnable(poolingHttpClientConnectionManager));
     }
 
     @PostConstruct
@@ -560,7 +560,7 @@ public class DhisWebServiceImpl implements DhisWebService {
                 response.close();
             }
         } catch (IOException e) {
-            LOGGER.error("Error trying to close response: " + e.getMessage());
+            LOGGER.error("Error trying to close response", e);
         }
     }
 
@@ -570,12 +570,11 @@ public class DhisWebServiceImpl implements DhisWebService {
         poolingHttpClientConnectionManager.close();
     }
 
-    private final class IdleConnectionMonitorThread extends Thread {
+    private final class IdleConnectionMonitorRunnable implements Runnable {
         private final HttpClientConnectionManager connMgr;
         private volatile boolean shutdown;
 
-        private IdleConnectionMonitorThread(PoolingHttpClientConnectionManager connMgr) {
-            super();
+        private IdleConnectionMonitorRunnable(PoolingHttpClientConnectionManager connMgr) {
             this.connMgr = connMgr;
         }
 
