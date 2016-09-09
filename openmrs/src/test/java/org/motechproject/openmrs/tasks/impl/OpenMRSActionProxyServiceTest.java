@@ -318,12 +318,13 @@ public class OpenMRSActionProxyServiceTest {
         DateTime startDateTime = new DateTime("2010-01-10T07:22:05Z");
         DateTime endDateTime = new DateTime("2012-08-01T07:22:05Z");
 
-        Visit visit = new Visit(startDateTime.toDate(), endDateTime.toDate(), patient, new VisitType("testVisitType"));
+        Visit visit = new Visit(startDateTime.toDate(), endDateTime.toDate(), patient,
+                new VisitType("ee1b6117-e40b-4082-8880-96aca7ea1472"));
 
         doReturn(patient).when(patientService).getPatientByUuid(eq(CONFIG_NAME), eq(patient.getUuid()));
 
         openMRSActionProxyService.createVisit(CONFIG_NAME, patient.getUuid(), new DateTime(visit.getStartDatetime()),
-                new DateTime(visit.getEndDatetime()), visit.getVisitType().getDisplay(), null);
+                new DateTime(visit.getStopDatetime()), visit.getVisitType().getUuid(), null);
 
         verify(visitService).createVisit(eq(CONFIG_NAME), visitCaptor.capture());
         assertEquals(visit, visitCaptor.getValue());
@@ -341,14 +342,14 @@ public class OpenMRSActionProxyServiceTest {
         DateTime endDateTime = new DateTime("2012-08-01T07:22:05Z");
 
         Visit visit = new Visit(startDateTime.toDate(), endDateTime.toDate(), patient,
-                new VisitType("testVisitType"), location);
+                new VisitType("ee1b6117-e40b-4082-8880-96aca7ea1472"), location);
 
         doReturn(patient).when(patientService).getPatientByUuid(eq(CONFIG_NAME), eq(patient.getUuid()));
         doReturn(Collections.singletonList(location))
                 .when(locationService).getLocations(eq(CONFIG_NAME), eq(location.getName()));
 
         openMRSActionProxyService.createVisit(CONFIG_NAME, patient.getUuid(), new DateTime(visit.getStartDatetime()),
-                new DateTime(visit.getEndDatetime()), visit.getVisitType().getDisplay(), location.getName());
+                new DateTime(visit.getStopDatetime()), visit.getVisitType().getUuid(), location.getName());
 
         verify(visitService).createVisit(eq(CONFIG_NAME), visitCaptor.capture());
         assertEquals(visit, visitCaptor.getValue());

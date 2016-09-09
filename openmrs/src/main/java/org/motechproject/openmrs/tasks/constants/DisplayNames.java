@@ -49,7 +49,7 @@ public final class DisplayNames {
     public static final String VISIT_UUID = "openMRS.visit.uuid";
     public static final String VISIT_START_DATETIME = "openMRS.visit.startDatetime";
     public static final String VISIT_END_DATETIME = "openMRS.visit.endDatetime";
-    public static final String VISIT_TYPE = "openMRS.visit.type";
+    public static final String VISIT_TYPE_UUID = "openMRS.visit.type.uuid";
 
     //Program Enrollment action
     public static final String PROGRAM_UUID = "openMRS.program.uuid";

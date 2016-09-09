@@ -68,7 +68,7 @@ public class VisitResourceImplTest extends AbstractResourceImplTest {
         verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
 
         assertThat(created.getStartDatetime(), equalTo(visit.getStartDatetime()));
-        assertThat(created.getEndDatetime(), equalTo(visit.getEndDatetime()));
+        assertThat(created.getStopDatetime(), equalTo(visit.getStopDatetime()));
         assertThat(created.getPatient().getUuid(), equalTo(visit.getPatient().getUuid()));
         assertThat(created.getVisitType().getUuid(), equalTo(visit.getVisitType().getUuid()));
 

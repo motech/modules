@@ -43,6 +43,6 @@ public class OpenMRSVisitServiceImpl implements OpenMRSVisitService {
         Validate.notNull(visit.getPatient(), "Patient cannot be null");
         Validate.notEmpty(visit.getPatient().getUuid(), "Patient must have an id");
         Validate.notNull(visit.getStartDatetime(), "Visit start datetime cannot be null");
-        Validate.notNull(visit.getEndDatetime(), "Visit end datetime cannot be null");
+        Validate.notNull(visit.getStopDatetime(), "Visit end datetime cannot be null");
     }
 }

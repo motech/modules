@@ -17,8 +17,8 @@ public class VisitType {
     private String uuid;
     private String display;
 
-    public VisitType(String display) {
-        this.display = display;
+    public VisitType(String uuid) {
+        this.uuid = uuid;
     }
 
     /**

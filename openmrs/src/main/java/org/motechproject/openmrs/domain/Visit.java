@@ -12,16 +12,16 @@ public class Visit {
     private Location location;
     private VisitType visitType;
     private Date startDatetime;
-    private Date endDatetime;
+    private Date stopDatetime;
     private Patient patient;
 
-    public Visit(Date startDatetime, Date endDatetime, Patient patient, VisitType visitType) {
-        this(startDatetime, endDatetime, patient, visitType, null);
+    public Visit(Date startDatetime, Date stopDatetime, Patient patient, VisitType visitType) {
+        this(startDatetime, stopDatetime, patient, visitType, null);
     }
 
-    public Visit(Date startDatetime, Date endDatetime, Patient patient, VisitType visitType, Location location) {
+    public Visit(Date startDatetime, Date stopDatetime, Patient patient, VisitType visitType, Location location) {
         this.startDatetime = startDatetime;
-        this.endDatetime = endDatetime;
+        this.stopDatetime = stopDatetime;
         this.patient = patient;
         this.visitType = visitType;
         this.location = location;
@@ -59,12 +59,12 @@ public class Visit {
         this.startDatetime = startDatetime;
     }
 
-    public Date getEndDatetime() {
-        return endDatetime;
+    public Date getStopDatetime() {
+        return stopDatetime;
     }
 
-    public void setEndDatetime(Date endDatetime) {
-        this.endDatetime = endDatetime;
+    public void setStopDatetime(Date stopDatetime) {
+        this.stopDatetime = stopDatetime;
     }
 
     public Patient getPatient() {
@@ -77,7 +77,7 @@ public class Visit {
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, location, visitType, startDatetime, endDatetime, patient);
+        return Objects.hash(uuid, location, visitType, startDatetime, stopDatetime, patient);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class Visit {
                 Objects.equals(location, visit.location) &&
                 Objects.equals(visitType, visit.visitType) &&
                 Objects.equals(startDatetime, visit.startDatetime) &&
-                Objects.equals(endDatetime, visit.endDatetime) &&
+                Objects.equals(stopDatetime, visit.stopDatetime) &&
                 Objects.equals(patient, visit.patient);
     }
 }

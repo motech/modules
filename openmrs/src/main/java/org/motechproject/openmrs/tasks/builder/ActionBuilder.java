@@ -153,7 +153,7 @@ public class ActionBuilder {
         actionParameters.add(prepareParameter(Keys.PATIENT_UUID, DisplayNames.PATIENT_UUID, true, order++));
         actionParameters.add(prepareParameter(Keys.VISIT_START_DATETIME, DisplayNames.VISIT_START_DATETIME, DATE, true, order++));
         actionParameters.add(prepareParameter(Keys.VISIT_END_DATETIME, DisplayNames.VISIT_END_DATETIME, DATE, true, order++));
-        actionParameters.add(prepareParameter(Keys.VISIT_TYPE, DisplayNames.VISIT_TYPE, true, order++));
+        actionParameters.add(prepareParameter(Keys.VISIT_TYPE_UUID, DisplayNames.VISIT_TYPE_UUID, true, order++));
         actionParameters.add(prepareParameter(Keys.LOCATION_NAME, DisplayNames.LOCATION_NAME, false, order));
 
         postActionParameters.add(prepareParameter(Keys.UUID, DisplayNames.VISIT_UUID, false, 0));
