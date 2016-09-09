@@ -35,10 +35,10 @@ public class AbstractWebService<T> {
     /**
      * Returns a matching instance of type T, if it exists.
      *
-     * @param key The field of the RapidPro Entity
-     * @param value The value to be matched
+     * @param key      The field of the RapidPro Entity
+     * @param value    The value to be matched
      * @param endpoint The RapidPro HTTP API endpoint
-     * @param typeRef The type reference for T
+     * @param typeRef  The type reference for T
      * @return One instance of type T.
      * @throws WebServiceException
      * @throws RapidProClientException

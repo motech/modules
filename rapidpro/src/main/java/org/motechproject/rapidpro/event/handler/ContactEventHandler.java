@@ -1,4 +1,4 @@
-package org.motechproject.rapidpro.event;
+package org.motechproject.rapidpro.event.handler;
 
 
 import org.motechproject.event.MotechEvent;
@@ -75,6 +75,7 @@ public class ContactEventHandler {
 
     /**
      * Handles events with the add to group event subject.
+     *
      * @param event {@link MotechEvent}
      */
     @MotechListener(subjects = EventSubjects.ADD_TO_GROUP)
@@ -88,6 +89,7 @@ public class ContactEventHandler {
 
     /**
      * Handles events with the remove from group event subject.
+     *
      * @param event {@link MotechEvent}
      */
     @MotechListener(subjects = EventSubjects.REMOVE_FROM_GROUP)
