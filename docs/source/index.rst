@@ -82,6 +82,11 @@ Enrolls users in message campaigns with flexible content-scheduling rules
 
 Provides data containers and APIs for defining mobile (e.g. SMS or IVR-based) training courses and tracking user enrollment and progress
 
+:std:ref:`ODK <odk-module>`
+---------------------------
+
+Integrates the MOTECH platform with OpenDataKit, KoboToolbox, and Ona.io
+
 :std:ref:`OpenMRS <openmrs-module>`
 -----------------------------------
 
@@ -91,6 +96,11 @@ Integrates the MOTECH platform with OpenMRS, an open source electronic medical r
 -----------------------------------------------
 
 A flexible reminder system that may be used to alert patients when it is time to take their medications
+
+:std:ref:`RapidPro <rapidpro-module>`
+-------------------------------------
+
+Integrates the MOTECH platform with RapidPro
 
 :std:ref:`Schedule Tracking <schedule-tracking-module>`
 -------------------------------------------------------
