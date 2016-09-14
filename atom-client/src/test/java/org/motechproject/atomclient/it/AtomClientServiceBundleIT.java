@@ -172,4 +172,30 @@ public class AtomClientServiceBundleIT extends BasePaxIT {
         String data3 = feedRecord.getData();
         assertThat(data3, is(not(data2)));
     }
+
+    @Test
+    public void verifyPagination() {
+
+        assertEquals(feedRecordDataService.count(), 0);
+
+        String feedUrl = "https://emrdemo.bahmni.org/openmrs/ws/atomfeed/patient/19";
+        configService.setFeedConfigs(new FeedConfigs(new HashSet<>(Arrays.asList(new FeedConfig(feedUrl, "/([0-9a-f-]*)\\?")))));
+        atomClientService.fetch();
+
+        FeedRecord feedRecord = feedRecordDataService.findByURL(feedUrl);
+        assertNotNull(feedRecord);
+        String data1 = feedRecord.getData();
+        int currentPage = feedRecord.getPage(data1);
+
+        feedUrl = "https://emrdemo.bahmni.org/openmrs/ws/atomfeed/patient/recent";
+        configService.setFeedConfigs(new FeedConfigs(new HashSet<>(Arrays.asList(new FeedConfig(feedUrl, "/([0-9a-f-]*)\\?")))));
+        atomClientService.fetch();
+
+        feedRecord = feedRecordDataService.findByURL(feedUrl);
+        assertNotNull(feedRecord);
+        String data2 = feedRecord.getData();
+        int recentPage = feedRecord.getPage(data2);
+        configService.readNewFeeds(currentPage,recentPage,feedUrl);
+        atomClientService.fetch();
+    }
 }

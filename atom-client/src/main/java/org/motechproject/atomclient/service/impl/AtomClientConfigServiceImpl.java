@@ -22,6 +22,8 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
+import java.util.Arrays;
+import java.util.HashSet;
 
 
 @Service("atomClientConfigService")
@@ -133,5 +135,16 @@ public class AtomClientConfigServiceImpl implements AtomClientConfigService {
             }
         }
         return "";
+    }
+
+    public void readNewFeeds (int currentPage, int recentPage, String feedUrl) {
+        int j = 0;
+        FeedConfig[] newFeeds = new FeedConfig[recentPage - currentPage + 1];
+        String url = feedUrl.substring(0, feedUrl.lastIndexOf('/') + 1);
+        for (int i = currentPage; i <= recentPage; i++) {
+            newFeeds[j]  = new FeedConfig(url + Integer.toString(i), "/([0-9a-f-]*)\\?");
+            j++;
+        }
+        this.setFeedConfigs(new FeedConfigs(new HashSet<>(Arrays.asList(newFeeds))));
     }
 }

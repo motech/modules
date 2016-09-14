@@ -52,4 +52,6 @@ public interface AtomClientConfigService {
      * @return a regex or an empty string
      */
     String getRegexForFeedUrl(String url);
+
+    void readNewFeeds (int currentPage, int recentPage, String feedUrl);
 }
