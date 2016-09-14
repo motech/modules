@@ -72,7 +72,10 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         Location location = getLocationByName(configName, locationName);
         Patient patient = patientService.getPatientByUuid(configName, patientUuid);
         Provider provider = providerService.getProviderByUuid(configName, providerUuid);
-        Visit visit = visitService.getVisitByUuid(configName, visitUuid);
+        Visit visit = null;
+        if (StringUtils.isNotEmpty(visitUuid)) {
+            visit = visitService.getVisitByUuid(configName, visitUuid);
+        }
 
         //While creating observations, the encounterDateTime is used as a obsDateTime.
         List<Observation> observationList = MapUtils.isNotEmpty(observations) ? convertObservationMapToList(observations, encounterDatetime) : null;

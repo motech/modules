@@ -28,6 +28,7 @@ public interface OpenMRSActionProxyService {
      * @param locationName      the name of location
      * @param patientUuid       the patient uuid
      * @param providerUuid      the provider uuid
+     * @param visitUuid         the visit uuid
      * @param observations      the map of observations where concept name is a key and value from the observation is a value
      */
     Encounter createEncounter(String configName, DateTime encounterDatetime, String encounterType,

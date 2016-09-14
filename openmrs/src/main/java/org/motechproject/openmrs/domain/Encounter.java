@@ -39,6 +39,11 @@ public class Encounter {
     }
 
     public Encounter(Location location, EncounterType encounterType, Date encounterDatetime, Patient patient,
+                     List<Person> encounterProviders) {
+        this(location, encounterType, encounterDatetime, patient, null, encounterProviders, null);
+    }
+
+    public Encounter(Location location, EncounterType encounterType, Date encounterDatetime, Patient patient,
                      Visit visit, List<Person> encounterProviders) {
         this(location, encounterType, encounterDatetime, patient, visit, encounterProviders, null);
     }
@@ -126,6 +131,11 @@ public class Encounter {
         this.obs = obs;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid, display, location, encounterType, encounterDatetime, patient, visit, obs, encounterProviders);
+    }
+
     @Override //NO CHECKSTYLE Cyclomatic Complexity
     public boolean equals(Object o) {
         if (this == o) {
@@ -144,11 +154,6 @@ public class Encounter {
                 Objects.equals(visit, encounter.visit) &&
                 Objects.equals(obs, encounter.obs) &&
                 Objects.equals(encounterProviders, encounter.encounterProviders);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(uuid, display, location, encounterType, encounterDatetime, patient, visit, obs, encounterProviders);
     }
 
     /**

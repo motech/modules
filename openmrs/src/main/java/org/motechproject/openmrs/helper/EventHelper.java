@@ -103,6 +103,7 @@ public final class EventHelper {
         }
         encounterParameters.put(EventKeys.ENCOUNTER_DATE, encounter.getEncounterDatetime());
         encounterParameters.put(EventKeys.ENCOUNTER_TYPE, encounter.getEncounterType().getUuid());
+        encounterParameters.put(EventKeys.VISIT_ID, encounter.getVisit().getUuid());
         return encounterParameters;
     }
 
@@ -137,6 +138,20 @@ public final class EventHelper {
         }
         return visitParameters;
     }
+
+    /**
+     * Parses the given ID of the visit to a map with a single parameter, which can then be attached to a
+     * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
+     *
+     * @param uuid the visit ID to be parsed
+     * @return the map with single ID parameter
+     */
+    public static Map<String, Object> visitParameters(String uuid) {
+        Map<String, Object> visitParameters = new HashMap<>();
+        visitParameters.put(EventKeys.VISIT_ID, uuid);
+        return visitParameters;
+    }
+
 
     /**
      * Parses the given {@link Observation} to a map of parameters, which can then be attached to a
