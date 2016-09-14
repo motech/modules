@@ -30,6 +30,29 @@ public class EventPublisherImpl implements EventPublisher {
     private EventRelay eventRelay;
 
     @Override
+    public void publishContactCreated(String externalId, Contact contact) {
+        Map<String, Object> params = createContactParams(externalId, contact);
+        MotechEvent event = new MotechEvent(EventSubjects.CONTACT_CREATED, params);
+        eventRelay.sendEventMessage(event);
+    }
+
+    @Override
+    public void publishContactUpdated(String externalId, Contact contact) {
+        Map<String, Object> params = createContactParams(externalId, contact);
+        MotechEvent event = new MotechEvent(EventSubjects.CONTACT_UPDATED, params);
+        eventRelay.sendEventMessage(event);
+    }
+
+    @Override
+    public void publishContactDeleted(String externalId, UUID contactUUID) {
+        Map<String, Object> params = new HashMap<>();
+        params.put(EventParameters.EXTERNAL_ID, externalId);
+        params.put(EventParameters.CONTACT_UUID, contactUUID);
+        MotechEvent event = new MotechEvent(EventSubjects.CONTACT_DELETED, params);
+        eventRelay.sendEventMessage(event);
+    }
+
+    @Override
     public void publishContactAddedToGroup(String externalId, Contact contact, Group group) {
         Map<String, Object> params = createAddedOrRemovedGroupParams(externalId, contact, group);
         MotechEvent event = new MotechEvent(EventSubjects.ADDED_TO_GROUP, params);
@@ -117,21 +140,7 @@ public class EventPublisherImpl implements EventPublisher {
     }
 
     private Map<String, Object> createAddedOrRemovedGroupParams(String externalId, Contact contact, Group group) {
-        Map<String, Object> params = new HashMap<>();
-
-        /*Contact parameters*/
-        params.put(EventParameters.EXTERNAL_ID, externalId);
-        params.put(EventParameters.CONTACT_UUID, contact.getUuid().toString());
-        params.put(EventParameters.CONTACT_NAME, contact.getName());
-        params.put(EventParameters.LANGUAGE, contact.getLanguage());
-        params.put(EventParameters.URNS, contact.getUrns());
-        params.put(EventParameters.CONTACT_GROUP_UUIDS, contact.getGroupUUIDs());
-        params.put(EventParameters.FIELDS, contact.getFields());
-        params.put(EventParameters.BLOCKED, contact.isBlocked());
-        params.put(EventParameters.FAILED, contact.isFailed());
-        params.put(EventParameters.MODIFIED_ON, contact.getModifiedOn());
-
-        /*Group parameters*/
+        Map<String, Object> params = createContactParams(externalId, contact);
         params.put(EventParameters.GROUP_NAME, group.getName());
         params.put(EventParameters.GROUP_UUID, group.getUuid());
         return params;
@@ -152,6 +161,21 @@ public class EventPublisherImpl implements EventPublisher {
         params.put(EventParameters.GROUP_NAME, groupName);
         params.put(EventParameters.RESTART_PARTICIPANTS, restart);
         params.put(EventParameters.EXTRA, extra);
+        return params;
+    }
+
+    private Map<String, Object> createContactParams(String externalId, Contact contact) {
+        Map<String, Object> params = new HashMap<>();
+        params.put(EventParameters.EXTERNAL_ID, externalId);
+        params.put(EventParameters.CONTACT_UUID, contact.getUuid().toString());
+        params.put(EventParameters.CONTACT_NAME, contact.getName());
+        params.put(EventParameters.LANGUAGE, contact.getLanguage());
+        params.put(EventParameters.URNS, contact.getUrns());
+        params.put(EventParameters.CONTACT_GROUP_UUIDS, contact.getGroupUUIDs());
+        params.put(EventParameters.FIELDS, contact.getFields());
+        params.put(EventParameters.BLOCKED, contact.isBlocked());
+        params.put(EventParameters.FAILED, contact.isFailed());
+        params.put(EventParameters.MODIFIED_ON, contact.getModifiedOn());
         return params;
     }
 }

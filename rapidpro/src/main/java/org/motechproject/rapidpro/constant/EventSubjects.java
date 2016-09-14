@@ -12,6 +12,9 @@ public final class EventSubjects {
     public static final String CREATE_CONTACT = BASE + "create-contact";
     public static final String UPDATE_CONTACT = BASE + "update-contact";
     public static final String DELETE_CONTACT = BASE + "delete-contact";
+    public static final String CONTACT_CREATED = BASE + "contact-created";
+    public static final String CONTACT_UPDATED = BASE + "contact-updated";
+    public static final String CONTACT_DELETED = BASE + "contact-deleted";
 
     /*Group related event subjects*/
     public static final String ADD_TO_GROUP = BASE + "add-contact-to-group";

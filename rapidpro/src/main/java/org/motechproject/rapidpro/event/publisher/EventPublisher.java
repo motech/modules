@@ -16,6 +16,30 @@ public interface EventPublisher {
 
     /**
      * Publishes an {@link org.motechproject.event.MotechEvent} with subject
+     * org.motechproject.rapidpro.contact-created
+     * @param externalId The external ID of the created contact
+     * @param contact The details of the newly created contact
+     */
+    void publishContactCreated(String externalId, Contact contact);
+
+    /**
+     * Publishes an {@link org.motechproject.event.MotechEvent} with subject
+     * org.motechproject.rapidpro.contact-updated
+     * @param externalId The external ID of the updated contact
+     * @param contact The details of the updated contact
+     */
+    void publishContactUpdated(String externalId, Contact contact);
+
+    /**
+     * Publishes an {@link org.motechproject.event.MotechEvent} with subject
+     * org.motechproject.rapidpro.contact-deleted
+     * @param externalId The external ID of the deleted contact
+     * @param contactUUID The UUID of the deleted contact
+     */
+    void publishContactDeleted(String externalId, UUID contactUUID);
+
+    /**
+     * Publishes an {@link org.motechproject.event.MotechEvent} with subject
      * org.motechproject.rapidpro.contact-added-to-group
      *
      * @param externalId The external ID of the contact added to the group
