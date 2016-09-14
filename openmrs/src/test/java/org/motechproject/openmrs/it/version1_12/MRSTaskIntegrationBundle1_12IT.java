@@ -26,7 +26,7 @@ import org.motechproject.tasks.domain.mds.task.Lookup;
 import org.motechproject.tasks.domain.mds.task.Task;
 import org.motechproject.tasks.domain.mds.task.TaskActionInformation;
 import org.motechproject.tasks.domain.mds.task.TaskActivity;
-import org.motechproject.tasks.domain.mds.task.TaskActivityType;
+import org.motechproject.tasks.domain.enums.TaskActivityType;
 import org.motechproject.tasks.domain.mds.task.TaskConfig;
 import org.motechproject.tasks.domain.mds.task.TaskConfigStep;
 import org.motechproject.tasks.domain.mds.task.TaskTriggerInformation;

@@ -8,16 +8,16 @@ import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
-import org.motechproject.tasks.domain.mds.ParameterType;
+import org.motechproject.tasks.domain.enums.ParameterType;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import static org.motechproject.tasks.domain.mds.ParameterType.BOOLEAN;
-import static org.motechproject.tasks.domain.mds.ParameterType.DATE;
-import static org.motechproject.tasks.domain.mds.ParameterType.MAP;
+import static org.motechproject.tasks.domain.enums.ParameterType.BOOLEAN;
+import static org.motechproject.tasks.domain.enums.ParameterType.DATE;
+import static org.motechproject.tasks.domain.enums.ParameterType.MAP;
 
 /**
  * Responsible for building actions for the Tasks channel.
