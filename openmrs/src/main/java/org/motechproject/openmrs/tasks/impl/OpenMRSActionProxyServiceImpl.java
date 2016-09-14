@@ -263,19 +263,21 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         List<Observation> observationList = new ArrayList<>();
 
         for (String observationConceptName : observations.keySet()) {
-            Observation observation = new Observation();
+            if (StringUtils.isNotEmpty(observations.get(observationConceptName))) {
+                Observation observation = new Observation();
 
-            ConceptName conceptName = new ConceptName(observationConceptName);
-            Concept concept = new Concept(conceptName);
-            observation.setConcept(concept);
+                ConceptName conceptName = new ConceptName(observationConceptName);
+                Concept concept = new Concept(conceptName);
+                observation.setConcept(concept);
 
-            String observationMapValue = observations.get(observationConceptName);
-            Observation.ObservationValue observationValue = new Observation.ObservationValue(observationMapValue);
-            observation.setValue(observationValue);
+                String observationMapValue = observations.get(observationConceptName);
+                Observation.ObservationValue observationValue = new Observation.ObservationValue(observationMapValue);
+                observation.setValue(observationValue);
 
-            observation.setObsDatetime(obsDatetime.toDate());
+                observation.setObsDatetime(obsDatetime.toDate());
 
-            observationList.add(observation);
+                observationList.add(observation);
+            }
         }
         return observationList;
     }
