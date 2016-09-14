@@ -180,12 +180,14 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
         List<Observation> updatedObs = new ArrayList<>();
         if (originalObservations != null) {
             for (Observation observation : originalObservations) {
-                String conceptUuid = conceptService.resolveConceptUuidFromConceptName(config.getName(), observation.getConcept().getName().getName());
-                if (CollectionUtils.isNotEmpty(observation.getGroupsMembers())) {
-                    resolveConceptUuidForConceptNames(config, observation.getGroupsMembers());
+                if (observation.getValue() != null && StringUtils.isNotEmpty(observation.getValue().getDisplay())) {
+                    String conceptUuid = conceptService.resolveConceptUuidFromConceptName(config.getName(), observation.getConcept().getName().getName());
+                    if (CollectionUtils.isNotEmpty(observation.getGroupsMembers())) {
+                        resolveConceptUuidForConceptNames(config, observation.getGroupsMembers());
+                    }
+                    observation.getConcept().setUuid(conceptUuid);
+                    updatedObs.add(observation);
                 }
-                observation.getConcept().setUuid(conceptUuid);
-                updatedObs.add(observation);
             }
         }
 
