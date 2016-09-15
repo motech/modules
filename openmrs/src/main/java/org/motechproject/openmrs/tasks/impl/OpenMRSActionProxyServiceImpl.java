@@ -282,7 +282,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         List<Observation> observationList = new ArrayList<>();
 
         for (String observationConceptName : observations.keySet()) {
-            if (StringUtils.isNotEmpty(observations.get(observationConceptName))) {
+            if (valueIsNotEmpty(observations, observationConceptName)) {
                 Observation observation = new Observation();
 
                 ConceptName conceptName = new ConceptName(observationConceptName);
@@ -296,9 +296,16 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
                 observation.setObsDatetime(obsDatetime.toDate());
 
                 observationList.add(observation);
+            } else {
+                LOGGER.warn("Observation value is null or empty for concept: " + observationConceptName
+                        + " and will not be created");
             }
         }
         return observationList;
+    }
+
+    private boolean valueIsNotEmpty(Map<String, String> map, String key) {
+        return StringUtils.isNotEmpty(map.get(key));
     }
 
     private List<Attribute> convertAttributeMapToList(Map<String, String> attributes, boolean isProgramEnrollmentUpdate) {
