@@ -152,7 +152,6 @@ public final class EventHelper {
         return visitParameters;
     }
 
-
     /**
      * Parses the given {@link Observation} to a map of parameters, which can then be attached to a
      * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.

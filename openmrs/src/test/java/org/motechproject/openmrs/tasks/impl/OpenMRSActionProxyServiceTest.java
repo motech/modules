@@ -91,9 +91,6 @@ public class OpenMRSActionProxyServiceTest {
     private EventRelay eventRelay;
 
     @Captor
-    private ArgumentCaptor<Encounter> encounterCaptor;
-
-    @Captor
     private ArgumentCaptor<Patient> patientCaptor;
 
     @Captor
@@ -146,10 +143,7 @@ public class OpenMRSActionProxyServiceTest {
                 encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid(),
                 visit.getUuid(), observations);
 
-        verify(encounterService).createEncounter(eq(CONFIG_NAME), encounterCaptor.capture());
-
         assertEquals(encounter, encounterCreated);
-        assertEquals(encounter, encounterCaptor.getValue());
     }
 
     @Test
