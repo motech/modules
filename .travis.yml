@@ -27,6 +27,6 @@ cache:
 notifications:
   email:
     recipients:
-      - travis-test-maniek@googlegroups.com
+      - motech-dev@googlegroups.com
     on_success: never
     on_failure: always
