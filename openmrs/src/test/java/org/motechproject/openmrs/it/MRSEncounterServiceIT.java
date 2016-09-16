@@ -167,6 +167,12 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         if (encounter != null) {
             encounterAdapter.deleteEncounter(DEFAULT_CONFIG_NAME, encounter.getUuid());
         }
+        if (visit != null) {
+            visitAdapter.deleteVisit(DEFAULT_CONFIG_NAME, visit.getUuid());
+        }
+        if (visitType != null) {
+            visitAdapter.deleteVisitType(DEFAULT_CONFIG_NAME, visitType.getUuid());
+        }
         if (observation != null) {
             obsAdapter.deleteObservation(DEFAULT_CONFIG_NAME, observation.getUuid());
         }
@@ -190,12 +196,6 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         }
         if (personTwo != null) {
             personAdapter.deletePerson(DEFAULT_CONFIG_NAME, personTwo.getUuid());
-        }
-        if (visit != null) {
-            visitAdapter.deleteVisit(DEFAULT_CONFIG_NAME, visit.getUuid());
-        }
-        if (visitType != null) {
-            visitAdapter.deleteVisitType(DEFAULT_CONFIG_NAME, visitType.getUuid());
         }
 
         eventListenerRegistry.clearListenersForBean("mrsTestListener");

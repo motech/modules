@@ -108,6 +108,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     private Encounter createdEncounter;
     private Provider createdProvider;
     private EncounterType createdEncounterType;
+    private String visitTypeUuid;
 
     private static final String OPENMRS_CHANNEL_NAME = "org.motechproject.openmrs";
     private static final String OPENMRS_MODULE_NAME = "openMRS";
@@ -168,11 +169,11 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         providerService.deleteProvider(DEFAULT_CONFIG_NAME, createdProvider.getUuid());
 
-        patientService.deletePatient(DEFAULT_CONFIG_NAME, createdPatient.getUuid());
-
         visitService.deleteVisit(DEFAULT_CONFIG_NAME, createdEncounter.getVisit().getUuid());
 
-        visitService.deleteVisitType(DEFAULT_CONFIG_NAME, createdEncounter.getVisit().getVisitType().getUuid());
+        visitService.deleteVisitType(DEFAULT_CONFIG_NAME, visitTypeUuid);
+
+        patientService.deletePatient(DEFAULT_CONFIG_NAME, createdPatient.getUuid());
 
         Patient patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, String.format("%staskCreated", MOTECH_ID));
         if (patient != null) {
@@ -252,7 +253,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         assertEquals(firstPatientUuid, address.getAddress1());
     }
-    
+
     private Long createPatientTestTask() {
         TaskTriggerInformation triggerInformation = new TaskTriggerInformation("CREATE SettingsRecord", "data-services", MDS_CHANNEL_NAME,
                 VERSION, TRIGGER_SUBJECT, TRIGGER_SUBJECT);
@@ -297,7 +298,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         SortedSet<TaskConfigStep> taskConfigStepSortedSet = new TreeSet<>();
         taskConfigStepSortedSet.add(createEncounterDataSource());
-        TaskConfig taskConfig = new TaskConfig( );
+        TaskConfig taskConfig = new TaskConfig();
         taskConfig.addAll(taskConfigStepSortedSet);
 
         Map<String, String> values = new HashMap<>();
@@ -367,7 +368,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         createdEncounter = encounterService.createEncounter(DEFAULT_CONFIG_NAME, encounter);
     }
 
-    private Task prepareCreatePatientPostActionParameterTask(){
+    private Task prepareCreatePatientPostActionParameterTask() {
         TaskTriggerInformation triggerInformation = new TaskTriggerInformation("CREATE SettingsRecord", "data-services", MDS_CHANNEL_NAME,
                 VERSION, TRIGGER_SUBJECT, TRIGGER_SUBJECT);
 
@@ -386,7 +387,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         return task;
     }
 
-    private TaskActionInformation prepareCreatePatientActionInformation(String adress1, String motechId){
+    private TaskActionInformation prepareCreatePatientActionInformation(String adress1, String motechId) {
         TaskActionInformation actionInformation = new TaskActionInformation("Create Patient [" + DEFAULT_CONFIG_NAME + "]", OPENMRS_CHANNEL_NAME,
                 OPENMRS_CHANNEL_NAME, VERSION, TEST_INTERFACE, "createPatient");
         actionInformation.setSubject(String.format("createPatient.%s", DEFAULT_CONFIG_NAME));
@@ -430,7 +431,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         VisitType tempVisitType = new VisitType();
         tempVisitType.setName("TestVisitType");
 
-        String visitTypeUuid = visitService.createVisitType(DEFAULT_CONFIG_NAME, tempVisitType).getUuid();
+        visitTypeUuid = visitService.createVisitType(DEFAULT_CONFIG_NAME, tempVisitType).getUuid();
         tempVisitType = visitService.getVisitTypeByUuid(DEFAULT_CONFIG_NAME, visitTypeUuid);
 
         Visit tempVisit = new Visit();
