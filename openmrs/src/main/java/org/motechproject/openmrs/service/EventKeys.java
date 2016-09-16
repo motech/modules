@@ -58,6 +58,7 @@ public final class EventKeys {
     public static final String UPDATED_ENCOUNTER_SUBJECT = BASE_SUBJECT + "Encounter.Updated";
     public static final String DELETED_ENCOUNTER_SUBJECT = BASE_SUBJECT + "Encounter.Deleted";
     public static final String CREATED_NEW_VISIT_SUBJECT = BASE_SUBJECT + "Visit.Created";
+    public static final String DELETED_VISIT_SUBJECT = BASE_SUBJECT + "Visit.Deleted";
     public static final String CREATED_NEW_LOCATION_SUBJECT = BASE_SUBJECT + "Location.Create";
     public static final String UPDATED_LOCATION_SUBJECT = BASE_SUBJECT + "Location.Updated";
     public static final String DELETED_LOCATION_SUBJECT = BASE_SUBJECT + "Location.Deleted";

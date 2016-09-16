@@ -67,18 +67,22 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
 
     @Override
     public Encounter createEncounter(String configName, DateTime encounterDatetime, String encounterType,
-                                String locationName, String patientUuid, String providerUuid,
+                                String locationName, String patientUuid, String providerUuid, String visitUuid,
                                 Map<String, String> observations) {
         Location location = getLocationByName(configName, locationName);
         Patient patient = patientService.getPatientByUuid(configName, patientUuid);
         Provider provider = providerService.getProviderByUuid(configName, providerUuid);
+        Visit visit = null;
+        if (StringUtils.isNotEmpty(visitUuid)) {
+            visit = visitService.getVisitByUuid(configName, visitUuid);
+        }
 
         //While creating observations, the encounterDateTime is used as a obsDateTime.
         List<Observation> observationList = MapUtils.isNotEmpty(observations) ? convertObservationMapToList(observations, encounterDatetime) : null;
 
         EncounterType type = new EncounterType(encounterType);
 
-        Encounter encounter = new Encounter(location, type, encounterDatetime.toDate(), patient, Collections.singletonList(provider.getPerson()), observationList);
+        Encounter encounter = new Encounter(location, type, encounterDatetime.toDate(), patient, visit, Collections.singletonList(provider.getPerson()), observationList);
         return encounterService.createEncounter(configName, encounter);
     }
 
@@ -278,21 +282,30 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         List<Observation> observationList = new ArrayList<>();
 
         for (String observationConceptName : observations.keySet()) {
-            Observation observation = new Observation();
+            if (valueIsNotEmpty(observations, observationConceptName)) {
+                Observation observation = new Observation();
 
-            ConceptName conceptName = new ConceptName(observationConceptName);
-            Concept concept = new Concept(conceptName);
-            observation.setConcept(concept);
+                ConceptName conceptName = new ConceptName(observationConceptName);
+                Concept concept = new Concept(conceptName);
+                observation.setConcept(concept);
 
-            String observationMapValue = observations.get(observationConceptName);
-            Observation.ObservationValue observationValue = new Observation.ObservationValue(observationMapValue);
-            observation.setValue(observationValue);
+                String observationMapValue = observations.get(observationConceptName);
+                Observation.ObservationValue observationValue = new Observation.ObservationValue(observationMapValue);
+                observation.setValue(observationValue);
 
-            observation.setObsDatetime(obsDatetime.toDate());
+                observation.setObsDatetime(obsDatetime.toDate());
 
-            observationList.add(observation);
+                observationList.add(observation);
+            } else {
+                LOGGER.warn("Observation value is null or empty for concept: " + observationConceptName
+                        + " and will not be created");
+            }
         }
         return observationList;
+    }
+
+    private boolean valueIsNotEmpty(Map<String, String> map, String key) {
+        return StringUtils.isNotEmpty(map.get(key));
     }
 
     private List<Attribute> convertAttributeMapToList(Map<String, String> attributes, boolean isProgramEnrollmentUpdate) {
