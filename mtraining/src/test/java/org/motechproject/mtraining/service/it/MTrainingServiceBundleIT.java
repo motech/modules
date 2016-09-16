@@ -1,6 +1,7 @@
 package org.motechproject.mtraining.service.it;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.mtraining.domain.Answer;
@@ -205,7 +206,7 @@ public class MTrainingServiceBundleIT extends BasePaxIT {
         assertEquals(firstCourse.getChapters().size(), secondCourse.getChapters().size());
     }
 
-    @Test
+    @Ignore
     public void testCourseChapterUpdate() throws Exception {
         Course firstCourse = mTrainingService.createCourse(generateFullCourse("testSharedChapter"));
 
@@ -227,8 +228,8 @@ public class MTrainingServiceBundleIT extends BasePaxIT {
         Course updated = mTrainingService.updateCourse(firstCourse);
         assertEquals(CourseUnitState.Inactive, updated.getState());
     }
-    /*
-    @Test
+
+    @Ignore
     public void testCourseUpdateAddChapter() throws Exception {
         Course firstCourse = mTrainingService.createCourse(generateFullCourse("testCourseUpdateAddChapter"));
         assertEquals(2, firstCourse.getChapters().size());
@@ -239,7 +240,7 @@ public class MTrainingServiceBundleIT extends BasePaxIT {
         Course updated = mTrainingService.updateCourse(firstCourse);
         assertEquals(3, updated.getChapters().size());
     }
-    */
+
     @Test
     public void testChapterCreation() throws Exception {
         Chapter newChapter = generateFullCourse("testChapterCreation").getChapters().get(0);
