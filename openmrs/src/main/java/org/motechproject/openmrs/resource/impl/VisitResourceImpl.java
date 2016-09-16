@@ -43,7 +43,13 @@ public class VisitResourceImpl extends BaseResource implements VisitResource {
     @Override
     public VisitType createVisitType(Config config, VisitType visitType) {
         String requestJson = buildGson().toJson(visitType, VisitType.class);
-        String responseJson = postForJson(config, requestJson, "/visittype");
+        String responseJson = postForJson(config, requestJson, "/visittype?v=full");
+        return (VisitType) JsonUtils.readJson(responseJson, VisitType.class);
+    }
+
+    @Override
+    public VisitType getVisitTypeById(Config config, String uuid) {
+        String responseJson = getJson(config, "/visittype/{uuid}", uuid);
         return (VisitType) JsonUtils.readJson(responseJson, VisitType.class);
     }
 

@@ -15,6 +15,12 @@ public class Visit {
     private Date stopDatetime;
     private Patient patient;
 
+    /**
+     * Default constructor.
+     */
+    public Visit() {
+    }
+
     public Visit(Date startDatetime, Date stopDatetime, Patient patient, VisitType visitType) {
         this(startDatetime, stopDatetime, patient, visitType, null);
     }
