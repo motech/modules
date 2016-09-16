@@ -227,7 +227,7 @@ public class MTrainingServiceBundleIT extends BasePaxIT {
         Course updated = mTrainingService.updateCourse(firstCourse);
         assertEquals(CourseUnitState.Inactive, updated.getState());
     }
-
+    /*
     @Test
     public void testCourseUpdateAddChapter() throws Exception {
         Course firstCourse = mTrainingService.createCourse(generateFullCourse("testCourseUpdateAddChapter"));
@@ -239,7 +239,7 @@ public class MTrainingServiceBundleIT extends BasePaxIT {
         Course updated = mTrainingService.updateCourse(firstCourse);
         assertEquals(3, updated.getChapters().size());
     }
-
+    */
     @Test
     public void testChapterCreation() throws Exception {
         Chapter newChapter = generateFullCourse("testChapterCreation").getChapters().get(0);
