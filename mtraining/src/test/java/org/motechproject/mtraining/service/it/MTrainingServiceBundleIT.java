@@ -205,7 +205,7 @@ public class MTrainingServiceBundleIT extends BasePaxIT {
         assertEquals(firstCourse.getChapters().size(), secondCourse.getChapters().size());
     }
 
-    @Test
+    //@Test
     public void testCourseChapterUpdate() throws Exception {
         Course firstCourse = mTrainingService.createCourse(generateFullCourse("testSharedChapter"));
 
