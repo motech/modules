@@ -282,21 +282,30 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         List<Observation> observationList = new ArrayList<>();
 
         for (String observationConceptName : observations.keySet()) {
-            Observation observation = new Observation();
+            if (valueIsNotEmpty(observations, observationConceptName)) {
+                Observation observation = new Observation();
 
-            ConceptName conceptName = new ConceptName(observationConceptName);
-            Concept concept = new Concept(conceptName);
-            observation.setConcept(concept);
+                ConceptName conceptName = new ConceptName(observationConceptName);
+                Concept concept = new Concept(conceptName);
+                observation.setConcept(concept);
 
-            String observationMapValue = observations.get(observationConceptName);
-            Observation.ObservationValue observationValue = new Observation.ObservationValue(observationMapValue);
-            observation.setValue(observationValue);
+                String observationMapValue = observations.get(observationConceptName);
+                Observation.ObservationValue observationValue = new Observation.ObservationValue(observationMapValue);
+                observation.setValue(observationValue);
 
-            observation.setObsDatetime(obsDatetime.toDate());
+                observation.setObsDatetime(obsDatetime.toDate());
 
-            observationList.add(observation);
+                observationList.add(observation);
+            } else {
+                LOGGER.warn("Observation value is null or empty for concept: " + observationConceptName
+                        + " and will not be created");
+            }
         }
         return observationList;
+    }
+
+    private boolean valueIsNotEmpty(Map<String, String> map, String key) {
+        return StringUtils.isNotEmpty(map.get(key));
     }
 
     private List<Attribute> convertAttributeMapToList(Map<String, String> attributes, boolean isProgramEnrollmentUpdate) {
