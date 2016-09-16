@@ -89,6 +89,7 @@ public class ContactServiceImpl implements ContactService {
                 Contact fromRapidpro = contactWebService.getContactByUUID(uuid);
                 ContactUtils.mergeContactFields(contact, fromRapidpro);
                 contactWebService.createOrUpdateContact(contact);
+                eventPublisher.publishContactUpdated(externalId, fromRapidpro);
             }
 
         } catch (WebServiceException e) {
@@ -108,6 +109,7 @@ public class ContactServiceImpl implements ContactService {
                 UUID uuid = contactMapperService.getRapidproUUIDFromExternalId(externalId);
                 contactWebService.deleteContactByUUID(uuid);
                 contactMapperService.delete(externalId);
+                eventPublisher.publishContactDeleted(externalId, uuid);
 
             } else {
                 LOGGER.warn(EXTERNAL_ID_NULL);
@@ -209,6 +211,7 @@ public class ContactServiceImpl implements ContactService {
             } else {
                 Contact created = contactWebService.createOrUpdateContact(contact);
                 contactMapperService.create(externalId, created.getUuid());
+                eventPublisher.publishContactCreated(externalId, created);
             }
         } catch (WebServiceException e) {
             sendWebserviceFailUpdateMessage(e);

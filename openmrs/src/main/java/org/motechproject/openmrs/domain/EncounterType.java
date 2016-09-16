@@ -33,7 +33,6 @@ public class EncounterType {
         public JsonElement serialize(EncounterType src, Type typeOfSrc, JsonSerializationContext context) {
             return new JsonPrimitive(src.getName());
         }
-
     }
 
     public String getUuid() {

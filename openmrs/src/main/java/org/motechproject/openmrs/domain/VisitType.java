@@ -15,7 +15,14 @@ import java.util.Objects;
 public class VisitType {
 
     private String uuid;
-    private String display;
+    private String name;
+    private String description;
+
+    /**
+     * Default constructor.
+     */
+    public VisitType() {
+    }
 
     public VisitType(String uuid) {
         this.uuid = uuid;
@@ -26,18 +33,19 @@ public class VisitType {
      * as its ID.
      */
     public static class VisitTypeSerializer implements JsonSerializer<VisitType> {
+
         @Override
         public JsonElement serialize(VisitType src, Type typeOfSrc, JsonSerializationContext context) {
             return new JsonPrimitive(src.getUuid());
         }
     }
 
-    public String getDisplay() {
-        return display;
+    public String getName() {
+        return name;
     }
 
-    public void setDisplay(String display) {
-        this.display = display;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getUuid() {
@@ -48,9 +56,17 @@ public class VisitType {
         this.uuid = uuid;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, display);
+        return Objects.hash(uuid, name, description);
     }
 
     @Override
@@ -65,6 +81,7 @@ public class VisitType {
 
         VisitType other = (VisitType) o;
 
-        return Objects.equals(this.uuid, other.uuid) && Objects.equals(this.display, other.display);
+        return Objects.equals(this.uuid, other.uuid) && Objects.equals(this.name, other.name)
+                && Objects.equals(this.description, other.description);
     }
 }
