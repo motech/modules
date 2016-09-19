@@ -253,6 +253,57 @@
           ]
         },
         {
+          "displayName": "Observation [$config.getName()]",
+          "type": "Observation-$config.getName()",
+          "lookupFields": [
+            {
+              "displayName": "openMRS.lookup.patientUuidAndConceptUuid",
+              "fields": [
+                "openMRS.uuid",
+                "openMRS.observation.concept.uuid"
+              ]
+            }
+          ],
+          "fields": [
+            {
+              "displayName": "openMRS.observation.uuid",
+              "fieldKey": "uuid"
+            },
+            {
+              "displayName": "openMRS.observation.display",
+              "fieldKey": "display"
+            },
+            {
+              "displayName": "openMRS.observation.concept.uuid",
+              "fieldKey": "concept.uuid"
+            },
+            {
+              "displayName": "openMRS.person.uuid",
+              "fieldKey": "person.uuid"
+            },
+            {
+              "displayName": "openMRS.observation.dateTime",
+              "fieldKey": "obsDateTime"
+            },
+            {
+              "displayName": "openMRS.observation.group",
+              "fieldKey": "groupsMembers"
+            },
+            {
+              "displayName": "openMRS.observation.groupMembers",
+              "fieldKey": "endDate"
+            },
+            {
+              "displayName": "openMRS.encounter.uuid",
+              "fieldKey": "encounter.uuid"
+            },
+            {
+              "displayName": "openMRS.observation.value",
+              "fieldKey": "value"
+            }
+          ]
+        },
+        {
           "displayName": "Relationship [$config.getName()]",
           "type": "Relationship-$config.getName()",
           "lookupFields": [

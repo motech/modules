@@ -55,7 +55,7 @@ public class PersonResourceImpl extends BaseResource implements PersonResource {
     }
 
     @Override
-    public AttributeListResult queryPersonAttributeByPersonUuid (Config config, String uuid) {
+    public AttributeListResult queryPersonAttributeByPersonUuid(Config config, String uuid) {
         String responseJson = getJson(config, "/person/{uuid}/attribute", uuid);
         return (AttributeListResult) JsonUtils.readJsonWithAdapters(responseJson, AttributeListResult.class, createAttributeAdapter());
     }
