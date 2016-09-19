@@ -33,6 +33,9 @@ public final class DummyCommcareSchema {
     public static final String XMLNS4 = "http://openrosa.org/formdesigner/32KE58A2-54C5-1Z4B-AR2S-Z0345995RF9E";
     public static final String XMLNS5 = "http://openrosa.org/formdesigner/13KE58A2-54C5-1Z4B-AR2S-Z0345995RF9E";
 
+    public static final String APP_ID1 = "cef11d974db0f4b69b465df85ef8c826";
+    public static final String APP_ID2 = "053c85550dc563a682ff610dab71f8d5";
+
     public static List<CommcareApplicationJson> getApplicationsForConfigOne() {
         List<CommcareApplicationJson> applicationsInConfig1 = new ArrayList<>();
 
@@ -116,10 +119,12 @@ public final class DummyCommcareSchema {
 
         CommcareApplicationJson commcareApplicationJson1 = new CommcareApplicationJson();
         commcareApplicationJson1.setApplicationName("app1");
+        commcareApplicationJson1.setCommcareAppId(APP_ID1);
         commcareApplicationJson1.setModules(Arrays.asList(commcareModuleJson1, commcareModuleJson2));
 
         CommcareApplicationJson commcareApplicationJson2 = new CommcareApplicationJson();
         commcareApplicationJson2.setApplicationName("app2");
+        commcareApplicationJson2.setCommcareAppId(APP_ID2);
         commcareApplicationJson2.setModules(Collections.singletonList((commcareModuleJson3)));
 
         applicationsInConfig1.add(commcareApplicationJson1);
@@ -156,6 +161,7 @@ public final class DummyCommcareSchema {
 
         CommcareApplicationJson commcareApplicationJson3 = new CommcareApplicationJson();
         commcareApplicationJson3.setApplicationName("app1");
+        commcareApplicationJson3.setCommcareAppId(APP_ID1);
         commcareApplicationJson3.setModules(Collections.singletonList((commcareModuleJson4)));
 
         applicationsInConfig2.add(commcareApplicationJson3);
@@ -191,6 +197,7 @@ public final class DummyCommcareSchema {
 
         CommcareApplicationJson commcareApplicationJson3 = new CommcareApplicationJson();
         commcareApplicationJson3.setApplicationName("app1");
+        commcareApplicationJson3.setCommcareAppId(APP_ID1);
         commcareApplicationJson3.setModules(Collections.singletonList((commcareModuleJson5)));
 
         applicationsInConfig3.add(commcareApplicationJson3);
