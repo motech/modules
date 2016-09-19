@@ -17,6 +17,8 @@ import org.motechproject.openmrs.domain.Location;
 import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.Person;
 import org.motechproject.openmrs.domain.Provider;
+import org.motechproject.openmrs.domain.Visit;
+import org.motechproject.openmrs.domain.VisitType;
 import org.motechproject.openmrs.exception.ConceptNameAlreadyInUseException;
 import org.motechproject.openmrs.exception.PatientNotFoundException;
 import org.motechproject.openmrs.service.OpenMRSConceptService;
@@ -26,13 +28,14 @@ import org.motechproject.openmrs.service.OpenMRSObservationService;
 import org.motechproject.openmrs.service.OpenMRSPatientService;
 import org.motechproject.openmrs.service.OpenMRSPersonService;
 import org.motechproject.openmrs.service.OpenMRSProviderService;
+import org.motechproject.openmrs.service.OpenMRSVisitService;
 import org.motechproject.openmrs.tasks.constants.Keys;
 import org.motechproject.tasks.domain.mds.task.DataSource;
 import org.motechproject.tasks.domain.mds.task.Lookup;
 import org.motechproject.tasks.domain.mds.task.Task;
 import org.motechproject.tasks.domain.mds.task.TaskActionInformation;
 import org.motechproject.tasks.domain.mds.task.TaskActivity;
-import org.motechproject.tasks.domain.mds.task.TaskActivityType;
+import org.motechproject.tasks.domain.enums.TaskActivityType;
 import org.motechproject.tasks.domain.mds.task.TaskConfig;
 import org.motechproject.tasks.domain.mds.task.TaskConfigStep;
 import org.motechproject.tasks.domain.mds.task.TaskTriggerInformation;
@@ -78,6 +81,9 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     private OpenMRSEncounterService encounterService;
 
     @Inject
+    private OpenMRSVisitService visitService;
+
+    @Inject
     private OpenMRSLocationService locationService;
 
     @Inject
@@ -102,6 +108,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     private Encounter createdEncounter;
     private Provider createdProvider;
     private EncounterType createdEncounterType;
+    private String visitTypeUuid;
 
     private static final String OPENMRS_CHANNEL_NAME = "org.motechproject.openmrs";
     private static final String OPENMRS_MODULE_NAME = "openMRS";
@@ -114,6 +121,9 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
     private static final Integer MAX_RETRIES_BEFORE_FAIL = 20;
     private static final Integer WAIT_TIME = 2000;
+    private DateTime encounterDateTime = new DateTime("2012-01-16T00:00:00Z");
+    private DateTime visitStartDateTime = new DateTime("2010-01-10T07:22:05Z");
+    private DateTime visitStopDateTime = new DateTime("2014-08-01T07:22:05Z");
 
     @Override
     protected Collection<String> getAdditionalTestDependencies() {
@@ -158,6 +168,10 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         encounterService.deleteEncounterType(DEFAULT_CONFIG_NAME, createdEncounterType.getUuid());
 
         providerService.deleteProvider(DEFAULT_CONFIG_NAME, createdProvider.getUuid());
+
+        visitService.deleteVisit(DEFAULT_CONFIG_NAME, createdEncounter.getVisit().getUuid());
+
+        visitService.deleteVisitType(DEFAULT_CONFIG_NAME, visitTypeUuid);
 
         patientService.deletePatient(DEFAULT_CONFIG_NAME, createdPatient.getUuid());
 
@@ -239,7 +253,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         assertEquals(firstPatientUuid, address.getAddress1());
     }
-    
+
     private Long createPatientTestTask() {
         TaskTriggerInformation triggerInformation = new TaskTriggerInformation("CREATE SettingsRecord", "data-services", MDS_CHANNEL_NAME,
                 VERSION, TRIGGER_SUBJECT, TRIGGER_SUBJECT);
@@ -284,15 +298,16 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         SortedSet<TaskConfigStep> taskConfigStepSortedSet = new TreeSet<>();
         taskConfigStepSortedSet.add(createEncounterDataSource());
-        TaskConfig taskConfig = new TaskConfig( );
+        TaskConfig taskConfig = new TaskConfig();
         taskConfig.addAll(taskConfigStepSortedSet);
 
         Map<String, String> values = new HashMap<>();
         values.put(Keys.PROVIDER_UUID, createdProvider.getUuid());
         values.put(Keys.PATIENT_UUID, "{{ad.openMRS.Encounter-" + DEFAULT_CONFIG_NAME + "#0.patient.uuid}}");
         values.put(Keys.ENCOUNTER_TYPE, "{{ad.openMRS.Encounter-" + DEFAULT_CONFIG_NAME + "#0.encounterType.name}}");
-        values.put(Keys.ENCOUNTER_DATE, new DateTime("1999-01-16T00:00:00Z").toString());
+        values.put(Keys.ENCOUNTER_DATE, encounterDateTime.toString());
         values.put(Keys.LOCATION_NAME, "{{ad.openMRS.Encounter-" + DEFAULT_CONFIG_NAME + "#0.location.display}}");
+        values.put(Keys.VISIT_UUID, "{{ad.openMRS.Encounter-" + DEFAULT_CONFIG_NAME + "#0.visit.uuid}}");
         values.put(Keys.CONFIG_NAME, DEFAULT_CONFIG_NAME);
         actionInformation.setValues(values);
 
@@ -344,15 +359,16 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     private void createEncounterTestData() throws ParseException, ConceptNameAlreadyInUseException {
         createdProvider = prepareProvider();
         createdEncounterType = prepareEncounterType();
+        Visit createdVisit = prepareVisit();
 
         Location location = locationService.getLocations(DEFAULT_CONFIG_NAME, DEFAULT_LOCATION_NAME).get(0);
-        Encounter encounter = new Encounter(location, createdEncounterType, new DateTime("2001-01-16T00:00:00Z").toDate(),
-                createdPatient, Collections.singletonList(createdProvider.getPerson()), null);
+        Encounter encounter = new Encounter(location, createdEncounterType, encounterDateTime.toDate(),
+                createdPatient, createdVisit, Collections.singletonList(createdProvider.getPerson()), null);
 
         createdEncounter = encounterService.createEncounter(DEFAULT_CONFIG_NAME, encounter);
     }
 
-    private Task prepareCreatePatientPostActionParameterTask(){
+    private Task prepareCreatePatientPostActionParameterTask() {
         TaskTriggerInformation triggerInformation = new TaskTriggerInformation("CREATE SettingsRecord", "data-services", MDS_CHANNEL_NAME,
                 VERSION, TRIGGER_SUBJECT, TRIGGER_SUBJECT);
 
@@ -371,7 +387,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         return task;
     }
 
-    private TaskActionInformation prepareCreatePatientActionInformation(String adress1, String motechId){
+    private TaskActionInformation prepareCreatePatientActionInformation(String adress1, String motechId) {
         TaskActionInformation actionInformation = new TaskActionInformation("Create Patient [" + DEFAULT_CONFIG_NAME + "]", OPENMRS_CHANNEL_NAME,
                 OPENMRS_CHANNEL_NAME, VERSION, TEST_INTERFACE, "createPatient");
         actionInformation.setSubject(String.format("createPatient.%s", DEFAULT_CONFIG_NAME));
@@ -409,6 +425,22 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         assertNotNull(location);
 
         return new Patient(person, MOTECH_ID, location);
+    }
+
+    private Visit prepareVisit() {
+        VisitType tempVisitType = new VisitType();
+        tempVisitType.setName("TestVisitType");
+
+        visitTypeUuid = visitService.createVisitType(DEFAULT_CONFIG_NAME, tempVisitType).getUuid();
+        tempVisitType = visitService.getVisitTypeByUuid(DEFAULT_CONFIG_NAME, visitTypeUuid);
+
+        Visit tempVisit = new Visit();
+        tempVisit.setPatient(createdPatient);
+        tempVisit.setStartDatetime(visitStartDateTime.toDate());
+        tempVisit.setStopDatetime(visitStopDateTime.toDate());
+        tempVisit.setVisitType(tempVisitType);
+
+        return visitService.createVisit(DEFAULT_CONFIG_NAME, tempVisit);
     }
 
     private void updatePatientWithNewAttribute() {
@@ -527,7 +559,8 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
             if (!Objects.equals(encounter.getUuid(), createdEncounter.getUuid())) {
                 assertEquals(createdEncounter.getPatient().getUuid(), encounter.getPatient().getUuid());
                 assertEquals(createdEncounter.getEncounterType().getUuid(), encounter.getEncounterType().getUuid());
-                assertEquals(new DateTime("1999-01-16T00:00:00Z").toDate(), encounter.getEncounterDatetime());
+                assertEquals(createdEncounter.getVisit().getUuid(), encounter.getVisit().getUuid());
+                assertEquals(createdEncounter.getEncounterDatetime(), encounter.getEncounterDatetime());
             }
         }
     }
