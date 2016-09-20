@@ -174,6 +174,43 @@ public class OpenMRSActionProxyServiceTest {
     }
 
     @Test
+    public void shouldCreateEncounterWithGivenParametersWithObsWithManyValues() {
+        Location location = new Location();
+        location.setName("testLocation");
+
+        Patient patient = new Patient();
+        patient.setUuid("10");
+
+        Provider provider = new Provider();
+        provider.setUuid("20");
+
+        Person person = new Person();
+        person.setUuid("30");
+        provider.setPerson(person);
+
+        DateTime encounterDatetime = new DateTime("2000-08-16T07:22:05Z");
+        Map<String, String> observations = new HashMap<>();
+        observations.put("testConceptName","testObservationValueName0, testObservationValueName1");
+
+        List<Observation> obsList = createObservationListWithManyObservations();
+
+        Encounter encounter = new Encounter(location, new EncounterType("testEncounterType"), encounterDatetime.toDate(), patient, Collections.singletonList(provider.getPerson()), obsList);
+
+        doReturn(patient).when(patientService).getPatientByUuid(eq(CONFIG_NAME), eq(patient.getUuid()));
+        doReturn(provider).when(providerService).getProviderByUuid(eq(CONFIG_NAME), eq(provider.getUuid()));
+        doReturn(Collections.singletonList(location))
+                .when(locationService).getLocations(eq(CONFIG_NAME), eq(location.getName()));
+
+        openMRSActionProxyService.createEncounter(CONFIG_NAME, new DateTime(encounter.getEncounterDatetime()),
+                encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid(),
+                observations);
+
+        verify(encounterService).createEncounter(eq(CONFIG_NAME), encounterCaptor.capture());
+
+        assertEquals(encounter, encounterCaptor.getValue());
+    }
+
+    @Test
     public void shouldCreatePatientWithGivenParameters() {
         Person person = createTestPerson();
         Concept causeOfDeath = createTestConcept("testCauseOfDeath");
@@ -551,6 +588,23 @@ public class OpenMRSActionProxyServiceTest {
         observation.setObsDatetime(new DateTime("2000-08-16T07:22:05Z").toDate());
 
         return Collections.singletonList(observation);
+    }
+
+    private List<Observation> createObservationListWithManyObservations() {
+        List<Observation> observationList = new ArrayList<>();
+
+        for (int i = 0; i < 2; i++) {
+            Observation observation = new Observation();
+
+            ConceptName conceptName = new ConceptName("testConceptName");
+            Concept concept = new Concept(conceptName);
+
+            observation.setConcept(concept);
+            observation.setValue(new Observation.ObservationValue("testObservationValueName" + Integer.toString(i)));
+            observation.setObsDatetime(new DateTime("2000-08-16T07:22:05Z").toDate());
+            observationList.add(observation);
+        }
+        return observationList;
     }
 
     private CohortQueryReport prepareCohortQueryReport(boolean withMembers) {
