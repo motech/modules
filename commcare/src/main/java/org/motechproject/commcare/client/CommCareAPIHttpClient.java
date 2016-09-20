@@ -151,6 +151,16 @@ public class CommCareAPIHttpClient {
     }
 
     /**
+      * Executes a HTTP get request to the reports list API endpoint.
+      *
+      * @param accountConfig the account configuration to use
+      * @return the response as a String (JSON expected)
+      */
+    public String reportsListRequest(AccountConfig accountConfig) {
+        return this.getRequest(accountConfig, commcareReportsListUrl(accountConfig), null);
+    }
+
+    /**
      * Retrieves a list of the cases from the CommCare server. The given {@code caseRequest} will be used for fetching
      * data from the server.
      *
@@ -522,6 +532,11 @@ public class CommCareAPIHttpClient {
     String commcareCaseUrl(AccountConfig accountConfig, String caseId) {
         return String.format("%s/%s/api/v%s/case/%s/", getCommcareBaseUrl(accountConfig.getBaseUrl()),
                 accountConfig.getDomain(), API_VERSION, caseId);
+    }
+
+    String commcareReportsListUrl(AccountConfig accountConfig) {
+        return String.format("%s/%s/api/v%s/simplereportconfiguration/?format=json", getCommcareBaseUrl(accountConfig.getBaseUrl()),
+                        accountConfig.getDomain(), API_VERSION);
     }
 
     String commcareStockTransactionsUrl(AccountConfig accountConfig) {
