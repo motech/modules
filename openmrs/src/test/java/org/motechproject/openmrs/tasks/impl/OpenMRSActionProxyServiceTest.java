@@ -116,9 +116,9 @@ public class OpenMRSActionProxyServiceTest {
 
         DateTime encounterDatetime = new DateTime("2000-08-16T07:22:05Z");
         Map<String, String> observations = new HashMap<>();
-        observations.put("testConceptName","testObservationValueName");
+        observations.put("testConceptName","testObservationValueName0");
 
-        List<Observation> obsList = createObservationList();
+        List<Observation> obsList = createObservationList(1);
 
         Encounter encounter = new Encounter(location, new EncounterType("testEncounterType"), encounterDatetime.toDate(), patient, Collections.singletonList(provider.getPerson()), obsList);
 
@@ -192,7 +192,7 @@ public class OpenMRSActionProxyServiceTest {
         Map<String, String> observations = new HashMap<>();
         observations.put("testConceptName","testObservationValueName0, testObservationValueName1");
 
-        List<Observation> obsList = createObservationListWithManyObservations();
+        List<Observation> obsList = createObservationList(2);
 
         Encounter encounter = new Encounter(location, new EncounterType("testEncounterType"), encounterDatetime.toDate(), patient, Collections.singletonList(provider.getPerson()), obsList);
 
@@ -577,23 +577,10 @@ public class OpenMRSActionProxyServiceTest {
         return concept;
     }
 
-    private List<Observation> createObservationList() {
-        Observation observation = new Observation();
-
-        ConceptName conceptName = new ConceptName("testConceptName");
-        Concept concept = new Concept(conceptName);
-
-        observation.setConcept(concept);
-        observation.setValue(new Observation.ObservationValue("testObservationValueName"));
-        observation.setObsDatetime(new DateTime("2000-08-16T07:22:05Z").toDate());
-
-        return Collections.singletonList(observation);
-    }
-
-    private List<Observation> createObservationListWithManyObservations() {
+    private List<Observation> createObservationList(Integer observationsNumber) {
         List<Observation> observationList = new ArrayList<>();
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < observationsNumber; i++) {
             Observation observation = new Observation();
 
             ConceptName conceptName = new ConceptName("testConceptName");
