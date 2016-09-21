@@ -1,0 +1,880 @@
+[INFO] Scanning for projects...
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building OpenMRS 0.30-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ openmrs ---
+[INFO] Deleting /home/nextuser/workspace/modules/openmrs/target
+[INFO] 
+[INFO] --- maven-enforcer-plugin:1.4.1:enforce (enforce-dependency-convergence) @ openmrs ---
+[INFO] 
+[INFO] --- properties-maven-plugin:1.0-alpha-2:read-project-properties (default) @ openmrs ---
+[INFO] 
+[INFO] --- build-helper-maven-plugin:1.7:parse-version (default) @ openmrs ---
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:resources (default) @ openmrs ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 0 resource
+[INFO] Copying 12 resources
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:resolve (list-dependencies) @ openmrs ---
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:copy-dependencies (copy-osgi-dependencies) @ openmrs ---
+[INFO] paranamer-2.6-sources.jar already exists in destination.
+[INFO] kahadb-5.4.2.jar already exists in destination.
+[INFO] org.apache.servicemix.bundles.spring-context-3.2.16.RELEASE_1.jar already exists in destination.
+[INFO] org.apache.servicemix.bundles.paranamer-2.6_1.jar already exists in destination.
+[INFO] org.apache.servicemix.specs.saaj-api-1.3-2.2.0.jar already exists in destination.
+[INFO] aopalliance-1.0.jar already exists in destination.
+[INFO] quartz-2.2.1.jar already exists in destination.
+[INFO] datanucleus-core-4.0.1.jar already exists in destination.
+[INFO] org.apache.felix.eventadmin-1.3.2.jar already exists in destination.
+[INFO] motech-tasks-0.30-SNAPSHOT.jar already exists in destination.
+[INFO] maven-scm-provider-svnexe-1.4.jar already exists in destination.
+[INFO] org.apache.servicemix.bundles.saaj-impl-1.3.25_1.jar already exists in destination.
+[INFO] motech-platform-dataservices-migration-0.30-SNAPSHOT.jar already exists in destination.
+[INFO] javax.management.j2ee-api-1.1.1.jar already exists in destination.
+[INFO] org.apache.servicemix.bundles.spring-expression-3.2.16.RELEASE_1.jar already exists in destination.
+[INFO] datanucleus-rdbms-4.0.1.jar already exists in destination.
+[INFO] datanucleus-java8-4.0.5.jar already exists in destination.
+[INFO] org.apache.servicemix.bundles.spring-aop-3.2.16.RELEASE_1.jar already exists in destination.
+[INFO] mimepull-1.9.jar already exists in destination.
+[INFO] asm-commons-5.0.3.jar already exists in destination.
+[INFO] commons-digester-2.1.jar already exists in destination.
+[INFO] org.eclipse.gemini.blueprint.core-1.0.2.RELEASE.jar already exists in destination.
+[INFO] motech-platform-commons-date-0.30-SNAPSHOT.jar already exists in destination.
+[INFO] commons-logging-1.1.1.jar already exists in destination.
+[INFO] commons-io-2.4.jar already exists in destination.
+[INFO] commons-beanutils-1.9.2.jar already exists in destination.
+[INFO] flyway-core-2.3.1.jar already exists in destination.
+[INFO] spring-security-web-3.2.8.RELEASE.jar already exists in destination.
+[INFO] motech-osgi-platform-0.30-SNAPSHOT.jar already exists in destination.
+[INFO] time-api-0.6.3.jar already exists in destination.
+[INFO] commons-fileupload-1.3.1.jar already exists in destination.
+[INFO] super-csv-2.2.0.jar already exists in destination.
+[INFO] com.springsource.javax.servlet-2.5.0.jar already exists in destination.
+[INFO] org.apache.servicemix.bundles.jsch-0.1.51_1.jar already exists in destination.
+[INFO] org.apache.bval.bundle-0.5.jar already exists in destination.
+[INFO] org.apache.servicemix.bundles.spring-web-3.2.16.RELEASE_1.jar already exists in destination.
+[INFO] org.apache.servicemix.bundles.c3p0-0.9.1.2_1.jar already exists in destination.
+[INFO] joda-time-2.9.1.jar already exists in destination.
+[INFO] regexp-1.3.jar already exists in destination.
+[INFO] spring-security-core-3.2.8.RELEASE.jar already exists in destination.
+[INFO] asm-5.0.3.jar already exists in destination.
+[INFO] bval-core-0.5.jar already exists in destination.
+[INFO] motech-platform-event-0.30-SNAPSHOT.jar already exists in destination.
+[INFO] maven-scm-api-1.4.jar already exists in destination.
+[INFO] spring-orm-3.2.16.RELEASE.jar already exists in destination.
+[INFO] commons-lang-2.6.jar already exists in destination.
+[INFO] activation-1.1.jar already exists in destination.
+[INFO] commons-vfs2-2.0.jar already exists in destination.
+[INFO] com.springsource.org.apache.commons.httpclient-3.1.0.jar already exists in destination.
+[INFO] motech-platform-dataservices-0.30-SNAPSHOT.jar already exists in destination.
+[INFO] commons-codec-1.10.jar already exists in destination.
+[INFO] javassist-3.18.1-GA.jar already exists in destination.
+[INFO] motech-platform-config-core-0.30-SNAPSHOT.jar already exists in destination.
+[INFO] org.apache.servicemix.bundles.velocity-1.6.4_4.jar already exists in destination.
+[INFO] org.apache.servicemix.bundles.spring-core-3.2.16.RELEASE_1.jar already exists in destination.
+[INFO] org.apache.servicemix.bundles.spring-context-support-3.2.16.RELEASE_1.jar already exists in destination.
+[INFO] org.apache.servicemix.bundles.spring-security-config-3.2.8.RELEASE_1.jar already exists in destination.
+[INFO] jta-1.1.jar already exists in destination.
+[INFO] org.apache.servicemix.specs.activation-api-1.1-2.4.0.jar already exists in destination.
+[INFO] ow2-ejb-3.1-spec-1.0.13.jar already exists in destination.
+[INFO] stax-api-1.0-2.jar already exists in destination.
+[INFO] javax.xml.rpc-api-1.1.1.jar already exists in destination.
+[INFO] guava-18.0.jar already exists in destination.
+[INFO] org.motechproject.spring-orm-3.2.16.RELEASE_1-r033.jar already exists in destination.
+[INFO] org.eclipse.gemini.blueprint.io-1.0.2.RELEASE.jar already exists in destination.
+[INFO] org.apache.servicemix.bundles.howl-1.0.1-1_3.jar already exists in destination.
+[INFO] org.apache.servicemix.bundles.spring-webmvc-3.2.16.RELEASE_1.jar already exists in destination.
+[INFO] motech-platform-commons-api-0.30-SNAPSHOT.jar already exists in destination.
+[INFO] motech-platform-osgi-extender-fragment-0.30-SNAPSHOT.jar already exists in destination.
+[INFO] jdo-api-3.0.1.jar already exists in destination.
+[INFO] oro-2.0.8.jar already exists in destination.
+[INFO] slf4j-api-1.7.7.jar already exists in destination.
+[INFO] org.osgi.compendium-5.0.0.jar already exists in destination.
+[INFO] org.motechproject.reflections-0.9.9-r033.jar already exists in destination.
+[INFO] com.springsource.javax.transaction-1.1.0.jar already exists in destination.
+[INFO] org.apache.servicemix.bundles.spring-beans-3.2.16.RELEASE_1.jar already exists in destination.
+[INFO] postgresql-9.1-901.jdbc4.jar already exists in destination.
+[INFO] datanucleus-api-jdo-4.0.1.jar already exists in destination.
+[INFO] annotations-2.0.1.jar already exists in destination.
+[INFO] org.motechproject.org.codehaus.jackson-1.9.7-r033.jar already exists in destination.
+[INFO] com.springsource.javax.jms-1.1.0.jar already exists in destination.
+[INFO] mysql-connector-java-5.1.32.jar already exists in destination.
+[INFO] log4j-1.2.17.jar already exists in destination.
+[INFO] org.motechproject.com.google.code.gson-1.7.1-r033.jar already exists in destination.
+[INFO] maven-scm-provider-svn-commons-1.4.jar already exists in destination.
+[INFO] org.apache.servicemix.bundles.aopalliance-1.0_6.jar already exists in destination.
+[INFO] spring-integration-core-2.1.0.RELEASE.jar already exists in destination.
+[INFO] itextpdf-5.5.6.jar already exists in destination.
+[INFO] motech-platform-osgi-web-util-0.30-SNAPSHOT.jar already exists in destination.
+[INFO] datanucleus-jodatime-4.0.6.jar already exists in destination.
+[INFO] org.apache.servicemix.bundles.spring-tx-3.2.16.RELEASE_1.jar already exists in destination.
+[INFO] org.motechproject.javax.time-0.6.3-r033.jar already exists in destination.
+[INFO] org.eclipse.gemini.blueprint.extender-1.0.2.RELEASE.jar already exists in destination.
+[INFO] org.apache.servicemix.bundles.aspectj-1.8.5_1.jar already exists in destination.
+[INFO] org.apache.servicemix.bundles.hamcrest-1.3_1.jar already exists in destination.
+[INFO] commons-net-3.2.jar already exists in destination.
+[INFO] bval-jsr303-0.5.jar already exists in destination.
+[INFO] jcl-over-slf4j-1.7.7.jar already exists in destination.
+[INFO] org.apache.servicemix.bundles.spring-jdbc-3.2.16.RELEASE_1.jar already exists in destination.
+[INFO] org.motechproject.org.apache.activemq-5.4.2-r033.jar already exists in destination.
+[INFO] motech-platform-commons-sql-0.30-SNAPSHOT.jar already exists in destination.
+[INFO] commons-lang3-3.1.jar already exists in destination.
+[INFO] org.apache.servicemix.bundles.spring-jms-3.2.16.RELEASE_1.jar already exists in destination.
+[INFO] paranamer-2.6.jar already exists in destination.
+[INFO] commons-configuration-1.10.jar already exists in destination.
+[INFO] org.apache.servicemix.bundles.dom4j-1.6.1_5.jar already exists in destination.
+[INFO] org.motechproject.org.postgresql-9.1-901.jdbc4-r033.jar already exists in destination.
+[INFO] stax-ex-1.7.4.jar already exists in destination.
+[INFO] motech-platform-server-config-0.30-SNAPSHOT.jar already exists in destination.
+[INFO] commons-beanutils-core-1.8.3.jar already exists in destination.
+[INFO] org.motechproject.com.googlecode.lambdaj-2.3.3-r033.jar already exists in destination.
+[INFO] objenesis-2.1.jar already exists in destination.
+[INFO] jackrabbit-webdav-2.9.1.jar already exists in destination.
+[INFO] commons-validator-1.4.1.jar already exists in destination.
+[INFO] asm-tree-5.0.3.jar already exists in destination.
+[INFO] org.apache.servicemix.bundles.cglib-2.2.2_1.jar already exists in destination.
+[INFO] spring-integration-jms-2.1.0.RELEASE.jar already exists in destination.
+[INFO] commons-collections-3.2.2.jar already exists in destination.
+[INFO] slf4j-log4j12-1.7.7.jar already exists in destination.
+[INFO] com.springsource.javax.validation-1.0.0.GA.jar already exists in destination.
+[INFO] org.eclipse.osgi.services-3.3.0.v20110513.jar already exists in destination.
+[INFO] reflections-0.9.9.jar already exists in destination.
+[INFO] commons-httpclient-3.1.jar already exists in destination.
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:resources (default-resources) @ openmrs ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 0 resource
+[INFO] Copying 12 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.5.1:compile (default-compile) @ openmrs ---
+[INFO] Compiling 121 source files to /home/nextuser/workspace/modules/openmrs/target/classes
+[INFO] 
+[INFO] >>> maven-pmd-plugin:3.5:check (default) @ openmrs >>>
+[INFO] 
+[INFO] --- maven-pmd-plugin:3.5:pmd (pmd) @ openmrs ---
+[INFO] 
+[INFO] <<< maven-pmd-plugin:3.5:check (default) @ openmrs <<<
+[INFO] 
+[INFO] --- maven-pmd-plugin:3.5:check (default) @ openmrs ---
+[INFO] 
+[INFO] 
+[INFO] >>> maven-pmd-plugin:3.5:cpd-check (default) @ openmrs >>>
+[INFO] 
+[INFO] --- maven-pmd-plugin:3.5:cpd (cpd) @ openmrs ---
+[INFO] 
+[INFO] <<< maven-pmd-plugin:3.5:cpd-check (default) @ openmrs <<<
+[INFO] 
+[INFO] --- maven-pmd-plugin:3.5:cpd-check (default) @ openmrs ---
+[INFO] 
+[INFO] 
+[INFO] --- maven-checkstyle-plugin:2.10:check (default) @ openmrs ---
+[INFO] Starting audit...
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/service/impl/OpenMRSConfigServiceImpl.java:170:77: '-' is not preceded with whitespace.
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/service/impl/OpenMRSConfigServiceImpl.java:170:78: '-' is not followed by whitespace.
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/tasks/OpenMRSTasksNotifier.java:0: File does not end with a newline.
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/tasks/impl/OpenMRSActionProxyServiceImpl.java:82:20: warning: More than 7 parameters (found 28).
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/tasks/impl/OpenMRSActionProxyServiceImpl.java:117:17: warning: More than 7 parameters (found 26).
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/tasks/impl/OpenMRSActionProxyServiceImpl.java:163:41: warning: '(' is preceded with whitespace.
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/tasks/impl/OpenMRSActionProxyServiceImpl.java:304:20: warning: More than 7 parameters (found 24).
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/tasks/OpenMRSTaskDataProvider.java:80:12: warning: More than 7 parameters (found 8).
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/tasks/OpenMRSTaskDataProvider.java:145:13: warning: switch without "default" clause.
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/tasks/OpenMRSTaskDataProvider.java:221:49: warning: Avoid nested blocks.
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/tasks/OpenMRSTaskDataProvider.java:229:44: warning: Avoid nested blocks.
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/tasks/OpenMRSTaskDataProvider.java:237:22: warning: Avoid nested blocks.
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/tasks/OpenMRSTaskDataProvider.java:262:13: warning: switch without "default" clause.
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/tasks/OpenMRSTaskDataProvider.java:263:53: warning: Avoid nested blocks.
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/tasks/OpenMRSTaskDataProvider.java:268:48: warning: Avoid nested blocks.
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/tasks/OpenMRSTaskDataProvider.java:305:11: 'if' is not followed by whitespace.
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/tasks/OpenMRSTaskDataProvider.java:319:11: 'if' is not followed by whitespace.
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/tasks/OpenMRSActionProxyService.java:70:13: warning: More than 7 parameters (found 28).
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/tasks/OpenMRSActionProxyService.java:120:10: warning: More than 7 parameters (found 26).
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/tasks/OpenMRSActionProxyService.java:153:34: warning: '(' is preceded with whitespace.
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/domain/AttributeTypeListResult.java:0: File does not end with a newline.
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/domain/Person.java:127:16: warning: More than 7 parameters (found 15).
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/domain/Attribute.java:166:113: Redundant throws: 'JsonParseException' is unchecked exception.
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/domain/RoleListResult.java:0: File does not end with a newline.
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/domain/AttributeListResult.java:13:39: warning: '(' is preceded with whitespace.
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/domain/AttributeListResult.java:17:28: warning: '(' is preceded with whitespace.
+/home/nextuser/workspace/modules/openmrs/src/main/java/org/motechproject/openmrs/resource/impl/PersonResourceImpl.java:58:65: warning: '(' is preceded with whitespace.
+Audit done.
+
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:testResources (default-testResources) @ openmrs ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 54 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.5.1:testCompile (default-testCompile) @ openmrs ---
+[INFO] Compiling 37 source files to /home/nextuser/workspace/modules/openmrs/target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.17:test (default-test) @ openmrs ---
+[INFO] Surefire report directory: /home/nextuser/workspace/modules/openmrs/target/surefire-reports
+[INFO] Using configured provider org.apache.maven.surefire.junitcore.JUnitCoreProvider
+[INFO] parallel='none', perCoreThreadCount=true, threadCount=0, useUnlimitedThreads=false, threadCountSuites=0, threadCountClasses=0, threadCountMethods=0, parallelOptimized=true
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Java HotSpot(TM) 64-Bit Server VM warning: ignoring option UseSplitVerifier; support was removed in 8.0
+Running org.motechproject.openmrs.service.impl.OpenMRSConfigServiceImplTest
+Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.428 sec - in org.motechproject.openmrs.service.impl.OpenMRSConfigServiceImplTest
+Running org.motechproject.openmrs.config.ConfigsTest
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 sec - in org.motechproject.openmrs.config.ConfigsTest
+Running org.motechproject.openmrs.tasks.OpenMRSTaskDataProviderBuilderTest
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.124 sec - in org.motechproject.openmrs.tasks.OpenMRSTaskDataProviderBuilderTest
+Running org.motechproject.openmrs.tasks.builder.OpenMRSTriggerBuilderTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec - in org.motechproject.openmrs.tasks.builder.OpenMRSTriggerBuilderTest
+Running org.motechproject.openmrs.tasks.builder.DisplayNameHelperTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.056 sec - in org.motechproject.openmrs.tasks.builder.DisplayNameHelperTest
+Running org.motechproject.openmrs.tasks.impl.OpenMRSActionProxyServiceTest
+2016-09-21 13:40:03,691 main WARN  [org.motechproject.openmrs.tasks.impl.OpenMRSActionProxyServiceImpl] There is no location with name testLocationNameForNotExistingLocation
+Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.213 sec - in org.motechproject.openmrs.tasks.impl.OpenMRSActionProxyServiceTest
+Running org.motechproject.openmrs.tasks.OpenMRSTaskDataProviderTest
+2016-09-21 13:40:03,774 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:03,782 main WARN  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Active Program Only field should be 'true' or 'false', actually is "%s".
+2016-09-21 13:40:03,783 main WARN  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Multiple program enrollment found with the patient UUID "495b10c4-56bd-11df-a35e-0027136865c4" and program name "program".
+2016-09-21 13:40:03,791 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:03,801 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:03,803 main WARN  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Active Program Only field should be 'true' or 'false', actually is "%s".
+2016-09-21 13:40:03,803 main WARN  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Multiple program enrollment found with the patient MOTECH Id "3" and program name "program".
+2016-09-21 13:40:03,815 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:03,817 main WARN  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Active Program Only field should be 'true' or 'false', actually is "%s".
+2016-09-21 13:40:03,825 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:03,831 main WARN  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Active Program Only field should be 'true' or 'false', actually is "%s".
+2016-09-21 13:40:03,843 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:03,858 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:03,860 main WARN  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Multiple program enrollment found with the patient MOTECH Id "3" and program name "program".
+2016-09-21 13:40:03,871 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:03,880 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:03,889 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:03,890 main WARN  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Multiple program enrollment found with the patient UUID "495b10c4-56bd-11df-a35e-0027136865c4" and program name "program".
+2016-09-21 13:40:03,898 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:03,905 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:03,907 main ERROR [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Class testClass not found by provider openMRS
+java.lang.ClassNotFoundException: org.motechproject.openmrs.domain.testClass
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:331)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+	at org.motechproject.commons.api.AbstractDataProvider.getClassForType(AbstractDataProvider.java:56)
+	at org.motechproject.commons.api.AbstractDataProvider.supports(AbstractDataProvider.java:46)
+	at org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider.lookup(OpenMRSTaskDataProvider.java:144)
+	at org.motechproject.openmrs.tasks.OpenMRSTaskDataProviderTest.shouldReturnNullWhenClassIsNotSupported(OpenMRSTaskDataProviderTest.java:119)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:69)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:48)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:292)
+	at org.mockito.internal.runners.JUnit45AndHigherRunnerImpl.run(JUnit45AndHigherRunnerImpl.java:37)
+	at org.mockito.runners.MockitoJUnitRunner.run(MockitoJUnitRunner.java:62)
+	at org.junit.runners.Suite.runChild(Suite.java:128)
+	at org.junit.runners.Suite.runChild(Suite.java:24)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:292)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:157)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:136)
+	at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.createRequestAndRun(JUnitCoreWrapper.java:113)
+	at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.executeEager(JUnitCoreWrapper.java:85)
+	at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.execute(JUnitCoreWrapper.java:54)
+	at org.apache.maven.surefire.junitcore.JUnitCoreProvider.invoke(JUnitCoreProvider.java:134)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:200)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:153)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:103)
+2016-09-21 13:40:03,915 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:03,915 main ERROR [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Lookup with name wrongLookupName doesn't exist for encounter object
+2016-09-21 13:40:03,921 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:03,928 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:03,935 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:03,941 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:03,942 main ERROR [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Lookup with name wrongLookupName doesn't exist for patient object
+2016-09-21 13:40:03,946 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:03,952 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:03,958 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:03,969 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:03,975 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:03,981 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:03,986 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:03,987 main ERROR [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Lookup with name wrongLookupName doesn't exist for provider object
+2016-09-21 13:40:03,992 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:04,000 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:04,006 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:04,012 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:04,020 main INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Omitting registration of empty OpenMRS data provider
+2016-09-21 13:40:04,020 main ERROR [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Lookup with name wrongLookupName doesn't exist for patient object
+2016-09-21 13:40:04,021 main WARN  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] Active Program Only field should be 'true' or 'false', actually is "%s".
+Tests run: 29, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.255 sec - in org.motechproject.openmrs.tasks.OpenMRSTaskDataProviderTest
+Running org.motechproject.openmrs.validation.ConfigValidatorTest
+Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 sec - in org.motechproject.openmrs.validation.ConfigValidatorTest
+Running org.motechproject.openmrs.domain.PasswordTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 sec - in org.motechproject.openmrs.domain.PasswordTest
+Running org.motechproject.openmrs.resource.impl.CohortResourceImplTest
+2016-09-21 13:40:04,204 main INFO  [org.motechproject.openmrs.resource.impl.CohortResourceImpl] Querying Cohort Query endpoint returned report with 3 members
+2016-09-21 13:40:04,223 main INFO  [org.motechproject.openmrs.resource.impl.CohortResourceImpl] Querying Cohort Query endpoint returned report with 3 members
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.17 sec - in org.motechproject.openmrs.resource.impl.CohortResourceImplTest
+Running org.motechproject.openmrs.resource.impl.GeneratedIdentifierResourceImplTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 sec - in org.motechproject.openmrs.resource.impl.GeneratedIdentifierResourceImplTest
+Running org.motechproject.openmrs.resource.impl.PatientResourceImplTest
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.104 sec - in org.motechproject.openmrs.resource.impl.PatientResourceImplTest
+Running org.motechproject.openmrs.resource.impl.RelationshipResourceImplTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 sec - in org.motechproject.openmrs.resource.impl.RelationshipResourceImplTest
+Running org.motechproject.openmrs.resource.impl.LocationResourceImplTest
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.028 sec - in org.motechproject.openmrs.resource.impl.LocationResourceImplTest
+Running org.motechproject.openmrs.resource.impl.ConceptResourceImplTest
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.028 sec - in org.motechproject.openmrs.resource.impl.ConceptResourceImplTest
+Running org.motechproject.openmrs.resource.impl.PersonResourceImplTest
+Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.068 sec - in org.motechproject.openmrs.resource.impl.PersonResourceImplTest
+Running org.motechproject.openmrs.resource.impl.EncounterResourceImplTest
+2016-09-21 13:40:04,521 main ERROR [org.motechproject.openmrs.util.JsonUtils] Failed to parse date: Unparseable date: "2012-06-03T00:00:00.000Z"
+2016-09-21 13:40:04,522 main ERROR [org.motechproject.openmrs.util.JsonUtils] Failed to parse date: Unparseable date: "2012-06-03T00:00:00.000Z"
+2016-09-21 13:40:04,525 main ERROR [org.motechproject.openmrs.util.JsonUtils] Failed to parse date: Unparseable date: "2012-06-03T00:00:00.000Z"
+2016-09-21 13:40:04,526 main ERROR [org.motechproject.openmrs.util.JsonUtils] Failed to parse date: Unparseable date: "2012-06-03T00:00:00.000Z"
+2016-09-21 13:40:04,532 main ERROR [org.motechproject.openmrs.util.JsonUtils] Failed to parse date: Unparseable date: "2012-06-03T00:00:00.000Z"
+2016-09-21 13:40:04,533 main ERROR [org.motechproject.openmrs.util.JsonUtils] Failed to parse date: Unparseable date: "2012-06-03T00:00:00.000Z"
+2016-09-21 13:40:04,535 main ERROR [org.motechproject.openmrs.util.JsonUtils] Failed to parse date: Unparseable date: "2012-06-03T00:00:00.000Z"
+2016-09-21 13:40:04,536 main ERROR [org.motechproject.openmrs.util.JsonUtils] Failed to parse date: Unparseable date: "2012-06-03T00:00:00.000Z"
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.055 sec - in org.motechproject.openmrs.resource.impl.EncounterResourceImplTest
+Running org.motechproject.openmrs.resource.impl.ProgramEnrollmentResourceImplTest
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.049 sec - in org.motechproject.openmrs.resource.impl.ProgramEnrollmentResourceImplTest
+Running org.motechproject.openmrs.resource.impl.ObservationResourceImplTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 sec - in org.motechproject.openmrs.resource.impl.ObservationResourceImplTest
+Running org.motechproject.openmrs.resource.impl.UserResourceImplTest
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.032 sec - in org.motechproject.openmrs.resource.impl.UserResourceImplTest
+
+Results :
+
+Tests run: 126, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] 
+[INFO] --- maven-bundle-plugin:2.5.3:bundle (default-bundle) @ openmrs ---
+[WARNING] Bundle org.motechproject:openmrs:bundle:0.30-SNAPSHOT : Export org.motechproject.openmrs.service,  has 1,  private references [org.motechproject.openmrs.config], 
+[WARNING] Bundle org.motechproject:openmrs:bundle:0.30-SNAPSHOT : Export org.motechproject.openmrs.tasks,  has 1,  private references [org.motechproject.openmrs.tasks.builder], 
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:copy-resources (copy-bundles) @ openmrs ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:copy-resources (copy-test-config-files) @ openmrs ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource
+[INFO] Copying 1 resource
+[INFO] Copying 1 resource
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:copy-resources (copy-test-openmrs-config-file) @ openmrs ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource
+[INFO] 
+[INFO] --- sql-maven-plugin:1.5:execute (drop-db) @ openmrs ---
+[INFO] Executing commands
+[INFO] 2 of 2 SQL statements executed successfully
+[INFO] 
+[INFO] --- sql-maven-plugin:1.5:execute (create-db) @ openmrs ---
+[INFO] Executing commands
+[INFO] 2 of 2 SQL statements executed successfully
+[INFO] 
+[INFO] --- maven-failsafe-plugin:2.17:integration-test (integration-test) @ openmrs ---
+[INFO] Failsafe report directory: /home/nextuser/workspace/modules/openmrs/target/failsafe-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.motechproject.openmrs.it.version1_12.MRSIntegrationTests
+[INFO] Started jetty 6.1.x at port(s) HTTP:8181
+[INFO] Initializing Spring FrameworkServlet 'servlet_1'
+[INFO] Initialized servlet for org.motechproject.motech-platform-osgi-web-util [104]
+[INFO] Initializing Spring FrameworkServlet 'servlet_3'
+[INFO] Initialized servlet for org.motechproject.motech-platform-dataservices [62]
+2016-09-21 13:41:33,269 EclipseGeminiBlueprintExtenderThread-17 INFO  [org.motechproject.openmrs.tasks.OpenMRSTaskDataProvider] OpenMRS data provider registered
+[INFO] Initializing Spring FrameworkServlet 'servlet_4'
+[INFO] Initialized servlet for org.motechproject.openmrs [13]
+2016-09-21 13:41:34,362 EclipseGeminiBlueprintExtenderThread-18 INFO  [org.motechproject.openmrs.tasks.OpenMRSTasksNotifier] Tasks module became available, registering channel
+2016-09-21 13:41:34,373 EclipseGeminiBlueprintExtenderThread-18 TRACE [org.motechproject.openmrs.tasks.TasksChannelServiceInstance] Registering channel with the following request: Channel{actionTaskEvents=[ActionEventRequest{name='null', actionParameters=[ActionParameterRequest{order=0, key='configName', value='TestOpenMRSServer', displayName='openMRS.configuration.name', type='UNICODE', required=true, hidden=true, options=null}, ActionParameterRequest{order=1, key='encounterDatetime', value='null', displayName='openMRS.encounter.date', type='DATE', required=true, hidden=false, options=null}, ActionParameterRequest{order=2, key='encounterType', value='null', displayName='openMRS.encounter.type', type='UNICODE', required=true, hidden=false, options=null}, ActionParameterRequest{order=3, key='locationName', value='null', displayName='openMRS.location.name', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=4, key='patientUuid', value='null', displayName='openMRS.patient.uuid', type='UNICODE', required=true, hidden=false, options=null}, ActionParameterRequest{order=5, key='providerUuid', value='null', displayName='openMRS.provider.uuid', type='UNICODE', required=true, hidden=false, options=null}, ActionParameterRequest{order=6, key='observation', value='null', displayName='openMRS.encounter.observation', type='MAP', required=false, hidden=false, options=null}], postActionParameters=[ActionParameterRequest{order=0, key='uuid', value='null', displayName='openMRS.encounter.uuid', type='UNICODE', required=false, hidden=false, options=null}], serviceInterface='org.motechproject.openmrs.tasks.OpenMRSActionProxyService', serviceMethod='createEncounter', serviceMethodCallManner='NAMED_PARAMETERS'}, ActionEventRequest{name='null', actionParameters=[ActionParameterRequest{order=0, key='configName', value='TestOpenMRSServer', displayName='openMRS.configuration.name', type='UNICODE', required=false, hidden=true, options=null}, ActionParameterRequest{order=1, key='givenName', value='null', displayName='openMRS.person.givenName', type='UNICODE', required=true, hidden=false, options=null}, ActionParameterRequest{order=2, key='middleName', value='null', displayName='openMRS.person.middleName', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=3, key='familyName', value='null', displayName='openMRS.person.familyName', type='UNICODE', required=true, hidden=false, options=null}, ActionParameterRequest{order=4, key='address1', value='null', displayName='openMRS.address.address1', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=5, key='address2', value='null', displayName='openMRS.address.address2', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=6, key='address3', value='null', displayName='openMRS.address.address3', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=7, key='address4', value='null', displayName='openMRS.address.address4', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=8, key='address5', value='null', displayName='openMRS.address.address5', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=9, key='address6', value='null', displayName='openMRS.address.address6', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=10, key='cityVillage', value='null', displayName='openMRS.address.cityVillage', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=11, key='stateProvince', value='null', displayName='openMRS.address.stateProvince', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=12, key='country', value='null', displayName='openMRS.address.country', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=13, key='postalCode', value='null', displayName='openMRS.address.postalCode', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=14, key='countyDistrict', value='null', displayName='openMRS.address.countyDistrict', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=15, key='latitude', value='null', displayName='openMRS.address.latitude', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=16, key='longitude', value='null', displayName='openMRS.address.longitude', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=17, key='startDate', value='null', displayName='openMRS.address.startDate', type='DATE', required=false, hidden=false, options=null}, ActionParameterRequest{order=18, key='endDate', value='null', displayName='openMRS.address.endDate', type='DATE', required=false, hidden=false, options=null}, ActionParameterRequest{order=19, key='birthDate', value='null', displayName='openMRS.person.birthDate', type='DATE', required=false, hidden=false, options=null}, ActionParameterRequest{order=20, key='birthDateEstimated', value='null', displayName='openMRS.person.birthDateEstimated', type='BOOLEAN', required=false, hidden=false, options=null}, ActionParameterRequest{order=21, key='gender', value='null', displayName='openMRS.person.gender', type='UNICODE', required=true, hidden=false, options=null}, ActionParameterRequest{order=22, key='dead', value='null', displayName='openMRS.person.dead', type='BOOLEAN', required=false, hidden=false, options=null}, ActionParameterRequest{order=23, key='causeOfDeathUUID', value='null', displayName='openMRS.person.causeOfDeath.uuid', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=24, key='motechId', value='null', displayName='openMRS.motechId', type='UNICODE', required=true, hidden=false, options=null}, ActionParameterRequest{order=25, key='locationForMotechId', value='null', displayName='openMRS.location.name', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=26, key='identifiers', value='null', displayName='openMRS.patient.identifiers', type='MAP', required=false, hidden=false, options=null}, ActionParameterRequest{order=27, key='person.personAttributes', value='null', displayName='openMRS.patient.personAttributes', type='MAP', required=false, hidden=false, options=null}], postActionParameters=[ActionParameterRequest{order=0, key='uuid', value='null', displayName='openMRS.patient.uuid', type='UNICODE', required=false, hidden=false, options=null}], serviceInterface='org.motechproject.openmrs.tasks.OpenMRSActionProxyService', serviceMethod='createPatient', serviceMethodCallManner='NAMED_PARAMETERS'}, ActionEventRequest{name='null', actionParameters=[ActionParameterRequest{order=0, key='configName', value='TestOpenMRSServer', displayName='openMRS.configuration.name', type='UNICODE', required=false, hidden=true, options=null}, ActionParameterRequest{order=1, key='person.uuid', value='null', displayName='openMRS.person.uuid', type='UNICODE', required=true, hidden=false, options=null}, ActionParameterRequest{order=2, key='givenName', value='null', displayName='openMRS.person.givenName', type='UNICODE', required=true, hidden=false, options=null}, ActionParameterRequest{order=3, key='middleName', value='null', displayName='openMRS.person.middleName', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=4, key='familyName', value='null', displayName='openMRS.person.familyName', type='UNICODE', required=true, hidden=false, options=null}, ActionParameterRequest{order=5, key='address1', value='null', displayName='openMRS.address.address1', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=6, key='address2', value='null', displayName='openMRS.address.address2', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=7, key='address3', value='null', displayName='openMRS.address.address3', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=8, key='address4', value='null', displayName='openMRS.address.address4', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=9, key='address5', value='null', displayName='openMRS.address.address5', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=10, key='address6', value='null', displayName='openMRS.address.address6', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=11, key='cityVillage', value='null', displayName='openMRS.address.cityVillage', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=12, key='stateProvince', value='null', displayName='openMRS.address.stateProvince', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=13, key='country', value='null', displayName='openMRS.address.country', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=14, key='postalCode', value='null', displayName='openMRS.address.postalCode', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=15, key='countyDistrict', value='null', displayName='openMRS.address.countyDistrict', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=16, key='latitude', value='null', displayName='openMRS.address.latitude', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=17, key='longitude', value='null', displayName='openMRS.address.longitude', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=18, key='startDate', value='null', displayName='openMRS.address.startDate', type='DATE', required=false, hidden=false, options=null}, ActionParameterRequest{order=19, key='endDate', value='null', displayName='openMRS.address.endDate', type='DATE', required=false, hidden=false, options=null}, ActionParameterRequest{order=20, key='birthDate', value='null', displayName='openMRS.person.birthDate', type='DATE', required=false, hidden=false, options=null}, ActionParameterRequest{order=21, key='birthDateEstimated', value='null', displayName='openMRS.person.birthDateEstimated', type='BOOLEAN', required=false, hidden=false, options=null}, ActionParameterRequest{order=22, key='gender', value='null', displayName='openMRS.person.gender', type='UNICODE', required=true, hidden=false, options=null}, ActionParameterRequest{order=23, key='dead', value='null', displayName='openMRS.person.dead', type='BOOLEAN', required=false, hidden=false, options=null}, ActionParameterRequest{order=24, key='causeOfDeathUUID', value='null', displayName='openMRS.person.causeOfDeath.uuid', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=25, key='person.personAttributes', value='null', displayName='openMRS.patient.personAttributes', type='MAP', required=false, hidden=false, options=null}], postActionParameters=[], serviceInterface='org.motechproject.openmrs.tasks.OpenMRSActionProxyService', serviceMethod='updatePerson', serviceMethodCallManner='NAMED_PARAMETERS'}, ActionEventRequest{name='null', actionParameters=[ActionParameterRequest{order=0, key='configName', value='TestOpenMRSServer', displayName='openMRS.configuration.name', type='UNICODE', required=false, hidden=true, options=null}, ActionParameterRequest{order=1, key='person.uuid', value='null', displayName='openMRS.person.uuid', type='UNICODE', required=true, hidden=false, options=null}, ActionParameterRequest{order=2, key='identifiers', value='null', displayName='openMRS.patient.identifiers', type='MAP', required=true, hidden=false, options=null}], postActionParameters=[], serviceInterface='org.motechproject.openmrs.tasks.OpenMRSActionProxyService', serviceMethod='updatePatientIdentifiers', serviceMethodCallManner='NAMED_PARAMETERS'}, ActionEventRequest{name='null', actionParameters=[ActionParameterRequest{order=0, key='configName', value='TestOpenMRSServer', displayName='openMRS.configuration.name', type='UNICODE', required=false, hidden=true, options=null}, ActionParameterRequest{order=1, key='cohortQueryUuid', value='null', displayName='openMRS.cohortQuery.uuid', type='UNICODE', required=true, hidden=false, options=null}, ActionParameterRequest{order=2, key='cohortQueryParameters', value='null', displayName='openMRS.cohortQuery.parameters', type='MAP', required=false, hidden=false, options=null}], postActionParameters=[], serviceInterface='org.motechproject.openmrs.tasks.OpenMRSActionProxyService', serviceMethod='getCohortQueryReport', serviceMethodCallManner='NAMED_PARAMETERS'}, ActionEventRequest{name='null', actionParameters=[ActionParameterRequest{order=0, key='configName', value='TestOpenMRSServer', displayName='openMRS.configuration.name', type='UNICODE', required=false, hidden=true, options=null}, ActionParameterRequest{order=1, key='patientUuid', value='null', displayName='openMRS.patient.uuid', type='UNICODE', required=true, hidden=false, options=null}, ActionParameterRequest{order=2, key='program.uuid', value='null', displayName='openMRS.program.uuid', type='UNICODE', required=true, hidden=false, options=null}, ActionParameterRequest{order=3, key='dateEnrolled', value='null', displayName='openMRS.programEnrollment.dateEnrolled', type='DATE', required=true, hidden=false, options=null}, ActionParameterRequest{order=4, key='dateCompleted', value='null', displayName='openMRS.programEnrollment.dateCompleted', type='DATE', required=false, hidden=false, options=null}, ActionParameterRequest{order=5, key='locationName', value='null', displayName='openMRS.location.name', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=6, key='programEnrollmentAttributes', value='null', displayName='openMRS.programEnrollment.attributes', type='MAP', required=false, hidden=false, options=null}], postActionParameters=[], serviceInterface='org.motechproject.openmrs.tasks.OpenMRSActionProxyService', serviceMethod='createProgramEnrollment', serviceMethodCallManner='NAMED_PARAMETERS'}, ActionEventRequest{name='null', actionParameters=[ActionParameterRequest{order=0, key='configName', value='TestOpenMRSServer', displayName='openMRS.configuration.name', type='UNICODE', required=false, hidden=true, options=null}, ActionParameterRequest{order=1, key='programEnrollmentUuid', value='null', displayName='openMRS.programEnrollment.uuid', type='UNICODE', required=true, hidden=false, options=null}, ActionParameterRequest{order=2, key='dateCompleted', value='null', displayName='openMRS.programEnrollment.dateCompleted', type='DATE', required=false, hidden=false, options=null}, ActionParameterRequest{order=3, key='stateUuid', value='null', displayName='openMRS.program.state.uuid', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=4, key='startDate', value='null', displayName='openMRS.program.state.startDate', type='DATE', required=false, hidden=false, options=null}, ActionParameterRequest{order=5, key='programEnrollmentAttributes', value='null', displayName='openMRS.programEnrollment.attributes', type='MAP', required=false, hidden=false, options=null}], postActionParameters=[], serviceInterface='org.motechproject.openmrs.tasks.OpenMRSActionProxyService', serviceMethod='updateProgramEnrollment', serviceMethodCallManner='NAMED_PARAMETERS'}, ActionEventRequest{name='null', actionParameters=[ActionParameterRequest{order=0, key='configName', value='TestOpenMRSServer', displayName='openMRS.configuration.name', type='UNICODE', required=false, hidden=true, options=null}, ActionParameterRequest{order=1, key='programEnrollmentUuid', value='null', displayName='openMRS.programEnrollment.uuid', type='UNICODE', required=true, hidden=false, options=null}, ActionParameterRequest{order=2, key='dateCompleted', value='null', displayName='openMRS.programEnrollment.dateCompleted', type='DATE', required=false, hidden=false, options=null}, ActionParameterRequest{order=3, key='stateUuid', value='null', displayName='openMRS.program.state.uuid', type='UNICODE', required=false, hidden=false, options=null}, ActionParameterRequest{order=4, key='startDate', value='null', displayName='openMRS.program.state.startDate', type='DATE', required=false, hidden=false, options=null}], postActionParameters=[], serviceInterface='org.motechproject.openmrs.tasks.OpenMRSActionProxyService', serviceMethod='changeStateOfProgramEnrollment', serviceMethodCallManner='NAMED_PARAMETERS'}], triggerTaskEvents=[TriggerEvent{eventParameters=[EventParameter{eventKey='patientUuid'} org.motechproject.tasks.contract.EventParameterRequest@1f55487f, EventParameter{eventKey='patientDisplay'} org.motechproject.tasks.contract.EventParameterRequest@ae41461c, EventParameter{eventKey='cohortQueryUuid'} org.motechproject.tasks.contract.EventParameterRequest@f524b44d]}], description='Channel originating from the OpenMRS module', moduleName='org.motechproject.openmrs', moduleVersion='0.30.0.SNAPSHOT', displayName='openMRS'}
+[INFO] Initializing Spring FrameworkServlet 'servlet_6'
+[INFO] Initialized servlet for org.motechproject.motech-tasks [22]
+2016-09-21 13:43:34,650 main INFO  [org.motechproject.openmrs.it.MRSTasksIntegrationBundleIT] Setting up security context with permissions: [manageTasks, manageOpenMRS]
+2016-09-21 13:43:34,658 main INFO  [org.motechproject.openmrs.it.MRSTasksIntegrationBundleIT] Looking for org.motechproject.openmrs
+2016-09-21 13:43:46,827 main INFO  [org.motechproject.openmrs.it.MRSTasksIntegrationBundleIT] There are 2 channels in total
+2016-09-21 13:43:48,243 main INFO  [org.motechproject.openmrs.it.MRSTasksIntegrationBundleIT] Looking for org.motechproject.motech-platform-dataservices-entities
+2016-09-21 13:44:00,003 main INFO  [org.motechproject.openmrs.it.MRSTasksIntegrationBundleIT] There are 2 channels in total
+2016-09-21 13:44:14,859 main INFO  [org.motechproject.openmrs.it.MRSTasksIntegrationBundleIT] testOpenMRSTasksIntegration starts waiting for task to execute
+2016-09-21 13:44:14,875 main INFO  [org.motechproject.openmrs.it.MRSTasksIntegrationBundleIT] co sie tu ku.wa dzieje!? [WARNING, SUCCESS, ERROR]no nie wierze []
+2016-09-21 13:44:16,880 main INFO  [org.motechproject.openmrs.it.MRSTasksIntegrationBundleIT] co sie tu ku.wa dzieje!? [WARNING, SUCCESS, ERROR]no nie wierze []
+2016-09-21 13:44:18,903 main INFO  [org.motechproject.openmrs.it.MRSTasksIntegrationBundleIT] co sie tu ku.wa dzieje!? [WARNING, SUCCESS, ERROR]no nie wierze [TaskActivity{message='task.success.ok', task=1, field='[]', date=2016-09-21T13:44:14.937+02:00, activityType=SUCCESS, stackTrace=null}]
+2016-09-21 13:44:18,904 main INFO  [org.motechproject.openmrs.it.MRSTasksIntegrationBundleIT] Task executed after 2 retries, what took about 4 seconds
+2016-09-21 13:44:19,068 main INFO  [org.motechproject.openmrs.it.MRSTasksIntegrationBundleIT] co tu sie dzieje: org.motechproject.openmrs.domain.Encounter@2c44a088
+[INFO] Destroying Spring FrameworkServlet 'servlet_6'
+[INFO] Destroying Spring FrameworkServlet 'servlet_4'
+2016-09-21 13:44:25,090 Gemini Blueprint context shutdown thread INFO  [org.motechproject.openmrs.tasks.OpenMRSTasksNotifier] Module is being disabled, unregistering Tasks channel
+[INFO] Destroying Spring FrameworkServlet 'servlet_3'
+[INFO] Destroying Spring FrameworkServlet 'servlet_1'
+Tests run: 11, Failures: 0, Errors: 10, Skipped: 0, Time elapsed: 250.458 sec <<< FAILURE! - in org.motechproject.openmrs.it.version1_12.MRSIntegrationTests
+initializationError(org.motechproject.openmrs.it.version1_12.MRSTaskIntegrationBundle1_12IT)  Time elapsed: 0.009 sec  <<< ERROR!
+java.lang.Exception: No runnable methods
+	at org.junit.runners.BlockJUnit4ClassRunner.validateInstanceMethods(BlockJUnit4ClassRunner.java:157)
+	at org.junit.runners.BlockJUnit4ClassRunner.collectInitializationErrors(BlockJUnit4ClassRunner.java:102)
+	at org.junit.runners.ParentRunner.validate(ParentRunner.java:336)
+	at org.junit.runners.ParentRunner.<init>(ParentRunner.java:74)
+	at org.junit.runners.BlockJUnit4ClassRunner.<init>(BlockJUnit4ClassRunner.java:56)
+	at org.ops4j.pax.exam.junit.impl.ProbeRunner.<init>(ProbeRunner.java:73)
+	at org.ops4j.pax.exam.junit.PaxExam.createDelegate(PaxExam.java:82)
+	at org.ops4j.pax.exam.junit.PaxExam.<init>(PaxExam.java:73)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.junit.internal.builders.AnnotatedBuilder.buildRunner(AnnotatedBuilder.java:31)
+	at org.junit.internal.builders.AnnotatedBuilder.runnerForClass(AnnotatedBuilder.java:24)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.builders.AllDefaultPossibilitiesBuilder.runnerForClass(AllDefaultPossibilitiesBuilder.java:29)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.runners.model.RunnerBuilder.runners(RunnerBuilder.java:98)
+	at org.junit.runners.model.RunnerBuilder.runners(RunnerBuilder.java:84)
+	at org.junit.runners.Suite.<init>(Suite.java:101)
+	at org.junit.runners.Suite.<init>(Suite.java:67)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.junit.internal.builders.AnnotatedBuilder.buildRunner(AnnotatedBuilder.java:35)
+	at org.junit.internal.builders.AnnotatedBuilder.runnerForClass(AnnotatedBuilder.java:24)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.builders.AllDefaultPossibilitiesBuilder.runnerForClass(AllDefaultPossibilitiesBuilder.java:29)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.requests.ClassRequest.getRunner(ClassRequest.java:24)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:262)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:153)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:124)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:200)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:153)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:103)
+
+initializationError(org.motechproject.openmrs.it.MRSConceptServiceIT)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.Exception: No runnable methods
+	at org.junit.runners.BlockJUnit4ClassRunner.validateInstanceMethods(BlockJUnit4ClassRunner.java:157)
+	at org.junit.runners.BlockJUnit4ClassRunner.collectInitializationErrors(BlockJUnit4ClassRunner.java:102)
+	at org.junit.runners.ParentRunner.validate(ParentRunner.java:336)
+	at org.junit.runners.ParentRunner.<init>(ParentRunner.java:74)
+	at org.junit.runners.BlockJUnit4ClassRunner.<init>(BlockJUnit4ClassRunner.java:56)
+	at org.ops4j.pax.exam.junit.impl.ProbeRunner.<init>(ProbeRunner.java:73)
+	at org.ops4j.pax.exam.junit.PaxExam.createDelegate(PaxExam.java:82)
+	at org.ops4j.pax.exam.junit.PaxExam.<init>(PaxExam.java:73)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.junit.internal.builders.AnnotatedBuilder.buildRunner(AnnotatedBuilder.java:31)
+	at org.junit.internal.builders.AnnotatedBuilder.runnerForClass(AnnotatedBuilder.java:24)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.builders.AllDefaultPossibilitiesBuilder.runnerForClass(AllDefaultPossibilitiesBuilder.java:29)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.runners.model.RunnerBuilder.runners(RunnerBuilder.java:98)
+	at org.junit.runners.model.RunnerBuilder.runners(RunnerBuilder.java:84)
+	at org.junit.runners.Suite.<init>(Suite.java:101)
+	at org.junit.runners.Suite.<init>(Suite.java:67)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.junit.internal.builders.AnnotatedBuilder.buildRunner(AnnotatedBuilder.java:35)
+	at org.junit.internal.builders.AnnotatedBuilder.runnerForClass(AnnotatedBuilder.java:24)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.builders.AllDefaultPossibilitiesBuilder.runnerForClass(AllDefaultPossibilitiesBuilder.java:29)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.requests.ClassRequest.getRunner(ClassRequest.java:24)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:262)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:153)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:124)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:200)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:153)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:103)
+
+initializationError(org.motechproject.openmrs.it.MRSEncounterServiceIT)  Time elapsed: 0.001 sec  <<< ERROR!
+java.lang.Exception: No runnable methods
+	at org.junit.runners.BlockJUnit4ClassRunner.validateInstanceMethods(BlockJUnit4ClassRunner.java:157)
+	at org.junit.runners.BlockJUnit4ClassRunner.collectInitializationErrors(BlockJUnit4ClassRunner.java:102)
+	at org.junit.runners.ParentRunner.validate(ParentRunner.java:336)
+	at org.junit.runners.ParentRunner.<init>(ParentRunner.java:74)
+	at org.junit.runners.BlockJUnit4ClassRunner.<init>(BlockJUnit4ClassRunner.java:56)
+	at org.ops4j.pax.exam.junit.impl.ProbeRunner.<init>(ProbeRunner.java:73)
+	at org.ops4j.pax.exam.junit.PaxExam.createDelegate(PaxExam.java:82)
+	at org.ops4j.pax.exam.junit.PaxExam.<init>(PaxExam.java:73)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.junit.internal.builders.AnnotatedBuilder.buildRunner(AnnotatedBuilder.java:31)
+	at org.junit.internal.builders.AnnotatedBuilder.runnerForClass(AnnotatedBuilder.java:24)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.builders.AllDefaultPossibilitiesBuilder.runnerForClass(AllDefaultPossibilitiesBuilder.java:29)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.runners.model.RunnerBuilder.runners(RunnerBuilder.java:98)
+	at org.junit.runners.model.RunnerBuilder.runners(RunnerBuilder.java:84)
+	at org.junit.runners.Suite.<init>(Suite.java:101)
+	at org.junit.runners.Suite.<init>(Suite.java:67)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.junit.internal.builders.AnnotatedBuilder.buildRunner(AnnotatedBuilder.java:35)
+	at org.junit.internal.builders.AnnotatedBuilder.runnerForClass(AnnotatedBuilder.java:24)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.builders.AllDefaultPossibilitiesBuilder.runnerForClass(AllDefaultPossibilitiesBuilder.java:29)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.requests.ClassRequest.getRunner(ClassRequest.java:24)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:262)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:153)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:124)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:200)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:153)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:103)
+
+initializationError(org.motechproject.openmrs.it.MRSLocationServiceIT)  Time elapsed: 0.001 sec  <<< ERROR!
+java.lang.Exception: No runnable methods
+	at org.junit.runners.BlockJUnit4ClassRunner.validateInstanceMethods(BlockJUnit4ClassRunner.java:157)
+	at org.junit.runners.BlockJUnit4ClassRunner.collectInitializationErrors(BlockJUnit4ClassRunner.java:102)
+	at org.junit.runners.ParentRunner.validate(ParentRunner.java:336)
+	at org.junit.runners.ParentRunner.<init>(ParentRunner.java:74)
+	at org.junit.runners.BlockJUnit4ClassRunner.<init>(BlockJUnit4ClassRunner.java:56)
+	at org.ops4j.pax.exam.junit.impl.ProbeRunner.<init>(ProbeRunner.java:73)
+	at org.ops4j.pax.exam.junit.PaxExam.createDelegate(PaxExam.java:82)
+	at org.ops4j.pax.exam.junit.PaxExam.<init>(PaxExam.java:73)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.junit.internal.builders.AnnotatedBuilder.buildRunner(AnnotatedBuilder.java:31)
+	at org.junit.internal.builders.AnnotatedBuilder.runnerForClass(AnnotatedBuilder.java:24)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.builders.AllDefaultPossibilitiesBuilder.runnerForClass(AllDefaultPossibilitiesBuilder.java:29)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.runners.model.RunnerBuilder.runners(RunnerBuilder.java:98)
+	at org.junit.runners.model.RunnerBuilder.runners(RunnerBuilder.java:84)
+	at org.junit.runners.Suite.<init>(Suite.java:101)
+	at org.junit.runners.Suite.<init>(Suite.java:67)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.junit.internal.builders.AnnotatedBuilder.buildRunner(AnnotatedBuilder.java:35)
+	at org.junit.internal.builders.AnnotatedBuilder.runnerForClass(AnnotatedBuilder.java:24)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.builders.AllDefaultPossibilitiesBuilder.runnerForClass(AllDefaultPossibilitiesBuilder.java:29)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.requests.ClassRequest.getRunner(ClassRequest.java:24)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:262)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:153)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:124)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:200)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:153)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:103)
+
+initializationError(org.motechproject.openmrs.it.MRSObservationServiceIT)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.Exception: No runnable methods
+	at org.junit.runners.BlockJUnit4ClassRunner.validateInstanceMethods(BlockJUnit4ClassRunner.java:157)
+	at org.junit.runners.BlockJUnit4ClassRunner.collectInitializationErrors(BlockJUnit4ClassRunner.java:102)
+	at org.junit.runners.ParentRunner.validate(ParentRunner.java:336)
+	at org.junit.runners.ParentRunner.<init>(ParentRunner.java:74)
+	at org.junit.runners.BlockJUnit4ClassRunner.<init>(BlockJUnit4ClassRunner.java:56)
+	at org.ops4j.pax.exam.junit.impl.ProbeRunner.<init>(ProbeRunner.java:73)
+	at org.ops4j.pax.exam.junit.PaxExam.createDelegate(PaxExam.java:82)
+	at org.ops4j.pax.exam.junit.PaxExam.<init>(PaxExam.java:73)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.junit.internal.builders.AnnotatedBuilder.buildRunner(AnnotatedBuilder.java:31)
+	at org.junit.internal.builders.AnnotatedBuilder.runnerForClass(AnnotatedBuilder.java:24)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.builders.AllDefaultPossibilitiesBuilder.runnerForClass(AllDefaultPossibilitiesBuilder.java:29)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.runners.model.RunnerBuilder.runners(RunnerBuilder.java:98)
+	at org.junit.runners.model.RunnerBuilder.runners(RunnerBuilder.java:84)
+	at org.junit.runners.Suite.<init>(Suite.java:101)
+	at org.junit.runners.Suite.<init>(Suite.java:67)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.junit.internal.builders.AnnotatedBuilder.buildRunner(AnnotatedBuilder.java:35)
+	at org.junit.internal.builders.AnnotatedBuilder.runnerForClass(AnnotatedBuilder.java:24)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.builders.AllDefaultPossibilitiesBuilder.runnerForClass(AllDefaultPossibilitiesBuilder.java:29)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.requests.ClassRequest.getRunner(ClassRequest.java:24)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:262)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:153)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:124)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:200)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:153)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:103)
+
+initializationError(org.motechproject.openmrs.it.MRSPatientServiceIT)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.Exception: No runnable methods
+	at org.junit.runners.BlockJUnit4ClassRunner.validateInstanceMethods(BlockJUnit4ClassRunner.java:157)
+	at org.junit.runners.BlockJUnit4ClassRunner.collectInitializationErrors(BlockJUnit4ClassRunner.java:102)
+	at org.junit.runners.ParentRunner.validate(ParentRunner.java:336)
+	at org.junit.runners.ParentRunner.<init>(ParentRunner.java:74)
+	at org.junit.runners.BlockJUnit4ClassRunner.<init>(BlockJUnit4ClassRunner.java:56)
+	at org.ops4j.pax.exam.junit.impl.ProbeRunner.<init>(ProbeRunner.java:73)
+	at org.ops4j.pax.exam.junit.PaxExam.createDelegate(PaxExam.java:82)
+	at org.ops4j.pax.exam.junit.PaxExam.<init>(PaxExam.java:73)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.junit.internal.builders.AnnotatedBuilder.buildRunner(AnnotatedBuilder.java:31)
+	at org.junit.internal.builders.AnnotatedBuilder.runnerForClass(AnnotatedBuilder.java:24)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.builders.AllDefaultPossibilitiesBuilder.runnerForClass(AllDefaultPossibilitiesBuilder.java:29)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.runners.model.RunnerBuilder.runners(RunnerBuilder.java:98)
+	at org.junit.runners.model.RunnerBuilder.runners(RunnerBuilder.java:84)
+	at org.junit.runners.Suite.<init>(Suite.java:101)
+	at org.junit.runners.Suite.<init>(Suite.java:67)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.junit.internal.builders.AnnotatedBuilder.buildRunner(AnnotatedBuilder.java:35)
+	at org.junit.internal.builders.AnnotatedBuilder.runnerForClass(AnnotatedBuilder.java:24)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.builders.AllDefaultPossibilitiesBuilder.runnerForClass(AllDefaultPossibilitiesBuilder.java:29)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.requests.ClassRequest.getRunner(ClassRequest.java:24)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:262)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:153)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:124)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:200)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:153)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:103)
+
+initializationError(org.motechproject.openmrs.it.MRSPersonServiceIT)  Time elapsed: 0.001 sec  <<< ERROR!
+java.lang.Exception: No runnable methods
+	at org.junit.runners.BlockJUnit4ClassRunner.validateInstanceMethods(BlockJUnit4ClassRunner.java:157)
+	at org.junit.runners.BlockJUnit4ClassRunner.collectInitializationErrors(BlockJUnit4ClassRunner.java:102)
+	at org.junit.runners.ParentRunner.validate(ParentRunner.java:336)
+	at org.junit.runners.ParentRunner.<init>(ParentRunner.java:74)
+	at org.junit.runners.BlockJUnit4ClassRunner.<init>(BlockJUnit4ClassRunner.java:56)
+	at org.ops4j.pax.exam.junit.impl.ProbeRunner.<init>(ProbeRunner.java:73)
+	at org.ops4j.pax.exam.junit.PaxExam.createDelegate(PaxExam.java:82)
+	at org.ops4j.pax.exam.junit.PaxExam.<init>(PaxExam.java:73)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.junit.internal.builders.AnnotatedBuilder.buildRunner(AnnotatedBuilder.java:31)
+	at org.junit.internal.builders.AnnotatedBuilder.runnerForClass(AnnotatedBuilder.java:24)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.builders.AllDefaultPossibilitiesBuilder.runnerForClass(AllDefaultPossibilitiesBuilder.java:29)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.runners.model.RunnerBuilder.runners(RunnerBuilder.java:98)
+	at org.junit.runners.model.RunnerBuilder.runners(RunnerBuilder.java:84)
+	at org.junit.runners.Suite.<init>(Suite.java:101)
+	at org.junit.runners.Suite.<init>(Suite.java:67)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.junit.internal.builders.AnnotatedBuilder.buildRunner(AnnotatedBuilder.java:35)
+	at org.junit.internal.builders.AnnotatedBuilder.runnerForClass(AnnotatedBuilder.java:24)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.builders.AllDefaultPossibilitiesBuilder.runnerForClass(AllDefaultPossibilitiesBuilder.java:29)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.requests.ClassRequest.getRunner(ClassRequest.java:24)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:262)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:153)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:124)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:200)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:153)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:103)
+
+initializationError(org.motechproject.openmrs.it.MRSProviderServiceIT)  Time elapsed: 0.001 sec  <<< ERROR!
+java.lang.Exception: No runnable methods
+	at org.junit.runners.BlockJUnit4ClassRunner.validateInstanceMethods(BlockJUnit4ClassRunner.java:157)
+	at org.junit.runners.BlockJUnit4ClassRunner.collectInitializationErrors(BlockJUnit4ClassRunner.java:102)
+	at org.junit.runners.ParentRunner.validate(ParentRunner.java:336)
+	at org.junit.runners.ParentRunner.<init>(ParentRunner.java:74)
+	at org.junit.runners.BlockJUnit4ClassRunner.<init>(BlockJUnit4ClassRunner.java:56)
+	at org.ops4j.pax.exam.junit.impl.ProbeRunner.<init>(ProbeRunner.java:73)
+	at org.ops4j.pax.exam.junit.PaxExam.createDelegate(PaxExam.java:82)
+	at org.ops4j.pax.exam.junit.PaxExam.<init>(PaxExam.java:73)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.junit.internal.builders.AnnotatedBuilder.buildRunner(AnnotatedBuilder.java:31)
+	at org.junit.internal.builders.AnnotatedBuilder.runnerForClass(AnnotatedBuilder.java:24)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.builders.AllDefaultPossibilitiesBuilder.runnerForClass(AllDefaultPossibilitiesBuilder.java:29)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.runners.model.RunnerBuilder.runners(RunnerBuilder.java:98)
+	at org.junit.runners.model.RunnerBuilder.runners(RunnerBuilder.java:84)
+	at org.junit.runners.Suite.<init>(Suite.java:101)
+	at org.junit.runners.Suite.<init>(Suite.java:67)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.junit.internal.builders.AnnotatedBuilder.buildRunner(AnnotatedBuilder.java:35)
+	at org.junit.internal.builders.AnnotatedBuilder.runnerForClass(AnnotatedBuilder.java:24)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.builders.AllDefaultPossibilitiesBuilder.runnerForClass(AllDefaultPossibilitiesBuilder.java:29)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.requests.ClassRequest.getRunner(ClassRequest.java:24)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:262)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:153)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:124)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:200)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:153)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:103)
+
+initializationError(org.motechproject.openmrs.it.MRSUserServiceIT)  Time elapsed: 0.001 sec  <<< ERROR!
+java.lang.Exception: No runnable methods
+	at org.junit.runners.BlockJUnit4ClassRunner.validateInstanceMethods(BlockJUnit4ClassRunner.java:157)
+	at org.junit.runners.BlockJUnit4ClassRunner.collectInitializationErrors(BlockJUnit4ClassRunner.java:102)
+	at org.junit.runners.ParentRunner.validate(ParentRunner.java:336)
+	at org.junit.runners.ParentRunner.<init>(ParentRunner.java:74)
+	at org.junit.runners.BlockJUnit4ClassRunner.<init>(BlockJUnit4ClassRunner.java:56)
+	at org.ops4j.pax.exam.junit.impl.ProbeRunner.<init>(ProbeRunner.java:73)
+	at org.ops4j.pax.exam.junit.PaxExam.createDelegate(PaxExam.java:82)
+	at org.ops4j.pax.exam.junit.PaxExam.<init>(PaxExam.java:73)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.junit.internal.builders.AnnotatedBuilder.buildRunner(AnnotatedBuilder.java:31)
+	at org.junit.internal.builders.AnnotatedBuilder.runnerForClass(AnnotatedBuilder.java:24)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.builders.AllDefaultPossibilitiesBuilder.runnerForClass(AllDefaultPossibilitiesBuilder.java:29)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.runners.model.RunnerBuilder.runners(RunnerBuilder.java:98)
+	at org.junit.runners.model.RunnerBuilder.runners(RunnerBuilder.java:84)
+	at org.junit.runners.Suite.<init>(Suite.java:101)
+	at org.junit.runners.Suite.<init>(Suite.java:67)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.junit.internal.builders.AnnotatedBuilder.buildRunner(AnnotatedBuilder.java:35)
+	at org.junit.internal.builders.AnnotatedBuilder.runnerForClass(AnnotatedBuilder.java:24)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.builders.AllDefaultPossibilitiesBuilder.runnerForClass(AllDefaultPossibilitiesBuilder.java:29)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.requests.ClassRequest.getRunner(ClassRequest.java:24)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:262)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:153)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:124)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:200)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:153)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:103)
+
+initializationError(org.motechproject.openmrs.it.version1_12.MRSProgramEnrollmentIT)  Time elapsed: 0.001 sec  <<< ERROR!
+java.lang.Exception: No runnable methods
+	at org.junit.runners.BlockJUnit4ClassRunner.validateInstanceMethods(BlockJUnit4ClassRunner.java:157)
+	at org.junit.runners.BlockJUnit4ClassRunner.collectInitializationErrors(BlockJUnit4ClassRunner.java:102)
+	at org.junit.runners.ParentRunner.validate(ParentRunner.java:336)
+	at org.junit.runners.ParentRunner.<init>(ParentRunner.java:74)
+	at org.junit.runners.BlockJUnit4ClassRunner.<init>(BlockJUnit4ClassRunner.java:56)
+	at org.ops4j.pax.exam.junit.impl.ProbeRunner.<init>(ProbeRunner.java:73)
+	at org.ops4j.pax.exam.junit.PaxExam.createDelegate(PaxExam.java:82)
+	at org.ops4j.pax.exam.junit.PaxExam.<init>(PaxExam.java:73)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.junit.internal.builders.AnnotatedBuilder.buildRunner(AnnotatedBuilder.java:31)
+	at org.junit.internal.builders.AnnotatedBuilder.runnerForClass(AnnotatedBuilder.java:24)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.builders.AllDefaultPossibilitiesBuilder.runnerForClass(AllDefaultPossibilitiesBuilder.java:29)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.runners.model.RunnerBuilder.runners(RunnerBuilder.java:98)
+	at org.junit.runners.model.RunnerBuilder.runners(RunnerBuilder.java:84)
+	at org.junit.runners.Suite.<init>(Suite.java:101)
+	at org.junit.runners.Suite.<init>(Suite.java:67)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.junit.internal.builders.AnnotatedBuilder.buildRunner(AnnotatedBuilder.java:35)
+	at org.junit.internal.builders.AnnotatedBuilder.runnerForClass(AnnotatedBuilder.java:24)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.builders.AllDefaultPossibilitiesBuilder.runnerForClass(AllDefaultPossibilitiesBuilder.java:29)
+	at org.junit.runners.model.RunnerBuilder.safeRunnerForClass(RunnerBuilder.java:57)
+	at org.junit.internal.requests.ClassRequest.getRunner(ClassRequest.java:24)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:262)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:153)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:124)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:200)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:153)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:103)
+
+
+Results :
+
+Tests in error: 
+  MRSTaskIntegrationBundle1_12IT.initializationError »  No runnable methods
+  MRSConceptServiceIT.initializationError »  No runnable methods
+  MRSEncounterServiceIT.initializationError »  No runnable methods
+  MRSLocationServiceIT.initializationError »  No runnable methods
+  MRSObservationServiceIT.initializationError »  No runnable methods
+  MRSPatientServiceIT.initializationError »  No runnable methods
+  MRSPersonServiceIT.initializationError »  No runnable methods
+  MRSProviderServiceIT.initializationError »  No runnable methods
+  MRSUserServiceIT.initializationError »  No runnable methods
+  MRSProgramEnrollmentIT.initializationError »  No runnable methods
+
+Tests run: 11, Failures: 0, Errors: 10, Skipped: 0
+
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (clean-test-config-files) @ openmrs ---
+[INFO] Deleting /home/nextuser/.motech/config (includes = [org.motechproject.openmrs/raw/openmrs-configs.json, bootstrap.properties, motech-settings.properties, datanucleus.properties], excludes = [])
+[INFO] 
+[INFO] --- maven-enforcer-plugin:1.4.1:enforce (enforce-no-package-cycles) @ openmrs ---
+[INFO] Adding directory /home/nextuser/workspace/modules/openmrs/target/classes for package cycles search.
+[INFO] Adding directory /home/nextuser/workspace/modules/openmrs/target/test-classes for package cycles search.
+[INFO] 
+[INFO] --- maven-failsafe-plugin:2.17:verify (verify) @ openmrs ---
+[INFO] Failsafe report directory: /home/nextuser/workspace/modules/openmrs/target/failsafe-reports
+[WARNING] File encoding has not been set, using platform encoding UTF-8, i.e. build is platform dependent!
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 4:39.198s
+[INFO] Finished at: Wed Sep 21 13:44:27 CEST 2016
+[INFO] Final Memory: 50M/268M
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-failsafe-plugin:2.17:verify (verify) on project openmrs: There are test failures.
+[ERROR] 
+[ERROR] Please refer to /home/nextuser/workspace/modules/openmrs/target/failsafe-reports for the individual test results.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
