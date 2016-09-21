@@ -116,9 +116,9 @@ public class OpenMRSActionProxyServiceTest {
 
         DateTime encounterDatetime = new DateTime("2000-08-16T07:22:05Z");
         Map<String, String> observations = new HashMap<>();
-        observations.put("testConceptName","testObservationValueName");
+        observations.put("testConceptName","testObservationValueName0");
 
-        List<Observation> obsList = createObservationList();
+        List<Observation> obsList = createObservationList(1);
 
         Encounter encounter = new Encounter(location, new EncounterType("testEncounterType"), encounterDatetime.toDate(), patient, Collections.singletonList(provider.getPerson()), obsList);
 
@@ -156,6 +156,43 @@ public class OpenMRSActionProxyServiceTest {
         observations.put("testConceptName","");
 
         List<Observation> obsList = new ArrayList<>();
+
+        Encounter encounter = new Encounter(location, new EncounterType("testEncounterType"), encounterDatetime.toDate(), patient, Collections.singletonList(provider.getPerson()), obsList);
+
+        doReturn(patient).when(patientService).getPatientByUuid(eq(CONFIG_NAME), eq(patient.getUuid()));
+        doReturn(provider).when(providerService).getProviderByUuid(eq(CONFIG_NAME), eq(provider.getUuid()));
+        doReturn(Collections.singletonList(location))
+                .when(locationService).getLocations(eq(CONFIG_NAME), eq(location.getName()));
+
+        openMRSActionProxyService.createEncounter(CONFIG_NAME, new DateTime(encounter.getEncounterDatetime()),
+                encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid(),
+                observations);
+
+        verify(encounterService).createEncounter(eq(CONFIG_NAME), encounterCaptor.capture());
+
+        assertEquals(encounter, encounterCaptor.getValue());
+    }
+
+    @Test
+    public void shouldCreateEncounterWithGivenParametersWithObsWithManyValues() {
+        Location location = new Location();
+        location.setName("testLocation");
+
+        Patient patient = new Patient();
+        patient.setUuid("10");
+
+        Provider provider = new Provider();
+        provider.setUuid("20");
+
+        Person person = new Person();
+        person.setUuid("30");
+        provider.setPerson(person);
+
+        DateTime encounterDatetime = new DateTime("2000-08-16T07:22:05Z");
+        Map<String, String> observations = new HashMap<>();
+        observations.put("testConceptName","testObservationValueName0, testObservationValueName1");
+
+        List<Observation> obsList = createObservationList(2);
 
         Encounter encounter = new Encounter(location, new EncounterType("testEncounterType"), encounterDatetime.toDate(), patient, Collections.singletonList(provider.getPerson()), obsList);
 
@@ -540,17 +577,21 @@ public class OpenMRSActionProxyServiceTest {
         return concept;
     }
 
-    private List<Observation> createObservationList() {
-        Observation observation = new Observation();
+    private List<Observation> createObservationList(Integer observationsNumber) {
+        List<Observation> observationList = new ArrayList<>();
 
-        ConceptName conceptName = new ConceptName("testConceptName");
-        Concept concept = new Concept(conceptName);
+        for (int i = 0; i < observationsNumber; i++) {
+            Observation observation = new Observation();
 
-        observation.setConcept(concept);
-        observation.setValue(new Observation.ObservationValue("testObservationValueName"));
-        observation.setObsDatetime(new DateTime("2000-08-16T07:22:05Z").toDate());
+            ConceptName conceptName = new ConceptName("testConceptName");
+            Concept concept = new Concept(conceptName);
 
-        return Collections.singletonList(observation);
+            observation.setConcept(concept);
+            observation.setValue(new Observation.ObservationValue("testObservationValueName" + Integer.toString(i)));
+            observation.setObsDatetime(new DateTime("2000-08-16T07:22:05Z").toDate());
+            observationList.add(observation);
+        }
+        return observationList;
     }
 
     private CohortQueryReport prepareCohortQueryReport(boolean withMembers) {
