@@ -14,11 +14,7 @@ public class Settings {
     public Settings() { }
 
     public Settings(String serverURI, String username, String password) {
-        if (serverURI.endsWith("/")) {
-            this.serverURI = serverURI.substring(0, serverURI.length() - 1);
-        } else {
-            this.serverURI = serverURI;
-        }
+        this.serverURI = serverURI;
         this.username = username;
         this.password = password;
     }
