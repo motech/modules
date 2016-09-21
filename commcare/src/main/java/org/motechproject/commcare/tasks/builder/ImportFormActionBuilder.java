@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import static org.motechproject.tasks.domain.mds.ParameterType.DATE;
+import static org.motechproject.tasks.domain.enums.ParameterType.DATE;
 
 /**
  * Responsible for building actions for importing forms for all configurations. There action can then be used in

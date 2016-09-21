@@ -30,6 +30,7 @@
     <osgi:service ref="locationService" interface="org.motechproject.openmrs.service.OpenMRSLocationService"/>
     <osgi:service ref="observationService" interface="org.motechproject.openmrs.service.OpenMRSObservationService"/>
     <osgi:service ref="patientService" interface="org.motechproject.openmrs.service.OpenMRSPatientService"/>
+    <osgi:service ref="visitService" interface="org.motechproject.openmrs.service.OpenMRSVisitService"/>
     <osgi:service ref="personService" interface="org.motechproject.openmrs.service.OpenMRSPersonService"/>
     <osgi:service ref="userService" interface="org.motechproject.openmrs.service.OpenMRSUserService"/>
     <osgi:service ref="providerService" interface="org.motechproject.openmrs.service.OpenMRSProviderService"/>

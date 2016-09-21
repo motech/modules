@@ -3,8 +3,8 @@ package org.motechproject.openmrs.tasks.builder;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.service.OpenMRSConfigService;
 import org.motechproject.openmrs.tasks.constants.DisplayNames;
-import org.motechproject.openmrs.tasks.constants.Keys;
 import org.motechproject.openmrs.tasks.constants.EventSubjects;
+import org.motechproject.openmrs.tasks.constants.Keys;
 import org.motechproject.tasks.contract.EventParameterRequest;
 import org.motechproject.tasks.contract.TriggerEventRequest;
 

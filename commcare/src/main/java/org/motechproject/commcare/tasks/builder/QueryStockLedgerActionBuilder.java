@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import static org.motechproject.tasks.domain.mds.ParameterType.DATE;
-import static org.motechproject.tasks.domain.mds.ParameterType.MAP;
-import static org.motechproject.tasks.domain.mds.ParameterType.UNICODE;
+import static org.motechproject.tasks.domain.enums.ParameterType.DATE;
+import static org.motechproject.tasks.domain.enums.ParameterType.MAP;
+import static org.motechproject.tasks.domain.enums.ParameterType.UNICODE;
 
 /**
  * Responsible for building actions for querying stock ledger for all configurations. There action can then be used in

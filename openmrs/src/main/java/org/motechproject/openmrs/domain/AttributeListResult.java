@@ -10,11 +10,11 @@ public class AttributeListResult {
 
     private List<Attribute> results;
 
-    public List<Attribute> getResults () {
+    public List<Attribute> getResults() {
         return results;
     }
 
-    public void setResults (List<Attribute> results) {
+    public void setResults(List<Attribute> results) {
         this.results = results;
     }
 

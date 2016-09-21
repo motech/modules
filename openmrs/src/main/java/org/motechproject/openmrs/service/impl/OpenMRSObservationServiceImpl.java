@@ -100,6 +100,8 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
         Validate.notEmpty(observation.getPerson().getUuid(), "Patient uuid cannot be empty");
         Validate.notNull(observation.getConcept().getName(), "Concept name cannot be empty");
         Validate.notNull(observation.getObsDatetime());
+        Validate.notNull(observation.getValue());
+        Validate.notEmpty(observation.getValue().getDisplay());
 
         try {
             Config config = configService.getConfigByName(configName);

@@ -9,6 +9,7 @@ import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.Person;
 import org.motechproject.openmrs.domain.ProgramEnrollment;
 import org.motechproject.openmrs.domain.Provider;
+import org.motechproject.openmrs.domain.Visit;
 import org.motechproject.openmrs.service.EventKeys;
 import org.motechproject.openmrs.tasks.constants.Keys;
 
@@ -31,7 +32,7 @@ public final class EventHelper {
      * Parses the given {@link Patient} to a map of parameters, which can then be attached to a
      * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
      *
-     * @param patient  the patient to be parsed
+     * @param patient the patient to be parsed
      * @return the map of the parameters
      */
     public static Map<String, Object> patientParameters(Patient patient) {
@@ -55,7 +56,7 @@ public final class EventHelper {
      * Parses the given {@link Person} to a map of parameters, which can then be attached to a
      * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
      *
-     * @param person  the person to be parsed
+     * @param person the person to be parsed
      * @return the map of the parameters
      */
     public static Map<String, Object> personParameters(Person person) {
@@ -84,7 +85,7 @@ public final class EventHelper {
      * Parses the given {@link Encounter} to a map of parameters, which can then be attached to a
      * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
      *
-     * @param encounter  the encounter to be parsed
+     * @param encounter the encounter to be parsed
      * @return the map of the parameters
      */
     public static Map<String, Object> encounterParameters(Encounter encounter) {
@@ -102,6 +103,7 @@ public final class EventHelper {
         }
         encounterParameters.put(EventKeys.ENCOUNTER_DATE, encounter.getEncounterDatetime());
         encounterParameters.put(EventKeys.ENCOUNTER_TYPE, encounter.getEncounterType().getUuid());
+        encounterParameters.put(EventKeys.VISIT_ID, encounter.getVisit().getUuid());
         return encounterParameters;
     }
 
@@ -109,7 +111,7 @@ public final class EventHelper {
      * Parses the given ID of the encounter to a map with a single parameter, which can then be attached to a
      * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
      *
-     * @param uuid  the encounter ID to be parsed
+     * @param uuid the encounter ID to be parsed
      * @return the map with single ID parameter
      */
     public static Map<String, Object> encounterParameters(String uuid) {
@@ -119,10 +121,42 @@ public final class EventHelper {
     }
 
     /**
+     * Parses the given {@link Visit} to a map of parameters, which can then be attached to a
+     * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
+     *
+     * @param visit the visit to be parsed
+     * @return the map of the parameters
+     */
+    public static Map<String, Object> visitParameters(Visit visit) {
+        Map<String, Object> visitParameters = new HashMap<>();
+        visitParameters.put(EventKeys.VISIT_ID, visit.getUuid());
+        visitParameters.put(EventKeys.VISIT_START_DATETIME, visit.getStartDatetime());
+        visitParameters.put(EventKeys.VISIT_STOP_DATETIME, visit.getStopDatetime());
+        visitParameters.put(EventKeys.VISIT_TYPE, visit.getVisitType().getUuid());
+        if (visit.getLocation() != null) {
+            visitParameters.put(EventKeys.LOCATION_ID, visit.getLocation().getUuid());
+        }
+        return visitParameters;
+    }
+
+    /**
+     * Parses the given ID of the visit to a map with a single parameter, which can then be attached to a
+     * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
+     *
+     * @param uuid the visit ID to be parsed
+     * @return the map with single ID parameter
+     */
+    public static Map<String, Object> visitParameters(String uuid) {
+        Map<String, Object> visitParameters = new HashMap<>();
+        visitParameters.put(EventKeys.VISIT_ID, uuid);
+        return visitParameters;
+    }
+
+    /**
      * Parses the given {@link Observation} to a map of parameters, which can then be attached to a
      * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
      *
-     * @param obs  the observation to be parsed
+     * @param obs the observation to be parsed
      * @return the map of the parameters
      */
     public static Map<String, Object> observationParameters(Observation obs) {
@@ -133,14 +167,14 @@ public final class EventHelper {
         }
         observationParameters.put(EventKeys.PATIENT_ID, obs.getPerson().getUuid());
         observationParameters.put(EventKeys.OBSERVATION_VALUE, obs.getValue().getDisplay());
-        return  observationParameters;
+        return observationParameters;
     }
 
     /**
      * Parses the given {@link Location} to a map of parameters, which can then be attached to a
      * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
      *
-     * @param location  the location to be parsed
+     * @param location the location to be parsed
      * @return the map of the parameters
      */
     public static Map<String, Object> locationParameters(Location location) {
@@ -158,7 +192,7 @@ public final class EventHelper {
      * Parses the given {@link Provider} to a map of parameters, which can then be attached to a
      * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
      *
-     * @param provider  the provider to be parsed
+     * @param provider the provider to be parsed
      * @return the map of the parameters
      */
     public static Map<String, Object> providerParameters(Provider provider) {
@@ -176,7 +210,7 @@ public final class EventHelper {
      * Parses the given {@link Concept} to a map of parameters, which can then be attached to a
      * {@link org.motechproject.event.MotechEvent} and sent via the {@link org.motechproject.event.listener.EventRelay}.
      *
-     * @param concept  the concept to be parsed
+     * @param concept the concept to be parsed
      * @return the map of the parameters
      */
     public static Map<String, Object> conceptParameters(Concept concept) {

@@ -1,5 +1,6 @@
 package org.motechproject.openmrs.it;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
@@ -17,6 +18,8 @@ import org.motechproject.openmrs.domain.Observation;
 import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.Person;
 import org.motechproject.openmrs.domain.Provider;
+import org.motechproject.openmrs.domain.Visit;
+import org.motechproject.openmrs.domain.VisitType;
 import org.motechproject.openmrs.exception.ConceptNameAlreadyInUseException;
 import org.motechproject.openmrs.exception.HttpException;
 import org.motechproject.openmrs.exception.PatientNotFoundException;
@@ -28,6 +31,7 @@ import org.motechproject.openmrs.service.OpenMRSObservationService;
 import org.motechproject.openmrs.service.OpenMRSPatientService;
 import org.motechproject.openmrs.service.OpenMRSPersonService;
 import org.motechproject.openmrs.service.OpenMRSProviderService;
+import org.motechproject.openmrs.service.OpenMRSVisitService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
@@ -68,6 +72,9 @@ public class MRSEncounterServiceIT extends BasePaxIT {
     private OpenMRSPersonService personAdapter;
 
     @Inject
+    private OpenMRSVisitService visitAdapter;
+
+    @Inject
     private OpenMRSObservationService obsAdapter;
 
     @Inject
@@ -90,11 +97,16 @@ public class MRSEncounterServiceIT extends BasePaxIT {
     Encounter encounter;
     Location location;
     Patient patient;
+    VisitType visitType;
+    Visit visit;
     Observation observation;
     Provider provider;
     Concept concept;
 
     String date = "2012-09-05";
+    DateTime startDateTime = new DateTime("2010-01-10T07:22:05Z");
+    DateTime stopDateTime = new DateTime("2014-08-01T07:22:05Z");
+
 
     @Before
     public void setUp() throws ParseException, ConceptNameAlreadyInUseException, InterruptedException {
@@ -116,6 +128,7 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         assertEquals(encounter.getLocation().getUuid(), mrsListener.eventParameters.get(EventKeys.LOCATION_ID));
         assertEquals(encounter.getEncounterDatetime(), mrsListener.eventParameters.get(EventKeys.ENCOUNTER_DATE));
         assertEquals(encounter.getEncounterType().getUuid(), mrsListener.eventParameters.get(EventKeys.ENCOUNTER_TYPE));
+        assertEquals(encounter.getVisit().getUuid(), mrsListener.eventParameters.get(EventKeys.VISIT_ID));
 
         //In created encounter json there are only two fields in observation: uuid and display. Because of that in order to
         //get other observation values we need to get observation by uuid from OpenMRS server.
@@ -153,6 +166,12 @@ public class MRSEncounterServiceIT extends BasePaxIT {
 
         if (encounter != null) {
             encounterAdapter.deleteEncounter(DEFAULT_CONFIG_NAME, encounter.getUuid());
+        }
+        if (visit != null) {
+            visitAdapter.deleteVisit(DEFAULT_CONFIG_NAME, visit.getUuid());
+        }
+        if (visitType != null) {
+            visitAdapter.deleteVisitType(DEFAULT_CONFIG_NAME, visitType.getUuid());
         }
         if (observation != null) {
             obsAdapter.deleteObservation(DEFAULT_CONFIG_NAME, observation.getUuid());
@@ -215,10 +234,12 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         prepareProvider();
         prepareLocation();
         preparePatient();
+        prepareVisitType();
+        prepareVisit();
         prepareEncounterType();
         prepareObservations();
 
-        Encounter encounter = new Encounter(location, encounterType, format.parse(date), patient, Collections.singletonList(provider.getPerson()),
+        Encounter encounter = new Encounter(location, encounterType, format.parse(date), patient, visit, Collections.singletonList(provider.getPerson()),
                 Collections.singletonList(observation));
 
         return encounter;
@@ -293,6 +314,24 @@ public class MRSEncounterServiceIT extends BasePaxIT {
         tempPatient.setMotechId("666");
         String patientUuid = patientAdapter.createPatient(DEFAULT_CONFIG_NAME, tempPatient).getUuid();
         patient = patientAdapter.getPatientByUuid(DEFAULT_CONFIG_NAME, patientUuid);
+    }
+
+    private void prepareVisitType() {
+        VisitType tempVisitType = new VisitType();
+        tempVisitType.setName("testVisitType");
+
+        String visitTypeUuid = visitAdapter.createVisitType(DEFAULT_CONFIG_NAME, tempVisitType).getUuid();
+        visitType = visitAdapter.getVisitTypeByUuid(DEFAULT_CONFIG_NAME, visitTypeUuid);
+    }
+
+    private void prepareVisit() {
+        Visit tempVisit = new Visit();
+        tempVisit.setPatient(patient);
+        tempVisit.setStartDatetime(startDateTime.toDate());
+        tempVisit.setStopDatetime(stopDateTime.toDate());
+        tempVisit.setVisitType(visitType);
+
+        visit = visitAdapter.createVisit(DEFAULT_CONFIG_NAME, tempVisit);
     }
 
     private void prepareEncounterType() {

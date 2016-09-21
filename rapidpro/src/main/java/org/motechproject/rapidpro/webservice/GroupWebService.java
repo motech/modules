@@ -8,5 +8,12 @@ import org.motechproject.rapidpro.webservice.dto.Group;
  */
 public interface GroupWebService {
 
+    /**
+     * Finds a group by its name, if it exists.
+     *
+     * @param groupName The name of the Group.
+     * @return {@link Group}
+     * @throws WebServiceException If there is an error communicating with RapidPro.
+     */
     Group getGroupByName(String groupName) throws WebServiceException;
 }

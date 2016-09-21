@@ -180,16 +180,25 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
         List<Observation> updatedObs = new ArrayList<>();
         if (originalObservations != null) {
             for (Observation observation : originalObservations) {
-                String conceptUuid = conceptService.resolveConceptUuidFromConceptName(config.getName(), observation.getConcept().getName().getName());
-                if (CollectionUtils.isNotEmpty(observation.getGroupsMembers())) {
-                    resolveConceptUuidForConceptNames(config, observation.getGroupsMembers());
+                if (observationValueIsNotEmpty(observation)) {
+                    String conceptUuid = conceptService.resolveConceptUuidFromConceptName(config.getName(), observation.getConcept().getName().getName());
+                    if (CollectionUtils.isNotEmpty(observation.getGroupsMembers())) {
+                        resolveConceptUuidForConceptNames(config, observation.getGroupsMembers());
+                    }
+                    observation.getConcept().setUuid(conceptUuid);
+                    updatedObs.add(observation);
+                } else {
+                    LOGGER.warn("Observation value is null or empty for concept: " + observation.getConcept().getName()
+                            + " and will not be created");
                 }
-                observation.getConcept().setUuid(conceptUuid);
-                updatedObs.add(observation);
             }
         }
 
         return updatedObs;
+    }
+
+    private boolean observationValueIsNotEmpty(Observation observation) {
+        return observation.getValue() != null && StringUtils.isNotEmpty(observation.getValue().getDisplay());
     }
 
     private List<Encounter> getAllEncountersByPatientMotechId(Config config, String motechId) {

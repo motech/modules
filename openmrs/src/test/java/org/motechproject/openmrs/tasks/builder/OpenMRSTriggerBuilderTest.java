@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.config.Configs;
-import org.motechproject.openmrs.service.EventKeys;
 import org.motechproject.openmrs.service.OpenMRSConfigService;
 import org.motechproject.openmrs.tasks.constants.DisplayNames;
 import org.motechproject.openmrs.tasks.constants.EventSubjects;
@@ -14,8 +13,8 @@ import org.motechproject.tasks.contract.TriggerEventRequest;
 
 import java.util.List;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
