@@ -7,7 +7,6 @@ import java.util.Map;
 /**
  * Represents a single CommCareHQ report data. It's a part of the MOTECH model.
  */
-
 public class ReportDataInfo {
 
     private List<ReportDataColumn> columns;

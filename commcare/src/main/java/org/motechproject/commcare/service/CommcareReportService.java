@@ -4,11 +4,10 @@ import org.motechproject.commcare.domain.report.ReportDataInfo;
 
 
 /**
- * This service is responsible for Interacting with CommCareHQ's programmatic Report Data APIs and uploading JSON data
- * from single report.
+ * Responsible for interacting with CommCareHQ's Report Data APIs and uploading JSON data
+ * from a single report.
  */
-
-public interface CommcareReportDataService {
+public interface CommcareReportService {
 
     /**
      * Query CommCareHQ for a report by its report id.

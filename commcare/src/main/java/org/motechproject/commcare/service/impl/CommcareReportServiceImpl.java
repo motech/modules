@@ -5,23 +5,27 @@ import org.motechproject.commcare.client.CommCareAPIHttpClient;
 import org.motechproject.commcare.domain.report.ReportDataContainerJson;
 import org.motechproject.commcare.domain.report.ReportDataInfo;
 import org.motechproject.commcare.service.CommcareConfigService;
-import org.motechproject.commcare.service.CommcareReportDataService;
+import org.motechproject.commcare.service.CommcareReportService;
 import org.motechproject.commons.api.json.MotechJsonReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
 
-
+/**
+ * Implementation of the {@link CommcareReportService}
+ * Responsible for interacting with CommCareHQ's Report Data APIs and uploading JSON data
+ * from a single report.
+ */
 @Service
-public class CommcareReportDataServiceImpl implements CommcareReportDataService {
+public class CommcareReportServiceImpl implements CommcareReportService {
 
     private CommCareAPIHttpClient commcareHttpClient;
     private CommcareConfigService configService;
     private MotechJsonReader motechJsonReader;
 
     @Autowired
-    public CommcareReportDataServiceImpl(CommCareAPIHttpClient commcareHttpClient, CommcareConfigService configService){
+    public CommcareReportServiceImpl(CommCareAPIHttpClient commcareHttpClient, CommcareConfigService configService){
         this.commcareHttpClient = commcareHttpClient;
         this.configService = configService;
         this.motechJsonReader = new MotechJsonReader();

@@ -2,12 +2,9 @@ package org.motechproject.commcare.domain.report;
 
 import com.google.gson.annotations.SerializedName;
 
-/*
-*
- * Represents column part in single report.
-*/
-
-
+/**
+ * Represents a single column report data.
+ */
 public class ReportDataColumn {
 
     @SerializedName("header")

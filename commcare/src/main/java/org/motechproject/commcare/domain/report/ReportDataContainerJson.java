@@ -5,12 +5,9 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 import java.util.Map;
 
-/*
-*
+/**
  * Represents a single CommCareHQ report data. It's a part of the CommCareHQ model.
-*/
-
-
+ */
 public class ReportDataContainerJson {
 
     @SerializedName("columns")
