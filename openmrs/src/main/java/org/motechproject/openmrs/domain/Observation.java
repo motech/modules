@@ -1,6 +1,13 @@
 package org.motechproject.openmrs.domain;
 
-import com.google.gson.*;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
@@ -27,7 +34,7 @@ public class Observation {
     private String valueCodedName;
     private String obsGroup;
     private Location location;
-    private String orderUuid;
+    private Order order;
 
     public String getUuid() {
         return uuid;
@@ -137,20 +144,21 @@ public class Observation {
         this.location = location;
     }
 
-    public String getOrderUuid () {
-        return orderUuid;
+    public Order getOrder () {
+        return order;
     }
 
-    public void setOrderUuid (String orderUuid) {
-        this.orderUuid = orderUuid;
+    public void setOrder (Order order) {
+        this.order = order;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, display, concept, encounter, value, obsDatetime, person, groupsMembers);
+        return Objects.hash(uuid, display, concept, encounter, value, obsDatetime, person, groupsMembers, voided,
+                valueModifier, valueCodedName, obsGroup, location, order);
     }
 
-    @Override
+    @Override //NO CHECKSTYLE CyclomaticComplexity
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -165,7 +173,10 @@ public class Observation {
         return Objects.equals(uuid, other.uuid) && Objects.equals(display, other.display)
                 && Objects.equals(concept, other.concept) && Objects.equals(encounter, other.encounter)
                 && Objects.equals(value, other.value) && Objects.equals(obsDatetime, other.obsDatetime)
-                && Objects.equals(person, other.person) && Objects.equals(groupsMembers, other.groupsMembers);
+                && Objects.equals(person, other.person) && Objects.equals(groupsMembers, other.groupsMembers)
+                && Objects.equals(voided, other.voided) && Objects.equals(valueModifier, other.valueModifier)
+                && Objects.equals(valueCodedName, other.valueCodedName) && Objects.equals(obsGroup, other.obsGroup)
+                && Objects.equals(location, other.location) && Objects.equals(order, other.order);
     }
 
     /**

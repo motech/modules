@@ -307,7 +307,7 @@
             },
             {
               "displayName": "openMRS.observation.orderUuid",
-              "fieldKey": "orderUuid"
+              "fieldKey": "order.uuid"
             },
             {
               "displayName": "openMRS.encounter.uuid",
