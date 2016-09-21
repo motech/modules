@@ -1,10 +1,6 @@
 package org.motechproject.openmrs.domain;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
+import com.google.gson.*;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
@@ -26,6 +22,12 @@ public class Observation {
     private Date obsDatetime;
     private Person person;
     private List<Observation> groupsMembers;
+    private Boolean voided;
+    private String valueModifier;
+    private String valueCodedName;
+    private String obsGroup;
+    private Location location;
+    private String orderUuid;
 
     public String getUuid() {
         return uuid;
@@ -93,6 +95,54 @@ public class Observation {
 
     public void setGroupsMembers(List<Observation> groupsMembers) {
         this.groupsMembers = groupsMembers;
+    }
+
+    public Boolean getVoided () {
+        return voided;
+    }
+
+    public void setVoided (Boolean voided) {
+        this.voided = voided;
+    }
+
+    public String getValueModifier () {
+        return valueModifier;
+    }
+
+    public void setValueModifier (String valueModifier) {
+        this.valueModifier = valueModifier;
+    }
+
+    public String getValueCodedName () {
+        return valueCodedName;
+    }
+
+    public void setValueCodedName (String valueCodedName) {
+        this.valueCodedName = valueCodedName;
+    }
+
+    public String getObsGroup () {
+        return obsGroup;
+    }
+
+    public void setObsGroup (String obsGroup) {
+        this.obsGroup = obsGroup;
+    }
+
+    public Location getLocation () {
+        return location;
+    }
+
+    public void setLocation (Location location) {
+        this.location = location;
+    }
+
+    public String getOrderUuid () {
+        return orderUuid;
+    }
+
+    public void setOrderUuid (String orderUuid) {
+        this.orderUuid = orderUuid;
     }
 
     @Override
@@ -190,6 +240,23 @@ public class Observation {
         @Override
         public JsonElement serialize(ObservationValue src, Type typeOfSrc, JsonSerializationContext context) {
             return new JsonPrimitive(src.getDisplay());
+        }
+    }
+
+    public static class ObservationValueDeserializer implements JsonDeserializer<ObservationValue> {
+        @Override
+        public ObservationValue deserialize (JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            ObservationValue observationValue = new ObservationValue(null);
+
+            if (json.isJsonObject()) {
+                JsonObject jsonObject = json.getAsJsonObject();
+                observationValue.setDisplay(jsonObject.get("display").getAsString());
+            } else if (json.isJsonPrimitive()) {
+                JsonPrimitive jsonPrimitive = json.getAsJsonPrimitive();
+                observationValue.setDisplay(jsonPrimitive.getAsString());
+            }
+
+            return observationValue;
         }
     }
 }

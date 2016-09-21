@@ -282,52 +282,48 @@
               "fieldKey": "person.uuid"
             },
             {
-              "displayName": "openMRS.observation.dateTime",
-              "fieldKey": "obsDateTime"
+              "displayName": "openMRS.observation.obsDatetime",
+              "fieldKey": "obsDatetime"
             },
             {
-              "displayName": "openMRS.observation.group",
-              "fieldKey": "groupsMembers"
-            },
-            {
-              "displayName": "openMRS.observation.groupMembers",
-              "fieldKey": "endDate"
-            },
-            {
-              "displayName": "openMRS.encounter.uuid",
-              "fieldKey": "encounter.uuid"
-            },
-            {
-              "displayName": "openMRS.observation.value",
-              "fieldKey": "value"
+              "displayName": "openMRS.observation.obsGroup",
+              "fieldKey": "obsGroup"
             },
             {
               "displayName": "openMRS.observation.valueCodedName",
               "fieldKey": "valueCodedName"
             },
             {
-              "displayName": "",
-              "fieldKey": ""
+              "displayName": "openMRS.observation.groupsMembers",
+              "fieldKey": "groupsMembers"
             },
             {
-              "displayName": "",
-              "fieldKey": ""
+              "displayName": "openMRS.location.uuid",
+              "fieldKey": "location.uuid"
             },
             {
-              "displayName": "",
-              "fieldKey": ""
+              "displayName": "openMRS.location.display",
+              "fieldKey": "location.display"
             },
             {
-              "displayName": "",
-              "fieldKey": ""
+              "displayName": "openMRS.observation.orderUuid",
+              "fieldKey": "orderUuid"
             },
             {
-              "displayName": "",
-              "fieldKey": ""
+              "displayName": "openMRS.encounter.uuid",
+              "fieldKey": "encounter.uuid"
             },
             {
-              "displayName": "",
-              "fieldKey": ""
+              "displayName": "openMRS.observation.voided",
+              "fieldKey": "voided"
+            },
+            {
+              "displayName": "openMRS.observation.value",
+              "fieldKey": "value.display"
+            },
+            {
+              "displayName": "openMRS.observation.valueModifier",
+              "fieldKey": "valueModifier"
             }
           ]
         },

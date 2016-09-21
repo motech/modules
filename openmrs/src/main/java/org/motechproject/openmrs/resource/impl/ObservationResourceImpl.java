@@ -15,6 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestOperations;
 
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
+
 @Component
 public class ObservationResourceImpl extends BaseResource implements ObservationResource {
 
@@ -40,8 +44,10 @@ public class ObservationResourceImpl extends BaseResource implements Observation
 
     @Override
     public Observation getObservationById(Config config, String uuid) {
+        Map<Type, Object> adapter = new HashMap<>();
+        adapter.put(Observation.ObservationValue.class, new Observation.ObservationValueDeserializer());
         String responseJson = getJson(config, "/obs/{uuid}?v=full", uuid);
-        return (Observation) JsonUtils.readJson(responseJson, Observation.class);
+        return (Observation) JsonUtils.readJsonWithAdapters(responseJson, Observation.class, adapter);
     }
 
     @Override

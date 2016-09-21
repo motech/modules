@@ -29,6 +29,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class ObservationResourceImplTest extends AbstractResourceImplTest {
 
     private static final String OBSERVATION_LIST_RESPONSE_JSON = "json/observation/observation-list-response.json";
+    private static final String OBSERVATION_QUERY_RESPONSE_JSON = "json/observation/observation-query-response.json";
 
     @Mock
     private RestOperations restOperations;
@@ -65,6 +66,24 @@ public class ObservationResourceImplTest extends AbstractResourceImplTest {
         verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
 
         assertThat(result, equalTo(readFromFile(OBSERVATION_LIST_RESPONSE_JSON, ObservationListResult.class)));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
+        assertThat(requestCaptor.getValue().getBody(), nullValue());
+    }
+
+    @Test
+    public void shouldQueryForObservationByPatientIdAndConceptId() throws Exception {
+        String patientId = "OOO";
+        String conceptId = "CCC";
+        URI url = config.toInstancePathWithParams("/obs?patient={patientUUID}&concept={conceptUUID}&limit=1", patientId, conceptId);
+
+        when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(getResponseFromFile(OBSERVATION_QUERY_RESPONSE_JSON));
+
+        ObservationListResult result = observationResource.getObservationByPatientUUIDAndConceptUUID(config, patientId, conceptId);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
+
+        assertThat(result, equalTo(readFromFile(OBSERVATION_QUERY_RESPONSE_JSON, ObservationListResult.class)));
         assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
         assertThat(requestCaptor.getValue().getBody(), nullValue());
     }
