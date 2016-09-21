@@ -259,8 +259,8 @@
             {
               "displayName": "openMRS.lookup.patientUuidAndConceptUuid",
               "fields": [
-                "openMRS.uuid",
-                "openMRS.observation.concept.uuid"
+                "openMRS.patient.uuid",
+                "openMRS.concept.uuid"
               ]
             }
           ],
@@ -274,7 +274,7 @@
               "fieldKey": "display"
             },
             {
-              "displayName": "openMRS.observation.concept.uuid",
+              "displayName": "openMRS.concept.uuid",
               "fieldKey": "concept.uuid"
             },
             {
@@ -300,6 +300,34 @@
             {
               "displayName": "openMRS.observation.value",
               "fieldKey": "value"
+            },
+            {
+              "displayName": "openMRS.observation.valueCodedName",
+              "fieldKey": "valueCodedName"
+            },
+            {
+              "displayName": "",
+              "fieldKey": ""
+            },
+            {
+              "displayName": "",
+              "fieldKey": ""
+            },
+            {
+              "displayName": "",
+              "fieldKey": ""
+            },
+            {
+              "displayName": "",
+              "fieldKey": ""
+            },
+            {
+              "displayName": "",
+              "fieldKey": ""
+            },
+            {
+              "displayName": "",
+              "fieldKey": ""
             }
           ]
         },

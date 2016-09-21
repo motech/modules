@@ -1,5 +1,6 @@
 package org.motechproject.openmrs.service.impl;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 import org.motechproject.event.MotechEvent;
@@ -10,6 +11,7 @@ import org.motechproject.openmrs.domain.Observation;
 import org.motechproject.openmrs.domain.ObservationListResult;
 import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.exception.ObservationNotFoundException;
+import org.motechproject.openmrs.exception.OpenMRSException;
 import org.motechproject.openmrs.helper.EventHelper;
 import org.motechproject.openmrs.resource.ConceptResource;
 import org.motechproject.openmrs.resource.ObservationResource;
@@ -100,14 +102,17 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
     public Observation getObservationByPatientUUIDAndConceptUUID(String configName, String patientUUID, String conceptUUID) {
         Validate.notEmpty(patientUUID, "Patient uuid cannot be empty");
         Validate.notEmpty(conceptUUID, "Concept uuid cannot be empty");
-        Observation observation = null;
+        ObservationListResult observations;
 
         try {
             Config config = configService.getConfigByName(configName);
-            observation = obsResource.getObservationByPatientUUIDAndConceptUUID(config, patientUUID, conceptUUID);
-            return obsResource.getObservationById(config, observation.getUuid());
+            observations = obsResource.getObservationByPatientUUIDAndConceptUUID(config, patientUUID, conceptUUID);
+            if (CollectionUtils.isEmpty(observations.getResults())) {
+                throw new OpenMRSException("There is no observations for Patient uuid: " + patientUUID + " and Concept uuid: " + conceptUUID);
+            }
+            return obsResource.getObservationById(config, observations.getResults().get(0).getUuid());
         } catch (HttpClientErrorException e) {
-            LOGGER.error("Error while fetching observation with Patient uuid: " + patientUUID + " and Concept uuid: " + conceptUUID);
+            LOGGER.error("Error while fetching observations with Patient uuid: " + patientUUID + " and Concept uuid: " + conceptUUID);
             return null;
         }
     }

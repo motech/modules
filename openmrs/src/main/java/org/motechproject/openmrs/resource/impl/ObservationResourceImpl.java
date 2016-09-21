@@ -45,9 +45,9 @@ public class ObservationResourceImpl extends BaseResource implements Observation
     }
 
     @Override
-    public Observation getObservationByPatientUUIDAndConceptUUID(Config config, String patientUUID, String conceptUUID) {
+    public ObservationListResult getObservationByPatientUUIDAndConceptUUID(Config config, String patientUUID, String conceptUUID) {
         String responseJson = getJson(config, "/obs?patient={patientUUID}&concept={conceptUUID}&limit=1", patientUUID, conceptUUID);
-        return (Observation) JsonUtils.readJson(responseJson, Observation.class);
+        return (ObservationListResult) JsonUtils.readJson(responseJson, ObservationListResult.class);
     }
 
     @Override

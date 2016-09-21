@@ -6,14 +6,7 @@ import org.motechproject.commons.api.AbstractDataProvider;
 import org.motechproject.commons.api.DataProvider;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.openmrs.domain.Encounter;
-import org.motechproject.openmrs.domain.GeneratedIdentifier;
-import org.motechproject.openmrs.domain.Patient;
-import org.motechproject.openmrs.domain.ProgramEnrollment;
-import org.motechproject.openmrs.domain.ProgramEnrollmentListResult;
-import org.motechproject.openmrs.domain.Provider;
-import org.motechproject.openmrs.domain.Relationship;
-import org.motechproject.openmrs.domain.Observation;
+import org.motechproject.openmrs.domain.*;
 import org.motechproject.openmrs.service.OpenMRSEncounterService;
 import org.motechproject.openmrs.service.OpenMRSGeneratedIdentifierService;
 import org.motechproject.openmrs.service.OpenMRSObservationService;
@@ -59,7 +52,7 @@ import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PROGRAM_NAME
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PROVIDER;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.RELATIONSHIP;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.RELATIONSHIP_TYPE_UUID;
-import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.UUID;;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.UUID;
 
 /**
  * This is the OpenMRS task data provider that is registered with the task module as a data source.
@@ -199,11 +192,11 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
 
     private Observation getObservation(String lookupName, Map<String, String> lookupFields, String configName) {
         Observation observation = null;
+
         switch(lookupName) {
             case BY_PATIENT_UUID_AND_CONCEPT_UUID:
-                observation = observationService.getObservationByUuid(configName, lookupFields.get(UUID));
-                /*observation = observationService.getObservationByPatientUUIDAndConceptUUID(configName, lookupFields.get(PATIENT_UUID), lookupFields.get(CONCEPT_UUID));
-                observation = observationService.getObservationByUuid(configName, observation.getUuid());*/
+                observation = observationService.getObservationByPatientUUIDAndConceptUUID(configName,
+                        lookupFields.get(PATIENT_UUID), lookupFields.get(CONCEPT_UUID));
                 break;
             default: LOGGER.error("Lookup with name {} doesn't exist for observation object", lookupName);
                 break;
