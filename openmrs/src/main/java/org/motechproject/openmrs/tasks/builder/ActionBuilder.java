@@ -18,6 +18,7 @@ import java.util.TreeSet;
 import static org.motechproject.tasks.domain.enums.ParameterType.BOOLEAN;
 import static org.motechproject.tasks.domain.enums.ParameterType.DATE;
 import static org.motechproject.tasks.domain.enums.ParameterType.MAP;
+import static org.motechproject.tasks.domain.enums.ParameterType.TEXTAREA;
 
 /**
  * Responsible for building actions for the Tasks channel.
@@ -26,8 +27,9 @@ public class ActionBuilder {
     private static final String CREATE_ENCOUNTER = "Create Encounter";
     private static final String CREATE_PATIENT = "Create Patient";
     private static final String UPDATE_PATIENT_IDENTIFIERS = "Update Patient Identifiers";
-    private static final String CREATE_VISIT = "Create Visit";
     private static final String UPDATE_PERSON = "Update Person";
+    private static final String CREATE_OBSERVATION_JSON = "Create Observation JSON";
+    private static final String CREATE_VISIT = "Create Visit";
     private static final String CREATE_PROGRAM_ENROLLMENT = "Create Program Enrollment";
     private static final String UPDATE_PROGRAM_ENROLLMENT = "Update Program Enrollment";
     private static final String CHANGE_PROGRAM_ENROLLMENT_STATE = "Change Program Enrollment State";
@@ -53,6 +55,7 @@ public class ActionBuilder {
             actions.add(buildCreateEncounterAction(configName));
             actions.add(buildCreatePatientAction(configName));
             actions.add(buildUpdatePatientAction(configName));
+            actions.add(buildCreateObservationJSON(configName));
             actions.add(buildCreateVisitAction(configName));
             actions.add(buildUpdatePatientIdentifiersAction(configName));
             actions.add(buildGetCohortQueryReport(configName));
@@ -144,6 +147,28 @@ public class ActionBuilder {
                 .setServiceMethod(serviceMethod)
                 .setSubject(getSubject(serviceMethod, configName))
                 .setActionParameters(parameters)
+                .createActionEventRequest();
+    }
+
+    private ActionEventRequest buildCreateObservationJSON(String configName) {
+        SortedSet<ActionParameterRequest> actionParameters = new TreeSet<>();
+        int order = 0;
+        String serviceMethod = "createObservationJSON";
+
+        actionParameters.add(prepareParameter(Keys.CONFIG_NAME, DisplayNames.CONFIG_NAME, configName, true, true,
+                order++));
+        actionParameters.add(prepareParameter(Keys.OBSERVATION_JSON, DisplayNames.OBSERVATION_JSON, TEXTAREA, true, order++));
+        actionParameters.add(prepareParameter(Keys.ENCOUNTER_UUID, DisplayNames.ENCOUNTER_UUID, false, order++));
+        actionParameters.add(prepareParameter(Keys.CONCEPT_UUID, DisplayNames.CONCEPT_UUID, false, order++));
+        actionParameters.add(prepareParameter(Keys.OBSERVATION_DATETIME, DisplayNames.OBSERVATION_DATETIME, DATE, false, order++));
+        actionParameters.add(prepareParameter(Keys.COMMENT, DisplayNames.COMMENT, false, order));
+
+        return new ActionEventRequestBuilder()
+                .setDisplayName(getDisplayName(CREATE_OBSERVATION_JSON, configName))
+                .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
+                .setServiceMethod(serviceMethod)
+                .setSubject(getSubject(serviceMethod, configName))
+                .setActionParameters(actionParameters)
                 .createActionEventRequest();
     }
 

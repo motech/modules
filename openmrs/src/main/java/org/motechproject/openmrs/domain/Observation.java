@@ -27,6 +27,8 @@ public class Observation {
     private Person person;
     private List<Observation> groupsMembers;
 
+    private String comment;
+
     public String getUuid() {
         return uuid;
     }
@@ -95,12 +97,20 @@ public class Observation {
         this.groupsMembers = groupsMembers;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(uuid, display, concept, encounter, value, obsDatetime, person, groupsMembers);
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(uuid, display, concept, encounter, value, obsDatetime, person, groupsMembers, comment);
+    }
+
+    @Override //NO CHECKSTYLE Cyclomatic Complexity
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -115,7 +125,8 @@ public class Observation {
         return Objects.equals(uuid, other.uuid) && Objects.equals(display, other.display)
                 && Objects.equals(concept, other.concept) && Objects.equals(encounter, other.encounter)
                 && Objects.equals(value, other.value) && Objects.equals(obsDatetime, other.obsDatetime)
-                && Objects.equals(person, other.person) && Objects.equals(groupsMembers, other.groupsMembers);
+                && Objects.equals(person, other.person) && Objects.equals(groupsMembers, other.groupsMembers)
+                && Objects.equals(comment, other.comment);
     }
 
     /**

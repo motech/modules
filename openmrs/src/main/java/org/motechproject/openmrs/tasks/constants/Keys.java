@@ -46,21 +46,27 @@ public final class Keys {
     public static final String UUID = "uuid";
     public static final String PERSON_ATTRIBUTES = "person.personAttributes";
 
+    //Observation action
+    public static final String OBSERVATION_JSON = "observationJSON";
+    public static final String ENCOUNTER_UUID = "encounterUuid";
+    public static final String CONCEPT_UUID = "conceptUuid";
+    public static final String OBSERVATION_DATETIME = "obsDatetime";
+    public static final String COMMENT = "comment";
+
     //Visit action
     public static final String VISIT_START_DATETIME = "startDatetime";
     public static final String VISIT_STOP_DATETIME = "stopDatetime";
     public static final String VISIT_TYPE_UUID = "visitTypeUuid";
     public static final String VISIT_UUID = "visitUuid";
-
     public static final String VISIT_TYPE = "visitType";
     //Program Enrollment action
     public static final String PROGRAM_UUID = "program.uuid";
+
     public static final String PROGRAM_ENROLLMENT_UUID = "programEnrollmentUuid";
     public static final String DATE_ENROLLED = "dateEnrolled";
     public static final String DATE_COMPLETED = "dateCompleted";
     public static final String STATE_UUID = "stateUuid";
     public static final String STATE_START_DATE = "startDate";
-
     public static final String PROGRAM_ENROLLMENT_ATTRIBUTES = "programEnrollmentAttributes";
     //CohortQuery Report action
     public static final String COHORT_QUERY_UUID = "cohortQueryUuid";

@@ -27,6 +27,7 @@ import org.motechproject.openmrs.service.OpenMRSCohortService;
 import org.motechproject.openmrs.service.OpenMRSConceptService;
 import org.motechproject.openmrs.service.OpenMRSEncounterService;
 import org.motechproject.openmrs.service.OpenMRSLocationService;
+import org.motechproject.openmrs.service.OpenMRSObservationService;
 import org.motechproject.openmrs.service.OpenMRSPatientService;
 import org.motechproject.openmrs.service.OpenMRSPersonService;
 import org.motechproject.openmrs.service.OpenMRSProgramEnrollmentService;
@@ -34,6 +35,7 @@ import org.motechproject.openmrs.service.OpenMRSProviderService;
 import org.motechproject.openmrs.service.OpenMRSVisitService;
 import org.motechproject.openmrs.tasks.OpenMRSActionProxyService;
 import org.motechproject.openmrs.tasks.constants.EventSubjects;
+import org.motechproject.openmrs.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -57,6 +60,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     private OpenMRSEncounterService encounterService;
     private OpenMRSLocationService locationService;
     private OpenMRSPatientService patientService;
+    private OpenMRSObservationService observationService;
     private OpenMRSVisitService visitService;
     private OpenMRSProviderService providerService;
     private OpenMRSProgramEnrollmentService programEnrollmentService;
@@ -138,6 +142,54 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         person.setUuid(personUuid);
 
         personService.updatePerson(configName, person);
+    }
+
+    @Override //NO CHECKSTYLE Cyclomatic Complexity
+    public void createObservationJSON(String configName, String observationJSON, String encounterUuid, String conceptUuid,
+                                      DateTime obsDatetime, String comment) {
+        Observation observation = new Observation();
+        ObservationFromJSON observationFromJSON = (ObservationFromJSON) JsonUtils.readJson(observationJSON, ObservationFromJSON.class);
+
+        if (observationFromJSON.groupsMembers != null) {
+            List<Observation> groupsMembers = new ArrayList<>();
+            for (String obsUuid : observationFromJSON.groupsMembers) {
+                groupsMembers.add(observationService.getObservationByUuid(configName, obsUuid));
+            }
+            if (!groupsMembers.isEmpty()) {
+                observation.setGroupsMembers(groupsMembers);
+            }
+        }
+
+        if (StringUtils.isNotEmpty(observationFromJSON.person)) {
+            observation.setPerson(personService.getPersonByUuid(configName, observationFromJSON.person));
+        }
+        if (StringUtils.isNotEmpty(observationFromJSON.concept)) {
+            observation.setConcept(conceptService.getConceptByUuid(configName, observationFromJSON.concept));
+        }
+        if (StringUtils.isNotEmpty(observationFromJSON.value)) {
+            observation.setValue(new Observation.ObservationValue(observationFromJSON.value));
+        }
+        if (StringUtils.isNotEmpty(observationFromJSON.encounter)) {
+            observation.setEncounter(encounterService.getEncounterByUuid(configName, observationFromJSON.encounter));
+        }
+        if (observationFromJSON.obsDatetime != null) {
+            observation.setObsDatetime(observationFromJSON.obsDatetime);
+        }
+
+        if (StringUtils.isNotEmpty(encounterUuid)) {
+            observation.setEncounter(encounterService.getEncounterByUuid(configName, encounterUuid));
+        }
+        if (StringUtils.isNotEmpty(conceptUuid)) {
+            observation.setConcept(conceptService.getConceptByUuid(configName, conceptUuid));
+        }
+        if (obsDatetime != null) {
+            observation.setObsDatetime(obsDatetime.toDate());
+        }
+        if (comment != null) {
+            observation.setComment(comment);
+        }
+
+        observationService.createObservation(configName, observation);
     }
 
     @Override
@@ -413,5 +465,19 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     @Autowired
     public void setVisitService(OpenMRSVisitService visitService) {
         this.visitService = visitService;
+    }
+
+    @Autowired
+    public void setObservationService(OpenMRSObservationService observationService) {
+        this.observationService = observationService;
+    }
+
+    private class ObservationFromJSON {
+        private String person;
+        private Date obsDatetime;
+        private String concept;
+        private String encounter;
+        private String value;
+        private List<String> groupsMembers;
     }
 }

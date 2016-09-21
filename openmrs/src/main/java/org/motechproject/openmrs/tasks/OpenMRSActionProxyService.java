@@ -32,8 +32,8 @@ public interface OpenMRSActionProxyService {
      * @param observations      the map of observations where concept name is a key and value from the observation is a value
      */
     Encounter createEncounter(String configName, DateTime encounterDatetime, String encounterType,
-                         String locationName, String patientUuid, String providerUuid, String visitUuid,
-                         Map<String, String> observations);
+                              String locationName, String patientUuid, String providerUuid, String visitUuid,
+                              Map<String, String> observations);
 
     /**
      * Creates a patient with the given params. The required fields are : {@code givenName}, {@code familyName},
@@ -87,6 +87,21 @@ public interface OpenMRSActionProxyService {
      * @param identifiers the identifiers to be stored to patient
      */
     void updatePatientIdentifiers(String configName, String patientUuid, Map<String, String> identifiers);
+
+    /**
+     * Creates an observation from given {@code observationJSON}. The observationJSON is the only required field. Other
+     * params are optional and will overwrite any matching key of {@code observationJSON}. Configuration with
+     * the given {@code configName} will be used while performing this action.
+     *
+     * @param configName      the name of the configuration
+     * @param observationJSON the observation in JSON
+     * @param encounterUuid   the encounter uuid
+     * @param conceptUuid     the concept uuid
+     * @param obsDatetime     the observation datetime
+     * @param comment         the comment
+     */
+    void createObservationJSON(String configName, String observationJSON, String encounterUuid, String conceptUuid,
+                               DateTime obsDatetime, String comment);
 
     /**
      * Creates a visit with the given {@code patientUuid}, {@code visitStartDatetime},
