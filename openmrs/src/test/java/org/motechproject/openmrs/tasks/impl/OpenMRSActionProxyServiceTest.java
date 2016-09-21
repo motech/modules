@@ -125,7 +125,7 @@ public class OpenMRSActionProxyServiceTest {
 
         DateTime encounterDatetime = new DateTime("2000-08-16T07:22:05Z");
         Map<String, String> observations = new HashMap<>();
-        observations.put("testConceptName","testObservationValueName0");
+        observations.put("18ff53df-744a-4a3f-8f25-dac6de5b7131", "testObservationValueName0");
 
         List<Observation> obsList = createObservationList(1);
 
@@ -166,7 +166,7 @@ public class OpenMRSActionProxyServiceTest {
 
         DateTime encounterDatetime = new DateTime("2000-08-16T07:22:05Z");
         Map<String, String> observations = new HashMap<>();
-        observations.put("testConceptName","");
+        observations.put("18ff53df-744a-4a3f-8f25-dac6de5b7131","");
 
         List<Observation> obsList = new ArrayList<>();
 
@@ -646,8 +646,8 @@ public class OpenMRSActionProxyServiceTest {
         List<Observation> observationList = new ArrayList<>();
 
         for (int i = 0; i < observationsNumber; i++) {
-            ConceptName conceptName = new ConceptName("testConceptName");
-            Concept concept = new Concept(conceptName);
+            Concept concept = new Concept();
+            concept.setUuid("18ff53df-744a-4a3f-8f25-dac6de5b7131");
 
             Observation observation = new Observation();
             observation.setConcept(concept);
