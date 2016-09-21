@@ -1,10 +1,14 @@
 package org.motechproject.openmrs.domain;
 
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import org.motechproject.openmrs.util.JsonUtils;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
@@ -17,6 +21,7 @@ import java.util.Objects;
  * a moment in time.
  */
 public class Observation {
+    private static final String DISPLAY_KEY = "display";
 
     private String uuid;
     private String display;
@@ -197,10 +202,26 @@ public class Observation {
      * Implementation of the {@link JsonSerializer} interface for the
      * {@link Observation.ObservationValue} class.
      */
-    public static class ObservationValueSerializer implements JsonSerializer<ObservationValue> {
+    public static class ObservationValueSerializer implements JsonSerializer<ObservationValue>, JsonDeserializer<ObservationValue> {
+
         @Override
         public JsonElement serialize(ObservationValue src, Type typeOfSrc, JsonSerializationContext context) {
             return new JsonPrimitive(src.getDisplay());
         }
+
+        @Override
+        public ObservationValue deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+
+            if (json.isJsonObject()) {
+                return (ObservationValue) JsonUtils.readJson(json.toString(), ObservationValue.class);
+            } else {
+                Double valueDouble = json.getAsDouble();
+                JsonObject valueObject = new JsonObject();
+                valueObject.addProperty(DISPLAY_KEY, valueDouble);
+
+                return (ObservationValue) JsonUtils.readJson(valueObject.toString(), ObservationValue.class);
+            }
+        }
+
     }
 }

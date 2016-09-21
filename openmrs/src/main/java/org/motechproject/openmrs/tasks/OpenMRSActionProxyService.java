@@ -2,6 +2,7 @@ package org.motechproject.openmrs.tasks;
 
 import org.joda.time.DateTime;
 import org.motechproject.openmrs.domain.Encounter;
+import org.motechproject.openmrs.domain.Observation;
 import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.Visit;
 
@@ -92,16 +93,15 @@ public interface OpenMRSActionProxyService {
      * Creates an observation from given {@code observationJSON}. The observationJSON is the only required field. Other
      * params are optional and will overwrite any matching key of {@code observationJSON}. Configuration with
      * the given {@code configName} will be used while performing this action.
-     *
-     * @param configName      the name of the configuration
+     *  @param configName      the name of the configuration
      * @param observationJSON the observation in JSON
      * @param encounterUuid   the encounter uuid
      * @param conceptUuid     the concept uuid
      * @param obsDatetime     the observation datetime
      * @param comment         the comment
      */
-    void createObservationJSON(String configName, String observationJSON, String encounterUuid, String conceptUuid,
-                               DateTime obsDatetime, String comment);
+    Observation createObservationJSON(String configName, String observationJSON, String encounterUuid, String conceptUuid,
+                                      DateTime obsDatetime, String comment);
 
     /**
      * Creates a visit with the given {@code patientUuid}, {@code visitStartDatetime},

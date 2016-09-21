@@ -3,6 +3,9 @@ package org.motechproject.openmrs.tasks.impl;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.json.JSONObject;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.openmrs.domain.Attribute;
@@ -35,7 +38,6 @@ import org.motechproject.openmrs.service.OpenMRSProviderService;
 import org.motechproject.openmrs.service.OpenMRSVisitService;
 import org.motechproject.openmrs.tasks.OpenMRSActionProxyService;
 import org.motechproject.openmrs.tasks.constants.EventSubjects;
-import org.motechproject.openmrs.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +45,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -71,8 +72,8 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
 
     @Override
     public Encounter createEncounter(String configName, DateTime encounterDatetime, String encounterType,
-                                String locationName, String patientUuid, String providerUuid, String visitUuid,
-                                Map<String, String> observations) {
+                                     String locationName, String patientUuid, String providerUuid, String visitUuid,
+                                     Map<String, String> observations) {
         Location location = getLocationByName(configName, locationName);
         Patient patient = patientService.getPatientByUuid(configName, patientUuid);
         Provider provider = providerService.getProviderByUuid(configName, providerUuid);
@@ -144,52 +145,26 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         personService.updatePerson(configName, person);
     }
 
-    @Override //NO CHECKSTYLE Cyclomatic Complexity
-    public void createObservationJSON(String configName, String observationJSON, String encounterUuid, String conceptUuid,
-                                      DateTime obsDatetime, String comment) {
-        Observation observation = new Observation();
-        ObservationFromJSON observationFromJSON = (ObservationFromJSON) JsonUtils.readJson(observationJSON, ObservationFromJSON.class);
-
-        if (observationFromJSON.groupsMembers != null) {
-            List<Observation> groupsMembers = new ArrayList<>();
-            for (String obsUuid : observationFromJSON.groupsMembers) {
-                groupsMembers.add(observationService.getObservationByUuid(configName, obsUuid));
-            }
-            if (!groupsMembers.isEmpty()) {
-                observation.setGroupsMembers(groupsMembers);
-            }
-        }
-
-        if (StringUtils.isNotEmpty(observationFromJSON.person)) {
-            observation.setPerson(personService.getPersonByUuid(configName, observationFromJSON.person));
-        }
-        if (StringUtils.isNotEmpty(observationFromJSON.concept)) {
-            observation.setConcept(conceptService.getConceptByUuid(configName, observationFromJSON.concept));
-        }
-        if (StringUtils.isNotEmpty(observationFromJSON.value)) {
-            observation.setValue(new Observation.ObservationValue(observationFromJSON.value));
-        }
-        if (StringUtils.isNotEmpty(observationFromJSON.encounter)) {
-            observation.setEncounter(encounterService.getEncounterByUuid(configName, observationFromJSON.encounter));
-        }
-        if (observationFromJSON.obsDatetime != null) {
-            observation.setObsDatetime(observationFromJSON.obsDatetime);
-        }
+    @Override
+    public Observation createObservationJSON(String configName, String observationJSON, String encounterUuid, String conceptUuid,
+                                             DateTime obsDatetime, String comment) {
+        JSONObject obj = new JSONObject(observationJSON);
 
         if (StringUtils.isNotEmpty(encounterUuid)) {
-            observation.setEncounter(encounterService.getEncounterByUuid(configName, encounterUuid));
+            obj.put("encounter", encounterUuid);
         }
         if (StringUtils.isNotEmpty(conceptUuid)) {
-            observation.setConcept(conceptService.getConceptByUuid(configName, conceptUuid));
+            obj.put("concept", conceptUuid);
         }
         if (obsDatetime != null) {
-            observation.setObsDatetime(obsDatetime.toDate());
+            DateTimeFormatter fullDateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+            obj.put("obsDatetime", obsDatetime.toString(fullDateTimeFormatter));
         }
-        if (comment != null) {
-            observation.setComment(comment);
+        if (StringUtils.isNotEmpty(comment)) {
+            obj.put("comment", comment);
         }
 
-        observationService.createObservation(configName, observation);
+        return observationService.createObservationFromJson(configName, obj.toString());
     }
 
     @Override
@@ -470,14 +445,5 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     @Autowired
     public void setObservationService(OpenMRSObservationService observationService) {
         this.observationService = observationService;
-    }
-
-    private class ObservationFromJSON {
-        private String person;
-        private Date obsDatetime;
-        private String concept;
-        private String encounter;
-        private String value;
-        private List<String> groupsMembers;
     }
 }
