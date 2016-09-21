@@ -283,19 +283,21 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
 
         for (String observationConceptName : observations.keySet()) {
             if (valueIsNotEmpty(observations, observationConceptName)) {
-                Observation observation = new Observation();
+                String[] observationValues = observations.get(observationConceptName).replace(", ", ",").split(",");
+                for (String value : observationValues) {
+                    Observation observation = new Observation();
 
-                ConceptName conceptName = new ConceptName(observationConceptName);
-                Concept concept = new Concept(conceptName);
-                observation.setConcept(concept);
+                    ConceptName conceptName = new ConceptName(observationConceptName);
+                    Concept concept = new Concept(conceptName);
+                    observation.setConcept(concept);
 
-                String observationMapValue = observations.get(observationConceptName);
-                Observation.ObservationValue observationValue = new Observation.ObservationValue(observationMapValue);
-                observation.setValue(observationValue);
+                    Observation.ObservationValue observationValue = new Observation.ObservationValue(value);
+                    observation.setValue(observationValue);
 
-                observation.setObsDatetime(obsDatetime.toDate());
+                    observation.setObsDatetime(obsDatetime.toDate());
 
-                observationList.add(observation);
+                    observationList.add(observation);
+                }
             } else {
                 LOGGER.warn("Observation value is null or empty for concept: " + observationConceptName
                         + " and will not be created");
