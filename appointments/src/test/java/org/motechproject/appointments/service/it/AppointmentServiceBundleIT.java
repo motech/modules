@@ -58,17 +58,6 @@ public class AppointmentServiceBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void addAppointmentDuplicate() throws Exception {
-        logger.info("addAppointmentDuplicate");
-        Appointment current = new Appointment();
-        current.setExternalId("1234");
-        Appointment result = appointmentService.addAppointment(current);
-        assertEquals(result.getExternalId(), current.getExternalId());
-
-        appointmentService.addAppointment(current);
-    }
-
-    @Test
     public void getAppointment() throws Exception {
         logger.info("getAppointment");
         Appointment current = new Appointment();
