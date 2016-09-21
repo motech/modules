@@ -86,7 +86,8 @@ public class ActionBuilder {
         actionParameters.add(prepareParameter(Keys.PATIENT_UUID, DisplayNames.PATIENT_UUID, true, order++));
         actionParameters.add(prepareParameter(Keys.PROVIDER_UUID, DisplayNames.PROVIDER_UUID, true, order++));
         actionParameters.add(prepareParameter(Keys.VISIT_UUID, DisplayNames.VISIT_UUID, false, order++));
-        actionParameters.add(prepareParameter(Keys.OBSERVATION, DisplayNames.OBSERVATION, MAP, false, order));
+        actionParameters.add(prepareParameter(Keys.OBSERVATION, DisplayNames.OBSERVATION, MAP, false, order++));
+        actionParameters.add(prepareParameter(Keys.FORM, DisplayNames.FORM, false, order));
 
         postActionParameters.add(prepareParameter(Keys.UUID, DisplayNames.ENCOUNTER_UUID, false, 0));
 

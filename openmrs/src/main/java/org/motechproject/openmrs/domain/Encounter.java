@@ -31,6 +31,7 @@ public class Encounter {
     private Visit visit;
     private List<Observation> obs;
     private List<Person> encounterProviders;
+    private String formId;
 
     /**
      * Default constructor.
@@ -50,6 +51,11 @@ public class Encounter {
 
     public Encounter(Location location, EncounterType encounterType, Date encounterDatetime, Patient patient,
                      Visit visit, List<Person> encounterProviders, List<Observation> obs) {
+        this(location, encounterType, encounterDatetime, patient, visit, encounterProviders, obs, null);
+    }
+
+    public Encounter(Location location, EncounterType encounterType, Date encounterDatetime, Patient patient,
+                     Visit visit, List<Person> encounterProviders, List<Observation> obs, String formId) {
         this.location = location;
         this.encounterType = encounterType;
         this.encounterDatetime = encounterDatetime;
@@ -57,6 +63,7 @@ public class Encounter {
         this.visit = visit;
         this.encounterProviders = encounterProviders;
         this.obs = obs;
+        this.formId = formId;
     }
 
     public String getUuid() {
@@ -127,13 +134,17 @@ public class Encounter {
         return obs;
     }
 
+    public String getFormId() { return formId; }
+
+    public void setFormId(String formId) { this.formId  = formId; }
+
     public void setObs(List<Observation> obs) {
         this.obs = obs;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, display, location, encounterType, encounterDatetime, patient, visit, obs, encounterProviders);
+        return Objects.hash(uuid, display, location, encounterType, encounterDatetime, patient, visit, obs, encounterProviders, formId);
     }
 
     @Override //NO CHECKSTYLE Cyclomatic Complexity
@@ -153,7 +164,8 @@ public class Encounter {
                 Objects.equals(patient, encounter.patient) &&
                 Objects.equals(visit, encounter.visit) &&
                 Objects.equals(obs, encounter.obs) &&
-                Objects.equals(encounterProviders, encounter.encounterProviders);
+                Objects.equals(encounterProviders, encounter.encounterProviders) &&
+                Objects.equals(formId, encounter.formId);
     }
 
     /**
@@ -161,7 +173,7 @@ public class Encounter {
      */
     public static class EncounterSerializer implements JsonSerializer<Encounter> {
 
-        @Override
+        @Override //NO CHECKSTYLE Cyclomatic Complexity
         public JsonElement serialize(Encounter src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject encounter = new JsonObject();
 
@@ -189,6 +201,9 @@ public class Encounter {
             }
             if (src.visit != null) {
                 encounter.addProperty("visit", src.getVisit().getUuid());
+            }
+            if (src.formId != null) {
+                encounter.addProperty("form", src.getFormId());
             }
             if (src.obs != null) {
                 final JsonElement jsonObs = context.serialize(src.getObs());

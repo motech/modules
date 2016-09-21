@@ -68,7 +68,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     @Override
     public Encounter createEncounter(String configName, DateTime encounterDatetime, String encounterType,
                                 String locationName, String patientUuid, String providerUuid, String visitUuid,
-                                Map<String, String> observations) {
+                                Map<String, String> observations, String formId) {
         Location location = getLocationByName(configName, locationName);
         Patient patient = patientService.getPatientByUuid(configName, patientUuid);
         Provider provider = providerService.getProviderByUuid(configName, providerUuid);
@@ -82,7 +82,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
 
         EncounterType type = new EncounterType(encounterType);
 
-        Encounter encounter = new Encounter(location, type, encounterDatetime.toDate(), patient, visit, Collections.singletonList(provider.getPerson()), observationList);
+        Encounter encounter = new Encounter(location, type, encounterDatetime.toDate(), patient, visit, Collections.singletonList(provider.getPerson()), observationList, formId);
         return encounterService.createEncounter(configName, encounter);
     }
 

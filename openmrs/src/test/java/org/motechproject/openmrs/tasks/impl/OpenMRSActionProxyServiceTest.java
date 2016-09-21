@@ -141,7 +141,7 @@ public class OpenMRSActionProxyServiceTest {
 
         Encounter encounterCreated = openMRSActionProxyService.createEncounter(CONFIG_NAME, new DateTime(encounter.getEncounterDatetime()),
                 encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid(),
-                visit.getUuid(), observations);
+                visit.getUuid(), observations, null);
 
         assertEquals(encounter, encounterCreated);
     }
@@ -182,7 +182,7 @@ public class OpenMRSActionProxyServiceTest {
 
         Encounter encounterCreated = openMRSActionProxyService.createEncounter(CONFIG_NAME, new DateTime(encounter.getEncounterDatetime()),
                 encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid(),
-                visit.getUuid(), observations);
+                visit.getUuid(), observations, null);
 
         assertEquals(encounter, encounterCreated);
     }
