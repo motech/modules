@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.commcare.client.CommCareAPIHttpClient;
 import org.motechproject.commcare.config.Config;
-import org.motechproject.commcare.domain.report.ReportsInfo;
+import org.motechproject.commcare.domain.report.ReportsMetadataInfo;
 import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.util.ConfigsUtils;
 
@@ -41,14 +41,14 @@ public class CommcareReportServiceImplTest {
 
     @Test
     public void shouldGetReports() {
-        when(commcareHttpClient.reportsListRequest(configService.getByName(null).getAccountConfig())).thenReturn(getResponseForReportsList());
+        when(commcareHttpClient.reportsListMetadataRequest(configService.getByName(null).getAccountConfig())).thenReturn(getResponseForReportsList());
 
-        ReportsInfo reportsInfo = reportService.getReportsList();
+        ReportsMetadataInfo reportsMetadataInfo = reportService.getReportsList();
 
-        assertThat(reportsInfo.getMetadataInfo().getTotalCount(), equalTo(2));
-        assertThat(reportsInfo.getReportInfoList().size(), equalTo(2));
-        assertThat(reportsInfo.getReportInfoList().get(0).getColumns().size(), equalTo(3));
-        assertThat(reportsInfo.getReportInfoList().get(0).getFilters().size(), equalTo(2));
+        assertThat(reportsMetadataInfo.getMetadataInfo().getTotalCount(), equalTo(2));
+        assertThat(reportsMetadataInfo.getReportMetadataInfoList().size(), equalTo(2));
+        assertThat(reportsMetadataInfo.getReportMetadataInfoList().get(0).getColumns().size(), equalTo(3));
+        assertThat(reportsMetadataInfo.getReportMetadataInfoList().get(0).getFilters().size(), equalTo(2));
     }
 
     private String getResponseForReportsList() {

@@ -4,10 +4,10 @@ import com.google.common.reflect.TypeToken;
 import org.motechproject.commcare.client.CommCareAPIHttpClient;
 import org.motechproject.commcare.domain.CommcareMetadataInfo;
 import org.motechproject.commcare.domain.CommcareMetadataJson;
-import org.motechproject.commcare.domain.report.ReportInfo;
-import org.motechproject.commcare.domain.report.ReportsInfo;
-import org.motechproject.commcare.domain.report.ReportJson;
-import org.motechproject.commcare.domain.report.ReportsResponseJson;
+import org.motechproject.commcare.domain.report.ReportMetadataInfo;
+import org.motechproject.commcare.domain.report.ReportsMetadataInfo;
+import org.motechproject.commcare.domain.report.ReportMetadataJson;
+import org.motechproject.commcare.domain.report.ReportsMetadataResponseJson;
 import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.service.CommcareReportService;
 import org.motechproject.commons.api.json.MotechJsonReader;
@@ -37,51 +37,51 @@ public class CommcareReportServiceImpl implements CommcareReportService {
     }
 
     @Override
-    public ReportsInfo getReportsList(String configName) {
-        String response = commCareHttpClient.reportsListRequest(configService.getByName(configName).getAccountConfig());
+    public ReportsMetadataInfo getReportsList(String configName) {
+        String response = commCareHttpClient.reportsListMetadataRequest(configService.getByName(configName).getAccountConfig());
 
-        ReportsResponseJson reportsResponseJson = parseReportsFromResponse(response);
+        ReportsMetadataResponseJson reportsMetadataResponseJson = parseReportsFromResponse(response);
 
-        return new ReportsInfo(generateReportsFromReportsResponse(reportsResponseJson.getReports()), populateReportsMetadata(reportsResponseJson.getMetadata()));
+        return new ReportsMetadataInfo(generateReportsFromReportsResponse(reportsMetadataResponseJson.getReports()), populateReportsMetadata(reportsMetadataResponseJson.getMetadata()));
     }
 
     @Override
-    public ReportsInfo getReportsList() {
+    public ReportsMetadataInfo getReportsList() {
         return getReportsList(null);
     }
 
-    private ReportsResponseJson parseReportsFromResponse(String response) {
-        Type reportsResponseType = new TypeToken<ReportsResponseJson>() { } .getType();
-        return (ReportsResponseJson) motechJsonReader.readFromString(response, reportsResponseType);
+    private ReportsMetadataResponseJson parseReportsFromResponse(String response) {
+        Type reportsResponseType = new TypeToken<ReportsMetadataResponseJson>() { } .getType();
+        return (ReportsMetadataResponseJson) motechJsonReader.readFromString(response, reportsResponseType);
     }
 
-    private List<ReportInfo> generateReportsFromReportsResponse(List<ReportJson> reportResponses) {
+    private List<ReportMetadataInfo> generateReportsFromReportsResponse(List<ReportMetadataJson> reportResponses) {
         if (reportResponses == null) {
             return Collections.emptyList();
         }
 
-        List<ReportInfo> reportsInfoList = new ArrayList<>();
+        List<ReportMetadataInfo> reportsInfoList = new ArrayList<>();
 
-        for (ReportJson reportResponse : reportResponses) {
-            reportsInfoList.add(populateReportInfo(reportResponse));
+        for (ReportMetadataJson reportResponse : reportResponses) {
+            reportsInfoList.add(populateReportMetadataInfo(reportResponse));
         }
 
         return reportsInfoList;
     }
 
-    private ReportInfo populateReportInfo(ReportJson reportResponse) {
+    private ReportMetadataInfo populateReportMetadataInfo(ReportMetadataJson reportResponse) {
         if (reportResponse == null) {
             return null;
         }
 
-        ReportInfo reportInfo = new ReportInfo();
+        ReportMetadataInfo reportMetadataInfo = new ReportMetadataInfo();
 
-        reportInfo.setId(reportResponse.getId());
-        reportInfo.setTitle(reportResponse.getTitle());
-        reportInfo.setColumns(reportResponse.getColumns());
-        reportInfo.setFilters(reportResponse.getFilters());
+        reportMetadataInfo.setId(reportResponse.getId());
+        reportMetadataInfo.setTitle(reportResponse.getTitle());
+        reportMetadataInfo.setColumns(reportResponse.getColumns());
+        reportMetadataInfo.setFilters(reportResponse.getFilters());
 
-        return reportInfo;
+        return reportMetadataInfo;
     }
 
     private CommcareMetadataInfo populateReportsMetadata(CommcareMetadataJson metadataJson) {

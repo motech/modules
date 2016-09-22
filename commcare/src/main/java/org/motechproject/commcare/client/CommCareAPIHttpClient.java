@@ -156,8 +156,8 @@ public class CommCareAPIHttpClient {
       * @param accountConfig the account configuration to use
       * @return the response as a String (JSON expected)
       */
-    public String reportsListRequest(AccountConfig accountConfig) {
-        return this.getRequest(accountConfig, commcareReportsListUrl(accountConfig), null);
+    public String reportsListMetadataRequest(AccountConfig accountConfig) {
+        return this.getRequest(accountConfig, commcareReportsMetadataUrl(accountConfig), null);
     }
 
     /**
@@ -534,7 +534,7 @@ public class CommCareAPIHttpClient {
                 accountConfig.getDomain(), API_VERSION, caseId);
     }
 
-    String commcareReportsListUrl(AccountConfig accountConfig) {
+    String commcareReportsMetadataUrl(AccountConfig accountConfig) {
         return String.format("%s/%s/api/v%s/simplereportconfiguration/?format=json", getCommcareBaseUrl(accountConfig.getBaseUrl()),
                         accountConfig.getDomain(), API_VERSION);
     }

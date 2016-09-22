@@ -3,9 +3,9 @@ package org.motechproject.commcare.domain.report;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Represents a single CommCareHQ {@link ReportInfo} filter.
+ * Represents a single CommCareHQ {@link ReportMetadataInfo} filter.
  */
-public class Filter {
+public class ReportMetadataFilter {
 
     @SerializedName("datatype")
     private String datatype;

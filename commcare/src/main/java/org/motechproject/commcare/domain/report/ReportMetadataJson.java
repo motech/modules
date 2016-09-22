@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Represents a single CommCareHQ report. It's a part of the CommCareHQ model.
  */
-public class ReportJson {
+public class ReportMetadataJson {
 
     @SerializedName("title")
     private String title;
@@ -19,10 +19,10 @@ public class ReportJson {
     private String resource;
 
     @SerializedName("columns")
-    private List<Column> columns;
+    private List<ReportMetadataColumn> columns;
 
     @SerializedName("filters")
-    private List<Filter> filters;
+    private List<ReportMetadataFilter> filters;
 
     public String getId() {
         return id;
@@ -48,19 +48,19 @@ public class ReportJson {
         this.resource = resource;
     }
 
-    public List<Column> getColumns() {
+    public List<ReportMetadataColumn> getColumns() {
         return columns;
     }
 
-    public void setColumns(List<Column> columns) {
+    public void setColumns(List<ReportMetadataColumn> columns) {
         this.columns = columns;
     }
 
-    public List<Filter> getFilters() {
+    public List<ReportMetadataFilter> getFilters() {
         return filters;
     }
 
-    public void setFilters(List<Filter> filters) {
+    public void setFilters(List<ReportMetadataFilter> filters) {
         this.filters = filters;
     }
 }

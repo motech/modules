@@ -3,9 +3,9 @@ package org.motechproject.commcare.domain.report;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Represents a single CommCareHQ {@link ReportInfo} column.
+ * Represents a single CommCareHQ {@link ReportMetadataInfo} column.
  */
-public class Column {
+public class ReportMetadataColumn {
 
     @SerializedName("column_id")
     private String id;

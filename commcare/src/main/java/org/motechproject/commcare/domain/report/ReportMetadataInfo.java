@@ -5,12 +5,12 @@ import java.util.List;
 /**
  * Represents a single CommCareHQ report. It's a part of the MOTECH model.
  */
-public class ReportInfo {
+public class ReportMetadataInfo {
 
     private String id;
     private String title;
-    private List<Column> columns;
-    private List<Filter> filters;
+    private List<ReportMetadataColumn> columns;
+    private List<ReportMetadataFilter> filters;
 
     public String getId() {
         return id;
@@ -28,19 +28,19 @@ public class ReportInfo {
         this.title = title;
     }
 
-    public List<Column> getColumns() {
+    public List<ReportMetadataColumn> getColumns() {
         return columns;
     }
 
-    public void setColumns(List<Column> columns) {
+    public void setColumns(List<ReportMetadataColumn> columns) {
         this.columns = columns;
     }
 
-    public List<Filter> getFilters() {
+    public List<ReportMetadataFilter> getFilters() {
         return filters;
     }
 
-    public void setFilters(List<Filter> filters) {
+    public void setFilters(List<ReportMetadataFilter> filters) {
         this.filters = filters;
     }
 }
