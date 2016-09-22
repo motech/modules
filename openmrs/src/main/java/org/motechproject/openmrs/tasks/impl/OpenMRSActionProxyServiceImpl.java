@@ -285,7 +285,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
             if (valueIsNotEmpty(observations, observationConceptName)) {
                 String[] observationValues = observations.get(observationConceptName).replace(", ", ",").split(",");
                 for (String value : observationValues) {
-                    if (value != null && !value.isEmpty()) {
+                    if (StringUtils.isNotEmpty(value)) {
                         Observation observation = new Observation();
 
                         ConceptName conceptName = new ConceptName(observationConceptName);
