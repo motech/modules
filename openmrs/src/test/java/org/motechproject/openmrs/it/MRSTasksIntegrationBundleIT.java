@@ -235,6 +235,26 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     }
 
     @Test
+    public void testCreateEncounterPostActionParameter() throws InterruptedException {
+        Task task = prepareCreateEncounterPostActionParameterTask();
+
+        getTriggerHandler().registerHandlerFor(task.getTrigger().getEffectiveListenerSubject());
+
+        activateTrigger();
+
+        // Give Tasks some time to process
+        assertTrue(waitForTaskExecution(task.getId()));
+
+        Encounter encounter = encounterService.getLatestEncounterByPatientMotechId(DEFAULT_CONFIG_NAME, createdPatient.getMotechId(), createdEncounterType.getName());
+        String firstEncounterUuid = encounter.getUuid();
+
+        Patient patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, "Jacob Lee");
+        Person.Address address = patient.getPerson().getPreferredAddress();
+
+        assertEquals(firstEncounterUuid, address.getAddress1());
+    }
+
+    @Test
     public void testCreatePatientPostActionParameter() throws InterruptedException {
         Task task = prepareCreatePatientPostActionParameterTask();
 
@@ -368,7 +388,21 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         createdEncounter = encounterService.createEncounter(DEFAULT_CONFIG_NAME, encounter);
     }
 
-    private Task prepareCreatePatientPostActionParameterTask() {
+    private Task prepareCreateEncounterPostActionParameterTask() {
+        TaskTriggerInformation triggerInformation = new TaskTriggerInformation("CREATE SettingsRecord", "data-services", MDS_CHANNEL_NAME,
+                VERSION, TRIGGER_SUBJECT, TRIGGER_SUBJECT);
+
+        ArrayList<TaskActionInformation> taskActions = new ArrayList();
+        taskActions.add(prepareCreateEncounterActionInformation());
+        taskActions.add(prepareCreatePatientActionInformation("{{pa.0.uuid}}", "Jacob Lee", false));
+
+        Task task = new Task("OpenMRSEncounterPostActionParameterTestTask", triggerInformation, taskActions, new TaskConfig(), true, true);
+        getTaskService().save(task);
+
+        return task;
+    }
+
+    private Task prepareCreatePatientPostActionParameterTask(){
         TaskTriggerInformation triggerInformation = new TaskTriggerInformation("CREATE SettingsRecord", "data-services", MDS_CHANNEL_NAME,
                 VERSION, TRIGGER_SUBJECT, TRIGGER_SUBJECT);
 
@@ -378,8 +412,8 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         taskConfig.addAll(taskConfigStepSortedSet);
 
         ArrayList<TaskActionInformation> taskActions = new ArrayList();
-        taskActions.add(prepareCreatePatientActionInformation("Wallstreet 15/2", "John Smith"));
-        taskActions.add(prepareCreatePatientActionInformation("{{pa.0.uuid}}", "Jacob Lee"));
+        taskActions.add(prepareCreatePatientActionInformation("Wallstreet 15/2", "John Smith", true));
+        taskActions.add(prepareCreatePatientActionInformation("{{pa.0.uuid}}", "Jacob Lee", true));
 
         Task task = new Task("OpenMRSPatientPostActionParameterTestTask", triggerInformation, taskActions, taskConfig, true, true);
         getTaskService().save(task);
@@ -387,17 +421,48 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         return task;
     }
 
-    private TaskActionInformation prepareCreatePatientActionInformation(String adress1, String motechId) {
+    private TaskActionInformation prepareCreatePatientActionInformation(String address1, String motechId, boolean withPatientDataSourceBubbles) {
         TaskActionInformation actionInformation = new TaskActionInformation("Create Patient [" + DEFAULT_CONFIG_NAME + "]", OPENMRS_CHANNEL_NAME,
                 OPENMRS_CHANNEL_NAME, VERSION, TEST_INTERFACE, "createPatient");
         actionInformation.setSubject(String.format("createPatient.%s", DEFAULT_CONFIG_NAME));
 
         Map<String, String> values = new HashMap<>();
-        values.put(Keys.ADDRESS_1, adress1);
-        values.put(Keys.FAMILY_NAME, "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.person.display}}");
-        values.put(Keys.GENDER, "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.person.gender}}");
-        values.put(Keys.GIVEN_NAME, "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.person.display}}");
+
+        String familyName;
+        String gender;
+        String givenName;
+        if (withPatientDataSourceBubbles) {
+            familyName = "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.person.display}}";
+            gender = "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.person.gender}}";
+            givenName = "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.person.display}}";
+        } else {
+            familyName = "Bond";
+            gender = "M";
+            givenName = "James";
+        }
+        values.put(Keys.ADDRESS_1, address1);
+        values.put(Keys.FAMILY_NAME, familyName);
+        values.put(Keys.GENDER, gender);
+        values.put(Keys.GIVEN_NAME, givenName);
         values.put(Keys.MOTECH_ID, motechId);
+        values.put(Keys.CONFIG_NAME, DEFAULT_CONFIG_NAME);
+        actionInformation.setValues(values);
+
+        return actionInformation;
+    }
+
+    private TaskActionInformation prepareCreateEncounterActionInformation(){
+        TaskActionInformation actionInformation = new TaskActionInformation("Create Encounter [" + DEFAULT_CONFIG_NAME + "]", OPENMRS_CHANNEL_NAME,
+                OPENMRS_CHANNEL_NAME, VERSION, TEST_INTERFACE, "createEncounter");
+        actionInformation.setSubject(String.format("createEncounter.%s", DEFAULT_CONFIG_NAME));
+
+        Map<String, String> values = new HashMap<>();
+        values.put(Keys.PROVIDER_UUID, createdProvider.getUuid());
+        values.put(Keys.PATIENT_UUID, createdPatient.getUuid());
+        values.put(Keys.ENCOUNTER_TYPE, createdEncounterType.getName());
+        values.put(Keys.ENCOUNTER_DATE, new DateTime("2015-01-16T00:00:00Z").toString());
+        values.put(Keys.LOCATION_NAME, DEFAULT_LOCATION_NAME);
+        values.put(Keys.VISIT_UUID, prepareVisit().getUuid());
         values.put(Keys.CONFIG_NAME, DEFAULT_CONFIG_NAME);
         actionInformation.setValues(values);
 
