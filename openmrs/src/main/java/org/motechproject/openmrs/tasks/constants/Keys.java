@@ -49,10 +49,9 @@ public final class Keys {
     //Visit action
     public static final String VISIT_START_DATETIME = "startDatetime";
     public static final String VISIT_STOP_DATETIME = "stopDatetime";
-    public static final String VISIT_TYPE_UUID = "visitTypeUuid";
     public static final String VISIT_UUID = "visitUuid";
-
     public static final String VISIT_TYPE = "visitType";
+
     //Program Enrollment action
     public static final String PROGRAM_UUID = "program.uuid";
     public static final String PROGRAM_ENROLLMENT_UUID = "programEnrollmentUuid";
