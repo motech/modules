@@ -61,7 +61,7 @@ public class SettingsServiceImpl implements SettingsService {
             Gson gson = new Gson();
             settings = gson.fromJson(jsonText, Settings.class);
             String uri = settings.getServerURI();
-            if (uri.endsWith("/")) {
+            if (uri != null && uri.endsWith("/")) {
                 settings.setServerURI(uri.substring(0, uri.length() - 1));
             }
         } catch (Exception e) {
