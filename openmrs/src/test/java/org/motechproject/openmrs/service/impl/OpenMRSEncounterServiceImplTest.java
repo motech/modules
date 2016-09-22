@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OpenMRSEncounterServiceImplTest {
@@ -77,6 +78,10 @@ public class OpenMRSEncounterServiceImplTest {
         when(configService.getConfigByName(CONFIG_NAME)).thenReturn(config);
         when(encounterResource.createEncounter(config,encounter)).thenThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST));
 
-        encounterServiceImpl.createEncounter(CONFIG_NAME, encounter);
+        try {
+            encounterServiceImpl.createEncounter(CONFIG_NAME, encounter);
+        } finally {
+            verify(encounterResource).createEncounter(config, encounter);
+        }
     }
 }
