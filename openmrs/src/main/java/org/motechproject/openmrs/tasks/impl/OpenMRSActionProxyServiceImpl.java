@@ -291,8 +291,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
                         concept.setUuid(observationConceptUuid);
                         observation.setConcept(concept);
 
-                        String observationMapValue = observations.get(observationConceptUuid);
-                        Observation.ObservationValue observationValue = new Observation.ObservationValue(observationMapValue);
+                        Observation.ObservationValue observationValue = new Observation.ObservationValue(value);
                         observation.setValue(observationValue);
 
                         observation.setObsDatetime(obsDatetime.toDate());
