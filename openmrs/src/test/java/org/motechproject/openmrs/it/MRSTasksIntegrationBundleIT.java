@@ -394,7 +394,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         ArrayList<TaskActionInformation> taskActions = new ArrayList();
         taskActions.add(prepareCreateEncounterActionInformation());
-        taskActions.add(prepareCreatePatientActionInformation("{{pa.0.uuid}}", "Jacob Lee", true));
+        taskActions.add(prepareCreatePatientActionInformation("{{pa.0.uuid}}", "Jacob Lee", false));
 
         Task task = new Task("OpenMRSEncounterPostActionParameterTestTask", triggerInformation, taskActions, new TaskConfig(), true, true);
         getTaskService().save(task);
@@ -412,8 +412,8 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         taskConfig.addAll(taskConfigStepSortedSet);
 
         ArrayList<TaskActionInformation> taskActions = new ArrayList();
-        taskActions.add(prepareCreatePatientActionInformation("Wallstreet 15/2", "John Smith", false));
-        taskActions.add(prepareCreatePatientActionInformation("{{pa.0.uuid}}", "Jacob Lee", false));
+        taskActions.add(prepareCreatePatientActionInformation("Wallstreet 15/2", "John Smith", true));
+        taskActions.add(prepareCreatePatientActionInformation("{{pa.0.uuid}}", "Jacob Lee", true));
 
         Task task = new Task("OpenMRSPatientPostActionParameterTestTask", triggerInformation, taskActions, taskConfig, true, true);
         getTaskService().save(task);
@@ -421,20 +421,21 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         return task;
     }
 
-    private TaskActionInformation prepareCreatePatientActionInformation(String address1, String motechId, Boolean forEncounter) {
+    private TaskActionInformation prepareCreatePatientActionInformation(String address1, String motechId, boolean withPatientDataSourceBubbles) {
         TaskActionInformation actionInformation = new TaskActionInformation("Create Patient [" + DEFAULT_CONFIG_NAME + "]", OPENMRS_CHANNEL_NAME,
                 OPENMRS_CHANNEL_NAME, VERSION, TEST_INTERFACE, "createPatient");
         actionInformation.setSubject(String.format("createPatient.%s", DEFAULT_CONFIG_NAME));
 
         Map<String, String> values = new HashMap<>();
 
-        String familyName, gender, givenName;
-        if (forEncounter == false) {
+        String familyName;
+        String gender;
+        String givenName;
+        if (withPatientDataSourceBubbles) {
             familyName = "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.person.display}}";
             gender = "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.person.gender}}";
             givenName = "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.person.display}}";
-        }
-        else {
+        } else {
             familyName = "Bond";
             gender = "M";
             givenName = "James";
