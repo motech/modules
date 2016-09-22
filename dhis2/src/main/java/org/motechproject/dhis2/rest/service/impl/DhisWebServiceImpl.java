@@ -23,25 +23,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.JavaType;
 import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.dhis2.event.EventSubjects;
-import org.motechproject.dhis2.rest.domain.BaseDto;
-import org.motechproject.dhis2.rest.domain.DataElementDto;
-import org.motechproject.dhis2.rest.domain.DataSetDto;
-import org.motechproject.dhis2.rest.domain.DataValueSetDto;
-import org.motechproject.dhis2.rest.domain.DhisDataValueStatusResponse;
-import org.motechproject.dhis2.rest.domain.DhisEventDto;
-import org.motechproject.dhis2.rest.domain.DhisServerInfo;
-import org.motechproject.dhis2.rest.domain.DhisStatusResponse;
-import org.motechproject.dhis2.rest.domain.EnrollmentDto;
-import org.motechproject.dhis2.rest.domain.OrganisationUnitDto;
-import org.motechproject.dhis2.rest.domain.PagedResourceDto;
-import org.motechproject.dhis2.rest.domain.ProgramDto;
-import org.motechproject.dhis2.rest.domain.ProgramStageDataElementDto;
-import org.motechproject.dhis2.rest.domain.ProgramStageDto;
-import org.motechproject.dhis2.rest.domain.ProgramTrackedEntityAttributeDto;
-import org.motechproject.dhis2.rest.domain.ServerVersion;
-import org.motechproject.dhis2.rest.domain.TrackedEntityAttributeDto;
-import org.motechproject.dhis2.rest.domain.TrackedEntityDto;
-import org.motechproject.dhis2.rest.domain.TrackedEntityInstanceDto;
+import org.motechproject.dhis2.rest.domain.*;
 import org.motechproject.dhis2.rest.service.DhisWebException;
 import org.motechproject.dhis2.rest.service.DhisWebService;
 import org.motechproject.dhis2.service.Settings;
@@ -418,6 +400,14 @@ public class DhisWebServiceImpl implements DhisWebService {
             throw new DhisWebException(msg, e);
         } finally {
             closeResponse(response);
+        }
+
+        LOGGER.debug(String.format("DHIS2 status response: %s", status.getStatus().toString()));
+
+        if (status.getStatus() == DhisStatus.ERROR) {
+            String msg = String.format("Error in DHIS2 status response: %s", status.getStatus().toString());
+            statusMessageService.warn(msg, MODULE_NAME);
+            throw new DhisWebException(msg);
         }
 
         return status;
