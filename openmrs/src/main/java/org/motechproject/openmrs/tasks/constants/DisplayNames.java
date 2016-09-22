@@ -50,7 +50,7 @@ public final class DisplayNames {
     public static final String VISIT_UUID = "openMRS.visit.uuid";
     public static final String VISIT_START_DATETIME = "openMRS.visit.startDatetime";
     public static final String VISIT_STOP_DATETIME = "openMRS.visit.stopDatetime";
-    public static final String VISIT_TYPE_UUID = "openMRS.visit.type.uuid";
+    public static final String VISIT_TYPE = "openMRS.visit.type";
 
     //Program Enrollment action
     public static final String PROGRAM_UUID = "openMRS.program.uuid";

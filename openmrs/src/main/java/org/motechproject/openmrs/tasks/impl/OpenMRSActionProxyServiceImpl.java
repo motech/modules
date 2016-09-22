@@ -142,10 +142,10 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
 
     @Override
     public Visit createVisit(String configName, String patientUuid, DateTime startDatetime,
-                             DateTime stopDatetime, String visitTypeUuid, String locationName) {
+                             DateTime stopDatetime, String visitType, String locationName) {
         Location location = getLocationByName(configName, locationName);
         Patient patient = patientService.getPatientByUuid(configName, patientUuid);
-        VisitType type = new VisitType(visitTypeUuid);
+        VisitType type = new VisitType(visitType);
         Visit visit = new Visit(startDatetime.toDate(), stopDatetime.toDate(), patient, type, location);
 
         return visitService.createVisit(configName, visit);
