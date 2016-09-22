@@ -7,5 +7,12 @@ if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
         mvn clean install -PIT -U
     fi
 elif [ "$TRAVIS_BRANCH" = "master" ] && [ "$DB" = "mysql" ]; then
+
+    mvn clean install -PIT -U
+
+    if [ "$?" -ne 0 ]; then
+        exit 1
+    fi
+
     mvn clean deploy --settings deploy-settings.xml -Dmaven.test.skip=true -U
 fi
