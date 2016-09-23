@@ -18,6 +18,7 @@ import org.motechproject.openmrs.domain.Concept;
 import org.motechproject.openmrs.domain.ConceptName;
 import org.motechproject.openmrs.domain.Encounter;
 import org.motechproject.openmrs.domain.EncounterType;
+import org.motechproject.openmrs.domain.Form;
 import org.motechproject.openmrs.domain.Identifier;
 import org.motechproject.openmrs.domain.IdentifierType;
 import org.motechproject.openmrs.domain.Location;
@@ -32,6 +33,7 @@ import org.motechproject.openmrs.domain.VisitType;
 import org.motechproject.openmrs.service.OpenMRSCohortService;
 import org.motechproject.openmrs.service.OpenMRSConceptService;
 import org.motechproject.openmrs.service.OpenMRSEncounterService;
+import org.motechproject.openmrs.service.OpenMRSFormService;
 import org.motechproject.openmrs.service.OpenMRSLocationService;
 import org.motechproject.openmrs.service.OpenMRSPatientService;
 import org.motechproject.openmrs.service.OpenMRSPersonService;
@@ -90,6 +92,9 @@ public class OpenMRSActionProxyServiceTest {
     @Mock
     private EventRelay eventRelay;
 
+    @Mock
+    private OpenMRSFormService formService;
+
     @Captor
     private ArgumentCaptor<Patient> patientCaptor;
 
@@ -123,6 +128,9 @@ public class OpenMRSActionProxyServiceTest {
         Visit visit = new Visit();
         visit.setUuid("40");
 
+        Form form = new Form();
+        form.setUuid("50");
+
         DateTime encounterDatetime = new DateTime("2000-08-16T07:22:05Z");
         Map<String, String> observations = new HashMap<>();
         observations.put("18ff53df-744a-4a3f-8f25-dac6de5b7131", "testObservationValueName0");
@@ -141,7 +149,7 @@ public class OpenMRSActionProxyServiceTest {
 
         Encounter encounterCreated = openMRSActionProxyService.createEncounter(CONFIG_NAME, new DateTime(encounter.getEncounterDatetime()),
                 encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid(),
-                visit.getUuid(), observations);
+                visit.getUuid(), form.getUuid(),  observations);
 
         assertEquals(encounter, encounterCreated);
     }
@@ -164,6 +172,9 @@ public class OpenMRSActionProxyServiceTest {
         Visit visit = new Visit();
         visit.setUuid("40");
 
+        Form form = new Form();
+        form.setUuid("50");
+
         DateTime encounterDatetime = new DateTime("2000-08-16T07:22:05Z");
         Map<String, String> observations = new HashMap<>();
         observations.put("18ff53df-744a-4a3f-8f25-dac6de5b7131","");
@@ -182,7 +193,7 @@ public class OpenMRSActionProxyServiceTest {
 
         Encounter encounterCreated = openMRSActionProxyService.createEncounter(CONFIG_NAME, new DateTime(encounter.getEncounterDatetime()),
                 encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid(),
-                visit.getUuid(), observations);
+                visit.getUuid(), form.getUuid(), observations);
 
         assertEquals(encounter, encounterCreated);
     }
@@ -205,6 +216,9 @@ public class OpenMRSActionProxyServiceTest {
         Visit visit = new Visit();
         visit.setUuid("40");
 
+        Form form = new Form();
+        form.setUuid("50");
+
         DateTime encounterDatetime = new DateTime("2000-08-16T07:22:05Z");
         Map<String, String> observations = new HashMap<>();
         /* Empty value in observations should not be included */
@@ -223,7 +237,7 @@ public class OpenMRSActionProxyServiceTest {
 
         Encounter encounterCreated = openMRSActionProxyService.createEncounter(CONFIG_NAME, new DateTime(encounter.getEncounterDatetime()),
                 encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid(),
-                visit.getUuid(), observations);
+                visit.getUuid(), form.getUuid(), observations);
 
 
         assertEquals(encounter, encounterCreated);

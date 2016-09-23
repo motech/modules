@@ -10,6 +10,7 @@ import org.motechproject.openmrs.domain.CohortQueryReport;
 import org.motechproject.openmrs.domain.Concept;
 import org.motechproject.openmrs.domain.Encounter;
 import org.motechproject.openmrs.domain.EncounterType;
+import org.motechproject.openmrs.domain.Form;
 import org.motechproject.openmrs.domain.Identifier;
 import org.motechproject.openmrs.domain.IdentifierType;
 import org.motechproject.openmrs.domain.Location;
@@ -25,6 +26,7 @@ import org.motechproject.openmrs.helper.EventHelper;
 import org.motechproject.openmrs.service.OpenMRSCohortService;
 import org.motechproject.openmrs.service.OpenMRSConceptService;
 import org.motechproject.openmrs.service.OpenMRSEncounterService;
+import org.motechproject.openmrs.service.OpenMRSFormService;
 import org.motechproject.openmrs.service.OpenMRSLocationService;
 import org.motechproject.openmrs.service.OpenMRSPatientService;
 import org.motechproject.openmrs.service.OpenMRSPersonService;
@@ -61,19 +63,24 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     private OpenMRSProgramEnrollmentService programEnrollmentService;
     private OpenMRSPersonService personService;
     private OpenMRSCohortService cohortService;
+    private OpenMRSFormService formService;
 
     private EventRelay eventRelay;
 
     @Override
     public Encounter createEncounter(String configName, DateTime encounterDatetime, String encounterType,
                                 String locationName, String patientUuid, String providerUuid, String visitUuid,
-                                Map<String, String> observations) {
+                                String formUuid, Map<String, String> observations) {
         Location location = getLocationByName(configName, locationName);
         Patient patient = patientService.getPatientByUuid(configName, patientUuid);
         Provider provider = providerService.getProviderByUuid(configName, providerUuid);
         Visit visit = null;
+        Form form = null;
         if (StringUtils.isNotEmpty(visitUuid)) {
             visit = visitService.getVisitByUuid(configName, visitUuid);
+        }
+        if (StringUtils.isNotEmpty(formUuid)) {
+            form = formService.getFormByUuid(configName, formUuid);
         }
 
         //While creating observations, the encounterDateTime is used as a obsDateTime.
@@ -81,7 +88,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
 
         EncounterType type = new EncounterType(encounterType);
 
-        Encounter encounter = new Encounter(location, type, encounterDatetime.toDate(), patient, visit, Collections.singletonList(provider.getPerson()), observationList);
+        Encounter encounter = new Encounter(location, type, encounterDatetime.toDate(), patient, visit, Collections.singletonList(provider.getPerson()), observationList, form);
         return encounterService.createEncounter(configName, encounter);
     }
 
@@ -412,5 +419,10 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     @Autowired
     public void setVisitService(OpenMRSVisitService visitService) {
         this.visitService = visitService;
+    }
+
+    @Autowired
+    public void setFormService(OpenMRSFormService formService) {
+        this.formService = formService;
     }
 }
