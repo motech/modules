@@ -82,6 +82,7 @@ public class ActionBuilder {
         actionParameters.add(prepareParameter(Keys.LOCATION_NAME, DisplayNames.LOCATION_NAME, false, order++));
         actionParameters.add(prepareParameter(Keys.PATIENT_UUID, DisplayNames.PATIENT_UUID, true, order++));
         actionParameters.add(prepareParameter(Keys.PROVIDER_UUID, DisplayNames.PROVIDER_UUID, true, order++));
+        actionParameters.add(prepareParameter(Keys.FORM, DisplayNames.FORM, false, order++));
         actionParameters.add(prepareParameter(Keys.OBSERVATION, DisplayNames.OBSERVATION, MAP, false, order));
 
         return new ActionEventRequestBuilder()

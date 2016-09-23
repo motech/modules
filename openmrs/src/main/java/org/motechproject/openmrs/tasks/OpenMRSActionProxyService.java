@@ -17,7 +17,7 @@ public interface OpenMRSActionProxyService {
 
     /**
      * Creates an encounter with the given {@code encounterDate}, {@code encounterType}, {@code locationName},
-     * {@code patientUuid} and {@code providerUuid}. The locationName is the only not required field. Configuration with
+     * {@code patientUuid}, {@code providerUuid} and {@code formUuid}. The locationName is the only not required field. Configuration with
      * the given {@code configName} will be used while performing this action.
      *
      * @param configName  the name of the configuration
@@ -26,10 +26,11 @@ public interface OpenMRSActionProxyService {
      * @param locationName  the name of location
      * @param patientUuid  the patient uuid
      * @param providerUuid  the provider uuid
+     * @param formUuid          the form uuid
      * @param observations  the map of observations where concept name is a key and value from the observation is a value
      */
     void createEncounter(String configName, DateTime encounterDatetime, String encounterType, String locationName,
-                         String patientUuid, String providerUuid, Map<String, String> observations);
+                         String patientUuid, String providerUuid, String formUuid, Map<String, String> observations);
 
     /**
      * Creates a patient with the given params. The required fields are : {@code givenName}, {@code familyName},
