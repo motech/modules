@@ -29,12 +29,12 @@ public interface OpenMRSActionProxyService {
      * @param patientUuid       the patient uuid
      * @param providerUuid      the provider uuid
      * @param visitUuid         the visit uuid
+     * @param formUuid          the form uuid
      * @param observations      the map of observations where concept name is a key and value from the observation is a value
-     * @param observations      the form uuid
      */
     Encounter createEncounter(String configName, DateTime encounterDatetime, String encounterType,
                          String locationName, String patientUuid, String providerUuid, String visitUuid,
-                         Map<String, String> observations, String formId);
+                         String formUuid, Map<String, String> observations);
 
     /**
      * Creates a patient with the given params. The required fields are : {@code givenName}, {@code familyName},

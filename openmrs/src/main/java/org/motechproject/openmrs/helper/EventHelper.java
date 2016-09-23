@@ -104,7 +104,7 @@ public final class EventHelper {
         encounterParameters.put(EventKeys.ENCOUNTER_DATE, encounter.getEncounterDatetime());
         encounterParameters.put(EventKeys.ENCOUNTER_TYPE, encounter.getEncounterType().getUuid());
         encounterParameters.put(EventKeys.VISIT_ID, encounter.getVisit().getUuid());
-        encounterParameters.put(EventKeys.FORM_ID, encounter.getFormId());
+        encounterParameters.put(EventKeys.FORM_ID, encounter.getForm().getUuid());
         return encounterParameters;
     }
 
