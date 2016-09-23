@@ -245,7 +245,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         // Give Tasks some time to process
         assertTrue(waitForTaskExecution(task.getId()));
 
-        Encounter encounter = encounterService.getLatestEncounterByPatientMotechId(DEFAULT_CONFIG_NAME, createdPatient.getMotechId(), createdEncounterType.getName());
+        Encounter encounter = encounterService.getLatestEncounterByPatientMotechId(DEFAULT_CONFIG_NAME, MOTECH_ID, createdEncounterType.getName());
         String firstEncounterUuid = encounter.getUuid();
 
         Patient patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, "Jacob Lee");
