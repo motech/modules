@@ -8,7 +8,6 @@ import org.motechproject.event.listener.EventRelay;
 import org.motechproject.openmrs.domain.Attribute;
 import org.motechproject.openmrs.domain.CohortQueryReport;
 import org.motechproject.openmrs.domain.Concept;
-import org.motechproject.openmrs.domain.ConceptName;
 import org.motechproject.openmrs.domain.Encounter;
 import org.motechproject.openmrs.domain.EncounterType;
 import org.motechproject.openmrs.domain.Form;
@@ -288,15 +287,15 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     private List<Observation> convertObservationMapToList(Map<String, String> observations, DateTime obsDatetime) {
         List<Observation> observationList = new ArrayList<>();
 
-        for (String observationConceptName : observations.keySet()) {
-            if (valueIsNotEmpty(observations, observationConceptName)) {
-                String[] observationValues = observations.get(observationConceptName).replace(", ", ",").split(",");
+        for (String observationConceptUuid : observations.keySet()) {
+            if (valueIsNotEmpty(observations, observationConceptUuid)) {
+                String[] observationValues = observations.get(observationConceptUuid).replace(", ", ",").split(",");
                 for (String value : observationValues) {
                     if (StringUtils.isNotEmpty(value)) {
                         Observation observation = new Observation();
 
-                        ConceptName conceptName = new ConceptName(observationConceptName);
-                        Concept concept = new Concept(conceptName);
+                        Concept concept = new Concept();
+                        concept.setUuid(observationConceptUuid);
                         observation.setConcept(concept);
 
                         Observation.ObservationValue observationValue = new Observation.ObservationValue(value);
@@ -308,7 +307,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
                     }
                 }
             } else {
-                LOGGER.warn("Observation value is null or empty for concept: " + observationConceptName
+                LOGGER.warn("Observation value is null or empty for concept with Uuid: " + observationConceptUuid
                         + " and will not be created");
             }
         }

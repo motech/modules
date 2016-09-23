@@ -30,7 +30,7 @@ public interface OpenMRSActionProxyService {
      * @param providerUuid      the provider uuid
      * @param visitUuid         the visit uuid
      * @param formUuid          the form uuid
-     * @param observations      the map of observations where concept name is a key and value from the observation is a value
+     * @param observations      the map of observations where concept Uuid is a key and value from the observation is a value
      */
     Encounter createEncounter(String configName, DateTime encounterDatetime, String encounterType,
                          String locationName, String patientUuid, String providerUuid, String visitUuid,
