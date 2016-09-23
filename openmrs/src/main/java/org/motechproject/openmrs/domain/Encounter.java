@@ -30,6 +30,7 @@ public class Encounter {
     private Patient patient;
     private List<Observation> obs;
     private List<Person> encounterProviders;
+    private Form form;
 
     /**
      * Default constructor.
@@ -39,17 +40,23 @@ public class Encounter {
 
     public Encounter(Location location, EncounterType encounterType, Date encounterDatetime, Patient patient,
                      List<Person> encounterProviders) {
-        this(location, encounterType, encounterDatetime, patient, encounterProviders, null);
+        this(location, encounterType, encounterDatetime, patient, encounterProviders, null, null);
     }
 
     public Encounter(Location location, EncounterType encounterType, Date encounterDatetime, Patient patient,
-                     List<Person> encounterProviders, List<Observation> obs) {
+                     List<Person> encounterProviders, List<Observation> obs){
+        this(location, encounterType, encounterDatetime, patient, encounterProviders, obs, null);
+    }
+
+    public Encounter(Location location, EncounterType encounterType, Date encounterDatetime, Patient patient,
+                     List<Person> encounterProviders, List<Observation> obs, Form form) {
         this.location = location;
         this.encounterType = encounterType;
         this.encounterDatetime = encounterDatetime;
         this.patient = patient;
         this.encounterProviders = encounterProviders;
         this.obs = obs;
+        this.form = form;
     }
 
     public String getUuid() {
@@ -116,9 +123,13 @@ public class Encounter {
         this.obs = obs;
     }
 
+    public Form getForm() { return form; }
+
+    public void setForm(Form form) { this.form  = form; }
+
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, display, location, encounterType, encounterDatetime, patient, encounterProviders, obs);
+        return Objects.hash(uuid, display, location, encounterType, encounterDatetime, patient, encounterProviders, obs, form);
     }
 
     @Override //NO CHECKSTYLE Cyclomatic Complexity
@@ -136,7 +147,8 @@ public class Encounter {
         return Objects.equals(this.uuid, other.uuid) && Objects.equals(this.display, other.display) &&
                 Objects.equals(this.location, other.location) && Objects.equals(this.encounterType, other.encounterType) &&
                 Objects.equals(this.encounterDatetime, other.encounterDatetime) && Objects.equals(this.patient, other.patient) &&
-                Objects.equals(this.encounterProviders, other.encounterProviders) && Objects.equals(this.obs, other.obs);
+                Objects.equals(this.encounterProviders, other.encounterProviders) && Objects.equals(this.obs, other.obs) &&
+                Objects.equals(this.form, other.form);
     }
 
     /**
@@ -169,6 +181,9 @@ public class Encounter {
             }
             if (src.encounterProviders != null) {
                 encounter.addProperty("provider", src.getEncounterProviders().get(0).getUuid());
+            }
+            if (src.form != null) {
+                encounter.addProperty("form", src.getForm().getUuid());
             }
             if (src.obs != null) {
                 final JsonElement jsonObs = context.serialize(src.getObs());

@@ -37,6 +37,7 @@
     <osgi:service ref="identifierService" interface="org.motechproject.openmrs.service.OpenMRSGeneratedIdentifierService"/>
     <osgi:service ref="openMRSActionProxyService" interface="org.motechproject.openmrs.tasks.OpenMRSActionProxyService"/>
     <osgi:service ref="cohortService" interface="org.motechproject.openmrs.service.OpenMRSCohortService"/>
+    <osgi:service ref="formService" interface="org.motechproject.openmrs.service.OpenMRSFormService"/>
 
     <osgi:reference id="eventListenerRegistryServiceOsgi" interface="org.motechproject.event.listener.EventListenerRegistryService"/>
 
