@@ -16,5 +16,5 @@ public interface FormResource {
      * @param uuid   the UUID of the visit
      * @return the form with the given UUID
      */
-    Form getFormById(Config config, String uuid);
+    Form getFormByUuid(Config config, String uuid);
 }

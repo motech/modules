@@ -18,7 +18,7 @@ public class FormResourceImpl extends BaseResource implements FormResource {
     }
 
     @Override
-    public Form getFormById(Config config, String uuid) {
+    public Form getFormByUuid(Config config, String uuid) {
         String responseJson = getJson(config, "/form/{uuid}", uuid);
         return (Form) JsonUtils.readJson(responseJson, Form.class);
     }

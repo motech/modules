@@ -75,10 +75,13 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         Location location = getLocationByName(configName, locationName);
         Patient patient = patientService.getPatientByUuid(configName, patientUuid);
         Provider provider = providerService.getProviderByUuid(configName, providerUuid);
-        Form form = formService.getFormByUuid(configName, formUuid);
         Visit visit = null;
+        Form form = null;
         if (StringUtils.isNotEmpty(visitUuid)) {
             visit = visitService.getVisitByUuid(configName, visitUuid);
+        }
+        if (StringUtils.isNotEmpty(formUuid)) {
+            form = formService.getFormByUuid(configName, formUuid);
         }
 
         //While creating observations, the encounterDateTime is used as a obsDateTime.

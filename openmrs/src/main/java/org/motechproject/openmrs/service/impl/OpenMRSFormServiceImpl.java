@@ -30,7 +30,7 @@ public class OpenMRSFormServiceImpl implements OpenMRSFormService {
     public Form getFormByUuid(String configName, String uuid) {
         try {
             Config config = configService.getConfigByName(configName);
-            return formResource.getFormById(config, uuid);
+            return formResource.getFormByUuid(config, uuid);
         } catch (HttpClientErrorException e) {
             LOGGER.error("Error while fetching form with UUID: " + uuid);
             return null;
