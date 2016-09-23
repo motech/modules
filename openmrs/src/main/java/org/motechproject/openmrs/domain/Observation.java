@@ -202,26 +202,28 @@ public class Observation {
      * Implementation of the {@link JsonSerializer} interface for the
      * {@link Observation.ObservationValue} class.
      */
-    public static class ObservationValueSerializer implements JsonSerializer<ObservationValue>, JsonDeserializer<ObservationValue> {
+    public static class ObservationValueSerializer implements JsonSerializer<ObservationValue> {
 
         @Override
         public JsonElement serialize(ObservationValue src, Type typeOfSrc, JsonSerializationContext context) {
             return new JsonPrimitive(src.getDisplay());
         }
+    }
+
+    /**
+     * Implementation of the {@link JsonDeserializer} interface for the
+     * {@link Observation.ObservationValue} class.
+     */
+    public static class ObservationValueDeSerializer implements JsonDeserializer<ObservationValue> {
 
         @Override
         public ObservationValue deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            String value = json.getAsString();
+            JsonObject valueObject = new JsonObject();
+            valueObject.addProperty(DISPLAY_KEY, value);
 
-            if (json.isJsonObject()) {
-                return (ObservationValue) JsonUtils.readJson(json.toString(), ObservationValue.class);
-            } else {
-                Double valueDouble = json.getAsDouble();
-                JsonObject valueObject = new JsonObject();
-                valueObject.addProperty(DISPLAY_KEY, valueDouble);
-
-                return (ObservationValue) JsonUtils.readJson(valueObject.toString(), ObservationValue.class);
-            }
+            return (ObservationValue) JsonUtils.readJson(valueObject.toString(), ObservationValue.class);
         }
-
     }
+
 }

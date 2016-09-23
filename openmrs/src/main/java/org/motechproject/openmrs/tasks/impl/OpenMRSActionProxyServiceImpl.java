@@ -1,11 +1,12 @@
 package org.motechproject.openmrs.tasks.impl;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.json.JSONObject;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.openmrs.domain.Attribute;
@@ -148,20 +149,21 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     @Override
     public Observation createObservationJSON(String configName, String observationJSON, String encounterUuid, String conceptUuid,
                                              DateTime obsDatetime, String comment) {
-        JSONObject obj = new JSONObject(observationJSON);
+        JsonParser parser = new JsonParser();
+        JsonObject obj = parser.parse(observationJSON).getAsJsonObject();
 
         if (StringUtils.isNotEmpty(encounterUuid)) {
-            obj.put("encounter", encounterUuid);
+            obj.addProperty("encounter", encounterUuid);
         }
         if (StringUtils.isNotEmpty(conceptUuid)) {
-            obj.put("concept", conceptUuid);
+            obj.addProperty("concept", conceptUuid);
         }
         if (obsDatetime != null) {
             DateTimeFormatter fullDateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-            obj.put("obsDatetime", obsDatetime.toString(fullDateTimeFormatter));
+            obj.addProperty("obsDatetime", obsDatetime.toString(fullDateTimeFormatter));
         }
         if (StringUtils.isNotEmpty(comment)) {
-            obj.put("comment", comment);
+            obj.addProperty("comment", comment);
         }
 
         return observationService.createObservationFromJson(configName, obj.toString());

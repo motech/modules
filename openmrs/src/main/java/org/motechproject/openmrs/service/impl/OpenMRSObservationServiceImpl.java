@@ -10,6 +10,7 @@ import org.motechproject.openmrs.domain.Observation;
 import org.motechproject.openmrs.domain.ObservationListResult;
 import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.exception.ObservationNotFoundException;
+import org.motechproject.openmrs.exception.OpenMRSException;
 import org.motechproject.openmrs.helper.EventHelper;
 import org.motechproject.openmrs.resource.ConceptResource;
 import org.motechproject.openmrs.resource.ObservationResource;
@@ -132,8 +133,7 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_OBSERVATION_SUBJECT, EventHelper.observationParameters(created)));
             return created;
         } catch (HttpClientErrorException e) {
-            LOGGER.error("Error while creating observation!");
-            return null;
+            throw new OpenMRSException("Error while creating observation. Response body: " + e.getResponseBodyAsString(), e);
         }
     }
 

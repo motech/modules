@@ -1,9 +1,9 @@
 package org.motechproject.openmrs.tasks.impl;
 
+import com.google.gson.JsonObject;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -410,17 +410,17 @@ public class OpenMRSActionProxyServiceTest {
 
     @Test
     public void shouldCreateObservationWithGivenJsonParameter() {
-        JSONObject observationObject = new JSONObject();
+        JsonObject observationObject = new JsonObject();
 
         String encounterUuid = "10";
         String conceptUuid = "20";
         String obsDatetime = "2016-07-29T18:29:50.000+0800";
         String comment = "testComment";
 
-        observationObject.put("encounter", encounterUuid);
-        observationObject.put("concept", conceptUuid);
-        observationObject.put("obsDatetime", obsDatetime);
-        observationObject.put("comment", comment);
+        observationObject.addProperty("encounter", encounterUuid);
+        observationObject.addProperty("concept", conceptUuid);
+        observationObject.addProperty("obsDatetime", obsDatetime);
+        observationObject.addProperty("comment", comment);
         String observationJSON = observationObject.toString();
 
         Encounter encounter = new Encounter();
@@ -446,7 +446,7 @@ public class OpenMRSActionProxyServiceTest {
 
     @Test
     public void shouldCreateObservationWithReplacedParameters() {
-        JSONObject observationObject = new JSONObject();
+        JsonObject observationObject = new JsonObject();
 
         String encounterUuid = "10";
         String conceptUuid = "20";
@@ -459,19 +459,19 @@ public class OpenMRSActionProxyServiceTest {
         String obsDatetimeReplace = "2010-07-29T18:29:50.000+0800";
         String commentReplace = "testComment2";
 
-        observationObject.put("encounter", encounterUuid);
-        observationObject.put("concept", conceptUuid);
-        observationObject.put("obsDatetime", obsDatetime);
-        observationObject.put("comment", comment);
-        observationObject.put("value", value);
+        observationObject.addProperty("encounter", encounterUuid);
+        observationObject.addProperty("concept", conceptUuid);
+        observationObject.addProperty("obsDatetime", obsDatetime);
+        observationObject.addProperty("comment", comment);
+        observationObject.addProperty("value", value);
         String observationJSON = observationObject.toString();
 
-        observationObject = new JSONObject();
-        observationObject.put("encounter", encounterUuidReplace);
-        observationObject.put("concept", conceptUuidReplace);
-        observationObject.put("obsDatetime", new DateTime(obsDatetimeReplace).toString(fullDateTimeFormatter));
-        observationObject.put("comment", commentReplace);
-        observationObject.put("value", value);
+        observationObject = new JsonObject();
+        observationObject.addProperty("encounter", encounterUuidReplace);
+        observationObject.addProperty("concept", conceptUuidReplace);
+        observationObject.addProperty("obsDatetime", new DateTime(obsDatetimeReplace).toString(fullDateTimeFormatter));
+        observationObject.addProperty("comment", commentReplace);
+        observationObject.addProperty("value", value);
         String observationJSONReplace = observationObject.toString();
 
         Encounter encounter = new Encounter();

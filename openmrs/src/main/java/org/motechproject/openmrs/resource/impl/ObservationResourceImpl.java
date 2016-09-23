@@ -76,7 +76,7 @@ public class ObservationResourceImpl extends BaseResource implements Observation
 
     private Map<Type, Object> createValueAdapter() {
         Map<Type, Object> valueAdapter = new HashMap<>();
-        valueAdapter.put(Observation.ObservationValue.class, new Observation.ObservationValueSerializer());
+        valueAdapter.put(Observation.ObservationValue.class, new Observation.ObservationValueDeSerializer());
 
         return valueAdapter;
     }
