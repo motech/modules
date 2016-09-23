@@ -209,7 +209,6 @@ public class OpenMRSActionProxyServiceTest {
         Map<String, String> observations = new HashMap<>();
         /* Empty value in observations should not be included */
         observations.put("18ff53df-744a-4a3f-8f25-dac6de5b7131","testObservationValueName0, ,testObservationValueName1");
-
         List<Observation> obsList = createObservationList(2);
 
         Encounter encounter = new Encounter(location, new EncounterType("testEncounterType"), encounterDatetime.toDate(), patient, visit, Collections.singletonList(provider.getPerson()), obsList);
