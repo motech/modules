@@ -462,7 +462,6 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         values.put(Keys.ENCOUNTER_TYPE, createdEncounterType.getName());
         values.put(Keys.ENCOUNTER_DATE, new DateTime("2015-01-16T00:00:00Z").toString());
         values.put(Keys.LOCATION_NAME, DEFAULT_LOCATION_NAME);
-        values.put(Keys.VISIT_UUID, prepareVisit().getUuid());
         values.put(Keys.CONFIG_NAME, DEFAULT_CONFIG_NAME);
         actionInformation.setValues(values);
 
