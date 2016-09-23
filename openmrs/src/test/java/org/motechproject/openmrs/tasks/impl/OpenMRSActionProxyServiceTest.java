@@ -128,6 +128,9 @@ public class OpenMRSActionProxyServiceTest {
         Visit visit = new Visit();
         visit.setUuid("40");
 
+        Form form = new Form();
+        form.setUuid("50");
+
         DateTime encounterDatetime = new DateTime("2000-08-16T07:22:05Z");
         Map<String, String> observations = new HashMap<>();
         observations.put("testConceptName","testObservationValueName0");
@@ -146,7 +149,7 @@ public class OpenMRSActionProxyServiceTest {
 
         Encounter encounterCreated = openMRSActionProxyService.createEncounter(CONFIG_NAME, new DateTime(encounter.getEncounterDatetime()),
                 encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid(),
-                visit.getUuid(), null,  observations);
+                visit.getUuid(), form.getUuid(),  observations);
 
         assertEquals(encounter, encounterCreated);
     }
