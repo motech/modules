@@ -8,6 +8,7 @@ import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
+import org.motechproject.tasks.domain.enums.ParameterType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,6 @@ import java.util.TreeSet;
  */
 public class CreateInstanceActionBuilder {
 
-    private static final String UNICODE = "UNICODE";
     private static final int ATTRIBUTE_COUNT = 3;
 
 
@@ -45,7 +45,7 @@ public class CreateInstanceActionBuilder {
             ActionParameterRequestBuilder actionParameterBuilder = new ActionParameterRequestBuilder()
                     .setDisplayName(DisplayNames.EXTERNAL_ID)
                     .setKey(EventParams.EXTERNAL_ID)
-                    .setType(UNICODE)
+                    .setType(ParameterType.UNICODE.getValue())
                     .setRequired(true)
                     .setOrder(counter++);
 
@@ -54,7 +54,7 @@ public class CreateInstanceActionBuilder {
 
             actionParameterBuilder = new ActionParameterRequestBuilder()
                     .setDisplayName(entity.getName())
-                    .setType(UNICODE)
+                    .setType(ParameterType.TEXTAREA.getValue())
                     .setHidden(true)
                     .setKey(EventParams.ENTITY_TYPE)
                     .setValue(entity.getUuid())
@@ -64,7 +64,7 @@ public class CreateInstanceActionBuilder {
 
             actionParameterBuilder = new ActionParameterRequestBuilder()
                     .setDisplayName(DisplayNames.ORG_UNIT)
-                    .setType(UNICODE)
+                    .setType(ParameterType.TEXTAREA.getValue())
                     .setKey(EventParams.LOCATION)
                     .setOrder(counter++)
                     .setRequired(true);
@@ -98,7 +98,7 @@ public class CreateInstanceActionBuilder {
             parameterRequestBuilder = new ActionParameterRequestBuilder()
                     .setDisplayName(attribute.getName())
                     .setKey(attribute.getUuid())
-                    .setType(UNICODE)
+                    .setType(ParameterType.TEXTAREA.getValue())
                     .setOrder(count++);
 
             attributeActionParameters.add(parameterRequestBuilder.createActionParameterRequest());

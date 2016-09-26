@@ -9,6 +9,7 @@ import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
+import org.motechproject.tasks.domain.enums.ParameterType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,6 @@ import java.util.TreeSet;
  */
 public class ProgramActionBuilder {
 
-    private static final String UNICODE = "UNICODE";
     private int counter;
 
     /**
@@ -47,7 +47,7 @@ public class ProgramActionBuilder {
             ActionParameterRequestBuilder actionParameterBuilder = new ActionParameterRequestBuilder()
                     .setDisplayName(DisplayNames.EXTERNAL_ID)
                     .setKey(EventParams.EXTERNAL_ID)
-                    .setType(UNICODE)
+                    .setType(ParameterType.UNICODE.getValue())
                     .setRequired(true)
                     .setOrder(counter++);
 
@@ -59,7 +59,7 @@ public class ProgramActionBuilder {
                     .setDisplayName(DisplayNames.ENROLLMENT_DATE)
                     .setKey(EventParams.DATE)
                     .setOrder(counter++)
-                    .setType(UNICODE);
+                    .setType(ParameterType.DATE.getValue());
 
             actionParameters.add(actionParameterBuilder.createActionParameterRequest());
             actionParamsForCreateAndEnroll.add(actionParameterBuilder.createActionParameterRequest());
@@ -68,7 +68,7 @@ public class ProgramActionBuilder {
                     .setDisplayName(DisplayNames.PROGRAM_NAME)
                     .setKey(EventParams.PROGRAM)
                     .setValue(program.getUuid())
-                    .setType(UNICODE)
+                    .setType(ParameterType.UNICODE.getValue())
                     .setOrder(counter++)
                     .setHidden(true);
 
@@ -77,7 +77,7 @@ public class ProgramActionBuilder {
 
             actionParameterBuilder = new ActionParameterRequestBuilder()
                     .setDisplayName(DisplayNames.ORG_UNIT)
-                    .setType(UNICODE)
+                    .setType(ParameterType.TEXTAREA.getValue())
                     .setKey(EventParams.LOCATION)
                     .setOrder(counter++)
                     .setRequired(true);
@@ -104,7 +104,7 @@ public class ProgramActionBuilder {
             /*Add corresponding create and enroll action*/
             actionParameterBuilder = new ActionParameterRequestBuilder()
                     .setDisplayName(program.getTrackedEntity().getName())
-                    .setType(UNICODE)
+                    .setType(ParameterType.TEXTAREA.getValue())
                     .setHidden(true)
                     .setKey(EventParams.ENTITY_TYPE)
                     .setValue(program.getTrackedEntity().getUuid())
@@ -139,7 +139,7 @@ public class ProgramActionBuilder {
             actionParameterBuilder = new ActionParameterRequestBuilder()
                     .setDisplayName(attribute.getName())
                     .setKey(attribute.getUuid())
-                    .setType(UNICODE)
+                    .setType(ParameterType.TEXTAREA.getValue())
                     .setOrder(counter++);
 
             parameterRequests.add(actionParameterBuilder.createActionParameterRequest());

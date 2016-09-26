@@ -18,6 +18,7 @@ import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
 import org.motechproject.tasks.contract.ChannelRequest;
 import org.osgi.framework.BundleContext;
+import org.motechproject.tasks.domain.enums.ParameterType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,6 +114,7 @@ public class ChannelRequestBuilder  {
         builder = new ActionParameterRequestBuilder();
         builder.setDisplayName(DisplayNames.VALUE)
                 .setKey(EventParams.VALUE)
+                .setType(ParameterType.TEXTAREA.getValue())
                 .setRequired(true)
                 .setOrder(order++);
         actionParameterRequests.add(builder.createActionParameterRequest());
