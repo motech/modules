@@ -48,7 +48,7 @@ public class OpenMRSEncounterServiceImplTest {
     private Config config;
 
     @InjectMocks
-    private OpenMRSEncounterServiceImpl encounterServiceImpl = new OpenMRSEncounterServiceImpl(encounterResource, patientService, conceptService, eventRelay, configService);
+    private OpenMRSEncounterServiceImpl encounterServiceImpl = new OpenMRSEncounterServiceImpl(encounterResource, patientService, eventRelay, configService);
 
 
     @Test(expected = OpenMRSException.class)
