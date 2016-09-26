@@ -18,6 +18,7 @@ import org.motechproject.openmrs.domain.Concept;
 import org.motechproject.openmrs.domain.ConceptName;
 import org.motechproject.openmrs.domain.Encounter;
 import org.motechproject.openmrs.domain.EncounterType;
+import org.motechproject.openmrs.domain.Form;
 import org.motechproject.openmrs.domain.Identifier;
 import org.motechproject.openmrs.domain.IdentifierType;
 import org.motechproject.openmrs.domain.Location;
@@ -32,6 +33,7 @@ import org.motechproject.openmrs.domain.VisitType;
 import org.motechproject.openmrs.service.OpenMRSCohortService;
 import org.motechproject.openmrs.service.OpenMRSConceptService;
 import org.motechproject.openmrs.service.OpenMRSEncounterService;
+import org.motechproject.openmrs.service.OpenMRSFormService;
 import org.motechproject.openmrs.service.OpenMRSLocationService;
 import org.motechproject.openmrs.service.OpenMRSPatientService;
 import org.motechproject.openmrs.service.OpenMRSPersonService;
@@ -90,6 +92,9 @@ public class OpenMRSActionProxyServiceTest {
     @Mock
     private EventRelay eventRelay;
 
+    @Mock
+    private OpenMRSFormService formService;
+
     @Captor
     private ArgumentCaptor<Patient> patientCaptor;
 
@@ -123,11 +128,14 @@ public class OpenMRSActionProxyServiceTest {
         Visit visit = new Visit();
         visit.setUuid("40");
 
+        Form form = new Form();
+        form.setUuid("50");
+
         DateTime encounterDatetime = new DateTime("2000-08-16T07:22:05Z");
         Map<String, String> observations = new HashMap<>();
-        observations.put("testConceptName", "testObservationValueName");
+        observations.put("18ff53df-744a-4a3f-8f25-dac6de5b7131", "testObservationValueName0");
 
-        List<Observation> obsList = createObservationList();
+        List<Observation> obsList = createObservationList(1);
 
         Encounter encounter = new Encounter(location, new EncounterType("testEncounterType"), encounterDatetime.toDate(), patient, visit, Collections.singletonList(provider.getPerson()), obsList);
 
@@ -141,7 +149,7 @@ public class OpenMRSActionProxyServiceTest {
 
         Encounter encounterCreated = openMRSActionProxyService.createEncounter(CONFIG_NAME, new DateTime(encounter.getEncounterDatetime()),
                 encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid(),
-                visit.getUuid(), observations);
+                visit.getUuid(), form.getUuid(),  observations);
 
         assertEquals(encounter, encounterCreated);
     }
@@ -164,9 +172,12 @@ public class OpenMRSActionProxyServiceTest {
         Visit visit = new Visit();
         visit.setUuid("40");
 
+        Form form = new Form();
+        form.setUuid("50");
+
         DateTime encounterDatetime = new DateTime("2000-08-16T07:22:05Z");
         Map<String, String> observations = new HashMap<>();
-        observations.put("testConceptName","");
+        observations.put("18ff53df-744a-4a3f-8f25-dac6de5b7131","");
 
         List<Observation> obsList = new ArrayList<>();
 
@@ -182,7 +193,52 @@ public class OpenMRSActionProxyServiceTest {
 
         Encounter encounterCreated = openMRSActionProxyService.createEncounter(CONFIG_NAME, new DateTime(encounter.getEncounterDatetime()),
                 encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid(),
-                visit.getUuid(), observations);
+                visit.getUuid(), form.getUuid(), observations);
+
+        assertEquals(encounter, encounterCreated);
+    }
+
+    @Test
+    public void shouldCreateEncounterWithGivenParametersWithObsWithManyValues() {
+        Location location = new Location();
+        location.setName("testLocation");
+
+        Patient patient = new Patient();
+        patient.setUuid("10");
+
+        Provider provider = new Provider();
+        provider.setUuid("20");
+
+        Person person = new Person();
+        person.setUuid("30");
+        provider.setPerson(person);
+
+        Visit visit = new Visit();
+        visit.setUuid("40");
+
+        Form form = new Form();
+        form.setUuid("50");
+
+        DateTime encounterDatetime = new DateTime("2000-08-16T07:22:05Z");
+        Map<String, String> observations = new HashMap<>();
+        /* Empty value in observations should not be included */
+        observations.put("18ff53df-744a-4a3f-8f25-dac6de5b7131","testObservationValueName0, ,testObservationValueName1");
+        List<Observation> obsList = createObservationList(2);
+
+        Encounter encounter = new Encounter(location, new EncounterType("testEncounterType"), encounterDatetime.toDate(), patient, visit, Collections.singletonList(provider.getPerson()), obsList);
+
+        doReturn(patient).when(patientService).getPatientByUuid(eq(CONFIG_NAME), eq(patient.getUuid()));
+        doReturn(provider).when(providerService).getProviderByUuid(eq(CONFIG_NAME), eq(provider.getUuid()));
+        doReturn(visit).when(visitService).getVisitByUuid(eq(CONFIG_NAME), eq(visit.getUuid()));
+        doReturn(encounter).when(encounterService).createEncounter(eq(CONFIG_NAME), eq(encounter));
+
+        doReturn(Collections.singletonList(location))
+                .when(locationService).getLocations(eq(CONFIG_NAME), eq(location.getName()));
+
+        Encounter encounterCreated = openMRSActionProxyService.createEncounter(CONFIG_NAME, new DateTime(encounter.getEncounterDatetime()),
+                encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid(),
+                visit.getUuid(), form.getUuid(), observations);
+
 
         assertEquals(encounter, encounterCreated);
     }
@@ -599,17 +655,20 @@ public class OpenMRSActionProxyServiceTest {
         return concept;
     }
 
-    private List<Observation> createObservationList() {
-        Observation observation = new Observation();
+    private List<Observation> createObservationList(int observationsNumber) {
+        List<Observation> observationList = new ArrayList<>();
 
-        ConceptName conceptName = new ConceptName("testConceptName");
-        Concept concept = new Concept(conceptName);
+        for (int i = 0; i < observationsNumber; i++) {
+            Concept concept = new Concept();
+            concept.setUuid("18ff53df-744a-4a3f-8f25-dac6de5b7131");
 
-        observation.setConcept(concept);
-        observation.setValue(new Observation.ObservationValue("testObservationValueName"));
-        observation.setObsDatetime(new DateTime("2000-08-16T07:22:05Z").toDate());
-
-        return Collections.singletonList(observation);
+            Observation observation = new Observation();
+            observation.setConcept(concept);
+            observation.setValue(new Observation.ObservationValue("testObservationValueName" + Integer.toString(i)));
+            observation.setObsDatetime(new DateTime("2000-08-16T07:22:05Z").toDate());
+            observationList.add(observation);
+        }
+        return observationList;
     }
 
     private CohortQueryReport prepareCohortQueryReport(boolean withMembers) {
