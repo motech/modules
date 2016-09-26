@@ -23,12 +23,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-/**
- * Created by user on 26.09.16.
- */
 public class FormResourceImplTest extends AbstractResourceImplTest {
 
-    private static final String GET_FORM_RESPONSE_JSON = "json/form/form-response.json";
+    private static final String FORM_RESPONSE_JSON = "json/form/form-response.json";
 
     @Mock
     private RestOperations restOperations;
@@ -58,7 +55,7 @@ public class FormResourceImplTest extends AbstractResourceImplTest {
         URI url = config.toInstancePathWithParams("/form/{uuid}", form.getUuid());
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(getResponseFromFile(GET_FORM_RESPONSE_JSON));
+                .thenReturn(getResponseFromFile(FORM_RESPONSE_JSON));
 
         Form created = formResource.getFormByUuid(config, form.getUuid());
 
@@ -69,7 +66,7 @@ public class FormResourceImplTest extends AbstractResourceImplTest {
     }
 
     private Form buildForm() throws Exception {
-        return (Form) readFromFile(GET_FORM_RESPONSE_JSON, Form.class);
+        return (Form) readFromFile(FORM_RESPONSE_JSON, Form.class);
     }
 
 
