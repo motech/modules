@@ -61,11 +61,13 @@ public class SettingsServiceImpl implements SettingsService {
             LOGGER.debug("Loading DHIS2 settings...");
             Gson gson = new Gson();
             settings = gson.fromJson(jsonText, Settings.class);
-            URI uri = new URI(settings.getServerURI());
-            uri = uri.normalize();
-            String uriString = uri.toString();
-            if (uriString != null && uriString.endsWith("/")) {
-                settings.setServerURI(uriString.substring(0, uriString.length() - 1));
+            if (settings.getServerURI() != null) {
+                URI uri = new URI(settings.getServerURI());
+                uri = uri.normalize();
+                String uriString = uri.toString();
+                if (uriString.endsWith("/")) {
+                    settings.setServerURI(uriString.substring(0, uriString.length() - 1));
+                }
             }
         } catch (Exception e) {
             String message = "There was an error loading json from the DHIS2 settings.";
