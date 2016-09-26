@@ -1,5 +1,6 @@
 package org.motechproject.dhis2.rest.service.impl;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpStatus;
@@ -412,21 +413,20 @@ public class DhisWebServiceImpl implements DhisWebService {
         DhisStatusResponse status;
 
         try (InputStream content = getContentForResponse(response)) {
-            status = new ObjectMapper().readValue(content, DhisStatusResponse.class);
+            String contentString = IOUtils.toString(content);
+            status = new ObjectMapper().readValue(contentString, DhisStatusResponse.class);
+            if (status.getStatus() == DhisStatus.ERROR) {
+                LOGGER.debug(String.format("DHIS2 status response error details: %s", contentString));
+                String msg = String.format("Error in DHIS2 status response.");
+                statusMessageService.warn(msg, MODULE_NAME);
+                throw new DhisWebException(msg);
+            }
         } catch (IOException e) {
             String msg = String.format("Error parsing response from uri: %s, exception: %s", uri, e.toString());
             statusMessageService.warn(msg, MODULE_NAME);
             throw new DhisWebException(msg, e);
         } finally {
             closeResponse(response);
-        }
-
-        LOGGER.debug(String.format("DHIS2 status response: %s", status.getStatus().toString()));
-
-        if (status.getStatus() == DhisStatus.ERROR) {
-            String msg = String.format("Error in DHIS2 status response: %s", status.getStatus().toString());
-            statusMessageService.warn(msg, MODULE_NAME);
-            throw new DhisWebException(msg);
         }
 
         return status;
