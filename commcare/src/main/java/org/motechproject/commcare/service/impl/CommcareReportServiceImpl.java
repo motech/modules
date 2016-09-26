@@ -8,6 +8,9 @@ import org.motechproject.commcare.domain.report.ReportMetadataInfo;
 import org.motechproject.commcare.domain.report.ReportsMetadataInfo;
 import org.motechproject.commcare.domain.report.ReportMetadataJson;
 import org.motechproject.commcare.domain.report.ReportsMetadataResponseJson;
+import org.motechproject.commcare.domain.report.constants.ColumnType;
+import org.motechproject.commcare.domain.report.constants.FilterDataType;
+import org.motechproject.commcare.domain.report.constants.FilterType;
 import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.service.CommcareReportService;
 import org.motechproject.commons.api.json.MotechJsonReader;
@@ -18,6 +21,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * A {@link CommcareReportService} that is responsible for interacting with CommCareHQ's Report Metadata and Data API.
@@ -52,7 +57,11 @@ public class CommcareReportServiceImpl implements CommcareReportService {
 
     private ReportsMetadataResponseJson parseReportsFromResponse(String response) {
         Type reportsResponseType = new TypeToken<ReportsMetadataResponseJson>() { } .getType();
-        return (ReportsMetadataResponseJson) motechJsonReader.readFromString(response, reportsResponseType);
+        Map<Type, Object> adapters = new HashMap<>();
+        adapters.put(ColumnType.class, new ColumnType.ColumnTypeDeserializer());
+        adapters.put(FilterType.class, new FilterType.FilterTypeDeserializer());
+        adapters.put(FilterDataType.class, new FilterDataType.FilterDataTypeDeserializer());
+        return (ReportsMetadataResponseJson) motechJsonReader.readFromString(response, reportsResponseType, adapters);
     }
 
     private List<ReportMetadataInfo> generateReportsFromReportsResponse(List<ReportMetadataJson> reportResponses) {

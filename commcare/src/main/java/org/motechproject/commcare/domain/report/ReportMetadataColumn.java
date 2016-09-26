@@ -1,6 +1,7 @@
 package org.motechproject.commcare.domain.report;
 
 import com.google.gson.annotations.SerializedName;
+import org.motechproject.commcare.domain.report.constants.ColumnType;
 
 /**
  * Represents a single CommCareHQ {@link ReportMetadataInfo} column.
@@ -14,7 +15,7 @@ public class ReportMetadataColumn {
     private String display;
 
     @SerializedName("type")
-    private String type;
+    private ColumnType type;
 
     public String getId() {
         return id;
@@ -32,11 +33,11 @@ public class ReportMetadataColumn {
         this.display = display;
     }
 
-    public String getType() {
+    public ColumnType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(ColumnType type) {
         this.type = type;
     }
 }
