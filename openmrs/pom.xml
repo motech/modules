@@ -239,8 +239,7 @@
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${user.home}/.motech/config/org.motechproject.openmrs/raw
-                                    </outputDirectory>
+                                    <outputDirectory>${user.home}/.motech/config/org.motechproject.openmrs/raw</outputDirectory>
                                     <overwrite>true</overwrite>
                                     <resources>
                                         <resource>

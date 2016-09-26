@@ -214,7 +214,7 @@ public class Observation {
      * Implementation of the {@link JsonDeserializer} interface for the
      * {@link Observation.ObservationValue} class.
      */
-    public static class ObservationValueDeSerializer implements JsonDeserializer<ObservationValue> {
+    public static class ObservationValueDeserializer implements JsonDeserializer<ObservationValue> {
 
         @Override
         public ObservationValue deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

@@ -155,10 +155,11 @@ public class ActionBuilder {
         SortedSet<ActionParameterRequest> actionParameters = new TreeSet<>();
         int order = 0;
         String serviceMethod = "createObservationJSON";
+        String defaultValueForJsonField = "{}";
 
-        actionParameters.add(prepareParameter(Keys.CONFIG_NAME, DisplayNames.CONFIG_NAME, configName, true, true,
-                order++));
-        actionParameters.add(prepareParameter(Keys.OBSERVATION_JSON, DisplayNames.OBSERVATION_JSON, TEXTAREA, "{}", true, order++));
+        actionParameters.add(prepareParameter(Keys.CONFIG_NAME, DisplayNames.CONFIG_NAME, configName, true, true, order++));
+        actionParameters.add(prepareParameter(Keys.OBSERVATION_JSON, DisplayNames.OBSERVATION_JSON, TEXTAREA,
+                defaultValueForJsonField, true, order++));
         actionParameters.add(prepareParameter(Keys.ENCOUNTER_UUID, DisplayNames.ENCOUNTER_UUID, false, order++));
         actionParameters.add(prepareParameter(Keys.CONCEPT_UUID, DisplayNames.CONCEPT_UUID, false, order++));
         actionParameters.add(prepareParameter(Keys.OBSERVATION_DATETIME, DisplayNames.OBSERVATION_DATETIME, DATE, false, order++));

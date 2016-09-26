@@ -189,7 +189,7 @@ public class OpenMRSActionProxyServiceTest {
 
         DateTime encounterDatetime = new DateTime("2000-08-16T07:22:05Z");
         Map<String, String> observations = new HashMap<>();
-        observations.put("18ff53df-744a-4a3f-8f25-dac6de5b7131","");
+        observations.put("18ff53df-744a-4a3f-8f25-dac6de5b7131", "");
 
         List<Observation> obsList = new ArrayList<>();
 
