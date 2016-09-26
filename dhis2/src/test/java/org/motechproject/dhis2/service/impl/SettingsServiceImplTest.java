@@ -45,7 +45,7 @@ public class SettingsServiceImplTest {
     }
 
     @Test
-    public void shouldParseURI() {
+    public void shouldRemoveTrailingSlashes() {
         try (InputStream is = getClass().getClassLoader().getResourceAsStream(SETTINGS_JSON)) {
             when(settingsFacade.getRawConfig(SETTINGS_FILE_NAME)).thenReturn(is);
             settingsService.updateSettings(settings);
