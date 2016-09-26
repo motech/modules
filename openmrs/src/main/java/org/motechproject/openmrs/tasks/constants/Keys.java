@@ -14,6 +14,7 @@ public final class Keys {
     public static final String PATIENT_UUID = "patientUuid";
     public static final String PROVIDER_UUID = "providerUuid";
     public static final String OBSERVATION = "observation";
+    public static final String FORM = "form";
 
     //Patient action
     public static final String PERSON_UUID = "person.uuid";
