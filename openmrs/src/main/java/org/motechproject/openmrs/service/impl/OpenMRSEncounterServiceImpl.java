@@ -59,7 +59,7 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
 
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_ENCOUNTER_SUBJECT, EventHelper.encounterParameters(createdEncounter)));
         } catch (HttpClientErrorException e) {
-            throw new OpenMRSException("Could not create encounter with patient uuid: " + encounter.getPatient().getUuid() + " " + e.getMessage() + " " + e.getResponseBodyAsString(), e);
+            throw new OpenMRSException(String.format("Could not create encounter with patient uuid: %s. %s %s", encounter.getPatient().getUuid(), e.getMessage(), e.getResponseBodyAsString()), e);
         }
 
         return createdEncounter;
