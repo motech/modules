@@ -65,43 +65,33 @@ public class CommcareReportServiceImpl implements CommcareReportService {
     }
 
     private List<ReportMetadataInfo> generateReportsFromReportsResponse(List<ReportMetadataJson> reportResponses) {
+        List<ReportMetadataInfo> reportsInfoList;
+
         if (reportResponses == null) {
-            return Collections.emptyList();
-        }
-
-        List<ReportMetadataInfo> reportsInfoList = new ArrayList<>();
-
-        for (ReportMetadataJson reportResponse : reportResponses) {
-            reportsInfoList.add(populateReportMetadataInfo(reportResponse));
+            reportsInfoList = Collections.emptyList();
+        } else {
+            reportsInfoList = new ArrayList<>();
+            for (ReportMetadataJson reportResponse : reportResponses) {
+                reportsInfoList.add(populateReportMetadataInfo(reportResponse));
+            }
         }
 
         return reportsInfoList;
     }
 
     private ReportMetadataInfo populateReportMetadataInfo(ReportMetadataJson reportResponse) {
+        ReportMetadataInfo reportMetadataInfo;
+
         if (reportResponse == null) {
-            return null;
+            reportMetadataInfo = null;
+        } else {
+            reportMetadataInfo = new ReportMetadataInfo(reportResponse.getId(), reportResponse.getTitle(), reportResponse.getColumns(), reportResponse.getFilters());
         }
-
-        ReportMetadataInfo reportMetadataInfo = new ReportMetadataInfo();
-
-        reportMetadataInfo.setId(reportResponse.getId());
-        reportMetadataInfo.setTitle(reportResponse.getTitle());
-        reportMetadataInfo.setColumns(reportResponse.getColumns());
-        reportMetadataInfo.setFilters(reportResponse.getFilters());
 
         return reportMetadataInfo;
     }
 
     private CommcareMetadataInfo populateReportsMetadata(CommcareMetadataJson metadataJson) {
-        CommcareMetadataInfo metadataInfo = new CommcareMetadataInfo();
-
-        metadataInfo.setLimit(metadataJson.getLimit());
-        metadataInfo.setNextPageQueryString(metadataJson.getNextPageQueryString());
-        metadataInfo.setOffset(metadataJson.getOffset());
-        metadataInfo.setPreviousPageQueryString(metadataJson.getPreviousPageQueryString());
-        metadataInfo.setTotalCount(metadataJson.getTotalCount());
-
-        return metadataInfo;
+        return new CommcareMetadataInfo(metadataJson.getLimit(), metadataJson.getNextPageQueryString(), metadataJson.getOffset(), metadataJson.getPreviousPageQueryString(), metadataJson.getTotalCount());
     }
 }

@@ -19,26 +19,12 @@ public enum FilterType {
         this.type = type;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public static FilterType getFilterTypeFromTypeValue(String typeValue) {
-        FilterType[] filterTypes = FilterType.values();
-        for (FilterType filterType : filterTypes) {
-            if (filterType.getType().equals(typeValue)) {
-                return filterType;
-            }
-        }
-        throw new IllegalArgumentException("Invalid filter type value: " + typeValue);
-    }
-
     public static class FilterTypeDeserializer implements JsonDeserializer<FilterType> {
 
         @Override
         public FilterType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             String value = json.getAsString();
-            return FilterType.getFilterTypeFromTypeValue(value);
+            return FilterType.valueOf(value.toUpperCase());
         }
     }
 }

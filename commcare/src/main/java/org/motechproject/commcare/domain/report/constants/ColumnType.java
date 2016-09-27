@@ -17,26 +17,12 @@ public enum ColumnType {
         this.type = type;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public static ColumnType getColumnTypeFromTypeValue(String typeValue) {
-        ColumnType[] columnTypes = ColumnType.values();
-        for (ColumnType columnType : columnTypes) {
-            if (columnType.getType().equals(typeValue)) {
-                return columnType;
-            }
-        }
-        throw new IllegalArgumentException("Invalid column type value: " + typeValue);
-    }
-
     public static class ColumnTypeDeserializer implements JsonDeserializer<ColumnType> {
 
         @Override
         public ColumnType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             String value = json.getAsString();
-            return ColumnType.getColumnTypeFromTypeValue(value);
+            return ColumnType.valueOf(value.toUpperCase());
         }
     }
 }

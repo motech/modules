@@ -12,6 +12,16 @@ public class ReportMetadataInfo {
     private List<ReportMetadataColumn> columns;
     private List<ReportMetadataFilter> filters;
 
+    public ReportMetadataInfo() {}
+
+    public ReportMetadataInfo(String id, String title, List<ReportMetadataColumn> columns, List<ReportMetadataFilter> filters) {
+        this.id = id;
+        this.title = title;
+        this.columns = columns;
+        this.filters = filters;
+    }
+
+
     public String getId() {
         return id;
     }
