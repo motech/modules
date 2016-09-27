@@ -1,10 +1,14 @@
 package org.motechproject.openmrs.domain;
 
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import org.motechproject.openmrs.util.JsonUtils;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
@@ -17,6 +21,7 @@ import java.util.Objects;
  * a moment in time.
  */
 public class Observation {
+    private static final String DISPLAY_KEY = "display";
 
     private String uuid;
     private String display;
@@ -26,6 +31,8 @@ public class Observation {
     private Date obsDatetime;
     private Person person;
     private List<Observation> groupsMembers;
+
+    private String comment;
 
     public String getUuid() {
         return uuid;
@@ -95,12 +102,20 @@ public class Observation {
         this.groupsMembers = groupsMembers;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(uuid, display, concept, encounter, value, obsDatetime, person, groupsMembers);
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(uuid, display, concept, encounter, value, obsDatetime, person, groupsMembers, comment);
+    }
+
+    @Override //NO CHECKSTYLE Cyclomatic Complexity
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -115,7 +130,8 @@ public class Observation {
         return Objects.equals(uuid, other.uuid) && Objects.equals(display, other.display)
                 && Objects.equals(concept, other.concept) && Objects.equals(encounter, other.encounter)
                 && Objects.equals(value, other.value) && Objects.equals(obsDatetime, other.obsDatetime)
-                && Objects.equals(person, other.person) && Objects.equals(groupsMembers, other.groupsMembers);
+                && Objects.equals(person, other.person) && Objects.equals(groupsMembers, other.groupsMembers)
+                && Objects.equals(comment, other.comment);
     }
 
     /**
@@ -187,9 +203,27 @@ public class Observation {
      * {@link Observation.ObservationValue} class.
      */
     public static class ObservationValueSerializer implements JsonSerializer<ObservationValue> {
+
         @Override
         public JsonElement serialize(ObservationValue src, Type typeOfSrc, JsonSerializationContext context) {
             return new JsonPrimitive(src.getDisplay());
         }
     }
+
+    /**
+     * Implementation of the {@link JsonDeserializer} interface for the
+     * {@link Observation.ObservationValue} class.
+     */
+    public static class ObservationValueDeserializer implements JsonDeserializer<ObservationValue> {
+
+        @Override
+        public ObservationValue deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            String value = json.getAsString();
+            JsonObject valueObject = new JsonObject();
+            valueObject.addProperty(DISPLAY_KEY, value);
+
+            return (ObservationValue) JsonUtils.readJson(valueObject.toString(), ObservationValue.class);
+        }
+    }
+
 }

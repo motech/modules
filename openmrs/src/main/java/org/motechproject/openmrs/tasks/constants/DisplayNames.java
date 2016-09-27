@@ -47,21 +47,26 @@ public final class DisplayNames {
     public static final String IDENTIFIERS = "openMRS.patient.identifiers";
     public static final String PERSON_ATTRIBUTES = "openMRS.patient.personAttributes";
 
+    //Observation json
+    public static final String OBSERVATION_JSON = "openMRS.observationJSON";
+    public static final String CONCEPT_UUID = "openMRS.concept.uuid";
+    public static final String OBSERVATION_DATETIME = "openMRS.obsDatetime";
+    public static final String COMMENT = "openMRS.comment";
+
     //Visit action
     public static final String VISIT_UUID = "openMRS.visit.uuid";
     public static final String VISIT_START_DATETIME = "openMRS.visit.startDatetime";
     public static final String VISIT_STOP_DATETIME = "openMRS.visit.stopDatetime";
     public static final String VISIT_TYPE_UUID = "openMRS.visit.type.uuid";
-
     //Program Enrollment action
     public static final String PROGRAM_UUID = "openMRS.program.uuid";
     public static final String PROGRAM_ENROLLMENT_UUID = "openMRS.programEnrollment.uuid";
     public static final String DATE_ENROLLED = "openMRS.programEnrollment.dateEnrolled";
+
     public static final String DATE_COMPLETED = "openMRS.programEnrollment.dateCompleted";
     public static final String STATE_UUID = "openMRS.program.state.uuid";
     public static final String STATE_START_DATE = "openMRS.program.state.startDate";
     public static final String PROGRAM_ENROLLMENT_ATTRIBUTES = "openMRS.programEnrollment.attributes";
-
     //CohortQuery Report action
     public static final String COHORT_QUERY_UUID = "openMRS.cohortQuery.uuid";
     public static final String COHORT_QUERY_PARAMETERS = "openMRS.cohortQuery.parameters";
