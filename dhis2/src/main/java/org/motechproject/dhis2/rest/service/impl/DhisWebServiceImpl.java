@@ -416,8 +416,7 @@ public class DhisWebServiceImpl implements DhisWebService {
             String contentString = IOUtils.toString(content);
             status = new ObjectMapper().readValue(contentString, DhisStatusResponse.class);
             if (status.getStatus() == DhisStatus.ERROR) {
-                String msg = String.format("DHIS2 status response error details: %s", contentString);
-                statusMessageService.warn(msg, MODULE_NAME);
+                String msg = String.format("Error in DHIS2 status response, error details: %s", contentString);
                 throw new DhisWebException(msg);
             }
         } catch (IOException e) {
