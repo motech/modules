@@ -1,5 +1,7 @@
 package org.motechproject.commcare.domain;
 
+import java.util.Objects;
+
 /**
  * Domain class representing case metadata, retrieved from CommCareHQ server.
  */
@@ -59,5 +61,27 @@ public class CommcareMetadataInfo {
 
     public void setPreviousPageQueryString(String previousPageQueryString) {
         this.previousPageQueryString = previousPageQueryString;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(limit, nextPageQueryString, offset, previousPageQueryString, totalCount);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof CommcareMetadataInfo)) {
+            return false;
+        }
+
+        CommcareMetadataInfo other = (CommcareMetadataInfo) o;
+
+        return Objects.equals(limit, other.limit) && Objects.equals(nextPageQueryString, other.nextPageQueryString)
+                && Objects.equals(offset, other.offset) && Objects.equals(previousPageQueryString, other.previousPageQueryString)
+                && Objects.equals(totalCount, other.totalCount);
     }
 }

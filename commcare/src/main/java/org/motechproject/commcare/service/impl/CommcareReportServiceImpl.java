@@ -65,11 +65,9 @@ public class CommcareReportServiceImpl implements CommcareReportService {
     }
 
     private List<ReportMetadataInfo> generateReportsFromReportsResponse(List<ReportMetadataJson> reportResponses) {
-        List<ReportMetadataInfo> reportsInfoList;
+        List<ReportMetadataInfo> reportsInfoList = Collections.emptyList();
 
-        if (reportResponses == null) {
-            reportsInfoList = Collections.emptyList();
-        } else {
+        if (reportResponses != null) {
             reportsInfoList = new ArrayList<>();
             for (ReportMetadataJson reportResponse : reportResponses) {
                 reportsInfoList.add(populateReportMetadataInfo(reportResponse));
@@ -80,11 +78,9 @@ public class CommcareReportServiceImpl implements CommcareReportService {
     }
 
     private ReportMetadataInfo populateReportMetadataInfo(ReportMetadataJson reportResponse) {
-        ReportMetadataInfo reportMetadataInfo;
+        ReportMetadataInfo reportMetadataInfo = null;
 
-        if (reportResponse == null) {
-            reportMetadataInfo = null;
-        } else {
+        if (reportResponse != null) {
             reportMetadataInfo = new ReportMetadataInfo(reportResponse.getId(), reportResponse.getTitle(), reportResponse.getColumns(), reportResponse.getFilters());
         }
 

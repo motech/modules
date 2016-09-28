@@ -1,6 +1,7 @@
 package org.motechproject.commcare.domain.report;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a single CommCareHQ report. It's a part of the MOTECH model.
@@ -52,5 +53,26 @@ public class ReportMetadataInfo {
 
     public void setFilters(List<ReportMetadataFilter> filters) {
         this.filters = filters;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, columns, filters);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof ReportMetadataInfo)) {
+            return false;
+        }
+
+        ReportMetadataInfo other = (ReportMetadataInfo) o;
+
+        return Objects.equals(id, other.id) && Objects.equals(title, other.title)
+                && Objects.equals(columns, other.columns) && Objects.equals(filters, other.filters);
     }
 }

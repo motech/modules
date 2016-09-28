@@ -4,6 +4,8 @@ import com.google.gson.annotations.SerializedName;
 import org.motechproject.commcare.domain.report.constants.FilterDataType;
 import org.motechproject.commcare.domain.report.constants.FilterType;
 
+import java.util.Objects;
+
 /**
  * Represents a single CommCareHQ {@link ReportMetadataInfo} filter.
  */
@@ -17,6 +19,14 @@ public class ReportMetadataFilter {
 
     @SerializedName("type")
     private FilterType type;
+
+    public ReportMetadataFilter() {}
+
+    public ReportMetadataFilter(FilterDataType datatype, String slug, FilterType type) {
+        this.datatype = datatype;
+        this.slug = slug;
+        this.type = type;
+    }
 
     public FilterDataType getDatatype() {
         return datatype;
@@ -40,6 +50,26 @@ public class ReportMetadataFilter {
 
     public void setType(FilterType type) {
         this.type = type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(datatype, slug, type);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof ReportMetadataFilter)) {
+            return false;
+        }
+
+        ReportMetadataFilter other = (ReportMetadataFilter) o;
+
+        return Objects.equals(datatype, other.datatype) && Objects.equals(slug, other.slug) && Objects.equals(type, other.type);
     }
 
 }

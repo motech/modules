@@ -3,6 +3,8 @@ package org.motechproject.commcare.domain.report;
 import com.google.gson.annotations.SerializedName;
 import org.motechproject.commcare.domain.report.constants.ColumnType;
 
+import java.util.Objects;
+
 /**
  * Represents a single CommCareHQ {@link ReportMetadataInfo} column.
  */
@@ -16,6 +18,14 @@ public class ReportMetadataColumn {
 
     @SerializedName("type")
     private ColumnType type;
+
+    public ReportMetadataColumn() {}
+
+    public ReportMetadataColumn(String id, String display, ColumnType type) {
+        this.id = id;
+        this.display = display;
+        this.type = type;
+    }
 
     public String getId() {
         return id;
@@ -39,5 +49,25 @@ public class ReportMetadataColumn {
 
     public void setType(ColumnType type) {
         this.type = type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, display, type);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof ReportMetadataColumn)) {
+            return false;
+        }
+
+        ReportMetadataColumn other = (ReportMetadataColumn) o;
+
+        return Objects.equals(id, other.id) && Objects.equals(display, other.display) && Objects.equals(type, other.type);
     }
 }
