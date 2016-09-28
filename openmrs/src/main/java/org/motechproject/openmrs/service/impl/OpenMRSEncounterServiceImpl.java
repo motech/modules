@@ -8,6 +8,7 @@ import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.Encounter;
 import org.motechproject.openmrs.domain.EncounterType;
 import org.motechproject.openmrs.domain.Patient;
+import org.motechproject.openmrs.exception.OpenMRSException;
 import org.motechproject.openmrs.helper.EventHelper;
 import org.motechproject.openmrs.resource.EncounterResource;
 import org.motechproject.openmrs.service.EventKeys;
@@ -58,8 +59,7 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
 
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_ENCOUNTER_SUBJECT, EventHelper.encounterParameters(createdEncounter)));
         } catch (HttpClientErrorException e) {
-            LOGGER.error("Could not create encounter: " + e.getMessage());
-            return null;
+            throw new OpenMRSException(String.format("Could not create encounter with patient uuid: %s. %s %s", encounter.getPatient().getUuid(), e.getMessage(), e.getResponseBodyAsString()), e);
         }
 
         return createdEncounter;
