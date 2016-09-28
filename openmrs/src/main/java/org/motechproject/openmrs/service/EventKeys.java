@@ -45,6 +45,7 @@ public final class EventKeys {
     public static final String USER_ID = "UserId";
     public static final String PROGRAM_ID = "ProgramId";
     public static final String PROGRAM_ENROLLMENT_ID = "ProgramEnrollmentId";
+    public static final String FORM_ID = "FormId";
 
     public static final String BASE_SUBJECT = "org.motechproject.mrs.api.";
 

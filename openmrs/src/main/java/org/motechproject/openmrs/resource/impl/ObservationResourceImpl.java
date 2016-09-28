@@ -64,6 +64,12 @@ public class ObservationResourceImpl extends BaseResource implements Observation
     }
 
     @Override
+    public Observation createObservationFromJson(Config config, String observationJson) {
+        String responseJson = postForJson(config, observationJson, "/obs");
+        return (Observation) JsonUtils.readJsonWithAdapters(responseJson, Observation.class, createValueAdapter());
+    }
+
+    @Override
     public void deleteObservation(Config config, String uuid) {
         delete(config, "/obs/{uuid}?purge", uuid);
     }
@@ -74,5 +80,12 @@ public class ObservationResourceImpl extends BaseResource implements Observation
                 .registerTypeAdapter(Concept.class, new Concept.ConceptSerializer())
                 .registerTypeAdapter(Person.class, new Person.PersonSerializer())
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
+    }
+
+    private Map<Type, Object> createValueAdapter() {
+        Map<Type, Object> valueAdapter = new HashMap<>();
+        valueAdapter.put(Observation.ObservationValue.class, new Observation.ObservationValueDeserializer());
+
+        return valueAdapter;
     }
 }

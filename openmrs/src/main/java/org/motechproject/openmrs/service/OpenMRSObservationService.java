@@ -75,6 +75,16 @@ public interface OpenMRSObservationService {
     Observation createObservation(String configName, Observation observation);
 
     /**
+     * Creates the given {@code observation} on the OpenMRS server. Configuration with the given {@code configName} will
+     * be used while performing this action.
+     *
+     * @param configName  the name of the configuration
+     * @param observationJson  the observation json to be created
+     * @return  the created observation
+     */
+    Observation createObservationFromJson(String configName, String observationJson);
+
+    /**
      * Deletes the observation with the given {@code uuid} from the OpenMRS server. If the observation with the given
      * {@code uuid} doesn't exist an error will be logged. Configuration with the given {@code configName} will be used
      * while performing this action.

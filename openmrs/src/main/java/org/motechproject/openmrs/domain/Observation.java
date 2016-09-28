@@ -8,6 +8,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import org.motechproject.openmrs.util.JsonUtils;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
@@ -20,6 +21,7 @@ import java.util.Objects;
  * a moment in time.
  */
 public class Observation {
+    private static final String DISPLAY_KEY = "display";
 
     private String uuid;
     private String display;
@@ -35,6 +37,7 @@ public class Observation {
     private String obsGroup;
     private Location location;
     private Order order;
+    private String comment;
 
     public String getUuid() {
         return uuid;
@@ -152,13 +155,21 @@ public class Observation {
         this.order = order;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(uuid, display, concept, encounter, value, obsDatetime, person, groupsMembers, voided,
-                valueModifier, valueCodedName, obsGroup, location, order);
+                valueModifier, valueCodedName, obsGroup, location, order, comment);
     }
 
-    @Override //NO CHECKSTYLE CyclomaticComplexity
+    @Override //NO CHECKSTYLE Cyclomatic Complexity
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -176,7 +187,8 @@ public class Observation {
                 && Objects.equals(person, other.person) && Objects.equals(groupsMembers, other.groupsMembers)
                 && Objects.equals(voided, other.voided) && Objects.equals(valueModifier, other.valueModifier)
                 && Objects.equals(valueCodedName, other.valueCodedName) && Objects.equals(obsGroup, other.obsGroup)
-                && Objects.equals(location, other.location) && Objects.equals(order, other.order);
+                && Objects.equals(location, other.location) && Objects.equals(order, other.order)
+                && Objects.equals(comment, other.comment);
     }
 
     /**
@@ -248,12 +260,17 @@ public class Observation {
      * {@link Observation.ObservationValue} class.
      */
     public static class ObservationValueSerializer implements JsonSerializer<ObservationValue> {
+
         @Override
         public JsonElement serialize(ObservationValue src, Type typeOfSrc, JsonSerializationContext context) {
             return new JsonPrimitive(src.getDisplay());
         }
     }
 
+    /**
+    * Implementation of the {@link JsonDeserializer} interface for the
+    * {@link Observation.ObservationValue} class.
+    */
     public static class ObservationValueDeserializer implements JsonDeserializer<ObservationValue> {
         @Override
         public ObservationValue deserialize (JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

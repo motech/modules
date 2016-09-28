@@ -1,6 +1,9 @@
 package org.motechproject.openmrs.tasks.impl;
 
+import com.google.gson.JsonObject;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -18,6 +21,7 @@ import org.motechproject.openmrs.domain.Concept;
 import org.motechproject.openmrs.domain.ConceptName;
 import org.motechproject.openmrs.domain.Encounter;
 import org.motechproject.openmrs.domain.EncounterType;
+import org.motechproject.openmrs.domain.Form;
 import org.motechproject.openmrs.domain.Identifier;
 import org.motechproject.openmrs.domain.IdentifierType;
 import org.motechproject.openmrs.domain.Location;
@@ -32,7 +36,9 @@ import org.motechproject.openmrs.domain.VisitType;
 import org.motechproject.openmrs.service.OpenMRSCohortService;
 import org.motechproject.openmrs.service.OpenMRSConceptService;
 import org.motechproject.openmrs.service.OpenMRSEncounterService;
+import org.motechproject.openmrs.service.OpenMRSFormService;
 import org.motechproject.openmrs.service.OpenMRSLocationService;
+import org.motechproject.openmrs.service.OpenMRSObservationService;
 import org.motechproject.openmrs.service.OpenMRSPatientService;
 import org.motechproject.openmrs.service.OpenMRSPersonService;
 import org.motechproject.openmrs.service.OpenMRSProgramEnrollmentService;
@@ -59,6 +65,8 @@ import static org.mockito.Mockito.verify;
 public class OpenMRSActionProxyServiceTest {
 
     private static final String CONFIG_NAME = "Configuration name";
+    private static final DateTimeFormatter fullDateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+
 
     @Mock
     private OpenMRSConceptService conceptService;
@@ -76,6 +84,9 @@ public class OpenMRSActionProxyServiceTest {
     private OpenMRSPersonService personService;
 
     @Mock
+    private OpenMRSObservationService observationService;
+
+    @Mock
     private OpenMRSVisitService visitService;
 
     @Mock
@@ -90,11 +101,17 @@ public class OpenMRSActionProxyServiceTest {
     @Mock
     private EventRelay eventRelay;
 
+    @Mock
+    private OpenMRSFormService formService;
+
     @Captor
     private ArgumentCaptor<Patient> patientCaptor;
 
     @Captor
     private ArgumentCaptor<Person> personCaptor;
+
+    @Captor
+    private ArgumentCaptor<String> observationCaptor;
 
     @Captor
     private ArgumentCaptor<Visit> visitCaptor;
@@ -123,11 +140,14 @@ public class OpenMRSActionProxyServiceTest {
         Visit visit = new Visit();
         visit.setUuid("40");
 
+        Form form = new Form();
+        form.setUuid("50");
+
         DateTime encounterDatetime = new DateTime("2000-08-16T07:22:05Z");
         Map<String, String> observations = new HashMap<>();
-        observations.put("testConceptName", "testObservationValueName");
+        observations.put("18ff53df-744a-4a3f-8f25-dac6de5b7131", "testObservationValueName0");
 
-        List<Observation> obsList = createObservationList();
+        List<Observation> obsList = createObservationList(1);
 
         Encounter encounter = new Encounter(location, new EncounterType("testEncounterType"), encounterDatetime.toDate(), patient, visit, Collections.singletonList(provider.getPerson()), obsList);
 
@@ -141,7 +161,7 @@ public class OpenMRSActionProxyServiceTest {
 
         Encounter encounterCreated = openMRSActionProxyService.createEncounter(CONFIG_NAME, new DateTime(encounter.getEncounterDatetime()),
                 encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid(),
-                visit.getUuid(), observations);
+                visit.getUuid(), form.getUuid(),  observations);
 
         assertEquals(encounter, encounterCreated);
     }
@@ -164,9 +184,12 @@ public class OpenMRSActionProxyServiceTest {
         Visit visit = new Visit();
         visit.setUuid("40");
 
+        Form form = new Form();
+        form.setUuid("50");
+
         DateTime encounterDatetime = new DateTime("2000-08-16T07:22:05Z");
         Map<String, String> observations = new HashMap<>();
-        observations.put("testConceptName","");
+        observations.put("18ff53df-744a-4a3f-8f25-dac6de5b7131", "");
 
         List<Observation> obsList = new ArrayList<>();
 
@@ -182,7 +205,53 @@ public class OpenMRSActionProxyServiceTest {
 
         Encounter encounterCreated = openMRSActionProxyService.createEncounter(CONFIG_NAME, new DateTime(encounter.getEncounterDatetime()),
                 encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid(),
-                visit.getUuid(), observations);
+                visit.getUuid(), form.getUuid(), observations);
+
+        assertEquals(encounter, encounterCreated);
+    }
+
+    @Test
+    public void shouldCreateEncounterWithGivenParametersWithObsWithManyValues() {
+        Location location = new Location();
+        location.setName("testLocation");
+
+        Patient patient = new Patient();
+        patient.setUuid("10");
+
+        Provider provider = new Provider();
+        provider.setUuid("20");
+
+        Person person = new Person();
+        person.setUuid("30");
+        provider.setPerson(person);
+
+        Visit visit = new Visit();
+        visit.setUuid("40");
+
+        Form form = new Form();
+        form.setUuid("50");
+
+        DateTime encounterDatetime = new DateTime("2000-08-16T07:22:05Z");
+        Map<String, String> observations = new HashMap<>();
+
+        /* Empty value in observations should not be included */
+        observations.put("18ff53df-744a-4a3f-8f25-dac6de5b7131","testObservationValueName0, ,testObservationValueName1");
+        List<Observation> obsList = createObservationList(2);
+
+        Encounter encounter = new Encounter(location, new EncounterType("testEncounterType"), encounterDatetime.toDate(), patient, visit, Collections.singletonList(provider.getPerson()), obsList);
+
+        doReturn(patient).when(patientService).getPatientByUuid(eq(CONFIG_NAME), eq(patient.getUuid()));
+        doReturn(provider).when(providerService).getProviderByUuid(eq(CONFIG_NAME), eq(provider.getUuid()));
+        doReturn(visit).when(visitService).getVisitByUuid(eq(CONFIG_NAME), eq(visit.getUuid()));
+        doReturn(encounter).when(encounterService).createEncounter(eq(CONFIG_NAME), eq(encounter));
+
+        doReturn(Collections.singletonList(location))
+                .when(locationService).getLocations(eq(CONFIG_NAME), eq(location.getName()));
+
+        Encounter encounterCreated = openMRSActionProxyService.createEncounter(CONFIG_NAME, new DateTime(encounter.getEncounterDatetime()),
+                encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid(),
+                visit.getUuid(), form.getUuid(), observations);
+
 
         assertEquals(encounter, encounterCreated);
     }
@@ -351,6 +420,86 @@ public class OpenMRSActionProxyServiceTest {
         assertEquals("1000", patientCaptorIdentifier.getIdentifier());
         assertEquals("CommCare CaseID", patientCaptorIdentifier.getIdentifierType().getName());
     }
+
+    @Test
+    public void shouldCreateObservationWithGivenJsonParameter() {
+        JsonObject observationObject = new JsonObject();
+
+        String encounterUuid = "10";
+        String conceptUuid = "20";
+        String obsDatetime = "2016-07-29T18:29:50.000+0800";
+        String comment = "testComment";
+
+        observationObject.addProperty("encounter", encounterUuid);
+        observationObject.addProperty("concept", conceptUuid);
+        observationObject.addProperty("obsDatetime", obsDatetime);
+        observationObject.addProperty("comment", comment);
+        String observationJSON = observationObject.toString();
+
+        Encounter encounter = new Encounter();
+        encounter.setUuid(encounterUuid);
+
+        Concept concept = new Concept();
+        concept.setUuid(conceptUuid);
+
+        Observation observation = new Observation();
+        observation.setEncounter(encounter);
+        observation.setConcept(concept);
+        observation.setObsDatetime(new DateTime(obsDatetime).toDate());
+        observation.setComment(comment);
+
+        doReturn(observation).when(observationService).createObservationFromJson(eq(CONFIG_NAME),
+                eq(observationJSON));
+
+        Observation obsCreated = openMRSActionProxyService.createObservationJSON(CONFIG_NAME, observationJSON, null, null, null, null);
+
+        assertEquals(observation, obsCreated);
+    }
+
+
+    @Test
+    public void shouldCreateObservationWithReplacedParameters() {
+        JsonObject observationObject = new JsonObject();
+
+        String encounterUuid = "10";
+        String conceptUuid = "20";
+        String obsDatetime = "2016-07-29T18:29:50.000+0800";
+        String comment = "testComment";
+        String value = "testValue";
+
+        String encounterUuidReplace = "100";
+        String conceptUuidReplace = "200";
+        String obsDatetimeReplace = "2010-07-29T18:29:50.000+0800";
+        String commentReplace = "testComment2";
+
+        observationObject.addProperty("encounter", encounterUuid);
+        observationObject.addProperty("concept", conceptUuid);
+        observationObject.addProperty("obsDatetime", obsDatetime);
+        observationObject.addProperty("comment", comment);
+        observationObject.addProperty("value", value);
+        String observationJSON = observationObject.toString();
+
+        observationObject = new JsonObject();
+        observationObject.addProperty("encounter", encounterUuidReplace);
+        observationObject.addProperty("concept", conceptUuidReplace);
+        observationObject.addProperty("obsDatetime", new DateTime(obsDatetimeReplace).toString(fullDateTimeFormatter));
+        observationObject.addProperty("comment", commentReplace);
+        observationObject.addProperty("value", value);
+        String observationJSONReplace = observationObject.toString();
+
+        Encounter encounter = new Encounter();
+        encounter.setUuid(encounterUuid);
+
+        Concept concept = new Concept();
+        concept.setUuid(conceptUuid);
+
+        openMRSActionProxyService.createObservationJSON(CONFIG_NAME, observationJSON,
+                encounterUuidReplace, conceptUuidReplace, new DateTime(obsDatetimeReplace), commentReplace);
+
+        verify(observationService).createObservationFromJson(eq(CONFIG_NAME), observationCaptor.capture());
+        assertEquals(observationJSONReplace, observationCaptor.getValue());
+    }
+
 
     @Test
     public void shouldCreateVisitWithRequiredGivenParameters() {
@@ -599,17 +748,20 @@ public class OpenMRSActionProxyServiceTest {
         return concept;
     }
 
-    private List<Observation> createObservationList() {
-        Observation observation = new Observation();
+    private List<Observation> createObservationList(int observationsNumber) {
+        List<Observation> observationList = new ArrayList<>();
 
-        ConceptName conceptName = new ConceptName("testConceptName");
-        Concept concept = new Concept(conceptName);
+        for (int i = 0; i < observationsNumber; i++) {
+            Concept concept = new Concept();
+            concept.setUuid("18ff53df-744a-4a3f-8f25-dac6de5b7131");
 
-        observation.setConcept(concept);
-        observation.setValue(new Observation.ObservationValue("testObservationValueName"));
-        observation.setObsDatetime(new DateTime("2000-08-16T07:22:05Z").toDate());
-
-        return Collections.singletonList(observation);
+            Observation observation = new Observation();
+            observation.setConcept(concept);
+            observation.setValue(new Observation.ObservationValue("testObservationValueName" + Integer.toString(i)));
+            observation.setObsDatetime(new DateTime("2000-08-16T07:22:05Z").toDate());
+            observationList.add(observation);
+        }
+        return observationList;
     }
 
     private CohortQueryReport prepareCohortQueryReport(boolean withMembers) {

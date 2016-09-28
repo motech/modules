@@ -139,10 +139,22 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
             Observation created = obsResource.createObservation(config, observation);
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_OBSERVATION_SUBJECT, EventHelper.observationParameters(created)));
             return created;
-
         } catch (HttpClientErrorException e) {
             LOGGER.error("Error while creating observation!");
             return null;
+        }
+    }
+
+    @Override
+    public Observation createObservationFromJson(String configName, String observationJson) {
+        try {
+            Config config = configService.getConfigByName(configName);
+
+            Observation created = obsResource.createObservationFromJson(config, observationJson);
+            eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_OBSERVATION_SUBJECT, EventHelper.observationParameters(created)));
+            return created;
+        } catch (HttpClientErrorException e) {
+            throw new OpenMRSException("Error while creating observation. Response body: " + e.getResponseBodyAsString(), e);
         }
     }
 
