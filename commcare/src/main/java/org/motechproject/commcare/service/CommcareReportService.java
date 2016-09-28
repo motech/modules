@@ -21,7 +21,7 @@ public interface CommcareReportService {
      * Same as {@link #getReportsList(String)} but uses default Commcare configuration.
      */
     ReportsMetadataInfo getReportsList();
-}
+
     /**
      * Query CommCareHQ for a report by its report id.
      *

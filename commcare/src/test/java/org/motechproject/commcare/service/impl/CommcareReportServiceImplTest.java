@@ -11,12 +11,12 @@ import org.motechproject.commcare.domain.report.ReportMetadataColumn;
 import org.motechproject.commcare.domain.report.ReportMetadataFilter;
 import org.motechproject.commcare.domain.report.ReportMetadataInfo;
 import org.motechproject.commcare.domain.report.ReportsMetadataInfo;
+import org.motechproject.commcare.domain.report.ReportDataInfo;
 import org.motechproject.commcare.domain.report.constants.ColumnType;
 import org.motechproject.commcare.domain.report.constants.FilterDataType;
 import org.motechproject.commcare.domain.report.constants.FilterType;
 import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.util.ConfigsUtils;
-import org.motechproject.commons.api.json.MotechJsonReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -34,7 +35,6 @@ public class CommcareReportServiceImplTest {
 
     private static final String REPORTS_LIST_METADATA_RESPONSE = "json/service/reportsListMetadataResponse.json";
     private static final Logger LOGGER = LoggerFactory.getLogger(CommcareCaseServiceImplTest.class);
-    private static final MotechJsonReader READER = new MotechJsonReader();
     private CommcareReportServiceImpl reportService;
 
     @Mock
@@ -65,6 +65,18 @@ public class CommcareReportServiceImplTest {
         ReportsMetadataInfo fetched = reportService.getReportsList();
 
         assertEquals(reportsMetadataInfo, fetched);
+    }
+
+    @Test
+    public void testReportByReportId() {
+        String reportId = "testId";
+
+        when(commcareHttpClient.singleReportDataRequest(config.getAccountConfig(), reportId)).thenReturn(individualReport());
+
+        ReportDataInfo reportInstance = reportService.getReportByReportId(reportId);
+
+        assertNotNull(reportInstance);
+
     }
 
     private String getResponseForReportsListMetadata() {
@@ -111,17 +123,6 @@ public class CommcareReportServiceImplTest {
         CommcareMetadataInfo metadataInfo = new CommcareMetadataInfo(0, null, 0, null, 2);
 
         return new ReportsMetadataInfo(reportMetadataInfoList, metadataInfo);
-    }
-}
-    public void testReportByReportId() {
-        String reportId = "testId";
-
-        when(commcareHttpClient.singleReportDataRequest(config.getAccountConfig(), reportId)).thenReturn(individualReport());
-
-        ReportDataInfo reportInstance = reportService.getReportByReportId(reportId);
-
-        assertNotNull(reportInstance);
-
     }
 
     private String individualReport() {

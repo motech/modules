@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Represents a single CommCareHQ report data. It's a part of the CommCareHQ model.
  */
-public class ReportDataContainerJson {
+public class ReportDataResponseJson {
 
     @SerializedName("columns")
     private List<ReportDataColumn> columns;
@@ -22,35 +22,35 @@ public class ReportDataContainerJson {
     @SerializedName("total_records")
     private Integer totalRecords;
 
-    public List<ReportDataColumn> getColumns(){
+    public List<ReportDataColumn> getColumns() {
         return columns;
     }
 
-    public List<Map<String, String>> getData(){
+    public List<Map<String, String>> getData() {
         return data;
     }
 
-    public String getNextPage(){
+    public String getNextPage() {
         return nextPage;
     }
 
-    public Integer getTotalRecords(){
+    public Integer getTotalRecords() {
         return totalRecords;
     }
 
-    public void setColumns(List<ReportDataColumn> reportDataColumns){
+    public void setColumns(List<ReportDataColumn> reportDataColumns) {
         this.columns = reportDataColumns;
     }
 
-    public void setData(List<Map<String, String>> reportDataList){
+    public void setData(List<Map<String, String>> reportDataList) {
         this.data = reportDataList;
     }
 
-    public void setNextPage(String nextPage){
+    public void setNextPage(String nextPage) {
         this.nextPage = nextPage;
     }
 
-    public void setTotalRecords(Integer totalRecords){
+    public void setTotalRecords(Integer totalRecords) {
         this.totalRecords = totalRecords;
     }
 

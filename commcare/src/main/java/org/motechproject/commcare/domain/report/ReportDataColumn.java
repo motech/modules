@@ -16,27 +16,27 @@ public class ReportDataColumn {
     @SerializedName("expand_column_value")
     private String expandColumnValue;
 
-    public String getHeader(){
+    public String getHeader() {
         return header;
     }
 
-    public String getSlug(){
+    public String getSlug() {
         return slug;
     }
 
-    public String getExpandColumnValue(){
+    public String getExpandColumnValue() {
         return expandColumnValue;
     }
 
-    public void setHeader(String header){
+    public void setHeader(String header) {
         this.header = header;
     }
 
-    public void setSlug(String slug){
+    public void setSlug(String slug) {
         this.slug = slug;
     }
 
-    public void setExpandColumnValue(String expandColumnValue){
+    public void setExpandColumnValue(String expandColumnValue) {
         this.expandColumnValue = expandColumnValue;
     }
 }

@@ -14,7 +14,7 @@ public class ReportDataInfo {
     private String nextPage;
     private Integer totalRecords;
 
-    public List<ReportDataColumn> getColumns(){
+    public List<ReportDataColumn> getColumns() {
         return columns;
     }
 
@@ -22,7 +22,7 @@ public class ReportDataInfo {
         this.columns = columns;
     }
 
-    public List<Map<String, String>> getData(){
+    public List<Map<String, String>> getData() {
         return data;
     }
 
@@ -30,7 +30,7 @@ public class ReportDataInfo {
         this.data = data;
     }
 
-    public String getNextPage(){
+    public String getNextPage() {
         return nextPage;
     }
 
@@ -38,12 +38,11 @@ public class ReportDataInfo {
         this.nextPage = nextPage;
     }
 
-    public Integer getTotalRecords(){
+    public Integer getTotalRecords() {
         return totalRecords;
     }
 
     public void setTotalRecords(Integer totalRecords) {
         this.totalRecords = totalRecords;
     }
-
 }
