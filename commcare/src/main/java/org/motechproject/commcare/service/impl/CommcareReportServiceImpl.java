@@ -32,20 +32,20 @@ import java.util.HashMap;
 @Service
 public class CommcareReportServiceImpl implements CommcareReportService {
 
-    private CommCareAPIHttpClient commCareHttpClient;
+    private CommCareAPIHttpClient commcareHttpClient;
     private CommcareConfigService configService;
     private MotechJsonReader motechJsonReader;
 
     @Autowired
-    public CommcareReportServiceImpl(CommCareAPIHttpClient commCareHttpClient, CommcareConfigService configService) {
-        this.commCareHttpClient = commCareHttpClient;
+    public CommcareReportServiceImpl(CommCareAPIHttpClient commcareHttpClient, CommcareConfigService configService) {
+        this.commcareHttpClient = commcareHttpClient;
         this.configService = configService;
         this.motechJsonReader = new MotechJsonReader();
     }
 
     @Override
     public ReportsMetadataInfo getReportsList(String configName) {
-        String response = commCareHttpClient.reportsListMetadataRequest(configService.getByName(configName).getAccountConfig());
+        String response = commcareHttpClient.reportsListMetadataRequest(configService.getByName(configName).getAccountConfig());
 
         ReportsMetadataResponseJson reportsMetadataResponseJson = parseReportsFromResponse(response);
 
@@ -59,7 +59,7 @@ public class CommcareReportServiceImpl implements CommcareReportService {
 
     @Override
     public ReportDataInfo getReportByReportId(String reportId, String configName) {
-        String response = commCareHttpClient.singleReportDataRequest(configService.getByName(configName).getAccountConfig(),
+        String response = commcareHttpClient.singleReportDataRequest(configService.getByName(configName).getAccountConfig(),
                 reportId);
 
         ReportDataResponseJson reportResponse = parseSingleReportFromResponse(response);
@@ -107,28 +107,26 @@ public class CommcareReportServiceImpl implements CommcareReportService {
         ReportMetadataInfo reportMetadataInfo = null;
 
         if (reportResponse != null) {
-            reportMetadataInfo = new ReportMetadataInfo(reportResponse.getId(), reportResponse.getTitle(), reportResponse.getColumns(), reportResponse.getFilters());
+            reportMetadataInfo = new ReportMetadataInfo(reportResponse.getId(), reportResponse.getTitle(),
+                    reportResponse.getColumns(), reportResponse.getFilters());
         }
 
         return reportMetadataInfo;
     }
 
     private ReportDataInfo populateReportDataInfo(ReportDataResponseJson reportResponse) {
-        if (reportResponse == null) {
-            return null;
+        ReportDataInfo reportDataInfo = null;
+
+        if (reportResponse != null) {
+            reportDataInfo = new ReportDataInfo(reportResponse.getColumns(), reportResponse.getData(),
+                    reportResponse.getNextPage(), reportResponse.getTotalRecords());
         }
 
-        ReportDataInfo reportDataInfo = new ReportDataInfo();
-
-        reportDataInfo.setColumns(reportResponse.getColumns());
-        reportDataInfo.setData(reportResponse.getData());
-        reportDataInfo.setNextPage(reportResponse.getNextPage());
-        reportDataInfo.setTotalRecords(reportResponse.getTotalRecords());
-
-        return  reportDataInfo;
+        return reportDataInfo;
     }
 
     private CommcareMetadataInfo populateReportsMetadata(CommcareMetadataJson metadataJson) {
-        return new CommcareMetadataInfo(metadataJson.getLimit(), metadataJson.getNextPageQueryString(), metadataJson.getOffset(), metadataJson.getPreviousPageQueryString(), metadataJson.getTotalCount());
+        return new CommcareMetadataInfo(metadataJson.getLimit(), metadataJson.getNextPageQueryString(),
+                metadataJson.getOffset(), metadataJson.getPreviousPageQueryString(), metadataJson.getTotalCount());
     }
 }

@@ -12,6 +12,7 @@ import org.motechproject.commcare.domain.report.ReportMetadataFilter;
 import org.motechproject.commcare.domain.report.ReportMetadataInfo;
 import org.motechproject.commcare.domain.report.ReportsMetadataInfo;
 import org.motechproject.commcare.domain.report.ReportDataInfo;
+import org.motechproject.commcare.domain.report.ReportDataColumn;
 import org.motechproject.commcare.domain.report.constants.ColumnType;
 import org.motechproject.commcare.domain.report.constants.FilterDataType;
 import org.motechproject.commcare.domain.report.constants.FilterType;
@@ -24,16 +25,22 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+/**
+ * Test class for {@link CommcareReportServiceImpl}
+ */
 public class CommcareReportServiceImplTest {
 
     private static final String REPORTS_LIST_METADATA_RESPONSE = "json/service/reportsListMetadataResponse.json";
+    private static final String REPORT_DATA_RESPONSE = "json/service/reportDataResponse.json";
+    private static final String REPORT_ID = "reportId";
     private static final Logger LOGGER = LoggerFactory.getLogger(CommcareCaseServiceImplTest.class);
     private CommcareReportServiceImpl reportService;
 
@@ -69,18 +76,22 @@ public class CommcareReportServiceImplTest {
 
     @Test
     public void testReportByReportId() {
-        String reportId = "testId";
+        ReportDataInfo reportDataInfo = prepareReportDataInfo();
 
-        when(commcareHttpClient.singleReportDataRequest(config.getAccountConfig(), reportId)).thenReturn(individualReport());
+        when(commcareHttpClient.singleReportDataRequest(config.getAccountConfig(), REPORT_ID)).thenReturn(getResponseForReportData());
 
-        ReportDataInfo reportInstance = reportService.getReportByReportId(reportId);
+        ReportDataInfo fetched = reportService.getReportByReportId(REPORT_ID);
 
-        assertNotNull(reportInstance);
+        assertEquals(reportDataInfo, fetched);
 
     }
 
     private String getResponseForReportsListMetadata() {
         return getRawJson(REPORTS_LIST_METADATA_RESPONSE);
+    }
+
+    private String getResponseForReportData() {
+        return getRawJson(REPORT_DATA_RESPONSE);
     }
 
     private String getRawJson(String path) {
@@ -125,7 +136,28 @@ public class CommcareReportServiceImplTest {
         return new ReportsMetadataInfo(reportMetadataInfoList, metadataInfo);
     }
 
-    private String individualReport() {
-        return "{" + "  \"columns\": [" + "    {" + "      \"header\": \"District\"," + "      \"slug\": \"district\"" + "    }," + "    {" + "      \"header\": \"Num Children Visited\"," + "      \"slug\": \"number_of_children_visited\"" + "    }," + "    {" + "      \"header\": \"Gender-male\"," + "      \"expand_column_value\": \"male\"," + "      \"slug\": \"gender-male\"" + "    }," + "    {" + "      \"header\": \"Gender-female\"," + "      \"expand_column_value\": \"female\"," + "      \"slug\": \"gender-female\"" + "    }" + "  ]," + "  \"data\": [" + "    {" + "      \"district\": \"Middlesex\"," + "      \"number_of_children_visited\": 46," + "      \"gender-male\": 10," + "      \"gender-female\": 35" + "    }," + "    {" + "      \"district\": \"Suffolk\"," + "      \"number_of_children_visited\": 85," + "      \"gender-male\": 81," + "      \"gender-female\": 4" + "    }" + "  ]," + "  \"next_page\": \"/a/motechproject/api/v0.5/configurablereportdata/9aab0eeb88555a7b4568676883e7379a/?offset=3&limit=3&state=vermont\"," + "  \"total_records\": 30" + "}";
+    private ReportDataInfo prepareReportDataInfo() {
+        List<ReportDataColumn> columns = new ArrayList<>();
+        columns.add(new ReportDataColumn("District", "district", null));
+        columns.add(new ReportDataColumn("Num Children Visited", "number_of_children_visited", null));
+        columns.add(new ReportDataColumn("Gender-male", "gender-male", "male"));
+        columns.add(new ReportDataColumn("Gender-female", "gender-female", "female"));
+
+        List<Map<String, String>> data = new ArrayList<>();
+        Map<String, String> singleData = new HashMap<>();
+        singleData.put("district", "Middlesex");
+        singleData.put("number_of_children_visited", "46");
+        singleData.put("gender-male", "10");
+        singleData.put("gender-female", "35");
+        data.add(singleData);
+
+        singleData = new HashMap<>();
+        singleData.put("district", "Suffolk");
+        singleData.put("number_of_children_visited", "85");
+        singleData.put("gender-male", "81");
+        singleData.put("gender-female", "4");
+        data.add(singleData);
+
+        return new ReportDataInfo(columns, data, "/a/domainOne/api/v0.5/configurablereportdata/9aab0eeb88555a7b4568676883e7379a/?offset=3&limit=3&state=vermont", 30);
     }
 }
