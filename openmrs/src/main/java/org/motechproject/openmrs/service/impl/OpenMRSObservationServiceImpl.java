@@ -110,7 +110,7 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
             if (CollectionUtils.isNotEmpty(observations.getResults())) {
                 return obsResource.getObservationById(config, observations.getResults().get(0).getUuid());
             }
-            return null;
+            return new Observation();
         } catch (HttpClientErrorException e) {
             LOGGER.error("Error while fetching observations with Patient uuid: " + patientUUID + " and Concept uuid: " + conceptUUID);
             return null;
