@@ -672,17 +672,20 @@ public class CourseStructureServiceBundleIT extends BasePaxIT {
         List<Lesson> allLessons = mTrainingService.getAllLessons();
         List<Chapter> allChapters = mTrainingService.getAllChapters();
 
-        for(Quiz quiz : allQuizzes){
-            if(quizzes.contains(quiz.getName()))
+        for(Quiz quiz : allQuizzes) {
+            if(quizzes.contains(quiz.getName())) {
                 assertNull(quiz.getChapter());
+            }
         }
-        for(Lesson lesson : allLessons){
-            if(lessons.contains(lesson.getName()))
+        for(Lesson lesson : allLessons) {
+            if(lessons.contains(lesson.getName())) {
                 assertNull(lesson.getChapter());
+            }
         }
-        for(Chapter chapter : allChapters){
-            if(chapters.contains(chapter.getName()))
+        for(Chapter chapter : allChapters) {
+            if(chapters.contains(chapter.getName())) {
                 assertNull(chapter.getCourse());
+            }
         }
     }
 
