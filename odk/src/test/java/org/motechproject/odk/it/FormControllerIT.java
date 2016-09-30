@@ -76,7 +76,7 @@ public class FormControllerIT extends OdkBaseIT {
             if (count == WAIT_COUNT) {
                 fail(TIMEOUT);
             }
-            Thread.sleep(2000);
+            Thread.sleep(4000);
         }
 
         List<MotechEvent> events = mockEventListener.getEvents();
