@@ -49,6 +49,16 @@ public interface ObservationResource {
     Observation createObservation(Config config, Observation observation);
 
     /**
+     * Creates the given observation on the OpenMRS server. The given {@code config} will be used while performing this
+     * action.
+     *
+     * @param config  the configuration to be used while performing this action
+     * @param observationJson  the observation json to be created
+     * @return  the saved observation
+     */
+    Observation createObservationFromJson(Config config, String observationJson);
+
+    /**
      * Deletes the observation with the given UUID. The given {@code config} will be used while performing this action.
      *
      * @param config  the configuration to be used while performing this action

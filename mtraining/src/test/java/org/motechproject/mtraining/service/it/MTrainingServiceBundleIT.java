@@ -1,6 +1,7 @@
 package org.motechproject.mtraining.service.it;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.mtraining.domain.Answer;

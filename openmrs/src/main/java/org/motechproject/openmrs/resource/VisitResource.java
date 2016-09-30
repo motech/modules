@@ -47,6 +47,15 @@ public interface VisitResource {
     VisitType createVisitType(Config config, VisitType visitType);
 
     /**
+     * Gets the visit type by its UUID. The given {@code config} will be used while performing this action.
+     *
+     * @param config the name of the configuration
+     * @param uuid   the UUID of the visit type
+     * @return the visit type with the given UUID
+     */
+    VisitType getVisitTypeById(Config config, String uuid);
+
+    /**
      * Deletes the visit type with the given UUID from the OpenMRS server. The given {@code config} will be used
      * while performing this action.
      *

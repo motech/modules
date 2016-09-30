@@ -1,6 +1,5 @@
 package org.motechproject.openmrs.service.impl;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.motechproject.event.MotechEvent;
@@ -8,12 +7,11 @@ import org.motechproject.event.listener.EventRelay;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.Encounter;
 import org.motechproject.openmrs.domain.EncounterType;
-import org.motechproject.openmrs.domain.Observation;
 import org.motechproject.openmrs.domain.Patient;
+import org.motechproject.openmrs.exception.OpenMRSException;
 import org.motechproject.openmrs.helper.EventHelper;
 import org.motechproject.openmrs.resource.EncounterResource;
 import org.motechproject.openmrs.service.EventKeys;
-import org.motechproject.openmrs.service.OpenMRSConceptService;
 import org.motechproject.openmrs.service.OpenMRSConfigService;
 import org.motechproject.openmrs.service.OpenMRSEncounterService;
 import org.motechproject.openmrs.service.OpenMRSPatientService;
@@ -32,7 +30,6 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSEncounterServiceImpl.class);
 
-    private final OpenMRSConceptService conceptService;
     private final OpenMRSPatientService patientService;
 
     private final OpenMRSConfigService configService;
@@ -43,11 +40,9 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
 
     @Autowired
     public OpenMRSEncounterServiceImpl(EncounterResource encounterResource, OpenMRSPatientService patientAdapter,
-                                       OpenMRSConceptService conceptAdapter, EventRelay eventRelay,
-                                       OpenMRSConfigService configService) {
+                                       EventRelay eventRelay, OpenMRSConfigService configService) {
         this.encounterResource = encounterResource;
         this.patientService = patientAdapter;
-        this.conceptService = conceptAdapter;
         this.configService = configService;
         this.eventRelay = eventRelay;
     }
@@ -59,19 +54,12 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
         Encounter createdEncounter;
         Config config = configService.getConfigByName(configName);
 
-        // OpenMRS expects the observations to reference a concept uuid rather
-        // than just a concept name. Attempt to map all concept names to concept
-        // uuid's for each of the observations
-        List<Observation> updatedObs = resolveConceptUuidForConceptNames(config, encounter.getObs());
-
         try {
-            encounter.setObs(updatedObs);
             createdEncounter = encounterResource.createEncounter(config, encounter);
 
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_ENCOUNTER_SUBJECT, EventHelper.encounterParameters(createdEncounter)));
         } catch (HttpClientErrorException e) {
-            LOGGER.error("Could not create encounter: " + e.getMessage());
-            return null;
+            throw new OpenMRSException(String.format("Could not create encounter with patient uuid: %s. %s %s", encounter.getPatient().getUuid(), e.getMessage(), e.getResponseBodyAsString()), e);
         }
 
         return createdEncounter;
@@ -174,22 +162,6 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
         Validate.notNull(encounter.getEncounterProviders().get(0), "Provider cannot be null");
         Validate.notNull(encounter.getEncounterDatetime(), "Encounter Date cannot be null");
         Validate.notNull(encounter.getEncounterType(), "Encounter type cannot be null");
-    }
-
-    private List<Observation> resolveConceptUuidForConceptNames(Config config, List<Observation> originalObservations) {
-        List<Observation> updatedObs = new ArrayList<>();
-        if (originalObservations != null) {
-            for (Observation observation : originalObservations) {
-                String conceptUuid = conceptService.resolveConceptUuidFromConceptName(config.getName(), observation.getConcept().getName().getName());
-                if (CollectionUtils.isNotEmpty(observation.getGroupsMembers())) {
-                    resolveConceptUuidForConceptNames(config, observation.getGroupsMembers());
-                }
-                observation.getConcept().setUuid(conceptUuid);
-                updatedObs.add(observation);
-            }
-        }
-
-        return updatedObs;
     }
 
     private List<Encounter> getAllEncountersByPatientMotechId(Config config, String motechId) {

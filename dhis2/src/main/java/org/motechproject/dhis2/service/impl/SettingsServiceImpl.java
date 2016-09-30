@@ -17,6 +17,8 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 
 /**
@@ -60,10 +62,23 @@ public class SettingsServiceImpl implements SettingsService {
             LOGGER.debug("Loading DHIS2 settings...");
             Gson gson = new Gson();
             settings = gson.fromJson(jsonText, Settings.class);
+            if (settings.getServerURI() != null) {
+                settings.setServerURI(removeTrailingSlash());
+            }
         } catch (Exception e) {
             String message = "There was an error loading json from the DHIS2 settings.";
             LOGGER.debug(message);
             throw new JsonIOException(message, e);
         }
+    }
+
+    private String removeTrailingSlash() throws URISyntaxException {
+            URI uri = new URI(settings.getServerURI());
+            uri = uri.normalize();
+            String uriString = uri.toString();
+            if (uriString.endsWith("/")) {
+                uriString = uriString.substring(0, uriString.length() - 1);
+            }
+            return uriString;
     }
 }
