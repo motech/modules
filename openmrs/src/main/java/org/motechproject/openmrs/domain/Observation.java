@@ -8,7 +8,6 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import org.motechproject.openmrs.util.JsonUtils;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
@@ -278,7 +277,7 @@ public class Observation {
 
             if (json.isJsonObject()) {
                 JsonObject jsonObject = json.getAsJsonObject();
-                observationValue.setDisplay(jsonObject.get("display").getAsString());
+                observationValue.setDisplay(jsonObject.get(DISPLAY_KEY).getAsString());
             } else if (json.isJsonPrimitive()) {
                 JsonPrimitive jsonPrimitive = json.getAsJsonPrimitive();
                 observationValue.setDisplay(jsonPrimitive.getAsString());

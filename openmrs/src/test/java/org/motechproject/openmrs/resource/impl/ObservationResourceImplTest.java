@@ -79,7 +79,6 @@ public class ObservationResourceImplTest extends AbstractResourceImplTest {
     }
 
     @Test
-<<<<<<< HEAD
     public void shouldQueryForObservationByPatientIdAndConceptId() throws Exception {
         String patientId = "OOO";
         String conceptId = "CCC";
@@ -95,7 +94,8 @@ public class ObservationResourceImplTest extends AbstractResourceImplTest {
         assertThat(result, equalTo(readFromFile(OBSERVATION_QUERY_RESPONSE_JSON, ObservationListResult.class)));
         assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
         assertThat(requestCaptor.getValue().getBody(), nullValue());
-=======
+    }
+
     public void shouldCreateObservation() throws Exception {
         String observationJson = prepareObservationJson();
         ObservationFromJSON observation = prepareObservation();
@@ -134,7 +134,6 @@ public class ObservationResourceImplTest extends AbstractResourceImplTest {
         private String encounter;
         private String value;
         private List<String> groupsMembers;
->>>>>>> upstream/master
     }
 
 }
