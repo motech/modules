@@ -189,7 +189,7 @@ public class CourseStructureServiceImpl implements CourseStructureService {
 
     private void clearRelationships(List<CourseUnitDto> courses, Map<Long, Course> courseMap, Map<Long, Chapter> chapterMap, Map<Long, Lesson> lessonMap, Map<Long, Quiz> quizMap) {
         for (CourseUnitDto courseDto : courses) {
-            Course course = courseDataService.findCourseById(courseDto.getId());
+            Course course = courseDataService.detachedCopy(courseDataService.findCourseById(courseDto.getId()));
 
             if (course == null) {
                 throw new CourseUnitNotFoundException("Cannot find course with id: " + courseDto.getId());
