@@ -33,9 +33,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-/**
- * Test class for {@link CommcareReportServiceImpl}
- */
 public class CommcareReportServiceImplTest {
 
     private static final String REPORTS_LIST_METADATA_RESPONSE = "json/service/reportsListMetadataResponse.json";
@@ -75,12 +72,12 @@ public class CommcareReportServiceImplTest {
     }
 
     @Test
-    public void testReportByReportId() {
+    public void shouldGetReportById() {
         ReportDataInfo reportDataInfo = prepareReportDataInfo();
 
         when(commcareHttpClient.singleReportDataRequest(config.getAccountConfig(), REPORT_ID)).thenReturn(getResponseForReportData());
 
-        ReportDataInfo fetched = reportService.getReportByReportId(REPORT_ID);
+        ReportDataInfo fetched = reportService.getReportById(REPORT_ID);
 
         assertEquals(reportDataInfo, fetched);
 

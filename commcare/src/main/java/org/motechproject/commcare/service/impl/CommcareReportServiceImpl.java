@@ -58,7 +58,7 @@ public class CommcareReportServiceImpl implements CommcareReportService {
     }
 
     @Override
-    public ReportDataInfo getReportByReportId(String reportId, String configName) {
+    public ReportDataInfo getReportById(String reportId, String configName) {
         String response = commcareHttpClient.singleReportDataRequest(configService.getByName(configName).getAccountConfig(),
                 reportId);
 
@@ -68,8 +68,8 @@ public class CommcareReportServiceImpl implements CommcareReportService {
     }
 
     @Override
-    public ReportDataInfo getReportByReportId(String reportId) {
-        return getReportByReportId(reportId, null);
+    public ReportDataInfo getReportById(String reportId) {
+        return getReportById(reportId, null);
     }
 
     private ReportsMetadataResponseJson parseReportsFromResponse(String response) {

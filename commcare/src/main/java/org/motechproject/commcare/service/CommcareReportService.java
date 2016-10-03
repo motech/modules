@@ -29,11 +29,11 @@ public interface CommcareReportService {
      * @param configName  the name of the configuration used for connecting to CommcareHQ, null means default configuration
      * @return  the ReportDataInfo object representing the state of the report data or null if that report does not exist.
      */
-    ReportDataInfo getReportByReportId(String reportId, String configName);
+    ReportDataInfo getReportById(String reportId, String configName);
 
     /**
-     * Same as {@link #getReportByReportId(String, String) getReportByReportId} but uses default Commcare configuration.
+     * Same as {@link #getReportById(String, String) getReportById} but uses default Commcare configuration.
      */
-    ReportDataInfo getReportByReportId(String reportId);
+    ReportDataInfo getReportById(String reportId);
 
 }
