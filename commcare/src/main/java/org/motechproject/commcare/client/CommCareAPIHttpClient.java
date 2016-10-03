@@ -142,8 +142,8 @@ public class CommCareAPIHttpClient {
     /**
      * Executes a HTTP get request to the form list API endpoint.
      *
-     * @param accountConfig the account configuration to use
-     * @param formListRequest the request that will be used for creating the HTTP request
+     * @param accountConfig  the account configuration to use
+     * @param formListRequest  the request that will be used for creating the HTTP request
      * @return the response as a String (JSON expected)
      */
     public String formListRequest(AccountConfig accountConfig, FormListRequest formListRequest) {
@@ -151,9 +151,20 @@ public class CommCareAPIHttpClient {
     }
 
     /**
+     * Executes a HTTP get request to the report data API endpoint.
+     *
+     * @param accountConfig  the account configuration to use
+     * @param reportId  the ID of the report
+     * @return the response as a String (JSON expected)
+     */
+    public String singleReportDataRequest(AccountConfig accountConfig, String reportId){
+        return this.getRequest(accountConfig, commcareReportDataUrl(accountConfig, reportId), null);
+    }
+
+    /**
       * Executes a HTTP get request to the reports list API endpoint.
       *
-      * @param accountConfig the account configuration to use
+      * @param accountConfig  the account configuration to use
       * @return the response as a String (JSON expected)
       */
     public String reportsListMetadataRequest(AccountConfig accountConfig) {
@@ -532,6 +543,11 @@ public class CommCareAPIHttpClient {
     String commcareCaseUrl(AccountConfig accountConfig, String caseId) {
         return String.format("%s/%s/api/v%s/case/%s/", getCommcareBaseUrl(accountConfig.getBaseUrl()),
                 accountConfig.getDomain(), API_VERSION, caseId);
+    }
+
+    String commcareReportDataUrl(AccountConfig accountConfig, String reportId){
+        return String.format("%s/%s/api/v%s/configurablereportdata/%s/?format=json",
+                getCommcareBaseUrl(accountConfig.getBaseUrl()), accountConfig.getDomain(), API_VERSION, reportId);
     }
 
     String commcareReportsMetadataUrl(AccountConfig accountConfig) {

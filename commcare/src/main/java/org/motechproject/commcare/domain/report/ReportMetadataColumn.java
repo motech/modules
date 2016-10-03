@@ -19,7 +19,7 @@ public class ReportMetadataColumn {
     @SerializedName("type")
     private ColumnType type;
 
-    public ReportMetadataColumn() {}
+    public ReportMetadataColumn() { }
 
     public ReportMetadataColumn(String id, String display, ColumnType type) {
         this.id = id;
