@@ -13,7 +13,7 @@ public class CommcareMetadataInfo {
     private String previousPageQueryString;
     private int totalCount;
 
-    public CommcareMetadataInfo() {}
+    public CommcareMetadataInfo() { }
 
     public CommcareMetadataInfo(int limit, String nextPageQueryString, int offset, String previousPageQueryString, int totalCount) {
         this.limit = limit;

@@ -3,7 +3,6 @@ package org.motechproject.commcare.domain.report.constants;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
@@ -20,7 +19,7 @@ public enum ColumnType {
     public static class ColumnTypeDeserializer implements JsonDeserializer<ColumnType> {
 
         @Override
-        public ColumnType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        public ColumnType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
             String value = json.getAsString();
             return ColumnType.valueOf(value.toUpperCase());
         }
