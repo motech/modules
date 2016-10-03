@@ -324,6 +324,10 @@
             {
               "displayName": "openMRS.observation.valueModifier",
               "fieldKey": "valueModifier"
+            },
+            {
+              "displayName": "openMRS.observation.numberOfObservations",
+              "fieldKey": "numberOfObservations"
             }
           ]
         },

@@ -9,6 +9,7 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.openmrs.domain.Encounter;
 import org.motechproject.openmrs.domain.GeneratedIdentifier;
 import org.motechproject.openmrs.domain.Observation;
+import org.motechproject.openmrs.domain.ObservationListResult;
 import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.ProgramEnrollment;
 import org.motechproject.openmrs.domain.ProgramEnrollmentListResult;
@@ -198,18 +199,26 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     }
 
     private Observation getObservation(String lookupName, Map<String, String> lookupFields, String configName) {
-        Observation observation = null;
+        ObservationListResult observations;
+        Observation latestObservation = null;
 
         switch(lookupName) {
             case BY_PATIENT_UUID_AND_CONCEPT_UUID:
-                observation = observationService.getObservationByPatientUUIDAndConceptUUID(configName,
+                observations = observationService.getObservationByPatientUUIDAndConceptUUID(configName,
                         lookupFields.get(PATIENT_UUID), lookupFields.get(CONCEPT_UUID));
+                if (CollectionUtils.isNotEmpty(observations.getResults())) {
+                    latestObservation = observationService.getObservationByUuid(configName, observations.getResults().get(0).getUuid());
+                    latestObservation.setNumberOfObservations("1");
+                }
                 break;
             default: LOGGER.error("Lookup with name {} doesn't exist for observation object", lookupName);
                 break;
         }
-
-        return observation;
+        if (latestObservation == null) {
+            latestObservation = new Observation();
+            latestObservation.setNumberOfObservations("0");
+        }
+        return latestObservation;
     }
 
     private Provider getProvider(String lookupName, Map<String, String> lookupFields, String configName) {

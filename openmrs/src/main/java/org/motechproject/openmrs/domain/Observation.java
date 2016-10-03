@@ -38,6 +38,9 @@ public class Observation {
     private Order order;
     private String comment;
 
+    //Field used in Tasks filter
+    private String numberOfObservations;
+
     public String getUuid() {
         return uuid;
     }
@@ -160,6 +163,14 @@ public class Observation {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getNumberOfObservations () {
+        return numberOfObservations;
+    }
+
+    public void setNumberOfObservations (String numberOfObservations) {
+        this.numberOfObservations = numberOfObservations;
     }
 
     @Override

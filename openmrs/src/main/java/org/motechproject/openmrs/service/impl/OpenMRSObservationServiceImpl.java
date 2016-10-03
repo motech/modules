@@ -1,6 +1,5 @@
 package org.motechproject.openmrs.service.impl;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 import org.motechproject.event.MotechEvent;
@@ -99,18 +98,13 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
     }
 
     @Override
-    public Observation getObservationByPatientUUIDAndConceptUUID(String configName, String patientUUID, String conceptUUID) {
+    public ObservationListResult getObservationByPatientUUIDAndConceptUUID(String configName, String patientUUID, String conceptUUID) {
         Validate.notEmpty(patientUUID, "Patient uuid cannot be empty");
         Validate.notEmpty(conceptUUID, "Concept uuid cannot be empty");
-        ObservationListResult observations;
 
         try {
             Config config = configService.getConfigByName(configName);
-            observations = obsResource.getObservationByPatientUUIDAndConceptUUID(config, patientUUID, conceptUUID);
-            if (CollectionUtils.isNotEmpty(observations.getResults())) {
-                return obsResource.getObservationById(config, observations.getResults().get(0).getUuid());
-            }
-            return new Observation();
+            return obsResource.getObservationByPatientUUIDAndConceptUUID(config, patientUUID, conceptUUID);
         } catch (HttpClientErrorException e) {
             LOGGER.error("Error while fetching observations with Patient uuid: " + patientUUID + " and Concept uuid: " + conceptUUID);
             return null;
