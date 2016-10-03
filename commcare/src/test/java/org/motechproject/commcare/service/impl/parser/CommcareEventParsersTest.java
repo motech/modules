@@ -100,7 +100,7 @@ public class CommcareEventParsersTest {
         String parsedSubject = formsEventParser.parseEventSubject(eventSubject, eventParameters);
 
         assertEquals(EventSubjects.FORMS_EVENT, eventSubject);
-        assertEquals(EventSubjects.FORMS_EVENT + "." + config.getName() + "." + DummyCommcareSchema.XMLNS1, parsedSubject);
+        assertEquals(EventSubjects.FORMS_EVENT + "." + config.getName() + "." + DummyCommcareSchema.XMLNS1 + DummyCommcareSchema.APP_ID1, parsedSubject);
     }
 
     @Test
