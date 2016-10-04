@@ -63,7 +63,7 @@ public class FormActionBuilder implements ActionBuilder {
                             application.getApplicationName(), config.getName());
                     ActionEventRequestBuilder actionBuilder = new ActionEventRequestBuilder()
                             .setDisplayName(displayName)
-                            .setSubject(EventSubjects.SUBMIT_FORM + "." + form.getXmlns() + "." + config.getName())
+                            .setSubject(EventSubjects.SUBMIT_FORM + "." + form.getXmlns() + application.getCommcareAppId() + "." + config.getName())
                             .setActionParameters(parameters);
                     actions.add(actionBuilder.createActionEventRequest());
                 }
