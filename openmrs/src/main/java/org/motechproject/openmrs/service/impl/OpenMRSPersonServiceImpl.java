@@ -54,7 +54,7 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
 
             return saved;
         } catch (HttpClientErrorException e) {
-            throw new OpenMRSException("Failed to create person for: " + person.getDisplay(), e);
+            throw new OpenMRSException(String.format("Failed to create person for: %s. %s %s", person.getDisplay(), e.getMessage(), e.getResponseBodyAsString()), e);
         }
     }
 
@@ -124,7 +124,8 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
 
             return updated;
         } catch (HttpClientErrorException e) {
-            throw new OpenMRSException("Failed to update a person in OpenMRS with id: " + person.getUuid(), e);
+            throw new OpenMRSException(String.format("Failed to update a person in OpenMRS with uuid: %s. %s %s", person.getUuid(),
+                    e.getMessage(), e.getResponseBodyAsString()), e);
         }
     }
 
@@ -145,6 +146,8 @@ public class OpenMRSPersonServiceImpl implements OpenMRSPersonService {
                 personResource.createPersonAttribute(config, person.getUuid(), attribute);
             } catch (HttpClientErrorException e) {
                 LOGGER.warn("Unable to add attribute to person with id: " + person.getUuid());
+                throw new OpenMRSException(String.format("Could not add an attribute with uuid: %s to Person with uuid: %s. %s %s", attribute.getUuid(),
+                        person.getUuid(), e.getMessage(), e.getResponseBodyAsString()), e);
             }
         }
     }
