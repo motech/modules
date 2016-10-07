@@ -13,7 +13,7 @@ public class ReportsMetadataInfo {
     private List<ReportMetadataInfo> reportMetadataInfoList;
     private CommcareMetadataInfo metadataInfo;
 
-    public ReportsMetadataInfo() {}
+    public ReportsMetadataInfo() { }
 
     public ReportsMetadataInfo(List<ReportMetadataInfo> reportMetadataInfoList, CommcareMetadataInfo metadataInfo) {
         this.reportMetadataInfoList = reportMetadataInfoList;

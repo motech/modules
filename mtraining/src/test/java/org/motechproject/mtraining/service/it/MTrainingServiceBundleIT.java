@@ -61,7 +61,6 @@ public class MTrainingServiceBundleIT extends BasePaxIT {
     @Inject
     private QuizDataService quizDataService;
 
-
     @Before
     public void setup() {
         getLogger().info("setup");
@@ -206,17 +205,23 @@ public class MTrainingServiceBundleIT extends BasePaxIT {
         assertEquals(firstCourse.getChapters().size(), secondCourse.getChapters().size());
     }
 
-    @Ignore
+    @Test
     public void testCourseChapterUpdate() throws Exception {
-        Course firstCourse = mTrainingService.createCourse(generateFullCourse("testSharedChapter"));
+        courseDataService.doInTransaction(new TransactionCallback<Course>() {
+            @Override
+            public Course doInTransaction(TransactionStatus transactionStatus) {
+                Course firstCourse = mTrainingService.createCourse(generateFullCourse("testSharedChapter"));
 
-        Chapter chapterToUpdate = firstCourse.getChapters().get(0);
-        chapterToUpdate.setState(CourseUnitState.Inactive);
-        Chapter updatedChapter = mTrainingService.updateChapter(chapterToUpdate);
-        firstCourse = mTrainingService.getCourseById(firstCourse.getId());
+                Chapter chapterToUpdate = firstCourse.getChapters().get(0);
+                chapterToUpdate.setState(CourseUnitState.Inactive);
+                Chapter updatedChapter = mTrainingService.updateChapter(chapterToUpdate);
+                firstCourse = mTrainingService.getCourseById(firstCourse.getId());
 
-        assertEquals(firstCourse.getChapters().get(0).getId(), updatedChapter.getId());
-        assertEquals(firstCourse.getChapters().get(0).getState(), updatedChapter.getState());
+                assertEquals(firstCourse.getChapters().get(0).getId(), updatedChapter.getId());
+                assertEquals(firstCourse.getChapters().get(0).getState(), updatedChapter.getState());
+                return firstCourse;
+            }
+        });
     }
 
     @Test
@@ -229,16 +234,22 @@ public class MTrainingServiceBundleIT extends BasePaxIT {
         assertEquals(CourseUnitState.Inactive, updated.getState());
     }
 
-    @Ignore
+    @Test
     public void testCourseUpdateAddChapter() throws Exception {
-        Course firstCourse = mTrainingService.createCourse(generateFullCourse("testCourseUpdateAddChapter"));
-        assertEquals(2, firstCourse.getChapters().size());
+       courseDataService.doInTransaction(new TransactionCallback<Course>() {
+            @Override
+            public Course doInTransaction(TransactionStatus transactionStatus) {
+                Course firstCourse = courseDataService.detachedCopy(mTrainingService.createCourse(generateFullCourse("testCourseUpdateAddChapter")));
+                assertEquals(2, firstCourse.getChapters().size());
 
-        Chapter newChapter = new Chapter("newChapter", CourseUnitState.Active, "newChapterContent", null, null);
-        firstCourse.getChapters().add(newChapter);
+                Chapter newChapter = new Chapter("newChapter", CourseUnitState.Active, "newChapterContent", null, null);
+                firstCourse.getChapters().add(newChapter);
 
-        Course updated = mTrainingService.updateCourse(firstCourse);
-        assertEquals(3, updated.getChapters().size());
+                Course updated = mTrainingService.updateCourse(firstCourse);
+                assertEquals(3, updated.getChapters().size());
+                return updated;
+            }
+        });
     }
 
     @Test
