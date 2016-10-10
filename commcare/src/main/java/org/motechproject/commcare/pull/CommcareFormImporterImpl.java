@@ -11,7 +11,6 @@ import org.motechproject.commcare.events.MalformedFormStatusMessageEvent;
 import org.motechproject.commcare.request.FormListRequest;
 import org.motechproject.commcare.service.CommcareFormService;
 import org.motechproject.commons.api.Range;
-import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
