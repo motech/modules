@@ -99,9 +99,13 @@ public class FormTriggerBuilder implements TriggerBuilder {
         String formName = form.getFormName();
 
         String displayName = DisplayNameHelper.buildDisplayName(RECEIVED_FORM, formName, applicationName, config.getName());
-
-        return new TriggerEventRequest(displayName, FORMS_EVENT + "." + config.getName() + "." + form.getXmlns() + application.getCommcareAppId(),
-                null, buildTriggerParameters(form), FORMS_EVENT);
+        if (application.getCommcareAppId() != null) {
+            return new TriggerEventRequest(displayName, FORMS_EVENT + "." + config.getName() + "." + form.getXmlns() + application.getCommcareAppId(),
+                    null, buildTriggerParameters(form), FORMS_EVENT);
+        } else {
+            return new TriggerEventRequest(displayName, FORMS_EVENT + "." + config.getName() + "." + form.getXmlns(),
+                    null, buildTriggerParameters(form), FORMS_EVENT);
+        }
     }
 
     private List<EventParameterRequest> buildTriggerParameters(FormSchemaJson form) {

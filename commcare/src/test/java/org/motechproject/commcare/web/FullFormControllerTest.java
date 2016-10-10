@@ -130,7 +130,7 @@ public class FullFormControllerTest {
         assertEquals("1", attributes.get("uiVersion"));
         assertEquals("41", attributes.get("version"));
         assertEquals(ResponseXML.FORM_NAME, attributes.get("name"));
-        assertEquals(DummyCommcareSchema.XMLNS1 + DummyCommcareSchema.APP_ID1, attributes.get("xmlns"));
+        assertEquals(DummyCommcareSchema.XMLNS1, attributes.get("xmlns"));
 
         Multimap<String, Object> subElements = (Multimap<String, Object>) parameters.get(SUB_ELEMENTS);
         assertEquals(5, subElements.size());

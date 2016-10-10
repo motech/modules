@@ -111,6 +111,11 @@ public class FormTriggerBuilderTest {
                     assertEquals("Received Form: form4 [app2: ConfigOne]", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION5));
                     break;
+                case BASE_SUBJECT_ONE + "." + XMLNS1:
+                    assertEquals(1 + FORM_PREDEFINED_FIELDS, request.getEventParameters().size());
+                    assertEquals("Received Form: form5 [app3: ConfigOne]", request.getDisplayName());
+                    assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION5));
+                    break;
                 case BASE_SUBJECT_TWO + "." + XMLNS5 + APP_ID1:
                     assertEquals(1 + FORM_PREDEFINED_FIELDS, request.getEventParameters().size());
                     assertEquals("Received Form: form5 [app1: ConfigTwo]", request.getDisplayName());

@@ -11,6 +11,7 @@ import org.motechproject.commcare.events.MalformedFormStatusMessageEvent;
 import org.motechproject.commcare.request.FormListRequest;
 import org.motechproject.commcare.service.CommcareFormService;
 import org.motechproject.commons.api.Range;
+import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -196,6 +197,7 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
     private void importFormList(CommcareFormList formList) {
         // iterate backwards
         for (CommcareForm form : Lists.reverse(formList.getObjects())) {
+            form.getForm().addAttribute("app_id", form.getAppId());
             FullFormEvent formEvent = new FullFormEvent(form.getForm(), form.getReceivedOn(), form.getConfigName());
 
             lastFormXMLNSToBeImported = formEvent.getAttributes().get("xmlns");

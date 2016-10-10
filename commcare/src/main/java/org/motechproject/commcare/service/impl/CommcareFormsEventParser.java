@@ -54,7 +54,12 @@ public class CommcareFormsEventParser implements TasksEventParser {
 
         if (eventSubject.equals(FORMS_EVENT)) {
             String xmlns = (String) ((Map) eventParameters.get(ATTRIBUTES)).get("xmlns");
-            return eventSubject.concat(".").concat(configName).concat(".").concat(xmlns);
+            String appId = (String) ((Map) eventParameters.get(ATTRIBUTES)).get("app_id");
+            if (appId != null) {
+                return eventSubject.concat(".").concat(configName).concat(".").concat(xmlns).concat(appId);
+            } else {
+                return eventSubject.concat(".").concat(configName).concat(".").concat(xmlns);
+            }
         }
 
         return eventSubject.concat(".").concat(configName);
