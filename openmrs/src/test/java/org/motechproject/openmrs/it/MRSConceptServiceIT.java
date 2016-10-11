@@ -1,5 +1,6 @@
 package org.motechproject.openmrs.it;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +11,7 @@ import org.motechproject.event.listener.EventListenerRegistryService;
 import org.motechproject.openmrs.domain.Concept;
 import org.motechproject.openmrs.domain.ConceptName;
 import org.motechproject.openmrs.exception.ConceptNameAlreadyInUseException;
+import org.motechproject.openmrs.exception.OpenMRSException;
 import org.motechproject.openmrs.service.EventKeys;
 import org.motechproject.openmrs.service.OpenMRSConceptService;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -27,7 +29,6 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.motechproject.openmrs.util.TestConstants.DEFAULT_CONFIG_NAME;
 
@@ -96,10 +97,17 @@ public class MRSConceptServiceIT extends BasePaxIT {
 
     @Test
     public void shouldDeleteConcept() throws InterruptedException, ConceptNameAlreadyInUseException {
+        Boolean isOpenMRSExceptionThrown = Boolean.FALSE;
 
         synchronized (lock) {
             conceptAdapter.deleteConcept(DEFAULT_CONFIG_NAME, conceptOne.getUuid());
-            assertNull(conceptAdapter.getConceptByUuid(DEFAULT_CONFIG_NAME, conceptOne.getUuid()));
+            try {
+                conceptAdapter.getConceptByUuid(DEFAULT_CONFIG_NAME, conceptOne.getUuid());
+            } catch (OpenMRSException e) {
+                isOpenMRSExceptionThrown = Boolean.TRUE;
+            }
+
+            assertTrue(isOpenMRSExceptionThrown);
 
             lock.wait(60000);
         }
@@ -187,10 +195,17 @@ public class MRSConceptServiceIT extends BasePaxIT {
     }
 
     private void deleteConcept(Concept concept) throws InterruptedException {
+        Boolean isOpenMRSExceptionThrown = Boolean.FALSE;
 
         conceptAdapter.deleteConcept(DEFAULT_CONFIG_NAME, concept.getUuid());
-        assertNull(conceptAdapter.getConceptByUuid(DEFAULT_CONFIG_NAME, concept.getUuid()));
 
+        try {
+            conceptAdapter.getConceptByUuid(DEFAULT_CONFIG_NAME, concept.getUuid());
+        } catch (OpenMRSException e) {
+            isOpenMRSExceptionThrown = Boolean.TRUE;
+        }
+
+        assertTrue(isOpenMRSExceptionThrown);
     }
 
     public class MrsListener implements EventListener {
