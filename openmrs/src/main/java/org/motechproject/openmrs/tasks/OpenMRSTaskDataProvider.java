@@ -206,17 +206,10 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
             case BY_PATIENT_UUID_AND_CONCEPT_UUID:
                 observations = observationService.getObservationByPatientUUIDAndConceptUUID(configName,
                         lookupFields.get(PATIENT_UUID), lookupFields.get(CONCEPT_UUID));
-                if (CollectionUtils.isNotEmpty(observations.getResults())) {
-                    latestObservation = observationService.getObservationByUuid(configName, observations.getResults().get(0).getUuid());
-                    latestObservation.setNumberOfObservations("1");
-                }
+                latestObservation = getLatestObservation(configName, observations);
                 break;
             default: LOGGER.error("Lookup with name {} doesn't exist for observation object", lookupName);
                 break;
-        }
-        if (latestObservation == null) {
-            latestObservation = new Observation();
-            latestObservation.setNumberOfObservations("0");
         }
         return latestObservation;
     }
@@ -309,6 +302,20 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
 
     private GeneratedIdentifier getIdentifier(Map<String, String> lookupFields, String configName) {
         return generatedIdentifierService.getLatestIdentifier(configName, lookupFields.get(IDENTIFIER_SOURCE_NAME));
+    }
+
+    private Observation getLatestObservation(String configName, ObservationListResult observations) {
+        Observation latestObservation;
+
+        if (CollectionUtils.isNotEmpty(observations.getResults())) {
+            latestObservation = observationService.getObservationByUuid(configName, observations.getResults().get(0).getUuid());
+            latestObservation.setNumberOfObservations("1");
+        } else {
+            latestObservation = new Observation();
+            latestObservation.setNumberOfObservations("0");
+        }
+
+        return latestObservation;
     }
 
     private List<ProgramEnrollment> filterPrograms(List<ProgramEnrollment> programEnrollments, String programName, String activeProgram) {

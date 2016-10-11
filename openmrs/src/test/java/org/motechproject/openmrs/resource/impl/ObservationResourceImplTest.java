@@ -93,7 +93,6 @@ public class ObservationResourceImplTest extends AbstractResourceImplTest {
 
         assertThat(result, equalTo(readFromFile(OBSERVATION_QUERY_RESPONSE_JSON, ObservationListResult.class)));
         assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
-        assertThat(requestCaptor.getValue().getBody(), nullValue());
     }
 
     public void shouldCreateObservation() throws Exception {

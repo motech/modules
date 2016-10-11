@@ -106,8 +106,8 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
             Config config = configService.getConfigByName(configName);
             return obsResource.getObservationByPatientUUIDAndConceptUUID(config, patientUUID, conceptUUID);
         } catch (HttpClientErrorException e) {
-            LOGGER.error("Error while fetching observations with Patient uuid: " + patientUUID + " and Concept uuid: " + conceptUUID);
-            return null;
+            throw new OpenMRSException(String.format("Could not get Observation for Patient uuid: %s and Concept: %s. %s %s",
+                    patientUUID, conceptUUID, e.getMessage(), e.getResponseBodyAsString()), e);
         }
     }
 
