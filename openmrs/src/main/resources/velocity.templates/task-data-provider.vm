@@ -253,6 +253,85 @@
           ]
         },
         {
+          "displayName": "Observation [$config.getName()]",
+          "type": "Observation-$config.getName()",
+          "lookupFields": [
+            {
+              "displayName": "openMRS.lookup.patientUuidAndConceptUuid",
+              "fields": [
+                "openMRS.patient.uuid",
+                "openMRS.concept.uuid"
+              ]
+            }
+          ],
+          "fields": [
+            {
+              "displayName": "openMRS.observation.uuid",
+              "fieldKey": "uuid"
+            },
+            {
+              "displayName": "openMRS.observation.display",
+              "fieldKey": "display"
+            },
+            {
+              "displayName": "openMRS.concept.uuid",
+              "fieldKey": "concept.uuid"
+            },
+            {
+              "displayName": "openMRS.person.uuid",
+              "fieldKey": "person.uuid"
+            },
+            {
+              "displayName": "openMRS.observation.obsDatetime",
+              "fieldKey": "obsDatetime"
+            },
+            {
+              "displayName": "openMRS.observation.obsGroup",
+              "fieldKey": "obsGroup"
+            },
+            {
+              "displayName": "openMRS.observation.valueCodedName",
+              "fieldKey": "valueCodedName"
+            },
+            {
+              "displayName": "openMRS.observation.groupsMembers",
+              "fieldKey": "groupsMembers"
+            },
+            {
+              "displayName": "openMRS.location.uuid",
+              "fieldKey": "location.uuid"
+            },
+            {
+              "displayName": "openMRS.location.display",
+              "fieldKey": "location.display"
+            },
+            {
+              "displayName": "openMRS.observation.orderUuid",
+              "fieldKey": "order.uuid"
+            },
+            {
+              "displayName": "openMRS.encounter.uuid",
+              "fieldKey": "encounter.uuid"
+            },
+            {
+              "displayName": "openMRS.observation.voided",
+              "fieldKey": "voided"
+            },
+            {
+              "displayName": "openMRS.observation.value",
+              "fieldKey": "value.display"
+            },
+            {
+              "displayName": "openMRS.observation.valueModifier",
+              "fieldKey": "valueModifier"
+            },
+            {
+              "displayName": "openMRS.observation.numberOfObservations",
+              "fieldKey": "numberOfObservations"
+            }
+          ]
+        },
+        {
           "displayName": "Relationship [$config.getName()]",
           "type": "Relationship-$config.getName()",
           "lookupFields": [
