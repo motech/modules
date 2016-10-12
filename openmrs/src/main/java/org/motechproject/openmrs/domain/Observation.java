@@ -8,7 +8,6 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import org.motechproject.openmrs.util.JsonUtils;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
@@ -31,8 +30,16 @@ public class Observation {
     private Date obsDatetime;
     private Person person;
     private List<Observation> groupsMembers;
-
+    private Boolean voided;
+    private String valueModifier;
+    private String valueCodedName;
+    private String obsGroup;
+    private Location location;
+    private Order order;
     private String comment;
+
+    //Field used in Tasks filter
+    private String numberOfObservations;
 
     public String getUuid() {
         return uuid;
@@ -102,6 +109,54 @@ public class Observation {
         this.groupsMembers = groupsMembers;
     }
 
+    public Boolean getVoided () {
+        return voided;
+    }
+
+    public void setVoided (Boolean voided) {
+        this.voided = voided;
+    }
+
+    public String getValueModifier () {
+        return valueModifier;
+    }
+
+    public void setValueModifier (String valueModifier) {
+        this.valueModifier = valueModifier;
+    }
+
+    public String getValueCodedName () {
+        return valueCodedName;
+    }
+
+    public void setValueCodedName (String valueCodedName) {
+        this.valueCodedName = valueCodedName;
+    }
+
+    public String getObsGroup () {
+        return obsGroup;
+    }
+
+    public void setObsGroup (String obsGroup) {
+        this.obsGroup = obsGroup;
+    }
+
+    public Location getLocation () {
+        return location;
+    }
+
+    public void setLocation (Location location) {
+        this.location = location;
+    }
+
+    public Order getOrder () {
+        return order;
+    }
+
+    public void setOrder (Order order) {
+        this.order = order;
+    }
+
     public String getComment() {
         return comment;
     }
@@ -110,9 +165,18 @@ public class Observation {
         this.comment = comment;
     }
 
+    public String getNumberOfObservations () {
+        return numberOfObservations;
+    }
+
+    public void setNumberOfObservations (String numberOfObservations) {
+        this.numberOfObservations = numberOfObservations;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, display, concept, encounter, value, obsDatetime, person, groupsMembers, comment);
+        return Objects.hash(uuid, display, concept, encounter, value, obsDatetime, person, groupsMembers, voided,
+                valueModifier, valueCodedName, obsGroup, location, order, comment);
     }
 
     @Override //NO CHECKSTYLE Cyclomatic Complexity
@@ -131,6 +195,9 @@ public class Observation {
                 && Objects.equals(concept, other.concept) && Objects.equals(encounter, other.encounter)
                 && Objects.equals(value, other.value) && Objects.equals(obsDatetime, other.obsDatetime)
                 && Objects.equals(person, other.person) && Objects.equals(groupsMembers, other.groupsMembers)
+                && Objects.equals(voided, other.voided) && Objects.equals(valueModifier, other.valueModifier)
+                && Objects.equals(valueCodedName, other.valueCodedName) && Objects.equals(obsGroup, other.obsGroup)
+                && Objects.equals(location, other.location) && Objects.equals(order, other.order)
                 && Objects.equals(comment, other.comment);
     }
 
@@ -211,19 +278,23 @@ public class Observation {
     }
 
     /**
-     * Implementation of the {@link JsonDeserializer} interface for the
-     * {@link Observation.ObservationValue} class.
-     */
+    * Implementation of the {@link JsonDeserializer} interface for the
+    * {@link Observation.ObservationValue} class.
+    */
     public static class ObservationValueDeserializer implements JsonDeserializer<ObservationValue> {
-
         @Override
-        public ObservationValue deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            String value = json.getAsString();
-            JsonObject valueObject = new JsonObject();
-            valueObject.addProperty(DISPLAY_KEY, value);
+        public ObservationValue deserialize (JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            ObservationValue observationValue = new ObservationValue(null);
 
-            return (ObservationValue) JsonUtils.readJson(valueObject.toString(), ObservationValue.class);
+            if (json.isJsonObject()) {
+                JsonObject jsonObject = json.getAsJsonObject();
+                observationValue.setDisplay(jsonObject.get(DISPLAY_KEY).getAsString());
+            } else if (json.isJsonPrimitive()) {
+                JsonPrimitive jsonPrimitive = json.getAsJsonPrimitive();
+                observationValue.setDisplay(jsonPrimitive.getAsString());
+            }
+
+            return observationValue;
         }
     }
-
 }

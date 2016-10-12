@@ -1,6 +1,7 @@
 package org.motechproject.openmrs.service;
 
 import org.motechproject.openmrs.domain.Observation;
+import org.motechproject.openmrs.domain.ObservationListResult;
 import org.motechproject.openmrs.exception.ObservationNotFoundException;
 
 import java.util.List;
@@ -52,6 +53,17 @@ public interface OpenMRSObservationService {
      * @return the observation with the given UUID, null if the observation doesn't exist
      */
     Observation getObservationByUuid(String configName, String uuid);
+
+    /**
+     * Returns the observation with given {@code uuid}. Configuration with the given {@code configName} will be used
+     * while performing this action.
+     *
+     * @param configName  the name of the configuration
+     * @param patientUUID the UUID of the patient
+     * @param conceptUUID the UUID of the concept
+     * @return the latest observation with the given patientUUID and conceptUUID, null if the observation doesn't exist
+     */
+    ObservationListResult getObservationByPatientUUIDAndConceptUUID(String configName, String patientUUID, String conceptUUID);
 
     /**
      * Creates the given {@code observation} on the OpenMRS server. Configuration with the given {@code configName} will
