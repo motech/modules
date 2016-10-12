@@ -22,6 +22,7 @@ import org.motechproject.openmrs.domain.Visit;
 import org.motechproject.openmrs.domain.VisitType;
 import org.motechproject.openmrs.exception.ConceptNameAlreadyInUseException;
 import org.motechproject.openmrs.exception.HttpException;
+import org.motechproject.openmrs.exception.OpenMRSException;
 import org.motechproject.openmrs.exception.PatientNotFoundException;
 import org.motechproject.openmrs.service.EventKeys;
 import org.motechproject.openmrs.service.OpenMRSConceptService;
@@ -46,7 +47,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
-import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -149,10 +149,18 @@ public class MRSEncounterServiceIT extends BasePaxIT {
 
     @Test
     public void shouldDeleteEncounter() throws InterruptedException {
+        Boolean isopenMRSExceptionThrown = Boolean.FALSE;
 
         synchronized (lock) {
             encounterAdapter.deleteEncounter(DEFAULT_CONFIG_NAME, encounter.getUuid());
-            assertNull(encounterAdapter.getEncounterByUuid(DEFAULT_CONFIG_NAME, encounter.getUuid()));
+
+            try {
+                encounterAdapter.getEncounterByUuid(DEFAULT_CONFIG_NAME, encounter.getUuid());
+            } catch (OpenMRSException e) {
+                isopenMRSExceptionThrown = Boolean.TRUE;
+            }
+
+            assertTrue(isopenMRSExceptionThrown);
 
             lock.wait(60000);
         }

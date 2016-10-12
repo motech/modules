@@ -2,6 +2,7 @@ package org.motechproject.openmrs.service.impl;
 
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.Provider;
+import org.motechproject.openmrs.exception.OpenMRSException;
 import org.motechproject.openmrs.resource.ProviderResource;
 import org.motechproject.openmrs.service.OpenMRSConfigService;
 import org.motechproject.openmrs.service.OpenMRSProviderService;
@@ -43,8 +44,7 @@ public class OpenMRSProviderServiceImpl implements OpenMRSProviderService {
             Config config = configService.getConfigByName(configName);
             return providerResource.getByUuid(config, uuid);
         } catch (HttpClientErrorException e) {
-            LOGGER.error("Error while fetching provider with UUID: " + uuid);
-            return null;
+            throw new OpenMRSException(String.format("Could not get Provider for uuid: %s. %s %s", uuid, e.getMessage(), e.getResponseBodyAsString()), e);
         }
     }
 

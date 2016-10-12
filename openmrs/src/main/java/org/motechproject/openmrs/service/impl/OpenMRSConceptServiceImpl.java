@@ -104,8 +104,7 @@ public class OpenMRSConceptServiceImpl implements OpenMRSConceptService {
             Config config = configService.getConfigByName(configName);
             concept = conceptResource.getConceptById(config, uuid);
         } catch (HttpClientErrorException e) {
-            LOGGER.error("Failed to get concept with ID " + uuid);
-            concept = null;
+            throw new OpenMRSException(String.format("Could not get Concept for uuid: %s. %s %s", uuid, e.getMessage(), e.getResponseBodyAsString()), e);
         }
 
         return concept;

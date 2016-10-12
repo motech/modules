@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service("encounterService")
@@ -88,7 +87,7 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
             Config config = configService.getConfigByName(configName);
             return encounterResource.getEncounterById(config, uuid);
         } catch (HttpClientErrorException e) {
-            return null;
+            throw new OpenMRSException(String.format("Could not get encounter with uuid: %s. %s %s", uuid, e.getMessage(), e.getResponseBodyAsString()), e);
         }
     }
 
@@ -182,8 +181,7 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
         try {
             result = encounterResource.queryForAllEncountersByPatientId(config, patient.getUuid()).getResults();
         } catch (HttpClientErrorException e) {
-            LOGGER.error("Error retrieving encounters for patient: " + patient.getUuid());
-            return Collections.emptyList();
+            throw new OpenMRSException(String.format("Could not get encounters for patient with uuid: %s. %s %s", patient.getUuid(), e.getMessage(), e.getResponseBodyAsString()), e);
         }
 
         return result;
