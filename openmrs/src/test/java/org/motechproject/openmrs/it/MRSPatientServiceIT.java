@@ -16,6 +16,7 @@ import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.Person;
 import org.motechproject.openmrs.exception.ConceptNameAlreadyInUseException;
 import org.motechproject.openmrs.exception.HttpException;
+import org.motechproject.openmrs.exception.OpenMRSException;
 import org.motechproject.openmrs.exception.PatientNotFoundException;
 import org.motechproject.openmrs.service.EventKeys;
 import org.motechproject.openmrs.service.OpenMRSConceptService;
@@ -184,10 +185,18 @@ public class MRSPatientServiceIT extends BasePaxIT {
 
     @Test
     public void shouldDeletePatient() throws PatientNotFoundException, InterruptedException {
+        Boolean isOpenMRSExceptionThrown = Boolean.FALSE;
 
         synchronized (lock) {
             patientAdapter.deletePatient(DEFAULT_CONFIG_NAME, patient.getUuid());
-            assertNull(patientAdapter.getPatientByUuid(DEFAULT_CONFIG_NAME, patient.getUuid()));
+
+            try {
+                    patientAdapter.getPatientByUuid(DEFAULT_CONFIG_NAME, patient.getUuid());
+                } catch (OpenMRSException e) {
+                    isOpenMRSExceptionThrown = Boolean.TRUE;
+                }
+
+            assertTrue(isOpenMRSExceptionThrown);
 
             lock.wait(60000);
         }
@@ -255,9 +264,17 @@ public class MRSPatientServiceIT extends BasePaxIT {
     private void deletePatient(Patient patient) throws PatientNotFoundException, InterruptedException {
 
         String locationId = patient.getLocationForMotechId().getUuid();
+        Boolean isOpenMRSExceptionThrown = Boolean.FALSE;
 
         patientAdapter.deletePatient(DEFAULT_CONFIG_NAME, patient.getUuid());
-        assertNull(patientAdapter.getPatientByUuid(DEFAULT_CONFIG_NAME, patient.getUuid()));
+
+        try {
+            patientAdapter.getPatientByUuid(DEFAULT_CONFIG_NAME, patient.getUuid());
+        } catch (OpenMRSException e) {
+            isOpenMRSExceptionThrown = Boolean.TRUE;
+        }
+
+        assertTrue(isOpenMRSExceptionThrown);
 
         locationAdapter.deleteLocation(DEFAULT_CONFIG_NAME, locationId);
     }

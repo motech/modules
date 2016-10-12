@@ -2,19 +2,16 @@ package org.motechproject.openmrs.service.impl;
 
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.Form;
+import org.motechproject.openmrs.exception.OpenMRSException;
 import org.motechproject.openmrs.resource.FormResource;
 import org.motechproject.openmrs.service.OpenMRSConfigService;
 import org.motechproject.openmrs.service.OpenMRSFormService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 @Service("formService")
 public class OpenMRSFormServiceImpl implements OpenMRSFormService {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSFormServiceImpl.class);
 
     @Autowired
     private final OpenMRSConfigService configService;
@@ -32,8 +29,7 @@ public class OpenMRSFormServiceImpl implements OpenMRSFormService {
             Config config = configService.getConfigByName(configName);
             return formResource.getFormByUuid(config, uuid);
         } catch (HttpClientErrorException e) {
-            LOGGER.error("Error while fetching form with UUID: " + uuid);
-            return null;
+            throw new OpenMRSException(String.format("Could not get Form for uuid %s. %s %s", uuid, e.getMessage(), e.getResponseBodyAsString()), e);
         }
     }
 }
