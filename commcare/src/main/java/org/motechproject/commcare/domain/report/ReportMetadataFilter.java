@@ -20,7 +20,7 @@ public class ReportMetadataFilter {
     @SerializedName("type")
     private FilterType type;
 
-    public ReportMetadataFilter() {}
+    public ReportMetadataFilter() { }
 
     public ReportMetadataFilter(FilterDataType datatype, String slug, FilterType type) {
         this.datatype = datatype;

@@ -64,8 +64,12 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         Config config = configService.getConfigByName(configName);
 
         if (patient.getPerson().getUuid() == null) {
-            personResource.checkPersonAttributeTypes(config, patient.getPerson());
-            patient.setPerson(personResource.createPerson(config, patient.getPerson()));
+            try {
+                personResource.checkPersonAttributeTypes(config, patient.getPerson());
+                patient.setPerson(personResource.createPerson(config, patient.getPerson()));
+            } catch (HttpClientErrorException e) {
+                throw new OpenMRSException(String.format("Could not create Person. %s %s", e.getMessage(), e.getResponseBodyAsString()), e);
+            }
         }
 
         IdentifierType identifierType = new IdentifierType();
@@ -84,8 +88,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
 
             return savedPatient;
         } catch (HttpClientErrorException e) {
-            LOGGER.error("Failed to create a patient in OpenMRS with MOTECH Id: " + patient.getMotechId());
-            return null;
+            throw new OpenMRSException(String.format("Could not create Patient. %s %s", e.getMessage(), e.getResponseBodyAsString()), e);
         }
     }
 
@@ -189,8 +192,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         try {
             patient = patientResource.getPatientById(config, uuid);
         } catch (HttpClientErrorException e) {
-            LOGGER.error("Failed to get patient by id: " + uuid);
-            return null;
+            throw new OpenMRSException(String.format("Could not get Patient with uuid: %s. %s %s", uuid, e.getMessage(), e.getResponseBodyAsString()), e);
         }
 
         Identifier motechIdentifier = getMotechIdentifier(config, patient);
@@ -212,8 +214,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         try {
             patientList = patientResource.queryForPatient(config, motechId);
         } catch (HttpClientErrorException e) {
-            LOGGER.error("Failed search for patient by MOTECH Id: " + motechId);
-            return null;
+            throw new OpenMRSException(String.format("Could not get Patient for MOTECH Id: %s. %s %s", motechId, e.getMessage(), e.getResponseBodyAsString()), e);
         }
 
         if (patientList.getResults().size() == 0) {
@@ -244,7 +245,8 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
             updatedPatient = getPatientByUuid(config, patient.getUuid());
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.UPDATED_PATIENT_SUBJECT, EventHelper.patientParameters(updatedPatient)));
         } catch (HttpClientErrorException e) {
-            throw new OpenMRSException("Failed to update OpenMRS patient with id: " + patient.getUuid(), e);
+            throw new OpenMRSException(String.format("Failed to update OpenMRS patient with uuid: %s. %s %s" + patient.getUuid(), e.getMessage(),
+                    e.getResponseBodyAsString()), e);
         }
 
         return updatedPatient;
@@ -262,7 +264,8 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
             updatedPatient = getPatientByUuid(config, patient.getUuid());
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.UPDATED_PATIENT_IDENTIFIERS_SUBJECT, EventHelper.patientParameters(updatedPatient)));
         } catch (HttpClientErrorException e) {
-            throw new OpenMRSException("Failed to update OpenMRS patient's identifiers for patient with id: " + patient.getUuid(), e);
+            throw new OpenMRSException(String.format("Failed to update OpenMRS patient's identifiers for patient with uuid: %s. %s %s", patient.getUuid(),
+                    e.getMessage(), e.getResponseBodyAsString()), e);
         }
         return updatedPatient;
     }
@@ -322,8 +325,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         try {
             motechPatientIdentifierTypeUuid = patientResource.getMotechPatientIdentifierUuid(config);
         } catch (HttpClientErrorException e) {
-            LOGGER.error("There was an exception retrieving the MOTECH Identifier Type UUID");
-            return null;
+            throw new OpenMRSException(String.format("Could not get Patient Identifier Type uuid. %s, %s", e.getMessage(), e.getResponseBodyAsString()), e);
         }
 
         if (motechPatientIdentifierTypeUuid == null) {
@@ -365,8 +367,8 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
                     supportedIdentifierTypeList.add(identifier);
                 }
             } catch (HttpClientErrorException e) {
-                LOGGER.error("There was an exception retrieving the identifier type with UUID {}", identifierTypeUuid);
-                return null;
+                throw new OpenMRSException(String.format("Could not get supported Identifier Type for uuid: %s. %s %s", identifierTypeUuid, e.getMessage(),
+                        e.getResponseBodyAsString()), e);
             }
         }
 
@@ -395,7 +397,8 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
                     parsedIdentifiers.add(identifier);
                 }
             } catch (HttpClientErrorException e) {
-                LOGGER.error("There was an exception retrieving the identifier type with name {}", identifierTypeName);
+                throw new OpenMRSException(String.format("Could not get Patient Identifier Type for name: %s. %s %s", identifierTypeName,
+                        e.getMessage(), e.getResponseBodyAsString()), e);
             }
         }
 
@@ -414,7 +417,8 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
             try {
                 personResource.deleteAttribute(config, person.getUuid(), attribute);
             } catch (HttpClientErrorException e) {
-                LOGGER.warn("Failed to delete attribute with name: " + attribute.getName());
+                throw new OpenMRSException(String.format("Could not delete Person's attribute for Person uuid: %s and Attribute uuid: %s. %s %s",
+                        person.getUuid(), attribute.getUuid(), e.getMessage(), e.getResponseBodyAsString()), e);
             }
         }
     }
@@ -439,6 +443,8 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
                 personResource.createPersonAttribute(config, person.getUuid(), attribute);
             } catch (HttpClientErrorException e) {
                 LOGGER.warn("Unable to add attribute to person with id: " + person.getUuid());
+                throw new OpenMRSException(String.format("Could not create Person's attribute for Person uuid: %s and Attribute uuid: %s. %s %s",
+                        person.getUuid(), attribute.getUuid(), e.getMessage(), e.getResponseBodyAsString()), e);
             }
         }
     }

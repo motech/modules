@@ -1,6 +1,7 @@
 package org.motechproject.commcare.service;
 
 import org.motechproject.commcare.domain.report.ReportsMetadataInfo;
+import org.motechproject.commcare.domain.report.ReportDataInfo;
 
 /**
  *  Responsible for interacting with CommCareHQ's Report Metadata and Data API.
@@ -20,4 +21,19 @@ public interface CommcareReportService {
      * Same as {@link #getReportsList(String)} but uses default Commcare configuration.
      */
     ReportsMetadataInfo getReportsList();
+
+    /**
+     * Query CommCareHQ for a report by its report id.
+     *
+     * @param reportId  the id of the report on CommCareHQ
+     * @param configName  the name of the configuration used for connecting to CommcareHQ, null means default configuration
+     * @return  the ReportDataInfo object representing the state of the report data or null if that report does not exist.
+     */
+    ReportDataInfo getReportById(String reportId, String configName);
+
+    /**
+     * Same as {@link #getReportById(String, String) getReportById} but uses default Commcare configuration.
+     */
+    ReportDataInfo getReportById(String reportId);
+
 }
