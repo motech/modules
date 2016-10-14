@@ -30,7 +30,9 @@ import org.motechproject.dhis2.rest.domain.DataSetDto;
 import org.motechproject.dhis2.rest.domain.DataValueSetDto;
 import org.motechproject.dhis2.rest.domain.DhisDataValueStatusResponse;
 import org.motechproject.dhis2.rest.domain.DhisEventDto;
+import org.motechproject.dhis2.rest.domain.DhisResponse;
 import org.motechproject.dhis2.rest.domain.DhisServerInfo;
+import org.motechproject.dhis2.rest.domain.DhisStatus;
 import org.motechproject.dhis2.rest.domain.DhisStatusResponse;
 import org.motechproject.dhis2.rest.domain.EnrollmentDto;
 import org.motechproject.dhis2.rest.domain.OrganisationUnitDto;
@@ -527,13 +529,17 @@ public class DhisWebServiceImpl implements DhisWebService {
         return (DhisDataValueStatusResponse) getDhisResponseForHttpResponse(json, uri, response, DhisDataValueStatusResponse.class);
     }
 
-    private Object getDhisResponseForHttpResponse(String json, String uri, CloseableHttpResponse response, Class responseType) {
-        Object status;
+    private DhisResponse getDhisResponseForHttpResponse(String json, String uri, CloseableHttpResponse response, Class responseType) {
+        DhisResponse status;
         try (InputStream content = getContentForResponse(response)) {
             String contentString = IOUtils.toString(content);
             LOGGER.debug(String.format("Received response to create resource: %s, request: %s", contentString, json));
-            status = new ObjectMapper().readValue(contentString, responseType);
-            if (status.toString().contains("ERROR")) {
+            if(responseType == DhisStatusResponse.class) {
+                status = new ObjectMapper().readValue(contentString, DhisStatusResponse.class);
+            } else {
+                status = new ObjectMapper().readValue(contentString, DhisDataValueStatusResponse.class);
+            }
+            if (status.getStatus() == DhisStatus.ERROR) {
                 String msg = String.format("Error in DHIS2 status response, error details: %s", contentString);
                 throw new DhisWebException(msg);
             }
