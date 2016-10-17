@@ -111,7 +111,7 @@ public class FormActionBuilder implements ActionBuilder {
         builder.setValue(form.getXmlns())
                 .setDisplayName("xmlns")
                 .setKey("xmlns")
-                .setOrder(order++)
+                .setOrder(order)
                 .setType(ParameterType.UNICODE.getValue())
                 .setHidden(true);
         return builder.createActionParameterRequest();
