@@ -59,7 +59,7 @@ public class CommcareFormsEventParser implements TasksEventParser {
             String xmlns = (String) ((Map) eventParameters.get(ATTRIBUTES)).get("xmlns");
             String appId = (String) ((Map) eventParameters.get(ATTRIBUTES)).get("app_id");
 
-            if (appId != null) {
+            if (appId == null) {
                 appId = "";
                 LOGGER.warn("AppId for form is null. XMLNS: {}", xmlns);
             }
