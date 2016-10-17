@@ -194,29 +194,34 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         List<TriggerEvent> triggerEvents = channel.getTriggerTaskEvents();
         List<ActionEvent> actionEvents = channel.getActionTaskEvents();
 
-        assertEquals(8, actionEvents.size());
-        assertEquals(11, triggerEvents.size());
+        assertEquals(9, actionEvents.size());
+        assertEquals(13, triggerEvents.size());
 
         TaskTriggerInformation expectedForm1 = new TaskTriggerInformation();
         TaskTriggerInformation expectedForm2 = new TaskTriggerInformation();
         TaskTriggerInformation expectedForm3 = new TaskTriggerInformation();
         TaskTriggerInformation expectedForm4 = new TaskTriggerInformation();
+        TaskTriggerInformation expectedForm5 = new TaskTriggerInformation();
         TaskTriggerInformation expectedCaseBirth = new TaskTriggerInformation();
         TaskTriggerInformation expectedCaseAppointment = new TaskTriggerInformation();
         TaskTriggerInformation expectedCaseDeath = new TaskTriggerInformation();
+        TaskTriggerInformation expectedCaseCheckup = new TaskTriggerInformation();
         TaskTriggerInformation expectedStockTx = new TaskTriggerInformation();
 
-        expectedForm1.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareSchema.XMLNS1);
+        expectedForm1.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareSchema.XMLNS1 + DummyCommcareSchema.APP_ID1);
         assertTrue(containsTrigger(channel, expectedForm1));
 
-        expectedForm2.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareSchema.XMLNS2);
+        expectedForm2.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareSchema.XMLNS2 + DummyCommcareSchema.APP_ID1);
         assertTrue(containsTrigger(channel, expectedForm2));
 
-        expectedForm3.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareSchema.XMLNS3);
+        expectedForm3.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareSchema.XMLNS3 + DummyCommcareSchema.APP_ID1);
         assertTrue(containsTrigger(channel, expectedForm3));
 
-        expectedForm4.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareSchema.XMLNS4);
+        expectedForm4.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareSchema.XMLNS4 + DummyCommcareSchema.APP_ID2);
         assertTrue(containsTrigger(channel, expectedForm4));
+
+        expectedForm5.setSubject("org.motechproject.commcare.api.forms." + config.getName() + "." + DummyCommcareSchema.XMLNS1);
+        assertTrue(containsTrigger(channel, expectedForm5));
 
         expectedCaseBirth.setSubject("org.motechproject.commcare.api.case." + config.getName() + ".birth");
         assertTrue(containsTrigger(channel, expectedCaseBirth));
@@ -226,6 +231,9 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
         expectedCaseDeath.setSubject("org.motechproject.commcare.api.case." + config.getName() + ".death");
         assertTrue(containsTrigger(channel, expectedCaseDeath));
+
+        expectedCaseCheckup.setSubject("org.motechproject.commcare.api.case." + config.getName() + ".checkup");
+        assertTrue(containsTrigger(channel, expectedCaseCheckup));
 
         expectedStockTx.setSubject(EventSubjects.RECEIVED_STOCK_TRANSACTION + '.' + config.getName());
         assertTrue(containsTrigger(channel, expectedStockTx));
@@ -250,6 +258,11 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         assertTriggerParameters(form4Trigger.getEventParameters(),
                 Arrays.asList("/data/medications", "/data/meta/username", "/data/case/create/case_type"));
 
+        TriggerEvent form5Trigger = getTrigger(channel, expectedForm5);
+        assertEquals("org.motechproject.commcare.api.forms", form5Trigger.getTriggerListenerSubject());
+        assertTriggerParameters(form5Trigger.getEventParameters(),
+                Arrays.asList("/data/medications", "/data/meta/username", "/data/case/create/case_type"));
+
         TriggerEvent caseBirthTrigger = getTrigger(channel, expectedCaseBirth);
         assertEquals("org.motechproject.commcare.api.case", caseBirthTrigger.getTriggerListenerSubject());
         assertTriggerParameters(caseBirthTrigger.getEventParameters(),
@@ -265,6 +278,11 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         assertTriggerParameters(caseDeathTrigger.getEventParameters(),
                 Arrays.asList("dod", "caseName"));
 
+        TriggerEvent caseCheckupTrigger = getTrigger(channel, expectedCaseCheckup);
+        assertEquals("org.motechproject.commcare.api.case", caseCheckupTrigger.getTriggerListenerSubject());
+        assertTriggerParameters(caseCheckupTrigger.getEventParameters(),
+                Arrays.asList("dod", "caseName"));
+
         verifyTaskAction(channel, prepareStockLedgerAction());
         verifyTaskAction(channel, prepareCreateCaseAction());
         verifyTaskAction(channel, prepareUpdateCaseAction());
@@ -272,6 +290,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         verifyTaskAction(channel, prepareSubmitForm2Action());
         verifyTaskAction(channel, prepareSubmitForm3Action());
         verifyTaskAction(channel, prepareSubmitForm4Action());
+        verifyTaskAction(channel, prepareSubmitForm5Action());
     }
 
     private void verifyTaskAction(Channel channel, ActionEvent expected) {
@@ -296,19 +315,23 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
     private void createMockCommcareSchema() {
         CommcareApplicationJson applicationJson1 = DummyCommcareSchema.getApplicationsForConfigOne().get(0);
-        applicationJson1.setCommcareAppId("123");
         applicationJson1.setApplicationName("TestApp1");
         applicationJson1.setResourceUri("none");
         applicationJson1.setConfigName(config.getName());
 
         CommcareApplicationJson applicationJson2 = DummyCommcareSchema.getApplicationsForConfigOne().get(1);
-        applicationJson2.setCommcareAppId("124");
         applicationJson2.setApplicationName("TestApp2");
         applicationJson2.setResourceUri("none");
         applicationJson2.setConfigName(config.getName());
 
+        CommcareApplicationJson applicationJson3 = DummyCommcareSchema.getApplicationsForConfigOne().get(2);
+        applicationJson3.setApplicationName("TestApp3");
+        applicationJson3.setResourceUri("none");
+        applicationJson3.setConfigName(config.getName());
+
         applicationDataService.create(applicationJson1);
         applicationDataService.create(applicationJson2);
+        applicationDataService.create(applicationJson3);
     }
 
     private HttpResponse sendMockForm() throws IOException, InterruptedException {
@@ -557,11 +580,21 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setOrder(order++);
         parameters.add(builder.build());
 
+        builder = new ActionParameterBuilder();
+        builder.setValue(DummyCommcareSchema.XMLNS1)
+                .setDisplayName("xmlns")
+                .setKey("xmlns")
+                .setOrder(order++)
+                .setType(ParameterType.UNICODE)
+                .setHidden(true)
+                .setRequired(false);
+        parameters.add(builder.build());
+
         String displayName = String.format("Submit Form: form1 [TestApp1: %s]", config.getName());
 
         ActionEventBuilder actionBuilder = new ActionEventBuilder()
                 .setDisplayName(displayName)
-                .setSubject(EventSubjects.SUBMIT_FORM + ".http://openrosa.org/formdesigner/84FA38A2-93C1-4B9E-AA2A-0E082995FF9E." + config.getName())
+                .setSubject(EventSubjects.SUBMIT_FORM + "." + DummyCommcareSchema.XMLNS1 + DummyCommcareSchema.APP_ID1 + "." + config.getName())
                 .setActionParameters(parameters);
         return actionBuilder.build();
     }
@@ -579,11 +612,21 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setOrder(order++);
         parameters.add(builder.build());
 
+        builder = new ActionParameterBuilder();
+        builder.setValue(DummyCommcareSchema.XMLNS2)
+                .setDisplayName("xmlns")
+                .setKey("xmlns")
+                .setOrder(order++)
+                .setType(ParameterType.UNICODE)
+                .setHidden(true)
+                .setRequired(false);
+        parameters.add(builder.build());
+
         String displayName = String.format("Submit Form: form2 [TestApp1: %s]", config.getName());
 
         ActionEventBuilder actionBuilder = new ActionEventBuilder()
                 .setDisplayName(displayName)
-                .setSubject(EventSubjects.SUBMIT_FORM + ".http://openrosa.org/formdesigner/12KE58A2-54C5-1Z4B-AR2S-Z0345995RF9E." + config.getName())
+                .setSubject(EventSubjects.SUBMIT_FORM + "." + DummyCommcareSchema.XMLNS2 + DummyCommcareSchema.APP_ID1 + "." + config.getName())
                 .setActionParameters(parameters);
         return actionBuilder.build();
     }
@@ -601,11 +644,21 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setOrder(order++);
         parameters.add(builder.build());
 
+        builder = new ActionParameterBuilder();
+        builder.setValue(DummyCommcareSchema.XMLNS3)
+                .setDisplayName("xmlns")
+                .setKey("xmlns")
+                .setOrder(order++)
+                .setType(ParameterType.UNICODE)
+                .setHidden(true)
+                .setRequired(false);
+        parameters.add(builder.build());
+
         String displayName = String.format("Submit Form: form3 [TestApp1: %s]", config.getName());
 
         ActionEventBuilder actionBuilder = new ActionEventBuilder()
                 .setDisplayName(displayName)
-                .setSubject(EventSubjects.SUBMIT_FORM + ".http://openrosa.org/formdesigner/22KE58A2-54C5-1Z4B-AR2S-Z0345995RF9E." + config.getName())
+                .setSubject(EventSubjects.SUBMIT_FORM + "." + DummyCommcareSchema.XMLNS3 + DummyCommcareSchema.APP_ID1 + "." + config.getName())
                 .setActionParameters(parameters);
         return actionBuilder.build();
     }
@@ -623,11 +676,53 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setOrder(order++);
         parameters.add(builder.build());
 
+        builder = new ActionParameterBuilder();
+        builder.setValue(DummyCommcareSchema.XMLNS4)
+                .setDisplayName("xmlns")
+                .setKey("xmlns")
+                .setOrder(order++)
+                .setType(ParameterType.UNICODE)
+                .setHidden(true)
+                .setRequired(false);
+        parameters.add(builder.build());
+
         String displayName = String.format("Submit Form: form4 [TestApp2: %s]", config.getName());
 
         ActionEventBuilder actionBuilder = new ActionEventBuilder()
                 .setDisplayName(displayName)
-                .setSubject(EventSubjects.SUBMIT_FORM + ".http://openrosa.org/formdesigner/32KE58A2-54C5-1Z4B-AR2S-Z0345995RF9E." + config.getName())
+                .setSubject(EventSubjects.SUBMIT_FORM + "." + DummyCommcareSchema.XMLNS4 + DummyCommcareSchema.APP_ID2 + "." + config.getName())
+                .setActionParameters(parameters);
+        return actionBuilder.build();
+    }
+
+    private ActionEvent prepareSubmitForm5Action() {
+        SortedSet<ActionParameter> parameters = new TreeSet<>();
+        ActionParameterBuilder builder;
+        int order = 0;
+
+        builder = new ActionParameterBuilder()
+                .setDisplayName("Does patient take any medications?")
+                .setKey(DummyCommcareSchema.FORM_QUESTION5)
+                .setRequired(false)
+                .setType(ParameterType.UNICODE)
+                .setOrder(order++);
+        parameters.add(builder.build());
+
+        builder = new ActionParameterBuilder();
+        builder.setValue(DummyCommcareSchema.XMLNS1)
+                .setDisplayName("xmlns")
+                .setKey("xmlns")
+                .setOrder(order++)
+                .setType(ParameterType.UNICODE)
+                .setHidden(true)
+                .setRequired(false);
+        parameters.add(builder.build());
+
+        String displayName = String.format("Submit Form: form5 [TestApp3: %s]", config.getName());
+
+        ActionEventBuilder actionBuilder = new ActionEventBuilder()
+                .setDisplayName(displayName)
+                .setSubject(EventSubjects.SUBMIT_FORM + "." + DummyCommcareSchema.XMLNS1 + "." + config.getName())
                 .setActionParameters(parameters);
         return actionBuilder.build();
     }

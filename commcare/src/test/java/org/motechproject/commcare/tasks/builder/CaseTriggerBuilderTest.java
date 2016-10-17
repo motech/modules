@@ -95,6 +95,11 @@ public class CaseTriggerBuilderTest {
                     assertEquals("Received Case: death [app2: ConfigOne]", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD6));
                     break;
+                case "org.motechproject.commcare.api.case.ConfigOne.checkup":
+                    assertEquals(1 + CASE_PREDEFINED_FIELDS, request.getEventParameters().size());
+                    assertEquals("Received Case: checkup [app3: ConfigOne]", request.getDisplayName());
+                    assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD6));
+                    break;
                 case "org.motechproject.commcare.api.case.ConfigTwo.visit":
                     assertEquals(3 + CASE_PREDEFINED_FIELDS, request.getEventParameters().size());
                     assertEquals("Received Case: visit [app1: ConfigTwo]", request.getDisplayName());
