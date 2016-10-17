@@ -61,10 +61,7 @@ public class FormActionBuilder implements ActionBuilder {
 
                     String displayName = DisplayNameHelper.buildDisplayName(DisplayNames.SUBMIT_FORM, form.getFormName(),
                             application.getApplicationName(), config.getName());
-                    String appId = application.getCommcareAppId();
-                    if (appId == null) {
-                        appId = "";
-                    }
+                    String appId = (application.getCommcareAppId() == null) ? "" : application.getCommcareAppId();
                     ActionEventRequestBuilder actionBuilder = new ActionEventRequestBuilder()
                             .setDisplayName(displayName)
                             .setSubject(EventSubjects.SUBMIT_FORM + "." + form.getXmlns() + appId + "." + config.getName())
@@ -105,15 +102,19 @@ public class FormActionBuilder implements ActionBuilder {
             parameters.add(builder.createActionParameterRequest());
         }
 
-        builder = new ActionParameterRequestBuilder();
+        parameters.add(addXmlnsParameter(form, order));
+        return parameters;
+    }
+
+    private ActionParameterRequest addXmlnsParameter(FormSchemaJson form, int order) {
+        ActionParameterRequestBuilder builder = new ActionParameterRequestBuilder();
         builder.setValue(form.getXmlns())
                 .setDisplayName("xmlns")
                 .setKey("xmlns")
                 .setOrder(order++)
                 .setType(ParameterType.UNICODE.getValue())
                 .setHidden(true);
-        parameters.add(builder.createActionParameterRequest());
-        return parameters;
+        return builder.createActionParameterRequest();
     }
 
     private SortedSet<String> convertCommcareoptionsToTaskActionOptions(List<FormSchemaQuestionOptionJson> options) {
