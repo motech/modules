@@ -10,7 +10,8 @@ public enum FilterType {
     NUMERIC("numeric"),
     DATE("date"),
     CHOICE_LIST("choice_list"),
-    DYNAMIC_CHOICE_LIST("dynamic_choice_list");
+    DYNAMIC_CHOICE_LIST("dynamic_choice_list"),
+    PRE("pre");
 
     private final String type;
 

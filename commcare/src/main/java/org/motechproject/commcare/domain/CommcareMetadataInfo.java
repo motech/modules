@@ -1,16 +1,36 @@
 package org.motechproject.commcare.domain;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * Domain class representing case metadata, retrieved from CommCareHQ server.
  */
-public class CommcareMetadataInfo {
+public class CommcareMetadataInfo implements Serializable {
 
+    private static final long serialVersionUID = -3427706967092034501L;
+
+    @Expose
+    @SerializedName("limit")
     private int limit;
+
+    @Expose
+    @SerializedName("next")
     private String nextPageQueryString;
+
+    @Expose
+    @SerializedName("offset")
     private int offset;
+
+    @Expose
+    @SerializedName("previous")
     private String previousPageQueryString;
+
+    @Expose
+    @SerializedName("total_count")
     private int totalCount;
 
     public CommcareMetadataInfo() { }
