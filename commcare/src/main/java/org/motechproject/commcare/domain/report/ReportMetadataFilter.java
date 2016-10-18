@@ -1,22 +1,29 @@
 package org.motechproject.commcare.domain.report;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.motechproject.commcare.domain.report.constants.FilterDataType;
 import org.motechproject.commcare.domain.report.constants.FilterType;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * Represents a single CommCareHQ {@link ReportMetadataInfo} filter.
  */
-public class ReportMetadataFilter {
+public class ReportMetadataFilter implements Serializable {
 
+    private static final long serialVersionUID = 8994777814607875504L;
+
+    @Expose
     @SerializedName("datatype")
     private FilterDataType datatype;
 
+    @Expose
     @SerializedName("slug")
     private String slug;
 
+    @Expose
     @SerializedName("type")
     private FilterType type;
 

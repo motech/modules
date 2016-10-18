@@ -8,7 +8,8 @@ import java.lang.reflect.Type;
 
 public enum ColumnType {
     FIELD("field"),
-    EXPANDED("expanded");
+    EXPANDED("expanded"),
+    PERCENT("percent");
 
     private final String type;
 
