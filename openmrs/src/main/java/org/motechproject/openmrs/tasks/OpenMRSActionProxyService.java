@@ -33,6 +33,7 @@ public interface OpenMRSActionProxyService {
      * @param visitUuid         the visit uuid
      * @param formUuid          the form uuid
      * @param observations      the map of observations where concept Uuid is a key and value from the observation is a value
+     * @return the created encounter
      */
     Encounter createEncounter(String configName, DateTime encounterDatetime, String encounterType,
                          String locationName, String patientUuid, String providerUuid, String visitUuid,
@@ -100,10 +101,12 @@ public interface OpenMRSActionProxyService {
      * @param encounterUuid   the encounter uuid
      * @param conceptUuid     the concept uuid
      * @param obsDatetime     the observation datetime
+     * @param orderUuid       the order uuid
      * @param comment         the comment
+     * @return the created observation
      */
     Observation createObservationJSON(String configName, String observationJSON, String encounterUuid, String conceptUuid,
-                                      DateTime obsDatetime, String comment);
+                                      DateTime obsDatetime, String orderUuid, String comment);
 
     /**
      * Creates a visit with the given {@code patientUuid}, {@code visitStartDatetime},

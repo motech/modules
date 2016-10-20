@@ -166,6 +166,7 @@ public class ActionBuilder {
         actionParameters.add(prepareParameter(Keys.ENCOUNTER_UUID, DisplayNames.ENCOUNTER_UUID, false, order++));
         actionParameters.add(prepareParameter(Keys.CONCEPT_UUID, DisplayNames.CONCEPT_UUID, false, order++));
         actionParameters.add(prepareParameter(Keys.OBSERVATION_DATETIME, DisplayNames.OBSERVATION_DATETIME, DATE, false, order++));
+        actionParameters.add(prepareParameter(Keys.ORDER_UUID, DisplayNames.ORDER_UUID, false, order++));
         actionParameters.add(prepareParameter(Keys.COMMENT, DisplayNames.COMMENT, false, order));
 
         return new ActionEventRequestBuilder()

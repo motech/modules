@@ -34,6 +34,9 @@ public class Order {
     @Expose
     private CareSetting careSetting;
 
+    public Order() {
+    }
+
     public Order(String type, Encounter encounter, Provider orderer, Patient patient, Concept concept, CareSetting careSetting) {
         this.type = type;
         this.encounter = encounter;

@@ -157,7 +157,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
 
     @Override
     public Observation createObservationJSON(String configName, String observationJSON, String encounterUuid, String conceptUuid,
-                                             DateTime obsDatetime, String comment) {
+                                             DateTime obsDatetime, String orderUuid, String comment) {
         JsonParser parser = new JsonParser();
         JsonObject obj = parser.parse(observationJSON).getAsJsonObject();
 
@@ -170,6 +170,9 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         if (obsDatetime != null) {
             DateTimeFormatter fullDateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
             obj.addProperty("obsDatetime", obsDatetime.toString(fullDateTimeFormatter));
+        }
+        if (StringUtils.isNotEmpty(orderUuid)) {
+            obj.addProperty("order", orderUuid);
         }
         if (StringUtils.isNotEmpty(comment)) {
             obj.addProperty("comment", comment);
