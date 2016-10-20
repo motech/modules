@@ -3,6 +3,7 @@ package org.motechproject.openmrs.tasks;
 import org.joda.time.DateTime;
 import org.motechproject.openmrs.domain.Encounter;
 import org.motechproject.openmrs.domain.Observation;
+import org.motechproject.openmrs.domain.Order;
 import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.Visit;
 
@@ -207,4 +208,18 @@ public interface OpenMRSActionProxyService {
      * @param parameters      the additional parameters
      */
     void getCohortQueryReport(String configName, String cohortQueryUuid, Map<String, String> parameters);
+
+    /**
+     * Creates an order with the given params.
+     *
+     * @param configName    the name of the configuration
+     * @param type the order type
+     * @param encounterUuid the encounter uuid
+     * @param patientUuid the patient uuid
+     * @param conceptUuid the concept uuid
+     * @param ordererUuid the orderer uuid
+     * @param careSetting the care setting value
+     * @return the created Order
+     */
+    Order createOrder(String configName, String type, String encounterUuid, String patientUuid, String conceptUuid, String ordererUuid, String careSetting);
 }

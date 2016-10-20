@@ -74,6 +74,11 @@ public final class Keys {
     public static final String COHORT_QUERY_PARAMETERS = "cohortQueryParameters";
     public static final String PATIENT_DISPLAY = "patientDisplay";
 
+    //Order action
+    public static final String ORDER_TYPE = "orderType";
+    public static final String ORDERER_UUID = "ordererUuid";
+    public static final String CARE_SETTING = "careSetting";
+
     /**
      * Utility class, should not be initiated.
      */

@@ -102,7 +102,7 @@
               "fieldKey": "person.display"
             },
             {
-              "displayName": "openMRS.person.address",
+              "displayName": "openMRS.person.fullAddress",
               "fieldKey": "person.preferredAddress.fullAddressString"
             },
             {
@@ -111,12 +111,12 @@
               "type": "INTEGER"
             },
             {
-              "displayName": "openMRS.person.birthdateEstimated",
+              "displayName": "openMRS.person.birthDateEstimated",
               "fieldKey": "person.birthdateEstimated",
               "type": "BOOLEAN"
             },
             {
-              "displayName": "openMRS.person.birthdate",
+              "displayName": "openMRS.person.birthDate",
               "fieldKey": "person.birthdate",
               "type": "DATE"
             },
@@ -282,7 +282,7 @@
               "fieldKey": "person.uuid"
             },
             {
-              "displayName": "openMRS.observation.obsDatetime",
+              "displayName": "openMRS.obsDatetime",
               "fieldKey": "obsDatetime"
             },
             {
@@ -306,7 +306,7 @@
               "fieldKey": "location.display"
             },
             {
-              "displayName": "openMRS.observation.orderUuid",
+              "displayName": "openMRS.order.uuid",
               "fieldKey": "order.uuid"
             },
             {

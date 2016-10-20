@@ -1,6 +1,7 @@
 package org.motechproject.openmrs.tasks.builder;
 
 import org.motechproject.openmrs.config.Config;
+import org.motechproject.openmrs.domain.Order;
 import org.motechproject.openmrs.service.OpenMRSConfigService;
 import org.motechproject.openmrs.tasks.constants.DisplayNames;
 import org.motechproject.openmrs.tasks.constants.Keys;
@@ -34,6 +35,7 @@ public class ActionBuilder {
     private static final String UPDATE_PROGRAM_ENROLLMENT = "Update Program Enrollment";
     private static final String CHANGE_PROGRAM_ENROLLMENT_STATE = "Change Program Enrollment State";
     private static final String GET_COHORT_QUERY_REPORT = "Get CohortQuery Report";
+    private static final String CREATE_ORDER = "Create Order";
     private static final String OPENMRS_ACTION_PROXY_SERVICE = "org.motechproject.openmrs.tasks.OpenMRSActionProxyService";
     private static final String OPENMRS_V1_9 = "1.9";
 
@@ -72,6 +74,7 @@ public class ActionBuilder {
             actions.add(buildCreateProgramEnrollmentAction(configName));
             actions.add(buildUpdateProgramEnrollmentAction(configName));
             actions.add(buildChangeStateOfProgramEnrollmentAction(configName));
+            actions.add(buildCreateOrderAction(configName));
         }
     }
 
@@ -293,6 +296,34 @@ public class ActionBuilder {
                 .createActionEventRequest();
     }
 
+    private ActionEventRequest buildCreateOrderAction(String configName) {
+        SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
+        SortedSet<ActionParameterRequest> postActionParameters = new TreeSet<>();
+
+        int order = 0;
+        String serviceMethod = "createOrder";
+
+        parameters.add(prepareParameter(Keys.CONFIG_NAME, DisplayNames.CONFIG_NAME, configName, false, true, order++));
+        parameters.add(prepareParameter(Keys.ORDER_TYPE, DisplayNames.ORDER_TYPE, ParameterType.UNICODE, Order.DEFAULT_TYPE, true, order++));
+        parameters.add(prepareParameter(Keys.ENCOUNTER_UUID, DisplayNames.ENCOUNTER_UUID, true, order++));
+        parameters.add(prepareParameter(Keys.PATIENT_UUID, DisplayNames.PATIENT_UUID, true, order++));
+        parameters.add(prepareParameter(Keys.CONCEPT_UUID, DisplayNames.CONCEPT_UUID, true, order++));
+        parameters.add(prepareParameter(Keys.ORDERER_UUID, DisplayNames.ORDER_ORDERER_UUID, true, order++));
+        parameters.add(prepareParameter(Keys.CARE_SETTING, DisplayNames.ORDER_CARE_SETTING, ParameterType.SELECT,
+                Order.CareSetting.getValuesAsStringSet(), true, order));
+
+        postActionParameters.add(prepareParameter(Keys.UUID, DisplayNames.ORDER_UUID, false, 0));
+
+        return new ActionEventRequestBuilder()
+                .setDisplayName(getDisplayName(CREATE_ORDER, configName))
+                .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
+                .setServiceMethod(serviceMethod)
+                .setSubject(getSubject(serviceMethod, configName))
+                .setActionParameters(parameters)
+                .setPostActionParameters(postActionParameters)
+                .createActionEventRequest();
+    }
+
     private SortedSet<ActionParameterRequest> prepareProgramEnrollmentParameters(int startOrder, boolean addAttributeMap) {
         SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
         int order = startOrder;
@@ -351,6 +382,14 @@ public class ActionBuilder {
                                                     boolean required, int order) {
         return prepareParameterBuilder(key, displayName, required, order)
                 .setType(type.toString())
+                .createActionParameterRequest();
+    }
+
+    private ActionParameterRequest prepareParameter(String key, String displayName, ParameterType type,
+                                                    SortedSet<String> options, boolean required, int order) {
+        return prepareParameterBuilder(key, displayName, required, order)
+                .setType(type.toString())
+                .setOptions(options)
                 .createActionParameterRequest();
     }
 
