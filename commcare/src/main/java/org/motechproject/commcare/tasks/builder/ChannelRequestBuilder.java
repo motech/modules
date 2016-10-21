@@ -56,6 +56,7 @@ public class ChannelRequestBuilder {
         QueryStockLedgerActionBuilder queryStockLedgerActionBuilder = new QueryStockLedgerActionBuilder(configService);
         CaseActionBuilder caseActionBuilder = new CaseActionBuilder(configService);
         FormActionBuilder formActionBuilder = new FormActionBuilder(schemaService, configService);
+        ReportActionBuilder reportActionBuilder = new ReportActionBuilder(schemaService, configService);
 
         List<TriggerEventRequest> triggers = formTriggerBuilder.buildTriggers();
         triggers.addAll(caseTriggerBuilder.buildTriggers());
@@ -66,6 +67,7 @@ public class ChannelRequestBuilder {
         actions.addAll(queryStockLedgerActionBuilder.buildActions());
         actions.addAll(caseActionBuilder.buildActions());
         actions.addAll(formActionBuilder.buildActions());
+        actions.addAll(reportActionBuilder.buildActions());
 
         return new ChannelRequest(DISPLAY_NAME, bundleContext.getBundle().getSymbolicName(),
                 bundleContext.getBundle().getVersion().toString(), null, triggers, actions);

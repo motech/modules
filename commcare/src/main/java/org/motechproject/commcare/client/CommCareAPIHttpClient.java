@@ -161,6 +161,10 @@ public class CommCareAPIHttpClient {
         return this.getRequest(accountConfig, commcareReportDataUrl(accountConfig, reportId), null);
     }
 
+    public String singleReportDataRequestWithFilters(AccountConfig accountConfig, String reportId, String filters) {
+        return this.getRequest(accountConfig, commcareReportDataUrlWithFilters(accountConfig, reportId, filters), null);
+    }
+
     /**
       * Executes a HTTP get request to the reports list API endpoint.
       *
@@ -545,9 +549,13 @@ public class CommCareAPIHttpClient {
                 accountConfig.getDomain(), API_VERSION, caseId);
     }
 
-    String commcareReportDataUrl(AccountConfig accountConfig, String reportId){
+    String commcareReportDataUrl(AccountConfig accountConfig, String reportId) {
         return String.format("%s/%s/api/v%s/configurablereportdata/%s/?format=json",
                 getCommcareBaseUrl(accountConfig.getBaseUrl()), accountConfig.getDomain(), API_VERSION, reportId);
+    }
+
+    String commcareReportDataUrlWithFilters(AccountConfig accountConfig, String reportId, String filter) {
+        return commcareReportDataUrl(accountConfig, reportId).concat(filter);
     }
 
     String commcareReportsMetadataUrl(AccountConfig accountConfig) {

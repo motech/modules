@@ -68,6 +68,15 @@ public class CommcareReportServiceImpl implements CommcareReportService {
     }
 
     @Override
+    public ReportDataInfo getReportByIdWithFilters (String reportId, String configName, String filters) {
+        String response = commcareHttpClient.singleReportDataRequestWithFilters(configService.getByName(configName).getAccountConfig(),
+                reportId, filters);
+        ReportDataResponseJson reportResponse = parseSingleReportFromResponse(response);
+
+        return generateReportFromReportResponse(reportResponse);
+    }
+
+    @Override
     public ReportDataInfo getReportById(String reportId) {
         return getReportById(reportId, null);
     }
