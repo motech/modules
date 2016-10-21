@@ -9,7 +9,6 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.openmrs.domain.Encounter;
 import org.motechproject.openmrs.domain.GeneratedIdentifier;
 import org.motechproject.openmrs.domain.Observation;
-import org.motechproject.openmrs.domain.ObservationListResult;
 import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.ProgramEnrollment;
 import org.motechproject.openmrs.domain.ProgramEnrollmentListResult;
@@ -41,6 +40,7 @@ import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BAHMNI_PROGR
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_MOTECH_ID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_MOTECH_ID_AND_PROGRAM_NAME;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_PATIENT_UUID_AND_CONCEPT_UUID;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_PATIENT_UUID_AND_VALUE;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_UUID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_UUID_AMD_PROGRAM_NAME;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.CONCEPT_UUID;
@@ -50,6 +50,7 @@ import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.IDENTIFIER_S
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.MOTECH_ID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.NAME;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.OBSERVATION;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.OBSERVATION_VALUE;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PACKAGE_ROOT;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PATIENT;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PATIENT_MOTECH_ID;
@@ -199,19 +200,32 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     }
 
     private Observation getObservation(String lookupName, Map<String, String> lookupFields, String configName) {
-        ObservationListResult observations;
-        Observation latestObservation = null;
+        Observation result = null;
+        String observationsNumber;
 
         switch(lookupName) {
             case BY_PATIENT_UUID_AND_CONCEPT_UUID:
-                observations = observationService.getObservationByPatientUUIDAndConceptUUID(configName,
+                result = observationService.getLatestObservationByPatientUUIDAndConceptUUID(configName,
                         lookupFields.get(PATIENT_UUID), lookupFields.get(CONCEPT_UUID));
-                latestObservation = getLatestObservation(configName, observations);
+                observationsNumber = getObservationsNumber(result);
+                if (result == null) {
+                    result = new Observation();
+                }
+                result.setNumberOfObservations(observationsNumber);
+                break;
+            case BY_PATIENT_UUID_AND_VALUE:
+                result = observationService.getLatestObservationByValueAndPatientUuid(configName, lookupFields.get(PATIENT_UUID),
+                        lookupFields.get(OBSERVATION_VALUE));
+                observationsNumber = getObservationsNumber(result);
+                if (result == null) {
+                    result = new Observation();
+                }
+                result.setNumberOfObservations(observationsNumber);
                 break;
             default: LOGGER.error("Lookup with name {} doesn't exist for observation object", lookupName);
                 break;
         }
-        return latestObservation;
+        return result;
     }
 
     private Provider getProvider(String lookupName, Map<String, String> lookupFields, String configName) {
@@ -304,18 +318,8 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         return generatedIdentifierService.getLatestIdentifier(configName, lookupFields.get(IDENTIFIER_SOURCE_NAME));
     }
 
-    private Observation getLatestObservation(String configName, ObservationListResult observations) {
-        Observation latestObservation;
-
-        if (CollectionUtils.isNotEmpty(observations.getResults())) {
-            latestObservation = observationService.getObservationByUuid(configName, observations.getResults().get(0).getUuid());
-            latestObservation.setNumberOfObservations("1");
-        } else {
-            latestObservation = new Observation();
-            latestObservation.setNumberOfObservations("0");
-        }
-
-        return latestObservation;
+    private String getObservationsNumber(Observation observation) {
+        return observation == null ? "0" : "1";
     }
 
     private List<ProgramEnrollment> filterPrograms(List<ProgramEnrollment> programEnrollments, String programName, String activeProgram) {
