@@ -1,0 +1,15 @@
+{
+  "type": "order",
+  "patient": {
+    "uuid": "p123456-2821-4334-ab85-eef3cd8fea8c"
+  },
+  "concept": {
+    "uuid": "c123456-2821-4334-ab85-eef3cd8fea8c"
+  },
+  "orderer": {
+    "uuid": "o123456-2821-4334-ab85-eef3cd8fea8c"
+  },
+  "encounter": {
+    "uuid": "e123456-2821-4334-ab85-eef3cd8fea8c"
+  }
+}
