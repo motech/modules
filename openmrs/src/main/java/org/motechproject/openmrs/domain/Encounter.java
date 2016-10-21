@@ -4,6 +4,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import org.motechproject.openmrs.util.JsonUtils;
@@ -210,6 +211,18 @@ public class Encounter {
                 encounter.add("obs", jsonObs);
             }
             return encounter;
+        }
+    }
+
+    /**
+     * Implementation of the {@link JsonSerializer} interface for the {@link Encounter} class. It represents the encounter
+     * as its ID.
+     */
+    public static class EncounterUuidSerializer implements JsonSerializer<Encounter> {
+
+        @Override
+        public JsonElement serialize(Encounter encounter, Type type, JsonSerializationContext jsonSerializationContext) {
+            return new JsonPrimitive(encounter.getUuid());
         }
     }
 
