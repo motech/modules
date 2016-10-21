@@ -9,6 +9,7 @@ import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.service.CommcareSchemaService;
 import org.motechproject.tasks.contract.EventParameterRequest;
 import org.motechproject.tasks.contract.TriggerEventRequest;
+import org.motechproject.tasks.domain.enums.ParameterType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,8 +129,8 @@ public class FormTriggerBuilder implements TriggerBuilder {
         parameters.add(new EventParameterRequest("commcare.form.field.deviceId", META_DEVICE_ID));
         parameters.add(new EventParameterRequest("commcare.form.field.username", META_USERNAME));
         parameters.add(new EventParameterRequest("commcare.form.field.appVersion", META_APP_VERSION));
-        parameters.add(new EventParameterRequest("commcare.form.field.timeStart", META_TIME_START));
-        parameters.add(new EventParameterRequest("commcare.form.field.timeEnd", META_TIME_END));
+        parameters.add(new EventParameterRequest("commcare.form.field.timeStart", META_TIME_START, ParameterType.DATE.getValue()));
+        parameters.add(new EventParameterRequest("commcare.form.field.timeEnd", META_TIME_END, ParameterType.DATE.getValue()));
         parameters.add(new EventParameterRequest("commcare.field.configName", CONFIG_NAME));
     }
 }

@@ -19,6 +19,7 @@ import org.motechproject.openmrs.domain.Identifier;
 import org.motechproject.openmrs.domain.IdentifierType;
 import org.motechproject.openmrs.domain.Location;
 import org.motechproject.openmrs.domain.Observation;
+import org.motechproject.openmrs.domain.Order;
 import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.Person;
 import org.motechproject.openmrs.domain.Program;
@@ -33,6 +34,7 @@ import org.motechproject.openmrs.service.OpenMRSEncounterService;
 import org.motechproject.openmrs.service.OpenMRSFormService;
 import org.motechproject.openmrs.service.OpenMRSLocationService;
 import org.motechproject.openmrs.service.OpenMRSObservationService;
+import org.motechproject.openmrs.service.OpenMRSOrderService;
 import org.motechproject.openmrs.service.OpenMRSPatientService;
 import org.motechproject.openmrs.service.OpenMRSPersonService;
 import org.motechproject.openmrs.service.OpenMRSProgramEnrollmentService;
@@ -70,6 +72,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     private OpenMRSPersonService personService;
     private OpenMRSCohortService cohortService;
     private OpenMRSFormService formService;
+    private OpenMRSOrderService orderService;
 
     private EventRelay eventRelay;
 
@@ -154,7 +157,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
 
     @Override
     public Observation createObservationJSON(String configName, String observationJSON, String encounterUuid, String conceptUuid,
-                                             DateTime obsDatetime, String comment) {
+                                             DateTime obsDatetime, String orderUuid, String comment) {
         JsonParser parser = new JsonParser();
         JsonObject obj = parser.parse(observationJSON).getAsJsonObject();
 
@@ -167,6 +170,9 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         if (obsDatetime != null) {
             DateTimeFormatter fullDateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
             obj.addProperty("obsDatetime", obsDatetime.toString(fullDateTimeFormatter));
+        }
+        if (StringUtils.isNotEmpty(orderUuid)) {
+            obj.addProperty("order", orderUuid);
         }
         if (StringUtils.isNotEmpty(comment)) {
             obj.addProperty("comment", comment);
@@ -274,6 +280,25 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
             eventRelay.sendEventMessage(new MotechEvent(EventSubjects.GET_COHORT_QUERY_MEMBER_EVENT.concat(configName),
                     EventHelper.cohortMemberParameters(cohortQueryUuid, member)));
         }
+    }
+
+    @Override
+    public Order createOrder(String configName, String type, String encounterUuid, String patientUuid, String conceptUuid, String ordererUuid, String careSetting) {
+        Encounter encounter = new Encounter();
+        encounter.setUuid(encounterUuid);
+
+        Patient patient = new Patient();
+        patient.setUuid(patientUuid);
+
+        Concept concept = new Concept();
+        concept.setUuid(conceptUuid);
+
+        Provider orderer = new Provider();
+        orderer.setUuid(ordererUuid);
+
+        Order order = new Order(type, encounter, orderer, patient, concept, Order.CareSetting.valueOf(careSetting));
+
+        return orderService.createOrder(configName, order);
     }
 
     private Location getDefaultLocation(String configName) {
@@ -458,5 +483,10 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     @Autowired
     public void setFormService(OpenMRSFormService formService) {
         this.formService = formService;
+    }
+
+    @Autowired
+    public void setOrderService(OpenMRSOrderService orderService) {
+        this.orderService = orderService;
     }
 }

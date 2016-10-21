@@ -72,6 +72,11 @@ public final class DisplayNames {
     public static final String COHORT_QUERY_PARAMETERS = "openMRS.cohortQuery.parameters";
     public static final String PATIENT_DISPLAY = "openMRS.patient.display";
     public static final String COHORT_QUERY_REPORTMEMBER = "openMRS.cohortQuery.reportMember";
+    //Order Action
+    public static final String ORDER_TYPE = "openMRS.orderType";
+    public static final String ORDER_UUID = "openMRS.order.uuid";
+    public static final String ORDER_ORDERER_UUID = "openMRS.order.orderer.uuid";
+    public static final String ORDER_CARE_SETTING = "openMRS.order.careSetting";
 
     /**
      * Utility class, should not be initiated.
