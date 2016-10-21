@@ -708,17 +708,11 @@ public class OpenMRSActionProxyServiceTest {
     @Test
     public void shouldCreateOrderWithGivenParameters() {
 
-        Location location = new Location();
-        location.setName("testLocation");
-
         Patient patient = new Patient();
         patient.setUuid("10");
 
         Provider provider = new Provider();
         provider.setUuid("20");
-
-        Visit visit = new Visit();
-        visit.setUuid("40");
 
         Encounter encounter = new Encounter();
         encounter.setUuid("50");
@@ -731,7 +725,6 @@ public class OpenMRSActionProxyServiceTest {
         verify(orderService).createOrder(eq(CONFIG_NAME), orderCaptor.capture());
 
         assertEquals(order, orderCaptor.getValue());
-
     }
 
     private Person createTestPerson() {

@@ -18,8 +18,7 @@ import org.springframework.web.client.RestOperations;
 
 import java.net.URI;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -29,8 +28,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class OrderResourceImplTest extends AbstractResourceImplTest {
 
     private static final String ORDER_RESPONSE = "json/order/order-response.json";
-
-    private static final String CREATE_ORDER_JSON = "json/order/order-create.json";
     private static final String PREPARE_ORDER_JSON = "json/order/order-prepare.json";
 
     @Mock
@@ -67,15 +64,15 @@ public class OrderResourceImplTest extends AbstractResourceImplTest {
 
         verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
 
-        assertThat(order.getType(), equalTo(created.getType()));
-        assertThat(order.getEncounter(), equalTo(created.getEncounter()));
-        assertThat(order.getOrderer(), equalTo(created.getOrderer()));
-        assertThat(order.getConcept(), equalTo(created.getConcept()));
-        assertThat(order.getPatient(), equalTo(created.getPatient()));
+        assertEquals(order.getType(), created.getType());
+        assertEquals(order.getEncounter(), created.getEncounter());
+        assertEquals(order.getOrderer(), created.getOrderer());
+        assertEquals(order.getConcept().getUuid(), created.getConcept().getUuid());
+        assertEquals(order.getPatient(), created.getPatient());
 
-        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPost(config)));
-        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
-                equalTo(readFromFile(CREATE_ORDER_JSON, JsonObject.class)));
+        assertEquals(requestCaptor.getValue().getHeaders(), getHeadersForPost(config));
+        assertEquals(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
+               readFromFile(PREPARE_ORDER_JSON, JsonObject.class));
     }
 
     private Order prepareOrder() throws Exception {
