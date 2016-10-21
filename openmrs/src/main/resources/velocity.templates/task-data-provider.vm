@@ -262,6 +262,13 @@
                 "openMRS.patient.uuid",
                 "openMRS.concept.uuid"
               ]
+            },
+            {
+              "displayName": "openMRS.lookup.patientUuidAndValue",
+              "fields": [
+                "openMRS.patient.uuid",
+                "openMRS.observation.value"
+              ]
             }
           ],
           "fields": [
