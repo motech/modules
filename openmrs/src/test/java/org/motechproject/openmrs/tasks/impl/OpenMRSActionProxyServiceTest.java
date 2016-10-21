@@ -717,14 +717,14 @@ public class OpenMRSActionProxyServiceTest {
         Encounter encounter = new Encounter();
         encounter.setUuid("50");
 
-        Concept concept = createTestConcept("testConcept");
+        Concept concept = createTestConcept("60");
 
-        Order order = new Order("testType", encounter, provider, patient, concept, Order.CareSetting.INPATIENT);
+        Order order = new Order("order", encounter, provider, patient, concept, Order.CareSetting.INPATIENT);
 
-        openMRSActionProxyService.createOrder(CONFIG_NAME, "testType", encounter.getUuid(), patient.getUuid(), concept.getUuid(), provider.getUuid(),  Order.CareSetting.INPATIENT.toString());
-        verify(orderService).createOrder(eq(CONFIG_NAME), orderCaptor.capture());
+        doReturn(order).when(orderService).createOrder(eq(CONFIG_NAME), eq(order));
+        Order orderCreated = openMRSActionProxyService.createOrder(CONFIG_NAME, "order", encounter.getUuid(), patient.getUuid(), concept.getUuid(), provider.getUuid(),  Order.CareSetting.INPATIENT.toString());
 
-        assertEquals(order, orderCaptor.getValue());
+        assertEquals(order, orderCreated);
     }
 
     private Person createTestPerson() {
