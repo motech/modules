@@ -7,7 +7,6 @@ import org.motechproject.commcare.domain.report.constants.FilterType;
 import org.motechproject.commcare.events.constants.DisplayNames;
 import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.commcare.events.constants.EventSubjects;
-import org.motechproject.commcare.service.CommcareFormService;
 import org.motechproject.commcare.service.CommcareReportService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
@@ -23,7 +22,7 @@ import java.util.Map;
 /**
  * This class serves as the event handler for the task actions, exposed by the Commcare module.
  * Respective methods extract the necessary data from the {@link MotechEvent} instance and
- * pass them to the {@link CommcareFormService} that handles all the operations on Commcare forms.
+ * handles all the operations on Commcare reports.
  */
 @Component
 public class ReportActionEventHandler {
@@ -64,7 +63,6 @@ public class ReportActionEventHandler {
 
         eventRelay.sendEventMessage(new MotechEvent(EventSubjects.RECEIVED_REPORT + "." +  reportName + "." + reportId,
                 prepareReceiveReportParameters(report, reportId, reportName)));
-
     }
 
     private List<String> getFieldNamesFromParameters (Map<String, Object> parameters) {

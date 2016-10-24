@@ -16,6 +16,7 @@ import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
 import org.motechproject.tasks.domain.enums.ParameterType;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,7 @@ public class ReportActionBuilder implements ActionBuilder {
         this.configService = configService;
     }
 
+    @Transactional
     @Override
     public List<ActionEventRequest> buildActions () {
         List<ActionEventRequest> actions = new ArrayList<>();
@@ -78,17 +80,12 @@ public class ReportActionBuilder implements ActionBuilder {
 
         for (ReportMetadataFilter filter : reportMetadata.getFilters()) {
             if (filter.getDatatype().equals(FilterDataType.DECIMAL) || filter.getDatatype().equals(FilterDataType.INTEGER)) {
-
                 parameters.addAll(prepareNumericParameters(filter, order));
                 order = parameters.size();
-
             } else if (filter.getType().equals(FilterType.DATE)) {
-
                 parameters.addAll(prepareDateParameters(filter, order));
                 order = parameters.size();
-
             } else {
-
                 parameters.addAll(prepareUnicodeParameters(filter, order));
                 order = parameters.size();
             }
