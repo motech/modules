@@ -26,7 +26,8 @@ public class GroupWebServiceImpl extends AbstractWebService<Group> implements Gr
     private static final String ERROR_RETRIEVING = "Error retrieving group with name: ";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GroupWebServiceImpl.class);
-    private static final TypeReference PAGED_RESPONSE_GROUP_TYPE_REF = new TypeReference<PaginatedResponse<Group>>() { };
+    private static final TypeReference PAGED_RESPONSE_GROUP_TYPE_REF = new TypeReference<PaginatedResponse<Group>>() {
+    };
 
     @Autowired
     public GroupWebServiceImpl(RapidProHttpClient httpClient) {

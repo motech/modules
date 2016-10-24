@@ -77,7 +77,8 @@ public class RapidproDataProvider extends AbstractDataProvider {
      * @param lookupName   The name of the lookup
      * @param lookupFields The keys and values for lookup fields.
      * @return The object satisfying the lookup conditions, if it exists.
-\     */
+     * \
+     */
     @Override
     public Object lookup(String type, String lookupName, Map<String, String> lookupFields) {
         switch (type) {

@@ -1,0 +1,10 @@
+{
+  "visitType": {
+    "uuid": "ee1b6117-e40b-4082-8880-96aca7ea1472"
+  },
+  "patient": {
+    "uuid": "d4f36a2e-2821-4334-ab85-eef3cd8fea8c"
+  },
+  "startDatetime": "2016-07-28T10:29:50.000+0000",
+  "stopDatetime": "2016-07-28T14:29:50.000+0000"
+}

@@ -667,24 +667,26 @@ public class CourseStructureServiceBundleIT extends BasePaxIT {
         verifyUnused(asList(QUIZ_3, QUIZ_4, QUIZ_6, "quiz_7"), asList("lesson_10", LESSON_7, LESSON_8, LESSON_9), asList(CHAPTER_4, CHAPTER_5, CHAPTER_6));
     }
 
+    private void verifyUnused(List<String> quizzes, List<String> lessons, List<String> chapters){
+        List<Quiz> allQuizzes = mTrainingService.getAllQuizzes();
+        List<Lesson> allLessons = mTrainingService.getAllLessons();
+        List<Chapter> allChapters = mTrainingService.getAllChapters();
 
-    private void verifyUnused(List<String> quizzes, List<String> lessons, List<String> chapters) {
-        // verify unused units
-        List<Quiz> unusedQuizzes = mTrainingService.getUnusedQuizzes();
-        List<Lesson> unusedLessons = mTrainingService.getUnusedLessons();
-        List<Chapter> unusedChapters = mTrainingService.getUnusedChapters();
-
-        List<String> unusedUnits = extract(unusedQuizzes, on(Quiz.class).getName());
-        Collections.sort(unusedUnits);
-        assertEquals(quizzes, unusedUnits);
-
-        unusedUnits = extract(unusedLessons, on(Lesson.class).getName());
-        Collections.sort(unusedUnits);
-        assertEquals(lessons, unusedUnits);
-
-        unusedUnits = extract(unusedChapters, on(Chapter.class).getName());
-        Collections.sort(unusedUnits);
-        assertEquals(chapters, unusedUnits);
+        for(Quiz quiz : allQuizzes) {
+            if(quizzes.contains(quiz.getName())) {
+                assertNull(quiz.getChapter());
+            }
+        }
+        for(Lesson lesson : allLessons) {
+            if(lessons.contains(lesson.getName())) {
+                assertNull(lesson.getChapter());
+            }
+        }
+        for(Chapter chapter : allChapters) {
+            if(chapters.contains(chapter.getName())) {
+                assertNull(chapter.getCourse());
+            }
+        }
     }
 
     private void verifyLessons(Chapter chapter, int size, List<String> expectedLessons, List<CourseUnitState> expectedStates) {
@@ -710,9 +712,9 @@ public class CourseStructureServiceBundleIT extends BasePaxIT {
         Quiz q2 = new Quiz(QUIZ_2, CourseUnitState.Active, "content_2", "Description_2", props);
         Quiz q3 = new Quiz(QUIZ_3, CourseUnitState.Active, "content_3", "Description_3", props);
 
-        q1 = quizDataService.create(q1);
-        q2 = quizDataService.create(q2);
-        q3 = quizDataService.create(q3);
+        q1 = quizDataService.detachedCopy(quizDataService.create(q1));
+        q2 = quizDataService.detachedCopy(quizDataService.create(q2));
+        q3 = quizDataService.detachedCopy(quizDataService.create(q3));
 
         idMap.put(q1.getName(), q1.getId());
         idMap.put(q2.getName(), q2.getId());
@@ -724,11 +726,11 @@ public class CourseStructureServiceBundleIT extends BasePaxIT {
         Lesson l4 = new Lesson(LESSON_4, CourseUnitState.Active, "content_4", "Description_4", props);
         Lesson l5 = new Lesson(LESSON_5, CourseUnitState.Active, "content_5", "Description_5", props);
 
-        l1 = lessonDataService.create(l1);
-        l2 = lessonDataService.create(l2);
-        l3 = lessonDataService.create(l3);
-        l4 = lessonDataService.create(l4);
-        l5 = lessonDataService.create(l5);
+        l1 = lessonDataService.detachedCopy(lessonDataService.create(l1));
+        l2 = lessonDataService.detachedCopy(lessonDataService.create(l2));
+        l3 = lessonDataService.detachedCopy(lessonDataService.create(l3));
+        l4 = lessonDataService.detachedCopy(lessonDataService.create(l4));
+        l5 = lessonDataService.detachedCopy(lessonDataService.create(l5));
 
         idMap.put(l1.getName(), l1.getId());
         idMap.put(l2.getName(), l2.getId());
@@ -740,9 +742,9 @@ public class CourseStructureServiceBundleIT extends BasePaxIT {
         Chapter ch2 = new Chapter(CHAPTER_2, CourseUnitState.Active, "content_2", "Description_2", props);
         Chapter ch3 = new Chapter(CHAPTER_3, CourseUnitState.Active, "content_3", "Description_3", props);
 
-        ch1 = chapterDataService.create(ch1);
-        ch2 = chapterDataService.create(ch2);
-        ch3 = chapterDataService.create(ch3);
+        ch1 = chapterDataService.detachedCopy(chapterDataService.create(ch1));
+        ch2 = chapterDataService.detachedCopy(chapterDataService.create(ch2));
+        ch3 = chapterDataService.detachedCopy(chapterDataService.create(ch3));
 
         idMap.put(ch1.getName(), ch1.getId());
         idMap.put(ch2.getName(), ch2.getId());
@@ -765,15 +767,15 @@ public class CourseStructureServiceBundleIT extends BasePaxIT {
         ch1.setLessons(lessons1);
         ch2.setLessons(lessons2);
         ch3.setLessons(lessons3);
-        ch1 = chapterDataService.update(ch1);
-        ch2 = chapterDataService.update(ch2);
-        ch3 = chapterDataService.update(ch3);
+        ch1 = chapterDataService.detachedCopy(chapterDataService.update(ch1));
+        ch2 = chapterDataService.detachedCopy(chapterDataService.update(ch2));
+        ch3 = chapterDataService.detachedCopy(chapterDataService.update(ch3));
 
         Course c1 = new Course(COURSE_1, CourseUnitState.Active, "content_1", "Description_1", props);
         Course c2 = new Course(COURSE_2, CourseUnitState.Active, "content_2", "Description_2", props);
 
-        c1 = courseDataService.create(c1);
-        c2 = courseDataService.create(c2);
+        c1 = courseDataService.detachedCopy(courseDataService.create(c1));
+        c2 = courseDataService.detachedCopy(courseDataService.create(c2));
 
         idMap.put(c1.getName(), c1.getId());
         idMap.put(c2.getName(), c2.getId());
@@ -795,10 +797,10 @@ public class CourseStructureServiceBundleIT extends BasePaxIT {
         Lesson l7 = new Lesson(LESSON_7, CourseUnitState.Active, "content_7", "Description_7", props);
         Lesson l8 = new Lesson(LESSON_8, CourseUnitState.Active, "content_8", "Description_8", props);
         Lesson l9 = new Lesson(LESSON_9, CourseUnitState.Active, "content_9", "Description_9", props);
-        lessonDataService.create(l6);
-        lessonDataService.create(l7);
-        lessonDataService.create(l8);
-        lessonDataService.create(l9);
+        l6 = lessonDataService.detachedCopy(lessonDataService.create(l6));
+        l7 = lessonDataService.detachedCopy(lessonDataService.create(l7));
+        l8 = lessonDataService.detachedCopy(lessonDataService.create(l8));
+        l9 = lessonDataService.detachedCopy(lessonDataService.create(l9));
 
         idMap.put(l6.getName(), l6.getId());
         idMap.put(l7.getName(), l7.getId());
@@ -808,9 +810,9 @@ public class CourseStructureServiceBundleIT extends BasePaxIT {
         Chapter ch4 = new Chapter(CHAPTER_4, CourseUnitState.Active, "content_4", "Description_4", props);
         Chapter ch5 = new Chapter(CHAPTER_5, CourseUnitState.Active, "content_5", "Description_5", props);
         Chapter ch6 = new Chapter(CHAPTER_6, CourseUnitState.Active, "content_6", "Description_6", props);
-        chapterDataService.create(ch4);
-        chapterDataService.create(ch5);
-        chapterDataService.create(ch6);
+        ch4 = chapterDataService.detachedCopy(chapterDataService.create(ch4));
+        ch5 = chapterDataService.detachedCopy(chapterDataService.create(ch5));
+        ch6 = chapterDataService.detachedCopy(chapterDataService.create(ch6));
 
         idMap.put(ch4.getName(), ch4.getId());
         idMap.put(ch5.getName(), ch5.getId());
@@ -819,9 +821,9 @@ public class CourseStructureServiceBundleIT extends BasePaxIT {
         Quiz q4 = new Quiz(QUIZ_4, CourseUnitState.Active, "content_4", "Description_4", props);
         Quiz q5 = new Quiz(QUIZ_5, CourseUnitState.Active, "content_5", "Description_5", props);
         Quiz q6 = new Quiz(QUIZ_6, CourseUnitState.Active, "content_6", "Description_6", props);
-        quizDataService.create(q4);
-        quizDataService.create(q5);
-        quizDataService.create(q6);
+        q4 = quizDataService.detachedCopy(quizDataService.create(q4));
+        q5 = quizDataService.detachedCopy(quizDataService.create(q5));
+        q6 = quizDataService.detachedCopy(quizDataService.create(q6));
 
         idMap.put(q4.getName(), q4.getId());
         idMap.put(q5.getName(), q5.getId());
@@ -829,8 +831,8 @@ public class CourseStructureServiceBundleIT extends BasePaxIT {
 
         Course c3 = new Course(COURSE_3, CourseUnitState.Active, "content_3", "Description_3", props);
         Course c4 = new Course(COURSE_4, CourseUnitState.Active, "content_4", "Description_4", props);
-        courseDataService.create(c3);
-        courseDataService.create(c4);
+        c3 = courseDataService.detachedCopy(courseDataService.create(c3));
+        c4 = courseDataService.detachedCopy(courseDataService.create(c4));
 
         idMap.put(c3.getName(), c3.getId());
         idMap.put(c4.getName(), c4.getId());

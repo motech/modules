@@ -79,32 +79,52 @@ public class OpenMRSProgramEnrollmentServiceImpl implements OpenMRSProgramEnroll
             }
             return updatedProgramEnrollment;
         } catch (HttpClientErrorException e) {
-            throw new OpenMRSException("Could not update program enrollment with uuid: " + programEnrollment.getUuid(), e);
+            throw new OpenMRSException(String.format("Could not update program enrollment with uuid: %s. %s %s", programEnrollment.getUuid(),
+                    e.getMessage(), e.getResponseBodyAsString()), e);
         }
     }
 
     @Override
     public List<ProgramEnrollment> getBahmniProgramEnrollmentByPatientUuid(String configName, String patientUuid)  {
-        return programEnrollmentResource.getBahmniProgramEnrollmentByPatientUuid(configService.getConfigByName(configName), patientUuid);
+        try {
+            return programEnrollmentResource.getBahmniProgramEnrollmentByPatientUuid(configService.getConfigByName(configName), patientUuid);
+        } catch (HttpClientErrorException e) {
+            throw new OpenMRSException(String.format("Could not get a Bahmni Program Enrollments for Patient uuid: %s. %s %s", patientUuid,
+                    e.getMessage(), e.getResponseBodyAsString()), e);
+        }
     }
 
     @Override
     public List<ProgramEnrollment> getBahmniProgramEnrollmentByPatientMotechId(String configName, String patientMotechId) {
-        Patient patient = patientService.getPatientByMotechId(configName, patientMotechId);
-
-        return Objects.nonNull(patient) ? getBahmniProgramEnrollmentByPatientUuid(configName, patient.getUuid()) : new ArrayList<>();
+        try {
+            Patient patient = patientService.getPatientByMotechId(configName, patientMotechId);
+            return Objects.nonNull(patient) ? getBahmniProgramEnrollmentByPatientUuid(configName, patient.getUuid()) : new ArrayList<>();
+        } catch (HttpClientErrorException e) {
+            throw new OpenMRSException(String.format("Could not create a Bahmni Program Enrollment for Patient Motech Id: %s. %s %s",
+                    patientMotechId, e.getMessage(), e.getResponseBodyAsString()), e);
+        }
     }
 
     @Override
     public List<ProgramEnrollment> getProgramEnrollmentByPatientUuid(String configName, String patientUuid) {
-        return programEnrollmentResource.getProgramEnrollmentByPatientUuid(configService.getConfigByName(configName), patientUuid);
+        try {
+            return programEnrollmentResource.getProgramEnrollmentByPatientUuid(configService.getConfigByName(configName), patientUuid);
+        } catch (HttpClientErrorException e) {
+            throw new OpenMRSException(String.format("Could not get Program Enrollment for Patient uuid: %s. %s %s", patientUuid,
+                    e.getMessage(), e.getResponseBodyAsString()), e);
+        }
     }
 
     @Override
     public List<ProgramEnrollment> getProgramEnrollmentByPatientMotechId(String configName, String patientMotechId) {
-        Patient patient = patientService.getPatientByMotechId(configName, patientMotechId);
+        try {
+            Patient patient = patientService.getPatientByMotechId(configName, patientMotechId);
 
-        return Objects.nonNull(patient) ? getProgramEnrollmentByPatientUuid(configName, patient.getUuid()) : new ArrayList<>();
+            return Objects.nonNull(patient) ? getProgramEnrollmentByPatientUuid(configName, patient.getUuid()) : new ArrayList<>();
+        } catch (HttpClientErrorException e) {
+            throw new OpenMRSException(String.format("Could not get a Program Enrollment for Patient Motech Id: %s, %s %s", patientMotechId,
+                    e.getMessage(), e.getResponseBodyAsString()), e);
+        }
     }
 
     @Override

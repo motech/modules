@@ -40,8 +40,10 @@ public class ContactWebServiceImpl extends AbstractWebService<Contact> implement
     private static final String PHONE = "phone";
     private static final String CONTACTS_ENDPOINT = "/contacts";
 
-    private static final TypeReference CONTACT_TYPE_REF = new TypeReference<Contact>() { };
-    private static final TypeReference PAGED_RESPONSE_CONTACT_TYPE_REF = new TypeReference<PaginatedResponse<Contact>>() { };
+    private static final TypeReference CONTACT_TYPE_REF = new TypeReference<Contact>() {
+    };
+    private static final TypeReference PAGED_RESPONSE_CONTACT_TYPE_REF = new TypeReference<PaginatedResponse<Contact>>() {
+    };
     private static final Logger LOGGER = LoggerFactory.getLogger(ContactWebServiceImpl.class);
 
     @Autowired

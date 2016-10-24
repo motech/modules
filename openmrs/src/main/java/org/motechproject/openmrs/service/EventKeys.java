@@ -37,10 +37,15 @@ public final class EventKeys {
     public static final String ENCOUNTER_ID = "EncounterID";
     public static final String ENCOUNTER_TYPE = "EncounterType";
     public static final String ENCOUNTER_DATE = "EncounterDate";
+    public static final String VISIT_ID = "VisitID";
+    public static final String VISIT_TYPE = "VisitType";
+    public static final String VISIT_START_DATETIME = "VisitStartDateTime";
+    public static final String VISIT_STOP_DATETIME = "VisitStopDateTime";
     public static final String PROVIDER_ID = "ProviderId";
     public static final String USER_ID = "UserId";
     public static final String PROGRAM_ID = "ProgramId";
     public static final String PROGRAM_ENROLLMENT_ID = "ProgramEnrollmentId";
+    public static final String FORM_ID = "FormId";
 
     public static final String BASE_SUBJECT = "org.motechproject.mrs.api.";
 
@@ -53,6 +58,8 @@ public final class EventKeys {
     public static final String CREATED_NEW_ENCOUNTER_SUBJECT = BASE_SUBJECT + "Encounter.Created";
     public static final String UPDATED_ENCOUNTER_SUBJECT = BASE_SUBJECT + "Encounter.Updated";
     public static final String DELETED_ENCOUNTER_SUBJECT = BASE_SUBJECT + "Encounter.Deleted";
+    public static final String CREATED_NEW_VISIT_SUBJECT = BASE_SUBJECT + "Visit.Created";
+    public static final String DELETED_VISIT_SUBJECT = BASE_SUBJECT + "Visit.Deleted";
     public static final String CREATED_NEW_LOCATION_SUBJECT = BASE_SUBJECT + "Location.Create";
     public static final String UPDATED_LOCATION_SUBJECT = BASE_SUBJECT + "Location.Updated";
     public static final String DELETED_LOCATION_SUBJECT = BASE_SUBJECT + "Location.Deleted";

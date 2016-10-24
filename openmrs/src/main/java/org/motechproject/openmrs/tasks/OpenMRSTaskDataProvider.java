@@ -8,6 +8,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.openmrs.domain.Encounter;
 import org.motechproject.openmrs.domain.GeneratedIdentifier;
+import org.motechproject.openmrs.domain.Observation;
 import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.ProgramEnrollment;
 import org.motechproject.openmrs.domain.ProgramEnrollmentListResult;
@@ -15,6 +16,7 @@ import org.motechproject.openmrs.domain.Provider;
 import org.motechproject.openmrs.domain.Relationship;
 import org.motechproject.openmrs.service.OpenMRSEncounterService;
 import org.motechproject.openmrs.service.OpenMRSGeneratedIdentifierService;
+import org.motechproject.openmrs.service.OpenMRSObservationService;
 import org.motechproject.openmrs.service.OpenMRSPatientService;
 import org.motechproject.openmrs.service.OpenMRSProgramEnrollmentService;
 import org.motechproject.openmrs.service.OpenMRSProviderService;
@@ -34,16 +36,21 @@ import java.util.List;
 import java.util.Map;
 
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.ACTIVE_PROGRAM;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BAHMNI_PROGRAM_ENROLLMENT;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_MOTECH_ID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_MOTECH_ID_AND_PROGRAM_NAME;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_PATIENT_UUID_AND_CONCEPT_UUID;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_PATIENT_UUID_AND_VALUE;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_UUID;
-import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BAHMNI_PROGRAM_ENROLLMENT;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_UUID_AMD_PROGRAM_NAME;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.CONCEPT_UUID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.ENCOUNTER;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.IDENTIFIER;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.IDENTIFIER_SOURCE_NAME;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.MOTECH_ID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.NAME;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.OBSERVATION;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.OBSERVATION_VALUE;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PACKAGE_ROOT;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PATIENT;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PATIENT_MOTECH_ID;
@@ -64,9 +71,10 @@ import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.UUID;
 public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSTaskDataProvider.class);
     private static final List<Class<?>> SUPPORTED_CLASSES = Arrays.asList(Patient.class, Provider.class, Encounter.class,
-            Relationship.class, ProgramEnrollment.class, GeneratedIdentifier.class);
+            Relationship.class, ProgramEnrollment.class, GeneratedIdentifier.class, Observation.class);
 
     private OpenMRSEncounterService encounterService;
+    private OpenMRSObservationService observationService;
     private OpenMRSPatientService patientService;
     private OpenMRSProviderService providerService;
     private OpenMRSTaskDataProviderBuilder dataProviderBuilder;
@@ -78,10 +86,11 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
 
     @Autowired
     public OpenMRSTaskDataProvider(OpenMRSTaskDataProviderBuilder taskDataProviderBuilder, OpenMRSEncounterService encounterService,
-                                   OpenMRSPatientService patientService, OpenMRSProviderService providerService,
+                                   OpenMRSObservationService observationService, OpenMRSPatientService patientService, OpenMRSProviderService providerService,
                                    OpenMRSRelationshipService relationshipService, OpenMRSProgramEnrollmentService programEnrollmentService,
                                    OpenMRSGeneratedIdentifierService generatedIdentifierService, BundleContext bundleContext) {
         this.encounterService = encounterService;
+        this.observationService = observationService;
         this.patientService = patientService;
         this.providerService = providerService;
         this.dataProviderBuilder = taskDataProviderBuilder;
@@ -154,6 +163,8 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
                 case PROGRAM_ENROLLMENT: obj = getProgramEnrollments(lookupName, lookupFields, configName, isBahmniProgramEnrollment);
                     break;
                 case IDENTIFIER: obj = getIdentifier(lookupFields, configName);
+                    break;
+                case OBSERVATION: obj = getObservation(lookupName, lookupFields, configName);
             }
         }
 
@@ -186,6 +197,35 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         }
 
         return patient;
+    }
+
+    private Observation getObservation(String lookupName, Map<String, String> lookupFields, String configName) {
+        Observation result = null;
+        String observationsNumber;
+
+        switch(lookupName) {
+            case BY_PATIENT_UUID_AND_CONCEPT_UUID:
+                result = observationService.getLatestObservationByPatientUUIDAndConceptUUID(configName,
+                        lookupFields.get(PATIENT_UUID), lookupFields.get(CONCEPT_UUID));
+                observationsNumber = getObservationsNumber(result);
+                if (result == null) {
+                    result = new Observation();
+                }
+                result.setNumberOfObservations(observationsNumber);
+                break;
+            case BY_PATIENT_UUID_AND_VALUE:
+                result = observationService.getLatestObservationByValueAndPatientUuid(configName, lookupFields.get(PATIENT_UUID),
+                        lookupFields.get(OBSERVATION_VALUE));
+                observationsNumber = getObservationsNumber(result);
+                if (result == null) {
+                    result = new Observation();
+                }
+                result.setNumberOfObservations(observationsNumber);
+                break;
+            default: LOGGER.error("Lookup with name {} doesn't exist for observation object", lookupName);
+                break;
+        }
+        return result;
     }
 
     private Provider getProvider(String lookupName, Map<String, String> lookupFields, String configName) {
@@ -278,6 +318,10 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
         return generatedIdentifierService.getLatestIdentifier(configName, lookupFields.get(IDENTIFIER_SOURCE_NAME));
     }
 
+    private String getObservationsNumber(Observation observation) {
+        return observation == null ? "0" : "1";
+    }
+
     private List<ProgramEnrollment> filterPrograms(List<ProgramEnrollment> programEnrollments, String programName, String activeProgram) {
         List<ProgramEnrollment> programEnrollmentsList = filterByProgramName(programEnrollments, programName);
         List<ProgramEnrollment> result;
@@ -302,7 +346,7 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     private List<ProgramEnrollment> filterByProgramName(List<ProgramEnrollment> programEnrollments, String programName) {
         List<ProgramEnrollment> result = new ArrayList<>();
 
-        if(CollectionUtils.isNotEmpty(programEnrollments)) {
+        if (CollectionUtils.isNotEmpty(programEnrollments)) {
             for (ProgramEnrollment programEnrollment : programEnrollments) {
                 if (programEnrollment.getProgram().getName().equals(programName)) {
                     result.add(programEnrollment);
@@ -316,7 +360,7 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     private List<ProgramEnrollment> filterByActiveProgramOnly(List<ProgramEnrollment> programEnrollments) {
         List<ProgramEnrollment> result = new ArrayList<>();
 
-        if(CollectionUtils.isNotEmpty(programEnrollments)) {
+        if (CollectionUtils.isNotEmpty(programEnrollments)) {
             for (ProgramEnrollment programEnrollment : programEnrollments) {
                 if (programEnrollment.getDateCompleted() == null) {
                     result.add(programEnrollment);

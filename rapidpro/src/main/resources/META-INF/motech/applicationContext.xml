@@ -30,6 +30,7 @@
         <property name="roleForAccess">
             <list>
                 <value>configureRapidpro</value>
+                <value>webHook</value>
             </list>
         </property>
     </bean>

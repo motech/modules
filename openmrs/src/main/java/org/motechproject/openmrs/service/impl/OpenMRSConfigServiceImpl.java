@@ -2,11 +2,11 @@ package org.motechproject.openmrs.service.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.IOUtils;
@@ -167,7 +167,7 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
     private void adjustOpenMrsUrl(Config config) {
         String openMrsUrl = config.getOpenMrsUrl();
         if (openMrsUrl.charAt(openMrsUrl.length() - 1) == '/') {
-            config.setOpenMrsUrl(openMrsUrl.substring(0, openMrsUrl.length()-1));
+            config.setOpenMrsUrl(openMrsUrl.substring(0, openMrsUrl.length() - 1));
         }
     }
 }

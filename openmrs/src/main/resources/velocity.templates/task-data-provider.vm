@@ -102,7 +102,7 @@
               "fieldKey": "person.display"
             },
             {
-              "displayName": "openMRS.person.address",
+              "displayName": "openMRS.person.fullAddress",
               "fieldKey": "person.preferredAddress.fullAddressString"
             },
             {
@@ -111,12 +111,12 @@
               "type": "INTEGER"
             },
             {
-              "displayName": "openMRS.person.birthdateEstimated",
+              "displayName": "openMRS.person.birthDateEstimated",
               "fieldKey": "person.birthdateEstimated",
               "type": "BOOLEAN"
             },
             {
-              "displayName": "openMRS.person.birthdate",
+              "displayName": "openMRS.person.birthDate",
               "fieldKey": "person.birthdate",
               "type": "DATE"
             },
@@ -249,6 +249,92 @@
             {
               "displayName": "openMRS.person.display",
               "fieldKey": "person.display"
+            }
+          ]
+        },
+        {
+          "displayName": "Observation [$config.getName()]",
+          "type": "Observation-$config.getName()",
+          "lookupFields": [
+            {
+              "displayName": "openMRS.lookup.patientUuidAndConceptUuid",
+              "fields": [
+                "openMRS.patient.uuid",
+                "openMRS.concept.uuid"
+              ]
+            },
+            {
+              "displayName": "openMRS.lookup.patientUuidAndValue",
+              "fields": [
+                "openMRS.patient.uuid",
+                "openMRS.observation.value"
+              ]
+            }
+          ],
+          "fields": [
+            {
+              "displayName": "openMRS.observation.uuid",
+              "fieldKey": "uuid"
+            },
+            {
+              "displayName": "openMRS.observation.display",
+              "fieldKey": "display"
+            },
+            {
+              "displayName": "openMRS.concept.uuid",
+              "fieldKey": "concept.uuid"
+            },
+            {
+              "displayName": "openMRS.person.uuid",
+              "fieldKey": "person.uuid"
+            },
+            {
+              "displayName": "openMRS.obsDatetime",
+              "fieldKey": "obsDatetime"
+            },
+            {
+              "displayName": "openMRS.observation.obsGroup",
+              "fieldKey": "obsGroup"
+            },
+            {
+              "displayName": "openMRS.observation.valueCodedName",
+              "fieldKey": "valueCodedName"
+            },
+            {
+              "displayName": "openMRS.observation.groupsMembers",
+              "fieldKey": "groupsMembers"
+            },
+            {
+              "displayName": "openMRS.location.uuid",
+              "fieldKey": "location.uuid"
+            },
+            {
+              "displayName": "openMRS.location.display",
+              "fieldKey": "location.display"
+            },
+            {
+              "displayName": "openMRS.order.uuid",
+              "fieldKey": "order.uuid"
+            },
+            {
+              "displayName": "openMRS.encounter.uuid",
+              "fieldKey": "encounter.uuid"
+            },
+            {
+              "displayName": "openMRS.observation.voided",
+              "fieldKey": "voided"
+            },
+            {
+              "displayName": "openMRS.observation.value",
+              "fieldKey": "value.display"
+            },
+            {
+              "displayName": "openMRS.observation.valueModifier",
+              "fieldKey": "valueModifier"
+            },
+            {
+              "displayName": "openMRS.observation.numberOfObservations",
+              "fieldKey": "numberOfObservations"
             }
           ]
         },

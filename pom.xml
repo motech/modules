@@ -1094,6 +1094,23 @@
                                     </resources>
                                 </configuration>
                             </execution>
+                            <execution>
+                                <id>copy-locations-file</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${motech.dir}</outputDirectory>
+                                    <overwrite>true</overwrite>
+                                    <resources>
+                                        <resource>
+                                            <directory>${modules.root.dir}/testdata</directory>
+                                            <include>config-locations.properties</include>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
                         </executions>
                     </plugin>
                     <plugin>
@@ -1254,6 +1271,7 @@
                                     <rules>
                                         <requireBackwardCompatibility implementation="org.semver.enforcer.RequireBackwardCompatibility">
                                             <compatibilityType>BACKWARD_COMPATIBLE_IMPLEMENTER</compatibilityType>
+                                            <dumpDetails>true</dumpDetails>
                                         </requireBackwardCompatibility>
                                         <requireSemanticVersioningConformance implementation="org.semver.enforcer.RequireSemanticVersioningConformance" />
                                     </rules>

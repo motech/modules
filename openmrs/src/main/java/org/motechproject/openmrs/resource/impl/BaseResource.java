@@ -3,6 +3,8 @@ package org.motechproject.openmrs.resource.impl;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.HttpClient;
 import org.motechproject.openmrs.config.Config;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -18,6 +20,8 @@ import java.util.Arrays;
  * the OpenMRS servers.
  */
 public abstract class BaseResource {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseResource.class);
 
     private RestOperations restOperations;
     private HttpClient httpClient;
@@ -36,7 +40,9 @@ public abstract class BaseResource {
      * @return the response json
      */
     protected String getJson(Config config, String path, Object... params) {
-        return exchange(config, buildUrl(config, path, params), HttpMethod.GET).getBody();
+        String responseJson = exchange(config, buildUrl(config, path, params), HttpMethod.GET).getBody();
+        LOGGER.debug("{} request response body: {}", buildUrl(config, path, params), responseJson);
+        return responseJson;
     }
 
     /**
@@ -53,7 +59,9 @@ public abstract class BaseResource {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Arrays.asList(MediaType.ALL));
 
-        return exchange(config, buildUrl(config, path, params), HttpMethod.POST, json, headers).getBody();
+        String responseJson = exchange(config, buildUrl(config, path, params), HttpMethod.POST, json, headers).getBody();
+        LOGGER.debug("{} request response body: {}", buildUrl(config, path, params), responseJson);
+        return responseJson;
     }
 
     /**

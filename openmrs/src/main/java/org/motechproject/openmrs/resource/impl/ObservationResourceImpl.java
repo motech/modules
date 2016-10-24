@@ -15,6 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestOperations;
 
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
+
 @Component
 public class ObservationResourceImpl extends BaseResource implements ObservationResource {
 
@@ -26,7 +30,7 @@ public class ObservationResourceImpl extends BaseResource implements Observation
     @Override
     public ObservationListResult queryForObservationsByPatientId(Config config, String uuid) {
         String responseJson = getJson(config, "/obs?patient={uuid}&v=full", uuid);
-        return (ObservationListResult) JsonUtils.readJson(responseJson, ObservationListResult.class);
+        return (ObservationListResult) JsonUtils.readJsonWithAdapters(responseJson, ObservationListResult.class, createValueAdapter());
     }
 
     @Override
@@ -41,7 +45,13 @@ public class ObservationResourceImpl extends BaseResource implements Observation
     @Override
     public Observation getObservationById(Config config, String uuid) {
         String responseJson = getJson(config, "/obs/{uuid}?v=full", uuid);
-        return (Observation) JsonUtils.readJson(responseJson, Observation.class);
+        return (Observation) JsonUtils.readJsonWithAdapters(responseJson, Observation.class, createValueAdapter());
+    }
+
+    @Override
+    public ObservationListResult getObservationByPatientUUIDAndConceptUUID(Config config, String patientUUID, String conceptUUID) {
+        String responseJson = getJson(config, "/obs?patient={patientUUID}&concept={conceptUUID}&limit=1&v=full", patientUUID, conceptUUID);
+        return (ObservationListResult) JsonUtils.readJsonWithAdapters(responseJson, ObservationListResult.class, createValueAdapter());
     }
 
     @Override
@@ -49,6 +59,12 @@ public class ObservationResourceImpl extends BaseResource implements Observation
         String requestJson = buildGson().toJson(observation);
         String responseJson = postForJson(config, requestJson, "/obs");
         return (Observation) JsonUtils.readJson(responseJson, Observation.class);
+    }
+
+    @Override
+    public Observation createObservationFromJson(Config config, String observationJson) {
+        String responseJson = postForJson(config, observationJson, "/obs");
+        return (Observation) JsonUtils.readJsonWithAdapters(responseJson, Observation.class, createValueAdapter());
     }
 
     @Override
@@ -62,5 +78,12 @@ public class ObservationResourceImpl extends BaseResource implements Observation
                 .registerTypeAdapter(Concept.class, new Concept.ConceptSerializer())
                 .registerTypeAdapter(Person.class, new Person.PersonSerializer())
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
+    }
+
+    private Map<Type, Object> createValueAdapter() {
+        Map<Type, Object> valueAdapter = new HashMap<>();
+        valueAdapter.put(Observation.ObservationValue.class, new Observation.ObservationValueDeserializer());
+
+        return valueAdapter;
     }
 }

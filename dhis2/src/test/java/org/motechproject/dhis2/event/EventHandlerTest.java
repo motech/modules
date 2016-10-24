@@ -77,7 +77,7 @@ public class EventHandlerTest {
         response = new DhisStatusResponse();
         response.setReference(INSTANCE_DHIS_ID);
         response.setStatus(DhisStatus.SUCCESS);
-        response.setImportCount(importCount);
+        response.setImportCountDto(importCount);
     }
 
     @Test

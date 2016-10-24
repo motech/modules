@@ -11,6 +11,7 @@ import org.motechproject.commcare.exception.EndpointNotSupported;
 import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.service.impl.CommcareFormsEventParser;
 import org.motechproject.commcare.util.ConfigsUtils;
+import org.motechproject.commcare.util.DummyCommcareSchema;
 import org.motechproject.commcare.util.ResponseXML;
 import org.motechproject.commons.api.TasksEventParser;
 import org.motechproject.event.MotechEvent;
@@ -129,7 +130,7 @@ public class FullFormControllerTest {
         assertEquals("1", attributes.get("uiVersion"));
         assertEquals("41", attributes.get("version"));
         assertEquals(ResponseXML.FORM_NAME, attributes.get("name"));
-        assertEquals("http://openrosa.org/formdesigner/84FA38A2-93C1-4B9E-AA2A-0E082995FF9E", attributes.get("xmlns"));
+        assertEquals(DummyCommcareSchema.XMLNS1, attributes.get("xmlns"));
 
         Multimap<String, Object> subElements = (Multimap<String, Object>) parameters.get(SUB_ELEMENTS);
         assertEquals(5, subElements.size());

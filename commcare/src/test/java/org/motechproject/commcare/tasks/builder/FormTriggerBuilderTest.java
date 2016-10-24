@@ -32,6 +32,8 @@ import static org.motechproject.commcare.util.DummyCommcareSchema.XMLNS2;
 import static org.motechproject.commcare.util.DummyCommcareSchema.XMLNS3;
 import static org.motechproject.commcare.util.DummyCommcareSchema.XMLNS4;
 import static org.motechproject.commcare.util.DummyCommcareSchema.XMLNS5;
+import static org.motechproject.commcare.util.DummyCommcareSchema.APP_ID1;
+import static org.motechproject.commcare.util.DummyCommcareSchema.APP_ID2;
 
 public class FormTriggerBuilderTest {
 
@@ -88,28 +90,33 @@ public class FormTriggerBuilderTest {
 
             String subject = request.getSubject();
             switch (subject) {
-                case BASE_SUBJECT_ONE + "." + XMLNS1:
+                case BASE_SUBJECT_ONE + "." + XMLNS1 + APP_ID1:
                     assertEquals(2 + FORM_PREDEFINED_FIELDS, request.getEventParameters().size());
                     assertEquals("Received Form: form1 [app1: ConfigOne]", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION1));
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION2));
                     break;
-                case BASE_SUBJECT_ONE + "." + XMLNS2:
+                case BASE_SUBJECT_ONE + "." + XMLNS2 + APP_ID1:
                     assertEquals(1 + FORM_PREDEFINED_FIELDS, request.getEventParameters().size());
                     assertEquals("Received Form: form2 [app1: ConfigOne]", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION3));
                     break;
-                case BASE_SUBJECT_ONE + "." + XMLNS3:
+                case BASE_SUBJECT_ONE + "." + XMLNS3 + APP_ID1:
                     assertEquals(1 + FORM_PREDEFINED_FIELDS, request.getEventParameters().size());
                     assertEquals("Received Form: form3 [app1: ConfigOne]", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION4));
                     break;
-                case BASE_SUBJECT_ONE + "." + XMLNS4:
+                case BASE_SUBJECT_ONE + "." + XMLNS4 + APP_ID2:
                     assertEquals(1 + FORM_PREDEFINED_FIELDS, request.getEventParameters().size());
                     assertEquals("Received Form: form4 [app2: ConfigOne]", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION5));
                     break;
-                case BASE_SUBJECT_TWO + "." + XMLNS5:
+                case BASE_SUBJECT_ONE + "." + XMLNS1:
+                    assertEquals(1 + FORM_PREDEFINED_FIELDS, request.getEventParameters().size());
+                    assertEquals("Received Form: form5 [app3: ConfigOne]", request.getDisplayName());
+                    assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION5));
+                    break;
+                case BASE_SUBJECT_TWO + "." + XMLNS5 + APP_ID1:
                     assertEquals(1 + FORM_PREDEFINED_FIELDS, request.getEventParameters().size());
                     assertEquals("Received Form: form5 [app1: ConfigTwo]", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION4));

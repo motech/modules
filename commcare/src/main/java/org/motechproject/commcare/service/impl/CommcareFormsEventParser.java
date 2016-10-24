@@ -4,6 +4,8 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.commons.api.TasksEventParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -32,6 +34,7 @@ public class CommcareFormsEventParser implements TasksEventParser {
     public static final String PARSER_NAME = "CommcareForms";
 
     private static final String ID = "id";
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommcareFormsEventParser.class);
 
     @Override
     public Map<String, Object> parseEventParameters(String subject, Map<String, Object> entryParameters) {
@@ -54,7 +57,13 @@ public class CommcareFormsEventParser implements TasksEventParser {
 
         if (eventSubject.equals(FORMS_EVENT)) {
             String xmlns = (String) ((Map) eventParameters.get(ATTRIBUTES)).get("xmlns");
-            return eventSubject.concat(".").concat(configName).concat(".").concat(xmlns);
+            String appId = (String) ((Map) eventParameters.get(ATTRIBUTES)).get("app_id");
+
+            if (appId == null) {
+                appId = "";
+                LOGGER.warn("AppId for form is null. XMLNS: {}", xmlns);
+            }
+            return eventSubject.concat(".").concat(configName).concat(".").concat(xmlns).concat(appId);
         }
 
         return eventSubject.concat(".").concat(configName);

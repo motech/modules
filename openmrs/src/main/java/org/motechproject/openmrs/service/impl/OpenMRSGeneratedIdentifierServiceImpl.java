@@ -31,7 +31,7 @@ public class OpenMRSGeneratedIdentifierServiceImpl implements OpenMRSGeneratedId
 
             return generatedIdentifierResource.getGeneratedIdentifier(config, sourceName);
         } catch (HttpServerErrorException | HttpClientErrorException e) {
-            throw new OpenMRSException("Cannot get latest identifier from Generator with name: " + sourceName, e);
+            throw new OpenMRSException(String.format("Cannot get latest identifier from Generator with name: %s. %s %s" + sourceName, e.getMessage(), e.getResponseBodyAsString()), e);
         }
     }
 }

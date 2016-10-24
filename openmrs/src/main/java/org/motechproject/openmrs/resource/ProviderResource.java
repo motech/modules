@@ -1,7 +1,7 @@
 package org.motechproject.openmrs.resource;
 
-import org.motechproject.openmrs.domain.Provider;
 import org.motechproject.openmrs.config.Config;
+import org.motechproject.openmrs.domain.Provider;
 
 /**
  * Interface for providers management.
