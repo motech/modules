@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,17 +43,17 @@ public class FullFormController extends CommcareController {
 
     @RequestMapping
     @ResponseStatus(HttpStatus.OK)
-    public void receiveFormForDefaultConfig(@RequestBody String body, HttpServletRequest request) throws EndpointNotSupported {
-        doReceiveForm(body, request, configService.getDefault());
+    public void receiveFormForDefaultConfig(@RequestBody String body, HttpServletRequest request, @RequestParam(value = "app_id", required = false) String appId) throws EndpointNotSupported {
+        doReceiveForm(body, request, configService.getDefault(), appId);
     }
 
     @RequestMapping(value = "/{configName}")
     @ResponseStatus(HttpStatus.OK)
-    public void receiveForm(@RequestBody String body, HttpServletRequest request) throws EndpointNotSupported {
-        doReceiveForm(body, request, configService.getByName(getConfigName(request)));
+    public void receiveForm(@RequestBody String body, HttpServletRequest request, @RequestParam(value = "app_id", required = false) String appId) throws EndpointNotSupported {
+        doReceiveForm(body, request, configService.getByName(getConfigName(request)), appId);
     }
 
-    private void doReceiveForm(String body, HttpServletRequest request, Config config) throws EndpointNotSupported {
+    private void doReceiveForm(String body, HttpServletRequest request, Config config, String appId) throws EndpointNotSupported {
 
         LOGGER.trace("Received request for mapping /forms: {}", body);
 
@@ -64,6 +65,7 @@ public class FullFormController extends CommcareController {
 
         try {
             FormValueElement formValueElement = parser.parse();
+            formValueElement.addAttribute("app_id", appId);
 
             FullFormEvent fullFormEvent = new FullFormEvent(formValueElement, request.getHeader("received-on"),
                     config.getName());
