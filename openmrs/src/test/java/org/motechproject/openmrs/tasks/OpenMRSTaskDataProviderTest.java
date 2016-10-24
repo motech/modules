@@ -164,8 +164,6 @@ public class OpenMRSTaskDataProviderTest {
         String className = Observation.class.getSimpleName();
         String conceptUuid = "sampleConceptUuid";
 
-        List<Observation> results = new ArrayList<>();
-
         Map<String, String> lookupFields = new HashMap<>();
         lookupFields.put(PATIENT_UUID, DEFAULT_UUID);
         lookupFields.put(CONCEPT_UUID, conceptUuid);
@@ -173,19 +171,13 @@ public class OpenMRSTaskDataProviderTest {
         Observation observation = new Observation();
         observation.setUuid("10");
 
-        results.add(observation);
-
-        ObservationListResult observationListResult = new ObservationListResult();
-        observationListResult.setResults(results);
-
-        when(observationService.getObservationByPatientUUIDAndConceptUUID(CONFIG_NAME, DEFAULT_UUID, conceptUuid)).thenReturn(observationListResult);
-        when(observationService.getObservationByUuid(CONFIG_NAME, "10")).thenReturn(observation);
+        when(observationService.getLatestObservationByPatientUUIDAndConceptUUID(CONFIG_NAME, DEFAULT_UUID, conceptUuid)).thenReturn(observation);
 
         Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, BY_PATIENT_UUID_AND_CONCEPT_UUID, lookupFields);
 
         assertEquals(observation, object);
 
-        verify(observationService).getObservationByPatientUUIDAndConceptUUID(CONFIG_NAME, DEFAULT_UUID, conceptUuid);
+        verify(observationService).getLatestObservationByPatientUUIDAndConceptUUID(CONFIG_NAME, DEFAULT_UUID, conceptUuid);
     }
 
     @Test

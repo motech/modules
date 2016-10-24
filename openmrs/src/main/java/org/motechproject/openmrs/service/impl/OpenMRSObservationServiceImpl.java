@@ -1,5 +1,6 @@
 package org.motechproject.openmrs.service.impl;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 import org.motechproject.event.MotechEvent;
@@ -98,16 +99,29 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
     }
 
     @Override
-    public ObservationListResult getObservationByPatientUUIDAndConceptUUID(String configName, String patientUUID, String conceptUUID) {
+    public Observation getLatestObservationByPatientUUIDAndConceptUUID(String configName, String patientUUID, String conceptUUID) {
         Validate.notEmpty(patientUUID, "Patient uuid cannot be empty");
         Validate.notEmpty(conceptUUID, "Concept uuid cannot be empty");
 
         try {
             Config config = configService.getConfigByName(configName);
-            return obsResource.getObservationByPatientUUIDAndConceptUUID(config, patientUUID, conceptUUID);
+            ObservationListResult obs = obsResource.getObservationByPatientUUIDAndConceptUUID(config, patientUUID, conceptUUID);
+            return CollectionUtils.isEmpty(obs.getResults()) ? null : obs.getResults().get(0);
         } catch (HttpClientErrorException e) {
             throw new OpenMRSException(String.format("Could not get Observation for Patient uuid: %s and Concept: %s. %s %s",
                     patientUUID, conceptUUID, e.getMessage(), e.getResponseBodyAsString()), e);
+        }
+    }
+
+    @Override
+    public Observation getLatestObservationByValueAndPatientUuid(String configName, String patientUuid, String value) {
+        try {
+            Config config = configService.getConfigByName(configName);
+            ObservationListResult obs = obsResource.queryForObservationsByPatientId(config, patientUuid);
+            return getLatestObservationByValue(obs.getResults(), new Observation.ObservationValue(value));
+        } catch (HttpClientErrorException e) {
+            throw new OpenMRSException(String.format("Could not get Observation for Patient uuid: %s. %s %s",
+                    patientUuid, e.getMessage(), e.getResponseBodyAsString()), e);
         }
     }
 
@@ -188,5 +202,18 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
         }
 
         return obs;
+    }
+
+    private Observation getLatestObservationByValue(List<Observation> obs, Observation.ObservationValue value) {
+        Observation result = null;
+
+        for (Observation observation : obs) {
+            if (value.equals(observation.getValue())) {
+                result = observation;
+                break;
+            }
+        }
+
+        return result;
     }
 }
