@@ -29,6 +29,7 @@ public class OrderResourceImplTest extends AbstractResourceImplTest {
 
     private static final String ORDER_RESPONSE = "json/order/order-response.json";
     private static final String PREPARE_ORDER_JSON = "json/order/order-prepare.json";
+    private static final String CREATE_ORDER_JSON = "json/order/order-create.json";
 
     @Mock
     private RestOperations restOperations;
@@ -72,7 +73,7 @@ public class OrderResourceImplTest extends AbstractResourceImplTest {
 
         assertEquals(requestCaptor.getValue().getHeaders(), getHeadersForPost(config));
         assertEquals(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
-               readFromFile(PREPARE_ORDER_JSON, JsonObject.class));
+               readFromFile(CREATE_ORDER_JSON, JsonObject.class));
     }
 
     private Order prepareOrder() throws Exception {
