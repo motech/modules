@@ -139,7 +139,7 @@ public class Order {
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, display, encounter, orderer, patient, concept, careSetting);
+        return Objects.hash(uuid, display, type, encounter, orderer, patient, concept, careSetting);
     }
 
     @Override
@@ -156,6 +156,7 @@ public class Order {
 
         return Objects.equals(uuid, other.uuid) &&
                 Objects.equals(display, other.display) &&
+                Objects.equals(type, other.type) &&
                 Objects.equals(encounter, other.encounter) &&
                 Objects.equals(orderer, other.orderer) &&
                 Objects.equals(patient, other.patient) &&
