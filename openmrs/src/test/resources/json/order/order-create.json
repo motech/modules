@@ -1,0 +1,8 @@
+{
+  "type": "order",
+  "patient": "p123456-2821-4334-ab85-eef3cd8fea8c",
+  "concept": "c123456-2821-4334-ab85-eef3cd8fea8c",
+  "orderer": "o123456-2821-4334-ab85-eef3cd8fea8c",
+  "encounter": "e123456-2821-4334-ab85-eef3cd8fea8c"
+
+}
