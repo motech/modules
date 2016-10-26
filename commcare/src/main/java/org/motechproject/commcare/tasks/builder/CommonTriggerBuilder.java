@@ -5,6 +5,7 @@ import org.motechproject.commcare.events.constants.DisplayNames;
 import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.tasks.contract.EventParameterRequest;
 import org.motechproject.tasks.contract.TriggerEventRequest;
+import org.motechproject.tasks.domain.enums.ParameterType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +74,7 @@ public class CommonTriggerBuilder implements TriggerBuilder {
             parameterRequests.add(new EventParameterRequest(DisplayNames.QUANTITY, QUANTITY));
             parameterRequests.add(new EventParameterRequest(DisplayNames.SECTION_ID, SECTION_ID));
             parameterRequests.add(new EventParameterRequest(DisplayNames.STOCK_ON_HAND, STOCK_ON_HAND));
-            parameterRequests.add(new EventParameterRequest(DisplayNames.TRANSACTION_DATE, TRANSACTION_DATE));
+            parameterRequests.add(new EventParameterRequest(DisplayNames.TRANSACTION_DATE, TRANSACTION_DATE, ParameterType.DATE.getValue()));
             parameterRequests.add(new EventParameterRequest(DisplayNames.TYPE, TYPE));
 
             String displayName = DisplayNameHelper.buildDisplayName(DisplayNames.RETRIEVED_STOCK_TRANSACTION,
@@ -133,7 +134,7 @@ public class CommonTriggerBuilder implements TriggerBuilder {
 
         for (Config  config : configService.getConfigs().getConfigs()) {
             List<EventParameterRequest> parameterRequests = new ArrayList<>();
-            parameterRequests.add(new EventParameterRequest("commcare.receivedOn", RECEIVED_ON));
+            parameterRequests.add(new EventParameterRequest("commcare.receivedOn", RECEIVED_ON, ParameterType.DATE.getValue()));
             parameterRequests.add(new EventParameterRequest("commcare.formId", FORM_ID));
             parameterRequests.add(new EventParameterRequest("commcare.caseIds", CASE_IDS, "LIST"));
             parameterRequests.add(new EventParameterRequest(CONFIG_NAME_KEY, CONFIG_NAME));

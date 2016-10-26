@@ -1,8 +1,11 @@
 package org.motechproject.commcare.config.manager;
 
 import org.motechproject.commcare.domain.CommcareApplicationJson;
+import org.motechproject.commcare.domain.report.ReportsMetadataInfo;
 import org.motechproject.commcare.service.CommcareAppStructureService;
 import org.motechproject.commcare.service.CommcareApplicationDataService;
+import org.motechproject.commcare.service.CommcareReportService;
+import org.motechproject.commcare.service.ReportsMetadataDataService;
 import org.motechproject.commcare.tasks.CommcareTasksNotifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +29,13 @@ public class ConfigurationManager {
     private CommcareAppStructureService appStructureService;
 
     @Autowired
+    private CommcareReportService reportService;
+
+    @Autowired
     private CommcareApplicationDataService commcareApplicationDataService;
+
+    @Autowired
+    private ReportsMetadataDataService reportsMetadataDataService;
 
     @Autowired
     private CommcareTasksNotifier commcareTasksNotifier;
@@ -43,8 +52,8 @@ public class ConfigurationManager {
     }
 
     @Transactional
-    public void configUpdated(String configName, boolean downloadApplications) {
-        if (downloadApplications) {
+    public void configUpdated(String configName, boolean downloadApplicationsAndReports) {
+        if (downloadApplicationsAndReports) {
             LOGGER.info("Configuration [{}] updated, fetching Commcare schema, {}", configName);
             reloadConfig(configName);
         } else {
@@ -62,14 +71,19 @@ public class ConfigurationManager {
 
     private synchronized void reloadConfig(String configName) {
         List<CommcareApplicationJson> applications = appStructureService.getAllApplications(configName);
+        ReportsMetadataInfo reportsMetadata = reportService.getReportsList(configName);
 
         // clear the configuration before saving the new one
         clearApps(configName);
+        clearReports(configName);
 
         for (CommcareApplicationJson app : applications) {
             app.setConfigName(configName);
             commcareApplicationDataService.create(app);
         }
+
+        reportsMetadata.setConfigName(configName);
+        reportsMetadataDataService.create(reportsMetadata);
 
         commcareTasksNotifier.updateTasksInfo();
     }
@@ -77,6 +91,12 @@ public class ConfigurationManager {
     private void clearApps(String configName) {
         for (CommcareApplicationJson application : commcareApplicationDataService.bySourceConfiguration(configName)) {
             commcareApplicationDataService.delete(application);
+        }
+    }
+
+    private void clearReports(String configName) {
+        for (ReportsMetadataInfo report : reportsMetadataDataService.bySourceConfiguration(configName)) {
+            reportsMetadataDataService.delete(report);
         }
     }
 }

@@ -36,6 +36,7 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
     private final OpenMRSConfigService configService;
 
     private final ObservationResource obsResource;
+
     private final ConceptResource conceptResource;
 
     private final EventRelay eventRelay;
@@ -93,6 +94,20 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
         } catch (HttpClientErrorException e) {
             LOGGER.error("Error while fetching obs with UUID: " + uuid);
             return null;
+        }
+    }
+
+    @Override
+    public ObservationListResult getObservationByPatientUUIDAndConceptUUID(String configName, String patientUUID, String conceptUUID) {
+        Validate.notEmpty(patientUUID, "Patient uuid cannot be empty");
+        Validate.notEmpty(conceptUUID, "Concept uuid cannot be empty");
+
+        try {
+            Config config = configService.getConfigByName(configName);
+            return obsResource.getObservationByPatientUUIDAndConceptUUID(config, patientUUID, conceptUUID);
+        } catch (HttpClientErrorException e) {
+            throw new OpenMRSException(String.format("Could not get Observation for Patient uuid: %s and Concept: %s. %s %s",
+                    patientUUID, conceptUUID, e.getMessage(), e.getResponseBodyAsString()), e);
         }
     }
 

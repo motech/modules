@@ -61,9 +61,10 @@ public class FormActionBuilder implements ActionBuilder {
 
                     String displayName = DisplayNameHelper.buildDisplayName(DisplayNames.SUBMIT_FORM, form.getFormName(),
                             application.getApplicationName(), config.getName());
+                    String appId = (application.getCommcareAppId() == null) ? "" : application.getCommcareAppId();
                     ActionEventRequestBuilder actionBuilder = new ActionEventRequestBuilder()
                             .setDisplayName(displayName)
-                            .setSubject(EventSubjects.SUBMIT_FORM + "." + form.getXmlns() + "." + config.getName())
+                            .setSubject(EventSubjects.SUBMIT_FORM + "." + form.getXmlns() + appId + "." + config.getName())
                             .setActionParameters(parameters);
                     actions.add(actionBuilder.createActionEventRequest());
                 }
@@ -76,9 +77,10 @@ public class FormActionBuilder implements ActionBuilder {
     private SortedSet<ActionParameterRequest> buildActionParameters(FormSchemaJson form) {
         SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
         int order = 0;
+        ActionParameterRequestBuilder builder;
 
         for (FormSchemaQuestionJson question : form.getQuestions()) {
-            ActionParameterRequestBuilder builder = new ActionParameterRequestBuilder();
+            builder = new ActionParameterRequestBuilder();
 
             String displayName = StringUtils.isBlank(question.getQuestionLabel()) ? question.getQuestionValue() : question.getQuestionLabel();
 
@@ -100,7 +102,19 @@ public class FormActionBuilder implements ActionBuilder {
             parameters.add(builder.createActionParameterRequest());
         }
 
+        parameters.add(addXmlnsParameter(form, order));
         return parameters;
+    }
+
+    private ActionParameterRequest addXmlnsParameter(FormSchemaJson form, int order) {
+        ActionParameterRequestBuilder builder = new ActionParameterRequestBuilder();
+        builder.setValue(form.getXmlns())
+                .setDisplayName("xmlns")
+                .setKey("xmlns")
+                .setOrder(order)
+                .setType(ParameterType.UNICODE.getValue())
+                .setHidden(true);
+        return builder.createActionParameterRequest();
     }
 
     private SortedSet<String> convertCommcareoptionsToTaskActionOptions(List<FormSchemaQuestionOptionJson> options) {

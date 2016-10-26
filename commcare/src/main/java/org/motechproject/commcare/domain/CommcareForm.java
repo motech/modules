@@ -26,6 +26,9 @@ public class CommcareForm {
     @SerializedName("resource_uri")
     private String resourceUri;
 
+    @SerializedName("app_id")
+    private String appId;
+
     private String type;
 
     private String uiversion;
@@ -82,6 +85,14 @@ public class CommcareForm {
 
     public void setResourceUri(String resourceUri) {
         this.resourceUri = resourceUri;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
     }
 
     public String getType() {

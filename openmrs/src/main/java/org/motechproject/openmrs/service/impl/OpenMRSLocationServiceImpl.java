@@ -6,6 +6,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.Location;
+import org.motechproject.openmrs.exception.OpenMRSException;
 import org.motechproject.openmrs.helper.EventHelper;
 import org.motechproject.openmrs.resource.LocationResource;
 import org.motechproject.openmrs.service.EventKeys;
@@ -76,8 +77,7 @@ public class OpenMRSLocationServiceImpl implements OpenMRSLocationService {
             Config config = configService.getConfigByName(configName);
             locations = locationResource.queryForLocationByName(config, locationName).getResults();
         } catch (HttpClientErrorException e) {
-            LOGGER.error("Failed to retrieve all locations by location name: " + locationName);
-            return Collections.emptyList();
+            throw new OpenMRSException(String.format("Could not get Locations for name %s. %s %s", locationName, e.getMessage(), e.getResponseBodyAsString()), e);
         }
 
         return locations;

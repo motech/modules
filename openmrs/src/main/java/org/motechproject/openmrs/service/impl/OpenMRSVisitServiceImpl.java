@@ -6,6 +6,7 @@ import org.motechproject.event.listener.EventRelay;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.Visit;
 import org.motechproject.openmrs.domain.VisitType;
+import org.motechproject.openmrs.exception.OpenMRSException;
 import org.motechproject.openmrs.helper.EventHelper;
 import org.motechproject.openmrs.resource.VisitResource;
 import org.motechproject.openmrs.service.EventKeys;
@@ -37,11 +38,15 @@ public class OpenMRSVisitServiceImpl implements OpenMRSVisitService {
     public Visit createVisit(String configName, Visit visit) {
         validateVisit(visit);
 
-        Config config = configService.getConfigByName(configName);
-        Visit createdVisit = visitResource.createVisit(config, visit);
+        try {
+            Config config = configService.getConfigByName(configName);
+            Visit createdVisit = visitResource.createVisit(config, visit);
 
-        eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_VISIT_SUBJECT, EventHelper.visitParameters(createdVisit)));
-        return createdVisit;
+            eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_VISIT_SUBJECT, EventHelper.visitParameters(createdVisit)));
+            return createdVisit;
+        } catch (HttpClientErrorException e) {
+            throw new OpenMRSException(String.format("Could not create a Visit. %s %s", e.getMessage(), e.getResponseBodyAsString()), e);
+        }
     }
 
     @Override
@@ -50,8 +55,7 @@ public class OpenMRSVisitServiceImpl implements OpenMRSVisitService {
             Config config = configService.getConfigByName(configName);
             return visitResource.getVisitById(config, uuid);
         } catch (HttpClientErrorException e) {
-            LOGGER.error("Error while fetching visit with UUID: " + uuid);
-            return null;
+            throw new OpenMRSException(String.format("Could not get a Visit for uuid: %s. %s %s", uuid, e.getMessage(), e.getResponseBodyAsString()), e);
         }
     }
 
