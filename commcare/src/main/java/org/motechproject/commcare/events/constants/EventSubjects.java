@@ -8,6 +8,7 @@ public final class EventSubjects {
     private static final String BASE_SUBJECT = "org.motechproject.commcare.api.";
 
     public static final String CASE_EVENT = BASE_SUBJECT + "case";
+    public static final String REPORT_EVENT = BASE_SUBJECT + "report";
     public static final String MALFORMED_CASE_EXCEPTION = BASE_SUBJECT + "exception";
     public static final String FORM_STUB_EVENT = BASE_SUBJECT + "formstub";
     public static final String FORM_STUB_FAIL_EVENT = FORM_STUB_EVENT + ".failed";
@@ -24,6 +25,7 @@ public final class EventSubjects {
     public static final String CREATE_CASE = BASE_SUBJECT + "createCase";
     public static final String UPDATE_CASE = BASE_SUBJECT + "updateCase";
     public static final String SUBMIT_FORM = BASE_SUBJECT + "submitForm";
+    public static final String RECEIVED_REPORT = BASE_SUBJECT + "receivedReport";
 
     public static String getConfigName(String subject) {
         return subject.substring(subject.lastIndexOf('.') + 1);
