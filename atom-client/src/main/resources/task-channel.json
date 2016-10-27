@@ -35,6 +35,20 @@
       "subject" : "org.motechproject.atomclient.fetch",
       "displayName" : "atomclient.task.feed.fetch",
       "actionParameters" : [ ]
+    },
+    {
+      "subject" : "org.motechproject.atomclient.read",
+      "displayName" : "atomclient.task.feed.read",
+      "actionParameters" : [
+        {
+          "key" : "currentFeedUrl",
+          "displayName" : "atomclient.task.feed.read.current_url"
+        },
+        {
+          "key" : "lastFeedUrl",
+          "displayName" : "atomclient.task.feed.read.last_url"
+        }
+      ]
     }
   ]
 }

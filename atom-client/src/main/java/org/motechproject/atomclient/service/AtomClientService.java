@@ -15,6 +15,9 @@ public interface AtomClientService {
      */
     void scheduleFetchJob(String cronExpression);
 
+
+    void read(String currentUrl, String lastUrl);
+
     /**
      * Fetches the atom feed(s) specified in atom-client-feeds.json setting file.
      *
