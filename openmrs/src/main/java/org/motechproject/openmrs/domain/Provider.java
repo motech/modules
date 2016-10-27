@@ -1,5 +1,11 @@
 package org.motechproject.openmrs.domain;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+
+import java.lang.reflect.Type;
 import java.util.Objects;
 
 /**
@@ -49,6 +55,18 @@ public class Provider {
 
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
+    }
+
+    /**
+     * Implementation of the {@link JsonSerializer} interface for the {@link Provider} class. It represents the provider
+     * as its ID.
+     */
+    public static class ProviderSerializer implements JsonSerializer<Provider> {
+
+        @Override
+        public JsonElement serialize(Provider provider, Type type, JsonSerializationContext jsonSerializationContext) {
+            return new JsonPrimitive(provider.getUuid());
+        }
     }
 
     @Override

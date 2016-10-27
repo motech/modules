@@ -2,6 +2,8 @@ package org.motechproject.openmrs.tasks;
 
 import org.joda.time.DateTime;
 import org.motechproject.openmrs.domain.Encounter;
+import org.motechproject.openmrs.domain.Observation;
+import org.motechproject.openmrs.domain.Order;
 import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.Visit;
 
@@ -19,8 +21,8 @@ public interface OpenMRSActionProxyService {
 
     /**
      * Creates an encounter with the given {@code encounterDate}, {@code encounterType}, {@code locationName},
-     * {@code patientUuid} and {@code providerUuid}. The locationName is the only not required field. Configuration with
-     * the given {@code configName} will be used while performing this action.
+     * {@code patientUuid},{@code providerUuid} and {@code formId}. The locationName and formId are the only not required fields.
+     * Configuration with the given {@code configName} will be used while performing this action.
      *
      * @param configName        the name of the configuration
      * @param encounterDatetime the date of encounter
@@ -28,10 +30,14 @@ public interface OpenMRSActionProxyService {
      * @param locationName      the name of location
      * @param patientUuid       the patient uuid
      * @param providerUuid      the provider uuid
-     * @param observations      the map of observations where concept name is a key and value from the observation is a value
+     * @param visitUuid         the visit uuid
+     * @param formUuid          the form uuid
+     * @param observations      the map of observations where concept Uuid is a key and value from the observation is a value
+     * @return the created encounter
      */
-    Encounter createEncounter(String configName, DateTime encounterDatetime, String encounterType, String locationName,
-                              String patientUuid, String providerUuid, Map<String, String> observations);
+    Encounter createEncounter(String configName, DateTime encounterDatetime, String encounterType,
+                         String locationName, String patientUuid, String providerUuid, String visitUuid,
+                         String formUuid, Map<String, String> observations);
 
     /**
      * Creates a patient with the given params. The required fields are : {@code givenName}, {@code familyName},
@@ -85,6 +91,22 @@ public interface OpenMRSActionProxyService {
      * @param identifiers the identifiers to be stored to patient
      */
     void updatePatientIdentifiers(String configName, String patientUuid, Map<String, String> identifiers);
+
+    /**
+     * Creates an observation from given {@code observationJSON}. The observationJSON is the only required field. Other
+     * params are optional and will overwrite any matching key of {@code observationJSON}. Configuration with
+     * the given {@code configName} will be used while performing this action.
+     *  @param configName      the name of the configuration
+     * @param observationJSON the observation in JSON
+     * @param encounterUuid   the encounter uuid
+     * @param conceptUuid     the concept uuid
+     * @param obsDatetime     the observation datetime
+     * @param orderUuid       the order uuid
+     * @param comment         the comment
+     * @return the created observation
+     */
+    Observation createObservationJSON(String configName, String observationJSON, String encounterUuid, String conceptUuid,
+                                      DateTime obsDatetime, String orderUuid, String comment);
 
     /**
      * Creates a visit with the given {@code patientUuid}, {@code visitStartDatetime},
@@ -189,4 +211,18 @@ public interface OpenMRSActionProxyService {
      * @param parameters      the additional parameters
      */
     void getCohortQueryReport(String configName, String cohortQueryUuid, Map<String, String> parameters);
+
+    /**
+     * Creates an order with the given params.
+     *
+     * @param configName    the name of the configuration
+     * @param type the order type
+     * @param encounterUuid the encounter uuid
+     * @param patientUuid the patient uuid
+     * @param conceptUuid the concept uuid
+     * @param ordererUuid the orderer uuid
+     * @param careSetting the care setting value
+     * @return the created Order
+     */
+    Order createOrder(String configName, String type, String encounterUuid, String patientUuid, String conceptUuid, String ordererUuid, String careSetting);
 }

@@ -84,8 +84,8 @@ public class CourseStructureServiceTest {
         chapter.setId(11l);
         Course course = new Course(Constants.COURSE, CourseUnitState.Active, Constants.COURSE, Constants.COURSE, null, asList(chapter));
         course.setId(1l);
-
-        when(courseDataService.findCourseById(1l)).thenReturn(course);
+        
+        when(courseDataService.detachedCopy(courseDataService.findCourseById(1l))).thenReturn(course);
 
         courseStructureService.updateCourseStructure(coursesToUpdate);
 
@@ -132,10 +132,11 @@ public class CourseStructureServiceTest {
         Course course = new Course(Constants.COURSE, CourseUnitState.Active, Constants.COURSE, Constants.COURSE, null, null);
         course.setId(1l);
 
-        when(courseDataService.findCourseById(1l)).thenReturn(course);
+        when(courseDataService.detachedCopy(courseDataService.findCourseById(1l))).thenReturn(course);
         when(chapterDataService.findChapterById(11l)).thenReturn(chapter);
         when(lessonDataService.findLessonById(13l)).thenReturn(lesson);
         when(quizDataService.findQuizById(15l)).thenReturn(quiz);
+
 
         courseStructureService.updateCourseStructure(coursesToUpdate);
 

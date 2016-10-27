@@ -4,6 +4,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import org.motechproject.openmrs.util.JsonUtils;
@@ -28,8 +29,10 @@ public class Encounter {
     private EncounterType encounterType;
     private Date encounterDatetime;
     private Patient patient;
+    private Visit visit;
     private List<Observation> obs;
     private List<Person> encounterProviders;
+    private Form form;
 
     /**
      * Default constructor.
@@ -39,17 +42,29 @@ public class Encounter {
 
     public Encounter(Location location, EncounterType encounterType, Date encounterDatetime, Patient patient,
                      List<Person> encounterProviders) {
-        this(location, encounterType, encounterDatetime, patient, encounterProviders, null);
+        this(location, encounterType, encounterDatetime, patient, null, encounterProviders, null);
     }
 
     public Encounter(Location location, EncounterType encounterType, Date encounterDatetime, Patient patient,
-                     List<Person> encounterProviders, List<Observation> obs) {
+                     Visit visit, List<Person> encounterProviders) {
+        this(location, encounterType, encounterDatetime, patient, visit, encounterProviders, null);
+    }
+
+    public Encounter(Location location, EncounterType encounterType, Date encounterDatetime, Patient patient,
+                     Visit visit, List<Person> encounterProviders, List<Observation> obs) {
+        this(location, encounterType, encounterDatetime, patient, visit, encounterProviders, obs, null);
+    }
+
+    public Encounter(Location location, EncounterType encounterType, Date encounterDatetime, Patient patient,
+                     Visit visit, List<Person> encounterProviders, List<Observation> obs, Form form) {
         this.location = location;
         this.encounterType = encounterType;
         this.encounterDatetime = encounterDatetime;
         this.patient = patient;
+        this.visit = visit;
         this.encounterProviders = encounterProviders;
         this.obs = obs;
+        this.form = form;
     }
 
     public String getUuid() {
@@ -100,6 +115,14 @@ public class Encounter {
         this.patient = patient;
     }
 
+    public Visit getVisit() {
+        return visit;
+    }
+
+    public void setVisit(Visit visit) {
+        this.visit = visit;
+    }
+
     public List<Person> getEncounterProviders() {
         return encounterProviders;
     }
@@ -112,31 +135,38 @@ public class Encounter {
         return obs;
     }
 
+    public Form getForm() { return form; }
+
+    public void setForm(Form form) { this.form  = form; }
+
     public void setObs(List<Observation> obs) {
         this.obs = obs;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, display, location, encounterType, encounterDatetime, patient, encounterProviders, obs);
+        return Objects.hash(uuid, display, location, encounterType, encounterDatetime, patient, visit, obs, encounterProviders, form);
     }
 
     @Override //NO CHECKSTYLE Cyclomatic Complexity
-    public boolean equals(Object obj) {
-        if (this == obj) {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-
-        if (obj == null || getClass() != obj.getClass()) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
-        Encounter other = (Encounter) obj;
-
-        return Objects.equals(this.uuid, other.uuid) && Objects.equals(this.display, other.display) &&
-                Objects.equals(this.location, other.location) && Objects.equals(this.encounterType, other.encounterType) &&
-                Objects.equals(this.encounterDatetime, other.encounterDatetime) && Objects.equals(this.patient, other.patient) &&
-                Objects.equals(this.encounterProviders, other.encounterProviders) && Objects.equals(this.obs, other.obs);
+        Encounter encounter = (Encounter) o;
+        return Objects.equals(uuid, encounter.uuid) &&
+                Objects.equals(display, encounter.display) &&
+                Objects.equals(location, encounter.location) &&
+                Objects.equals(encounterType, encounter.encounterType) &&
+                Objects.equals(encounterDatetime, encounter.encounterDatetime) &&
+                Objects.equals(patient, encounter.patient) &&
+                Objects.equals(visit, encounter.visit) &&
+                Objects.equals(obs, encounter.obs) &&
+                Objects.equals(encounterProviders, encounter.encounterProviders) &&
+                Objects.equals(form, encounter.form);
     }
 
     /**
@@ -144,7 +174,7 @@ public class Encounter {
      */
     public static class EncounterSerializer implements JsonSerializer<Encounter> {
 
-        @Override
+        @Override //NO CHECKSTYLE Cyclomatic Complexity
         public JsonElement serialize(Encounter src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject encounter = new JsonObject();
 
@@ -170,11 +200,29 @@ public class Encounter {
             if (src.encounterProviders != null) {
                 encounter.addProperty("provider", src.getEncounterProviders().get(0).getUuid());
             }
+            if (src.visit != null) {
+                encounter.addProperty("visit", src.getVisit().getUuid());
+            }
+            if (src.form != null) {
+                encounter.addProperty("form", src.getForm().getUuid());
+            }
             if (src.obs != null) {
                 final JsonElement jsonObs = context.serialize(src.getObs());
                 encounter.add("obs", jsonObs);
             }
             return encounter;
+        }
+    }
+
+    /**
+     * Implementation of the {@link JsonSerializer} interface for the {@link Encounter} class. It represents the encounter
+     * as its ID.
+     */
+    public static class EncounterUuidSerializer implements JsonSerializer<Encounter> {
+
+        @Override
+        public JsonElement serialize(Encounter encounter, Type type, JsonSerializationContext jsonSerializationContext) {
+            return new JsonPrimitive(encounter.getUuid());
         }
     }
 
@@ -190,7 +238,7 @@ public class Encounter {
             final JsonElement jsonProvider = jsonEncounter.get("provider");
             Person provider = (Person) JsonUtils.readJson(jsonProvider.toString(), Person.class);
 
-            Encounter  encounter = (Encounter) JsonUtils.readJson(src.toString(), Encounter.class);
+            Encounter encounter = (Encounter) JsonUtils.readJson(src.toString(), Encounter.class);
             encounter.setEncounterProviders(Collections.singletonList(provider));
 
             return encounter;

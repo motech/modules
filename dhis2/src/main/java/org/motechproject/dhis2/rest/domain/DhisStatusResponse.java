@@ -9,31 +9,19 @@ import java.util.Objects;
  * A class to model DHIS2 responses that result from creating entities.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DhisStatusResponse {
+public class DhisStatusResponse extends DhisResponse{
 
     private DhisStatus status;
-    private ImportCountDto importCount;
+    private ImportCountDto importCountDto;
     private String reference;
     private DhisResponseDetails response;
 
-    public DhisStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(DhisStatus status) {
-        this.status = status;
-    }
-
-    public ImportCountDto getImportCount() {
-        if (importCount == null && response == null) {
+    public ImportCountDto getImportCountDto() {
+        if (importCountDto == null && response == null) {
             return null;
         } else {
-            return importCount != null ? importCount : response.getImportCount();
+            return importCountDto != null ? importCountDto : response.getImportCount();
         }
-    }
-
-    public void setImportCount(ImportCountDto importCount) {
-        this.importCount = importCount;
     }
 
     public String getReference() {
@@ -58,7 +46,7 @@ public class DhisStatusResponse {
 
     @Override
     public int hashCode() {
-        return Objects.hash(status, importCount, reference, response);
+        return Objects.hash(status, importCountDto, reference, response);
     }
 
     @Override
@@ -71,7 +59,7 @@ public class DhisStatusResponse {
         }
         final DhisStatusResponse other = (DhisStatusResponse) obj;
         return Objects.equals(this.status, other.status)
-                && Objects.equals(this.importCount, other.importCount)
+                && Objects.equals(this.importCountDto, other.importCountDto)
                 && Objects.equals(this.reference, other.reference)
                 && Objects.equals(this.response, other.response);
     }

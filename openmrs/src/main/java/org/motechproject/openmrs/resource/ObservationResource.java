@@ -39,6 +39,16 @@ public interface ObservationResource {
     Observation getObservationById(Config config, String uuid);
 
     /**
+     * Gets the latest observation with the given patientUUID and conceptUUID. The given {@code config} will be used while performing this action.
+     *
+     * @param config  the configuration to be used while performing this action
+     * @param patientUUID  the UUID of the patient
+     * @param conceptUUID  the UUID of the concept
+     * @return  the latest observation with the given patientUUID and conceptUUID
+     */
+    ObservationListResult getObservationByPatientUUIDAndConceptUUID(Config config, String patientUUID, String conceptUUID);
+
+    /**
      * Creates the given observation on the OpenMRS server. The given {@code config} will be used while performing this
      * action.
      *
@@ -47,6 +57,16 @@ public interface ObservationResource {
      * @return  the saved observation
      */
     Observation createObservation(Config config, Observation observation);
+
+    /**
+     * Creates the given observation on the OpenMRS server. The given {@code config} will be used while performing this
+     * action.
+     *
+     * @param config  the configuration to be used while performing this action
+     * @param observationJson  the observation json to be created
+     * @return  the saved observation
+     */
+    Observation createObservationFromJson(Config config, String observationJson);
 
     /**
      * Deletes the observation with the given UUID. The given {@code config} will be used while performing this action.

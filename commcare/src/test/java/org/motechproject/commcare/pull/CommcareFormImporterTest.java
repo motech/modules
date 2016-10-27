@@ -247,7 +247,7 @@ public class CommcareFormImporterTest {
 
         Map<String, String> attributes = (Map<String, String>) params.get(EventDataKeys.ATTRIBUTES);
         assertNotNull(attributes);
-        assertEquals(2, attributes.size());
+        assertEquals(3, attributes.size());
         assertEquals(ATTR_KEY1 + " " + id, attributes.get(ATTR_KEY1));
         assertEquals(ATTR_KEY2 + " " + id, attributes.get(ATTR_KEY2));
 

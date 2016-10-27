@@ -31,7 +31,7 @@ public class OpenMRSCohortServiceImpl implements OpenMRSCohortService {
             Config config = configService.getConfigByName(configName);
             return cohortResource.getCohortQueryReport(config, cohortQueryUuid, parameters);
         } catch (HttpClientErrorException e) {
-            throw new OpenMRSException("Could not get cohort query report for uuid" + cohortQueryUuid, e);
+            throw new OpenMRSException(String.format("Could not get cohort query report for uuid: %s. %s %s" + cohortQueryUuid, e.getMessage(), e.getResponseBodyAsString()), e);
         }
     }
 }

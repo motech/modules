@@ -347,7 +347,7 @@
                     $scope.$parent.selectedConfig = data;
                     $scope.$parent.newlyCreatedConfig = data;
                     if ($scope.$parent.selectedConfig.eventStrategy === "") {
-                        $scope.$parent.selectedConfig.eventStrategy = $scope.eventStrategyOptions[0];
+                        $scope.$parent.selectedConfig.eventStrategy = $scope.eventStrategyOptions[2];
                     }
                     LoadingModal.close();
                 },

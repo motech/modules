@@ -8,20 +8,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.openmrs.config.Configs;
-import org.motechproject.openmrs.domain.Attribute;
-import org.motechproject.openmrs.domain.Encounter;
-import org.motechproject.openmrs.domain.EncounterType;
-import org.motechproject.openmrs.domain.Patient;
-import org.motechproject.openmrs.domain.Person;
-import org.motechproject.openmrs.domain.Program;
-import org.motechproject.openmrs.domain.ProgramEnrollment;
-import org.motechproject.openmrs.domain.ProgramEnrollmentListResult;
-import org.motechproject.openmrs.domain.Provider;
-import org.motechproject.openmrs.domain.Relationship;
-import org.motechproject.openmrs.domain.RelationshipType;
+import org.motechproject.openmrs.domain.*;
 import org.motechproject.openmrs.service.OpenMRSConfigService;
 import org.motechproject.openmrs.service.OpenMRSEncounterService;
 import org.motechproject.openmrs.service.OpenMRSGeneratedIdentifierService;
+import org.motechproject.openmrs.service.OpenMRSObservationService;
 import org.motechproject.openmrs.service.OpenMRSPatientService;
 import org.motechproject.openmrs.service.OpenMRSProgramEnrollmentService;
 import org.motechproject.openmrs.service.OpenMRSProviderService;
@@ -44,20 +35,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.ACTIVE_PROGRAM;
-import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BAHMNI_PROGRAM_ENROLLMENT;
-import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_MOTECH_ID;
-import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_MOTECH_ID_AND_PROGRAM_NAME;
-import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_PERSON_UUID;
-import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_UUID;
-import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_UUID_AMD_PROGRAM_NAME;
-import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.MOTECH_ID;
-import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PATIENT_MOTECH_ID;
-import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PATIENT_UUID;
-import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PERSON_UUID;
-import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PROGRAM_NAME;
-import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.RELATIONSHIP_TYPE_UUID;
-import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.UUID;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OpenMRSTaskDataProviderTest {
@@ -74,6 +52,9 @@ public class OpenMRSTaskDataProviderTest {
 
     @Mock
     private OpenMRSEncounterService encounterService;
+
+    @Mock
+    private OpenMRSObservationService observationService;
 
     @Mock
     private OpenMRSPatientService patientService;
@@ -107,7 +88,7 @@ public class OpenMRSTaskDataProviderTest {
     @Before
     public void setUp() {
         when(configService.getConfigs()).thenReturn(new Configs());
-        taskDataProvider = new OpenMRSTaskDataProvider(taskDataProviderBuilder, encounterService, patientService,
+        taskDataProvider = new OpenMRSTaskDataProvider(taskDataProviderBuilder, encounterService, observationService, patientService,
                 providerService, relationshipService, programEnrollmentService, identifierService, bundleContext);
     }
 
@@ -176,6 +157,27 @@ public class OpenMRSTaskDataProviderTest {
 
         assertEquals(encounter, object);
         verify(encounterService).getEncounterByUuid(CONFIG_NAME, DEFAULT_UUID);
+    }
+
+    @Test
+    public void shouldReturnObservationForPatientUuidAndConceptUuid() {
+        String className = Observation.class.getSimpleName();
+        String conceptUuid = "sampleConceptUuid";
+
+        Map<String, String> lookupFields = new HashMap<>();
+        lookupFields.put(PATIENT_UUID, DEFAULT_UUID);
+        lookupFields.put(CONCEPT_UUID, conceptUuid);
+
+        Observation observation = new Observation();
+        observation.setUuid("10");
+
+        when(observationService.getLatestObservationByPatientUUIDAndConceptUUID(CONFIG_NAME, DEFAULT_UUID, conceptUuid)).thenReturn(observation);
+
+        Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, BY_PATIENT_UUID_AND_CONCEPT_UUID, lookupFields);
+
+        assertEquals(observation, object);
+
+        verify(observationService).getLatestObservationByPatientUUIDAndConceptUUID(CONFIG_NAME, DEFAULT_UUID, conceptUuid);
     }
 
     @Test

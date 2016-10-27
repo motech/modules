@@ -196,6 +196,7 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
     private void importFormList(CommcareFormList formList) {
         // iterate backwards
         for (CommcareForm form : Lists.reverse(formList.getObjects())) {
+            form.getForm().addAttribute("app_id", form.getAppId());
             FullFormEvent formEvent = new FullFormEvent(form.getForm(), form.getReceivedOn(), form.getConfigName());
 
             lastFormXMLNSToBeImported = formEvent.getAttributes().get("xmlns");

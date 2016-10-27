@@ -7,11 +7,9 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
  * A class to model DHIS2 responses that result from importing data values and data value sets.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DhisDataValueStatusResponse {
+public class DhisDataValueStatusResponse extends DhisResponse {
 
-    private DhisStatus status;
     private String description;
-    private ImportCountDto importCountDto;
     private ImportCountDto dataValueCount;
     private boolean dataSetComplete;
 
@@ -24,28 +22,12 @@ public class DhisDataValueStatusResponse {
         this.dataValueCount = dataValueCount;
     }
 
-    public DhisStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(DhisStatus status) {
-        this.status = status;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public ImportCountDto getImportCountDto() {
-        return importCountDto;
-    }
-
-    public void setImportCountDto(ImportCountDto importCountDto) {
-        this.importCountDto = importCountDto;
     }
 
     public boolean isDataSetComplete() {
