@@ -24,11 +24,10 @@ import java.util.Map;
 public class AtomClientEventHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AtomClientEventHandler.class);
-    private AtomClientConfigService atomClientConfigService;
-    private AtomClientService atomClientService;
-
     private static final String CURRENT_URL = "currentFeedUrl";
     private static final String LAST_URL = "lastFeedUrl";
+    private AtomClientConfigService atomClientConfigService;
+    private AtomClientService atomClientService;
 
     @Autowired
     public void setAtomClientConfigService(AtomClientConfigService atomClientConfigService) {

@@ -53,5 +53,12 @@ public interface AtomClientConfigService {
      */
     String getRegexForFeedUrl(String url);
 
-    void readNewFeeds (int currentPage, int recentPage, String feedUrl);
+    /**
+     * Sets the module's feed configurations, based on pages that should be consumed.
+     *
+     * @param currentPage last page that is already loaded to module
+     * @param recentPage recent available page that can be consumed
+     * @param feedUrl the feed URL
+     */
+    void readNewFeeds(int currentPage, int recentPage, String feedUrl);
 }

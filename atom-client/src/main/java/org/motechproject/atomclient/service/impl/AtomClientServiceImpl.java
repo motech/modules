@@ -71,6 +71,7 @@ public class AtomClientServiceImpl implements AtomClientService {
         LOGGER.info("The fetch job cron is {}", cronExpression);
     }
 
+
     @Override
     @Transactional
     public void read(String currentUrl, String lastUrl) {
@@ -91,7 +92,6 @@ public class AtomClientServiceImpl implements AtomClientService {
 
         configService.readNewFeeds(currentPage, lastPage, currentUrl);
         fetch();
-
     }
 
 
