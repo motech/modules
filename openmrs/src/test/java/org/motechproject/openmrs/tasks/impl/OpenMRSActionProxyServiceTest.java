@@ -412,6 +412,33 @@ public class OpenMRSActionProxyServiceTest {
     }
 
     @Test
+    public void shouldUpdatePersonWithBlankMiddleName() {
+        Person person = createTestPerson();
+        // the empty value from task action fields
+        person.getPreferredName().setMiddleName("\"\"");
+
+        Person.Address personAddress = person.getPreferredAddress();
+
+        Map<String, String> personAttributes = new HashMap<>();
+        personAttributes.put("8d8718c2-c2cc-11de-8d13-0010c6dffd0f", "testValue");
+
+        openMRSActionProxyService.updatePerson(CONFIG_NAME, person.getUuid(), person.getPreferredName().getGivenName(),
+                person.getPreferredName().getMiddleName(), person.getPreferredName().getFamilyName(),
+                personAddress.getAddress1(), personAddress.getAddress2(), personAddress.getAddress3(),
+                personAddress.getAddress4(), personAddress.getAddress5(), personAddress.getAddress6(),
+                personAddress.getCityVillage(), personAddress.getStateProvince(), personAddress.getCountry(),
+                personAddress.getPostalCode(), personAddress.getCountyDistrict(), personAddress.getLatitude(),
+                personAddress.getLongitude(), new DateTime(personAddress.getStartDate()),
+                new DateTime(personAddress.getEndDate()), new DateTime(person.getBirthdate()),
+                person.getBirthdateEstimated(), person.getGender(), person.getDead(), null, personAttributes);
+
+        verify(personService).updatePerson(eq(CONFIG_NAME), personCaptor.capture());
+        // middleName should be converted to empty string
+        person.getPreferredName().setMiddleName("");
+        assertEquals(person, personCaptor.getValue());
+    }
+
+    @Test
     public void shouldUpdatePatientIdentifiers() {
         Patient patient = new Patient();
         patient.setUuid("10");
