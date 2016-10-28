@@ -74,7 +74,6 @@ public final class EventDataKeys {
     //ReportEvent
     public static final String REPORT_ID = "report_id";
     public static final String REPORT_NAME = "report_name";
-    public static final String REPORT_DATA = "report_data";
 
     /**
      * Utility class, should not be initiated.

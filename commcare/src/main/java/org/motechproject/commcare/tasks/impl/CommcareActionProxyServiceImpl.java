@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.motechproject.commcare.domain.CaseTask;
 import org.motechproject.commcare.service.CaseActionService;
 import org.motechproject.commcare.service.QueryStockLedgerActionService;
+import org.motechproject.commcare.service.ReportActionService;
 import org.motechproject.commcare.service.imports.ImportFormActionService;
 import org.motechproject.commcare.tasks.CommcareActionProxyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +18,17 @@ public class CommcareActionProxyServiceImpl implements CommcareActionProxyServic
     private CaseActionService caseActionService;
     private ImportFormActionService importFormActionService;
     private QueryStockLedgerActionService queryStockLedgerActionService;
+    private ReportActionService reportActionService;
 
     @Autowired
     public  CommcareActionProxyServiceImpl(CaseActionService caseActionService,
                                            ImportFormActionService importFormActionService,
-                                           QueryStockLedgerActionService queryStockLedgerActionService) {
+                                           QueryStockLedgerActionService queryStockLedgerActionService,
+                                           ReportActionService reportActionService) {
         this.caseActionService = caseActionService;
         this.importFormActionService = importFormActionService;
         this.queryStockLedgerActionService = queryStockLedgerActionService;
+        this.reportActionService = reportActionService;
     }
 
 
@@ -46,5 +50,10 @@ public class CommcareActionProxyServiceImpl implements CommcareActionProxyServic
     @Override
     public void queryStockLedger(String configName, String caseId, String sectionId, DateTime startDate, DateTime endDate, Map<String, Object> extraData) {
         queryStockLedgerActionService.queryStockLedger(configName, caseId, sectionId, startDate, endDate, extraData);
+    }
+
+    @Override
+    public void queryReport (String configName, String reportId, String reportName, String urlParsedFilters) {
+        reportActionService.queryReport(configName, reportId, reportName, urlParsedFilters);
     }
 }

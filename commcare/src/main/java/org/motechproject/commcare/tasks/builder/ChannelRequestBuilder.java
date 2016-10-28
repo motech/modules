@@ -49,6 +49,7 @@ public class ChannelRequestBuilder {
 
         FormTriggerBuilder formTriggerBuilder = new FormTriggerBuilder(schemaService, configService);
         CaseTriggerBuilder caseTriggerBuilder = new CaseTriggerBuilder(schemaService, configService);
+        ReportTriggerBuilder reportTriggerBuilder = new ReportTriggerBuilder(schemaService, configService);
         CommonTriggerBuilder commonTriggerBuilder = new CommonTriggerBuilder(configService);
 
         // Actions
@@ -60,6 +61,7 @@ public class ChannelRequestBuilder {
 
         List<TriggerEventRequest> triggers = formTriggerBuilder.buildTriggers();
         triggers.addAll(caseTriggerBuilder.buildTriggers());
+        triggers.addAll(reportTriggerBuilder.buildTriggers());
         triggers.addAll(commonTriggerBuilder.buildTriggers());
 
         List<ActionEventRequest> actions = new ArrayList<>();
