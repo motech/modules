@@ -1,21 +1,18 @@
 package org.motechproject.commcare.events;
 
 import org.joda.time.DateTime;
-import org.motechproject.commcare.domain.report.ReportDataInfo;
 import org.motechproject.commcare.domain.report.constants.FilterDataType;
 import org.motechproject.commcare.domain.report.constants.FilterType;
 import org.motechproject.commcare.events.constants.DisplayNames;
 import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.commcare.events.constants.EventSubjects;
-import org.motechproject.commcare.service.CommcareReportService;
+import org.motechproject.commcare.service.ReportActionService;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.event.listener.EventRelay;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +20,11 @@ import java.util.Map;
  * This class serves as the event handler for the task actions, exposed by the Commcare module.
  * Respective methods extract the necessary data from the {@link MotechEvent} instance and
  * handles all the operations on Commcare reports.
+ */
+/**
+ * Class responsible for handling "Report" events. The service will extract the necessary data
+ * from the {@link MotechEvent} and pass them to the {@link ReportActionService} service that will
+ * query the CommCare Report UCR API and then send a motech event for selected report.
  */
 @Component
 public class ReportActionEventHandler {
@@ -34,14 +36,13 @@ public class ReportActionEventHandler {
     private static final String NUMERIC_OPERAND_FILTER_SUFFIX = "-operand";
     private static final String COMMCARE_REPORT_FILTER_DATE_FORMAT = "yyyy-MM-dd";
 
-    private CommcareReportService commcareReportService;
-    private EventRelay eventRelay;
+    private ReportActionService reportActionService;
 
     @Autowired
-    public ReportActionEventHandler (CommcareReportService commcareReportService, EventRelay eventRelay) {
-        this.commcareReportService = commcareReportService;
-        this.eventRelay = eventRelay;
+    public ReportActionEventHandler (ReportActionService reportActionService) {
+        this.reportActionService = reportActionService;
     }
+
     /**
      * Handles events, connected with getting Commcare report. The event subject should have the following syntax:
      * {@code EventSubjects.REPORT_EVENT.report_name.config_name}
@@ -59,10 +60,7 @@ public class ReportActionEventHandler {
 
         String parsedFilters = convertFieldsToRequest(fields, parameters);
 
-        ReportDataInfo report = commcareReportService.getReportByIdWithFilters(reportId, configName, parsedFilters);
-
-        eventRelay.sendEventMessage(new MotechEvent(EventSubjects.RECEIVED_REPORT + "." +  reportName + "." + reportId,
-                prepareReceiveReportParameters(report, reportId, reportName)));
+        reportActionService.queryReport(configName, reportId, reportName, parsedFilters);
     }
 
     private List<String> getFieldNamesFromParameters (Map<String, Object> parameters) {
@@ -93,7 +91,7 @@ public class ReportActionEventHandler {
                 }
             } else if (fieldType.equals(FilterType.DATE.toString())) {
                 urlFilterBuilder.append(parseDateField(fieldName, parameters));
-            } else if (fieldType.equals(FilterDataType.INTEGER.toString())) {
+            } else if (fieldType.equals(FilterDataType.DECIMAL.toString())) {
                 urlFilterBuilder.append(parseNumericField(fieldName, parameters));
             }
         }
@@ -144,15 +142,5 @@ public class ReportActionEventHandler {
         }
 
         return parsedNumericFilterBuilder.toString();
-    }
-
-    private Map<String, Object> prepareReceiveReportParameters (ReportDataInfo report, String reportId, String reportName) {
-        Map<String, Object> parameters = new HashMap<>();
-
-        parameters.put(EventDataKeys.REPORT_ID, reportId);
-        parameters.put(EventDataKeys.REPORT_NAME, reportName);
-        parameters.put(EventDataKeys.REPORT_DATA, report);
-
-        return parameters;
     }
 }

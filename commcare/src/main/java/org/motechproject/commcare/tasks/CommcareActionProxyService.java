@@ -30,4 +30,9 @@ public interface CommcareActionProxyService {
      * See {@link org.motechproject.commcare.service.QueryStockLedgerActionService#queryStockLedger(String, String, String, DateTime, DateTime, Map) queryStockLedger}
      */
     void queryStockLedger(String configName, String caseId, String sectionId, DateTime startDate, DateTime endDate, Map<String, Object> extraData);
+
+    /**
+     * See {@link org.motechproject.commcare.service.ReportActionService#queryReport(String, String, String, String)}
+     */
+    void queryReport (String configName, String reportId, String reportName, String urlParsedFilters);
 }
