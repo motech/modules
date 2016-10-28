@@ -128,7 +128,14 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
                              String gender, Boolean dead, String causeOfDeathUUID, Map<String, String> personAttributes) {
         Concept causeOfDeath = StringUtils.isNotEmpty(causeOfDeathUUID) ? conceptService.getConceptByUuid(configName, causeOfDeathUUID) : null;
 
-        Person person = preparePerson(givenName, middleName, familyName, address1, address2,
+        String parsedMiddleName;
+        if ("\"\"".equals(middleName)) {
+            parsedMiddleName = "";
+        } else {
+            parsedMiddleName = middleName;
+        }
+
+        Person person = preparePerson(givenName, parsedMiddleName, familyName, address1, address2,
                 address3, address4, address5, address6, cityVillage, stateProvince,
                 country, postalCode, countyDistrict, latitude, longitude,
                 startDate, endDate, birthDate, birthDateEstimated,

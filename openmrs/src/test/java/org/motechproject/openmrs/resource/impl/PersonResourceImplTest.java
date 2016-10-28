@@ -26,6 +26,7 @@ import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -38,6 +39,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
     private static final String PERSON_ATTRIBUTE_TYPE_RESPONSE_JSON = "json/person/person-attribute-type-response.json";
     private static final String CREATE_PERSON_ATTRIBUTE_JSON = "json/person/person-attribute-create.json";
     private static final String PERSON_NAME_UPDATE_JSON = "json/person/person-name-update.json";
+    private static final String PERSON_MIDDLENAME_UPDATE_JSON = "json/person/person-middleName-update.json";
     private static final String PERSON_RESPONSE_JSON = "json/person/person-response.json";
     private static final String CREATE_PERSON_JSON = "json/person/person-create.json";
     private static final String UPDATE_PERSON_ADDRESS_JSON = "json/person/person-address-update.json";
@@ -195,9 +197,24 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
 
         verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
 
-        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForPostWithoutResponse(config)));
-        assertThat(JsonUtils.readJson(requestCaptor.getValue().getBody(), JsonObject.class),
-                equalTo(readFromFile(PERSON_NAME_UPDATE_JSON, JsonObject.class)));
+        assertEquals(readFromFile(PERSON_NAME_UPDATE_JSON, Person.Name.class),
+                JsonUtils.readJson(requestCaptor.getValue().getBody(), Person.Name.class));
+    }
+
+    @Test
+    public void shouldOverwritePersonMiddleName() throws Exception {
+        String personId = "CCC";
+        Person.Name name = prepareName();
+        name.setMiddleName("");
+
+        URI url = config.toInstancePathWithParams("/person/{personUuid}/name/{nameUuid}", personId, name.getUuid());
+
+        personResource.updatePersonName(config, personId, name);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.POST), requestCaptor.capture(), eq(String.class));
+
+        assertEquals(readFromFile(PERSON_MIDDLENAME_UPDATE_JSON, Person.Name.class),
+                JsonUtils.readJson(requestCaptor.getValue().getBody(), Person.Name.class));
     }
 
     @Test
@@ -254,7 +271,7 @@ public class PersonResourceImplTest extends AbstractResourceImplTest {
         name.setUuid("AAA");
         name.setGivenName("Motech");
         name.setMiddleName("E");
-        name.setGivenName("Test");
+        name.setFamilyName("Test");
         return name;
     }
     private Person.Address prepareAddress() throws Exception {
