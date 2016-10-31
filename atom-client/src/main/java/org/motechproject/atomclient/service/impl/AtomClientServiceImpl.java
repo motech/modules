@@ -26,8 +26,9 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 
 @Service("atomClientService")
@@ -45,7 +46,6 @@ public class AtomClientServiceImpl implements AtomClientService {
     public AtomClientServiceImpl(FeedRecordDataService feedRecordDataService, EventRelay eventRelay,
                                  AtomClientConfigService configService, MotechSchedulerService motechSchedulerService) {
         feedFetcher = new HttpURLFeedFetcher(new FeedCache(feedRecordDataService, eventRelay, configService));
-        feedFetcher.setAllowDoctypes(true);
         this.configService = configService;
         this.motechSchedulerService = motechSchedulerService;
         this.feedRecordDataService = feedRecordDataService;
@@ -75,11 +75,12 @@ public class AtomClientServiceImpl implements AtomClientService {
     @Override
     @Transactional
     public void read(String currentUrl, String lastUrl) {
-        FeedConfig[] feeds = new FeedConfig[2];
+        List<FeedConfig> feeds = new ArrayList<>();
+        String regex = "/([0-9a-f-]*)\\?";
 
-        feeds[0] = new FeedConfig(currentUrl, "/([0-9a-f-]*)\\?");
-        feeds[1] = new FeedConfig(lastUrl, "/([0-9a-f-]*)\\?");
-        configService.setFeedConfigs(new FeedConfigs(new HashSet<>(Arrays.asList(feeds))));
+        feeds.add(new FeedConfig(currentUrl, regex));
+        feeds.add(new FeedConfig(lastUrl, regex));
+        configService.setFeedConfigs(new FeedConfigs(new HashSet<>(feeds)));
         fetch();
 
         FeedRecord feedRecord = feedRecordDataService.findByURL(currentUrl);

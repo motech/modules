@@ -38,15 +38,15 @@
     },
     {
       "subject" : "org.motechproject.atomclient.read",
-      "displayName" : "atomclient.task.feed.read",
+      "displayName" : "atomclient.task.feed.OpenMRS.read",
       "actionParameters" : [
         {
           "key" : "currentFeedUrl",
-          "displayName" : "atomclient.task.feed.read.current_url"
+          "displayName" : "atomclient.task.feed.OpenMRS.currentUrl"
         },
         {
           "key" : "lastFeedUrl",
-          "displayName" : "atomclient.task.feed.read.last_url"
+          "displayName" : "atomclient.task.feed.OpenMRS.lastUrl"
         }
       ]
     }
