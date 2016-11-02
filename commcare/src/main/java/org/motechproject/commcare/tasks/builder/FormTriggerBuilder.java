@@ -111,7 +111,7 @@ public class FormTriggerBuilder implements TriggerBuilder {
         addCaseFields(parameters);
 
         for (FormSchemaQuestionJson question : form.getQuestions()) {
-            parameters.add(new EventParameterRequest(question.getQuestionValue(), question.getQuestionValue()));
+            parameters.add(new EventParameterRequest(question.getQuestionValue(), question.getQuestionValue(), ParameterType.DATE.getValue()));
         }
 
         return parameters;
