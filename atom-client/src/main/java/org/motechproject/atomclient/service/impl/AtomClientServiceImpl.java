@@ -87,14 +87,13 @@ public class AtomClientServiceImpl implements AtomClientService {
         String currenData = feedRecord.getData();
         int currentPage = feedRecord.getPage(currenData);
 
-        feedRecord = feedRecordDataService.findByURL(currentUrl);
+        feedRecord = feedRecordDataService.findByURL(lastUrl);
         String lastData = feedRecord.getData();
         int lastPage = feedRecord.getPage(lastData);
 
         configService.readNewFeeds(currentPage, lastPage, currentUrl);
         fetch();
     }
-
 
     @Override
     @Transactional
