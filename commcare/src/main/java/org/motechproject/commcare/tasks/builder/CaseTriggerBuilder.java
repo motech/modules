@@ -74,7 +74,7 @@ public class CaseTriggerBuilder implements TriggerBuilder {
 
                         if (config.isEventStrategyFull()) {
                             for (String caseProperty : module.getCaseProperties()) {
-                                parameterRequests.add(new EventParameterRequest(caseProperty, caseProperty));
+                                parameterRequests.add(new EventParameterRequest(caseProperty, caseProperty, ParameterType.DATE.getValue()));
                             }
                         }
 
