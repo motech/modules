@@ -42,4 +42,11 @@ public class FeedRecord {
     public String getData() {
         return data;
     }
+
+    public Integer getPage(String data) {
+        int beginIndex = data.indexOf("via");
+        beginIndex = data.indexOf("patient", beginIndex) + "patient/".length();
+        int endIndex = data.indexOf('/', beginIndex) - "\" ".length();
+        return Integer.parseInt(data.substring(beginIndex, endIndex));
+    }
 }

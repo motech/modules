@@ -35,6 +35,20 @@
       "subject" : "org.motechproject.atomclient.fetch",
       "displayName" : "atomclient.task.feed.fetch",
       "actionParameters" : [ ]
+    },
+    {
+      "subject" : "org.motechproject.atomclient.read",
+      "displayName" : "atomclient.task.feed.OpenMRS.read",
+      "actionParameters" : [
+        {
+          "key" : "currentFeedUrl",
+          "displayName" : "atomclient.task.feed.OpenMRS.currentUrl"
+        },
+        {
+          "key" : "lastFeedUrl",
+          "displayName" : "atomclient.task.feed.OpenMRS.lastUrl"
+        }
+      ]
     }
   ]
 }

@@ -8,9 +8,9 @@ import org.motechproject.atomclient.service.AtomClientConfigService;
 import org.motechproject.atomclient.service.Constants;
 import org.motechproject.atomclient.service.FeedConfig;
 import org.motechproject.atomclient.service.FeedConfigs;
+import org.motechproject.config.SettingsFacade;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.config.SettingsFacade;
 import org.quartz.CronExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +22,9 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 
 @Service("atomClientConfigService")
@@ -133,5 +136,14 @@ public class AtomClientConfigServiceImpl implements AtomClientConfigService {
             }
         }
         return "";
+    }
+
+    public void readNewFeeds (int currentPage, int recentPage, String feedUrl) {
+        List<FeedConfig> newFeeds = new ArrayList<>();
+        String url = feedUrl.substring(0, feedUrl.lastIndexOf('/') + 1);
+        for (int i = currentPage; i <= recentPage; i++) {
+            newFeeds.add(new FeedConfig(url + Integer.toString(i), "/([0-9a-f-]*)\\?"));
+        }
+        this.setFeedConfigs(new FeedConfigs(new HashSet<>(newFeeds)));
     }
 }

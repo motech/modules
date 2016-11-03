@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 /**
  * Handles:
  * - (raw or text) config changes by triggering the reload of the appropriate configuration items
@@ -22,9 +24,10 @@ import org.springframework.stereotype.Component;
 public class AtomClientEventHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AtomClientEventHandler.class);
+    private static final String CURRENT_URL = "currentFeedUrl";
+    private static final String LAST_URL = "lastFeedUrl";
     private AtomClientConfigService atomClientConfigService;
     private AtomClientService atomClientService;
-
 
     @Autowired
     public void setAtomClientConfigService(AtomClientConfigService atomClientConfigService) {
@@ -71,5 +74,16 @@ public class AtomClientEventHandler {
         LOGGER.trace("handleFetch {}", event);
 
         atomClientService.fetch();
+    }
+
+    @MotechListener(subjects = { Constants.READ_MESSAGE })
+    public void handleRead(MotechEvent event) {
+        LOGGER.trace("handleRead {}", event);
+        Map<String, Object> params = event.getParameters();
+
+        String currentUrl = (String) params.get(CURRENT_URL);
+        String lastUrl = (String) params.get(LAST_URL);
+
+        atomClientService.read(currentUrl, lastUrl);
     }
 }

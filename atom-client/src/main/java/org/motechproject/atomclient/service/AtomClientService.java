@@ -22,4 +22,11 @@ public interface AtomClientService {
      * changed since the last time the feed was fetched.
      */
     void fetch();
+
+    /**
+     * Reads the atom feed(s) specified in task action.
+     * @param currentUrl last url that is already fetched
+     * @param lastUrl last known url that can be fetched
+     */
+    void read(String currentUrl, String lastUrl);
 }
