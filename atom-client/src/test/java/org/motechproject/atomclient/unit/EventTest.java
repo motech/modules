@@ -138,11 +138,9 @@ public class EventTest {
        when(feedRecordDataService.findByURL(feedURL)).thenReturn(new FeedRecord(feedURL, ATOM_FEED_DATA));
        when(feedRecordDataService.findByURL(feedURL2)).thenReturn(new FeedRecord(feedURL2, ATOM_FEED_DATA_2));
 
-       ArgumentCaptor<MotechEvent> event = ArgumentCaptor.forClass(MotechEvent.class);
-
        atomClientService.read(feedURL, feedURL2);
 
-       verify(eventRelay, times(0)).sendEventMessage(event.capture());
+       verify(atomClientConfigService).readNewFeeds(35, 36, feedURL);
    }
 
 }
