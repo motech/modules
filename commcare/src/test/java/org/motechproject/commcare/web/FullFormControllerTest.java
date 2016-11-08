@@ -69,7 +69,7 @@ public class FullFormControllerTest {
     public void testIncomingFormsFailure() throws EndpointNotSupported {
         ArgumentCaptor<MotechEvent> captor = ArgumentCaptor.forClass(MotechEvent.class);
 
-        controller.receiveForm("", request);
+        controller.receiveForm("", request, null);
         verify(eventRelay, times(2)).sendEventMessage(captor.capture());
     }
 
@@ -77,7 +77,7 @@ public class FullFormControllerTest {
     public void testIncomingDeviceReport() throws EndpointNotSupported {
         ArgumentCaptor<MotechEvent> captor = ArgumentCaptor.forClass(MotechEvent.class);
 
-        controller.receiveForm(ResponseXML.getDeviceReportXML(), request);
+        controller.receiveForm(ResponseXML.getDeviceReportXML(), request, DummyCommcareSchema.APP_ID1);
 
         verify(eventRelay).sendEventMessage(captor.capture());
         MotechEvent event = captor.getValue();
@@ -94,8 +94,9 @@ public class FullFormControllerTest {
         assertEquals("2012-07-21T15:22:34.046462Z", parameters.get(RECEIVED_ON));
 
         Map<String, String> attributes = (Map<String, String>) parameters.get(ATTRIBUTES);
-        assertEquals(1, attributes.size());
+        assertEquals(2, attributes.size());
         assertEquals("http://code.javarosa.org/devicereport", attributes.get("xmlns"));
+        assertEquals(DummyCommcareSchema.APP_ID1, attributes.get("app_id"));
 
         Multimap<String, Object> subElements = (Multimap<String, Object>) parameters.get(SUB_ELEMENTS);
         assertEquals(1, subElements.size());
@@ -107,7 +108,7 @@ public class FullFormControllerTest {
     public void testIncomingFormsSuccess() throws EndpointNotSupported {
         ArgumentCaptor<MotechEvent> captor = ArgumentCaptor.forClass(MotechEvent.class);
 
-        controller.receiveForm(ResponseXML.getFormXML(), request);
+        controller.receiveForm(ResponseXML.getFormXML(), request, DummyCommcareSchema.APP_ID1);
         verify(eventRelay).sendEventMessage(captor.capture());
 
         MotechEvent event = captor.getValue();
@@ -126,11 +127,12 @@ public class FullFormControllerTest {
         assertEquals("2012-07-21T15:22:34.046462Z", parameters.get(RECEIVED_ON));
 
         Map<String, String> attributes = (Map<String, String>) parameters.get(ATTRIBUTES);
-        assertEquals(4, attributes.size());
+        assertEquals(5, attributes.size());
         assertEquals("1", attributes.get("uiVersion"));
         assertEquals("41", attributes.get("version"));
         assertEquals(ResponseXML.FORM_NAME, attributes.get("name"));
         assertEquals(DummyCommcareSchema.XMLNS1, attributes.get("xmlns"));
+        assertEquals(DummyCommcareSchema.APP_ID1, attributes.get("app_id"));
 
         Multimap<String, Object> subElements = (Multimap<String, Object>) parameters.get(SUB_ELEMENTS);
         assertEquals(5, subElements.size());

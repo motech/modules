@@ -2,6 +2,7 @@ package org.motechproject.commcare.service;
 
 import org.motechproject.commcare.domain.CommcareApplicationJson;
 import org.motechproject.commcare.domain.FormSchemaJson;
+import org.motechproject.commcare.domain.report.ReportsMetadataInfo;
 import org.motechproject.commcare.tasks.builder.model.CaseTypeWithApplicationName;
 import org.motechproject.commcare.tasks.builder.model.FormWithApplicationName;
 
@@ -57,4 +58,11 @@ public interface CommcareSchemaService {
      * @return Set of Forms with display names.
      */
     Set<FormWithApplicationName> getFormsWithApplicationName(String configName);
+
+    /**
+     * Retrieves reports metadata by configuration name
+     *
+     * @return the list of matching reports metadata
+     */
+    List<ReportsMetadataInfo> getReportsMetadata(String configName);
 }

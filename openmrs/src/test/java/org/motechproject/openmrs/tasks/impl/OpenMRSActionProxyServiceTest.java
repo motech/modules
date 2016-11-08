@@ -26,6 +26,7 @@ import org.motechproject.openmrs.domain.Identifier;
 import org.motechproject.openmrs.domain.IdentifierType;
 import org.motechproject.openmrs.domain.Location;
 import org.motechproject.openmrs.domain.Observation;
+import org.motechproject.openmrs.domain.Order;
 import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.Person;
 import org.motechproject.openmrs.domain.Program;
@@ -39,6 +40,7 @@ import org.motechproject.openmrs.service.OpenMRSEncounterService;
 import org.motechproject.openmrs.service.OpenMRSFormService;
 import org.motechproject.openmrs.service.OpenMRSLocationService;
 import org.motechproject.openmrs.service.OpenMRSObservationService;
+import org.motechproject.openmrs.service.OpenMRSOrderService;
 import org.motechproject.openmrs.service.OpenMRSPatientService;
 import org.motechproject.openmrs.service.OpenMRSPersonService;
 import org.motechproject.openmrs.service.OpenMRSProgramEnrollmentService;
@@ -87,6 +89,9 @@ public class OpenMRSActionProxyServiceTest {
     private OpenMRSObservationService observationService;
 
     @Mock
+    private OpenMRSOrderService orderService;
+
+    @Mock
     private OpenMRSVisitService visitService;
 
     @Mock
@@ -112,6 +117,9 @@ public class OpenMRSActionProxyServiceTest {
 
     @Captor
     private ArgumentCaptor<String> observationCaptor;
+
+    @Captor
+    private ArgumentCaptor<Order> orderCaptor;
 
     @Captor
     private ArgumentCaptor<Visit> visitCaptor;
@@ -400,6 +408,33 @@ public class OpenMRSActionProxyServiceTest {
                 person.getBirthdateEstimated(), person.getGender(), person.getDead(), causeOfDeath.getUuid(), personAttributes);
 
         verify(personService).updatePerson(eq(CONFIG_NAME), personCaptor.capture());
+        assertEquals(person, personCaptor.getValue());
+    }
+
+    @Test
+    public void shouldUpdatePersonWithBlankMiddleName() {
+        Person person = createTestPerson();
+        // the empty value from task action fields
+        person.getPreferredName().setMiddleName("\"\"");
+
+        Person.Address personAddress = person.getPreferredAddress();
+
+        Map<String, String> personAttributes = new HashMap<>();
+        personAttributes.put("8d8718c2-c2cc-11de-8d13-0010c6dffd0f", "testValue");
+
+        openMRSActionProxyService.updatePerson(CONFIG_NAME, person.getUuid(), person.getPreferredName().getGivenName(),
+                person.getPreferredName().getMiddleName(), person.getPreferredName().getFamilyName(),
+                personAddress.getAddress1(), personAddress.getAddress2(), personAddress.getAddress3(),
+                personAddress.getAddress4(), personAddress.getAddress5(), personAddress.getAddress6(),
+                personAddress.getCityVillage(), personAddress.getStateProvince(), personAddress.getCountry(),
+                personAddress.getPostalCode(), personAddress.getCountyDistrict(), personAddress.getLatitude(),
+                personAddress.getLongitude(), new DateTime(personAddress.getStartDate()),
+                new DateTime(personAddress.getEndDate()), new DateTime(person.getBirthdate()),
+                person.getBirthdateEstimated(), person.getGender(), person.getDead(), null, personAttributes);
+
+        verify(personService).updatePerson(eq(CONFIG_NAME), personCaptor.capture());
+        // middleName should be converted to empty string
+        person.getPreferredName().setMiddleName("");
         assertEquals(person, personCaptor.getValue());
     }
 
@@ -695,6 +730,28 @@ public class OpenMRSActionProxyServiceTest {
         List<MotechEvent> capturedEvents = eventCaptor.getAllValues();
         assertEquals(createEventForMember(cohortQueryUuid, prepareCohortQueryReportMember("1")), capturedEvents.get(0));
         assertEquals(createEventForMember(cohortQueryUuid, prepareCohortQueryReportMember("2")), capturedEvents.get(1));
+    }
+
+    @Test
+    public void shouldCreateOrderWithGivenParameters() {
+
+        Patient patient = new Patient();
+        patient.setUuid("10");
+
+        Provider provider = new Provider();
+        provider.setUuid("20");
+
+        Encounter encounter = new Encounter();
+        encounter.setUuid("50");
+
+        Concept concept = createTestConcept("60");
+
+        Order order = new Order("order", encounter, provider, patient, concept, Order.CareSetting.INPATIENT);
+
+        doReturn(order).when(orderService).createOrder(eq(CONFIG_NAME), eq(order));
+        Order orderCreated = openMRSActionProxyService.createOrder(CONFIG_NAME, "order", encounter.getUuid(), patient.getUuid(), concept.getUuid(), provider.getUuid(),  Order.CareSetting.INPATIENT.toString());
+
+        assertEquals(order, orderCreated);
     }
 
     private Person createTestPerson() {

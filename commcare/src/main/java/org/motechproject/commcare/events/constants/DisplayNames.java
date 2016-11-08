@@ -12,6 +12,7 @@ public final class DisplayNames {
     public static final String UPDATE_CASE = "Update Case";
     public static final String SUBMIT_FORM = "Submit Form";
     public static final String IMPORT_FORMS = "Import Forms";
+    public static final String CREATE_REPORT = "Create Report";
 
     public static final String CONFIG_NAME = "commcare.configName";
     public static final String CASE_ID = "commcare.caseId";

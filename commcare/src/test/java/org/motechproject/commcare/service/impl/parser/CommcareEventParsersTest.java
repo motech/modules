@@ -78,8 +78,8 @@ public class CommcareEventParsersTest {
         request.setPathInfo("/forms/"+ config.getName());
 
         ArgumentCaptor<MotechEvent> captor = ArgumentCaptor.forClass(MotechEvent.class);
-        formsController.receiveForm(ResponseXML.getFormXML(), request);
-        formsController.receiveForm(ResponseXML.getFormXMLWithRepeatData(), request);
+        formsController.receiveForm(ResponseXML.getFormXML(), request, null);
+        formsController.receiveForm(ResponseXML.getFormXMLWithRepeatData(), request, null);
 
         request.setContent(ResponseXML.getCaseXML().getBytes());
         casesController.receiveCase(request, config.getName());
