@@ -98,14 +98,14 @@ public class StageActionBuilder {
                     .setDisplayName(DisplayNames.EVENT_DATE)
                     .setOrder(counter++)
                     .setKey(EventParams.DATE)
-                    .setType(ParameterType.UNICODE.getValue())
+                    .setType(ParameterType.DATE.getValue())
                     .setRequired(true);
 
             actionParameters.add(actionParameterBuilder.createActionParameterRequest());
 
             actionParameterBuilder = new ActionParameterRequestBuilder()
                     .setDisplayName(DisplayNames.ORG_UNIT)
-                    .setType(ParameterType.UNICODE.getValue())
+                    .setType(ParameterType.TEXTAREA.getValue())
                     .setKey(EventParams.LOCATION)
                     .setOrder(counter++)
                     .setRequired(true);
@@ -149,7 +149,7 @@ public class StageActionBuilder {
             ActionParameterRequestBuilder actionParameterBuilder = new ActionParameterRequestBuilder()
                     .setDisplayName(element.getName())
                     .setKey(element.getUuid())
-                    .setType(ParameterType.UNICODE.getValue())
+                    .setType(ParameterType.TEXTAREA.getValue())
                     .setOrder(counter++);
 
             parameterRequests.add(actionParameterBuilder.createActionParameterRequest());
