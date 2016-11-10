@@ -8,6 +8,7 @@ import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
+import org.motechproject.tasks.domain.enums.ParameterType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,7 @@ public class SendDataValueSetActionBuilder {
         builder = new ActionParameterRequestBuilder();
         builder.setDisplayName(DisplayNames.PERIOD)
                 .setKey(EventParams.PERIOD)
+                .setType(ParameterType.PERIOD.getValue())
                 .setOrder(order++)
                 .setRequired(true);
         actionParameterRequests.add(builder.createActionParameterRequest());
@@ -61,6 +63,7 @@ public class SendDataValueSetActionBuilder {
         builder = new ActionParameterRequestBuilder();
         builder.setDisplayName(DisplayNames.ORG_UNIT)
                 .setKey(EventParams.LOCATION)
+                .setType(ParameterType.TEXTAREA.getValue())
                 .setOrder(order++)
                 .setRequired(true);
         actionParameterRequests.add(builder.createActionParameterRequest());
@@ -74,6 +77,7 @@ public class SendDataValueSetActionBuilder {
         builder = new ActionParameterRequestBuilder();
         builder.setDisplayName(DisplayNames.COMMENT)
                 .setKey(EventParams.COMMENT)
+                .setType(ParameterType.TEXTAREA.getValue())
                 .setOrder(order++);
         actionParameterRequests.add(builder.createActionParameterRequest());
 
@@ -87,6 +91,7 @@ public class SendDataValueSetActionBuilder {
             builder = new ActionParameterRequestBuilder();
             builder.setDisplayName(dataElement.getName())
                     .setKey(dataElement.getUuid())
+                    .setType(ParameterType.TEXTAREA.getValue())
                     .setOrder(order++);
             actionParameterRequests.add(builder.createActionParameterRequest());
         }
