@@ -231,6 +231,190 @@
         });
     });
 
+    controllers.controller('CommcareImportCasesCtrl', function ($scope, $http, LoadingModal) {
+        $scope.importOptions = ['all', 'byId', 'byDateRange'];
+        $scope.importCasesProgressShow = false;
+        $scope.importCasesComplete = false;
+        $scope.totalCases = 0;
+        $scope.casesImported = 0;
+        $scope.statusError = false;
+        $scope.errorMsg = 'Unknown error';
+        $scope.importInProgress = false;
+        $scope.modifiedDateStart = null;
+        $scope.modifiedDateEnd = null;
+        $scope.caseId = null;
+        $scope.lastCaseId = null;
+        $scope.lastReceivedOn = null;
+        $('#importCompleteAlert').fadeOut("slow");
+
+        $scope.byDateRange = false;
+        $scope.byId = false;
+        $scope.importRequest = {
+                    "config": $scope.selectedConfig !== undefined? $scope.selectedConfig.name : '',
+                    "caseId": $scope.caseId,
+                    "modifiedDateStart": $scope.modifiedDateStart,
+                    "modifiedDateEnd": $scope.modifiedDateEnd
+        };
+        $scope.selectedImportOption = $scope.importOptions[0];
+        $scope.updateProgress = function () {
+                    var percentage = Math.round(($scope.casesImported / $scope.totalCases) * 100);
+                    percentage = !isNaN(percentage) && percentage !== Infinity && percentage >= 0 ? percentage : 0;
+                    $('#commcareImportPercentage').text(percentage + '%').css({width: percentage + '%'}).attr('aria-valuenow', percentage);
+                };
+        $scope.setImportOption = function (index) {
+                    $scope.resetImportRequest();
+                    $scope.resetImportValues();
+                    $scope.selectedImportOption = $scope.importOptions[index];
+                    if ('byDateRange' === $scope.importOptions[index]) {
+                        $scope.byDateRange = true;
+                    } else {
+                        $scope.byDateRange = false;
+                    }
+                    if ('byId' === $scope.importOptions[index]) {
+                        $scope.byId = true;
+                    } else {
+                        $scope.byId = false;
+                    }
+                };
+        $scope.resetImportRequest = function () {
+                    $scope.importRequest = {
+                        "config": $scope.selectedConfig.name = $scope.selectedConfig !== undefined? $scope.selectedConfig.name : '',
+                        "caseId": null,
+                        "modifiedDateStart": null,
+                        "modifiedDateEnd": null
+                    };
+                };
+        $scope.resetImportValues = function () {
+                    $scope.initImportComplete = false;
+                    $scope.importCasesProgressShow = false;
+                    $scope.importCasesComplete = false;
+                    $scope.totalCases = 0;
+                    $scope.casesImported = 0;
+                    $scope.statusError = false;
+                    $scope.importInProgress = false;
+                    $('#importCompleteAlert').fadeOut("slow");
+                };
+        $scope.updateImportRequest = function (nameParameter, valueParameter) {
+                    $scope.resetImportValues();
+                    var dValue,
+                    normalizeDate = function (dateValue) {
+                        var indexTValue = dateValue.indexOf('T');
+                        dValue = dateValue.replace(' ', '');
+                        dValue = dValue.replace(' ', '');
+                        return  dValue;
+                    };
+
+                    switch (nameParameter) {
+                    case 'modifiedDateStart':
+                        $scope.importRequest.modifiedDateStart = normalizeDate(valueParameter);
+                        break;
+                    case 'modifiedDateEnd':
+                        $scope.importRequest.modifiedDateEnd = normalizeDate(valueParameter);
+                        break;
+                    case 'config':
+                        $scope.importRequest.config = valueParameter;
+                        break;
+                    case 'caseId':
+                        $scope.importRequest.caseId = valueParameter;
+                        break;
+                    default:
+                        break;
+                    }
+
+                };
+        $scope.importCasesStart = function () {
+                    $scope.updateImportRequest();
+                    $('#importCommcareCases').modal('show');
+                    $scope.initImport();
+                };
+        $scope.importSingleCase = function (caseId) {
+            $scope.updateImportRequest("caseId", caseId);
+            if (!$scope.importInProgress) {
+            LoadingModal.open();
+                                    $http.post('../commcare/case-import/start', $scope.importRequest).success( function(data) {
+                                        $scope.importInProgress = true;
+                                        $scope.lastCaseId = null;
+                                        $scope.lastReceivedOn = null;
+                                        $scope.importCasesComplete = true;
+                                        LoadingModal.close();
+                                    }).error(function(data) {
+                                        $scope.importError(data);
+                                        LoadingModal.close();
+                                    });
+                                }
+        };
+        $scope.initImport = function () {
+                    $http.post('../commcare/case-import/init', $scope.importRequest).success( function(data) {
+                         $scope.totalCases = data;
+                         $scope.initImportComplete = true;
+                    }).error(function(data) {
+                         $scope.importError(data);
+                    });
+                };
+        $scope.closeImportCases = function () {
+                    $('#importCommcareCases').modal('hide');
+                    $scope.importCasesProgressShow = false;
+                };
+        $scope.importCasesContinue = function () {
+                    $scope.updateProgress();
+                    if (!$scope.importCasesProgressShow) {
+                        $scope.startImport();
+                    }
+                    $scope.importCasesProgressShow = true;
+                };
+        $scope.startImport = function () {
+                    if (!$scope.importInProgress) {
+                        $http.post('../commcare/case-import/start', $scope.importRequest).success( function(data) {
+                            $scope.importInProgress = true;
+                            $scope.lastCaseId = null;
+                            $scope.lastReceivedOn = null;
+                            $scope.checkStatus();
+                        }).error(function(data) {
+                            $scope.importError(data);
+                        });
+                    }
+                };
+        $scope.checkStatus = function () {
+                    var getStatus = function () {
+                        $http.get('../commcare/case-import/status').success(function(data) {
+                            $scope.statusError = data.error;
+                            if (data.casesImported > 0) {
+                                $scope.casesImported = data.casesImported;
+                            }
+
+                            $scope.lastCaseId = data.lastImportCaseId;
+                            $scope.lastReceivedOn = data.lastImportDate;
+
+                            $scope.updateProgress();
+
+                            if (data.casesImported === data.totalCases) {
+                                $scope.importCasesProgressShow = false;
+                                $('#importCommcareCases').modal('hide');
+                                $scope.importCasesComplete = true;
+                                clearInterval($scope.importStatusInterval);
+                            }
+
+                            if (!data.error) {
+                                $scope.importInProgress = data.importInProgress;
+                            } else {
+                                $scope.importError(data.errorMsg);
+                            }
+                        }).error(function(data) {
+                            $scope.importError(data);
+                        });
+                    };
+                    $scope.importStatusInterval = setInterval(function () {
+                        getStatus();
+                    }, 2000);
+                };
+        $scope.importError = function (msg) {
+                    $scope.importCasesProgressShow = false;
+                    $scope.errorMsg = msg;
+                    clearInterval($scope.importStatusInterval);
+                    $scope.statusError = true;
+                };
+    });
+
     controllers.controller('CommcareSettingsCtrl', function ($scope, Configurations, ModalFactory, LoadingModal, $timeout) {
 
         $scope.eventStrategyOptions = [ 'minimal', 'partial', 'full' ];

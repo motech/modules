@@ -65,6 +65,9 @@
     <osgi:service id="commcareFormImporterFactoryOsgi" ref="commcareFormImporterFactory"
                   interface="javax.servlet.http.HttpSessionListener" />
 
+    <osgi:service id="commcareCaseImporterFactoryOsgi" ref="commcareCaseImporterFactory"
+                  interface="javax.servlet.http.HttpSessionListener" />
+
     <osgi:service ref="commcareActionProxyService"
                   interface="org.motechproject.commcare.tasks.CommcareActionProxyService" />
 

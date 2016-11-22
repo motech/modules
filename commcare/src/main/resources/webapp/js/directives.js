@@ -52,6 +52,7 @@
                             ngModel.$setViewValue(viewValue);
                         });
                         scope.updateImportRequest('receivedOnStart', viewValue);
+                        scope.updateImportRequest('modifiedDateStart', viewValue);
                     },
                     onChangeMonthYear: function (year, month, inst) {
                         var curDate = elem.datetimepicker("getDate");
@@ -114,6 +115,7 @@
                             ngModel.$setViewValue(viewValue);
                         });
                         scope.updateImportRequest('receivedOnEnd', viewValue);
+                        scope.updateImportRequest('modifiedDateEnd', viewValue);
                     },
                     onChangeMonthYear: function (year, month, inst) {
                         var curDate = $(this).datetimepicker("getDate");
@@ -140,6 +142,30 @@
             }
         };
     });
+
+    directives.directive('uuidValidity', function() {
+            var UUID_REGEXP = new RegExp('^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$');
+            return {
+                require: 'ngModel',
+                link: function(scope, element, attrs, ctrl) {
+                    var elm = angular.element(element), originalValue;
+                    ctrl.$validators.uuid = function(modelValue, viewValue) {
+                            if (ctrl.$isEmpty(modelValue)) {
+                              // consider empty models to be valid
+                              return true;
+                            }
+
+                            if (UUID_REGEXP.test(viewValue)) {
+                              // it is valid
+                              return true;
+                            }
+
+                            // it is invalid
+                            return false;
+                          };
+                }
+            };
+        });
 
     directives.directive('switch', function() {
 

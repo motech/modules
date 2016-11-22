@@ -1,5 +1,7 @@
 package org.motechproject.commcare.request.json;
 
+import org.apache.http.client.utils.URIBuilder;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +46,32 @@ public class CaseRequest extends Request {
         }
 
         return toQueryString(queryParams);
+    }
+
+    public void addQueryParams(URIBuilder uriBuilder) {
+        if (userId != null) {
+            uriBuilder.addParameter("user_id", userId);
+        }
+        if (ownerId != null) {
+            uriBuilder.addParameter("owner_id", ownerId);
+        }
+        if (caseId != null) {
+            uriBuilder.addParameter("case_id", caseId);
+        }
+        if (type != null) {
+            uriBuilder.addParameter("type", type);
+        }
+        if (caseName != null) {
+            uriBuilder.addParameter("case_name", caseName);
+        }
+        if (dateModifiedStart != null) {
+            uriBuilder.addParameter("date_modified_start", dateModifiedStart);
+        }
+        if (dateModifiedEnd != null) {
+            uriBuilder.addParameter("date_modified_end", dateModifiedEnd);
+        }
+
+        addOtherQueryParams(uriBuilder);
     }
 
     /**

@@ -184,7 +184,7 @@ public class CommCareAPIHttpClient {
      * @return the JSON string representation of the cases
      */
     public String casesRequest(AccountConfig accountConfig, CaseRequest caseRequest) {
-        return this.getRequest(accountConfig, commcareCasesUrl(accountConfig), caseRequest);
+        return this.getRequest(accountConfig, commcareCasesUrl(accountConfig, caseRequest), caseRequest);
     }
 
     /**
@@ -373,7 +373,7 @@ public class CommCareAPIHttpClient {
         HttpMethod requestMethod = new GetMethod(url);
 
         authenticate(accountConfig);
-        if (request != null) {
+        if (request != null && requestMethod.getQueryString() == null) {
             requestMethod.setQueryString(request.toQueryString());
         }
 
@@ -533,6 +533,21 @@ public class CommCareAPIHttpClient {
     String commcareFixturesUrl(AccountConfig accountConfig, Integer pageSize, Integer pageNumber) {
         return String.format("%s?format=json%s", commcareFixturesUrl(accountConfig),
                 buildPaginationParams(pageSize, pageNumber));
+    }
+
+    String commcareCasesUrl(AccountConfig accountConfig, CaseRequest caseRequest) {
+        try {
+            URIBuilder uriBuilder = new URIBuilder(String.format("%s/%s/api/v%s/case/", getCommcareBaseUrl(accountConfig.getBaseUrl()),
+                    accountConfig.getDomain(), API_VERSION));
+
+            if (caseRequest != null) {
+                caseRequest.addQueryParams(uriBuilder);
+            }
+
+            return uriBuilder.build().toString();
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Unable to build form list url", e);
+        }
     }
 
     String commcareCasesUrl(AccountConfig accountConfig) {
