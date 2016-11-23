@@ -39,6 +39,7 @@ import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.ACTIVE_PROGR
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BAHMNI_PROGRAM_ENROLLMENT;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_MOTECH_ID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_MOTECH_ID_AND_PROGRAM_NAME;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_OTHER_IDENTIFIER;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_PATIENT_UUID_AND_CONCEPT_UUID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_PATIENT_UUID_AND_VALUE;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_UUID;
@@ -51,6 +52,8 @@ import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.MOTECH_ID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.NAME;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.OBSERVATION;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.OBSERVATION_VALUE;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.OTHER_IDENTIFIER;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.OTHER_IDENTIFIER_NAME;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PACKAGE_ROOT;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PATIENT;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PATIENT_MOTECH_ID;
@@ -191,6 +194,8 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
             case BY_MOTECH_ID: patient = patientService.getPatientByMotechId(configName, lookupFields.get(MOTECH_ID));
                 break;
             case BY_UUID: patient = patientService.getPatientByUuid(configName, lookupFields.get(UUID));
+                break;
+            case BY_OTHER_IDENTIFIER: patient = patientService.getPatientByOtherIdentifier(configName, lookupFields.get(OTHER_IDENTIFIER), lookupFields.get(OTHER_IDENTIFIER_NAME));
                 break;
             default: LOGGER.error("Lookup with name {} doesn't exist for patient object", lookupName);
                 break;

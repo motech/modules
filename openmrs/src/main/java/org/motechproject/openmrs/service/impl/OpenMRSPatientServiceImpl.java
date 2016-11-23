@@ -122,6 +122,11 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
     }
 
     @Override
+    public Patient getPatientByOtherIdentifier(String configName, String otherId, String otherName) {
+        return getPatientByOtherId(configService.getConfigByName(configName), otherId, otherName);
+    }
+
+    @Override
     public List<Patient> search(String configName, String name, String motechId) {
         Validate.notEmpty(name, "Name cannot be empty");
 
@@ -224,6 +229,46 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         }
 
         return getPatientByUuid(config.getName(), patientList.getResults().get(0).getUuid());
+    }
+
+    private Patient getPatientByOtherId(Config config, String otherId, String otherName) {
+        Validate.notEmpty(otherId, "Other Id cannot be empty");
+        Validate.notEmpty(otherName, "Other Name cannot be empty");
+
+        PatientListResult patientList;
+        Patient fetchedPatient;
+        try {
+            patientList = patientResource.queryForPatient(config, otherId);
+        } catch (HttpClientErrorException e) {
+            throw new OpenMRSException(String.format("Could not get Patient for %s: %s. %s %s", otherName, otherId, e.getMessage(), e.getResponseBodyAsString()), e);
+        }
+
+        if (patientList.getResults().size() == 0) {
+            return null;
+        } else {
+            fetchedPatient = getPatientByOtherIdentifierName(config, otherId, otherName, patientList);
+        }
+
+        return fetchedPatient;
+    }
+
+    private Patient getPatientByOtherIdentifierName(Config config, String otherId, String otherName, PatientListResult patientList) {
+        List<Identifier> identifiersList;
+        Patient result = null;
+        for (Patient patient : patientList.getResults()) {
+            identifiersList = patientResource.getPatientIdentifierList(config, patient.getUuid());
+
+            for (Identifier identifier : identifiersList) {
+                if (otherName.equals(identifier.getIdentifierType().getName()) && otherId.equals(identifier.getIdentifier())) {
+                    result = getPatientByUuid(config.getName(), patient.getUuid());
+                    break;
+                }
+            }
+            if (result != null) {
+                break;
+            }
+        }
+        return result;
     }
 
     private Patient updatePatient(Config config, Patient patient) {

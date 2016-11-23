@@ -72,6 +72,13 @@
               "fields": [
                 "openMRS.uuid"
               ]
+            },
+            {
+              "displayName": "openMRS.lookup.patientOtherIdentifiers",
+              "fields": [
+                "openMRS.other.identifier.name",
+                "openMRS.other.identifier.id"
+              ]
             }
           ],
           "fields": [
