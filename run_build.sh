@@ -2,6 +2,8 @@
 
 #Release
 if [ "$TRAVIS_EVENT_TYPE" = "api" ] && [ ! -z "$developmentVersion" ] && [ ! -z "$scmTag" ] && [ ! -z "$releaseVersion" ] && [ ! -z "$githubMail" ] && [ ! -z "$githubUsername" ]; then
+
+    echo "USE mysql;\nUPDATE user SET password=PASSWORD('password') WHERE user='root';\nFLUSH PRIVILEGES\n" | mysql -u root
     mvn --settings deploy-settings.xml clean deploy -PIT -B -U
 
     git config --global user.email "$githubMail"
@@ -9,7 +11,7 @@ if [ "$TRAVIS_EVENT_TYPE" = "api" ] && [ ! -z "$developmentVersion" ] && [ ! -z 
     git checkout -f $TRAVIS_BRANCH
     git reset --hard $TRAVIS_BRANCH
 
-    openssl aes-256-cbc -K $GITHUB_SHH_KEY -iv $GITHUB_SHH_IV -in github_ssh.enc -out id_rsa -d
+    openssl aes-256-cbc -K $GITHUB_SSH_KEY -iv $GITHUB_SSH_IV -in github_ssh.enc -out id_rsa -d
     mv id_rsa ~/.ssh/id_rsa
     chmod 600 ~/.ssh/id_rsa
     echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
