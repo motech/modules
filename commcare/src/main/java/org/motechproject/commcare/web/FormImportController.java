@@ -37,6 +37,7 @@ public class FormImportController extends CommcareController {
     /**
      * Checks the status of the ongoing form import. If there is no import in progress currently,
      * that will be reflected in the returned object.
+     *
      * @return the status representation for form import
      */
     @RequestMapping(value = "/status", method = RequestMethod.GET)
@@ -50,6 +51,7 @@ public class FormImportController extends CommcareController {
     /**
      * Initializes form import, on the UI this will trigger a modal with the number of forms.
      * Under the covers this just does a form count for the provided request.
+     *
      * @param importRequest the request for
      * @return the number of forms that match this request
      */
@@ -58,11 +60,16 @@ public class FormImportController extends CommcareController {
     public int initImport(@RequestBody FormImportRequest importRequest, HttpSession session) {
         LOGGER.debug("Received import INIT request: {}", importRequest);
         CommcareFormImporter importer = importerFactory.getImporter(session);
-        return importer.countForImport(importRequest.getDateRange(), importRequest.getConfig());
+        if (importRequest.getFormId() == null) {
+            return importer.countForImport(importRequest.getDateRange(), importRequest.getConfig());
+        } else {
+            return importer.checkFormIdForImport(importRequest.getFormId(), importRequest.getConfig()) ? 1 : 0;
+        }
     }
 
     /**
      * Starts a form import using the provided request.
+     *
      * @param importRequest the request for the form import
      */
     @RequestMapping(value = "/start", method = RequestMethod.POST)
@@ -70,6 +77,10 @@ public class FormImportController extends CommcareController {
     public void startImport(@RequestBody FormImportRequest importRequest, HttpSession session) {
         LOGGER.debug("Received import START request: {}", importRequest);
         CommcareFormImporter importer = importerFactory.getImporter(session);
-        importer.startImport(importRequest.getDateRange(), importRequest.getConfig());
+        if (importRequest.getFormId() == null) {
+            importer.startImport(importRequest.getDateRange(), importRequest.getConfig());
+        } else {
+            importer.startImportById(importRequest.getFormId(), importRequest.getConfig());
+        }
     }
 }

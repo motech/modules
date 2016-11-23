@@ -94,6 +94,20 @@ public class FormImportControllerTest {
     }
 
     @Test
+    public void shouldAllowImportInitByFormId() throws Exception {
+        when(formImporter.checkFormIdForImport(any(String.class), eq("configName"))).thenReturn(true);
+
+        controller.perform(post("/form-import/init").body(requestJsonForFormId().getBytes(Charset.forName("UTF-8")))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(HttpStatus.OK.value()))
+                .andExpect(content().type("application/json;charset=UTF-8"))
+                .andExpect(content().string("1"));
+
+        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+        verify(formImporter).checkFormIdForImport(captor.capture(), eq("configName"));
+    }
+
+    @Test
     public void shouldStartImport() throws Exception {
         controller.perform(post("/form-import/start").body(requestJson().getBytes(Charset.forName("UTF-8")))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -104,6 +118,16 @@ public class FormImportControllerTest {
         verifyDateRange(captor.getValue());
     }
 
+    @Test
+    public void shouldStartImportByFormId() throws Exception {
+        controller.perform(post("/form-import/start").body(requestJsonForFormId().getBytes(Charset.forName("UTF-8")))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(HttpStatus.OK.value()));
+
+        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+        verify(formImporter).startImportById(captor.capture(), eq("configName"));
+    }
+
     private void verifyDateRange(Range<DateTime> dtRange) {
         assertNotNull(dtRange);
         assertEquals(new DateTime(2012, 9, 29, 17, 24, 52, 0, DateTimeZone.UTC), dtRange.getMin());
@@ -112,6 +136,12 @@ public class FormImportControllerTest {
 
     private String requestJson() throws IOException {
         try (InputStream in = getClass().getClassLoader().getResourceAsStream("json/web/import-request.json")) {
+            return IOUtils.toString(in);
+        }
+    }
+
+    private String requestJsonForFormId() throws IOException {
+        try (InputStream in = getClass().getClassLoader().getResourceAsStream("json/web/import-request-form-id.json")) {
             return IOUtils.toString(in);
         }
     }

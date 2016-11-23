@@ -47,11 +47,13 @@
         $scope.receivedOnStart = null;
         $scope.receivedOnEnd = null;
         $scope.lastFormId = null;
+        $scope.formId = null;
         $scope.lastReceivedOn = null;
         $('#importCompleteAlert').fadeOut("slow");
 
         $scope.byDateRange = false;
-        $scope.importOptions = ['all', 'byDateRange'];
+        $scope.byFormId = false;
+        $scope.importOptions = ['all', 'byDateRange', 'byFormId'];
         $scope.selectedImportOption = $scope.importOptions[0];
         $scope.setImportOption = function (index) {
             $scope.resetImportRequest();
@@ -59,8 +61,13 @@
             $scope.selectedImportOption = $scope.importOptions[index];
             if ('byDateRange' === $scope.importOptions[index]) {
                 $scope.byDateRange = true;
+                $scope.byFormId = false;
+            } else if ('byFormId' === $scope.importOptions[index]) {
+                $scope.byFormId = true;
+                $scope.byDateRange = false;
             } else {
                 $scope.byDateRange = false;
+                $scope.byFormId = false;
             }
         };
 
@@ -74,6 +81,7 @@
             $scope.updateImportRequest();
             $('#importCommcareForms').modal('show');
             $scope.initImport();
+
         };
 
         $scope.importFormsContinue = function () {
@@ -109,7 +117,8 @@
         $scope.importRequest = {
             "config": $scope.selectedConfig !== undefined? $scope.selectedConfig.name : '',
             "receivedOnStart": $scope.receivedOnStart,
-            "receivedOnEnd": $scope.receivedOnEnd
+            "receivedOnEnd": $scope.receivedOnEnd,
+            "formId": $scope.formId
         };
 
         $scope.updateImportRequest = function (nameParameter, valueParameter) {
@@ -129,6 +138,9 @@
             case 'receivedOnEnd':
                 $scope.importRequest.receivedOnEnd = normalizeDate(valueParameter);
                 break;
+            case 'formId':
+                $scope.importRequest.formId = valueParameter;
+                break;
             case 'config':
                 $scope.importRequest.config = valueParameter;
                 break;
@@ -142,7 +154,8 @@
             $scope.importRequest = {
                 "config": $scope.selectedConfig.name = $scope.selectedConfig !== undefined? $scope.selectedConfig.name : '',
                 "receivedOnStart": null,
-                "receivedOnEnd": null
+                "receivedOnEnd": null,
+                "formId": null
             };
         };
 
@@ -347,7 +360,7 @@
                     $scope.$parent.selectedConfig = data;
                     $scope.$parent.newlyCreatedConfig = data;
                     if ($scope.$parent.selectedConfig.eventStrategy === "") {
-                        $scope.$parent.selectedConfig.eventStrategy = $scope.eventStrategyOptions[2];
+                        $scope.$parent.selectedConfig.eventStrategy = $scope.eventStrategyOptions[0];
                     }
                     LoadingModal.close();
                 },

@@ -25,6 +25,11 @@ public class FormImportRequest implements Serializable {
     private DateTime receivedOnEnd;
 
     /**
+     * The id for form import.
+     */
+    private String formId;
+
+    /**
      * The name of the configuration for which to initiate the import.
      */
     private String config;
@@ -56,6 +61,20 @@ public class FormImportRequest implements Serializable {
      */
     public void setReceivedOnEnd(DateTime receivedOnEnd) {
         this.receivedOnEnd = receivedOnEnd;
+    }
+
+    /**
+     * @return the form id for form import
+     */
+    public String getFormId() {
+        return formId;
+    }
+
+    /**
+     * @param formId the id for form import
+     */
+    public void setFormId(String formId) {
+        this.formId = formId;
     }
 
     /**
