@@ -36,11 +36,14 @@ public class CommcareFormServiceImpl implements CommcareFormService {
     @Override
     public CommcareForm retrieveForm(String id, String configName) {
         String returnJson = commcareHttpClient.formRequest(configService.getByName(configName).getAccountConfig(), id);
-
-        CommcareForm form = FormAdapter.readJson(returnJson);
-        form.setConfigName(configName);
-
-        return form;
+        CommcareForm form = new CommcareForm();
+        if (("").equals(returnJson)){
+            return form;
+        } else {
+            form = FormAdapter.readJson(returnJson);
+            form.setConfigName(configName);
+            return form;
+        }
     }
 
     @Override

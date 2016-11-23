@@ -29,13 +29,12 @@ public interface CommcareFormImporter {
 
     /**
      * Checks if a form exists with select id. A single request to the form list
-     * API will be made underneath, and the returned total count will be returned by this method.
+     * API will be made underneath, and a boolean value will be returned by this method.
      *
      * @param formId     the id of the form to be checked
      * @param configName the name of the configuration to use, if null is provided the default configuration
      *                   will be used
      * @return the boolean value if there exists a form with the provided id
-     * @throws NullPointerException if the form id is null or invalid
      */
     boolean checkFormIdForImport(String formId, String configName);
 

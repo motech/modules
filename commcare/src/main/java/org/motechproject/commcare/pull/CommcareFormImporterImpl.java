@@ -67,11 +67,11 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
     @Override
     public boolean checkFormIdForImport(String formId, String configName) {
         LOGGER.info("Checking form with id {} [config: {}]", formId, configName);
-        try {
-            CommcareForm form = formService.retrieveForm(formId, configName);
+        CommcareForm form = formService.retrieveForm(formId, configName);
+        if (form.getId() != null) {
             LOGGER.info("Form with id {} exists", form.getId());
             return true;
-        } catch (NullPointerException e) {
+        } else {
             LOGGER.info("Form with id {} doesnot exist", formId);
             return false;
         }
