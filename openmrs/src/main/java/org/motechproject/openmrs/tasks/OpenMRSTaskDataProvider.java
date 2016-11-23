@@ -195,11 +195,10 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
                 break;
             case BY_UUID: patient = patientService.getPatientByUuid(configName, lookupFields.get(UUID));
                 break;
-            case BY_OTHER_IDENTIFIER: patient = patientService.getPatientByOtherIdentifier(configName, lookupFields.get(OTHER_IDENTIFIER), lookupFields.get(OTHER_IDENTIFIER_NAME));
-                break;
-            default: LOGGER.error("Lookup with name {} doesn't exist for patient object", lookupName);
+            default: patient = patientService.getPatientByOtherIdentifier(configName, lookupFields.get(OTHER_IDENTIFIER), lookupName);
                 break;
         }
+
 
         return patient;
     }
