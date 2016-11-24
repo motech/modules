@@ -299,7 +299,7 @@ public class OpenMRSTaskDataProviderTest {
 
         when(patientService.getPatientByOtherIdentifier(CONFIG_NAME, DEFAULT_OTHER_IDENTIFIER, DEFAULT_OTHER_IDENTIFIER_NAME)).thenReturn(patient);
 
-        Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, BY_OTHER_IDENTIFIER, lookupFields);
+        Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, DEFAULT_OTHER_IDENTIFIER_NAME, lookupFields);
 
         assertEquals(patient, object);
         verify(patientService).getPatientByOtherIdentifier(CONFIG_NAME, DEFAULT_OTHER_IDENTIFIER, DEFAULT_OTHER_IDENTIFIER_NAME);

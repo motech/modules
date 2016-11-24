@@ -202,7 +202,6 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
                 break;
         }
 
-
         return patient;
     }
 
