@@ -39,8 +39,8 @@ public final class OpenMRSTasksConstants {
     public static final String IDENTIFIER_SOURCE_NAME = "openMRS.identifier.sourceName";
     public static final String PROGRAM_ENROLLMENT_UUID = "openMRS.programEnrollment.uuid";
     public static final String ACTIVE_PROGRAM = "openMRS.activeProgramOnly";
-    public static final String OTHER_IDENTIFIER = "openMRS.other.identifier.id";
-    public static final String OTHER_IDENTIFIER_NAME = "openMRS.other.identifier.name";
+    public static final String IDENTIFIER_ID = "openMRS.other.identifier.id";
+    public static final String IDENTIFIER_NAME = "openMRS.other.identifier.name";
 
     private OpenMRSTasksConstants() {
 

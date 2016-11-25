@@ -75,15 +75,15 @@ public interface OpenMRSPatientService {
     Patient getPatientByMotechId(String configName, String motechId);
 
     /**
-     * Returns the patient with the given {@code otherName} and {@code otherId}. Configuration with the given {@code configName} will be used
+     * Returns the patient with the given {@code identifierName} and {@code identifierId}. Configuration with the given {@code configName} will be used
      * while performing this action.
      *
      * @param configName  the name of the configuration
-     * @param otherId  the other identifier of the patient
-     * @param otherName  the other identifier name of the patient
-     * @return the patient with the given other identifier, null if the patient doesn't exist
+     * @param identifierId  the identifier id of the patient
+     * @param identifierName  the identifier name of the patient
+     * @return the patient with the given identifier, null if the patient doesn't exist
      */
-    Patient getPatientByOtherIdentifier(String configName, String otherId, String otherName);
+    Patient getPatientByIdentifier(String configName, String identifierId, String identifierName);
 
     /**
      * If the {@code motechId} is null this method will return a list of patients with given {@code name}, else it will

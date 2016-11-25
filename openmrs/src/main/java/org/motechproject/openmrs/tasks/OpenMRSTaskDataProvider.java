@@ -46,12 +46,12 @@ import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_UUID_AMD_
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.CONCEPT_UUID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.ENCOUNTER;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.IDENTIFIER;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.IDENTIFIER_ID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.IDENTIFIER_SOURCE_NAME;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.MOTECH_ID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.NAME;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.OBSERVATION;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.OBSERVATION_VALUE;
-import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.OTHER_IDENTIFIER;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PACKAGE_ROOT;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PATIENT;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.PATIENT_MOTECH_ID;
@@ -195,7 +195,7 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
                 break;
             default:
                 if (lookupFields != null) {
-                    patient = patientService.getPatientByOtherIdentifier(configName, lookupFields.get(OTHER_IDENTIFIER), lookupName);
+                    patient = patientService.getPatientByIdentifier(configName, lookupFields.get(IDENTIFIER_ID), lookupName);
                 } else {
                     LOGGER.error("Lookup with name {} doesn't exist for patient object", lookupName);
                 }

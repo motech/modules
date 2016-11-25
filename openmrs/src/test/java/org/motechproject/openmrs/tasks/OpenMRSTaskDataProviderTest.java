@@ -45,8 +45,8 @@ public class OpenMRSTaskDataProviderTest {
     private static final String PROGRAM_ANOTHER_NAME = "anotherName";
     private static final String DEFAULT_UUID = "495b10c4-56bd-11df-a35e-0027136865c4";
     private static final String DEFAULT_MOTECH_ID = "3";
-    private static final String DEFAULT_OTHER_IDENTIFIER = "4";
-    private static final String DEFAULT_OTHER_IDENTIFIER_NAME = "otherIdentifierName";
+    private static final String DEFAULT_IDENTIFIER_ID = "4";
+    private static final String DEFAULT_IDENTIFIER_NAME = "otherIdentifierName";
     private static final String ATTRIBUTE_UUID = "51f41ccf-dca8-48e3-bcf3-5e0981948b1e";
     private static final String ATTRIBUTE_VALUE = "attributeValue";
     private static final String ATTRIBUTE_TYPE_UUID = "2c41f832-f3ed-47f1-92e2-53143ee71626";
@@ -291,18 +291,18 @@ public class OpenMRSTaskDataProviderTest {
         String className = Patient.class.getSimpleName();
 
         Map<String, String> lookupFields = new HashMap<>();
-        lookupFields.put(OTHER_IDENTIFIER, DEFAULT_OTHER_IDENTIFIER);
-        lookupFields.put(OTHER_IDENTIFIER_NAME, DEFAULT_OTHER_IDENTIFIER_NAME);
+        lookupFields.put(IDENTIFIER_ID, DEFAULT_IDENTIFIER_ID);
+        lookupFields.put(IDENTIFIER_NAME, DEFAULT_IDENTIFIER_NAME);
 
         Patient patient = new Patient();
         patient.setUuid("10");
 
-        when(patientService.getPatientByOtherIdentifier(CONFIG_NAME, DEFAULT_OTHER_IDENTIFIER, DEFAULT_OTHER_IDENTIFIER_NAME)).thenReturn(patient);
+        when(patientService.getPatientByIdentifier(CONFIG_NAME, DEFAULT_IDENTIFIER_ID, DEFAULT_IDENTIFIER_NAME)).thenReturn(patient);
 
-        Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, DEFAULT_OTHER_IDENTIFIER_NAME, lookupFields);
+        Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, DEFAULT_IDENTIFIER_NAME, lookupFields);
 
         assertEquals(patient, object);
-        verify(patientService).getPatientByOtherIdentifier(CONFIG_NAME, DEFAULT_OTHER_IDENTIFIER, DEFAULT_OTHER_IDENTIFIER_NAME);
+        verify(patientService).getPatientByIdentifier(CONFIG_NAME, DEFAULT_IDENTIFIER_ID, DEFAULT_IDENTIFIER_NAME);
     }
 
     @Test
