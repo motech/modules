@@ -73,6 +73,14 @@
                 "openMRS.uuid"
               ]
             }
+            #foreach($identifier in $config.getPatientIdentifierTypeNames()),
+                {
+                  "displayName": "$identifier",
+                  "fields": [
+                    "openMRS.other.identifier.id"
+                  ]
+                }
+            #end
           ],
           "fields": [
             {

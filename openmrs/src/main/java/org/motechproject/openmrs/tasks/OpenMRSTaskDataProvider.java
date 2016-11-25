@@ -46,6 +46,7 @@ import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_UUID_AMD_
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.CONCEPT_UUID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.ENCOUNTER;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.IDENTIFIER;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.IDENTIFIER_ID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.IDENTIFIER_SOURCE_NAME;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.MOTECH_ID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.NAME;
@@ -192,7 +193,12 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
                 break;
             case BY_UUID: patient = patientService.getPatientByUuid(configName, lookupFields.get(UUID));
                 break;
-            default: LOGGER.error("Lookup with name {} doesn't exist for patient object", lookupName);
+            default:
+                if (lookupFields != null) {
+                    patient = patientService.getPatientByIdentifier(configName, lookupFields.get(IDENTIFIER_ID), lookupName);
+                } else {
+                    LOGGER.error("Lookup with name {} doesn't exist for patient object", lookupName);
+                }
                 break;
         }
 
