@@ -15,6 +15,7 @@ if [ "$TRAVIS_EVENT_TYPE" = "api" ] && [ ! -z "$developmentVersion" ] && [ ! -z 
     mv id_rsa ~/.ssh/id_rsa
     chmod 600 ~/.ssh/id_rsa
     echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+    ssh-add ~/.ssh/id_rsa
 
     mvn --settings deploy-settings.xml -DdevelopmentVersion=$developmentVersion -Dscm.tag=$scmTag -DreleaseVersion=$releaseVersion -Dmaven.test.failure.ignore=false -Dscm.developerConnection=scm:git:git@github.com:motech/modules.git -Dscm.connection=scm:git:git@github.com:motech/modules.git release:clean release:prepare release:perform
 
