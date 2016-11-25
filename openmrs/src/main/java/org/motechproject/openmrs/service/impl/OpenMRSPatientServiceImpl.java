@@ -232,8 +232,8 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
     }
 
     private Patient getPatientByIdentifier(Config config, String identifierId, String identifierName) {
-        Validate.notEmpty(identifierId, "Other Id cannot be empty");
-        Validate.notEmpty(identifierName, "Other Name cannot be empty");
+        Validate.notEmpty(identifierId, "Identifier Id cannot be empty");
+        Validate.notEmpty(identifierName, "Identifier Name cannot be empty");
 
         PatientListResult patientList;
         Patient fetchedPatient;

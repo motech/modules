@@ -46,7 +46,7 @@ public class OpenMRSTaskDataProviderTest {
     private static final String DEFAULT_UUID = "495b10c4-56bd-11df-a35e-0027136865c4";
     private static final String DEFAULT_MOTECH_ID = "3";
     private static final String DEFAULT_IDENTIFIER_ID = "4";
-    private static final String DEFAULT_IDENTIFIER_NAME = "otherIdentifierName";
+    private static final String DEFAULT_IDENTIFIER_NAME = "identifierName";
     private static final String ATTRIBUTE_UUID = "51f41ccf-dca8-48e3-bcf3-5e0981948b1e";
     private static final String ATTRIBUTE_VALUE = "attributeValue";
     private static final String ATTRIBUTE_TYPE_UUID = "2c41f832-f3ed-47f1-92e2-53143ee71626";
