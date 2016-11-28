@@ -9,6 +9,7 @@ import org.motechproject.dhis2.service.DataElementService;
 import org.motechproject.dhis2.service.DataSetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ public class DataSetServiceImpl implements DataSetService {
 
 
     @Override
+    @Transactional
     public DataSet createFromDetails(DataSetDto dto) {
         DataSet dataSet = new DataSet();
 
@@ -43,16 +45,19 @@ public class DataSetServiceImpl implements DataSetService {
     }
 
     @Override
+    @Transactional
     public List<DataSet> findAll() {
         return dataSetDataService.retrieveAll();
     }
 
     @Override
+    @Transactional
     public DataSet findByUuid(String uuid) {
         return dataSetDataService.findByUuid(uuid);
     }
 
     @Override
+    @Transactional
     public void deleteAll() {
         dataSetDataService.deleteAll();
     }

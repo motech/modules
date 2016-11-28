@@ -37,7 +37,6 @@ public class DhisSchemaController {
     @Autowired
     private DataElementService dataElementService;
 
-
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/programs", method = RequestMethod.GET)
     @ResponseBody
@@ -59,7 +58,6 @@ public class DhisSchemaController {
         return trackedEntityService.findAll();
     }
 
-
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/orgUnits", method = RequestMethod.GET)
@@ -67,13 +65,10 @@ public class DhisSchemaController {
         return orgUnitService.findAll();
     }
 
-
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/dataElements", method = RequestMethod.GET)
     public List<DataElement> getDataElements() {
         return dataElementService.findAll();
     }
-
-
 }

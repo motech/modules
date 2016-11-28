@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -133,6 +134,7 @@ public class EventHandler {
      * @param event
      */
     @MotechListener(subjects = EventSubjects.SEND_DATA_VALUE)
+    @Transactional
     public void handleDataValue(MotechEvent event) {
 
         Map<String, Object> params = event.getParameters();
@@ -174,6 +176,7 @@ public class EventHandler {
      * @param event
      */
     @MotechListener(subjects = EventSubjects.SEND_DATA_VALUE_SET)
+    @Transactional
     public void handleDataValueSet(MotechEvent event) {
 
         Map<String, Object> params = prepareDhisAttributesMap(event.getParameters());
