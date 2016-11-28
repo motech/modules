@@ -7,10 +7,10 @@ import java.util.Map;
 
 /**
  * A wrapper for the event that will trigger a status message signaling
- * a failure to receive a form. The status messages will be displayed by the Admin
+ * a failure to receive a form or a case. The status messages will be displayed by the Admin
  * module in its UI (if the module is present).
  */
-public class MalformedFormStatusMessageEvent {
+public class FailedImportStatusMessageEvent {
 
     /**
      * The message to display.
@@ -20,7 +20,7 @@ public class MalformedFormStatusMessageEvent {
     /**
      * @param message the message to display
      */
-    public MalformedFormStatusMessageEvent(String message) {
+    public FailedImportStatusMessageEvent(String message) {
         this.message = message;
     }
 

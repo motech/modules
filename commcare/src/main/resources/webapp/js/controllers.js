@@ -231,7 +231,7 @@
         });
     });
 
-    controllers.controller('CommcareImportCasesCtrl', function ($scope, $http, LoadingModal) {
+    controllers.controller('CommcareImportCasesCtrl', function ($scope, $http, LoadingModal, ModalFactory) {
         $scope.importOptions = ['all', 'byId', 'byDateRange'];
         $scope.importCasesProgressShow = false;
         $scope.importCasesComplete = false;
@@ -332,13 +332,22 @@
             if (!$scope.importInProgress) {
             LoadingModal.open();
                                     $http.post('../commcare/case-import/start', $scope.importRequest).success( function(data) {
-                                        $scope.importInProgress = true;
-                                        $scope.lastCaseId = null;
-                                        $scope.lastReceivedOn = null;
-                                        $scope.importCasesComplete = true;
-                                        LoadingModal.close();
+                                        if (data) {
+                                            $scope.importInProgress = true;
+                                            $scope.lastCaseId = null;
+                                            $scope.lastReceivedOn = null;
+                                            $scope.importCasesComplete = true;
+                                        } else {
+                                            $scope.importError(data);
+                                            $scope.importCasesComplete = false;
+                                            ModalFactory.showErrorAlertWithResponse('commcare.error.importCase', 'commcare.error', data);
+                                            LoadingModal.close();
+                                        }
+                                      LoadingModal.close();
                                     }).error(function(data) {
                                         $scope.importError(data);
+                                        $scope.importCasesComplete = false;
+                                        ModalFactory.showErrorAlertWithResponse('commcare.error.importCase', 'commcare.error', data);
                                         LoadingModal.close();
                                     });
                                 }

@@ -7,7 +7,7 @@ import org.motechproject.commcare.domain.CommcareForm;
 import org.motechproject.commcare.domain.CommcareFormList;
 import org.motechproject.commcare.events.FullFormEvent;
 import org.motechproject.commcare.events.FullFormFailureEvent;
-import org.motechproject.commcare.events.MalformedFormStatusMessageEvent;
+import org.motechproject.commcare.events.FailedImportStatusMessageEvent;
 import org.motechproject.commcare.request.FormListRequest;
 import org.motechproject.commcare.service.CommcareFormService;
 import org.motechproject.commons.api.Range;
@@ -282,7 +282,7 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
 
         // Trigger a status message in the Admin UI
         String msg = "Error while importing form: " + errorMessage;
-        MalformedFormStatusMessageEvent statusMessageEvent = new MalformedFormStatusMessageEvent(msg);
+        FailedImportStatusMessageEvent statusMessageEvent = new FailedImportStatusMessageEvent(msg);
         eventRelay.sendEventMessage(statusMessageEvent.toMotechEvent());
     }
 }

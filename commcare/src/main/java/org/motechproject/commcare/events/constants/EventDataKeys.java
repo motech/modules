@@ -70,6 +70,7 @@ public final class EventDataKeys {
 
     //FullFormsExceptionEvent
     public static final String FAILED_FORM_MESSAGE = "failedMessage";
+    public static final String FAILED_CASE_MESSAGE = "failed case import message";
 
     //ReportEvent
     public static final String REPORT_ID = "report_id";

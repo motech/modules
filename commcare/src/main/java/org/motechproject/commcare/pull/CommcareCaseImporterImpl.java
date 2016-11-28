@@ -7,8 +7,8 @@ import org.joda.time.format.DateTimeFormatter;
 import org.motechproject.commcare.domain.CaseInfo;
 import org.motechproject.commcare.domain.CasesInfo;
 import org.motechproject.commcare.events.CaseEvent;
-import org.motechproject.commcare.events.FullFormFailureEvent;
-import org.motechproject.commcare.events.MalformedFormStatusMessageEvent;
+import org.motechproject.commcare.events.FullCaseFailureEvent;
+import org.motechproject.commcare.events.FailedImportStatusMessageEvent;
 import org.motechproject.commcare.service.CommcareCaseService;
 import org.motechproject.commons.api.Range;
 import org.motechproject.event.listener.EventRelay;
@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  * The implementation of {@link CommcareCaseImporter}. Uses the {@link CommcareCaseService} for
  * retrieval of cases.
  */
-public class CommcareCaseImporterImpl implements CommcareCaseImporter{
+public class CommcareCaseImporterImpl implements CommcareCaseImporter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommcareCaseImporterImpl.class);
 
@@ -66,35 +66,29 @@ public class CommcareCaseImporterImpl implements CommcareCaseImporter{
         LOGGER.info("Initiating import request for case with id : {} [config: {}]", caseId, configName);
         importInProgress = true;
 
-        importThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                LOGGER.debug("Import thread started");
-                try {
-                    LOGGER.debug("Retrieving case info for case with id : {}", caseId);
-                    // Fetching the case
-                    CaseInfo caseInfo = caseService.getCaseByCaseId(caseId, configName);
+        try {
+            LOGGER.debug("Retrieving case info for case with id : {}", caseId);
+            // Fetching the case
+            CaseInfo caseInfo = caseService.getCaseByCaseId(caseId, configName);
 
-                    LOGGER.debug("Retrieved the case");
-                    // Sending event for the fetched case
-                    CaseEvent caseEvent = CaseEvent.fromCaseInfo(caseInfo, configName);
-                    eventRelay.sendEventMessage(caseEvent.toMotechEventWithData());
+            LOGGER.debug("Retrieved the case");
+            // Sending event for the fetched case
+            CaseEvent caseEvent = CaseEvent.fromCaseInfo(caseInfo, configName);
+            eventRelay.sendEventMessage(caseEvent.toMotechEventWithData());
 
-                    lastImportedCaseId = caseInfo.getCaseId();
+            lastImportedCaseId = caseInfo.getCaseId();
+            lastImportedDate = caseInfo.getDateModified();
+            importCount++;
 
-                    LOGGER.info("Imported case with ID: {}", caseInfo.getCaseId());
-                } catch (RuntimeException e) {
-                    LOGGER.error("Error while importing case with id : {} [config: {}]", e, caseId, configName);
-                    handleImportError(e, configName);
-                }
-                LOGGER.info("Case import finished for case with id : {}. ", caseId);
+            LOGGER.info("Imported case with ID: {}", caseInfo.getCaseId());
+        } catch (RuntimeException e) {
+            LOGGER.error("Error while importing case", e);
+            LOGGER.error("Can not import case of id : {} with conf: [{}]", caseId, configName);
+            handleImportError(e, configName);
+        }
+        LOGGER.info("Case import finished for case with id : {}. ", caseId);
 
-                importInProgress = false;
-            }
-        });
-        LOGGER.debug("Starting import thread");
-
-        importThread.start();
+        importInProgress = false;
     }
 
     public void startImport(final Range<DateTime> dateRange, final String configName) {
@@ -204,12 +198,12 @@ public class CommcareCaseImporterImpl implements CommcareCaseImporter{
     }
 
     private void importCaseList(CasesInfo caseList, String configName) {
-        // iterate backwards
         for (CaseInfo caseInfo : Lists.reverse(caseList.getCaseInfoList())) {
             CaseEvent caseEvent = CaseEvent.fromCaseInfo(caseInfo, configName);
             eventRelay.sendEventMessage(caseEvent.toMotechEventWithData());
 
             lastImportedCaseId = caseInfo.getCaseId();
+            lastImportedDate = caseInfo.getDateModified();
             importCount++;
 
             LOGGER.info("Imported case with ID: {}", caseInfo.getCaseId());
@@ -261,12 +255,12 @@ public class CommcareCaseImporterImpl implements CommcareCaseImporter{
         // stop import
         importInProgress = false;
 
-        FullFormFailureEvent failureEvent = new FullFormFailureEvent(configName, errorMessage);
+        FullCaseFailureEvent failureEvent = new FullCaseFailureEvent(configName, errorMessage);
         eventRelay.sendEventMessage(failureEvent.toMotechEvent());
 
         // Trigger a status message in the Admin UI
         String msg = "Error while importing case: " + errorMessage;
-        MalformedFormStatusMessageEvent statusMessageEvent = new MalformedFormStatusMessageEvent(msg);
+        FailedImportStatusMessageEvent statusMessageEvent = new FailedImportStatusMessageEvent(msg);
         eventRelay.sendEventMessage(statusMessageEvent.toMotechEvent());
     }
 }
