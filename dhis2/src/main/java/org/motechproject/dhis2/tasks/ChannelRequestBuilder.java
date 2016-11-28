@@ -7,6 +7,7 @@ import org.motechproject.dhis2.domain.TrackedEntityAttribute;
 import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.event.EventSubjects;
 import org.motechproject.dhis2.rest.domain.ServerVersion;
+import org.motechproject.dhis2.rest.service.DhisWebService;
 import org.motechproject.dhis2.service.DataSetService;
 import org.motechproject.dhis2.service.ProgramService;
 import org.motechproject.dhis2.service.StageService;
@@ -19,6 +20,9 @@ import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
 import org.motechproject.tasks.contract.ChannelRequest;
 import org.osgi.framework.BundleContext;
 import org.motechproject.tasks.domain.enums.ParameterType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,43 +33,43 @@ import java.util.TreeSet;
  * Builds a channel request from the records in MDS pertaining to the DHIS2 instance schema.
  *
  */
+@Component
 public class ChannelRequestBuilder  {
 
+    @Autowired
     private BundleContext bundleContext;
+    @Autowired
     private ProgramService programService;
+    @Autowired
     private StageService stageService;
+    @Autowired
     private TrackedEntityAttributeService trackedEntityAttributeService;
+    @Autowired
     private TrackedEntityService trackedEntityService;
-    private ServerVersion serverVersion;
+    @Autowired
+    private DhisWebService dhisWebService;
+    @Autowired
     private DataSetService dataSetService;
 
-    public ChannelRequestBuilder(BundleContext bundleContext,
-                                 ProgramService programService,
-                                 StageService stageService,
-                                 TrackedEntityAttributeService trackedEntityAttributeService,
-                                 TrackedEntityService trackedEntityService,
-                                 ServerVersion serverVersion,
-                                 DataSetService dataSetService) {
-        this.bundleContext = bundleContext;
-        this.programService = programService;
-        this.stageService = stageService;
-        this.trackedEntityAttributeService = trackedEntityAttributeService;
-        this.trackedEntityService = trackedEntityService;
-        this.serverVersion = serverVersion;
-        this.dataSetService = dataSetService;
-    }
+    @Autowired
+    private ProgramActionBuilder programActionBuilder;
+    @Autowired
+    private CreateInstanceActionBuilder createInstanceActionBuilder;
+    @Autowired
+    private StageActionBuilder stageActionBuilder;
+    @Autowired
+    private SendDataValueSetActionBuilder sendDataValueSetActionBuilder;
+
+    private ServerVersion serverVersion;
 
     /**
      * Creates task action event requests for tracked entity instance creation,
      * program enrollment, and program stage events.
      * @return the new Channel Request
      */
+    @Transactional
     public ChannelRequest build() {
-
-        ProgramActionBuilder programActionBuilder = new ProgramActionBuilder();
-        CreateInstanceActionBuilder createInstanceActionBuilder = new CreateInstanceActionBuilder();
-        StageActionBuilder stageActionBuilder = new StageActionBuilder();
-        SendDataValueSetActionBuilder sendDataValueSetActionBuilder = new SendDataValueSetActionBuilder();
+        serverVersion = dhisWebService.getServerVersion();
 
         List<ActionEventRequest> actions = new ArrayList<>();
 

@@ -9,6 +9,8 @@ import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
 import org.motechproject.tasks.domain.enums.ParameterType;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.TreeSet;
 /**
  * Builds task action requests for each data set.
  */
+@Component
 public class SendDataValueSetActionBuilder {
 
     /**
@@ -26,6 +29,7 @@ public class SendDataValueSetActionBuilder {
      * @param dataSets  the list of data sets
      * @return the list of action event requests
      */
+    @Transactional
     public List<ActionEventRequest> addSendDataValueSetActions(List<DataSet> dataSets) {
         List<ActionEventRequest> requests = new ArrayList<>();
 

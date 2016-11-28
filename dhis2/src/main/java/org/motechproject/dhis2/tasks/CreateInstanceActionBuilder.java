@@ -9,6 +9,8 @@ import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
 import org.motechproject.tasks.domain.enums.ParameterType;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.TreeSet;
 /**
  * Builds task action requests for tracked entity instance creation for each entity type in the DHIS2 schema.
  */
+@Component
 public class CreateInstanceActionBuilder {
 
     private static final int ATTRIBUTE_COUNT = 3;
@@ -30,6 +33,7 @@ public class CreateInstanceActionBuilder {
      * @param trackedEntities
      * @return a list of action event requests for creating instances of each tracked entity type
      */
+    @Transactional
     public List<ActionEventRequest> build(List<TrackedEntityAttribute> attributes, List<TrackedEntity> trackedEntities) {
 
         List<ActionEventRequest> actionEventRequests = new ArrayList<>();

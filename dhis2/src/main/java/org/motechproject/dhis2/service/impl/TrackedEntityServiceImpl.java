@@ -6,6 +6,7 @@ import org.motechproject.dhis2.rest.domain.TrackedEntityDto;
 import org.motechproject.dhis2.service.TrackedEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,16 +20,19 @@ public class TrackedEntityServiceImpl implements TrackedEntityService {
     private TrackedEntityDataService trackedEntityDataService;
 
     @Override
+    @Transactional
     public List<TrackedEntity> findAll() {
         return trackedEntityDataService.retrieveAll();
     }
 
     @Override
+    @Transactional
     public TrackedEntity findById(String id) {
         return trackedEntityDataService.findByUuid(id);
     }
 
     @Override
+    @Transactional
     public TrackedEntity createFromDetails(TrackedEntityDto details) {
         TrackedEntity trackedEntity = new TrackedEntity();
         trackedEntity.setUuid(details.getId());
@@ -37,16 +41,19 @@ public class TrackedEntityServiceImpl implements TrackedEntityService {
     }
 
     @Override
+    @Transactional
     public void update(TrackedEntity trackedEntity) {
         trackedEntityDataService.update(trackedEntity);
     }
 
     @Override
+    @Transactional
     public void delete(TrackedEntity trackedEntity) {
         trackedEntityDataService.delete(trackedEntity);
     }
 
     @Override
+    @Transactional
     public void deleteAll() {
         trackedEntityDataService.deleteAll();
     }

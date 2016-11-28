@@ -6,6 +6,7 @@ import org.motechproject.dhis2.rest.domain.OrganisationUnitDto;
 import org.motechproject.dhis2.service.OrgUnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,21 +19,25 @@ public class OrgUnitServiceImpl implements OrgUnitService {
     private OrgUnitDataService orgUnitDataService;
 
     @Override
+    @Transactional
     public List<OrgUnit> findAll() {
         return orgUnitDataService.retrieveAll();
     }
 
     @Override
+    @Transactional
     public OrgUnit findById(String id) {
         return orgUnitDataService.findByUuid(id);
     }
 
     @Override
+    @Transactional
     public OrgUnit findByName(String name) {
         return orgUnitDataService.findByName(name);
     }
 
     @Override
+    @Transactional
     public OrgUnit createFromDetails(OrganisationUnitDto details) {
         OrgUnit orgUnit = new OrgUnit();
         orgUnit.setUuid(details.getId());
@@ -41,16 +46,19 @@ public class OrgUnitServiceImpl implements OrgUnitService {
     }
 
     @Override
+    @Transactional
     public void update(OrgUnit orgUnit) {
         orgUnitDataService.update(orgUnit);
     }
 
     @Override
+    @Transactional
     public void delete(OrgUnit orgUnit) {
         orgUnitDataService.delete(orgUnit);
     }
 
     @Override
+    @Transactional
     public void deleteAll() {
         orgUnitDataService.deleteAll();
     }

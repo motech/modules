@@ -10,6 +10,8 @@ import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
 import org.motechproject.tasks.domain.enums.ParameterType;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,7 @@ import java.util.TreeSet;
  * schema. Also builds create + enroll combination task action requests for each
  * program and the corresponding tracked entity type.
  */
+@Component
 public class ProgramActionBuilder {
 
     private int counter;
@@ -32,6 +35,7 @@ public class ProgramActionBuilder {
      * @param programs
      * @return A list of action event rests pertaining to program enrollment.
      */
+    @Transactional
     public List<ActionEventRequest> build(List<Program> programs, ServerVersion version) {
 
         List<ActionEventRequest> actionEventRequests = new ArrayList<>();

@@ -9,6 +9,8 @@ import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
 import org.motechproject.tasks.domain.enums.ParameterType;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +22,7 @@ import java.util.TreeSet;
 /**
  * Builds task action requests for program stage events for each program stage.
  */
+@Component
 public class StageActionBuilder {
 
     private int counter;
@@ -34,6 +37,7 @@ public class StageActionBuilder {
      * @param stages
      * @return a list of ActionEventRequests
      */
+    @Transactional
     public List<ActionEventRequest> build(List<Stage> stages) {
 
         List<ActionEventRequest> actionEventRequests = new ArrayList<>();
