@@ -4,7 +4,7 @@
 
     <artifactId>modules</artifactId>
     <groupId>org.motechproject</groupId>
-    <version>0.29.1-SNAPSHOT</version>
+    <version>0.29.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>MOTECH Modules</name>
 
@@ -1353,8 +1353,8 @@
     </organization>
 
     <ciManagement>
-        <system>Jenkins</system>
-        <url>http://ci.motechproject.org/</url>
+        <system>Travis</system>
+        <url>https://travis-ci.org/motech/modules/</url>
     </ciManagement>
 
     <mailingLists>
