@@ -1,15 +1,11 @@
 package org.motechproject.dhis2.web;
 
-import org.motechproject.dhis2.domain.DataElement;
-import org.motechproject.dhis2.domain.OrgUnit;
-import org.motechproject.dhis2.domain.Program;
-import org.motechproject.dhis2.domain.TrackedEntity;
-import org.motechproject.dhis2.domain.TrackedEntityAttribute;
-import org.motechproject.dhis2.service.DataElementService;
-import org.motechproject.dhis2.service.OrgUnitService;
-import org.motechproject.dhis2.service.ProgramService;
-import org.motechproject.dhis2.service.TrackedEntityAttributeService;
-import org.motechproject.dhis2.service.TrackedEntityService;
+import org.motechproject.dhis2.dto.DataElementDto;
+import org.motechproject.dhis2.dto.OrgUnitDto;
+import org.motechproject.dhis2.dto.ProgramDto;
+import org.motechproject.dhis2.dto.TrackedEntityAttributeDto;
+import org.motechproject.dhis2.dto.TrackedEntityDto;
+import org.motechproject.dhis2.service.Dhis2WebService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -27,48 +23,40 @@ import java.util.List;
 public class DhisSchemaController {
 
     @Autowired
-    private ProgramService programService;
-    @Autowired
-    private TrackedEntityAttributeService trackedEntityAttributeService;
-    @Autowired
-    private TrackedEntityService trackedEntityService;
-    @Autowired
-    private OrgUnitService orgUnitService;
-    @Autowired
-    private DataElementService dataElementService;
+    private Dhis2WebService dhis2WebService;
 
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/programs", method = RequestMethod.GET)
     @ResponseBody
-    public List<Program> getPrograms() {
-        return programService.findAll();
+    public List<ProgramDto> getPrograms() {
+        return dhis2WebService.getPrograms();
     }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/trackedEntityAttributes", method = RequestMethod.GET)
-    public List<TrackedEntityAttribute> getAttributes() {
-        return trackedEntityAttributeService.findAll();
+    public List<TrackedEntityAttributeDto> getAttributes() {
+        return dhis2WebService.getAttributes();
     }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/trackedEntities", method = RequestMethod.GET)
-    public List<TrackedEntity> getTrackedEntities() {
-        return trackedEntityService.findAll();
+    public List<TrackedEntityDto> getTrackedEntities() {
+        return dhis2WebService.getTrackedEntities();
     }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/orgUnits", method = RequestMethod.GET)
-    public List<OrgUnit> getOrgUnits() {
-        return orgUnitService.findAll();
+    public List<OrgUnitDto> getOrgUnits() {
+        return dhis2WebService.getOrgUnits();
     }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/dataElements", method = RequestMethod.GET)
-    public List<DataElement> getDataElements() {
-        return dataElementService.findAll();
+    public List<DataElementDto> getDataElements() {
+        return dhis2WebService.getDataElements();
     }
 }

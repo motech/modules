@@ -1,11 +1,14 @@
 package org.motechproject.dhis2.domain;
 
+import org.motechproject.dhis2.dto.DataElementDto;
+import org.motechproject.dhis2.dto.StageDto;
 import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.util.SecurityMode;
 
 import javax.jdo.annotations.Unique;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -68,5 +71,15 @@ public class Stage {
 
     public void setProgram(String program) {
         this.program = program;
+    }
+
+    public StageDto toDto() {
+        List<DataElementDto> dataElementDtos = new ArrayList<>();
+
+        for (DataElement dataElement : dataElements) {
+            dataElementDtos.add(dataElement.toDto());
+        }
+
+        return new StageDto(uuid, name, dataElementDtos, program, registration);
     }
 }

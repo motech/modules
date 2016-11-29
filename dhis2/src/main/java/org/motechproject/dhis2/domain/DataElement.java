@@ -2,6 +2,7 @@ package org.motechproject.dhis2.domain;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.motechproject.dhis2.dto.DataElementDto;
 import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
@@ -43,6 +44,10 @@ public class DataElement {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public DataElementDto toDto () {
+        return new DataElementDto(name, uuid);
     }
 
     @Override

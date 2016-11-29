@@ -1,5 +1,8 @@
 package org.motechproject.dhis2.domain;
 
+import org.motechproject.dhis2.dto.ProgramDto;
+import org.motechproject.dhis2.dto.StageDto;
+import org.motechproject.dhis2.dto.TrackedEntityAttributeDto;
 import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
@@ -7,6 +10,7 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.util.SecurityMode;
 
 import javax.jdo.annotations.Unique;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -104,5 +108,20 @@ public class Program {
 
     public void setProgramType(String programType) {
         this.programType = programType;
+    }
+
+    public ProgramDto toDto() {
+        List<StageDto> stageDtos = new ArrayList<>();
+        List<TrackedEntityAttributeDto> trackedEntityAttributeDtos = new ArrayList<>();
+
+        for (Stage stage : stages) {
+            stageDtos.add(stage.toDto());
+        }
+
+        for (TrackedEntityAttribute trackedEntityAttribute : attributes) {
+            trackedEntityAttributeDtos.add(trackedEntityAttribute.toDto());
+        }
+
+        return new ProgramDto(uuid, name, trackedEntity.toDto(), stageDtos, trackedEntityAttributeDtos, singleEvent, registration, programType);
     }
 }
