@@ -159,7 +159,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
     @After
     public void tearDown() throws PatientNotFoundException {
-        List<Encounter> encounters = encounterService.getEncountersByEncounterType(DEFAULT_CONFIG_NAME, MOTECH_ID, createdEncounterType.getName());
+        List<Encounter> encounters = encounterService.getEncountersByEncounterType(DEFAULT_CONFIG_NAME, MOTECH_ID, createdEncounterType.getUuid());
 
         for (Encounter encounter : encounters) {
             encounterService.deleteEncounter(DEFAULT_CONFIG_NAME, encounter.getUuid());
@@ -245,7 +245,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         // Give Tasks some time to process
         assertTrue(waitForTaskExecution(task.getId()));
 
-        Encounter encounter = encounterService.getLatestEncounterByPatientMotechId(DEFAULT_CONFIG_NAME, MOTECH_ID, createdEncounterType.getName());
+        Encounter encounter = encounterService.getLatestEncounterByPatientMotechId(DEFAULT_CONFIG_NAME, MOTECH_ID, createdEncounterType.getUuid());
         String firstEncounterUuid = encounter.getUuid();
 
         Patient patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, "Jacob Lee");
@@ -459,7 +459,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         Map<String, String> values = new HashMap<>();
         values.put(Keys.PROVIDER_UUID, createdProvider.getUuid());
         values.put(Keys.PATIENT_UUID, createdPatient.getUuid());
-        values.put(Keys.ENCOUNTER_TYPE, createdEncounterType.getName());
+        values.put(Keys.ENCOUNTER_TYPE, createdEncounterType.getUuid());
         values.put(Keys.ENCOUNTER_DATE, new DateTime("2015-01-16T00:00:00Z").toString());
         values.put(Keys.LOCATION_NAME, DEFAULT_LOCATION_NAME);
         values.put(Keys.CONFIG_NAME, DEFAULT_CONFIG_NAME);
@@ -615,7 +615,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     }
 
     private void checkIfEncounterWasCreatedProperly() {
-        List<Encounter> encounterList = encounterService.getEncountersByEncounterType(DEFAULT_CONFIG_NAME, MOTECH_ID, createdEncounterType.getName());
+        List<Encounter> encounterList = encounterService.getEncountersByEncounterType(DEFAULT_CONFIG_NAME, MOTECH_ID, createdEncounterType.getUuid());
 
         assertEquals(2, encounterList.size());
 

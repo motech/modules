@@ -141,7 +141,7 @@ public class MRSEncounterServiceIT extends BasePaxIT {
 
     @Test
     public void shouldGetLatestEncounter() {
-        Encounter encounter = encounterAdapter.getLatestEncounterByPatientMotechId(DEFAULT_CONFIG_NAME, patient.getMotechId(), encounterType.getName());
+        Encounter encounter = encounterAdapter.getLatestEncounterByPatientMotechId(DEFAULT_CONFIG_NAME, patient.getMotechId(), encounterType.getUuid());
 
         assertNotNull(encounter);
         assertEquals(new LocalDate("2012-09-05"), new LocalDate(encounter.getEncounterDatetime()));

@@ -168,7 +168,7 @@ public class OpenMRSActionProxyServiceTest {
                 .when(locationService).getLocations(eq(CONFIG_NAME), eq(location.getName()));
 
         Encounter encounterCreated = openMRSActionProxyService.createEncounter(CONFIG_NAME, new DateTime(encounter.getEncounterDatetime()),
-                encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid(),
+                encounter.getEncounterType().getUuid(), location.getName(), patient.getUuid(), provider.getUuid(),
                 visit.getUuid(), form.getUuid(),  observations);
 
         assertEquals(encounter, encounterCreated);
@@ -212,7 +212,7 @@ public class OpenMRSActionProxyServiceTest {
                 .when(locationService).getLocations(eq(CONFIG_NAME), eq(location.getName()));
 
         Encounter encounterCreated = openMRSActionProxyService.createEncounter(CONFIG_NAME, new DateTime(encounter.getEncounterDatetime()),
-                encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid(),
+                encounter.getEncounterType().getUuid(), location.getName(), patient.getUuid(), provider.getUuid(),
                 visit.getUuid(), form.getUuid(), observations);
 
         assertEquals(encounter, encounterCreated);
@@ -257,7 +257,7 @@ public class OpenMRSActionProxyServiceTest {
                 .when(locationService).getLocations(eq(CONFIG_NAME), eq(location.getName()));
 
         Encounter encounterCreated = openMRSActionProxyService.createEncounter(CONFIG_NAME, new DateTime(encounter.getEncounterDatetime()),
-                encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid(),
+                encounter.getEncounterType().getUuid(), location.getName(), patient.getUuid(), provider.getUuid(),
                 visit.getUuid(), form.getUuid(), observations);
 
 
