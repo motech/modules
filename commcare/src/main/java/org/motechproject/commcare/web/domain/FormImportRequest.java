@@ -34,7 +34,6 @@ public class FormImportRequest implements Serializable {
      */
     private String config;
 
-
     /**
      * @return the starting date for form import
      */
@@ -90,6 +89,7 @@ public class FormImportRequest implements Serializable {
     public void setConfig(String config) {
         this.config = config;
     }
+
 
     @JsonIgnore
     public Range<DateTime> getDateRange() {

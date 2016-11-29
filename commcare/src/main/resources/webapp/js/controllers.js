@@ -331,16 +331,15 @@
             $scope.updateImportRequest("caseId", caseId);
             if (!$scope.importInProgress) {
             LoadingModal.open();
-                                    $http.post('../commcare/case-import/start', $scope.importRequest).success( function(data) {
-                                        if (data) {
+                                    $http.post('../commcare/case-import/import-by-id', $scope.importRequest).success( function(data) {
+                                        if (data === 1) {
                                             $scope.importInProgress = true;
                                             $scope.lastCaseId = null;
                                             $scope.lastReceivedOn = null;
                                             $scope.importCasesComplete = true;
-                                        } else {
-                                            $scope.importError(data);
+                                        } else if (data === 0) {
                                             $scope.importCasesComplete = false;
-                                            ModalFactory.showErrorAlertWithResponse('commcare.error.importCase', 'commcare.error', data);
+                                            ModalFactory.showErrorAlertWithResponse('commcare.error.importCase', 'commcare.error', caseId);
                                             LoadingModal.close();
                                         }
                                       LoadingModal.close();

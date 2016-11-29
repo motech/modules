@@ -62,16 +62,30 @@ public class CaseImportController extends CommcareController{
     /**
      * Starts a case import using the provided request.
      * @param importRequest the request for the case import
+     * @return returns whether case imported by id is failed or not.
      */
     @RequestMapping(value = "/start", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public void startImport(@RequestBody CaseImportRequest importRequest, HttpSession session) {
         LOGGER.debug("Received import START request: {}", importRequest);
         CommcareCaseImporter importer = caseImporterFactory.getImporter(session);
+        importer.startImport(importRequest.getDateRange(), importRequest.getConfig());
+    }
+
+    /**
+     * Starts a case import by the given case id.
+     * @param importRequest the request for the case import
+     * @return returns 0 if there is an error and 1 if there is no error.
+     */
+    @RequestMapping(value = "/import-by-id", method = RequestMethod.POST)
+    @ResponseBody
+    public int startImportById(@RequestBody CaseImportRequest importRequest, HttpSession session) {
+        LOGGER.debug("Received import START request: {}", importRequest);
+        CommcareCaseImporter importer = caseImporterFactory.getImporter(session);
         if (importRequest.getCaseId() != null) {
-            importer.importSingleCase(importRequest.getCaseId(), importRequest.getConfig());
-        } else {
-            importer.startImport(importRequest.getDateRange(), importRequest.getConfig());
+            return importer.importSingleCase(importRequest.getCaseId(), importRequest.getConfig());
         }
+
+        return 0;
     }
 }

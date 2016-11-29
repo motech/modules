@@ -1,6 +1,5 @@
 package org.motechproject.commcare.pull;
 
-import com.google.common.collect.Lists;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -62,7 +61,7 @@ public class CommcareCaseImporterImpl implements CommcareCaseImporter {
         return count;
     }
 
-    public void importSingleCase(final String caseId, final String configName) {
+    public int importSingleCase(final String caseId, final String configName) {
         LOGGER.info("Initiating import request for case with id : {} [config: {}]", caseId, configName);
         importInProgress = true;
 
@@ -85,10 +84,14 @@ public class CommcareCaseImporterImpl implements CommcareCaseImporter {
             LOGGER.error("Error while importing case", e);
             LOGGER.error("Can not import case of id : {} with conf: [{}]", caseId, configName);
             handleImportError(e, configName);
+
+            return 0;
         }
         LOGGER.info("Case import finished for case with id : {}. ", caseId);
 
         importInProgress = false;
+
+        return 1;
     }
 
     public void startImport(final Range<DateTime> dateRange, final String configName) {
@@ -103,6 +106,7 @@ public class CommcareCaseImporterImpl implements CommcareCaseImporter {
             @Override
             public void run() {
                 boolean hasMore = false;
+                int currentPage = 1;
 
                 LOGGER.debug("Import thread started");
 
@@ -112,7 +116,7 @@ public class CommcareCaseImporterImpl implements CommcareCaseImporter {
                                 pageCount, fetchSize);
                         // fetching the cases
                         CasesInfo caseList = caseService.getCasesByCasesTimeWithMetadata(dateTimeToString(dateRange.getMin()),
-                                dateTimeToString(dateRange.getMax()), fetchSize, pageCount, configName);
+                                dateTimeToString(dateRange.getMax()), fetchSize, currentPage, configName);
 
                         LOGGER.debug("Retrieved a list of {} cases", caseList.getCaseInfoList().size());
 
@@ -122,12 +126,12 @@ public class CommcareCaseImporterImpl implements CommcareCaseImporter {
                         LOGGER.debug("Imported {} cases", caseList.getCaseInfoList().size());
 
                         // the first page is the last one
-                        hasMore = pageCount > 1;
+                        hasMore = currentPage < pageCount;
 
                         // we decrement the page
                         if (hasMore) {
                             LOGGER.debug("Proceeding to the next batch of cases");
-                            pageCount--;
+                            currentPage++;
                         }
 
                     } catch (RuntimeException e) {
@@ -198,7 +202,7 @@ public class CommcareCaseImporterImpl implements CommcareCaseImporter {
     }
 
     private void importCaseList(CasesInfo caseList, String configName) {
-        for (CaseInfo caseInfo : Lists.reverse(caseList.getCaseInfoList())) {
+        for (CaseInfo caseInfo : caseList.getCaseInfoList()) {
             CaseEvent caseEvent = CaseEvent.fromCaseInfo(caseInfo, configName);
             eventRelay.sendEventMessage(caseEvent.toMotechEventWithData());
 

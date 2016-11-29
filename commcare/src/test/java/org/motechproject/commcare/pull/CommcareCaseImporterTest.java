@@ -30,7 +30,8 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.*;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.anyInt;
@@ -87,14 +88,14 @@ public class CommcareCaseImporterTest {
                 anyInt(), pageCaptor.capture(), eq(CONFIG_NAME)); // count + 3 fetches
 
         assertEquals(pageCaptor.getAllValues().get(0), (Integer)1);
-        assertEquals(pageCaptor.getAllValues().get(1), (Integer)3);
+        assertEquals(pageCaptor.getAllValues().get(1), (Integer)1);
         assertEquals(pageCaptor.getAllValues().get(2), (Integer)2);
-        assertEquals(pageCaptor.getAllValues().get(3), (Integer)1);
+        assertEquals(pageCaptor.getAllValues().get(3), (Integer)3);
         ArgumentCaptor<MotechEvent> eventCaptor = ArgumentCaptor.forClass(MotechEvent.class);
         verify(eventRelay, times(5)).sendEventMessage(eventCaptor.capture());
 
         for (int i = 0; i < 5; i++) {
-            verifyCaseEvent(eventCaptor.getAllValues().get(i), "id" + (4 - i), REC_DATES.get(4 - i));
+            verifyCaseEvent(eventCaptor.getAllValues().get(i), "id" + i, REC_DATES.get(i));
         }
 
         // verify status
@@ -105,8 +106,8 @@ public class CommcareCaseImporterTest {
         assertFalse(status.isError());
         assertEquals(5, status.getCasesImported());
         assertEquals(5, status.getTotalCases());
-        assertEquals(REC_DATES.get(0), status.getLastImportDate());
-        assertEquals("id0", status.getLastImportCaseId());
+        assertEquals(REC_DATES.get(4), status.getLastImportDate());
+        assertEquals("id4", status.getLastImportCaseId());
         assertFalse(status.isImportInProgress());
     }
 
@@ -172,15 +173,15 @@ public class CommcareCaseImporterTest {
                 anyInt(), pageCaptor.capture(), eq(CONFIG_NAME));
 
         assertEquals(pageCaptor.getAllValues().get(0), (Integer)1);
-        assertEquals(pageCaptor.getAllValues().get(1), (Integer)3);
+        assertEquals(pageCaptor.getAllValues().get(1), (Integer)1);
         assertEquals(pageCaptor.getAllValues().get(2), (Integer)2);
 
         ArgumentCaptor<MotechEvent> eventCaptor = ArgumentCaptor.forClass(MotechEvent.class);
-        verify(eventRelay, times(3)).sendEventMessage(eventCaptor.capture());
+        verify(eventRelay, times(4)).sendEventMessage(eventCaptor.capture());
 
-        verifyCaseEvent(eventCaptor.getAllValues().get(0), "id4", REC_DATES.get(4));
-        verifyCaseFailureEvent(eventCaptor.getAllValues().get(1), errorMsg);
-        verifyCaseFailureStatusMessageEvent(eventCaptor.getAllValues().get(2), errorMsg);
+        verifyCaseEvent(eventCaptor.getAllValues().get(0), "id0", REC_DATES.get(0));
+        verifyCaseFailureEvent(eventCaptor.getAllValues().get(2), errorMsg);
+        verifyCaseFailureStatusMessageEvent(eventCaptor.getAllValues().get(3), errorMsg);
     }
 
     @Test(expected = IllegalArgumentException.class)

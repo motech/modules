@@ -34,7 +34,7 @@ public interface CommcareCaseImporter {
      * @param configName the name of the configuration to use, if null is provided the default configuration
      *                   will be used
      */
-    void importSingleCase(final String caseId, final String configName);
+    int importSingleCase(final String caseId, final String configName);
 
     /**
      * Initiates asynchronous import for the provided criteria. Cases will be fetched from Commcare by doing HTTP
