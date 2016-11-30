@@ -56,7 +56,11 @@ public class CaseImportController extends CommcareController{
     public int initImport(@RequestBody CaseImportRequest importRequest, HttpSession session) {
         LOGGER.debug("Received import INIT request: {}", importRequest);
         CommcareCaseImporter importer = caseImporterFactory.getImporter(session);
-        return importer.countForImport(importRequest.getDateRange(), importRequest.getConfig());
+        if (importRequest.getCaseId() == null) {
+            return importer.countForImport(importRequest.getDateRange(), importRequest.getConfig());
+        } else {
+            return importer.checkCaseIdForImport(importRequest.getCaseId(), importRequest.getConfig()) ? 1 : 0;
+        }
     }
 
     /**
@@ -78,14 +82,12 @@ public class CaseImportController extends CommcareController{
      * @return returns 0 if there is an error and 1 if there is no error.
      */
     @RequestMapping(value = "/import-by-id", method = RequestMethod.POST)
-    @ResponseBody
-    public int startImportById(@RequestBody CaseImportRequest importRequest, HttpSession session) {
+    @ResponseStatus(HttpStatus.OK)
+    public void startImportById(@RequestBody CaseImportRequest importRequest, HttpSession session) {
         LOGGER.debug("Received import START request: {}", importRequest);
         CommcareCaseImporter importer = caseImporterFactory.getImporter(session);
         if (importRequest.getCaseId() != null) {
-            return importer.importSingleCase(importRequest.getCaseId(), importRequest.getConfig());
+            importer.importSingleCase(importRequest.getCaseId(), importRequest.getConfig());
         }
-
-        return 0;
     }
 }

@@ -108,12 +108,9 @@ public class CaseImportControllerTest {
 
     @Test
     public void shouldStartImportByCaseId() throws Exception {
-        when(caseImporter.importSingleCase(anyString(), eq("configName"))).thenReturn(1);
         controller.perform(post("/case-import/import-by-id").body(requestJsonWithCaseId().getBytes(Charset.forName("UTF-8")))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(HttpStatus.OK.value()))
-                .andExpect(content().type("application/json;charset=UTF-8"))
-                .andExpect(content().string("1"));
+                .andExpect(status().is(HttpStatus.OK.value()));
 
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         verify(caseImporter).importSingleCase(captor.capture(), eq("configName"));

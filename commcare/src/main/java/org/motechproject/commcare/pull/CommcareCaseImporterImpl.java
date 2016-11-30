@@ -61,37 +61,36 @@ public class CommcareCaseImporterImpl implements CommcareCaseImporter {
         return count;
     }
 
-    public int importSingleCase(final String caseId, final String configName) {
+    public void importSingleCase(final String caseId, final String configName) {
         LOGGER.info("Initiating import request for case with id : {} [config: {}]", caseId, configName);
         importInProgress = true;
+        totalCount = 1;
 
-        try {
-            LOGGER.debug("Retrieving case info for case with id : {}", caseId);
-            // Fetching the case
-            CaseInfo caseInfo = caseService.getCaseByCaseId(caseId, configName);
+        LOGGER.debug("Retrieving case info for case with id : {}", caseId);
+        // Fetching the case
+        CaseInfo caseInfo = caseService.getCaseByCaseId(caseId, configName);
 
-            LOGGER.debug("Retrieved the case");
-            // Sending event for the fetched case
-            CaseEvent caseEvent = CaseEvent.fromCaseInfo(caseInfo, configName);
-            eventRelay.sendEventMessage(caseEvent.toMotechEventWithData());
+        LOGGER.debug("Retrieved the case");
+        // Sending event for the fetched case
+        CaseEvent caseEvent = CaseEvent.fromCaseInfo(caseInfo, configName);
+        eventRelay.sendEventMessage(caseEvent.toMotechEventWithData());
 
-            lastImportedCaseId = caseInfo.getCaseId();
-            lastImportedDate = caseInfo.getDateModified();
-            importCount++;
+        lastImportedCaseId = caseInfo.getCaseId();
+        lastImportedDate = caseInfo.getDateModified();
+        importCount = 1;
 
-            LOGGER.info("Imported case with ID: {}", caseInfo.getCaseId());
-        } catch (RuntimeException e) {
-            LOGGER.error("Error while importing case", e);
-            LOGGER.error("Can not import case of id : {} with conf: [{}]", caseId, configName);
-            handleImportError(e, configName);
-
-            return 0;
-        }
+        LOGGER.info("Imported case with ID: {}", caseInfo.getCaseId());
         LOGGER.info("Case import finished for case with id : {}. ", caseId);
 
         importInProgress = false;
+    }
 
-        return 1;
+    public boolean checkCaseIdForImport(final String caseId, final String configName) {
+        LOGGER.debug("Checking if the case with id : {} exists", caseId);
+        CaseInfo caseInfo = caseService.getCaseByCaseId(caseId, configName);
+        LOGGER.info("Case with id : {} exists", caseId);
+
+        return !(caseInfo == null);
     }
 
     public void startImport(final Range<DateTime> dateRange, final String configName) {

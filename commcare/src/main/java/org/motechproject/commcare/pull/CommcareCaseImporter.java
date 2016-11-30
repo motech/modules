@@ -34,7 +34,7 @@ public interface CommcareCaseImporter {
      * @param configName the name of the configuration to use, if null is provided the default configuration
      *                   will be used
      */
-    int importSingleCase(final String caseId, final String configName);
+    void importSingleCase(final String caseId, final String configName);
 
     /**
      * Initiates asynchronous import for the provided criteria. Cases will be fetched from Commcare by doing HTTP
@@ -53,6 +53,15 @@ public interface CommcareCaseImporter {
      * Stops the ongoing import. The effect is not guaranteed to be immediate.
      */
     void stopImport();
+
+    /**
+     * Checks whether a case with the given id exists.
+     * @param caseId the uuid of the case to be imported.
+     * @param configName the name of the configuration to use, if null is provided the default configuration
+     *                   will be used
+     * @return boolean value
+     */
+    boolean checkCaseIdForImport(final String caseId, final String configName);
 
     /**
      * Checks whether there is an ongoing import in progress.

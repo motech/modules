@@ -81,7 +81,6 @@
             $scope.updateImportRequest();
             $('#importCommcareForms').modal('show');
             $scope.initImport();
-
         };
 
         $scope.importFormsContinue = function () {
@@ -232,7 +231,7 @@
     });
 
     controllers.controller('CommcareImportCasesCtrl', function ($scope, $http, LoadingModal, ModalFactory) {
-        $scope.importOptions = ['all', 'byId', 'byDateRange'];
+        $scope.importOptions = ['all', 'byDateRange', 'byId'];
         $scope.importCasesProgressShow = false;
         $scope.importCasesComplete = false;
         $scope.totalCases = 0;
@@ -327,30 +326,6 @@
                     $('#importCommcareCases').modal('show');
                     $scope.initImport();
                 };
-        $scope.importSingleCase = function (caseId) {
-            $scope.updateImportRequest("caseId", caseId);
-            if (!$scope.importInProgress) {
-            LoadingModal.open();
-                                    $http.post('../commcare/case-import/import-by-id', $scope.importRequest).success( function(data) {
-                                        if (data === 1) {
-                                            $scope.importInProgress = true;
-                                            $scope.lastCaseId = null;
-                                            $scope.lastReceivedOn = null;
-                                            $scope.importCasesComplete = true;
-                                        } else if (data === 0) {
-                                            $scope.importCasesComplete = false;
-                                            ModalFactory.showErrorAlertWithResponse('commcare.error.importCase', 'commcare.error', caseId);
-                                            LoadingModal.close();
-                                        }
-                                      LoadingModal.close();
-                                    }).error(function(data) {
-                                        $scope.importError(data);
-                                        $scope.importCasesComplete = false;
-                                        ModalFactory.showErrorAlertWithResponse('commcare.error.importCase', 'commcare.error', data);
-                                        LoadingModal.close();
-                                    });
-                                }
-        };
         $scope.initImport = function () {
                     $http.post('../commcare/case-import/init', $scope.importRequest).success( function(data) {
                          $scope.totalCases = data;
@@ -372,7 +347,8 @@
                 };
         $scope.startImport = function () {
                     if (!$scope.importInProgress) {
-                        $http.post('../commcare/case-import/start', $scope.importRequest).success( function(data) {
+                        var url = $scope.byId ? "../commcare/case-import/import-by-id" : "../commcare/case-import/start";
+                        $http.post(url, $scope.importRequest).success( function(data) {
                             $scope.importInProgress = true;
                             $scope.lastCaseId = null;
                             $scope.lastReceivedOn = null;
@@ -399,6 +375,7 @@
                                 $scope.importCasesProgressShow = false;
                                 $('#importCommcareCases').modal('hide');
                                 $scope.importCasesComplete = true;
+                                $('#importCompleteAlert').fadeIn("slow");
                                 clearInterval($scope.importStatusInterval);
                             }
 

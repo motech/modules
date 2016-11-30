@@ -143,30 +143,6 @@
         };
     });
 
-    directives.directive('uuidValidity', function() {
-            var UUID_REGEXP = new RegExp('^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$');
-            return {
-                require: 'ngModel',
-                link: function(scope, element, attrs, ctrl) {
-                    var elm = angular.element(element), originalValue;
-                    ctrl.$validators.uuid = function(modelValue, viewValue) {
-                            if (ctrl.$isEmpty(modelValue)) {
-                              // consider empty models to be valid
-                              return true;
-                            }
-
-                            if (UUID_REGEXP.test(viewValue)) {
-                              // it is valid
-                              return true;
-                            }
-
-                            // it is invalid
-                            return false;
-                          };
-                }
-            };
-        });
-
     directives.directive('switch', function() {
 
         return {
