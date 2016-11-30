@@ -18,8 +18,8 @@ public class EncounterType {
     private String name;
     private String description;
 
-    public EncounterType(String uuid) {
-        this.uuid = uuid;
+    public EncounterType(String name) {
+        this.name = name;
     }
 
     /**
