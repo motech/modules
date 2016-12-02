@@ -1,5 +1,6 @@
 package org.motechproject.dhis2.service.impl;
 
+import org.motechproject.dhis2.domain.DataElement;
 import org.motechproject.dhis2.domain.Stage;
 import org.motechproject.dhis2.repository.StageDataService;
 import org.motechproject.dhis2.rest.domain.ProgramStageDto;
@@ -33,12 +34,13 @@ public class StageServiceImpl implements StageService {
 
     @Override
     @Transactional
-    public Stage createFromDetails(ProgramStageDto details, String programId, boolean hasRegistration) {
+    public Stage createFromDetails(ProgramStageDto details, String programId, boolean hasRegistration, List<DataElement> dataElements) {
         Stage stage = new Stage();
         stage.setUuid(details.getId());
         stage.setName(details.getName());
         stage.setRegistration(hasRegistration);
         stage.setProgram(programId);
+        stage.setDataElements(dataElements);
         return stageDataService.create(stage);
     }
 
