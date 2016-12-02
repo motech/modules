@@ -543,7 +543,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     }
 
     private EncounterType prepareEncounterType() {
-        EncounterType tempEncounterType = new EncounterType("TestEncounterType");
+        EncounterType tempEncounterType = new EncounterType("TestEncounterType", null);
         tempEncounterType.setDescription("TestDescription");
 
         String encounterUuid = encounterService.createEncounterType(DEFAULT_CONFIG_NAME, tempEncounterType).getUuid();

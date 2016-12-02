@@ -343,7 +343,7 @@ public class MRSEncounterServiceIT extends BasePaxIT {
     }
 
     private void prepareEncounterType() {
-        EncounterType tempEncounterType = new EncounterType("FooType");
+        EncounterType tempEncounterType = new EncounterType("FooType", null);
         tempEncounterType.setDescription("FooDescription");
 
         String encounterUuid = encounterAdapter.createEncounterType(DEFAULT_CONFIG_NAME, tempEncounterType).getUuid();

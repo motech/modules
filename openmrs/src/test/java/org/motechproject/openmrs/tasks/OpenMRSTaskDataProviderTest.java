@@ -151,7 +151,7 @@ public class OpenMRSTaskDataProviderTest {
         lookupFields.put(UUID, DEFAULT_UUID);
 
         Encounter encounter = new Encounter();
-        encounter.setEncounterType(new EncounterType("encounterTypeTest"));
+        encounter.setEncounterType(new EncounterType("encounterTypeTest", null));
 
         when(encounterService.getEncounterByUuid(CONFIG_NAME, DEFAULT_UUID)).thenReturn(encounter);
 
