@@ -189,7 +189,7 @@ public class Encounter {
                 encounter.addProperty("location", src.getLocation().getUuid());
             }
             if (src.encounterType != null) {
-                encounter.addProperty("encounterType", src.getEncounterType().getName());
+                encounter.addProperty("encounterType", src.getEncounterType().getUuid());
             }
             if (src.encounterDatetime != null) {
                 encounter.addProperty("encounterDatetime", sdf.format(src.getEncounterDatetime()));

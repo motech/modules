@@ -146,7 +146,7 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
         List<Encounter> encountersByPatientMotechId = getAllEncountersByPatientMotechId(config, motechId);
 
         for (Encounter encounter : encountersByPatientMotechId) {
-            if (StringUtils.equals(encounter.getEncounterType().getName(), encounterType)) {
+            if (StringUtils.equals(encounter.getEncounterType().getUuid(), encounterType)) {
                 encountersByEncounterType.add(encounter);
             }
         }

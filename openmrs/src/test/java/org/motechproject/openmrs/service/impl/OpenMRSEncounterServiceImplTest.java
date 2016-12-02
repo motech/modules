@@ -73,7 +73,7 @@ public class OpenMRSEncounterServiceImplTest {
 
         List<Observation> obsList = new ArrayList<>();
 
-        Encounter encounter = new Encounter(location, new EncounterType("testEncounterType"), encounterDatetime.toDate(), patient, visit, Collections.singletonList(provider.getPerson()), obsList);
+        Encounter encounter = new Encounter(location, new EncounterType("testEncounterType", null), encounterDatetime.toDate(), patient, visit, Collections.singletonList(provider.getPerson()), obsList);
 
         when(configService.getConfigByName(CONFIG_NAME)).thenReturn(config);
         when(encounterResource.createEncounter(config,encounter)).thenThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST));
