@@ -305,6 +305,7 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
         caseInfo.setCaseId(caseResponse.getCaseId());
         caseInfo.setUserId(caseResponse.getUserId());
         caseInfo.setConfigName(configName);
+        caseInfo.setDateModified(caseResponse.getDateModified());
 
         return caseInfo;
     }

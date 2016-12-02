@@ -4,7 +4,7 @@ import org.motechproject.commcare.config.Config;
 import org.motechproject.commcare.domain.FormValueElement;
 import org.motechproject.commcare.events.FullFormEvent;
 import org.motechproject.commcare.events.FullFormFailureEvent;
-import org.motechproject.commcare.events.MalformedFormStatusMessageEvent;
+import org.motechproject.commcare.events.FailedImportStatusMessageEvent;
 import org.motechproject.commcare.exception.EndpointNotSupported;
 import org.motechproject.commcare.exception.FullFormParserException;
 import org.motechproject.commcare.parser.FullFormParser;
@@ -82,7 +82,7 @@ public class FullFormController extends CommcareController {
         eventRelay.sendEventMessage(failureEvent.toMotechEvent());
         // publish a status message in the Admin module
         String msg = "Error while receiving a form from Commcare: " + e.getMessage();
-        MalformedFormStatusMessageEvent statusMessageEvent = new MalformedFormStatusMessageEvent(msg);
+        FailedImportStatusMessageEvent statusMessageEvent = new FailedImportStatusMessageEvent(msg);
         eventRelay.sendEventMessage(statusMessageEvent.toMotechEvent());
     }
 

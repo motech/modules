@@ -27,13 +27,23 @@
                     }
                 }
             })
-            .state('commcare.import', {
-                url: '/import',
+            .state('commcare.importForms', {
+                url: '/importForms',
                 parent: 'commcare',
                 views: {
                     'commcareView': {
                         templateUrl: '../commcare/resources/partials/importForms.html',
                         controller: 'CommcareImportFormsCtrl'
+                    }
+                }
+            })
+            .state('commcare.importCases', {
+                url: '/importCases',
+                parent: 'commcare',
+                views: {
+                    'commcareView': {
+                        templateUrl: '../commcare/resources/partials/importCases.html',
+                        controller: 'CommcareImportCasesCtrl'
                     }
                 }
             })

@@ -1,0 +1,122 @@
+<div ng-if="!selectedConfig" class="row inside">
+    <div class="alert alert-info">
+        <p>&nbsp;{{msg('commcare.alert.info.noConfigurationsDefined')}}</p>
+    </div>
+</div>
+
+<div ng-if="selectedConfig">
+    <div class="form-horizontal">
+        <div class="form-group toolbox">
+            <label class="col-lg-2 col-md-3 col-sm-4 control-label">{{msg('commcare.selectConfig')}}: </label>
+            <div class="col-lg-10 col-md-9 col-sm-8">
+                <select class="form-control input-auto" ng-change="updateImportRequest('config', $parent.selectedConfig.name)" ng-model="$parent.selectedConfig" ng-options="config.name for config in $parent.configurations.configs | filterUnsavedConfig:newlyCreatedConfig">
+                    <option ng-if="!$parent.selectedConfig || (selectedConfig === newlyCreatedConfig)" value="">{{msg('commcare.select')}}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div>
+        <form class="form-horizontal" name="caseImportForm">
+            <div class="form-group">
+                <label class="col-lg-2 col-md-3 col-sm-4 control-label">{{msg('commcare.casesToImport')}}: </label>
+                <div class="col-lg-10 col-md-9 col-sm-8">
+                    <div id="selectImportOption" class="btn-group">
+                        <a class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            {{msg('commcare.' + selectedImportOption)}}
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li ng-model="selectedImportOption" ng-repeat="option in importOptions">
+                                <a ng-click="setImportOption($index)">
+                                    {{msg('commcare.' + option)}}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="byDateRange" class="form-group">
+                <label class="col-lg-2 col-md-3 col-sm-4 control-label">{{msg('commcare.startDateTime')}}: </label>
+                <div class="col-lg-10 col-md-9 col-sm-8">
+                    <input id="commcareDateTimeFrom" ng-model="modifiedDateStart" import-date-time-picker-from type="datetime" placeholder="{{msg('commcare.from')}}" class="form-control input-large-fluid">
+                </div>
+            </div>
+            <div ng-show="byDateRange" class="form-group">
+                <label class="col-lg-2 col-md-3 col-sm-4 control-label">{{msg('commcare.endDateTime')}}: </label>
+                <div class="col-lg-10 col-md-9 col-sm-8">
+                    <input id="commcareDateTimeTo" ng-model="modifiedDateEnd" import-date-time-picker-to type="datetime" placeholder="{{msg('commcare.to')}}" class="form-control input-large-fluid">
+                </div>
+            </div>
+            <div ng-show="byId" class="form-group">
+                <label class="col-lg-2 col-md-3 col-sm-4 control-label">{{msg('commcare.caseId')}}: </label>
+                <div class="col-lg-10 col-md-9 col-sm-8">
+                    <input id="commcareCaseId" ng-model="caseId" type="text" name="id" ng-change="updateImportRequest('caseId', caseId)" class="form-control input-small-fluid">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-offset-2 col-md-offset-3 col-sm-offset-4 col-lg-10 col-md-9 col-sm-8">
+                    <button ng-click="importCasesStart()" class="btn btn-primary">{{msg('commcare.importCases')}}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div id="importCompleteAlert" ng-show="importCasesComplete" class="form-group">
+        <div class="alert alert-success">
+            <p>{{msg('commcare.importComplete')}}</p>
+        </div>
+    </div>
+
+    <div id="importCommcareCases" class="commcare modal fade" tabindex="-1" role="dialog" aria-labelledby="importCommcareCases" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" ng-hide="importInProgress" ng-click="closeImportCases()">&times;</button>
+                    <h4 class="modal-title" id="importInstanceModalLabel">{{msg('commcare.importCases')}}</h4>
+                </div>
+                <div class="modal-body">
+                    <div ng-show="!statusError && !importFormsProgressShow && byId">
+                        <div>{{msg('commcare.import.checkForCaseId',caseId)}}</div>
+                    </div>
+                    <div ng-show="!statusError && !importCasesProgressShow && !initImportComplete" class="form-group">
+                        <div><img ng-hide="totalCases &gt; 0" alt="loading" src="./../../static/common/img/load.gif">&nbsp;<strong></strong>&nbsp{{msg('commcare.retrievingCases')}}</div>
+                    </div>
+                    <div ng-show="!statusError && totalCases &gt; 0 && initImportComplete && !(importCasesProgressShow || importInProgress) && !byId" class="case-group">
+                        <div><strong>{{totalCases}}</strong>&nbsp{{msg('commcare.casesWillImported')}}</div>
+                    </div>
+                    <div ng-show="!statusError && totalCases &gt; 0 && initImportComplete && !(importFormsProgressShow || importInProgress) && byId" class="form-group">
+                        <div><strong>{{totalCases}}</strong>&nbsp{{msg('commcare.caseWillImported')}}</div>
+                    </div>
+                    <div ng-show="!statusError && totalCases &lt; 1 && initImportComplete && !(importCasesProgressShow || importInProgress) && !byId" class="form-group">
+                        <div>{{msg('commcare.noCasesToImport')}}</div>
+                    </div>
+                    <div ng-show="!statusError && totalCases &lt; 1 && initImportComplete && !(importCasesProgressShow || importInProgress) && byId" class="form-group">
+                        <div>{{msg('commcare.noCaseToImport')}}</div>
+                    </div>
+                    <div ng-show="totalCases &gt; 0 && importInProgress" class="form-group">
+                        <div class="margin-after">{{msg('commcare.caseImport.imported', casesImported, totalCases)}}</div>
+                        <div class="progress" ng-if="importCasesProgressShow">
+                            <div id="commcareImportPercentage" class="progress-bar progress-bar-striped active" style="min-width: 2em; width: 0%;" aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" role="progressbar"></div>
+                        </div>
+                    </div>
+                    <div ng-show="statusError" class="form-group">
+                        <div class="alert alert-danger">
+                            <h4>{{commcare.error}}</h4>
+                            <p>{{msg('commcare.import.error', errorMsg)}}</p>
+                            <p ng-show="lastCaseId">{{msg('commcare.import.caseId', lastCaseId)}}</p>
+                            <p ng-show="lastReceivedOn">{{msg('commcare.import.receivedOn', lastReceivedOn)}}</p>
+                            <p ng-show="lastReceivedOn">{{msg('commcare.import.retry', lastReceivedOn)}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div ng-show="!statusError" class="modal-footer">
+                    <button class="btn btn-primary" ng-click="importCasesContinue()" ng-disabled="totalCases &lt; 1 || importInProgress">{{msg('commcare.startImport')}}</button>
+                    <button class="btn btn-default" ng-click="closeImportCases()" ng-disabled="importInProgress">{{msg('commcare.cancel')}}</button>
+                </div>
+                <div ng-show="statusError" class="modal-footer">
+                    <button class="btn btn-primary" ng-click="closeImportCases()">{{msg('commcare.ok')}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
