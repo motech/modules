@@ -1,7 +1,6 @@
 package org.motechproject.dhis2.service.impl;
 
 import org.motechproject.dhis2.domain.DataElement;
-import org.motechproject.dhis2.domain.Program;
 import org.motechproject.dhis2.domain.Stage;
 import org.motechproject.dhis2.domain.TrackedEntity;
 import org.motechproject.dhis2.domain.TrackedEntityAttribute;
@@ -146,24 +145,26 @@ public class SyncServiceImpl implements SyncService {
             } else {
                 fullDto = dhisWebService.getProgramByHref(partialDto.getHref());
             }
-            Program program = programService.createFromDetails(fullDto);
 
             /**
              * Request and add the program's sub-objects (tracked entity, program stages, program tracked entity's attributes).
              */
+            TrackedEntity trackedEntity = null;
             if (fullDto.getTrackedEntity() != null) {
-                program.setTrackedEntity(getProgramTrackedEntityFromDto(fullDto.getTrackedEntity()));
+                trackedEntity = getProgramTrackedEntityFromDto(fullDto.getTrackedEntity());
             }
 
+            List<Stage> stages = null;
             if (fullDto.getProgramStages() != null) {
-                program.setStages(getStagesFromDtos(fullDto.getProgramStages(), program.getUuid(), program.hasRegistration()));
+                stages = getStagesFromDtos(fullDto.getProgramStages(), fullDto.getId(), fullDto.getRegistration());
             }
 
+            List<TrackedEntityAttribute> trackedEntityAttributes = null;
             if (fullDto.getProgramTrackedEntityAttributes() != null) {
-                program.setAttributes(getTrackedEntityAttributesFromDtos(fullDto.getProgramTrackedEntityAttributes()));
+                trackedEntityAttributes = getTrackedEntityAttributesFromDtos(fullDto.getProgramTrackedEntityAttributes());
             }
 
-            programService.update(program);
+            programService.createFromDetails(fullDto, trackedEntity, stages, trackedEntityAttributes);
         }
     }
 
@@ -203,8 +204,7 @@ public class SyncServiceImpl implements SyncService {
                 } else {
                     fullDto = dhisWebService.getProgramStageByHref(partialStageDto.getHref());
                 }
-                stage = stageService.createFromDetails(fullDto, programId, hasRegistration);
-                stage.setDataElements(getStageDataElementsFromDtos(fullDto.getProgramStageDataElements()));
+                stage = stageService.createFromDetails(fullDto, programId, hasRegistration, getStageDataElementsFromDtos(fullDto.getProgramStageDataElements()));
             }
             stages.add(stage);
         }
