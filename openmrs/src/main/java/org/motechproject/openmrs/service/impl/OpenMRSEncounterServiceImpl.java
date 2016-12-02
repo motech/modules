@@ -113,7 +113,7 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
             Config config = configService.getConfigByName(configName);
             return encounterResource.createEncounterType(config, encounterType);
         } catch (HttpClientErrorException e) {
-            LOGGER.error("Error while creating encounter type with UUID: " + encounterType.getUuid());
+            LOGGER.error("Error while creating encounter type with name: " + encounterType.getName());
             return null;
         }
     }

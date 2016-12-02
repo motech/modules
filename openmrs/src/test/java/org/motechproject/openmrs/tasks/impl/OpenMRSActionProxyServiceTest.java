@@ -157,7 +157,7 @@ public class OpenMRSActionProxyServiceTest {
 
         List<Observation> obsList = createObservationList(1);
 
-        Encounter encounter = new Encounter(location, new EncounterType("testEncounterType", null), encounterDatetime.toDate(), patient, visit, Collections.singletonList(provider.getPerson()), obsList);
+        Encounter encounter = new Encounter(location, new EncounterType(null, "testId"), encounterDatetime.toDate(), patient, visit, Collections.singletonList(provider.getPerson()), obsList);
 
         doReturn(patient).when(patientService).getPatientByUuid(eq(CONFIG_NAME), eq(patient.getUuid()));
         doReturn(provider).when(providerService).getProviderByUuid(eq(CONFIG_NAME), eq(provider.getUuid()));
@@ -168,7 +168,7 @@ public class OpenMRSActionProxyServiceTest {
                 .when(locationService).getLocations(eq(CONFIG_NAME), eq(location.getName()));
 
         Encounter encounterCreated = openMRSActionProxyService.createEncounter(CONFIG_NAME, new DateTime(encounter.getEncounterDatetime()),
-                encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid(),
+                encounter.getEncounterType().getUuid(), location.getName(), patient.getUuid(), provider.getUuid(),
                 visit.getUuid(), form.getUuid(),  observations);
 
         assertEquals(encounter, encounterCreated);
@@ -201,7 +201,7 @@ public class OpenMRSActionProxyServiceTest {
 
         List<Observation> obsList = new ArrayList<>();
 
-        Encounter encounter = new Encounter(location, new EncounterType("testEncounterType", null), encounterDatetime.toDate(), patient, visit, Collections.singletonList(provider.getPerson()), obsList);
+        Encounter encounter = new Encounter(location, new EncounterType(null, "testId"), encounterDatetime.toDate(), patient, visit, Collections.singletonList(provider.getPerson()), obsList);
 
         doReturn(patient).when(patientService).getPatientByUuid(eq(CONFIG_NAME), eq(patient.getUuid()));
         doReturn(provider).when(providerService).getProviderByUuid(eq(CONFIG_NAME), eq(provider.getUuid()));
@@ -212,7 +212,7 @@ public class OpenMRSActionProxyServiceTest {
                 .when(locationService).getLocations(eq(CONFIG_NAME), eq(location.getName()));
 
         Encounter encounterCreated = openMRSActionProxyService.createEncounter(CONFIG_NAME, new DateTime(encounter.getEncounterDatetime()),
-                encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid(),
+                encounter.getEncounterType().getUuid(), location.getName(), patient.getUuid(), provider.getUuid(),
                 visit.getUuid(), form.getUuid(), observations);
 
         assertEquals(encounter, encounterCreated);
@@ -246,7 +246,7 @@ public class OpenMRSActionProxyServiceTest {
         observations.put("18ff53df-744a-4a3f-8f25-dac6de5b7131","testObservationValueName0, ,testObservationValueName1");
         List<Observation> obsList = createObservationList(2);
 
-        Encounter encounter = new Encounter(location, new EncounterType("testEncounterType", null), encounterDatetime.toDate(), patient, visit, Collections.singletonList(provider.getPerson()), obsList);
+        Encounter encounter = new Encounter(location, new EncounterType(null, "testId"), encounterDatetime.toDate(), patient, visit, Collections.singletonList(provider.getPerson()), obsList);
 
         doReturn(patient).when(patientService).getPatientByUuid(eq(CONFIG_NAME), eq(patient.getUuid()));
         doReturn(provider).when(providerService).getProviderByUuid(eq(CONFIG_NAME), eq(provider.getUuid()));
@@ -257,7 +257,7 @@ public class OpenMRSActionProxyServiceTest {
                 .when(locationService).getLocations(eq(CONFIG_NAME), eq(location.getName()));
 
         Encounter encounterCreated = openMRSActionProxyService.createEncounter(CONFIG_NAME, new DateTime(encounter.getEncounterDatetime()),
-                encounter.getEncounterType().getName(), location.getName(), patient.getUuid(), provider.getUuid(),
+                encounter.getEncounterType().getUuid(), location.getName(), patient.getUuid(), provider.getUuid(),
                 visit.getUuid(), form.getUuid(), observations);
 
 

@@ -95,7 +95,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         //While creating observations, the encounterDateTime is used as a obsDateTime.
         List<Observation> observationList = MapUtils.isNotEmpty(observations) ? convertObservationMapToList(observations, encounterDatetime) : null;
 
-        EncounterType type = new EncounterType(encounterType, null);
+        EncounterType type = new EncounterType(null, encounterType);
 
         Encounter encounter = new Encounter(location, type, encounterDatetime.toDate(), patient, visit, Collections.singletonList(provider.getPerson()), observationList, form);
         return encounterService.createEncounter(configName, encounter);
