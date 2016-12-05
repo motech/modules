@@ -1,5 +1,6 @@
 package org.motechproject.dhis2.service.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.motechproject.dhis2.domain.DataElement;
 import org.motechproject.dhis2.domain.Stage;
 import org.motechproject.dhis2.domain.TrackedEntity;
@@ -97,7 +98,11 @@ public class SyncServiceImpl implements SyncService {
         List<DataElementDto> dataElementDtos = dhisWebService.getDataElements();
 
         for (DataElementDto dataElementDto : dataElementDtos) {
-            dataElementService.createFromDetails(dataElementDto);
+            if (StringUtils.isEmpty(dataElementDto.getName())) {
+                dataElementService.createFromDetails(dhisWebService.getDataElementById(dataElementDto.getId()));
+            } else {
+                dataElementService.createFromDetails(dataElementDto);
+            }
         }
     }
 
@@ -116,7 +121,11 @@ public class SyncServiceImpl implements SyncService {
     private void addAttributes()  {
         List<TrackedEntityAttributeDto> trackedEntityAttributeDtos = dhisWebService.getTrackedEntityAttributes();
         for (TrackedEntityAttributeDto trackedEntityAttributeDto : trackedEntityAttributeDtos) {
-            trackedEntityAttributeService.createFromDetails(trackedEntityAttributeDto);
+            if (StringUtils.isEmpty(trackedEntityAttributeDto.getName())) {
+                trackedEntityAttributeService.createFromDetails(dhisWebService.getTrackedEntityAttributeById(trackedEntityAttributeDto.getId()));
+            } else {
+                trackedEntityAttributeService.createFromDetails(trackedEntityAttributeDto);
+            }
         }
     }
 
@@ -127,7 +136,11 @@ public class SyncServiceImpl implements SyncService {
     private void addTrackedEntities() {
         List<TrackedEntityDto> trackedEntityDtos = dhisWebService.getTrackedEntities();
         for (TrackedEntityDto trackedEntityDto : trackedEntityDtos) {
-            trackedEntityService.createFromDetails(trackedEntityDto);
+            if (StringUtils.isEmpty(trackedEntityDto.getName())) {
+                trackedEntityService.createFromDetails(dhisWebService.getTrackedEntityById(trackedEntityDto.getId()));
+            } else {
+                trackedEntityService.createFromDetails(trackedEntityDto);
+            }
         }
     }
 
@@ -271,7 +284,11 @@ public class SyncServiceImpl implements SyncService {
     private void addOrgUnits() {
         List<OrganisationUnitDto> orgUnitDtos = dhisWebService.getOrganisationUnits();
         for (OrganisationUnitDto orgUnitDto : orgUnitDtos) {
-            orgUnitService.createFromDetails(orgUnitDto);
+            if (StringUtils.isEmpty(orgUnitDto.getName())) {
+                orgUnitService.createFromDetails(dhisWebService.getOrganisationUnitById(orgUnitDto.getId()));
+            } else {
+                orgUnitService.createFromDetails(orgUnitDto);
+            }
         }
     }
 
