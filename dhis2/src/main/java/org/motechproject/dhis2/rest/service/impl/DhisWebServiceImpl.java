@@ -153,7 +153,7 @@ public class DhisWebServiceImpl implements DhisWebService {
 
     @Override
     public List<DataElementDto> getDataElements() {
-        return getResources(DATA_ELEMENTS, DataElementDto.class, true);
+        return getResources(DATA_ELEMENTS, DataElementDto.class);
     }
 
     @Override
