@@ -1,6 +1,8 @@
 package org.motechproject.dhis2.event;
 
+import org.joda.time.DateTime;
 import org.motechproject.commons.api.TasksEventParser;
+import org.motechproject.commons.date.util.JodaFormatter;
 import org.motechproject.dhis2.domain.DataElement;
 import org.motechproject.dhis2.domain.DataSet;
 import org.motechproject.dhis2.exception.DataElementNotFoundException;
@@ -181,7 +183,7 @@ public class EventHandler {
 
         Map<String, Object> params = prepareDhisAttributesMap(event.getParameters());
         DataSet dataSet = dataSetService.findByUuid((String) params.get(EventParams.DATA_SET));
-        String completeDate = (String) params.get(EventParams.COMPLETE_DATE);
+        DateTime completeDate = (DateTime) params.get(EventParams.COMPLETE_DATE);
         String period = (String) params.get(EventParams.PERIOD);
         String orgUnitId = (String) params.get(EventParams.LOCATION);
         String categoryOptionCombo = (String) params.get(EventParams.CATEGORY_OPTION_COMBO);
@@ -202,7 +204,7 @@ public class EventHandler {
         DataValueSetDto dataValueSetDto = new DataValueSetDto();
         dataValueSetDto.setDataSet(dataSet.getUuid());
         dataValueSetDto.setPeriod(period);
-        dataValueSetDto.setCompleteDate(completeDate);
+        dataValueSetDto.setCompleteDate(convertDateTimeToString(completeDate));
         dataValueSetDto.setOrgUnit(orgUnitId);
         dataValueSetDto.setDataValues(dataValueDtos);
         dataValueSetDto.setAttributeOptionCombo(attributeOptionCombo);
@@ -276,7 +278,7 @@ public class EventHandler {
 
         String orgUnitId = (String) params.remove(EventParams.LOCATION);
         String program = (String) params.remove(EventParams.PROGRAM);
-        String date = (String) params.remove(EventParams.DATE);
+        DateTime date = (DateTime) params.remove(EventParams.DATE);
         String stage = (String) params.remove(EventParams.STAGE);
         String status = (String) params.remove(EventParams.STATUS);
 
@@ -290,7 +292,7 @@ public class EventHandler {
         }
 
         dhisEventDto.setProgram(program);
-        dhisEventDto.setEventDate(date);
+        dhisEventDto.setEventDate(convertDateTimeToString(date));
         dhisEventDto.setProgramStage(stage);
         dhisEventDto.setOrgUnit(orgUnitId);
         dhisEventDto.setStatus(status);
@@ -306,6 +308,10 @@ public class EventHandler {
         dhisAttributes.remove(TasksEventParser.CUSTOM_PARSER_EVENT_KEY);
 
         return dhisAttributes;
+    }
+
+    private String convertDateTimeToString(DateTime dateTime) {
+        return new JodaFormatter().formatDateTime(dateTime);
     }
 
 }
