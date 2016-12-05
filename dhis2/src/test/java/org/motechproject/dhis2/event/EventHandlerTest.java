@@ -1,5 +1,6 @@
 package org.motechproject.dhis2.event;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.motechproject.commons.date.util.JodaFormatter;
 import org.motechproject.dhis2.domain.DataElement;
 import org.motechproject.dhis2.exception.DataElementNotFoundException;
 import org.motechproject.dhis2.rest.domain.AttributeDto;
@@ -154,7 +156,7 @@ public class EventHandlerTest {
         programStageDto.setDataValues(dataValues);
         programStageDto.setTrackedEntityInstance(INSTANCE_DHIS_ID);
         programStageDto.setProgram(PROGRAM_ID);
-        programStageDto.setEventDate(DATE);
+        programStageDto.setEventDate(new JodaFormatter().formatDateTime(new DateTime(DATE)));
         programStageDto.setOrgUnit(ORGUNIT_ID);
         programStageDto.setProgramStage(STAGE_ID);
         programStageDto.setStatus(STATUS);
@@ -168,7 +170,7 @@ public class EventHandlerTest {
         params.put(EventParams.EXTERNAL_ID, ENTITY_INSTANCE_ID);
         params.put(EventParams.LOCATION, ORGUNIT_ID);
         params.put(EventParams.PROGRAM, PROGRAM_ID);
-        params.put(EventParams.DATE, DATE);
+        params.put(EventParams.DATE, new DateTime(DATE));
         params.put(EventParams.STAGE,STAGE_ID);
         params.put(EventParams.STATUS, STATUS);
         params.put(DATA_ELEMENT_ID, DATA_ELEMENT_VALUE);
