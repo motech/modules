@@ -1,5 +1,6 @@
-package org.motechproject.dhis2.tasks;
+package org.motechproject.dhis2.tasks.builder;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -21,6 +22,7 @@ import org.motechproject.dhis2.service.ProgramService;
 import org.motechproject.dhis2.service.StageService;
 import org.motechproject.dhis2.service.TrackedEntityAttributeService;
 import org.motechproject.dhis2.service.TrackedEntityService;
+import org.motechproject.dhis2.tasks.DisplayNames;
 import org.motechproject.dhis2.tasks.builder.ChannelRequestBuilder;
 import org.motechproject.dhis2.tasks.builder.CreateInstanceActionBuilder;
 import org.motechproject.dhis2.tasks.builder.ProgramActionBuilder;
@@ -128,7 +130,7 @@ public class ChannelRequestBuilderTest {
     @Test
     public void testBuildChannelRequest() throws Exception {
         assertNotNull(request);
-        assertEquals(request.getDisplayName(),DisplayNames.DHIS2_DISPLAY_NAME);
+        Assert.assertEquals(request.getDisplayName(), DisplayNames.DHIS2_DISPLAY_NAME);
         //assertEquals(EXPECTED_ACTIONS_SIZE, request.getActionTaskEvents().size());
     }
 

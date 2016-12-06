@@ -1,4 +1,4 @@
-package org.motechproject.dhis2.tasks;
+package org.motechproject.dhis2.tasks.builder;
 
 import org.junit.Test;
 import org.motechproject.dhis2.domain.Program;
@@ -8,6 +8,7 @@ import org.motechproject.dhis2.domain.TrackedEntityAttribute;
 import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.event.EventSubjects;
 import org.motechproject.dhis2.rest.domain.ServerVersion;
+import org.motechproject.dhis2.tasks.DisplayNames;
 import org.motechproject.dhis2.tasks.builder.ProgramActionBuilder;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.ActionParameterRequest;
@@ -38,7 +39,7 @@ public class ProgramActionBuilderTest {
         ActionEventRequest request = actionEventRequests.get(0);
         assertEquals(request.getSubject(), EventSubjects.ENROLL_IN_PROGRAM);
         assertEquals(request.getName(),program1.getName());
-        assertEquals(request.getDisplayName(),DisplayNames.PROGRAM_ENROLLMENT + " [" + program1.getName() + "]");
+        assertEquals(request.getDisplayName(), DisplayNames.PROGRAM_ENROLLMENT + " [" + program1.getName() + "]");
 
         SortedSet<ActionParameterRequest> actionParameters = request.getActionParameters();
 
