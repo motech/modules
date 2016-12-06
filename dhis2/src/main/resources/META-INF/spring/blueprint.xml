@@ -80,4 +80,6 @@
     <osgi:service ref="dhisSettingsService" interface="org.motechproject.dhis2.service.SettingsService" />
 
     <osgi:service  ref="trackedEntityInstanceMapperService" interface="org.motechproject.dhis2.service.TrackedEntityInstanceMappingService"/>
+    <osgi:service ref="dhisActionProxyService" interface="org.motechproject.dhis2.tasks.DhisActionProxyService"/>
+    <osgi:service ref="dhisService" interface="org.motechproject.dhis2.service.DhisService"/>
 </beans>

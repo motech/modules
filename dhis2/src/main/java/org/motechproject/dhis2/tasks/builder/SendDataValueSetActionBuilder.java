@@ -1,13 +1,15 @@
-package org.motechproject.dhis2.tasks;
+package org.motechproject.dhis2.tasks.builder;
 
 import org.motechproject.dhis2.domain.DataElement;
 import org.motechproject.dhis2.domain.DataSet;
 import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.event.EventSubjects;
+import org.motechproject.dhis2.tasks.DisplayNames;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
+import org.motechproject.tasks.domain.enums.MethodCallManner;
 import org.motechproject.tasks.domain.enums.ParameterType;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -111,6 +113,9 @@ public class SendDataValueSetActionBuilder {
         ActionEventRequestBuilder eventRequestBuilder = new ActionEventRequestBuilder();
         eventRequestBuilder.setActionParameters(actionParameterRequests)
                 .setDisplayName(String.format("%s [%s]", DisplayNames.SEND_DATA_VALUE_SET, dataSet.getName()))
+                .setServiceInterface(ChannelRequestBuilder.ACTION_PROXY_SERVICE)
+                .setServiceMethod("sendDataValueSet")
+                .setServiceMethodCallManner(MethodCallManner.MAP.name())
                 .setSubject(EventSubjects.SEND_DATA_VALUE_SET)
                 .setName(String.format("%s [%s]", DisplayNames.SEND_DATA_VALUE_SET, dataSet.getName()));
 

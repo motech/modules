@@ -1,9 +1,11 @@
 package org.motechproject.dhis2.service;
 
+import org.motechproject.dhis2.tasks.builder.ChannelRequestBuilder;
+
 /**
  * Processes Task channel updates for this module
  * @see org.motechproject.tasks.service.ChannelService
- * @see org.motechproject.dhis2.tasks.ChannelRequestBuilder
+ * @see ChannelRequestBuilder
  * */
 public interface TasksService {
 

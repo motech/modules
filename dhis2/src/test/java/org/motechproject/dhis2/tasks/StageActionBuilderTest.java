@@ -5,6 +5,7 @@ import org.motechproject.dhis2.domain.DataElement;
 import org.motechproject.dhis2.domain.Stage;
 import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.event.EventSubjects;
+import org.motechproject.dhis2.tasks.builder.StageActionBuilder;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.ActionParameterRequest;
 
