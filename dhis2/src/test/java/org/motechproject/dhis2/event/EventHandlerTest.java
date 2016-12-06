@@ -121,7 +121,7 @@ public class EventHandlerTest {
 
         EnrollmentDto enrollment = new EnrollmentDto();
         enrollment.setAttributes(attributeDtos);
-        enrollment.setDateOfEnrollment(DATE);
+        enrollment.setDateOfEnrollment(new JodaFormatter().formatDateTime(new DateTime(DATE)));
         enrollment.setProgram(PROGRAM_ID);
         enrollment.setTrackedEntityInstance(INSTANCE_DHIS_ID);
 
@@ -133,7 +133,7 @@ public class EventHandlerTest {
         Map<String,Object> params = new HashMap<>();
         params.put(EventParams.PROGRAM,PROGRAM_ID );
         params.put(EventParams.EXTERNAL_ID, ENTITY_INSTANCE_ID);
-        params.put(EventParams.DATE, DATE);
+        params.put(EventParams.DATE, new DateTime(DATE));
         params.put(ATTRIBUTE_ID, ATTRIBUTE_VALUE);
 
         MotechEvent event = new MotechEvent(EventSubjects.ENROLL_IN_PROGRAM,params);
@@ -192,7 +192,7 @@ public class EventHandlerTest {
 
         EnrollmentDto enrollment = new EnrollmentDto();
         enrollment.setAttributes(new ArrayList<>());
-        enrollment.setDateOfEnrollment(DATE);
+        enrollment.setDateOfEnrollment(new JodaFormatter().formatDateTime(new DateTime(DATE)));
         enrollment.setProgram(PROGRAM_ID);
         enrollment.setOrgUnit(ORGUNIT_ID);
         enrollment.setTrackedEntityInstance(INSTANCE_DHIS_ID);
@@ -212,7 +212,7 @@ public class EventHandlerTest {
         params.put(EventParams.ENTITY_TYPE, ENTITY_TYPE_PERSON );
         params.put(EventParams.LOCATION,ORGUNIT_ID);
         params.put(EventParams.PROGRAM,PROGRAM_ID );
-        params.put(EventParams.DATE, DATE);
+        params.put(EventParams.DATE, new DateTime(DATE));
         params.put(ATTRIBUTE_ID, ATTRIBUTE_VALUE);
 
         MotechEvent event = new MotechEvent(EventSubjects.CREATE_AND_ENROLL, params);
