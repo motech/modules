@@ -242,7 +242,7 @@ public class EventHandler {
         String trackedEntityInstanceId = trackedEntityInstanceMappingService.mapFromExternalId(externalId);
         String orgUnit = (String) params.remove(EventParams.LOCATION);
 
-        String date = (String) params.remove(EventParams.DATE);
+        DateTime date = (DateTime) params.remove(EventParams.DATE);
 
         List<AttributeDto> attributes = new ArrayList<>();
         for (Entry<String, Object> entry : params.entrySet()) {
@@ -258,7 +258,7 @@ public class EventHandler {
         enrollment.setProgram(program);
         enrollment.setOrgUnit(orgUnit);
         enrollment.setTrackedEntityInstance(trackedEntityInstanceId);
-        enrollment.setDateOfEnrollment(date);
+        enrollment.setDateOfEnrollment(convertDateTimeToString(date));
         enrollment.setAttributes(attributes);
 
         return enrollment;
