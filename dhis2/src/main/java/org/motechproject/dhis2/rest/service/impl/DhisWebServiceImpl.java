@@ -238,7 +238,7 @@ public class DhisWebServiceImpl implements DhisWebService {
 
     @Override
     public TrackedEntityDto getTrackedEntityById(String id) {
-        return getResource(getURIForResource(settingsService.getSettings().getServerURI(), PROGRAM_STAGES, id), TrackedEntityDto.class);
+        return getResource(getURIForResource(settingsService.getSettings().getServerURI(), TRACKED_ENTITIES, id), TrackedEntityDto.class);
     }
 
     @Override
