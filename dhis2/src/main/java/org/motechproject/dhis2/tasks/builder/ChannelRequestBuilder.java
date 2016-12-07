@@ -108,6 +108,7 @@ public class ChannelRequestBuilder  {
         builder.setDisplayName(DisplayNames.PERIOD)
                 .setKey(EventParams.PERIOD)
                 .setRequired(true)
+                .setType(ParameterType.PERIOD.getValue())
                 .setOrder(order++);
         actionParameterRequests.add(builder.createActionParameterRequest());
 

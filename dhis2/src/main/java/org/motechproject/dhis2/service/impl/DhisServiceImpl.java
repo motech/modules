@@ -1,6 +1,7 @@
 package org.motechproject.dhis2.service.impl;
 
 import org.joda.time.DateTime;
+import org.joda.time.Period;
 import org.motechproject.commons.api.TasksEventParser;
 import org.motechproject.commons.date.util.JodaFormatter;
 import org.motechproject.dhis2.domain.DataElement;
@@ -104,7 +105,7 @@ public class DhisServiceImpl implements DhisService {
         }
 
         String orgUnitId = (String) params.get(EventParams.LOCATION);
-        String period = (String) params.get(EventParams.PERIOD);
+        Period period = (Period) params.get(EventParams.PERIOD);
         String value = (String) params.get(EventParams.VALUE);
         String categoryOptionCombo = (String) params.get(EventParams.CATEGORY_OPTION_COMBO);
         String comment = (String) params.get(EventParams.COMMENT);
@@ -113,7 +114,7 @@ public class DhisServiceImpl implements DhisService {
         dataValueDto.setDataElement(dataElement.getUuid());
         dataValueDto.setValue(value);
         dataValueDto.setOrgUnit(orgUnitId);
-        dataValueDto.setPeriod(period);
+        dataValueDto.setPeriod(convertPeriodToString(period));
         dataValueDto.setCategoryOptionCombo(categoryOptionCombo);
         dataValueDto.setComment(comment);
 
@@ -131,7 +132,7 @@ public class DhisServiceImpl implements DhisService {
         Map<String, Object> params = prepareDhisAttributesMap(parameters);
         DataSet dataSet = dataSetService.findByUuid((String) params.get(EventParams.DATA_SET));
         DateTime completeDate = (DateTime) params.get(EventParams.COMPLETE_DATE);
-        String period = (String) params.get(EventParams.PERIOD);
+        Period period = (Period) params.get(EventParams.PERIOD);
         String orgUnitId = (String) params.get(EventParams.LOCATION);
         String categoryOptionCombo = (String) params.get(EventParams.CATEGORY_OPTION_COMBO);
         String comment = (String) params.get(EventParams.COMMENT);
@@ -150,7 +151,7 @@ public class DhisServiceImpl implements DhisService {
 
         DataValueSetDto dataValueSetDto = new DataValueSetDto();
         dataValueSetDto.setDataSet(dataSet.getUuid());
-        dataValueSetDto.setPeriod(period);
+        dataValueSetDto.setPeriod(convertPeriodToString(period));
         dataValueSetDto.setCompleteDate(convertDateTimeToString(completeDate));
         dataValueSetDto.setOrgUnit(orgUnitId);
         dataValueSetDto.setDataValues(dataValueDtos);
@@ -259,5 +260,9 @@ public class DhisServiceImpl implements DhisService {
 
     private String convertDateTimeToString(DateTime dateTime) {
         return new JodaFormatter().formatDateTime(dateTime);
+    }
+
+    private String convertPeriodToString(Period period) {
+        return new JodaFormatter().formatPeriod(period);
     }
 }
