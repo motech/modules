@@ -96,6 +96,7 @@
                             org.motechproject.dhis2.rest.domain;version=${project.version},
                             org.motechproject.dhis2.rest.service;version=${project.version},
                             org.motechproject.dhis2.tasks;version=${project.version},
+                            org.motechproject.dhis2.tasks.builder;version=${project.version},
                             org.motechproject.dhis2.web;version=${project.version},
                         </Export-Package>
                     </instructions>

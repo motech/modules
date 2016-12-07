@@ -1,13 +1,15 @@
-package org.motechproject.dhis2.tasks;
+package org.motechproject.dhis2.tasks.builder;
 
 import org.junit.Test;
 import org.motechproject.dhis2.domain.DataElement;
 import org.motechproject.dhis2.domain.DataSet;
 import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.event.EventSubjects;
+import org.motechproject.dhis2.tasks.DisplayNames;
 import org.motechproject.dhis2.util.DummyData;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.ActionParameterRequest;
+import org.motechproject.tasks.domain.enums.MethodCallManner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +73,11 @@ public class SendDataValueSetActionBuilderTest {
                     String.format("%s [%s]", DisplayNames.SEND_DATA_VALUE_SET, dataSet.getName()),
                     String.format("%s [%s]", DisplayNames.SEND_DATA_VALUE_SET, dataSet.getName()),
                     EventSubjects.SEND_DATA_VALUE_SET,
-                    null, null, null, null, actionParameters));
+                    null,
+                    ChannelRequestBuilder.ACTION_PROXY_SERVICE,
+                    "sendDataValueSet",
+                    MethodCallManner.MAP.name(),
+                    actionParameters));
         }
 
         return requests;

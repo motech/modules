@@ -1,13 +1,15 @@
-package org.motechproject.dhis2.tasks;
+package org.motechproject.dhis2.tasks.builder;
 
 import org.motechproject.dhis2.domain.DataElement;
 import org.motechproject.dhis2.domain.Stage;
 import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.event.EventSubjects;
+import org.motechproject.dhis2.tasks.DisplayNames;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
+import org.motechproject.tasks.domain.enums.MethodCallManner;
 import org.motechproject.tasks.domain.enums.ParameterType;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -132,6 +134,9 @@ public class StageActionBuilder {
             builder.setActionParameters(actionParameters)
                     .setDisplayName(DisplayNames.STAGE_EVENT + " [" + stage.getName() + "]")
                     .setName(stage.getName())
+                    .setServiceInterface(ChannelRequestBuilder.ACTION_PROXY_SERVICE)
+                    .setServiceMethod("updateProgramStage")
+                    .setServiceMethodCallManner(MethodCallManner.MAP.name())
                     .setSubject(EventSubjects.UPDATE_PROGRAM_STAGE);
 
             actionEventRequests.add(builder.createActionEventRequest());

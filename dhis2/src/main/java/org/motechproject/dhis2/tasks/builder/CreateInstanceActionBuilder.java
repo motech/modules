@@ -1,13 +1,15 @@
-package org.motechproject.dhis2.tasks;
+package org.motechproject.dhis2.tasks.builder;
 
 import org.motechproject.dhis2.domain.TrackedEntity;
 import org.motechproject.dhis2.domain.TrackedEntityAttribute;
 import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.event.EventSubjects;
+import org.motechproject.dhis2.tasks.DisplayNames;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
+import org.motechproject.tasks.domain.enums.MethodCallManner;
 import org.motechproject.tasks.domain.enums.ParameterType;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,6 +82,9 @@ public class CreateInstanceActionBuilder {
             ActionEventRequestBuilder builder = new ActionEventRequestBuilder()
                     .setDisplayName(DisplayNames.CREATE_TRACKED_ENTITY_INSTANCE + " [" + entity.getName() + "]")
                     .setName(entity.getName())
+                    .setServiceInterface(ChannelRequestBuilder.ACTION_PROXY_SERVICE)
+                    .setServiceMethod("createEntity")
+                    .setServiceMethodCallManner(MethodCallManner.MAP.name())
                     .setSubject(EventSubjects.CREATE_ENTITY)
                     .setActionParameters(actionParameters);
 

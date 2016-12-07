@@ -1,4 +1,4 @@
-package org.motechproject.dhis2.tasks;
+package org.motechproject.dhis2.tasks.builder;
 
 import org.motechproject.dhis2.domain.Program;
 import org.motechproject.dhis2.domain.Stage;
@@ -13,11 +13,13 @@ import org.motechproject.dhis2.service.ProgramService;
 import org.motechproject.dhis2.service.StageService;
 import org.motechproject.dhis2.service.TrackedEntityAttributeService;
 import org.motechproject.dhis2.service.TrackedEntityService;
+import org.motechproject.dhis2.tasks.DisplayNames;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
 import org.motechproject.tasks.contract.ChannelRequest;
+import org.motechproject.tasks.domain.enums.MethodCallManner;
 import org.osgi.framework.BundleContext;
 import org.motechproject.tasks.domain.enums.ParameterType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,7 @@ import java.util.TreeSet;
  */
 @Component
 public class ChannelRequestBuilder  {
+    public static final String ACTION_PROXY_SERVICE = "org.motechproject.dhis2.tasks.DhisActionProxyService";
 
     @Autowired
     private BundleContext bundleContext;
@@ -139,6 +142,9 @@ public class ChannelRequestBuilder  {
         ActionEventRequestBuilder eventRequestBuilder = new ActionEventRequestBuilder();
         eventRequestBuilder.setActionParameters(actionParameterRequests)
                 .setDisplayName(DisplayNames.SEND_DATA_VALUE)
+                .setServiceInterface(ChannelRequestBuilder.ACTION_PROXY_SERVICE)
+                .setServiceMethod("sendDataValue")
+                .setServiceMethodCallManner(MethodCallManner.MAP.name())
                 .setSubject(EventSubjects.SEND_DATA_VALUE)
                 .setName(DisplayNames.SEND_DATA_VALUE);
 

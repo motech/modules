@@ -1,7 +1,7 @@
 package org.motechproject.dhis2.service.impl;
 
 import org.motechproject.dhis2.service.TasksService;
-import org.motechproject.dhis2.tasks.ChannelRequestBuilder;
+import org.motechproject.dhis2.tasks.builder.ChannelRequestBuilder;
 import org.motechproject.tasks.service.ChannelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

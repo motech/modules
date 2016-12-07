@@ -1,10 +1,12 @@
-package org.motechproject.dhis2.tasks;
+package org.motechproject.dhis2.tasks.builder;
 
 import org.junit.Test;
 import org.motechproject.dhis2.domain.DataElement;
 import org.motechproject.dhis2.domain.Stage;
 import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.event.EventSubjects;
+import org.motechproject.dhis2.tasks.DisplayNames;
+import org.motechproject.dhis2.tasks.builder.StageActionBuilder;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.ActionParameterRequest;
 
@@ -61,7 +63,7 @@ public class StageActionBuilderTest {
         ActionEventRequest eventRequest = actionEventRequests.get(0);
         assertEquals(eventRequest.getSubject(), EventSubjects.UPDATE_PROGRAM_STAGE);
         assertEquals(eventRequest.getName(),stage1.getName());
-        assertEquals(eventRequest.getDisplayName(),DisplayNames.STAGE_EVENT + " [" + stage1.getName() + "]");
+        assertEquals(eventRequest.getDisplayName(), DisplayNames.STAGE_EVENT + " [" + stage1.getName() + "]");
 
         SortedSet<ActionParameterRequest> actionParameters = eventRequest.getActionParameters();
 
