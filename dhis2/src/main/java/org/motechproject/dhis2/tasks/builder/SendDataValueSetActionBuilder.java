@@ -55,6 +55,7 @@ public class SendDataValueSetActionBuilder {
         builder = new ActionParameterRequestBuilder();
         builder.setDisplayName(DisplayNames.COMPLETE_DATE)
                 .setKey(EventParams.COMPLETE_DATE)
+                .setType(ParameterType.DATE.getValue())
                 .setOrder(order++);
         actionParameterRequests.add(builder.createActionParameterRequest());
 

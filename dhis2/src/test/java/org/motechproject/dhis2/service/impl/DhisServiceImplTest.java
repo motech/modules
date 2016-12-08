@@ -49,7 +49,7 @@ public class DhisServiceImplTest {
     private static final String STAGE_ID = "stageId";
     private static final String DATA_ELEMENT_ID = "dataElementID";
     private static final String DATA_ELEMENT_VALUE = "value";
-    private static final String PERIOD = "period";
+    private static final String PERIOD_VALUE = "5 months";
     private static final String CATEGORY_COMBO = "categoryOption";
     private static final String COMMENT = "comment";
     private static final String STATUS = "ACTIVE";
@@ -226,7 +226,7 @@ public class DhisServiceImplTest {
         dataValueDto.setDataElement(DATA_ELEMENT_ID);
         dataValueDto.setValue(DATA_ELEMENT_VALUE);
         dataValueDto.setOrgUnit(ORGUNIT_ID);
-        dataValueDto.setPeriod(PERIOD);
+        dataValueDto.setPeriod(PERIOD_VALUE);
         dataValueDto.setCategoryOptionCombo(CATEGORY_COMBO);
         dataValueDto.setComment(COMMENT);
 
@@ -238,7 +238,7 @@ public class DhisServiceImplTest {
         Map<String, Object> params = new HashMap<>();
         params.put(EventParams.DATA_ELEMENT, DATA_ELEMENT_ID);
         params.put(EventParams.LOCATION, ORGUNIT_ID);
-        params.put(EventParams.PERIOD, PERIOD);
+        params.put(EventParams.PERIOD, new JodaFormatter().parsePeriod(PERIOD_VALUE));
         params.put(EventParams.VALUE, DATA_ELEMENT_VALUE);
         params.put(EventParams.CATEGORY_OPTION_COMBO, CATEGORY_COMBO);
         params.put(EventParams.COMMENT, COMMENT);
@@ -258,7 +258,7 @@ public class DhisServiceImplTest {
         Map<String, Object> params = new HashMap<>();
         params.put(EventParams.DATA_ELEMENT, DATA_ELEMENT_ID);
         params.put(EventParams.LOCATION, ORGUNIT_ID);
-        params.put(EventParams.PERIOD, PERIOD);
+        params.put(EventParams.PERIOD, PERIOD_VALUE);
         params.put(EventParams.VALUE, DATA_ELEMENT_VALUE);
         params.put(EventParams.CATEGORY_OPTION_COMBO, CATEGORY_COMBO);
         params.put(EventParams.COMMENT, COMMENT);
