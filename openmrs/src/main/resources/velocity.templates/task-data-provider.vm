@@ -309,8 +309,8 @@
               "fieldKey": "valueCodedName"
             },
             {
-              "displayName": "openMRS.observation.groupsMembers",
-              "fieldKey": "groupsMembers"
+              "displayName": "openMRS.observation.groupMembers",
+              "fieldKey": "groupMembers"
             },
             {
               "displayName": "openMRS.location.uuid",

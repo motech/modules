@@ -92,10 +92,10 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
             form = formService.getFormByUuid(configName, formUuid);
         }
 
+        EncounterType type = new EncounterType(null, encounterType);
+
         //While creating observations, the encounterDateTime is used as a obsDateTime.
         List<Observation> observationList = MapUtils.isNotEmpty(observations) ? convertObservationMapToList(observations, encounterDatetime) : null;
-
-        EncounterType type = new EncounterType(null, encounterType);
 
         Encounter encounter = new Encounter(location, type, encounterDatetime.toDate(), patient, visit, Collections.singletonList(provider.getPerson()), observationList, form);
         return encounterService.createEncounter(configName, encounter);
@@ -347,36 +347,109 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
 
     private List<Observation> convertObservationMapToList(Map<String, String> observations, DateTime obsDatetime) {
         List<Observation> observationList = new ArrayList<>();
+        List<Observation> observationChildren = new ArrayList<>();
+        List<Observation> observationParents = new ArrayList<>();
 
-        for (String observationConceptUuid : observations.keySet()) {
-            if (valueIsNotEmpty(observations, observationConceptUuid)) {
-                String[] observationValues = observations.get(observationConceptUuid).replace(", ", ",").split(",");
-                for (String value : observationValues) {
-                    if (StringUtils.isNotEmpty(value)) {
-                        Observation observation = new Observation();
+        for (String observationConceptPath : observations.keySet()) {
+            if (valueIsNotEmpty(observations, observationConceptPath)) {
+                if (isObservationGroups(observationConceptPath)) {
+                    String[] concepts = observationConceptPath.split("/");
 
-                        Concept concept = new Concept();
-                        concept.setUuid(observationConceptUuid);
-                        observation.setConcept(concept);
+                    Observation childrenObservation = null;
+                    for (int i = concepts.length - 1; i >= 0; i--) {
+                        String concept = concepts[i];
 
-                        Observation.ObservationValue observationValue = new Observation.ObservationValue(value);
-                        observation.setValue(observationValue);
-
-                        observation.setObsDatetime(obsDatetime.toDate());
-
-                        observationList.add(observation);
+                        if (i == 0) {
+                            createOrUpdateObservation(observationParents, concept, obsDatetime, childrenObservation);
+                        } else if (i == concepts.length - 1) {
+                            String value = observations.get(observationConceptPath);
+                            childrenObservation = createObservation(concept, obsDatetime, value, null);
+                        } else {
+                            childrenObservation = createOrUpdateObservation(observationChildren, concept, obsDatetime, childrenObservation);
+                        }
+                    }
+                } else {
+                    String[] observationValues = observations.get(observationConceptPath).replace(", ", ",").split(",");
+                    for (String value : observationValues) {
+                        if (StringUtils.isNotEmpty(value)) {
+                            observationList.add(createObservation(observationConceptPath, obsDatetime, value, null));
+                        }
                     }
                 }
             } else {
-                LOGGER.warn("Observation value is null or empty for concept with Uuid: " + observationConceptUuid
+                LOGGER.warn("Observation value is null or empty for concept path: " + observationConceptPath
                         + " and will not be created");
             }
         }
+
+        observationList.addAll(observationParents);
         return observationList;
     }
 
     private boolean valueIsNotEmpty(Map<String, String> map, String key) {
         return StringUtils.isNotEmpty(map.get(key));
+    }
+
+    private Observation createOrUpdateObservation(List<Observation> observationList, String concept, DateTime obsDatetime, Observation childrenObservation) {
+        Observation observation = getObservation(observationList, concept, null);
+        if (observation == null) {
+            observation = createObservation(concept, obsDatetime, null, childrenObservation);
+            observationList.add(observation);
+        } else if (getObservation(observation.getGroupMembers(), childrenObservation) == null){
+            observation.getGroupMembers().add(childrenObservation);
+        }
+
+        return observation;
+    }
+
+    private Observation createObservation(String observationConceptUuid, DateTime obsDatetime, String value, Observation childrenObs) {
+        Observation observation = new Observation();
+
+        Concept concept = new Concept();
+        concept.setUuid(observationConceptUuid);
+        observation.setConcept(concept);
+
+        observation.setObsDatetime(obsDatetime.toDate());
+
+        if (StringUtils.isNotEmpty(value)) {
+            Observation.ObservationValue observationValue = new Observation.ObservationValue(value);
+            observation.setValue(observationValue);
+        }
+
+        if (childrenObs != null) {
+            List<Observation> groupsMembers = new ArrayList<>();
+            groupsMembers.add(childrenObs);
+            observation.setGroupMembers(groupsMembers);
+        }
+
+        return observation;
+    }
+
+    private boolean isObservationGroups(String observationConceptPath) {
+        return observationConceptPath.contains("/");
+    }
+
+    private Observation getObservation(List<Observation> observationList, Observation obsToFind) {
+        String value = obsToFind.getValue() != null ? obsToFind.getValue().getDisplay() : null;
+        return getObservation(observationList, obsToFind.getConcept().getUuid(), value);
+    }
+
+    private Observation getObservation(List<Observation> observationList, String conceptUuid, String value) {
+        Observation observation = null;
+
+        for (Observation obs : observationList) {
+            if (StringUtils.equals(conceptUuid, obs.getConcept().getUuid())) {
+                if (obs.getValue() == null && value == null) {
+                    observation = obs;
+                    break;
+                } else if (obs.getValue() != null && StringUtils.equals(obs.getValue().getDisplay(), value)) {
+                    observation = obs;
+                    break;
+                }
+            }
+        }
+
+        return observation;
     }
 
     private List<Attribute> convertAttributeMapToList(Map<String, String> attributes, boolean isProgramEnrollmentUpdate) {
