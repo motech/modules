@@ -50,4 +50,8 @@
         return $resource('../commcare/caseList/:name');
     });
 
+    services.factory('Reports', function($resource) {
+        return $resource('../commcare/reports/:name');
+    });
+
 }());

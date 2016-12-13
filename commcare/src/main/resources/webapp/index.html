@@ -8,6 +8,7 @@
                 <li ng-show="selectedTabState.selectedTab === 'importForms'" ng-class="{'active': selectedTabState.selectedTab === 'importForms'}">{{msg('commcare.tab.importForms')}}</li>
                 <li ng-show="selectedTabState.selectedTab === 'importCases'" ng-class="{'active': selectedTabState.selectedTab === 'importCases'}">{{msg('commcare.tab.importCases')}}</li>
                 <li ng-show="selectedTabState.selectedTab === 'forms'" ng-class="{'active': selectedTabState.selectedTab === 'forms'}">{{msg('commcare.tab.forms')}}</li>
+                <li ng-show="selectedTabState.selectedTab === 'reports'" ng-class="{'active': selectedTabState.selectedTab === 'reports'}">{{msg('commcare.tab.reports')}}</li>
             </ul>
         </div>
         <div class="header-footer">
@@ -16,6 +17,7 @@
                 <li ng-class="{'active': selectedTabState.selectedTab === 'importForms'}" ng-click="selectedTabState.selectedTab = 'importForms'"><a ui-sref="commcare.importForms">{{msg('commcare.tab.importForms')}}</a></li>
                 <li ng-class="{'active': selectedTabState.selectedTab === 'importCases'}" ng-click="selectedTabState.selectedTab = 'importCases'"><a ui-sref="commcare.importCases">{{msg('commcare.tab.importCases')}}</a></li>
                 <li ng-class="{'active': selectedTabState.selectedTab === 'forms'}" ng-click="selectedTabState.selectedTab = 'forms'"><a ui-sref="commcare.forms">{{msg('commcare.tab.forms')}}</a></li>
+                <li ng-class="{'active': selectedTabState.selectedTab === 'reports'}" ng-click="selectedTabState.selectedTab= 'reports'"><a ui-sref="commcare.reports">{{msg('commcare.tab.reports')}}</a></li>
             </ul>
         </div>
         <div class="ui-layout-content">
