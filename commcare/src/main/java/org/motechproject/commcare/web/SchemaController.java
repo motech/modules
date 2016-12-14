@@ -3,10 +3,12 @@ package org.motechproject.commcare.web;
 import org.motechproject.commcare.domain.CaseInfo;
 import org.motechproject.commcare.domain.CasesInfo;
 import org.motechproject.commcare.domain.CommcareApplicationJson;
+import org.motechproject.commcare.domain.report.ReportsMetadataInfo;
 import org.motechproject.commcare.exception.ConfigurationNotFoundException;
 import org.motechproject.commcare.service.CommcareApplicationDataService;
 import org.motechproject.commcare.service.CommcareCaseService;
 import org.motechproject.commcare.service.CommcareConfigService;
+import org.motechproject.commcare.service.ReportsMetadataDataService;
 import org.motechproject.commcare.web.domain.CasesRecords;
 import org.motechproject.commcare.web.domain.GridSettings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,9 @@ public class SchemaController extends CommcareController {
     private CommcareApplicationDataService commcareApplicationDataService;
 
     @Autowired
+    private ReportsMetadataDataService reportsMetadataDataService;
+
+    @Autowired
     private CommcareCaseService caseService;
 
     @Autowired
@@ -48,6 +53,13 @@ public class SchemaController extends CommcareController {
     public List<CommcareApplicationJson> schema(@PathVariable String configName) {
         validateConfig(configName);
         return commcareApplicationDataService.bySourceConfiguration(configName);
+    }
+
+    @RequestMapping(value = "/reports/{configName}")
+    @ResponseBody
+    public List<ReportsMetadataInfo> reports(@PathVariable String configName) {
+        validateConfig(configName);
+        return reportsMetadataDataService.bySourceConfiguration(configName);
     }
 
     @RequestMapping(value = "/caseList/{configName}")
