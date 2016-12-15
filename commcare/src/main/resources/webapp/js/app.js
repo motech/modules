@@ -66,6 +66,16 @@
                         controller: 'CommcareCaseSchemasCtrl'
                     }
                 }
+            })
+            .state('commcare.reports', {
+                url: '/reports',
+                parent: 'commcare',
+                views: {
+                    'commcareView': {
+                        templateUrl: '../commcare/resources/partials/reports.html',
+                        controller: 'CommcareReportsCtrl'
+                    }
+                }
             });
     }]);
 }());
