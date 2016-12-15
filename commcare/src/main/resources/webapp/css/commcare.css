@@ -226,6 +226,46 @@ td.questionData .table {
     color: #224477;
 }
 
+.report-schema .report-schema-group {
+    padding: 1px 7px 1px 15px;
+    line-height: 32px;
+    color: #005580;
+    background-color: #E4F1F9;
+    border: 1px solid #D1E6F9;
+    border-top: none;
+}
+
+.report-schema .report-columns{
+    padding-bottom: 12px;
+}
+
+.report-schema .report-column{
+    padding: 6px 20px;
+}
+
+.report-schema .report-column button {
+    float: right;
+}
+
+.report-schema .report-filters{
+    padding-bottom: 12px;
+}
+
+.report-schema .report-filters button{
+    float: right;
+}
+
+.report .modal-dialog .modal-content .modal-body p{
+    font-weight: bold;
+    margin-left: 3px;
+}
+
+.report .modal-dialog .modal-content .modal-body{
+    padding: 15px;
+}
+
+
+
 .case-schema .case-schema-group {
     padding: 1px 7px 1px 15px;
     height: 37px;

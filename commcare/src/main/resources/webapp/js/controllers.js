@@ -808,7 +808,7 @@
         $scope.downloadingCases = false;
 
         $scope.formatJson = function(jsonResponse) {
-            return JSON.stringify(jsonResponse, null,4);
+            return JSON.stringify(jsonResponse, null, 4);
         };
 
         $scope.$watch('selectedConfig', function() {
@@ -874,5 +874,34 @@
             return contentView;
         };
     });
+
+    controllers.controller('CommcareReportsCtrl', function ($scope, $http, Reports, LoadingModal) {
+
+            $scope.reportError= false;
+
+            $scope.formatJson = function(jsonResponse) {
+              return JSON.stringify(jsonResponse, null, 4);
+            };
+
+            $scope.$watch('selectedConfig', function() {
+                if (!$scope.$parent.selectedConfig) {
+                    return;
+                }
+                if ($scope.$parent.selectedConfig === $scope.$parent.newlyCreatedConfig) {
+                    return;
+                }
+                LoadingModal.open();
+
+                $scope.reports = Reports.query({name: $scope.selectedConfig.name}, function() {
+                    $scope.reportError = false;
+                    LoadingModal.close();
+                }, function() {
+                    $scope.reportError = true;
+                    LoadingModal.close();
+                });
+
+                LoadingModal.close();
+            });
+        });
 
 }());
