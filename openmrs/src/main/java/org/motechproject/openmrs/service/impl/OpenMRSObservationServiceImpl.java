@@ -6,14 +6,12 @@ import org.apache.log4j.Logger;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.openmrs.config.Config;
-import org.motechproject.openmrs.domain.Concept;
 import org.motechproject.openmrs.domain.Observation;
 import org.motechproject.openmrs.domain.ObservationListResult;
 import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.exception.ObservationNotFoundException;
 import org.motechproject.openmrs.exception.OpenMRSException;
 import org.motechproject.openmrs.helper.EventHelper;
-import org.motechproject.openmrs.resource.ConceptResource;
 import org.motechproject.openmrs.resource.ObservationResource;
 import org.motechproject.openmrs.service.EventKeys;
 import org.motechproject.openmrs.service.OpenMRSConfigService;
@@ -38,17 +36,13 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
 
     private final ObservationResource obsResource;
 
-    private final ConceptResource conceptResource;
-
     private final EventRelay eventRelay;
 
     @Autowired
     public OpenMRSObservationServiceImpl(ObservationResource obsResource, OpenMRSPatientService patientAdapter,
-                                         ConceptResource conceptResource, EventRelay eventRelay,
-                                         OpenMRSConfigService configService) {
+                                         EventRelay eventRelay, OpenMRSConfigService configService) {
         this.obsResource = obsResource;
         this.patientService = patientAdapter;
-        this.conceptResource = conceptResource;
         this.eventRelay = eventRelay;
         this.configService = configService;
     }
@@ -128,28 +122,17 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
     @Override
     public Observation createObservation(String configName, Observation observation) {
         Validate.notEmpty(observation.getPerson().getUuid(), "Patient uuid cannot be empty");
-        Validate.notNull(observation.getConcept().getName(), "Concept name cannot be empty");
+        Validate.notEmpty(observation.getConcept().getUuid(), "Concept uuid cannot be empty");
         Validate.notNull(observation.getObsDatetime());
-        Validate.notNull(observation.getValue());
-        Validate.notEmpty(observation.getValue().getDisplay());
 
         try {
             Config config = configService.getConfigByName(configName);
-            Concept concept = conceptResource.getConceptByName(config, observation.getConcept().getName().getName());
-            Patient patient = patientService.getPatientByUuid(configName, observation.getPerson().getUuid());
-
-            Validate.notNull(concept);
-            Validate.notNull(patient);
-
-            observation.setConcept(concept);
-            observation.setPerson(patient.getPerson());
 
             Observation created = obsResource.createObservation(config, observation);
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_OBSERVATION_SUBJECT, EventHelper.observationParameters(created)));
             return created;
         } catch (HttpClientErrorException e) {
-            LOGGER.error("Error while creating observation!");
-            return null;
+            throw new OpenMRSException("Error while creating observation. Response body: " + e.getResponseBodyAsString(), e);
         }
     }
 

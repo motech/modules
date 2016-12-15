@@ -51,7 +51,9 @@ import org.motechproject.openmrs.tasks.constants.EventSubjects;
 import org.motechproject.openmrs.tasks.constants.Keys;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +70,7 @@ public class OpenMRSActionProxyServiceTest {
 
     private static final String CONFIG_NAME = "Configuration name";
     private static final DateTimeFormatter fullDateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-
+    private static final Date DATE = new DateTime("2000-08-16T07:22:05Z").toDate();
 
     @Mock
     private OpenMRSConceptService conceptService;
@@ -113,6 +115,9 @@ public class OpenMRSActionProxyServiceTest {
     private ArgumentCaptor<Patient> patientCaptor;
 
     @Captor
+    private ArgumentCaptor<Encounter> encounterCaptor;
+
+    @Captor
     private ArgumentCaptor<Person> personCaptor;
 
     @Captor
@@ -151,13 +156,12 @@ public class OpenMRSActionProxyServiceTest {
         Form form = new Form();
         form.setUuid("50");
 
-        DateTime encounterDatetime = new DateTime("2000-08-16T07:22:05Z");
         Map<String, String> observations = new HashMap<>();
         observations.put("18ff53df-744a-4a3f-8f25-dac6de5b7131", "testObservationValueName0");
 
         List<Observation> obsList = createObservationList(1);
 
-        Encounter encounter = new Encounter(location, new EncounterType(null, "testId"), encounterDatetime.toDate(), patient, visit, Collections.singletonList(provider.getPerson()), obsList);
+        Encounter encounter = new Encounter(location, new EncounterType(null, "testId"), DATE, patient, visit, Collections.singletonList(provider.getPerson()), obsList);
 
         doReturn(patient).when(patientService).getPatientByUuid(eq(CONFIG_NAME), eq(patient.getUuid()));
         doReturn(provider).when(providerService).getProviderByUuid(eq(CONFIG_NAME), eq(provider.getUuid()));
@@ -195,13 +199,12 @@ public class OpenMRSActionProxyServiceTest {
         Form form = new Form();
         form.setUuid("50");
 
-        DateTime encounterDatetime = new DateTime("2000-08-16T07:22:05Z");
         Map<String, String> observations = new HashMap<>();
         observations.put("18ff53df-744a-4a3f-8f25-dac6de5b7131", "");
 
         List<Observation> obsList = new ArrayList<>();
 
-        Encounter encounter = new Encounter(location, new EncounterType(null, "testId"), encounterDatetime.toDate(), patient, visit, Collections.singletonList(provider.getPerson()), obsList);
+        Encounter encounter = new Encounter(location, new EncounterType(null, "testId"), DATE, patient, visit, Collections.singletonList(provider.getPerson()), obsList);
 
         doReturn(patient).when(patientService).getPatientByUuid(eq(CONFIG_NAME), eq(patient.getUuid()));
         doReturn(provider).when(providerService).getProviderByUuid(eq(CONFIG_NAME), eq(provider.getUuid()));
@@ -239,20 +242,18 @@ public class OpenMRSActionProxyServiceTest {
         Form form = new Form();
         form.setUuid("50");
 
-        DateTime encounterDatetime = new DateTime("2000-08-16T07:22:05Z");
         Map<String, String> observations = new HashMap<>();
 
         /* Empty value in observations should not be included */
         observations.put("18ff53df-744a-4a3f-8f25-dac6de5b7131","testObservationValueName0, ,testObservationValueName1");
         List<Observation> obsList = createObservationList(2);
 
-        Encounter encounter = new Encounter(location, new EncounterType(null, "testId"), encounterDatetime.toDate(), patient, visit, Collections.singletonList(provider.getPerson()), obsList);
+        Encounter encounter = new Encounter(location, new EncounterType(null, "testId"), DATE, patient, visit, Collections.singletonList(provider.getPerson()), obsList);
 
         doReturn(patient).when(patientService).getPatientByUuid(eq(CONFIG_NAME), eq(patient.getUuid()));
         doReturn(provider).when(providerService).getProviderByUuid(eq(CONFIG_NAME), eq(provider.getUuid()));
         doReturn(visit).when(visitService).getVisitByUuid(eq(CONFIG_NAME), eq(visit.getUuid()));
         doReturn(encounter).when(encounterService).createEncounter(eq(CONFIG_NAME), eq(encounter));
-
         doReturn(Collections.singletonList(location))
                 .when(locationService).getLocations(eq(CONFIG_NAME), eq(location.getName()));
 
@@ -260,6 +261,46 @@ public class OpenMRSActionProxyServiceTest {
                 encounter.getEncounterType().getUuid(), location.getName(), patient.getUuid(), provider.getUuid(),
                 visit.getUuid(), form.getUuid(), observations);
 
+
+        assertEquals(encounter, encounterCreated);
+    }
+
+    @Test
+    public void shouldCreateEncounterAndObservationGroups() {
+        Location location = new Location();
+        location.setName("testLocation");
+
+        Patient patient = new Patient();
+        patient.setUuid("10");
+
+        Provider provider = new Provider();
+        provider.setUuid("20");
+
+        Person person = new Person();
+        person.setUuid("30");
+        provider.setPerson(person);
+
+        Visit visit = new Visit();
+        visit.setUuid("40");
+
+        Form form = new Form();
+        form.setUuid("50");
+
+        Map<String, String> observations = prepareObservationGroupsMap();
+        List<Observation> obsList = createObservationGroups();
+
+        Encounter encounter = new Encounter(location, new EncounterType(null, "testId"), DATE, patient, visit, Collections.singletonList(provider.getPerson()), obsList);
+
+        doReturn(patient).when(patientService).getPatientByUuid(eq(CONFIG_NAME), eq(patient.getUuid()));
+        doReturn(provider).when(providerService).getProviderByUuid(eq(CONFIG_NAME), eq(provider.getUuid()));
+        doReturn(visit).when(visitService).getVisitByUuid(eq(CONFIG_NAME), eq(visit.getUuid()));
+        doReturn(encounter).when(encounterService).createEncounter(eq(CONFIG_NAME), eq(encounter));
+        doReturn(Collections.singletonList(location))
+                .when(locationService).getLocations(eq(CONFIG_NAME), eq(location.getName()));
+
+        Encounter encounterCreated = openMRSActionProxyService.createEncounter(CONFIG_NAME, new DateTime(encounter.getEncounterDatetime()),
+                encounter.getEncounterType().getUuid(), location.getName(), patient.getUuid(), provider.getUuid(),
+                visit.getUuid(), form.getUuid(), observations);
 
         assertEquals(encounter, encounterCreated);
     }
@@ -780,13 +821,13 @@ public class OpenMRSActionProxyServiceTest {
 
         Person.Address address = new Person.Address("address 1", "address 2", "address 3", "address 4", "address 5",
                 "address 6", "City", "State", "Country", "000000", "County district", "30", "50",
-                new DateTime("2000-08-16T07:22:05Z").toDate(), new DateTime("2100-08-16T07:22:05Z").toDate());
+                DATE, new DateTime("2100-08-16T07:22:05Z").toDate());
         person.setPreferredAddress(address);
         person.setAddresses(Collections.singletonList(address));
 
         person.setGender("M");
 
-        person.setBirthdate(new DateTime("2000-08-16T07:22:05Z").toDate());
+        person.setBirthdate(DATE);
         person.setBirthdateEstimated(true);
         person.setDead(false);
 
@@ -815,7 +856,7 @@ public class OpenMRSActionProxyServiceTest {
             Observation observation = new Observation();
             observation.setConcept(concept);
             observation.setValue(new Observation.ObservationValue("testObservationValueName" + Integer.toString(i)));
-            observation.setObsDatetime(new DateTime("2000-08-16T07:22:05Z").toDate());
+            observation.setObsDatetime(DATE);
             observationList.add(observation);
         }
         return observationList;
@@ -853,4 +894,72 @@ public class OpenMRSActionProxyServiceTest {
 
         return new MotechEvent(EventSubjects.GET_COHORT_QUERY_MEMBER_EVENT.concat(CONFIG_NAME), parameters);
     }
-}
+
+    private Map<String, String> prepareObservationGroupsMap() {
+        Map<String, String> observationsMap = new HashMap<>();
+
+        observationsMap.put("parentUuid/child1Uuid/child2Child1Uuid", "Yes");
+        observationsMap.put("parentUuid/child1Uuid/child1Child1Uuid", "No");
+        observationsMap.put("parentUuid/child2Uuid", "2nd");
+        observationsMap.put("parentUuid/child3Uuid", "Maybe");
+
+        //observations with blank/null values should be omitted
+        observationsMap.put("parentUuid/child1Uuid/child3Child1Uuid", null);
+        observationsMap.put("parentUuid/child5Uuid", null);
+        observationsMap.put("parentUuid/child6Uuid", "");
+
+        return observationsMap;
+    }
+
+    private List<Observation> createObservationGroups() {
+        Concept concept1 = new Concept();
+        concept1.setUuid("child1Child1Uuid");
+
+        Observation childChild1 = new Observation();
+        childChild1.setConcept(concept1);
+        childChild1.setValue(new Observation.ObservationValue("No"));
+        childChild1.setObsDatetime(DATE);
+
+        Concept concept2 = new Concept();
+        concept2.setUuid("child2Child1Uuid");
+
+        Observation childChild2 = new Observation();
+        childChild2.setConcept(concept2);
+        childChild2.setValue(new Observation.ObservationValue("Yes"));
+        childChild2.setObsDatetime(DATE);
+
+        Concept concept3 = new Concept();
+        concept3.setUuid("child1Uuid");
+
+        Observation child1 = new Observation();
+        child1.setConcept(concept3);
+        child1.setGroupMembers(Arrays.asList(childChild2, childChild1));
+        child1.setObsDatetime(DATE);
+
+        Concept concept4 = new Concept();
+        concept4.setUuid("child2Uuid");
+
+        Observation child2 = new Observation();
+        child2.setConcept(concept4);
+        child2.setValue(new Observation.ObservationValue("2nd"));
+        child2.setObsDatetime(DATE);
+
+        Concept concept5 = new Concept();
+        concept5.setUuid("child3Uuid");
+
+        Observation child3 = new Observation();
+        child3.setConcept(concept5);
+        child3.setValue(new Observation.ObservationValue("Maybe"));
+        child3.setObsDatetime(DATE);
+
+        Concept concept6 = new Concept();
+        concept6.setUuid("parentUuid");
+
+        Observation parentObservation = new Observation();
+        parentObservation.setObsDatetime(DATE);
+        parentObservation.setConcept(concept6);
+        parentObservation.setGroupMembers(Arrays.asList(child1, child2, child3));
+
+        return Collections.singletonList(parentObservation);
+    }
+ }
