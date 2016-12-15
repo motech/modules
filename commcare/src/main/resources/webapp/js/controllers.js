@@ -177,6 +177,7 @@
                         $scope.importFormsProgressShow = false;
                         $('#importCommcareForms').modal('hide');
                         $scope.importFormsComplete = true;
+                        $('#importCompleteAlert').fadeIn("slow");
                         clearInterval($scope.importStatusInterval);
                     }
 
