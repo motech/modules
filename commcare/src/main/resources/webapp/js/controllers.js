@@ -877,7 +877,7 @@
 
     controllers.controller('CommcareReportsCtrl', function ($scope, $http, Reports, LoadingModal) {
 
-            $scope.reportError= false;
+            $scope.reportError = false;
 
             $scope.formatJson = function(jsonResponse) {
               return JSON.stringify(jsonResponse, null, 4);
@@ -901,6 +901,12 @@
                 });
 
                 LoadingModal.close();
+            });
+
+            innerLayout({
+                spacing_closed: 30,
+                east__minSize: 200,
+                east__maxSize: 350
             });
         });
 
