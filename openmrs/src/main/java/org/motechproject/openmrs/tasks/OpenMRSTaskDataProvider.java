@@ -204,7 +204,7 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
                     break;
             }
         } catch (OpenMRSException e) {
-            LOGGER.warn(e.getMessage());
+            LOGGER.error(e.getMessage(), e);
         }
 
         return patient;
