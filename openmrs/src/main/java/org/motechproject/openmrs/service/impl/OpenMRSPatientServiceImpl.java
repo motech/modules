@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -196,7 +197,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         Patient patient;
         try {
             patient = patientResource.getPatientById(config, uuid);
-        } catch (HttpClientErrorException e) {
+        } catch (HttpServerErrorException | HttpClientErrorException e) {
             throw new OpenMRSException(String.format("Could not get Patient with uuid: %s. %s %s", uuid, e.getMessage(), e.getResponseBodyAsString()), e);
         }
 
@@ -218,7 +219,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         PatientListResult patientList;
         try {
             patientList = patientResource.queryForPatient(config, motechId);
-        } catch (HttpClientErrorException e) {
+        } catch (HttpServerErrorException | HttpClientErrorException e) {
             throw new OpenMRSException(String.format("Could not get Patient for MOTECH Id: %s. %s %s", motechId, e.getMessage(), e.getResponseBodyAsString()), e);
         }
 
@@ -239,7 +240,7 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
         Patient fetchedPatient;
         try {
             patientList = patientResource.queryForPatient(config, identifierId);
-        } catch (HttpClientErrorException e) {
+        } catch (HttpServerErrorException | HttpClientErrorException e) {
             throw new OpenMRSException(String.format("Could not get Patient for %s: %s. %s %s", identifierName, identifierId, e.getMessage(), e.getResponseBodyAsString()), e);
         }
 

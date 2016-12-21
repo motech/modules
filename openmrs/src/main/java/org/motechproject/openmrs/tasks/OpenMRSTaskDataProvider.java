@@ -167,6 +167,10 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
                     break;
                 case OBSERVATION: obj = getObservation(lookupName, lookupFields, configName);
             }
+
+            if (obj == null) {
+                LOGGER.warn("Lookup with name {} didn't find the object of type {}.", lookupName, objectType);
+            }
         }
 
         return obj;
