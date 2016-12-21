@@ -14,6 +14,7 @@ import org.motechproject.openmrs.domain.ProgramEnrollment;
 import org.motechproject.openmrs.domain.ProgramEnrollmentListResult;
 import org.motechproject.openmrs.domain.Provider;
 import org.motechproject.openmrs.domain.Relationship;
+import org.motechproject.openmrs.exception.OpenMRSException;
 import org.motechproject.openmrs.service.OpenMRSEncounterService;
 import org.motechproject.openmrs.service.OpenMRSGeneratedIdentifierService;
 import org.motechproject.openmrs.service.OpenMRSObservationService;
@@ -167,10 +168,6 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
                     break;
                 case OBSERVATION: obj = getObservation(lookupName, lookupFields, configName);
             }
-
-            if (obj == null) {
-                LOGGER.warn("Lookup with name {} didn't find the object of type {}.", lookupName, objectType);
-            }
         }
 
         return obj;
@@ -192,18 +189,22 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     private Patient getPatient(String lookupName, Map<String, String> lookupFields, String configName) {
         Patient patient = null;
 
-        switch (lookupName) {
-            case BY_MOTECH_ID: patient = patientService.getPatientByMotechId(configName, lookupFields.get(MOTECH_ID));
-                break;
-            case BY_UUID: patient = patientService.getPatientByUuid(configName, lookupFields.get(UUID));
-                break;
-            default:
-                if (lookupFields != null) {
-                    patient = patientService.getPatientByIdentifier(configName, lookupFields.get(IDENTIFIER_ID), lookupName);
-                } else {
-                    LOGGER.error("Lookup with name {} doesn't exist for patient object", lookupName);
-                }
-                break;
+        try {
+            switch (lookupName) {
+                case BY_MOTECH_ID: patient = patientService.getPatientByMotechId(configName, lookupFields.get(MOTECH_ID));
+                    break;
+                case BY_UUID: patient = patientService.getPatientByUuid(configName, lookupFields.get(UUID));
+                    break;
+                default:
+                    if (lookupFields != null) {
+                        patient = patientService.getPatientByIdentifier(configName, lookupFields.get(IDENTIFIER_ID), lookupName);
+                    } else {
+                        LOGGER.error("Lookup with name {} doesn't exist for patient object", lookupName);
+                    }
+                    break;
+            }
+        } catch (OpenMRSException e) {
+            LOGGER.warn(e.getMessage());
         }
 
         return patient;
