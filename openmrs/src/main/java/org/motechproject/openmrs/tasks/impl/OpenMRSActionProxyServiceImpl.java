@@ -347,7 +347,6 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
 
     private List<Observation> convertObservationMapToList(Map<String, String> observations, DateTime obsDatetime) {
         List<Observation> observationList = new ArrayList<>();
-        List<Observation> observationChildren = new ArrayList<>();
         List<Observation> observationParents = new ArrayList<>();
 
         for (String observationConceptPath : observations.keySet()) {
@@ -355,19 +354,10 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
                 if (isObservationGroups(observationConceptPath)) {
                     String[] concepts = observationConceptPath.split("/");
 
-                    Observation childrenObservation = null;
-                    for (int i = concepts.length - 1; i >= 0; i--) {
-                        String concept = concepts[i];
+                    String value = observations.get(observationConceptPath);
+                    Observation childrenObservation = createObservation(concepts[concepts.length - 1], obsDatetime, value, null);
 
-                        if (i == 0) {
-                            createOrUpdateObservation(observationParents, concept, obsDatetime, childrenObservation);
-                        } else if (i == concepts.length - 1) {
-                            String value = observations.get(observationConceptPath);
-                            childrenObservation = createObservation(concept, obsDatetime, value, null);
-                        } else {
-                            childrenObservation = createOrUpdateObservation(observationChildren, concept, obsDatetime, childrenObservation);
-                        }
-                    }
+                    createOrUpdateObservation(observationParents, concepts[0], obsDatetime, childrenObservation);
                 } else {
                     String[] observationValues = observations.get(observationConceptPath).replace(", ", ",").split(",");
                     for (String value : observationValues) {
