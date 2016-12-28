@@ -110,12 +110,6 @@ public class SyncServiceImpl implements SyncService {
         List<DataSetDto> dataSetDtos = dhisWebService.getDataSets();
 
         for (DataSetDto dataSetDto : dataSetDtos) {
-            if (dataSetDto.getDataElements() == null) {
-                List <DataElementDto> dataElementList = new ArrayList<>();
-
-                dataSetDto.setDataElements(dataElementList);
-            }
-
             dataSetService.createFromDetails(dataSetDto);
         }
     }

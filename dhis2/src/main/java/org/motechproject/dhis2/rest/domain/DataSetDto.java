@@ -3,6 +3,7 @@ package org.motechproject.dhis2.rest.domain;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,6 +16,10 @@ public class DataSetDto extends BaseDto {
     private List<DataElementDto> dataElements;
 
     public List<DataElementDto> getDataElements() {
+        if (dataElements == null) {
+            dataElements = new ArrayList<>();
+        }
+
         return dataElements;
     }
 

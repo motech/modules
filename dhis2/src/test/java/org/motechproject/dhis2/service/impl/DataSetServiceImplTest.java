@@ -15,6 +15,7 @@ import org.motechproject.dhis2.service.DataSetService;
 import java.util.ArrayList;
 import java.util.List;
 
+import static junit.framework.TestCase.assertNotNull;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
@@ -47,19 +48,17 @@ public class DataSetServiceImplTest {
         DataSetDto dto = prepareDataSetDto();
         DataSet expected = prepareDataSet(dto);
 
-        for (DataElementDto dataElementDto : dto.getDataElements()) {
-            when(dataElementService.findById(eq(dataElementDto.getId()))).thenReturn(prepareDataElement(dataElementDto));
-        }
-        when(dataSetDataService.create(eq(expected))).thenReturn(expected);
+        createFromDetails(dto, expected);
+    }
 
-        DataSet created = dataSetService.createFromDetails(dto);
+    @Test
+    public void shouldCreateFromDetailsWhenDataElementListIsNull() {
+        DataSetDto dto = prepareDataSetDtoWithNullDataElementList();
+        assertNotNull(dto.getDataElements());
 
-        assertThat(created, equalTo(expected));
+        DataSet expected = prepareDataSet(dto);
 
-        for (DataElementDto dataElementDto : dto.getDataElements()) {
-            verify(dataElementService).findById(dataElementDto.getId());
-        }
-        verify(dataSetDataService).create(eq(expected));
+        createFromDetails(dto, expected);
     }
 
     @Test
@@ -67,6 +66,22 @@ public class DataSetServiceImplTest {
         dataSetService.deleteAll();
 
         verify(dataSetDataService).deleteAll();
+    }
+
+    private void createFromDetails(DataSetDto actual, DataSet expected) {
+        for (DataElementDto dataElementDto : actual.getDataElements()) {
+            when(dataElementService.findById(eq(dataElementDto.getId()))).thenReturn(prepareDataElement(dataElementDto));
+        }
+        when(dataSetDataService.create(eq(expected))).thenReturn(expected);
+
+        DataSet created = dataSetService.createFromDetails(actual);
+
+        assertThat(created, equalTo(expected));
+
+        for (DataElementDto dataElementDto : actual.getDataElements()) {
+            verify(dataElementService).findById(dataElementDto.getId());
+        }
+        verify(dataSetDataService).create(eq(expected));
     }
 
     private DataSetDto prepareDataSetDto() {
@@ -79,6 +94,16 @@ public class DataSetServiceImplTest {
         dataElementDtos.add(prepareDataElementDto("One"));
         dataElementDtos.add(prepareDataElementDto("Two"));
         dto.setDataElements(dataElementDtos);
+
+        return dto;
+    }
+
+    private DataSetDto prepareDataSetDtoWithNullDataElementList() {
+        DataSetDto dto = new DataSetDto();
+
+        dto.setId(ID);
+        dto.setName(NAME);
+        dto.setDataElements(null);
 
         return dto;
     }
