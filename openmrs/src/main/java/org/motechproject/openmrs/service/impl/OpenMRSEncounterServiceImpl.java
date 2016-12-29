@@ -1,5 +1,6 @@
 package org.motechproject.openmrs.service.impl;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.motechproject.event.MotechEvent;
@@ -7,6 +8,7 @@ import org.motechproject.event.listener.EventRelay;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.Encounter;
 import org.motechproject.openmrs.domain.EncounterType;
+import org.motechproject.openmrs.domain.Observation;
 import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.exception.OpenMRSException;
 import org.motechproject.openmrs.helper.EventHelper;
@@ -14,6 +16,7 @@ import org.motechproject.openmrs.resource.EncounterResource;
 import org.motechproject.openmrs.service.EventKeys;
 import org.motechproject.openmrs.service.OpenMRSConfigService;
 import org.motechproject.openmrs.service.OpenMRSEncounterService;
+import org.motechproject.openmrs.service.OpenMRSObservationService;
 import org.motechproject.openmrs.service.OpenMRSPatientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +34,8 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
 
     private final OpenMRSPatientService patientService;
 
+    private final OpenMRSObservationService observationService;
+
     private final OpenMRSConfigService configService;
 
     private final EncounterResource encounterResource;
@@ -39,9 +44,11 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
 
     @Autowired
     public OpenMRSEncounterServiceImpl(EncounterResource encounterResource, OpenMRSPatientService patientAdapter,
-                                       EventRelay eventRelay, OpenMRSConfigService configService) {
+                                       OpenMRSObservationService observationService, EventRelay eventRelay,
+                                       OpenMRSConfigService configService) {
         this.encounterResource = encounterResource;
         this.patientService = patientAdapter;
+        this.observationService = observationService;
         this.configService = configService;
         this.eventRelay = eventRelay;
     }
@@ -52,9 +59,13 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
 
         Encounter createdEncounter;
         Config config = configService.getConfigByName(configName);
+        List<Observation> observationList = encounter.getObs();
+
+        encounter.setObs(new ArrayList<>());
 
         try {
             createdEncounter = encounterResource.createEncounter(config, encounter);
+            createdEncounter.setObs(createNestedObservations(configName, createdEncounter, observationList));
 
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_ENCOUNTER_SUBJECT, EventHelper.encounterParameters(createdEncounter)));
         } catch (HttpClientErrorException e) {
@@ -185,5 +196,40 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
         }
 
         return result;
+    }
+
+    private List<Observation> createNestedObservations(String configName, Encounter encounter, List<Observation> observationList) {
+        List<Observation> createdObservations = new ArrayList<>();
+        Observation observationToCreate;
+
+        for (Observation observation : observationList) {
+            List<Observation> nestedObservations = new ArrayList<>();
+            List<Observation> groupMembers = new ArrayList<>();
+
+            observationToCreate = observation;
+
+            if (observation.getGroupMembers() != null) {
+                for (Observation nestedObservation : observation.getGroupMembers()) {
+                    if (CollectionUtils.isNotEmpty(nestedObservation.getGroupMembers())) {
+                        nestedObservations.add(nestedObservation);
+                    } else {
+                        groupMembers.add(nestedObservation);
+                    }
+                }
+            }
+            observationToCreate.setGroupMembers(groupMembers);
+            observationToCreate.setEncounter(encounter);
+
+            Observation createdObservation = observationService.createObservation(configName, observationToCreate);
+
+            if (createdObservation.getGroupMembers() == null) {
+                createdObservation.setGroupMembers(new ArrayList<>());
+            }
+            createdObservation.getGroupMembers().addAll(createNestedObservations(configName, encounter, nestedObservations));
+
+            createdObservations.add(createdObservation);
+        }
+
+        return createdObservations;
     }
 }

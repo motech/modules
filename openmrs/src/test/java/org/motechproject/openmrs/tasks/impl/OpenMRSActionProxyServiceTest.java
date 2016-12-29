@@ -898,8 +898,8 @@ public class OpenMRSActionProxyServiceTest {
     private Map<String, String> prepareObservationGroupsMap() {
         Map<String, String> observationsMap = new HashMap<>();
 
-        observationsMap.put("parentUuid/child1Uuid/child1Child1Uuid", "No");
         observationsMap.put("parentUuid/child1Uuid/child2Child1Uuid", "Yes");
+        observationsMap.put("parentUuid/child1Uuid/child1Child1Uuid", "No");
         observationsMap.put("parentUuid/child2Uuid", "2nd");
         observationsMap.put("parentUuid/child3Uuid", "Maybe");
 
@@ -913,45 +913,53 @@ public class OpenMRSActionProxyServiceTest {
 
     private List<Observation> createObservationGroups() {
         Concept concept1 = new Concept();
-        concept1.setUuid("child2Child1Uuid");
+        concept1.setUuid("child1Child1Uuid");
 
-        Observation child1 = new Observation();
-        child1.setConcept(concept1);
-        child1.setValue(new Observation.ObservationValue("Yes"));
-        child1.setObsDatetime(DATE);
+        Observation childChild1 = new Observation();
+        childChild1.setConcept(concept1);
+        childChild1.setValue(new Observation.ObservationValue("No"));
+        childChild1.setObsDatetime(DATE);
 
         Concept concept2 = new Concept();
-        concept2.setUuid("child1Child1Uuid");
+        concept2.setUuid("child2Child1Uuid");
 
-        Observation child2 = new Observation();
-        child2.setConcept(concept2);
-        child2.setValue(new Observation.ObservationValue("No"));
-        child2.setObsDatetime(DATE);
+        Observation childChild2 = new Observation();
+        childChild2.setConcept(concept2);
+        childChild2.setValue(new Observation.ObservationValue("Yes"));
+        childChild2.setObsDatetime(DATE);
 
         Concept concept3 = new Concept();
-        concept3.setUuid("child2Uuid");
+        concept3.setUuid("child1Uuid");
 
-        Observation child3 = new Observation();
-        child3.setConcept(concept3);
-        child3.setValue(new Observation.ObservationValue("2nd"));
-        child3.setObsDatetime(DATE);
+        Observation child1 = new Observation();
+        child1.setConcept(concept3);
+        child1.setGroupMembers(Arrays.asList(childChild2, childChild1));
+        child1.setObsDatetime(DATE);
 
         Concept concept4 = new Concept();
-        concept4.setUuid("child3Uuid");
+        concept4.setUuid("child2Uuid");
 
-        Observation child4 = new Observation();
-        child4.setConcept(concept4);
-        child4.setValue(new Observation.ObservationValue("Maybe"));
-        child4.setObsDatetime(DATE);
+        Observation child2 = new Observation();
+        child2.setConcept(concept4);
+        child2.setValue(new Observation.ObservationValue("2nd"));
+        child2.setObsDatetime(DATE);
 
         Concept concept5 = new Concept();
-        concept5.setUuid("parentUuid");
+        concept5.setUuid("child3Uuid");
+
+        Observation child3 = new Observation();
+        child3.setConcept(concept5);
+        child3.setValue(new Observation.ObservationValue("Maybe"));
+        child3.setObsDatetime(DATE);
+
+        Concept concept6 = new Concept();
+        concept6.setUuid("parentUuid");
 
         Observation parentObservation = new Observation();
         parentObservation.setObsDatetime(DATE);
-        parentObservation.setConcept(concept5);
-        parentObservation.setGroupMembers(Arrays.asList(child1, child2, child3, child4));
+        parentObservation.setConcept(concept6);
+        parentObservation.setGroupMembers(Arrays.asList(child1, child2, child3));
 
         return Collections.singletonList(parentObservation);
     }
- }
+}
