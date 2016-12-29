@@ -74,7 +74,7 @@ public class CaseActionServiceImplTest {
 
     @Test
     public void testUpdateCaseWithClosingCase() {
-        caseActionService.updateCase(CONFIG_NAME, CASE_ID, OWNER_ID, true , getCaseProperties());
+        caseActionService.updateCase(CONFIG_NAME, CASE_ID, OWNER_ID, true, getCaseProperties());
 
         ArgumentCaptor<CaseTask> captor = ArgumentCaptor.forClass(CaseTask.class);
 
