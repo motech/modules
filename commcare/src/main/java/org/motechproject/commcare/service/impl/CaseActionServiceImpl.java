@@ -47,13 +47,14 @@ public class CaseActionServiceImpl implements CaseActionService {
     }
 
     @Override
-    public void updateCase(String configName, String caseId, Boolean closeCase, Map<String, Object> fieldValues) {
+    public void updateCase(String configName, String caseId, String ownerId, Boolean closeCase, Map<String, Object> fieldValues) {
         CaseTask caseTask = new CaseTask();
 
         caseTask.setCaseId(caseId);
 
         // <update> tag
         UpdateTask updateTask = new UpdateTask();
+        updateTask.setOwnerId(ownerId);
         updateTask.setFieldValues(fieldValues);
 
         // optional <close> tag

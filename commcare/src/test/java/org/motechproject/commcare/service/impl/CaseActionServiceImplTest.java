@@ -57,7 +57,7 @@ public class CaseActionServiceImplTest {
 
     @Test
     public void testUpdateCaseWithoutClosingCase() {
-        caseActionService.updateCase(CONFIG_NAME, CASE_ID, null, getCaseProperties());
+        caseActionService.updateCase(CONFIG_NAME, CASE_ID, OWNER_ID, null, getCaseProperties());
 
         ArgumentCaptor<CaseTask> captor = ArgumentCaptor.forClass(CaseTask.class);
 
@@ -67,13 +67,14 @@ public class CaseActionServiceImplTest {
         assertNotNull(actual.getCaseId());
         assertTrue(StringUtils.isNotBlank(actual.getCaseId()));
         assertEquals(CASE_ID, actual.getCaseId());
+        assertEquals(OWNER_ID, actual.getUpdateTask().getOwnerId());
         assertNull(actual.getCloseTask());
         assertEquals(getCaseProperties().size(), actual.getUpdateTask().getFieldValues().size());
     }
 
     @Test
     public void testUpdateCaseWithClosingCase() {
-        caseActionService.updateCase(CONFIG_NAME, CASE_ID, true, getCaseProperties());
+        caseActionService.updateCase(CONFIG_NAME, CASE_ID, OWNER_ID, true , getCaseProperties());
 
         ArgumentCaptor<CaseTask> captor = ArgumentCaptor.forClass(CaseTask.class);
 
@@ -83,6 +84,7 @@ public class CaseActionServiceImplTest {
         assertNotNull(actual.getCaseId());
         assertTrue(StringUtils.isNotBlank(actual.getCaseId()));
         assertEquals(CASE_ID, actual.getCaseId());
+        assertEquals(OWNER_ID, actual.getUpdateTask().getOwnerId());
         assertTrue(actual.getCloseTask().isClose());
         assertEquals(getCaseProperties().size(), actual.getUpdateTask().getFieldValues().size());
     }

@@ -38,8 +38,8 @@ public class CommcareActionProxyServiceImpl implements CommcareActionProxyServic
     }
 
     @Override
-    public void updateCase(String configName, String caseId, Boolean closeCase, Map<String, Object> fieldValues) {
-        caseActionService.updateCase(configName, caseId, closeCase, fieldValues);
+    public void updateCase(String configName, String caseId, String ownerId, Boolean closeCase, Map<String, Object> fieldValues) {
+        caseActionService.updateCase(configName, caseId, ownerId, closeCase, fieldValues);
     }
 
     @Override

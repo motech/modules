@@ -86,6 +86,7 @@ public class CaseEventHandlerTest {
         verify(caseActionService).updateCase(
                 eq(CONFIG_NAME),
                 eq(CASE_ID),
+                eq(OWNER_ID),
                 eq(null),
                 CAPTOR.capture()
         );
@@ -103,6 +104,7 @@ public class CaseEventHandlerTest {
         verify(caseActionService).updateCase(
                 eq(CONFIG_NAME),
                 eq(CASE_ID),
+                eq(OWNER_ID),
                 eq(true),
                 CAPTOR.capture()
         );

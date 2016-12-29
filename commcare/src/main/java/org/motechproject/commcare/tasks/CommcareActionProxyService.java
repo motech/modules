@@ -19,7 +19,7 @@ public interface CommcareActionProxyService {
     /**
      * See {@link org.motechproject.commcare.service.CaseActionService#updateCase(String, String, String, Boolean, Map) updateCase}
      */
-    void updateCase(String configName, String caseId, Boolean closeCase, Map<String, Object> fieldValues);
+    void updateCase(String configName, String caseId, String ownerId, Boolean closeCase, Map<String, Object> fieldValues);
 
     /**
      * See {@link org.motechproject.commcare.service.imports.ImportFormActionService#importForms(String, DateTime, DateTime) importForms}

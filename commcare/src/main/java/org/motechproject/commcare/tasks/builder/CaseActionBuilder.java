@@ -120,6 +120,14 @@ public class CaseActionBuilder implements ActionBuilder {
             parameters.add(builder.createActionParameterRequest());
 
             builder = new ActionParameterRequestBuilder()
+                    .setDisplayName(DisplayNames.OWNER_ID)
+                    .setKey(EventDataKeys.OWNER_ID)
+                    .setType(UNICODE.getValue())
+                    .setRequired(false)
+                    .setOrder(order++);
+            parameters.add(builder.createActionParameterRequest());
+
+            builder = new ActionParameterRequestBuilder()
                     .setDisplayName(DisplayNames.CLOSE_CASE)
                     .setKey(EventDataKeys.CLOSE_CASE)
                     .setType(BOOLEAN.getValue())
