@@ -31,5 +31,5 @@ public interface CaseActionService {
      * @param closeCase  true to optionally close the case on CommCareHQ
      * @param fieldValues   the params that will be passed to CommcareHQ with case information
      */
-    void updateCase(String configName, String caseId, String ownerId, Boolean closeCase, Map<String, Object> fieldValues);
+    void updateCase(String configName, String caseId, Boolean closeCase, Map<String, Object> fieldValues);
 }

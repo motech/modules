@@ -45,10 +45,9 @@ public class CaseEventHandler {
         Map<String, Object> parameters = event.getParameters();
 
         String caseId = (String) parameters.get(EventDataKeys.CASE_ID);
-        String ownerId = (String) parameters.get(EventDataKeys.OWNER_ID);
         Map<String, Object> fieldValues = (Map<String, Object>) parameters.get(EventDataKeys.FIELD_VALUES);
         Boolean closeCase = (Boolean) parameters.get(EventDataKeys.CLOSE_CASE);
 
-        caseActionService.updateCase(configName, caseId, ownerId, closeCase, fieldValues);
+        caseActionService.updateCase(configName, caseId, closeCase, fieldValues);
     }
 }
