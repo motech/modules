@@ -11,6 +11,7 @@ import org.motechproject.openmrs.util.JsonUtils;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -132,6 +133,10 @@ public class Encounter {
     }
 
     public List<Observation> getObs() {
+        if (obs == null) {
+            obs = new ArrayList<>();
+        }
+
         return obs;
     }
 

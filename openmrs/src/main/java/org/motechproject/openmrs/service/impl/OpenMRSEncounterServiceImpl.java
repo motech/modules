@@ -59,6 +59,9 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
 
         Encounter createdEncounter;
         Config config = configService.getConfigByName(configName);
+
+        //OpenMRS encounter endpoint can't handle creating of a nested observations (with more than one level of children).
+        //Since this feature is not fixed, encounter observations will be created through obs endpoint.
         List<Observation> observationList = encounter.getObs();
 
         encounter.setObs(new ArrayList<>());
@@ -208,23 +211,19 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
 
             observationToCreate = observation;
 
-            if (observation.getGroupMembers() != null) {
-                for (Observation nestedObservation : observation.getGroupMembers()) {
-                    if (CollectionUtils.isNotEmpty(nestedObservation.getGroupMembers())) {
-                        nestedObservations.add(nestedObservation);
-                    } else {
-                        groupMembers.add(nestedObservation);
-                    }
+            for (Observation nestedObservation : observation.getGroupMembers()) {
+                if (CollectionUtils.isNotEmpty(nestedObservation.getGroupMembers())) {
+                    nestedObservations.add(nestedObservation);
+                } else {
+                    groupMembers.add(nestedObservation);
                 }
             }
+
             observationToCreate.setGroupMembers(groupMembers);
             observationToCreate.setEncounter(encounter);
 
             Observation createdObservation = observationService.createObservation(configName, observationToCreate);
 
-            if (createdObservation.getGroupMembers() == null) {
-                createdObservation.setGroupMembers(new ArrayList<>());
-            }
             createdObservation.getGroupMembers().addAll(createNestedObservations(configName, encounter, nestedObservations));
 
             createdObservations.add(createdObservation);
