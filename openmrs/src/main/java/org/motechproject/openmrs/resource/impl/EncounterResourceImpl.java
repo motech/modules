@@ -18,12 +18,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestOperations;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class EncounterResourceImpl extends BaseResource implements EncounterResource {
-
     private static final String OPENMRS_V19 = "1.9";
 
     @Autowired
@@ -59,7 +61,7 @@ public class EncounterResourceImpl extends BaseResource implements EncounterReso
     public Encounter getEncounterById(Config config, String uuid) {
         String responseJson = getJson(config, "/encounter/{uuid}?v=full", uuid);
 
-        return  checkVersionAndSetEncounter(config, responseJson);
+        return checkVersionAndSetEncounter(config, responseJson);
     }
 
     @Override
@@ -108,7 +110,7 @@ public class EncounterResourceImpl extends BaseResource implements EncounterReso
         if (OPENMRS_V19.equals(config.getOpenMrsVersion())) {
             createdEncounter = buildGsonWithAdaptersDeserialize().fromJson(responseJson, Encounter.class);
         } else {
-            createdEncounter = (Encounter) JsonUtils.readJson(responseJson, Encounter.class);
+            createdEncounter = (Encounter) JsonUtils.readJsonWithAdapters(responseJson, Encounter.class, createValueAdapter());
         }
         return createdEncounter;
     }
@@ -116,5 +118,12 @@ public class EncounterResourceImpl extends BaseResource implements EncounterReso
     private JsonArray prepareAllEncountersList(String json) {
         JsonObject obj = new JsonParser().parse(json).getAsJsonObject();
         return obj.getAsJsonArray("results");
+    }
+
+    private Map<Type, Object> createValueAdapter() {
+        Map<Type, Object> valueAdapter = new HashMap<>();
+        valueAdapter.put(Observation.ObservationValue.class, new Observation.ObservationValueDeserializer());
+
+        return valueAdapter;
     }
 }

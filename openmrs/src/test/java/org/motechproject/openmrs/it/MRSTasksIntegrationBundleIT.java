@@ -1,5 +1,7 @@
 package org.motechproject.openmrs.it;
 
+import com.google.common.base.Joiner;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
@@ -11,9 +13,12 @@ import org.motechproject.config.mds.SettingsDataService;
 import org.motechproject.mds.query.QueryParams;
 import org.motechproject.mds.util.Order;
 import org.motechproject.openmrs.domain.Attribute;
+import org.motechproject.openmrs.domain.Concept;
+import org.motechproject.openmrs.domain.ConceptName;
 import org.motechproject.openmrs.domain.Encounter;
 import org.motechproject.openmrs.domain.EncounterType;
 import org.motechproject.openmrs.domain.Location;
+import org.motechproject.openmrs.domain.Observation;
 import org.motechproject.openmrs.domain.Patient;
 import org.motechproject.openmrs.domain.Person;
 import org.motechproject.openmrs.domain.Provider;
@@ -65,7 +70,9 @@ import java.util.TreeSet;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.motechproject.openmrs.tasks.OpenMRSActionProxyService.DEFAULT_LOCATION_NAME;
 import static org.motechproject.openmrs.util.TestConstants.DEFAULT_CONFIG_NAME;
 
@@ -219,7 +226,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         // Give Tasks some time to process
         assertTrue(waitForTaskExecution(taskID));
 
-        checkIfEncounterWasCreatedProperly();
+        checkIfEncounterWasCreatedProperly(false);
     }
 
     @Test
@@ -235,7 +242,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     }
 
     @Test
-    public void testCreateEncounterPostActionParameter() throws InterruptedException {
+    public void testCreateEncounterPostActionParameter() throws Exception {
         Task task = prepareCreateEncounterPostActionParameterTask();
 
         getTriggerHandler().registerHandlerFor(task.getTrigger().getEffectiveListenerSubject());
@@ -272,6 +279,18 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         Person.Address address = patient.getPerson().getPreferredAddress();
 
         assertEquals(firstPatientUuid, address.getAddress1());
+    }
+
+    @Test
+    public void testCreateEncounterActionWithGroupedObservations() throws Exception {
+        Long taskID = prepareCreateEncounterWithObsTask();
+
+        activateTrigger();
+
+        // Give Tasks some time to process
+        assertTrue(waitForTaskExecution(taskID));
+
+        checkIfEncounterWasCreatedProperly(true);
     }
 
     private Long createPatientTestTask() {
@@ -388,18 +407,31 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         createdEncounter = encounterService.createEncounter(DEFAULT_CONFIG_NAME, encounter);
     }
 
-    private Task prepareCreateEncounterPostActionParameterTask() {
+    private Task prepareCreateEncounterPostActionParameterTask() throws Exception {
         TaskTriggerInformation triggerInformation = new TaskTriggerInformation("CREATE SettingsRecord", "data-services", MDS_CHANNEL_NAME,
                 VERSION, TRIGGER_SUBJECT, TRIGGER_SUBJECT);
 
         ArrayList<TaskActionInformation> taskActions = new ArrayList();
-        taskActions.add(prepareCreateEncounterActionInformation());
+        taskActions.add(prepareCreateEncounterActionInformation(false));
         taskActions.add(prepareCreatePatientActionInformation("{{pa.0.uuid}}", "Jacob Lee", false));
 
         Task task = new Task("OpenMRSEncounterPostActionParameterTestTask", triggerInformation, taskActions, new TaskConfig(), true, true);
         getTaskService().save(task);
 
         return task;
+    }
+
+    private Long prepareCreateEncounterWithObsTask() throws Exception {
+        TaskTriggerInformation triggerInformation = new TaskTriggerInformation("CREATE SettingsRecord", "data-services", MDS_CHANNEL_NAME,
+                VERSION, TRIGGER_SUBJECT, TRIGGER_SUBJECT);
+
+        ArrayList<TaskActionInformation> taskActions = new ArrayList();
+        taskActions.add(prepareCreateEncounterActionInformation(true));
+
+        Task task = new Task("OpenMRSEncounterWithObsTestTask", triggerInformation, taskActions, new TaskConfig(), true, true);
+        getTaskService().save(task);
+
+        return task.getId();
     }
 
     private Task prepareCreatePatientPostActionParameterTask(){
@@ -451,7 +483,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         return actionInformation;
     }
 
-    private TaskActionInformation prepareCreateEncounterActionInformation(){
+    private TaskActionInformation prepareCreateEncounterActionInformation(boolean withObs) throws ConceptNameAlreadyInUseException {
         TaskActionInformation actionInformation = new TaskActionInformation("Create Encounter [" + DEFAULT_CONFIG_NAME + "]", OPENMRS_CHANNEL_NAME,
                 OPENMRS_CHANNEL_NAME, VERSION, TEST_INTERFACE, "createEncounter");
         actionInformation.setSubject(String.format("createEncounter.%s", DEFAULT_CONFIG_NAME));
@@ -460,9 +492,15 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         values.put(Keys.PROVIDER_UUID, createdProvider.getUuid());
         values.put(Keys.PATIENT_UUID, createdPatient.getUuid());
         values.put(Keys.ENCOUNTER_TYPE, createdEncounterType.getUuid());
-        values.put(Keys.ENCOUNTER_DATE, new DateTime("2015-01-16T00:00:00Z").toString());
+        values.put(Keys.ENCOUNTER_DATE, encounterDateTime.toString());
         values.put(Keys.LOCATION_NAME, DEFAULT_LOCATION_NAME);
         values.put(Keys.CONFIG_NAME, DEFAULT_CONFIG_NAME);
+
+        if (withObs) {
+            String obs = Joiner.on('\n').withKeyValueSeparator(":").join(prepareObservations());
+            values.put(Keys.OBSERVATION, obs);
+        }
+
         actionInformation.setValues(values);
 
         return actionInformation;
@@ -614,7 +652,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         assertEquals(createdPatient.getPerson().getDisplay(), actualName.getGivenName());
     }
 
-    private void checkIfEncounterWasCreatedProperly() {
+    private void checkIfEncounterWasCreatedProperly(boolean withObs) {
         List<Encounter> encounterList = encounterService.getEncountersByEncounterType(DEFAULT_CONFIG_NAME, MOTECH_ID, createdEncounterType.getUuid());
 
         assertEquals(2, encounterList.size());
@@ -623,8 +661,13 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
             if (!Objects.equals(encounter.getUuid(), createdEncounter.getUuid())) {
                 assertEquals(createdEncounter.getPatient().getUuid(), encounter.getPatient().getUuid());
                 assertEquals(createdEncounter.getEncounterType().getUuid(), encounter.getEncounterType().getUuid());
-                assertEquals(createdEncounter.getVisit().getUuid(), encounter.getVisit().getUuid());
                 assertEquals(createdEncounter.getEncounterDatetime(), encounter.getEncounterDatetime());
+
+                if (withObs) {
+                    checkEncounterObs(encounter.getObs());
+                } else {
+                    assertEquals(createdEncounter.getVisit().getUuid(), encounter.getVisit().getUuid());
+                }
             }
         }
     }
@@ -637,6 +680,78 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         assertEquals(createdProvider.getUuid(), address.getAddress1());
         assertEquals(createdProvider.getIdentifier(), address.getAddress2());
         assertEquals(createdProvider.getPerson().getUuid(), address.getAddress3());
+    }
+
+    private Map<String, String> prepareObservations() throws ConceptNameAlreadyInUseException {
+        Map<String, String> observations = new HashMap<>();
+
+        String parent = createConcept("Concept1");
+        String child1 = createConcept("Concept2");
+        String child1Child1 = createConcept("Concept3");
+        String child1Child2 = createConcept("Concept4");
+        String child2 = createConcept("Concept5");
+        String child3 = createConcept("Concept6");
+
+        observations.put(parent + "/" + child1 + "/" + child1Child1, "Yes");
+        observations.put(parent + "/" + child1 + "/" + child1Child2, "No");
+        observations.put(parent + "/" + child2, "2nd");
+        observations.put(parent + "/" + child3, "Maybe");
+
+        return observations;
+    }
+
+    private String createConcept(String name) throws ConceptNameAlreadyInUseException {
+        Concept concept = new Concept();
+        ConceptName conceptName = new ConceptName(name);
+
+        concept.setNames(Collections.singletonList(conceptName));
+        concept.setDatatype(new Concept.DataType("TEXT"));
+        concept.setConceptClass(new Concept.ConceptClass("Test"));
+
+        return conceptService.createConcept(DEFAULT_CONFIG_NAME, concept).getUuid();
+    }
+
+    private void checkEncounterObs(List<Observation> observations) {
+        assertEquals(1L, observations.size());
+
+        Observation observation = observations.get(0);
+
+        assertNull(observation.getValue());
+        isConceptEquals(observation, "Concept1");
+
+        List<Observation> groupMembers = observation.getGroupMembers();
+        assertEquals(3L, groupMembers.size());
+
+        for (Observation obs : groupMembers) {
+            if (isConceptEquals(obs, "Concept2")) {
+                assertNull(obs.getValue());
+
+                List<Observation> childGroupMembers = obs.getGroupMembers();
+                assertEquals(2L, childGroupMembers.size());
+
+                for (Observation childObs : childGroupMembers) {
+                    if (isConceptEquals(obs, "Concept3")) {
+                        assertEquals("Yes", childObs.getValue().getDisplay());
+                    } else if (isConceptEquals(obs, "Concept4")) {
+                        assertEquals("No", childObs.getValue().getDisplay());
+                    } else {
+                        fail();
+                    }
+                }
+            } else if (isConceptEquals(obs, "Concept5")) {
+                assertEquals("2nd", obs.getValue().getDisplay());
+                assertEquals(0L, obs.getGroupMembers().size());
+            } else if (isConceptEquals(obs, "Concept6")) {
+                assertEquals("Maybe", obs.getValue().getDisplay());
+                assertEquals(0L, obs.getGroupMembers().size());
+            } else {
+                fail();
+            }
+        }
+    }
+
+    private boolean isConceptEquals(Observation obs, String conceptName) {
+        return StringUtils.equals(obs.getConcept().getDisplay(), conceptName);
     }
 
     private void activateTrigger() {
