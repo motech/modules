@@ -123,7 +123,7 @@ public class CaseActionBuilder implements ActionBuilder {
                     .setDisplayName(DisplayNames.OWNER_ID)
                     .setKey(EventDataKeys.OWNER_ID)
                     .setType(UNICODE.getValue())
-                    .setRequired(true)
+                    .setRequired(false)
                     .setOrder(order++);
             parameters.add(builder.createActionParameterRequest());
 
