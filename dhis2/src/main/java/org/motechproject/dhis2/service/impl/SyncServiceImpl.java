@@ -66,7 +66,7 @@ public class SyncServiceImpl implements SyncService {
 
     @Override
     @Transactional
-    public boolean sync() {
+    public synchronized boolean sync() {
         LOGGER.debug("Starting Sync");
         try {
             long startTime = System.nanoTime();
