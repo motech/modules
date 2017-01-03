@@ -4,7 +4,7 @@
     /* Controllers */
     var controllers = angular.module('dhis2.controllers', []);
 
-    controllers.controller('Dhis2SettingsCtrl', function ($scope, $http) {
+    controllers.controller('Dhis2SettingsCtrl', function ($scope, Sync, $http) {
 
             $scope.retrievalError = false;
             $scope.updateError = false;
@@ -18,21 +18,9 @@
                     $scope.retrievalError = true;
                 });
 
-            $scope.sync = function () {
-                $scope.blocked = true;
-                $scope.success = null;
-                $http.get('../dhis2/sync')
-
-                    .success(function (response) {
-                        $scope.blocked = false;
-                        $scope.success = response;
-                    })
-
-                    .error(function (response) {
-                        $scope.blocked = false;
-                        $scope.success = false;
-                    })
-            };
+            $scope.sync = Sync.sync;
+            $scope.isSyncing = Sync.isSyncing;
+            $scope.success = Sync.isLastSuccessful;
 
             $scope.submit = function () {
                 if(!$scope.settings.serverURI.match("^https?:\/\/.+")) {
