@@ -351,14 +351,11 @@ public class MRSEncounterServiceIT extends BasePaxIT {
     }
 
     private void prepareObservations() throws ParseException {
-        Observation tempObservation = new Observation();
+        observation = new Observation();
 
-        tempObservation.setObsDatetime(format.parse(date));
-        tempObservation.setConcept(concept);
-        tempObservation.setValue(new Observation.ObservationValue("true"));
-        tempObservation.setPerson(patient.getPerson());
-
-        String observationUuid = obsAdapter.createObservation(DEFAULT_CONFIG_NAME, tempObservation).getUuid();
-        observation = obsAdapter.getObservationByUuid(DEFAULT_CONFIG_NAME, observationUuid);
+        observation.setObsDatetime(format.parse(date));
+        observation.setConcept(concept);
+        observation.setValue(new Observation.ObservationValue("True"));
+        observation.setPerson(patient.getPerson());
     }
 }

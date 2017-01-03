@@ -95,7 +95,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         EncounterType type = new EncounterType(null, encounterType);
 
         //While creating observations, the encounterDateTime is used as a obsDateTime.
-        List<Observation> observationList = MapUtils.isNotEmpty(observations) ? convertObservationMapToList(observations, encounterDatetime, patient.getPerson()) : null;
+        List<Observation> observationList = MapUtils.isNotEmpty(observations) ? convertObservationMapToList(observations, encounterDatetime) : null;
 
         Encounter encounter = new Encounter(location, type, encounterDatetime.toDate(), patient, visit, Collections.singletonList(provider.getPerson()), observationList, form);
         return encounterService.createEncounter(configName, encounter);
@@ -345,7 +345,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         return identifierList;
     }
 
-    private List<Observation> convertObservationMapToList(Map<String, String> observations, DateTime obsDatetime, Person person) {
+    private List<Observation> convertObservationMapToList(Map<String, String> observations, DateTime obsDatetime) {
         List<Observation> observationList = new ArrayList<>();
         List<Observation> observationChildren = new ArrayList<>();
         List<Observation> observationParents = new ArrayList<>();
@@ -360,19 +360,19 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
                         String concept = concepts[i];
 
                         if (i == 0) {
-                            createOrUpdateObservation(observationParents, concept, obsDatetime, childrenObservation, person);
+                            createOrUpdateObservation(observationParents, concept, obsDatetime, childrenObservation);
                         } else if (i == concepts.length - 1) {
                             String value = observations.get(observationConceptPath);
-                            childrenObservation = createObservation(concept, obsDatetime, value, null, person);
+                            childrenObservation = createObservation(concept, obsDatetime, value, null);
                         } else {
-                            childrenObservation = createOrUpdateObservation(observationChildren, concept, obsDatetime, childrenObservation, person);
+                            childrenObservation = createOrUpdateObservation(observationChildren, concept, obsDatetime, childrenObservation);
                         }
                     }
                 } else {
                     String[] observationValues = observations.get(observationConceptPath).replace(", ", ",").split(",");
                     for (String value : observationValues) {
                         if (StringUtils.isNotEmpty(value)) {
-                            observationList.add(createObservation(observationConceptPath, obsDatetime, value, null, person));
+                            observationList.add(createObservation(observationConceptPath, obsDatetime, value, null));
                         }
                     }
                 }
@@ -390,10 +390,10 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         return StringUtils.isNotEmpty(map.get(key));
     }
 
-    private Observation createOrUpdateObservation(List<Observation> observationList, String concept, DateTime obsDatetime, Observation childrenObservation, Person person) {
+    private Observation createOrUpdateObservation(List<Observation> observationList, String concept, DateTime obsDatetime, Observation childrenObservation) {
         Observation observation = getObservation(observationList, concept, null);
         if (observation == null) {
-            observation = createObservation(concept, obsDatetime, null, childrenObservation, person);
+            observation = createObservation(concept, obsDatetime, null, childrenObservation);
             observationList.add(observation);
         } else if (getObservation(observation.getGroupMembers(), childrenObservation) == null){
             observation.getGroupMembers().add(childrenObservation);
@@ -402,13 +402,12 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         return observation;
     }
 
-    private Observation createObservation(String observationConceptUuid, DateTime obsDatetime, String value, Observation childrenObs, Person person) {
+    private Observation createObservation(String observationConceptUuid, DateTime obsDatetime, String value, Observation childrenObs) {
         Observation observation = new Observation();
 
         Concept concept = new Concept();
         concept.setUuid(observationConceptUuid);
         observation.setConcept(concept);
-        observation.setPerson(person);
 
         observation.setObsDatetime(obsDatetime.toDate());
 

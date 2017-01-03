@@ -215,12 +215,14 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
                 if (CollectionUtils.isNotEmpty(nestedObservation.getGroupMembers())) {
                     nestedObservations.add(nestedObservation);
                 } else {
+                    nestedObservation.setPerson(encounter.getPatient().getPerson());
                     groupMembers.add(nestedObservation);
                 }
             }
 
             observationToCreate.setGroupMembers(groupMembers);
             observationToCreate.setEncounter(encounter);
+            observationToCreate.setPerson(encounter.getPatient().getPerson());
 
             Observation createdObservation = observationService.createObservation(configName, observationToCreate);
 
