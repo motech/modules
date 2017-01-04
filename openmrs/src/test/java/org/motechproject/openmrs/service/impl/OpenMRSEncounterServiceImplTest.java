@@ -13,6 +13,7 @@ import org.motechproject.openmrs.exception.OpenMRSException;
 import org.motechproject.openmrs.resource.EncounterResource;
 import org.motechproject.openmrs.service.OpenMRSConceptService;
 import org.motechproject.openmrs.service.OpenMRSConfigService;
+import org.motechproject.openmrs.service.OpenMRSObservationService;
 import org.motechproject.openmrs.service.OpenMRSPatientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
@@ -33,6 +34,9 @@ public class OpenMRSEncounterServiceImplTest {
     private OpenMRSPatientService patientService;
 
     @Mock
+    private OpenMRSObservationService observationService;
+
+    @Mock
     private OpenMRSConceptService conceptService;
 
     @Mock
@@ -48,7 +52,7 @@ public class OpenMRSEncounterServiceImplTest {
     private Config config;
 
     @InjectMocks
-    private OpenMRSEncounterServiceImpl encounterServiceImpl = new OpenMRSEncounterServiceImpl(encounterResource, patientService, eventRelay, configService);
+    private OpenMRSEncounterServiceImpl encounterServiceImpl = new OpenMRSEncounterServiceImpl(encounterResource, patientService, observationService, eventRelay, configService);
 
 
     @Test(expected = OpenMRSException.class)
