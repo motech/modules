@@ -10,6 +10,7 @@ import org.motechproject.openmrs.domain.Encounter;
 import org.motechproject.openmrs.domain.EncounterType;
 import org.motechproject.openmrs.domain.Observation;
 import org.motechproject.openmrs.domain.Patient;
+import org.motechproject.openmrs.domain.Person;
 import org.motechproject.openmrs.exception.OpenMRSException;
 import org.motechproject.openmrs.helper.EventHelper;
 import org.motechproject.openmrs.resource.EncounterResource;
@@ -215,14 +216,14 @@ public class OpenMRSEncounterServiceImpl implements OpenMRSEncounterService {
                 if (CollectionUtils.isNotEmpty(nestedObservation.getGroupMembers())) {
                     nestedObservations.add(nestedObservation);
                 } else {
-                    nestedObservation.setPerson(encounter.getPatient().getPerson());
+                    nestedObservation.setPerson(new Person(encounter.getPatient().getUuid()));
                     groupMembers.add(nestedObservation);
                 }
             }
 
             observationToCreate.setGroupMembers(groupMembers);
             observationToCreate.setEncounter(encounter);
-            observationToCreate.setPerson(encounter.getPatient().getPerson());
+            observationToCreate.setPerson(new Person(encounter.getPatient().getUuid()));
 
             Observation createdObservation = observationService.createObservation(configName, observationToCreate);
 
