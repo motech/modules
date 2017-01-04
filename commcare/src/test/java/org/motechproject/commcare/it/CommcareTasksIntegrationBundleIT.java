@@ -528,7 +528,7 @@ public class CommcareTasksIntegrationBundleIT extends AbstractTaskBundleIT {
                 .setDisplayName(DisplayNames.OWNER_ID)
                 .setKey(EventDataKeys.OWNER_ID)
                 .setType(ParameterType.UNICODE)
-                .setRequired(true)
+                .setRequired(false)
                 .setOrder(order++);
         parameters.add(builder.build());
 
