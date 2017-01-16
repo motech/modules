@@ -5,5 +5,14 @@
     "total": "1",
     "pageSize": "1"
   },
-  "programs": []
+  "programs": [{
+    "id": "programId",
+    "name": "programName",
+    "programType": "programType",
+    "trackedEntity": {
+      "id": "trackedEntities1Id",
+      "name": "trackedEntities1Name"
+    },
+    "href": "http://localhost:9780/api/programs/programId"
+  }]
 }

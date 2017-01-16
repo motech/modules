@@ -17,6 +17,7 @@ public class Dhis2DummyServer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Dhis2DummyServer.class);
 
+    private static final String PROGRAM_ENDPOINT = "/programs/programId";
     private static final String DATA_ELEMENTS_ENDPOINT = "/dataElements";
     private static final String DATA_SETS_ENDPOINT = "/dataSets";
     private static final String ORGANISATION_UNITS_ENDPOINT = "/organisationUnits";
@@ -27,15 +28,13 @@ public class Dhis2DummyServer {
     private static final String TRACKED_ENTITY_ATTRIBUTES_ENDPOINT = "/trackedEntityAttributes";
     private static final String PROGRAM_TRACKED_ENTITY_ATTRIBUTES_ENDPOINT = "/programTrackedEntityAttributes";
 
+    private static final String PROGRAM_RESPONSE = "/json/program-response.json";
     private static final String DATA_ELEMENTS_RESPONSE = "/json/data-elements-response.json";
     private static final String DATA_SETS_RESPONSE = "/json/data-sets-response.json";
     private static final String ORGANISATION_UNITS_RESPONSE = "/json/organisation-units-response.json";
     private static final String PROGRAMS_RESPONSE = "/json/programs-response.json";
-    private static final String PROGRAM_STAGES_RESPONSE = "/json/program-stages-response.json";
-    private static final String PROGRAM_STAGE_DATA_ELEMENTS_RESPONSE = "/json/program-stage-data-elements-response.json";
     private static final String TRACKED_ENTITIES_RESPONSE = "/json/tracked-entities-response.json";
     private static final String TRACKED_ENTITY_ATTRIBUTES_RESPONSE = "/json/tracked-entity-attributes-response.json";
-    private static final String PROGRAM_TRACKED_ENTITY_ATTRIBUTES_RESPONSE = "/json/program-tracked-entity-attributes-response.json";
 
     private Server server;
 
@@ -65,7 +64,9 @@ public class Dhis2DummyServer {
         public void handle(String s, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, int i) throws IOException, ServletException {
             String requestURI = httpServletRequest.getRequestURI().toString();
 
-            if (requestURI.contains(DATA_ELEMENTS_ENDPOINT)) {
+            if (requestURI.contains(PROGRAM_ENDPOINT)) {
+                writeResponse(httpServletResponse, PROGRAM_RESPONSE);
+            } else if (requestURI.contains(DATA_ELEMENTS_ENDPOINT)) {
                 writeResponse(httpServletResponse, DATA_ELEMENTS_RESPONSE);
             } else if (requestURI.contains(DATA_SETS_ENDPOINT)) {
                 writeResponse(httpServletResponse, DATA_SETS_RESPONSE);
@@ -73,16 +74,10 @@ public class Dhis2DummyServer {
                 writeResponse(httpServletResponse, ORGANISATION_UNITS_RESPONSE);
             } else if (requestURI.contains(PROGRAMS_ENDPOINT)) {
                 writeResponse(httpServletResponse, PROGRAMS_RESPONSE);
-            } else if (requestURI.contains(PROGRAM_STAGES_ENDPOINT)) {
-                writeResponse(httpServletResponse, PROGRAM_STAGES_RESPONSE);
-            } else if (requestURI.contains(PROGRAM_STAGE_DATA_ELEMENTS_ENDPOINT)) {
-                writeResponse(httpServletResponse, PROGRAM_STAGE_DATA_ELEMENTS_RESPONSE);
             } else if (requestURI.contains(TRACKED_ENTITIES_ENDPOINT)) {
                 writeResponse(httpServletResponse, TRACKED_ENTITIES_RESPONSE);
             } else if (requestURI.contains(TRACKED_ENTITY_ATTRIBUTES_ENDPOINT)) {
                 writeResponse(httpServletResponse, TRACKED_ENTITY_ATTRIBUTES_RESPONSE);
-            } else if (requestURI.contains(PROGRAM_TRACKED_ENTITY_ATTRIBUTES_ENDPOINT)) {
-                writeResponse(httpServletResponse, PROGRAM_TRACKED_ENTITY_ATTRIBUTES_RESPONSE);
             }
         }
 
