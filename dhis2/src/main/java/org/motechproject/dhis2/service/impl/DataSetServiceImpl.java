@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Implementation of the {@link DataSetService} interface.
  */
-@Service
+@Service("dataSetService")
 public class DataSetServiceImpl implements DataSetService {
 
     @Autowired

@@ -82,4 +82,14 @@
     <osgi:service  ref="trackedEntityInstanceMapperService" interface="org.motechproject.dhis2.service.TrackedEntityInstanceMappingService"/>
     <osgi:service ref="dhisActionProxyService" interface="org.motechproject.dhis2.tasks.DhisActionProxyService"/>
     <osgi:service ref="dhisService" interface="org.motechproject.dhis2.service.DhisService"/>
+
+    <osgi:service ref="trackedEntityService" interface="org.motechproject.dhis2.service.TrackedEntityService"/>
+    <osgi:service ref="trackedEntityAttributeService" interface="org.motechproject.dhis2.service.TrackedEntityAttributeService"/>
+    <osgi:service ref="dataElementService" interface="org.motechproject.dhis2.service.DataElementService"/>
+    <osgi:service ref="dataSetService" interface="org.motechproject.dhis2.service.DataSetService"/>
+    <osgi:service ref="orgUnitService" interface="org.motechproject.dhis2.service.OrgUnitService"/>
+    <osgi:service ref="programService" interface="org.motechproject.dhis2.service.ProgramService"/>
+    <osgi:service ref="stageService" interface="org.motechproject.dhis2.service.StageService"/>
+    <osgi:service ref="syncService" interface="org.motechproject.dhis2.service.SyncService"/>
+
 </beans>
