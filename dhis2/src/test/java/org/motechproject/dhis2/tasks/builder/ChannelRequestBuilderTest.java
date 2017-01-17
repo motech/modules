@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class ChannelRequestBuilderTest {
 
-    public static final String TEST_VERSION = "2.22";
+    private static final String TEST_VERSION = "2.22";
 
     @Mock
     private ProgramService programService;
@@ -190,30 +190,18 @@ public class ChannelRequestBuilderTest {
     }
 
     private List<ActionEventRequest> prepareProgramActionEventRequests() {
-        ProgramActionBuilder builder = new ProgramActionBuilder();
-        List<ActionEventRequest> result = builder.build(programs, serverVersion);
-
-        return result;
+        return new ProgramActionBuilder().build(programs, serverVersion);
     }
 
     private List<ActionEventRequest> prepareStagesActionEventRequests() {
-        StageActionBuilder builder = new StageActionBuilder();
-        List<ActionEventRequest> result = builder.build(stages);
-
-        return result;
+        return new StageActionBuilder().build(stages);
     }
 
     private List<ActionEventRequest> prepareInstanceActionEventRequests() {
-        CreateInstanceActionBuilder builder = new CreateInstanceActionBuilder();
-        List<ActionEventRequest> result = builder.build(attributes, trackedEntities);
-
-        return result;
+        return new CreateInstanceActionBuilder().build(attributes, trackedEntities);
     }
 
     private List<ActionEventRequest> prepareDataSetsActionEventRequests() {
-        SendDataValueSetActionBuilder builder = new SendDataValueSetActionBuilder();
-        List<ActionEventRequest> result = builder.addSendDataValueSetActions(dataSets);
-
-        return result;
+        return new SendDataValueSetActionBuilder().addSendDataValueSetActions(dataSets);
     }
 }

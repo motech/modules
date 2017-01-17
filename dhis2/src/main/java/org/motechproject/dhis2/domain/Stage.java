@@ -30,6 +30,16 @@ public class Stage {
     @Field
     private boolean registration;
 
+    public Stage() {}
+
+    public Stage(String uuid, String name, List<DataElement> dataElements, String program, boolean registration) {
+        this.uuid = uuid;
+        this.name = name;
+        this.dataElements = dataElements;
+        this.program = program;
+        this.registration = registration;
+    }
+
     public boolean hasRegistration() {
         return registration;
     }

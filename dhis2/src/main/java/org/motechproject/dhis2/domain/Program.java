@@ -41,6 +41,19 @@ public class Program {
     @Field
     private String programType;
 
+    public Program() {}
+
+    public Program(String uuid, String name, TrackedEntity trackedEntity, List<Stage> stages,
+                   List<TrackedEntityAttribute> attributes, boolean singleEvent, boolean registration, String programType) {
+        this.uuid = uuid;
+        this.name = name;
+        this.trackedEntity = trackedEntity;
+        this.stages = stages;
+        this.attributes = attributes;
+        this.singleEvent = singleEvent;
+        this.registration = registration;
+        this.programType = programType;
+    }
 
     public boolean isSingleEvent() {
         return singleEvent;
