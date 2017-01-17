@@ -6,6 +6,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.domain.Concept;
+import org.motechproject.openmrs.domain.Encounter;
 import org.motechproject.openmrs.domain.Observation;
 import org.motechproject.openmrs.domain.ObservationListResult;
 import org.motechproject.openmrs.domain.Person;
@@ -30,7 +31,7 @@ public class ObservationResourceImpl extends BaseResource implements Observation
     @Override
     public ObservationListResult queryForObservationsByPatientId(Config config, String uuid) {
         String responseJson = getJson(config, "/obs?patient={uuid}&v=full", uuid);
-        return (ObservationListResult) JsonUtils.readJson(responseJson, ObservationListResult.class);
+        return (ObservationListResult) JsonUtils.readJsonWithAdapters(responseJson, ObservationListResult.class, createValueAdapter());
     }
 
     @Override
@@ -44,23 +45,21 @@ public class ObservationResourceImpl extends BaseResource implements Observation
 
     @Override
     public Observation getObservationById(Config config, String uuid) {
-        Map<Type, Object> adapter = new HashMap<>();
-        adapter.put(Observation.ObservationValue.class, new Observation.ObservationValueDeserializer());
         String responseJson = getJson(config, "/obs/{uuid}?v=full", uuid);
-        return (Observation) JsonUtils.readJsonWithAdapters(responseJson, Observation.class, adapter);
+        return (Observation) JsonUtils.readJsonWithAdapters(responseJson, Observation.class, createValueAdapter());
     }
 
     @Override
     public ObservationListResult getObservationByPatientUUIDAndConceptUUID(Config config, String patientUUID, String conceptUUID) {
-        String responseJson = getJson(config, "/obs?patient={patientUUID}&concept={conceptUUID}&limit=1", patientUUID, conceptUUID);
-        return (ObservationListResult) JsonUtils.readJson(responseJson, ObservationListResult.class);
+        String responseJson = getJson(config, "/obs?patient={patientUUID}&concept={conceptUUID}&limit=1&v=full", patientUUID, conceptUUID);
+        return (ObservationListResult) JsonUtils.readJsonWithAdapters(responseJson, ObservationListResult.class, createValueAdapter());
     }
 
     @Override
     public Observation createObservation(Config config, Observation observation) {
         String requestJson = buildGson().toJson(observation);
         String responseJson = postForJson(config, requestJson, "/obs");
-        return (Observation) JsonUtils.readJson(responseJson, Observation.class);
+        return (Observation) JsonUtils.readJsonWithAdapters(responseJson, Observation.class, createValueAdapter());
     }
 
     @Override
@@ -79,6 +78,7 @@ public class ObservationResourceImpl extends BaseResource implements Observation
                 .registerTypeAdapter(Observation.ObservationValue.class, new Observation.ObservationValueSerializer())
                 .registerTypeAdapter(Concept.class, new Concept.ConceptSerializer())
                 .registerTypeAdapter(Person.class, new Person.PersonSerializer())
+                .registerTypeAdapter(Encounter.class, new Encounter.EncounterUuidSerializer())
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
     }
 

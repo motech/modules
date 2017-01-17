@@ -208,7 +208,7 @@
                         <Export-Package>
                             org.motechproject.commcare.builder;version=${project.version},
                             org.motechproject.commcare.config;version=${project.version},
-                            org.motechproject.commcare.domain;version=${project.version},
+                            org.motechproject.commcare.domain.*;version=${project.version},
                             org.motechproject.commcare.events;version=${project.version},
                             org.motechproject.commcare.events.constants;version=${project.version},
                             org.motechproject.commcare.exception;version=${project.version},

@@ -33,10 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
@@ -51,6 +48,7 @@ public class CommcareFormImporterTest {
     private static final String CONFIG_NAME = "Bihar";
     private static final int TOTAL_COUNT = 5;
     private static final String FORM = "form";
+    private static final String FORM_ID = "id0";
 
     private static final String ATTR_KEY1 = "attr1";
     private static final String ATTR_KEY2 = "attr2";
@@ -112,6 +110,32 @@ public class CommcareFormImporterTest {
     }
 
     @Test
+    public void shouldImportFormById() {
+        importer.startImportById(new String(), CONFIG_NAME);
+
+        ArgumentCaptor<String> requestCaptor = ArgumentCaptor.forClass(String.class);
+        verify(formService).retrieveForm(requestCaptor.capture(), eq(CONFIG_NAME));
+
+        ArgumentCaptor<MotechEvent> eventCaptor = ArgumentCaptor.forClass(MotechEvent.class);
+        verify(eventRelay).sendEventMessage(eventCaptor.capture());
+
+        verifyFormEvent(eventCaptor.getAllValues().get(0), FORM_ID, REC_DATES.get(0));
+
+
+        // verify status
+        FormImportStatus status = importer.importStatus();
+
+        assertNotNull(status);
+        assertNull(status.getErrorMsg());
+        assertFalse(status.isError());
+        assertEquals(1, status.getFormsImported());
+        assertEquals(1, status.getTotalForms());
+        assertEquals(CommcareParamHelper.printDateTime(REC_DATES.get(0)), status.getLastImportDate());
+        assertEquals("id0", status.getLastImportFormId());
+        assertFalse(status.isImportInProgress());
+    }
+
+    @Test
     public void shouldCountFormsForImport() {
         long count = importer.countForImport(new Range<>(START, END), CONFIG_NAME);
 
@@ -121,6 +145,28 @@ public class CommcareFormImporterTest {
         verify(formService).retrieveFormList(requestCaptor.capture(), eq(CONFIG_NAME));
 
         verifyFormListRequest(requestCaptor.getValue(), 1, 1);
+
+        // verify status didn't change
+        FormImportStatus status = importer.importStatus();
+
+        assertNotNull(status);
+        assertNull(status.getErrorMsg());
+        assertFalse(status.isError());
+        assertEquals(0, status.getFormsImported());
+        assertEquals(0, status.getTotalForms());
+        assertNull(status.getLastImportDate());
+        assertNull(status.getLastImportFormId());
+        assertFalse(status.isImportInProgress());
+    }
+
+    @Test
+    public void shouldCheckFormIdForImport() {
+        boolean answer = importer.checkFormIdForImport(new String(), CONFIG_NAME);
+
+        assertTrue(answer);
+
+        ArgumentCaptor<String> requestCaptor = ArgumentCaptor.forClass(String.class);
+        verify(formService).retrieveForm(requestCaptor.capture(), eq(CONFIG_NAME));
 
         // verify status didn't change
         FormImportStatus status = importer.importStatus();
@@ -189,6 +235,7 @@ public class CommcareFormImporterTest {
         when(formService.retrieveFormList(page(1), eq(CONFIG_NAME))).thenReturn(formList(
            form("id4", REC_DATES.get(4)), form("id3", REC_DATES.get(3))
         ));
+        when(formService.retrieveForm(getFormId("id0"), eq(CONFIG_NAME))).thenReturn(form("id0", REC_DATES.get(0)));
     }
 
     private FormListRequest page(final int page) {
@@ -197,6 +244,16 @@ public class CommcareFormImporterTest {
             public boolean matches(Object argument) {
                 FormListRequest request = (FormListRequest) argument;
                 return request != null && page == request.getPageNumber();
+            }
+        });
+    }
+
+    private String getFormId(final String formId){
+        return argThat(new ArgumentMatcher<String>() {
+            @Override
+            public boolean matches(Object argument) {
+                String answer = argument.toString();
+                return answer != null && formId.equals(FORM_ID);
             }
         });
     }
@@ -247,7 +304,7 @@ public class CommcareFormImporterTest {
 
         Map<String, String> attributes = (Map<String, String>) params.get(EventDataKeys.ATTRIBUTES);
         assertNotNull(attributes);
-        assertEquals(2, attributes.size());
+        assertEquals(3, attributes.size());
         assertEquals(ATTR_KEY1 + " " + id, attributes.get(ATTR_KEY1));
         assertEquals(ATTR_KEY2 + " " + id, attributes.get(ATTR_KEY2));
 

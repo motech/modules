@@ -1,7 +1,7 @@
 package org.motechproject.dhis2.service.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.motechproject.dhis2.domain.DataElement;
-import org.motechproject.dhis2.domain.Program;
 import org.motechproject.dhis2.domain.Stage;
 import org.motechproject.dhis2.domain.TrackedEntity;
 import org.motechproject.dhis2.domain.TrackedEntityAttribute;
@@ -66,7 +66,7 @@ public class SyncServiceImpl implements SyncService {
 
     @Override
     @Transactional
-    public boolean sync() {
+    public synchronized boolean sync() {
         LOGGER.debug("Starting Sync");
         try {
             long startTime = System.nanoTime();
@@ -98,7 +98,11 @@ public class SyncServiceImpl implements SyncService {
         List<DataElementDto> dataElementDtos = dhisWebService.getDataElements();
 
         for (DataElementDto dataElementDto : dataElementDtos) {
-            dataElementService.createFromDetails(dataElementDto);
+            if (StringUtils.isEmpty(dataElementDto.getName())) {
+                dataElementService.createFromDetails(dhisWebService.getDataElementById(dataElementDto.getId()));
+            } else {
+                dataElementService.createFromDetails(dataElementDto);
+            }
         }
     }
 
@@ -117,7 +121,11 @@ public class SyncServiceImpl implements SyncService {
     private void addAttributes()  {
         List<TrackedEntityAttributeDto> trackedEntityAttributeDtos = dhisWebService.getTrackedEntityAttributes();
         for (TrackedEntityAttributeDto trackedEntityAttributeDto : trackedEntityAttributeDtos) {
-            trackedEntityAttributeService.createFromDetails(trackedEntityAttributeDto);
+            if (StringUtils.isEmpty(trackedEntityAttributeDto.getName())) {
+                trackedEntityAttributeService.createFromDetails(dhisWebService.getTrackedEntityAttributeById(trackedEntityAttributeDto.getId()));
+            } else {
+                trackedEntityAttributeService.createFromDetails(trackedEntityAttributeDto);
+            }
         }
     }
 
@@ -128,7 +136,11 @@ public class SyncServiceImpl implements SyncService {
     private void addTrackedEntities() {
         List<TrackedEntityDto> trackedEntityDtos = dhisWebService.getTrackedEntities();
         for (TrackedEntityDto trackedEntityDto : trackedEntityDtos) {
-            trackedEntityService.createFromDetails(trackedEntityDto);
+            if (StringUtils.isEmpty(trackedEntityDto.getName())) {
+                trackedEntityService.createFromDetails(dhisWebService.getTrackedEntityById(trackedEntityDto.getId()));
+            } else {
+                trackedEntityService.createFromDetails(trackedEntityDto);
+            }
         }
     }
 
@@ -146,24 +158,26 @@ public class SyncServiceImpl implements SyncService {
             } else {
                 fullDto = dhisWebService.getProgramByHref(partialDto.getHref());
             }
-            Program program = programService.createFromDetails(fullDto);
 
             /**
              * Request and add the program's sub-objects (tracked entity, program stages, program tracked entity's attributes).
              */
+            TrackedEntity trackedEntity = null;
             if (fullDto.getTrackedEntity() != null) {
-                program.setTrackedEntity(getProgramTrackedEntityFromDto(fullDto.getTrackedEntity()));
+                trackedEntity = getProgramTrackedEntityFromDto(fullDto.getTrackedEntity());
             }
 
+            List<Stage> stages = null;
             if (fullDto.getProgramStages() != null) {
-                program.setStages(getStagesFromDtos(fullDto.getProgramStages(), program.getUuid(), program.hasRegistration()));
+                stages = getStagesFromDtos(fullDto.getProgramStages(), fullDto.getId(), fullDto.getRegistration());
             }
 
+            List<TrackedEntityAttribute> trackedEntityAttributes = null;
             if (fullDto.getProgramTrackedEntityAttributes() != null) {
-                program.setAttributes(getTrackedEntityAttributesFromDtos(fullDto.getProgramTrackedEntityAttributes()));
+                trackedEntityAttributes = getTrackedEntityAttributesFromDtos(fullDto.getProgramTrackedEntityAttributes());
             }
 
-            programService.update(program);
+            programService.createFromDetails(fullDto, trackedEntity, stages, trackedEntityAttributes);
         }
     }
 
@@ -203,8 +217,7 @@ public class SyncServiceImpl implements SyncService {
                 } else {
                     fullDto = dhisWebService.getProgramStageByHref(partialStageDto.getHref());
                 }
-                stage = stageService.createFromDetails(fullDto, programId, hasRegistration);
-                stage.setDataElements(getStageDataElementsFromDtos(fullDto.getProgramStageDataElements()));
+                stage = stageService.createFromDetails(fullDto, programId, hasRegistration, getStageDataElementsFromDtos(fullDto.getProgramStageDataElements()));
             }
             stages.add(stage);
         }
@@ -271,7 +284,11 @@ public class SyncServiceImpl implements SyncService {
     private void addOrgUnits() {
         List<OrganisationUnitDto> orgUnitDtos = dhisWebService.getOrganisationUnits();
         for (OrganisationUnitDto orgUnitDto : orgUnitDtos) {
-            orgUnitService.createFromDetails(orgUnitDto);
+            if (StringUtils.isEmpty(orgUnitDto.getName())) {
+                orgUnitService.createFromDetails(dhisWebService.getOrganisationUnitById(orgUnitDto.getId()));
+            } else {
+                orgUnitService.createFromDetails(orgUnitDto);
+            }
         }
     }
 

@@ -1,21 +1,28 @@
 package org.motechproject.commcare.domain.report;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.motechproject.commcare.domain.report.constants.ColumnType;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * Represents a single CommCareHQ {@link ReportMetadataInfo} column.
  */
-public class ReportMetadataColumn {
+public class ReportMetadataColumn implements Serializable {
 
+    private static final long serialVersionUID = - 5218432575178076712L;
+
+    @Expose
     @SerializedName("column_id")
     private String id;
 
+    @Expose
     @SerializedName("display")
     private String display;
 
+    @Expose
     @SerializedName("type")
     private ColumnType type;
 

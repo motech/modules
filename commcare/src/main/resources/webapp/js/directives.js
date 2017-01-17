@@ -52,6 +52,7 @@
                             ngModel.$setViewValue(viewValue);
                         });
                         scope.updateImportRequest('receivedOnStart', viewValue);
+                        scope.updateImportRequest('modifiedDateStart', viewValue);
                     },
                     onChangeMonthYear: function (year, month, inst) {
                         var curDate = elem.datetimepicker("getDate");
@@ -114,6 +115,7 @@
                             ngModel.$setViewValue(viewValue);
                         });
                         scope.updateImportRequest('receivedOnEnd', viewValue);
+                        scope.updateImportRequest('modifiedDateEnd', viewValue);
                     },
                     onChangeMonthYear: function (year, month, inst) {
                         var curDate = $(this).datetimepicker("getDate");

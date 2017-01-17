@@ -12,6 +12,7 @@ public class CaseInfo {
     private String caseId;
     private String userId;
     private String dateClosed;
+    private String dateModified;
     private String domain;
     private List<String> xformIds;
     private String version;
@@ -48,6 +49,14 @@ public class CaseInfo {
 
     public void setDateClosed(String dateClosed) {
         this.dateClosed = dateClosed;
+    }
+
+    public String getDateModified() {
+        return dateModified;
+    }
+
+    public void setDateModified(String dateModified) {
+        this.dateModified = dateModified;
     }
 
     public String getDomain() {

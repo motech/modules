@@ -7,10 +7,11 @@ import org.motechproject.commcare.domain.CommcareForm;
 import org.motechproject.commcare.domain.CommcareFormList;
 import org.motechproject.commcare.events.FullFormEvent;
 import org.motechproject.commcare.events.FullFormFailureEvent;
-import org.motechproject.commcare.events.MalformedFormStatusMessageEvent;
+import org.motechproject.commcare.events.FailedImportStatusMessageEvent;
 import org.motechproject.commcare.request.FormListRequest;
 import org.motechproject.commcare.service.CommcareFormService;
 import org.motechproject.commons.api.Range;
+import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +32,7 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
     private int fetchSize = PAGE_SIZE_FOR_FETCH;
 
     private Thread importThread;
-    private boolean importInProgress = false;
+    private boolean importInProgress;
 
     private int importCount;
     private int totalCount;
@@ -62,6 +63,20 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
 
         return count;
     }
+
+    @Override
+    public boolean checkFormIdForImport(String formId, String configName) {
+        LOGGER.info("Checking form with id {} [config: {}]", formId, configName);
+        CommcareForm form = formService.retrieveForm(formId, configName);
+        if (form.getId() != null) {
+            LOGGER.info("Form with id {} exists", form.getId());
+            return true;
+        } else {
+            LOGGER.info("Form with id {} doesnot exist", formId);
+            return false;
+        }
+    }
+
 
     @Override
     public void startImport(final Range<DateTime> dateRange, final String configName) {
@@ -127,6 +142,22 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
         LOGGER.debug("Starting import thread");
 
         importThread.start();
+    }
+
+    @Override
+    public void startImportById(final String formId, final String configName) {
+        LOGGER.debug("Initiating form import with form id {} [config: {}]",
+                formId, configName);
+        CommcareForm form = formService.retrieveForm(formId, configName);
+        form.getForm().addAttribute("app_id", form.getAppId());
+        FullFormEvent formEvent = new FullFormEvent(form.getForm(), form.getReceivedOn(), form.getConfigName());
+        eventRelay.sendEventMessage(formEvent.toMotechEvent());
+        lastFormXMLNSToBeImported = formEvent.getAttributes().get("xmlns");
+        lastImportedDate = form.getReceivedOn();
+        lastImportedFormId = form.getId();
+        totalCount = 1;
+        importCount = 1;
+        LOGGER.info("Imported form with id {}", formId);
     }
 
     @Override
@@ -196,11 +227,12 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
     private void importFormList(CommcareFormList formList) {
         // iterate backwards
         for (CommcareForm form : Lists.reverse(formList.getObjects())) {
+            form.getForm().addAttribute("app_id", form.getAppId());
             FullFormEvent formEvent = new FullFormEvent(form.getForm(), form.getReceivedOn(), form.getConfigName());
 
             lastFormXMLNSToBeImported = formEvent.getAttributes().get("xmlns");
-
-            eventRelay.sendEventMessage(formEvent.toMotechEvent());
+            MotechEvent motechEvent = formEvent.toMotechEvent();
+            eventRelay.sendEventMessage(motechEvent);
 
             lastImportedDate = form.getReceivedOn();
             lastImportedFormId = form.getId();
@@ -250,7 +282,7 @@ public class CommcareFormImporterImpl implements CommcareFormImporter {
 
         // Trigger a status message in the Admin UI
         String msg = "Error while importing form: " + errorMessage;
-        MalformedFormStatusMessageEvent statusMessageEvent = new MalformedFormStatusMessageEvent(msg);
+        FailedImportStatusMessageEvent statusMessageEvent = new FailedImportStatusMessageEvent(msg);
         eventRelay.sendEventMessage(statusMessageEvent.toMotechEvent());
     }
 }

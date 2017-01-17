@@ -4,6 +4,13 @@ import org.motechproject.commcare.domain.CommcareApplicationJson;
 import org.motechproject.commcare.domain.CommcareModuleJson;
 import org.motechproject.commcare.domain.FormSchemaJson;
 import org.motechproject.commcare.domain.FormSchemaQuestionJson;
+import org.motechproject.commcare.domain.report.ReportMetadataColumn;
+import org.motechproject.commcare.domain.report.ReportMetadataFilter;
+import org.motechproject.commcare.domain.report.ReportMetadataInfo;
+import org.motechproject.commcare.domain.report.ReportsMetadataInfo;
+import org.motechproject.commcare.domain.report.constants.ColumnType;
+import org.motechproject.commcare.domain.report.constants.FilterDataType;
+import org.motechproject.commcare.domain.report.constants.FilterType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,6 +40,34 @@ public final class DummyCommcareSchema {
     public static final String XMLNS4 = "http://openrosa.org/formdesigner/32KE58A2-54C5-1Z4B-AR2S-Z0345995RF9E";
     public static final String XMLNS5 = "http://openrosa.org/formdesigner/13KE58A2-54C5-1Z4B-AR2S-Z0345995RF9E";
 
+    public static final String APP_ID1 = "cef11d974db0f4b69b465df85ef8c826";
+    public static final String APP_ID2 = "053c85550dc563a682ff610dab71f8d5";
+
+    public static final String REPORT_ID1 = "9aab0eeb88555a7b3bc8676883e7379a";
+    public static final String REPORT_ID2 = "9aab0eeb88555a7b4568676883e7379a";
+
+    public static final String REPORT_TITLE1 = "Test Report 1";
+    public static final String REPORT_TITLE2 = "Test Report 2";
+
+    public static final String REPORT_UNICODE_FILTER_SLUG = "unicode_filter";
+    public static final String REPORT_DECIMAL_FILTER_SLUG = "decimal_filter";
+    public static final String REPORT_DATE_FILTER_SLUG = "date_filter";
+    public static final String REPORT_DYNAMIC_UNICODE_FILTER_SLUG = "dynamic_unicode_filter";
+
+    public static final String REPORT_COLUMN1 = "district";
+    public static final String REPORT_COLUMN2 = "number_of_children_visited";
+    public static final String REPORT_COLUMN3 = "owner_name";
+    public static final String REPORT_COLUMN4 = "birth_date";
+    public static final String REPORT_COLUMN5 = "gender";
+    public static final String REPORT_COLUMN6 = "child_age";
+
+    public static final String REPORT_COLUMN1_VALUE = "District";
+    public static final String REPORT_COLUMN2_VALUE = "Number of children visited";
+    public static final String REPORT_COLUMN3_VALUE = "Owner name";
+    public static final String REPORT_COLUMN4_VALUE = "Birth date";
+    public static final String REPORT_COLUMN5_VALUE = "Gender";
+    public static final String REPORT_COLUMN6_VALUE = "Child Age";
+
     public static List<CommcareApplicationJson> getApplicationsForConfigOne() {
         List<CommcareApplicationJson> applicationsInConfig1 = new ArrayList<>();
 
@@ -40,11 +75,13 @@ public final class DummyCommcareSchema {
         Map<String, String> formNames2 = new HashMap<>();
         Map<String, String> formNames3 = new HashMap<>();
         Map<String, String> formNames4 = new HashMap<>();
+        Map<String, String> formNames5 = new HashMap<>();
 
         formNames1.put("en", "form1");
         formNames2.put("en", "form2");
         formNames3.put("en", "form3");
         formNames4.put("en", "form4");
+        formNames5.put("en", "form5");
 
         List<String> fields1 = new ArrayList<>();
         List<String> fields2 = new ArrayList<>();
@@ -99,6 +136,11 @@ public final class DummyCommcareSchema {
         formSchemaJson4.setQuestions(Collections.singletonList(questionJson5));
         formSchemaJson4.setXmlns(XMLNS4);
 
+        FormSchemaJson formSchemaJson5 = new FormSchemaJson();
+        formSchemaJson5.setFormNames(formNames5);
+        formSchemaJson5.setQuestions(Collections.singletonList(questionJson5));
+        formSchemaJson5.setXmlns(XMLNS1);
+
         CommcareModuleJson commcareModuleJson1 = new CommcareModuleJson();
         commcareModuleJson1.setFormSchemas(Arrays.asList(formSchemaJson1, formSchemaJson2));
         commcareModuleJson1.setCaseType("birth");
@@ -114,16 +156,29 @@ public final class DummyCommcareSchema {
         commcareModuleJson3.setCaseType("death");
         commcareModuleJson3.setCaseProperties(fields3);
 
+        CommcareModuleJson commcareModuleJson4 = new CommcareModuleJson();
+        commcareModuleJson4.setFormSchemas(Collections.singletonList(formSchemaJson5));
+        commcareModuleJson4.setCaseType("checkup");
+        commcareModuleJson4.setCaseProperties(fields3);
+
         CommcareApplicationJson commcareApplicationJson1 = new CommcareApplicationJson();
         commcareApplicationJson1.setApplicationName("app1");
+        commcareApplicationJson1.setCommcareAppId(APP_ID1);
         commcareApplicationJson1.setModules(Arrays.asList(commcareModuleJson1, commcareModuleJson2));
 
         CommcareApplicationJson commcareApplicationJson2 = new CommcareApplicationJson();
         commcareApplicationJson2.setApplicationName("app2");
+        commcareApplicationJson2.setCommcareAppId(APP_ID2);
         commcareApplicationJson2.setModules(Collections.singletonList((commcareModuleJson3)));
+
+        CommcareApplicationJson commcareApplicationJson3 = new CommcareApplicationJson();
+        commcareApplicationJson3.setApplicationName("app3");
+        commcareApplicationJson3.setCommcareAppId(null);
+        commcareApplicationJson3.setModules(Collections.singletonList((commcareModuleJson4)));
 
         applicationsInConfig1.add(commcareApplicationJson1);
         applicationsInConfig1.add(commcareApplicationJson2);
+        applicationsInConfig1.add(commcareApplicationJson3);
 
         return applicationsInConfig1;
     }
@@ -156,6 +211,7 @@ public final class DummyCommcareSchema {
 
         CommcareApplicationJson commcareApplicationJson3 = new CommcareApplicationJson();
         commcareApplicationJson3.setApplicationName("app1");
+        commcareApplicationJson3.setCommcareAppId(APP_ID1);
         commcareApplicationJson3.setModules(Collections.singletonList((commcareModuleJson4)));
 
         applicationsInConfig2.add(commcareApplicationJson3);
@@ -191,6 +247,7 @@ public final class DummyCommcareSchema {
 
         CommcareApplicationJson commcareApplicationJson3 = new CommcareApplicationJson();
         commcareApplicationJson3.setApplicationName("app1");
+        commcareApplicationJson3.setCommcareAppId(APP_ID1);
         commcareApplicationJson3.setModules(Collections.singletonList((commcareModuleJson5)));
 
         applicationsInConfig3.add(commcareApplicationJson3);
@@ -221,5 +278,85 @@ public final class DummyCommcareSchema {
         applicationsInConfig.add(commcareApplicationJson);
 
         return applicationsInConfig;
+    }
+
+    public static List<ReportsMetadataInfo> getReportsMetadataForConfigOne() {
+        List<ReportsMetadataInfo> reportsInConfig1 = new ArrayList<>();
+        
+        ReportsMetadataInfo report1 = new ReportsMetadataInfo();
+        
+        List<ReportMetadataInfo> reportsMetadata = new ArrayList<>();
+        
+        ReportMetadataInfo reportOneMetadata = new ReportMetadataInfo();
+        List<ReportMetadataColumn> columnsInReportOne = new ArrayList<>();
+        List<ReportMetadataFilter> filtersInreportOne = new ArrayList<>();
+        
+        columnsInReportOne.add(new ReportMetadataColumn(REPORT_COLUMN1, REPORT_COLUMN1_VALUE, ColumnType.FIELD));
+        columnsInReportOne.add(new ReportMetadataColumn(REPORT_COLUMN2, REPORT_COLUMN2_VALUE, ColumnType.EXPANDED));
+        columnsInReportOne.add(new ReportMetadataColumn(REPORT_COLUMN3, REPORT_COLUMN3_VALUE, ColumnType.PERCENT));
+        
+        filtersInreportOne.add(new ReportMetadataFilter(FilterDataType.DECIMAL, REPORT_DECIMAL_FILTER_SLUG, FilterType.NUMERIC));
+        filtersInreportOne.add(new ReportMetadataFilter(FilterDataType.STRING, REPORT_UNICODE_FILTER_SLUG, FilterType.CHOICE_LIST));
+        filtersInreportOne.add(new ReportMetadataFilter(FilterDataType.STRING, REPORT_DATE_FILTER_SLUG, FilterType.DATE));
+        
+        ReportMetadataInfo reportTwoMetadata = new ReportMetadataInfo();
+        List<ReportMetadataColumn> columnsInReportTwo = new ArrayList<>();
+        List<ReportMetadataFilter> filtersInreportTwo = new ArrayList<>();
+
+        columnsInReportTwo.add(new ReportMetadataColumn(REPORT_COLUMN4, REPORT_COLUMN4_VALUE, ColumnType.FIELD));
+        columnsInReportTwo.add(new ReportMetadataColumn(REPORT_COLUMN5, REPORT_COLUMN5_VALUE, ColumnType.EXPANDED));
+        columnsInReportTwo.add(new ReportMetadataColumn(REPORT_COLUMN6, REPORT_COLUMN6_VALUE, ColumnType.FIELD));
+
+        filtersInreportTwo.add(new ReportMetadataFilter(FilterDataType.DECIMAL, REPORT_DYNAMIC_UNICODE_FILTER_SLUG, FilterType.DYNAMIC_CHOICE_LIST));
+        filtersInreportTwo.add(new ReportMetadataFilter(FilterDataType.STRING, REPORT_UNICODE_FILTER_SLUG, FilterType.CHOICE_LIST));
+        filtersInreportTwo.add(new ReportMetadataFilter(FilterDataType.STRING, REPORT_DATE_FILTER_SLUG, FilterType.DATE));
+
+        reportOneMetadata.setId(REPORT_ID1);
+        reportOneMetadata.setTitle(REPORT_TITLE1);
+        reportOneMetadata.setColumns(columnsInReportOne);
+        reportOneMetadata.setFilters(filtersInreportOne);
+        reportsMetadata.add(reportOneMetadata);
+
+        reportTwoMetadata.setId(REPORT_ID2);
+        reportTwoMetadata.setTitle(REPORT_TITLE2);
+        reportTwoMetadata.setColumns(columnsInReportTwo);
+        reportTwoMetadata.setFilters(filtersInreportTwo);
+        reportsMetadata.add(reportTwoMetadata);
+        
+        report1.setReportMetadataInfoList(reportsMetadata);
+        reportsInConfig1.add(report1);
+        
+        return reportsInConfig1;
+    }
+
+    public static List<ReportsMetadataInfo> getReportsMetadataForConfigTwo() {
+        List<ReportsMetadataInfo> reportsInConfig2 = new ArrayList<>();
+        ReportsMetadataInfo report1 = new ReportsMetadataInfo();
+        List<ReportMetadataInfo> reportsMetadata = new ArrayList<>();
+
+        ReportMetadataInfo reportOneMetadata = new ReportMetadataInfo();
+
+        List<ReportMetadataColumn> columnsInReportOne = new ArrayList<>();
+        List<ReportMetadataFilter> filtersInreportOne = new ArrayList<>();
+
+        columnsInReportOne.add(new ReportMetadataColumn(REPORT_COLUMN6, REPORT_COLUMN6_VALUE, ColumnType.FIELD));
+        columnsInReportOne.add(new ReportMetadataColumn(REPORT_COLUMN5, REPORT_COLUMN5_VALUE, ColumnType.EXPANDED));
+        columnsInReportOne.add(new ReportMetadataColumn(REPORT_COLUMN4, REPORT_COLUMN4_VALUE, ColumnType.PERCENT));
+
+        filtersInreportOne.add(new ReportMetadataFilter(FilterDataType.DECIMAL, REPORT_DECIMAL_FILTER_SLUG, FilterType.NUMERIC));
+        filtersInreportOne.add(new ReportMetadataFilter(FilterDataType.STRING, REPORT_UNICODE_FILTER_SLUG, FilterType.CHOICE_LIST));
+        filtersInreportOne.add(new ReportMetadataFilter(FilterDataType.STRING, REPORT_DATE_FILTER_SLUG, FilterType.DATE));
+
+        reportOneMetadata.setId(REPORT_ID1);
+        reportOneMetadata.setTitle(REPORT_TITLE1);
+        reportOneMetadata.setColumns(columnsInReportOne);
+        reportOneMetadata.setFilters(filtersInreportOne);
+        reportsMetadata.add(reportOneMetadata);
+
+        report1.setReportMetadataInfoList(reportsMetadata);
+
+        reportsInConfig2.add(report1);
+
+        return reportsInConfig2;
     }
 }

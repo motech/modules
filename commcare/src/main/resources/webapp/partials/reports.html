@@ -1,0 +1,166 @@
+<div ng-if="!selectedConfig" class="row inside">
+    <div class="alert alert-info">
+        <p>&nbsp;{{msg('commcare.alert.info.noConfigurationsDefined')}}</p>
+    </div>
+</div>
+
+<div ng-if="selectedConfig" class="row">
+
+    <div class="form-inline toolbox">
+        <label class="form-group">{{msg('commcare.selectConfig')}}: </label>
+        <select class="form-control largeCombobox" ng-model="$parent.selectedConfig" ng-options="config.name for config in $parent.configurations.configs | filterUnsavedConfig:newlyCreatedConfig">
+            <option ng-if="!$parent.selectedConfig || (selectedConfig === newlyCreatedConfig)" value="">{{msg('commcare.select')}}</option>
+        </select>
+    </div>
+
+    <div ng-if="reportError" class="connection-status connection-error alert alert-danger">
+        <h4>{{msg('commcare.alert.warning')}}</h4>
+        <span class="margin-left1">{{msg('commcare.error.reports')}}</span>
+    </div>
+
+    <div ng-if="!reportError" class="col-lg-12 col-md-12 col-sm-12 row">
+        <h4 class="margin-before2 frame-title">{{msg('commcare.reports.reportDetails')}}</h4>
+        <div ng-repeat="report in reports[0].reportMetadataInfoList">
+            <div class="report-schema">
+                <div class="module-header">{{report.title}}</div>
+                <div class="report-schema-group">
+                    <div class="report-columns">
+                        <div class="report-column-title">{{msg('commcare.reports.columnsTitle')}} <a class="caret" data-toggle="collapse" data-target="#report-column-list-{{$index}}"></a></div>
+
+                        <div id="report-column-list-{{$index}}" class="collapse">
+                            <div class="report-column" ng-repeat="column in report.columns">
+                                <span class="report-column-name">{{column.display}}</span>
+                                <button class="btn btn-default" data-toggle="modal" href="#report-schema-column-{{$parent.$index}}-{{$index}}">{{msg('commcare.view')}}</button>
+
+                                <div id="report-schema-column-{{$parent.$index}}-{{$index}}" class="modal fade commcare report" tabindex="-1" role="dialog">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                <h4 class="modal-title">{{msg('commcare.reports.title')}}: <em>{{report.title}}</em></h4>
+                                            </div>
+
+                                            <div class="modal-body clear">
+                                                <p>{{msg('commcare.report.columnTitle')}}:</p>
+                                                    <table class="table table-bordered">
+                                                        <tr>
+                                                            <td>{{msg('commcare.report.columnId')}}</td>
+                                                            <td>{{column.id}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>{{msg('commcare.report.columnDisplay')}}</td>
+                                                            <td>{{column.display}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>{{msg('commcare.report.columnType')}}</td>
+                                                            <td>{{column.type}}</td>
+                                                        </tr>
+                                                    </table>
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <button class="btn btn-default" data-dismiss="modal">
+                                                    {{msg('commcare.close')}}
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button class="btn btn-default" data-toggle="modal" href="#report-schema-column-{{$parent.$index}}-{{$index}}-json">{{msg('commcare.json')}}</button>
+                                <div id="report-schema-column-{{$parent.$index}}-{{$index}}-json" class="modal fade commcare report" tabindex="-1" role="dialog">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                <h4 class="modal-title">{{msg('commcare.reports.title')}}: <em>{{report.title}}</em></h4>
+                                            </div>
+                                            <div class="modal-body clear">
+                                                <p>{{msg('commcare.report.columnTitle')}}:</p>
+                                                <pre>{{formatJson(column)}}</pre>
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <button class="btn btn-default" data-dismiss="modal">
+                                                    {{msg('commcare.close')}}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="report-filters">
+                        <span class="report-title">{{msg('commcare.reports.filtersTitle')}}</span>
+                        <button class="btn btn-default" data-toggle="modal" href="#report-schema-filter-{{$index}}">{{msg('commcare.view')}}</button>
+
+                        <div id="report-schema-filter-{{$index}}" class="modal fade commcare report" tabindex="-1" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">{{msg('commcare.reports.title')}}: <em>{{report.title}}</em></h4>
+                                    </div>
+
+                                    <div class="modal-body clear">
+                                        <p>{{msg('commcare.report.filterTitle')}}:</p>
+                                        <table class="table table-bordered" ng-repeat="filter in report.filters">
+                                            <tr>
+                                                <td>{{msg('commcare.report.filterDataType')}}</td>
+                                                <td>{{filter.datatype}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{{msg('commcare.report.filterSlug')}}</td>
+                                                <td>{{filter.slug}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{{msg('commcare.report.filterType')}}</td>
+                                                <td>{{filter.type}}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button class="btn btn-default" data-dismiss="modal">
+                                            {{msg('commcare.close')}}
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-default" data-toggle="modal" href="#report-schema-filter-{{$index}}-json">{{msg('commcare.json')}}</button>
+                        <div id="report-schema-filter-{{$index}}-json" class="modal fade commcare report" tabindex="-1" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title">{{msg('commcare.reports.title')}}: <em>{{report.title}}</em></h4>
+                                    </div>
+                                    <div class="modal-body clear">
+                                        <p>{{msg('commcare.report.filterTitle')}}:</p>
+                                        <pre>{{formatJson(report.filters)}}</pre>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button class="btn btn-default" data-dismiss="modal">
+                                            {{msg('commcare.close')}}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

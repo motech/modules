@@ -11,6 +11,7 @@ import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -29,11 +30,11 @@ public class Observation {
     private ObservationValue value;
     private Date obsDatetime;
     private Person person;
-    private List<Observation> groupsMembers;
+    private List<Observation> groupMembers;
     private Boolean voided;
     private String valueModifier;
     private String valueCodedName;
-    private String obsGroup;
+    private Observation obsGroup;
     private Location location;
     private Order order;
     private String comment;
@@ -101,12 +102,16 @@ public class Observation {
         this.person = person;
     }
 
-    public List<Observation> getGroupsMembers() {
-        return groupsMembers;
+    public List<Observation> getGroupMembers() {
+        if (groupMembers == null) {
+            groupMembers = new ArrayList<>();
+        }
+
+        return groupMembers;
     }
 
-    public void setGroupsMembers(List<Observation> groupsMembers) {
-        this.groupsMembers = groupsMembers;
+    public void setGroupMembers(List<Observation> groupMembers) {
+        this.groupMembers = groupMembers;
     }
 
     public Boolean getVoided () {
@@ -133,11 +138,11 @@ public class Observation {
         this.valueCodedName = valueCodedName;
     }
 
-    public String getObsGroup () {
+    public Observation getObsGroup() {
         return obsGroup;
     }
 
-    public void setObsGroup (String obsGroup) {
+    public void setObsGroup(Observation obsGroup) {
         this.obsGroup = obsGroup;
     }
 
@@ -175,7 +180,7 @@ public class Observation {
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, display, concept, encounter, value, obsDatetime, person, groupsMembers, voided,
+        return Objects.hash(uuid, display, concept, encounter, value, obsDatetime, person, groupMembers, voided,
                 valueModifier, valueCodedName, obsGroup, location, order, comment);
     }
 
@@ -194,7 +199,7 @@ public class Observation {
         return Objects.equals(uuid, other.uuid) && Objects.equals(display, other.display)
                 && Objects.equals(concept, other.concept) && Objects.equals(encounter, other.encounter)
                 && Objects.equals(value, other.value) && Objects.equals(obsDatetime, other.obsDatetime)
-                && Objects.equals(person, other.person) && Objects.equals(groupsMembers, other.groupsMembers)
+                && Objects.equals(person, other.person) && Objects.equals(groupMembers, other.groupMembers)
                 && Objects.equals(voided, other.voided) && Objects.equals(valueModifier, other.valueModifier)
                 && Objects.equals(valueCodedName, other.valueCodedName) && Objects.equals(obsGroup, other.obsGroup)
                 && Objects.equals(location, other.location) && Objects.equals(order, other.order)
@@ -220,6 +225,10 @@ public class Observation {
             }
             if (observation.obsDatetime != null) {
                 object.addProperty("obsDatetime", sdf.format(observation.obsDatetime));
+            }
+            if (observation.groupMembers != null) {
+                final JsonElement jsonObs = context.serialize(observation.groupMembers);
+                object.add("groupMembers", jsonObs);
             }
 
             return object;

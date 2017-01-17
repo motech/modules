@@ -1,5 +1,6 @@
-package org.motechproject.dhis2.event;
+package org.motechproject.dhis2.service.impl;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +8,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.motechproject.commons.date.util.JodaFormatter;
 import org.motechproject.dhis2.domain.DataElement;
+import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.exception.DataElementNotFoundException;
 import org.motechproject.dhis2.rest.domain.AttributeDto;
 import org.motechproject.dhis2.rest.domain.DataValueDto;
@@ -20,9 +23,9 @@ import org.motechproject.dhis2.rest.domain.ImportCountDto;
 import org.motechproject.dhis2.rest.domain.TrackedEntityInstanceDto;
 import org.motechproject.dhis2.rest.service.DhisWebService;
 import org.motechproject.dhis2.service.DataElementService;
+import org.motechproject.dhis2.service.DhisService;
 import org.motechproject.dhis2.service.SettingsService;
 import org.motechproject.dhis2.service.TrackedEntityInstanceMappingService;
-import org.motechproject.event.MotechEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,8 +36,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class EventHandlerTest {
-
+public class DhisServiceImplTest {
     private static final String ORGUNIT_ID = "orgUnitID";
     private static final String ENTITY_TYPE_PERSON = "person";
     private static final String ENTITY_INSTANCE_ID = "externalID";
@@ -47,12 +49,10 @@ public class EventHandlerTest {
     private static final String STAGE_ID = "stageId";
     private static final String DATA_ELEMENT_ID = "dataElementID";
     private static final String DATA_ELEMENT_VALUE = "value";
-    private static final String PERIOD = "period";
+    private static final String PERIOD_VALUE = "5 months";
     private static final String CATEGORY_COMBO = "categoryOption";
     private static final String COMMENT = "comment";
     private static final String STATUS = "ACTIVE";
-
-
 
     @Mock
     SettingsService settingsService;
@@ -62,9 +62,11 @@ public class EventHandlerTest {
     private DataElementService dataElementService;
     @Mock
     private DhisWebService dhisWebservice;
+
     private DhisStatusResponse response;
+
     @InjectMocks
-    private EventHandler handler = new EventHandler();
+    private DhisService dhisService = new DhisServiceImpl();
 
     @Before
     public void setup() throws Exception{
@@ -77,7 +79,7 @@ public class EventHandlerTest {
         response = new DhisStatusResponse();
         response.setReference(INSTANCE_DHIS_ID);
         response.setStatus(DhisStatus.SUCCESS);
-        response.setImportCount(importCount);
+        response.setImportCountDto(importCount);
     }
 
     @Test
@@ -101,9 +103,8 @@ public class EventHandlerTest {
         params.put(EventParams.LOCATION, ORGUNIT_ID);
         params.put(ATTRIBUTE_ID, ATTRIBUTE_VALUE);
 
-        MotechEvent event = new MotechEvent(EventSubjects.CREATE_ENTITY, params);
+        dhisService.createEntity(params);
 
-        handler.handleCreate(event);
         verify(trackedEntityInstanceMappingService).create(ENTITY_INSTANCE_ID, INSTANCE_DHIS_ID);
         verify(dhisWebservice).createTrackedEntityInstance(instance);
     }
@@ -119,7 +120,7 @@ public class EventHandlerTest {
 
         EnrollmentDto enrollment = new EnrollmentDto();
         enrollment.setAttributes(attributeDtos);
-        enrollment.setDateOfEnrollment(DATE);
+        enrollment.setDateOfEnrollment(new JodaFormatter().formatDateTime(new DateTime(DATE)));
         enrollment.setProgram(PROGRAM_ID);
         enrollment.setTrackedEntityInstance(INSTANCE_DHIS_ID);
 
@@ -131,12 +132,11 @@ public class EventHandlerTest {
         Map<String,Object> params = new HashMap<>();
         params.put(EventParams.PROGRAM,PROGRAM_ID );
         params.put(EventParams.EXTERNAL_ID, ENTITY_INSTANCE_ID);
-        params.put(EventParams.DATE, DATE);
+        params.put(EventParams.DATE, new DateTime(DATE));
         params.put(ATTRIBUTE_ID, ATTRIBUTE_VALUE);
 
-        MotechEvent event = new MotechEvent(EventSubjects.ENROLL_IN_PROGRAM,params);
+        dhisService.enrollInProgram(params);
 
-        handler.handleEnrollment(event);
         verify(trackedEntityInstanceMappingService).mapFromExternalId(ENTITY_INSTANCE_ID);
         verify(dhisWebservice).createEnrollment(enrollment);
 
@@ -154,7 +154,7 @@ public class EventHandlerTest {
         programStageDto.setDataValues(dataValues);
         programStageDto.setTrackedEntityInstance(INSTANCE_DHIS_ID);
         programStageDto.setProgram(PROGRAM_ID);
-        programStageDto.setEventDate(DATE);
+        programStageDto.setEventDate(new JodaFormatter().formatDateTime(new DateTime(DATE)));
         programStageDto.setOrgUnit(ORGUNIT_ID);
         programStageDto.setProgramStage(STAGE_ID);
         programStageDto.setStatus(STATUS);
@@ -168,13 +168,12 @@ public class EventHandlerTest {
         params.put(EventParams.EXTERNAL_ID, ENTITY_INSTANCE_ID);
         params.put(EventParams.LOCATION, ORGUNIT_ID);
         params.put(EventParams.PROGRAM, PROGRAM_ID);
-        params.put(EventParams.DATE, DATE);
+        params.put(EventParams.DATE, new DateTime(DATE));
         params.put(EventParams.STAGE,STAGE_ID);
         params.put(EventParams.STATUS, STATUS);
         params.put(DATA_ELEMENT_ID, DATA_ELEMENT_VALUE);
 
-        MotechEvent event = new MotechEvent(EventSubjects.UPDATE_PROGRAM_STAGE, params);
-        handler.handleStageUpdate(event);
+        dhisService.updateProgramStage(params);
 
         verify(trackedEntityInstanceMappingService).mapFromExternalId(ENTITY_INSTANCE_ID);
         verify(dhisWebservice).createEvent(programStageDto);
@@ -190,7 +189,7 @@ public class EventHandlerTest {
 
         EnrollmentDto enrollment = new EnrollmentDto();
         enrollment.setAttributes(new ArrayList<>());
-        enrollment.setDateOfEnrollment(DATE);
+        enrollment.setDateOfEnrollment(new JodaFormatter().formatDateTime(new DateTime(DATE)));
         enrollment.setProgram(PROGRAM_ID);
         enrollment.setOrgUnit(ORGUNIT_ID);
         enrollment.setTrackedEntityInstance(INSTANCE_DHIS_ID);
@@ -210,12 +209,10 @@ public class EventHandlerTest {
         params.put(EventParams.ENTITY_TYPE, ENTITY_TYPE_PERSON );
         params.put(EventParams.LOCATION,ORGUNIT_ID);
         params.put(EventParams.PROGRAM,PROGRAM_ID );
-        params.put(EventParams.DATE, DATE);
+        params.put(EventParams.DATE, new DateTime(DATE));
         params.put(ATTRIBUTE_ID, ATTRIBUTE_VALUE);
 
-        MotechEvent event = new MotechEvent(EventSubjects.CREATE_AND_ENROLL, params);
-
-        handler.handleCreateAndEnroll(event);
+        dhisService.createAndEnroll(params);
 
         verify(dhisWebservice).createTrackedEntityInstance(instance);
         verify(dhisWebservice).createEnrollment(enrollment);
@@ -229,7 +226,7 @@ public class EventHandlerTest {
         dataValueDto.setDataElement(DATA_ELEMENT_ID);
         dataValueDto.setValue(DATA_ELEMENT_VALUE);
         dataValueDto.setOrgUnit(ORGUNIT_ID);
-        dataValueDto.setPeriod(PERIOD);
+        dataValueDto.setPeriod(PERIOD_VALUE);
         dataValueDto.setCategoryOptionCombo(CATEGORY_COMBO);
         dataValueDto.setComment(COMMENT);
 
@@ -241,7 +238,7 @@ public class EventHandlerTest {
         Map<String, Object> params = new HashMap<>();
         params.put(EventParams.DATA_ELEMENT, DATA_ELEMENT_ID);
         params.put(EventParams.LOCATION, ORGUNIT_ID);
-        params.put(EventParams.PERIOD, PERIOD);
+        params.put(EventParams.PERIOD, new JodaFormatter().parsePeriod(PERIOD_VALUE));
         params.put(EventParams.VALUE, DATA_ELEMENT_VALUE);
         params.put(EventParams.CATEGORY_OPTION_COMBO, CATEGORY_COMBO);
         params.put(EventParams.COMMENT, COMMENT);
@@ -250,9 +247,7 @@ public class EventHandlerTest {
 
         when(dataElementService.findByName(DATA_ELEMENT_ID)).thenReturn(dataElement);
 
-        MotechEvent event = new MotechEvent(EventSubjects.SEND_DATA_VALUE, params);
-
-        handler.handleDataValue(event);
+        dhisService.sendDataValue(params);
 
         verify(dhisWebservice).sendDataValueSet(Matchers.refEq(dataValueSetDto));
     }
@@ -263,14 +258,13 @@ public class EventHandlerTest {
         Map<String, Object> params = new HashMap<>();
         params.put(EventParams.DATA_ELEMENT, DATA_ELEMENT_ID);
         params.put(EventParams.LOCATION, ORGUNIT_ID);
-        params.put(EventParams.PERIOD, PERIOD);
+        params.put(EventParams.PERIOD, PERIOD_VALUE);
         params.put(EventParams.VALUE, DATA_ELEMENT_VALUE);
         params.put(EventParams.CATEGORY_OPTION_COMBO, CATEGORY_COMBO);
         params.put(EventParams.COMMENT, COMMENT);
 
         when(dataElementService.findByName(DATA_ELEMENT_ID)).thenReturn(null);
-        MotechEvent event = new MotechEvent(EventSubjects.SEND_DATA_VALUE, params);
-        handler.handleDataValue(event);
-    }
 
+        dhisService.sendDataValue(params);
+    }
 }

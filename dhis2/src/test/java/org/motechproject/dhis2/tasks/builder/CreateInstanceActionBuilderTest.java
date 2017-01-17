@@ -1,4 +1,4 @@
-package org.motechproject.dhis2.tasks;
+package org.motechproject.dhis2.tasks.builder;
 
 
 import org.junit.Test;
@@ -6,6 +6,8 @@ import org.motechproject.dhis2.domain.TrackedEntity;
 import org.motechproject.dhis2.domain.TrackedEntityAttribute;
 import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.event.EventSubjects;
+import org.motechproject.dhis2.tasks.DisplayNames;
+import org.motechproject.dhis2.tasks.builder.CreateInstanceActionBuilder;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.ActionParameterRequest;
 
@@ -44,7 +46,7 @@ public class CreateInstanceActionBuilderTest {
         assertNotNull(requests);
 
         ActionEventRequest actionEventRequest = requests.get(0);
-        assertEquals(actionEventRequest.getDisplayName(),DisplayNames.CREATE_TRACKED_ENTITY_INSTANCE +
+        assertEquals(actionEventRequest.getDisplayName(), DisplayNames.CREATE_TRACKED_ENTITY_INSTANCE +
                 " [" + trackedEntity1.getName() + "]");
         assertEquals(actionEventRequest.getSubject(), EventSubjects.CREATE_ENTITY);
         assertEquals(actionEventRequest.getName(),trackedEntity1.getName());

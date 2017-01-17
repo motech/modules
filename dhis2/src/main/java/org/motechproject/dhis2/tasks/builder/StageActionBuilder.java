@@ -1,14 +1,18 @@
-package org.motechproject.dhis2.tasks;
+package org.motechproject.dhis2.tasks.builder;
 
 import org.motechproject.dhis2.domain.DataElement;
 import org.motechproject.dhis2.domain.Stage;
 import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.event.EventSubjects;
+import org.motechproject.dhis2.tasks.DisplayNames;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
+import org.motechproject.tasks.domain.enums.MethodCallManner;
 import org.motechproject.tasks.domain.enums.ParameterType;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +24,7 @@ import java.util.TreeSet;
 /**
  * Builds task action requests for program stage events for each program stage.
  */
+@Component
 public class StageActionBuilder {
 
     private int counter;
@@ -34,6 +39,7 @@ public class StageActionBuilder {
      * @param stages
      * @return a list of ActionEventRequests
      */
+    @Transactional
     public List<ActionEventRequest> build(List<Stage> stages) {
 
         List<ActionEventRequest> actionEventRequests = new ArrayList<>();
@@ -98,14 +104,14 @@ public class StageActionBuilder {
                     .setDisplayName(DisplayNames.EVENT_DATE)
                     .setOrder(counter++)
                     .setKey(EventParams.DATE)
-                    .setType(ParameterType.UNICODE.getValue())
+                    .setType(ParameterType.DATE.getValue())
                     .setRequired(true);
 
             actionParameters.add(actionParameterBuilder.createActionParameterRequest());
 
             actionParameterBuilder = new ActionParameterRequestBuilder()
                     .setDisplayName(DisplayNames.ORG_UNIT)
-                    .setType(ParameterType.UNICODE.getValue())
+                    .setType(ParameterType.TEXTAREA.getValue())
                     .setKey(EventParams.LOCATION)
                     .setOrder(counter++)
                     .setRequired(true);
@@ -128,6 +134,9 @@ public class StageActionBuilder {
             builder.setActionParameters(actionParameters)
                     .setDisplayName(DisplayNames.STAGE_EVENT + " [" + stage.getName() + "]")
                     .setName(stage.getName())
+                    .setServiceInterface(ChannelRequestBuilder.ACTION_PROXY_SERVICE)
+                    .setServiceMethod("updateProgramStage")
+                    .setServiceMethodCallManner(MethodCallManner.MAP.name())
                     .setSubject(EventSubjects.UPDATE_PROGRAM_STAGE);
 
             actionEventRequests.add(builder.createActionEventRequest());
@@ -149,7 +158,7 @@ public class StageActionBuilder {
             ActionParameterRequestBuilder actionParameterBuilder = new ActionParameterRequestBuilder()
                     .setDisplayName(element.getName())
                     .setKey(element.getUuid())
-                    .setType(ParameterType.UNICODE.getValue())
+                    .setType(ParameterType.TEXTAREA.getValue())
                     .setOrder(counter++);
 
             parameterRequests.add(actionParameterBuilder.createActionParameterRequest());

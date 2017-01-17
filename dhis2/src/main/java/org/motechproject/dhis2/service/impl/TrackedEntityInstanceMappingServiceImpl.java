@@ -7,6 +7,7 @@ import org.motechproject.dhis2.service.TrackedEntityInstanceMappingService;
 import org.motechproject.dhis2.service.TrackedEntityInstanceMappingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class TrackedEntityInstanceMappingServiceImpl implements TrackedEntityIns
     private TrackedEntityInstanceMappingDataService trackedEntityInstanceMappingDataService;
 
     @Override
+    @Transactional
     public TrackedEntityInstanceMapping create(String externalId, String dhisId) {
         TrackedEntityInstanceMapping mapper = new TrackedEntityInstanceMapping();
         mapper.setExternalName(externalId);
@@ -33,6 +35,7 @@ public class TrackedEntityInstanceMappingServiceImpl implements TrackedEntityIns
     }
 
     @Override
+    @Transactional
     public String mapFromExternalId(String externalId) {
         TrackedEntityInstanceMapping mapper = trackedEntityInstanceMappingDataService.findByExternalName(externalId);
 
@@ -46,26 +49,31 @@ public class TrackedEntityInstanceMappingServiceImpl implements TrackedEntityIns
     }
 
     @Override
+    @Transactional
     public void update(TrackedEntityInstanceMapping mapper) {
         trackedEntityInstanceMappingDataService.update(mapper);
     }
 
     @Override
+    @Transactional
     public void delete(TrackedEntityInstanceMapping mapper) {
         trackedEntityInstanceMappingDataService.delete(mapper);
     }
 
     @Override
+    @Transactional
     public List<TrackedEntityInstanceMapping> findAll() {
         return trackedEntityInstanceMappingDataService.retrieveAll();
     }
 
     @Override
+    @Transactional
     public TrackedEntityInstanceMapping findByExternalId(String externalId) {
         return trackedEntityInstanceMappingDataService.findByExternalName(externalId);
     }
 
     @Override
+    @Transactional
     public void deleteAll() {
         trackedEntityInstanceMappingDataService.deleteAll();
     }

@@ -171,7 +171,10 @@ public final class EventHelper {
             observationParameters.put(EventKeys.OBSERVATION_CONCEPT_NAME, obs.getConcept().getName().getName());
         }
         observationParameters.put(EventKeys.PATIENT_ID, obs.getPerson().getUuid());
-        observationParameters.put(EventKeys.OBSERVATION_VALUE, obs.getValue().getDisplay());
+        if (obs.getValue() != null) {
+            observationParameters.put(EventKeys.OBSERVATION_VALUE, obs.getValue().getDisplay());
+        }
+
         return observationParameters;
     }
 

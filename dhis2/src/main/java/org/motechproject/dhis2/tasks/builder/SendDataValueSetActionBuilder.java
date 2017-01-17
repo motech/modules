@@ -1,13 +1,18 @@
-package org.motechproject.dhis2.tasks;
+package org.motechproject.dhis2.tasks.builder;
 
 import org.motechproject.dhis2.domain.DataElement;
 import org.motechproject.dhis2.domain.DataSet;
 import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.event.EventSubjects;
+import org.motechproject.dhis2.tasks.DisplayNames;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.builder.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.builder.ActionParameterRequestBuilder;
+import org.motechproject.tasks.domain.enums.MethodCallManner;
+import org.motechproject.tasks.domain.enums.ParameterType;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +22,7 @@ import java.util.TreeSet;
 /**
  * Builds task action requests for each data set.
  */
+@Component
 public class SendDataValueSetActionBuilder {
 
     /**
@@ -25,6 +31,7 @@ public class SendDataValueSetActionBuilder {
      * @param dataSets  the list of data sets
      * @return the list of action event requests
      */
+    @Transactional
     public List<ActionEventRequest> addSendDataValueSetActions(List<DataSet> dataSets) {
         List<ActionEventRequest> requests = new ArrayList<>();
 
@@ -48,12 +55,14 @@ public class SendDataValueSetActionBuilder {
         builder = new ActionParameterRequestBuilder();
         builder.setDisplayName(DisplayNames.COMPLETE_DATE)
                 .setKey(EventParams.COMPLETE_DATE)
+                .setType(ParameterType.DATE.getValue())
                 .setOrder(order++);
         actionParameterRequests.add(builder.createActionParameterRequest());
 
         builder = new ActionParameterRequestBuilder();
         builder.setDisplayName(DisplayNames.PERIOD)
                 .setKey(EventParams.PERIOD)
+                .setType(ParameterType.PERIOD.getValue())
                 .setOrder(order++)
                 .setRequired(true);
         actionParameterRequests.add(builder.createActionParameterRequest());
@@ -61,6 +70,7 @@ public class SendDataValueSetActionBuilder {
         builder = new ActionParameterRequestBuilder();
         builder.setDisplayName(DisplayNames.ORG_UNIT)
                 .setKey(EventParams.LOCATION)
+                .setType(ParameterType.TEXTAREA.getValue())
                 .setOrder(order++)
                 .setRequired(true);
         actionParameterRequests.add(builder.createActionParameterRequest());
@@ -74,6 +84,7 @@ public class SendDataValueSetActionBuilder {
         builder = new ActionParameterRequestBuilder();
         builder.setDisplayName(DisplayNames.COMMENT)
                 .setKey(EventParams.COMMENT)
+                .setType(ParameterType.TEXTAREA.getValue())
                 .setOrder(order++);
         actionParameterRequests.add(builder.createActionParameterRequest());
 
@@ -87,6 +98,7 @@ public class SendDataValueSetActionBuilder {
             builder = new ActionParameterRequestBuilder();
             builder.setDisplayName(dataElement.getName())
                     .setKey(dataElement.getUuid())
+                    .setType(ParameterType.TEXTAREA.getValue())
                     .setOrder(order++);
             actionParameterRequests.add(builder.createActionParameterRequest());
         }
@@ -102,6 +114,9 @@ public class SendDataValueSetActionBuilder {
         ActionEventRequestBuilder eventRequestBuilder = new ActionEventRequestBuilder();
         eventRequestBuilder.setActionParameters(actionParameterRequests)
                 .setDisplayName(String.format("%s [%s]", DisplayNames.SEND_DATA_VALUE_SET, dataSet.getName()))
+                .setServiceInterface(ChannelRequestBuilder.ACTION_PROXY_SERVICE)
+                .setServiceMethod("sendDataValueSet")
+                .setServiceMethodCallManner(MethodCallManner.MAP.name())
                 .setSubject(EventSubjects.SEND_DATA_VALUE_SET)
                 .setName(String.format("%s [%s]", DisplayNames.SEND_DATA_VALUE_SET, dataSet.getName()));
 

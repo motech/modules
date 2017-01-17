@@ -1,6 +1,7 @@
 package org.motechproject.commcare.request.json;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.client.utils.URIBuilder;
 
 import java.util.List;
 
@@ -87,5 +88,10 @@ public abstract class Request {
     @Override
     public int hashCode() {
         return toQueryString().hashCode();
+    }
+
+    public void addOtherQueryParams(URIBuilder uriBuilder) {
+        uriBuilder.addParameter("limit", String.valueOf(limit < 1 ? DEFAULT_LIMIT : limit));
+        uriBuilder.addParameter("offset", String.valueOf(offset < 0 ? 0 : offset));
     }
 }

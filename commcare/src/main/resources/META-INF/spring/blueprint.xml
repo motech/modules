@@ -65,6 +65,9 @@
     <osgi:service id="commcareFormImporterFactoryOsgi" ref="commcareFormImporterFactory"
                   interface="javax.servlet.http.HttpSessionListener" />
 
+    <osgi:service id="commcareCaseImporterFactoryOsgi" ref="commcareCaseImporterFactory"
+                  interface="javax.servlet.http.HttpSessionListener" />
+
     <osgi:service ref="commcareActionProxyService"
                   interface="org.motechproject.commcare.tasks.CommcareActionProxyService" />
 
@@ -75,6 +78,9 @@
 
     <osgi:reference id="commcareApplicationDataService"
                     interface="org.motechproject.commcare.service.CommcareApplicationDataService"/>
+
+    <osgi:reference id="reportsMetadataDataService"
+                    interface="org.motechproject.commcare.service.ReportsMetadataDataService" />
 
     <osgi:reference id="transactionManager" interface="org.springframework.transaction.PlatformTransactionManager" context-class-loader="unmanaged"/>
 

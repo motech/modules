@@ -3,8 +3,10 @@ package org.motechproject.commcare.service.impl;
 import org.motechproject.commcare.domain.CommcareApplicationJson;
 import org.motechproject.commcare.domain.CommcareModuleJson;
 import org.motechproject.commcare.domain.FormSchemaJson;
+import org.motechproject.commcare.domain.report.ReportsMetadataInfo;
 import org.motechproject.commcare.service.CommcareApplicationDataService;
 import org.motechproject.commcare.service.CommcareSchemaService;
+import org.motechproject.commcare.service.ReportsMetadataDataService;
 import org.motechproject.commcare.tasks.builder.model.CaseTypeWithApplicationName;
 import org.motechproject.commcare.tasks.builder.model.FormWithApplicationName;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,8 @@ import java.util.HashMap;
 public class CommcareSchemaServiceImpl implements CommcareSchemaService {
 
     private CommcareApplicationDataService commcareApplicationDataService;
+
+    private ReportsMetadataDataService reportsMetadataDataService;
 
     @Override
     @Transactional
@@ -106,8 +110,19 @@ public class CommcareSchemaServiceImpl implements CommcareSchemaService {
         return commcareApplicationDataService.bySourceConfiguration(configName);
     }
 
+    @Override
+    @Transactional
+    public List<ReportsMetadataInfo> getReportsMetadata (String configName) {
+        return reportsMetadataDataService.bySourceConfiguration(configName);
+    }
+
     @Autowired
     public void setCommcareApplicationDataService(CommcareApplicationDataService commcareApplicationDataService) {
         this.commcareApplicationDataService = commcareApplicationDataService;
+    }
+
+    @Autowired
+    public void setReportsMetadataDataService (ReportsMetadataDataService reportsMetadataDataService) {
+        this.reportsMetadataDataService = reportsMetadataDataService;
     }
 }

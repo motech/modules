@@ -71,7 +71,8 @@
                                 },
                                 {
                                    "displayName" : "commcare.form.field.receivedOn",
-                                   "fieldKey" : "receivedOn"
+                                   "fieldKey" : "receivedOn",
+                                   "type" : "DATE"
                                 },
                                 {
                                    "displayName" : "commcare.form.field.metadata",
@@ -128,7 +129,8 @@
                                 },
                                 {
                                      "displayName" : "commcare.case.field.dateClosed",
-                                     "fieldKey" : "dateClosed"
+                                     "fieldKey" : "dateClosed",
+                                     "type" : "DATE"
                                 },
                                 {
                                     "displayName" : "commcare.case.field.domain",
@@ -145,7 +147,8 @@
                                 },
                                 {
                                     "displayName" : "commcare.case.field.serverDateOpened",
-                                    "fieldKey" : "serverDateOpened"
+                                    "fieldKey" : "serverDateOpened",
+                                    "type" : "DATE"
                                 },
                                 {
                                     "displayName" : "commcare.case.field.caseType",
@@ -153,7 +156,8 @@
                                 },
                                 {
                                     "displayName" : "commcare.case.field.dateOpened",
-                                    "fieldKey" : "dateOpened"
+                                    "fieldKey" : "dateOpened",
+                                    "type" : "DATE"
                                 },
                                 {
                                     "displayName" : "commcare.case.field.ownerId",
@@ -171,7 +175,8 @@
                                 #end
                                 {
                                     "displayName" : "commcare.case.field.serverDateModified",
-                                    "fieldKey" : "serverDateModified"
+                                    "fieldKey" : "serverDateModified",
+                                    "type" : "DATE"
                                 },
                                 {
                                     "displayName" : "commcare.case.field.closed",
@@ -268,7 +273,8 @@
                             },
                             {
                                 "displayName": "commcare.location.field.lastModified",
-                                "fieldKey": "lastModified"
+                                "fieldKey": "lastModified",
+                                "type" : "DATE"
                             },
                             {
                                 "displayName": "commcare.location.field.locationData",

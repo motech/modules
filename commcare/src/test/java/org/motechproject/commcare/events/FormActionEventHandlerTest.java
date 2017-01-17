@@ -41,6 +41,7 @@ public class FormActionEventHandlerTest {
         formFields.put("/data/mother/dob_known", "yes");
         formFields.put("/data/mother/dob", "1993-02-29");
         formFields.put("/data/mother/child", "Mark");
+        formFields.put("xmlns", XMLNS);
 
         event = new MotechEvent(EventSubjects.SUBMIT_FORM + "." + XMLNS + "." + CONFIG, formFields);
     }

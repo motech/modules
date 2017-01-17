@@ -1,5 +1,6 @@
 package org.motechproject.commcare.events;
 
+import org.motechproject.commcare.domain.CaseInfo;
 import org.motechproject.commcare.domain.CaseXml;
 import org.motechproject.commcare.events.constants.EventDataKeys;
 import org.motechproject.commcare.events.constants.EventSubjects;
@@ -121,6 +122,28 @@ public class CaseEvent {
         event.setOwnerId(caseInstance.getOwnerId());
         event.setCaseDataXmlns(caseInstance.getCaseDataXmlns());
         event.setConfigName(configName);
+        return event;
+    }
+
+    /**
+     * Creates an instance of the {@link CaseEvent} class based on the given {@code caseInfo} and
+     * {@code configName}.
+     *
+     * @param caseInfo the case information
+     * @param configName the configuration name
+     * @return an instance of the {@link CaseEvent}
+     */
+    public static CaseEvent fromCaseInfo(CaseInfo caseInfo, String configName) {
+        CaseEvent event = new CaseEvent(caseInfo.getCaseId());
+        event.setServerModifiedOn(caseInfo.getServerDateModified());
+        event.setUserId(caseInfo.getUserId());
+        event.setCaseName(caseInfo.getCaseName());
+        event.setCaseType(caseInfo.getCaseType());
+        event.setDateModified(caseInfo.getDateModified());
+        event.setFieldValues(caseInfo.getFieldValues());
+        event.setOwnerId(caseInfo.getOwnerId());
+        event.setConfigName(configName);
+
         return event;
     }
 

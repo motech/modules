@@ -45,6 +45,8 @@ public class OpenMRSTaskDataProviderTest {
     private static final String PROGRAM_ANOTHER_NAME = "anotherName";
     private static final String DEFAULT_UUID = "495b10c4-56bd-11df-a35e-0027136865c4";
     private static final String DEFAULT_MOTECH_ID = "3";
+    private static final String DEFAULT_IDENTIFIER_ID = "4";
+    private static final String DEFAULT_IDENTIFIER_NAME = "identifierName";
     private static final String ATTRIBUTE_UUID = "51f41ccf-dca8-48e3-bcf3-5e0981948b1e";
     private static final String ATTRIBUTE_VALUE = "attributeValue";
     private static final String ATTRIBUTE_TYPE_UUID = "2c41f832-f3ed-47f1-92e2-53143ee71626";
@@ -149,7 +151,7 @@ public class OpenMRSTaskDataProviderTest {
         lookupFields.put(UUID, DEFAULT_UUID);
 
         Encounter encounter = new Encounter();
-        encounter.setEncounterType(new EncounterType("encounterTypeTest"));
+        encounter.setEncounterType(new EncounterType("encounterTypeTest", null));
 
         when(encounterService.getEncounterByUuid(CONFIG_NAME, DEFAULT_UUID)).thenReturn(encounter);
 
@@ -164,8 +166,6 @@ public class OpenMRSTaskDataProviderTest {
         String className = Observation.class.getSimpleName();
         String conceptUuid = "sampleConceptUuid";
 
-        List<Observation> results = new ArrayList<>();
-
         Map<String, String> lookupFields = new HashMap<>();
         lookupFields.put(PATIENT_UUID, DEFAULT_UUID);
         lookupFields.put(CONCEPT_UUID, conceptUuid);
@@ -173,19 +173,13 @@ public class OpenMRSTaskDataProviderTest {
         Observation observation = new Observation();
         observation.setUuid("10");
 
-        results.add(observation);
-
-        ObservationListResult observationListResult = new ObservationListResult();
-        observationListResult.setResults(results);
-
-        when(observationService.getObservationByPatientUUIDAndConceptUUID(CONFIG_NAME, DEFAULT_UUID, conceptUuid)).thenReturn(observationListResult);
-        when(observationService.getObservationByUuid(CONFIG_NAME, "10")).thenReturn(observation);
+        when(observationService.getLatestObservationByPatientUUIDAndConceptUUID(CONFIG_NAME, DEFAULT_UUID, conceptUuid)).thenReturn(observation);
 
         Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, BY_PATIENT_UUID_AND_CONCEPT_UUID, lookupFields);
 
         assertEquals(observation, object);
 
-        verify(observationService).getObservationByPatientUUIDAndConceptUUID(CONFIG_NAME, DEFAULT_UUID, conceptUuid);
+        verify(observationService).getLatestObservationByPatientUUIDAndConceptUUID(CONFIG_NAME, DEFAULT_UUID, conceptUuid);
     }
 
     @Test
@@ -290,6 +284,25 @@ public class OpenMRSTaskDataProviderTest {
 
         assertEquals(patient, object);
         verify(patientService).getPatientByMotechId(CONFIG_NAME, DEFAULT_MOTECH_ID);
+    }
+
+    @Test
+    public void shouldReturnPatientForLookupGetPatientByOtherId() {
+        String className = Patient.class.getSimpleName();
+
+        Map<String, String> lookupFields = new HashMap<>();
+        lookupFields.put(IDENTIFIER_ID, DEFAULT_IDENTIFIER_ID);
+        lookupFields.put(IDENTIFIER_NAME, DEFAULT_IDENTIFIER_NAME);
+
+        Patient patient = new Patient();
+        patient.setUuid("10");
+
+        when(patientService.getPatientByIdentifier(CONFIG_NAME, DEFAULT_IDENTIFIER_ID, DEFAULT_IDENTIFIER_NAME)).thenReturn(patient);
+
+        Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, DEFAULT_IDENTIFIER_NAME, lookupFields);
+
+        assertEquals(patient, object);
+        verify(patientService).getPatientByIdentifier(CONFIG_NAME, DEFAULT_IDENTIFIER_ID, DEFAULT_IDENTIFIER_NAME);
     }
 
     @Test

@@ -1,6 +1,5 @@
 package org.motechproject.commcare.events;
 
-import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -49,11 +48,9 @@ public class FormActionEventHandler {
     @MotechListener(subjects = EventSubjects.SUBMIT_FORM + ".*")
     public void submitForm(MotechEvent event) {
         String configName = EventSubjects.getConfigName(event.getSubject());
-        String xmlns = extractXmlnsFromEventSubject(event.getSubject(), configName);
         Map<String, Object> parameters = event.getParameters();
 
         FormXml formXml = parseEventParametersToFormXml(parameters);
-        formXml.setXmlns(xmlns);
 
         Map<String, MetadataValue> formMetadata = new HashMap<>();
         formMetadata.put(INSTANCE_ID_KEY, new MetadataValue(UUID.randomUUID().toString()));
@@ -66,18 +63,18 @@ public class FormActionEventHandler {
         commcareFormService.uploadForm(formXml, configName);
     }
 
-    private String extractXmlnsFromEventSubject(String subject, String configName) {
-        return StringUtils.removeEnd(subject.replaceFirst(EventSubjects.SUBMIT_FORM + ".", StringUtils.EMPTY), "." + configName);
-    }
-
     private FormXml parseEventParametersToFormXml(Map<String, Object> parameters) {
         FormXml formXml = new FormXml();
 
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
             if (entry.getValue() != null) {
-                List<String> xmlPath = discoverXmlPath(entry.getKey());
-                FormValueElement element = formXml.getElementByPath(xmlPath);
-                element.setValue(entry.getValue().toString());
+                if ("xmlns".equals(entry.getKey())) {
+                    formXml.setXmlns(entry.getValue().toString());
+                } else {
+                    List<String> xmlPath = discoverXmlPath(entry.getKey());
+                    FormValueElement element = formXml.getElementByPath(xmlPath);
+                    element.setValue(entry.getValue().toString());
+                }
             }
         }
 

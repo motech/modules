@@ -53,6 +53,12 @@
                     <input id="commcareDateTimeTo" ng-model="receivedOnEnd" import-date-time-picker-to type="datetime" placeholder="{{msg('commcare.to')}}" class="form-control input-large-fluid">
                 </div>
             </div>
+            <div ng-show="byFormId" class="form-group">
+                <label class="col-lg-2 col-md-3 col-sm-4 control-label">{{msg('commcare.formId')}}: </label>
+                <div class="col-lg-10 col-md-9 col-sm-8">
+                    <input id="commcareFormId" ng-model="formId" ng-change="updateImportRequest('formId', formId)" placeholder="{{msg('commcare.formId')}}" class="form-control input-large-fluid">
+                </div>
+            </div>
             <div class="form-group">
                 <div class="col-lg-offset-2 col-md-offset-3 col-sm-offset-4 col-lg-10 col-md-9 col-sm-8">
                     <button ng-click="importFormsStart()" class="btn btn-primary">{{msg('commcare.importForms')}}</button>
@@ -75,14 +81,23 @@
                     <h4 class="modal-title" id="importInstanceModalLabel">{{msg('commcare.importForms')}}</h4>
                 </div>
                 <div class="modal-body">
+                    <div ng-show="!statusError && !importFormsProgressShow && byFormId">
+                        <div>{{msg('commcare.import.formById',formId)}}</div>
+                    </div>
                     <div ng-show="!statusError && !importFormsProgressShow && !initImportComplete" class="form-group">
                         <div><img ng-hide="totalForms &gt; 0" alt="loading" src="./../../static/common/img/load.gif">&nbsp;<strong></strong>&nbsp{{msg('commcare.retrievingForms')}}</div>
                     </div>
-                    <div ng-show="!statusError && totalForms &gt; 0 && initImportComplete && !(importFormsProgressShow || importInProgress)" class="form-group">
+                    <div ng-show="!statusError && totalForms &gt; 0 && initImportComplete && !(importFormsProgressShow || importInProgress) && !byFormId" class="form-group">
                         <div><strong>{{totalForms}}</strong>&nbsp{{msg('commcare.formsWillImported')}}</div>
                     </div>
-                    <div ng-show="!statusError && totalForms &lt; 1 && initImportComplete && !(importFormsProgressShow || importInProgress)" class="form-group">
+                    <div ng-show="!statusError && totalForms &gt; 0 && initImportComplete && !(importFormsProgressShow || importInProgress) && byFormId" class="form-group">
+                        <div><strong>{{totalForms}}</strong>&nbsp{{msg('commcare.formWillImported')}}</div>
+                    </div>
+                    <div ng-show="!statusError && totalForms &lt; 1 && initImportComplete && !(importFormsProgressShow || importInProgress) && !byFormId" class="form-group">
                         <div>{{msg('commcare.noFormsToImport')}}</div>
+                    </div>
+                    <div ng-show="!statusError && totalForms &lt; 1 && initImportComplete && !(importFormsProgressShow || importInProgress) && byFormId" class="form-group">
+                        <div>{{msg('commcare.noFormToImport')}}</div>
                     </div>
                     <div ng-show="totalForms &gt; 0 && importInProgress" class="form-group">
                         <div class="margin-after">{{msg('commcare.formImport.imported', formsImported, totalForms)}}</div>

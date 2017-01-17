@@ -4,12 +4,14 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import org.motechproject.openmrs.util.JsonUtils;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -131,6 +133,10 @@ public class Encounter {
     }
 
     public List<Observation> getObs() {
+        if (obs == null) {
+            obs = new ArrayList<>();
+        }
+
         return obs;
     }
 
@@ -188,7 +194,7 @@ public class Encounter {
                 encounter.addProperty("location", src.getLocation().getUuid());
             }
             if (src.encounterType != null) {
-                encounter.addProperty("encounterType", src.getEncounterType().getName());
+                encounter.addProperty("encounterType", src.getEncounterType().getUuid());
             }
             if (src.encounterDatetime != null) {
                 encounter.addProperty("encounterDatetime", sdf.format(src.getEncounterDatetime()));
@@ -210,6 +216,18 @@ public class Encounter {
                 encounter.add("obs", jsonObs);
             }
             return encounter;
+        }
+    }
+
+    /**
+     * Implementation of the {@link JsonSerializer} interface for the {@link Encounter} class. It represents the encounter
+     * as its ID.
+     */
+    public static class EncounterUuidSerializer implements JsonSerializer<Encounter> {
+
+        @Override
+        public JsonElement serialize(Encounter encounter, Type type, JsonSerializationContext jsonSerializationContext) {
+            return new JsonPrimitive(encounter.getUuid());
         }
     }
 

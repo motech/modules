@@ -30,6 +30,7 @@ import org.motechproject.dhis2.rest.domain.DataSetDto;
 import org.motechproject.dhis2.rest.domain.DataValueSetDto;
 import org.motechproject.dhis2.rest.domain.DhisDataValueStatusResponse;
 import org.motechproject.dhis2.rest.domain.DhisEventDto;
+import org.motechproject.dhis2.rest.domain.DhisResponse;
 import org.motechproject.dhis2.rest.domain.DhisServerInfo;
 import org.motechproject.dhis2.rest.domain.DhisStatus;
 import org.motechproject.dhis2.rest.domain.DhisStatusResponse;
@@ -237,7 +238,7 @@ public class DhisWebServiceImpl implements DhisWebService {
 
     @Override
     public TrackedEntityDto getTrackedEntityById(String id) {
-        return getResource(getURIForResource(settingsService.getSettings().getServerURI(), PROGRAM_STAGES, id), TrackedEntityDto.class);
+        return getResource(getURIForResource(settingsService.getSettings().getServerURI(), TRACKED_ENTITIES, id), TrackedEntityDto.class);
     }
 
     @Override
@@ -403,31 +404,9 @@ public class DhisWebServiceImpl implements DhisWebService {
     /*Attempts to create the an entity in the DHIS2 system. Returns the response from DHIS2*/
     private DhisStatusResponse createEntity(Settings settings, String uri, String json) {
         HttpUriRequest request = generatePostRequest(settings, uri, json);
-
         LOGGER.debug(String.format("Initiating request to create resource: %s, request: %s", json, request.toString()));
-
         CloseableHttpResponse response = getResponseForRequest(request);
-
-        LOGGER.debug(String.format("Received response to create resource: %s, request: %s", json, response));
-
-        DhisStatusResponse status;
-
-        try (InputStream content = getContentForResponse(response)) {
-            String contentString = IOUtils.toString(content);
-            status = new ObjectMapper().readValue(contentString, DhisStatusResponse.class);
-            if (status.getStatus() == DhisStatus.ERROR) {
-                String msg = String.format("Error in DHIS2 status response, error details: %s", contentString);
-                throw new DhisWebException(msg);
-            }
-        } catch (IOException e) {
-            String msg = String.format("Error parsing response from uri: %s, exception: %s", uri, e.toString());
-            statusMessageService.warn(msg, MODULE_NAME);
-            throw new DhisWebException(msg, e);
-        } finally {
-            closeResponse(response);
-        }
-
-        return status;
+        return (DhisStatusResponse) getDhisResponseForHttpResponse(json, uri, response, DhisStatusResponse.class);
     }
 
     /*Converts the object to json*/
@@ -547,10 +526,23 @@ public class DhisWebServiceImpl implements DhisWebService {
         HttpUriRequest request = generatePostRequest(settings, uri, json);
         LOGGER.debug(String.format("Initiating request to create resource: %s, request: %s", json, request.toString()));
         CloseableHttpResponse response = getResponseForRequest(request);
-        LOGGER.debug(String.format("Received response to create resource: %s, request: %s", json, response));
+        return (DhisDataValueStatusResponse) getDhisResponseForHttpResponse(json, uri, response, DhisDataValueStatusResponse.class);
+    }
 
+    private DhisResponse getDhisResponseForHttpResponse(String json, String uri, CloseableHttpResponse response, Class responseType) {
+        DhisResponse status;
         try (InputStream content = getContentForResponse(response)) {
-            return new ObjectMapper().readValue(content, DhisDataValueStatusResponse.class);
+            String contentString = IOUtils.toString(content);
+            LOGGER.debug(String.format("Received response to create resource: %s, request: %s", contentString, json));
+            if(responseType == DhisStatusResponse.class) {
+                status = new ObjectMapper().readValue(contentString, DhisStatusResponse.class);
+            } else {
+                status = new ObjectMapper().readValue(contentString, DhisDataValueStatusResponse.class);
+            }
+            if (status.getStatus() == DhisStatus.ERROR) {
+                String msg = String.format("Error in DHIS2 status response, error details: %s", contentString);
+                throw new DhisWebException(msg);
+            }
         } catch (IOException e) {
             String msg = String.format("Error parsing response from uri: %s, exception: %s", uri, e.toString());
             statusMessageService.warn(msg, MODULE_NAME);
@@ -558,6 +550,7 @@ public class DhisWebServiceImpl implements DhisWebService {
         } finally {
             closeResponse(response);
         }
+        return status;
     }
 
     private void closeResponse(CloseableHttpResponse response) {

@@ -18,20 +18,21 @@ public class EncounterType {
     private String name;
     private String description;
 
-    public EncounterType(String name) {
+    public EncounterType(String name, String uuid) {
         this.name = name;
+        this.uuid = uuid;
     }
 
     /**
      * Implementation of the {@link JsonSerializer} interface for the
      * {@link EncounterType} class. It represents the encounter
-     * as its name.
+     * as its uuid.
      */
     public static class EncounterTypeSerializer implements JsonSerializer<EncounterType> {
 
         @Override
         public JsonElement serialize(EncounterType src, Type typeOfSrc, JsonSerializationContext context) {
-            return new JsonPrimitive(src.getName());
+            return new JsonPrimitive(src.getUuid());
         }
     }
 

@@ -7,6 +7,7 @@ import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.service.CommcareSchemaService;
 import org.motechproject.tasks.contract.EventParameterRequest;
 import org.motechproject.tasks.contract.TriggerEventRequest;
+import org.motechproject.tasks.domain.enums.ParameterType;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -73,7 +74,7 @@ public class CaseTriggerBuilder implements TriggerBuilder {
 
                         if (config.isEventStrategyFull()) {
                             for (String caseProperty : module.getCaseProperties()) {
-                                parameterRequests.add(new EventParameterRequest(caseProperty, caseProperty));
+                                parameterRequests.add(new EventParameterRequest(caseProperty, caseProperty, ParameterType.DATE.getValue()));
                             }
                         }
 
@@ -99,7 +100,7 @@ public class CaseTriggerBuilder implements TriggerBuilder {
         parameters.add(new EventParameterRequest("commcare.userId", USER_ID));
         parameters.add(new EventParameterRequest("commcare.apiKey", API_KEY));
         parameters.add(new EventParameterRequest("commcare.caseAction", CASE_ACTION));
-        parameters.add(new EventParameterRequest("commcare.dateModified", DATE_MODIFIED));
+        parameters.add(new EventParameterRequest("commcare.dateModified", DATE_MODIFIED, ParameterType.DATE.getValue()));
         parameters.add(new EventParameterRequest("commcare.caseName", CASE_NAME));
         parameters.add(new EventParameterRequest("commcare.ownerId", OWNER_ID));
     }
