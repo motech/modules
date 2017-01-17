@@ -22,11 +22,8 @@ public class Dhis2DummyServer {
     private static final String DATA_SETS_ENDPOINT = "/dataSets";
     private static final String ORGANISATION_UNITS_ENDPOINT = "/organisationUnits";
     private static final String PROGRAMS_ENDPOINT = "/programs";
-    private static final String PROGRAM_STAGES_ENDPOINT = "/programStages";
-    private static final String PROGRAM_STAGE_DATA_ELEMENTS_ENDPOINT = "/programStageDataElements";
     private static final String TRACKED_ENTITIES_ENDPOINT = "/trackedEntities";
     private static final String TRACKED_ENTITY_ATTRIBUTES_ENDPOINT = "/trackedEntityAttributes";
-    private static final String PROGRAM_TRACKED_ENTITY_ATTRIBUTES_ENDPOINT = "/programTrackedEntityAttributes";
 
     private static final String PROGRAM_RESPONSE = "/json/program-response.json";
     private static final String DATA_ELEMENTS_RESPONSE = "/json/data-elements-response.json";
