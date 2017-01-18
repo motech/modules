@@ -1,0 +1,16 @@
+{
+  "pager": {
+    "page": "1",
+    "pageCount": "1",
+    "total": "1",
+    "pageSize": "1"
+  },
+  "trackedEntities": [{
+    "id": "trackedEntities1Id",
+    "name": "trackedEntities1Name",
+    "created": "2016-10-22T17:48:51.639",
+    "lastUpdated": "2016-10-22T17:48:51.639",
+    "code": "trackedEntities1Code",
+    "href": "http://localhost:9780/api/trackedEntities/trackedEntities1Id"
+  }]
+}

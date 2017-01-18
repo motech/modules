@@ -1,0 +1,18 @@
+{
+  "pager": {
+    "page": "1",
+    "pageCount": "1",
+    "total": "1",
+    "pageSize": "1"
+  },
+  "dataElements": [
+    {
+      "id": "testDataElementId",
+      "name": "testDataElementName",
+      "created": "2016-10-22T17:48:51.639",
+      "lastUpdated": "2016-10-22T17:48:51.639",
+      "code": "testDataElementCode",
+      "href": "http://localhost:9780/api/dataElements/testDataElementId"
+    }
+  ]
+}
