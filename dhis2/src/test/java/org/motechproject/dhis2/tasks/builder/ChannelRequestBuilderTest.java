@@ -13,6 +13,7 @@ import org.motechproject.dhis2.domain.Program;
 import org.motechproject.dhis2.domain.Stage;
 import org.motechproject.dhis2.domain.TrackedEntity;
 import org.motechproject.dhis2.domain.TrackedEntityAttribute;
+import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.event.EventSubjects;
 import org.motechproject.dhis2.rest.domain.ServerVersion;
 import org.motechproject.dhis2.rest.service.DhisWebService;
@@ -24,13 +25,18 @@ import org.motechproject.dhis2.service.TrackedEntityService;
 import org.motechproject.dhis2.tasks.DisplayNames;
 import org.motechproject.dhis2.util.DummyData;
 import org.motechproject.tasks.contract.ActionEventRequest;
+import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.ChannelRequest;
+import org.motechproject.tasks.domain.enums.ParameterType;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Version;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -39,6 +45,8 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class ChannelRequestBuilderTest {
 
+    private static final String BUNDLE_SYMBOLIC_NAME = "bundleSymbolicName";
+    private static final String BUNDLE_VERSION = "bundleVersion";
     private static final String TEST_VERSION = "2.22";
 
     @Mock
@@ -107,7 +115,9 @@ public class ChannelRequestBuilderTest {
     @Test
     public void testBuildChannelRequest() throws Exception {
         assertNotNull(request);
-        Assert.assertEquals(request.getDisplayName(), DisplayNames.DHIS2_DISPLAY_NAME);
+        assertEquals(request.getDisplayName(), DisplayNames.DHIS2_DISPLAY_NAME);
+        assertEquals(request.getModuleName(), BUNDLE_SYMBOLIC_NAME);
+        assertEquals(request.getModuleVersion(), BUNDLE_VERSION);
         assertEquals(EXPECTED_ACTIONS_SIZE, request.getActionTaskEvents().size());
     }
 
@@ -127,7 +137,6 @@ public class ChannelRequestBuilderTest {
         assertEquals(actionEventRequest.getSubject(), EventSubjects.CREATE_AND_ENROLL);
         assertNotNull(actionEventRequest.getActionParameters());
 
-
         actionEventRequest = itr.next();
         assertEquals(actionEventRequest.getName(),"Program2");
         assertEquals(actionEventRequest.getSubject(), EventSubjects.ENROLL_IN_PROGRAM);
@@ -138,7 +147,6 @@ public class ChannelRequestBuilderTest {
         assertEquals(actionEventRequest.getSubject(), EventSubjects.CREATE_AND_ENROLL);
         assertNotNull(actionEventRequest.getActionParameters());
 
-
         actionEventRequest = itr.next();
         assertEquals(actionEventRequest.getName(),"stage1");
         assertEquals(actionEventRequest.getSubject(), EventSubjects.UPDATE_PROGRAM_STAGE);
@@ -148,7 +156,6 @@ public class ChannelRequestBuilderTest {
         assertEquals(actionEventRequest.getName(),"stage2");
         assertEquals(actionEventRequest.getSubject(), EventSubjects.UPDATE_PROGRAM_STAGE);
         assertNotNull(actionEventRequest.getActionParameters());
-
 
         actionEventRequest = itr.next();
         assertEquals(actionEventRequest.getName(),"trackedEntity1");
@@ -178,8 +185,8 @@ public class ChannelRequestBuilderTest {
         when(bundle.getVersion()).thenReturn(version);
         when(dhisWebService.getServerVersion()).thenReturn(serverVersion);
 
-        when(bundle.getSymbolicName()).thenReturn("BundleSymbolicName");
-        when(version.toString()).thenReturn("bundleVersion");
+        when(bundle.getSymbolicName()).thenReturn(BUNDLE_SYMBOLIC_NAME);
+        when(version.toString()).thenReturn(BUNDLE_VERSION);
     }
 
     private void mockActionEventRequest() {
@@ -190,18 +197,55 @@ public class ChannelRequestBuilderTest {
     }
 
     private List<ActionEventRequest> prepareProgramActionEventRequests() {
-        return new ProgramActionBuilder().build(programs, serverVersion);
+        List<ActionEventRequest> result = new ArrayList<>();
+
+        for(Program program : programs) {
+            result.add(prepareActionEventRequests(program.getName(), EventSubjects.ENROLL_IN_PROGRAM));
+            result.add(prepareActionEventRequests(program.getTrackedEntity().getName() + ", " + program.getName(), EventSubjects.CREATE_AND_ENROLL));
+        }
+
+        return result;
     }
 
     private List<ActionEventRequest> prepareStagesActionEventRequests() {
-        return new StageActionBuilder().build(stages);
+        List<ActionEventRequest> result = new ArrayList<>();
+
+        for (Stage stage : stages) {
+            result.add(prepareActionEventRequests(stage.getName(), EventSubjects.UPDATE_PROGRAM_STAGE));
+        }
+
+        return result;
     }
 
     private List<ActionEventRequest> prepareInstanceActionEventRequests() {
-        return new CreateInstanceActionBuilder().build(attributes, trackedEntities);
+        List<ActionEventRequest> result = new ArrayList<>();
+
+        for (TrackedEntity trackedEntity : trackedEntities) {
+            result.add(prepareActionEventRequests(trackedEntity.getName(), EventSubjects.CREATE_ENTITY));
+        }
+
+        return result;
     }
 
     private List<ActionEventRequest> prepareDataSetsActionEventRequests() {
-        return new SendDataValueSetActionBuilder().addSendDataValueSetActions(dataSets);
+        List<ActionEventRequest> result = new ArrayList<>();
+
+        for (DataSet dataSet : dataSets) {
+            result.add(prepareActionEventRequests(dataSet.getName(), EventSubjects.CREATE_ENTITY));
+        }
+
+        return result;
+    }
+
+    private ActionEventRequest prepareActionEventRequests(String name, String subject) {
+        SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
+
+        parameters.add(new ActionParameterRequest(0, EventParams.EXTERNAL_ID, null, "testActionParam1",
+                ParameterType.UNICODE.getValue(), true, false, null));
+        parameters.add(new ActionParameterRequest(1, EventParams.DATE, null, "testActionParam2",
+                ParameterType.DATE.getValue(), true, false, null));
+
+        return new ActionEventRequest(name, "displayName", subject, "description", "serviceInterface", "serviceMethod",
+                "serviceMethodCallManner", parameters);
     }
 }
