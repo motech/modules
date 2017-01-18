@@ -22,6 +22,13 @@ public class ProgramDto extends BaseDto {
     private List<OrganisationUnitDto> organisationUnits;
     private List<ProgramTrackedEntityAttributeDto> programTrackedEntityAttributes;
 
+    public ProgramDto() {}
+
+    public ProgramDto(String uuid, String name) {
+        this.setId(uuid);
+        this.setName(name);
+    }
+
     public boolean getRegistration() {
         return registration;
     }
