@@ -8,4 +8,12 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OrganisationUnitDto extends BaseDto { }
+public class OrganisationUnitDto extends BaseDto {
+
+    public OrganisationUnitDto() {}
+
+    public OrganisationUnitDto(String uuid, String name) {
+        this.setId(uuid);
+        this.setName(name);
+    }
+}

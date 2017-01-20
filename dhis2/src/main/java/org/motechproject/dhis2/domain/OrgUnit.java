@@ -1,11 +1,13 @@
 package org.motechproject.dhis2.domain;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.util.SecurityMode;
 
 import javax.jdo.annotations.Unique;
+import java.util.Objects;
 
 /**
  * Represents a DHIS2 Organisation Unit
@@ -41,5 +43,26 @@ public class OrgUnit {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof OrgUnit)) {
+            return false;
+        }
+
+        OrgUnit other = (OrgUnit) o;
+
+        return ObjectUtils.equals(uuid, other.uuid) && ObjectUtils.equals(name, other.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid, name);
     }
 }
