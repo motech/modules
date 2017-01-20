@@ -1,5 +1,6 @@
 package org.motechproject.dhis2.domain;
 
+import org.motechproject.dhis2.dto.OrgUnitDto;
 import org.motechproject.mds.annotations.Access;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
@@ -42,4 +43,9 @@ public class OrgUnit {
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
+
+    public OrgUnitDto toDto () {
+        return new OrgUnitDto(name, uuid);
+    }
+
 }

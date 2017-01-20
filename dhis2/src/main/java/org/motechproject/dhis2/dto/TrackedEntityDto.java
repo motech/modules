@@ -1,33 +1,18 @@
-package org.motechproject.dhis2.domain;
+package org.motechproject.dhis2.dto;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.motechproject.dhis2.dto.DataElementDto;
-import org.motechproject.mds.annotations.Access;
-import org.motechproject.mds.annotations.Entity;
-import org.motechproject.mds.annotations.Field;
-import org.motechproject.mds.util.SecurityMode;
 
-import javax.jdo.annotations.Unique;
-
-/**
- * Represents a DHIS2 Data Element
- */
-@Entity
-@Access(value = SecurityMode.PERMISSIONS, members = {"configureDhis"})
-public class DataElement {
-    @Field(required = true)
-    @Unique
+public class TrackedEntityDto {
     private String uuid;
 
-    @Field
     private String name;
 
-    public DataElement() { }
+    public TrackedEntityDto() { }
 
-    public DataElement(String name, String uuid) {
-        this.uuid = uuid;
+    public TrackedEntityDto(String name, String uuid) {
         this.name = name;
+        this.uuid = uuid;
     }
 
     public String getName() {
@@ -46,10 +31,6 @@ public class DataElement {
         this.uuid = uuid;
     }
 
-    public DataElementDto toDto () {
-        return new DataElementDto(name, uuid);
-    }
-
     @Override
     public boolean equals(Object o) {
 
@@ -57,11 +38,11 @@ public class DataElement {
             return true;
         }
 
-        if (!(o instanceof DataElement)) {
+        if (!(o instanceof TrackedEntityDto)) {
             return false;
         }
 
-        DataElement other = (DataElement) o;
+        TrackedEntityDto other = (TrackedEntityDto) o;
 
         return ObjectUtils.equals(uuid, other.uuid) && ObjectUtils.equals(name, other.name);
     }
