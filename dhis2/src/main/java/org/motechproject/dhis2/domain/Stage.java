@@ -32,7 +32,7 @@ public class Stage {
     @Field
     private boolean registration;
 
-    public Stage() { }
+    public Stage() {}
 
     public Stage(String uuid, String name, List<DataElement> dataElements, String program, boolean registration) {
         this.uuid = uuid;

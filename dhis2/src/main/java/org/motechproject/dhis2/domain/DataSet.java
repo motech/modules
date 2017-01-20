@@ -25,6 +25,14 @@ public class DataSet {
     @Field
     private List<DataElement> dataElementList;
 
+    public DataSet() {}
+
+    public DataSet(String uuid, String name, List<DataElement> dataElementList) {
+        this.uuid = uuid;
+        this.name = name;
+        this.dataElementList = dataElementList;
+    }
+
     public String getUuid() {
         return uuid;
     }

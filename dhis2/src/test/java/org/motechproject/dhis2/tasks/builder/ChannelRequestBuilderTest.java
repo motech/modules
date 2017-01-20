@@ -2,20 +2,20 @@ package org.motechproject.dhis2.tasks.builder;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.motechproject.dhis2.domain.DataElement;
 import org.motechproject.dhis2.domain.DataSet;
 import org.motechproject.dhis2.domain.Program;
 import org.motechproject.dhis2.domain.Stage;
 import org.motechproject.dhis2.domain.TrackedEntity;
 import org.motechproject.dhis2.domain.TrackedEntityAttribute;
+import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.event.EventSubjects;
+import org.motechproject.dhis2.rest.domain.ServerVersion;
 import org.motechproject.dhis2.rest.service.DhisWebService;
 import org.motechproject.dhis2.service.DataSetService;
 import org.motechproject.dhis2.service.ProgramService;
@@ -23,14 +23,11 @@ import org.motechproject.dhis2.service.StageService;
 import org.motechproject.dhis2.service.TrackedEntityAttributeService;
 import org.motechproject.dhis2.service.TrackedEntityService;
 import org.motechproject.dhis2.tasks.DisplayNames;
-import org.motechproject.dhis2.tasks.builder.ChannelRequestBuilder;
-import org.motechproject.dhis2.tasks.builder.CreateInstanceActionBuilder;
-import org.motechproject.dhis2.tasks.builder.ProgramActionBuilder;
-import org.motechproject.dhis2.tasks.builder.SendDataValueSetActionBuilder;
-import org.motechproject.dhis2.tasks.builder.StageActionBuilder;
 import org.motechproject.dhis2.util.DummyData;
 import org.motechproject.tasks.contract.ActionEventRequest;
+import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.ChannelRequest;
+import org.motechproject.tasks.domain.enums.ParameterType;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Version;
@@ -38,6 +35,8 @@ import org.osgi.framework.Version;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -45,6 +44,10 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ChannelRequestBuilderTest {
+
+    private static final String BUNDLE_SYMBOLIC_NAME = "bundleSymbolicName";
+    private static final String BUNDLE_VERSION = "bundleVersion";
+    private static final String TEST_VERSION = "2.22";
 
     @Mock
     private ProgramService programService;
@@ -88,6 +91,8 @@ public class ChannelRequestBuilderTest {
     @InjectMocks
     private ChannelRequestBuilder builder = new ChannelRequestBuilder();
 
+    private ServerVersion serverVersion = new ServerVersion(TEST_VERSION);
+
     private List<Program> programs;
     private List<Stage> stages;
     private List<TrackedEntityAttribute> attributes;
@@ -101,40 +106,22 @@ public class ChannelRequestBuilderTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        programs = new ArrayList<>();
-        stages = new ArrayList<>();
-        attributes = new ArrayList<>();
-        dataSets = DummyData.prepareDataSets();
-        trackedEntities = new ArrayList<>();
-
-        setupStages();
-        setupPrograms();
-        setupTrackedEntities();
-
-        when(programService.findByRegistration(true)).thenReturn(programs);
-        when(stageService.findAll()).thenReturn(stages);
-        when(trackedEntityAttributeService.findAll()).thenReturn(attributes);
-        when(trackedEntityService.findAll()).thenReturn(trackedEntities);
-        when(dataSetService.findAll()).thenReturn(dataSets);
-
-        when(bundleContext.getBundle()).thenReturn(bundle);
-        when(bundle.getVersion()).thenReturn(version);
-
-        when(bundle.getSymbolicName()).thenReturn("BundleSymbolicName");
-        when(version.toString()).thenReturn("bundleVersion");
+        mockTestData();
+        mockActionEventRequest();
 
         request = builder.build();
     }
 
-
     @Test
     public void testBuildChannelRequest() throws Exception {
         assertNotNull(request);
-        Assert.assertEquals(request.getDisplayName(), DisplayNames.DHIS2_DISPLAY_NAME);
-        //assertEquals(EXPECTED_ACTIONS_SIZE, request.getActionTaskEvents().size());
+        assertEquals(request.getDisplayName(), DisplayNames.DHIS2_DISPLAY_NAME);
+        assertEquals(request.getModuleName(), BUNDLE_SYMBOLIC_NAME);
+        assertEquals(request.getModuleVersion(), BUNDLE_VERSION);
+        assertEquals(EXPECTED_ACTIONS_SIZE, request.getActionTaskEvents().size());
     }
 
-    @Ignore
+    @Test
     public void testActionEventRequests() throws Exception{
         List<ActionEventRequest> actionEventRequests = request.getActionTaskEvents();
 
@@ -150,7 +137,6 @@ public class ChannelRequestBuilderTest {
         assertEquals(actionEventRequest.getSubject(), EventSubjects.CREATE_AND_ENROLL);
         assertNotNull(actionEventRequest.getActionParameters());
 
-
         actionEventRequest = itr.next();
         assertEquals(actionEventRequest.getName(),"Program2");
         assertEquals(actionEventRequest.getSubject(), EventSubjects.ENROLL_IN_PROGRAM);
@@ -160,7 +146,6 @@ public class ChannelRequestBuilderTest {
         assertEquals(actionEventRequest.getName(), "trackedEntityName, Program2");
         assertEquals(actionEventRequest.getSubject(), EventSubjects.CREATE_AND_ENROLL);
         assertNotNull(actionEventRequest.getActionParameters());
-
 
         actionEventRequest = itr.next();
         assertEquals(actionEventRequest.getName(),"stage1");
@@ -172,7 +157,6 @@ public class ChannelRequestBuilderTest {
         assertEquals(actionEventRequest.getSubject(), EventSubjects.UPDATE_PROGRAM_STAGE);
         assertNotNull(actionEventRequest.getActionParameters());
 
-
         actionEventRequest = itr.next();
         assertEquals(actionEventRequest.getName(),"trackedEntity1");
         assertEquals(actionEventRequest.getSubject(), EventSubjects.CREATE_ENTITY);
@@ -182,85 +166,86 @@ public class ChannelRequestBuilderTest {
         assertEquals(actionEventRequest.getName(),"trackedEntity2");
         assertEquals(actionEventRequest.getSubject(), EventSubjects.CREATE_ENTITY);
         assertNotNull(actionEventRequest.getActionParameters());
-
-
     }
 
+    private void mockTestData() {
+        programs = DummyData.preparePrograms();
+        stages = DummyData.prepareStages();
+        attributes = DummyData.prepareTrackedEntityAttributes();
+        dataSets = DummyData.prepareDataSets();
+        trackedEntities = DummyData.prepareTrackedEntities();
 
-    private void setupPrograms() {
-        List<Stage> stages = new ArrayList<>();
-        List<TrackedEntityAttribute> attributes = new ArrayList<>();
+        when(programService.findByRegistration(true)).thenReturn(programs);
+        when(stageService.findAll()).thenReturn(stages);
+        when(trackedEntityAttributeService.findAll()).thenReturn(attributes);
+        when(trackedEntityService.findAll()).thenReturn(trackedEntities);
+        when(dataSetService.findAll()).thenReturn(dataSets);
 
-        TrackedEntityAttribute attribute1 = new TrackedEntityAttribute("attribute1", "uuid");
-        TrackedEntityAttribute attribute2 = new TrackedEntityAttribute("attribute2", "uuid");
-        attributes.add(attribute1);
-        attributes.add(attribute2);
+        when(bundleContext.getBundle()).thenReturn(bundle);
+        when(bundle.getVersion()).thenReturn(version);
+        when(dhisWebService.getServerVersion()).thenReturn(serverVersion);
 
-        TrackedEntity trackedEntity = new TrackedEntity("trackedEntityName","trackedEntityID");
-
-        Program program1 = new Program();
-        program1.setName("Program1");
-        program1.setUuid("program1UUID");
-        program1.setRegistration(true);
-        program1.setSingleEvent(false);
-        program1.setTrackedEntity(trackedEntity);
-        program1.setStages(stages);
-        program1.setAttributes(attributes);
-
-        Program program2 = new Program();
-        program2.setName("Program2");
-        program2.setUuid("program2UUID");
-        program2.setRegistration(true);
-        program2.setSingleEvent(false);
-        program2.setTrackedEntity(trackedEntity);
-        program2.setStages(stages);
-        program2.setAttributes(attributes);
-
-        programs.add(program1);
-        programs.add(program2);
-
+        when(bundle.getSymbolicName()).thenReturn(BUNDLE_SYMBOLIC_NAME);
+        when(version.toString()).thenReturn(BUNDLE_VERSION);
     }
 
-    private void setupStages() {
-
-        DataElement dataElement1 = new DataElement("dataElementName1","dataElementID1");
-        DataElement dataElement2 = new DataElement("dataElementName2","dataElementID2");
-
-        Stage stage1 = new Stage();
-        stage1.setName("stage1");
-        stage1.setProgram("programID");
-        stage1.setUuid("stageID");
-
-        List<DataElement> dataElements = new ArrayList<>();
-        dataElements.add(dataElement1);
-        dataElements.add(dataElement2);
-
-        stage1.setDataElements(dataElements);
-
-        Stage stage2 = new Stage();
-        stage2.setName("stage2");
-        stage2.setProgram("programID");
-        stage2.setUuid("stageID");
-
-        stage2.setDataElements(dataElements);
-
-        stages.add(stage1);
-        stages.add(stage2);
+    private void mockActionEventRequest() {
+        when(stageActionBuilder.build(stages)).thenReturn(prepareStagesActionEventRequests());
+        when(createInstanceActionBuilder.build(attributes, trackedEntities)).thenReturn(prepareInstanceActionEventRequests());
+        when(programActionBuilder.build(programs, serverVersion)).thenReturn(prepareProgramActionEventRequests());
+        when(sendDataValueSetActionBuilder.addSendDataValueSetActions(dataSets)).thenReturn(prepareDataSetsActionEventRequests());
     }
 
-    private void setupTrackedEntities() {
+    private List<ActionEventRequest> prepareProgramActionEventRequests() {
+        List<ActionEventRequest> result = new ArrayList<>();
 
-        TrackedEntity trackedEntity1 = new TrackedEntity("trackedEntity1", "ID1");
-        TrackedEntity trackedEntity2 = new TrackedEntity("trackedEntity2", "ID2");
+        for(Program program : programs) {
+            result.add(prepareActionEventRequests(program.getName(), EventSubjects.ENROLL_IN_PROGRAM));
+            result.add(prepareActionEventRequests(program.getTrackedEntity().getName() + ", " + program.getName(), EventSubjects.CREATE_AND_ENROLL));
+        }
 
-        trackedEntities.add(trackedEntity1);
-        trackedEntities.add(trackedEntity2);
+        return result;
+    }
 
+    private List<ActionEventRequest> prepareStagesActionEventRequests() {
+        List<ActionEventRequest> result = new ArrayList<>();
 
-        TrackedEntityAttribute attribute1 = new TrackedEntityAttribute("attribute1", "ID1");
-        TrackedEntityAttribute attribute2 = new TrackedEntityAttribute("attribute2", "ID2");
+        for (Stage stage : stages) {
+            result.add(prepareActionEventRequests(stage.getName(), EventSubjects.UPDATE_PROGRAM_STAGE));
+        }
 
-        attributes.add(attribute1);
-        attributes.add(attribute2);
+        return result;
+    }
+
+    private List<ActionEventRequest> prepareInstanceActionEventRequests() {
+        List<ActionEventRequest> result = new ArrayList<>();
+
+        for (TrackedEntity trackedEntity : trackedEntities) {
+            result.add(prepareActionEventRequests(trackedEntity.getName(), EventSubjects.CREATE_ENTITY));
+        }
+
+        return result;
+    }
+
+    private List<ActionEventRequest> prepareDataSetsActionEventRequests() {
+        List<ActionEventRequest> result = new ArrayList<>();
+
+        for (DataSet dataSet : dataSets) {
+            result.add(prepareActionEventRequests(dataSet.getName(), EventSubjects.CREATE_ENTITY));
+        }
+
+        return result;
+    }
+
+    private ActionEventRequest prepareActionEventRequests(String name, String subject) {
+        SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
+
+        parameters.add(new ActionParameterRequest(0, EventParams.EXTERNAL_ID, null, "testActionParam1",
+                ParameterType.UNICODE.getValue(), true, false, null));
+        parameters.add(new ActionParameterRequest(1, EventParams.DATE, null, "testActionParam2",
+                ParameterType.DATE.getValue(), true, false, null));
+
+        return new ActionEventRequest(name, "displayName", subject, "description", "serviceInterface", "serviceMethod",
+                "serviceMethodCallManner", parameters);
     }
 }

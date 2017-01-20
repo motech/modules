@@ -45,7 +45,8 @@ public class Program {
 
     public Program() {}
 
-    public Program(String uuid, String name, TrackedEntity trackedEntity, List<Stage> stages, List<TrackedEntityAttribute> attributes, boolean singleEvent, boolean registration, String programType) {
+    public Program(String uuid, String name, TrackedEntity trackedEntity, List<Stage> stages,
+                   List<TrackedEntityAttribute> attributes, boolean singleEvent, boolean registration, String programType) {
         this.uuid = uuid;
         this.name = name;
         this.trackedEntity = trackedEntity;
