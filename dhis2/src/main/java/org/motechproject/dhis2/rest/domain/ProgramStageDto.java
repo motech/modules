@@ -16,6 +16,15 @@ public class ProgramStageDto extends BaseDto {
     private ProgramDto program;
     private List<ProgramStageDataElementDto> programStageDataElements;
 
+    public ProgramStageDto() { }
+
+    public ProgramStageDto(String uuid, String name, ProgramDto program, List<ProgramStageDataElementDto> programStageDataElements) {
+        this.setId(uuid);
+        this.setName(name);
+        this.program = program;
+        this.programStageDataElements = programStageDataElements;
+    }
+
     public ProgramDto getProgram() {
         return program;
     }

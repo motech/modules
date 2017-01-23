@@ -8,4 +8,12 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DataElementDto extends BaseDto { }
+public class DataElementDto extends BaseDto {
+
+    public DataElementDto() {}
+
+    public DataElementDto(String uuid, String name) {
+        this.setId(uuid);
+        this.setName(name);
+    }
+}
