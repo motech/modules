@@ -962,4 +962,4 @@ public class OpenMRSActionProxyServiceTest {
 
         return Collections.singletonList(parentObservation);
     }
-}
+ }
