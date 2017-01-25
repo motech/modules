@@ -119,7 +119,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
 
         Location location = StringUtils.isNotEmpty(locationForMotechId) ? getLocationByName(configName, locationForMotechId) : getDefaultLocation(configName);
 
-        List<Identifier> identifierList = convertIdentifierMapToList(identifiers);
+        List<Identifier> identifierList = convertIdentifierMapToList(configName, identifiers);
 
         Patient patient = new Patient(identifierList, person, motechId, location);
         return patientService.createPatient(configName, patient);
@@ -129,7 +129,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     public void updatePatientIdentifiers(String configName, String patientUuid, Map<String, String> identifiers) {
         Patient patient = new Patient();
 
-        List<Identifier> identifierList = convertIdentifierMapToList(identifiers);
+        List<Identifier> identifierList = convertIdentifierMapToList(configName, identifiers);
         patient.setIdentifiers(identifierList);
         patient.setUuid(patientUuid);
 
@@ -330,14 +330,14 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         return location;
     }
 
-    private List<Identifier> convertIdentifierMapToList(Map<String, String> identifiers) {
+    private List<Identifier> convertIdentifierMapToList(String configName, Map<String, String> identifiers) {
         List<Identifier> identifierList = new ArrayList<>();
 
         for (String identifierTypeName : identifiers.keySet()) {
             IdentifierType identifierType = new IdentifierType();
             identifierType.setName(identifierTypeName);
 
-            Identifier identifier = new Identifier(identifiers.get(identifierTypeName), identifierType);
+            Identifier identifier = new Identifier(identifiers.get(identifierTypeName), identifierType, getDefaultLocation(configName));
 
             identifierList.add(identifier);
         }
