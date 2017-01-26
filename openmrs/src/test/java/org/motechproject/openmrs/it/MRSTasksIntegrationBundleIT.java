@@ -298,7 +298,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         values.put(Keys.GIVEN_NAME, "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.person.display}}");
         values.put(Keys.MOTECH_ID, "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.motechId}}" + "taskCreated");
         values.put(Keys.CONFIG_NAME, DEFAULT_CONFIG_NAME);
-        values.put(Keys.IDENTIFIERS, "Old Identification Number:testOldId");
+        values.put(Keys.IDENTIFIERS, "Old Identification Number:" + TEST_OLD_ID);
         actionInformation.setValues(values);
 
         Task task = new Task("OpenMRSPatientTestTask", triggerInformation, Collections.singletonList(actionInformation), taskConfig, true, true);
