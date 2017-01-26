@@ -118,6 +118,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
     private static final String TRIGGER_SUBJECT = "mds.crud.serverconfig.SettingsRecord.CREATE";
     private static final String MOTECH_ID = "654";
     private static final String TEST_MOTECH_ID = "333";
+    private static final String TEST_OLD_ID = "testOldId";
 
     private static final Integer MAX_RETRIES_BEFORE_FAIL = 20;
     private static final Integer WAIT_TIME = 2000;
@@ -297,6 +298,7 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         values.put(Keys.GIVEN_NAME, "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.person.display}}");
         values.put(Keys.MOTECH_ID, "{{ad.openMRS.Patient-" + DEFAULT_CONFIG_NAME + "#0.motechId}}" + "taskCreated");
         values.put(Keys.CONFIG_NAME, DEFAULT_CONFIG_NAME);
+        values.put(Keys.IDENTIFIERS, "Old Identification Number:testOldId");
         actionInformation.setValues(values);
 
         Task task = new Task("OpenMRSPatientTestTask", triggerInformation, Collections.singletonList(actionInformation), taskConfig, true, true);
@@ -609,9 +611,12 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
         assertEquals(createdPatient.getPerson().getGender(), patient.getPerson().getGender());
 
         Person.Name actualName = patient.getPerson().getPreferredName();
-
         assertEquals(createdPatient.getPerson().getDisplay(), actualName.getFamilyName());
         assertEquals(createdPatient.getPerson().getDisplay(), actualName.getGivenName());
+
+        assertNotNull(patient.getIdentifiers());
+        assertEquals(1, patient.getIdentifiers().size());
+        assertEquals(TEST_OLD_ID, patient.getIdentifiers().get(0).getIdentifier());
     }
 
     private void checkIfEncounterWasCreatedProperly() {
