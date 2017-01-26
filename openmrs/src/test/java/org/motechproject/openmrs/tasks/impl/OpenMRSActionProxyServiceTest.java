@@ -355,7 +355,7 @@ public class OpenMRSActionProxyServiceTest {
         Location location = new Location();
         location.setName(OpenMRSActionProxyService.DEFAULT_LOCATION_NAME);
 
-        Identifier identifier = new Identifier("1000", new IdentifierType("CommCare CaseID"));
+        Identifier identifier = new Identifier("1000", new IdentifierType("CommCare CaseID"), location);
 
         Patient patient = new Patient(Collections.singletonList(identifier), person, "500", location);
 
