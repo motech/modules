@@ -111,13 +111,11 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
     }
 
     @Override
-    @Transactional
     public Configs getConfigs() {
         return configs;
     }
 
     @Override
-    @Transactional
     public Config getConfigByName(String name) {
         Config config = StringUtils.isEmpty(name) ?
                 configs.getByName(configs.getDefaultConfigName()) : configs.getByName(name);
@@ -130,7 +128,6 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
     }
 
     @Override
-    @Transactional
     public Config getDefaultConfig() {
         return configs.getByName(configs.getDefaultConfigName());
     }

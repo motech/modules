@@ -69,6 +69,10 @@ public class OpenMRSPatientServiceImpl implements OpenMRSPatientService {
                 personResource.checkPersonAttributeTypes(config, patient.getPerson());
                 patient.setPerson(personResource.createPerson(config, patient.getPerson()));
             } catch (HttpClientErrorException e) {
+                if(StringUtils.equals("401 Unauthorized", e.getMessage())) {
+                    LOGGER.info(String.format("%s: User: %s Password: %s.\n", e.getMessage(), config.getUsername(), config.getPassword()));
+                }
+
                 throw new OpenMRSException(String.format("Could not create Person. %s %s", e.getMessage(), e.getResponseBodyAsString()), e);
             }
         }
