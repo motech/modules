@@ -1,0 +1,20 @@
+{
+  "pager": {
+    "page": "1",
+    "pageCount": "1",
+    "total": "1",
+    "pageSize": "1"
+  },
+  "dataSets": [ {
+    "id": "testDataSetId",
+    "name": "testDataSetName",
+    "created": "2016-10-22T17:48:51.639",
+    "lastUpdated": "2016-10-22T17:48:51.639",
+    "code": "testDataSetCode",
+    "href": "http://localhost:9780/api/dataSets/testDataSetId",
+    "dataElementList":[ {
+      "id": "testDataElementFromDataSetId",
+      "name": "testDataElementFromDataSetName"
+    }]
+  }]
+}
