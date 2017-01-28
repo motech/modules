@@ -45,7 +45,8 @@
     "origin": "SYSTEM_MODULE_ODK",
     "version": "1.0",
     "methodsRequired": [
-      "GET"
+      "GET",
+      "POST"
     ]
   },
   {

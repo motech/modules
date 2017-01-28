@@ -83,8 +83,10 @@ public class CommcareAppStructureServiceImpl implements CommcareAppStructureServ
     }
 
     private void setDomain(AppStructureResponseJson responseJson, String configName) {
-        for (CommcareApplicationJson application : responseJson.getApplications()) {
-            application.setConfigName(configName);
+        if (responseJson != null) {
+            for (CommcareApplicationJson application : responseJson.getApplications()) {
+                application.setConfigName(configName);
+            }
         }
     }
 }
