@@ -51,6 +51,7 @@ public class OpenMRSTaskDataProviderTest {
     private static final String ATTRIBUTE_VALUE = "attributeValue";
     private static final String ATTRIBUTE_TYPE_UUID = "2c41f832-f3ed-47f1-92e2-53143ee71626";
     private static final String ATTRIBUTE_TYPE_DISPLAY = "displayName";
+    private static final String IDENTIFIER_SOURCE_NAME_VALUE = "BAH";
 
     @Mock
     private OpenMRSEncounterService encounterService;
@@ -678,20 +679,21 @@ public class OpenMRSTaskDataProviderTest {
 
     @Test
     public void shouldReturnIdentifierForLookupGeneratedIdentifier() {
+
         String className = GeneratedIdentifier.class.getSimpleName();
 
         Map<String, String> lookupFields = new HashMap<>();
-        lookupFields.put(IDENTIFIER_SOURCE_NAME, "BAH");
+        lookupFields.put(IDENTIFIER_SOURCE_NAME, IDENTIFIER_SOURCE_NAME_VALUE);
 
         GeneratedIdentifier generatedIdentifier = new GeneratedIdentifier();
         generatedIdentifier.setValue("222");
 
-        when(identifierService.getLatestIdentifier(CONFIG_NAME, "BAH")).thenReturn(generatedIdentifier);
+        when(identifierService.getLatestIdentifier(CONFIG_NAME, IDENTIFIER_SOURCE_NAME_VALUE)).thenReturn(generatedIdentifier);
 
         Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, "Generator source name", lookupFields);
 
         //After fetching latest identifier, MOTECH should send post request to bump identifier value up
-        verify(identifierService).setLatestIdentifier(eq(CONFIG_NAME), eq("BAH"), eq(223L));
+        verify(identifierService).setLatestIdentifier(eq(CONFIG_NAME), eq(IDENTIFIER_SOURCE_NAME_VALUE), eq(223L));
 
         assertEquals(generatedIdentifier, object);
     }
