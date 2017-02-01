@@ -676,6 +676,26 @@ public class OpenMRSTaskDataProviderTest {
         assertEquals(0, actual.getNumberOfPrograms());
     }
 
+    @Test
+    public void shouldReturnIdentifierForLookupGeneratedIdentifier() {
+        String className = GeneratedIdentifier.class.getSimpleName();
+
+        Map<String, String> lookupFields = new HashMap<>();
+        lookupFields.put(IDENTIFIER_SOURCE_NAME, "BAH");
+
+        GeneratedIdentifier generatedIdentifier = new GeneratedIdentifier();
+        generatedIdentifier.setValue("222");
+
+        when(identifierService.getLatestIdentifier(CONFIG_NAME, "BAH")).thenReturn(generatedIdentifier);
+
+        Object object = taskDataProvider.lookup(className + '-' + CONFIG_NAME, "Generator source name", lookupFields);
+
+        //After fetching latest identifier, MOTECH should send post request to bump identifier value up
+        verify(identifierService).setLatestIdentifier(eq(CONFIG_NAME), eq("BAH"), eq(223L));
+
+        assertEquals(generatedIdentifier, object);
+    }
+
     private List<Relationship> prepareRelationship() {
         Relationship relationship = new Relationship();
         relationship.setUuid("relationShipUuid");
