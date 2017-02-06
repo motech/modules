@@ -25,4 +25,9 @@ public class GeneratedIdentifierResourceImpl extends BaseResource implements Gen
 
         return identifier;
     }
+
+    @Override
+    public void setLatestIdentifier(Config config, String sourceName, String identifier) {
+        postWithEmptyResponseBody(config, String.format("{\"sourceName\": \"%s\", \"identifier\": \"%s\"}", sourceName, identifier), "/idgen/latestidentifier");
+    }
 }

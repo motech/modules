@@ -326,7 +326,12 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
     }
 
     private GeneratedIdentifier getIdentifier(Map<String, String> lookupFields, String configName) {
-        return generatedIdentifierService.getLatestIdentifier(configName, lookupFields.get(IDENTIFIER_SOURCE_NAME));
+        GeneratedIdentifier generatedIdentifier = generatedIdentifierService.getLatestIdentifier(configName, lookupFields.get(IDENTIFIER_SOURCE_NAME));
+
+        Long value = Long.valueOf(generatedIdentifier.getValue());
+        generatedIdentifierService.setLatestIdentifier(configName, lookupFields.get(IDENTIFIER_SOURCE_NAME), ++value);
+
+        return generatedIdentifier;
     }
 
     private String getObservationsNumber(Observation observation) {

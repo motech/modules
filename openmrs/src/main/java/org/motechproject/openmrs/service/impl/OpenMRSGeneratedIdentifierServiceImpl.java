@@ -7,8 +7,7 @@ import org.motechproject.openmrs.resource.GeneratedIdentifierResource;
 import org.motechproject.openmrs.service.OpenMRSGeneratedIdentifierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.HttpStatusCodeException;
 
 @Service("identifierService")
 public class OpenMRSGeneratedIdentifierServiceImpl implements OpenMRSGeneratedIdentifierService {
@@ -30,8 +29,19 @@ public class OpenMRSGeneratedIdentifierServiceImpl implements OpenMRSGeneratedId
             Config config = configService.getConfigByName(configName);
 
             return generatedIdentifierResource.getGeneratedIdentifier(config, sourceName);
-        } catch (HttpServerErrorException | HttpClientErrorException e) {
-            throw new OpenMRSException(String.format("Cannot get latest identifier from Generator with name: %s. %s %s" + sourceName, e.getMessage(), e.getResponseBodyAsString()), e);
+        } catch (HttpStatusCodeException e) {
+            throw new OpenMRSException(String.format("Cannot get latest identifier from Generator with name: %s. %s %s", sourceName, e.getMessage(), e.getResponseBodyAsString()), e);
+        }
+    }
+
+    @Override
+    public void setLatestIdentifier(String configName, String sourceName, Long identifier) {
+        try {
+            Config config = configService.getConfigByName(configName);
+
+            generatedIdentifierResource.setLatestIdentifier(config, sourceName, identifier.toString());
+        } catch (HttpStatusCodeException e) {
+            throw new OpenMRSException(String.format("Cannot set latest identifier for Generator with name: %s. %s %s", sourceName, e.getMessage(), e.getResponseBodyAsString()), e);
         }
     }
 }

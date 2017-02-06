@@ -16,4 +16,14 @@ public interface OpenMRSGeneratedIdentifierService {
      * @return latest generated identifier
      */
     GeneratedIdentifier getLatestIdentifier(String configName, String sourceName);
+
+    /**
+     * Sets latest identifier {@code identifier} for Generator with given {@code sourceName}.
+     * Configuration with the given {@code configName} will be used while performing this action.
+     *
+     * @param configName the name of the configuration
+     * @param sourceName the source name of the ID Generator
+     * @param identifier identifier to set
+     */
+    void setLatestIdentifier(String configName, String sourceName, Long identifier);
 }
