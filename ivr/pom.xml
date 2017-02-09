@@ -22,19 +22,19 @@
 
     <dependencies>
         <dependency>
-            <groupId>${motech.groupId}</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>motech-platform-dataservices</artifactId>
-            <version>${motech.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${motech.groupId}</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>motech-admin</artifactId>
-            <version>${motech.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${motech.groupId}</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>motech-scheduler</artifactId>
-            <version>${motech.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>

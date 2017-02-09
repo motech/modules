@@ -173,7 +173,7 @@ module, so you must add following dependency:
     <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>motech-platform-event</artifactId>
-        <version>${motech.version}</version>
+        <version>${project.version}</version>
     </dependency>
 
 To fire events you must use OSGI Service, so you will need add reference to it in the blueprint.xml in your module:

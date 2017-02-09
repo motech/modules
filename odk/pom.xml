@@ -23,9 +23,9 @@
     <dependencies>
 
         <dependency>
-            <groupId>${motech.groupId}</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>motech-platform-web-security</artifactId>
-            <version>${motech.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -38,16 +38,16 @@
         </dependency>
 
         <dependency>
-            <groupId>${motech.groupId}</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>motech-tasks</artifactId>
-            <version>${motech.version}</version>
+            <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
-            <groupId>${motech.groupId}</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>motech-admin</artifactId>
-            <version>${motech.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

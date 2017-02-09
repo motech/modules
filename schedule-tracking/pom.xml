@@ -17,24 +17,24 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>${motech.groupId}</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>motech-platform-server-config</artifactId>
-            <version>${motech.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${motech.groupId}</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>motech-platform-dataservices</artifactId>
-            <version>${motech.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${motech.groupId}</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>motech-scheduler</artifactId>
-            <version>${motech.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${motech.groupId}</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>motech-platform-event</artifactId>
-            <version>${motech.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <!-- OSGI dependencies -->
         <dependency>
@@ -51,15 +51,15 @@
         </dependency>
         <!-- Test -->
         <dependency>
-            <groupId>${motech.groupId}</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>motech-testing-utils</artifactId>
-            <version>${motech.version}</version>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>${motech.groupId}</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>motech-tasks-test-utils</artifactId>
-            <version>${motech.version}</version>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

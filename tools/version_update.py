@@ -5,7 +5,7 @@ from xml.dom.minidom import parse
 pom = open("pom.xml")
 dom = parse(pom)
 pom.close()
-mv = dom.getElementsByTagName('motech.version')
+mv = dom.getElementsByTagName('project.version')
 mv[0].childNodes[0].data = sys.argv[1]
 
 f = open("pom.xml", 'w')
