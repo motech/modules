@@ -13,9 +13,6 @@
     </description>
 
     <properties>
-        <motech.groupId>org.motechproject</motech.groupId>
-        <motech.version>0.30-SNAPSHOT</motech.version>
-
         <jasmine.server.port>8234</jasmine.server.port>
 
         <external.dependency.release.tag>r033</external.dependency.release.tag>
@@ -634,7 +631,7 @@
             <dependency>
                 <groupId>org.motechproject</groupId>
                 <artifactId>motech-platform-osgi-extender-fragment</artifactId>
-                <version>${motech.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>jaxen</groupId>
@@ -761,7 +758,7 @@
             <dependency>
                 <groupId>org.motechproject</groupId>
                 <artifactId>motech-pax-it</artifactId>
-                <version>${motech.version}</version>
+                <version>${project.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
