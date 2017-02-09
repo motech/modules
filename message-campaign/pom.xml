@@ -4,13 +4,13 @@
     <parent>
         <artifactId>modules</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.27.7</version>
+        <version>0.27.7-SNAPSHOT</version>
         <relativePath>../</relativePath>
     </parent>
     <artifactId>message-campaign</artifactId>
     <name>MOTECH Message Campaign</name>
     <description>Message Campaign Module</description>
-    <version>0.27.7</version>
+    <version>0.27.7-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>

@@ -4,12 +4,12 @@
     <parent>
         <artifactId>modules</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.27.7</version>
+        <version>0.27.7-SNAPSHOT</version>
         <relativePath>../</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <version>0.27.7</version>
+    <version>0.27.7-SNAPSHOT</version>
     <description>OpenHIE Care Services Directory Module</description>
     <artifactId>csd</artifactId>
     <name>Care Services Directory</name>

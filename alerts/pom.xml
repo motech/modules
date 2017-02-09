@@ -3,14 +3,14 @@
     <parent>
         <artifactId>modules</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.27.7</version>
+        <version>0.27.7-SNAPSHOT</version>
         <relativePath>../</relativePath>
     </parent>
     <groupId>org.motechproject</groupId>
     <artifactId>alerts</artifactId>
     <name>Alerts Module</name>
     <description>Alerts Module</description>
-    <version>0.27.7</version>
+    <version>0.27.7-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>
