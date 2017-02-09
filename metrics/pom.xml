@@ -3,13 +3,13 @@
     <parent>
         <artifactId>modules</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.27.8-SNAPSHOT</version>
+        <version>0.27.7</version>
         <relativePath>../</relativePath>
     </parent>
     <artifactId>metrics</artifactId>
     <name>Metrics Module</name>
     <description>Metrics Module</description>
-    <version>0.27.8-SNAPSHOT</version>
+    <version>0.27.7</version>
     <packaging>bundle</packaging>
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>

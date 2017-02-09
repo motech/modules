@@ -4,12 +4,12 @@
     <parent>
         <artifactId>modules</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.27.8-SNAPSHOT</version>
+        <version>0.27.7</version>
         <relativePath>../</relativePath>
     </parent>
 
     <artifactId>hub</artifactId>
-    <version>0.27.8-SNAPSHOT</version>
+    <version>0.27.7</version>
     <name>MOTECH Hub</name>
     <description>MOTECH Hub</description>
     <packaging>bundle</packaging>

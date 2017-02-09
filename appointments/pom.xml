@@ -6,11 +6,11 @@
     <parent>
         <artifactId>modules</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.27.8-SNAPSHOT</version>
+        <version>0.27.7</version>
     </parent>
 
     <artifactId>appointments</artifactId>
-    <version>0.27.8-SNAPSHOT</version>
+    <version>0.27.7</version>
     <packaging>bundle</packaging>
     <name>Appointments Module</name>
 

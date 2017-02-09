@@ -3,13 +3,13 @@
     <parent>
         <artifactId>modules</artifactId>
         <groupId>org.motechproject</groupId>
-        <version>0.27.8-SNAPSHOT</version>
+        <version>0.27.7</version>
         <relativePath>../</relativePath>
     </parent>
 
     <artifactId>openmrs-19</artifactId>
     <name>OpenMRS 1.9</name>
-    <version>0.27.8-SNAPSHOT</version>
+    <version>0.27.7</version>
     <packaging>bundle</packaging>
 
     <properties>
