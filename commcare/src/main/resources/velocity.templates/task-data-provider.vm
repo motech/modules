@@ -169,7 +169,7 @@
                                 },
                                 {
                                     "displayName" : "commcare.case.field.parentId",
-                                    "fieldKey" : "indices.parent.caseId"
+                                    "fieldKey" : "parentId"
                                 },
                                 #foreach($caseField in $entry.getCaseProperties())
                                 {
