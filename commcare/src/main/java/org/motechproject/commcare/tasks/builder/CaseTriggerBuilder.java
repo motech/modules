@@ -82,6 +82,8 @@ public class CaseTriggerBuilder implements TriggerBuilder {
 
                         triggers.add(new TriggerEventRequest(displayName, CASE_EVENT + "." + config.getName() + "." + module.getCaseType(),
                                 null, parameterRequests, CASE_EVENT));
+                    } else if (config.isEventStrategyFull()) {
+                        addDistinctCasePropertiesToTrigger(triggers, module);
                     }
                 }
             }
@@ -103,5 +105,27 @@ public class CaseTriggerBuilder implements TriggerBuilder {
         parameters.add(new EventParameterRequest("commcare.dateModified", DATE_MODIFIED, ParameterType.DATE.getValue()));
         parameters.add(new EventParameterRequest("commcare.caseName", CASE_NAME));
         parameters.add(new EventParameterRequest("commcare.ownerId", OWNER_ID));
+    }
+
+    private void addDistinctCasePropertiesToTrigger(List<TriggerEventRequest> triggers, CommcareModuleJson module) {
+        for (TriggerEventRequest trigger : triggers) {
+            if (trigger.getSubject().endsWith("." + module.getCaseType())) {
+                for (String caseProperty : module.getCaseProperties()) {
+                    if (!isTriggerContainingParameter(trigger.getEventParameters(), caseProperty)) {
+                        trigger.getEventParameters().add(new EventParameterRequest(caseProperty, caseProperty, ParameterType.DATE.getValue()));
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean isTriggerContainingParameter(List<EventParameterRequest> parameters, String name) {
+        for (EventParameterRequest parameter : parameters) {
+            if (parameter.getEventKey().equals(parameter.getDisplayName()) && parameter.getEventKey().equals(name) &&
+                    parameter.getType().equals(ParameterType.DATE.getValue())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
