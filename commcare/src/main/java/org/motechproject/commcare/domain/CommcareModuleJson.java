@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +28,14 @@ public class CommcareModuleJson implements Serializable {
     private List<FormSchemaJson> formSchemas;
 
     public List<String> getCaseProperties() {
-        return caseProperties;
+        List<String> properties = new ArrayList<>();
+        for (String property : this.caseProperties) {
+            if (!property.contains("parent")) {
+                properties.add(property);
+            }
+        }
+
+        return properties;
     }
 
     public void setCaseProperties(List<String> caseProperties) {
