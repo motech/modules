@@ -277,6 +277,7 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
         CaseInfo caseInfo = new CaseInfo();
 
         Map<String, String> properties = caseResponse.getCaseProperties();
+        Map<String, Map<String, String>> indices = caseResponse.getIndices();
 
         String caseType = properties.get("case_type");
         String dateOpened = properties.get("date_opened");
@@ -297,7 +298,7 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
         caseInfo.setClosed(caseResponse.isClosed());
         caseInfo.setDateClosed(caseResponse.getDateClosed());
         caseInfo.setDomain(caseResponse.getDomain());
-        caseInfo.setIndices(caseResponse.getIndices());
+        caseInfo.setIndices(indices);
         caseInfo.setServerDateModified(caseResponse.getServerDateModified());
         caseInfo.setServerDateOpened(caseResponse.getServerDateOpened());
         caseInfo.setVersion(caseResponse.getVersion());
@@ -306,6 +307,9 @@ public class CommcareCaseServiceImpl implements CommcareCaseService {
         caseInfo.setUserId(caseResponse.getUserId());
         caseInfo.setConfigName(configName);
         caseInfo.setDateModified(caseResponse.getDateModified());
+
+        String parentId = indices.containsKey("parent") ? indices.get("parent").get("case_id") : "";
+        caseInfo.setParentId(parentId);
 
         return caseInfo;
     }

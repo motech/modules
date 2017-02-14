@@ -167,6 +167,10 @@
                                     "displayName" : "commcare.case.field.caseName",
                                     "fieldKey" : "caseName"
                                 },
+                                {
+                                    "displayName" : "commcare.case.field.parentId",
+                                    "fieldKey" : "parentId"
+                                },
                                 #if($unionProperties.containsKey($entry.getCaseType()))
                                     #foreach($caseField in $unionProperties.get($entry.getCaseType()))
                                     {

@@ -10,6 +10,7 @@ import java.util.Map;
 public class CaseInfo {
 
     private String caseId;
+    private String parentId;
     private String userId;
     private String dateClosed;
     private String dateModified;
@@ -33,6 +34,14 @@ public class CaseInfo {
 
     public void setCaseId(String caseId) {
         this.caseId = caseId;
+    }
+
+    public String getParentId() {
+        return this.parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 
     public String getUserId() {
