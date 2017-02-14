@@ -167,11 +167,13 @@
                                     "displayName" : "commcare.case.field.caseName",
                                     "fieldKey" : "caseName"
                                 },
-                                #foreach($caseField in $entry.getCaseProperties())
-                                {
-                                    "displayName" : "$esc.java($caseField)",
-                                    "fieldKey" : "$trimmer.trim($esc.java($caseField))"
-                                },
+                                #if($unionProperties.containsKey($entry.getCaseType()))
+                                    #foreach($caseField in $unionProperties.get($entry.getCaseType()))
+                                    {
+                                        "displayName" : "$esc.java($caseField)",
+                                        "fieldKey" : "$trimmer.trim($esc.java($caseField))"
+                                    },
+                                    #end
                                 #end
                                 {
                                     "displayName" : "commcare.case.field.serverDateModified",

@@ -5,6 +5,7 @@ import org.apache.velocity.tools.generic.EscapeTool;
 import org.motechproject.commcare.config.Config;
 import org.motechproject.commcare.service.CommcareConfigService;
 import org.motechproject.commcare.service.CommcareSchemaService;
+import org.motechproject.commcare.tasks.builder.model.CaseTypeWithApplicationName;
 import org.motechproject.commcare.util.NameTrimmer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +17,10 @@ import javax.annotation.Resource;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * The <code>CommcareDataProviderBuilder</code> class is responsible for building
@@ -57,6 +60,7 @@ public class CommcareDataProviderBuilder {
         }
 
         model.put("configurations", configurations);
+        model.put("unionProperties", getCasePropertiesForGivenCaseType(configurations));
         model.put("esc", escapeTool);
         model.put("trimmer", trimmer);
         model.put("DisplayNameHelper", DisplayNameHelper.class);
@@ -86,4 +90,17 @@ public class CommcareDataProviderBuilder {
         this.configService = configService;
     }
 
+    private Map<String, Set<String>> getCasePropertiesForGivenCaseType(List<ConfigurationData> configurations) {
+        Map<String, Set<String>> caseProperties = new HashMap<>();
+
+        for (ConfigurationData config : configurations) {
+            for (CaseTypeWithApplicationName actualCase : config.getCasesWithApplication()) {
+                Set<String> casePropertiesForCaseType = caseProperties.containsKey(actualCase.getCaseType()) ? caseProperties.get(actualCase.getCaseType()) : new HashSet<>();
+
+                casePropertiesForCaseType.addAll(actualCase.getCaseProperties());
+                caseProperties.put(actualCase.getCaseType(), casePropertiesForCaseType);
+            }
+        }
+        return caseProperties;
+    }
 }
