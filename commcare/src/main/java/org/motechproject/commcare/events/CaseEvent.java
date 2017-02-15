@@ -95,7 +95,11 @@ public class CaseEvent {
         parameters.put(EventDataKeys.DATE_MODIFIED, this.dateModified);
         parameters.put(EventDataKeys.OWNER_ID, this.ownerId);
         parameters.put(EventDataKeys.CASE_DATA_XMLNS, this.caseDataXmlns);
-        parameters.putAll(this.getFieldValues());
+
+        if (this.getFieldValues() != null) {
+            parameters.putAll(this.getFieldValues());
+        }
+
         event.getParameters().putAll(parameters);
 
         return event;
