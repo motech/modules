@@ -30,6 +30,8 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class CommcareCaseServiceImplTest {
+    private static final String CASES_RESPONSE_JSON = "json/service/cases.json";
+    private static final String SINGLE_CASE_RESPONSE_JSON = "json/service/single-case-response.json";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommcareCaseServiceImplTest.class);
 
@@ -59,7 +61,7 @@ public class CommcareCaseServiceImplTest {
 
     @Test
     public void testAllCases() {
-        when(commcareHttpClient.casesRequest(any(AccountConfig.class), any(CaseRequest.class))).thenReturn(casesResponse());
+        when(commcareHttpClient.casesRequest(any(AccountConfig.class), any(CaseRequest.class))).thenReturn(readResponseFromFile(CASES_RESPONSE_JSON));
 
         List<CaseInfo> cases = caseService.getCases(50, 1);
 
@@ -74,7 +76,7 @@ public class CommcareCaseServiceImplTest {
     public void testCaseByCaseId() {
         String caseId = "testCase";
 
-        when(commcareHttpClient.singleCaseRequest(config.getAccountConfig(), caseId)).thenReturn(individualCase());
+        when(commcareHttpClient.singleCaseRequest(config.getAccountConfig(), caseId)).thenReturn(readResponseFromFile(SINGLE_CASE_RESPONSE_JSON));
 
         CaseInfo caseInstance = caseService.getCaseByCaseId(caseId);
 
@@ -89,7 +91,7 @@ public class CommcareCaseServiceImplTest {
         request.setUserId(userId);
         request.setLimit(20);
         request.setOffset(0);
-        when(commcareHttpClient.casesRequest(config.getAccountConfig(), request)).thenReturn(casesResponse());
+        when(commcareHttpClient.casesRequest(config.getAccountConfig(), request)).thenReturn(readResponseFromFile(CASES_RESPONSE_JSON));
 
         List<CaseInfo> cases = caseService.getCasesByUserId(userId, 20, 1);
 
@@ -99,7 +101,7 @@ public class CommcareCaseServiceImplTest {
 
     @Test
     public void testAllCaseServerDateModified() {
-        when(commcareHttpClient.casesRequest(any(AccountConfig.class), any(CaseRequest.class))).thenReturn(casesResponse());
+        when(commcareHttpClient.casesRequest(any(AccountConfig.class), any(CaseRequest.class))).thenReturn(readResponseFromFile(CASES_RESPONSE_JSON));
 
         List<CaseInfo> cases = caseService.getCases(50, 1);
 
@@ -107,17 +109,25 @@ public class CommcareCaseServiceImplTest {
                 "2012-04-10T14:31:44.950000Z"), extract(cases, on(CaseInfo.class).getServerDateModified()));
     }
 
-    private String casesResponse() {
+    @Test
+    public void shouldCreateCaseInfoWithParentId() {
+        String caseId = "testCase";
+        String expectedParentId = "ca43088e-471b-451c-b036-44edf63ad123";
+
+        when(commcareHttpClient.singleCaseRequest(config.getAccountConfig(), caseId)).thenReturn(readResponseFromFile(SINGLE_CASE_RESPONSE_JSON));
+        CaseInfo caseInstance = caseService.getCaseByCaseId(caseId);
+
+        assertNotNull(caseInstance);
+        assertEquals(expectedParentId, caseInstance.getParentId());
+    }
+
+    private String readResponseFromFile(String fileName) {
         try {
-            URL url = this.getClass().getClassLoader().getResource("json/service/cases.json");
+            URL url = this.getClass().getClassLoader().getResource(fileName);
             return FileUtils.readFileToString(new File(url.getFile()));
         } catch (IOException e) {
             LOGGER.error(e.getMessage(), e);
             return null;
         }
-    }
-
-    private String individualCase() {
-        return "{\"date_closed\": null, \"domain\": \"usm-motech\", \"xform_ids\": [\"UPMW4L9RB4JWYFQYRDRWFKETV\"], \"version\": \"1.0\", \"server_date_opened\": \"2012-04-12T18:59:04Z\", \"properties\": {\"case_type\": \"checkup\", \"date_opened\": \"2012-04-12T14:58:58Z\", \"external_id\": \"Gddd\", \"owner_id\": null, \"case_name\": \"Gddd\"}, \"server_date_modified\": \"2012-04-12T18:59:04Z\", \"user_id\": \"5d622c4336d118a9020d1c758e71f368\", \"date_modified\": \"2012-04-12T14:58:58Z\", \"case_id\": \"JQHFW1DBNQRQJ8VVKZ0M7RKJ4\", \"closed\": false, \"indices\": {\"parent\":{\"case_id\":\"ca43088e-471b-451c-b036-44edf63ad123\",\"case_type\":\"mother\"}}}";
     }
 }
