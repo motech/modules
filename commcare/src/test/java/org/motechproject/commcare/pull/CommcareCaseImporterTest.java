@@ -26,6 +26,7 @@ import org.motechproject.testing.osgi.wait.WaitCondition;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,7 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
@@ -52,8 +54,10 @@ public class CommcareCaseImporterTest {
     private static final String CASE = "case";
     private static final String CASE_ID = "id0";
 
-    private static final String ATTR_KEY1 = "attr1";
-    private static final String ATTR_KEY2 = "attr2";
+    private static final String CC_PROPERTY1_KEY = "firstCCProperty";
+    private static final String CC_PROPERTY2_KEY = "secondCCProperty";
+    private static final String CC_PROPERTY1_VALUE = "firstCCPropertyValue";
+    private static final String CC_PROPERTY2_VALUE = "secondCCPropertyValue";
 
     private static final List<String> REC_DATES = Arrays.asList(
             dateTimeToString(new DateTime(2013, 2, 1, 10, 20, 33)),
@@ -120,8 +124,9 @@ public class CommcareCaseImporterTest {
         ArgumentCaptor<MotechEvent> eventCaptor = ArgumentCaptor.forClass(MotechEvent.class);
         verify(eventRelay).sendEventMessage(eventCaptor.capture());
 
-        verifyCaseEvent(eventCaptor.getAllValues().get(0), CASE_ID, REC_DATES.get(0));
-
+        MotechEvent motechEvent = eventCaptor.getAllValues().get(0);
+        verifyCaseEvent(motechEvent, CASE_ID, REC_DATES.get(0));
+        verifyCasePropertiesFromMotechEvent(motechEvent.getParameters());
 
         // verify status
         CaseImportStatus status = importer.importStatus();
@@ -131,7 +136,7 @@ public class CommcareCaseImporterTest {
         assertFalse(status.isError());
         assertEquals(1, status.getCasesImported());
         assertEquals(REC_DATES.get(0), status.getLastImportDate());
-        assertEquals("id0", status.getLastImportCaseId());
+        assertEquals(CASE_ID, status.getLastImportCaseId());
         assertFalse(status.isImportInProgress());
     }
 
@@ -215,13 +220,13 @@ public class CommcareCaseImporterTest {
         ));
         when(caseService.getCasesByCasesTimeWithMetadata(eq(dateTimeToString(START)), eq(dateTimeToString(END)),
                 eq(FETCH_SIZE), getPageNumber(1), eq(CONFIG_NAME))).thenReturn(caseList(
-                caseInfo("id0", REC_DATES.get(0)), caseInfo("id1", REC_DATES.get(1))
+                caseInfo(CASE_ID, REC_DATES.get(0)), caseInfo("id1", REC_DATES.get(1))
         ));
         when(caseService.getCasesByCasesTimeWithMetadata(eq(dateTimeToString(START)), eq(dateTimeToString(END)), eq(1),
                 getPageNumber(1), eq(CONFIG_NAME))).thenReturn(caseList(
-                caseInfo("id0", REC_DATES.get(0))
+                caseInfo(CASE_ID, REC_DATES.get(0))
         ));
-        when(caseService.getCaseByCaseId(eq("id0"), eq(CONFIG_NAME))).thenReturn(caseInfo("id0", REC_DATES.get(0)));
+        when(caseService.getCaseByCaseId(eq(CASE_ID), eq(CONFIG_NAME))).thenReturn(prepareCaseInfoWithAdditionalProperties());
     }
 
     private static String dateTimeToString(DateTime dateTime) {
@@ -253,6 +258,17 @@ public class CommcareCaseImporterTest {
         return caseInfo;
     }
 
+    private CaseInfo prepareCaseInfoWithAdditionalProperties() {
+        CaseInfo result = caseInfo(CASE_ID, REC_DATES.get(0));
+
+        Map <String, String> fieldValues = new HashMap<>();
+        fieldValues.put(CC_PROPERTY1_KEY, CC_PROPERTY1_VALUE);
+        fieldValues.put(CC_PROPERTY2_KEY, CC_PROPERTY2_VALUE);
+        result.setFieldValues(fieldValues);
+
+        return result;
+    }
+
     private Integer getPageNumber(final int pageNumber) {
         return argThat(new ArgumentMatcher<Integer>() {
             @Override
@@ -261,6 +277,14 @@ public class CommcareCaseImporterTest {
                 return pageNum == pageNumber;
             }
         });
+    }
+
+    private void verifyCasePropertiesFromMotechEvent(Map <String, Object> params) {
+        assertTrue(params.containsKey(CC_PROPERTY1_KEY));
+        assertTrue(params.containsKey(CC_PROPERTY2_KEY));
+
+        assertEquals(CC_PROPERTY1_VALUE, params.get(CC_PROPERTY1_KEY));
+        assertEquals(CC_PROPERTY2_VALUE, params.get(CC_PROPERTY2_KEY));
     }
 
     private void verifyCaseEvent(MotechEvent event, String id, String dateModified) {
