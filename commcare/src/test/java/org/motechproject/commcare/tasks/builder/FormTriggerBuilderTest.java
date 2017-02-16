@@ -121,6 +121,11 @@ public class FormTriggerBuilderTest {
                     assertEquals("Received Form: form5 [app1: ConfigTwo]", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION4));
                     break;
+                case BASE_SUBJECT_TWO + "." + XMLNS3 + APP_ID1:
+                    assertEquals(1 + FORM_PREDEFINED_FIELDS, request.getEventParameters().size());
+                    assertEquals("Received Form: form3 [app1: ConfigTwo]", request.getDisplayName());
+                    assertTrue(hasEventKey(request.getEventParameters(), FORM_QUESTION4));
+                    break;
                 default:
                     fail("Found trigger with incorrect subject: " + subject);
             }

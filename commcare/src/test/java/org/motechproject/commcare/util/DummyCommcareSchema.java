@@ -186,23 +186,45 @@ public final class DummyCommcareSchema {
     public static List<CommcareApplicationJson> getApplicationsForConfigTwo() {
         List<CommcareApplicationJson> applicationsInConfig2 = new ArrayList<>();
 
+        Map<String, String> formNames3 = new HashMap<>();
         Map<String, String> formNames5 = new HashMap<>();
+
+        formNames3.put("en", "form3");
         formNames5.put("en", "form5");
 
         List<String> fields1 = new ArrayList<>();
+        List<String> fields2 = new ArrayList<>();
 
         fields1.add(CASE_FIELD1);
         fields1.add(CASE_FIELD2);
         fields1.add(CASE_FIELD3);
 
+        fields2.add(CASE_FIELD4);
+        fields2.add(CASE_FIELD5);
+        fields2.add(CASE_FIELD6);
+
+        FormSchemaQuestionJson questionJson4 = new FormSchemaQuestionJson();
+        questionJson4.setQuestionLabel("Last visit");
+        questionJson4.setQuestionValue(FORM_QUESTION4);
+
         FormSchemaQuestionJson questionJson6 = new FormSchemaQuestionJson();
         questionJson6.setQuestionLabel("Last visit");
         questionJson6.setQuestionValue(FORM_QUESTION4);
+
+        FormSchemaJson formSchemaJson3 = new FormSchemaJson();
+        formSchemaJson3.setFormNames(formNames3);
+        formSchemaJson3.setQuestions(Collections.singletonList(questionJson4));
+        formSchemaJson3.setXmlns(XMLNS3);
 
         FormSchemaJson formSchemaJson5 = new FormSchemaJson();
         formSchemaJson5.setFormNames(formNames5);
         formSchemaJson5.setQuestions(Collections.singletonList(questionJson6));
         formSchemaJson5.setXmlns(XMLNS5);
+
+        CommcareModuleJson commcareModuleJson2 = new CommcareModuleJson();
+        commcareModuleJson2.setFormSchemas(Collections.singletonList(formSchemaJson3));
+        commcareModuleJson2.setCaseType("appointment");
+        commcareModuleJson2.setCaseProperties(fields2);
 
         CommcareModuleJson commcareModuleJson4 = new CommcareModuleJson();
         commcareModuleJson4.setFormSchemas(Collections.singletonList(formSchemaJson5));
@@ -212,7 +234,7 @@ public final class DummyCommcareSchema {
         CommcareApplicationJson commcareApplicationJson3 = new CommcareApplicationJson();
         commcareApplicationJson3.setApplicationName("app1");
         commcareApplicationJson3.setCommcareAppId(APP_ID1);
-        commcareApplicationJson3.setModules(Collections.singletonList((commcareModuleJson4)));
+        commcareApplicationJson3.setModules(Arrays.asList(commcareModuleJson2, commcareModuleJson4));
 
         applicationsInConfig2.add(commcareApplicationJson3);
 
