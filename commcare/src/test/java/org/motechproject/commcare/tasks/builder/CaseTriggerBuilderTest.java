@@ -14,7 +14,9 @@ import org.motechproject.commcare.util.DummyCommcareSchema;
 import org.motechproject.tasks.contract.EventParameterRequest;
 import org.motechproject.tasks.contract.TriggerEventRequest;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -57,19 +59,23 @@ public class CaseTriggerBuilderTest {
     public void shouldBuildProperTriggerRequestForCases() {
 
         List<TriggerEventRequest> triggerEventRequests = caseTriggerBuilder.buildTriggers();
+        Set<String> existingModules = new HashSet<>();
 
         assertFalse(triggerEventRequests.isEmpty());
 
-        int counter = 0;
-        for (CommcareApplicationJson application: DummyCommcareSchema.getApplicationsForConfigOne()) {
-            counter += application.getModules().size();
+        for (CommcareApplicationJson application : DummyCommcareSchema.getApplicationsForConfigOne()) {
+            for (CommcareModuleJson module : application.getModules()) {
+                existingModules.add(module.getCaseType());
+            }
         }
 
         for (CommcareApplicationJson application: DummyCommcareSchema.getApplicationsForConfigTwo()) {
-            counter += application.getModules().size();
+            for (CommcareModuleJson module : application.getModules()) {
+                existingModules.add(module.getCaseType());
+            }
         }
 
-        assertEquals(counter, triggerEventRequests.size());
+        assertEquals(existingModules.size(), triggerEventRequests.size());
 
         for(TriggerEventRequest request : triggerEventRequests) {
 
@@ -85,7 +91,7 @@ public class CaseTriggerBuilderTest {
                     assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD3));
                     break;
                 case "org.motechproject.commcare.api.case.ConfigOne.appointment":
-                    assertEquals(2 + CASE_PREDEFINED_FIELDS, request.getEventParameters().size());
+                    assertEquals(3 + CASE_PREDEFINED_FIELDS, request.getEventParameters().size());
                     assertEquals("Received Case: appointment [app1: ConfigOne]", request.getDisplayName());
                     assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD4));
                     assertTrue(hasEventKey(request.getEventParameters(), CASE_FIELD5));
