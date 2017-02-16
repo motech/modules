@@ -1,0 +1,41 @@
+{
+  "id": "h1k38soa0293jd84fjs8d9fk23jf48f0sd8gh3n8",
+  "modules": [
+    {
+      "case_properties": [
+        "name",
+        "user_bednet",
+        "parent/name",
+        "parent/last_implants_competency",
+        "parent/last_implants_date_visit",
+        "parent/last_implants_plan1_content",
+        "parent/last_implants_plan1_deadline",
+        "parent/last_implants_plan1_supervisor",
+        "parent/last_implants_plan1_supervisor_name"
+      ],
+      "case_type": "myCase1",
+      "forms": [
+        {
+          "name": {"en": "myForm1"},
+          "questions": [
+            {
+              "label": "questionName",
+              "repeat": "",
+              "tag": "input",
+              "value": "/data/name",
+              "options": [
+                {
+                  "label": "1. Yes",
+                  "value": "yes"
+                },
+                {
+                  "label": "2. No",
+                  "value": "no"
+                }]
+            }],
+          "xmlns": "http://openrosa.org/formdesigner/61650CE0-06E3-46D2-A53F-E105725DDB3B"
+        }]
+    }],
+  "name": "myApplication",
+  "resource_uri": ""
+}
