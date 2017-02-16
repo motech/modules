@@ -33,7 +33,7 @@ import static org.junit.Assert.*;
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class FormControllerIT extends OdkBaseIT {
 
-    private static final int WAIT_COUNT = 30;
+    private static final int WAIT_COUNT = 100;
     private static final int EXPECTED_EVENTS_SUCCESS = 7;
     private static final int EXPECTED_EVENTS_FAIL = 1;
     private static final String TIMEOUT = "Timeout";
@@ -76,7 +76,7 @@ public class FormControllerIT extends OdkBaseIT {
             if (count == WAIT_COUNT) {
                 fail(TIMEOUT);
             }
-            Thread.sleep(2000);
+            Thread.sleep(4000);
         }
 
         List<MotechEvent> events = mockEventListener.getEvents();
