@@ -108,14 +108,59 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
     }
 
     @Override
-    public Observation getLatestObservationByValueAndPatientUuid(String configName, String patientUuid, String value) {
+    public Observation getLatestObservationByValueAndPatientUuid(String configName, String patientUUID, String value) {
         try {
             Config config = configService.getConfigByName(configName);
-            ObservationListResult obs = obsResource.queryForObservationsByPatientId(config, patientUuid);
+            ObservationListResult obs = obsResource.queryForObservationsByPatientId(config, patientUUID);
             return getLatestObservationByValue(obs.getResults(), new Observation.ObservationValue(value));
         } catch (HttpClientErrorException e) {
             throw new OpenMRSException(String.format("Could not get Observation for Patient uuid: %s. %s %s",
-                    patientUuid, e.getMessage(), e.getResponseBodyAsString()), e);
+                    patientUUID, e.getMessage(), e.getResponseBodyAsString()), e);
+        }
+    }
+
+    @Override
+    public Observation getLatestObservationByPatientUUIDConceptUUIDAndValue (String configName, String patientUUID, String conceptUUID, String value) {
+        Validate.notEmpty(patientUUID, "Patient uuid cannot be empty");
+        Validate.notEmpty(conceptUUID, "Concept uuid cannot be empty");
+
+        try {
+            Config config = configService.getConfigByName(configName);
+            ObservationListResult obs = obsResource.getObservationByPatientUUIDAndConceptUUID(config, patientUUID, conceptUUID);
+            return getLatestObservationByValue(obs.getResults(), new Observation.ObservationValue(value));
+        } catch (HttpClientErrorException e) {
+            throw new OpenMRSException(String.format("Could not get Observation for Patient uuid: %s, Concept UUID: %s and Value: %s. %s %s",
+                    patientUUID, conceptUUID, value, e.getMessage(), e.getResponseBodyAsString()), e);
+        }
+    }
+
+    @Override
+    public Observation getLatestObservationByEncounterUUIDAndConceptUUID (String configName, String encounterUUID, String conceptUUID) {
+        Validate.notEmpty(encounterUUID, "Encounter uuid cannot be empty");
+        Validate.notEmpty(conceptUUID, "Concept uuid cannot be empty");
+
+        try {
+            Config config = configService.getConfigByName(configName);
+            ObservationListResult obs = obsResource.getObservationByEncounterUUIDAndConceptUUID(config, encounterUUID, conceptUUID);
+            return CollectionUtils.isEmpty(obs.getResults()) ? null : obs.getResults().get(0);
+        } catch (HttpClientErrorException e) {
+            throw new OpenMRSException(String.format("Could not get Observation for Encounter uuid: %s and Concept UUID: %s. %s %s",
+                    encounterUUID, conceptUUID, e.getMessage(), e.getResponseBodyAsString()), e);
+        }
+    }
+
+    @Override
+    public Observation getLatestObservationByEncounterUUIDConceptUUIDAndValue (String configName, String encounterUUID, String conceptUUID, String value) {
+        Validate.notEmpty(encounterUUID, "Encounter uuid cannot be empty");
+        Validate.notEmpty(conceptUUID, "Concept uuid cannot be empty");
+
+        try {
+            Config config = configService.getConfigByName(configName);
+            ObservationListResult obs = obsResource.getObservationByEncounterUUIDAndConceptUUID(config, encounterUUID, conceptUUID);
+            return getLatestObservationByValue(obs.getResults(), new Observation.ObservationValue(value));
+        } catch (HttpClientErrorException e) {
+            throw new OpenMRSException(String.format("Could not get Observation for Encounter uuid: %s, Concept UUID: %s and Value: %s. %s %s",
+                    encounterUUID, conceptUUID, value, e.getMessage(), e.getResponseBodyAsString()), e);
         }
     }
 

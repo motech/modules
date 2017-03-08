@@ -184,6 +184,75 @@ public class OpenMRSTaskDataProviderTest {
     }
 
     @Test
+    public void shouldReturnObservationForPatientUuidConceptUuidAndValue() {
+        String className = Observation.class.getSimpleName();
+        String conceptUuid = "sampleConceptUuid";
+        String value = "Sample value";
+
+        Map<String, String> lookupFields = new HashMap<>();
+        lookupFields.put(PATIENT_UUID, DEFAULT_UUID);
+        lookupFields.put(CONCEPT_UUID, conceptUuid);
+        lookupFields.put(OBSERVATION_VALUE, value);
+
+        Observation observation = new Observation();
+        observation.setUuid("20");
+
+        when(observationService.getLatestObservationByPatientUUIDConceptUUIDAndValue(CONFIG_NAME, DEFAULT_UUID, conceptUuid, value)).thenReturn(observation);
+
+        Object object = taskDataProvider.lookup(className + "-" + CONFIG_NAME, BY_PATIENT_UUID_CONCEPT_UUID_AND_VALUE, lookupFields);
+
+        assertEquals(observation, object);
+
+        verify(observationService).getLatestObservationByPatientUUIDConceptUUIDAndValue(CONFIG_NAME, DEFAULT_UUID, conceptUuid, value);
+    }
+
+    @Test
+    public void shouldReturnObservationForEncounterUuidAndConceptUuid() {
+        String className = Observation.class.getSimpleName();
+        String conceptUuid = "sampleConceptUuid";
+        String encounterUuid = "sampleEncounterUuid";
+
+        Map<String, String> lookupFields = new HashMap<>();
+        lookupFields.put(CONCEPT_UUID, conceptUuid);
+        lookupFields.put(ENCOUNTER_UUID, encounterUuid);
+
+        Observation observation = new Observation();
+        observation.setUuid("30");
+
+        when(observationService.getLatestObservationByEncounterUUIDAndConceptUUID(CONFIG_NAME, encounterUuid, conceptUuid)).thenReturn(observation);
+
+        Object object = taskDataProvider.lookup(className + "-" + CONFIG_NAME, BY_ENCOUNTER_UUID_AND_CONCEPT_UUID, lookupFields);
+
+        assertEquals(observation, object);
+
+        verify(observationService).getLatestObservationByEncounterUUIDAndConceptUUID(CONFIG_NAME, encounterUuid, conceptUuid);
+    }
+
+    @Test
+    public void shouldReturnObservationForEncounterUuidConceptUuidAndValue() {
+        String className = Observation.class.getSimpleName();
+        String conceptUuid = "sampleConceptUuid";
+        String encounterUuid = "sampleEncounterUuid";
+        String value = "Sample value";
+
+        Map<String, String> lookupFields = new HashMap<>();
+        lookupFields.put(CONCEPT_UUID, conceptUuid);
+        lookupFields.put(ENCOUNTER_UUID, encounterUuid);
+        lookupFields.put(OBSERVATION_VALUE, value);
+
+        Observation observation = new Observation();
+        observation.setUuid("40");
+
+        when(observationService.getLatestObservationByEncounterUUIDConceptUUIDAndValue(CONFIG_NAME, encounterUuid, conceptUuid, value)).thenReturn(observation);
+
+        Object object = taskDataProvider.lookup(className + "-" + CONFIG_NAME, BY_ENCOUNTER_UUID_CONCEPT_UUID_AND_VALUE, lookupFields);
+
+        assertEquals(observation, object);
+
+        verify(observationService).getLatestObservationByEncounterUUIDConceptUUIDAndValue(CONFIG_NAME, encounterUuid, conceptUuid, value);
+    }
+
+    @Test
     public void shouldReturnNullWhenWrongLookupNameForPatient() {
         String className = Patient.class.getSimpleName();
 

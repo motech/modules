@@ -65,15 +65,50 @@ public interface OpenMRSObservationService {
     Observation getLatestObservationByPatientUUIDAndConceptUUID(String configName, String patientUUID, String conceptUUID);
 
     /**
-     * Returns the latest observation with given {@code patientUuid} and {@code value}. Configuration with the given {@code configName} will be used
+     * Returns the latest observation with given {@code patientUUID} and {@code value}. Configuration with the given {@code configName} will be used
      * while performing this action.
      *
      * @param configName  the name of the configuration
-     * @param patientUuid the UUID of the patient
+     * @param patientUUID the UUID of the patient
      * @param value       the observation value
-     * @return the latest observation with the given patientUuid and value, null if the observation doesn't exist
+     * @return the latest observation with the given patientUUID and value, null if the observation doesn't exist
      */
-    Observation getLatestObservationByValueAndPatientUuid(String configName, String patientUuid, String value);
+    Observation getLatestObservationByValueAndPatientUuid(String configName, String patientUUID, String value);
+
+    /**
+     *Returns the latest observation with given {@code patientUUID}, {@code conceptUUID} and {@code value}. Configuration with the given {@code configName} will be used
+     * while performing this action.
+     *
+     * @param configName   the name of the configuration
+     * @param patientUUID  the UUID of the patient
+     * @param conceptUUID  the UUID of the concept
+     * @param value        the observation value
+     * @return  the latest observation with the given patientUUID, conceptUUID and value, null if the observation doesn't exist
+	 */
+    Observation getLatestObservationByPatientUUIDConceptUUIDAndValue (String configName, String patientUUID, String conceptUUID, String value);
+
+	/**
+     * Returns the latest observation with given {@code encounterUUID} and {@code conceptUUID}. Configuration with the given {@code configName} will be used
+     * while performing this action.
+     *
+     * @param configName     the name of the configuration
+     * @param encounterUUID  the UUID of the encounter
+     * @param conceptUUID    the UUID of the concept
+     * @return  the latest observation with the given patientUUID, conceptUUID and value, null if the observation doesn't exist
+     */
+    Observation getLatestObservationByEncounterUUIDAndConceptUUID (String configName, String encounterUUID, String conceptUUID);
+
+	/**
+     * Returns the latest observation with given {@code encounterUUID}, {@code conceptUUID} and {@code value}. Configuration with the given {@code configName} will be used
+     * while performing this action.
+     *
+     * @param configName     the name of the configuration
+     * @param encounterUUID  the UUID of the encounter
+     * @param conceptUUID    the UUID of the concept
+     * @param value          the observation value
+     * @return  the latest observation with the given patientUUID, conceptUUID and value, null if the observation doesn't exist
+     */
+    Observation getLatestObservationByEncounterUUIDConceptUUIDAndValue (String configName, String encounterUUID, String conceptUUID, String value);
 
     /**
      * Creates the given {@code observation} on the OpenMRS server. Configuration with the given {@code configName} will

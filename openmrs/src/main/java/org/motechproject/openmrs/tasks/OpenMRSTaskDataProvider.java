@@ -38,14 +38,18 @@ import java.util.Map;
 
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.ACTIVE_PROGRAM;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BAHMNI_PROGRAM_ENROLLMENT;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_ENCOUNTER_UUID_AND_CONCEPT_UUID;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_ENCOUNTER_UUID_CONCEPT_UUID_AND_VALUE;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_MOTECH_ID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_MOTECH_ID_AND_PROGRAM_NAME;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_PATIENT_UUID_AND_CONCEPT_UUID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_PATIENT_UUID_AND_VALUE;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_PATIENT_UUID_CONCEPT_UUID_AND_VALUE;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_UUID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_UUID_AMD_PROGRAM_NAME;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.CONCEPT_UUID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.ENCOUNTER;
+import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.ENCOUNTER_UUID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.IDENTIFIER;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.IDENTIFIER_ID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.IDENTIFIER_SOURCE_NAME;
@@ -218,24 +222,33 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
             case BY_PATIENT_UUID_AND_CONCEPT_UUID:
                 result = observationService.getLatestObservationByPatientUUIDAndConceptUUID(configName,
                         lookupFields.get(PATIENT_UUID), lookupFields.get(CONCEPT_UUID));
-                observationsNumber = getObservationsNumber(result);
-                if (result == null) {
-                    result = new Observation();
-                }
-                result.setNumberOfObservations(observationsNumber);
                 break;
             case BY_PATIENT_UUID_AND_VALUE:
                 result = observationService.getLatestObservationByValueAndPatientUuid(configName, lookupFields.get(PATIENT_UUID),
                         lookupFields.get(OBSERVATION_VALUE));
-                observationsNumber = getObservationsNumber(result);
-                if (result == null) {
-                    result = new Observation();
-                }
-                result.setNumberOfObservations(observationsNumber);
+                break;
+            case BY_PATIENT_UUID_CONCEPT_UUID_AND_VALUE:
+                result = observationService.getLatestObservationByPatientUUIDConceptUUIDAndValue(configName, lookupFields.get(PATIENT_UUID),
+                        lookupFields.get(CONCEPT_UUID), lookupFields.get(OBSERVATION_VALUE));
+                break;
+            case BY_ENCOUNTER_UUID_AND_CONCEPT_UUID:
+                result = observationService.getLatestObservationByEncounterUUIDAndConceptUUID(configName, lookupFields.get(ENCOUNTER_UUID),
+                        lookupFields.get(CONCEPT_UUID));
+                break;
+            case BY_ENCOUNTER_UUID_CONCEPT_UUID_AND_VALUE:
+                result = observationService.getLatestObservationByEncounterUUIDConceptUUIDAndValue(configName, lookupFields.get(ENCOUNTER_UUID),
+                        lookupFields.get(CONCEPT_UUID), lookupFields.get(OBSERVATION_VALUE));
                 break;
             default: LOGGER.error("Lookup with name {} doesn't exist for observation object", lookupName);
                 break;
         }
+
+        observationsNumber = getObservationsNumber(result);
+        if (result == null) {
+            result = new Observation();
+        }
+        result.setNumberOfObservations(observationsNumber);
+
         return result;
     }
 
