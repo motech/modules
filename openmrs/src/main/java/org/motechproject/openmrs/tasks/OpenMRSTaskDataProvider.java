@@ -43,7 +43,6 @@ import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_ENCOUNTER
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_MOTECH_ID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_MOTECH_ID_AND_PROGRAM_NAME;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_PATIENT_UUID_AND_CONCEPT_UUID;
-import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_PATIENT_UUID_AND_VALUE;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_PATIENT_UUID_CONCEPT_UUID_AND_VALUE;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_UUID;
 import static org.motechproject.openmrs.tasks.OpenMRSTasksConstants.BY_UUID_AMD_PROGRAM_NAME;
@@ -222,10 +221,6 @@ public class OpenMRSTaskDataProvider extends AbstractDataProvider {
             case BY_PATIENT_UUID_AND_CONCEPT_UUID:
                 result = observationService.getLatestObservationByPatientUUIDAndConceptUUID(configName,
                         lookupFields.get(PATIENT_UUID), lookupFields.get(CONCEPT_UUID));
-                break;
-            case BY_PATIENT_UUID_AND_VALUE:
-                result = observationService.getLatestObservationByValueAndPatientUuid(configName, lookupFields.get(PATIENT_UUID),
-                        lookupFields.get(OBSERVATION_VALUE));
                 break;
             case BY_PATIENT_UUID_CONCEPT_UUID_AND_VALUE:
                 result = observationService.getLatestObservationByPatientUUIDConceptUUIDAndValue(configName, lookupFields.get(PATIENT_UUID),

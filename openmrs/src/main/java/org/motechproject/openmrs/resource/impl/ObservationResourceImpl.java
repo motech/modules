@@ -51,14 +51,13 @@ public class ObservationResourceImpl extends BaseResource implements Observation
 
     @Override
     public ObservationListResult getObservationByPatientUUIDAndConceptUUID(Config config, String patientUUID, String conceptUUID) {
-        String responseJson = getJson(config, "/obs?patient={patientUUID}&concept={conceptUUID}&limit=1&v=full", patientUUID, conceptUUID);
+        String responseJson = getJson(config, "/obs?patient={patientUUID}&concept={conceptUUID}&v=full", patientUUID, conceptUUID);
         return (ObservationListResult) JsonUtils.readJsonWithAdapters(responseJson, ObservationListResult.class, createValueAdapter());
     }
 
     @Override
     public ObservationListResult getObservationByEncounterUUIDAndConceptUUID (Config config, String encounterUUID, String conceptUUID) {
-        //TODO Check this address, if it isn't working - get by concept UUID and after that filter results by encounter uuid (and value) in service
-        String responseJson = getJson(config, "/obs?encounter={encounterUUID}&concept={conceptUUID}&limit=1&v=full", encounterUUID, conceptUUID);
+        String responseJson = getJson(config, "/obs?encounter={encounterUUID}&concept={conceptUUID}&v=full", encounterUUID, conceptUUID);
         return (ObservationListResult) JsonUtils.readJsonWithAdapters(responseJson, ObservationListResult.class, createValueAdapter());
     }
 

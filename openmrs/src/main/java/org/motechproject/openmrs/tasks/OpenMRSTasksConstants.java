@@ -17,7 +17,6 @@ public final class OpenMRSTasksConstants {
     public static final String BY_PATIENT_UUID_CONCEPT_UUID_AND_VALUE = "openMRS.lookup.patientUuidConceptUuidAndValue";
     public static final String BY_ENCOUNTER_UUID_AND_CONCEPT_UUID = "openMRS.lookup.encounterUuidAndConceptUuid";
     public static final String BY_ENCOUNTER_UUID_CONCEPT_UUID_AND_VALUE = "openMRS.lookup.encounterUuidConceptUuidAndValue";
-    public static final String BY_PATIENT_UUID_AND_VALUE = "openMRS.lookup.patientUuidAndValue";
 
     // Lookup objects
     public static final String ENCOUNTER = "Encounter";

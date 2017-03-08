@@ -83,7 +83,7 @@ public class ObservationResourceImplTest extends AbstractResourceImplTest {
     public void shouldQueryForObservationByPatientIdAndConceptId() throws Exception {
         String patientId = "OOO";
         String conceptId = "CCC";
-        URI url = config.toInstancePathWithParams("/obs?patient={patientUUID}&concept={conceptUUID}&limit=1&v=full", patientId, conceptId);
+        URI url = config.toInstancePathWithParams("/obs?patient={patientUUID}&concept={conceptUUID}&v=full", patientId, conceptId);
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
                 .thenReturn(getResponseFromFile(OBSERVATION_QUERY_RESPONSE_JSON));
@@ -100,7 +100,7 @@ public class ObservationResourceImplTest extends AbstractResourceImplTest {
     public void shouldQueryForObservationByEncounterIdAndConceptId() throws Exception {
         String encounterId = "EEE";
         String conceptId = "CCC";
-        URI url = config.toInstancePathWithParams("/obs?encounter={encounterUUID}&concept={conceptUUID}&limit=1&v=full", encounterId, conceptId);
+        URI url = config.toInstancePathWithParams("/obs?encounter={encounterUUID}&concept={conceptUUID}&v=full", encounterId, conceptId);
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class)))
                 .thenReturn(getResponseFromFile(OBSERVATION_ENCOUNTER_LOOKUP_RESPONSE));

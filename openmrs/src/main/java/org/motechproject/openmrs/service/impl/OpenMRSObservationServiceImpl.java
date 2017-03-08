@@ -30,6 +30,9 @@ import java.util.List;
 public class OpenMRSObservationServiceImpl implements OpenMRSObservationService {
     private static final Logger LOGGER = Logger.getLogger(OpenMRSObservationServiceImpl.class);
 
+    private static final String CONCEPT_UUID_NOT_EMPTY = "Concept uuid cannot be empty";
+    private static final String PATIENT_UUID_NOT_EMPTY = "Patient uuid cannot be empty";
+
     private final OpenMRSPatientService patientService;
 
     private final OpenMRSConfigService configService;
@@ -94,8 +97,8 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
 
     @Override
     public Observation getLatestObservationByPatientUUIDAndConceptUUID(String configName, String patientUUID, String conceptUUID) {
-        Validate.notEmpty(patientUUID, "Patient uuid cannot be empty");
-        Validate.notEmpty(conceptUUID, "Concept uuid cannot be empty");
+        Validate.notEmpty(patientUUID, PATIENT_UUID_NOT_EMPTY);
+        Validate.notEmpty(conceptUUID, CONCEPT_UUID_NOT_EMPTY);
 
         try {
             Config config = configService.getConfigByName(configName);
@@ -108,21 +111,9 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
     }
 
     @Override
-    public Observation getLatestObservationByValueAndPatientUuid(String configName, String patientUUID, String value) {
-        try {
-            Config config = configService.getConfigByName(configName);
-            ObservationListResult obs = obsResource.queryForObservationsByPatientId(config, patientUUID);
-            return getLatestObservationByValue(obs.getResults(), new Observation.ObservationValue(value));
-        } catch (HttpClientErrorException e) {
-            throw new OpenMRSException(String.format("Could not get Observation for Patient uuid: %s. %s %s",
-                    patientUUID, e.getMessage(), e.getResponseBodyAsString()), e);
-        }
-    }
-
-    @Override
     public Observation getLatestObservationByPatientUUIDConceptUUIDAndValue (String configName, String patientUUID, String conceptUUID, String value) {
-        Validate.notEmpty(patientUUID, "Patient uuid cannot be empty");
-        Validate.notEmpty(conceptUUID, "Concept uuid cannot be empty");
+        Validate.notEmpty(patientUUID, PATIENT_UUID_NOT_EMPTY);
+        Validate.notEmpty(conceptUUID, CONCEPT_UUID_NOT_EMPTY);
 
         try {
             Config config = configService.getConfigByName(configName);
@@ -137,7 +128,7 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
     @Override
     public Observation getLatestObservationByEncounterUUIDAndConceptUUID (String configName, String encounterUUID, String conceptUUID) {
         Validate.notEmpty(encounterUUID, "Encounter uuid cannot be empty");
-        Validate.notEmpty(conceptUUID, "Concept uuid cannot be empty");
+        Validate.notEmpty(conceptUUID, CONCEPT_UUID_NOT_EMPTY);
 
         try {
             Config config = configService.getConfigByName(configName);
@@ -152,7 +143,7 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
     @Override
     public Observation getLatestObservationByEncounterUUIDConceptUUIDAndValue (String configName, String encounterUUID, String conceptUUID, String value) {
         Validate.notEmpty(encounterUUID, "Encounter uuid cannot be empty");
-        Validate.notEmpty(conceptUUID, "Concept uuid cannot be empty");
+        Validate.notEmpty(conceptUUID, CONCEPT_UUID_NOT_EMPTY);
 
         try {
             Config config = configService.getConfigByName(configName);
@@ -166,8 +157,8 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
 
     @Override
     public Observation createObservation(String configName, Observation observation) {
-        Validate.notEmpty(observation.getPerson().getUuid(), "Patient uuid cannot be empty");
-        Validate.notEmpty(observation.getConcept().getUuid(), "Concept uuid cannot be empty");
+        Validate.notEmpty(observation.getPerson().getUuid(), PATIENT_UUID_NOT_EMPTY);
+        Validate.notEmpty(observation.getConcept().getUuid(), CONCEPT_UUID_NOT_EMPTY);
         Validate.notNull(observation.getObsDatetime());
 
         try {
