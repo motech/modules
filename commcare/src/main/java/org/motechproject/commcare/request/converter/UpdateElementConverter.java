@@ -52,11 +52,11 @@ public class UpdateElementConverter implements Converter {
 
         if (fieldValues != null) {
             for (Map.Entry<String, Object> entry : fieldValues.entrySet()) {
-                String value = entry.getValue() != null ? entry.getValue().toString() : "";
-
-                writer.startNode(entry.getKey());
-                writer.setValue(value);
-                writer.endNode();
+                if (entry.getValue() != null) {
+                    writer.startNode(entry.getKey());
+                    writer.setValue(entry.getValue().toString());
+                    writer.endNode();
+                }
             }
         }
     }
