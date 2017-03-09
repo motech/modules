@@ -52,8 +52,10 @@ public class UpdateElementConverter implements Converter {
 
         if (fieldValues != null) {
             for (Map.Entry<String, Object> entry : fieldValues.entrySet()) {
+                String value = entry.getValue() != null ? entry.getValue().toString() : "";
+
                 writer.startNode(entry.getKey());
-                writer.setValue(entry.getValue().toString());
+                writer.setValue(value);
                 writer.endNode();
             }
         }
