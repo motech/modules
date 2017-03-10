@@ -39,6 +39,7 @@ public class ObservationResourceImplTest extends AbstractResourceImplTest {
 
     private static final String OBSERVATION_RESPONSE_JSON = "json/observation/observation-response.json";
     private static final String PREPARE_OBSERVATION_JSON = "json/observation/prepare-observation.json";
+    private static final String OBSERVATION_ENCOUNTER_LOOKUP_RESPONSE = "json/observation/observation-encounter-lookup-response.json";
 
     @Mock
     private RestOperations restOperations;
@@ -82,7 +83,7 @@ public class ObservationResourceImplTest extends AbstractResourceImplTest {
     public void shouldQueryForObservationByPatientIdAndConceptId() throws Exception {
         String patientId = "OOO";
         String conceptId = "CCC";
-        URI url = config.toInstancePathWithParams("/obs?patient={patientUUID}&concept={conceptUUID}&limit=1&v=full", patientId, conceptId);
+        URI url = config.toInstancePathWithParams("/obs?patient={patientUUID}&concept={conceptUUID}&v=full", patientId, conceptId);
 
         when(restOperations.exchange(eq(url), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
                 .thenReturn(getResponseFromFile(OBSERVATION_QUERY_RESPONSE_JSON));
@@ -92,6 +93,23 @@ public class ObservationResourceImplTest extends AbstractResourceImplTest {
         verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
 
         assertThat(result, equalTo(readFromFile(OBSERVATION_QUERY_RESPONSE_JSON, ObservationListResult.class)));
+        assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
+    }
+
+    @Test
+    public void shouldQueryForObservationByEncounterIdAndConceptId() throws Exception {
+        String encounterId = "EEE";
+        String conceptId = "CCC";
+        URI url = config.toInstancePathWithParams("/obs?encounter={encounterUUID}&concept={conceptUUID}&v=full", encounterId, conceptId);
+
+        when(restOperations.exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class)))
+                .thenReturn(getResponseFromFile(OBSERVATION_ENCOUNTER_LOOKUP_RESPONSE));
+
+        ObservationListResult result = observationResource.getObservationByEncounterUUIDAndConceptUUID(config, encounterId, conceptId);
+
+        verify(restOperations).exchange(eq(url), eq(HttpMethod.GET), requestCaptor.capture(), eq(String.class));
+
+        assertThat(result, equalTo(readFromFile(OBSERVATION_ENCOUNTER_LOOKUP_RESPONSE, ObservationListResult.class)));
         assertThat(requestCaptor.getValue().getHeaders(), equalTo(getHeadersForGet(config)));
     }
 

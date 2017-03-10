@@ -272,9 +272,25 @@
               ]
             },
             {
-              "displayName": "openMRS.lookup.patientUuidAndValue",
+              "displayName": "openMRS.lookup.patientUuidConceptUuidAndValue",
               "fields": [
                 "openMRS.patient.uuid",
+                "openMRS.concept.uuid",
+                "openMRS.observation.value"
+              ]
+            },
+            {
+              "displayName": "openMRS.lookup.encounterUuidAndConceptUuid",
+              "fields": [
+                "openMRS.encounter.uuid",
+                "openMRS.concept.uuid"
+              ]
+            },
+            {
+              "displayName": "openMRS.lookup.encounterUuidConceptUuidAndValue",
+              "fields": [
+                "openMRS.encounter.uuid",
+                "openMRS.concept.uuid",
                 "openMRS.observation.value"
               ]
             }

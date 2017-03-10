@@ -49,6 +49,16 @@ public interface ObservationResource {
     ObservationListResult getObservationByPatientUUIDAndConceptUUID(Config config, String patientUUID, String conceptUUID);
 
     /**
+     * Gets the latest observation with the given encounter UUID and concept UUID. The given {@code config} will be used while performing this action.
+     *
+     * @param config  the configuration to be used while performing this action
+     * @param encounterUUID  the UUID of the encounter
+     * @param conceptUUID  the UUID of the concept
+     * @return  the latest observation with the given patientUUID and conceptUUID
+     */
+    ObservationListResult getObservationByEncounterUUIDAndConceptUUID(Config config, String encounterUUID, String conceptUUID);
+
+    /**
      * Creates the given observation on the OpenMRS server. The given {@code config} will be used while performing this
      * action.
      *

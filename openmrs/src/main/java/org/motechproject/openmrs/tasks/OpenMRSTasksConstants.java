@@ -14,7 +14,9 @@ public final class OpenMRSTasksConstants {
     public static final String BY_MOTECH_ID_AND_PROGRAM_NAME = "openMRS.lookup.motechIdAndProgramName";
     public static final String BY_UUID_AMD_PROGRAM_NAME = "openMRS.lookup.uuidAndProgramName";
     public static final String BY_PATIENT_UUID_AND_CONCEPT_UUID = "openMRS.lookup.patientUuidAndConceptUuid";
-    public static final String BY_PATIENT_UUID_AND_VALUE = "openMRS.lookup.patientUuidAndValue";
+    public static final String BY_PATIENT_UUID_CONCEPT_UUID_AND_VALUE = "openMRS.lookup.patientUuidConceptUuidAndValue";
+    public static final String BY_ENCOUNTER_UUID_AND_CONCEPT_UUID = "openMRS.lookup.encounterUuidAndConceptUuid";
+    public static final String BY_ENCOUNTER_UUID_CONCEPT_UUID_AND_VALUE = "openMRS.lookup.encounterUuidConceptUuidAndValue";
 
     // Lookup objects
     public static final String ENCOUNTER = "Encounter";
@@ -41,6 +43,7 @@ public final class OpenMRSTasksConstants {
     public static final String ACTIVE_PROGRAM = "openMRS.activeProgramOnly";
     public static final String IDENTIFIER_ID = "openMRS.other.identifier.id";
     public static final String IDENTIFIER_NAME = "openMRS.other.identifier.name";
+    public static final String ENCOUNTER_UUID = "openMRS.encounter.uuid";
 
     private OpenMRSTasksConstants() {
 
