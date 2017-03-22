@@ -50,6 +50,7 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -603,9 +604,12 @@ public class MRSTasksIntegrationBundleIT extends AbstractTaskBundleIT {
 
     private void checkIfPatientWasCreatedProperly() {
         Patient patient = patientService.getPatientByMotechId(DEFAULT_CONFIG_NAME, String.format("%staskCreated", MOTECH_ID));
-
         assertEquals(createdPatient.getUuid(), patient.getPerson().getPreferredAddress().getAddress2());
-        assertEquals(createdPatient.getPerson().getBirthdate().toString(), patient.getPerson().getPreferredAddress().getAddress1());
+
+        //Since the MOTECH-3152, Motech returns dates with format "yyyy-MM-dd'T'HH:mm:ss.SSSZ" by default.
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+
+        assertEquals(sdf.format(createdPatient.getPerson().getBirthdate()), patient.getPerson().getPreferredAddress().getAddress1());
         assertEquals(createdPatient.getPerson().getAttributes().get(0).getValue(), patient.getPerson().getPreferredAddress().getAddress3());
         assertEquals(String.format("%staskCreated", MOTECH_ID), patient.getMotechId());
         assertEquals(createdPatient.getPerson().getGender(), patient.getPerson().getGender());
