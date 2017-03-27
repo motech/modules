@@ -29,7 +29,7 @@ public class ActionBuilder {
     private static final String CREATE_PATIENT = "Create Patient";
     private static final String UPDATE_PATIENT_IDENTIFIERS = "Update Patient Identifiers";
     private static final String UPDATE_PERSON = "Update Person";
-    private static final String CREATE_OBSERVATION_JSON = "Create Observation JSON";
+    private static final String CREATE_UPDATE_OBSERVATION_JSON = "Create / Update Observation JSON";
     private static final String CREATE_VISIT = "Create Visit";
     private static final String CREATE_PROGRAM_ENROLLMENT = "Create Program Enrollment";
     private static final String UPDATE_PROGRAM_ENROLLMENT = "Update Program Enrollment";
@@ -57,7 +57,7 @@ public class ActionBuilder {
             actions.add(buildCreateEncounterAction(configName));
             actions.add(buildCreatePatientAction(configName));
             actions.add(buildUpdatePatientAction(configName));
-            actions.add(buildCreateObservationJSON(configName));
+            actions.add(buildCreateOrUpdateObservationJSON(configName));
             actions.add(buildCreateVisitAction(configName));
             actions.add(buildUpdatePatientIdentifiersAction(configName));
             actions.add(buildGetCohortQueryReport(configName));
@@ -154,13 +154,14 @@ public class ActionBuilder {
                 .createActionEventRequest();
     }
 
-    private ActionEventRequest buildCreateObservationJSON(String configName) {
+    private ActionEventRequest buildCreateOrUpdateObservationJSON(String configName) {
         SortedSet<ActionParameterRequest> actionParameters = new TreeSet<>();
         int order = 0;
-        String serviceMethod = "createObservationJSON";
+        String serviceMethod = "createOrUpdateObservationJSON";
         String defaultValueForJsonField = "{}";
 
         actionParameters.add(prepareParameter(Keys.CONFIG_NAME, DisplayNames.CONFIG_NAME, configName, true, true, order++));
+        actionParameters.add(prepareParameter(Keys.OBSERVATION_UUID, DisplayNames.OBSERVATION_UUID, false, order++));
         actionParameters.add(prepareParameter(Keys.OBSERVATION_JSON, DisplayNames.OBSERVATION_JSON, TEXTAREA,
                 defaultValueForJsonField, true, order++));
         actionParameters.add(prepareParameter(Keys.ENCOUNTER_UUID, DisplayNames.ENCOUNTER_UUID, false, order++));
@@ -170,7 +171,7 @@ public class ActionBuilder {
         actionParameters.add(prepareParameter(Keys.COMMENT, DisplayNames.COMMENT, TEXTAREA, false, order));
 
         return new ActionEventRequestBuilder()
-                .setDisplayName(getDisplayName(CREATE_OBSERVATION_JSON, configName))
+                .setDisplayName(getDisplayName(CREATE_UPDATE_OBSERVATION_JSON, configName))
                 .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
                 .setServiceMethod(serviceMethod)
                 .setSubject(getSubject(serviceMethod, configName))
