@@ -110,5 +110,50 @@
                 </div>
             </div>
         </div>
+        <div class="row inside form-group">
+            <h4 class="inside form-group">{{msg('openMRS.config.atomFeed')}}</h4>
+            <div class="form-group">
+                <label class="col-md-3 col-sm-4 control-label" for="selectedConfig.feedConfig.patientAtomFeed">{{msg('openMRS.config.atomFeed.usePatientAtomFeed')}}</label>
+                <div class="col-md-9 col-sm-8 form-inline">
+                    <div class="checkbox">
+                        <input ng-change="draftChanged()" ng-model="selectedConfig.feedConfig.patientAtomFeed" type="checkbox" id="selectedConfig.feedConfig.patientAtomFeed"/>
+                    </div>
+                </div>
+                <div ng-if="selectedConfig.feedConfig.patientAtomFeed">
+                    <label class="col-md-3 col-sm-4 control-label" for="patientConnectionTime">{{msg('openMRS.config.atomFeed.connectionTime')}}</label>
+                    <div class="col-md-9 col-sm-8 form-inline">
+                        <input class="form-control input-xlarge-fluid" ng-change="draftChanged()" ng-model="selectedConfig.feedConfig.atomFeeds['patientConnectionTime']" type="text" id="patientConnectionTime" />
+                    </div>
+                    <label class="col-md-3 col-sm-4 control-label" for="patientCurrentPageID">{{msg('openMRS.config.atomFeed.currentPageID')}}</label>
+                    <div class="col-md-9 col-sm-8 form-inline">
+                        <input class="form-control input-xlarge-fluid" ng-change="draftChanged()" ng-model="selectedConfig.feedConfig.atomFeeds['patientCurrentPageID']" type="text" id="patientCurrentPageID" />
+                        <div class="form-hints">
+                            <span ng-hide="selectedConfig.feedConfig.atomFeeds['patientCurrentPageID'].length>0" class="form-hint-error">{{msg('openMRS.config.atomFedd.error.pageID')}}</span>
+                        </div>
+                    </div>
+                </div>
+                <label class="col-md-3 col-sm-4 control-label" for="selectedConfig.feedConfig.encounterAtomFeed">{{msg('openMRS.config.atomFeed.useEncounterAtomFeed')}}</label>
+                <div class="col-md-9 col-sm-8 form-inline">
+                    <div class="checkbox">
+                        <input ng-change="draftChanged()" ng-model="selectedConfig.feedConfig.encounterAtomFeed" type="checkbox" id="selectedConfig.feedConfig.encounterAtomFeed"/>
+                    </div>
+                </div>
+                <div ng-if="selectedConfig.feedConfig.encounterAtomFeed">
+                    <label class="col-md-3 col-sm-4 control-label" for="encounterConnectionTime">{{msg('openMRS.config.atomFeed.connectionTime')}}</label>
+                    <div class="col-md-9 col-sm-8 form-inline">
+                        <input class="form-control input-xlarge-fluid" ng-change="draftChanged()" ng-model="selectedConfig.feedConfig.atomFeeds['encounterConnectionTime']" type="text" id="encounterConnectionTime" />
+                    </div>
+                    <label class="col-md-3 col-sm-4 control-label" for="encounterCurrentPageID">{{msg('openMRS.config.atomFeed.currentPageID')}}</label>
+                    <div class="col-md-9 col-sm-8 form-inline">
+                        <input class="form-control input-xlarge-fluid" ng-change="draftChanged()" ng-model="selectedConfig.feedConfig.atomFeeds['encounterCurrentPageID']" type="text" id="encounterCurrentPageID" />
+                        <div class="form-hints">
+                            <span ng-hide="selectedConfig.feedConfig.atomFeeds['encounterCurrentPageID'].length>0" class="form-hint-error">{{msg('openMRS.config.atomFedd.error.pageID')}}</span>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
     </form>
 </div>

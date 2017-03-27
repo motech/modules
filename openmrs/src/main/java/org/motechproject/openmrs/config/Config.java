@@ -9,6 +9,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents configuration for a single OpenMRS server.
@@ -16,6 +17,10 @@ import java.util.List;
 public class Config {
 
     private static final String SERVICE_PATH = "/ws/rest/v1";
+
+    private static final String SERVICE_ATOM_FEED_PATH = "/ws/atomfeed/";
+
+    public static final String ATOM_FEED_PATIENT_PAGE_ID = "patientCurrentPageID";
 
     private String name;
 
@@ -30,6 +35,24 @@ public class Config {
     private String motechPatientIdentifierTypeName;
 
     private List<String> patientIdentifierTypeNames;
+
+    private FeedConfig feedConfig;
+
+    public Config() {
+        this(null, null, null, null, null, null, new ArrayList<>(), null);
+    }
+
+    public Config(String name, String openMrsVersion, String openMrsUrl, String username, String password, String motechPatientIdentifierTypeName, List<String> patientIdentifierTypeNames,
+                  FeedConfig feedConfig) {
+        this.name = name;
+        this.openMrsVersion = openMrsVersion;
+        this.openMrsUrl = openMrsUrl;
+        this.username = username;
+        this.password = password;
+        this.motechPatientIdentifierTypeName = motechPatientIdentifierTypeName;
+        this.patientIdentifierTypeNames = patientIdentifierTypeNames;
+        this.feedConfig = feedConfig;
+    }
 
     /**
      * Creates an URI that points to the resource under the given path on the OpenMRS server.
@@ -114,6 +137,20 @@ public class Config {
         this.patientIdentifierTypeNames = patientIdentifierTypeNames;
     }
 
+    public void setFeedConfig(FeedConfig feedConfig) {
+        this.feedConfig = feedConfig;
+    }
+
+    public FeedConfig getFeedConfig() {
+        return this.feedConfig;
+    }
+
+    public String getAtomFeedUrl(Map.Entry<String, String> feed) {
+        String resource = (ATOM_FEED_PATIENT_PAGE_ID.equals(feed.getKey())) ? "patient/" : "encounter/";
+
+        return getBaseAtomFeedApiUrl() + resource + feed.getValue();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -140,5 +177,9 @@ public class Config {
 
     private String getBaseApiUrl() {
         return openMrsUrl + SERVICE_PATH;
+    }
+
+    private String getBaseAtomFeedApiUrl() {
+        return openMrsUrl + SERVICE_ATOM_FEED_PATH;
     }
 }

@@ -28,6 +28,7 @@ import org.motechproject.openmrs.domain.Provider;
 import org.motechproject.openmrs.domain.Visit;
 import org.motechproject.openmrs.domain.VisitType;
 import org.motechproject.openmrs.helper.EventHelper;
+import org.motechproject.openmrs.service.OpenMRSAtomFeedService;
 import org.motechproject.openmrs.service.OpenMRSCohortService;
 import org.motechproject.openmrs.service.OpenMRSConceptService;
 import org.motechproject.openmrs.service.OpenMRSEncounterService;
@@ -61,6 +62,7 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenMRSActionProxyServiceImpl.class);
 
+    private OpenMRSAtomFeedService atomFeedService;
     private OpenMRSConceptService conceptService;
     private OpenMRSEncounterService encounterService;
     private OpenMRSLocationService locationService;
@@ -290,6 +292,11 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
     }
 
     @Override
+    public void fetchAtomFeeds(String configName) {
+        atomFeedService.fetch(configName);
+    }
+
+    @Override
     public Order createOrder(String configName, String type, String encounterUuid, String patientUuid, String conceptUuid, String ordererUuid, String careSetting) {
         Encounter encounter = new Encounter();
         encounter.setUuid(encounterUuid);
@@ -503,6 +510,11 @@ public class OpenMRSActionProxyServiceImpl implements OpenMRSActionProxyService 
         person.setAttributes(attributesList);
 
         return person;
+    }
+
+    @Autowired
+    public void setAtomFeedService(OpenMRSAtomFeedService atomFeedService) {
+        this.atomFeedService = atomFeedService;
     }
 
     @Autowired

@@ -17,6 +17,7 @@ import org.motechproject.event.listener.EventRelay;
 import org.motechproject.openmrs.config.Config;
 import org.motechproject.openmrs.config.Configs;
 import org.motechproject.openmrs.exception.config.ConfigurationNotFoundException;
+import org.motechproject.openmrs.service.EventKeys;
 import org.motechproject.openmrs.service.OpenMRSConfigService;
 import org.motechproject.openmrs.tasks.constants.EventSubjects;
 import org.slf4j.Logger;
@@ -29,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 
 import static org.motechproject.openmrs.validation.ConfigValidator.validateConfig;
 
@@ -74,6 +76,7 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
     public void saveAllConfigs(Configs newConfigs) {
         configs.setDefaultConfigName(newConfigs.getDefaultConfigName());
         for (Config config : newConfigs.getConfigs()) {
+            prepareOpenMRSAtomFeedSettings(config);
             validateConfig(config);
             configs.add(config);
         }
@@ -170,4 +173,20 @@ public class OpenMRSConfigServiceImpl implements OpenMRSConfigService {
             config.setOpenMrsUrl(openMrsUrl.substring(0, openMrsUrl.length() - 1));
         }
     }
+
+    private void prepareOpenMRSAtomFeedSettings(Config config) {
+        Map<String, String> atomFeedSettings = config.getFeedConfig().getAtomFeeds();
+
+        if (!config.getFeedConfig().isPatientAtomFeed()) {
+            atomFeedSettings.remove(EventKeys.ATOM_FEED_PATIENT_PAGE_ID);
+            atomFeedSettings.remove(EventKeys.PATIENT_SCHEDULE_KEY);
+        }
+
+        if (!config.getFeedConfig().isEncounterAtomFeed()) {
+            atomFeedSettings.remove(EventKeys.ATOM_FEED_ENCOUNTER_PAGE_ID);
+            atomFeedSettings.remove(EventKeys.ENCOUNTER_SCHEDULE_KEY);
+        }
+        config.getFeedConfig().setAtomFeeds(atomFeedSettings);
+    }
 }
+

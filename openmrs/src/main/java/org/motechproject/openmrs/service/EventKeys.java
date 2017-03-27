@@ -77,6 +77,11 @@ public final class EventKeys {
     public static final String VOIDED_OBSERVATION_SUBJECT = "Observation.Voided";
     public static final String CREATED_PROGRAM_ENROLLMENT = BASE_SUBJECT + "ProgramEnrollment.Created";
 
+    public static final String ATOM_FEED_PATIENT_PAGE_ID = "patientCurrentPageID";
+    public static final String ATOM_FEED_ENCOUNTER_PAGE_ID = "encounterCurrentPageID";
+    public static final String PATIENT_SCHEDULE_KEY = "patientConnectionTime";
+    public static final String ENCOUNTER_SCHEDULE_KEY = "encounterConnectionTime";
+
     /**
      * Utility class, should not be instantiated.
      */

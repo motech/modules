@@ -14,6 +14,8 @@
         $scope.newPatientIdentifierType = {};
         $scope.failureMessage = undefined;
         $scope.successMessage = undefined;
+        $scope.usePatientAtomFeed = false;
+        $scope.useEncounterAtomFeed = false;
 
         $scope.onConfigChange = function(selectedConfig, oldConfig) {
             if (!angular.equals(oldConfig, $scope.originalConfig) && selectedConfig) {

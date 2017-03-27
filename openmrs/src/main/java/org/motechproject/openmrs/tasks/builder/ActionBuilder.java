@@ -36,6 +36,7 @@ public class ActionBuilder {
     private static final String CHANGE_PROGRAM_ENROLLMENT_STATE = "Change Program Enrollment State";
     private static final String GET_COHORT_QUERY_REPORT = "Get CohortQuery Report";
     private static final String CREATE_ORDER = "Create Order";
+    private static final String FETCH_ATOM_FEEDS = "Fetch OpenMRS Atom Feeds!";
     private static final String OPENMRS_ACTION_PROXY_SERVICE = "org.motechproject.openmrs.tasks.OpenMRSActionProxyService";
     private static final String OPENMRS_V1_9 = "1.9";
 
@@ -61,6 +62,7 @@ public class ActionBuilder {
             actions.add(buildCreateVisitAction(configName));
             actions.add(buildUpdatePatientIdentifiersAction(configName));
             actions.add(buildGetCohortQueryReport(configName));
+            actions.add(buildFetchAtomFeed(configName));
 
             buildActionsForVersionGreaterThan19(config, configName, actions);
 
@@ -290,6 +292,23 @@ public class ActionBuilder {
 
         return new ActionEventRequestBuilder()
                 .setDisplayName(getDisplayName(GET_COHORT_QUERY_REPORT, configName))
+                .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
+                .setServiceMethod(serviceMethod)
+                .setSubject(getSubject(serviceMethod, configName))
+                .setActionParameters(parameters)
+                .createActionEventRequest();
+    }
+
+    private ActionEventRequest buildFetchAtomFeed(String configName) {
+        SortedSet<ActionParameterRequest> parameters = new TreeSet<>();
+
+        int order = 0;
+        String serviceMethod = "fetchAtomFeeds";
+
+        parameters.add(prepareParameter(Keys.CONFIG_NAME, DisplayNames.CONFIG_NAME, configName, false, true, order++));
+
+        return new ActionEventRequestBuilder()
+                .setDisplayName(getDisplayName(FETCH_ATOM_FEEDS, configName))
                 .setServiceInterface(OPENMRS_ACTION_PROXY_SERVICE)
                 .setServiceMethod(serviceMethod)
                 .setSubject(getSubject(serviceMethod, configName))

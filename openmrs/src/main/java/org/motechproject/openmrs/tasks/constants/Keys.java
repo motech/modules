@@ -80,6 +80,11 @@ public final class Keys {
     public static final String ORDERER_UUID = "ordererUuid";
     public static final String CARE_SETTING = "careSetting";
 
+    //Atom Feed triggers
+    public static final String ATOM_FEED_PUBLISHED = "published_date";
+    public static final String ATOM_FEED_UPDATED = "updated_date";
+    public static final String ATOM_FEED_OBJECT_UUID = "uuid";
+
     /**
      * Utility class, should not be initiated.
      */
