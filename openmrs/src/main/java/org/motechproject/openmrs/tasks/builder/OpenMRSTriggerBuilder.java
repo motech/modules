@@ -1,6 +1,7 @@
 package org.motechproject.openmrs.tasks.builder;
 
 import org.motechproject.openmrs.config.Config;
+import org.motechproject.openmrs.service.EventKeys;
 import org.motechproject.openmrs.service.OpenMRSConfigService;
 import org.motechproject.openmrs.tasks.constants.DisplayNames;
 import org.motechproject.openmrs.tasks.constants.EventSubjects;
@@ -31,6 +32,7 @@ public class OpenMRSTriggerBuilder {
         for (Config config : configService.getConfigs().getConfigs()) {
             String configName = config.getName();
             triggers.addAll(buildCohortQueryTriggers(configName));
+            triggers.addAll(buildAtomFeedTriggers(config));
         }
         return triggers;
     }
@@ -49,5 +51,29 @@ public class OpenMRSTriggerBuilder {
                 null, parameterRequests));
 
         return triggers;
+    }
+
+    private List<TriggerEventRequest> buildAtomFeedTriggers(Config config) {
+        List<TriggerEventRequest> triggers = new ArrayList<>();
+
+        if (config.getFeedConfig() != null) {
+            if (config.getFeedConfig().getAtomFeeds().containsKey(EventKeys.ATOM_FEED_PATIENT_PAGE_ID)) {
+                triggers.add(buildAtomFeedTrigger(config, DisplayNames.ATOM_FEED_PATIENT_UPDATE, DisplayNames.ATOM_FEED_PATIENT_UUID, EventSubjects.PATIENT_FEED_CHANGE_MESSAGE));
+            }
+            if (config.getFeedConfig().getAtomFeeds().containsKey(EventKeys.ATOM_FEED_ENCOUNTER_PAGE_ID)) {
+                triggers.add(buildAtomFeedTrigger(config, DisplayNames.ATOM_FEED_ENCOUNTER_UPDATE, DisplayNames.ATOM_FEED_ENCOUNTER_UUID, EventSubjects.ENCOUNTER_FEED_CHANGE_MESSAGE));
+            }
+        }
+        return triggers;
+    }
+
+    private TriggerEventRequest buildAtomFeedTrigger(Config config, String displayName, String objectUuidName, String eventSubject) {
+        List<EventParameterRequest> parameterRequests = new ArrayList();
+
+        parameterRequests.add(new EventParameterRequest(objectUuidName, Keys.ATOM_FEED_OBJECT_UUID));
+        parameterRequests.add(new EventParameterRequest(DisplayNames.ATOM_FEED_PUBLISHED_DATE, Keys.ATOM_FEED_PUBLISHED));
+        parameterRequests.add(new EventParameterRequest(DisplayNames.ATOM_FEED_UPDATE, Keys.ATOM_FEED_UPDATED));
+
+        return new TriggerEventRequest(DisplayNameHelper.buildDisplayName(displayName, config.getName()), eventSubject, null, parameterRequests);
     }
 }

@@ -7,6 +7,11 @@ public final class DisplayNames {
 
     public static final String CONFIG_NAME = "openMRS.configuration.name";
 
+    //Trigger names
+    public static final String ATOM_FEED_PATIENT_UPDATE = "OpenMRS Patient Update";
+    public static final String ATOM_FEED_ENCOUNTER_UPDATE = "OpenMRS Encounter Update";
+    public static final String COHORT_QUERY_REPORTMEMBER = "CohortQuery Report Member";
+
     //Encounter action
     public static final String ENCOUNTER_DATE = "openMRS.encounter.date";
     public static final String ENCOUNTER_TYPE = "openMRS.encounter.type";
@@ -68,16 +73,25 @@ public final class DisplayNames {
     public static final String STATE_UUID = "openMRS.program.state.uuid";
     public static final String STATE_START_DATE = "openMRS.program.state.startDate";
     public static final String PROGRAM_ENROLLMENT_ATTRIBUTES = "openMRS.programEnrollment.attributes";
+
     //CohortQuery Report action
     public static final String COHORT_QUERY_UUID = "openMRS.cohortQuery.uuid";
     public static final String COHORT_QUERY_PARAMETERS = "openMRS.cohortQuery.parameters";
     public static final String PATIENT_DISPLAY = "openMRS.patient.display";
-    public static final String COHORT_QUERY_REPORTMEMBER = "openMRS.cohortQuery.reportMember";
+
     //Order Action
     public static final String ORDER_TYPE = "openMRS.orderType";
     public static final String ORDER_UUID = "openMRS.order.uuid";
     public static final String ORDER_ORDERER_UUID = "openMRS.order.orderer.uuid";
     public static final String ORDER_CARE_SETTING = "openMRS.order.careSetting";
+
+    //AtomFeed triggers
+    public static final String ATOM_FEED_PUBLISHED_DATE = "openMRS.atomFeed.publishedDate";
+    public static final String ATOM_FEED_UPDATE = "openMRS.atomFeed.update";
+    public static final String ATOM_FEED_PATIENT_UUID = "openMRS.atomFeed.patientUuid";
+    public static final String ATOM_FEED_ENCOUNTER_UUID = "openMRS.atomFeed.encounterUuid";
+
+
 
     /**
      * Utility class, should not be initiated.

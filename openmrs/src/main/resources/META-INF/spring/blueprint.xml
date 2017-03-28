@@ -38,11 +38,14 @@
     <osgi:service ref="identifierService" interface="org.motechproject.openmrs.service.OpenMRSGeneratedIdentifierService"/>
     <osgi:service ref="openMRSActionProxyService" interface="org.motechproject.openmrs.tasks.OpenMRSActionProxyService"/>
     <osgi:service ref="cohortService" interface="org.motechproject.openmrs.service.OpenMRSCohortService"/>
+    <osgi:service ref="atomFeedService" interface="org.motechproject.openmrs.service.OpenMRSAtomFeedService"/>
     <osgi:service ref="formService" interface="org.motechproject.openmrs.service.OpenMRSFormService"/>
     <osgi:service ref="orderService" interface="org.motechproject.openmrs.service.OpenMRSOrderService"/>
+    <osgi:service ref="atomFeedEventHandler" interface="org.motechproject.openmrs.event.AtomFeedEventHandler"/>
 
     <osgi:reference id="eventListenerRegistryServiceOsgi" interface="org.motechproject.event.listener.EventListenerRegistryService"/>
-
     <osgi:reference id="eventRelayOsgi" interface="org.motechproject.event.listener.EventRelay" />
+    <osgi:reference id="schedulerService" interface="org.motechproject.scheduler.service.MotechSchedulerService" />
+    <osgi:reference id="feedRecordDataService" interface="org.motechproject.openmrs.repository.FeedRecordDataService" />
 
 </beans>

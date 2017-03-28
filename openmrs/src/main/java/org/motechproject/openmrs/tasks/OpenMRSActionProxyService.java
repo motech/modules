@@ -214,6 +214,13 @@ public interface OpenMRSActionProxyService {
     void getCohortQueryReport(String configName, String cohortQueryUuid, Map<String, String> parameters);
 
     /**
+     * Fetches the OpenMRS atom feeds.
+     *
+     * @param configName the name of the configuration
+     */
+    void fetchAtomFeeds(String configName);
+
+    /**
      * Creates an order with the given params.
      *
      * @param configName    the name of the configuration
