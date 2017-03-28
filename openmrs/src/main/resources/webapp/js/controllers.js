@@ -17,6 +17,12 @@
         $scope.usePatientAtomFeed = false;
         $scope.useEncounterAtomFeed = false;
 
+        innerLayout({
+            spacing_closed: 30,
+            east__minSize: 200,
+            east__maxSize: 350
+        });
+
         $scope.onConfigChange = function(selectedConfig, oldConfig) {
             if (!angular.equals(oldConfig, $scope.originalConfig) && selectedConfig) {
                 ModalFactory.showConfirm({
