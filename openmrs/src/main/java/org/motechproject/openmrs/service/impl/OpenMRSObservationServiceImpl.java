@@ -118,7 +118,7 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
         try {
             Config config = configService.getConfigByName(configName);
             ObservationListResult obs = obsResource.getObservationByPatientUUIDAndConceptUUID(config, patientUUID, conceptUUID);
-            return getLatestObservationByValue(obs.getResults(), new Observation.ObservationValue(value));
+            return getLatestObservationByValue(obs.getResults(), value);
         } catch (HttpClientErrorException e) {
             throw new OpenMRSException(String.format("Could not get Observation for Patient uuid: %s, Concept UUID: %s and Value: %s. %s %s",
                     patientUUID, conceptUUID, value, e.getMessage(), e.getResponseBodyAsString()), e);
@@ -148,7 +148,7 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
         try {
             Config config = configService.getConfigByName(configName);
             ObservationListResult obs = obsResource.getObservationByEncounterUUIDAndConceptUUID(config, encounterUUID, conceptUUID);
-            return getLatestObservationByValue(obs.getResults(), new Observation.ObservationValue(value));
+            return getLatestObservationByValue(obs.getResults(), value);
         } catch (HttpClientErrorException e) {
             throw new OpenMRSException(String.format("Could not get Observation for Encounter uuid: %s, Concept UUID: %s and Value: %s. %s %s",
                     encounterUUID, conceptUUID, value, e.getMessage(), e.getResponseBodyAsString()), e);
@@ -223,11 +223,13 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
         return obs;
     }
 
-    private Observation getLatestObservationByValue(List<Observation> obs, Observation.ObservationValue value) {
+    private Observation getLatestObservationByValue(List<Observation> obs, String value) {
         Observation result = null;
 
         for (Observation observation : obs) {
-            if (value.equals(observation.getValue())) {
+            Observation.ObservationValue obsValue = observation.getValue();
+            String fetchedValue = obsValue.getUuid() != null ? obsValue.getUuid() : obsValue.getDisplay();
+            if (value.equals(fetchedValue)) {
                 result = observation;
                 break;
             }
