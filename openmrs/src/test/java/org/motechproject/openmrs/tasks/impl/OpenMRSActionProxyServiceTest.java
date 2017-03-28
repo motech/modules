@@ -524,10 +524,10 @@ public class OpenMRSActionProxyServiceTest {
         observation.setObsDatetime(new DateTime(obsDatetime).toDate());
         observation.setComment(comment);
 
-        doReturn(observation).when(observationService).createObservationFromJson(eq(CONFIG_NAME),
+        doReturn(observation).when(observationService).createOrUpdateObservationFromJson(eq(CONFIG_NAME), eq(null),
                 eq(observationJSON));
 
-        Observation obsCreated = openMRSActionProxyService.createObservationJSON(CONFIG_NAME, observationJSON, null, null, null, null, null);
+        Observation obsCreated = openMRSActionProxyService.createOrUpdateObservationJSON(CONFIG_NAME, null, observationJSON, null, null, null, null, null);
 
         assertEquals(observation, obsCreated);
     }
@@ -569,10 +569,10 @@ public class OpenMRSActionProxyServiceTest {
         Concept concept = new Concept();
         concept.setUuid(conceptUuid);
 
-        openMRSActionProxyService.createObservationJSON(CONFIG_NAME, observationJSON,
+        openMRSActionProxyService.createOrUpdateObservationJSON(CONFIG_NAME, null, observationJSON,
                 encounterUuidReplace, conceptUuidReplace, new DateTime(obsDatetimeReplace), null, commentReplace);
 
-        verify(observationService).createObservationFromJson(eq(CONFIG_NAME), observationCaptor.capture());
+        verify(observationService).createOrUpdateObservationFromJson(eq(CONFIG_NAME), eq(null), observationCaptor.capture());
         assertEquals(observationJSONReplace, observationCaptor.getValue());
     }
 

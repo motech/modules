@@ -173,11 +173,12 @@ public class OpenMRSObservationServiceImpl implements OpenMRSObservationService 
     }
 
     @Override
-    public Observation createObservationFromJson(String configName, String observationJson) {
+    public Observation createOrUpdateObservationFromJson(String configName, String observationUuid, String observationJson) {
         try {
             Config config = configService.getConfigByName(configName);
 
-            Observation created = obsResource.createObservationFromJson(config, observationJson);
+            Observation created = observationUuid == null ? obsResource.createObservationFromJson(config, observationJson) :
+                    obsResource.updateObservation(config, observationUuid, observationJson);
             eventRelay.sendEventMessage(new MotechEvent(EventKeys.CREATED_NEW_OBSERVATION_SUBJECT, EventHelper.observationParameters(created)));
             return created;
         } catch (HttpClientErrorException e) {

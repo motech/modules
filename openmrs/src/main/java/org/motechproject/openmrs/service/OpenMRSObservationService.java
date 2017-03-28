@@ -114,10 +114,11 @@ public interface OpenMRSObservationService {
      * be used while performing this action.
      *
      * @param configName  the name of the configuration
+     * @param observationUuid  the UUID of the observation
      * @param observationJson  the observation json to be created
      * @return  the created observation
      */
-    Observation createObservationFromJson(String configName, String observationJson);
+    Observation createOrUpdateObservationFromJson(String configName, String observationUuid, String observationJson);
 
     /**
      * Deletes the observation with the given {@code uuid} from the OpenMRS server. If the observation with the given

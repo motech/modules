@@ -75,6 +75,12 @@ public class ObservationResourceImpl extends BaseResource implements Observation
     }
 
     @Override
+    public Observation updateObservation(Config config, String observationUuid, String observationJson) {
+        String responseJson = postForJson(config, observationJson, "/obs/{observationUuid}", observationUuid);
+        return (Observation) JsonUtils.readJsonWithAdapters(responseJson, Observation.class, createValueAdapter());
+    }
+
+    @Override
     public void deleteObservation(Config config, String uuid) {
         delete(config, "/obs/{uuid}?purge", uuid);
     }
